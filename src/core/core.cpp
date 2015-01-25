@@ -39,7 +39,7 @@ std::list< std::pair<UINT64, UINT8> > memorySnapshot;
 std::list<symbolicElement *> symbolicList;
 
 /* Output */
-boost::format outputInstruction("%1% %|15t| %2% %|55t| %3% %|90t| %4%\n");
+boost::format outputInstruction("%1% %|15t| %2% %|55t| %3% %|100t| %4%\n");
 
 /* Symbolic trace */
 UINT64 symbolicReg[] = {

@@ -56,8 +56,6 @@ std::string formulaReconstruction(UINT64 id)
 
 VOID solveFormula(std::string formula)
 {
-  z3::context *z3Context = new z3::context;
-  z3::solver *z3Solver   = new z3::solver(*z3Context);
 
   /* TODO
    *
@@ -74,8 +72,19 @@ VOID solveFormula(std::string formula)
    * >>> quit()
    */
 
-  delete z3Context;
-  delete z3Solver;
+  //z3::context c;
+
+  //z3::expr x = c.bv_const("SymVar_0", 32);
+  //
+  //z3::solver s(c);
+
+  //s.add(formula.c_str());
+  //
+  //std::cout << s.check() << "\n";
+
+  //z3::model m = s.get_model();
+
+  //std::cout << m << "\n";
 }
 
 

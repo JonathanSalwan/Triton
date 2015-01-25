@@ -12,9 +12,9 @@ static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64
   dst << "#" << std::dec << uniqueID;
 
   if (symbolicReg[ID_RSP] != (UINT64)-1)
-    src << "#" << std::dec << symbolicReg[ID_RSP] << " - 8";
+    src << "(- #" << std::dec << symbolicReg[ID_RSP] << " 8)";
   else
-    src << "0x" << std::hex << PIN_GetContextReg(ctx, REG_RSP) << " - 8";
+    src << "(- 0x" << std::hex << PIN_GetContextReg(ctx, REG_RSP) << " 8)";
 
   symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
   symbolicList.push_front(elem);

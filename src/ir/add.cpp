@@ -8,7 +8,7 @@ static VOID setZF(UINT64 id)
   std::stringstream src, dst, taint;
 
   dst << "#" << std::dec << uniqueID;
-  src << "(#" << std::dec << id << " == 0)";
+  src << "(= #" << std::dec << id << " 0)";
     
   symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
   symbolicList.push_front(elem);
@@ -30,9 +30,9 @@ VOID addRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   dst << "#" << std::dec << uniqueID;
 
   if (symbolicReg[reg1_ID] != (UINT64)-1)
-    src << "(#" << std::dec << symbolicReg[reg1_ID] << " + 0x" << std::hex << imm << ")";
+    src << "(+ #" << std::dec << symbolicReg[reg1_ID] << " 0x" << std::hex << imm << ")";
   else 
-    src << "(0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg1)) << " + 0x" << imm << ")";
+    src << "(+ 0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg1)) << " 0x" << imm << ")";
     
   symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
   symbolicList.push_front(elem);
@@ -72,7 +72,7 @@ VOID addRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   else
     vr2 << "0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg2));
 
-  src << "(" << vr1.str() << " + " << vr2.str() << ")";
+  src << "(+ " << vr1.str() << " " << vr2.str() << ")";
 
   symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
   symbolicList.push_front(elem);
