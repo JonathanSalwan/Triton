@@ -30,5 +30,7 @@ $(NAME): $(OBJ)
 
 clean:
 	 /bin/rm -f $(OBJ)
+
+cleanall: clean
 	 /bin/rm -f $(NAME).so
 
