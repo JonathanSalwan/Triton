@@ -15,7 +15,7 @@ Below, the install's command line::
   $ git clone git@github.com:JonathanSalwan/Triton.git
   $ cd Triton
   $ ./compile.sh
-  $ ../../../pin -t ./obj-intel64/triton.so -startAnalysis check -- ./crackmes/test2 a
+  $ ../../../pin -t ./obj-intel64/triton.so -startAnalysis check -- ./samples/crackmes/crackme_sample a
 
 Acknowledgement
 ---------------
