@@ -25,6 +25,13 @@ std::list<UINT64> addressesTainted;
  */
 std::list< std::pair<UINT64, UINT64> > memoryReference;
 
+/*
+ * Addresses <-> Z3 Symbolic Variable
+ * item1: memory address
+ * item2: symbolic variable ID
+ */
+std::list< std::pair<UINT64, UINT64> > symVarMemoryReference;
+
 /* I/O memory monitoring for snapshot */
 std::list< std::pair<UINT64, UINT8> > memorySnapshot;
 

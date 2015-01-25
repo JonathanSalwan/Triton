@@ -118,15 +118,16 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
     if (isMemoryTainted(mem) == TAINTED){
       switch(opcode){
         case XED_ICLASS_MOV:
-          src << "SymVar_" << std::dec << numberOfSymVar++;
+          src << "SymVar_" << std::dec << numberOfSymVar;
           break;
         case XED_ICLASS_MOVSX:
-          src << "SignExt(" << std::dec << size << ", " << "SymVar_" << std::dec << numberOfSymVar++ << ")";
+          src << "SignExt(" << std::dec << size << ", " << "SymVar_" << std::dec << numberOfSymVar << ")";
           break;
         case XED_ICLASS_MOVZX:
-          src << "ZeroExt(" << std::dec << size << ", " << "SymVar_" << std::dec << numberOfSymVar++ << ")";
+          src << "ZeroExt(" << std::dec << size << ", " << "SymVar_" << std::dec << numberOfSymVar << ")";
           break;
       } 
+      symVarMemoryReference.push_front(make_pair(mem, numberOfSymVar++));
     }
     else {
       switch(readSize){

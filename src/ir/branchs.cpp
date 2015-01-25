@@ -54,6 +54,31 @@ std::string formulaReconstruction(UINT64 id)
 }
 
 
+VOID solveFormula(std::string formula)
+{
+  z3::context *z3Context = new z3::context;
+  z3::solver *z3Solver   = new z3::solver(*z3Context);
+
+  /* TODO
+   *
+   * Look like that with Python:
+   *
+   * >>> from z3 import *
+   * >>> SymVar_0 = BitVec('SymVar_0', 32)
+   * >>> s = Solver()
+   * >>> s.add((ZeroExt(24, SymVar_0) == 0x78))   <---- "(ZeroExt(24, SymVar_0) == 0x78)" is got with formula.c_str()
+   * >>> s.check()
+   * sat
+   * >>> s.model()
+   * [SymVar_0 = 120]
+   * >>> quit()
+   */
+
+  delete z3Context;
+  delete z3Solver;
+}
+
+
 VOID branchs(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT32 opcode)
 {
   if (_analysisStatus == LOCKED)
@@ -69,6 +94,8 @@ VOID branchs(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT32 opcode)
   formula.str(formulaReconstruction(symbolicReg[ID_ZF]));
 
   std::cout << boost::format(outputInstruction) % "" % "" % formula.str() % "";
+
+  solveFormula(formula.str());
 }
 
 

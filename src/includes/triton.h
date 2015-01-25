@@ -70,6 +70,7 @@ extern UINT64                                   uniqueID;
 extern UINT64                                   numberOfSymVar;
 extern boost::format                            outputInstruction;
 extern std::list< std::pair<UINT64, UINT64> >   memoryReference;
+extern std::list< std::pair<UINT64, UINT64> >   symVarMemoryReference;
 extern std::list< std::pair<UINT64, UINT8> >    memorySnapshot;
 extern std::list<UINT64>                        addressesTainted;
 extern std::list<symbolicElement *>             symbolicList;
