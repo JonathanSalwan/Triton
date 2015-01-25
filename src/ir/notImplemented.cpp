@@ -1,6 +1,6 @@
 
 #include "pin.H"
-#include "dse.h"
+#include "triton.h"
 
 
 VOID notImplemented(std::string insDis, ADDRINT insAddr)

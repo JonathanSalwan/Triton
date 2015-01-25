@@ -1,6 +1,6 @@
 
 #include "pin.H"
-#include "dse.h"
+#include "triton.h"
 
 /* Pin options */
 KNOB<std::string>  KnobStartAnalysis(KNOB_MODE_WRITEONCE, "pintool", "startAnalysis", "none", "Start analysis from a function name");

@@ -1,6 +1,6 @@
 
-#ifndef   __DSE_H__
-#define   __DSE_H__
+#ifndef   __TRITON_H__
+#define   __TRITON_H__
 
 #include <asm/unistd.h>
 #include <cstring>
@@ -98,5 +98,5 @@ VOID    pushReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UIN
 VOID    taintParams(CONTEXT *ctx);
 VOID    unlockAnalysis(void);
 
-#endif     /* !__DSE_H__ */
+#endif     /* !__TRITON_H__ */
 
