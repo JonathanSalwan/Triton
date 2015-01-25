@@ -8,7 +8,7 @@ static VOID setZF(UINT64 id)
   std::stringstream src, dst, taint;
 
   dst << "#" << std::dec << uniqueID;
-  src << "(#" << std::dec << id << " == 0 ? 1, 0)";
+  src << "(#" << std::dec << id << " == 0)";
     
   symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
   symbolicList.push_front(elem);

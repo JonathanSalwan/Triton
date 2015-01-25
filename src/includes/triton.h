@@ -15,6 +15,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include <z3++.h>
+
 #define LOCKED        1
 #define UNLOCKED      !LOCKED
 #define TAINTED       1
@@ -65,6 +67,7 @@ extern UINT32                                   _analysisStatus;
 extern UINT64                                   symbolicReg[];
 extern UINT64                                   taintedReg[];
 extern UINT64                                   uniqueID;
+extern UINT64                                   numberOfSymVar;
 extern boost::format                            outputInstruction;
 extern std::list< std::pair<UINT64, UINT64> >   memoryReference;
 extern std::list< std::pair<UINT64, UINT8> >    memorySnapshot;
@@ -82,6 +85,7 @@ VOID    Image(IMG img, VOID *v);
 VOID    Instruction(INS ins, VOID *v);
 VOID    addRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 imm);
 VOID    addRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG reg2);
+VOID    branchs(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT32 opcode);
 VOID    cmpMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT32 readSize);
 VOID    cmpRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 imm);
 VOID    cmpRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG reg2);

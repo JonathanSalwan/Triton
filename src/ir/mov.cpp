@@ -114,59 +114,75 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
     }
   }
   else{
-    switch(readSize){
-      case 1:
-        switch(opcode){
-          case XED_ICLASS_MOV:
-            src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem)));
-            break;
-          case XED_ICLASS_MOVSX:
-            src << "SignExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem))) << ")";
-            break;
-          case XED_ICLASS_MOVZX:
-            src << "ZeroExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem))) << ")";
-            break;
-        }
-        break;
-      case 2:
-        switch(opcode){
-          case XED_ICLASS_MOV:
-            src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem)));
-            break;
-          case XED_ICLASS_MOVSX:
-            src << "SignExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem))) << ")";
-            break;
-          case XED_ICLASS_MOVZX:
-            src << "ZeroExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem))) << ")";
-            break;
-        }
-        break;
-      case 4:
-        switch(opcode){
-          case XED_ICLASS_MOV:
-            src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem)));
-            break;
-          case XED_ICLASS_MOVSX:
-            src << "SignExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem))) << ")";
-            break;
-          case XED_ICLASS_MOVZX:
-            src << "ZeroExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem))) << ")";
-            break;
-        }
-        break;
-      case 8:
-        switch(opcode){
-          case XED_ICLASS_MOV:
-            src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem)));
-            break;
-          case XED_ICLASS_MOVSX:
-            src << "SignExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem))) << ")";
-            break;
-          case XED_ICLASS_MOVZX:
-            src << "ZeroExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem))) << ")";
-            break;
-        }
-        break;
+
+    if (isMemoryTainted(mem) == TAINTED){
+      switch(opcode){
+        case XED_ICLASS_MOV:
+          src << "SymVar_" << std::dec << numberOfSymVar++;
+          break;
+        case XED_ICLASS_MOVSX:
+          src << "SignExt(" << std::dec << size << ", " << "SymVar_" << std::dec << numberOfSymVar++ << ")";
+          break;
+        case XED_ICLASS_MOVZX:
+          src << "ZeroExt(" << std::dec << size << ", " << "SymVar_" << std::dec << numberOfSymVar++ << ")";
+          break;
+      } 
+    }
+    else {
+      switch(readSize){
+        case 1:
+          switch(opcode){
+            case XED_ICLASS_MOV:
+              src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem)));
+              break;
+            case XED_ICLASS_MOVSX:
+              src << "SignExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem))) << ")";
+              break;
+            case XED_ICLASS_MOVZX:
+              src << "ZeroExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem))) << ")";
+              break;
+          }
+          break;
+        case 2:
+          switch(opcode){
+            case XED_ICLASS_MOV:
+              src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem)));
+              break;
+            case XED_ICLASS_MOVSX:
+              src << "SignExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem))) << ")";
+              break;
+            case XED_ICLASS_MOVZX:
+              src << "ZeroExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem))) << ")";
+              break;
+          }
+          break;
+        case 4:
+          switch(opcode){
+            case XED_ICLASS_MOV:
+              src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem)));
+              break;
+            case XED_ICLASS_MOVSX:
+              src << "SignExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem))) << ")";
+              break;
+            case XED_ICLASS_MOVZX:
+              src << "ZeroExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem))) << ")";
+              break;
+          }
+          break;
+        case 8:
+          switch(opcode){
+            case XED_ICLASS_MOV:
+              src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem)));
+              break;
+            case XED_ICLASS_MOVSX:
+              src << "SignExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem))) << ")";
+              break;
+            case XED_ICLASS_MOVZX:
+              src << "ZeroExt(" << std::dec << size << ", 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem))) << ")";
+              break;
+          }
+          break;
+      }
     }
   }
     
@@ -177,12 +193,9 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
   elem->isTainted       = !TAINTED;
 
   /* Check if the source addr is tainted */
-  for(i = addressesTainted.begin(); i != addressesTainted.end(); i++){
-    if ( (mem >= *i) && (mem+(readSize-1)) <= *i){
+  if (isMemoryTainted(mem) == TAINTED){
       taintedReg[reg1_ID] = TAINTED;
       elem->isTainted     = TAINTED;
-      break;
-    }
   }
 
   if (elem->isTainted)

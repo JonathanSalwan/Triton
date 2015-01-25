@@ -16,9 +16,9 @@ VOID cmpRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   dst << "#" << std::dec << uniqueID;
 
   if (symbolicReg[reg1_ID] != (UINT64)-1)
-    src << "(#" << std::dec << symbolicReg[reg1_ID] << " == 0x" << std::hex << imm << " ? 1, 0)";
+    src << "(#" << std::dec << symbolicReg[reg1_ID] << " == 0x" << std::hex << imm << ")";
   else 
-    src << "(0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg1)) << " == 0x" << imm << " ? 1, 0)";
+    src << "(0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg1)) << " == 0x" << imm << ")";
     
   symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
   symbolicList.push_front(elem);
@@ -55,7 +55,7 @@ VOID cmpRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   else
     vr2 << "0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg2));
 
-  src << "(" << vr1.str() << " == " << vr2.str() << ") ? 1, 0)";
+  src << "(" << vr1.str() << " == " << vr2.str() << ")";
 
   symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
   symbolicList.push_front(elem);
@@ -86,21 +86,21 @@ VOID cmpMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   dst << "#" << std::dec << uniqueID;
 
   if (isMemoryReference(mem) != -1){
-    src << "(#" << std::dec << isMemoryReference(mem) << " == 0x" << std::hex << imm << ") ? 1, 0)";
+    src << "(#" << std::dec << isMemoryReference(mem) << " == 0x" << std::hex << imm << ")";
   }
   else{
     switch(readSize){
       case 1:
-        src << "(0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem))) << " == " << std::hex << imm << ") ? 1, 0)";
+        src << "(0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem))) << " == " << std::hex << imm << ")";
         break;
       case 2:
-        src << "(0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem))) << " == " << std::hex << imm << ") ? 1, 0)";
+        src << "(0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem))) << " == " << std::hex << imm << ")";
         break;
       case 4:
-        src << "(0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem))) << " == " << std::hex << imm << ") ? 1, 0)";
+        src << "(0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem))) << " == " << std::hex << imm << ")";
         break;
       case 8:
-        src << "(0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem))) << " == " << std::hex << imm << ") ? 1, 0)";
+        src << "(0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem))) << " == " << std::hex << imm << ")";
         break;
     }
   }

@@ -2,6 +2,7 @@
 #include "pin.H"
 #include "triton.h"
 
+
 /* Pin options */
 KNOB<std::string>  KnobStartAnalysis(KNOB_MODE_WRITEONCE, "pintool", "startAnalysis", "none", "Start analysis from a function name");
 
@@ -10,6 +11,9 @@ UINT32 _analysisStatus = LOCKED;
 
 /* symbolic expression ID */
 UINT64 uniqueID;
+
+/* Number of symbolic variables used */
+UINT64 numberOfSymVar = 0;
 
 /* Addresses tainted */
 std::list<UINT64> addressesTainted;

@@ -222,6 +222,19 @@ VOID Instruction(INS ins, VOID *v)
 
       break;
 
+    case XED_ICLASS_JZ:
+    case XED_ICLASS_JNZ:
+
+        INS_InsertCall(
+          ins, IPOINT_BEFORE, (AFUNPTR)branchs,
+          IARG_PTR, new string(INS_Disassemble(ins)),
+          IARG_ADDRINT, INS_Address(ins),
+          IARG_CONTEXT,
+          IARG_UINT32, opcode,
+          IARG_END);
+
+      break;
+
     default:
 
       /* Callback for semantics not yet implemented */

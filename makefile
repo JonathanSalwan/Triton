@@ -8,8 +8,7 @@ INCLUDES =	-I../../../source/include/pin \
 		-I../../../extras/components/include \
 		-I../../../extras/xed2-intel64/include \
 		-I../../../source/tools/InstLib \
-		-I./src/includes \
-		-I./z3/src/api/c++
+		-I./src/includes
 
 CXXFLAGS = 	$(INCLUDES) -DBIGARRAY_MULTIPLIER=1 -DUSING_XED -Wall -Werror -Wno-unknown-pragmas \
 		-fno-stack-protector -DTARGET_IA32E -DHOST_IA32E -fPIC -DTARGET_LINUX  \
@@ -31,12 +30,13 @@ SRC = 		./src/core/core.cpp \
 		./src/core/instructions.cpp \
 		./src/core/symbolicElement.cpp \
 		./src/core/utils.cpp \
-		./src/ir/pop.cpp \
-		./src/ir/push.cpp \
-		./src/ir/mov.cpp \
 		./src/ir/add.cpp \
+		./src/ir/branchs.cpp \
 		./src/ir/cmp.cpp \
-		./src/ir/notImplemented.cpp
+		./src/ir/mov.cpp \
+		./src/ir/notImplemented.cpp \
+		./src/ir/pop.cpp \
+		./src/ir/push.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
