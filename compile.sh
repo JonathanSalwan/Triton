@@ -38,6 +38,6 @@ echo "[+] notImplemented.cpp compiled"
 
 
 g++ -shared -Wl,--hash-style=sysv -Wl,-Bsymbolic -Wl,--version-script=../../../source/include/pin/pintool.ver \
--o obj-intel64/dse.so obj-intel64/*.o  -L../../../intel64/lib -L../../../intel64/lib-ext -L../../../intel64/runtime/glibc \
+-o obj-intel64/triton.so obj-intel64/*.o  -L../../../intel64/lib -L../../../intel64/lib-ext -L../../../intel64/runtime/glibc \
 -L../../../extras/xed2-intel64/lib -lpin -lxed -ldwarf -lelf -ldl -lz3
 
