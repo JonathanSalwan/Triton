@@ -1,0 +1,6 @@
+obj-intel64/*
+pin.log
+pintool.log
+*.swp
+*.o
+*.so
