@@ -18,22 +18,22 @@ VOID Instruction(INS ins, VOID *v)
 
       /* mov reg, reg */
       if (INS_OperandCount(ins) == 2 && INS_OperandIsReg(ins, 0) && INS_OperandIsReg(ins, 1))
-        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)movRegReg, 
-          IARG_PTR, new string(INS_Disassemble(ins)), 
+        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)movRegReg,
+          IARG_PTR, new string(INS_Disassemble(ins)),
           IARG_ADDRINT, INS_Address(ins),
-          IARG_CONTEXT, 
-          IARG_UINT32, INS_OperandReg(ins, 0), 
-          IARG_UINT32, INS_OperandReg(ins, 1), 
+          IARG_CONTEXT,
+          IARG_UINT32, INS_OperandReg(ins, 0),
+          IARG_UINT32, INS_OperandReg(ins, 1),
           IARG_UINT32, opcode,
           IARG_END);
 
       /* mov reg, imm */
       else if (INS_OperandCount(ins) == 2 && INS_OperandIsReg(ins, 0) && INS_OperandIsImmediate(ins, 1))
-        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)movRegImm, 
-          IARG_PTR, new string(INS_Disassemble(ins)), 
+        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)movRegImm,
+          IARG_PTR, new string(INS_Disassemble(ins)),
           IARG_ADDRINT, INS_Address(ins),
-          IARG_UINT32, INS_OperandReg(ins, 0), 
-          IARG_ADDRINT, INS_OperandImmediate(ins, 1), 
+          IARG_UINT32, INS_OperandReg(ins, 0),
+          IARG_ADDRINT, INS_OperandImmediate(ins, 1),
           IARG_UINT32, opcode,
           IARG_END);
 
@@ -74,6 +74,14 @@ VOID Instruction(INS ins, VOID *v)
           IARG_UINT32, opcode,
           IARG_END);
 
+      else
+        /* Callback for semantics not yet implemented */
+        INS_InsertCall(
+          ins, IPOINT_BEFORE, (AFUNPTR)notImplemented,
+          IARG_PTR, new string(INS_Disassemble(ins)),
+          IARG_ADDRINT, INS_Address(ins),
+          IARG_END);
+
       break;
 
     case XED_ICLASS_PUSH:
@@ -101,7 +109,15 @@ VOID Instruction(INS ins, VOID *v)
           IARG_MEMORYOP_EA, 0,
           IARG_UINT32, INS_MemoryWriteSize(ins),
           IARG_END);
-   
+
+      else
+        /* Callback for semantics not yet implemented */
+        INS_InsertCall(
+          ins, IPOINT_BEFORE, (AFUNPTR)notImplemented,
+          IARG_PTR, new string(INS_Disassemble(ins)),
+          IARG_ADDRINT, INS_Address(ins),
+          IARG_END);
+
       break;
 
     case XED_ICLASS_POP:
@@ -116,7 +132,15 @@ VOID Instruction(INS ins, VOID *v)
           IARG_MEMORYOP_EA, 0,
           IARG_UINT32, INS_MemoryReadSize(ins),
           IARG_END);
-    
+
+      else
+        /* Callback for semantics not yet implemented */
+        INS_InsertCall(
+          ins, IPOINT_BEFORE, (AFUNPTR)notImplemented,
+          IARG_PTR, new string(INS_Disassemble(ins)),
+          IARG_ADDRINT, INS_Address(ins),
+          IARG_END);
+
       break;
 
     case XED_ICLASS_ADD:
@@ -141,6 +165,14 @@ VOID Instruction(INS ins, VOID *v)
           IARG_CONTEXT,
           IARG_UINT32, INS_OperandReg(ins, 0),
           IARG_UINT32, INS_OperandReg(ins, 1),
+          IARG_END);
+
+      else
+        /* Callback for semantics not yet implemented */
+        INS_InsertCall(
+          ins, IPOINT_BEFORE, (AFUNPTR)notImplemented,
+          IARG_PTR, new string(INS_Disassemble(ins)),
+          IARG_ADDRINT, INS_Address(ins),
           IARG_END);
 
       break;
@@ -180,15 +212,23 @@ VOID Instruction(INS ins, VOID *v)
           IARG_UINT32, INS_MemoryReadSize(ins),
           IARG_END);
 
+      else
+        /* Callback for semantics not yet implemented */
+        INS_InsertCall(
+          ins, IPOINT_BEFORE, (AFUNPTR)notImplemented,
+          IARG_PTR, new string(INS_Disassemble(ins)),
+          IARG_ADDRINT, INS_Address(ins),
+          IARG_END);
+
       break;
 
     default:
 
       /* Callback for semantics not yet implemented */
       INS_InsertCall(
-        ins, IPOINT_BEFORE, (AFUNPTR)notImplemented, 
+        ins, IPOINT_BEFORE, (AFUNPTR)notImplemented,
         IARG_PTR, new string(INS_Disassemble(ins)),
-        IARG_ADDRINT, INS_Address(ins), 
+        IARG_ADDRINT, INS_Address(ins),
         IARG_END);
 
       break;
