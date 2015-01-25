@@ -1,6 +1,11 @@
 Triton
 ======
 
+Description
+-----------
+
+TODO
+
 Install
 -------
 
@@ -12,4 +17,10 @@ Below, the install's command line::
   $ ./compile.sh
   $ ../../../pin -t ./obj-intel64/triton.so -startAnalysis check -- ./crackmes/test2 a
 
+Acknowledgement
+---------------
+
+* Florent Saudel
+* Emmanuel Fleury
+* Jonathan Salwan
 
