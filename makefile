@@ -39,6 +39,7 @@ SRC = 		./src/core/core.cpp \
 		./src/ir/pop.cpp \
 		./src/ir/push.cpp \
 		./src/snapshotEngine/snapshotEngine.cpp \
+		./src/solverEngine/solverEngine.cpp \
 		./src/solverEngine/utils.cpp \
 		./src/symbolicEngine/symbolicElement.cpp \
 		./src/symbolicEngine/symbolicEngine.cpp \

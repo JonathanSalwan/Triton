@@ -25,7 +25,6 @@ VOID addRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
 
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
-
   if (symbolicEngine->symbolicReg[reg1_ID] != (UINT64)-1)
     expr << "(+ #" << std::dec << symbolicEngine->symbolicReg[reg1_ID] << " 0x" << std::hex << imm << ")";
   else 
