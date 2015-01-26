@@ -56,35 +56,25 @@ std::string formulaReconstruction(UINT64 id)
 
 VOID solveFormula(std::string formula)
 {
+  z3::context ctx;
 
-  /* TODO
-   *
-   * Look like that with Python:
-   *
-   * >>> from z3 import *
-   * >>> SymVar_0 = BitVec('SymVar_0', 32)
-   * >>> s = Solver()
-   * >>> s.add((ZeroExt(24, SymVar_0) == 0x78))   <---- "(ZeroExt(24, SymVar_0) == 0x78)" is got with formula.c_str()
-   * >>> s.check()
-   * sat
-   * >>> s.model()
-   * [SymVar_0 = 120]
-   * >>> quit()
-   */
+  // TODO
 
-  //z3::context c;
+  //Z3_ast ast = Z3_parse_smtlib2_string(ctx, "(declare-fun fn ( Int) Int )(assert (= ( fn 1 ) 2  ))", 0, 0, 0, 0, 0, 0);
+  //Z3_ast ast = Z3_parse_smtlib2_string(ctx, "(declare-const var Int) (assert (= var 2))", 0, 0, 0, 0, 0, 0);
+  //Z3_ast ast = Z3_parse_smtlib2_string(ctx, "(declare-fun var () (_ BitVec 8)) (assert (= var (_ bv2 8)))", 0, 0, 0, 0, 0, 0);
+  Z3_ast ast = Z3_parse_smtlib2_string(ctx, "(declare-fun SymVar_0 () (_ BitVec 8)) (assert (= ((_ zero_extend 24) SymVar_0) (_ bv120 32)))", 0, 0, 0, 0, 0, 0);
 
-  //z3::expr x = c.bv_const("SymVar_0", 32);
-  //
-  //z3::solver s(c);
+  z3::expr eq(ctx, ast);
 
-  //s.add(formula.c_str());
-  //
-  //std::cout << s.check() << "\n";
+  z3::solver s(ctx);
 
-  //z3::model m = s.get_model();
+  s.add(eq);
+  s.check();
 
-  //std::cout << m << "\n";
+  z3::model m = s.get_model();
+
+  std::cout << m << std::endl;
 }
 
 
