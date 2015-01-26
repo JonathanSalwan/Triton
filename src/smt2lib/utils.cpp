@@ -49,3 +49,25 @@ std::string smt2lib_extract(UINT64 regSize)
 }
 
 
+std::string smt2lib_declare(UINT64 idSymVar, UINT64 BitVecSize)
+{
+  std::stringstream stream;
+
+  switch(BitVecSize){
+    case 1:
+      stream << "(declare-fun SymVar_" << idSymVar << " () (_ BitVec 8))";
+      break;
+    case 2:
+      stream << "(declare-fun SymVar_" << idSymVar << " () (_ BitVec 16))";
+      break;
+    case 4:
+      stream << "(declare-fun SymVar_" << idSymVar << " () (_ BitVec 32))";
+      break;
+    case 8:
+      stream << "(declare-fun SymVar_" << idSymVar << " () (_ BitVec 64))";
+      break;
+  }
+
+  return stream.str();
+}
+
