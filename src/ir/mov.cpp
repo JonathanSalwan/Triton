@@ -127,6 +127,22 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
           src << "((_ zero_extend " << std::dec << size << ") " << "SymVar_" << std::dec << numberOfSymVar << ")";
           break;
       } 
+      std::stringstream smtDeclare;
+      switch(readSize){
+        case 1:
+            smtDeclare << "(declare-fun SymVar_" << numberOfSymVar << " () (_ BitVec 8))";
+          break;
+        case 2:
+            smtDeclare << "(declare-fun SymVar_" << numberOfSymVar << " () (_ BitVec 16))";
+          break;
+        case 4:
+            smtDeclare << "(declare-fun SymVar_" << numberOfSymVar << " () (_ BitVec 32))";
+          break;
+        case 8:
+            smtDeclare << "(declare-fun SymVar_" << numberOfSymVar << " () (_ BitVec 64))";
+          break;
+      }
+      smt2libVarDeclList.push_front(smtDeclare.str());
       symVarMemoryReference.push_front(make_pair(mem, numberOfSymVar++));
     }
     else {

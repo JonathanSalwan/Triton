@@ -36,7 +36,8 @@ SRC = 		./src/core/core.cpp \
 		./src/ir/mov.cpp \
 		./src/ir/notImplemented.cpp \
 		./src/ir/pop.cpp \
-		./src/ir/push.cpp
+		./src/ir/push.cpp \
+		./src/smt2lib/utils.cpp
 
 OBJ = $(SRC:.cpp=.o)
 

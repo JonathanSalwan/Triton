@@ -32,6 +32,9 @@ std::list< std::pair<UINT64, UINT64> > memoryReference;
  */
 std::list< std::pair<UINT64, UINT64> > symVarMemoryReference;
 
+/* List of variables decl in smt2lib */
+std::list<std::string> smt2libVarDeclList;
+
 /* I/O memory monitoring for snapshot */
 std::list< std::pair<UINT64, UINT8> > memorySnapshot;
 

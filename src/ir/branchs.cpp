@@ -58,15 +58,8 @@ VOID solveFormula(std::string formula)
 {
   z3::context ctx;
 
-  // TODO
-
-  //Z3_ast ast = Z3_parse_smtlib2_string(ctx, "(declare-fun fn ( Int) Int )(assert (= ( fn 1 ) 2  ))", 0, 0, 0, 0, 0, 0);
-  //Z3_ast ast = Z3_parse_smtlib2_string(ctx, "(declare-const var Int) (assert (= var 2))", 0, 0, 0, 0, 0, 0);
-  //Z3_ast ast = Z3_parse_smtlib2_string(ctx, "(declare-fun var () (_ BitVec 8)) (assert (= var (_ bv2 8)))", 0, 0, 0, 0, 0, 0);
-  Z3_ast ast = Z3_parse_smtlib2_string(ctx, "(declare-fun SymVar_0 () (_ BitVec 8)) (assert (= ((_ zero_extend 24) SymVar_0) (_ bv120 32)))", 0, 0, 0, 0, 0, 0);
-
+  Z3_ast ast = Z3_parse_smtlib2_string(ctx, formula.c_str(), 0, 0, 0, 0, 0, 0);
   z3::expr eq(ctx, ast);
-
   z3::solver s(ctx);
 
   s.add(eq);
@@ -74,7 +67,7 @@ VOID solveFormula(std::string formula)
 
   z3::model m = s.get_model();
 
-  std::cout << m << std::endl;
+  std::cout << "----- Model -----" << std::endl << m << std::endl << "-----------------" << std::endl;
 }
 
 
@@ -83,18 +76,19 @@ VOID branchs(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT32 opcode)
   if (_analysisStatus == LOCKED)
     return;
 
-  std::stringstream info;
+  std::list<std::string>::iterator i;
   std::stringstream formula;
-
-  info << "Branch: ZF #" <<  symbolicReg[ID_ZF];
-
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % info.str() % "";
+  std::stringstream stream;
 
   formula.str(formulaReconstruction(symbolicReg[ID_ZF]));
 
-  std::cout << boost::format(outputInstruction) % "" % "" % formula.str() % "";
+  for(i = smt2libVarDeclList.begin(); i != smt2libVarDeclList.end(); i++)
+    stream << *i;
+  stream << formula.str();
 
-  solveFormula(formula.str());
+  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % stream.str() % "";
+
+  solveFormula(stream.str());
 }
 
 

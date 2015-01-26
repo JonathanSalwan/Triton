@@ -267,3 +267,18 @@ VOID taintParams(CONTEXT *ctx)
   }
 }
 
+UINT64 derefMem(UINT64 mem, UINT64 readSize)
+{
+  switch(readSize){
+    case 1:
+      return static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem)));
+    case 2:
+      return static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem)));
+    case 4:
+      return static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem)));
+    case 8:
+      return static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem)));
+  }
+  return 0; /* Never go here */
+}
+
