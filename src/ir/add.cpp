@@ -37,7 +37,7 @@ VOID addRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
   symbolicList.push_front(elem);
   symbolicReg[reg1_ID] = uniqueID++;
-  elem->isTainted = taintedReg[reg1_ID];
+  elem->isTainted = taintEngine->getRegStatus(reg1_ID);
 
   if (elem->isTainted)
     taint << "#" << symbolicReg[reg1_ID] << " is controllable";
@@ -78,10 +78,10 @@ VOID addRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   symbolicList.push_front(elem);
   symbolicReg[reg1_ID] = uniqueID++;
 
-  if (taintedReg[reg2_ID] == TAINTED)
-    taintedReg[reg1_ID] = TAINTED;
+  if (taintEngine->isRegTainted(reg2_ID))
+    taintEngine->taintReg(reg1_ID);
 
-  elem->isTainted = taintedReg[reg1_ID];  
+  elem->isTainted = taintEngine->getRegStatus(reg1_ID);
 
   if (elem->isTainted)
     taint << "#" << symbolicReg[reg1_ID] << " is controllable";

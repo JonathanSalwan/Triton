@@ -6,7 +6,7 @@
 
 static VOID setMem(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 readSize)
 {
-  std::list<UINT64>::iterator i;
+  UINT64 i = 0;
   std::stringstream src, dst, taint;
 
   UINT64 reg1_ID = translatePinRegToID(reg1);
@@ -36,14 +36,14 @@ static VOID setMem(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, 
   symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
   symbolicList.push_front(elem);
   symbolicReg[reg1_ID]  = uniqueID++;
-  taintedReg[reg1_ID]   = !TAINTED;
+  taintEngine->untaintReg(reg1_ID);
   elem->isTainted       = !TAINTED;
 
   /* Check if the source addr is tainted */
-  for(i = addressesTainted.begin(); i != addressesTainted.end(); i++){
-    if ( (mem >= *i) && (mem+(readSize-1)) <= *i){
-      taintedReg[reg1_ID] = TAINTED;
-      elem->isTainted     = TAINTED;
+  for (i = 0 ; i < readSize ; i++){
+    if (taintEngine->isMemoryTainted(mem + i)){
+      taintEngine->taintReg(reg1_ID);
+      elem->isTainted = TAINTED;
       break;
     }
   }

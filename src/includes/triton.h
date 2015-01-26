@@ -17,6 +17,11 @@
 
 #include <z3++.h>
 
+#include "SnapshotEngine.h"
+#include "SolverEngine.h"
+#include "SymbolicEngine.h"
+#include "TaintEngine.h"
+
 #define LOCKED        1
 #define UNLOCKED      !LOCKED
 #define TAINTED       1
@@ -47,41 +52,28 @@
 #define ID_DF         23
 #define ID_OF         24
 
-/* Symbolic element */
-class symbolicElement {
-
-  public:
-    std::stringstream   *symSrc;
-    std::stringstream   *symDst;
-    std::stringstream   *symExpr;
-    UINT32              isTainted;
-    UINT64              uniqueID;
-
-    symbolicElement(std::stringstream &dst, std::stringstream &src, UINT64 uniqueID);
-    ~symbolicElement();
-
-};
 
 /* Extern decl */
+
+extern SnapshotEngine   *snapshotEngine;
+extern TaintEngine      *taintEngine;
+
+
 extern UINT32                                   _analysisStatus;
 extern UINT64                                   symbolicReg[];
 extern KNOB<std::string>                        KnobStartAnalysis;
 extern UINT64                                   numberOfSymVar;
-extern UINT64                                   taintedReg[];
 extern UINT64                                   uniqueID;
 extern boost::format                            outputInstruction;
-extern std::list< std::pair<UINT64, UINT64> >   memoryReference;
 extern std::list< std::pair<UINT64, UINT64> >   symVarMemoryReference;
-extern std::list< std::pair<UINT64, UINT8> >    memorySnapshot;
-extern std::list<UINT64>                        addressesTainted;
 extern std::list<std::string>                   smt2libVarDeclList;
 extern std::list<symbolicElement *>             symbolicList;
 
+extern std::list< std::pair<UINT64, UINT64> > memoryReference;
 
 /* decl */
 INT32           isMemoryReference(UINT64 addr);
 REG             getHighReg(REG reg);
-UINT32          isMemoryTainted(UINT64 addr);
 UINT64          derefMem(UINT64 mem, UINT64 readSize);
 UINT64          translatePinRegToID(REG reg);
 VOID            Image(IMG img, VOID *v);
@@ -104,9 +96,6 @@ VOID            pushImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT6
 VOID            pushReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 writeSize);
 VOID            taintParams(CONTEXT *ctx);
 VOID            unlockAnalysis(void);
-std::string     smt2lib_bv(UINT64 value, UINT64 size);
-std::string     smt2lib_declare(UINT64 idSymVar, UINT64 BitVecSize);
-std::string     smt2lib_extract(UINT64 regSize);
 
 #endif     /* !__TRITON_H__ */
 

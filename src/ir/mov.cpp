@@ -47,12 +47,12 @@ VOID movRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   symbolicList.push_front(elem);
   symbolicReg[reg1_ID] = uniqueID++;
 
-  if (taintedReg[reg2_ID] == TAINTED)
-    taintedReg[reg1_ID] = TAINTED;
+  if (taintEngine->isRegTainted(reg2_ID))
+    taintEngine->taintReg(reg1_ID);
   else
-    taintedReg[reg1_ID] = !TAINTED;
+    taintEngine->untaintReg(reg1_ID);
 
-  elem->isTainted = taintedReg[reg1_ID];  
+  elem->isTainted = taintEngine->getRegStatus(reg1_ID);
 
   if (elem->isTainted)
     taint << "#" << symbolicReg[reg1_ID] << " is controllable";
@@ -79,7 +79,7 @@ VOID movRegImm(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 imm, INT32 
   symbolicList.push_front(elem);
   symbolicReg[reg1_ID] = uniqueID++;
 
-  taintedReg[reg1_ID] = !TAINTED;
+  taintEngine->untaintReg(reg1_ID);
 
   std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % (*elem->symExpr).str() % taint.str();
 
@@ -115,7 +115,7 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
   }
   else{
 
-    if (isMemoryTainted(mem) == TAINTED){
+    if (taintEngine->isMemoryTainted(mem)){
       switch(opcode){
         case XED_ICLASS_MOV:
           src << "SymVar_" << std::dec << numberOfSymVar;
@@ -191,12 +191,12 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
   symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
   symbolicList.push_front(elem);
   symbolicReg[reg1_ID]  = uniqueID++;
-  taintedReg[reg1_ID]   = !TAINTED;
   elem->isTainted       = !TAINTED;
+  taintEngine->untaintReg(reg1_ID);
 
   /* Check if the source addr is tainted */
-  if (isMemoryTainted(mem) == TAINTED){
-      taintedReg[reg1_ID] = TAINTED;
+  if (taintEngine->isMemoryTainted(mem)){
+      taintEngine->taintReg(reg1_ID);
       elem->isTainted     = TAINTED;
   }
 
@@ -231,20 +231,20 @@ VOID movMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   elem->isTainted       = !TAINTED;
 
   /* If src reg is tainted, we taint the memory area */
-  if (taintedReg[reg1_ID] == TAINTED){
+  if (taintEngine->isRegTainted(reg1_ID)){
     unsigned int offset = 0;
     for (; offset < writeSize ; offset++){
-      if (isMemoryTainted(mem+offset) == 0)
-        addressesTainted.push_front(mem+offset);
+      if (taintEngine->isMemoryTainted(mem+offset) == false)
+        taintEngine->addAddress(mem+offset);
     }
     elem->isTainted = TAINTED;
   }
 
   /* If src reg is not tainted, we untaint the memory area */
-  if (taintedReg[reg1_ID] != TAINTED){
+  if (taintEngine->isRegTainted(reg1_ID) == false){
     unsigned int offset = 0;
     for (; offset < writeSize ; offset++){
-      addressesTainted.remove(mem+offset);
+      taintEngine->removeAddress(mem+offset);
     }
     elem->isTainted = !TAINTED;
   }
@@ -279,7 +279,7 @@ VOID movMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   /* We remove the taint if the memory area is tainted */
   unsigned int offset = 0;
   for (; offset < writeSize ; offset++){
-    addressesTainted.remove(mem+offset);
+    taintEngine->removeAddress(mem+offset);
   }
 
   /* Link the memory reference to the symbolic expression */

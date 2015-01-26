@@ -218,17 +218,6 @@ REG getHighReg(REG reg)
 }
 
 
-UINT32 isMemoryTainted(UINT64 addr)
-{
-  std::list<UINT64>::iterator i;
-  for(i = addressesTainted.begin(); i != addressesTainted.end(); i++){
-    if (addr == *i)
-      return 1;
-  }
-  return 0;
-}
-
-
 INT32 isMemoryReference(UINT64 addr)
 {
   std::list< std::pair<UINT64, UINT64> >::iterator i;
@@ -262,10 +251,11 @@ VOID taintParams(CONTEXT *ctx)
   char    *ptr = (char *)rdi;
 
   for (i = 0; ptr[i] != '\0'; i++){
-    addressesTainted.push_front((ADDRINT)(&ptr[i]));
+    taintEngine->addAddress((ADDRINT)(&ptr[i]));
     std::cout << "[Initial tainting] *(" << std::hex << (ADDRINT)(&ptr[i]) << ") is now tainted" << std::endl;
   }
 }
+
 
 UINT64 derefMem(UINT64 mem, UINT64 readSize)
 {
@@ -281,4 +271,5 @@ UINT64 derefMem(UINT64 mem, UINT64 readSize)
   }
   return 0; /* Never go here */
 }
+
 

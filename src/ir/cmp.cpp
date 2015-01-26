@@ -29,7 +29,7 @@ VOID cmpRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   symbolicReg[ID_ZF] = uniqueID++;
 
   /* Check if reg1 is tainted */
-  if (symbolicReg[reg1_ID] != (UINT64)-1 && taintedReg[reg1_ID] == TAINTED)
+  if (symbolicReg[reg1_ID] != (UINT64)-1 && taintEngine->isRegTainted(reg1_ID))
     taint << "#" << std::dec << symbolicReg[reg1_ID] << " is controllable";
 
   /* Display trace */
@@ -76,11 +76,11 @@ VOID cmpRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   symbolicReg[ID_ZF] = uniqueID++;
 
   /* Check if reg1 is tainted */
-  if (symbolicReg[reg1_ID] != (UINT64)-1 && taintedReg[reg1_ID] == TAINTED)
+  if (symbolicReg[reg1_ID] != (UINT64)-1 && taintEngine->isRegTainted(reg1_ID))
     taint << "#" << std::dec << symbolicReg[reg1_ID] << " is controllable";
 
   /* Check if reg2 is tainted */
-  if (symbolicReg[reg2_ID] != (UINT64)-1 && taintedReg[reg2_ID] == TAINTED){
+  if (symbolicReg[reg2_ID] != (UINT64)-1 && taintEngine->isRegTainted(reg2_ID)){
     if (!taint.str().empty())
       taint << " and ";
     taint << "#" << std::dec << symbolicReg[reg2_ID] << " is controllable";
@@ -113,7 +113,7 @@ VOID cmpMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   symbolicList.push_front(elem);
   symbolicReg[ID_ZF] = uniqueID++;
 
-  if (isMemoryTainted(mem) == TAINTED){
+  if (taintEngine->isMemoryTainted(mem)){
     if (isMemoryReference(mem) != -1)
       taint << "#" << std::dec << isMemoryReference(mem) << " is controllable";
     else

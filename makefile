@@ -30,7 +30,6 @@ LIBS =		-L$(PIN_ROOT)/intel64/lib \
 SRC = 		./src/core/core.cpp \
 		./src/core/image.cpp \
 		./src/core/instructions.cpp \
-		./src/core/symbolicElement.cpp \
 		./src/core/utils.cpp \
 		./src/ir/add.cpp \
 		./src/ir/branchs.cpp \
@@ -39,7 +38,11 @@ SRC = 		./src/core/core.cpp \
 		./src/ir/notImplemented.cpp \
 		./src/ir/pop.cpp \
 		./src/ir/push.cpp \
-		./src/smt2lib/utils.cpp
+		./src/snapshotEngine/snapshotEngine.cpp \
+		./src/solverEngine/utils.cpp \
+		./src/symbolicEngine/symbolicElement.cpp \
+		./src/taintEngine/taintEngine.cpp \
+
 
 OBJ = $(SRC:.cpp=.o)
 
