@@ -7,22 +7,19 @@
 static VOID setMem(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 readSize)
 {
   UINT64 i = 0;
-  std::stringstream src, dst, taint;
+  std::stringstream expr, taint;
 
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
-  dst << "#" << std::dec << uniqueID;
-
-  if (isMemoryReference(mem) != -1)
-    src << "#" << std::dec << isMemoryReference(mem);
+  if (symbolicEngine->isMemoryReference(mem) != -1)
+    expr << "#" << std::dec << symbolicEngine->isMemoryReference(mem);
   else
-    src << "0x" << std::hex << derefMem(mem, readSize);
+    expr << "0x" << std::hex << derefMem(mem, readSize);
     
-  symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
-  symbolicList.push_front(elem);
-  symbolicReg[reg1_ID]  = uniqueID++;
+  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
   taintEngine->untaintReg(reg1_ID);
-  elem->isTainted       = !TAINTED;
+  elem->isTainted = !TAINTED;
 
   /* Check if the source addr is tainted */
   for (i = 0 ; i < readSize ; i++){
@@ -34,32 +31,29 @@ static VOID setMem(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, 
   }
 
   if (elem->isTainted)
-    taint << "#" << symbolicReg[reg1_ID] << " is controllable";
+    taint << "#" << symbolicEngine->symbolicReg[reg1_ID] << " is controllable";
 
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % (*elem->symExpr).str() % taint.str();
+  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
 }
 
 
 static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 mem)
 {
-  std::stringstream src, dst, taint;
+  std::stringstream expr, taint;
 
   /* Sub RSP */
-  dst << "#" << std::dec << uniqueID;
-
-  if (symbolicReg[ID_RSP] != (UINT64)-1)
-    src << "(+ #" << std::dec << symbolicReg[ID_RSP] << " 8)";
+  if (symbolicEngine->symbolicReg[ID_RSP] != (UINT64)-1)
+    expr << "(+ #" << std::dec << symbolicEngine->symbolicReg[ID_RSP] << " 8)";
   else
-    src << "(+ 0x" << std::hex << PIN_GetContextReg(ctx, REG_RSP) << " 8)";
+    expr << "(+ 0x" << std::hex << PIN_GetContextReg(ctx, REG_RSP) << " 8)";
 
-  symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
-  symbolicList.push_front(elem);
-  symbolicReg[ID_RSP] = uniqueID;
+  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  symbolicEngine->symbolicReg[ID_RSP] = elem->getID();
 
   /* Memory reference */
-  memoryReference.push_front(make_pair(mem, uniqueID++));
+  symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  std::cout << boost::format(outputInstruction) % "" % "" % (*elem->symExpr).str() % taint.str();
+  std::cout << boost::format(outputInstruction) % "" % "" % elem->getExpression() % taint.str();
 
   return;
 }

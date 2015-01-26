@@ -218,18 +218,6 @@ REG getHighReg(REG reg)
 }
 
 
-INT32 isMemoryReference(UINT64 addr)
-{
-  std::list< std::pair<UINT64, UINT64> >::iterator i;
-
-  for(i = memoryReference.begin(); i != memoryReference.end(); i++){
-    if (i->first == addr)
-      return i->second;
-  }
-  return -1;
-}
-
-
 VOID unlockAnalysis(void)
 {
   _analysisStatus = UNLOCKED;

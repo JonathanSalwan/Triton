@@ -6,24 +6,21 @@
 
 static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 mem)
 {
-  std::stringstream src, dst, taint;
+  std::stringstream expr, taint;
 
   /* Sub RSP */
-  dst << "#" << std::dec << uniqueID;
-
-  if (symbolicReg[ID_RSP] != (UINT64)-1)
-    src << "(- #" << std::dec << symbolicReg[ID_RSP] << " 8)";
+  if (symbolicEngine->symbolicReg[ID_RSP] != (UINT64)-1)
+    expr << "(- #" << std::dec << symbolicEngine->symbolicReg[ID_RSP] << " 8)";
   else
-    src << "(- 0x" << std::hex << PIN_GetContextReg(ctx, REG_RSP) << " 8)";
+    expr << "(- 0x" << std::hex << PIN_GetContextReg(ctx, REG_RSP) << " 8)";
 
-  symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
-  symbolicList.push_front(elem);
-  symbolicReg[ID_RSP] = uniqueID;
+  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  symbolicEngine->symbolicReg[ID_RSP] = elem->getID();
 
   /* Memory reference */
-  memoryReference.push_front(make_pair(mem, uniqueID++));
+  symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % (*elem->symExpr).str() % taint.str();
+  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
 
   return;
 }
@@ -34,17 +31,14 @@ static VOID setMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg
   /* Push in memory */
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
-  std::stringstream src, dst, taint;
+  std::stringstream expr, taint;
 
-  dst << "#" << std::dec << uniqueID;
-
-  if (symbolicReg[reg1_ID] != (UINT64)-1)
-    src << "#" << std::dec << symbolicReg[reg1_ID];
+  if (symbolicEngine->symbolicReg[reg1_ID] != (UINT64)-1)
+    expr << "#" << std::dec << symbolicEngine->symbolicReg[reg1_ID];
   else
-    src << "0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg1));
+    expr << "0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg1));
 
-  symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
-  symbolicList.push_front(elem);
+  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
 
   /* We remove the taint by default */
   unsigned int offset = 0;
@@ -60,22 +54,19 @@ static VOID setMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg
   }
 
   /* Memory reference */
-  memoryReference.push_front(make_pair(mem, uniqueID++));
+  symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  std::cout << boost::format(outputInstruction) % "" % "" % (*elem->symExpr).str() % taint.str();
+  std::cout << boost::format(outputInstruction) % "" % "" % elem->getExpression() % taint.str();
 }
 
 
 static VOID setMemImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 imm, UINT64 mem, UINT32 writeSize)
 {
-  std::stringstream src, dst, taint;
+  std::stringstream expr, taint;
 
-  dst << "#" << std::dec << uniqueID;
-  src << "0x" << std::hex << imm;
+  expr << "0x" << std::hex << imm;
 
-
-  symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
-  symbolicList.push_front(elem);
+  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
 
   /* We remove the taint by default */
   unsigned int offset = 0;
@@ -84,10 +75,9 @@ static VOID setMemImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 
   }
 
   /* Memory reference */
-  memoryReference.push_front(make_pair(mem, uniqueID++));
+  symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % (*elem->symExpr).str() % taint.str();
-
+  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
 }
 
 

@@ -4,22 +4,41 @@
 
 
 
-symbolicElement::symbolicElement(std::stringstream &dst, std::stringstream &src, UINT64 uniqueID)
+symbolicElement::symbolicElement(std::stringstream &dst, std::stringstream &src, UINT64 id)
 {
-  this->isTainted = 0;
-  this->symSrc  = new std::stringstream(src.str());
-  this->symDst  = new std::stringstream(dst.str());
-  this->symExpr = new std::stringstream();
+  this->isTainted   = !TAINTED;
+  this->source      = new std::stringstream(src.str());
+  this->destination = new std::stringstream(dst.str());
+  this->expression  = new std::stringstream();
 
-  *this->symExpr << (*this->symDst).str() << " = " << (*this->symSrc).str();
-  this->uniqueID = uniqueID;
+  *this->expression << (*this->destination).str() << " = " << (*this->source).str();
+  
+  this->id = id;
 }
 
 
 symbolicElement::~symbolicElement()
 {
-  delete this->symDst;
-  delete this->symSrc;
-  delete this->symExpr;
+  delete this->source;
+  delete this->destination;
+  delete this->expression;
+}
+
+
+std::string symbolicElement::getExpression()
+{
+  return this->expression->str();
+}
+
+
+std::string symbolicElement::getSource()
+{
+  return this->source->str();
+}
+
+
+UINT64 symbolicElement::getID()
+{
+  return this->id;
 }
 

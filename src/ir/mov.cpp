@@ -8,44 +8,41 @@ VOID movRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   if (_analysisStatus == LOCKED)
     return;
 
-  std::stringstream src, dst, taint;
+  std::stringstream expr, taint;
 
   UINT64 reg1_ID  = translatePinRegToID(reg1);
   UINT64 reg2_ID  = translatePinRegToID(reg2);
   UINT64 size     = (REG_Size(reg1) * 8) - (REG_Size(reg2) * 8);
 
-  dst << "#" << std::dec << uniqueID;
-
-  if (symbolicReg[reg2_ID] != (UINT64)-1){
+  if (symbolicEngine->symbolicReg[reg2_ID] != (UINT64)-1){
     switch(opcode){
       case XED_ICLASS_MOV:
-        src << "#" << std::dec << symbolicReg[reg2_ID];
+        expr << "#" << std::dec << symbolicEngine->symbolicReg[reg2_ID];
         break;
       case XED_ICLASS_MOVSX:
-        src << "((_ sign_extend " << std::dec << size << ") #" << symbolicReg[reg2_ID] << ")";
+        expr << "((_ sign_extend " << std::dec << size << ") #" << symbolicEngine->symbolicReg[reg2_ID] << ")";
         break;
       case XED_ICLASS_MOVZX:
-        src << "((_ zero_extend " << std::dec << size << ") #" << symbolicReg[reg2_ID] << ")";
+        expr << "((_ zero_extend " << std::dec << size << ") #" << symbolicEngine->symbolicReg[reg2_ID] << ")";
         break;
     }
   }
   else{
     switch(opcode){
       case XED_ICLASS_MOV:
-        src << "0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg2));
+        expr << "0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg2));
         break;
       case XED_ICLASS_MOVSX:
-        src << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg2)) << ")";
+        expr << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg2)) << ")";
         break;
       case XED_ICLASS_MOVZX:
-        src << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg2)) << ")";
+        expr << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg2)) << ")";
         break;
     }
   }
     
-  symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
-  symbolicList.push_front(elem);
-  symbolicReg[reg1_ID] = uniqueID++;
+  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
 
   if (taintEngine->isRegTainted(reg2_ID))
     taintEngine->taintReg(reg1_ID);
@@ -55,9 +52,9 @@ VOID movRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   elem->isTainted = taintEngine->getRegStatus(reg1_ID);
 
   if (elem->isTainted)
-    taint << "#" << symbolicReg[reg1_ID] << " is controllable";
+    taint << "#" << symbolicEngine->symbolicReg[reg1_ID] << " is controllable";
 
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % (*elem->symExpr).str() % taint.str();
+  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
 
   return;
 }
@@ -68,20 +65,18 @@ VOID movRegImm(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 imm, INT32 
   if (_analysisStatus == LOCKED)
     return;
 
-  std::stringstream src, dst, taint;
+  std::stringstream expr, taint;
 
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
-  dst << "#" << std::dec << uniqueID;
-  src << "0x" << std::hex << imm;
-    
-  symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
-  symbolicList.push_front(elem);
-  symbolicReg[reg1_ID] = uniqueID++;
+  expr << "0x" << std::hex << imm;
+   
+  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
 
   taintEngine->untaintReg(reg1_ID);
 
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % (*elem->symExpr).str() % taint.str();
+  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
 
   return;
 }
@@ -93,94 +88,93 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
     return;
 
   std::list<UINT64>::iterator i;
-  std::stringstream src, dst, taint;
+  std::stringstream expr, taint;
 
   UINT64 reg1_ID  = translatePinRegToID(reg1);
   UINT64 size     = (REG_Size(reg1) * 8) - (readSize * 8);
 
-  dst << "#" << std::dec << uniqueID;
-
-  if (isMemoryReference(mem) != -1){
+  if (symbolicEngine->isMemoryReference(mem) != -1){
     switch(opcode){
       case XED_ICLASS_MOV:
-        src << "#" << std::dec << isMemoryReference(mem);
+        expr << "#" << std::dec << symbolicEngine->isMemoryReference(mem);
         break;
       case XED_ICLASS_MOVSX:
-        src << "((_ sign_extend " << std::dec << size << ") #" << std::dec << isMemoryReference(mem) << ")";
+        expr << "((_ sign_extend " << std::dec << size << ") #" << std::dec << symbolicEngine->isMemoryReference(mem) << ")";
         break;
       case XED_ICLASS_MOVZX:
-        src << "((_ zero_extend " << std::dec << size << ") #" << std::dec << isMemoryReference(mem) << ")";
+        expr << "((_ zero_extend " << std::dec << size << ") #" << std::dec << symbolicEngine->isMemoryReference(mem) << ")";
         break;
     }
   }
   else{
 
     if (taintEngine->isMemoryTainted(mem)){
+      UINT64 symVarID = symbolicEngine->getUniqueSymVarID();
       switch(opcode){
         case XED_ICLASS_MOV:
-          src << "SymVar_" << std::dec << numberOfSymVar;
+          expr << "SymVar_" << std::dec << symVarID;
           break;
         case XED_ICLASS_MOVSX:
-          src << "((_ sign_extend " << std::dec << size << ") " << "SymVar_" << std::dec << numberOfSymVar << ")";
+          expr << "((_ sign_extend " << std::dec << size << ") " << "SymVar_" << std::dec << symVarID << ")";
           break;
         case XED_ICLASS_MOVZX:
-          src << "((_ zero_extend " << std::dec << size << ") " << "SymVar_" << std::dec << numberOfSymVar << ")";
+          expr << "((_ zero_extend " << std::dec << size << ") " << "SymVar_" << std::dec << symVarID << ")";
           break;
       } 
-      smt2libVarDeclList.push_front(smt2lib_declare(numberOfSymVar, readSize));
-      symVarMemoryReference.push_front(make_pair(mem, numberOfSymVar++));
+      symbolicEngine->addSmt2LibVarDecl(symVarID, readSize);
+      symbolicEngine->addSymVarMemoryReference(mem, symVarID);
     }
     else {
       switch(readSize){
         case 1:
           switch(opcode){
             case XED_ICLASS_MOV:
-              src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem)));
+              expr << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem)));
               break;
             case XED_ICLASS_MOVSX:
-              src << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem))) << ")";
+              expr << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem))) << ")";
               break;
             case XED_ICLASS_MOVZX:
-              src << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem))) << ")";
+              expr << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem))) << ")";
               break;
           }
           break;
         case 2:
           switch(opcode){
             case XED_ICLASS_MOV:
-              src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem)));
+              expr << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem)));
               break;
             case XED_ICLASS_MOVSX:
-              src << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem))) << ")";
+              expr << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem))) << ")";
               break;
             case XED_ICLASS_MOVZX:
-              src << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem))) << ")";
+              expr << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem))) << ")";
               break;
           }
           break;
         case 4:
           switch(opcode){
             case XED_ICLASS_MOV:
-              src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem)));
+              expr << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem)));
               break;
             case XED_ICLASS_MOVSX:
-              src << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem))) << ")";
+              expr << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem))) << ")";
               break;
             case XED_ICLASS_MOVZX:
-              src << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem))) << ")";
+              expr << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem))) << ")";
               break;
           }
           break;
         case 8:
           switch(opcode){
             case XED_ICLASS_MOV:
-              src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem)));
+              expr << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem)));
               break;
             case XED_ICLASS_MOVSX:
-              src << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem))) << ")";
+              expr << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem))) << ")";
               break;
             case XED_ICLASS_MOVZX:
-              src << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem))) << ")";
+              expr << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem))) << ")";
               break;
           }
           break;
@@ -188,22 +182,21 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
     }
   }
     
-  symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
-  symbolicList.push_front(elem);
-  symbolicReg[reg1_ID]  = uniqueID++;
-  elem->isTainted       = !TAINTED;
+  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
+  elem->isTainted = !TAINTED;
   taintEngine->untaintReg(reg1_ID);
 
   /* Check if the source addr is tainted */
   if (taintEngine->isMemoryTainted(mem)){
       taintEngine->taintReg(reg1_ID);
-      elem->isTainted     = TAINTED;
+      elem->isTainted = TAINTED;
   }
 
   if (elem->isTainted)
-    taint << "#" << symbolicReg[reg1_ID] << " is controllable";
+    taint << "#" << symbolicEngine->symbolicReg[reg1_ID] << " is controllable";
 
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % (*elem->symExpr).str() % taint.str();
+  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
 
   return;
 }
@@ -215,22 +208,19 @@ VOID movMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
     return;
 
   std::list<UINT64>::iterator i;
-  std::stringstream src, dst, taint;
+  std::stringstream expr, taint;
 
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
-  dst << "#" << std::dec << uniqueID;
-
-  if (symbolicReg[reg1_ID] != (UINT64)-1)
-    src << "#" << symbolicReg[reg1_ID];
+  if (symbolicEngine->symbolicReg[reg1_ID] != (UINT64)-1)
+    expr << "#" << symbolicEngine->symbolicReg[reg1_ID];
   else 
-    src << "0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg1));
+    expr << "0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg1));
 
-  symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
-  symbolicList.push_front(elem);
-  elem->isTainted       = !TAINTED;
+  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  elem->isTainted = !TAINTED;
 
-  /* If src reg is tainted, we taint the memory area */
+  /* If expr reg is tainted, we taint the memory area */
   if (taintEngine->isRegTainted(reg1_ID)){
     unsigned int offset = 0;
     for (; offset < writeSize ; offset++){
@@ -240,7 +230,7 @@ VOID movMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
     elem->isTainted = TAINTED;
   }
 
-  /* If src reg is not tainted, we untaint the memory area */
+  /* If expr reg is not tainted, we untaint the memory area */
   if (taintEngine->isRegTainted(reg1_ID) == false){
     unsigned int offset = 0;
     for (; offset < writeSize ; offset++){
@@ -250,12 +240,12 @@ VOID movMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   }
 
   if (elem->isTainted)
-    taint << "Memory area " << mem << " is controllable";
+    taint << "Memory area " << std::hex << mem << " is controllable";
 
   /* Link the memory reference to the symbolic expression */
-  memoryReference.push_front(make_pair(mem, uniqueID++));
+  symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % (*elem->symExpr).str() % taint.str();
+  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
 
   return;
 }
@@ -267,14 +257,12 @@ VOID movMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
     return;
 
   std::list<UINT64>::iterator i;
-  std::stringstream src, dst, taint;
+  std::stringstream expr, taint;
 
-  dst << "#" << std::dec << uniqueID;
-  src << "0x" << std::hex << imm;
+  expr << "0x" << std::hex << imm;
 
-  symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
-  symbolicList.push_front(elem);
-  elem->isTainted       = !TAINTED;
+  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  elem->isTainted = !TAINTED;
 
   /* We remove the taint if the memory area is tainted */
   unsigned int offset = 0;
@@ -283,10 +271,11 @@ VOID movMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   }
 
   /* Link the memory reference to the symbolic expression */
-  memoryReference.push_front(make_pair(mem, uniqueID++));
+  symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % (*elem->symExpr).str() % taint.str();
+  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
 
   return;
 }
+
 

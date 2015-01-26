@@ -4,18 +4,6 @@
 
 
 
-std::stringstream *getEqById(UINT64 id)
-{
-  std::list<symbolicElement *>::iterator i;
-
-  for(i = symbolicList.begin(); i != symbolicList.end(); i++){
-    if ((*i)->uniqueID == id)
-      return (*i)->symSrc;
-  }
-  return NULL;
-}
-
-
 std::string replaceEq(std::string str, const std::string from, const std::string to)
 {
   size_t start_pos = str.find(from);
@@ -35,7 +23,8 @@ std::string formulaReconstruction(UINT64 id)
   std::stringstream from;
   std::stringstream to;
 
-  formula.str(getEqById(id)->str());
+  formula.str(symbolicEngine->getElementFromId(id)->getSource());
+
 
   while (formula.str().find("#") != std::string::npos){
 
@@ -45,8 +34,8 @@ std::string formulaReconstruction(UINT64 id)
     value = atoi(subs.c_str());
 
     from << "#" << value;
-    to << getEqById(value)->str();
-
+    to << symbolicEngine->getElementFromId(value)->getSource();
+  
     formula.str(replaceEq(formula.str(), from.str(), to.str()));
   }
   
@@ -80,10 +69,10 @@ VOID branchs(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT32 opcode)
   std::stringstream formula;
   std::stringstream stream;
 
-  formula.str(formulaReconstruction(symbolicReg[ID_ZF]));
+  formula.str(formulaReconstruction(symbolicEngine->symbolicReg[ID_ZF]));
 
-  for(i = smt2libVarDeclList.begin(); i != smt2libVarDeclList.end(); i++)
-    stream << *i;
+  stream << symbolicEngine->getSmt2LibVarsDecl();
+
   stream << formula.str();
 
   std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % stream.str() % "";

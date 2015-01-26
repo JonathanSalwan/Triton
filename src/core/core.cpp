@@ -9,84 +9,17 @@ KNOB<std::string>  KnobStartAnalysis(KNOB_MODE_WRITEONCE, "pintool", "startAnaly
 /* flag Lock / Unlock instrumentation */
 UINT32 _analysisStatus = LOCKED;
 
+/* Output */
+boost::format outputInstruction("%1% %|15t| %2% %|55t| %3% %|100t| %4%\n");
+
 /* Snapshot Engine */
 SnapshotEngine *snapshotEngine = new SnapshotEngine;
 
 /* Taint Engine */
 TaintEngine *taintEngine = new TaintEngine;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* symbolic expression ID */
-UINT64 uniqueID;
-
-/* Number of symbolic variables used */
-UINT64 numberOfSymVar = 0;
-
-/* 
- * Addresses <-> symbolic expression 
- * item1: memory address
- * item2: reference ID
- */
-std::list< std::pair<UINT64, UINT64> > memoryReference;
-
-/*
- * Addresses <-> Z3 Symbolic Variable
- * item1: memory address
- * item2: symbolic variable ID
- */
-std::list< std::pair<UINT64, UINT64> > symVarMemoryReference;
-
-/* List of variables decl in smt2lib */
-std::list<std::string> smt2libVarDeclList;
-
-/* List of symbolic elements ID */
-std::list<symbolicElement *> symbolicList;
-
-/* Output */
-boost::format outputInstruction("%1% %|15t| %2% %|55t| %3% %|100t| %4%\n");
-
-
-/* Symbolic trace */
-UINT64 symbolicReg[] = {
-    (UINT64)-1, /* ID_RAX   */
-    (UINT64)-1, /* ID_RBX   */
-    (UINT64)-1, /* ID_RCX   */
-    (UINT64)-1, /* ID_RDX   */
-    (UINT64)-1, /* ID_RDI   */
-    (UINT64)-1, /* ID_RSI   */
-    (UINT64)-1, /* ID_RBP   */
-    (UINT64)-1, /* ID_RSP   */
-    (UINT64)-1, /* ID_R8    */
-    (UINT64)-1, /* ID_R9    */
-    (UINT64)-1, /* ID_R10   */
-    (UINT64)-1, /* ID_R11   */
-    (UINT64)-1, /* ID_R12   */
-    (UINT64)-1, /* ID_R13   */
-    (UINT64)-1, /* ID_R14   */
-    (UINT64)-1, /* ID_R15   */
-    (UINT64)-1, /* ID_CF    */
-    (UINT64)-1, /* ID_PF    */
-    (UINT64)-1, /* ID_AF    */
-    (UINT64)-1, /* ID_ZF    */
-    (UINT64)-1, /* ID_SF    */
-    (UINT64)-1, /* ID_TF    */
-    (UINT64)-1, /* ID_IF    */
-    (UINT64)-1, /* ID_DF    */
-    (UINT64)-1  /* ID_OF    */
-};
+/* Symbolic Engine */
+SymbolicEngine *symbolicEngine = new SymbolicEngine;
 
 
 

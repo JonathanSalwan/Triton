@@ -55,24 +55,15 @@
 
 /* Extern decl */
 
-extern SnapshotEngine   *snapshotEngine;
-extern TaintEngine      *taintEngine;
+extern SnapshotEngine           *snapshotEngine;
+extern TaintEngine              *taintEngine;
+extern SymbolicEngine           *symbolicEngine;
+extern UINT32                   _analysisStatus;
+extern KNOB<std::string>        KnobStartAnalysis;
+extern boost::format            outputInstruction;
 
-
-extern UINT32                                   _analysisStatus;
-extern UINT64                                   symbolicReg[];
-extern KNOB<std::string>                        KnobStartAnalysis;
-extern UINT64                                   numberOfSymVar;
-extern UINT64                                   uniqueID;
-extern boost::format                            outputInstruction;
-extern std::list< std::pair<UINT64, UINT64> >   symVarMemoryReference;
-extern std::list<std::string>                   smt2libVarDeclList;
-extern std::list<symbolicElement *>             symbolicList;
-
-extern std::list< std::pair<UINT64, UINT64> > memoryReference;
 
 /* decl */
-INT32           isMemoryReference(UINT64 addr);
 REG             getHighReg(REG reg);
 UINT64          derefMem(UINT64 mem, UINT64 readSize);
 UINT64          translatePinRegToID(REG reg);
