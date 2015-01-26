@@ -13,25 +13,10 @@ static VOID setMem(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, 
 
   dst << "#" << std::dec << uniqueID;
 
-  if (isMemoryReference(mem) != -1){
+  if (isMemoryReference(mem) != -1)
     src << "#" << std::dec << isMemoryReference(mem);
-  }
-  else{
-    switch(readSize){
-      case 1:
-        src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem)));
-        break;
-      case 2:
-        src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem)));
-        break;
-      case 4:
-        src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem)));
-        break;
-      case 8:
-        src << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem)));
-        break;
-    }
-  }
+  else
+    src << "0x" << std::hex << derefMem(mem, readSize);
     
   symbolicElement *elem = new symbolicElement(dst, src, uniqueID);
   symbolicList.push_front(elem);
