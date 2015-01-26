@@ -54,3 +54,7 @@ clean:
 cleanall: clean
 	 /bin/rm -f $(NAME).so
 
+re: cleanall all
+
+.PHONY: re clean cleanall all
+
