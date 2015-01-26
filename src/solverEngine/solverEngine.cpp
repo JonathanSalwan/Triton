@@ -55,13 +55,16 @@ SolverEngine::~SolverEngine()
 
 VOID SolverEngine::solveFromID(UINT64 id)
 {
-  this->formula.str(formulaReconstruction(symEngine->symbolicReg[ID_ZF]));
-  this->stream << this->symEngine->getSmt2LibVarsDecl();
-  this->stream << this->formula.str();
+  std::stringstream formula;
+
+  formula.str(formulaReconstruction(symEngine->symbolicReg[ID_ZF]));
+
+  this->formula << this->symEngine->getSmt2LibVarsDecl();
+  this->formula << formula.str();
 
   this->ctx = new z3::context();
 
-  Z3_ast ast = Z3_parse_smtlib2_string(*this->ctx, this->stream.str().c_str(), 0, 0, 0, 0, 0, 0);
+  Z3_ast ast = Z3_parse_smtlib2_string(*this->ctx, this->formula.str().c_str(), 0, 0, 0, 0, 0, 0);
   z3::expr eq(*this->ctx, ast);
   this->solver = new z3::solver(*this->ctx);
   this->solver->add(eq);
@@ -81,4 +84,9 @@ z3::model SolverEngine::getModel()
   return this->solver->get_model();
 }
 
+
+std::string SolverEngine::getFormula()
+{
+  return this->formula.str();
+}
 

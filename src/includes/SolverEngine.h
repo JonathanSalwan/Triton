@@ -19,7 +19,6 @@ class SolverEngine
   private:
     SymbolicEngine      *symEngine;
     std::stringstream   formula;
-    std::stringstream   stream;
     z3::solver          *solver;
     z3::context         *ctx;
 
@@ -27,6 +26,7 @@ class SolverEngine
     VOID                solveFromID(UINT64 id);
     VOID                displayModel();
     z3::model           getModel();
+    std::string         getFormula();
 
     SolverEngine(SymbolicEngine *sym);
     ~SolverEngine();
