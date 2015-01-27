@@ -3,6 +3,14 @@
 #include "Triton.h"
 
 
+/*
+ * TODO :
+ *
+ * reg <- done
+ *
+ * mem <- todo
+ *
+ * */
 
 static VOID setMem(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 readSize)
 {

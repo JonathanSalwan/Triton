@@ -3,6 +3,15 @@
 #include "Triton.h"
 
 
+/*
+ * reg, imm <- done
+ * reg, reg <- done
+ * reg, mem <- done
+ * mem, imm <- done
+ * mem, reg <- done
+ *
+ * */
+
 VOID movRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG reg2, INT32 opcode)
 {
   if (_analysisStatus == LOCKED)

@@ -3,6 +3,15 @@
 #include "Triton.h"
 
 
+/*
+ * TODO :
+ *
+ * reg <- done
+ * imm <- done
+ *
+ * mem <- todo
+ *
+ * */
 
 static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 mem)
 {

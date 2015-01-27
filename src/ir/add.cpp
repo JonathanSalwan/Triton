@@ -3,6 +3,26 @@
 #include "Triton.h"
 
 
+/*
+ * TODO :
+ *
+ * reg, imm <- done
+ * reg, reg <- done
+ *
+ * mem, imm <- todo
+ * mem, reg <- todo
+ * reg, mem <- todo
+ *
+ * ZF <- done
+ *
+ * OF <- todo
+ * SF <- todo
+ * AF <- todo
+ * CF <- todo
+ * PF <- todo
+ *
+ * */
+
 static VOID setZF(UINT64 id)
 {
   std::stringstream expr;

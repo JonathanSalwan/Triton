@@ -3,6 +3,25 @@
 #include "Triton.h"
 
 
+/*
+ * TODO :
+ *
+ * reg, imm <- done
+ * reg, reg <- done
+ * mem, imm <- done
+ *
+ * mem, reg <- todo
+ * reg, mem <- todo
+ *
+ * ZF <- done
+ *
+ * OF <- todo
+ * SF <- todo
+ * AF <- todo
+ * CF <- todo
+ * PF <- todo
+ *
+ * */
 
 VOID cmpRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 imm)
 {
