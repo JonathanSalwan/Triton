@@ -1,8 +1,5 @@
 
-
-#include "pin.H"
-#include "Triton.h"
-
+#include "SnapshotEngine.h"
 
 
 SnapshotEngine::SnapshotEngine()

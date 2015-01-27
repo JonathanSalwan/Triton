@@ -1,10 +1,9 @@
 
-#include "pin.H"
-#include "Triton.h"
+#include "TaintEngine.h"
+#include "SymbolicEngine.h"
 
 
-
-symbolicElement::symbolicElement(std::stringstream &dst, std::stringstream &src, UINT64 id)
+symbolicElement::symbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id)
 {
   this->isTainted   = !TAINTED;
   this->source      = new std::stringstream(src.str());
@@ -12,7 +11,7 @@ symbolicElement::symbolicElement(std::stringstream &dst, std::stringstream &src,
   this->expression  = new std::stringstream();
 
   *this->expression << (*this->destination).str() << " = " << (*this->source).str();
-  
+
   this->id = id;
 }
 
@@ -37,7 +36,7 @@ std::string symbolicElement::getSource()
 }
 
 
-UINT64 symbolicElement::getID()
+uint64_t symbolicElement::getID()
 {
   return this->id;
 }

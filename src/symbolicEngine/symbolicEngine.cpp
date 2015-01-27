@@ -1,36 +1,34 @@
 
-#include "pin.H"
-#include "Triton.h"
-
+#include "SymbolicEngine.h"
 
 
 SymbolicEngine::SymbolicEngine()
 {
- this->symbolicReg[0]  = (UINT64)-1; /* ID_RAX   */
- this->symbolicReg[1]  = (UINT64)-1; /* ID_RBX   */
- this->symbolicReg[2]  = (UINT64)-1; /* ID_RCX   */
- this->symbolicReg[3]  = (UINT64)-1; /* ID_RDX   */
- this->symbolicReg[4]  = (UINT64)-1; /* ID_RDI   */
- this->symbolicReg[5]  = (UINT64)-1; /* ID_RSI   */
- this->symbolicReg[6]  = (UINT64)-1; /* ID_RBP   */
- this->symbolicReg[7]  = (UINT64)-1; /* ID_RSP   */
- this->symbolicReg[8]  = (UINT64)-1; /* ID_R8    */
- this->symbolicReg[9]  = (UINT64)-1; /* ID_R9    */
- this->symbolicReg[10] = (UINT64)-1; /* ID_R10   */
- this->symbolicReg[11] = (UINT64)-1; /* ID_R11   */
- this->symbolicReg[12] = (UINT64)-1; /* ID_R12   */
- this->symbolicReg[13] = (UINT64)-1; /* ID_R13   */
- this->symbolicReg[14] = (UINT64)-1; /* ID_R14   */
- this->symbolicReg[15] = (UINT64)-1; /* ID_R15   */
- this->symbolicReg[16] = (UINT64)-1; /* ID_CF    */
- this->symbolicReg[17] = (UINT64)-1; /* ID_PF    */
- this->symbolicReg[18] = (UINT64)-1; /* ID_AF    */
- this->symbolicReg[19] = (UINT64)-1; /* ID_ZF    */
- this->symbolicReg[20] = (UINT64)-1; /* ID_SF    */
- this->symbolicReg[21] = (UINT64)-1; /* ID_TF    */
- this->symbolicReg[22] = (UINT64)-1; /* ID_IF    */
- this->symbolicReg[23] = (UINT64)-1; /* ID_DF    */
- this->symbolicReg[24] = (UINT64)-1; /* ID_OF    */
+ this->symbolicReg[0]  = (uint64_t)-1; /* ID_RAX   */
+ this->symbolicReg[1]  = (uint64_t)-1; /* ID_RBX   */
+ this->symbolicReg[2]  = (uint64_t)-1; /* ID_RCX   */
+ this->symbolicReg[3]  = (uint64_t)-1; /* ID_RDX   */
+ this->symbolicReg[4]  = (uint64_t)-1; /* ID_RDI   */
+ this->symbolicReg[5]  = (uint64_t)-1; /* ID_RSI   */
+ this->symbolicReg[6]  = (uint64_t)-1; /* ID_RBP   */
+ this->symbolicReg[7]  = (uint64_t)-1; /* ID_RSP   */
+ this->symbolicReg[8]  = (uint64_t)-1; /* ID_R8    */
+ this->symbolicReg[9]  = (uint64_t)-1; /* ID_R9    */
+ this->symbolicReg[10] = (uint64_t)-1; /* ID_R10   */
+ this->symbolicReg[11] = (uint64_t)-1; /* ID_R11   */
+ this->symbolicReg[12] = (uint64_t)-1; /* ID_R12   */
+ this->symbolicReg[13] = (uint64_t)-1; /* ID_R13   */
+ this->symbolicReg[14] = (uint64_t)-1; /* ID_R14   */
+ this->symbolicReg[15] = (uint64_t)-1; /* ID_R15   */
+ this->symbolicReg[16] = (uint64_t)-1; /* ID_CF    */
+ this->symbolicReg[17] = (uint64_t)-1; /* ID_PF    */
+ this->symbolicReg[18] = (uint64_t)-1; /* ID_AF    */
+ this->symbolicReg[19] = (uint64_t)-1; /* ID_ZF    */
+ this->symbolicReg[20] = (uint64_t)-1; /* ID_SF    */
+ this->symbolicReg[21] = (uint64_t)-1; /* ID_TF    */
+ this->symbolicReg[22] = (uint64_t)-1; /* ID_IF    */
+ this->symbolicReg[23] = (uint64_t)-1; /* ID_DF    */
+ this->symbolicReg[24] = (uint64_t)-1; /* ID_OF    */
 
  this->numberOfSymVar = 0;
 }
@@ -41,9 +39,9 @@ SymbolicEngine::~SymbolicEngine()
 }
 
 
-INT32 SymbolicEngine::isMemoryReference(UINT64 addr)
+int32_t SymbolicEngine::isMemoryReference(uint64_t addr)
 {
-  std::list< std::pair<UINT64, UINT64> >::iterator i;
+  std::list< std::pair<uint64_t, uint64_t> >::iterator i;
 
   for(i = this->memoryReference.begin(); i != this->memoryReference.end(); i++){
     if (i->first == addr)
@@ -53,7 +51,7 @@ INT32 SymbolicEngine::isMemoryReference(UINT64 addr)
 }
 
 
-UINT64 SymbolicEngine::getUniqueID()
+uint64_t SymbolicEngine::getUniqueID()
 {
   return this->uniqueID++;
 }
@@ -62,8 +60,8 @@ UINT64 SymbolicEngine::getUniqueID()
 symbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
 {
   std::stringstream dst;
-  UINT64            id;
-  
+  uint64_t          id;
+
   id = this->getUniqueID();
 
   dst << "#" << std::dec << id;
@@ -76,13 +74,13 @@ symbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
 }
 
 
-VOID SymbolicEngine::setSymbolicReg(UINT64 reg, UINT64 referenceID)
+void SymbolicEngine::setSymbolicReg(uint64_t reg, uint64_t referenceID)
 {
   this->symbolicReg[reg] = referenceID;
 }
 
 
-symbolicElement *SymbolicEngine::getElementFromId(UINT64 id)
+symbolicElement *SymbolicEngine::getElementFromId(uint64_t id)
 {
   std::list<symbolicElement *>::iterator i;
 
@@ -105,25 +103,25 @@ std::string SymbolicEngine::getSmt2LibVarsDecl()
 }
 
 
-UINT64 SymbolicEngine::getUniqueSymVarID()
+uint64_t SymbolicEngine::getUniqueSymVarID()
 {
   return this->numberOfSymVar++;
 }
 
 
-VOID SymbolicEngine::addSymVarMemoryReference(UINT64 mem, UINT64 symVarID)
+void SymbolicEngine::addSymVarMemoryReference(uint64_t mem, uint64_t symVarID)
 {
-  this->symVarMemoryReference.push_front(make_pair(mem, symVarID));
+  this->symVarMemoryReference.push_front(std::make_pair(mem, symVarID));
 }
 
 
-VOID SymbolicEngine::addSmt2LibVarDecl(UINT64 symVarID, UINT64 readSize)
+void SymbolicEngine::addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize)
 {
   this->smt2libVarDeclList.push_front(smt2lib_declare(symVarID, readSize));
 }
 
-VOID SymbolicEngine::addMemoryReference(UINT64 mem, UINT64 id)
+void SymbolicEngine::addMemoryReference(uint64_t mem, uint64_t id)
 {
-  this->memoryReference.push_front(make_pair(mem, id));
+  this->memoryReference.push_front(std::make_pair(mem, id));
 }
 

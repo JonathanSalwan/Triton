@@ -2,16 +2,14 @@
 #ifndef   __SOLVERENGINE_H__
 #define   __SOLVERENGINE_H__
 
+#include <cstdlib>
+#include <stdint.h>
+#include <string>
+
 #include <z3++.h>
 
-#include "pin.H"
-#include "Triton.h"
+#include "registers.h"
 #include "SymbolicEngine.h"
-
-/* decl */
-std::string     smt2lib_bv(UINT64 value, UINT64 size);
-std::string     smt2lib_declare(UINT64 idSymVar, UINT64 BitVecSize);
-std::string     smt2lib_extract(UINT64 regSize);
 
 
 class SolverEngine
@@ -23,8 +21,8 @@ class SolverEngine
     z3::context         *ctx;
 
   public:
-    VOID                solveFromID(UINT64 id);
-    VOID                displayModel();
+    void                solveFromID(uint64_t id);
+    void                displayModel();
     z3::model           getModel();
     std::string         getFormula();
 

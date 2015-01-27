@@ -41,7 +41,7 @@ SRC = 		./src/core/core.cpp \
 		./src/ir/push.cpp \
 		./src/snapshotEngine/snapshotEngine.cpp \
 		./src/solverEngine/solverEngine.cpp \
-		./src/solverEngine/utils.cpp \
+		./src/solverEngine/smt2lib_utils.cpp \
 		./src/symbolicEngine/symbolicElement.cpp \
 		./src/symbolicEngine/symbolicEngine.cpp \
 		./src/taintEngine/taintEngine.cpp \
