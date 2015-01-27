@@ -56,10 +56,9 @@ VOID SolverEngine::solveFromID(UINT64 id)
 {
   std::stringstream formula;
 
-  std::cout << 1 << std::endl;
-
   formula.str(formulaReconstruction(symEngine->symbolicReg[ID_ZF]));
 
+  this->formula << "(set-logic QF_AUFBV)";
   this->formula << this->symEngine->getSmt2LibVarsDecl();
   this->formula << formula.str();
 
