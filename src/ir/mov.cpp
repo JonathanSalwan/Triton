@@ -1,6 +1,6 @@
 
 #include "pin.H"
-#include "triton.h"
+#include "Triton.h"
 
 
 VOID movRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG reg2, INT32 opcode)

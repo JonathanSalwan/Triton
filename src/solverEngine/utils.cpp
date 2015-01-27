@@ -1,6 +1,6 @@
 
 #include "pin.H"
-#include "triton.h"
+#include "Triton.h"
 
 
 std::string smt2lib_bv(UINT64 value, UINT64 size)

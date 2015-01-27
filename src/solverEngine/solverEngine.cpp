@@ -1,6 +1,6 @@
 
 #include "pin.H"
-#include "triton.h"
+#include "Triton.h"
 
 
 static std::string replaceEq(std::string str, const std::string from, const std::string to)

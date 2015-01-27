@@ -3,7 +3,7 @@
 #define   __TAINTENGINE_H__
 
 #include "pin.H"
-#include "triton.h"
+#include "Triton.h"
 
 
 class TaintEngine {

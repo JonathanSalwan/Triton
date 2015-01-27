@@ -5,7 +5,7 @@
 #include <z3++.h>
 
 #include "pin.H"
-#include "triton.h"
+#include "Triton.h"
 #include "SymbolicEngine.h"
 
 /* decl */

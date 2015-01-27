@@ -1,7 +1,7 @@
 
 
 #include "pin.H"
-#include "triton.h"
+#include "Triton.h"
 
 
 
