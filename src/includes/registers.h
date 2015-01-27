@@ -1,6 +1,7 @@
 #ifndef  __REGISTERS_H__
 #define  __REGISTERS_H__
 
+/* Register ID used in the Taint and Symbolic Engines */
 #define ID_RAX        0
 #define ID_RBX        1
 #define ID_RCX        2
@@ -17,6 +18,8 @@
 #define ID_R13        13
 #define ID_R14        14
 #define ID_R15        15
+
+/* Flags ID used in the Taint and Symbolic Engines */
 #define ID_CF         16
 #define ID_PF         17
 #define ID_AF         18

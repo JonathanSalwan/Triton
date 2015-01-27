@@ -49,7 +49,7 @@ VOID cmpRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
     elem->isTainted = TAINTED;
 
   /* Display trace */
-  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
+  displayTrace(insAddr, insDis, elem);
 
   return;
 }
@@ -93,7 +93,7 @@ VOID cmpRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
     elem->isTainted = TAINTED;
 
   /* Display trace */
-  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
+  displayTrace(insAddr, insDis, elem);
 
   return;
 }
@@ -119,7 +119,7 @@ VOID cmpMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   if (taintEngine->isMemoryTainted(mem))
     elem->isTainted = TAINTED;
   
-  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
+  displayTrace(insAddr, insDis, elem);
 
   return ;
 }

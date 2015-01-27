@@ -27,17 +27,17 @@
 
 /* Extern decl */
 
-extern SnapshotEngine           *snapshotEngine;
-extern TaintEngine              *taintEngine;
-extern SymbolicEngine           *symbolicEngine;
-extern UINT32                   _analysisStatus;
 extern KNOB<std::string>        KnobStartAnalysis;
+extern SnapshotEngine           *snapshotEngine;
+extern SymbolicEngine           *symbolicEngine;
+extern TaintEngine              *taintEngine;
+extern UINT32                   _analysisStatus;
 extern boost::format            outputInstruction;
 
 
 /* decl */
-VOID            Instruction(INS ins, VOID *v);
 VOID            Image(IMG img, VOID *v);
+VOID            Instruction(INS ins, VOID *v);
 VOID            addRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 imm);
 VOID            addRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG reg2);
 VOID            branchs(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT32 opcode);
@@ -54,8 +54,6 @@ VOID            popReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG re
 VOID            pushImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 imm, UINT64 mem, UINT32 writeSize);
 VOID            pushReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 writeSize);
 
-
-VOID displayTrace(ADDRINT addr, const std::string &insDis, const std::string &expr, UINT64 isTainted);
 
 #endif     /* !__TRITON_H__ */
 

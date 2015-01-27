@@ -13,6 +13,22 @@ boost::format outputInstruction("%1% %|15t| %2% %|55t| %3%\n");
 
 
 
+VOID displayTrace(ADDRINT addr, const std::string &insDis, symbolicElement *symElement)
+{
+  std::stringstream addrFormat;
+  std::stringstream taintColor;
+
+  if (addr != 0)
+    addrFormat << boost::io::group(hex, showbase, addr);
+
+  if (symElement->isTainted)
+    taintColor << _GREEN;
+
+  std::cout << taintColor.str() << boost::format(outputInstruction) % addrFormat.str() % insDis % symElement->getExpression() << _ENDC;
+}
+
+
+/* Currently, only used in src/ir/branchs.cpp and in src/ir/notImplemented.cpp */
 VOID displayTrace(ADDRINT addr, const std::string &insDis, const std::string &expr, UINT64 isTainted)
 {
   std::stringstream addrFormat;

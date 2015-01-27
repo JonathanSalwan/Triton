@@ -1,34 +1,35 @@
 
 #include "SymbolicEngine.h"
+#include "registers.h"
 
 
 SymbolicEngine::SymbolicEngine()
 {
- this->symbolicReg[0]  = (uint64_t)-1; /* ID_RAX   */
- this->symbolicReg[1]  = (uint64_t)-1; /* ID_RBX   */
- this->symbolicReg[2]  = (uint64_t)-1; /* ID_RCX   */
- this->symbolicReg[3]  = (uint64_t)-1; /* ID_RDX   */
- this->symbolicReg[4]  = (uint64_t)-1; /* ID_RDI   */
- this->symbolicReg[5]  = (uint64_t)-1; /* ID_RSI   */
- this->symbolicReg[6]  = (uint64_t)-1; /* ID_RBP   */
- this->symbolicReg[7]  = (uint64_t)-1; /* ID_RSP   */
- this->symbolicReg[8]  = (uint64_t)-1; /* ID_R8    */
- this->symbolicReg[9]  = (uint64_t)-1; /* ID_R9    */
- this->symbolicReg[10] = (uint64_t)-1; /* ID_R10   */
- this->symbolicReg[11] = (uint64_t)-1; /* ID_R11   */
- this->symbolicReg[12] = (uint64_t)-1; /* ID_R12   */
- this->symbolicReg[13] = (uint64_t)-1; /* ID_R13   */
- this->symbolicReg[14] = (uint64_t)-1; /* ID_R14   */
- this->symbolicReg[15] = (uint64_t)-1; /* ID_R15   */
- this->symbolicReg[16] = (uint64_t)-1; /* ID_CF    */
- this->symbolicReg[17] = (uint64_t)-1; /* ID_PF    */
- this->symbolicReg[18] = (uint64_t)-1; /* ID_AF    */
- this->symbolicReg[19] = (uint64_t)-1; /* ID_ZF    */
- this->symbolicReg[20] = (uint64_t)-1; /* ID_SF    */
- this->symbolicReg[21] = (uint64_t)-1; /* ID_TF    */
- this->symbolicReg[22] = (uint64_t)-1; /* ID_IF    */
- this->symbolicReg[23] = (uint64_t)-1; /* ID_DF    */
- this->symbolicReg[24] = (uint64_t)-1; /* ID_OF    */
+ this->symbolicReg[ID_RAX] = (uint64_t)-1;
+ this->symbolicReg[ID_RBX] = (uint64_t)-1;
+ this->symbolicReg[ID_RCX] = (uint64_t)-1;
+ this->symbolicReg[ID_RDX] = (uint64_t)-1;
+ this->symbolicReg[ID_RDI] = (uint64_t)-1;
+ this->symbolicReg[ID_RSI] = (uint64_t)-1;
+ this->symbolicReg[ID_RBP] = (uint64_t)-1;
+ this->symbolicReg[ID_RSP] = (uint64_t)-1;
+ this->symbolicReg[ID_R8]  = (uint64_t)-1;
+ this->symbolicReg[ID_R9]  = (uint64_t)-1;
+ this->symbolicReg[ID_R10] = (uint64_t)-1;
+ this->symbolicReg[ID_R11] = (uint64_t)-1;
+ this->symbolicReg[ID_R12] = (uint64_t)-1;
+ this->symbolicReg[ID_R13] = (uint64_t)-1;
+ this->symbolicReg[ID_R14] = (uint64_t)-1;
+ this->symbolicReg[ID_R15] = (uint64_t)-1;
+ this->symbolicReg[ID_CF]  = (uint64_t)-1;
+ this->symbolicReg[ID_PF]  = (uint64_t)-1;
+ this->symbolicReg[ID_AF]  = (uint64_t)-1;
+ this->symbolicReg[ID_ZF]  = (uint64_t)-1;
+ this->symbolicReg[ID_SF]  = (uint64_t)-1;
+ this->symbolicReg[ID_TF]  = (uint64_t)-1;
+ this->symbolicReg[ID_IF]  = (uint64_t)-1;
+ this->symbolicReg[ID_DF]  = (uint64_t)-1;
+ this->symbolicReg[ID_OF]  = (uint64_t)-1;
 
  this->numberOfSymVar = 0;
 }

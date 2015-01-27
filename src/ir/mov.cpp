@@ -61,7 +61,7 @@ VOID movRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
 
   elem->isTainted = taintEngine->getRegStatus(reg1_ID);
 
-  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
+  displayTrace(insAddr, insDis, elem);
 
   return;
 }
@@ -83,7 +83,7 @@ VOID movRegImm(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 imm, INT32 
 
   taintEngine->untaintReg(reg1_ID);
 
-  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
+  displayTrace(insAddr, insDis, elem);
 
   return;
 }
@@ -157,7 +157,7 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
       elem->isTainted = TAINTED;
   }
 
-  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
+  displayTrace(insAddr, insDis, elem);
 
   return;
 }
@@ -203,7 +203,7 @@ VOID movMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   /* Link the memory reference to the symbolic expression */
   symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
+  displayTrace(insAddr, insDis, elem);
 
   return;
 }
@@ -231,7 +231,7 @@ VOID movMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   /* Link the memory reference to the symbolic expression */
   symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
+  displayTrace(insAddr, insDis, elem);
 
   return;
 }

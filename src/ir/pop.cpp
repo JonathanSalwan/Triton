@@ -38,7 +38,7 @@ static VOID setMem(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, 
     }
   }
 
-  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
+  displayTrace(insAddr, insDis, elem);
 }
 
 
@@ -58,7 +58,7 @@ static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64
   /* Memory reference */
   symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
+  displayTrace(insAddr, insDis, elem);
 
   return;
 }

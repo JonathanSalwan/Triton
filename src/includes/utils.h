@@ -6,17 +6,20 @@
 
 #include "pin.H"
 
+#include "SymbolicEngine.h"
 #include "TaintEngine.h"
 
 #define LOCKED        1
 #define UNLOCKED      !LOCKED
 
 
-UINT64 translatePinRegToID(REG reg);
-REG getHighReg(REG reg);
-VOID unlockAnalysis(UINT32 *analysisStatus);
-VOID lockAnalysis(UINT32 *analysisStatus);
-VOID taintParams(CONTEXT *ctx, TaintEngine *taintEngine);
-UINT64 derefMem(UINT64 mem, UINT64 readSize);
+REG     getHighReg(REG reg);
+UINT64  derefMem(UINT64 mem, UINT64 readSize);
+UINT64  translatePinRegToID(REG reg);
+VOID    displayTrace(ADDRINT addr, const std::string &insDis, const std::string &expr, UINT64 isTainted);
+VOID    displayTrace(ADDRINT addr, const std::string &insDis, symbolicElement *symElement);
+VOID    lockAnalysis(UINT32 *analysisStatus);
+VOID    taintParams(CONTEXT *ctx, TaintEngine *taintEngine);
+VOID    unlockAnalysis(UINT32 *analysisStatus);
 
 #endif /* !__UTILS_H__ */

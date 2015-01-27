@@ -15,16 +15,16 @@
 class symbolicElement {
 
   private:
-    std::stringstream   *source;
     std::stringstream   *destination;
     std::stringstream   *expression;
-    uint64_t              id;
+    std::stringstream   *source;
+    uint64_t            id;
 
 
   public:
-    uint32_t      isTainted;
     std::string   getExpression();
     std::string   getSource();
+    uint32_t      isTainted;
     uint64_t      getID();
 
     symbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id);
@@ -67,18 +67,19 @@ class SymbolicEngine {
   public:
 
     /* Symbolic trace */
-    uint64_t symbolicReg[25];
+    uint64_t              symbolicReg[25];
 
+    /* public methods */
     int32_t               isMemoryReference(uint64_t addr);
+    std::string           getSmt2LibVarsDecl();
+    symbolicElement       *getElementFromId(uint64_t id);
+    symbolicElement       *newSymbolicElement(std::stringstream &src);
     uint64_t              getUniqueID();
     uint64_t              getUniqueSymVarID();
-    void                addMemoryReference(uint64_t mem, uint64_t id);
-    void                addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize);
-    void                addSymVarMemoryReference(uint64_t mem, uint64_t symVarID);
-    void                setSymbolicReg(uint64_t reg, uint64_t referenceID);
-    symbolicElement     *getElementFromId(uint64_t id);
-    std::string         getSmt2LibVarsDecl();
-    symbolicElement     *newSymbolicElement(std::stringstream &src);
+    void                  addMemoryReference(uint64_t mem, uint64_t id);
+    void                  addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize);
+    void                  addSymVarMemoryReference(uint64_t mem, uint64_t symVarID);
+    void                  setSymbolicReg(uint64_t reg, uint64_t referenceID);
 
     SymbolicEngine();
     ~SymbolicEngine();

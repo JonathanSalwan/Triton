@@ -32,7 +32,7 @@ static VOID setZF(UINT64 id)
   symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
-  displayTrace(0, "", elem->getExpression(), !TAINTED);
+  displayTrace(0, "", elem);
 }
 
 
@@ -54,7 +54,7 @@ VOID addRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
   elem->isTainted = taintEngine->getRegStatus(reg1_ID);
 
-  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
+  displayTrace(insAddr, insDis, elem);
 
   setZF(elem->getID());
 
@@ -92,7 +92,7 @@ VOID addRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
 
   elem->isTainted = taintEngine->getRegStatus(reg1_ID);
 
-  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
+  displayTrace(insAddr, insDis, elem);
 
   setZF(elem->getID());
 

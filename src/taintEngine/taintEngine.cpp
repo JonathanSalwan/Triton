@@ -1,29 +1,31 @@
 
 #include "TaintEngine.h"
+#include "registers.h"
 
-TaintEngine::TaintEngine(){
-
-  this->taintedReg[0]  = (uint64_t)0; /* ID_RAX */
-  this->taintedReg[1]  = (uint64_t)0; /* ID_RBX */
-  this->taintedReg[2]  = (uint64_t)0; /* ID_RCX */
-  this->taintedReg[3]  = (uint64_t)0; /* ID_RDX */
-  this->taintedReg[4]  = (uint64_t)0; /* ID_RDI */
-  this->taintedReg[5]  = (uint64_t)0; /* ID_RSI */
-  this->taintedReg[6]  = (uint64_t)0; /* ID_RBP */
-  this->taintedReg[7]  = (uint64_t)0; /* ID_RSP */
-  this->taintedReg[8]  = (uint64_t)0; /* ID_R8  */
-  this->taintedReg[9]  = (uint64_t)0; /* ID_R9  */
-  this->taintedReg[10] = (uint64_t)0; /* ID_R10 */
-  this->taintedReg[11] = (uint64_t)0; /* ID_R11 */
-  this->taintedReg[12] = (uint64_t)0; /* ID_R12 */
-  this->taintedReg[13] = (uint64_t)0; /* ID_R13 */
-  this->taintedReg[14] = (uint64_t)0; /* ID_R14 */
-  this->taintedReg[15] = (uint64_t)0; /* ID_R15 */
+TaintEngine::TaintEngine()
+{
+  this->taintedReg[ID_RAX] = (uint64_t)0;
+  this->taintedReg[ID_RBX] = (uint64_t)0;
+  this->taintedReg[ID_RCX] = (uint64_t)0;
+  this->taintedReg[ID_RDX] = (uint64_t)0;
+  this->taintedReg[ID_RDI] = (uint64_t)0;
+  this->taintedReg[ID_RSI] = (uint64_t)0;
+  this->taintedReg[ID_RBP] = (uint64_t)0;
+  this->taintedReg[ID_RSP] = (uint64_t)0;
+  this->taintedReg[ID_R8]  = (uint64_t)0;
+  this->taintedReg[ID_R9]  = (uint64_t)0;
+  this->taintedReg[ID_R10] = (uint64_t)0;
+  this->taintedReg[ID_R11] = (uint64_t)0;
+  this->taintedReg[ID_R12] = (uint64_t)0;
+  this->taintedReg[ID_R13] = (uint64_t)0;
+  this->taintedReg[ID_R14] = (uint64_t)0;
+  this->taintedReg[ID_R15] = (uint64_t)0;
 
 }
 
 
-TaintEngine::~TaintEngine(){
+TaintEngine::~TaintEngine()
+{
 }
 
 

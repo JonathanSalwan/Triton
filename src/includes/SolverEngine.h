@@ -17,14 +17,14 @@ class SolverEngine
   private:
     SymbolicEngine      *symEngine;
     std::stringstream   formula;
-    z3::solver          *solver;
     z3::context         *ctx;
+    z3::solver          *solver;
 
   public:
-    void                solveFromID(uint64_t id);
-    void                displayModel();
-    z3::model           getModel();
     std::string         getFormula();
+    void                displayModel();
+    void                solveFromID(uint64_t id);
+    z3::model           getModel();
 
     SolverEngine(SymbolicEngine *sym);
     ~SolverEngine();
