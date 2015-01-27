@@ -10,9 +10,9 @@ static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64
 
   /* Sub RSP */
   if (symbolicEngine->symbolicReg[ID_RSP] != (UINT64)-1)
-    expr << "(- #" << std::dec << symbolicEngine->symbolicReg[ID_RSP] << " 8)";
+    expr << "(- #" << std::dec << symbolicEngine->symbolicReg[ID_RSP] << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
   else
-    expr << "(- 0x" << std::hex << PIN_GetContextReg(ctx, REG_RSP) << " 8)";
+    expr << "(- " << smt2lib_bv(PIN_GetContextReg(ctx, REG_RSP), REG_Size(REG_RSP)) << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
 
   symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[ID_RSP] = elem->getID();
@@ -36,7 +36,7 @@ static VOID setMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg
   if (symbolicEngine->symbolicReg[reg1_ID] != (UINT64)-1)
     expr << "#" << std::dec << symbolicEngine->symbolicReg[reg1_ID];
   else
-    expr << "0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg1));
+    expr << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg1)), writeSize);
 
   symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
 
@@ -64,7 +64,7 @@ static VOID setMemImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 
 {
   std::stringstream expr, taint;
 
-  expr << "0x" << std::hex << imm;
+  expr << smt2lib_bv(imm, writeSize);
 
   symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
 

@@ -26,9 +26,9 @@ VOID addRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
   if (symbolicEngine->symbolicReg[reg1_ID] != (UINT64)-1)
-    expr << "(+ #" << std::dec << symbolicEngine->symbolicReg[reg1_ID] << " 0x" << std::hex << imm << ")";
+    expr << "(+ #" << std::dec << symbolicEngine->symbolicReg[reg1_ID] << " " << smt2lib_bv(imm, REG_Size(reg1)) << ")";
   else 
-    expr << "(+ 0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg1)) << " 0x" << imm << ")";
+    expr << "(+ " << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg1)), REG_Size(reg1)) << " " << smt2lib_bv(imm, REG_Size(reg1)) << ")";
     
   symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
@@ -58,12 +58,12 @@ VOID addRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   if (symbolicEngine->symbolicReg[reg1_ID] != (UINT64)-1)
     vr1 << "#" << std::dec << symbolicEngine->symbolicReg[reg1_ID];
   else
-    vr1 << "0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg1));
+    vr1 << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg1)), REG_Size(reg1));
     
   if (symbolicEngine->symbolicReg[reg2_ID] != (UINT64)-1)
     vr2 << "#" << std::dec << symbolicEngine->symbolicReg[reg2_ID];
   else
-    vr2 << "0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg2));
+    vr2 << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg2)), REG_Size(reg1));
 
   expr << "(+ " << vr1.str() << " " << vr2.str() << ")";
 

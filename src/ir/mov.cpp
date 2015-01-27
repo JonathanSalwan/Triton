@@ -30,16 +30,17 @@ VOID movRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   else{
     switch(opcode){
       case XED_ICLASS_MOV:
-        expr << "0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg2));
+        expr << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg2)), REG_Size(reg1));
         break;
       case XED_ICLASS_MOVSX:
-        expr << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg2)) << ")";
+        expr << "((_ sign_extend " << std::dec << size << ") " << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg2)), REG_Size(reg2)) << ")";
         break;
       case XED_ICLASS_MOVZX:
-        expr << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg2)) << ")";
+        expr << "((_ zero_extend " << std::dec << size << ") " << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg2)), REG_Size(reg2)) << ")";
         break;
     }
   }
+
     
   symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
@@ -69,7 +70,7 @@ VOID movRegImm(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 imm, INT32 
 
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
-  expr << "0x" << std::hex << imm;
+  expr << smt2lib_bv(imm, REG_Size(reg1));
    
   symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
@@ -125,58 +126,15 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
       symbolicEngine->addSymVarMemoryReference(mem, symVarID);
     }
     else {
-      switch(readSize){
-        case 1:
-          switch(opcode){
-            case XED_ICLASS_MOV:
-              expr << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem)));
-              break;
-            case XED_ICLASS_MOVSX:
-              expr << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem))) << ")";
-              break;
-            case XED_ICLASS_MOVZX:
-              expr << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem))) << ")";
-              break;
-          }
+      switch(opcode){
+        case XED_ICLASS_MOV:
+          expr << smt2lib_bv(derefMem(mem, readSize), readSize);
           break;
-        case 2:
-          switch(opcode){
-            case XED_ICLASS_MOV:
-              expr << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem)));
-              break;
-            case XED_ICLASS_MOVSX:
-              expr << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem))) << ")";
-              break;
-            case XED_ICLASS_MOVZX:
-              expr << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem))) << ")";
-              break;
-          }
+        case XED_ICLASS_MOVSX:
+          expr << "((_ sign_extend " << std::dec << size << ") " << smt2lib_bv(derefMem(mem, readSize), readSize) << ")";
           break;
-        case 4:
-          switch(opcode){
-            case XED_ICLASS_MOV:
-              expr << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem)));
-              break;
-            case XED_ICLASS_MOVSX:
-              expr << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem))) << ")";
-              break;
-            case XED_ICLASS_MOVZX:
-              expr << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem))) << ")";
-              break;
-          }
-          break;
-        case 8:
-          switch(opcode){
-            case XED_ICLASS_MOV:
-              expr << "0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem)));
-              break;
-            case XED_ICLASS_MOVSX:
-              expr << "((_ sign_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem))) << ")";
-              break;
-            case XED_ICLASS_MOVZX:
-              expr << "((_ zero_extend " << std::dec << size << ") 0x" << std::hex << static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem))) << ")";
-              break;
-          }
+        case XED_ICLASS_MOVZX:
+          expr << "((_ zero_extend " << std::dec << size << ") " << smt2lib_bv(derefMem(mem, readSize), readSize) << ")";
           break;
       }
     }
@@ -215,7 +173,7 @@ VOID movMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   if (symbolicEngine->symbolicReg[reg1_ID] != (UINT64)-1)
     expr << "#" << symbolicEngine->symbolicReg[reg1_ID];
   else 
-    expr << "0x" << std::hex << PIN_GetContextReg(ctx, getHighReg(reg1));
+    expr << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg1)), writeSize);
 
   symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   elem->isTainted = !TAINTED;
@@ -259,7 +217,7 @@ VOID movMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   std::list<UINT64>::iterator i;
   std::stringstream expr, taint;
 
-  expr << "0x" << std::hex << imm;
+  expr << smt2lib_bv(imm, writeSize);
 
   symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   elem->isTainted = !TAINTED;
