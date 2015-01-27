@@ -1,6 +1,5 @@
 
-#include "pin.H"
-#include "Triton.h"
+#include "SolverEngine.h"
 
 
 static std::string replaceEq(std::string str, const std::string from, const std::string to)
@@ -13,7 +12,7 @@ static std::string replaceEq(std::string str, const std::string from, const std:
 }
 
 
-static std::string formulaReconstruction(UINT64 id)
+static std::string formulaReconstruction(SymbolicEngine *symbolicEngine, uint64_t id)
 {
   int value;
   std::size_t found;
@@ -36,7 +35,7 @@ static std::string formulaReconstruction(UINT64 id)
 
     formula.str(replaceEq(formula.str(), from.str(), to.str()));
   }
-  
+
   return formula.str();
 }
 
@@ -52,11 +51,11 @@ SolverEngine::~SolverEngine()
 }
 
 
-VOID SolverEngine::solveFromID(UINT64 id)
+void SolverEngine::solveFromID(uint64_t id)
 {
   std::stringstream formula;
 
-  formula.str(formulaReconstruction(symEngine->symbolicReg[ID_ZF]));
+  formula.str(formulaReconstruction(symEngine, this->symEngine->symbolicReg[ID_ZF]));
 
   this->formula << "(set-logic QF_AUFBV)";
   this->formula << this->symEngine->getSmt2LibVarsDecl();
@@ -72,7 +71,7 @@ VOID SolverEngine::solveFromID(UINT64 id)
 }
 
 
-VOID SolverEngine::displayModel()
+void SolverEngine::displayModel()
 {
   z3::model m = this->solver->get_model();
   std::cout << "----- Model -----" << std::endl << m << std::endl << "-----------------" << std::endl;

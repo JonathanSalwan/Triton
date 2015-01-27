@@ -1,9 +1,8 @@
 
-#include "pin.H"
-#include "Triton.h"
+#include "smt2lib_utils.h"
 
 
-std::string smt2lib_bv(UINT64 value, UINT64 size)
+std::string smt2lib_bv(uint64_t value, uint64_t size)
 {
   std::stringstream stream;
 
@@ -21,12 +20,12 @@ std::string smt2lib_bv(UINT64 value, UINT64 size)
       stream << "(_ bv" << std::dec << value << " 64)";
       break;
   }
-  
+
   return stream.str();
 }
 
 
-std::string smt2lib_extract(UINT64 regSize)
+std::string smt2lib_extract(uint64_t regSize)
 {
   std::stringstream stream;
 
@@ -44,12 +43,12 @@ std::string smt2lib_extract(UINT64 regSize)
       stream << "(_ extract 63 0)";
       break;
   }
-  
+
   return stream.str();
 }
 
 
-std::string smt2lib_declare(UINT64 idSymVar, UINT64 BitVecSize)
+std::string smt2lib_declare(uint64_t idSymVar, uint64_t BitVecSize)
 {
   std::stringstream stream;
 

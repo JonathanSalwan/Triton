@@ -2,8 +2,12 @@
 #ifndef   __TAINTENGINE_H__
 #define   __TAINTENGINE_H__
 
-#include "pin.H"
-#include "Triton.h"
+#include <list>
+#include <sstream>
+#include <stdint.h>
+
+
+#define TAINTED       1
 
 
 class TaintEngine {
@@ -11,23 +15,23 @@ class TaintEngine {
   private:
 
     /* Tainted addresses */
-    std::list<UINT64> taintedAddresses;
+    std::list<uint64_t> taintedAddresses;
 
     /* Tainted registers */
-    UINT64 taintedReg[16]; 
+    uint64_t taintedReg[16];
 
 
   public:
     TaintEngine();
     ~TaintEngine();
 
-    UINT64    getRegStatus(UINT64 regID);
-    VOID      addAddress(UINT64 addr);
-    VOID      removeAddress(UINT64 addr);
-    VOID      taintReg(UINT64 regID);
-    VOID      untaintReg(UINT64 regID);
-    bool      isMemoryTainted(UINT64 addr);
-    bool      isRegTainted(UINT64 regID);
+    uint64_t   getRegStatus(uint64_t regID);
+    void       addAddress(uint64_t addr);
+    void       removeAddress(uint64_t addr);
+    void       taintReg(uint64_t regID);
+    void       untaintReg(uint64_t regID);
+    bool       isMemoryTainted(uint64_t addr);
+    bool       isRegTainted(uint64_t regID);
 
 };
 

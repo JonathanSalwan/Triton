@@ -2,12 +2,14 @@
 #ifndef   __SNAPSHOTENGINE_H__
 #define   __SNAPSHOTENGINE_H__
 
+#include <list>
+
 #include "pin.H"
 
 
 class SnapshotEngine{
- 
-  private: 
+
+  private:
     /* I/O memory monitoring for snapshot */
     /* item1: memory address              */
     /* item2: byte                        */
