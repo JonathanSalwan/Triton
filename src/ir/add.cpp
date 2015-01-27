@@ -32,7 +32,7 @@ static VOID setZF(UINT64 id)
   symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
-  std::cout << boost::format(outputInstruction) % "" % "" % elem->getExpression() % "";
+  displayTrace(0, "", elem->getExpression(), !TAINTED);
 }
 
 
@@ -41,7 +41,7 @@ VOID addRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   if (_analysisStatus == LOCKED)
     return;
 
-  std::stringstream expr, taint;
+  std::stringstream expr;
 
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
@@ -54,10 +54,7 @@ VOID addRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
   elem->isTainted = taintEngine->getRegStatus(reg1_ID);
 
-  if (elem->isTainted)
-    taint << "#" << symbolicEngine->symbolicReg[reg1_ID] << " is controllable";
-
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 
   setZF(elem->getID());
 
@@ -70,7 +67,7 @@ VOID addRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   if (_analysisStatus == LOCKED)
     return;
 
-  std::stringstream expr, vr1, vr2, taint;
+  std::stringstream expr, vr1, vr2;
 
   UINT64 reg1_ID = translatePinRegToID(reg1);
   UINT64 reg2_ID = translatePinRegToID(reg2);
@@ -95,10 +92,7 @@ VOID addRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
 
   elem->isTainted = taintEngine->getRegStatus(reg1_ID);
 
-  if (elem->isTainted)
-    taint << "#" << symbolicEngine->symbolicReg[reg1_ID] << " is controllable";
-
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 
   setZF(elem->getID());
 

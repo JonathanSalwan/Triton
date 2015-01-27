@@ -9,9 +9,6 @@ KNOB<std::string>  KnobStartAnalysis(KNOB_MODE_WRITEONCE, "pintool", "startAnaly
 /* flag Lock / Unlock instrumentation */
 UINT32 _analysisStatus = LOCKED;
 
-/* Output */
-boost::format outputInstruction("%1% %|15t| %2% %|55t| %3% %|100t| %4%\n");
-
 /* Snapshot Engine */
 SnapshotEngine *snapshotEngine = new SnapshotEngine;
 

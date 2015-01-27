@@ -17,7 +17,7 @@ VOID movRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   if (_analysisStatus == LOCKED)
     return;
 
-  std::stringstream expr, taint;
+  std::stringstream expr;
 
   UINT64 reg1_ID  = translatePinRegToID(reg1);
   UINT64 reg2_ID  = translatePinRegToID(reg2);
@@ -61,10 +61,7 @@ VOID movRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
 
   elem->isTainted = taintEngine->getRegStatus(reg1_ID);
 
-  if (elem->isTainted)
-    taint << "#" << symbolicEngine->symbolicReg[reg1_ID] << " is controllable";
-
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 
   return;
 }
@@ -75,7 +72,7 @@ VOID movRegImm(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 imm, INT32 
   if (_analysisStatus == LOCKED)
     return;
 
-  std::stringstream expr, taint;
+  std::stringstream expr;
 
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
@@ -86,7 +83,7 @@ VOID movRegImm(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 imm, INT32 
 
   taintEngine->untaintReg(reg1_ID);
 
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 
   return;
 }
@@ -98,7 +95,7 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
     return;
 
   std::list<UINT64>::iterator i;
-  std::stringstream expr, taint;
+  std::stringstream expr;
 
   UINT64 reg1_ID  = translatePinRegToID(reg1);
   UINT64 size     = (REG_Size(reg1) * 8) - (readSize * 8);
@@ -160,10 +157,7 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
       elem->isTainted = TAINTED;
   }
 
-  if (elem->isTainted)
-    taint << "#" << symbolicEngine->symbolicReg[reg1_ID] << " is controllable";
-
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 
   return;
 }
@@ -175,7 +169,7 @@ VOID movMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
     return;
 
   std::list<UINT64>::iterator i;
-  std::stringstream expr, taint;
+  std::stringstream expr;
 
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
@@ -206,13 +200,10 @@ VOID movMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
     elem->isTainted = !TAINTED;
   }
 
-  if (elem->isTainted)
-    taint << "Memory area " << std::hex << mem << " is controllable";
-
   /* Link the memory reference to the symbolic expression */
   symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 
   return;
 }
@@ -224,7 +215,7 @@ VOID movMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
     return;
 
   std::list<UINT64>::iterator i;
-  std::stringstream expr, taint;
+  std::stringstream expr;
 
   expr << smt2lib_bv(imm, writeSize);
 
@@ -240,7 +231,7 @@ VOID movMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   /* Link the memory reference to the symbolic expression */
   symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 
   return;
 }

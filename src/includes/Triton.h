@@ -88,5 +88,8 @@ VOID            pushReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG r
 VOID            taintParams(CONTEXT *ctx);
 VOID            unlockAnalysis(void);
 
+
+VOID displayTrace(ADDRINT addr, const std::string &insDis, const std::string &expr, UINT64 isTainted);
+
 #endif     /* !__TRITON_H__ */
 

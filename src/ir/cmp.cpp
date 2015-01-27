@@ -28,7 +28,7 @@ VOID cmpRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   if (_analysisStatus == LOCKED)
     return;
 
-  std::stringstream expr, taint;
+  std::stringstream expr;
 
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
@@ -45,11 +45,11 @@ VOID cmpRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
   /* Check if reg1 is tainted */
-  if (symbolicEngine->symbolicReg[reg1_ID] != (UINT64)-1 && taintEngine->isRegTainted(reg1_ID))
-    taint << "#" << std::dec << symbolicEngine->symbolicReg[reg1_ID] << " is controllable";
+  if (taintEngine->isRegTainted(reg1_ID))
+    elem->isTainted = TAINTED;
 
   /* Display trace */
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 
   return;
 }
@@ -60,7 +60,7 @@ VOID cmpRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   if (_analysisStatus == LOCKED)
     return;
 
-  std::stringstream expr, vr1, vr2, taint;
+  std::stringstream expr, vr1, vr2;
 
   UINT64 reg1_ID = translatePinRegToID(reg1);
   UINT64 reg2_ID = translatePinRegToID(reg2);
@@ -88,19 +88,12 @@ VOID cmpRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
-  /* Check if reg1 is tainted */
-  if (symbolicEngine->symbolicReg[reg1_ID] != (UINT64)-1 && taintEngine->isRegTainted(reg1_ID))
-    taint << "#" << std::dec << symbolicEngine->symbolicReg[reg1_ID] << " is controllable";
-
-  /* Check if reg2 is tainted */
-  if (symbolicEngine->symbolicReg[reg2_ID] != (UINT64)-1 && taintEngine->isRegTainted(reg2_ID)){
-    if (!taint.str().empty())
-      taint << " and ";
-    taint << "#" << std::dec << symbolicEngine->symbolicReg[reg2_ID] << " is controllable";
-  }
+  /* Check if reg1 or reg2 is tainted */
+  if (taintEngine->isRegTainted(reg1_ID) || taintEngine->isRegTainted(reg2_ID))
+    elem->isTainted = TAINTED;
 
   /* Display trace */
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 
   return;
 }
@@ -111,7 +104,7 @@ VOID cmpMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   if (_analysisStatus == LOCKED)
     return;
 
-  std::stringstream expr, vr1, vr2, taint;
+  std::stringstream expr, vr1, vr2;
 
   expr << "(assert (= ";
   if (symbolicEngine->isMemoryReference(mem) != -1)
@@ -123,14 +116,10 @@ VOID cmpMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
-  if (taintEngine->isMemoryTainted(mem)){
-    if (symbolicEngine->isMemoryReference(mem) != -1)
-      taint << "#" << std::dec << symbolicEngine->isMemoryReference(mem) << " is controllable";
-    else
-      taint << "0x" << std::hex << derefMem(mem, readSize) << "is controllable";
-  }
-
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
+  if (taintEngine->isMemoryTainted(mem))
+    elem->isTainted = TAINTED;
+  
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 
   return ;
 }

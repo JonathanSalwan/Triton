@@ -28,6 +28,7 @@ LIBS =		-L$(PIN_ROOT)/intel64/lib \
 		-lz3
 
 SRC = 		./src/core/core.cpp \
+		./src/core/display.cpp \
 		./src/core/image.cpp \
 		./src/core/instructions.cpp \
 		./src/core/utils.cpp \

@@ -15,7 +15,7 @@
 static VOID setMem(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 readSize)
 {
   UINT64 i = 0;
-  std::stringstream expr, taint;
+  std::stringstream expr;
 
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
@@ -38,16 +38,13 @@ static VOID setMem(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, 
     }
   }
 
-  if (elem->isTainted)
-    taint << "#" << symbolicEngine->symbolicReg[reg1_ID] << " is controllable";
-
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 }
 
 
 static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 mem)
 {
-  std::stringstream expr, taint;
+  std::stringstream expr;
 
   /* Add RSP */
   if (symbolicEngine->symbolicReg[ID_RSP] != (UINT64)-1)
@@ -61,7 +58,7 @@ static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64
   /* Memory reference */
   symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  std::cout << boost::format(outputInstruction) % "" % "" % elem->getExpression() % taint.str();
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 
   return;
 }

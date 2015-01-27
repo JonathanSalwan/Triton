@@ -15,7 +15,7 @@
 
 static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 mem)
 {
-  std::stringstream expr, taint;
+  std::stringstream expr;
 
   /* Sub RSP */
   if (symbolicEngine->symbolicReg[ID_RSP] != (UINT64)-1)
@@ -29,7 +29,7 @@ static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64
   /* Memory reference */
   symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 
   return;
 }
@@ -40,7 +40,7 @@ static VOID setMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg
   /* Push in memory */
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
-  std::stringstream expr, taint;
+  std::stringstream expr;
 
   if (symbolicEngine->symbolicReg[reg1_ID] != (UINT64)-1)
     expr << "#" << std::dec << symbolicEngine->symbolicReg[reg1_ID];
@@ -65,13 +65,13 @@ static VOID setMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg
   /* Memory reference */
   symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  std::cout << boost::format(outputInstruction) % "" % "" % elem->getExpression() % taint.str();
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 }
 
 
 static VOID setMemImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 imm, UINT64 mem, UINT32 writeSize)
 {
-  std::stringstream expr, taint;
+  std::stringstream expr;
 
   expr << smt2lib_bv(imm, writeSize);
 
@@ -86,7 +86,7 @@ static VOID setMemImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 
   /* Memory reference */
   symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  std::cout << boost::format(outputInstruction) % boost::io::group(hex, showbase, insAddr) % insDis % elem->getExpression() % taint.str();
+  displayTrace(insAddr, insDis, elem->getExpression(), elem->isTainted);
 }
 
 
