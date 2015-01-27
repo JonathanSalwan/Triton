@@ -75,3 +75,4 @@ VOID TaintEngine::removeAddress(UINT64 addr)
 {
   this->taintedAddresses.remove(addr);
 }
+

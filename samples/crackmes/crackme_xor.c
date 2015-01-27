@@ -4,7 +4,7 @@
 
 char *serial = "\x31\x3e\x3d\x26\x31";
 
-int check_password(char *ptr)
+int check(char *ptr)
 {
   int i = 0;
 
@@ -23,7 +23,7 @@ int main(int ac, char **av)
   if (ac != 2)
     return -1;
 
-  ret = check_password(av[1]);
+  ret = check(av[1]);
   if (ret == 0)
     printf("Win\n");
   else

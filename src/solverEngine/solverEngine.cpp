@@ -3,7 +3,7 @@
 #include "Triton.h"
 
 
-static std::string replaceEq(std::string str, const std::string from, const std::string to)
+static std::string replaceEq(std::string str, std::string from, std::string to)
 {
   size_t start_pos = str.find(from);
   if(start_pos == std::string::npos)
@@ -23,18 +23,17 @@ static std::string formulaReconstruction(UINT64 id)
   std::stringstream to;
 
   formula.str(symbolicEngine->getElementFromId(id)->getSource());
-
-
   while (formula.str().find("#") != std::string::npos){
+
+    from.str("");
+    to.str("");
 
     found = formula.str().find("#") + 1;
     std::string subs = formula.str().substr(found, std::string::npos);
-
     value = atoi(subs.c_str());
-
     from << "#" << value;
-    to << symbolicEngine->getElementFromId(value)->getSource();
-  
+    to.str(symbolicEngine->getElementFromId(value)->getSource());
+
     formula.str(replaceEq(formula.str(), from.str(), to.str()));
   }
   
@@ -56,6 +55,8 @@ SolverEngine::~SolverEngine()
 VOID SolverEngine::solveFromID(UINT64 id)
 {
   std::stringstream formula;
+
+  std::cout << 1 << std::endl;
 
   formula.str(formulaReconstruction(symEngine->symbolicReg[ID_ZF]));
 
