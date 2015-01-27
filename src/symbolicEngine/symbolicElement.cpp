@@ -23,19 +23,19 @@ symbolicElement::~symbolicElement()
   delete this->expression;
 }
 
-
+/* Returns the SMT dst and src expression of the symbolic element */
 std::string symbolicElement::getExpression()
 {
   return this->expression->str();
 }
 
-
+/* Returns the SMT src expression of the symbolic element */
 std::string symbolicElement::getSource()
 {
   return this->source->str();
 }
 
-
+/* Returns the ID of the symbolic element */
 uint64_t symbolicElement::getID()
 {
   return this->id;

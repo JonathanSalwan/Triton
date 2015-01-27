@@ -79,7 +79,6 @@ class SymbolicEngine {
     void                  addMemoryReference(uint64_t mem, uint64_t id);
     void                  addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize);
     void                  addSymVarMemoryReference(uint64_t mem, uint64_t symVarID);
-    void                  setSymbolicReg(uint64_t reg, uint64_t referenceID);
 
     SymbolicEngine();
     ~SymbolicEngine();

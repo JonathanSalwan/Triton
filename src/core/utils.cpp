@@ -4,6 +4,9 @@
 #include "registers.h"
 #include "utils.h"
 
+
+/* In some cases, we need to convert Pin registers to your own ID
+ * Mainly used in the Taint and the Symbolic engine */
 UINT64 translatePinRegToID(REG reg)
 {
   switch(reg){
@@ -110,7 +113,8 @@ UINT64 translatePinRegToID(REG reg)
   }
 }
 
-
+/* In some cases, Pin need the Highest size register like
+ * the PIN_GetContextReg() function */
 REG getHighReg(REG reg)
 {
   switch(reg){
@@ -217,7 +221,7 @@ REG getHighReg(REG reg)
   }
 }
 
-
+/* Unlock analysis. This is the -startAnalysis Pin option */
 VOID unlockAnalysis(UINT32 *analysisStatus)
 {
   *analysisStatus = UNLOCKED;
@@ -225,6 +229,7 @@ VOID unlockAnalysis(UINT32 *analysisStatus)
 }
 
 
+/* Unlock analysis. This is the -startAnalysis Pin option */
 VOID lockAnalysis(UINT32 *analysisStatus)
 {
   *analysisStatus = LOCKED;
@@ -232,6 +237,7 @@ VOID lockAnalysis(UINT32 *analysisStatus)
 }
 
 
+/* TODO: Must be deleted but currently used for test */
 VOID taintParams(CONTEXT *ctx, TaintEngine *taintEngine)
 {
   UINT64  i;
@@ -244,7 +250,7 @@ VOID taintParams(CONTEXT *ctx, TaintEngine *taintEngine)
   }
 }
 
-
+/* Used to deref a pointer address and returns the targeted byte by size of read */
 UINT64 derefMem(UINT64 mem, UINT64 readSize)
 {
   switch(readSize){

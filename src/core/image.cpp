@@ -9,7 +9,8 @@ VOID Image(IMG img, VOID *v)
   RTN unlockRTN = RTN_FindByName(img, KnobStartAnalysis.Value().c_str());
   RTN taintParamsRTN = RTN_FindByName(img, "check"); /* TODO: generique */
 
-
+  /* This callback is used to lock and unlock the analysis */
+  /* Mainly used to target an area */
   if (RTN_Valid(unlockRTN)){
     RTN_Open(unlockRTN);
     RTN_InsertCall(unlockRTN,
@@ -29,6 +30,7 @@ VOID Image(IMG img, VOID *v)
     RTN_Close(unlockRTN);
   }
 
+  /* TODO: Must be deleted but currently used for test */
   if (RTN_Valid(taintParamsRTN)){
     RTN_Open(taintParamsRTN);
     RTN_InsertCall(taintParamsRTN,

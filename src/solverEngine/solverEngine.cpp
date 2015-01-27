@@ -2,6 +2,7 @@
 #include "SolverEngine.h"
 
 
+/* Replace a symbolic element ID by its source expression */
 static std::string replaceEq(std::string str, const std::string from, const std::string to)
 {
   size_t start_pos = str.find(from);
@@ -12,6 +13,7 @@ static std::string replaceEq(std::string str, const std::string from, const std:
 }
 
 
+/* Reconstructs all symbolic elements ID */
 static std::string formulaReconstruction(SymbolicEngine *symbolicEngine, uint64_t id)
 {
   int value;
@@ -51,14 +53,21 @@ SolverEngine::~SolverEngine()
 }
 
 
+/* Solve a formula based on the symbolic element ID */
 void SolverEngine::solveFromID(uint64_t id)
 {
   std::stringstream formula;
 
+  /* Reconstruct the full formula by backward analysis */
   formula.str(formulaReconstruction(symEngine, this->symEngine->symbolicReg[ID_ZF]));
 
+  /* First, set the QF_AUFBV flag */
   this->formula << "(set-logic QF_AUFBV)";
+
+  /* Then, delcare all symbolic variables */
   this->formula << this->symEngine->getSmt2LibVarsDecl();
+
+  /* And concat the formula */
   this->formula << formula.str();
 
   this->ctx = new z3::context();
@@ -71,6 +80,7 @@ void SolverEngine::solveFromID(uint64_t id)
 }
 
 
+/* Hard display the current model */
 void SolverEngine::displayModel()
 {
   z3::model m = this->solver->get_model();
@@ -78,12 +88,14 @@ void SolverEngine::displayModel()
 }
 
 
+/* Returns the current models */
 z3::model SolverEngine::getModel()
 {
   return this->solver->get_model();
 }
 
 
+/* Returns the full symbolic formula */
 std::string SolverEngine::getFormula()
 {
   return this->formula.str();

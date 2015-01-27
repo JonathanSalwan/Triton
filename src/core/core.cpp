@@ -20,7 +20,7 @@ SymbolicEngine *symbolicEngine = new SymbolicEngine;
 
 
 
-
+/* Usage function if Pin fail to start */
 INT32 Usage()
 {
     cerr << KNOB_BASE::StringKnobSummary() << endl;
@@ -35,12 +35,20 @@ int main(int argc, char *argv[])
       return Usage();
   }
  
+  /* We first need a target function */
   if (KnobStartAnalysis.Value().empty())
     return Usage();
 
+  /* Enable Intel syntax */
   PIN_SetSyntaxIntel();
+
+  /* Add Image callback */
   IMG_AddInstrumentFunction(Image, 0);
+
+  /* Add Instruction callback */
   INS_AddInstrumentFunction(Instruction, 0);
+
+  /* Rock 'n roll baby */
   PIN_StartProgram();
 
   return 0;
