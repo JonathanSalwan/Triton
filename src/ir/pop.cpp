@@ -58,7 +58,7 @@ static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64
   /* Memory reference */
   symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  displayTrace(insAddr, insDis, elem);
+  displayTrace(0, "", elem);
 
   return;
 }

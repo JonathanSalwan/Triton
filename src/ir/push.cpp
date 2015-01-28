@@ -65,7 +65,7 @@ static VOID setMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg
   /* Memory reference */
   symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  displayTrace(insAddr, insDis, elem);
+  displayTrace(0, "", elem);
 }
 
 
