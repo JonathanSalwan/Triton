@@ -1,5 +1,6 @@
 
 #include "SolverEngine.h"
+#include "Colors.h"
 
 
 /* Replace a symbolic element ID by its source expression */
@@ -83,15 +84,15 @@ void SolverEngine::solveFromID(uint64_t id)
 /* Hard display the current model */
 void SolverEngine::displayModel()
 {
-  std::cout << "----- Model -----" << std::endl;
+  std::cout << _BLUE << "----- Model -----" << std::endl;
   if (this->checkResult == z3::sat){
     z3::model m = this->solver->get_model();
     std::cout << m << std::endl;
   }
   else {
-    std::cout << "__UNSAT__";
+    std::cout << "UNSAT" << std::endl;
   }
-  std::cout << "-----------------" << std::endl;
+  std::cout << "-----------------" << _ENDC << std::endl;
 }
 
 

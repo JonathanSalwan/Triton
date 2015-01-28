@@ -1,13 +1,8 @@
 
 #include "pin.H"
 #include "Triton.h"
+#include "Colors.h"
 
-
-#define _BLUE   "\033[94m"
-#define _GREEN  "\033[92m"
-#define _YELLOW "\033[93m"
-#define _RED    "\033[91m"
-#define _ENDC   "\033[0m"
 
 /* Output format */
 boost::format outputInstruction("%1% %|15t| %2% %|55t| %3%\n");
