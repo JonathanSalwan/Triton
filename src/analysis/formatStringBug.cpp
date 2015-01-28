@@ -9,13 +9,13 @@ void formatStringBugAnalysis(unsigned long rdi)
   std::string content = std::string((const char *)rdi);
   std::stringstream str;
 
+  /* In 64-bit, RDI holds the first argument.
+   * If this argument is tainted, it's probably vulnerable */
   if (taintEngine->isMemoryTainted(rdi)){
-    if (content.find("%s") == string::npos){
-      str << "[call::printf] RDI content is tainted: " << content;
-      displayBug(str.str());
-      str.str("[call::printf] This printf is probably vulnerable");
-      displayBug(str.str());
-    }
+    str << "[call::printf] RDI content is tainted: " << content;
+    displayBug(str.str());
+    str.str("[call::printf] This printf is probably vulnerable");
+    displayBug(str.str());
   }
 }
 
