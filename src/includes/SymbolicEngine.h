@@ -2,11 +2,14 @@
 #ifndef   __SYMBOLICENGINE_H__
 #define   __SYMBOLICENGINE_H__
 
+#include <map>
 #include <list>
 #include <sstream>
+#include <stdexcept>
 #include <stdint.h>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "smt2lib_utils.h"
 
@@ -44,24 +47,24 @@ class SymbolicEngine {
     uint64_t numberOfSymVar;
 
     /*
-     * Addresses <-> symbolic expression
+     * Addresses -> symbolic expression
      * item1: memory address
      * item2: reference ID
      */
-    std::list< std::pair<uint64_t, uint64_t> > memoryReference;
+    std::map<uint64_t, uint64_t> memoryReference;
 
     /*
-     * Addresses <-> Z3 Symbolic Variable
+     * Addresses -> Z3 Symbolic Variable
      * item1: memory address
      * item2: symbolic variable ID
      */
-    std::list< std::pair<uint64_t, uint64_t> > symVarMemoryReference;
+    std::map<uint64_t, uint64_t> symVarMemoryReference;
 
     /* List of variables decl in smt2lib */
     std::list<std::string> smt2libVarDeclList;
 
     /* List of symbolic elements ID */
-    std::list<symbolicElement *> symbolicList;
+    std::vector<symbolicElement *> symbolicVector;
 
 
   public:
@@ -70,7 +73,7 @@ class SymbolicEngine {
     uint64_t              symbolicReg[25];
 
     /* public methods */
-    int32_t               isMemoryReference(uint64_t addr);
+    uint64_t               isMemoryReference(uint64_t addr);
     std::string           getSmt2LibVarsDecl();
     symbolicElement       *getElementFromId(uint64_t id);
     symbolicElement       *newSymbolicElement(std::stringstream &src);

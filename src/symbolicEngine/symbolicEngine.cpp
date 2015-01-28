@@ -43,14 +43,11 @@ SymbolicEngine::~SymbolicEngine()
 
 
 /* Returns the reference memory if it's referenced otherwise returns -1 */
-int32_t SymbolicEngine::isMemoryReference(uint64_t addr)
+uint64_t SymbolicEngine::isMemoryReference(uint64_t addr)
 {
-  std::list< std::pair<uint64_t, uint64_t> >::iterator i;
-
-  for(i = this->memoryReference.begin(); i != this->memoryReference.end(); i++){
-    if (i->first == addr)
-      return i->second;
-  }
+  std::map<uint64_t, uint64_t>::iterator it;
+  if ((it = this->memoryReference.find(addr)) != this->memoryReference.end())
+    return it->second;
   return -1;
 }
 
@@ -73,7 +70,7 @@ symbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
 
   symbolicElement *elem = new symbolicElement(dst, src, id);
 
-  this->symbolicList.push_front(elem);
+  this->symbolicVector.push_back(elem);
 
   return elem;
 }
@@ -81,13 +78,12 @@ symbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
 /* Get the symbolic element pointer from a symbolic ID */
 symbolicElement *SymbolicEngine::getElementFromId(uint64_t id)
 {
-  std::list<symbolicElement *>::iterator i;
-
-  for(i = this->symbolicList.begin(); i != this->symbolicList.end(); i++){
-    if ((*i)->getID() == id)
-      return *i;
+  try {
+    return this->symbolicVector[id];
   }
-  return NULL;
+  catch (std::out_of_range& oor) {
+    return NULL;
+  }
 }
 
 /* Returns the list of the symbolic variables declared in the trace */
@@ -113,7 +109,7 @@ uint64_t SymbolicEngine::getUniqueSymVarID()
  * Mainly used to know where come from a symbolic variable */
 void SymbolicEngine::addSymVarMemoryReference(uint64_t mem, uint64_t symVarID)
 {
-  this->symVarMemoryReference.push_front(std::make_pair(mem, symVarID));
+  this->symVarMemoryReference.insert(std::make_pair(mem, symVarID));
 }
 
 /* Add a new symbolic variable */
@@ -125,6 +121,6 @@ void SymbolicEngine::addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize)
 /* Add and assign a new memory reference */
 void SymbolicEngine::addMemoryReference(uint64_t mem, uint64_t id)
 {
-  this->memoryReference.push_front(std::make_pair(mem, id));
+  this->memoryReference.insert(std::make_pair(mem, id));
 }
 
