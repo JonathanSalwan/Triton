@@ -33,6 +33,7 @@ SRC = 		./src/analysis/formatStringBug.cpp \
 		./src/core/image.cpp \
 		./src/core/instructions.cpp \
 		./src/core/utils.cpp \
+		./src/core/signals.cpp \
 		./src/ir/add.cpp \
 		./src/ir/branchs.cpp \
 		./src/ir/cmp.cpp \

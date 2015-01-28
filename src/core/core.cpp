@@ -1,7 +1,8 @@
 
+#include <csignal>
+
 #include "pin.H"
 #include "Triton.h"
-
 
 /* Pin options: -startAnalysis */
 KNOB<std::string>  KnobStartAnalysis(KNOB_MODE_WRITEONCE, "pintool", "startAnalysis", "none", "Start/end the analysis from a scope function");
@@ -52,6 +53,9 @@ int main(int argc, char *argv[])
 
   /* Add Instructions callback */
   INS_AddInstrumentFunction(Instruction, 0);
+
+  /* Catch SIGSEGV */
+  PIN_InterceptSignal(SIGSEGV, catchSignal, 0);
 
   /* Rock 'n roll baby */
   PIN_StartProgram();

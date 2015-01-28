@@ -17,6 +17,7 @@
 
 #include <z3++.h>
 
+#include "Signals.h"
 #include "SnapshotEngine.h"
 #include "SolverEngine.h"
 #include "SymbolicEngine.h"
@@ -57,7 +58,6 @@ VOID            notImplemented(std::string insDis, ADDRINT insAddr);
 VOID            popReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 readSize);
 VOID            pushImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 imm, UINT64 mem, UINT32 writeSize);
 VOID            pushReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 writeSize);
-
 
 #endif     /* !__TRITON_H__ */
 
