@@ -19,12 +19,14 @@ class SolverEngine
     std::stringstream   formula;
     z3::context         *ctx;
     z3::solver          *solver;
+    z3::check_result    checkResult;
 
   public:
     std::string         getFormula();
     void                displayModel();
     void                solveFromID(uint64_t id);
     z3::model           getModel();
+    z3::check_result    getCheckResult();
 
     SolverEngine(SymbolicEngine *sym);
     ~SolverEngine();

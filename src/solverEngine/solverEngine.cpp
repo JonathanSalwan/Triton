@@ -76,28 +76,36 @@ void SolverEngine::solveFromID(uint64_t id)
   z3::expr eq(*this->ctx, ast);
   this->solver = new z3::solver(*this->ctx);
   this->solver->add(eq);
-  this->solver->check();
+  this->checkResult = this->solver->check();
 }
 
 
 /* Hard display the current model */
 void SolverEngine::displayModel()
 {
-  try{
+  std::cout << "----- Model -----" << std::endl;
+  if (this->checkResult == z3::sat){
     z3::model m = this->solver->get_model();
-    std::cout << "----- Model -----" << std::endl << m << std::endl << "-----------------" << std::endl;
+    std::cout << m << std::endl;
   }
-  catch(z3::exception& e){
-    std::cout << "----- Model fail -----" << std::endl;
+  else {
+    std::cout << "__UNSAT__";
   }
+  std::cout << "-----------------" << std::endl;
 }
 
 
-/* Returns the current models */
+/* Returns the current model */
 z3::model SolverEngine::getModel()
 {
-  /* TODO: sometime, it fail. Case a z3::exception */
   return this->solver->get_model();
+}
+
+
+/* Returns the result's status of the current model */
+z3::check_result SolverEngine::getCheckResult()
+{
+  return this->checkResult;
 }
 
 

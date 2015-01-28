@@ -15,7 +15,6 @@ VOID branchs(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT32 opcode)
   displayTrace(insAddr, insDis, se.getFormula(), !TAINTED);
 
   se.displayModel();
-  //std::cout << "----- Model -----" << std::endl << se.getModel() << std::endl << "-----------------" << std::endl;
 }
 
 
