@@ -55,8 +55,8 @@ class SymbolicEngine {
 
     /*
      * Z3 Symbolic Variable -> Addresses
-     * item1: memory address
-     * item2: symbolic variable ID
+     * item1: symbolic variable ID
+     * item2: memory address
      */
     std::map<uint64_t, uint64_t> symVarMemoryReference;
 
