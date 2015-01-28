@@ -54,7 +54,7 @@ class SymbolicEngine {
     std::map<uint64_t, uint64_t> memoryReference;
 
     /*
-     * Addresses -> Z3 Symbolic Variable
+     * Z3 Symbolic Variable -> Addresses
      * item1: memory address
      * item2: symbolic variable ID
      */
@@ -73,7 +73,7 @@ class SymbolicEngine {
     uint64_t              symbolicReg[25];
 
     /* public methods */
-    uint64_t               isMemoryReference(uint64_t addr);
+    int32_t               isMemoryReference(uint64_t addr);
     std::string           getSmt2LibVarsDecl();
     symbolicElement       *getElementFromId(uint64_t id);
     symbolicElement       *newSymbolicElement(std::stringstream &src);

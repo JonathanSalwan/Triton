@@ -39,11 +39,19 @@ SymbolicEngine::SymbolicEngine()
 
 SymbolicEngine::~SymbolicEngine()
 {
+  std::vector<symbolicElement *>::iterator it = this->symbolicVector.begin();
+
+  for (; it != this->symbolicVector.end(); ++it) {
+    symbolicElement *tmp = *it;
+    delete tmp;
+    tmp = NULL;
+  }
+
 }
 
 
 /* Returns the reference memory if it's referenced otherwise returns -1 */
-uint64_t SymbolicEngine::isMemoryReference(uint64_t addr)
+int32_t SymbolicEngine::isMemoryReference(uint64_t addr)
 {
   std::map<uint64_t, uint64_t>::iterator it;
   if ((it = this->memoryReference.find(addr)) != this->memoryReference.end())
@@ -105,11 +113,11 @@ uint64_t SymbolicEngine::getUniqueSymVarID()
   return this->numberOfSymVar++;
 }
 
-/* Assigns a memory address to a symbolic variable 
+/* Assigns a memory address to a symbolic variable
  * Mainly used to know where come from a symbolic variable */
 void SymbolicEngine::addSymVarMemoryReference(uint64_t mem, uint64_t symVarID)
 {
-  this->symVarMemoryReference.insert(std::make_pair(mem, symVarID));
+  this->symVarMemoryReference.insert(std::make_pair(symVarID, mem));
 }
 
 /* Add a new symbolic variable */
@@ -121,6 +129,6 @@ void SymbolicEngine::addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize)
 /* Add and assign a new memory reference */
 void SymbolicEngine::addMemoryReference(uint64_t mem, uint64_t id)
 {
-  this->memoryReference.insert(std::make_pair(mem, id));
+  this->memoryReference[mem] = id;
 }
 
