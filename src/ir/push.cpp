@@ -52,13 +52,13 @@ static VOID setMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg
   /* We remove the taint by default */
   unsigned int offset = 0;
   for (; offset < writeSize ; offset++){
-    taintEngine->removeAddress(mem+offset);
+    taintEngine->untaintAddress(mem+offset);
   }
 
   /* Then, we taint if the reg is tainted */
   if (taintEngine->isRegTainted(reg1_ID)){
     for (offset = 0; offset < writeSize ; offset++){
-      taintEngine->addAddress(mem+offset);
+      taintEngine->taintAddress(mem+offset);
     }
   }
 
@@ -80,7 +80,7 @@ static VOID setMemImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 
   /* We remove the taint by default */
   unsigned int offset = 0;
   for (; offset < writeSize ; offset++){
-    taintEngine->removeAddress(mem+offset);
+    taintEngine->untaintAddress(mem+offset);
   }
 
   /* Memory reference */

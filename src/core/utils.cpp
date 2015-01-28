@@ -245,7 +245,7 @@ VOID taintParams(CONTEXT *ctx, TaintEngine *taintEngine)
   char    *ptr = (char *)rdi;
 
   for (i = 0; ptr[i] != '\0'; i++){
-    taintEngine->addAddress((ADDRINT)(&ptr[i]));
+    taintEngine->taintAddress((ADDRINT)(&ptr[i]));
     std::cout << "[Initial tainting] *(" << std::hex << (ADDRINT)(&ptr[i]) << ") is now tainted" << std::endl;
   }
 }

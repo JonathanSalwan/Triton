@@ -186,7 +186,7 @@ VOID movMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
     unsigned int offset = 0;
     for (; offset < writeSize ; offset++){
       if (taintEngine->isMemoryTainted(mem+offset) == false)
-        taintEngine->addAddress(mem+offset);
+        taintEngine->taintAddress(mem+offset);
     }
     elem->isTainted = TAINTED;
   }
@@ -195,7 +195,7 @@ VOID movMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   if (taintEngine->isRegTainted(reg1_ID) == false){
     unsigned int offset = 0;
     for (; offset < writeSize ; offset++){
-      taintEngine->removeAddress(mem+offset);
+      taintEngine->untaintAddress(mem+offset);
     }
     elem->isTainted = !TAINTED;
   }
@@ -225,7 +225,7 @@ VOID movMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   /* We remove the taint if the memory area is tainted */
   unsigned int offset = 0;
   for (; offset < writeSize ; offset++){
-    taintEngine->removeAddress(mem+offset);
+    taintEngine->untaintAddress(mem+offset);
   }
 
   /* Link the memory reference to the symbolic expression */

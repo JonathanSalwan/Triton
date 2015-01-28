@@ -69,13 +69,13 @@ void TaintEngine::untaintReg(uint64_t regID)
 
 
 /* Taint the address */
-void TaintEngine::addAddress(uint64_t addr)
+void TaintEngine::taintAddress(uint64_t addr)
 {
   this->taintedAddresses.push_front(addr);
 }
 
 /* Untaint the address */
-void TaintEngine::removeAddress(uint64_t addr)
+void TaintEngine::untaintAddress(uint64_t addr)
 {
   this->taintedAddresses.remove(addr);
 }
