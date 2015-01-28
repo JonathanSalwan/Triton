@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
   /* Add Image callback */
   IMG_AddInstrumentFunction(Image, 0);
 
-  /* Add Instruction callback */
+  /* Add Instructions callback */
   INS_AddInstrumentFunction(Instruction, 0);
 
   /* Rock 'n roll baby */
@@ -58,4 +58,5 @@ int main(int argc, char *argv[])
 
   return 0;
 }
+
 

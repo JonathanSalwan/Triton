@@ -51,6 +51,7 @@ VOID Image(IMG img, VOID *v)
       RTN_InsertCall(printfRTN,
                      IPOINT_BEFORE,
                      (AFUNPTR)formatStringBugAnalysis,
+                     IARG_ADDRINT, RTN_Address(printfRTN),
                      IARG_REG_VALUE, REG_RDI,
                      IARG_END);
       RTN_Close(printfRTN);

@@ -3,11 +3,14 @@
 #include "analysis/formatString.h"
 
 
-void formatStringBugAnalysis(unsigned long rdi)
+void formatStringBugAnalysis(unsigned long insAddr, unsigned long rdi)
 {
   list<UINT64>::iterator i;
   std::string content = std::string((const char *)rdi);
   std::stringstream str;
+
+  if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
+    return;
 
   /* In 64-bit, RDI holds the first argument.
    * If this argument is tainted, it's probably vulnerable */

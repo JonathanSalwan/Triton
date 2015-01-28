@@ -3,6 +3,7 @@
 
 #include "registers.h"
 #include "utils.h"
+#include "Triton.h"
 
 
 /* In some cases, we need to convert Pin registers to your own ID
