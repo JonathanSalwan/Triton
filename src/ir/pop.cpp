@@ -66,7 +66,7 @@ static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64
 
 VOID popReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 readSize)
 {
-  if (_analysisStatus == LOCKED)
+  if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
 
   setMem(insDis, insAddr, ctx, reg1, mem, readSize);

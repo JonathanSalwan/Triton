@@ -6,7 +6,7 @@
 
 VOID branchs(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT32 opcode)
 {
-  if (_analysisStatus == LOCKED)
+  if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
 
   SolverEngine se(symbolicEngine);
@@ -14,7 +14,8 @@ VOID branchs(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT32 opcode)
 
   displayTrace(insAddr, insDis, se.getFormula(), !TAINTED);
 
-  std::cout << "----- Model -----" << std::endl << se.getModel() << std::endl << "-----------------" << std::endl;
+  se.displayModel();
+  //std::cout << "----- Model -----" << std::endl << se.getModel() << std::endl << "-----------------" << std::endl;
 }
 
 

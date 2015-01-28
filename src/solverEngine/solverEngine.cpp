@@ -83,14 +83,20 @@ void SolverEngine::solveFromID(uint64_t id)
 /* Hard display the current model */
 void SolverEngine::displayModel()
 {
-  z3::model m = this->solver->get_model();
-  std::cout << "----- Model -----" << std::endl << m << std::endl << "-----------------" << std::endl;
+  try{
+    z3::model m = this->solver->get_model();
+    std::cout << "----- Model -----" << std::endl << m << std::endl << "-----------------" << std::endl;
+  }
+  catch(z3::exception& e){
+    std::cout << "----- Model fail -----" << std::endl;
+  }
 }
 
 
 /* Returns the current models */
 z3::model SolverEngine::getModel()
 {
+  /* TODO: sometime, it fail. Case a z3::exception */
   return this->solver->get_model();
 }
 

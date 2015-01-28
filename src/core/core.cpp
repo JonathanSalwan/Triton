@@ -3,8 +3,11 @@
 #include "Triton.h"
 
 
-/* Pin options */
-KNOB<std::string>  KnobStartAnalysis(KNOB_MODE_WRITEONCE, "pintool", "startAnalysis", "none", "Start analysis from a function name");
+/* Pin options: -startAnalysis */
+KNOB<std::string>  KnobStartAnalysis(KNOB_MODE_WRITEONCE, "pintool", "startAnalysis", "none", "Start/end the analysis from a scope function");
+
+/* Pin options: -detectFormatString */
+KNOB<bool>  KnobDetectFormatString(KNOB_MODE_WRITEONCE, "pintool", "detectFormatString", "0", "Enable the format string detection analysis");
 
 /* flag Lock / Unlock instrumentation */
 UINT32 _analysisStatus = LOCKED;
@@ -23,7 +26,9 @@ SymbolicEngine *symbolicEngine = new SymbolicEngine;
 /* Usage function if Pin fail to start */
 INT32 Usage()
 {
-    cerr << KNOB_BASE::StringKnobSummary() << endl;
+    std::cerr << "Triton analyzer: " << std::endl << std::endl;
+    std::cerr << " -startAnalysis <function name>       Start/end the analysis from a scope function" << std::endl;
+    std::cerr << " -detectFormatString                  Enable the format string detection analysis" << std::endl;
     return -1;
 }
 

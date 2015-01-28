@@ -18,6 +18,7 @@ UINT64  derefMem(UINT64 mem, UINT64 readSize);
 UINT64  translatePinRegToID(REG reg);
 VOID    displayTrace(ADDRINT addr, const std::string &insDis, const std::string &expr, UINT64 isTainted);
 VOID    displayTrace(ADDRINT addr, const std::string &insDis, symbolicElement *symElement);
+VOID    displayBug(const std::string &str);
 VOID    lockAnalysis(UINT32 *analysisStatus);
 VOID    taintParams(CONTEXT *ctx, TaintEngine *taintEngine);
 VOID    unlockAnalysis(UINT32 *analysisStatus);

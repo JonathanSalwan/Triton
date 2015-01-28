@@ -50,3 +50,10 @@ VOID displayTrace(ADDRINT addr, const std::string &insDis, const std::string &ex
   std::cout << taintColor.str() << boost::format(outputInstruction) % addrFormat.str() % insDis % expr << _ENDC;
 }
 
+
+/* Currently, only used in src/analysis/formatStringBug.cpp */
+VOID displayBug(const std::string &str)
+{
+  std::cout << _RED << boost::format(outputInstruction) % "" % "" % str << _ENDC;
+}
+

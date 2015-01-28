@@ -24,10 +24,14 @@
 #include "registers.h"
 #include "utils.h"
 
+#define LIB_MAPING_MEMORY 0x7f0000000000
+
+
 
 /* Extern decl */
 
 extern KNOB<std::string>        KnobStartAnalysis;
+extern KNOB<bool>               KnobDetectFormatString;
 extern SnapshotEngine           *snapshotEngine;
 extern SymbolicEngine           *symbolicEngine;
 extern TaintEngine              *taintEngine;

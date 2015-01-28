@@ -27,7 +27,8 @@ LIBS =		-L$(PIN_ROOT)/intel64/lib \
 		-ldl \
 		-lz3
 
-SRC = 		./src/core/core.cpp \
+SRC = 		./src/analysis/formatStringBug.cpp \
+		./src/core/core.cpp \
 		./src/core/display.cpp \
 		./src/core/image.cpp \
 		./src/core/instructions.cpp \
@@ -40,8 +41,8 @@ SRC = 		./src/core/core.cpp \
 		./src/ir/pop.cpp \
 		./src/ir/push.cpp \
 		./src/snapshotEngine/snapshotEngine.cpp \
-		./src/solverEngine/solverEngine.cpp \
 		./src/solverEngine/smt2lib_utils.cpp \
+		./src/solverEngine/solverEngine.cpp \
 		./src/symbolicEngine/symbolicElement.cpp \
 		./src/symbolicEngine/symbolicEngine.cpp \
 		./src/taintEngine/taintEngine.cpp \

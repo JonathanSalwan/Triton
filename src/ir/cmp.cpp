@@ -25,7 +25,7 @@
 
 VOID cmpRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 imm)
 {
-  if (_analysisStatus == LOCKED)
+  if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
 
   std::stringstream expr;
@@ -57,7 +57,7 @@ VOID cmpRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
 
 VOID cmpRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG reg2)
 {
-  if (_analysisStatus == LOCKED)
+  if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
 
   std::stringstream expr, vr1, vr2;
@@ -101,7 +101,7 @@ VOID cmpRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
 
 VOID cmpMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT32 readSize)
 {
-  if (_analysisStatus == LOCKED)
+  if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
 
   std::stringstream expr, vr1, vr2;

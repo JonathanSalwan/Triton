@@ -92,7 +92,7 @@ static VOID setMemImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 
 
 VOID pushReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 writeSize)
 {
-  if (_analysisStatus == LOCKED)
+  if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
 
   alignStack(insDis, insAddr, ctx, mem);
@@ -104,7 +104,7 @@ VOID pushReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64
 
 VOID pushImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 imm, UINT64 mem, UINT32 writeSize)
 {
-  if (_analysisStatus == LOCKED)
+  if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
  
   alignStack(insDis, insAddr, ctx, mem);

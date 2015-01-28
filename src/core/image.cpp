@@ -2,15 +2,14 @@
 #include "pin.H"
 #include "Triton.h"
 
+#include "analysis/formatString.h"
 
 
 VOID Image(IMG img, VOID *v)
 {
-  RTN unlockRTN = RTN_FindByName(img, KnobStartAnalysis.Value().c_str());
-  RTN taintParamsRTN = RTN_FindByName(img, "check"); /* TODO: generique */
-
   /* This callback is used to lock and unlock the analysis */
   /* Mainly used to target an area */
+  RTN unlockRTN = RTN_FindByName(img, KnobStartAnalysis.Value().c_str());
   if (RTN_Valid(unlockRTN)){
     RTN_Open(unlockRTN);
     RTN_InsertCall(unlockRTN,
@@ -31,6 +30,7 @@ VOID Image(IMG img, VOID *v)
   }
 
   /* TODO: Must be deleted but currently used for test */
+  RTN taintParamsRTN = RTN_FindByName(img, "check"); /* TODO: generique */
   if (RTN_Valid(taintParamsRTN)){
     RTN_Open(taintParamsRTN);
     RTN_InsertCall(taintParamsRTN,
@@ -42,5 +42,20 @@ VOID Image(IMG img, VOID *v)
                    IARG_END);
     RTN_Close(taintParamsRTN);
   }
+
+  /* Add callback if KnobDetectFormatString is enable */
+  if (KnobDetectFormatString){
+    RTN printfRTN = RTN_FindByName(img, "printf"); /* TODO: Maybe use a list of vulnerable functions */
+    if (RTN_Valid(printfRTN)){
+      RTN_Open(printfRTN);
+      RTN_InsertCall(printfRTN,
+                     IPOINT_BEFORE,
+                     (AFUNPTR)formatStringBugAnalysis,
+                     IARG_REG_VALUE, REG_RDI,
+                     IARG_END);
+      RTN_Close(printfRTN);
+    }
+  }
+
 }
 

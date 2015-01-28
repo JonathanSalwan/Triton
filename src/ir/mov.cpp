@@ -14,7 +14,7 @@
 
 VOID movRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG reg2, INT32 opcode)
 {
-  if (_analysisStatus == LOCKED)
+  if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
 
   std::stringstream expr;
@@ -69,7 +69,7 @@ VOID movRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
 
 VOID movRegImm(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 imm, INT32 opcode)
 {
-  if (_analysisStatus == LOCKED)
+  if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
 
   std::stringstream expr;
@@ -91,7 +91,7 @@ VOID movRegImm(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 imm, INT32 
 
 VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32 readSize, INT32 opcode)
 {
-  if (_analysisStatus == LOCKED)
+  if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
 
   std::list<UINT64>::iterator i;
@@ -165,7 +165,7 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
 
 VOID movMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 writeSize, INT32 opcode)
 {
-  if (_analysisStatus == LOCKED)
+  if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
 
   std::list<UINT64>::iterator i;
@@ -211,7 +211,7 @@ VOID movMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
 
 VOID movMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT32 writeSize, INT32 opcode)
 {
-  if (_analysisStatus == LOCKED)
+  if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
 
   std::list<UINT64>::iterator i;
