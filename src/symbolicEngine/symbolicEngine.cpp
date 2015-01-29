@@ -37,6 +37,80 @@ SymbolicEngine::SymbolicEngine()
 }
 
 
+SymbolicEngine::SymbolicEngine(const SymbolicEngine &copy)
+{
+  this->symbolicReg[ID_RAX] = copy.symbolicReg[ID_RAX];
+  this->symbolicReg[ID_RBX] = copy.symbolicReg[ID_RBX];
+  this->symbolicReg[ID_RCX] = copy.symbolicReg[ID_RCX];
+  this->symbolicReg[ID_RDX] = copy.symbolicReg[ID_RDX];
+  this->symbolicReg[ID_RDI] = copy.symbolicReg[ID_RDI];
+  this->symbolicReg[ID_RSI] = copy.symbolicReg[ID_RSI];
+  this->symbolicReg[ID_RBP] = copy.symbolicReg[ID_RBP];
+  this->symbolicReg[ID_RSP] = copy.symbolicReg[ID_RSP];
+  this->symbolicReg[ID_R8]  = copy.symbolicReg[ID_R8];
+  this->symbolicReg[ID_R9]  = copy.symbolicReg[ID_R9];
+  this->symbolicReg[ID_R10] = copy.symbolicReg[ID_R10];
+  this->symbolicReg[ID_R11] = copy.symbolicReg[ID_R11];
+  this->symbolicReg[ID_R12] = copy.symbolicReg[ID_R12];
+  this->symbolicReg[ID_R13] = copy.symbolicReg[ID_R13];
+  this->symbolicReg[ID_R14] = copy.symbolicReg[ID_R14];
+  this->symbolicReg[ID_R15] = copy.symbolicReg[ID_R15];
+  this->symbolicReg[ID_CF]  = copy.symbolicReg[ID_CF];
+  this->symbolicReg[ID_PF]  = copy.symbolicReg[ID_PF];
+  this->symbolicReg[ID_AF]  = copy.symbolicReg[ID_AF];
+  this->symbolicReg[ID_ZF]  = copy.symbolicReg[ID_ZF];
+  this->symbolicReg[ID_SF]  = copy.symbolicReg[ID_SF];
+  this->symbolicReg[ID_TF]  = copy.symbolicReg[ID_TF];
+  this->symbolicReg[ID_IF]  = copy.symbolicReg[ID_IF];
+  this->symbolicReg[ID_DF]  = copy.symbolicReg[ID_DF];
+  this->symbolicReg[ID_OF]  = copy.symbolicReg[ID_OF];
+
+  this->uniqueID              = copy.uniqueID;
+  this->numberOfSymVar        = copy.numberOfSymVar;
+  this->memoryReference       = copy.memoryReference;
+  this->symVarMemoryReference = copy.symVarMemoryReference;
+  this->smt2libVarDeclList    = copy.smt2libVarDeclList;
+  this->symbolicVector        = copy.symbolicVector;
+}
+
+
+void SymbolicEngine::operator=(const SymbolicEngine &other)
+{
+  this->symbolicReg[ID_RAX] = other.symbolicReg[ID_RAX];
+  this->symbolicReg[ID_RBX] = other.symbolicReg[ID_RBX];
+  this->symbolicReg[ID_RCX] = other.symbolicReg[ID_RCX];
+  this->symbolicReg[ID_RDX] = other.symbolicReg[ID_RDX];
+  this->symbolicReg[ID_RDI] = other.symbolicReg[ID_RDI];
+  this->symbolicReg[ID_RSI] = other.symbolicReg[ID_RSI];
+  this->symbolicReg[ID_RBP] = other.symbolicReg[ID_RBP];
+  this->symbolicReg[ID_RSP] = other.symbolicReg[ID_RSP];
+  this->symbolicReg[ID_R8]  = other.symbolicReg[ID_R8];
+  this->symbolicReg[ID_R9]  = other.symbolicReg[ID_R9];
+  this->symbolicReg[ID_R10] = other.symbolicReg[ID_R10];
+  this->symbolicReg[ID_R11] = other.symbolicReg[ID_R11];
+  this->symbolicReg[ID_R12] = other.symbolicReg[ID_R12];
+  this->symbolicReg[ID_R13] = other.symbolicReg[ID_R13];
+  this->symbolicReg[ID_R14] = other.symbolicReg[ID_R14];
+  this->symbolicReg[ID_R15] = other.symbolicReg[ID_R15];
+  this->symbolicReg[ID_CF]  = other.symbolicReg[ID_CF];
+  this->symbolicReg[ID_PF]  = other.symbolicReg[ID_PF];
+  this->symbolicReg[ID_AF]  = other.symbolicReg[ID_AF];
+  this->symbolicReg[ID_ZF]  = other.symbolicReg[ID_ZF];
+  this->symbolicReg[ID_SF]  = other.symbolicReg[ID_SF];
+  this->symbolicReg[ID_TF]  = other.symbolicReg[ID_TF];
+  this->symbolicReg[ID_IF]  = other.symbolicReg[ID_IF];
+  this->symbolicReg[ID_DF]  = other.symbolicReg[ID_DF];
+  this->symbolicReg[ID_OF]  = other.symbolicReg[ID_OF];
+
+  this->uniqueID              = other.uniqueID;
+  this->numberOfSymVar        = other.numberOfSymVar;
+  this->memoryReference       = other.memoryReference;
+  this->symVarMemoryReference = other.symVarMemoryReference;
+  this->smt2libVarDeclList    = other.smt2libVarDeclList;
+  this->symbolicVector        = other.symbolicVector;
+}
+
+
 SymbolicEngine::~SymbolicEngine()
 {
   std::vector<symbolicElement *>::iterator it = this->symbolicVector.begin();
@@ -48,7 +122,6 @@ SymbolicEngine::~SymbolicEngine()
   }
 
 }
-
 
 /* Returns the reference memory if it's referenced otherwise returns -1 */
 int32_t SymbolicEngine::isMemoryReference(uint64_t addr)

@@ -17,6 +17,7 @@ VOID Image(IMG img, VOID *v)
                    (AFUNPTR)unlockAnalysis,
                    IARG_PTR,
                    &_analysisStatus,
+                   IARG_CONTEXT,
                    IARG_END);
 
     RTN_InsertCall(unlockRTN,
@@ -24,6 +25,7 @@ VOID Image(IMG img, VOID *v)
                    (AFUNPTR)lockAnalysis,
                    IARG_PTR,
                    &_analysisStatus,
+                   IARG_CONTEXT,
                    IARG_END);
 
     RTN_Close(unlockRTN);

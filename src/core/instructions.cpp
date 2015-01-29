@@ -246,4 +246,15 @@ VOID Instruction(INS ins, VOID *v)
 
       break;
   }
+
+  /* I/O memory monitoring for snapshot */
+  if (INS_OperandCount(ins) > 1 && INS_MemoryOperandIsWritten(ins, 0))
+    INS_InsertCall(
+      ins, IPOINT_BEFORE, (AFUNPTR)memoryWrite,
+      IARG_PTR, new string(INS_Disassemble(ins)),
+      IARG_ADDRINT, INS_Address(ins),
+      IARG_MEMORYOP_EA, 0,
+      IARG_UINT32, INS_MemoryWriteSize(ins),
+      IARG_END);
+
 }

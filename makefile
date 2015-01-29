@@ -41,6 +41,7 @@ SRC = 		./src/analysis/formatStringBug.cpp \
 		./src/ir/notImplemented.cpp \
 		./src/ir/pop.cpp \
 		./src/ir/push.cpp \
+		./src/snapshotEngine/memoryWrite.cpp \
 		./src/snapshotEngine/snapshotEngine.cpp \
 		./src/solverEngine/smt2lib_utils.cpp \
 		./src/solverEngine/solverEngine.cpp \

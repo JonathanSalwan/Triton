@@ -84,7 +84,10 @@ class SymbolicEngine {
     void                  addSymVarMemoryReference(uint64_t mem, uint64_t symVarID);
 
     SymbolicEngine();
+    SymbolicEngine(const SymbolicEngine &copy);
     ~SymbolicEngine();
+
+    void operator=(const SymbolicEngine &other);
 
 };
 
