@@ -34,13 +34,22 @@ INT32 Usage()
 }
 
 
+VOID Fini(INT32, VOID *)
+{
+  delete snapshotEngine;
+  delete taintEngine;
+  delete symbolicEngine;
+  return;
+}
+
+
 int main(int argc, char *argv[])
 {
   PIN_InitSymbols();
   if(PIN_Init(argc, argv)){
       return Usage();
   }
- 
+
   /* We first need a target function */
   if (KnobStartAnalysis.Value().empty())
     return Usage();
@@ -49,13 +58,16 @@ int main(int argc, char *argv[])
   PIN_SetSyntaxIntel();
 
   /* Add Image callback */
-  IMG_AddInstrumentFunction(Image, 0);
+  IMG_AddInstrumentFunction(Image, NULL);
 
   /* Add Instructions callback */
-  INS_AddInstrumentFunction(Instruction, 0);
+  INS_AddInstrumentFunction(Instruction, NULL);
+
+  /* Add callback call after the instrumentation */
+  PIN_AddFiniFunction(Fini, NULL);
 
   /* Catch SIGSEGV */
-  PIN_InterceptSignal(SIGSEGV, catchSignal, 0);
+  PIN_InterceptSignal(SIGSEGV, catchSignal, NULL);
 
   /* Rock 'n roll baby */
   PIN_StartProgram();
