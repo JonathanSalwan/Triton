@@ -51,6 +51,8 @@ SolverEngine::SolverEngine(SymbolicEngine *symEngine)
 
 SolverEngine::~SolverEngine()
 {
+  delete this->solver;
+  delete this->ctx;
 }
 
 
