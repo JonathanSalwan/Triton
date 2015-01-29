@@ -35,7 +35,7 @@ class SnapshotEngine{
     VOID addModification(UINT64 address, UINT8 byte);
     VOID disableSnapshot();
     VOID resetEngine();
-    VOID restoreSnapshot(SymbolicEngine currentSymEngine, CONTEXT *ctx);
+    VOID restoreSnapshot(SymbolicEngine *currentSymEngine, CONTEXT *ctx);
     VOID takeSnapshot(const SymbolicEngine &currentSymEngine, CONTEXT *ctx);
 
 };

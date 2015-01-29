@@ -42,7 +42,7 @@ VOID SnapshotEngine::takeSnapshot(const SymbolicEngine &currentSymEngine, CONTEX
 
 
 /* Restore the snapshot. */
-VOID SnapshotEngine::restoreSnapshot(SymbolicEngine currentSymEngine, CONTEXT *ctx)
+VOID SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, CONTEXT *ctx)
 {
   /* 1 - Restore all memory modification. */
   list< std::pair<UINT64, UINT8> >::iterator i;
@@ -52,7 +52,7 @@ VOID SnapshotEngine::restoreSnapshot(SymbolicEngine currentSymEngine, CONTEXT *c
   this->memory.clear();
 
   /* 2 - Restore current symbolic engine state */
-  currentSymEngine = *this->snapshotSymEngine;
+  *currentSymEngine = *this->snapshotSymEngine;
 
   /* 3 - Restore Pin registers context */
   PIN_SaveContext(&this->pinCtx, ctx);
