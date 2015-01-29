@@ -227,16 +227,14 @@ VOID unlockAnalysis(UINT32 *analysisStatus, CONTEXT *ctx)
 {
   *analysisStatus = UNLOCKED;
   std::cout << "[Start analysis]" << std::endl;
-  snapshotEngine->takeSnapshot(*symbolicEngine, ctx);
 }
 
 
 /* Unlock analysis. This is the -startAnalysis Pin option */
 VOID lockAnalysis(UINT32 *analysisStatus, CONTEXT *ctx)
 {
-  //*analysisStatus = LOCKED;
+  *analysisStatus = LOCKED;
   std::cout << "[Stop analysis]" << std::endl;
-  snapshotEngine->restoreSnapshot(*symbolicEngine, ctx);
 }
 
 
