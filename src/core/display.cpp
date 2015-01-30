@@ -9,7 +9,7 @@ boost::format outputInstruction("%1% %|15t| %2% %|55t| %3%\n");
 
 
 /* Function used in each instruction callback to display the trace */
-VOID displayTrace(ADDRINT addr, const std::string &insDis, symbolicElement *symElement)
+VOID displayTrace(ADDRINT addr, const std::string &insDis, SymbolicElement *symElement)
 {
   std::stringstream addrFormat;
   std::stringstream taintColor;

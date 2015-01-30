@@ -2,7 +2,7 @@
 #include "pin.H"
 #include "Triton.h"
 
-#include "analysis/formatString.h"
+#include "analysis/FormatString.h"
 
 
 VOID Image(IMG img, VOID *v)

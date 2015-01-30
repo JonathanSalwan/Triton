@@ -1,8 +1,8 @@
 
 #include "pin.H"
 
-#include "registers.h"
-#include "utils.h"
+#include "Registers.h"
+#include "Utils.h"
 #include "Triton.h"
 
 

@@ -8,7 +8,7 @@
 
 
 /* Symbolic element */
-class symbolicElement {
+class SymbolicElement {
 
   private:
     std::stringstream   *destination;
@@ -23,8 +23,8 @@ class symbolicElement {
     uint32_t      isTainted;
     uint64_t      getID();
 
-    symbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id);
-    ~symbolicElement();
+    SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id);
+    ~SymbolicElement();
 };
 
 #endif /* !_SYMBOLICELEMENT_H_ */

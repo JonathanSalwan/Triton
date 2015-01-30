@@ -1,6 +1,6 @@
 
 #include "SymbolicEngine.h"
-#include "registers.h"
+#include "Registers.h"
 
 
 SymbolicEngine::SymbolicEngine()
@@ -113,10 +113,10 @@ void SymbolicEngine::operator=(const SymbolicEngine &other)
 
 SymbolicEngine::~SymbolicEngine()
 {
-  std::vector<symbolicElement *>::iterator it = this->symbolicVector.begin();
+  std::vector<SymbolicElement *>::iterator it = this->symbolicVector.begin();
 
   for (; it != this->symbolicVector.end(); ++it) {
-    symbolicElement *tmp = *it;
+    SymbolicElement *tmp = *it;
     delete tmp;
     tmp = NULL;
   }
@@ -140,7 +140,7 @@ uint64_t SymbolicEngine::getUniqueID()
 }
 
 /* Create a new symbolic element */
-symbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
+SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
 {
   std::stringstream dst;
   uint64_t          id;
@@ -149,7 +149,7 @@ symbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
 
   dst << "#" << std::dec << id;
 
-  symbolicElement *elem = new symbolicElement(dst, src, id);
+  SymbolicElement *elem = new SymbolicElement(dst, src, id);
 
   this->symbolicVector.push_back(elem);
 
@@ -157,7 +157,7 @@ symbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
 }
 
 /* Get the symbolic element pointer from a symbolic ID */
-symbolicElement *SymbolicEngine::getElementFromId(uint64_t id)
+SymbolicElement *SymbolicEngine::getElementFromId(uint64_t id)
 {
   try {
     return this->symbolicVector[id];

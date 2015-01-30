@@ -51,7 +51,7 @@ VOID movRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   }
 
     
-  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
 
   if (taintEngine->isRegTainted(reg2_ID))
@@ -78,7 +78,7 @@ VOID movRegImm(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 imm, INT32 
 
   expr << smt2lib_bv(imm, REG_Size(reg1));
    
-  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
 
   taintEngine->untaintReg(reg1_ID);
@@ -146,7 +146,7 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
     }
   }
     
-  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
   elem->isTainted = !TAINTED;
   taintEngine->untaintReg(reg1_ID);
@@ -178,7 +178,7 @@ VOID movMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   else 
     expr << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg1)), writeSize);
 
-  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   elem->isTainted = !TAINTED;
 
   /* If expr reg is tainted, we taint the memory area */
@@ -219,7 +219,7 @@ VOID movMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
 
   expr << smt2lib_bv(imm, writeSize);
 
-  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   elem->isTainted = !TAINTED;
 
   /* We remove the taint if the memory area is tainted */

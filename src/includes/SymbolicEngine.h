@@ -44,7 +44,7 @@ class SymbolicEngine {
     std::list<std::string> smt2libVarDeclList;
 
     /* List of symbolic elements ID */
-    std::vector<symbolicElement *> symbolicVector;
+    std::vector<SymbolicElement *> symbolicVector;
 
 
   public:
@@ -55,8 +55,8 @@ class SymbolicEngine {
     /* public methods */
     int32_t               isMemoryReference(uint64_t addr);
     std::string           getSmt2LibVarsDecl();
-    symbolicElement       *getElementFromId(uint64_t id);
-    symbolicElement       *newSymbolicElement(std::stringstream &src);
+    SymbolicElement       *getElementFromId(uint64_t id);
+    SymbolicElement       *newSymbolicElement(std::stringstream &src);
     uint64_t              getUniqueID();
     uint64_t              getUniqueSymVarID();
     void                  addMemoryReference(uint64_t mem, uint64_t id);

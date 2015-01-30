@@ -22,8 +22,8 @@
 #include "SolverEngine.h"
 #include "SymbolicEngine.h"
 #include "TaintEngine.h"
-#include "registers.h"
-#include "utils.h"
+#include "Registers.h"
+#include "Utils.h"
 
 #define LIB_MAPING_MEMORY 0x7f0000000000
 

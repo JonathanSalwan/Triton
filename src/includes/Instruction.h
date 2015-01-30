@@ -8,24 +8,21 @@
 
 
 class Instruction {
+
   private:
-    uint64_t address;
-    std::string disassembly;
-    std::list<symbolicElement> elements;
+    uint64_t                    address;
+    std::string                 disassembly;
+    std::list<SymbolicElement>  elements;
 
   public:
-    Instruction(uint64_t at, std::string insDis):
-      address(at),
-      disassembly(insDis),
-      elements() {}
 
+    Instruction(uint64_t address, std::string insDis);
     ~Instruction();
 
-    const std::string &getDisassembly() { return disassembly; }
-    uint64_t getAddress() { return address; }
-
-    const std::list<symbolicElement> &getSymbolicElements();
-    void addElement(const symbolicElement& se);
+    const std::list<SymbolicElement>  &getSymbolicElements();
+    const std::string                 &getDisassembly();
+    uint64_t                          getAddress();
+    void                              addElement(const SymbolicElement& se);
 };
 
 #endif /* ! _INSTRUCTION_H_ */

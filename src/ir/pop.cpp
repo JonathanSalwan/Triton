@@ -24,7 +24,7 @@ static VOID setMem(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, 
   else
     expr << smt2lib_bv(derefMem(mem, readSize), readSize);
     
-  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
   taintEngine->untaintReg(reg1_ID);
   elem->isTainted = !TAINTED;
@@ -52,7 +52,7 @@ static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64
   else
     expr << "(+ " << smt2lib_bv(PIN_GetContextReg(ctx, REG_RSP), REG_Size(REG_RSP)) << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
 
-  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[ID_RSP] = elem->getID();
 
   /* Memory reference */

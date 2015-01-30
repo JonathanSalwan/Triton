@@ -1,6 +1,6 @@
 
 #include "Triton.h"
-#include "analysis/formatString.h"
+#include "analysis/FormatString.h"
 
 
 void formatStringBugAnalysis(unsigned long insAddr, unsigned long rdi)

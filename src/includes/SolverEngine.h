@@ -8,7 +8,7 @@
 
 #include <z3++.h>
 
-#include "registers.h"
+#include "Registers.h"
 #include "SymbolicEngine.h"
 
 

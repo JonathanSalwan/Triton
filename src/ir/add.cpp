@@ -29,7 +29,7 @@ static VOID setZF(UINT64 id)
 
   expr << "(assert (= #" << std::dec << id << " 0))";
     
-  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
   displayTrace(0, "", elem);
@@ -50,7 +50,7 @@ VOID addRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   else 
     expr << "(+ " << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg1)), REG_Size(reg1)) << " " << smt2lib_bv(imm, REG_Size(reg1)) << ")";
     
-  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
   elem->isTainted = taintEngine->getRegStatus(reg1_ID);
 
@@ -84,7 +84,7 @@ VOID addRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
 
   expr << "(+ " << vr1.str() << " " << vr2.str() << ")";
 
-  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
 
   if (taintEngine->isRegTainted(reg2_ID))

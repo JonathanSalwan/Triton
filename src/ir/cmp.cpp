@@ -41,7 +41,7 @@ VOID cmpRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   expr << ") " << smt2lib_bv(imm, REG_Size(reg1)) << "))";
     
   /* Add sym elem */
-  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
   /* Check if reg1 is tainted */
@@ -85,7 +85,7 @@ VOID cmpRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   expr << "(assert (= " << vr1.str() << " " << vr2.str() << "))";
 
   /* Add sym elem */
-  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
   /* Check if reg1 or reg2 is tainted */
@@ -113,7 +113,7 @@ VOID cmpMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
     expr << smt2lib_bv(derefMem(mem, readSize), readSize) << " " << smt2lib_bv(imm, readSize);
   expr << "))";
 
-  symbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
   symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
   if (taintEngine->isMemoryTainted(mem))

@@ -3,7 +3,7 @@
 #include "SymbolicEngine.h"
 
 
-symbolicElement::symbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id)
+SymbolicElement::SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id)
 {
   this->isTainted   = !TAINTED;
   this->source      = new std::stringstream(src.str());
@@ -16,7 +16,7 @@ symbolicElement::symbolicElement(std::stringstream &dst, std::stringstream &src,
 }
 
 
-symbolicElement::~symbolicElement()
+SymbolicElement::~SymbolicElement()
 {
   delete this->source;
   delete this->destination;
@@ -24,19 +24,19 @@ symbolicElement::~symbolicElement()
 }
 
 /* Returns the SMT dst and src expression of the symbolic element */
-std::string symbolicElement::getExpression()
+std::string SymbolicElement::getExpression()
 {
   return this->expression->str();
 }
 
 /* Returns the SMT src expression of the symbolic element */
-std::string symbolicElement::getSource()
+std::string SymbolicElement::getSource()
 {
   return this->source->str();
 }
 
 /* Returns the ID of the symbolic element */
-uint64_t symbolicElement::getID()
+uint64_t SymbolicElement::getID()
 {
   return this->id;
 }
