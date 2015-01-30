@@ -83,11 +83,12 @@ class SymbolicEngine {
     void                  addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize);
     void                  addSymVarMemoryReference(uint64_t mem, uint64_t symVarID);
 
+    void                  operator=(const SymbolicEngine &other);
+
     SymbolicEngine();
     SymbolicEngine(const SymbolicEngine &copy);
     ~SymbolicEngine();
 
-    void operator=(const SymbolicEngine &other);
 
 };
 

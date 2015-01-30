@@ -22,17 +22,19 @@ class TaintEngine {
 
 
   public:
+    bool        isMemoryTainted(uint64_t addr);
+    bool        isRegTainted(uint64_t regID);
+    uint64_t    getRegStatus(uint64_t regID);
+    void        taintAddress(uint64_t addr);
+    void        untaintAddress(uint64_t addr);
+    void        taintReg(uint64_t regID);
+    void        untaintReg(uint64_t regID);
+
+    void        operator=(const TaintEngine &other);
+
     TaintEngine();
+    TaintEngine(const TaintEngine &copy);
     ~TaintEngine();
-
-    bool       isMemoryTainted(uint64_t addr);
-    bool       isRegTainted(uint64_t regID);
-    uint64_t   getRegStatus(uint64_t regID);
-    void       taintAddress(uint64_t addr);
-    void       untaintAddress(uint64_t addr);
-    void       taintReg(uint64_t regID);
-    void       untaintReg(uint64_t regID);
-
 };
 
 #endif     /* !__TAINTENGINE_H__ */
