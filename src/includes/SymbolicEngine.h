@@ -2,38 +2,18 @@
 #ifndef   __SYMBOLICENGINE_H__
 #define   __SYMBOLICENGINE_H__
 
+#include <stdint.h>
+
 #include <map>
 #include <list>
-#include <sstream>
 #include <stdexcept>
-#include <stdint.h>
 #include <string>
 #include <utility>
 #include <vector>
 
+#include "SymbolicElement.h"
 #include "smt2lib_utils.h"
 
-
-/* Symbolic element */
-class symbolicElement {
-
-  private:
-    std::stringstream   *destination;
-    std::stringstream   *expression;
-    std::stringstream   *source;
-    uint64_t            id;
-
-
-  public:
-    std::string   getExpression();
-    std::string   getSource();
-    uint32_t      isTainted;
-    uint64_t      getID();
-
-    symbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id);
-    ~symbolicElement();
-
-};
 
 /* Symbolic Engine */
 class SymbolicEngine {
