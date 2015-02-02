@@ -26,35 +26,7 @@ TaintEngine::TaintEngine()
 }
 
 
-TaintEngine::TaintEngine(const TaintEngine &copy)
-{
-  this->taintedReg[ID_RAX] = copy.taintedReg[ID_RAX];
-  this->taintedReg[ID_RBX] = copy.taintedReg[ID_RBX];
-  this->taintedReg[ID_RCX] = copy.taintedReg[ID_RCX];
-  this->taintedReg[ID_RDX] = copy.taintedReg[ID_RDX];
-  this->taintedReg[ID_RDI] = copy.taintedReg[ID_RDI];
-  this->taintedReg[ID_RSI] = copy.taintedReg[ID_RSI];
-  this->taintedReg[ID_RBP] = copy.taintedReg[ID_RBP];
-  this->taintedReg[ID_RSP] = copy.taintedReg[ID_RSP];
-  this->taintedReg[ID_R8]  = copy.taintedReg[ID_R8];
-  this->taintedReg[ID_R9]  = copy.taintedReg[ID_R9];
-  this->taintedReg[ID_R10] = copy.taintedReg[ID_R10];
-  this->taintedReg[ID_R11] = copy.taintedReg[ID_R11];
-  this->taintedReg[ID_R12] = copy.taintedReg[ID_R12];
-  this->taintedReg[ID_R13] = copy.taintedReg[ID_R13];
-  this->taintedReg[ID_R14] = copy.taintedReg[ID_R14];
-  this->taintedReg[ID_R15] = copy.taintedReg[ID_R15];
-
-  this->taintedAddresses = copy.taintedAddresses;
-}
-
-
-TaintEngine::~TaintEngine()
-{
-}
-
-
-void TaintEngine::operator=(const TaintEngine &other)
+void TaintEngine::init(const TaintEngine &other)
 {
   this->taintedReg[ID_RAX] = other.taintedReg[ID_RAX];
   this->taintedReg[ID_RBX] = other.taintedReg[ID_RBX];
@@ -74,6 +46,23 @@ void TaintEngine::operator=(const TaintEngine &other)
   this->taintedReg[ID_R15] = other.taintedReg[ID_R15];
 
   this->taintedAddresses = other.taintedAddresses;
+}
+
+
+TaintEngine::TaintEngine(const TaintEngine &copy)
+{
+  init(copy);
+}
+
+
+TaintEngine::~TaintEngine()
+{
+}
+
+
+void TaintEngine::operator=(const TaintEngine &other)
+{
+  init(other);
 }
 
 

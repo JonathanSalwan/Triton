@@ -20,6 +20,9 @@ class TaintEngine {
     /* Tainted registers */
     uint64_t taintedReg[16];
 
+    /* Initialization of an object */
+    void init(const TaintEngine &other);
+
 
   public:
     bool        isMemoryTainted(uint64_t addr);
