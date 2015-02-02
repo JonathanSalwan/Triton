@@ -40,7 +40,7 @@ VOID Instruction(INS ins, VOID *v)
       /* mov reg, [mem] */
       else if (INS_OperandCount(ins) == 2 && INS_MemoryOperandIsRead(ins, 0) && INS_OperandIsReg(ins, 0))
         INS_InsertCall(
-          ins, IPOINT_BEFORE, (AFUNPTR)movRegMem,
+          ins, IPOINT_AFTER, (AFUNPTR)movRegMem,
           IARG_PTR, new string(INS_Disassemble(ins)),
           IARG_ADDRINT, INS_Address(ins),
           IARG_UINT32, INS_OperandReg(ins, 0),
@@ -52,10 +52,10 @@ VOID Instruction(INS ins, VOID *v)
       /* mov [mem], reg */
       else if (INS_OperandCount(ins) == 2 && INS_MemoryOperandIsWritten(ins, 0) && INS_OperandIsReg(ins, 1))
         INS_InsertCall(
-          ins, IPOINT_BEFORE, (AFUNPTR)movMemReg,
+          ins, IPOINT_AFTER, (AFUNPTR)movMemReg,
           IARG_PTR, new string(INS_Disassemble(ins)),
           IARG_ADDRINT, INS_Address(ins),
-          IARG_CONTEXT, 
+          IARG_CONTEXT,
           IARG_UINT32, INS_OperandReg(ins, 1),
           IARG_MEMORYOP_EA, 0,
           IARG_UINT32, INS_MemoryWriteSize(ins),
@@ -65,7 +65,7 @@ VOID Instruction(INS ins, VOID *v)
       /* mov [mem], imm */
       else if (INS_OperandCount(ins) == 2 && INS_MemoryOperandIsWritten(ins, 0) && INS_OperandIsImmediate(ins, 1))
         INS_InsertCall(
-          ins, IPOINT_BEFORE, (AFUNPTR)movMemImm,
+          ins, IPOINT_AFTER, (AFUNPTR)movMemImm,
           IARG_PTR, new string(INS_Disassemble(ins)),
           IARG_ADDRINT, INS_Address(ins),
           IARG_UINT32, INS_OperandImmediate(ins, 1),
@@ -92,7 +92,7 @@ VOID Instruction(INS ins, VOID *v)
           ins, IPOINT_BEFORE, (AFUNPTR)pushReg,
           IARG_PTR, new string(INS_Disassemble(ins)),
           IARG_ADDRINT, INS_Address(ins),
-          IARG_CONTEXT, 
+          IARG_CONTEXT,
           IARG_UINT32, INS_OperandReg(ins, 0),
           IARG_MEMORYOP_EA, 0,
           IARG_UINT32, INS_MemoryWriteSize(ins),
@@ -104,7 +104,7 @@ VOID Instruction(INS ins, VOID *v)
           ins, IPOINT_BEFORE, (AFUNPTR)pushImm,
           IARG_PTR, new string(INS_Disassemble(ins)),
           IARG_ADDRINT, INS_Address(ins),
-          IARG_CONTEXT, 
+          IARG_CONTEXT,
           IARG_ADDRINT, INS_OperandImmediate(ins, 0),
           IARG_MEMORYOP_EA, 0,
           IARG_UINT32, INS_MemoryWriteSize(ins),
@@ -204,7 +204,7 @@ VOID Instruction(INS ins, VOID *v)
       /* cmp [mem], imm */
       else if (INS_OperandCount(ins) == 3 && INS_MemoryOperandIsRead(ins, 0) && INS_OperandIsImmediate(ins, 1))
         INS_InsertCall(
-          ins, IPOINT_BEFORE, (AFUNPTR)cmpMemImm,
+          ins, IPOINT_AFTER, (AFUNPTR)cmpMemImm,
           IARG_PTR, new string(INS_Disassemble(ins)),
           IARG_ADDRINT, INS_Address(ins),
           IARG_UINT32, INS_OperandImmediate(ins, 1),
