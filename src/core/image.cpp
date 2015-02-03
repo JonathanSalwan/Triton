@@ -32,18 +32,18 @@ VOID Image(IMG img, VOID *v)
   }
 
   /* TODO: Must be deleted but currently used for test */
-  //RTN taintParamsRTN = RTN_FindByName(img, "check"); /* TODO: generique */
-  //if (RTN_Valid(taintParamsRTN)){
-  //  RTN_Open(taintParamsRTN);
-  //  RTN_InsertCall(taintParamsRTN,
-  //                 IPOINT_BEFORE,
-  //                 (AFUNPTR)taintParams,
-  //                 IARG_CONTEXT,
-  //                 IARG_PTR,
-  //                 taintEngine,
-  //                 IARG_END);
-  //  RTN_Close(taintParamsRTN);
-  //}
+  RTN taintParamsRTN = RTN_FindByName(img, "check"); /* TODO: generique */
+  if (RTN_Valid(taintParamsRTN)){
+    RTN_Open(taintParamsRTN);
+    RTN_InsertCall(taintParamsRTN,
+                   IPOINT_BEFORE,
+                   (AFUNPTR)taintParams,
+                   IARG_CONTEXT,
+                   IARG_PTR,
+                   taintEngine,
+                   IARG_END);
+    RTN_Close(taintParamsRTN);
+  }
 
   /* Add callback if KnobDetectFormatString is enable */
   if (KnobDetectFormatString){

@@ -247,7 +247,7 @@ VOID taintParams(CONTEXT *ctx, TaintEngine *taintEngine)
   ADDRINT rdi = PIN_GetContextReg(ctx, REG_RDI);
   char    *ptr = (char *)rdi;
 
-  for (i = 0; ptr[i] != '\0'; i++){
+  for (i = 0; derefMem(reinterpret_cast<UINT64>(ptr + i), sizeof(char)) != '\0'; i++){
     taintEngine->taintAddress((ADDRINT)(&ptr[i]));
     std::cout << "[Initial tainting] *(" << std::hex << (ADDRINT)(&ptr[i]) << ") is now tainted" << std::endl;
   }
