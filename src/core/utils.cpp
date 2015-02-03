@@ -5,6 +5,8 @@
 #include "Utils.h"
 #include "Triton.h"
 
+#include <sys/mman.h>
+
 
 /* In some cases, we need to convert Pin registers to your own ID
  * Mainly used in the Taint and the Symbolic engine */
@@ -251,9 +253,26 @@ VOID taintParams(CONTEXT *ctx, TaintEngine *taintEngine)
   }
 }
 
+
+/* Tricks to check if the address is mapped */
+static bool isAddressMapped(ADDRINT addr) {
+  int pagesize = getpagesize();
+  void *foo = (void *)(addr / pagesize * pagesize);
+  if (munlock(foo, 1) == -1)
+    return false;
+  return true;
+}
+
+
 /* Used to deref a pointer address and returns the targeted byte by size of read */
 UINT64 derefMem(UINT64 mem, UINT64 readSize)
 {
+
+  if (isAddressMapped(mem) == false){
+    std::cout << "[Bugs] Invalid read at " << std::hex << mem << std::endl;
+    exit(0);
+  }
+
   switch(readSize){
     case 1:
       return static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem)));
