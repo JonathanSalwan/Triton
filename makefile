@@ -1,5 +1,5 @@
 # Path to the pin kit directory
-PIN_ROOT =	"../../.."
+PIN_ROOT =	../../..
 
 NAME = 		triton
 
@@ -8,7 +8,7 @@ CXX =		g++
 INCLUDES =	-I$(PIN_ROOT)/source/include/pin \
 		-I$(PIN_ROOT)/source/include/pin/gen \
 		-I$(PIN_ROOT)/extras/components/include \
-		-I$(PIN_ROOT)/extras/xed2-intel64/include \
+		-I$(PIN_ROOT)/extras/xed-intel64/include \
 		-I$(PIN_ROOT)/source/tools/InstLib \
 		-I./src/includes
 
@@ -19,11 +19,10 @@ CXXFLAGS = 	$(INCLUDES) -DBIGARRAY_MULTIPLIER=1 -DUSING_XED -Wall -Werror -Wno-u
 LIBS =		-L$(PIN_ROOT)/intel64/lib \
 		-L$(PIN_ROOT)/intel64/lib-ext \
 		-L$(PIN_ROOT)/intel64/runtime/glibc \
-		-L$(PIN_ROOT)/extras/xed2-intel64/lib \
+		-L$(PIN_ROOT)/extras/xed-intel64/lib \
 		-lpin \
 		-lxed \
-		-ldwarf \
-		-lelf \
+		-lpindwarf \
 		-ldl \
 		-lz3
 
