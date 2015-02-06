@@ -5,7 +5,7 @@ ROOT="$(cd "$(dirname "$0")" && pwd)"
 
 usage ()
 {
-    echo "Triton binary analyzer usage: triton MODE [ARGS] EXEC\n"
+    echo "Triton binary analyzer usage: triton MODE [MODE_ARGS] EXEC [EXEC_ARGS]\n"
     echo "Available modes are:"
     echo " -startAnalysis <func_name>  Start the analysis the scope of the function"
     echo " -detectFormatString         Enable the format string detection analysis"
@@ -13,7 +13,7 @@ usage ()
 
 check_argument ()
 {
-    if [ -z "${ARGS}" ]; then
+    if [ -z "${MODE_ARGS}" ]; then
 	echo "triton: error: missing argument for the ${MODE} mode"
 	usage
 	exit 1
@@ -22,8 +22,9 @@ check_argument ()
 
 # Getting Triton arguments
 MODE=$1
-ARGS=$2
+MODE_ARGS=$2
 EXEC=$3
+EXEC_ARGS=$4
 
 # Check the mode and the arguments
 case ${MODE} in
@@ -62,4 +63,4 @@ if [ ! -x ${EXEC} ]; then
 fi
 
 # Running Triton
-${ROOT}/../../../pin -t ${ROOT}/triton.so ${MODE} ${ARGS} -- ${EXEC} || usage
+${ROOT}/../../../pin -t ${ROOT}/triton.so ${MODE} ${ARGS} -- ${EXEC} ${EXEC_ARGS} || usage
