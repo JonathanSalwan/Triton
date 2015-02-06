@@ -9,8 +9,8 @@
  * reg, imm <- done
  * reg, reg <- done
  * mem, imm <- done
+ * mem, reg <- done
  *
- * mem, reg <- todo
  * reg, mem <- todo
  *
  * ZF <- done
@@ -118,7 +118,7 @@ VOID cmpMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
 
-  std::stringstream expr, vr1, vr2;
+  std::stringstream expr;
 
   expr << "(assert (= ";
   if (trace->symbolicEngine->isMemoryReference(mem) != UNSET)
@@ -145,4 +145,48 @@ VOID cmpMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   return ;
 }
 
+
+VOID cmpMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 readSize)
+{
+  if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
+    return;
+
+  std::stringstream expr, vr1, vr2;
+
+  UINT64 reg1_ID = translatePinRegToID(reg1);
+
+  /* Operand 1 - mem */
+  if (trace->symbolicEngine->isMemoryReference(mem) != UNSET)
+    vr1 << "(" << smt2lib_extract(readSize) << "#" << std::dec << trace->symbolicEngine->isMemoryReference(mem) << ")";
+  else
+    vr1 << smt2lib_bv(derefMem(mem, readSize), readSize);
+
+  /* Operand 1 - reg */
+  if (trace->symbolicEngine->symbolicReg[reg1_ID] != UNSET)
+    vr2 << "#" << std::dec << trace->symbolicEngine->symbolicReg[reg1_ID];
+  else
+    vr2 << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg1)), readSize);
+
+  /* expression op1 op2 */
+  expr << "(assert (= " << vr1.str() << " " << vr2.str() << "))";
+
+  /* Craft the symbolic element */
+  SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
+  trace->symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
+
+  /* Craft the Tritinst */
+  Tritinst *inst = new Tritinst(insAddr, insDis);
+  inst->addElement(elem);
+
+  /* Add the Tritinst in the trace */
+  trace->addInstruction(inst);
+
+  /* Apply taint */
+  if (trace->taintEngine->isMemoryTainted(mem) || trace->taintEngine->isRegTainted(reg1_ID))
+    elem->isTainted = TAINTED;
+
+  displayTrace(insAddr, insDis, elem);
+
+  return ;
+}
 

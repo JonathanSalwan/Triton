@@ -235,6 +235,18 @@ VOID Instruction(INS ins, VOID *v)
           IARG_UINT32, INS_MemoryReadSize(ins),
           IARG_END);
 
+      /* cmp [mem], reg */
+      else if (INS_OperandCount(ins) == 3 && INS_MemoryOperandIsRead(ins, 0) && INS_OperandIsReg(ins, 1))
+        INS_InsertCall(
+          ins, IPOINT_BEFORE, (AFUNPTR)addMemReg,
+          IARG_PTR, new string(INS_Disassemble(ins)),
+          IARG_ADDRINT, INS_Address(ins),
+          IARG_CONTEXT,
+          IARG_UINT32, INS_OperandReg(ins, 1),
+          IARG_MEMORYOP_EA, 0,
+          IARG_UINT32, INS_MemoryReadSize(ins),
+          IARG_END);
+
       else
         /* Callback for semantics not yet implemented */
         INS_InsertCall(
