@@ -5,7 +5,6 @@
 
 void formatStringBugAnalysis(unsigned long insAddr, unsigned long rdi)
 {
-  list<UINT64>::iterator i;
   std::string content = std::string((const char *)rdi);
   std::stringstream str;
 

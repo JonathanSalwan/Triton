@@ -21,9 +21,15 @@ Trace::~Trace()
   delete this->symbolicEngine;
 }
 
-
+/* Add an instruction in the trace */
 void Trace::addInstruction(Tritinst *instruction)
 {
   this->instructions.push_back(instruction);
+}
+
+/* Returns the instructions list in the trace */
+std::list<Tritinst *> &Trace::getInstructions()
+{
+  return this->instructions;
 }
 
