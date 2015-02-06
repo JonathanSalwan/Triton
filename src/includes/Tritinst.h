@@ -17,6 +17,7 @@ class Tritinst {
   public:
     const std::list<SymbolicElement*> &getSymbolicElements();
     const std::string                 &getDisassembly();
+    size_t                            numberOfElements(void);
     uint64_t                          getAddress();
     void                              addElement(SymbolicElement *se);
 
