@@ -15,7 +15,7 @@ Below, the install's command line::
   $ git clone git@github.com:JonathanSalwan/Triton.git
   $ cd Triton
   $ make
-  $ ../../../pin -t ./triton.so -startAnalysis check -- ./samples/crackmes/crackme_sample a
+  $ ./triton -startAnalysis check ./samples/crackmes/crackme_xor elite
 
 Acknowledgement
 ---------------
