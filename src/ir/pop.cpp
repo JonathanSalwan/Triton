@@ -19,9 +19,9 @@ static VOID alignStack(CONTEXT *ctx, UINT64 mem, Tritinst *inst)
 
   /* Add RSP */
   if (trace->symbolicEngine->symbolicReg[ID_RSP] != UNSET)
-    expr << "(+ #" << std::dec << trace->symbolicEngine->symbolicReg[ID_RSP] << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
+    expr << "(bvadd #" << std::dec << trace->symbolicEngine->symbolicReg[ID_RSP] << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
   else
-    expr << "(+ " << smt2lib_bv(PIN_GetContextReg(ctx, REG_RSP), REG_Size(REG_RSP)) << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
+    expr << "(bvadd " << smt2lib_bv(PIN_GetContextReg(ctx, REG_RSP), REG_Size(REG_RSP)) << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
 
   /* Craft symbolic element */
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
