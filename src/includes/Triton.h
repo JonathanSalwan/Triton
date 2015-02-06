@@ -17,12 +17,14 @@
 
 #include <z3++.h>
 
+#include "Instruction.h" 
+#include "Registers.h"
 #include "Signals.h"
 #include "SnapshotEngine.h"
 #include "SolverEngine.h"
 #include "SymbolicEngine.h"
 #include "TaintEngine.h"
-#include "Registers.h"
+#include "Trace.h"
 #include "Utils.h"
 
 #define LIB_MAPING_MEMORY 0x7f0000000000
@@ -33,9 +35,7 @@
 
 extern KNOB<std::string>        KnobStartAnalysis;
 extern KNOB<bool>               KnobDetectFormatString;
-extern SnapshotEngine           *snapshotEngine;
-extern SymbolicEngine           *symbolicEngine;
-extern TaintEngine              *taintEngine;
+extern Trace                    *trace;
 extern UINT32                   _analysisStatus;
 extern boost::format            outputInstruction;
 

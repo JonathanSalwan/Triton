@@ -13,14 +13,10 @@ KNOB<bool>  KnobDetectFormatString(KNOB_MODE_WRITEONCE, "pintool", "detectFormat
 /* flag Lock / Unlock instrumentation */
 UINT32 _analysisStatus = LOCKED;
 
-/* Snapshot Engine */
-SnapshotEngine *snapshotEngine = new SnapshotEngine;
 
-/* Taint Engine */
-TaintEngine *taintEngine = new TaintEngine;
 
-/* Symbolic Engine */
-SymbolicEngine *symbolicEngine = new SymbolicEngine;
+/* Trace object */
+Trace *trace = new Trace;
 
 
 
@@ -36,9 +32,7 @@ INT32 Usage()
 
 VOID Fini(INT32, VOID *)
 {
-  delete snapshotEngine;
-  delete taintEngine;
-  delete symbolicEngine;
+  delete trace;
   return;
 }
 

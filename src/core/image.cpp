@@ -40,7 +40,7 @@ VOID Image(IMG img, VOID *v)
                    (AFUNPTR)taintParams,
                    IARG_CONTEXT,
                    IARG_PTR,
-                   taintEngine,
+                   trace->taintEngine,
                    IARG_END);
     RTN_Close(taintParamsRTN);
   }

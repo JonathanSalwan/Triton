@@ -18,16 +18,16 @@ static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64
   std::stringstream expr;
 
   /* Sub RSP */
-  if (symbolicEngine->symbolicReg[ID_RSP] != (UINT64)-1)
-    expr << "(- #" << std::dec << symbolicEngine->symbolicReg[ID_RSP] << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
+  if (trace->symbolicEngine->symbolicReg[ID_RSP] != UNSET)
+    expr << "(- #" << std::dec << trace->symbolicEngine->symbolicReg[ID_RSP] << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
   else
     expr << "(- " << smt2lib_bv(PIN_GetContextReg(ctx, REG_RSP), REG_Size(REG_RSP)) << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
 
-  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
-  symbolicEngine->symbolicReg[ID_RSP] = elem->getID();
+  SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
+  trace->symbolicEngine->symbolicReg[ID_RSP] = elem->getID();
 
   /* Memory reference */
-  symbolicEngine->addMemoryReference(mem, elem->getID());
+  trace->symbolicEngine->addMemoryReference(mem, elem->getID());
 
   displayTrace(insAddr, insDis, elem);
 
@@ -42,28 +42,28 @@ static VOID setMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg
 
   std::stringstream expr;
 
-  if (symbolicEngine->symbolicReg[reg1_ID] != (UINT64)-1)
-    expr << "#" << std::dec << symbolicEngine->symbolicReg[reg1_ID];
+  if (trace->symbolicEngine->symbolicReg[reg1_ID] != UNSET)
+    expr << "#" << std::dec << trace->symbolicEngine->symbolicReg[reg1_ID];
   else
     expr << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg1)), writeSize);
 
-  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
 
   /* We remove the taint by default */
   unsigned int offset = 0;
   for (; offset < writeSize ; offset++){
-    taintEngine->untaintAddress(mem+offset);
+    trace->taintEngine->untaintAddress(mem+offset);
   }
 
   /* Then, we taint if the reg is tainted */
-  if (taintEngine->isRegTainted(reg1_ID)){
+  if (trace->taintEngine->isRegTainted(reg1_ID)){
     for (offset = 0; offset < writeSize ; offset++){
-      taintEngine->taintAddress(mem+offset);
+      trace->taintEngine->taintAddress(mem+offset);
     }
   }
 
   /* Memory reference */
-  symbolicEngine->addMemoryReference(mem, elem->getID());
+  trace->symbolicEngine->addMemoryReference(mem, elem->getID());
 
   displayTrace(0, "", elem);
 }
@@ -75,16 +75,16 @@ static VOID setMemImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 
 
   expr << smt2lib_bv(imm, writeSize);
 
-  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
+  SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
 
   /* We remove the taint by default */
   unsigned int offset = 0;
   for (; offset < writeSize ; offset++){
-    taintEngine->untaintAddress(mem+offset);
+    trace->taintEngine->untaintAddress(mem+offset);
   }
 
   /* Memory reference */
-  symbolicEngine->addMemoryReference(mem, elem->getID());
+  trace->symbolicEngine->addMemoryReference(mem, elem->getID());
 
   displayTrace(insAddr, insDis, elem);
 }

@@ -19,20 +19,20 @@ static VOID setMem(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, 
 
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
-  if (symbolicEngine->isMemoryReference(mem) != -1)
-    expr << "#" << std::dec << symbolicEngine->isMemoryReference(mem);
+  if (trace->symbolicEngine->isMemoryReference(mem) != UNSET)
+    expr << "#" << std::dec << trace->symbolicEngine->isMemoryReference(mem);
   else
     expr << smt2lib_bv(derefMem(mem, readSize), readSize);
     
-  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
-  symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
-  taintEngine->untaintReg(reg1_ID);
+  SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
+  trace->symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
+  trace->taintEngine->untaintReg(reg1_ID);
   elem->isTainted = !TAINTED;
 
   /* Check if the source addr is tainted */
   for (i = 0 ; i < readSize ; i++){
-    if (taintEngine->isMemoryTainted(mem + i)){
-      taintEngine->taintReg(reg1_ID);
+    if (trace->taintEngine->isMemoryTainted(mem + i)){
+      trace->taintEngine->taintReg(reg1_ID);
       elem->isTainted = TAINTED;
       break;
     }
@@ -47,16 +47,16 @@ static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64
   std::stringstream expr;
 
   /* Add RSP */
-  if (symbolicEngine->symbolicReg[ID_RSP] != (UINT64)-1)
-    expr << "(+ #" << std::dec << symbolicEngine->symbolicReg[ID_RSP] << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
+  if (trace->symbolicEngine->symbolicReg[ID_RSP] != UNSET)
+    expr << "(+ #" << std::dec << trace->symbolicEngine->symbolicReg[ID_RSP] << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
   else
     expr << "(+ " << smt2lib_bv(PIN_GetContextReg(ctx, REG_RSP), REG_Size(REG_RSP)) << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
 
-  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
-  symbolicEngine->symbolicReg[ID_RSP] = elem->getID();
+  SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
+  trace->symbolicEngine->symbolicReg[ID_RSP] = elem->getID();
 
   /* Memory reference */
-  symbolicEngine->addMemoryReference(mem, elem->getID());
+  trace->symbolicEngine->addMemoryReference(mem, elem->getID());
 
   displayTrace(0, "", elem);
 

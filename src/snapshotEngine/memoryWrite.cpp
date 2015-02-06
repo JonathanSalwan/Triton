@@ -11,12 +11,12 @@ VOID memoryWrite(std::string insDis, ADDRINT insAddr, UINT64 mem, UINT32 writeSi
     return;
  
   /* If the snapshot is not enable we don't save the memory */
-  if (snapshotEngine->isLocked())
+  if (trace->snapshotEngine->isLocked())
     return;
 
   UINT32 i = 0;
   for (; i < writeSize ; i++)
-    snapshotEngine->addModification(mem+i, *(reinterpret_cast<UINT8*>(mem+i)));
+    trace->snapshotEngine->addModification(mem+i, *(reinterpret_cast<UINT8*>(mem+i)));
 
   return;
 }

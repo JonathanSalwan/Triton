@@ -5,26 +5,30 @@
 
 #include <list>
 
-#include "BasicBlock.h"
-
+#include "Instruction.h"
+#include "SnapshotEngine.h"
+#include "SymbolicEngine.h"
+#include "TaintEngine.h"
 
 /* Trace of a run */
 class Trace {
 
   private:
-    std::list<BasicBlock>   bbls;
-    uint64_t                endPoint;
-    uint64_t                entryPoint;
+    std::list<Instruction>  instructions;
 
   public:
-    Trace(uint64_t entry, uint64_t end);
-    ~Trace();
 
-    //const std::list<BasicBlock>   &getForks();;
-    //std::string                   dump(); // TODO
-    uint64_t                      getEndPoint();
-    uint64_t                      getEntryPoint();
-    void                          addBasicBlock(const BasicBlock &bbl);
+    /* Snapshot Engine */
+    SnapshotEngine *snapshotEngine;
+
+    /* Taint Engine */
+    TaintEngine *taintEngine;
+
+    /* Symbolic Engine */
+    SymbolicEngine *symbolicEngine;
+
+    Trace();
+    ~Trace();
 };
 
 #endif /* !_TRACE_H_ */
