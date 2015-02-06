@@ -43,6 +43,8 @@ extern boost::format            outputInstruction;
 /* decl */
 VOID            Image(IMG img, VOID *v);
 VOID            Instruction(INS ins, VOID *v);
+VOID            addMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT64 writeSize);
+VOID            addMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT64 writeSize);
 VOID            addRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 imm);
 VOID            addRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG reg2);
 VOID            branchs(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT32 opcode);
