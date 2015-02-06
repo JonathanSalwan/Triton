@@ -6,6 +6,7 @@
 
 #include "pin.H"
 #include "SymbolicEngine.h"
+#include "TaintEngine.h"
 
 #define LOCKED    1
 #define UNLOCKED  !LOCKED
@@ -23,8 +24,9 @@ class SnapshotEngine{
     /* Status of the snapshot engine */
     BOOL locked;
 
-    SymbolicEngine *snapshotSymEngine;
-    CONTEXT        pinCtx;
+    SymbolicEngine  *snapshotSymEngine;
+    TaintEngine     *snapshotTaintEngine;
+    CONTEXT         pinCtx;
 
 
   public:
@@ -35,8 +37,8 @@ class SnapshotEngine{
     VOID addModification(UINT64 address, UINT8 byte);
     VOID disableSnapshot();
     VOID resetEngine();
-    VOID restoreSnapshot(SymbolicEngine *currentSymEngine, CONTEXT *ctx);
-    VOID takeSnapshot(const SymbolicEngine &currentSymEngine, CONTEXT *ctx);
+    VOID restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngine *currentTaintEngine, CONTEXT *ctx);
+    VOID takeSnapshot(const SymbolicEngine &currentSymEngine, const TaintEngine &currentTaintEngine, CONTEXT *ctx);
 
 };
 

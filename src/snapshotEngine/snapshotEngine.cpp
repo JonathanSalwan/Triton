@@ -26,7 +26,7 @@ VOID SnapshotEngine::addModification(UINT64 mem, UINT8 byte)
 
 
 /* Enable the snapshot engine. */
-VOID SnapshotEngine::takeSnapshot(const SymbolicEngine &currentSymEngine, CONTEXT *ctx)
+VOID SnapshotEngine::takeSnapshot(const SymbolicEngine &currentSymEngine, const TaintEngine &currentTaintEngine, CONTEXT *ctx)
 {
   /* 1 - Unlock the engine */
   this->locked = UNLOCKED;
@@ -34,7 +34,10 @@ VOID SnapshotEngine::takeSnapshot(const SymbolicEngine &currentSymEngine, CONTEX
   /* 2 - Save current symbolic engine state */
   this->snapshotSymEngine = new SymbolicEngine(currentSymEngine);
 
-  /* 3 - Save Pin registers context */
+  /* 3 - Save current taint engine state */
+  this->snapshotTaintEngine = new TaintEngine(currentTaintEngine);
+
+  /* 4 - Save Pin registers context */
   PIN_SaveContext(ctx, &this->pinCtx);
 
   std::cout << "[snapshot]" << std::endl;
@@ -42,7 +45,7 @@ VOID SnapshotEngine::takeSnapshot(const SymbolicEngine &currentSymEngine, CONTEX
 
 
 /* Restore the snapshot. */
-VOID SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, CONTEXT *ctx)
+VOID SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngine *currentTaintEngine, CONTEXT *ctx)
 {
   /* 1 - Restore all memory modification. */
   list< std::pair<UINT64, UINT8> >::iterator i;
@@ -54,7 +57,10 @@ VOID SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, CONTEXT *
   /* 2 - Restore current symbolic engine state */
   *currentSymEngine = *this->snapshotSymEngine;
 
-  /* 3 - Restore Pin registers context */
+  /* 3 - Restore current taint engine state */
+  *currentTaintEngine = *this->snapshotTaintEngine;
+
+  /* 4 - Restore Pin registers context */
   PIN_SaveContext(&this->pinCtx, ctx);
 
   std::cout << "[restore snapshot]" << std::endl;
