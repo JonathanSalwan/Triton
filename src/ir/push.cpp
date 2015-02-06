@@ -84,9 +84,9 @@ VOID pushReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64
 
   /* Sub RSP */
   if (trace->symbolicEngine->symbolicReg[ID_RSP] != UNSET)
-    expr << "(- #" << std::dec << trace->symbolicEngine->symbolicReg[ID_RSP] << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
+    expr << "(bvsub #" << std::dec << trace->symbolicEngine->symbolicReg[ID_RSP] << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
   else
-    expr << "(- " << smt2lib_bv(PIN_GetContextReg(ctx, REG_RSP), REG_Size(REG_RSP)) << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
+    expr << "(bvsub " << smt2lib_bv(PIN_GetContextReg(ctx, REG_RSP), REG_Size(REG_RSP)) << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
 
   /* Craft symbolic element */
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
@@ -119,9 +119,9 @@ VOID pushImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 imm, UINT
 
   /* Sub RSP */
   if (trace->symbolicEngine->symbolicReg[ID_RSP] != UNSET)
-    expr << "(- #" << std::dec << trace->symbolicEngine->symbolicReg[ID_RSP] << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
+    expr << "(bvsub #" << std::dec << trace->symbolicEngine->symbolicReg[ID_RSP] << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
   else
-    expr << "(- " << smt2lib_bv(PIN_GetContextReg(ctx, REG_RSP), REG_Size(REG_RSP)) << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
+    expr << "(bvsub " << smt2lib_bv(PIN_GetContextReg(ctx, REG_RSP), REG_Size(REG_RSP)) << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
 
   /* Craft symbolic element */
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
