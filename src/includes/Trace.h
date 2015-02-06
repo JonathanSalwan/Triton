@@ -5,16 +5,16 @@
 
 #include <list>
 
-#include "Instruction.h"
 #include "SnapshotEngine.h"
 #include "SymbolicEngine.h"
 #include "TaintEngine.h"
+#include "Tritinst.h"
 
 /* Trace of a run */
 class Trace {
 
   private:
-    std::list<Instruction>  instructions;
+    std::list<Tritinst *> instructions;
 
   public:
 
@@ -29,6 +29,8 @@ class Trace {
 
     Trace();
     ~Trace();
+
+    void addInstruction(Tritinst *instruction);
 };
 
 #endif /* !_TRACE_H_ */

@@ -13,29 +13,8 @@
  *
  * */
 
-static VOID alignStack(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 mem)
-{
-  std::stringstream expr;
 
-  /* Sub RSP */
-  if (trace->symbolicEngine->symbolicReg[ID_RSP] != UNSET)
-    expr << "(- #" << std::dec << trace->symbolicEngine->symbolicReg[ID_RSP] << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
-  else
-    expr << "(- " << smt2lib_bv(PIN_GetContextReg(ctx, REG_RSP), REG_Size(REG_RSP)) << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
-
-  SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
-  trace->symbolicEngine->symbolicReg[ID_RSP] = elem->getID();
-
-  /* Memory reference */
-  trace->symbolicEngine->addMemoryReference(mem, elem->getID());
-
-  displayTrace(insAddr, insDis, elem);
-
-  return;
-}
-
-
-static VOID setMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 writeSize)
+static VOID setMemReg(CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 writeSize, Tritinst *inst)
 {
   /* Push in memory */
   UINT64 reg1_ID = translatePinRegToID(reg1);
@@ -47,7 +26,10 @@ static VOID setMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg
   else
     expr << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg1)), writeSize);
 
+  /* Craft symbolic element */
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
+
+  inst->addElement(elem);
 
   /* We remove the taint by default */
   unsigned int offset = 0;
@@ -69,13 +51,16 @@ static VOID setMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg
 }
 
 
-static VOID setMemImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 imm, UINT64 mem, UINT32 writeSize)
+static VOID setMemImm(CONTEXT *ctx, UINT64 imm, UINT64 mem, UINT32 writeSize, Tritinst *inst)
 {
   std::stringstream expr;
 
   expr << smt2lib_bv(imm, writeSize);
 
+  /* Craft symbolic element */
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
+
+  inst->addElement(elem);
 
   /* We remove the taint by default */
   unsigned int offset = 0;
@@ -86,7 +71,7 @@ static VOID setMemImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 
   /* Memory reference */
   trace->symbolicEngine->addMemoryReference(mem, elem->getID());
 
-  displayTrace(insAddr, insDis, elem);
+  displayTrace(0, "", elem);
 }
 
 
@@ -95,8 +80,31 @@ VOID pushReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64
   if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
 
-  alignStack(insDis, insAddr, ctx, mem);
-  setMemReg(insDis, insAddr, ctx, reg1, mem, writeSize);
+  std::stringstream expr;
+
+  /* Sub RSP */
+  if (trace->symbolicEngine->symbolicReg[ID_RSP] != UNSET)
+    expr << "(- #" << std::dec << trace->symbolicEngine->symbolicReg[ID_RSP] << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
+  else
+    expr << "(- " << smt2lib_bv(PIN_GetContextReg(ctx, REG_RSP), REG_Size(REG_RSP)) << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
+
+  /* Craft symbolic element */
+  SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
+  trace->symbolicEngine->symbolicReg[ID_RSP] = elem->getID();
+
+  /* Craft the Tritinst */
+  Tritinst *inst = new Tritinst(insAddr, insDis);
+  inst->addElement(elem);
+
+  /* Add the Tritinst in the trace */
+  trace->addInstruction(inst);
+
+  /* Memory reference */
+  trace->symbolicEngine->addMemoryReference(mem, elem->getID());
+
+  displayTrace(insAddr, insDis, elem);
+
+  setMemReg(ctx, reg1, mem, writeSize, inst);
 
   return;
 }
@@ -107,8 +115,31 @@ VOID pushImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, UINT64 imm, UINT
   if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
  
-  alignStack(insDis, insAddr, ctx, mem);
-  setMemImm(insDis, insAddr, ctx, imm, mem, writeSize);
+  std::stringstream expr;
+
+  /* Sub RSP */
+  if (trace->symbolicEngine->symbolicReg[ID_RSP] != UNSET)
+    expr << "(- #" << std::dec << trace->symbolicEngine->symbolicReg[ID_RSP] << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
+  else
+    expr << "(- " << smt2lib_bv(PIN_GetContextReg(ctx, REG_RSP), REG_Size(REG_RSP)) << " " << smt2lib_bv(8, REG_Size(REG_RSP)) << ")";
+
+  /* Craft symbolic element */
+  SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
+  trace->symbolicEngine->symbolicReg[ID_RSP] = elem->getID();
+
+  /* Craft the Tritinst */
+  Tritinst *inst = new Tritinst(insAddr, insDis);
+  inst->addElement(elem);
+
+  /* Add the Tritinst in the trace */
+  trace->addInstruction(inst);
+
+  /* Memory reference */
+  trace->symbolicEngine->addMemoryReference(mem, elem->getID());
+
+  displayTrace(insAddr, insDis, elem);
+
+  setMemImm(ctx, imm, mem, writeSize, inst);
 
   return;
 }

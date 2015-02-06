@@ -49,9 +49,18 @@ VOID movRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
     }
   }
 
+  /* Craft the symbolic element */
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
   trace->symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
 
+  /* Craft the Tritinst */
+  Tritinst *inst = new Tritinst(insAddr, insDis);
+  inst->addElement(elem);
+
+  /* Add the Tritinst in the trace */
+  trace->addInstruction(inst);
+
+  /* Apply taint */
   if (trace->taintEngine->isRegTainted(reg2_ID))
     trace->taintEngine->taintReg(reg1_ID);
   else
@@ -75,10 +84,19 @@ VOID movRegImm(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 imm, INT32 
   UINT64 reg1_ID = translatePinRegToID(reg1);
 
   expr << smt2lib_bv(imm, REG_Size(reg1));
-   
+ 
+  /* Craft the symbolic element */  
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
   trace->symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
 
+  /* Craft the Tritinst */
+  Tritinst *inst = new Tritinst(insAddr, insDis);
+  inst->addElement(elem);
+
+  /* Add the Tritinst in the trace */
+  trace->addInstruction(inst);
+
+  /* Apply taint */
   trace->taintEngine->untaintReg(reg1_ID);
 
   displayTrace(insAddr, insDis, elem);
@@ -143,11 +161,19 @@ VOID movRegMem(std::string insDis, ADDRINT insAddr, REG reg1, UINT64 mem, UINT32
       }
     }
   }
-    
+
+  /* Craft the symbolic element */ 
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
   trace->symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
   elem->isTainted = !TAINTED;
   trace->taintEngine->untaintReg(reg1_ID);
+
+  /* Craft the Tritinst */
+  Tritinst *inst = new Tritinst(insAddr, insDis);
+  inst->addElement(elem);
+
+  /* Add the Tritinst in the trace */
+  trace->addInstruction(inst);
 
   /* Check if the source addr is tainted */
   if (trace->taintEngine->isMemoryTainted(mem)){
@@ -176,8 +202,16 @@ VOID movMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   else 
     expr << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg1)), writeSize);
 
+  /* Craft the symbolic element */
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
   elem->isTainted = !TAINTED;
+
+  /* Craft the Tritinst */
+  Tritinst *inst = new Tritinst(insAddr, insDis);
+  inst->addElement(elem);
+
+  /* Add the Tritinst in the trace */
+  trace->addInstruction(inst);
 
   /* If expr reg is tainted, we taint the memory area */
   if (trace->taintEngine->isRegTainted(reg1_ID)){
@@ -217,8 +251,16 @@ VOID movMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
 
   expr << smt2lib_bv(imm, writeSize);
 
+  /* Craft the symbolic element */
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
   elem->isTainted = !TAINTED;
+
+  /* Craft the Tritinst */
+  Tritinst *inst = new Tritinst(insAddr, insDis);
+  inst->addElement(elem);
+
+  /* Add the Tritinst in the trace */
+  trace->addInstruction(inst);
 
   /* We remove the taint if the memory area is tainted */
   unsigned int offset = 0;

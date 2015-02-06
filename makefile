@@ -47,9 +47,8 @@ SRC = 		./src/analysis/formatStringBug.cpp \
 		./src/symbolicEngine/symbolicElement.cpp \
 		./src/symbolicEngine/symbolicEngine.cpp \
 		./src/taintEngine/taintEngine.cpp \
-		./src/components/Instruction.cpp \
-		./src/components/BasicBlock.cpp \
-		./src/components/Trace.cpp
+		./src/components/Trace.cpp \
+		./src/components/Tritinst.cpp
 
 
 OBJ = $(SRC:.cpp=.o)

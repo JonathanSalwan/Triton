@@ -23,14 +23,17 @@
  *
  * */
 
-static VOID setZF(UINT64 id)
+static VOID setZF(UINT64 id, Tritinst *inst)
 {
   std::stringstream expr;
 
   expr << "(assert (= #" << std::dec << id << " 0))";
-    
+  
+  /* Craft the symbolic element */
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
   trace->symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
+
+  inst->addElement(elem);
 
   displayTrace(0, "", elem);
 }
@@ -49,14 +52,22 @@ VOID addRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
     expr << "(+ #" << std::dec << trace->symbolicEngine->symbolicReg[reg1_ID] << " " << smt2lib_bv(imm, REG_Size(reg1)) << ")";
   else 
     expr << "(+ " << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg1)), REG_Size(reg1)) << " " << smt2lib_bv(imm, REG_Size(reg1)) << ")";
-    
+ 
+  /* Craft the symbolic element */   
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
   trace->symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
   elem->isTainted = trace->taintEngine->getRegStatus(reg1_ID);
 
+  /* Craft the Tritinst */
+  Tritinst *inst = new Tritinst(insAddr, insDis);
+  inst->addElement(elem);
+
+  /* Add the Tritinst in the trace */
+  trace->addInstruction(inst);
+
   displayTrace(insAddr, insDis, elem);
 
-  setZF(elem->getID());
+  setZF(elem->getID(), inst);
 
   return;
 }
@@ -84,9 +95,18 @@ VOID addRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
 
   expr << "(+ " << vr1.str() << " " << vr2.str() << ")";
 
+  /* Craft the symbolic element */
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
   trace->symbolicEngine->symbolicReg[reg1_ID] = elem->getID();
 
+  /* Craft the Tritinst */
+  Tritinst *inst = new Tritinst(insAddr, insDis);
+  inst->addElement(elem);
+
+  /* Add the Tritinst in the trace */
+  trace->addInstruction(inst);
+
+  /* Apply taint */
   if (trace->taintEngine->isRegTainted(reg2_ID))
     trace->taintEngine->taintReg(reg1_ID);
 
@@ -94,7 +114,7 @@ VOID addRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
 
   displayTrace(insAddr, insDis, elem);
 
-  setZF(elem->getID());
+  setZF(elem->getID(), inst);
 
   return;
 }

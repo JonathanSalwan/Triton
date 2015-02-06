@@ -44,6 +44,13 @@ VOID cmpRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
   trace->symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
+  /* Craft the Tritinst */
+  Tritinst *inst = new Tritinst(insAddr, insDis);
+  inst->addElement(elem);
+
+  /* Add the Tritinst in the trace */
+  trace->addInstruction(inst);
+
   /* Check if reg1 is tainted */
   if (trace->taintEngine->isRegTainted(reg1_ID))
     elem->isTainted = TAINTED;
@@ -88,6 +95,13 @@ VOID cmpRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
   trace->symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
+  /* Craft the Tritinst */
+  Tritinst *inst = new Tritinst(insAddr, insDis);
+  inst->addElement(elem);
+
+  /* Add the Tritinst in the trace */
+  trace->addInstruction(inst);
+
   /* Check if reg1 or reg2 is tainted */
   if (trace->taintEngine->isRegTainted(reg1_ID) || trace->taintEngine->isRegTainted(reg2_ID))
     elem->isTainted = TAINTED;
@@ -115,6 +129,13 @@ VOID cmpMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
 
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
   trace->symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
+
+  /* Craft the Tritinst */
+  Tritinst *inst = new Tritinst(insAddr, insDis);
+  inst->addElement(elem);
+
+  /* Add the Tritinst in the trace */
+  trace->addInstruction(inst);
 
   if (trace->taintEngine->isMemoryTainted(mem))
     elem->isTainted = TAINTED;

@@ -17,7 +17,6 @@
 
 #include <z3++.h>
 
-#include "Instruction.h" 
 #include "Registers.h"
 #include "Signals.h"
 #include "SnapshotEngine.h"
@@ -25,6 +24,7 @@
 #include "SymbolicEngine.h"
 #include "TaintEngine.h"
 #include "Trace.h"
+#include "Tritinst.h"
 #include "Utils.h"
 
 #define LIB_MAPING_MEMORY 0x7f0000000000
