@@ -34,18 +34,18 @@ VOID cmpRegImm(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
 
   /* Build smt */
   expr << "(assert (= (" << smt2lib_extract(REG_Size(reg1));
-  if (symbolicEngine->symbolicReg[reg1_ID] != (UINT64)-1)
-    expr << "#" << std::dec << symbolicEngine->symbolicReg[reg1_ID];
+  if (trace->symbolicEngine->symbolicReg[reg1_ID] != UNSET)
+    expr << "#" << std::dec << trace->symbolicEngine->symbolicReg[reg1_ID];
   else 
     expr << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg1)), REG_Size(reg1));
   expr << ") " << smt2lib_bv(imm, REG_Size(reg1)) << "))";
     
   /* Add sym elem */
-  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
-  symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
+  SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
+  trace->symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
   /* Check if reg1 is tainted */
-  if (taintEngine->isRegTainted(reg1_ID))
+  if (trace->taintEngine->isRegTainted(reg1_ID))
     elem->isTainted = TAINTED;
 
   /* Display trace */
@@ -67,16 +67,16 @@ VOID cmpRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
 
   /* Build smt reg 1 */
   vr1 << "(" << smt2lib_extract(REG_Size(reg1));
-  if (symbolicEngine->symbolicReg[reg1_ID] != (UINT64)-1)
-    vr1 << "#" << std::dec << symbolicEngine->symbolicReg[reg1_ID];
+  if (trace->symbolicEngine->symbolicReg[reg1_ID] != UNSET)
+    vr1 << "#" << std::dec << trace->symbolicEngine->symbolicReg[reg1_ID];
   else
     vr1 << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg1)), REG_Size(reg1));
   vr1 << ")";
     
   /* Build smt reg 2 */
   vr2 << "(" << smt2lib_extract(REG_Size(reg2));
-  if (symbolicEngine->symbolicReg[reg2_ID] != (UINT64)-1)
-    vr2 << "#" << std::dec << symbolicEngine->symbolicReg[reg2_ID];
+  if (trace->symbolicEngine->symbolicReg[reg2_ID] != UNSET)
+    vr2 << "#" << std::dec << trace->symbolicEngine->symbolicReg[reg2_ID];
   else
     vr2 << smt2lib_bv(PIN_GetContextReg(ctx, getHighReg(reg2)), REG_Size(reg2));
   vr2 << ")";
@@ -85,11 +85,11 @@ VOID cmpRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
   expr << "(assert (= " << vr1.str() << " " << vr2.str() << "))";
 
   /* Add sym elem */
-  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
-  symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
+  SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
+  trace->symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
   /* Check if reg1 or reg2 is tainted */
-  if (taintEngine->isRegTainted(reg1_ID) || taintEngine->isRegTainted(reg2_ID))
+  if (trace->taintEngine->isRegTainted(reg1_ID) || trace->taintEngine->isRegTainted(reg2_ID))
     elem->isTainted = TAINTED;
 
   /* Display trace */
@@ -107,16 +107,16 @@ VOID cmpMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   std::stringstream expr, vr1, vr2;
 
   expr << "(assert (= ";
-  if (symbolicEngine->isMemoryReference(mem) != -1)
-    expr << "(" << smt2lib_extract(readSize) << "#" << std::dec << symbolicEngine->isMemoryReference(mem) << ") " << smt2lib_bv(imm, readSize);
+  if (trace->symbolicEngine->isMemoryReference(mem) != UNSET)
+    expr << "(" << smt2lib_extract(readSize) << "#" << std::dec << trace->symbolicEngine->isMemoryReference(mem) << ") " << smt2lib_bv(imm, readSize);
   else
     expr << smt2lib_bv(derefMem(mem, readSize), readSize) << " " << smt2lib_bv(imm, readSize);
   expr << "))";
 
-  SymbolicElement *elem = symbolicEngine->newSymbolicElement(expr);
-  symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
+  SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
+  trace->symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
-  if (taintEngine->isMemoryTainted(mem))
+  if (trace->taintEngine->isMemoryTainted(mem))
     elem->isTainted = TAINTED;
   
   displayTrace(insAddr, insDis, elem);

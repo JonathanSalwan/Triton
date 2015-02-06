@@ -1,43 +1,24 @@
 #include "Trace.h"
 
 
-Trace::Trace(uint64_t entry, uint64_t end)
+Trace::Trace()
 {
-  this->entryPoint = entry;
-  this->endPoint = end;
+  /* Snapshot Engine */
+  this->snapshotEngine = new SnapshotEngine;
+
+  /* Taint Engine */
+  this->taintEngine = new TaintEngine;
+
+  /* Symbolic Engine */
+  this->symbolicEngine = new SymbolicEngine;
 }
 
 
 Trace::~Trace()
 {
+  delete this->snapshotEngine;
+  delete this->taintEngine;
+  delete this->symbolicEngine;
 }
 
-
-uint64_t Trace::getEntryPoint() 
-{
-  return entryPoint;
-}
-
-
-uint64_t Trace::getEndPoint()
-{
-  return endPoint;
-}
-
-// TODO
-//std::string Trace::dump()
-//{
-//}
-
-
-void Trace::addBasicBlock(const BasicBlock &bbl)
-{
-  // TODO
-}
-
-
-// TODO
-//const std::list<BasicBlock> &getForks()
-//{
-//}
 

@@ -5,76 +5,38 @@
 
 SymbolicEngine::SymbolicEngine()
 {
-  /* Init all symbolic registers/flags to -1 (init state) */
-  this->symbolicReg[ID_RAX] = (uint64_t)-1;
-  this->symbolicReg[ID_RBX] = (uint64_t)-1;
-  this->symbolicReg[ID_RCX] = (uint64_t)-1;
-  this->symbolicReg[ID_RDX] = (uint64_t)-1;
-  this->symbolicReg[ID_RDI] = (uint64_t)-1;
-  this->symbolicReg[ID_RSI] = (uint64_t)-1;
-  this->symbolicReg[ID_RBP] = (uint64_t)-1;
-  this->symbolicReg[ID_RSP] = (uint64_t)-1;
-  this->symbolicReg[ID_R8]  = (uint64_t)-1;
-  this->symbolicReg[ID_R9]  = (uint64_t)-1;
-  this->symbolicReg[ID_R10] = (uint64_t)-1;
-  this->symbolicReg[ID_R11] = (uint64_t)-1;
-  this->symbolicReg[ID_R12] = (uint64_t)-1;
-  this->symbolicReg[ID_R13] = (uint64_t)-1;
-  this->symbolicReg[ID_R14] = (uint64_t)-1;
-  this->symbolicReg[ID_R15] = (uint64_t)-1;
-  this->symbolicReg[ID_CF]  = (uint64_t)-1;
-  this->symbolicReg[ID_PF]  = (uint64_t)-1;
-  this->symbolicReg[ID_AF]  = (uint64_t)-1;
-  this->symbolicReg[ID_ZF]  = (uint64_t)-1;
-  this->symbolicReg[ID_SF]  = (uint64_t)-1;
-  this->symbolicReg[ID_TF]  = (uint64_t)-1;
-  this->symbolicReg[ID_IF]  = (uint64_t)-1;
-  this->symbolicReg[ID_DF]  = (uint64_t)-1;
-  this->symbolicReg[ID_OF]  = (uint64_t)-1;
+  /* Init all symbolic registers/flags to UNSET (init state) */
+  this->symbolicReg[ID_RAX] = UNSET;
+  this->symbolicReg[ID_RBX] = UNSET;
+  this->symbolicReg[ID_RCX] = UNSET;
+  this->symbolicReg[ID_RDX] = UNSET;
+  this->symbolicReg[ID_RDI] = UNSET;
+  this->symbolicReg[ID_RSI] = UNSET;
+  this->symbolicReg[ID_RBP] = UNSET;
+  this->symbolicReg[ID_RSP] = UNSET;
+  this->symbolicReg[ID_R8]  = UNSET;
+  this->symbolicReg[ID_R9]  = UNSET;
+  this->symbolicReg[ID_R10] = UNSET;
+  this->symbolicReg[ID_R11] = UNSET;
+  this->symbolicReg[ID_R12] = UNSET;
+  this->symbolicReg[ID_R13] = UNSET;
+  this->symbolicReg[ID_R14] = UNSET;
+  this->symbolicReg[ID_R15] = UNSET;
+  this->symbolicReg[ID_CF]  = UNSET;
+  this->symbolicReg[ID_PF]  = UNSET;
+  this->symbolicReg[ID_AF]  = UNSET;
+  this->symbolicReg[ID_ZF]  = UNSET;
+  this->symbolicReg[ID_SF]  = UNSET;
+  this->symbolicReg[ID_TF]  = UNSET;
+  this->symbolicReg[ID_IF]  = UNSET;
+  this->symbolicReg[ID_DF]  = UNSET;
+  this->symbolicReg[ID_OF]  = UNSET;
 
   /* Init the number of symbolic variable used */
   this->numberOfSymVar = 0;
 }
 
-
-SymbolicEngine::SymbolicEngine(const SymbolicEngine &copy)
-{
-  this->symbolicReg[ID_RAX] = copy.symbolicReg[ID_RAX];
-  this->symbolicReg[ID_RBX] = copy.symbolicReg[ID_RBX];
-  this->symbolicReg[ID_RCX] = copy.symbolicReg[ID_RCX];
-  this->symbolicReg[ID_RDX] = copy.symbolicReg[ID_RDX];
-  this->symbolicReg[ID_RDI] = copy.symbolicReg[ID_RDI];
-  this->symbolicReg[ID_RSI] = copy.symbolicReg[ID_RSI];
-  this->symbolicReg[ID_RBP] = copy.symbolicReg[ID_RBP];
-  this->symbolicReg[ID_RSP] = copy.symbolicReg[ID_RSP];
-  this->symbolicReg[ID_R8]  = copy.symbolicReg[ID_R8];
-  this->symbolicReg[ID_R9]  = copy.symbolicReg[ID_R9];
-  this->symbolicReg[ID_R10] = copy.symbolicReg[ID_R10];
-  this->symbolicReg[ID_R11] = copy.symbolicReg[ID_R11];
-  this->symbolicReg[ID_R12] = copy.symbolicReg[ID_R12];
-  this->symbolicReg[ID_R13] = copy.symbolicReg[ID_R13];
-  this->symbolicReg[ID_R14] = copy.symbolicReg[ID_R14];
-  this->symbolicReg[ID_R15] = copy.symbolicReg[ID_R15];
-  this->symbolicReg[ID_CF]  = copy.symbolicReg[ID_CF];
-  this->symbolicReg[ID_PF]  = copy.symbolicReg[ID_PF];
-  this->symbolicReg[ID_AF]  = copy.symbolicReg[ID_AF];
-  this->symbolicReg[ID_ZF]  = copy.symbolicReg[ID_ZF];
-  this->symbolicReg[ID_SF]  = copy.symbolicReg[ID_SF];
-  this->symbolicReg[ID_TF]  = copy.symbolicReg[ID_TF];
-  this->symbolicReg[ID_IF]  = copy.symbolicReg[ID_IF];
-  this->symbolicReg[ID_DF]  = copy.symbolicReg[ID_DF];
-  this->symbolicReg[ID_OF]  = copy.symbolicReg[ID_OF];
-
-  this->uniqueID              = copy.uniqueID;
-  this->numberOfSymVar        = copy.numberOfSymVar;
-  this->memoryReference       = copy.memoryReference;
-  this->symVarMemoryReference = copy.symVarMemoryReference;
-  this->smt2libVarDeclList    = copy.smt2libVarDeclList;
-  this->symbolicVector        = copy.symbolicVector;
-}
-
-
-void SymbolicEngine::operator=(const SymbolicEngine &other)
+void SymbolicEngine::init(const SymbolicEngine &other)
 {
   this->symbolicReg[ID_RAX] = other.symbolicReg[ID_RAX];
   this->symbolicReg[ID_RBX] = other.symbolicReg[ID_RBX];
@@ -111,6 +73,18 @@ void SymbolicEngine::operator=(const SymbolicEngine &other)
 }
 
 
+SymbolicEngine::SymbolicEngine(const SymbolicEngine &copy)
+{
+  this->init(copy);
+}
+
+
+void SymbolicEngine::operator=(const SymbolicEngine &other)
+{
+  this->init(other);
+}
+
+
 SymbolicEngine::~SymbolicEngine()
 {
   std::vector<SymbolicElement *>::iterator it = this->symbolicVector.begin();
@@ -124,12 +98,12 @@ SymbolicEngine::~SymbolicEngine()
 }
 
 /* Returns the reference memory if it's referenced otherwise returns -1 */
-int32_t SymbolicEngine::isMemoryReference(uint64_t addr)
+uint64_t SymbolicEngine::isMemoryReference(uint64_t addr)
 {
   std::map<uint64_t, uint64_t>::iterator it;
   if ((it = this->memoryReference.find(addr)) != this->memoryReference.end())
     return it->second;
-  return -1;
+  return UNSET;
 }
 
 /* Get an unique ID. 

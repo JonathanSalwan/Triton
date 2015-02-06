@@ -14,6 +14,8 @@
 #include "SymbolicElement.h"
 #include "smt2lib_utils.h"
 
+#define UNSET (uint64_t)-1
+
 
 /* Symbolic Engine */
 class SymbolicEngine {
@@ -53,7 +55,7 @@ class SymbolicEngine {
     uint64_t              symbolicReg[25];
 
     /* public methods */
-    int32_t               isMemoryReference(uint64_t addr);
+    uint64_t              isMemoryReference(uint64_t addr);
     std::string           getSmt2LibVarsDecl();
     SymbolicElement       *getElementFromId(uint64_t id);
     SymbolicElement       *newSymbolicElement(std::stringstream &src);
@@ -63,6 +65,7 @@ class SymbolicEngine {
     void                  addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize);
     void                  addSymVarMemoryReference(uint64_t mem, uint64_t symVarID);
 
+    void                  init(const SymbolicEngine &other);
     void                  operator=(const SymbolicEngine &other);
 
     SymbolicEngine();
