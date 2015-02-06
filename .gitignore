@@ -5,3 +5,4 @@ pintool.log
 *.o
 *.so
 note_perso
+smt2_branches

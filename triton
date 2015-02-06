@@ -63,4 +63,5 @@ if [ ! -x ${EXEC} ]; then
 fi
 
 # Running Triton
-${ROOT}/../../../pin -t ${ROOT}/triton.so ${MODE} ${MODE_ARGS} -- ${EXEC} ${EXEC_ARGS} || usage
+${ROOT}/../../../pin -t ${ROOT}/triton.so ${MODE} ${MODE_ARGS} -- ${EXEC} ${EXEC_ARGS}
+
