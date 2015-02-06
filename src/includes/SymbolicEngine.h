@@ -72,7 +72,6 @@ class SymbolicEngine {
     SymbolicEngine(const SymbolicEngine &copy);
     ~SymbolicEngine();
 
-
 };
 
 #endif     /* !__SYMBOLICENGINE_H__ */

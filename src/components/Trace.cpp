@@ -22,3 +22,8 @@ Trace::~Trace()
 }
 
 
+void Trace::addInstruction(Tritinst *instruction)
+{
+  this->instructions.push_back(instruction);
+}
+
