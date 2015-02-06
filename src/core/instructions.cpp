@@ -167,6 +167,29 @@ VOID Instruction(INS ins, VOID *v)
           IARG_UINT32, INS_OperandReg(ins, 1),
           IARG_END);
 
+      /* add [mem], imm */
+      else if (INS_OperandCount(ins) == 3 && INS_MemoryOperandIsWritten(ins, 0) && INS_OperandIsImmediate(ins, 1))
+        INS_InsertCall(
+          ins, IPOINT_BEFORE, (AFUNPTR)addMemImm,
+          IARG_PTR, new string(INS_Disassemble(ins)),
+          IARG_ADDRINT, INS_Address(ins),
+          IARG_UINT32, INS_OperandImmediate(ins, 1),
+          IARG_MEMORYOP_EA, 0,
+          IARG_UINT32, INS_MemoryWriteSize(ins),
+          IARG_END);
+
+      /* add [mem], reg */
+      else if (INS_OperandCount(ins) == 3 && INS_MemoryOperandIsWritten(ins, 0) && INS_OperandIsReg(ins, 1))
+        INS_InsertCall(
+          ins, IPOINT_BEFORE, (AFUNPTR)addMemReg,
+          IARG_PTR, new string(INS_Disassemble(ins)),
+          IARG_ADDRINT, INS_Address(ins),
+          IARG_CONTEXT,
+          IARG_UINT32, INS_OperandReg(ins, 1),
+          IARG_MEMORYOP_EA, 0,
+          IARG_UINT32, INS_MemoryWriteSize(ins),
+          IARG_END);
+
       else
         /* Callback for semantics not yet implemented */
         INS_InsertCall(
