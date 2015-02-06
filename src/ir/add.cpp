@@ -120,7 +120,7 @@ VOID addRegReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, REG 
 }
 
 
-VOID addMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT64 writeSize)
+VOID addMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT32 writeSize)
 {
   if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
@@ -135,7 +135,6 @@ VOID addMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
   expr << ")";
 
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
-  trace->symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
   /* Craft the Tritinst */
   Tritinst *inst = new Tritinst(insAddr, insDis);
@@ -158,7 +157,7 @@ VOID addMemImm(std::string insDis, ADDRINT insAddr, UINT64 imm, UINT64 mem, UINT
 }
 
 
-VOID addMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT64 writeSize)
+VOID addMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT64 mem, UINT32 writeSize)
 {
   if (_analysisStatus == LOCKED || insAddr > LIB_MAPING_MEMORY)
     return;
@@ -184,7 +183,6 @@ VOID addMemReg(std::string insDis, ADDRINT insAddr, CONTEXT *ctx, REG reg1, UINT
 
   /* Craft the symbolic element */
   SymbolicElement *elem = trace->symbolicEngine->newSymbolicElement(expr);
-  trace->symbolicEngine->symbolicReg[ID_ZF] = elem->getID();
 
   /* Craft the Tritinst */
   Tritinst *inst = new Tritinst(insAddr, insDis);
