@@ -32,6 +32,15 @@ INT32 Usage()
 
 VOID Fini(INT32, VOID *)
 {
+
+//  /* Currently used to test if all going good */
+//  std::cout << std::endl << std::endl << "[DEBUG] ---------------------------" << std::endl;
+//  std::list<Tritinst *>::iterator i;
+//  for(i = trace->getInstructions().begin(); i != trace->getInstructions().end(); i++){
+//    std::cout << (*i)->getAddress() << " " << (*i)->numberOfElements() << " " << (*i)->getDisassembly() << std::endl;
+//  }
+
+  /* Delete the trace */
   delete trace;
   return;
 }

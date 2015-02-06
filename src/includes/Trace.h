@@ -31,6 +31,7 @@ class Trace {
     ~Trace();
 
     void addInstruction(Tritinst *instruction);
+    std::list<Tritinst *> &getInstructions();
 };
 
 #endif /* !_TRACE_H_ */
