@@ -1,48 +1,58 @@
+#include "Triton.h"
 
+#include <iostream>
+
+#include <cstdlib>
 #include <csignal>
 
 #include "pin.H"
-#include "Triton.h"
 
-/* Pin options: -startAnalysis */
-KNOB<std::string>  KnobStartAnalysis(KNOB_MODE_WRITEONCE, "pintool", "startAnalysis", "none", "Start/end the analysis from a scope function");
+#include "analysis/FormatString.h"
 
-/* Pin options: -detectFormatString */
-KNOB<bool>  KnobDetectFormatString(KNOB_MODE_WRITEONCE, "pintool", "detectFormatString", "0", "Enable the format string detection analysis");
+using namespace std;
 
 /* flag Lock / Unlock instrumentation */
 UINT32 _analysisStatus = LOCKED;
 
-
-
 /* Trace object */
 Trace *trace = new Trace;
 
+/* Pin options: -startAnalysis */
+KNOB<string>
+KnobStartAnalysis(KNOB_MODE_WRITEONCE,
+		  "pintool", "startAnalysis", "none",
+		  "Start/end the analysis from a scope function");
 
+/* Pin options: -detectFormatString */
+KNOB<bool>
+KnobDetectFormatString(KNOB_MODE_WRITEONCE,
+		       "pintool", "detectFormatString", "0",
+		       "Enable the format string detection analysis");
 
 /* Usage function if Pin fail to start */
 INT32 Usage()
 {
-    std::cerr << "Triton analyzer: " << std::endl << std::endl;
-    std::cerr << " -startAnalysis <function name>       Start/end the analysis from a scope function" << std::endl;
-    std::cerr << " -detectFormatString                  Enable the format string detection analysis" << std::endl;
-    return -1;
-}
+  cout << "Triton binary analyzer usage: triton MODE [MODE_ARGS] EXEC [EXEC_ARGS]" << endl;
+  cout << endl;
+  cout << "Available modes are:" << endl;
+  cout << " -startAnalysis <func name>  Start/end the analysis from a scope function" << endl;
+  cout << " -detectFormatString         Enable the format string detection analysis" << endl;
 
+    return EXIT_FAILURE;
+}
 
 VOID Fini(INT32, VOID *)
 {
 
 //  /* Currently used to test if all going good */
-//  std::cout << std::endl << std::endl << "[DEBUG] ---------------------------" << std::endl;
-//  std::list<Tritinst *>::iterator i;
+//  cout << endl << endl << "[DEBUG] ---------------------------" << endl;
+//  list<Tritinst *>::iterator i;
 //  for(i = trace->getInstructions().begin(); i != trace->getInstructions().end(); i++){
-//    std::cout << (*i)->getAddress() << " " << (*i)->numberOfElements() << " " << (*i)->getDisassembly() << std::endl;
+//    cout << (*i)->getAddress() << " " << (*i)->numberOfElements() << " " << (*i)->getDisassembly() << endl;
 //  }
 
   /* Delete the trace */
   delete trace;
-  return;
 }
 
 
@@ -50,7 +60,7 @@ int main(int argc, char *argv[])
 {
   PIN_InitSymbols();
   if(PIN_Init(argc, argv)){
-      return Usage();
+    return Usage();
   }
 
   /* We first need a target function */
@@ -75,7 +85,7 @@ int main(int argc, char *argv[])
   /* Rock 'n roll baby */
   PIN_StartProgram();
 
-  return 0;
+  return EXIT_SUCCESS;
 }
 
 
