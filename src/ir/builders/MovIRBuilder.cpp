@@ -34,13 +34,13 @@ std::stringstream *MovIRBuilder::regReg(const ContextHandler &ctxH) const {
   uint64_t          reg1 = _operands[0].second;
   uint64_t          reg2 = _operands[1].second;
 
-  if (symEngine->symbolicReg[reg2] != UNSET)
-    expr << "#" << std::dec << symEngine->symbolicReg[reg2];
+  if (symEngine->symbolicReg[ctxH.translateRegID(reg2)] != UNSET)
+    expr << "#" << std::dec << symEngine->symbolicReg[ctxH.translateRegID(reg2)];
   else
     expr << smt2lib::bv(ctxH.getRegisterValue(reg2), ctxH.getRegisterSize(reg1));
 
   SymbolicElement *symElement = symEngine->newSymbolicElement(expr);
-  symEngine->symbolicReg[reg1] = symElement->getID();
+  symEngine->symbolicReg[ctxH.translateRegID(reg1)] = symElement->getID();
 
   return symElement->getExpression();
 }
