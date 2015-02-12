@@ -23,7 +23,7 @@ std::stringstream *MovIRBuilder::regImm(const ContextHandler &ctxH) const {
   expr << smt2lib::bv(imm, ctxH.getRegisterSize(reg));
 
   SymbolicElement *symElement = symEngine->newSymbolicElement(expr);
-  symEngine->symbolicReg[reg] = symElement->getID();
+  symEngine->symbolicReg[ctxH.translateRegID(reg)] = symElement->getID();
 
   return symElement->getExpression();
 }
@@ -66,3 +66,4 @@ std::stringstream *MovIRBuilder::process(const ContextHandler &ctxH) const {
 
   return templateMethod(ctxH, _operands, "MOV");
 }
+
