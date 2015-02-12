@@ -4,6 +4,9 @@
 
 #include "MovIRBuilder.h"
 #include "smt2lib_utils.h"
+#include "SymbolicEngine.h"
+
+extern SymbolicEngine symEngine;
 
 
 MovIRBuilder::MovIRBuilder(uint64_t address, const std::string &disassembly):
@@ -13,13 +16,18 @@ MovIRBuilder::MovIRBuilder(uint64_t address, const std::string &disassembly):
 
 
 std::stringstream *MovIRBuilder::regImm(const ContextHandler &ctxH) const {
-  std::stringstream *expr = new std::stringstream();
+
+  std::stringstream expr;
+
   uint64_t regID = _operands[0].second;
   uint64_t imm = _operands[1].second;
 
-  *expr << smt2lib::bv(imm, ctxH.getRegisterSize(regID));
+  expr << smt2lib::bv(imm, ctxH.getRegisterSize(regID));
 
-  return expr;
+  SymbolicElement *symElement = symEngine.newSymbolicElement(expr);
+  symEngine.symbolicReg[regID] = symElement->getID();
+
+  return symElement->getExpression();
 }
 
 std::stringstream *MovIRBuilder::regReg(const ContextHandler &ctxH) const {

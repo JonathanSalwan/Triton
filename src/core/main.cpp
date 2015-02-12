@@ -10,6 +10,7 @@
 #include "IRBuilder.h"
 #include "IRBuilderFactory.h"
 #include "trigger.h"
+#include "SymbolicEngine.h"
 
 
 /* Pin options: -startAnalysis */
@@ -17,6 +18,7 @@ KNOB<std::string>  KnobStartAnalysis(KNOB_MODE_WRITEONCE, "pintool", "startAnaly
 
 
 Trigger analysisTrigger;
+SymbolicEngine symEngine;
 
 
 VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea)
