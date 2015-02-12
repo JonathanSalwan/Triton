@@ -45,15 +45,15 @@ IRBuilder *createIRBuilder(INS ins) {
       type = IRBuilder::REG;
       val  = INS_OperandReg(ins, i);
     }
-    else if (INS_MemoryOperandIsRead(ins, 0)){
-      type = IRBuilder::MEM_R;
-      if (INS_MemoryOperandCount(ins) > 0)
-        size = INS_MemoryReadSize(ins);
-    }
-    else if (INS_MemoryOperandIsWritten(ins, 0)){
-      type = IRBuilder::MEM_W;
-      if (INS_MemoryOperandCount(ins) > 0)
-        size = INS_MemoryWriteSize(ins);
+    else if (INS_MemoryOperandCount(ins) > 0) {
+      // Sanity check, instruction like "nop dword ptr [eax], ebx"
+      // make INS_MemoryReadSize crash.
+      size = INS_MemoryReadSize(ins);
+
+      if (INS_MemoryOperandIsRead(ins, 0))
+        type = IRBuilder::MEM_R;
+      else
+        type = IRBuilder::MEM_W;
     }
     else
       continue;
