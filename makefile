@@ -1,5 +1,5 @@
 # Path to the pin kit directory
-PIN_ROOT =	"../../.."
+PIN_ROOT =	../../..
 
 NAME = 		triton
 
@@ -28,7 +28,7 @@ LIBS =		-L$(PIN_ROOT)/intel64/lib \
 		-lxed \
 		-lpindwarf \
 		-ldl \
-		#-lz3
+		-lz3
 
 SRC =           ./src/core/main.cpp \
 		./src/ir/IRBuilderFactory.cpp \

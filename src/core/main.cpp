@@ -65,7 +65,7 @@ VOID TRACE_Instrumentation(TRACE trace, VOID *v)
         INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR) callback,
             IARG_PTR, irb,
             IARG_CONTEXT,
-            IARG_BOOL, FALSE,
+            IARG_BOOL, false,
             IARG_ADDRINT, 0,
             IARG_END);
       }

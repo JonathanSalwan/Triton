@@ -10,10 +10,10 @@ ROOT="$(cd "$(dirname "$0")" && pwd)"
 
 usage ()
 {
-    echo "Triton binary analyzer usage: triton MODE [MODE_ARGS] EXEC [EXEC_ARGS]\n"
+    echo "Triton binary analyzer usage: triton MODE [MODE_ARGS] EXEC [EXEC_ARGS]"
     echo "Available modes are:"
     echo " -startAnalysis <func_name>  Start the analysis the scope of the function"
-    echo " -detectFormatString         Enable the format string detection analysis"
+    #echo " -detectFormatString         Enable the format string detection analysis"
 }
 
 check_argument ()
@@ -42,8 +42,8 @@ case ${MODE} in
 	check_argument
 	;;
 
-    "-detectFormatString")
-	;;
+    #"-detectFormatString")
+    #	;;
 
     "-h" | "-help" | "--help")
 	usage
