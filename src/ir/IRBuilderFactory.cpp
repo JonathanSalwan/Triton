@@ -7,7 +7,7 @@
 #include "MovIRBuilder.h"
 #include "NullIRBuilder.h"
 
-// Returns a pointer to a IRBuilder object.
+// Returns a pointer to an IRBuilder object.
 // It is up to the user to delete it when times come.
 IRBuilder *createIRBuilder(INS ins) {
   UINT64 address    = INS_Address(ins);
@@ -18,15 +18,15 @@ IRBuilder *createIRBuilder(INS ins) {
 
   switch (opcode) {
 
-    case XED_ICLASS_MOVSX:
-    case XED_ICLASS_MOVZX:
+    //case XED_ICLASS_MOVSX:
+    //case XED_ICLASS_MOVZX:
     case XED_ICLASS_MOV:
       ir = new MovIRBuilder(address, disas);
-
       break;
 
     default:
       ir = new NullIRBuilder(address, disas);
+      break;
   }
 
   // Populate the operands
@@ -46,8 +46,8 @@ IRBuilder *createIRBuilder(INS ins) {
       val  = INS_OperandReg(ins, i);
     }
     else if (INS_MemoryOperandCount(ins) > 0) {
-      // check needed because instruction like "nop dword ptr [eax], ebx"
-      // make INS_MemoryReadSize crash.
+      // check needed because instructions like "nop dword ptr [eax], ebx"
+      // makes INS_MemoryReadSize crash.
 
       if (INS_MemoryOperandIsRead(ins, 0)) {
         type = IRBuilder::MEM_R;
