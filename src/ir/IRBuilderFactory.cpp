@@ -47,11 +47,13 @@ IRBuilder *createIRBuilder(INS ins) {
     }
     else if (INS_MemoryOperandIsRead(ins, 0)){
       type = IRBuilder::MEM_R;
-      //size = INS_MemoryReadSize(ins);
+      if (INS_MemoryOperandCount(ins) > 0)
+        size = INS_MemoryReadSize(ins);
     }
     else if (INS_MemoryOperandIsWritten(ins, 0)){
       type = IRBuilder::MEM_W;
-      //size = INS_MemoryWriteSize(ins);
+      if (INS_MemoryOperandCount(ins) > 0)
+        size = INS_MemoryWriteSize(ins);
     }
     else
       continue;
