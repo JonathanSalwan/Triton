@@ -37,7 +37,7 @@ SRC =           ./src/core/main.cpp \
 		./src/ir/templates/TwoOperandsTemplate.cpp \
 		./src/trigger/trigger.cpp \
 		./src/contextHandler/PINContextHandler.cpp \
-		./src/solverEngine/smt2lib_utils.cpp \
+		./src/solverEngine/smt2lib.cpp \
 		./src/symbolicEngine/symbolicElement.cpp \
 		./src/symbolicEngine/symbolicEngine.cpp
 

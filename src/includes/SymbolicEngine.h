@@ -12,7 +12,7 @@
 #include <vector>
 
 #include "SymbolicElement.h"
-#include "smt2lib_utils.h"
+#include "SMT2Lib.h"
 
 #define UNSET (uint64_t)-1
 
