@@ -16,7 +16,7 @@ class PINContextHandler: public ContextHandler {
     uint64_t getRegisterValue(uint64_t regID) const;
     uint64_t getRegisterSize(uint64_t regID) const;
     uint64_t translateRegID(uint64_t regID) const;
-    uint64_t getMemoryValue(uint64_t mem, uint64_t readSize) const;
+    uint64_t getMemoryValue(uint64_t mem, uint32_t readSize) const;
 
   private:
     CONTEXT *_ctx;
