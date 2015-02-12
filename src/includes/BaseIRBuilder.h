@@ -3,6 +3,7 @@
 
 #include <ostream>
 #include <sstream>
+#include <tuple>
 #include <vector>
 
 #include "contextHandler.h"
@@ -25,20 +26,19 @@ class BaseIRBuilder: public IRBuilder {
     //  - REG (Register), the value is the register ID.
     //  - MEM_*, the value doesn't mean anything and it's unused.
     //    The object will need a setup before any processing.
-    virtual void addOperand(IRBuilder::operand_t type, uint64_t value = 0);
+    virtual void addOperand(IRBuilder::operand_t type, uint64_t value = 0, uint32_t size = 0);
 
     virtual void setup(uint64_t mem_value);
 
     virtual void checkSetup() const;
 
-
     virtual void display(std::ostream &os) const;
 
   protected:
-    uint64_t _address;
-    std::string _disas;
-    bool _needSetup;
-    std::vector< std::pair<IRBuilder::operand_t, uint64_t> > _operands;
+    uint64_t        _address;
+    std::string     _disas;
+    bool            _needSetup;
+    std::vector< std::tuple<IRBuilder::operand_t, uint64_t, uint32_t> > _operands;
 };
 
 #endif // _BASEIRBUILDER_H_

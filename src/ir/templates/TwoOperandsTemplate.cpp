@@ -1,3 +1,4 @@
+#include <tuple>
 #include <stdexcept>
 
 #include "TwoOperandsTemplate.h"
@@ -5,7 +6,7 @@
 
 std::stringstream *TwoOperandsTemplate::templateMethod(
     const ContextHandler &ctxH,
-    const std::vector< std::pair<IRBuilder::operand_t, uint64_t> > &operands,
+    const std::vector< std::tuple<IRBuilder::operand_t, uint64_t, uint32_t> > &operands,
     std::string insName) const
 {
   if (operands.size() != 2)
@@ -16,29 +17,30 @@ std::stringstream *TwoOperandsTemplate::templateMethod(
   std::stringstream *expr = nullptr;
 
   // reg, imm
-  if (operands[0].first == IRBuilder::REG
-      && operands[1].first == IRBuilder::IMM)
+  if (std::get<0>(operands[0]) == IRBuilder::REG &&
+      std::get<0>(operands[1]) == IRBuilder::IMM)
     expr = this->regImm(ctxH);
 
   // reg, reg
-  if (operands[0].first == IRBuilder::REG
-      && operands[1].first == IRBuilder::REG)
+  if (std::get<0>(operands[0]) == IRBuilder::REG &&
+      std::get<0>(operands[1]) == IRBuilder::REG)
     expr = this->regReg(ctxH);
 
   // reg, mem
-  if (operands[0].first == IRBuilder::REG
-      && IRBuilder::isMemOperand(operands[1].first))
+  if (std::get<0>(operands[0]) == IRBuilder::REG &&
+      IRBuilder::isMemOperand(std::get<0>(operands[1])))
     expr = this->regMem(ctxH);
 
   // mem, imm
-  if (IRBuilder::isMemOperand(operands[0].first)
-      && operands[1].first == IRBuilder::IMM)
+  if (IRBuilder::isMemOperand(std::get<0>(operands[0])) &&
+      std::get<0>(operands[1]) == IRBuilder::IMM)
     expr = this->memImm(ctxH);
 
   // mem, reg
-  if (IRBuilder::isMemOperand(operands[0].first)
-      && operands[1].first == IRBuilder::REG)
+  if (IRBuilder::isMemOperand(std::get<0>(operands[0])) &&
+      std::get<0>(operands[1]) == IRBuilder::REG)
     expr = this->memReg(ctxH);
 
   return expr;
 }
+

@@ -27,20 +27,20 @@ const std::string &BaseIRBuilder::getDisassembly() const
 }
 
 
-void BaseIRBuilder::addOperand(IRBuilder::operand_t type, uint64_t value)
+void BaseIRBuilder::addOperand(IRBuilder::operand_t type, uint64_t value, uint32_t size)
 {
   if (IRBuilder::isMemOperand(type))
     _needSetup = true;
 
-  _operands.push_back(std::make_pair(type, value));
+  _operands.push_back(std::make_tuple(type, value, size));
 }
 
 
 void BaseIRBuilder::setup(uint64_t mem_value)
 {
   for (auto it = _operands.begin(); it != _operands.end(); ++it)
-    if (IRBuilder::isMemOperand(it->first)) {
-      it->second = mem_value;
+    if (IRBuilder::isMemOperand(std::get<0>(*it))) {
+      std::get<1>(*it) = mem_value;
       _needSetup = false;
       break;
     }

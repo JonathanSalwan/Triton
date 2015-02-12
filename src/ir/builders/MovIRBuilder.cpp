@@ -17,8 +17,8 @@ MovIRBuilder::MovIRBuilder(uint64_t address, const std::string &disassembly):
 
 std::stringstream *MovIRBuilder::regImm(const ContextHandler &ctxH) const {
   std::stringstream expr;
-  uint64_t          reg = _operands[0].second;
-  uint64_t          imm = _operands[1].second;
+  uint64_t          reg = std::get<1>(_operands[0]);
+  uint64_t          imm = std::get<1>(_operands[1]);
 
   expr << smt2lib::bv(imm, ctxH.getRegisterSize(reg));
 
@@ -31,8 +31,8 @@ std::stringstream *MovIRBuilder::regImm(const ContextHandler &ctxH) const {
 
 std::stringstream *MovIRBuilder::regReg(const ContextHandler &ctxH) const {
   std::stringstream expr;
-  uint64_t          reg1 = _operands[0].second;
-  uint64_t          reg2 = _operands[1].second;
+  uint64_t          reg1 = std::get<1>(_operands[0]);
+  uint64_t          reg2 = std::get<1>(_operands[1]);
 
   if (symEngine->symbolicReg[ctxH.translateRegID(reg2)] != UNSET)
     expr << "#" << std::dec << symEngine->symbolicReg[ctxH.translateRegID(reg2)];
@@ -47,6 +47,10 @@ std::stringstream *MovIRBuilder::regReg(const ContextHandler &ctxH) const {
 
 
 std::stringstream *MovIRBuilder::regMem(const ContextHandler &ctxH) const {
+//  std::stringstream expr;
+//  uint64_t          reg = _operands[0].second;
+//  uint64_t          mem = _operands[1].second;
+  
   return nullptr;
 }
 

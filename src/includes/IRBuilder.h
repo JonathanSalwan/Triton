@@ -26,7 +26,7 @@ class IRBuilder {
 
     // Add an operand to the IRBuilder.
     // If the value is already now (Immediate value), you can speficy it with value.
-    virtual void addOperand(IRBuilder::operand_t, uint64_t value) = 0;
+    virtual void addOperand(IRBuilder::operand_t, uint64_t value, uint32_t size) = 0;
 
     // Set the value for the MEM_* operand, if there is no such kind of operand
     // it does nothing.

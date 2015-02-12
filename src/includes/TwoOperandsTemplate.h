@@ -14,7 +14,7 @@ class TwoOperandsTemplate {
 
     virtual std::stringstream *templateMethod(
         const ContextHandler &ctxH,
-        const std::vector< std::pair<IRBuilder::operand_t, uint64_t > > &operands,
+        const std::vector< std::tuple<IRBuilder::operand_t, uint64_t, uint32_t> > &operands,
         std::string instructionName) const;
 
   protected:

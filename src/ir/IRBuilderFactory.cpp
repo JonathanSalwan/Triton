@@ -10,9 +10,9 @@
 // Returns a pointer to a IRBuilder object.
 // It is up to the user to delete it when times come.
 IRBuilder *createIRBuilder(INS ins) {
-  UINT64 address = INS_Address(ins);
+  UINT64 address    = INS_Address(ins);
   std::string disas = INS_Disassemble(ins);
-  INT32 opcode = INS_Opcode(ins);
+  INT32 opcode      = INS_Opcode(ins);
 
   IRBuilder *ir = NULL;
 
@@ -33,8 +33,9 @@ IRBuilder *createIRBuilder(INS ins) {
   const UINT32 n = INS_OperandCount(ins);
 
   for (UINT32 i = 0; i < n; ++i) {
-    IRBuilder::operand_t type;
-    UINT64 val = 0;
+    IRBuilder::operand_t  type;
+    UINT32                size = 0;
+    UINT64                val  = 0;
 
     if (INS_OperandIsImmediate(ins, i)) {
       type = IRBuilder::IMM;
@@ -42,16 +43,20 @@ IRBuilder *createIRBuilder(INS ins) {
     }
     else if (INS_OperandIsReg(ins, i)) {
       type = IRBuilder::REG;
-      val = INS_OperandReg(ins, i);
+      val  = INS_OperandReg(ins, i);
     }
-    else if (INS_MemoryOperandIsRead(ins, 0))
+    else if (INS_MemoryOperandIsRead(ins, 0)){
       type = IRBuilder::MEM_R;
-    else if (INS_MemoryOperandIsWritten(ins, 0))
+      //size = INS_MemoryReadSize(ins);
+    }
+    else if (INS_MemoryOperandIsWritten(ins, 0)){
       type = IRBuilder::MEM_W;
+      //size = INS_MemoryWriteSize(ins);
+    }
     else
       continue;
 
-    ir->addOperand(type, val);
+    ir->addOperand(type, val, size);
   }
 
   return ir;

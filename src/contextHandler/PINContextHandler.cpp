@@ -1,6 +1,9 @@
 #include "PINContextHandler.h"
 
+#include <iostream>
 #include <stdexcept>
+#include <sys/mman.h>
+#include <unistd.h>
 
 PINContextHandler::PINContextHandler(CONTEXT *ctx): _ctx(ctx) { }
 
@@ -128,6 +131,34 @@ uint64_t PINContextHandler::getRegisterValue(uint64_t regID) const
 uint64_t PINContextHandler::getRegisterSize(uint64_t regID) const
 {
   return REG_Size(safecast(regID));
+}
+
+/* Tricks to check if the address is mapped */
+static bool isAddressMapped(ADDRINT addr) {
+  int pagesize = getpagesize();
+  void *foo = (void *)(addr / pagesize * pagesize);
+  if (munlock(foo, 1) == -1)
+    return false;
+  return true;
+}
+
+/* Used to deref a pointer address and returns the targeted byte by size of read */
+uint64_t PINContextHandler::getMemoryValue(uint64_t mem, uint64_t readSize) const
+{
+
+  if (isAddressMapped(mem) == false){
+    std::cout << "[Bugs] Invalid read at " << std::hex << mem << std::endl;
+    exit(0);
+  }
+
+  switch(readSize){
+    case 1: return static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem)));
+    case 2: return static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem)));
+    case 4: return static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem)));
+    case 8: return static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem)));
+  }
+  throw std::runtime_error("Invalid read size");
+  return 0; // Never go there
 }
 
 // In some cases, we need to convert Pin registers to your own ID
