@@ -1,6 +1,10 @@
+#include <boost/format.hpp>
 #include <stdexcept>
 
 #include "BaseIRBuilder.h"
+
+boost::format outputInstruction("%1% %|15t| %2% %|55t|");
+
 
 BaseIRBuilder::BaseIRBuilder(uint64_t address, const std::string &s):
   _address(address),
@@ -58,11 +62,8 @@ static const char * enum2Text(IRBuilder::operand_t val)
 }
 
 void BaseIRBuilder::display(std::ostream &os) const {
-  os << std::hex << std::showbase
-     << _address
-     << ": "
-     << _disas;
 
+  os << boost::format(outputInstruction) % boost::io::group(std::hex, std::showbase, this->_address) % this->_disas;
 
   if (!_operands.empty()) {
     os  << "\t[";
@@ -80,3 +81,4 @@ void BaseIRBuilder::display(std::ostream &os) const {
 
   os << std::dec << std::noshowbase;
 }
+
