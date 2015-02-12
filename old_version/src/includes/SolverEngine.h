@@ -3,7 +3,7 @@
 #define   __SOLVERENGINE_H__
 
 #include <cstdlib>
-#include <cstdint>
+#include <stdint.h>
 #include <string>
 
 #include <z3++.h>

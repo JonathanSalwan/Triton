@@ -1,5 +1,5 @@
 # Path to the pin kit directory
-PIN_ROOT =	"../../.."
+PIN_ROOT =	../../..
 
 NAME = 		triton
 
@@ -14,11 +14,7 @@ INCLUDES =	-I$(PIN_ROOT)/source/include/pin \
 
 CXXFLAGS = 	$(INCLUDES) -DBIGARRAY_MULTIPLIER=1 -DUSING_XED -Wall -Werror -Wno-unknown-pragmas \
 		-fno-stack-protector -DTARGET_IA32E -DHOST_IA32E -fPIC -DTARGET_LINUX  \
-		-O3 -fomit-frame-pointer -fno-strict-aliasing -std=c++11
-
-ifdef DEBUG
-  CXXFLAGS += -g
-endif
+		-O3 -fomit-frame-pointer -fno-strict-aliasing
 
 LIBS =		-L$(PIN_ROOT)/intel64/lib \
 		-L$(PIN_ROOT)/intel64/lib-ext \
@@ -28,27 +24,39 @@ LIBS =		-L$(PIN_ROOT)/intel64/lib \
 		-lxed \
 		-lpindwarf \
 		-ldl \
-		#-lz3
+		-lz3
 
-SRC =           ./src/core/main.cpp \
-		./src/ir/IRBuilderFactory.cpp \
-		./src/ir/builders/BaseIRBuilder.cpp \
-		./src/ir/builders/MovIRBuilder.cpp \
-		./src/ir/templates/TwoOperandsTemplate.cpp \
-		./src/trigger/trigger.cpp \
-		./src/contextHandler/PINContextHandler.cpp \
-		./src/solverEngine/smt2lib_utils.cpp
+SRC = 		./src/analysis/formatStringBug.cpp \
+		./src/core/core.cpp \
+		./src/core/display.cpp \
+		./src/core/image.cpp \
+		./src/core/instructions.cpp \
+		./src/core/utils.cpp \
+		./src/core/signals.cpp \
+		./src/ir/add.cpp \
+		./src/ir/branchs.cpp \
+		./src/ir/cmp.cpp \
+		./src/ir/mov.cpp \
+		./src/ir/notImplemented.cpp \
+		./src/ir/pop.cpp \
+		./src/ir/push.cpp \
+		./src/snapshotEngine/memoryWrite.cpp \
+		./src/snapshotEngine/snapshotEngine.cpp \
+		./src/solverEngine/smt2lib_utils.cpp \
+		./src/solverEngine/solverEngine.cpp \
+		./src/symbolicEngine/symbolicElement.cpp \
+		./src/symbolicEngine/symbolicEngine.cpp \
+		./src/taintEngine/taintEngine.cpp \
+		./src/components/Trace.cpp \
+		./src/components/Tritinst.cpp
 
 
 OBJ = $(SRC:.cpp=.o)
 
-
-# Rules
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CXX) -shared -Wl,--hash-style=sysv -Wl,-Bsymbolic -Wl,--version-script=$(PIN_ROOT)/source/include/pin/pintool.ver -o $(NAME).so $(OBJ) $(LIBS)
-
 
 clean:
 	 /bin/rm -f $(OBJ)

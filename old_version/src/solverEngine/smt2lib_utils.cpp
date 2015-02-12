@@ -5,7 +5,7 @@
 
 /* Returns the 'bv' syntax based on a value and a size.
  * Mainly used for the SMT translation */
-std::string smt2lib::bv(uint64_t value, uint64_t size)
+std::string smt2lib_bv(uint64_t value, uint64_t size)
 {
   std::stringstream stream;
 
@@ -30,7 +30,7 @@ std::string smt2lib::bv(uint64_t value, uint64_t size)
 
 /* Returns the 'extract' syntax based on a value and a size.
  * Mainly used for the SMT translation */
-std::string smt2lib::extract(uint64_t regSize)
+std::string smt2lib_extract(uint64_t regSize)
 {
   std::stringstream stream;
 
@@ -55,7 +55,7 @@ std::string smt2lib::extract(uint64_t regSize)
 
 /* Returns the 'declare' syntax based on a value and a size.
  * Mainly used for the SMT translation */
-std::string smt2lib::declare(uint64_t idSymVar, uint64_t BitVecSize)
+std::string smt2lib_declare(uint64_t idSymVar, uint64_t BitVecSize)
 {
   std::stringstream stream;
 
