@@ -46,14 +46,17 @@ IRBuilder *createIRBuilder(INS ins) {
       val  = INS_OperandReg(ins, i);
     }
     else if (INS_MemoryOperandCount(ins) > 0) {
-      // Sanity check, instruction like "nop dword ptr [eax], ebx"
+      // check needed because instruction like "nop dword ptr [eax], ebx"
       // make INS_MemoryReadSize crash.
-      size = INS_MemoryReadSize(ins);
 
-      if (INS_MemoryOperandIsRead(ins, 0))
+      if (INS_MemoryOperandIsRead(ins, 0)) {
         type = IRBuilder::MEM_R;
-      else
+        size = INS_MemoryReadSize(ins);
+      }
+      else {
         type = IRBuilder::MEM_W;
+        size = INS_MemoryWriteSize(ins);
+      }
     }
     else
       continue;
