@@ -18,7 +18,7 @@ KNOB<std::string>  KnobStartAnalysis(KNOB_MODE_WRITEONCE, "pintool", "startAnaly
 
 
 Trigger analysisTrigger;
-SymbolicEngine symEngine;
+SymbolicEngine *symEngine = new SymbolicEngine;
 
 
 VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea)
