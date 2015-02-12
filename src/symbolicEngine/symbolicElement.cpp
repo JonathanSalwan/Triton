@@ -4,7 +4,7 @@
 
 SymbolicElement::SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id)
 {
-  //this->isTainted   = !TAINTED;
+  this->isTainted   = false;
   this->source      = new std::stringstream(src.str());
   this->destination = new std::stringstream(dst.str());
   this->expression  = new std::stringstream();
