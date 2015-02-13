@@ -2,7 +2,7 @@
 #ifndef   __SYMBOLICENGINE_H__
 #define   __SYMBOLICENGINE_H__
 
-#include <stdint.h>
+#include <cstdint>
 
 #include <map>
 #include <list>
@@ -14,7 +14,8 @@
 #include "SymbolicElement.h"
 #include "SMT2Lib.h"
 
-#define UNSET (uint64_t)-1
+
+const uint64_t UNSET = -1;
 
 
 /* Symbolic Engine */

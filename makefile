@@ -31,15 +31,18 @@ LIBS =		-L$(PIN_ROOT)/intel64/lib \
 		-lz3
 
 SRC =           ./src/core/main.cpp \
+		./src/analysisProcessor/analysisProcessor.cpp \
+		./src/contextHandler/PINContextHandler.cpp \
+		./src/components/Inst.cpp \
+		./src/components/Trace.cpp \
 		./src/ir/IRBuilderFactory.cpp \
 		./src/ir/builders/BaseIRBuilder.cpp \
 		./src/ir/builders/MovIRBuilder.cpp \
 		./src/ir/templates/TwoOperandsTemplate.cpp \
-		./src/trigger/trigger.cpp \
-		./src/contextHandler/PINContextHandler.cpp \
 		./src/solverEngine/smt2lib.cpp \
 		./src/symbolicEngine/symbolicElement.cpp \
-		./src/symbolicEngine/symbolicEngine.cpp
+		./src/symbolicEngine/symbolicEngine.cpp \
+		./src/trigger/trigger.cpp
 
 
 OBJ = $(SRC:.cpp=.o)

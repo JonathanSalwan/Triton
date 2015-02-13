@@ -16,8 +16,8 @@ class NullIRBuilder: public BaseIRBuilder {
 
     void addOperand(IRBuilder::operand_t type, uint64_t value = 0) { }
 
-    std::stringstream *process(const ContextHandler &ctxH) const {
-      return nullptr;
+    Inst *process(const ContextHandler &ctxH, AnalysisProcessor &ap) const {
+      return new Inst(_address, _disas);
     }
 };
 

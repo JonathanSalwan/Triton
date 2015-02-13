@@ -6,19 +6,22 @@
 
 #include "pin.H"
 
-#include "PINContextHandler.h"
+#include "AnalysisProcessor.h"
+#include "Inst.h"
 #include "IRBuilder.h"
 #include "IRBuilderFactory.h"
-#include "trigger.h"
-#include "SymbolicEngine.h"
+#include "PINContextHandler.h"
+#include "Trace.h"
+#include "Trigger.h"
 
 
 /* Pin options: -startAnalysis */
 KNOB<std::string>  KnobStartAnalysis(KNOB_MODE_WRITEONCE, "pintool", "startAnalysis", "", "Start/end the analysis from a scope function");
 
 
+AnalysisProcessor ap;
 Trigger analysisTrigger;
-SymbolicEngine *symEngine = new SymbolicEngine;
+Trace trace;
 
 
 VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea)
@@ -32,22 +35,7 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea)
   if (hasEA)
     irb->setup(ea);
 
-  // TODO
-  // Must take Trace (or SymbolicEngine/Taint) in arg and return a inst.
-  // Must create the smt2lib and apply the taint.
-  // Add taint method for each case Mem-Reg, Mem-Imm, Reg-Imm, Reg-Reg.
-
-  // Can throw runtime_error
-  shared_ptr<std::stringstream> expr(irb->process(ctxH));
-
-  std::cout << *irb;
-
-  if(expr)
-    std::cout << " Expr: " << expr->str();
-
-  std::cout << std::endl;
-
-  // Add TritInst to Trace
+  trace.addInstruction(irb->process(ctxH, ap));
 }
 
 VOID TRACE_Instrumentation(TRACE trace, VOID *v)
@@ -77,7 +65,6 @@ VOID TRACE_Instrumentation(TRACE trace, VOID *v)
 void toggleWrapper()
 {
   analysisTrigger.toggle();
-  std::cout << "Analysis:" << boolalpha << analysisTrigger.getState() << noboolalpha <<std::endl;
 }
 
 
@@ -100,6 +87,11 @@ VOID IMG_Instrumentation(IMG img, VOID *)
 
     RTN_Close(targetRTN);
   }
+}
+
+VOID Fini(INT32, VOID *)
+{
+  trace.display();
 }
 
 // Usage function if Pin fail to start.
@@ -132,6 +124,9 @@ int main(int argc, char *argv[])
 
   // Instruction callback
   TRACE_AddInstrumentFunction(TRACE_Instrumentation, NULL);
+
+  // End instrumentation callback
+  PIN_AddFiniFunction(Fini, NULL);
 
   // Never returns
   PIN_StartProgram();

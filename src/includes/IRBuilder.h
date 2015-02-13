@@ -4,10 +4,11 @@
 #include <cstdint>
 
 #include <ostream>
-#include <sstream>
 #include <string>
 
+#include "AnalysisProcessor.h"
 #include "ContextHandler.h"
+#include "Inst.h"
 
 
 // IR interface
@@ -38,7 +39,7 @@ class IRBuilder {
     virtual void checkSetup() const = 0;
 
     // Process the symbolic Execution.
-    virtual std::stringstream *process(const ContextHandler &ctxH) const = 0;
+    virtual Inst *process(const ContextHandler &ctxH, AnalysisProcessor &ap) const = 0;
 
     // Display the IRBuilder in the ostream.
     virtual void display(std::ostream &os) const = 0;
