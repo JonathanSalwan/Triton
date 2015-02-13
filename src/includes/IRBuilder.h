@@ -25,8 +25,12 @@ class IRBuilder {
     // Returns the assembler instruction.
     virtual const std::string &getDisassembly() const = 0;
 
-    // Add an operand to the IRBuilder.
-    // If the value is already now (Immediate value), you can speficy it with value.
+    // Add an operand to IRBuilder.
+    // If it's type is:
+    //  - IMM (Immediate), the value is the immediate value.
+    //  - REG (Register), the value is the register ID.
+    //  - MEM_*, the value doesn't mean anything and it's unused.
+    //    The object will need a setup before any processing.
     virtual void addOperand(IRBuilder::operand_t, uint64_t value, uint32_t size) = 0;
 
     // Set the value for the MEM_* operand, if there is no such kind of operand
