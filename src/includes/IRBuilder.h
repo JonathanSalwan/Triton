@@ -7,7 +7,7 @@
 #include <sstream>
 #include <string>
 
-#include "contextHandler.h"
+#include "ContextHandler.h"
 
 
 // IR interface

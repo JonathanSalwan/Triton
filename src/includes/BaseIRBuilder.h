@@ -6,7 +6,7 @@
 #include <tuple>
 #include <vector>
 
-#include "contextHandler.h"
+#include "ContextHandler.h"
 #include "IRBuilder.h"
 
 // Abstract class which is main purpose is too implement common methods
