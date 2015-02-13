@@ -106,9 +106,8 @@ INT32 Usage()
 int main(int argc, char *argv[])
 {
   PIN_InitSymbols();
-  if(PIN_Init(argc, argv)){
+  if(PIN_Init(argc, argv))
       return Usage();
-  }
 
   // We first need a target function
   if (KnobStartAnalysis.Value().empty())
@@ -128,7 +127,7 @@ int main(int argc, char *argv[])
   // End instrumentation callback
   PIN_AddFiniFunction(Fini, NULL);
 
-  // Never returns
+  // Never returns - Rock 'n roll baby \o/
   PIN_StartProgram();
 
   return 0;
