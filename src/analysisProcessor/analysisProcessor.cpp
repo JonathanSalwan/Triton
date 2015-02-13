@@ -1,8 +1,11 @@
 #include "AnalysisProcessor.h"
 
-AnalysisProcessor::AnalysisProcessor(): symEngine() {
+
+AnalysisProcessor::AnalysisProcessor(): symEngine(), taintEngine() {
 }
 
+// Symbolic Engine Facade
+// ----------------------
 
 SymbolicEngine &AnalysisProcessor::getSymbolicEngine() {
   return this->symEngine;
@@ -24,10 +27,21 @@ SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_
   return se;
 }
 
+
 uint64_t AnalysisProcessor::getRegSymbolicID(uint64_t regID) {
   return this->symEngine.symbolicReg[regID];
 }
 
+
 uint64_t AnalysisProcessor::getMemorySymbolicID(uint64_t address) {
   return this->symEngine.isMemoryReference(address);
 }
+
+
+// Taint Engine Facade
+// -------------------
+
+TaintEngine &AnalysisProcessor::getTaintEngine() {
+  return this->taintEngine;
+}
+

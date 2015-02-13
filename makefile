@@ -30,11 +30,11 @@ LIBS =		-L$(PIN_ROOT)/intel64/lib \
 		-ldl \
 		-lz3
 
-SRC =           ./src/core/main.cpp \
-		./src/analysisProcessor/analysisProcessor.cpp \
-		./src/contextHandler/PINContextHandler.cpp \
+SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/components/Inst.cpp \
 		./src/components/Trace.cpp \
+		./src/contextHandler/PINContextHandler.cpp \
+		./src/core/main.cpp \
 		./src/ir/IRBuilderFactory.cpp \
 		./src/ir/builders/BaseIRBuilder.cpp \
 		./src/ir/builders/MovIRBuilder.cpp \
@@ -42,6 +42,7 @@ SRC =           ./src/core/main.cpp \
 		./src/solverEngine/smt2lib.cpp \
 		./src/symbolicEngine/symbolicElement.cpp \
 		./src/symbolicEngine/symbolicEngine.cpp \
+		./src/taintEngine/taintEngine.cpp \
 		./src/trigger/trigger.cpp
 
 
