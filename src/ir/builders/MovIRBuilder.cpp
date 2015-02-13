@@ -4,7 +4,6 @@
 
 #include "MovIRBuilder.h"
 #include "SMT2Lib.h"
-#include "SymbolicEngine.h"
 
 
 MovIRBuilder::MovIRBuilder(uint64_t address, const std::string &disassembly):
@@ -92,7 +91,7 @@ Inst *MovIRBuilder::process(const ContextHandler &ctxH, AnalysisProcessor &ap) c
   Inst *inst = new Inst(_address, _disas);
 
   try {
-    templateMethod(ctxH, ap, *inst, _operands, "MOV");
+    this->templateMethod(ctxH, ap, *inst, _operands, "MOV");
   }
   catch (std::exception &e) {
     delete inst;

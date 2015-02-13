@@ -6,6 +6,7 @@
 #include "MovIRBuilder.h"
 #include "NullIRBuilder.h"
 
+
 // Returns a pointer to an IRBuilder object.
 // It is up to the user to delete it when times come.
 IRBuilder *createIRBuilder(INS ins) {
@@ -65,3 +66,4 @@ IRBuilder *createIRBuilder(INS ins) {
 
   return ir;
 }
+

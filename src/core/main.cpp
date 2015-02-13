@@ -38,6 +38,7 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea)
   trace.addInstruction(irb->process(ctxH, ap));
 }
 
+
 VOID TRACE_Instrumentation(TRACE trace, VOID *v)
 {
   for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl))
@@ -89,10 +90,12 @@ VOID IMG_Instrumentation(IMG img, VOID *)
   }
 }
 
+
 VOID Fini(INT32, VOID *)
 {
   trace.display();
 }
+
 
 // Usage function if Pin fail to start.
 // Display the help message.
@@ -132,3 +135,4 @@ int main(int argc, char *argv[])
 
   return 0;
 }
+
