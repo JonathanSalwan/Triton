@@ -146,7 +146,7 @@ static bool isAddressMapped(ADDRINT addr) {
 uint64_t PINContextHandler::getMemoryValue(uint64_t mem, uint32_t readSize) const
 {
 
-  if (isAddressMapped(mem) == false){
+  if (!isAddressMapped(mem)){
     std::cout << "[Bugs] Invalid read at " << std::hex << mem << std::endl;
     exit(0);
   }
@@ -157,7 +157,7 @@ uint64_t PINContextHandler::getMemoryValue(uint64_t mem, uint32_t readSize) cons
     case 4: return static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem)));
     case 8: return static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem)));
   }
-  throw std::runtime_error("Invalid read size");
+  throw std::runtime_error("Error: Invalid read size");
   return 0; // Never go there
 }
 
