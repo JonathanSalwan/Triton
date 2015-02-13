@@ -6,7 +6,7 @@
 #include "pin.H"
 
 #include "ContextHandler.h"
-#include "registers.h"
+#include "Registers.h"
 
 
 class PINContextHandler: public ContextHandler {
