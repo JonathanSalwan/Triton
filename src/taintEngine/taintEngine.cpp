@@ -145,11 +145,14 @@ bool TaintEngine::spreadTaintRegImm(uint64_t regDst)
  * Spread the taint in regDst if memSrc is tainted.
  * Returns true if a spreading occurs otherwise returns false.
  */
-bool TaintEngine::spreadTaintRegMem(uint64_t regDst, uint64_t memSrc)
+bool TaintEngine::spreadTaintRegMem(uint64_t regDst, uint64_t memSrc, uint64_t readSize)
 {
-  if (this->isMemoryTainted(memSrc)){
-    this->taintReg(regDst);
-    return true;
+  uint64_t offset = 0;
+  for ( ; offset != readSize; offset++){
+    if (this->isMemoryTainted(memSrc+offset)){
+      this->taintReg(regDst);
+      return true;
+    }
   }
   this->untaintReg(regDst);
   return false;
@@ -160,9 +163,11 @@ bool TaintEngine::spreadTaintRegMem(uint64_t regDst, uint64_t memSrc)
  * Untaint the memDst.
  * Returns false.
  */
-bool TaintEngine::spreadTaintMemImm(uint64_t memDst)
+bool TaintEngine::spreadTaintMemImm(uint64_t memDst, uint64_t writeSize)
 {
-  this->untaintAddress(memDst);
+  uint64_t offset = 0;
+  for ( ; offset != writeSize; offset++)
+    this->untaintAddress(memDst+offset);
   return false;
 }
 
@@ -171,10 +176,12 @@ bool TaintEngine::spreadTaintMemImm(uint64_t memDst)
  * Spread the taint in memDst if regSrc is tainted.
  * Returns true if a spreading occurs otherwise returns false.
  */
-bool TaintEngine::spreadTaintMemReg(uint64_t memDst, uint64_t regSrc)
+bool TaintEngine::spreadTaintMemReg(uint64_t memDst, uint64_t regSrc, uint64_t writeSize)
 {
   if (this->isRegTainted(regSrc)){
-    this->taintAddress(memDst);
+    uint64_t offset = 0;
+    for ( ; offset != writeSize; offset++)
+      this->taintAddress(memDst+offset);
     return true;
   }
   this->untaintAddress(memDst);

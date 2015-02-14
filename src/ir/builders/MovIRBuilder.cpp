@@ -99,7 +99,7 @@ void MovIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   se = ap.createMemSE(expr, mem);
 
   /* Apply the taint */
-  ap.spreadTaintMemImm(se, mem);
+  ap.spreadTaintMemImm(se, mem, writeSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -125,7 +125,7 @@ void MovIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   se = ap.createMemSE(expr, mem);
 
   /* Apply the taint */
-  ap.spreadTaintMemReg(se, mem, ctxH.translateRegID(reg));
+  ap.spreadTaintMemReg(se, mem, ctxH.translateRegID(reg), writeSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);

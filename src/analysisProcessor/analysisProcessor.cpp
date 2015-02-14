@@ -60,7 +60,7 @@ void AnalysisProcessor::spreadTaintRegImm(SymbolicElement *se, uint64_t regDst)
 
 void AnalysisProcessor::spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc, uint32_t readSize)
 {
-  se->isTainted = this->taintEngine.spreadTaintRegMem(regDst, memSrc);
+  se->isTainted = this->taintEngine.spreadTaintRegMem(regDst, memSrc, readSize);
 
   /* Use symbolic variable if the memory is tainted */
   if (se->isTainted) {
@@ -69,7 +69,7 @@ void AnalysisProcessor::spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, 
     uint64_t          symVarID;
 
     /* Check if this memory area is already known as a symbolic variable */
-    symVarID = this->symEngine.isSymVarMemory(memSrc);
+    symVarID = this->symEngine.isSymVarMemory(memSrc); // TODO: Must use the readSize
     if (symVarID == UNSET){
       symVarID = this->symEngine.getUniqueSymVarID();
       this->symEngine.addSmt2LibVarDecl(symVarID, readSize);
@@ -82,15 +82,15 @@ void AnalysisProcessor::spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, 
 }
 
 
-void AnalysisProcessor::spreadTaintMemImm(SymbolicElement *se, uint64_t memDst)
+void AnalysisProcessor::spreadTaintMemImm(SymbolicElement *se, uint64_t memDst, uint64_t writeSize)
 {
-  se->isTainted = this->taintEngine.spreadTaintMemImm(memDst);
+  se->isTainted = this->taintEngine.spreadTaintMemImm(memDst, writeSize);
 }
 
 
-void AnalysisProcessor::spreadTaintMemReg(SymbolicElement *se, uint64_t memDst, uint64_t regSrc)
+void AnalysisProcessor::spreadTaintMemReg(SymbolicElement *se, uint64_t memDst, uint64_t regSrc, uint64_t writeSize)
 {
-  se->isTainted = this->taintEngine.spreadTaintMemReg(memDst, regSrc);
+  se->isTainted = this->taintEngine.spreadTaintMemReg(memDst, regSrc, writeSize);
 }
 
 
