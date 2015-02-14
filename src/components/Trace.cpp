@@ -2,6 +2,7 @@
 
 #include <boost/format.hpp>
 
+#include "Colors.h"
 #include "Trace.h"
 
 
@@ -33,15 +34,21 @@ void Trace::display(std::ostream &os)
 
   for (auto inst : this->instructions)
     if (inst != nullptr) {
-      std::stringstream expr("");
+      std::stringstream expr(""), colr(ENDC);
 
-      for (auto se : inst->getSymbolicElements())
+      for (auto se : inst->getSymbolicElements()){
         expr << se->getExpression()->str() << " ";
+        if (se->isTainted)
+          colr.str(GREEN);
+      }
 
-      os << boost::format(outputInstruction)
+      os << colr.str()
+         << boost::format(outputInstruction)
           % boost::io::group(std::hex, std::showbase, inst->getAddress())
           % inst->getDisassembly()
          << expr.str()
+         << ENDC
          << std::endl;
     }
 }
+
