@@ -147,8 +147,7 @@ bool TaintEngine::spreadTaintRegImm(uint64_t regDst)
  */
 bool TaintEngine::spreadTaintRegMem(uint64_t regDst, uint64_t memSrc, uint64_t readSize)
 {
-  uint64_t offset = 0;
-  for ( ; offset != readSize; offset++){
+  for (uint64_t offset = 0; offset != readSize; offset++){
     if (this->isMemoryTainted(memSrc+offset)){
       this->taintReg(regDst);
       return true;
@@ -165,8 +164,7 @@ bool TaintEngine::spreadTaintRegMem(uint64_t regDst, uint64_t memSrc, uint64_t r
  */
 bool TaintEngine::spreadTaintMemImm(uint64_t memDst, uint64_t writeSize)
 {
-  uint64_t offset = 0;
-  for ( ; offset != writeSize; offset++)
+  for (uint64_t offset = 0; offset != writeSize; offset++)
     this->untaintAddress(memDst+offset);
   return false;
 }
@@ -179,8 +177,7 @@ bool TaintEngine::spreadTaintMemImm(uint64_t memDst, uint64_t writeSize)
 bool TaintEngine::spreadTaintMemReg(uint64_t memDst, uint64_t regSrc, uint64_t writeSize)
 {
   if (this->isRegTainted(regSrc)){
-    uint64_t offset = 0;
-    for ( ; offset != writeSize; offset++)
+    for (uint64_t offset = 0; offset != writeSize; offset++)
       this->taintAddress(memDst+offset);
     return true;
   }
