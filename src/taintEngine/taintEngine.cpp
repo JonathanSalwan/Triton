@@ -85,20 +85,15 @@ bool TaintEngine::isRegTainted(uint64_t regID)
   return false;
 }
 
-/* Returns state (TAINTED or !TAINTED) of the register */
-uint64_t TaintEngine::getRegStatus(uint64_t regID)
-{
-  return this->taintedReg[regID];
-}
 
-/* Tainted the register */
+/* Taint the register */
 void TaintEngine::taintReg(uint64_t regID)
 {
   this->taintedReg[regID] = TAINTED;
 }
 
 
-/* Untainted the register */
+/* Untaint the register */
 void TaintEngine::untaintReg(uint64_t regID)
 {
   this->taintedReg[regID] = !TAINTED;
@@ -108,13 +103,82 @@ void TaintEngine::untaintReg(uint64_t regID)
 /* Taint the address */
 void TaintEngine::taintAddress(uint64_t addr)
 {
-  this->taintedAddresses.push_front(addr);
+  if (!this->isMemoryTainted(addr))
+    this->taintedAddresses.push_front(addr);
 }
+
 
 /* Untaint the address */
 void TaintEngine::untaintAddress(uint64_t addr)
 {
   this->taintedAddresses.remove(addr);
+}
+
+
+/*
+ * Spread the taint in regDst if regSrc is tainted.
+ * Returns true if a spreading occurs otherwise returns false.
+ */
+bool TaintEngine::spreadTaintRegReg(uint64_t regDst, uint64_t regSrc)
+{
+  if (this->isRegTainted(regSrc)){
+    this->taintReg(regDst);
+    return true;
+  }
+  this->untaintReg(regDst);
+  return false;
+}
+
+
+/*
+ * Untaint the regDst.
+ * Returns false.
+ */
+bool TaintEngine::spreadTaintRegImm(uint64_t regDst)
+{
+  this->untaintReg(regDst);
+  return false;
+}
+
+
+/*
+ * Spread the taint in regDst if memSrc is tainted.
+ * Returns true if a spreading occurs otherwise returns false.
+ */
+bool TaintEngine::spreadTaintRegMem(uint64_t regDst, uint64_t memSrc)
+{
+  if (this->isMemoryTainted(memSrc)){
+    this->taintReg(regDst);
+    return true;
+  }
+  this->untaintReg(regDst);
+  return false;
+}
+
+
+/*
+ * Untaint the memDst.
+ * Returns false.
+ */
+bool TaintEngine::spreadTaintMemImm(uint64_t memDst)
+{
+  this->untaintAddress(memDst);
+  return false;
+}
+
+
+/*
+ * Spread the taint in memDst if regSrc is tainted.
+ * Returns true if a spreading occurs otherwise returns false.
+ */
+bool TaintEngine::spreadTaintMemReg(uint64_t memDst, uint64_t regSrc)
+{
+  if (this->isRegTainted(regSrc)){
+    this->taintAddress(memDst);
+    return true;
+  }
+  this->untaintAddress(memDst);
+  return false;
 }
 
 

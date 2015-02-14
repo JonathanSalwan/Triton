@@ -23,7 +23,7 @@ uint64_t Inst::getAddress()
   return this->address;
 }
 
-/* Adds a new element */
+/* Adds a new symbolic element */
 void Inst::addElement(SymbolicElement *se)
 {
   this->elements.push_back(se);
