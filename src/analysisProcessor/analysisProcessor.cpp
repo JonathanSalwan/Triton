@@ -48,36 +48,31 @@ TaintEngine &AnalysisProcessor::getTaintEngine() {
 
 void AnalysisProcessor::spreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc)
 {
-  if (this->taintEngine.spreadTaintRegReg(regDst, regSrc))
-    se->isTainted = true;
+  se->isTainted = this->taintEngine.spreadTaintRegReg(regDst, regSrc);
 }
 
 
 void AnalysisProcessor::spreadTaintRegImm(SymbolicElement *se, uint64_t regDst)
 {
-  if (this->taintEngine.spreadTaintRegImm(regDst))
-    se->isTainted = true;
+  se->isTainted = this->taintEngine.spreadTaintRegImm(regDst);
 }
 
 
 void AnalysisProcessor::spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc)
 {
-  if (this->taintEngine.spreadTaintRegMem(regDst, memSrc))
-    se->isTainted = true;
+  se->isTainted = this->taintEngine.spreadTaintRegMem(regDst, memSrc);
 }
 
 
 void AnalysisProcessor::spreadTaintMemImm(SymbolicElement *se, uint64_t memDst)
 {
-  if (this->taintEngine.spreadTaintMemImm(memDst))
-    se->isTainted = true;
+  se->isTainted = this->taintEngine.spreadTaintMemImm(memDst);
 }
 
 
 void AnalysisProcessor::spreadTaintMemReg(SymbolicElement *se, uint64_t memDst, uint64_t regSrc)
 {
-  if (this->taintEngine.spreadTaintMemReg(memDst, regSrc))
-    se->isTainted = true;
+  se->isTainted = this->taintEngine.spreadTaintMemReg(memDst, regSrc);
 }
 
 
