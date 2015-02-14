@@ -37,9 +37,9 @@ class SymbolicEngine {
     std::map<uint64_t, uint64_t> memoryReference;
 
     /*
-     * Z3 Symbolic Variable -> Addresses
-     * item1: symbolic variable ID
-     * item2: memory address
+     * Z3 Symbolic Addresse -> variable
+     * item1: memory address
+     * item2: symbolic variable ID
      */
     std::map<uint64_t, uint64_t> symVarMemoryReference;
 
@@ -65,6 +65,7 @@ class SymbolicEngine {
     void                  addMemoryReference(uint64_t mem, uint64_t id);
     void                  addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize);
     void                  addSymVarMemoryReference(uint64_t mem, uint64_t symVarID);
+    uint64_t              isSymVarMemory(uint64_t mem);
 
     void                  init(const SymbolicEngine &other);
     void                  operator=(const SymbolicEngine &other);

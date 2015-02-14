@@ -78,7 +78,7 @@ void MovIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   se = ap.createRegSE(expr, ctxH.translateRegID(reg));
 
   /* Apply the taint */
-  ap.spreadTaintRegMem(se, ctxH.translateRegID(reg), mem);
+  ap.spreadTaintRegMem(se, ctxH.translateRegID(reg), mem, readSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);

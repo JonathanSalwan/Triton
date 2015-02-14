@@ -40,3 +40,15 @@ uint64_t SymbolicElement::getID()
   return this->id;
 }
 
+/* Set the destination expression */
+void SymbolicElement::setSrcExpr(std::stringstream &src)
+{
+  delete this->expression;
+  delete this->source;
+
+  this->expression  = new std::stringstream();
+  this->source      = new std::stringstream(src.str());
+
+  *this->expression << (*this->destination).str() << " = " << (*this->source).str();
+}
+

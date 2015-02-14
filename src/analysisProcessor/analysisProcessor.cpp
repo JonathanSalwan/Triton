@@ -58,9 +58,27 @@ void AnalysisProcessor::spreadTaintRegImm(SymbolicElement *se, uint64_t regDst)
 }
 
 
-void AnalysisProcessor::spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc)
+void AnalysisProcessor::spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc, uint32_t readSize)
 {
   se->isTainted = this->taintEngine.spreadTaintRegMem(regDst, memSrc);
+
+  /* Use symbolic variable if the memory is tainted */
+  if (se->isTainted) {
+
+    std::stringstream newExpr;
+    uint64_t          symVarID;
+
+    /* Check if this memory area is already known as a symbolic variable */
+    symVarID = this->symEngine.isSymVarMemory(memSrc);
+    if (symVarID == UNSET){
+      symVarID = this->symEngine.getUniqueSymVarID();
+      this->symEngine.addSmt2LibVarDecl(symVarID, readSize);
+      this->symEngine.addSymVarMemoryReference(memSrc, symVarID);
+    }
+
+    newExpr << "SymVar_" << std::dec << symVarID;
+    se->setSrcExpr(newExpr);
+  }
 }
 
 

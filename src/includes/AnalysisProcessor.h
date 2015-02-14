@@ -39,7 +39,7 @@ class AnalysisProcessor {
     // Taint the symbolic element if the taint occurs.
     void spreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc);
     void spreadTaintRegImm(SymbolicElement *se, uint64_t regDst);
-    void spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc);
+    void spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc, uint32_t readSize);
     void spreadTaintMemImm(SymbolicElement *se, uint64_t memDst);
     void spreadTaintMemReg(SymbolicElement *se, uint64_t memDst, uint64_t regSrc);
 
