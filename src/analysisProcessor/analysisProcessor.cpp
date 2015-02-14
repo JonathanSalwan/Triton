@@ -45,3 +45,39 @@ TaintEngine &AnalysisProcessor::getTaintEngine() {
   return this->taintEngine;
 }
 
+
+void AnalysisProcessor::spreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc)
+{
+  if (this->taintEngine.spreadTaintRegReg(regDst, regSrc))
+    se->isTainted = true;
+}
+
+
+void AnalysisProcessor::spreadTaintRegImm(SymbolicElement *se, uint64_t regDst)
+{
+  if (this->taintEngine.spreadTaintRegImm(regDst))
+    se->isTainted = true;
+}
+
+
+void AnalysisProcessor::spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc)
+{
+  if (this->taintEngine.spreadTaintRegMem(regDst, memSrc))
+    se->isTainted = true;
+}
+
+
+void AnalysisProcessor::spreadTaintMemImm(SymbolicElement *se, uint64_t memDst)
+{
+  if (this->taintEngine.spreadTaintMemImm(memDst))
+    se->isTainted = true;
+}
+
+
+void AnalysisProcessor::spreadTaintMemReg(SymbolicElement *se, uint64_t memDst, uint64_t regSrc)
+{
+  if (this->taintEngine.spreadTaintMemReg(memDst, regSrc))
+    se->isTainted = true;
+}
+
+

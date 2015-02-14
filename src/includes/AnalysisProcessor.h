@@ -35,6 +35,15 @@ class AnalysisProcessor {
     // Returns the taint engine reference
     TaintEngine &getTaintEngine();
 
+    // Taint interface.
+    // Taint the symbolic element if the taint occurs.
+    void spreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc);
+    void spreadTaintRegImm(SymbolicElement *se, uint64_t regDst);
+    void spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc);
+    void spreadTaintMemImm(SymbolicElement *se, uint64_t memDst);
+    void spreadTaintMemReg(SymbolicElement *se, uint64_t memDst, uint64_t regSrc);
+
+
   private:
     SymbolicEngine  symEngine;
     TaintEngine     taintEngine;
