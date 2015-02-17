@@ -33,7 +33,7 @@ void MovIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   uint64_t          size = ctxH.getRegisterSize(reg);
 
   /* Create the SMT semantic */
-  expr << this->extender(smt2lib::bv(imm, size), deltaSize(size, 0));
+  expr << smt2lib::bv(imm, size);
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, ctxH.translateRegID(reg));
@@ -112,7 +112,7 @@ void MovIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   uint64_t          imm       = std::get<1>(_operands[1]);
 
   /* Create the SMT semantic */
-  expr << this->extender(smt2lib::bv(imm, writeSize), deltaSize(writeSize, 0));
+  expr << smt2lib::bv(imm, writeSize);
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);
@@ -131,7 +131,6 @@ void MovIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   uint32_t          writeSize = std::get<2>(_operands[0]);
   uint64_t          mem       = std::get<1>(_operands[0]);
   uint64_t          reg       = std::get<1>(_operands[1]);
-  uint64_t          regSize  = ctxH.getRegisterSize(reg);
 
   uint64_t          symReg    = ap.getRegSymbolicID(ctxH.translateRegID(reg));
 
@@ -140,8 +139,6 @@ void MovIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
     expr << "#" << std::dec << symReg;
   else
     expr << smt2lib::bv(ctxH.getRegisterValue(reg), writeSize);
-
-  expr.str(this->extender(expr.str(), deltaSize(regSize, writeSize)));
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);
