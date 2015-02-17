@@ -56,6 +56,9 @@ SymbolicElement *EflagsIRBuilder::zf(SymbolicElement *parent, AnalysisProcessor 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, ID_ZF);
 
+  /* Spread the taint from the parent to the child */
+  se->isTainted = parent->isTainted;
+
   return se;
 }
 
