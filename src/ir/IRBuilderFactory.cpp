@@ -26,6 +26,7 @@ IRBuilder *createIRBuilder(INS ins) {
       break;
 
     case XED_ICLASS_MOVSX:
+    case XED_ICLASS_MOVSXD:
       ir = new MovsxIRBuilder(address, disas);
       break;
 
