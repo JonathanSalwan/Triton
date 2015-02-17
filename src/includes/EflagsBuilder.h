@@ -7,11 +7,11 @@
 
 namespace EflagsBuilder {
 
-//    SymbolicElement *af(SymbolicElement *parent, AnalysisProcessor &ap);
-//    SymbolicElement *cf(SymbolicElement *parent, AnalysisProcessor &ap);
-//    SymbolicElement *of(SymbolicElement *parent, AnalysisProcessor &ap);
-//    SymbolicElement *pf(SymbolicElement *parent, AnalysisProcessor &ap);
-//    SymbolicElement *sf(SymbolicElement *parent, AnalysisProcessor &ap);
+//  SymbolicElement *af(SymbolicElement *parent, AnalysisProcessor &ap);
+  SymbolicElement *cf(SymbolicElement *parent, AnalysisProcessor &ap, std::stringstream &op1);
+//  SymbolicElement *of(SymbolicElement *parent, AnalysisProcessor &ap);
+//  SymbolicElement *pf(SymbolicElement *parent, AnalysisProcessor &ap);
+//  SymbolicElement *sf(SymbolicElement *parent, AnalysisProcessor &ap);
   SymbolicElement *zf(SymbolicElement *parent, AnalysisProcessor &ap);
 
 };

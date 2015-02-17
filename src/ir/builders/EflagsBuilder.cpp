@@ -5,31 +5,48 @@
 #include "Registers.h"
 
 
-//SymbolicElement *EflagsBuilder::af(SymbolicElement *parent, AnalysisProcessor &ap) const
+//SymbolicElement *EflagsBuilder::af(SymbolicElement *parent, AnalysisProcessor &ap)
+//{
+//  // TODO
+//}
+
+
+SymbolicElement *EflagsBuilder::cf(SymbolicElement *parent, AnalysisProcessor &ap, std::stringstream &op1)
+{
+  // parent.ID < dstValue
+
+  SymbolicElement     *se;
+  std::stringstream   expr;
+
+  /*
+   * Create the SMT semantic.
+   * bvult : unsigned less than
+   */
+  expr << "(assert (bvult #" << std::dec << parent->getID() << " " << op1.str() << "))";
+
+  /* Create the symbolic element */
+  se = ap.createRegSE(expr, ID_CF);
+
+  /* Spread the taint from the parent to the child */
+  se->isTainted = parent->isTainted;
+
+  return se;
+}
+
+
+//SymbolicElement *EflagsBuilder::of(SymbolicElement *parent, AnalysisProcessor &ap)
 //{
 //  // TODO
 //}
 //
 //
-//SymbolicElement *EflagsBuilder::cf(SymbolicElement *parent, AnalysisProcessor &ap) const
+//SymbolicElement *EflagsBuilder::pf(SymbolicElement *parent, AnalysisProcessor &ap)
 //{
 //  // TODO
 //}
 //
 //
-//SymbolicElement *EflagsBuilder::of(SymbolicElement *parent, AnalysisProcessor &ap) const
-//{
-//  // TODO
-//}
-//
-//
-//SymbolicElement *EflagsBuilder::pf(SymbolicElement *parent, AnalysisProcessor &ap) const
-//{
-//  // TODO
-//}
-//
-//
-//SymbolicElement *EflagsBuilder::sf(SymbolicElement *parent, AnalysisProcessor &ap) const
+//SymbolicElement *EflagsBuilder::sf(SymbolicElement *parent, AnalysisProcessor &ap)
 //{
 //  // TODO
 //}

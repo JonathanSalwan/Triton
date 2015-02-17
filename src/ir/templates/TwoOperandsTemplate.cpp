@@ -5,7 +5,7 @@
 #include "Inst.h"
 #include "TwoOperandsTemplate.h"
 
-#include <iostream>
+
 void TwoOperandsTemplate::templateMethod(
     const ContextHandler &ctxH,
     AnalysisProcessor &ap,

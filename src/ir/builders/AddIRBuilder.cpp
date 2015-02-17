@@ -15,7 +15,7 @@ AddIRBuilder::AddIRBuilder(uint64_t address, const std::string &disassembly):
 
 void AddIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
-  std::stringstream expr;
+  std::stringstream expr, op1;
   uint64_t          reg     = std::get<1>(this->operands[0]);
   uint64_t          imm     = std::get<1>(this->operands[1]);
 
@@ -23,10 +23,14 @@ void AddIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   uint32_t          regSize = ctxH.getRegisterSize(reg);
 
   /* Create the SMT semantic */
+  /* OP_1 */
   if (symReg != UNSET)
-    expr << "(bvadd #" << std::dec << symReg << " " << smt2lib::bv(imm, regSize) << ")";
+    op1 << "#" << std::dec << symReg;
   else
-    expr << "(bvadd " << smt2lib::bv(ctxH.getRegisterValue(reg), regSize) << " " << smt2lib::bv(imm, regSize) << ")";
+    op1 << smt2lib::bv(ctxH.getRegisterValue(reg), regSize);
+
+  /* Finale expr */
+  expr << "(bvadd " << op1.str() << " " << smt2lib::bv(imm, regSize) << ")";
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, ctxH.translateRegID(reg));
@@ -38,11 +42,7 @@ void AddIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(se);
 
   /* Add the symbolic flags element to the current inst */
-  //inst.addElement(this->af(se, ap));
-  //inst.addElement(this->cf(se, ap));
-  //inst.addElement(this->of(se, ap));
-  //inst.addElement(this->pf(se, ap));
-  //inst.addElement(this->sf(se, ap));
+  inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::zf(se, ap));
 }
 
@@ -84,11 +84,7 @@ void AddIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(se);
 
   /* Add the symbolic flags element to the current inst */
-  //inst.addElement(this->af(se, ap));
-  //inst.addElement(this->cf(se, ap));
-  //inst.addElement(this->of(se, ap));
-  //inst.addElement(this->pf(se, ap));
-  //inst.addElement(this->sf(se, ap));
+  inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::zf(se, ap));
 }
 
@@ -129,18 +125,14 @@ void AddIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(se);
 
   /* Add the symbolic flags element to the current inst */
-  //inst.addElement(this->af(se, ap));
-  //inst.addElement(this->cf(se, ap));
-  //inst.addElement(this->of(se, ap));
-  //inst.addElement(this->pf(se, ap));
-  //inst.addElement(this->sf(se, ap));
+  inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::zf(se, ap));
 }
 
 
 void AddIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
-  std::stringstream expr;
+  std::stringstream expr, op1;
   uint32_t          writeSize = std::get<2>(this->operands[0]);
   uint64_t          mem       = std::get<1>(this->operands[0]);
   uint64_t          imm       = std::get<1>(this->operands[1]);
@@ -148,10 +140,14 @@ void AddIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   uint64_t          symMem    = ap.getMemorySymbolicID(mem);
 
   /* Create the SMT semantic */
+  /* OP_1 */
   if (symMem != UNSET)
-    expr << "(bvadd #" << std::dec << symMem << " " << smt2lib::bv(imm, writeSize) << ")";
+    op1 << "#" << std::dec << symMem;
   else
-    expr << "(bvadd " << smt2lib::bv(ctxH.getMemoryValue(mem, writeSize), writeSize) << " " << smt2lib::bv(imm, writeSize) << ")";
+    op1 << smt2lib::bv(ctxH.getMemoryValue(mem, writeSize), writeSize);
+
+  /* Final expr */
+  expr << "(bvadd " << op1.str() << " " << smt2lib::bv(imm, writeSize) << ")";
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);
@@ -163,11 +159,7 @@ void AddIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(se);
 
   /* Add the symbolic flags element to the current inst */
-  //inst.addElement(this->af(se, ap));
-  //inst.addElement(this->cf(se, ap));
-  //inst.addElement(this->of(se, ap));
-  //inst.addElement(this->pf(se, ap));
-  //inst.addElement(this->sf(se, ap));
+  inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::zf(se, ap));
 }
 
@@ -208,11 +200,7 @@ void AddIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(se);
 
   /* Add the symbolic flags element to the current inst */
-  //inst.addElement(this->af(se, ap));
-  //inst.addElement(this->cf(se, ap));
-  //inst.addElement(this->of(se, ap));
-  //inst.addElement(this->pf(se, ap));
-  //inst.addElement(this->sf(se, ap));
+  inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::zf(se, ap));
 }
 
