@@ -27,7 +27,7 @@ void MovIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   se = ap.createRegSE(expr, ctxH.translateRegID(reg));
 
   /* Apply the taint */
-  ap.spreadTaintRegImm(se, ctxH.translateRegID(reg));
+  ap.assignmentSpreadTaintRegImm(se, ctxH.translateRegID(reg));
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -52,7 +52,7 @@ void MovIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   se = ap.createRegSE(expr, ctxH.translateRegID(reg1));
 
   /* Apply the taint */
-  ap.spreadTaintRegReg(se, ctxH.translateRegID(reg1), ctxH.translateRegID(reg2));
+  ap.assignmentSpreadTaintRegReg(se, ctxH.translateRegID(reg1), ctxH.translateRegID(reg2));
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -78,7 +78,7 @@ void MovIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   se = ap.createRegSE(expr, ctxH.translateRegID(reg));
 
   /* Apply the taint */
-  ap.spreadTaintRegMem(se, ctxH.translateRegID(reg), mem, readSize);
+  ap.assignmentSpreadTaintRegMem(se, ctxH.translateRegID(reg), mem, readSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -99,7 +99,7 @@ void MovIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   se = ap.createMemSE(expr, mem);
 
   /* Apply the taint */
-  ap.spreadTaintMemImm(se, mem, writeSize);
+  ap.assignmentSpreadTaintMemImm(se, mem, writeSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -125,7 +125,7 @@ void MovIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   se = ap.createMemSE(expr, mem);
 
   /* Apply the taint */
-  ap.spreadTaintMemReg(se, mem, ctxH.translateRegID(reg), writeSize);
+  ap.assignmentSpreadTaintMemReg(se, mem, ctxH.translateRegID(reg), writeSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);

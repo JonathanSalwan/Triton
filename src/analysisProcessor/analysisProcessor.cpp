@@ -46,21 +46,21 @@ TaintEngine &AnalysisProcessor::getTaintEngine() {
 }
 
 
-void AnalysisProcessor::spreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc)
+void AnalysisProcessor::assignmentSpreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc)
 {
-  se->isTainted = this->taintEngine.spreadTaintRegReg(regDst, regSrc);
+  se->isTainted = this->taintEngine.assignmentSpreadTaintRegReg(regDst, regSrc);
 }
 
 
-void AnalysisProcessor::spreadTaintRegImm(SymbolicElement *se, uint64_t regDst)
+void AnalysisProcessor::assignmentSpreadTaintRegImm(SymbolicElement *se, uint64_t regDst)
 {
-  se->isTainted = this->taintEngine.spreadTaintRegImm(regDst);
+  se->isTainted = this->taintEngine.assignmentSpreadTaintRegImm(regDst);
 }
 
 
-void AnalysisProcessor::spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc, uint32_t readSize)
+void AnalysisProcessor::assignmentSpreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc, uint32_t readSize)
 {
-  se->isTainted = this->taintEngine.spreadTaintRegMem(regDst, memSrc, readSize);
+  se->isTainted = this->taintEngine.assignmentSpreadTaintRegMem(regDst, memSrc, readSize);
 
   /* Use symbolic variable if the memory is tainted */
   if (se->isTainted) {
@@ -82,15 +82,15 @@ void AnalysisProcessor::spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, 
 }
 
 
-void AnalysisProcessor::spreadTaintMemImm(SymbolicElement *se, uint64_t memDst, uint64_t writeSize)
+void AnalysisProcessor::assignmentSpreadTaintMemImm(SymbolicElement *se, uint64_t memDst, uint64_t writeSize)
 {
-  se->isTainted = this->taintEngine.spreadTaintMemImm(memDst, writeSize);
+  se->isTainted = this->taintEngine.assignmentSpreadTaintMemImm(memDst, writeSize);
 }
 
 
-void AnalysisProcessor::spreadTaintMemReg(SymbolicElement *se, uint64_t memDst, uint64_t regSrc, uint64_t writeSize)
+void AnalysisProcessor::assignmentSpreadTaintMemReg(SymbolicElement *se, uint64_t memDst, uint64_t regSrc, uint64_t writeSize)
 {
-  se->isTainted = this->taintEngine.spreadTaintMemReg(memDst, regSrc, writeSize);
+  se->isTainted = this->taintEngine.assignmentSpreadTaintMemReg(memDst, regSrc, writeSize);
 }
 
 

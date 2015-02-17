@@ -48,11 +48,11 @@ class AnalysisProcessor {
     void aluSpreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc);
 
     /* Assignment Spreading */
-    void spreadTaintMemImm(SymbolicElement *se, uint64_t memDst, uint64_t writeSize);
-    void spreadTaintMemReg(SymbolicElement *se, uint64_t memDst, uint64_t regSrc, uint64_t writeSize);
-    void spreadTaintRegImm(SymbolicElement *se, uint64_t regDst);
-    void spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc, uint32_t readSize);
-    void spreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc);
+    void assignmentSpreadTaintMemImm(SymbolicElement *se, uint64_t memDst, uint64_t writeSize);
+    void assignmentSpreadTaintMemReg(SymbolicElement *se, uint64_t memDst, uint64_t regSrc, uint64_t writeSize);
+    void assignmentSpreadTaintRegImm(SymbolicElement *se, uint64_t regDst);
+    void assignmentSpreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc, uint32_t readSize);
+    void assignmentSpreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc);
 
 
   private:

@@ -41,11 +41,11 @@ class TaintEngine {
     bool        aluSpreadTaintRegReg(uint64_t regDst, uint64_t regSrc);
 
     /* Assignment Spreading */
-    bool        spreadTaintMemImm(uint64_t memDst, uint64_t writeSize);
-    bool        spreadTaintMemReg(uint64_t memDst, uint64_t regSrc, uint64_t writeSize);
-    bool        spreadTaintRegImm(uint64_t regDst);
-    bool        spreadTaintRegMem(uint64_t regDst, uint64_t memSrc, uint64_t readSize);
-    bool        spreadTaintRegReg(uint64_t regDst, uint64_t regSrc);
+    bool        assignmentSpreadTaintMemImm(uint64_t memDst, uint64_t writeSize);
+    bool        assignmentSpreadTaintMemReg(uint64_t memDst, uint64_t regSrc, uint64_t writeSize);
+    bool        assignmentSpreadTaintRegImm(uint64_t regDst);
+    bool        assignmentSpreadTaintRegMem(uint64_t regDst, uint64_t memSrc, uint64_t readSize);
+    bool        assignmentSpreadTaintRegReg(uint64_t regDst, uint64_t regSrc);
 
     TaintEngine();
     TaintEngine(const TaintEngine &copy);

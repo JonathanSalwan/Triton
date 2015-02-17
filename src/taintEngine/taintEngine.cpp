@@ -119,7 +119,7 @@ void TaintEngine::untaintAddress(uint64_t addr)
  * Spread the taint in regDst if regSrc is tainted.
  * Returns true if a spreading occurs otherwise returns false.
  */
-bool TaintEngine::spreadTaintRegReg(uint64_t regDst, uint64_t regSrc)
+bool TaintEngine::assignmentSpreadTaintRegReg(uint64_t regDst, uint64_t regSrc)
 {
   if (this->isRegTainted(regSrc)){
     this->taintReg(regDst);
@@ -134,7 +134,7 @@ bool TaintEngine::spreadTaintRegReg(uint64_t regDst, uint64_t regSrc)
  * Untaint the regDst.
  * Returns false.
  */
-bool TaintEngine::spreadTaintRegImm(uint64_t regDst)
+bool TaintEngine::assignmentSpreadTaintRegImm(uint64_t regDst)
 {
   this->untaintReg(regDst);
   return false;
@@ -145,7 +145,7 @@ bool TaintEngine::spreadTaintRegImm(uint64_t regDst)
  * Spread the taint in regDst if memSrc is tainted.
  * Returns true if a spreading occurs otherwise returns false.
  */
-bool TaintEngine::spreadTaintRegMem(uint64_t regDst, uint64_t memSrc, uint64_t readSize)
+bool TaintEngine::assignmentSpreadTaintRegMem(uint64_t regDst, uint64_t memSrc, uint64_t readSize)
 {
   for (uint64_t offset = 0; offset != readSize; offset++){
     if (this->isMemoryTainted(memSrc+offset)){
@@ -162,7 +162,7 @@ bool TaintEngine::spreadTaintRegMem(uint64_t regDst, uint64_t memSrc, uint64_t r
  * Untaint the memDst.
  * Returns false.
  */
-bool TaintEngine::spreadTaintMemImm(uint64_t memDst, uint64_t writeSize)
+bool TaintEngine::assignmentSpreadTaintMemImm(uint64_t memDst, uint64_t writeSize)
 {
   for (uint64_t offset = 0; offset != writeSize; offset++)
     this->untaintAddress(memDst+offset);
@@ -174,7 +174,7 @@ bool TaintEngine::spreadTaintMemImm(uint64_t memDst, uint64_t writeSize)
  * Spread the taint in memDst if regSrc is tainted.
  * Returns true if a spreading occurs otherwise returns false.
  */
-bool TaintEngine::spreadTaintMemReg(uint64_t memDst, uint64_t regSrc, uint64_t writeSize)
+bool TaintEngine::assignmentSpreadTaintMemReg(uint64_t memDst, uint64_t regSrc, uint64_t writeSize)
 {
   if (this->isRegTainted(regSrc)){
     for (uint64_t offset = 0; offset != writeSize; offset++)
