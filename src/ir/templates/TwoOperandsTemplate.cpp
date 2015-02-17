@@ -16,7 +16,7 @@ void TwoOperandsTemplate::templateMethod(
   if (operands.size() < 2) // TODO, MOV = 2, ADD = 3, virer le < et mettre un template 3op
     throw std::runtime_error("Wrong numbers of operands: "
                            + insName
-                           + "instruction must have two operands.");
+                           + " instruction must have two operands.");
 
   // reg, imm
   if (std::get<0>(operands[0]) == IRBuilder::REG &&

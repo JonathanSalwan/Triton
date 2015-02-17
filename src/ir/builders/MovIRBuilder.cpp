@@ -157,11 +157,11 @@ Inst *MovIRBuilder::process(const ContextHandler &ctxH, AnalysisProcessor &ap) c
   Inst *inst = new Inst(_address, _disas);
 
   try {
-    this->templateMethod(ctxH, ap, *inst, _operands, _disas);
+    this->templateMethod(ctxH, ap, *inst, _operands, "MOV");
   }
   catch (std::exception &e) {
     delete inst;
-    throw e;
+    throw;
   }
 
   return inst;

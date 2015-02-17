@@ -227,7 +227,7 @@ Inst *AddIRBuilder::process(const ContextHandler &ctxH, AnalysisProcessor &ap) c
   }
   catch (std::exception &e) {
     delete inst;
-    throw e;
+    throw;
   }
 
   return inst;
