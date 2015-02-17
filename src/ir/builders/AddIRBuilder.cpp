@@ -43,7 +43,7 @@ void AddIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   //inst.addElement(this->of(se, ap));
   //inst.addElement(this->pf(se, ap));
   //inst.addElement(this->sf(se, ap));
-  inst.addElement(this->zf(se, ap));
+  inst.addElement(EflagsBuilder::zf(se, ap));
 }
 
 
@@ -89,7 +89,7 @@ void AddIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   //inst.addElement(this->of(se, ap));
   //inst.addElement(this->pf(se, ap));
   //inst.addElement(this->sf(se, ap));
-  inst.addElement(this->zf(se, ap));
+  inst.addElement(EflagsBuilder::zf(se, ap));
 }
 
 
@@ -134,7 +134,7 @@ void AddIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   //inst.addElement(this->of(se, ap));
   //inst.addElement(this->pf(se, ap));
   //inst.addElement(this->sf(se, ap));
-  inst.addElement(this->zf(se, ap));
+  inst.addElement(EflagsBuilder::zf(se, ap));
 }
 
 
@@ -168,7 +168,7 @@ void AddIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   //inst.addElement(this->of(se, ap));
   //inst.addElement(this->pf(se, ap));
   //inst.addElement(this->sf(se, ap));
-  inst.addElement(this->zf(se, ap));
+  inst.addElement(EflagsBuilder::zf(se, ap));
 }
 
 
@@ -213,7 +213,7 @@ void AddIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   //inst.addElement(this->of(se, ap));
   //inst.addElement(this->pf(se, ap));
   //inst.addElement(this->sf(se, ap));
-  inst.addElement(this->zf(se, ap));
+  inst.addElement(EflagsBuilder::zf(se, ap));
 }
 
 

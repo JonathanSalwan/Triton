@@ -2,12 +2,12 @@
 #define _ADDIRBUILDER_H_
 
 #include "BaseIRBuilder.h"
-#include "EflagsIRBuilder.h"
+#include "EflagsBuilder.h"
 #include "Inst.h"
 #include "TwoOperandsTemplate.h"
 
 
-class AddIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate, protected EflagsIRBuilder {
+class AddIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 
   public:
     AddIRBuilder(uint64_t address, const std::string &disassembly);
