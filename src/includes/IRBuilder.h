@@ -45,22 +45,11 @@ class IRBuilder {
     // Process the symbolic Execution.
     virtual Inst *process(const ContextHandler &ctxH, AnalysisProcessor &ap) const = 0;
 
-    // Display the IRBuilder in the ostream.
-    virtual void display(std::ostream &os) const = 0;
-
     // Check if the operand is of type MEM_*
     static bool isMemOperand(IRBuilder::operand_t type) {
       return (type == IRBuilder::MEM_R) || (type == IRBuilder::MEM_W);
     }
 
 };
-
-
-// Operators overloading
-// Virtual Friend function idiom
-inline std::ostream& operator<<(std::ostream& os, const IRBuilder& ir) {
-  ir.display(os);
-  return os;
-}
 
 #endif // _IRBUILDER_H_

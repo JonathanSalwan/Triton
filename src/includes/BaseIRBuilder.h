@@ -19,7 +19,6 @@ class BaseIRBuilder: public IRBuilder {
     virtual uint64_t getAddress() const;
     virtual const std::string &getDisassembly() const;
 
-
     // Add an operand to IRBuilder.
     // If it's type is:
     //  - IMM (Immediate), the value is the immediate value.
@@ -31,8 +30,6 @@ class BaseIRBuilder: public IRBuilder {
     virtual void setup(uint64_t mem_value);
 
     virtual void checkSetup() const;
-
-    virtual void display(std::ostream &os) const;
 
   protected:
     uint64_t        _address;

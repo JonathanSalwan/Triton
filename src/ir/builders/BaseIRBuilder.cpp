@@ -54,31 +54,3 @@ void BaseIRBuilder::checkSetup() const {
 }
 
 
-// Utilities functions
-
-//static const char * enum2Text(IRBuilder::operand_t val)
-//{
-//  return (const char *[]){"IMM", "REG", "MEM_R", "MEM_W"}[val];
-//}
-
-void BaseIRBuilder::display(std::ostream &os) const {
-
-  os << boost::format(outputInstruction) % boost::io::group(std::hex, std::showbase, this->_address) % this->_disas;
-
-  //if (!_operands.empty()) {
-  //  os  << "\t[";
-
-  //  for (auto it = _operands.begin(); it != _operands.end(); ++it) {
-  //    os << "("  << std::dec << enum2Text(it->first)
-  //       << ", " << std::hex << it->second << ")";
-
-  //    if (it < --_operands.end())
-  //      os << ", ";
-  //  }
-
-  //  os << "]";
-  //}
-
-  os << std::dec << std::noshowbase;
-}
-

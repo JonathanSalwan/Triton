@@ -36,6 +36,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/contextHandler/PINContextHandler.cpp \
 		./src/core/main.cpp \
 		./src/ir/IRBuilderFactory.cpp \
+		./src/ir/builders/EflagsIRBuilder.cpp \
 		./src/ir/builders/AddIRBuilder.cpp \
 		./src/ir/builders/BaseIRBuilder.cpp \
 		./src/ir/builders/MovIRBuilder.cpp \

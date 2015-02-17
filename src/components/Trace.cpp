@@ -15,11 +15,13 @@ Trace::~Trace()
 {
 }
 
+
 /* Add an instruction in the trace */
 void Trace::addInstruction(Inst *instruction)
 {
   this->instructions.push_back(instruction);
 }
+
 
 /* Returns the instructions list in the trace */
 std::list<Inst *> &Trace::getInstructions()
@@ -32,14 +34,20 @@ void Trace::display(std::ostream &os)
 {
   boost::format outputInstruction("%1% %|15t| %2% %|55t|");
 
-  for (auto inst : this->instructions)
+  for (auto inst : this->instructions){
+    uint64_t count = 0;
     if (inst != nullptr) {
       std::stringstream expr(""), colr(ENDC);
 
       for (auto se : inst->getSymbolicElements()){
-        expr << se->getExpression()->str() << " ";
+
+        if (count == 0) expr << se->getExpression()->str();
+        else            expr << std::endl << boost::format(outputInstruction) % "" % "" << se->getExpression()->str();
+
         if (se->isTainted)
           colr.str(GREEN);
+
+        count++;
       }
 
       os << colr.str()
@@ -50,5 +58,5 @@ void Trace::display(std::ostream &os)
          << ENDC
          << std::endl;
     }
+  }
 }
-

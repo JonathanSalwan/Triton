@@ -22,15 +22,15 @@ enum regID_t
   ID_R15,
 
   /* Flags ID used in the Taint and Symbolic Engines */
-  ID_CF,
-  ID_PF,
   ID_AF,
-  ID_ZF,
+  ID_CF,
+  ID_DF,
+  ID_IF,
+  ID_OF,
+  ID_PF,
   ID_SF,
   ID_TF,
-  ID_IF,
-  ID_DF,
-  ID_OF,
+  ID_ZF,
 };
 
 #endif //__REGISTERS_H__
