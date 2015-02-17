@@ -13,13 +13,13 @@ static void stop(std::string disass)
 }
 
 void MovzxIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
-  stop(this->_disas);
+  stop(this->disas);
 }
 
 void MovzxIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
-  stop(this->_disas);
+  stop(this->disas);
 }
 
 void MovzxIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
-  stop(this->_disas);
+  stop(this->disas);
 }

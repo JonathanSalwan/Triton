@@ -32,10 +32,10 @@ class BaseIRBuilder: public IRBuilder {
     virtual void checkSetup() const;
 
   protected:
-    uint64_t        _address;
-    std::string     _disas;
-    bool            _needSetup;
-    std::vector< std::tuple<IRBuilder::operand_t, uint64_t, uint32_t> > _operands;
+    uint64_t        address;
+    std::string     disas;
+    bool            needSetup;
+    std::vector< std::tuple<IRBuilder::operand_t, uint64_t, uint32_t> > operands;
 };
 
 #endif // _BASEIRBUILDER_H_

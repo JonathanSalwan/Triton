@@ -1,15 +1,15 @@
 #include "Trigger.h"
 
-Trigger::Trigger(): _state(false) { }
+Trigger::Trigger(): state(false) { }
 
 
 void Trigger::toggle()
 {
-  _state = !_state;
+  this->state = !this->state;
 }
 
 
 bool Trigger::getState()
 {
-  return _state;
+  return this->state;
 }

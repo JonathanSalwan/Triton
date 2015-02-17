@@ -42,7 +42,7 @@ class IRBuilder {
     // Should be use in process.
     virtual void checkSetup() const = 0;
 
-    // Process the symbolic Execution.
+    // Process the symbolic execution and the taint analysis.
     virtual Inst *process(const ContextHandler &ctxH, AnalysisProcessor &ap) const = 0;
 
     // Check if the operand is of type MEM_*

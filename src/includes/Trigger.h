@@ -13,7 +13,7 @@ class Trigger {
     bool getState();
 
   private:
-    bool _state;
+    bool state;
 };
 
 #endif // _TRIGGER_H_
