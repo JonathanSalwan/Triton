@@ -24,6 +24,10 @@ class MovIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate  {
 
     virtual void memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const;
 
+  protected:
+    // Store a pointer to function building the bit vector expression.
+    // Truly useful for subclasses.
+    std::string (*extender) (std::string, uint64_t);
 };
 
 #endif // _MOVIRBUILDER_H_

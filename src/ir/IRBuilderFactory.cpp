@@ -5,6 +5,8 @@
 #include "IRBuilderFactory.h"
 #include "AddIRBuilder.h"
 #include "MovIRBuilder.h"
+#include "MovsxIRBuilder.h"
+#include "MovzxIRBuilder.h"
 #include "NullIRBuilder.h"
 
 
@@ -21,6 +23,13 @@ IRBuilder *createIRBuilder(INS ins) {
 
     case XED_ICLASS_ADD:
       ir = new AddIRBuilder(address, disas);
+
+    case XED_ICLASS_MOVSX:
+      ir = new MovsxIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_MOVZX:
+      ir = new MovzxIRBuilder(address, disas);
       break;
 
     case XED_ICLASS_MOV:

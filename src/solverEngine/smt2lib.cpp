@@ -1,3 +1,4 @@
+#include <string>
 
 #include "SMT2Lib.h"
 
@@ -25,6 +26,20 @@ std::string smt2lib::bv(uint64_t value, uint64_t size)
   }
 
   return stream.str();
+}
+
+
+/* Returns the 'bv' syntax with sign extension applied to it. */
+std::string smt2lib::sx(std::string expr, uint64_t size)
+{
+  return "((_ sign_extend " + std::to_string(size) + ") " + expr + ")";
+}
+
+
+/* Returns the 'bv' syntax with zero extension applied to it. */
+std::string smt2lib::zx(std::string expr, uint64_t size)
+{
+  return "((_ zero_extend " + std::to_string(size) + ") " + expr + ")";;
 }
 
 
