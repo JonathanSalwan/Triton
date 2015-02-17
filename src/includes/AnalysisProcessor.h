@@ -37,11 +37,22 @@ class AnalysisProcessor {
 
     // Taint interface.
     // Taint the symbolic element if the taint occurs.
-    void spreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc);
-    void spreadTaintRegImm(SymbolicElement *se, uint64_t regDst);
-    void spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc, uint32_t readSize);
+    bool isMemoryTainted(uint64_t addr);
+    bool isRegTainted(uint64_t reg);
+
+    /* ALU Spreading */
+    void aluSpreadTaintMemImm(SymbolicElement *se, uint64_t memDst, uint32_t writeSize);
+    void aluSpreadTaintMemReg(SymbolicElement *se, uint64_t memDst, uint64_t regSrc, uint32_t writeSize);
+    void aluSpreadTaintRegImm(SymbolicElement *se, uint64_t regDst);
+    void aluSpreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc, uint32_t readSize);
+    void aluSpreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc);
+
+    /* Assignment Spreading */
     void spreadTaintMemImm(SymbolicElement *se, uint64_t memDst, uint64_t writeSize);
     void spreadTaintMemReg(SymbolicElement *se, uint64_t memDst, uint64_t regSrc, uint64_t writeSize);
+    void spreadTaintRegImm(SymbolicElement *se, uint64_t regDst);
+    void spreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc, uint32_t readSize);
+    void spreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc);
 
 
   private:

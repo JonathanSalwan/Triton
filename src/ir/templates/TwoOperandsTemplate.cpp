@@ -5,7 +5,7 @@
 #include "Inst.h"
 #include "TwoOperandsTemplate.h"
 
-
+#include <iostream>
 void TwoOperandsTemplate::templateMethod(
     const ContextHandler &ctxH,
     AnalysisProcessor &ap,
@@ -13,7 +13,7 @@ void TwoOperandsTemplate::templateMethod(
     const std::vector< std::tuple<IRBuilder::operand_t, uint64_t, uint32_t> > &operands,
     std::string insName) const
 {
-  if (operands.size() != 2)
+  if (operands.size() < 2) // TODO, MOV = 2, ADD = 3, virer le < et mettre un template 3op
     throw std::runtime_error("Wrong numbers of operands: "
                            + insName
                            + "instruction must have two operands.");

@@ -94,3 +94,44 @@ void AnalysisProcessor::spreadTaintMemReg(SymbolicElement *se, uint64_t memDst, 
 }
 
 
+bool AnalysisProcessor::isRegTainted(uint64_t reg)
+{
+  return this->taintEngine.isRegTainted(reg);
+}
+
+
+bool AnalysisProcessor::isMemoryTainted(uint64_t addr)
+{
+  return this->taintEngine.isMemoryTainted(addr);
+}
+
+
+void AnalysisProcessor::aluSpreadTaintRegImm(SymbolicElement *se, uint64_t regDst)
+{
+  se->isTainted = this->taintEngine.aluSpreadTaintRegImm(regDst);
+}
+
+
+void AnalysisProcessor::aluSpreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc)
+{
+  se->isTainted = this->taintEngine.aluSpreadTaintRegReg(regDst, regSrc);
+}
+
+
+void AnalysisProcessor::aluSpreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc, uint32_t readSize)
+{
+  se->isTainted = this->taintEngine.aluSpreadTaintRegMem(regDst, memSrc, readSize);
+}
+
+
+void AnalysisProcessor::aluSpreadTaintMemImm(SymbolicElement *se, uint64_t memDst, uint32_t writeSize)
+{
+  se->isTainted = this->taintEngine.aluSpreadTaintMemImm(memDst, writeSize);
+}
+
+
+void AnalysisProcessor::aluSpreadTaintMemReg(SymbolicElement *se, uint64_t memDst, uint64_t regSrc, uint32_t writeSize)
+{
+  se->isTainted = this->taintEngine.aluSpreadTaintMemReg(memDst, regSrc, writeSize);
+}
+

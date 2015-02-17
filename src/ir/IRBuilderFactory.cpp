@@ -3,6 +3,7 @@
 #include "pin.H"
 
 #include "IRBuilderFactory.h"
+#include "AddIRBuilder.h"
 #include "MovIRBuilder.h"
 #include "NullIRBuilder.h"
 
@@ -17,6 +18,10 @@ IRBuilder *createIRBuilder(INS ins) {
   IRBuilder *ir = NULL;
 
   switch (opcode) {
+
+    case XED_ICLASS_ADD:
+      ir = new AddIRBuilder(address, disas);
+      break;
 
     //case XED_ICLASS_MOVSX:
     //case XED_ICLASS_MOVZX:
