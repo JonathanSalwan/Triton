@@ -44,14 +44,14 @@ SymbolicElement *EflagsBuilder::cf(SymbolicElement *parent, AnalysisProcessor &a
 //}
 
 
-SymbolicElement *EflagsBuilder::sf(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t size)
+SymbolicElement *EflagsBuilder::sf(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            sizeOp = (size * 8) - 1;
+  uint32_t            extractSize = (dstSize * 8) - 1;
 
   /* Create the SMT semantic. */
-  expr << "(assert (= ((_ extract " << sizeOp << " " << sizeOp << ")#" << std::dec << parent->getID() << ") (_ bv1 1)))";
+  expr << "(assert (= ((_ extract " << extractSize << " " << extractSize << ")#" << std::dec << parent->getID() << ") (_ bv1 1)))";
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, ID_SF);
