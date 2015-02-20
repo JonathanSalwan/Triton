@@ -13,6 +13,7 @@ static T nullf(T t, INT size) {
   return t;
 }
 
+
 MovIRBuilder::MovIRBuilder(uint64_t address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly),
   extender(&nullf<std::string, uint64_t>) {
@@ -24,6 +25,7 @@ MovIRBuilder::MovIRBuilder(uint64_t address, const std::string &disassembly):
 static uint64_t deltaSize(uint64_t size1, uint64_t size2) {
   return std::max(size1, size2)*8 - std::min(size1, size2)*8;
 }
+
 
 void MovIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;

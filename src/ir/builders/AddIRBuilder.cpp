@@ -44,6 +44,7 @@ void AddIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::zf(se, ap));
+  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
 }
 
 
@@ -86,6 +87,7 @@ void AddIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::zf(se, ap));
+  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
 }
 
 
@@ -98,6 +100,7 @@ void AddIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 
   uint64_t          symReg   = ap.getRegSymbolicID(ctxH.translateRegID(reg));
   uint64_t          symMem   = ap.getMemorySymbolicID(mem);
+  uint32_t          regSize  = ctxH.getRegisterSize(reg);
 
   /* Create the SMT semantic */
   // OP_1
@@ -127,6 +130,7 @@ void AddIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::zf(se, ap));
+  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
 }
 
 
@@ -161,6 +165,7 @@ void AddIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::zf(se, ap));
+  inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
 }
 
 
@@ -202,6 +207,7 @@ void AddIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::zf(se, ap));
+  inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
 }
 
 

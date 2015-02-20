@@ -13,8 +13,6 @@
 
 SymbolicElement *EflagsBuilder::cf(SymbolicElement *parent, AnalysisProcessor &ap, std::stringstream &op1)
 {
-  // parent.ID < dstValue
-
   SymbolicElement     *se;
   std::stringstream   expr;
 
@@ -44,12 +42,25 @@ SymbolicElement *EflagsBuilder::cf(SymbolicElement *parent, AnalysisProcessor &a
 //{
 //  // TODO
 //}
-//
-//
-//SymbolicElement *EflagsBuilder::sf(SymbolicElement *parent, AnalysisProcessor &ap)
-//{
-//  // TODO
-//}
+
+
+SymbolicElement *EflagsBuilder::sf(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t size)
+{
+  SymbolicElement     *se;
+  std::stringstream   expr;
+  uint32_t            sizeOp = (size * 8) - 1;
+
+  /* Create the SMT semantic. */
+  expr << "(assert (= ((_ extract " << sizeOp << " " << sizeOp << ")#" << std::dec << parent->getID() << ") (_ bv1 1)))";
+
+  /* Create the symbolic element */
+  se = ap.createRegSE(expr, ID_SF);
+
+  /* Spread the taint from the parent to the child */
+  se->isTainted = parent->isTainted;
+
+  return se;
+}
 
 
 SymbolicElement *EflagsBuilder::zf(SymbolicElement *parent, AnalysisProcessor &ap)

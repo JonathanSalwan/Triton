@@ -11,7 +11,7 @@ namespace EflagsBuilder {
   SymbolicElement *cf(SymbolicElement *parent, AnalysisProcessor &ap, std::stringstream &op1);
 //  SymbolicElement *of(SymbolicElement *parent, AnalysisProcessor &ap);
 //  SymbolicElement *pf(SymbolicElement *parent, AnalysisProcessor &ap);
-//  SymbolicElement *sf(SymbolicElement *parent, AnalysisProcessor &ap);
+  SymbolicElement *sf(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t size);
   SymbolicElement *zf(SymbolicElement *parent, AnalysisProcessor &ap);
 
 };
