@@ -3,9 +3,9 @@
 #include <stdexcept>
 
 #include "AddIRBuilder.h"
+#include "Registers.h"
 #include "SMT2Lib.h"
 #include "SymbolicElement.h"
-
 
 
 AddIRBuilder::AddIRBuilder(uint64_t address, const std::string &disassembly):
@@ -27,10 +27,10 @@ void AddIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symReg != UNSET)
     op1 << "#" << std::dec << symReg;
   else
-    op1 << smt2lib::bv(ctxH.getRegisterValue(reg), regSize);
+    op1 << smt2lib::bv(ctxH.getRegisterValue(reg), regSize * REG_SIZE);
 
   /* Finale expr */
-  expr << smt2lib::bvadd(op1.str(), smt2lib::bv(imm, regSize));
+  expr << smt2lib::bvadd(op1.str(), smt2lib::bv(imm, regSize * REG_SIZE));
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, ctxH.translateRegID(reg));
@@ -64,13 +64,13 @@ void AddIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symReg1 != UNSET)
     op1 << "#" << std::dec << symReg1;
   else
-    op1 << smt2lib::bv(ctxH.getRegisterValue(reg1), regSize);
+    op1 << smt2lib::bv(ctxH.getRegisterValue(reg1), regSize * REG_SIZE);
 
   // OP_2
   if (symReg2 != UNSET)
     op2 << "#" << std::dec << symReg2;
   else
-    op2 << smt2lib::bv(ctxH.getRegisterValue(reg2), regSize);
+    op2 << smt2lib::bv(ctxH.getRegisterValue(reg2), regSize * REG_SIZE);
 
   // Final expr
   expr << smt2lib::bvadd(op1.str(), op2.str());
@@ -107,13 +107,13 @@ void AddIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symReg != UNSET)
     op1 << "#" << std::dec << symReg;
   else
-    op1 << smt2lib::bv(ctxH.getRegisterValue(reg), readSize);
+    op1 << smt2lib::bv(ctxH.getRegisterValue(reg), readSize * REG_SIZE);
 
   // OP_2
   if (symMem != UNSET)
     op2 << "#" << std::dec << symMem;
   else
-    op2 << smt2lib::bv(ctxH.getMemoryValue(mem, readSize), readSize);
+    op2 << smt2lib::bv(ctxH.getMemoryValue(mem, readSize), readSize * REG_SIZE);
 
   // Final expr
   expr << smt2lib::bvadd(op1.str(), op2.str());
@@ -148,10 +148,10 @@ void AddIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symMem != UNSET)
     op1 << "#" << std::dec << symMem;
   else
-    op1 << smt2lib::bv(ctxH.getMemoryValue(mem, writeSize), writeSize);
+    op1 << smt2lib::bv(ctxH.getMemoryValue(mem, writeSize), writeSize * REG_SIZE);
 
   /* Final expr */
-  expr << smt2lib::bvadd(op1.str(), smt2lib::bv(imm, writeSize));
+  expr << smt2lib::bvadd(op1.str(), smt2lib::bv(imm, writeSize * REG_SIZE));
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);
@@ -184,13 +184,13 @@ void AddIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symMem != UNSET)
     op1 << "#" << std::dec << symMem;
   else
-    op1 << smt2lib::bv(ctxH.getMemoryValue(mem, writeSize), writeSize);
+    op1 << smt2lib::bv(ctxH.getMemoryValue(mem, writeSize), writeSize * REG_SIZE);
 
   // OP_1
   if (symReg != UNSET)
     op2 << "#" << std::dec << symReg;
   else
-    op2 << smt2lib::bv(ctxH.getRegisterValue(reg), writeSize);
+    op2 << smt2lib::bv(ctxH.getRegisterValue(reg), writeSize * REG_SIZE);
 
   // Final expr
   expr << smt2lib::bvadd(op1.str(), op2.str());

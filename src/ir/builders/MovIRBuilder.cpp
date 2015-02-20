@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include "MovIRBuilder.h"
+#include "Registers.h"
 #include "SMT2Lib.h"
 #include "SymbolicElement.h"
 
@@ -23,7 +24,7 @@ MovIRBuilder::MovIRBuilder(uint64_t address, const std::string &disassembly):
 
 // Return the difference in bits of two registers size given in bytes.
 static uint64_t deltaSize(uint64_t size1, uint64_t size2) {
-  return std::max(size1, size2)*8 - std::min(size1, size2)*8;
+  return (std::max(size1, size2) * REG_SIZE) - (std::min(size1, size2) * REG_SIZE);
 }
 
 
@@ -35,7 +36,7 @@ void MovIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   uint64_t          size = ctxH.getRegisterSize(reg);
 
   /* Create the SMT semantic */
-  expr << smt2lib::bv(imm, size);
+  expr << smt2lib::bv(imm, size * REG_SIZE);
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, ctxH.translateRegID(reg));
@@ -62,7 +63,7 @@ void MovIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symReg2 != UNSET)
     expr << "#" << std::dec << symReg2;
   else
-    expr << smt2lib::bv(ctxH.getRegisterValue(reg2), size1);
+    expr << smt2lib::bv(ctxH.getRegisterValue(reg2), size1 * REG_SIZE);
 
   expr.str(this->extender(expr.str(), deltaSize(size1, size2)));
 
@@ -91,7 +92,7 @@ void MovIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symMem != UNSET)
     expr << "#" << std::dec << symMem;
   else
-    expr << smt2lib::bv(ctxH.getMemoryValue(mem, readSize), readSize);
+    expr << smt2lib::bv(ctxH.getMemoryValue(mem, readSize), readSize * REG_SIZE);
 
   expr.str(this->extender(expr.str(), deltaSize(regSize, readSize)));
 
@@ -114,7 +115,7 @@ void MovIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   uint64_t          imm       = std::get<1>(this->operands[1]);
 
   /* Create the SMT semantic */
-  expr << smt2lib::bv(imm, writeSize);
+  expr << smt2lib::bv(imm, writeSize * REG_SIZE);
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);
@@ -140,7 +141,7 @@ void MovIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symReg != UNSET)
     expr << "#" << std::dec << symReg;
   else
-    expr << smt2lib::bv(ctxH.getRegisterValue(reg), writeSize);
+    expr << smt2lib::bv(ctxH.getRegisterValue(reg), writeSize * REG_SIZE);
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);

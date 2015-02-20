@@ -1,6 +1,8 @@
 #ifndef  __REGISTERS_H__
 #define  __REGISTERS_H__
 
+#define REG_SIZE 8
+
 enum regID_t
 {
   /* Register ID used in the Taint and Symbolic Engines */
