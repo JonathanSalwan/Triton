@@ -20,9 +20,10 @@ class SymbolicElement {
   public:
     bool                isTainted;
 
-    std::stringstream   *getExpression();
-    std::stringstream   *getSource();
-    uint64_t            getID();
+    std::string         getID2Str(void);
+    std::stringstream   *getExpression(void);
+    std::stringstream   *getSource(void);
+    uint64_t            getID(void);
     void                setSrcExpr(std::stringstream &src);
 
     SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id);

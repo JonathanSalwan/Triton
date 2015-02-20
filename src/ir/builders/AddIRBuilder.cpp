@@ -30,7 +30,7 @@ void AddIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
     op1 << smt2lib::bv(ctxH.getRegisterValue(reg), regSize);
 
   /* Finale expr */
-  expr << "(bvadd " << op1.str() << " " << smt2lib::bv(imm, regSize) << ")";
+  expr << smt2lib::bvadd(op1.str(), smt2lib::bv(imm, regSize));
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, ctxH.translateRegID(reg));
@@ -43,7 +43,7 @@ void AddIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::zf(se, ap));
+  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
   inst.addElement(EflagsBuilder::sf(se, ap, regSize));
 }
 
@@ -73,7 +73,7 @@ void AddIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
     op2 << smt2lib::bv(ctxH.getRegisterValue(reg2), regSize);
 
   // Final expr
-  expr << "(bvadd " << op1.str() << " " << op2.str() << ")";
+  expr << smt2lib::bvadd(op1.str(), op2.str());
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, ctxH.translateRegID(reg1));
@@ -86,7 +86,7 @@ void AddIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::zf(se, ap));
+  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
   inst.addElement(EflagsBuilder::sf(se, ap, regSize));
 }
 
@@ -116,7 +116,7 @@ void AddIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
     op2 << smt2lib::bv(ctxH.getMemoryValue(mem, readSize), readSize);
 
   // Final expr
-  expr << "(bvadd " << op1.str() << " " << op2.str() << ")";
+  expr << smt2lib::bvadd(op1.str(), op2.str());
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, ctxH.translateRegID(reg));
@@ -129,7 +129,7 @@ void AddIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::zf(se, ap));
+  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
   inst.addElement(EflagsBuilder::sf(se, ap, regSize));
 }
 
@@ -151,7 +151,7 @@ void AddIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
     op1 << smt2lib::bv(ctxH.getMemoryValue(mem, writeSize), writeSize);
 
   /* Final expr */
-  expr << "(bvadd " << op1.str() << " " << smt2lib::bv(imm, writeSize) << ")";
+  expr << smt2lib::bvadd(op1.str(), smt2lib::bv(imm, writeSize));
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);
@@ -164,7 +164,7 @@ void AddIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::zf(se, ap));
+  inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
   inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
 }
 
@@ -193,7 +193,7 @@ void AddIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
     op2 << smt2lib::bv(ctxH.getRegisterValue(reg), writeSize);
 
   // Final expr
-  expr << "(bvadd " << op1.str() << " " << op2.str() << ")";
+  expr << smt2lib::bvadd(op1.str(), op2.str());
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);
@@ -206,7 +206,7 @@ void AddIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::zf(se, ap));
+  inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
   inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
 }
 

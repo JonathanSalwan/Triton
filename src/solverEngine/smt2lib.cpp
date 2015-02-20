@@ -43,9 +43,26 @@ std::string smt2lib::zx(std::string expr, uint64_t size)
 }
 
 
+/* Returns the 'bvadd' syntax. */
+std::string smt2lib::bvadd(std::string op1, std::string op2)
+{
+  return "(bvadd " + op1 + " " + op2 + ")";
+}
+
+
+/*
+ * Returns the 'bvult' syntax.
+ * bvult: unsigned less than
+ */
+std::string smt2lib::bvult(std::string op1, std::string op2)
+{
+  return "(bvult " + op1 + " " + op2 + ")";
+}
+
+
 /* Returns the 'extract' syntax based on a value and a size.
  * Mainly used for the SMT translation */
-std::string smt2lib::extract(uint64_t regSize)
+std::string smt2lib::extractFromRegister(uint64_t regSize)
 {
   std::stringstream stream;
 
@@ -91,4 +108,19 @@ std::string smt2lib::declare(uint64_t idSymVar, uint64_t BitVecSize)
 
   return stream.str();
 }
+
+
+/* Returns the 'assert' syntax. */
+std::string smt2lib::smtAssert(std::string expr)
+{
+  return "(assert (" + expr + "))";
+}
+
+
+/* Returns the 'equal' syntax. */
+std::string smt2lib::equal(std::string op1, std::string op2)
+{
+  return "(= " + op1 + " " + op2 + ")";
+}
+
 

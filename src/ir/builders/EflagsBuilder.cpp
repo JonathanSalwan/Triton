@@ -16,11 +16,8 @@ SymbolicElement *EflagsBuilder::cf(SymbolicElement *parent, AnalysisProcessor &a
   SymbolicElement     *se;
   std::stringstream   expr;
 
-  /*
-   * Create the SMT semantic.
-   * bvult : unsigned less than
-   */
-  expr << "(assert (bvult #" << std::dec << parent->getID() << " " << op1.str() << "))";
+  /* Create the SMT semantic. */
+  expr << smt2lib::smtAssert(smt2lib::bvult(parent->getID2Str(), op1.str()));
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, ID_CF);
@@ -51,7 +48,7 @@ SymbolicElement *EflagsBuilder::sf(SymbolicElement *parent, AnalysisProcessor &a
   uint32_t            extractSize = (dstSize * 8) - 1;
 
   /* Create the SMT semantic. */
-  expr << "(assert (= ((_ extract " << extractSize << " " << extractSize << ")#" << std::dec << parent->getID() << ") (_ bv1 1)))";
+  expr << "(assert (= ((_ extract " << extractSize << " " << extractSize << ")" << parent->getID2Str() << ") (_ bv1 1)))";
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, ID_SF);
@@ -63,13 +60,13 @@ SymbolicElement *EflagsBuilder::sf(SymbolicElement *parent, AnalysisProcessor &a
 }
 
 
-SymbolicElement *EflagsBuilder::zf(SymbolicElement *parent, AnalysisProcessor &ap)
+SymbolicElement *EflagsBuilder::zf(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
 
   /* Create the SMT semantic */
-  expr << "(assert (= #" << std::dec << parent->getID() << " 0))";
+  expr << smt2lib::smtAssert(smt2lib::equal(parent->getID2Str(), smt2lib::bv(0, dstSize)));
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, ID_ZF);
