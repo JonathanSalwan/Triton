@@ -33,6 +33,27 @@ std::string smt2lib::bvadd(std::string op1, std::string op2)
 }
 
 
+/* Returns the 'bvxor' syntax. */
+std::string smt2lib::bvxor(std::string op1, std::string op2)
+{
+  return "(bvxor " + op1 + " " + op2 + ")";
+}
+
+
+/* Returns the 'bvand' syntax. */
+std::string smt2lib::bvand(std::string op1, std::string op2)
+{
+  return "(bvand " + op1 + " " + op2 + ")";
+}
+
+
+/* Returns the 'bvnot' syntax. */
+std::string smt2lib::bvnot(std::string op1)
+{
+  return "(bvnot " + op1 + ")";
+}
+
+
 /*
  * Returns the 'bvult' syntax.
  * bvult: unsigned less than
@@ -110,7 +131,7 @@ std::string smt2lib::declare(uint64_t idSymVar, uint64_t BitVecSize)
 /* Returns the 'assert' syntax. */
 std::string smt2lib::smtAssert(std::string expr)
 {
-  return "(assert (" + expr + "))";
+  return "(assert " + expr + ")";
 }
 
 

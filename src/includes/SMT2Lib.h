@@ -47,6 +47,18 @@ namespace smt2lib {
   /* Returns the 'bvult' syntax. */
   /* (bvult <op1> <op2>) */
   std::string bvult(std::string op1, std::string op2);
+
+  /* Returns the 'bvxor' syntax. */
+  /* (bvxor <op1> <op2>) */
+  std::string bvxor(std::string op1, std::string op2);
+
+  /* Returns the 'bvand' syntax. */
+  /* (bvand <op1> <op2>) */
+  std::string bvand(std::string op1, std::string op2);
+
+  /* Returns the 'bvnot' syntax. */
+  /* (bvnot <op1>) */
+  std::string bvnot(std::string op1);
 }
 
 #endif  /* !__SMTLIB2_UTILS__ */
