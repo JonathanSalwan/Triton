@@ -2,7 +2,26 @@
 
 #include "SMT2Lib.h"
 
+static const std::string parityDef =
+  "(define-fun parity_flag ((x!1 (_ BitVec 8))) (_ BitVec 1)"
+  "; x ^= x >> 4;"
+  "; v &= 0xf;"
+  "; return (0x6996 >> v) & 1;"
+  "((_ extract 0 0)"
+    "(bvlshr"
+       "(_ bv27030 16)"
+       "((_ zero_extend 8)"
+        "(bvand"
+          "(bvxor"
+            "x!1"
+            "(bvlshr x!1 (_ bv4 8)))"
+          "(_ bv15 8)))))";
 
+
+std::string smt2lib::init()
+{
+  return "(set-logic QF_AUFBV)" + parityDef;
+}
 
 /* Returns the 'bv' syntax based on a value and a size.
  * Mainly used for the SMT translation */
@@ -99,7 +118,7 @@ std::string smt2lib::extract(uint64_t high, uint64_t low)
 /* Returns the 'extract' syntax. */
 std::string smt2lib::extract(uint64_t high, uint64_t low, std::string expr)
 {
-  return "(" + smt2lib::extract(high, low) + expr + ")";
+  return "(" + smt2lib::extract(high, low) + " " + expr + ")";
 }
 
 
@@ -142,3 +161,10 @@ std::string smt2lib::equal(std::string op1, std::string op2)
 }
 
 
+/* Returns a call to the parity function.
+ * Returns the parity flag of one byte. If the number of bits set to 1 is even,
+ * it returns (_ bv0 1) and (_ bv1 1) otherwise. */
+std::string smt2lib::parityFlag(std::string expr)
+{
+  return "(parity_flag " + expr + ")";
+}

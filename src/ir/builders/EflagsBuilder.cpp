@@ -75,14 +75,33 @@ SymbolicElement *EflagsBuilder::of(SymbolicElement *parent,
 }
 
 
-// R_PF:bool = ~low:bool(let T_acc:u64 := R_RBX:u64 >> 4:u64 ^ R_RBX:u64 in
-//                let T_acc:u64 := T_acc:u64 >> 2:u64 ^ T_acc:u64 in
-//                T_acc:u64 >> 1:u64 ^ T_acc:u64)
-//
-//SymbolicElement *EflagsBuilder::pf(SymbolicElement *parent, AnalysisProcessor &ap)
-//{
-//  // TODO
-//}
+SymbolicElement *EflagsBuilder::pf(SymbolicElement *parent, AnalysisProcessor &ap)
+{
+  SymbolicElement     *se;
+  std::stringstream   expr;
+
+  /*
+   * Create the SMT semantic.
+   *
+   * pf is set to one if there is a even number of bit set to 1 in the least
+   * significant byte of the result.
+   */
+  expr << smt2lib::smtAssert(
+            smt2lib::equal(
+              smt2lib::parityFlag(
+                smt2lib::extract(7, 0, parent->getID2Str())),
+              smt2lib::bv(0, 1)
+            )
+          );
+
+  /* Create the symbolic element */
+  se = ap.createRegSE(expr, ID_PF);
+
+  /* Spread the taint from the parent to the child */
+  se->isTainted = parent->isTainted;
+
+  return se;
+}
 
 
 SymbolicElement *EflagsBuilder::sf(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize)

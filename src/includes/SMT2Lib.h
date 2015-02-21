@@ -9,6 +9,10 @@
 
 namespace smt2lib {
 
+  /* Returns a string which defines the default logic and */
+  /* utilies function used by the others functions (parity for example). */
+  std::string init();
+
   /* Returns the 'bv' syntax based on a value and a size. */
   /* (_ bv<value> <size>) */
   std::string bv(uint64_t value, uint64_t regSize);
@@ -59,6 +63,11 @@ namespace smt2lib {
   /* Returns the 'bvnot' syntax. */
   /* (bvnot <op1>) */
   std::string bvnot(std::string op1);
+
+ /* Return a call to the parity_flag function.
+  * Returns the parity flag of one byte. If the number of bits set to 1 is even,
+  * it returns (_ bv0 1) and (_ bv1 1) otherwise. */
+  std::string parityFlag(std::string expr);
 }
 
 #endif  /* !__SMTLIB2_UTILS__ */

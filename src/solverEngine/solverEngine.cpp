@@ -65,7 +65,7 @@ void SolverEngine::solveFromID(uint64_t id)
   formula.str(formulaReconstruction(symEngine, this->symEngine->symbolicReg[ID_ZF]));
 
   /* First, set the QF_AUFBV flag */
-  this->formula << "(set-logic QF_AUFBV)";
+  this->formula << smt2lib::init();
 
   /* Then, delcare all symbolic variables */
   this->formula << this->symEngine->getSmt2LibVarsDecl();
