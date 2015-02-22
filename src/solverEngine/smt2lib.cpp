@@ -15,7 +15,7 @@ static const std::string parityDef =
           "(bvxor"
             "x!1"
             "(bvlshr x!1 (_ bv4 8)))"
-          "(_ bv15 8)))))";
+          "(_ bv15 8))))))";
 
 
 std::string smt2lib::init()
