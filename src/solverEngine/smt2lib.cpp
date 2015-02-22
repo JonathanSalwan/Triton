@@ -59,6 +59,13 @@ std::string smt2lib::bvxor(std::string op1, std::string op2)
 }
 
 
+/* Returns the 'bvsub' syntax. */
+std::string smt2lib::bvsub(std::string op1, std::string op2)
+{
+  return "(bvsub " + op1 + " " + op2 + ")";
+}
+
+
 /* Returns the 'bvand' syntax. */
 std::string smt2lib::bvand(std::string op1, std::string op2)
 {

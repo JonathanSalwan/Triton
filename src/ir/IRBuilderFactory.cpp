@@ -2,12 +2,14 @@
 
 #include "pin.H"
 
-#include "IRBuilderFactory.h"
 #include "AddIRBuilder.h"
+#include "IRBuilderFactory.h"
 #include "MovIRBuilder.h"
 #include "MovsxIRBuilder.h"
 #include "MovzxIRBuilder.h"
 #include "NullIRBuilder.h"
+#include "SubIRBuilder.h"
+#include "XorIRBuilder.h"
 
 
 // Returns a pointer to an IRBuilder object.
@@ -23,6 +25,14 @@ IRBuilder *createIRBuilder(INS ins) {
 
     case XED_ICLASS_ADD:
       ir = new AddIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SUB:
+      ir = new SubIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_XOR:
+      ir = new XorIRBuilder(address, disas);
       break;
 
     case XED_ICLASS_MOVSX:

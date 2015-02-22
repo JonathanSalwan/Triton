@@ -36,12 +36,14 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/contextHandler/PINContextHandler.cpp \
 		./src/core/main.cpp \
 		./src/ir/IRBuilderFactory.cpp \
-		./src/ir/builders/EflagsBuilder.cpp \
 		./src/ir/builders/AddIRBuilder.cpp \
 		./src/ir/builders/BaseIRBuilder.cpp \
+		./src/ir/builders/EflagsBuilder.cpp \
 		./src/ir/builders/MovIRBuilder.cpp \
 		./src/ir/builders/MovsxIRBuilder.cpp \
 		./src/ir/builders/MovzxIRBuilder.cpp \
+		./src/ir/builders/SubIRBuilder.cpp \
+		./src/ir/builders/XorIRBuilder.cpp \
 		./src/ir/templates/TwoOperandsTemplate.cpp \
 		./src/solverEngine/smt2lib.cpp \
 		./src/symbolicEngine/symbolicElement.cpp \

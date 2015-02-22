@@ -56,6 +56,10 @@ namespace smt2lib {
   /* (bvxor <op1> <op2>) */
   std::string bvxor(std::string op1, std::string op2);
 
+  /* Returns the 'bvsub' syntax. */
+  /* (bvsub <op1> <op2>) */
+  std::string bvsub(std::string op1, std::string op2);
+
   /* Returns the 'bvand' syntax. */
   /* (bvand <op1> <op2>) */
   std::string bvand(std::string op1, std::string op2);
