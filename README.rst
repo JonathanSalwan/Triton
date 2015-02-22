@@ -17,8 +17,8 @@ Below, the install's command line::
   $ make
   $ ./triton -startAnalysis check ./samples/crackmes/crackme_xor elite
 
-Semantics supported
--------------------
+SMT Semantics supported
+-----------------------
 
 +----------+----------------------------------------------------------+
 | Mnemonic | Description                                              |
