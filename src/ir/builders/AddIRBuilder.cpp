@@ -45,6 +45,7 @@ void AddIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(se);
 
   /* Add the symbolic flags element to the current inst */
+  inst.addElement(EflagsBuilder::af(se, ap, regSize, op1, op2));
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::of(se, ap, regSize, op1, op2));
   inst.addElement(EflagsBuilder::zf(se, ap, regSize));
@@ -90,6 +91,7 @@ void AddIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(se);
 
   /* Add the symbolic flags element to the current inst */
+  inst.addElement(EflagsBuilder::af(se, ap, regSize, op1, op2));
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::of(se, ap, regSize, op1, op2));
   inst.addElement(EflagsBuilder::zf(se, ap, regSize));
@@ -135,6 +137,7 @@ void AddIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(se);
 
   /* Add the symbolic flags element to the current inst */
+  inst.addElement(EflagsBuilder::af(se, ap, regSize, op1, op2));
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::of(se, ap, regSize, op1, op2));
   inst.addElement(EflagsBuilder::zf(se, ap, regSize));
@@ -175,6 +178,7 @@ void AddIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(se);
 
   /* Add the symbolic flags element to the current inst */
+  inst.addElement(EflagsBuilder::af(se, ap, writeSize, op1, op2));
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::of(se, ap, writeSize, op1, op2));
   inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
@@ -219,6 +223,7 @@ void AddIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(se);
 
   /* Add the symbolic flags element to the current inst */
+  inst.addElement(EflagsBuilder::af(se, ap, writeSize, op1, op2));
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::of(se, ap, writeSize, op1, op2));
   inst.addElement(EflagsBuilder::zf(se, ap, writeSize));

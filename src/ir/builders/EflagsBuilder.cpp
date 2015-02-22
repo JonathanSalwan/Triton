@@ -5,12 +5,42 @@
 #include "Registers.h"
 
 
-// R_AF:bool = 0x10:u64 == (0x10:u64 & (R_RBX:u64 ^ T_t1:u64 ^ T_t2:u64))
-//
-//SymbolicElement *EflagsBuilder::af(SymbolicElement *parent, AnalysisProcessor &ap)
-//{
-//  // TODO
-//}
+
+SymbolicElement *EflagsBuilder::af(SymbolicElement *parent,
+                                   AnalysisProcessor &ap,
+                                   uint32_t dstSize,
+                                   std::stringstream &op1,
+                                   std::stringstream &op2)
+{
+  SymbolicElement     *se;
+  std::stringstream   expr;
+  uint32_t            bvSize = (dstSize * REG_SIZE);
+
+  /*
+   * Create the SMT semantic.
+   * af = 0x10 == (0x10 & (regDst ^ op1 ^ op2))
+   */
+  expr << smt2lib::smtAssert(
+            smt2lib::equal(
+              smt2lib::bv(0x10, bvSize),
+              smt2lib::bvand(
+                smt2lib::bv(0x10, bvSize),
+                smt2lib::bvxor(
+                  parent->getID2Str(),
+                  smt2lib::bvxor(op1.str(), op2.str())
+                )
+              )
+            )
+          );
+
+  /* Create the symbolic element */
+  se = ap.createRegSE(expr, ID_AF);
+
+  /* Spread the taint from the parent to the child */
+  se->isTainted = parent->isTainted;
+
+  return se;
+}
 
 
 SymbolicElement *EflagsBuilder::cf(SymbolicElement *parent, AnalysisProcessor &ap, std::stringstream &op1)
