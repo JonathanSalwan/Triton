@@ -46,6 +46,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/XorIRBuilder.cpp \
 		./src/ir/templates/TwoOperandsTemplate.cpp \
 		./src/solverEngine/smt2lib.cpp \
+		./src/solverEngine/solverEngine.cpp \
 		./src/symbolicEngine/symbolicElement.cpp \
 		./src/symbolicEngine/symbolicEngine.cpp \
 		./src/taintEngine/taintEngine.cpp \

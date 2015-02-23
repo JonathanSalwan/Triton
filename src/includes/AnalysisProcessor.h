@@ -2,6 +2,7 @@
 #define _ANALYSISPROCESSOR_H_
 
 #include "SymbolicEngine.h"
+#include "SolverEngine.h"
 #include "TaintEngine.h"
 
 
@@ -54,9 +55,14 @@ class AnalysisProcessor {
     void assignmentSpreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc, uint32_t readSize);
     void assignmentSpreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc);
 
+    // SolverEngine Facade
+
+    // Returns a reference to the solver engine.
+    SolverEngine &getSolverEngine();
 
   private:
     SymbolicEngine  symEngine;
+    SolverEngine    solverEngine;
     TaintEngine     taintEngine;
 };
 

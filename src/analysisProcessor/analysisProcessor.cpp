@@ -1,7 +1,12 @@
 #include "AnalysisProcessor.h"
 
 
-AnalysisProcessor::AnalysisProcessor(): symEngine(), taintEngine() {
+AnalysisProcessor::AnalysisProcessor():
+  symEngine(),
+  solverEngine(&this->symEngine),
+  taintEngine()
+{
+
 }
 
 // Symbolic Engine Facade
@@ -135,3 +140,9 @@ void AnalysisProcessor::aluSpreadTaintMemReg(SymbolicElement *se, uint64_t memDs
   se->isTainted = this->taintEngine.aluSpreadTaintMemReg(memDst, regSrc, writeSize);
 }
 
+// SolverEngine Facade
+
+SolverEngine &AnalysisProcessor::getSolverEngine()
+{
+  return this->solverEngine;
+}
