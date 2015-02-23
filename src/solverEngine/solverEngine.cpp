@@ -24,7 +24,7 @@ static std::string formulaReconstruction(SymbolicEngine *symbolicEngine, uint64_
   std::stringstream from;
   std::stringstream to;
 
-  formula.str(symbolicEngine->getElementFromId(id)->getSource());
+  formula.str(symbolicEngine->getElementFromId(id)->getSource()->str());
   while (formula.str().find("#") != std::string::npos){
 
     from.str("");
@@ -34,7 +34,7 @@ static std::string formulaReconstruction(SymbolicEngine *symbolicEngine, uint64_
     std::string subs = formula.str().substr(found, std::string::npos);
     value = atoi(subs.c_str());
     from << "#" << value;
-    to.str(symbolicEngine->getElementFromId(value)->getSource());
+    to.str(symbolicEngine->getElementFromId(value)->getSource()->str());
 
     formula.str(replaceEq(formula.str(), from.str(), to.str()));
   }
@@ -86,7 +86,7 @@ void SolverEngine::solveFromID(uint64_t id)
 /* Hard display the current model */
 void SolverEngine::displayModel()
 {
-  std::cout << _BLUE << "----- Model -----" << std::endl;
+  std::cout << BLUE << "----- Model -----" << std::endl;
   if (this->checkResult == z3::sat){
     z3::model m = this->solver->get_model();
     std::cout << m << std::endl;
@@ -94,7 +94,7 @@ void SolverEngine::displayModel()
   else {
     std::cout << "UNSAT" << std::endl;
   }
-  std::cout << "-----------------" << _ENDC << std::endl;
+  std::cout << "-----------------" << ENDC << std::endl;
 }
 
 
