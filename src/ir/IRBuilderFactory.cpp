@@ -3,6 +3,7 @@
 #include "pin.H"
 
 #include "AddIRBuilder.h"
+#include "CmpIRBuilder.h"
 #include "IRBuilderFactory.h"
 #include "MovIRBuilder.h"
 #include "MovsxIRBuilder.h"
@@ -27,12 +28,12 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new AddIRBuilder(address, disas);
       break;
 
-    case XED_ICLASS_SUB:
-      ir = new SubIRBuilder(address, disas);
+    case XED_ICLASS_CMP:
+      ir = new CmpIRBuilder(address, disas);
       break;
 
-    case XED_ICLASS_XOR:
-      ir = new XorIRBuilder(address, disas);
+    case XED_ICLASS_MOV:
+      ir = new MovIRBuilder(address, disas);
       break;
 
     case XED_ICLASS_MOVSX:
@@ -44,8 +45,12 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new MovzxIRBuilder(address, disas);
       break;
 
-    case XED_ICLASS_MOV:
-      ir = new MovIRBuilder(address, disas);
+    case XED_ICLASS_SUB:
+      ir = new SubIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_XOR:
+      ir = new XorIRBuilder(address, disas);
       break;
 
     default:
