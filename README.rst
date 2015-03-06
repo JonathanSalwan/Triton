@@ -17,8 +17,11 @@ Below, the install's command line::
   $ make
   $ ./triton -startAnalysis check ./samples/crackmes/crackme_xor elite
 
+
 SMT Semantics supported
 -----------------------
+
+Short view of what Triton supports.
 
 +----------+----------------------------------------------------------+
 | Mnemonic | Description                                              |
@@ -32,6 +35,8 @@ SMT Semantics supported
 | MOVSX    | Move with Sign-Extension                                 |
 +----------+----------------------------------------------------------+
 | MOVZX    | Move with Zero-Extend                                    |
++----------+----------------------------------------------------------+
+| PUSH     | Push Data Onto the Stack                                 |
 +----------+----------------------------------------------------------+
 | SUB      | Subtract                                                 |
 +----------+----------------------------------------------------------+
