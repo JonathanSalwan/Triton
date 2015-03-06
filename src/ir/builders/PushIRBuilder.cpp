@@ -129,8 +129,7 @@ void PushIRBuilder::mem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst 
   se = ap.createMemSE(expr, memDst);
 
   /* Apply the taint */
-  // TODO
-  // must create something like ap.assignmentSpreadTaintMemMem
+  ap.assignmentSpreadTaintMemMem(se, memDst, memOp, readSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);

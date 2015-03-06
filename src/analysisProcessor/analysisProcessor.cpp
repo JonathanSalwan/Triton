@@ -87,6 +87,30 @@ void AnalysisProcessor::assignmentSpreadTaintRegMem(SymbolicElement *se, uint64_
 }
 
 
+void AnalysisProcessor::assignmentSpreadTaintMemMem(SymbolicElement *se, uint64_t memDst, uint64_t memSrc, uint32_t readSize)
+{
+  se->isTainted = this->taintEngine.assignmentSpreadTaintMemMem(memDst, memSrc, readSize);
+
+  /* Use symbolic variable if the memory is tainted */
+  if (se->isTainted) {
+
+    std::stringstream newExpr;
+    uint64_t          symVarID;
+
+    /* Check if this memory area is already known as a symbolic variable */
+    symVarID = this->symEngine.isSymVarMemory(memSrc); // TODO: Must use the readSize
+    if (symVarID == UNSET){
+      symVarID = this->symEngine.getUniqueSymVarID();
+      this->symEngine.addSmt2LibVarDecl(symVarID, readSize);
+      this->symEngine.addSymVarMemoryReference(memSrc, symVarID);
+    }
+
+    newExpr << "SymVar_" << std::dec << symVarID;
+    se->setSrcExpr(newExpr);
+  }
+}
+
+
 void AnalysisProcessor::assignmentSpreadTaintMemImm(SymbolicElement *se, uint64_t memDst, uint64_t writeSize)
 {
   se->isTainted = this->taintEngine.assignmentSpreadTaintMemImm(memDst, writeSize);
