@@ -9,6 +9,7 @@
 #include "MovsxIRBuilder.h"
 #include "MovzxIRBuilder.h"
 #include "NullIRBuilder.h"
+#include "PopIRBuilder.h"
 #include "PushIRBuilder.h"
 #include "SubIRBuilder.h"
 #include "XorIRBuilder.h"
@@ -44,6 +45,10 @@ IRBuilder *createIRBuilder(INS ins) {
 
     case XED_ICLASS_MOVZX:
       ir = new MovzxIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_POP:
+      ir = new PopIRBuilder(address, disas);
       break;
 
     case XED_ICLASS_PUSH:
