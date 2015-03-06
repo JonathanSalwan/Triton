@@ -1,6 +1,8 @@
 #ifndef  __REGISTERS_H__
 #define  __REGISTERS_H__
 
+#include "pin.H" // Used for XED REG define
+
 #define REG_SIZE 8
 
 enum regID_t
