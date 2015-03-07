@@ -13,6 +13,14 @@ PopIRBuilder::PopIRBuilder(uint64_t address, const std::string &disassembly):
 }
 
 
+static void stop(std::string disass)
+{
+  throw std::runtime_error("Error:"
+                         + disass
+                         + "is an invalid instruction. Wrong kind of operands.");
+}
+
+
 static SymbolicElement *alignStack(AnalysisProcessor &ap, const ContextHandler &ctxH, uint32_t readSize)
 {
   SymbolicElement     *se;
@@ -108,6 +116,7 @@ void PopIRBuilder::mem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &
 
 void PopIRBuilder::imm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
   /* There is no <pop imm> available in x86 */
+  stop(this->disas);
 }
 
 
