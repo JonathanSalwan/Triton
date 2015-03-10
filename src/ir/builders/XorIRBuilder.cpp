@@ -48,9 +48,9 @@ void XorIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(EflagsBuilder::af(se, ap, regSize, op1, op2));
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::of(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
-  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
   inst.addElement(EflagsBuilder::pf(se, ap));
+  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
+  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
 }
 
 
@@ -94,9 +94,9 @@ void XorIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(EflagsBuilder::af(se, ap, regSize, op1, op2));
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::of(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
-  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
   inst.addElement(EflagsBuilder::pf(se, ap));
+  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
+  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
 }
 
 
@@ -140,9 +140,9 @@ void XorIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(EflagsBuilder::af(se, ap, regSize, op1, op2));
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::of(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
-  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
   inst.addElement(EflagsBuilder::pf(se, ap));
+  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
+  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
 }
 
 
@@ -181,9 +181,9 @@ void XorIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(EflagsBuilder::af(se, ap, writeSize, op1, op2));
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::of(se, ap, writeSize, op1, op2));
-  inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
-  inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
   inst.addElement(EflagsBuilder::pf(se, ap));
+  inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
+  inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
 }
 
 
@@ -226,9 +226,9 @@ void XorIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   inst.addElement(EflagsBuilder::af(se, ap, writeSize, op1, op2));
   inst.addElement(EflagsBuilder::cf(se, ap, op1));
   inst.addElement(EflagsBuilder::of(se, ap, writeSize, op1, op2));
-  inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
-  inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
   inst.addElement(EflagsBuilder::pf(se, ap));
+  inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
+  inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
 }
 
 
