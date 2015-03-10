@@ -5,7 +5,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-PINContextHandler::PINContextHandler(CONTEXT *ctx): _ctx(ctx) { }
+PINContextHandler::PINContextHandler(CONTEXT *ctx, THREADID id): _ctx(ctx), _threadId(id) { }
 
 
 /* In some cases, Pin need the Highest size register like
@@ -268,3 +268,11 @@ uint64_t PINContextHandler::translateRegID(uint64_t regID) const
       return -1;
   }
 }
+
+
+/* Returns the thread id  */
+THREADID PINContextHandler::getThreadId(void) const
+{
+  return this->_threadId;
+}
+

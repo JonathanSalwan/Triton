@@ -24,13 +24,13 @@ Trigger analysisTrigger;
 Trace trace;
 
 
-VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea)
+VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
 {
   if (!analysisTrigger.getState())
     // Analysis locked
     return;
 
-  PINContextHandler ctxH(ctx);
+  PINContextHandler ctxH(ctx, threadId);
 
   if (hasEA)
     irb->setup(ea);
@@ -51,6 +51,7 @@ VOID TRACE_Instrumentation(TRACE trace, VOID *v)
             IARG_CONTEXT,
             IARG_BOOL, true,
             IARG_MEMORYOP_EA, 0,
+            IARG_THREAD_ID,
             IARG_END);
       else
         INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR) callback,
@@ -58,6 +59,7 @@ VOID TRACE_Instrumentation(TRACE trace, VOID *v)
             IARG_CONTEXT,
             IARG_BOOL, false,
             IARG_ADDRINT, 0,
+            IARG_THREAD_ID,
             IARG_END);
       }
 }
