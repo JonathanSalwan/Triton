@@ -17,7 +17,7 @@ class TaintEngine {
     std::list<uint64_t> taintedAddresses;
 
     /* Tainted registers */
-    uint64_t taintedReg[16];
+    uint64_t taintedReg[32];
 
     /* Initialization of an object */
     void init(const TaintEngine &other);

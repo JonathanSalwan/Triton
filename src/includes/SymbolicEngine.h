@@ -53,7 +53,7 @@ class SymbolicEngine {
   public:
 
     /* Symbolic trace */
-    uint64_t              symbolicReg[25];
+    uint64_t              symbolicReg[41];
 
     /* public methods */
     uint64_t              isMemoryReference(uint64_t addr);

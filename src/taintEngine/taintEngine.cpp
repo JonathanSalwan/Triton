@@ -7,43 +7,75 @@
 TaintEngine::TaintEngine()
 {
   /* Init all registers to not tainted */
-  this->taintedReg[ID_RAX] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RBX] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RCX] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RDX] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RDI] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RSI] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RBP] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RSP] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R8]  = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R9]  = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R10] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R11] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R12] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R13] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R14] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R15] = (uint64_t)!TAINTED;
+  this->taintedReg[ID_RAX]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_RBX]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_RCX]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_RDX]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_RDI]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_RSI]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_RBP]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_RSP]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_R8]    = (uint64_t)!TAINTED;
+  this->taintedReg[ID_R9]    = (uint64_t)!TAINTED;
+  this->taintedReg[ID_R10]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_R11]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_R12]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_R13]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_R14]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_R15]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM0]  = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM1]  = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM2]  = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM3]  = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM4]  = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM5]  = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM6]  = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM7]  = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM8]  = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM9]  = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM10] = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM11] = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM12] = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM13] = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM14] = (uint64_t)!TAINTED;
+  this->taintedReg[ID_XMM15] = (uint64_t)!TAINTED;
 }
 
 
 void TaintEngine::init(const TaintEngine &other)
 {
-  this->taintedReg[ID_RAX] = other.taintedReg[ID_RAX];
-  this->taintedReg[ID_RBX] = other.taintedReg[ID_RBX];
-  this->taintedReg[ID_RCX] = other.taintedReg[ID_RCX];
-  this->taintedReg[ID_RDX] = other.taintedReg[ID_RDX];
-  this->taintedReg[ID_RDI] = other.taintedReg[ID_RDI];
-  this->taintedReg[ID_RSI] = other.taintedReg[ID_RSI];
-  this->taintedReg[ID_RBP] = other.taintedReg[ID_RBP];
-  this->taintedReg[ID_RSP] = other.taintedReg[ID_RSP];
-  this->taintedReg[ID_R8]  = other.taintedReg[ID_R8];
-  this->taintedReg[ID_R9]  = other.taintedReg[ID_R9];
-  this->taintedReg[ID_R10] = other.taintedReg[ID_R10];
-  this->taintedReg[ID_R11] = other.taintedReg[ID_R11];
-  this->taintedReg[ID_R12] = other.taintedReg[ID_R12];
-  this->taintedReg[ID_R13] = other.taintedReg[ID_R13];
-  this->taintedReg[ID_R14] = other.taintedReg[ID_R14];
-  this->taintedReg[ID_R15] = other.taintedReg[ID_R15];
+  this->taintedReg[ID_RAX]   = other.taintedReg[ID_RAX];
+  this->taintedReg[ID_RBX]   = other.taintedReg[ID_RBX];
+  this->taintedReg[ID_RCX]   = other.taintedReg[ID_RCX];
+  this->taintedReg[ID_RDX]   = other.taintedReg[ID_RDX];
+  this->taintedReg[ID_RDI]   = other.taintedReg[ID_RDI];
+  this->taintedReg[ID_RSI]   = other.taintedReg[ID_RSI];
+  this->taintedReg[ID_RBP]   = other.taintedReg[ID_RBP];
+  this->taintedReg[ID_RSP]   = other.taintedReg[ID_RSP];
+  this->taintedReg[ID_R8]    = other.taintedReg[ID_R8];
+  this->taintedReg[ID_R9]    = other.taintedReg[ID_R9];
+  this->taintedReg[ID_R10]   = other.taintedReg[ID_R10];
+  this->taintedReg[ID_R11]   = other.taintedReg[ID_R11];
+  this->taintedReg[ID_R12]   = other.taintedReg[ID_R12];
+  this->taintedReg[ID_R13]   = other.taintedReg[ID_R13];
+  this->taintedReg[ID_R14]   = other.taintedReg[ID_R14];
+  this->taintedReg[ID_R15]   = other.taintedReg[ID_R15];
+  this->taintedReg[ID_XMM0]  = other.taintedReg[ID_XMM0];
+  this->taintedReg[ID_XMM1]  = other.taintedReg[ID_XMM1];
+  this->taintedReg[ID_XMM2]  = other.taintedReg[ID_XMM2];
+  this->taintedReg[ID_XMM3]  = other.taintedReg[ID_XMM3];
+  this->taintedReg[ID_XMM4]  = other.taintedReg[ID_XMM4];
+  this->taintedReg[ID_XMM5]  = other.taintedReg[ID_XMM5];
+  this->taintedReg[ID_XMM6]  = other.taintedReg[ID_XMM6];
+  this->taintedReg[ID_XMM7]  = other.taintedReg[ID_XMM7];
+  this->taintedReg[ID_XMM8]  = other.taintedReg[ID_XMM8];
+  this->taintedReg[ID_XMM9]  = other.taintedReg[ID_XMM9];
+  this->taintedReg[ID_XMM10] = other.taintedReg[ID_XMM10];
+  this->taintedReg[ID_XMM11] = other.taintedReg[ID_XMM11];
+  this->taintedReg[ID_XMM12] = other.taintedReg[ID_XMM12];
+  this->taintedReg[ID_XMM13] = other.taintedReg[ID_XMM13];
+  this->taintedReg[ID_XMM14] = other.taintedReg[ID_XMM14];
+  this->taintedReg[ID_XMM15] = other.taintedReg[ID_XMM15];
 
   this->taintedAddresses = other.taintedAddresses;
 }
