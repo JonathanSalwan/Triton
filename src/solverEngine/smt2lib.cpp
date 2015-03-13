@@ -112,6 +112,13 @@ std::string smt2lib::extract(uint64_t regSize)
 }
 
 
+/* Returns the 'extract' syntax based on a regSize and expression */
+std::string smt2lib::extract(uint64_t regSize, std::string expr)
+{
+  return "(" + smt2lib::extract(regSize) + " " + expr + ")";
+}
+
+
 /* Returns the 'extract' syntax. */
 std::string smt2lib::extract(uint64_t high, uint64_t low)
 {

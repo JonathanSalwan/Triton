@@ -33,6 +33,9 @@ namespace smt2lib {
   /* Returns the 'extract' syntax based on a reg size. */
   std::string extract(uint64_t regSize);
 
+  /* Returns the 'extract' syntax based on a reg size. */
+  std::string extract(uint64_t regSize, std::string expr);
+
   /* Returns the 'extract' syntax based on a high and low bit. */
   /* (extract <high> <low>) */
   std::string extract(uint64_t high, uint64_t low);
