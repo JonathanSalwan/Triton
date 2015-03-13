@@ -158,7 +158,7 @@ void MovIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 Inst *MovIRBuilder::process(const ContextHandler &ctxH, AnalysisProcessor &ap) const {
   checkSetup();
 
-  Inst *inst = new Inst(this->address, this->disas);
+  Inst *inst = new Inst(ctxH.getThreadId(), this->address, this->disas);
 
   try {
     this->templateMethod(ctxH, ap, *inst, this->operands, "MOV");

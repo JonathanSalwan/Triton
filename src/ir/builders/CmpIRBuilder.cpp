@@ -246,7 +246,7 @@ void CmpIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 Inst *CmpIRBuilder::process(const ContextHandler &ctxH, AnalysisProcessor &ap) const {
   this->checkSetup();
 
-  Inst *inst = new Inst(this->address, this->disas);
+  Inst *inst = new Inst(ctxH.getThreadId(), this->address, this->disas);
 
   try {
     this->templateMethod(ctxH, ap, *inst, this->operands, "CMP");
