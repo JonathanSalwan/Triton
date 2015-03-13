@@ -6,7 +6,7 @@
 #include "Trace.h"
 
 
-Trace::Trace(): symbolicEngine()
+Trace::Trace()
 {
 }
 

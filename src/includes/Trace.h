@@ -14,17 +14,17 @@
 class Trace {
 
   private:
+    /* A trace contains a list of instruction */
     std::list<Inst *> instructions;
 
   public:
-    // TODO: it will be replace by the Facade: AnalysisProcessor
-    /* Symbolic Engine */
-    SymbolicEngine symbolicEngine;
-
     Trace();
     ~Trace();
 
+    /* Add an instruction into the Trace */
     void addInstruction(Inst *instruction);
+
+    /* Get all instructions from the Trace */
     std::list<Inst *> &getInstructions();
 
     // Display the trace: all the instructions and their expressions.
