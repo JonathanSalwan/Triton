@@ -1,18 +1,8 @@
 #include <string>
 
 #include "pin.H"
+#include "IRBuilderHeaders.h"
 
-#include "AddIRBuilder.h"
-#include "CmpIRBuilder.h"
-#include "IRBuilderFactory.h"
-#include "MovIRBuilder.h"
-#include "MovsxIRBuilder.h"
-#include "MovzxIRBuilder.h"
-#include "NullIRBuilder.h"
-#include "PopIRBuilder.h"
-#include "PushIRBuilder.h"
-#include "SubIRBuilder.h"
-#include "XorIRBuilder.h"
 
 
 // Returns a pointer to an IRBuilder object.
