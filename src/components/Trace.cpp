@@ -32,7 +32,8 @@ std::list<Inst *> &Trace::getInstructions()
 
 void Trace::display(std::ostream &os)
 {
-  boost::format outputInstruction("%1% %|15t| %2% %|55t|");
+  boost::format outputInstruction("[%1%] %|3t| %2% %|21t| %3% %|61t|");
+  boost::format outputExpression("%|61t|");
 
   for (auto inst : this->instructions){
     uint64_t count = 0;
@@ -42,7 +43,7 @@ void Trace::display(std::ostream &os)
       for (auto se : inst->getSymbolicElements()){
 
         if (count == 0) expr << se->getExpression()->str();
-        else            expr << std::endl << boost::format(outputInstruction) % "" % "" << se->getExpression()->str();
+        else            expr << std::endl << boost::format(outputExpression) << se->getExpression()->str();
 
         if (se->isTainted)
           colr.str(GREEN);
@@ -52,6 +53,7 @@ void Trace::display(std::ostream &os)
 
       os << colr.str()
          << boost::format(outputInstruction)
+          % std::to_string(inst->getThreadId())
           % boost::io::group(std::hex, std::showbase, inst->getAddress())
           % inst->getDisassembly()
          << expr.str()
