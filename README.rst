@@ -18,7 +18,7 @@ Triton
 Description
 -----------
 
-TODO
+Triton is a project which provides more components to the framework Pin to improve the instrumentation and to apply some program analysis specifically oriented for vulnerabilities research. These components are a taint engine, a dynamic symbolic engine, a memory snapshot engine, a translation of x64 instruction to the SMT2-LIB language and a Z3 interface to solve constraints. Based on these components, Triton provides runtime behavior analysis to find some kind of bugs.
 
 Symbolic Engine
 ---------------
