@@ -135,6 +135,30 @@ bool AnalysisProcessor::isMemoryTainted(uint64_t addr)
 }
 
 
+void AnalysisProcessor::taintReg(uint64_t reg)
+{
+  this->taintEngine.taintReg(reg);
+}
+
+
+void AnalysisProcessor::untaintReg(uint64_t reg)
+{
+  this->taintEngine.untaintReg(reg);
+}
+
+
+void AnalysisProcessor::taintAddress(uint64_t addr)
+{
+  this->taintEngine.taintAddress(addr);
+}
+
+
+void AnalysisProcessor::untaintAddress(uint64_t addr)
+{
+  this->taintEngine.untaintAddress(addr);
+}
+
+
 void AnalysisProcessor::aluSpreadTaintRegImm(SymbolicElement *se, uint64_t regDst)
 {
   se->isTainted = this->taintEngine.aluSpreadTaintRegImm(regDst);
