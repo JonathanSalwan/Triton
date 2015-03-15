@@ -6,14 +6,15 @@ Triton
 - `Description <#description>`_
 - `Symbolic Engine <#symbolic-engine>`_
 - `Taint Engine <#taint-engine>`_
-- `Z3 - Solver engine <#z3---solver-engine>`_
-- `Intermediate Representation (SMT2-LIB) <#intermediate-representation-smt2-lib>`_
 - `Snapshot engine <#snapshot-engine>`_
-- `Behavior analysis <#behavior-analysis>`_
+- `Intermediate Representation (SMT2-LIB) <#intermediate-representation-smt2-lib>`_
+- `Z3 - Solver engine <#z3---solver-engine>`_
+- `Multi-threading <#multi-threading>`_
+- `Runtime behavior analysis <#runtime-behavior-analysis>`_
 - `Install <#install>`_
 - `SMT Semantics supported <#smt-semantics-supported>`_
 - `Related presentations <#related-presentations>`_
-- `Acknowledgement <#acknowledgement>`_
+- `Auhtors and acknowledgement <#authors-and-acknowledgement>`_
 
 Description
 -----------
@@ -30,8 +31,8 @@ Taint Engine
 
 TODO
 
-Z3 - Solver engine
-------------------
+Snapshot engine
+---------------
 
 TODO
 
@@ -40,13 +41,18 @@ Intermediate Representation (SMT2-LIB)
 
 TODO
 
-Snapshot engine
+Z3 - Solver engine
+------------------
+
+TODO
+
+Multi-threading
 ---------------
 
 TODO
 
-Behavior analysis
------------------
+Runtime behavior analysis
+-------------------------
 
 TODO
 
@@ -113,10 +119,10 @@ Related presentations
 | `Description`: *This talk is about binary analysis and instrumentation. We will see how it's possible to target a specific function, snapshot the context memory/registers before the function, translate the instrumentation into an intermediate representation, apply a taint analysis based on this IR, build/keep formulas for a Dynamic Symbolic Execution (DSE), generate a concrete value to go through a specific path, restore the context memory/register and generate another concrete value to go through another path then repeat this operation until the target function is covered.*
 
 
-Acknowledgement
----------------
+Authors and acknowledgement
+---------------------------
 
-* Florent Saudel
-* Emmanuel Fleury
-* Jonathan Salwan
+* Florent Saudel (core dev)
+* Jonathan Salwan (core dev)
+* Emmanuel Fleury (feedbacks, ideas, design)
 
