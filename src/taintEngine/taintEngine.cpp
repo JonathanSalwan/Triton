@@ -113,7 +113,7 @@ bool TaintEngine::isMemoryTainted(uint64_t addr)
 bool TaintEngine::isRegTainted(uint64_t regID)
 {
   if (regID >= (sizeof(this->taintedReg) / sizeof(this->taintedReg[0])))
-    return false;
+    return !TAINTED;
   return this->taintedReg[regID];
 }
 
