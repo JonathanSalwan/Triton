@@ -56,11 +56,13 @@ static REG getHighReg(REG reg)
     case REG_RBP:
     case REG_EBP:
     case REG_BP:
+    case REG_BPL:
       return REG_RBP;
 
     case REG_RSP:
     case REG_ESP:
     case REG_SP:
+    case REG_SPL:
       return REG_RSP;
 
     case REG_R8:

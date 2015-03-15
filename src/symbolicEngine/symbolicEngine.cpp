@@ -150,6 +150,14 @@ uint64_t SymbolicEngine::isSymVarMemory(uint64_t addr)
 }
 
 
+/* Return the reg reference or UNSET */
+uint64_t SymbolicEngine::getRegSymbolicID(uint64_t regID) {
+  if (regID >= (sizeof(this->symbolicReg) / sizeof(this->symbolicReg[0])))
+    return UNSET;
+  return this->symbolicReg[regID];
+}
+
+
 /* Get an unique ID. 
  * Mainly used when a new symbolic element is created */
 uint64_t SymbolicEngine::getUniqueID()

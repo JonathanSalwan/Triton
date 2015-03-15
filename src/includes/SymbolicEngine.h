@@ -56,17 +56,17 @@ class SymbolicEngine {
     uint64_t              symbolicReg[41];
 
     /* public methods */
-    uint64_t              isMemoryReference(uint64_t addr);
-    std::string           getSmt2LibVarsDecl();
     SymbolicElement       *getElementFromId(uint64_t id);
     SymbolicElement       *newSymbolicElement(std::stringstream &src);
+    std::string           getSmt2LibVarsDecl();
+    uint64_t              getRegSymbolicID(uint64_t regID);
     uint64_t              getUniqueID();
     uint64_t              getUniqueSymVarID();
+    uint64_t              isMemoryReference(uint64_t addr);
+    uint64_t              isSymVarMemory(uint64_t mem);
     void                  addMemoryReference(uint64_t mem, uint64_t id);
     void                  addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize);
     void                  addSymVarMemoryReference(uint64_t mem, uint64_t symVarID);
-    uint64_t              isSymVarMemory(uint64_t mem);
-
     void                  init(const SymbolicEngine &other);
     void                  operator=(const SymbolicEngine &other);
 

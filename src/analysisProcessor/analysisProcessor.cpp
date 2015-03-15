@@ -34,7 +34,7 @@ SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_
 
 
 uint64_t AnalysisProcessor::getRegSymbolicID(uint64_t regID) {
-  return this->symEngine.symbolicReg[regID];
+  return this->symEngine.getRegSymbolicID(regID);
 }
 
 
@@ -194,3 +194,4 @@ SolverEngine &AnalysisProcessor::getSolverEngine()
 {
   return this->solverEngine;
 }
+

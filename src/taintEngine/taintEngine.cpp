@@ -112,6 +112,8 @@ bool TaintEngine::isMemoryTainted(uint64_t addr)
 /* Returns true of false if the register is currently tainted */
 bool TaintEngine::isRegTainted(uint64_t regID)
 {
+  if (regID >= (sizeof(this->taintedReg) / sizeof(this->taintedReg[0])))
+    return false;
   return this->taintedReg[regID];
 }
 
@@ -119,6 +121,8 @@ bool TaintEngine::isRegTainted(uint64_t regID)
 /* Taint the register */
 void TaintEngine::taintReg(uint64_t regID)
 {
+  if (regID >= (sizeof(this->taintedReg) / sizeof(this->taintedReg[0])))
+    return ;
   this->taintedReg[regID] = TAINTED;
 }
 
@@ -126,6 +130,8 @@ void TaintEngine::taintReg(uint64_t regID)
 /* Untaint the register */
 void TaintEngine::untaintReg(uint64_t regID)
 {
+  if (regID >= (sizeof(this->taintedReg) / sizeof(this->taintedReg[0])))
+    return ;
   this->taintedReg[regID] = !TAINTED;
 }
 
