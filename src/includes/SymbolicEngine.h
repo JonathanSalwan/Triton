@@ -53,7 +53,7 @@ class SymbolicEngine {
   public:
 
     /* Symbolic trace */
-    uint64_t              symbolicReg[41];
+    uint64_t              symbolicReg[42];
 
     /* public methods */
     SymbolicElement       *getElementFromId(uint64_t id);

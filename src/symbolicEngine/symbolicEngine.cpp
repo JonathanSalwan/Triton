@@ -14,6 +14,7 @@ SymbolicEngine::SymbolicEngine()
   this->symbolicReg[ID_RSI]   = UNSET;
   this->symbolicReg[ID_RBP]   = UNSET;
   this->symbolicReg[ID_RSP]   = UNSET;
+  this->symbolicReg[ID_RIP]   = UNSET;
   this->symbolicReg[ID_R8]    = UNSET;
   this->symbolicReg[ID_R9]    = UNSET;
   this->symbolicReg[ID_R10]   = UNSET;
@@ -62,6 +63,7 @@ void SymbolicEngine::init(const SymbolicEngine &other)
   this->symbolicReg[ID_RSI]   = other.symbolicReg[ID_RSI];
   this->symbolicReg[ID_RBP]   = other.symbolicReg[ID_RBP];
   this->symbolicReg[ID_RSP]   = other.symbolicReg[ID_RSP];
+  this->symbolicReg[ID_RIP]   = other.symbolicReg[ID_RIP];
   this->symbolicReg[ID_R8]    = other.symbolicReg[ID_R8];
   this->symbolicReg[ID_R9]    = other.symbolicReg[ID_R9];
   this->symbolicReg[ID_R10]   = other.symbolicReg[ID_R10];

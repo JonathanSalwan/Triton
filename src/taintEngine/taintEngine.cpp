@@ -15,6 +15,7 @@ TaintEngine::TaintEngine()
   this->taintedReg[ID_RSI]   = (uint64_t)!TAINTED;
   this->taintedReg[ID_RBP]   = (uint64_t)!TAINTED;
   this->taintedReg[ID_RSP]   = (uint64_t)!TAINTED;
+  this->taintedReg[ID_RIP]   = (uint64_t)!TAINTED;
   this->taintedReg[ID_R8]    = (uint64_t)!TAINTED;
   this->taintedReg[ID_R9]    = (uint64_t)!TAINTED;
   this->taintedReg[ID_R10]   = (uint64_t)!TAINTED;
@@ -52,6 +53,7 @@ void TaintEngine::init(const TaintEngine &other)
   this->taintedReg[ID_RSI]   = other.taintedReg[ID_RSI];
   this->taintedReg[ID_RBP]   = other.taintedReg[ID_RBP];
   this->taintedReg[ID_RSP]   = other.taintedReg[ID_RSP];
+  this->taintedReg[ID_RIP]   = other.taintedReg[ID_RIP];
   this->taintedReg[ID_R8]    = other.taintedReg[ID_R8];
   this->taintedReg[ID_R9]    = other.taintedReg[ID_R9];
   this->taintedReg[ID_R10]   = other.taintedReg[ID_R10];

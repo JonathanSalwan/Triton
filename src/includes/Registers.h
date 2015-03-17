@@ -17,6 +17,7 @@ enum regID_t
   ID_RSI,
   ID_RBP,
   ID_RSP,
+  ID_RIP,
   ID_R8,
   ID_R9,
   ID_R10,

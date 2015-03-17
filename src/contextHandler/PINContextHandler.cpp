@@ -65,6 +65,11 @@ static REG getHighReg(REG reg)
     case REG_SPL:
       return REG_RSP;
 
+    case REG_RIP:
+    case REG_EIP:
+    case REG_IP:
+      return REG_RIP;
+
     case REG_R8:
     case REG_R8D:
     case REG_R8W:
@@ -211,12 +216,19 @@ uint64_t PINContextHandler::translateRegID(uint64_t regID) const
     case REG_RBP:
     case REG_EBP:
     case REG_BP:
+    case REG_BPL:
       return ID_RBP;
 
     case REG_RSP:
     case REG_ESP:
     case REG_SP:
+    case REG_SPL:
       return ID_RSP;
+
+    case REG_RIP:
+    case REG_EIP:
+    case REG_IP:
+      return ID_RIP;
 
     case REG_R8:
     case REG_R8D:
