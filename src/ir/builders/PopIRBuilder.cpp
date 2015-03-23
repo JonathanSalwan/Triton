@@ -120,6 +120,12 @@ void PopIRBuilder::imm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &
 }
 
 
+void PopIRBuilder::none(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+  /* There is no <pop none> available in x86 */
+  stop(this->disas);
+}
+
+
 Inst *PopIRBuilder::process(const ContextHandler &ctxH, AnalysisProcessor &ap) const {
   this->checkSetup();
 

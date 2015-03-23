@@ -1,5 +1,5 @@
-#ifndef _ONEOPERANDTEMPLATE_H_
-#define _ONEOPERANDTEMPLATE_H_
+#ifndef _NONEOPERANDTEMPLATE_H_
+#define _NONEOPERANDTEMPLATE_H_
 
 #include <vector>
 
@@ -9,9 +9,9 @@
 #include "IRBuilder.h"
 
 
-class OneOperandTemplate {
+class NoneOperandTemplate {
   public:
-    virtual ~OneOperandTemplate() { }
+    virtual ~NoneOperandTemplate() { }
 
     virtual void templateMethod(
         const ContextHandler &ctxH,
@@ -24,12 +24,6 @@ class OneOperandTemplate {
     // Primitives uses in the templateMethod, must be implemented by subclasses.
 
     virtual void none(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const = 0;
-
-    virtual void reg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const = 0;
-
-    virtual void imm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const = 0;
-
-    virtual void mem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const = 0;
 };
 
-#endif // _ONEOPERANDTEMPLATE_H_
+#endif // _NONEOPERANDTEMPLATE_H_

@@ -13,6 +13,11 @@ void OneOperandTemplate::templateMethod(
     const std::vector< std::tuple<IRBuilder::operand_t, uint64_t, uint32_t> > &operands,
     std::string insName) const
 {
+  // If there is no operand
+  // Sometime instructions can have 0 or 1 operand. Like REP and REP imm16
+  if (operands.size() == 0)
+    this->none(ctxH, ap, inst);
+
   // reg
   if (std::get<0>(operands[0]) == IRBuilder::REG)
     this->reg(ctxH, ap, inst);

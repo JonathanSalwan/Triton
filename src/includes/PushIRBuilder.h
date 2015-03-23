@@ -16,6 +16,8 @@ class PushIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
     virtual Inst *process(const ContextHandler &ctxH, AnalysisProcessor &ap) const;
 
     // From OneOperandTemplate
+    virtual void none(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const;
+
     virtual void reg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const;
 
     virtual void imm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const;
