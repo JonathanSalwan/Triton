@@ -40,6 +40,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/BaseIRBuilder.cpp \
 		./src/ir/builders/CmpIRBuilder.cpp \
 		./src/ir/builders/EflagsBuilder.cpp \
+		./src/ir/builders/LeaveIRBuilder.cpp \
 		./src/ir/builders/MovIRBuilder.cpp \
 		./src/ir/builders/MovsxIRBuilder.cpp \
 		./src/ir/builders/MovzxIRBuilder.cpp \

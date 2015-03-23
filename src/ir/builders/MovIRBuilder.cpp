@@ -63,7 +63,7 @@ void MovIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symReg2 != UNSET)
     expr << smt2lib::extract(size2, "#" + std::to_string(symReg2));
   else
-    expr << size2, smt2lib::bv(ctxH.getRegisterValue(reg2), size1 * REG_SIZE);
+    expr << smt2lib::bv(ctxH.getRegisterValue(reg2), size1 * REG_SIZE);
 
   expr.str(this->extender(expr.str(), deltaSize(size1, size2)));
 
@@ -90,7 +90,7 @@ void MovIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 
   /* Create the SMT semantic */
   if (symMem != UNSET)
-    expr << "#" << std::dec << symMem;
+    expr << smt2lib::extract(readSize, "#" + std::to_string(symMem));
   else
     expr << smt2lib::bv(ctxH.getMemoryValue(mem, readSize), readSize * REG_SIZE);
 

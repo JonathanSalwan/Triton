@@ -24,6 +24,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new CmpIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_LEAVE:
+      ir = new LeaveIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_MOV:
       ir = new MovIRBuilder(address, disas);
       break;
