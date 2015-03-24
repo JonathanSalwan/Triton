@@ -57,9 +57,6 @@ void PopIRBuilder::reg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &
   uint32_t          readSize  = std::get<2>(this->operands[1]);
   uint64_t          symMem    = ap.getMemorySymbolicID(mem);
 
-  /* Create the SMT semantic side effect */
-  inst.addElement(alignStack(ap, ctxH, readSize));
-
   /* Create the SMT semantic */
   /* OP_1 */
   if (symMem != UNSET)
@@ -78,6 +75,9 @@ void PopIRBuilder::reg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
+
+  /* Create the SMT semantic side effect */
+  inst.addElement(alignStack(ap, ctxH, readSize));
 }
 
 
@@ -89,9 +89,6 @@ void PopIRBuilder::mem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &
   uint64_t          memSrc    = std::get<1>(this->operands[1]); // The dst memory read
   uint32_t          readSize  = std::get<2>(this->operands[1]);
   uint64_t          symMem    = ap.getMemorySymbolicID(memSrc);
-
-  /* Create the SMT semantic side effect */
-  inst.addElement(alignStack(ap, ctxH, writeSize));
 
   /* Create the SMT semantic */
   /* OP_1 */
@@ -111,6 +108,9 @@ void PopIRBuilder::mem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
+
+  /* Create the SMT semantic side effect */
+  inst.addElement(alignStack(ap, ctxH, writeSize));
 }
 
 

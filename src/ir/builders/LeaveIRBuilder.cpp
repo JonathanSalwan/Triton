@@ -13,6 +13,33 @@ LeaveIRBuilder::LeaveIRBuilder(uint64_t address, const std::string &disassembly)
 }
 
 
+static SymbolicElement *alignStack(AnalysisProcessor &ap, const ContextHandler &ctxH, uint32_t readSize)
+{
+  SymbolicElement     *se;
+  std::stringstream   expr, op1, op2;
+  uint64_t            symReg = ap.getRegSymbolicID(ID_RSP);
+
+  /*
+   * Create the SMT semantic.
+   */
+  if (symReg != UNSET)
+    op1 << "#" << std::dec << symReg;
+  else
+    op1 << smt2lib::bv(ctxH.getRegisterValue(REG_RSP), readSize * REG_SIZE);
+
+  op2 << smt2lib::bv(readSize, readSize * REG_SIZE);
+
+  expr << smt2lib::bvadd(op1.str(), op2.str());
+
+  /* Create the symbolic element */
+  se = ap.createRegSE(expr, ID_RSP);
+
+  /* Apply the taint */
+  se->isTainted = ap.isRegTainted(ID_RSP);
+
+  return se;
+}
+
 void LeaveIRBuilder::none(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement     *se1, *se2;
   std::stringstream   expr1, expr2;
@@ -50,6 +77,7 @@ void LeaveIRBuilder::none(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   /* Add the symbolic element to the current inst */
   inst.addElement(se1);
   inst.addElement(se2);
+  inst.addElement(alignStack(ap, ctxH, readSize));
 }
 
 
