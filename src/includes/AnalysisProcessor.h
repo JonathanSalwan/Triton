@@ -69,11 +69,11 @@ class AnalysisProcessor {
     // Statistics Facade
 
     // Returns a reference to the Stats object.
-    Stats &getStats();
-    void displayStats(void);
-    void incNumberOfExpressions(void);
-    void incNumberOfExpressions(uint64_t val);
-    void incNumberOfUnknownInstruction(void);
+    Stats     &getStats();
+    void      displayStats(void);
+    void      incNumberOfExpressions(uint64_t val);
+    void      incNumberOfExpressions(void);
+    void      incNumberOfUnknownInstruction(void);
 
 
   private:

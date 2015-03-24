@@ -12,7 +12,6 @@ Stats::Stats()
   this->numberOfUnknownInstruction  = 0;
   this->numberOfBranchesTaken       = 0;
   this->timeOfExecution             = 0;
-  this->codeCoverage                = 0;
 
   this->start = high_resolution_clock::now();
 }
@@ -35,7 +34,6 @@ void Stats::display(void)
   std::cout << boost::format(frmt) % "Number of unknown instructions" % std::to_string(this->numberOfUnknownInstruction) << std::endl;
   std::cout << boost::format(frmt) % "Number of branches taken" % std::to_string(this->numberOfBranchesTaken) << std::endl;
   std::cout << boost::format(frmt) % "Time of execution" % std::to_string(this->timeOfExecution) << " seconds" << std::endl;
-  std::cout << boost::format(frmt) % "Code coverage" % std::to_string(this->codeCoverage) << "%" << std::endl;
 }
 
 

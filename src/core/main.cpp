@@ -43,7 +43,7 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
 
 VOID TRACE_Instrumentation(TRACE trace, VOID *v)
 {
-  for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl))
+  for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)){
     for (INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins)) {
       IRBuilder *irb = createIRBuilder(ins);
 
@@ -63,7 +63,8 @@ VOID TRACE_Instrumentation(TRACE trace, VOID *v)
             IARG_ADDRINT, 0,
             IARG_THREAD_ID,
             IARG_END);
-      }
+    }
+  }
 }
 
 
