@@ -1,8 +1,9 @@
 #ifndef _ANALYSISPROCESSOR_H_
 #define _ANALYSISPROCESSOR_H_
 
-#include "SymbolicEngine.h"
 #include "SolverEngine.h"
+#include "Stats.h"
+#include "SymbolicEngine.h"
 #include "TaintEngine.h"
 
 
@@ -65,10 +66,21 @@ class AnalysisProcessor {
     // Returns a reference to the solver engine.
     SolverEngine &getSolverEngine();
 
+    // Statistics Facade
+
+    // Returns a reference to the Stats object.
+    Stats &getStats();
+    void displayStats(void);
+    void incNumberOfExpressions(void);
+    void incNumberOfExpressions(uint64_t val);
+    void incNumberOfUnknownInstruction(void);
+
+
   private:
     SymbolicEngine  symEngine;
     SolverEngine    solverEngine;
     TaintEngine     taintEngine;
+    Stats           stats;
 };
 
 #endif //_ANALYSISPROCESSOR_H_

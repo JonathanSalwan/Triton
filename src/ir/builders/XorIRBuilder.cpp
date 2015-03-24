@@ -241,6 +241,7 @@ Inst *XorIRBuilder::process(const ContextHandler &ctxH, AnalysisProcessor &ap) c
 
   try {
     this->templateMethod(ctxH, ap, *inst, this->operands, "XOR");
+    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
   }
   catch (std::exception &e) {
     delete inst;

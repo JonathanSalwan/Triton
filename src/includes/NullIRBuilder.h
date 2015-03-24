@@ -17,6 +17,7 @@ class NullIRBuilder: public BaseIRBuilder {
     void addOperand(IRBuilder::operand_t type, uint64_t value = 0) { }
 
     Inst *process(const ContextHandler &ctxH, AnalysisProcessor &ap) const {
+      ap.incNumberOfUnknownInstruction(); /* Used for statistics */
       return new Inst(ctxH.getThreadId(), this->address, this->disas);
     }
 };

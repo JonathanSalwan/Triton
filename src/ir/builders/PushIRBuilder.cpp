@@ -157,6 +157,7 @@ Inst *PushIRBuilder::process(const ContextHandler &ctxH, AnalysisProcessor &ap) 
 
   try {
     this->templateMethod(ctxH, ap, *inst, this->operands, "PUSH");
+    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
   }
   catch (std::exception &e) {
     delete inst;

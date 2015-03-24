@@ -60,6 +60,7 @@ Inst *LeaveIRBuilder::process(const ContextHandler &ctxH, AnalysisProcessor &ap)
 
   try {
     this->templateMethod(ctxH, ap, *inst, this->operands, "LEAVE");
+    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
   }
   catch (std::exception &e) {
     delete inst;

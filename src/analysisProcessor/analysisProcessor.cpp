@@ -195,3 +195,33 @@ SolverEngine &AnalysisProcessor::getSolverEngine()
   return this->solverEngine;
 }
 
+// Statistics Facade
+
+Stats &AnalysisProcessor::getStats()
+{
+  return this->stats;
+}
+
+void AnalysisProcessor::displayStats(void)
+{
+  this->stats.display();
+}
+
+
+void AnalysisProcessor::incNumberOfExpressions(void)
+{
+  this->stats.incNumberOfExpressions();
+}
+
+
+void AnalysisProcessor::incNumberOfExpressions(uint64_t val)
+{
+  this->stats.incNumberOfExpressions(val);
+}
+
+
+void AnalysisProcessor::incNumberOfUnknownInstruction(void)
+{
+  this->stats.incNumberOfUnknownInstruction();
+}
+

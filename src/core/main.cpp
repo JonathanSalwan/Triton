@@ -17,6 +17,8 @@
 
 /* Pin options: -startAnalysis */
 KNOB<std::string>  KnobStartAnalysis(KNOB_MODE_WRITEONCE, "pintool", "startAnalysis", "", "Start/end the analysis from a scope function");
+KNOB<BOOL>         KnobDisplayTrace(KNOB_MODE_WRITEONCE, "pintool", "displayTrace", "false", "Display the trace");
+KNOB<BOOL>         KnobDisplayStats(KNOB_MODE_WRITEONCE, "pintool", "displayStats", "false", "Display statistics");
 
 
 AnalysisProcessor ap;
@@ -27,7 +29,7 @@ Trace trace;
 VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
 {
   if (!analysisTrigger.getState())
-    // Analysis locked
+  // Analysis locked
     return;
 
   PINContextHandler ctxH(ctx, threadId);
@@ -95,7 +97,11 @@ VOID IMG_Instrumentation(IMG img, VOID *)
 
 VOID Fini(INT32, VOID *)
 {
-  trace.display();
+  if (KnobDisplayTrace.Value() == true)
+    trace.display();
+
+  if (KnobDisplayStats.Value() == true)
+    ap.displayStats();
 }
 
 

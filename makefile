@@ -32,6 +32,7 @@ LIBS =		-L$(PIN_ROOT)/intel64/lib \
 
 SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/components/Inst.cpp \
+		./src/components/Stats.cpp \
 		./src/components/Trace.cpp \
 		./src/contextHandler/PINContextHandler.cpp \
 		./src/core/main.cpp \
