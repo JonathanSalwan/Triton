@@ -17,7 +17,7 @@
 
 
 /* Pin options: -startAnalysis */
-KNOB<std::string>  KnobPythonModule(KNOB_MODE_WRITEONCE,    "pintool", "script",          "",      "Python script");
+KNOB<std::string>  KnobPythonModule(KNOB_MODE_WRITEONCE, "pintool", "script", "", "Python script");
 
 
 AnalysisProcessor   ap;
