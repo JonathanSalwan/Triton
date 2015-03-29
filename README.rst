@@ -75,6 +75,7 @@ Triton is used via Python bindings. In this section we will post some helpers wh
 
 | **Start the symbolic analysis from the 'check' function and dump the trace and stats at the end of the execution**
 
+.. code-block:: python
     import triton
     
     if __name__ == '__main__':
@@ -82,6 +83,7 @@ Triton is used via Python bindings. In this section we will post some helpers wh
         triton.dumpTrace(True)
         triton.dumpStats(True)
         triton.runProgram()
+..
 
 SMT Semantics supported
 -----------------------
