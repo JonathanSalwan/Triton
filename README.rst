@@ -62,16 +62,26 @@ Install
 
 Below, the install's command line::
   
-  $ cd pin-2.14-71313-gcc.4.4.7-linux/source/tools/
-  $ git clone git@github.com:JonathanSalwan/Triton.git
-  $ cd Triton
-  $ make
-  $ ../../../pin -t ./triton.so -script ./examples/test.py -- ./samples/crackmes/crackme_xor elite
+    $ cd pin-2.14-71313-gcc.4.4.7-linux/source/tools/
+    $ git clone git@github.com:JonathanSalwan/Triton.git
+    $ cd Triton
+    $ make
+    $ ../../../pin -t ./triton.so -script ./examples/test.py -- ./samples/crackmes/crackme_xor elite
 
 Examples
 --------
 
-TODO
+Triton is used via Python bindings. In this section we will post some helpers which show how to use its API.
+
+| **Start the symbolic analysis from the 'check' function and dump the trace and stats at the end of the execution**
+
+    import triton
+    
+    if __name__ == '__main__':
+        triton.startAnalysis('check')
+        triton.dumpTrace(True)
+        triton.dumpStats(True)
+        triton.runProgram()
 
 SMT Semantics supported
 -----------------------
