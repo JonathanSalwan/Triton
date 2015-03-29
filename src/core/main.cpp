@@ -24,6 +24,8 @@ AnalysisProcessor   ap;
 Trace               trace;
 Trigger             analysisTrigger  = Trigger();
 static char         *startAnalysis_g = NULL;
+static bool         dumpStats_g      = false;
+static bool         dumpTrace_g      = false;
 
 
 VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
@@ -100,8 +102,11 @@ VOID IMG_Instrumentation(IMG img, VOID *)
 
 VOID Fini(INT32, VOID *)
 {
-  trace.display();
-  ap.displayStats();
+  if (dumpTrace_g == true)
+    trace.display();
+  if (dumpStats_g == true)
+    ap.displayStats();
+
   Py_Finalize();
 }
 
@@ -115,7 +120,7 @@ INT32 Usage()
 }
 
 
-static char Triton_runProgram_doc[] = "Start the Pin instrumentation"; /* Must be in static */
+static char Triton_runProgram_doc[] = "Start the Pin instrumentation";
 static PyObject* Triton_runProgram(PyObject* self, PyObject* noarg)
 {
   // Never returns - Rock 'n roll baby \o/
@@ -124,7 +129,7 @@ static PyObject* Triton_runProgram(PyObject* self, PyObject* noarg)
 }
 
 
-static char Triton_startAnalysis_doc[] = "Start the symbolic execution from a specific"; /* Must be in static */
+static char Triton_startAnalysis_doc[] = "Start the symbolic execution from a specific";
 static PyObject* Triton_startAnalysis(PyObject* self, PyObject* name)
 {
   startAnalysis_g = PyString_AsString(name);
@@ -132,9 +137,29 @@ static PyObject* Triton_startAnalysis(PyObject* self, PyObject* name)
 }
 
 
+static char Triton_dumpTrace_doc[] = "Dump the trace at the end of the execution";
+static PyObject* Triton_dumpTrace(PyObject* self, PyObject* flag)
+{
+  if (PyBool_Check(flag))
+    dumpTrace_g = (flag == Py_True);
+  return Py_None;
+}
+
+
+static char Triton_dumpStats_doc[] = "Dump statistics at the end of the execution";
+static PyObject* Triton_dumpStats(PyObject* self, PyObject* flag)
+{
+  if (PyBool_Check(flag))
+    dumpStats_g = (flag == Py_True);
+  return Py_None;
+}
+
+
 static PyMethodDef pythonCallbacks[] = {
   {"runProgram",    Triton_runProgram,    METH_NOARGS, Triton_runProgram_doc},
   {"startAnalysis", Triton_startAnalysis, METH_O,      Triton_startAnalysis_doc},
+  {"dumpTrace",     Triton_dumpTrace,     METH_O,      Triton_dumpTrace_doc},
+  {"dumpStats",     Triton_dumpStats,     METH_O,      Triton_dumpStats_doc},
   {NULL, NULL, 0, NULL}
 };
 
