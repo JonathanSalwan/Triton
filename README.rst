@@ -73,7 +73,7 @@ Examples
 
 Triton is used via Python bindings. In this section we will post some helpers which show how to use its API.
 
-| **Start the symbolic analysis from the 'check' function and dump the trace and stats at the end of the execution**
+**Helper 1**: Start the symbolic analysis from the 'check' function and dump the trace and stats at the end of the execution.
 ::
     import triton
     
