@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <python2.7/Python.h>
 #include <sstream>
 #include <stdexcept>
 #include <vector>
@@ -16,14 +17,13 @@
 
 
 /* Pin options: -startAnalysis */
-KNOB<std::string>  KnobStartAnalysis(KNOB_MODE_WRITEONCE, "pintool", "startAnalysis", "", "Start/end the analysis from a scope function");
-KNOB<BOOL>         KnobDisplayTrace(KNOB_MODE_WRITEONCE, "pintool", "displayTrace", "false", "Display the trace");
-KNOB<BOOL>         KnobDisplayStats(KNOB_MODE_WRITEONCE, "pintool", "displayStats", "false", "Display statistics");
+KNOB<std::string>  KnobPythonModule(KNOB_MODE_WRITEONCE,    "pintool", "script",          "",      "Python script");
 
 
-AnalysisProcessor ap;
-Trigger analysisTrigger;
-Trace trace;
+AnalysisProcessor   ap;
+Trace               trace;
+Trigger             analysisTrigger  = Trigger();
+static char         *startAnalysis_g = NULL;
 
 
 VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
@@ -78,7 +78,9 @@ VOID IMG_Instrumentation(IMG img, VOID *)
 {
   /* This callback is used to lock and target the analysis */
   /* Mainly used to target an area */
-  RTN targetRTN = RTN_FindByName(img, KnobStartAnalysis.Value().c_str());
+  if (startAnalysis_g == NULL)
+    return;
+  RTN targetRTN = RTN_FindByName(img, startAnalysis_g);
   if (RTN_Valid(targetRTN)){
     RTN_Open(targetRTN);
     RTN_InsertCall(targetRTN,
@@ -98,11 +100,9 @@ VOID IMG_Instrumentation(IMG img, VOID *)
 
 VOID Fini(INT32, VOID *)
 {
-  if (KnobDisplayTrace.Value() == true)
-    trace.display();
-
-  if (KnobDisplayStats.Value() == true)
-    ap.displayStats();
+  trace.display();
+  ap.displayStats();
+  Py_Finalize();
 }
 
 
@@ -115,20 +115,46 @@ INT32 Usage()
 }
 
 
+static char Triton_runProgram_doc[] = "Start the Pin instrumentation"; /* Must be in static */
+static PyObject* Triton_runProgram(PyObject* self, PyObject* noarg)
+{
+  // Never returns - Rock 'n roll baby \o/
+  PIN_StartProgram();
+  return Py_None;
+}
+
+
+static char Triton_startAnalysis_doc[] = "Start the symbolic execution from a specific"; /* Must be in static */
+static PyObject* Triton_startAnalysis(PyObject* self, PyObject* name)
+{
+  startAnalysis_g = PyString_AsString(name);
+  return Py_None;
+}
+
+
+static PyMethodDef pythonCallbacks[] = {
+  {"runProgram",    Triton_runProgram,    METH_NOARGS, Triton_runProgram_doc},
+  {"startAnalysis", Triton_startAnalysis, METH_O,      Triton_startAnalysis_doc},
+  {NULL, NULL, 0, NULL}
+};
+
+
 int main(int argc, char *argv[])
 {
+  Py_Initialize();
+
   PIN_InitSymbols();
+  PIN_SetSyntaxIntel();
   if(PIN_Init(argc, argv))
       return Usage();
 
-  // We first need a target function
-  if (KnobStartAnalysis.Value().empty())
-    return Usage();
-
-  analysisTrigger = Trigger();
-
-  // Enable Intel syntax
-  PIN_SetSyntaxIntel();
+  // Init Python Bindings
+  PyObject* tritonModule = Py_InitModule("triton", pythonCallbacks);
+  if (tritonModule == NULL) {
+    printf("Failed to initialize Triton bindings\n");
+    PyErr_Print();
+    exit(1);
+  }
 
   // Image callback
   IMG_AddInstrumentFunction(IMG_Instrumentation, NULL);
@@ -139,8 +165,15 @@ int main(int argc, char *argv[])
   // End instrumentation callback
   PIN_AddFiniFunction(Fini, NULL);
 
-  // Never returns - Rock 'n roll baby \o/
-  PIN_StartProgram();
+  // Exec the python bindings file
+  const char* filename = KnobPythonModule.Value().c_str();
+  FILE* pyScript = fopen(filename, "r");
+  if (pyScript == NULL) {
+    perror("fopen");
+    exit(1);
+  }
+  PyRun_SimpleFile(pyScript, filename);
+  fclose(pyScript);
 
   return 0;
 }

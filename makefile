@@ -28,7 +28,8 @@ LIBS =		-L$(PIN_ROOT)/intel64/lib \
 		-lxed \
 		-lpindwarf \
 		-ldl \
-		-lz3
+		-lz3 \
+		-lpython2.7
 
 SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/components/Inst.cpp \
