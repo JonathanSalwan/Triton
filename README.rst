@@ -114,6 +114,10 @@ Short view of what Triton supports.
 Related presentations
 ---------------------
 
+| **Dynamic Behavior Analysis Using Binary Instrumentation**
+| St'Hack, Bordeaux, 2015. [`slide <http://shell-storm.org/talks/StHack2015_Dynamic_Behavior_Analysis_using_Binary_Instrumentation_Jonathan_Salwan.pdf>`_] 
+| `Description`: *This talk can be considered like the part 2 of my talk at SecurityDay. In the previous part, I talked about how it was possible to cover a targeted function in memory using the DSE (Dynamic Symbolic Execution) approach. Cover a function (or its states) doesn't mean find all vulnerabilities, some vulnerability doesn't crashes the program. That's why we must implement specific analysis to find specific bugs. These analysis are based on the binary instrumentation and the runtime behavior analysis of the program. In this talk, we will see how it's possible to find these following kind of bugs : off-by-one, stack / heap overflow, use-after-free, format string and {write, read}-what-where.*
+
 | **Covering a function using a Dynamic Symbolic Execution approach**
 | Security Day, Lille, 2015. [`slide <http://shell-storm.org/talks/SecurityDay2015_dynamic_symbolic_execution_Jonathan_Salwan.pdf>`_] 
 | `Description`: *This talk is about binary analysis and instrumentation. We will see how it's possible to target a specific function, snapshot the context memory/registers before the function, translate the instrumentation into an intermediate representation, apply a taint analysis based on this IR, build/keep formulas for a Dynamic Symbolic Execution (DSE), generate a concrete value to go through a specific path, restore the context memory/register and generate another concrete value to go through another path then repeat this operation until the target function is covered.*
