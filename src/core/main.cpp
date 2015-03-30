@@ -104,6 +104,7 @@ VOID Fini(INT32, VOID *)
 {
   if (dumpTrace_g == true)
     trace.display();
+
   if (dumpStats_g == true)
     ap.displayStats();
 
@@ -156,11 +157,11 @@ static PyObject* Triton_dumpStats(PyObject* self, PyObject* flag)
 
 
 static PyMethodDef pythonCallbacks[] = {
-  {"runProgram",    Triton_runProgram,    METH_NOARGS, Triton_runProgram_doc},
-  {"startAnalysis", Triton_startAnalysis, METH_O,      Triton_startAnalysis_doc},
-  {"dumpTrace",     Triton_dumpTrace,     METH_O,      Triton_dumpTrace_doc},
-  {"dumpStats",     Triton_dumpStats,     METH_O,      Triton_dumpStats_doc},
-  {NULL, NULL, 0, NULL}
+  {"runProgram",    Triton_runProgram,    METH_NOARGS,  Triton_runProgram_doc},
+  {"startAnalysis", Triton_startAnalysis, METH_O,       Triton_startAnalysis_doc},
+  {"dumpTrace",     Triton_dumpTrace,     METH_O,       Triton_dumpTrace_doc},
+  {"dumpStats",     Triton_dumpStats,     METH_O,       Triton_dumpStats_doc},
+  {NULL,            NULL,                 0,            NULL}
 };
 
 
