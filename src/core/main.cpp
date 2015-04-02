@@ -30,6 +30,10 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
   if (PyTritonOptions::startAnalysisFromAddr.find(irb->getAddress()) != PyTritonOptions::startAnalysisFromAddr.end())
     analysisTrigger.update(true);
 
+  // Check if the DSE must be stop at this address
+  if (PyTritonOptions::stopAnalysisFromAddr.find(irb->getAddress()) != PyTritonOptions::stopAnalysisFromAddr.end())
+    analysisTrigger.update(false);
+
   if (!analysisTrigger.getState())
   // Analysis locked
     return;
@@ -40,10 +44,6 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
     irb->setup(ea);
 
   trace.addInstruction(irb->process(ctxH, ap));
-
-  // Check if the DSE must be stop at this address
-  if (PyTritonOptions::stopAnalysisFromAddr.find(irb->getAddress()) != PyTritonOptions::stopAnalysisFromAddr.end())
-    analysisTrigger.update(false);
 }
 
 
@@ -84,9 +84,9 @@ VOID IMG_Instrumentation(IMG img, VOID *)
 {
   /* This callback is used to lock and target the analysis */
   /* Mainly used to target an area */
-  if (PyTritonOptions::startAnalysisFromName == NULL)
+  if (PyTritonOptions::startAnalysisFromSymbol == NULL)
     return;
-  RTN targetRTN = RTN_FindByName(img, PyTritonOptions::startAnalysisFromName);
+  RTN targetRTN = RTN_FindByName(img, PyTritonOptions::startAnalysisFromSymbol);
   if (RTN_Valid(targetRTN)){
     RTN_Open(targetRTN);
 

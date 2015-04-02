@@ -7,7 +7,7 @@
 
 /* NameSapce for all Python Bindings variables */
 namespace PyTritonOptions {
-  char *startAnalysisFromName = NULL;
+  char *startAnalysisFromSymbol = NULL;
   bool dumpStats = false;
   bool dumpTrace = false;
   std::set<uint64_t> startAnalysisFromAddr;
@@ -24,16 +24,16 @@ static PyObject* Triton_runProgram(PyObject* self, PyObject* noarg)
 }
 
 
-static char Triton_startAnalysisFromName_doc[] = "Start the symbolic execution from a specific name point";
-static PyObject* Triton_startAnalysisFromName(PyObject* self, PyObject* name)
+static char Triton_startAnalysisFromSymbol_doc[] = "Start the symbolic execution from a specific name point";
+static PyObject* Triton_startAnalysisFromSymbol(PyObject* self, PyObject* name)
 {
 
   if (!PyString_Check(name)){
-    PyErr_Format(PyExc_TypeError, "startAnalysisFromName(): expected a string");
+    PyErr_Format(PyExc_TypeError, "startAnalysisFromSymbol(): expected a string");
     PyErr_Print();
     exit(-1);
   }
-  PyTritonOptions::startAnalysisFromName = PyString_AsString(name);
+  PyTritonOptions::startAnalysisFromSymbol = PyString_AsString(name);
   return Py_None;
 }
 
@@ -93,12 +93,12 @@ static PyObject* Triton_dumpStats(PyObject* self, PyObject* flag)
 
 
 PyMethodDef pythonCallbacks[] = {
-  {"runProgram",            Triton_runProgram,            METH_NOARGS,  Triton_runProgram_doc},
-  {"startAnalysisFromName", Triton_startAnalysisFromName, METH_O,       Triton_startAnalysisFromName_doc},
-  {"startAnalysisFromAddr", Triton_startAnalysisFromAddr, METH_O,       Triton_startAnalysisFromAddr_doc},
-  {"stopAnalysisFromAddr",  Triton_stopAnalysisFromAddr , METH_O,       Triton_stopAnalysisFromAddr_doc},
-  {"dumpTrace",             Triton_dumpTrace,             METH_O,       Triton_dumpTrace_doc},
-  {"dumpStats",             Triton_dumpStats,             METH_O,       Triton_dumpStats_doc},
-  {NULL,                    NULL,                         0,            NULL}
+  {"runProgram",              Triton_runProgram,              METH_NOARGS,  Triton_runProgram_doc},
+  {"startAnalysisFromSymbol", Triton_startAnalysisFromSymbol, METH_O,       Triton_startAnalysisFromSymbol_doc},
+  {"startAnalysisFromAddr",   Triton_startAnalysisFromAddr,   METH_O,       Triton_startAnalysisFromAddr_doc},
+  {"stopAnalysisFromAddr",    Triton_stopAnalysisFromAddr ,   METH_O,       Triton_stopAnalysisFromAddr_doc},
+  {"dumpTrace",               Triton_dumpTrace,               METH_O,       Triton_dumpTrace_doc},
+  {"dumpStats",               Triton_dumpStats,               METH_O,       Triton_dumpStats_doc},
+  {NULL,                      NULL,                           0,            NULL}
 };
 

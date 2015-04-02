@@ -4,7 +4,7 @@ import triton
 if __name__ == '__main__':
 
     # Start the symbolic analysis from the 'check' function
-    triton.startAnalysisFromName('check')
+    triton.startAnalysisFromSymbol('check')
 
     # Dump the symbolic trace at the end of the execution
     triton.dumpTrace(True)

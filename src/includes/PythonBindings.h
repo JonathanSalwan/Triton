@@ -7,7 +7,7 @@
 extern PyMethodDef pythonCallbacks[];
 
 namespace PyTritonOptions {
-  extern char *startAnalysisFromName;
+  extern char *startAnalysisFromSymbol;
   extern bool dumpStats;
   extern bool dumpTrace;
   extern std::set<uint64_t> startAnalysisFromAddr;
