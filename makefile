@@ -32,6 +32,7 @@ LIBS =		-L$(PIN_ROOT)/intel64/lib \
 		-lpython2.7
 
 SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
+		./src/bindings/python/callbacks.cpp \
 		./src/components/Inst.cpp \
 		./src/components/Stats.cpp \
 		./src/components/Trace.cpp \
