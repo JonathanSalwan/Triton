@@ -1,5 +1,5 @@
 
-#include <list>
+#include <set>
 #include <python2.7/Python.h>
 
 #include "pin.H"
@@ -10,8 +10,8 @@ namespace PyTritonOptions {
   char *startAnalysisFromName = NULL;
   bool dumpStats = false;
   bool dumpTrace = false;
-  std::list<uint64_t> startAnalysisFromAddr;
-  std::list<uint64_t> endAnalysisFromAddr;
+  std::set<uint64_t> startAnalysisFromAddr;
+  std::set<uint64_t> stopAnalysisFromAddr;
 };
 
 
@@ -23,7 +23,8 @@ static PyObject* Triton_runProgram(PyObject* self, PyObject* noarg)
   return Py_None;
 }
 
-static char Triton_startAnalysisFromName_doc[] = "Start the symbolic execution from a specific";
+
+static char Triton_startAnalysisFromName_doc[] = "Start the symbolic execution from a specific name point";
 static PyObject* Triton_startAnalysisFromName(PyObject* self, PyObject* name)
 {
 
@@ -33,6 +34,34 @@ static PyObject* Triton_startAnalysisFromName(PyObject* self, PyObject* name)
     exit(-1);
   }
   PyTritonOptions::startAnalysisFromName = PyString_AsString(name);
+  return Py_None;
+}
+
+
+static char Triton_startAnalysisFromAddr_doc[] = "Start the symbolic execution from a specific address";
+static PyObject* Triton_startAnalysisFromAddr(PyObject* self, PyObject* addr)
+{
+
+  if (!PyLong_Check(addr) && !PyInt_Check(addr)){
+    PyErr_Format(PyExc_TypeError, "startAnalysisFromAddr(): expected an address");
+    PyErr_Print();
+    exit(-1);
+  }
+  PyTritonOptions::startAnalysisFromAddr.insert(PyLong_AsLong(addr));
+  return Py_None;
+}
+
+
+static char Triton_stopAnalysisFromAddr_doc[] = "Stop the symbolic execution from a specific address";
+static PyObject* Triton_stopAnalysisFromAddr(PyObject* self, PyObject* addr)
+{
+
+  if (!PyLong_Check(addr) && !PyInt_Check(addr)){
+    PyErr_Format(PyExc_TypeError, "stopAnalysisFromAddr(): expected an address");
+    PyErr_Print();
+    exit(-1);
+  }
+  PyTritonOptions::stopAnalysisFromAddr.insert(PyLong_AsLong(addr));
   return Py_None;
 }
 
@@ -66,6 +95,8 @@ static PyObject* Triton_dumpStats(PyObject* self, PyObject* flag)
 PyMethodDef pythonCallbacks[] = {
   {"runProgram",            Triton_runProgram,            METH_NOARGS,  Triton_runProgram_doc},
   {"startAnalysisFromName", Triton_startAnalysisFromName, METH_O,       Triton_startAnalysisFromName_doc},
+  {"startAnalysisFromAddr", Triton_startAnalysisFromAddr, METH_O,       Triton_startAnalysisFromAddr_doc},
+  {"stopAnalysisFromAddr",  Triton_stopAnalysisFromAddr , METH_O,       Triton_stopAnalysisFromAddr_doc},
   {"dumpTrace",             Triton_dumpTrace,             METH_O,       Triton_dumpTrace_doc},
   {"dumpStats",             Triton_dumpStats,             METH_O,       Triton_dumpStats_doc},
   {NULL,                    NULL,                         0,            NULL}
