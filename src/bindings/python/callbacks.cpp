@@ -1,17 +1,28 @@
 
-#include <set>
+#include <map>
 #include <python2.7/Python.h>
+#include <set>
 
 #include "pin.H"
 
 
 /* NameSapce for all Python Bindings variables */
 namespace PyTritonOptions {
-  char *startAnalysisFromSymbol = NULL;
+
+  /* Debug configurations */
   bool dumpStats = false;
   bool dumpTrace = false;
+
+  /* Execution configurations */
+  char *startAnalysisFromSymbol = NULL;
   std::set<uint64_t> startAnalysisFromAddr;
   std::set<uint64_t> stopAnalysisFromAddr;
+
+  /* Taint configurations */
+  std::map<uint64_t, uint64_t> taintRegFromAddr;   // <addr, reg>
+  std::map<uint64_t, uint64_t> untaintRegFromAddr; // <addr, reg>
+  std::map<uint64_t, uint64_t> taintMemFromAddr;   // <addr, reg>
+  std::map<uint64_t, uint64_t> untaintMemFromAddr; // <addr, reg>
 };
 
 
@@ -93,12 +104,12 @@ static PyObject* Triton_dumpStats(PyObject* self, PyObject* flag)
 
 
 PyMethodDef pythonCallbacks[] = {
-  {"runProgram",              Triton_runProgram,              METH_NOARGS,  Triton_runProgram_doc},
-  {"startAnalysisFromSymbol", Triton_startAnalysisFromSymbol, METH_O,       Triton_startAnalysisFromSymbol_doc},
-  {"startAnalysisFromAddr",   Triton_startAnalysisFromAddr,   METH_O,       Triton_startAnalysisFromAddr_doc},
-  {"stopAnalysisFromAddr",    Triton_stopAnalysisFromAddr ,   METH_O,       Triton_stopAnalysisFromAddr_doc},
-  {"dumpTrace",               Triton_dumpTrace,               METH_O,       Triton_dumpTrace_doc},
   {"dumpStats",               Triton_dumpStats,               METH_O,       Triton_dumpStats_doc},
+  {"dumpTrace",               Triton_dumpTrace,               METH_O,       Triton_dumpTrace_doc},
+  {"runProgram",              Triton_runProgram,              METH_NOARGS,  Triton_runProgram_doc},
+  {"startAnalysisFromAddr",   Triton_startAnalysisFromAddr,   METH_O,       Triton_startAnalysisFromAddr_doc},
+  {"startAnalysisFromSymbol", Triton_startAnalysisFromSymbol, METH_O,       Triton_startAnalysisFromSymbol_doc},
+  {"stopAnalysisFromAddr",    Triton_stopAnalysisFromAddr ,   METH_O,       Triton_stopAnalysisFromAddr_doc},
   {NULL,                      NULL,                           0,            NULL}
 };
 

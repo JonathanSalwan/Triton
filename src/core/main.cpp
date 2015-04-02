@@ -130,20 +130,13 @@ INT32 Usage()
 
 int main(int argc, char *argv[])
 {
-  Py_Initialize();
-
   PIN_InitSymbols();
   PIN_SetSyntaxIntel();
   if(PIN_Init(argc, argv))
       return Usage();
 
   // Init Python Bindings
-  PyObject* tritonModule = Py_InitModule("triton", pythonCallbacks);
-  if (tritonModule == NULL) {
-    printf("Failed to initialize Triton bindings\n");
-    PyErr_Print();
-    exit(1);
-  }
+  initBindings();
 
   // Image callback
   IMG_AddInstrumentFunction(IMG_Instrumentation, NULL);
@@ -155,14 +148,7 @@ int main(int argc, char *argv[])
   PIN_AddFiniFunction(Fini, NULL);
 
   // Exec the python bindings file
-  const char* filename = KnobPythonModule.Value().c_str();
-  FILE* pyScript = fopen(filename, "r");
-  if (pyScript == NULL) {
-    perror("fopen");
-    exit(1);
-  }
-  PyRun_SimpleFile(pyScript, filename);
-  fclose(pyScript);
+  execBindings(KnobPythonModule.Value().c_str());
 
   return 0;
 }
