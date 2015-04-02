@@ -16,16 +16,21 @@
 #include "Trigger.h"
 
 
-/* Pin options: -startAnalysis */
+/* Pin options: -script */
 KNOB<std::string>  KnobPythonModule(KNOB_MODE_WRITEONCE, "pintool", "script", "", "Python script");
 
 
 AnalysisProcessor   ap;
 Trace               trace;
-Trigger             analysisTrigger  = Trigger();
-static char         *startAnalysis_g = NULL;
-static bool         dumpStats_g      = false;
-static bool         dumpTrace_g      = false;
+Trigger             analysisTrigger = Trigger();
+
+
+/* NameSapce for all Python Bindings variables */
+namespace PyTritonOptions {
+  static char *startAnalysisFromName  = NULL;
+  static bool dumpStats               = false;
+  static bool dumpTrace               = false;
+};
 
 
 VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
@@ -80,9 +85,9 @@ VOID IMG_Instrumentation(IMG img, VOID *)
 {
   /* This callback is used to lock and target the analysis */
   /* Mainly used to target an area */
-  if (startAnalysis_g == NULL)
+  if (PyTritonOptions::startAnalysisFromName == NULL)
     return;
-  RTN targetRTN = RTN_FindByName(img, startAnalysis_g);
+  RTN targetRTN = RTN_FindByName(img, PyTritonOptions::startAnalysisFromName);
   if (RTN_Valid(targetRTN)){
     RTN_Open(targetRTN);
     RTN_InsertCall(targetRTN,
@@ -102,10 +107,10 @@ VOID IMG_Instrumentation(IMG img, VOID *)
 
 VOID Fini(INT32, VOID *)
 {
-  if (dumpTrace_g == true)
+  if (PyTritonOptions::dumpTrace == true)
     trace.display();
 
-  if (dumpStats_g == true)
+  if (PyTritonOptions::dumpStats == true)
     ap.displayStats();
 
   Py_Finalize();
@@ -130,10 +135,10 @@ static PyObject* Triton_runProgram(PyObject* self, PyObject* noarg)
 }
 
 
-static char Triton_startAnalysis_doc[] = "Start the symbolic execution from a specific";
-static PyObject* Triton_startAnalysis(PyObject* self, PyObject* name)
+static char Triton_startAnalysisFromName_doc[] = "Start the symbolic execution from a specific";
+static PyObject* Triton_startAnalysisFromName(PyObject* self, PyObject* name)
 {
-  startAnalysis_g = PyString_AsString(name);
+  PyTritonOptions::startAnalysisFromName = PyString_AsString(name);
   return Py_None;
 }
 
@@ -142,7 +147,7 @@ static char Triton_dumpTrace_doc[] = "Dump the trace at the end of the execution
 static PyObject* Triton_dumpTrace(PyObject* self, PyObject* flag)
 {
   if (PyBool_Check(flag))
-    dumpTrace_g = (flag == Py_True);
+    PyTritonOptions::dumpTrace = (flag == Py_True);
   return Py_None;
 }
 
@@ -151,17 +156,17 @@ static char Triton_dumpStats_doc[] = "Dump statistics at the end of the executio
 static PyObject* Triton_dumpStats(PyObject* self, PyObject* flag)
 {
   if (PyBool_Check(flag))
-    dumpStats_g = (flag == Py_True);
+    PyTritonOptions::dumpStats = (flag == Py_True);
   return Py_None;
 }
 
 
 static PyMethodDef pythonCallbacks[] = {
-  {"runProgram",    Triton_runProgram,    METH_NOARGS,  Triton_runProgram_doc},
-  {"startAnalysis", Triton_startAnalysis, METH_O,       Triton_startAnalysis_doc},
-  {"dumpTrace",     Triton_dumpTrace,     METH_O,       Triton_dumpTrace_doc},
-  {"dumpStats",     Triton_dumpStats,     METH_O,       Triton_dumpStats_doc},
-  {NULL,            NULL,                 0,            NULL}
+  {"runProgram",            Triton_runProgram,            METH_NOARGS,  Triton_runProgram_doc},
+  {"startAnalysisFromName", Triton_startAnalysisFromName, METH_O,       Triton_startAnalysisFromName_doc},
+  {"dumpTrace",             Triton_dumpTrace,             METH_O,       Triton_dumpTrace_doc},
+  {"dumpStats",             Triton_dumpStats,             METH_O,       Triton_dumpStats_doc},
+  {NULL,                    NULL,                         0,            NULL}
 };
 
 
