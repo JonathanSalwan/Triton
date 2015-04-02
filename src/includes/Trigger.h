@@ -12,6 +12,15 @@ class Trigger {
     // Return true if the switch is ON, false otherwise.
     bool getState();
 
+    // Set this->state to true
+    void enable(void);
+
+    // Set this->state to false
+    void disable(void);
+
+    // Set this->state to flag
+    void update(bool flag);
+
   private:
     bool state;
 };

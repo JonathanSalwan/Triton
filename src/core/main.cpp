@@ -66,9 +66,9 @@ VOID TRACE_Instrumentation(TRACE trace, VOID *v)
 }
 
 
-void toggleWrapper()
+void toggleWrapper(bool flag)
 {
-  analysisTrigger.toggle();
+  analysisTrigger.update(flag);
 }
 
 
@@ -81,14 +81,17 @@ VOID IMG_Instrumentation(IMG img, VOID *)
   RTN targetRTN = RTN_FindByName(img, PyTritonOptions::startAnalysisFromName);
   if (RTN_Valid(targetRTN)){
     RTN_Open(targetRTN);
+
     RTN_InsertCall(targetRTN,
         IPOINT_BEFORE,
         (AFUNPTR) toggleWrapper,
+        IARG_BOOL, true,
         IARG_END);
 
     RTN_InsertCall(targetRTN,
         IPOINT_AFTER,
         (AFUNPTR) toggleWrapper,
+        IARG_BOOL, false,
         IARG_END);
 
     RTN_Close(targetRTN);
