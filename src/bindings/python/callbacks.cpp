@@ -1,4 +1,5 @@
 
+#include <list>
 #include <map>
 #include <python2.7/Python.h>
 #include <set>
@@ -19,10 +20,10 @@ namespace PyTritonOptions {
   std::set<uint64_t> stopAnalysisFromAddr;
 
   /* Taint configurations */
-  std::map<uint64_t, uint64_t> taintRegFromAddr;   // <addr, reg>
-  std::map<uint64_t, uint64_t> untaintRegFromAddr; // <addr, reg>
-  std::map<uint64_t, uint64_t> taintMemFromAddr;   // <addr, reg>
-  std::map<uint64_t, uint64_t> untaintMemFromAddr; // <addr, reg>
+  std::map<uint64_t, std::list<uint64_t>> taintRegFromAddr;   // <addr, [reg1, reg2]>
+  std::map<uint64_t, std::list<uint64_t>> untaintRegFromAddr; // <addr, [reg1, reg2]>
+  std::map<uint64_t, std::list<uint64_t>> taintMemFromAddr;   // <addr, [mem1, mem2]>
+  std::map<uint64_t, std::list<uint64_t>> untaintMemFromAddr; // <addr, [mem1, mem2]>
 };
 
 
