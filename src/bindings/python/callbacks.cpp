@@ -7,6 +7,8 @@
 #include "pin.H"
 
 
+#include <iostream>
+
 /* NameSapce for all Python Bindings variables */
 namespace PyTritonOptions {
 
@@ -104,13 +106,97 @@ static PyObject* Triton_dumpStats(PyObject* self, PyObject* flag)
 }
 
 
+static char Triton_taintRegFromAddr_doc[] = "Taint specific registers from an address";
+static PyObject* Triton_taintRegFromAddr(PyObject* self, PyObject* args)
+{
+  PyObject *addr;
+  PyObject *regs;
+  std::list<uint64_t> regsList;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &addr, &regs);
+
+  /* Check if the first arg (addr) is a integer */
+  if (!PyLong_Check(addr) && !PyInt_Check(addr)) {
+    PyErr_Format(PyExc_TypeError, "taintRegFromAddr(): expected an address as first argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  /* Check if the second arg (regs) is a list */
+  if (!PyList_Check(regs)) {
+    PyErr_Format(PyExc_TypeError, "taintRegFromAddr(): expected a list as second argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  /* Check if the regs list contains only integer item and craft a std::list */
+  for (Py_ssize_t i = 0; i < PyList_Size(regs); i++){
+    PyObject *item = PyList_GetItem(regs, i);
+    if (!PyLong_Check(item) && !PyInt_Check(item)){
+      PyErr_Format(PyExc_TypeError, "taintRegFromAddr(): The second argument must be a list of integer");
+      PyErr_Print();
+      exit(-1);
+    }
+    regsList.push_back(PyLong_AsLong(item));
+  }
+
+  /* Update taint configuration */
+  PyTritonOptions::taintRegFromAddr.insert(std::pair<uint64_t, std::list<uint64_t>>(PyLong_AsLong(addr), regsList));
+  return Py_None;
+}
+
+
+static char Triton_untaintRegFromAddr_doc[] = "Untaint specific registers from an address";
+static PyObject* Triton_untaintRegFromAddr(PyObject* self, PyObject* args)
+{
+  PyObject *addr;
+  PyObject *regs;
+  std::list<uint64_t> regsList;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &addr, &regs);
+
+  /* Check if the first arg (addr) is a integer */
+  if (!PyLong_Check(addr) && !PyInt_Check(addr)) {
+    PyErr_Format(PyExc_TypeError, "untaintRegFromAddr(): expected an address as first argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  /* Check if the second arg (regs) is a list */
+  if (!PyList_Check(regs)) {
+    PyErr_Format(PyExc_TypeError, "untaintRegFromAddr(): expected a list as second argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  /* Check if the regs list contains only integer item and craft a std::list */
+  for (Py_ssize_t i = 0; i < PyList_Size(regs); i++){
+    PyObject *item = PyList_GetItem(regs, i);
+    if (!PyLong_Check(item) && !PyInt_Check(item)){
+      PyErr_Format(PyExc_TypeError, "untaintRegFromAddr(): The second argument must be a list of integer");
+      PyErr_Print();
+      exit(-1);
+    }
+    regsList.push_back(PyLong_AsLong(item));
+  }
+
+  /* Update taint configuration */
+  PyTritonOptions::untaintRegFromAddr.insert(std::pair<uint64_t, std::list<uint64_t>>(PyLong_AsLong(addr), regsList));
+  return Py_None;
+}
+
+
 PyMethodDef pythonCallbacks[] = {
   {"dumpStats",               Triton_dumpStats,               METH_O,       Triton_dumpStats_doc},
   {"dumpTrace",               Triton_dumpTrace,               METH_O,       Triton_dumpTrace_doc},
   {"runProgram",              Triton_runProgram,              METH_NOARGS,  Triton_runProgram_doc},
   {"startAnalysisFromAddr",   Triton_startAnalysisFromAddr,   METH_O,       Triton_startAnalysisFromAddr_doc},
   {"startAnalysisFromSymbol", Triton_startAnalysisFromSymbol, METH_O,       Triton_startAnalysisFromSymbol_doc},
-  {"stopAnalysisFromAddr",    Triton_stopAnalysisFromAddr ,   METH_O,       Triton_stopAnalysisFromAddr_doc},
+  {"stopAnalysisFromAddr",    Triton_stopAnalysisFromAddr,    METH_O,       Triton_stopAnalysisFromAddr_doc},
+  {"taintRegFromAddr",        Triton_taintRegFromAddr,        METH_VARARGS, Triton_taintRegFromAddr_doc},
+  {"untaintRegFromAddr",      Triton_untaintRegFromAddr,      METH_VARARGS, Triton_untaintRegFromAddr_doc},
   {NULL,                      NULL,                           0,            NULL}
 };
 

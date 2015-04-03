@@ -24,7 +24,9 @@ Trace               trace;
 Trigger             analysisTrigger = Trigger();
 
 
-VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
+
+
+void applyPyConf(IRBuilder *irb, CONTEXT *ctx, THREADID threadId)
 {
   // Check if the DSE must be start at this address
   if (PyTritonOptions::startAnalysisFromAddr.find(irb->getAddress()) != PyTritonOptions::startAnalysisFromAddr.end())
@@ -33,6 +35,24 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
   // Check if the DSE must be stop at this address
   if (PyTritonOptions::stopAnalysisFromAddr.find(irb->getAddress()) != PyTritonOptions::stopAnalysisFromAddr.end())
     analysisTrigger.update(false);
+
+  // Check if there is registers tainted via the python bindings
+  std::list<uint64_t> regsTainted = PyTritonOptions::taintRegFromAddr[irb->getAddress()];
+  std::list<uint64_t>::iterator it1 = regsTainted.begin();
+  for ( ; it1 != regsTainted.end(); it1++)
+    ap.taintReg(*it1);
+
+  // Check if there is registers untainted via the python bindings
+  std::list<uint64_t> regsUntainted = PyTritonOptions::untaintRegFromAddr[irb->getAddress()];
+  std::list<uint64_t>::iterator it2 = regsUntainted.begin();
+  for ( ; it2 != regsUntainted.end(); it2++)
+    ap.untaintReg(*it2);
+}
+
+
+VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
+{
+  applyPyConf(irb, ctx, threadId);
 
   if (!analysisTrigger.getState())
   // Analysis locked
