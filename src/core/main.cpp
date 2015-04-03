@@ -26,7 +26,7 @@ Trigger             analysisTrigger = Trigger();
 
 
 
-void applyPyConf(IRBuilder *irb, CONTEXT *ctx, THREADID threadId)
+void applyPyConfBefore(IRBuilder *irb, CONTEXT *ctx, THREADID threadId)
 {
   // Check if the DSE must be start at this address
   if (PyTritonOptions::startAnalysisFromAddr.find(irb->getAddress()) != PyTritonOptions::startAnalysisFromAddr.end())
@@ -50,9 +50,15 @@ void applyPyConf(IRBuilder *irb, CONTEXT *ctx, THREADID threadId)
 }
 
 
+void applyPyConfAfter(IRBuilder *irb, CONTEXT *ctx, THREADID threadId)
+{
+}
+
+
 VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
 {
-  applyPyConf(irb, ctx, threadId);
+  /* Some configurations must be applied before processing */
+  applyPyConfBefore(irb, ctx, threadId);
 
   if (!analysisTrigger.getState())
   // Analysis locked
@@ -62,6 +68,9 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
 
   if (hasEA)
     irb->setup(ea);
+
+  /* Some configurations must be applied after processing */
+  applyPyConfAfter(irb, ctx, threadId);
 
   trace.addInstruction(irb->process(ctxH, ap));
 }
