@@ -11,7 +11,7 @@
 #include "IRBuilderFactory.h"
 #include "Inst.h"
 #include "PINContextHandler.h"
-#include "PythonBindings.h"
+#include "ProcessingPyConf.h"
 #include "Trace.h"
 #include "Trigger.h"
 
@@ -22,66 +22,14 @@ KNOB<std::string>   KnobPythonModule(KNOB_MODE_WRITEONCE, "pintool", "script", "
 AnalysisProcessor   ap;
 Trace               trace;
 Trigger             analysisTrigger = Trigger();
+ProcessingPyConf    processingPyConf(&ap, &analysisTrigger);
 
-
-
-
-void applyPyConfBefore(IRBuilder *irb, CONTEXT *ctx, THREADID threadId)
-{
-  // Check if the DSE must be start at this address
-  if (PyTritonOptions::startAnalysisFromAddr.find(irb->getAddress()) != PyTritonOptions::startAnalysisFromAddr.end())
-    analysisTrigger.update(true);
-
-  // Check if the DSE must be stop at this address
-  if (PyTritonOptions::stopAnalysisFromAddr.find(irb->getAddress()) != PyTritonOptions::stopAnalysisFromAddr.end())
-    analysisTrigger.update(false);
-
-  // Check if there is registers tainted via the python bindings
-  std::list<uint64_t> regsTainted = PyTritonOptions::taintRegFromAddr[irb->getAddress()];
-  std::list<uint64_t>::iterator it1 = regsTainted.begin();
-  for ( ; it1 != regsTainted.end(); it1++)
-    ap.taintReg(*it1);
-
-  // Check if there is registers untainted via the python bindings
-  std::list<uint64_t> regsUntainted = PyTritonOptions::untaintRegFromAddr[irb->getAddress()];
-  std::list<uint64_t>::iterator it2 = regsUntainted.begin();
-  for ( ; it2 != regsUntainted.end(); it2++)
-    ap.untaintReg(*it2);
-
-  // Check if there is a callback wich must be called at each instruction instrumented
-  if (analysisTrigger.getState() && PyTritonOptions::callbackBefore){
-    PyObject *args = PyTuple_New(2);
-    PyTuple_SetItem(args, 0, PyInt_FromLong(irb->getAddress())); // TODO: Find a way to convert irb to python module
-    PyTuple_SetItem(args, 1, PyInt_FromLong(threadId));
-    if (PyObject_CallObject(PyTritonOptions::callbackBefore, args) == NULL){
-      PyErr_Print();
-      exit(1);
-    }
-    Py_DECREF(args); /* Free the allocated tuple */
-  }
-}
-
-
-void applyPyConfAfter(IRBuilder *irb, CONTEXT *ctx, THREADID threadId)
-{
-  // Check if there is a callback wich must be called at each instruction instrumented
-  if (analysisTrigger.getState() && PyTritonOptions::callbackAfter){
-    PyObject *args = PyTuple_New(2);
-    PyTuple_SetItem(args, 0, PyInt_FromLong(irb->getAddress())); // TODO: Find a way to convert irb to python module
-    PyTuple_SetItem(args, 1, PyInt_FromLong(threadId));
-    if (PyObject_CallObject(PyTritonOptions::callbackAfter, args) == NULL){
-      PyErr_Print();
-      exit(1);
-    }
-    Py_DECREF(args); /* Free the allocated tuple */
-  }
-}
 
 
 VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
 {
   /* Some configurations must be applied before processing */
-  applyPyConfBefore(irb, ctx, threadId);
+  processingPyConf.applyConfBefore(irb, ctx, threadId);
 
   if (!analysisTrigger.getState())
   // Analysis locked
@@ -95,7 +43,7 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
   trace.addInstruction(irb->process(ctxH, ap));
 
   /* Some configurations must be applied after processing */
-  applyPyConfAfter(irb, ctx, threadId);
+  processingPyConf.applyConfAfter(irb, ctx, threadId);
 }
 
 
