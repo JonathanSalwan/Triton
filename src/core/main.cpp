@@ -152,7 +152,10 @@ int main(int argc, char *argv[])
   PIN_AddFiniFunction(Fini, NULL);
 
   // Exec the python bindings file
-  execBindings(KnobPythonModule.Value().c_str());
+  if (!execBindings(KnobPythonModule.Value().c_str())) {
+    fprintf(stderr, "Error: Script file can't be found!\n");
+    exit(1);
+  }
 
   return 0;
 }

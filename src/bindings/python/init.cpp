@@ -12,7 +12,7 @@ PyObject *initBindings(void)
   PyObject *tritonModule = Py_InitModule("triton", pythonCallbacks);
 
   if (tritonModule == NULL) {
-    printf("Failed to initialize Triton bindings\n");
+    fprintf(stderr, "Failed to initialize Triton bindings\n");
     PyErr_Print();
     exit(1);
   }
@@ -71,14 +71,15 @@ PyObject *initBindings(void)
 }
 
 
-void execBindings(const char *fileName)
+bool execBindings(const char *fileName)
 {
   FILE *fd = fopen(fileName, "r");
   if (fd == NULL) {
     perror("fopen");
-    exit(1);
+    return false;
   }
   PyRun_SimpleFile(fd, fileName);
   fclose(fd);
+  return true;
 }
 

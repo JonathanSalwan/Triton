@@ -34,7 +34,9 @@ namespace PyTritonOptions {
 };
 
 PyObject *initBindings(void);
-void execBindings(const char *fileName);
+
+/* Returns false if the script file failed to be executed. */
+bool execBindings(const char *fileName);
 
 #endif     /* !__PYTHONBINDINGS_H__ */
 
