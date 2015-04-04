@@ -6,8 +6,9 @@
 
 #include "pin.H"
 
+#define CB_BEFORE 0
+#define CB_AFTER  1
 
-#include <iostream>
 
 /* NameSapce for all Python Bindings variables */
 namespace PyTritonOptions {
@@ -21,6 +22,10 @@ namespace PyTritonOptions {
   std::set<uint64_t> startAnalysisFromAddr;
   std::set<uint64_t> stopAnalysisFromAddr;
 
+  /* Callback configurations */
+  PyObject *callbackBefore = NULL; // Before the instruction processing
+  PyObject *callbackAfter  = NULL; // After the instruction processing
+
   /* Taint configurations */
   std::map<uint64_t, std::list<uint64_t>> taintRegFromAddr;   // <addr, [reg1, reg2]>
   std::map<uint64_t, std::list<uint64_t>> untaintRegFromAddr; // <addr, [reg1, reg2]>
@@ -29,8 +34,44 @@ namespace PyTritonOptions {
 };
 
 
+static char Triton_addCallback_doc[] = "Add a callback for each instruction instrumented";
+static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
+{
+  PyObject *function;
+  PyObject *flag;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &function, &flag);
+
+  if (!PyCallable_Check(function)){
+    PyErr_Format(PyExc_TypeError, "addCallback(): expected a function callback as first argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  /* Check if the second arg is CB_BEFORE or CB_AFTER */
+  if (!PyLong_Check(flag) && !PyInt_Check(flag)) {
+    PyErr_Format(PyExc_TypeError, "addCallback(): expected an integer as second argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  if (PyLong_AsLong(flag) == CB_BEFORE)
+    PyTritonOptions::callbackBefore = function;
+  else if ((PyLong_AsLong(flag) == CB_AFTER))
+    PyTritonOptions::callbackAfter = function;
+  else {
+    PyErr_Format(PyExc_TypeError, "addCallback(): expected CB_BEFORE or CB_AFTER as second argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  return Py_None;
+}
+
+
 static char Triton_runProgram_doc[] = "Start the Pin instrumentation";
-static PyObject* Triton_runProgram(PyObject* self, PyObject* noarg)
+static PyObject *Triton_runProgram(PyObject *self, PyObject *noarg)
 {
   // Never returns - Rock 'n roll baby \o/
   PIN_StartProgram();
@@ -39,11 +80,11 @@ static PyObject* Triton_runProgram(PyObject* self, PyObject* noarg)
 
 
 static char Triton_startAnalysisFromSymbol_doc[] = "Start the symbolic execution from a specific name point";
-static PyObject* Triton_startAnalysisFromSymbol(PyObject* self, PyObject* name)
+static PyObject *Triton_startAnalysisFromSymbol(PyObject *self, PyObject *name)
 {
 
   if (!PyString_Check(name)){
-    PyErr_Format(PyExc_TypeError, "startAnalysisFromSymbol(): expected a string");
+    PyErr_Format(PyExc_TypeError, "startAnalysisFromSymbol(): expected a string as argument");
     PyErr_Print();
     exit(-1);
   }
@@ -53,11 +94,11 @@ static PyObject* Triton_startAnalysisFromSymbol(PyObject* self, PyObject* name)
 
 
 static char Triton_startAnalysisFromAddr_doc[] = "Start the symbolic execution from a specific address";
-static PyObject* Triton_startAnalysisFromAddr(PyObject* self, PyObject* addr)
+static PyObject *Triton_startAnalysisFromAddr(PyObject *self, PyObject *addr)
 {
 
   if (!PyLong_Check(addr) && !PyInt_Check(addr)){
-    PyErr_Format(PyExc_TypeError, "startAnalysisFromAddr(): expected an address");
+    PyErr_Format(PyExc_TypeError, "startAnalysisFromAddr(): expected an address as argument");
     PyErr_Print();
     exit(-1);
   }
@@ -67,7 +108,7 @@ static PyObject* Triton_startAnalysisFromAddr(PyObject* self, PyObject* addr)
 
 
 static char Triton_stopAnalysisFromAddr_doc[] = "Stop the symbolic execution from a specific address";
-static PyObject* Triton_stopAnalysisFromAddr(PyObject* self, PyObject* addr)
+static PyObject *Triton_stopAnalysisFromAddr(PyObject *self, PyObject *addr)
 {
 
   if (!PyLong_Check(addr) && !PyInt_Check(addr)){
@@ -81,7 +122,7 @@ static PyObject* Triton_stopAnalysisFromAddr(PyObject* self, PyObject* addr)
 
 
 static char Triton_dumpTrace_doc[] = "Dump the trace at the end of the execution";
-static PyObject* Triton_dumpTrace(PyObject* self, PyObject* flag)
+static PyObject *Triton_dumpTrace(PyObject *self, PyObject *flag)
 {
   if (!PyBool_Check(flag)){
     PyErr_Format(PyExc_TypeError, "dumpTrace(): expected a boolean");
@@ -94,7 +135,7 @@ static PyObject* Triton_dumpTrace(PyObject* self, PyObject* flag)
 
 
 static char Triton_dumpStats_doc[] = "Dump statistics at the end of the execution";
-static PyObject* Triton_dumpStats(PyObject* self, PyObject* flag)
+static PyObject *Triton_dumpStats(PyObject *self, PyObject *flag)
 {
   if (!PyBool_Check(flag)){
     PyErr_Format(PyExc_TypeError, "dumpStats(): expected a boolean");
@@ -107,7 +148,7 @@ static PyObject* Triton_dumpStats(PyObject* self, PyObject* flag)
 
 
 static char Triton_taintRegFromAddr_doc[] = "Taint specific registers from an address";
-static PyObject* Triton_taintRegFromAddr(PyObject* self, PyObject* args)
+static PyObject *Triton_taintRegFromAddr(PyObject *self, PyObject *args)
 {
   PyObject *addr;
   PyObject *regs;
@@ -148,7 +189,7 @@ static PyObject* Triton_taintRegFromAddr(PyObject* self, PyObject* args)
 
 
 static char Triton_untaintRegFromAddr_doc[] = "Untaint specific registers from an address";
-static PyObject* Triton_untaintRegFromAddr(PyObject* self, PyObject* args)
+static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
 {
   PyObject *addr;
   PyObject *regs;
@@ -189,6 +230,7 @@ static PyObject* Triton_untaintRegFromAddr(PyObject* self, PyObject* args)
 
 
 PyMethodDef pythonCallbacks[] = {
+  {"addCallback",             Triton_addCallback,             METH_VARARGS, Triton_addCallback_doc},
   {"dumpStats",               Triton_dumpStats,               METH_O,       Triton_dumpStats_doc},
   {"dumpTrace",               Triton_dumpTrace,               METH_O,       Triton_dumpTrace_doc},
   {"runProgram",              Triton_runProgram,              METH_NOARGS,  Triton_runProgram_doc},

@@ -17,6 +17,7 @@ PyObject *initBindings(void)
     exit(1);
   }
 
+  /* Constants register */
   PyModule_AddIntConstant(tritonModule, "ID_RAX",     ID_RAX);
   PyModule_AddIntConstant(tritonModule, "ID_RBX",     ID_RBX);
   PyModule_AddIntConstant(tritonModule, "ID_RCX",     ID_RCX);
@@ -50,6 +51,8 @@ PyObject *initBindings(void)
   PyModule_AddIntConstant(tritonModule, "ID_XMM13",   ID_XMM13);
   PyModule_AddIntConstant(tritonModule, "ID_XMM14",   ID_XMM14);
   PyModule_AddIntConstant(tritonModule, "ID_XMM15",   ID_XMM15);
+
+  /* Constants flag */
   PyModule_AddIntConstant(tritonModule, "ID_AF",      ID_AF);
   PyModule_AddIntConstant(tritonModule, "ID_CF",      ID_CF);
   PyModule_AddIntConstant(tritonModule, "ID_DF",      ID_DF);
@@ -59,6 +62,10 @@ PyObject *initBindings(void)
   PyModule_AddIntConstant(tritonModule, "ID_SF",      ID_SF);
   PyModule_AddIntConstant(tritonModule, "ID_TF",      ID_TF);
   PyModule_AddIntConstant(tritonModule, "ID_ZF",      ID_ZF);
+
+  /* Constants Triton internal */
+  PyModule_AddIntConstant(tritonModule, "CB_BEFORE",  CB_BEFORE);
+  PyModule_AddIntConstant(tritonModule, "CB_AFTER",   CB_AFTER);
 
   return tritonModule;
 }
