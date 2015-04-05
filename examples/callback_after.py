@@ -121,8 +121,8 @@ from triton import *
 
 # A callback must be a function with one argument. This argument is always a dict and contains all information
 def my_callback_after(instruction):
-    print '%#x: %s' %(instruction['address'], instruction['assembly'])
-    for expr in instruction['expressions']:
+    print '%#x: %s' %(instruction.address, instruction.assembly)
+    for expr in instruction.expressions:
         print '\t -> ', expr
     print
 
