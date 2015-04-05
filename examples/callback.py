@@ -2,12 +2,8 @@
 from triton import *
 
 
-def my_callback_before(addr, threadId):
-    print 'Before addr: %x | thread: %x' %(addr, threadId)
-
-
-def my_callback_after(addr, threadId):
-    print 'After addr: %x | thread: %x' %(addr, threadId)
+def my_callback_before(instruction):
+    print 'TID (%d) %#x %s' %(instruction['threadId'], instruction['address'], instruction['assembly'])
 
 
 if __name__ == '__main__':
@@ -17,7 +13,6 @@ if __name__ == '__main__':
 
     # Add a callback
     addCallback(my_callback_before, CB_BEFORE)
-    addCallback(my_callback_after, CB_AFTER)
 
     # Run the instrumentation - Never returns
     runProgram()

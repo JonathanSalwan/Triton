@@ -54,13 +54,23 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, THREADID threadId)
 {
   // Check if there is a callback wich must be called at each instruction instrumented
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackBefore){
-    PyObject *args = PyTuple_New(2);
-    PyTuple_SetItem(args, 0, PyInt_FromLong(irb->getAddress())); // TODO: Find a way to convert irb to python module
-    PyTuple_SetItem(args, 1, PyInt_FromLong(threadId));
+
+    /* Create a dictionary */
+    PyObject *dict = PyDict_New();
+    PyDict_SetItemString(dict, "address", PyInt_FromLong(irb->getAddress()));
+    PyDict_SetItemString(dict, "threadId", PyInt_FromLong(threadId));
+    PyDict_SetItemString(dict, "assembly", PyString_FromFormat("%s", irb->getDisassembly().c_str()));
+
+    /* CallObject needs a tuple. The size of the tuple is the number of arguments.
+     * Triton sends only one argument to the callback. This argument is the previous
+     * dictionary and contains all information. */
+    PyObject *args = PyTuple_New(1);
+    PyTuple_SetItem(args, 0, dict);
     if (PyObject_CallObject(PyTritonOptions::callbackBefore, args) == NULL){
       PyErr_Print();
       exit(1);
     }
+    Py_DECREF(dict); /* Free the allocated dictionary */
     Py_DECREF(args); /* Free the allocated tuple */
   }
 }
@@ -70,13 +80,23 @@ void ProcessingPyConf::callbackAfter(IRBuilder *irb, THREADID threadId)
 {
   // Check if there is a callback wich must be called at each instruction instrumented
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackAfter){
-    PyObject *args = PyTuple_New(2);
-    PyTuple_SetItem(args, 0, PyInt_FromLong(irb->getAddress())); // TODO: Find a way to convert irb to python module
-    PyTuple_SetItem(args, 1, PyInt_FromLong(threadId));
+
+    /* Create a dictionary */
+    PyObject *dict = PyDict_New();
+    PyDict_SetItemString(dict, "address", PyInt_FromLong(irb->getAddress()));
+    PyDict_SetItemString(dict, "threadId", PyInt_FromLong(threadId));
+    PyDict_SetItemString(dict, "assembly", PyString_FromFormat("%s", irb->getDisassembly().c_str()));
+
+    /* CallObject needs a tuple. The size of the tuple is the number of arguments.
+     * Triton sends only one argument to the callback. This argument is the previous
+     * dictionary and contains all information. */
+    PyObject *args = PyTuple_New(1);
+    PyTuple_SetItem(args, 0, dict);
     if (PyObject_CallObject(PyTritonOptions::callbackAfter, args) == NULL){
       PyErr_Print();
       exit(1);
     }
+    Py_DECREF(dict); /* Free the allocated dictionary */
     Py_DECREF(args); /* Free the allocated tuple */
   }
 }
