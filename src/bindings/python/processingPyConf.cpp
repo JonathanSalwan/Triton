@@ -33,6 +33,10 @@ void ProcessingPyConf::stopAnalysisFromAddr(IRBuilder *irb)
 
 void ProcessingPyConf::taintRegFromAddr(IRBuilder *irb)
 {
+  // Apply this bindings only if the analysis is enable
+  if (!this->analysisTrigger->getState())
+    return;
+
   // Check if there is registers tainted via the python bindings
   std::list<uint64_t> regsTainted = PyTritonOptions::taintRegFromAddr[irb->getAddress()];
   std::list<uint64_t>::iterator it = regsTainted.begin();
@@ -43,6 +47,10 @@ void ProcessingPyConf::taintRegFromAddr(IRBuilder *irb)
 
 void ProcessingPyConf::untaintRegFromAddr(IRBuilder *irb)
 {
+  // Apply this bindings only if the analysis is enable
+  if (!this->analysisTrigger->getState())
+    return;
+
   // Check if there is registers untainted via the python bindings
   std::list<uint64_t> regsUntainted = PyTritonOptions::untaintRegFromAddr[irb->getAddress()];
   std::list<uint64_t>::iterator it = regsUntainted.begin();
@@ -51,7 +59,7 @@ void ProcessingPyConf::untaintRegFromAddr(IRBuilder *irb)
 }
 
 
-void ProcessingPyConf::callbackBefore(IRBuilder *irb, THREADID threadId)
+void ProcessingPyConf::callbackBefore(IRBuilder *irb, THREADID threadId, const ContextHandler &ctxH)
 {
   // Check if there is a callback wich must be called at each instruction instrumented
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackBefore){
@@ -81,7 +89,7 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, THREADID threadId)
 }
 
 
-void ProcessingPyConf::callbackAfter(Inst *inst)
+void ProcessingPyConf::callbackAfter(Inst *inst, const ContextHandler &ctxH)
 {
   // Check if there is a callback wich must be called at each instruction instrumented
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackAfter){
@@ -121,19 +129,11 @@ void ProcessingPyConf::callbackAfter(Inst *inst)
 }
 
 
-void ProcessingPyConf::applyConfBefore(IRBuilder *irb, CONTEXT *ctx, THREADID threadId)
+void ProcessingPyConf::applyConfBeforeProcessing(IRBuilder *irb, CONTEXT *ctx, THREADID threadId)
 {
   this->startAnalysisFromAddr(irb);
   this->stopAnalysisFromAddr(irb);
   this->taintRegFromAddr(irb);
   this->untaintRegFromAddr(irb);
-  this->callbackBefore(irb, threadId);
 }
-
-
-void ProcessingPyConf::applyConfAfter(Inst *inst, CONTEXT *ctx)
-{
-  this->callbackAfter(inst);
-}
-
 

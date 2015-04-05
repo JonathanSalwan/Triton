@@ -29,7 +29,7 @@ ProcessingPyConf    processingPyConf(&ap, &analysisTrigger);
 VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
 {
   /* Some configurations must be applied before processing */
-  processingPyConf.applyConfBefore(irb, ctx, threadId);
+  processingPyConf.applyConfBeforeProcessing(irb, ctx, threadId);
 
   if (!analysisTrigger.getState())
   // Analysis locked
@@ -40,11 +40,14 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
   if (hasEA)
     irb->setup(ea);
 
+  /* Python callback before instruction processing */
+  processingPyConf.callbackBefore(irb, threadId, ctxH);
+
   Inst *inst = irb->process(ctxH, ap);
   trace.addInstruction(inst);
 
-  /* Some configurations must be applied after processing */
-  processingPyConf.applyConfAfter(inst, ctx);
+  /* Python callback after instruction processing */
+  processingPyConf.callbackAfter(inst, ctxH);
 }
 
 
