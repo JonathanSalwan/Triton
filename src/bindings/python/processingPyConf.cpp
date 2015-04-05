@@ -63,7 +63,7 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, THREADID threadId)
     PyDict_SetItemString(dict, "assembly", PyString_FromFormat("%s", irb->getDisassembly().c_str()));
     /* Before the processing, the expression list is empty */
     PyObject *listExpr = PyList_New(0);
-    PyDict_SetItemString(dict, "exprs", listExpr);
+    PyDict_SetItemString(dict, "expressions", listExpr);
 
     /* CallObject needs a tuple. The size of the tuple is the number of arguments.
      * Triton sends only one argument to the callback. This argument is the previous
@@ -92,6 +92,19 @@ void ProcessingPyConf::callbackAfter(Inst *inst)
     PyDict_SetItemString(dict, "threadId", PyInt_FromLong(inst->getThreadId()));
     PyDict_SetItemString(dict, "assembly", PyString_FromFormat("%s", inst->getDisassembly().c_str()));
 
+    /* Setup the expression list */
+    PyObject *listExpr                       = PyList_New(inst->numberOfElements());
+    std::list<SymbolicElement*> elements     = inst->getSymbolicElements();
+    std::list<SymbolicElement*>::iterator it = elements.begin();
+    
+    uint64_t index = 0;
+    for ( ; it != elements.end(); it++){
+      PyList_SetItem(listExpr, index, PyString_FromFormat("%s", (*it)->getExpression()->str().c_str()));
+      index++;
+    }
+
+    PyDict_SetItemString(dict, "expressions", listExpr);
+
     /* CallObject needs a tuple. The size of the tuple is the number of arguments.
      * Triton sends only one argument to the callback. This argument is the previous
      * dictionary and contains all information. */
@@ -101,6 +114,7 @@ void ProcessingPyConf::callbackAfter(Inst *inst)
       PyErr_Print();
       exit(1);
     }
+    Py_DECREF(listExpr); /* Free the allocated expressions list */
     Py_DECREF(dict); /* Free the allocated dictionary */
     Py_DECREF(args); /* Free the allocated tuple */
   }
