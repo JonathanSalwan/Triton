@@ -2,6 +2,7 @@
 #include "ProcessingPyConf.h"
 
 
+
 ProcessingPyConf::ProcessingPyConf(AnalysisProcessor *ap, Trigger *analysisTrigger)
 {
   this->ap = ap;
@@ -60,6 +61,9 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, THREADID threadId)
     PyDict_SetItemString(dict, "address", PyInt_FromLong(irb->getAddress()));
     PyDict_SetItemString(dict, "threadId", PyInt_FromLong(threadId));
     PyDict_SetItemString(dict, "assembly", PyString_FromFormat("%s", irb->getDisassembly().c_str()));
+    /* Before the processing, the expression list is empty */
+    PyObject *listExpr = PyList_New(0);
+    PyDict_SetItemString(dict, "exprs", listExpr);
 
     /* CallObject needs a tuple. The size of the tuple is the number of arguments.
      * Triton sends only one argument to the callback. This argument is the previous
@@ -70,22 +74,23 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, THREADID threadId)
       PyErr_Print();
       exit(1);
     }
+    Py_DECREF(listExpr); /* Free the allocated expressions list */
     Py_DECREF(dict); /* Free the allocated dictionary */
     Py_DECREF(args); /* Free the allocated tuple */
   }
 }
 
 
-void ProcessingPyConf::callbackAfter(IRBuilder *irb, THREADID threadId)
+void ProcessingPyConf::callbackAfter(Inst *inst)
 {
   // Check if there is a callback wich must be called at each instruction instrumented
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackAfter){
 
     /* Create a dictionary */
     PyObject *dict = PyDict_New();
-    PyDict_SetItemString(dict, "address", PyInt_FromLong(irb->getAddress()));
-    PyDict_SetItemString(dict, "threadId", PyInt_FromLong(threadId));
-    PyDict_SetItemString(dict, "assembly", PyString_FromFormat("%s", irb->getDisassembly().c_str()));
+    PyDict_SetItemString(dict, "address", PyInt_FromLong(inst->getAddress()));
+    PyDict_SetItemString(dict, "threadId", PyInt_FromLong(inst->getThreadId()));
+    PyDict_SetItemString(dict, "assembly", PyString_FromFormat("%s", inst->getDisassembly().c_str()));
 
     /* CallObject needs a tuple. The size of the tuple is the number of arguments.
      * Triton sends only one argument to the callback. This argument is the previous
@@ -112,9 +117,9 @@ void ProcessingPyConf::applyConfBefore(IRBuilder *irb, CONTEXT *ctx, THREADID th
 }
 
 
-void ProcessingPyConf::applyConfAfter(IRBuilder *irb, CONTEXT *ctx, THREADID threadId)
+void ProcessingPyConf::applyConfAfter(Inst *inst, CONTEXT *ctx)
 {
-  this->callbackAfter(irb, threadId);
+  this->callbackAfter(inst);
 }
 
 

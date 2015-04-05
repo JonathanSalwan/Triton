@@ -40,10 +40,11 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
   if (hasEA)
     irb->setup(ea);
 
-  trace.addInstruction(irb->process(ctxH, ap));
+  Inst *inst = irb->process(ctxH, ap);
+  trace.addInstruction(inst);
 
   /* Some configurations must be applied after processing */
-  processingPyConf.applyConfAfter(irb, ctx, threadId);
+  processingPyConf.applyConfAfter(inst, ctx);
 }
 
 
