@@ -22,7 +22,7 @@ class ProcessingPyConf
     void applyConfBeforeProcessing(IRBuilder *irb, CONTEXT *ctx, THREADID threadId);
 
     void callbackAfter(Inst *inst, const ContextHandler &ctxH);
-    void callbackBefore(IRBuilder *irb, THREADID threadId, const ContextHandler &ctxH);
+    void callbackBefore(IRBuilder *irb, const ContextHandler &ctxH);
 
     void startAnalysisFromAddr(IRBuilder *irb);
     void stopAnalysisFromAddr(IRBuilder *irb);

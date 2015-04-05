@@ -59,7 +59,7 @@ void ProcessingPyConf::untaintRegFromAddr(IRBuilder *irb)
 }
 
 
-void ProcessingPyConf::callbackBefore(IRBuilder *irb, THREADID threadId, const ContextHandler &ctxH)
+void ProcessingPyConf::callbackBefore(IRBuilder *irb, const ContextHandler &ctxH)
 {
   // Check if there is a callback wich must be called at each instruction instrumented
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackBefore){
@@ -67,7 +67,7 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, THREADID threadId, const C
     /* Create a dictionary */
     PyObject *dict = PyDict_New();
     PyDict_SetItemString(dict, "address", PyInt_FromLong(irb->getAddress()));
-    PyDict_SetItemString(dict, "threadId", PyInt_FromLong(threadId));
+    PyDict_SetItemString(dict, "threadId", PyInt_FromLong(ctxH.getThreadId()));
     PyDict_SetItemString(dict, "assembly", PyString_FromFormat("%s", irb->getDisassembly().c_str()));
     /* Before the processing, the expression list is empty */
     PyObject *listExpr = PyList_New(0);

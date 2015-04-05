@@ -41,7 +41,7 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
     irb->setup(ea);
 
   /* Python callback before instruction processing */
-  processingPyConf.callbackBefore(irb, threadId, ctxH);
+  processingPyConf.callbackBefore(irb, ctxH);
 
   Inst *inst = irb->process(ctxH, ap);
   trace.addInstruction(inst);
