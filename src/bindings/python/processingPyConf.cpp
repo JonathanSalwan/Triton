@@ -192,10 +192,11 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, const ContextHandler &ctxH
       exit(1);
     }
 
-    Py_DECREF(SEList);        /* Free the allocated symbolic element list */
-    Py_DECREF(dictInstClass); /* Free the allocated dictionary */
-    Py_DECREF(instClassName); /* Free the allocated Inst class name */
-    Py_DECREF(args);          /* Free the allocated tuple */
+    PyDict_Clear(dictInstClass);  /* Clear all items in the dictionary */
+    Py_DECREF(SEList);            /* Free the allocated symbolic element list */
+    Py_DECREF(dictInstClass);     /* Free the allocated dictionary */
+    Py_DECREF(instClassName);     /* Free the allocated Inst class name */
+    Py_DECREF(args);              /* Free the allocated tuple */
   }
 }
 
