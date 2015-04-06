@@ -7,9 +7,10 @@
 #include "ContextHandler.h"
 #include "Inst.h"
 #include "IRBuilder.h"
+#include "OperandTemplate.h"
 
 
-class TwoOperandsTemplate {
+class TwoOperandsTemplate: public OperandTemplate {
   public:
     virtual ~TwoOperandsTemplate() { }
 

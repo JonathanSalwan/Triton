@@ -7,9 +7,10 @@
 #include "ContextHandler.h"
 #include "Inst.h"
 #include "IRBuilder.h"
+#include "OperandTemplate.h"
 
 
-class NoneOperandTemplate {
+class NoneOperandTemplate: public OperandTemplate {
   public:
     virtual ~NoneOperandTemplate() { }
 

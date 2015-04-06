@@ -55,6 +55,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/SubIRBuilder.cpp \
 		./src/ir/builders/XorIRBuilder.cpp \
 		./src/ir/templates/NoneOperandTemplate.cpp \
+		./src/ir/templates/OperandTemplate.cpp \
 		./src/ir/templates/OneOperandTemplate.cpp \
 		./src/ir/templates/TwoOperandsTemplate.cpp \
 		./src/solverEngine/smt2lib.cpp \
