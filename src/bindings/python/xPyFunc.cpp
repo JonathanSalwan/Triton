@@ -47,9 +47,9 @@ PyObject *xPyString_FromString(const char *v)
 }
 
 
-PyObject *xPyClass_New(PyObject *h, PyObject *d, PyObject *n)
+PyObject *xPyClass_New(PyObject *b, PyObject *d, PyObject *n)
 {
-  PyObject *c = PyClass_New(h, d, n);
+  PyObject *c = PyClass_New(b, d, n);
   if (!c)
     notEnoughMemory();
   return c;

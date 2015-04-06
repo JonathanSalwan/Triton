@@ -23,6 +23,7 @@ class SymbolicElement {
     std::string         getID2Str(void);
     std::stringstream   *getExpression(void);
     std::stringstream   *getSource(void);
+    std::stringstream   *getDestination(void);
     uint64_t            getID(void);
     void                setSrcExpr(std::stringstream &src);
 

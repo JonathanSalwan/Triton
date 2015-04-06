@@ -225,6 +225,7 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
 
   /* Update taint configuration */
   PyTritonOptions::untaintRegFromAddr.insert(std::pair<uint64_t, std::list<uint64_t>>(PyLong_AsLong(addr), regsList));
+
   return Py_None;
 }
 

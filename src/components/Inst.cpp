@@ -35,20 +35,20 @@ uint64_t Inst::getThreadId(void)
 /* Adds a new symbolic element */
 void Inst::addElement(SymbolicElement *se)
 {
-  this->elements.push_back(se);
+  this->symbolicElements.push_back(se);
 }
 
 
 /* Returns the elements list */
 const std::list<SymbolicElement*> &Inst::getSymbolicElements(void)
 {
-  return this->elements;
+  return this->symbolicElements;
 }
 
 
 /* Returns the number of elements */
 size_t Inst::numberOfElements(void)
 {
-  return this->elements.size();
+  return this->symbolicElements.size();
 }
 

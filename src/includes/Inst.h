@@ -13,7 +13,7 @@ class Inst {
     uint64_t                          threadId;
     uint64_t                          address;
     std::string                       disassembly;
-    std::list<SymbolicElement*>       elements;
+    std::list<SymbolicElement*>       symbolicElements;
 
   public:
     const std::list<SymbolicElement*> &getSymbolicElements(void);

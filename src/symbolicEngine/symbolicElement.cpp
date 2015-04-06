@@ -37,6 +37,13 @@ std::stringstream *SymbolicElement::getSource(void)
 }
 
 
+/* Returns the SMT dst expression of the symbolic element */
+std::stringstream *SymbolicElement::getDestination(void)
+{
+  return this->destination;
+}
+
+
 /* Returns the ID of the symbolic element */
 uint64_t SymbolicElement::getID(void)
 {
