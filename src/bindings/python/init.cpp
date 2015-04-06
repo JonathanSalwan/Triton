@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include <python2.7/Python.h>
 
 #include "PythonBindings.h"
@@ -12,7 +13,7 @@ PyObject *initBindings(void)
   PyObject *tritonModule = Py_InitModule("triton", pythonCallbacks);
 
   if (tritonModule == NULL) {
-    fprintf(stderr, "Failed to initialize Triton bindings\n");
+    std::cerr << "Failed to initialize Triton bindings" << std::endl;
     PyErr_Print();
     exit(1);
   }

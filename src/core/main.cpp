@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
 
   // Exec the python bindings file
   if (!execBindings(KnobPythonModule.Value().c_str())) {
-    fprintf(stderr, "Error: Script file can't be found!\n");
+    std::cerr << "Error: Script file can't be found!" << std::endl;
     exit(1);
   }
 
