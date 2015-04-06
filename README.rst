@@ -6,3 +6,5 @@ Based on these components, Triton provides runtime behavior analysis, concolic e
 for vulnerabilities research and/or can provide some reverse engineering assistance.
 
 All information and examples about **Triton** are published on the wiki: https://github.com/JonathanSalwan/Triton/wiki
+
+**As Triton is a young project, please, don't blame us if is not yet reliable. `Pull requests <https://github.com/JonathanSalwan/Triton/issues>`_ is better than troll :)**
