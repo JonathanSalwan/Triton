@@ -5,8 +5,8 @@ instruction into SMT2-LIB representation, a Z3 interface to solve constraints an
 Based on these components, Triton provides runtime behavior analysis, concolic execution 
 for vulnerabilities research and/or can provide some reverse engineering assistance.
 
-All information and examples about **Triton** are published on the wiki: https://github.com/JonathanSalwan/Triton/wiki
+All information and examples about **Triton** are published on the `wiki <https://github.com/JonathanSalwan/Triton/wiki>`_.
 
-As Triton is a young project, please, **don't blame us** if it is not yet reliable. `Pull requests <https://github.com/JonathanSalwan/Triton/issues>`_ 
+As Triton is a young project, please, **don't blame us** if it is not yet reliable. `Pull requests <https://github.com/JonathanSalwan/Triton/issues>`__
 are always better than troll =).
 
