@@ -1,5 +1,6 @@
 
 #include "ProcessingPyConf.h"
+#include "xPyFunc.h"
 
 
 
@@ -65,22 +66,22 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, const ContextHandler &ctxH
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackBefore){
 
     /* Create a dictionary */
-    PyObject *dictInstClass = PyDict_New();
+    PyObject *dictInstClass = xPyDict_New();
     PyDict_SetItemString(dictInstClass, "address", PyInt_FromLong(irb->getAddress()));
     PyDict_SetItemString(dictInstClass, "threadId", PyInt_FromLong(ctxH.getThreadId()));
     PyDict_SetItemString(dictInstClass, "assembly", PyString_FromFormat("%s", irb->getDisassembly().c_str()));
     /* Before the processing, the expression list is empty */
-    PyObject *listExpr = PyList_New(0);
+    PyObject *listExpr = xPyList_New(0);
     PyDict_SetItemString(dictInstClass, "expressions", listExpr);
 
     /* Create the Instruction class */
-    PyObject *instClassName = PyString_FromString("Instruction");
-    PyObject *instClass  = PyClass_New(NULL, dictInstClass, instClassName);
+    PyObject *instClassName = xPyString_FromString("Instruction");
+    PyObject *instClass  = xPyClass_New(NULL, dictInstClass, instClassName);
 
     /* CallObject needs a tuple. The size of the tuple is the number of arguments.
      * Triton sends only one argument to the callback. This argument is the Instruction
      * class and contains all information. */
-    PyObject *args = PyTuple_New(1);
+    PyObject *args = xPyTuple_New(1);
     PyTuple_SetItem(args, 0, instClass);
     if (PyObject_CallObject(PyTritonOptions::callbackBefore, args) == NULL){
       PyErr_Print();
@@ -102,13 +103,13 @@ void ProcessingPyConf::callbackAfter(Inst *inst, const ContextHandler &ctxH)
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackAfter){
 
     /* Create a dictionary */
-    PyObject *dictInstClass = PyDict_New();
+    PyObject *dictInstClass = xPyDict_New();
     PyDict_SetItemString(dictInstClass, "address", PyInt_FromLong(inst->getAddress()));
     PyDict_SetItemString(dictInstClass, "threadId", PyInt_FromLong(inst->getThreadId()));
     PyDict_SetItemString(dictInstClass, "assembly", PyString_FromFormat("%s", inst->getDisassembly().c_str()));
 
     /* Setup the expression list */
-    PyObject *listExpr                       = PyList_New(inst->numberOfElements());
+    PyObject *listExpr                       = xPyList_New(inst->numberOfElements());
     std::list<SymbolicElement*> elements     = inst->getSymbolicElements();
     std::list<SymbolicElement*>::iterator it = elements.begin();
     
@@ -121,13 +122,13 @@ void ProcessingPyConf::callbackAfter(Inst *inst, const ContextHandler &ctxH)
     PyDict_SetItemString(dictInstClass, "expressions", listExpr);
 
     /* Create the Instruction class */
-    PyObject *instClassName = PyString_FromString("Instruction");
-    PyObject *instClass  = PyClass_New(NULL, dictInstClass, instClassName);
+    PyObject *instClassName = xPyString_FromString("Instruction");
+    PyObject *instClass  = xPyClass_New(NULL, dictInstClass, instClassName);
 
     /* CallObject needs a tuple. The size of the tuple is the number of arguments.
      * Triton sends only one argument to the callback. This argument is the Instruction
      * class and contains all information. */
-    PyObject *args = PyTuple_New(1);
+    PyObject *args = xPyTuple_New(1);
     PyTuple_SetItem(args, 0, instClass);
     if (PyObject_CallObject(PyTritonOptions::callbackAfter, args) == NULL){
       PyErr_Print();
