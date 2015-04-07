@@ -4,7 +4,15 @@
 
 #include "PythonBindings.h"
 #include "Registers.h"
+#include "xPyFunc.h"
 
+
+/*
+ * Triton: [IDREF, callback, CB_AFTER, CB_BEFORE]
+ * IDREF: [REG, FLAG]
+ * REG: [RAX, RBX, XMM0, ...]
+ * FLAG: [AF, OF, ZF, ...]
+ */
 
 PyObject *initBindings(void)
 {
@@ -18,51 +26,78 @@ PyObject *initBindings(void)
     exit(1);
   }
 
-  /* Constants register */
-  PyModule_AddIntConstant(tritonModule, "ID_RAX",     ID_RAX);
-  PyModule_AddIntConstant(tritonModule, "ID_RBX",     ID_RBX);
-  PyModule_AddIntConstant(tritonModule, "ID_RCX",     ID_RCX);
-  PyModule_AddIntConstant(tritonModule, "ID_RDX",     ID_RDX);
-  PyModule_AddIntConstant(tritonModule, "ID_RDI",     ID_RDI);
-  PyModule_AddIntConstant(tritonModule, "ID_RSI",     ID_RSI);
-  PyModule_AddIntConstant(tritonModule, "ID_RBP",     ID_RBP);
-  PyModule_AddIntConstant(tritonModule, "ID_RSP",     ID_RSP);
-  PyModule_AddIntConstant(tritonModule, "ID_RIP",     ID_RIP);
-  PyModule_AddIntConstant(tritonModule, "ID_R8",      ID_R8);
-  PyModule_AddIntConstant(tritonModule, "ID_R9",      ID_R9);
-  PyModule_AddIntConstant(tritonModule, "ID_R10",     ID_R10);
-  PyModule_AddIntConstant(tritonModule, "ID_R11",     ID_R11);
-  PyModule_AddIntConstant(tritonModule, "ID_R12",     ID_R12);
-  PyModule_AddIntConstant(tritonModule, "ID_R13",     ID_R13);
-  PyModule_AddIntConstant(tritonModule, "ID_R14",     ID_R14);
-  PyModule_AddIntConstant(tritonModule, "ID_R15",     ID_R15);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM0",    ID_XMM0);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM1",    ID_XMM1);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM2",    ID_XMM2);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM3",    ID_XMM3);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM4",    ID_XMM4);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM5",    ID_XMM5);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM6",    ID_XMM6);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM7",    ID_XMM7);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM8",    ID_XMM8);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM9",    ID_XMM9);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM10",   ID_XMM10);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM11",   ID_XMM11);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM12",   ID_XMM12);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM13",   ID_XMM13);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM14",   ID_XMM14);
-  PyModule_AddIntConstant(tritonModule, "ID_XMM15",   ID_XMM15);
+  /* Create the IDREF class */
+  PyObject *idRefClassName = xPyString_FromString("IDREF");
+  PyObject *idRefClassDict = xPyDict_New();
 
-  /* Constants flag */
-  PyModule_AddIntConstant(tritonModule, "ID_AF",      ID_AF);
-  PyModule_AddIntConstant(tritonModule, "ID_CF",      ID_CF);
-  PyModule_AddIntConstant(tritonModule, "ID_DF",      ID_DF);
-  PyModule_AddIntConstant(tritonModule, "ID_IF",      ID_IF);
-  PyModule_AddIntConstant(tritonModule, "ID_OF",      ID_OF);
-  PyModule_AddIntConstant(tritonModule, "ID_PF",      ID_PF);
-  PyModule_AddIntConstant(tritonModule, "ID_SF",      ID_SF);
-  PyModule_AddIntConstant(tritonModule, "ID_TF",      ID_TF);
-  PyModule_AddIntConstant(tritonModule, "ID_ZF",      ID_ZF);
+  /* Create the IDREF.REG class */
+  PyObject *idRegClassName = xPyString_FromString("REG");
+  PyObject *idRegClassDict = xPyDict_New();
+
+  /* Add registers ref into IDREF.REG class */
+  PyDict_SetItemString(idRegClassDict, "RAX", PyInt_FromLong(ID_RAX));
+  PyDict_SetItemString(idRegClassDict, "RBX", PyInt_FromLong(ID_RBX));
+  PyDict_SetItemString(idRegClassDict, "RCX", PyInt_FromLong(ID_RCX));
+  PyDict_SetItemString(idRegClassDict, "RDX", PyInt_FromLong(ID_RDX));
+  PyDict_SetItemString(idRegClassDict, "RDI", PyInt_FromLong(ID_RDI));
+  PyDict_SetItemString(idRegClassDict, "RSI", PyInt_FromLong(ID_RSI));
+  PyDict_SetItemString(idRegClassDict, "RBP", PyInt_FromLong(ID_RBP));
+  PyDict_SetItemString(idRegClassDict, "RSP", PyInt_FromLong(ID_RSP));
+  PyDict_SetItemString(idRegClassDict, "RIP", PyInt_FromLong(ID_RIP));
+  PyDict_SetItemString(idRegClassDict, "R8", PyInt_FromLong(ID_R8));
+  PyDict_SetItemString(idRegClassDict, "R9", PyInt_FromLong(ID_R9));
+  PyDict_SetItemString(idRegClassDict, "R10", PyInt_FromLong(ID_R10));
+  PyDict_SetItemString(idRegClassDict, "R11", PyInt_FromLong(ID_R11));
+  PyDict_SetItemString(idRegClassDict, "R12", PyInt_FromLong(ID_R12));
+  PyDict_SetItemString(idRegClassDict, "R13", PyInt_FromLong(ID_R13));
+  PyDict_SetItemString(idRegClassDict, "R14", PyInt_FromLong(ID_R14));
+  PyDict_SetItemString(idRegClassDict, "R15", PyInt_FromLong(ID_R15));
+  PyDict_SetItemString(idRegClassDict, "XMM0", PyInt_FromLong(ID_XMM0));
+  PyDict_SetItemString(idRegClassDict, "XMM1", PyInt_FromLong(ID_XMM1));
+  PyDict_SetItemString(idRegClassDict, "XMM2", PyInt_FromLong(ID_XMM2));
+  PyDict_SetItemString(idRegClassDict, "XMM3", PyInt_FromLong(ID_XMM3));
+  PyDict_SetItemString(idRegClassDict, "XMM4", PyInt_FromLong(ID_XMM4));
+  PyDict_SetItemString(idRegClassDict, "XMM5", PyInt_FromLong(ID_XMM5));
+  PyDict_SetItemString(idRegClassDict, "XMM6", PyInt_FromLong(ID_XMM6));
+  PyDict_SetItemString(idRegClassDict, "XMM7", PyInt_FromLong(ID_XMM7));
+  PyDict_SetItemString(idRegClassDict, "XMM8", PyInt_FromLong(ID_XMM8));
+  PyDict_SetItemString(idRegClassDict, "XMM9", PyInt_FromLong(ID_XMM9));
+  PyDict_SetItemString(idRegClassDict, "XMM10", PyInt_FromLong(ID_XMM10));
+  PyDict_SetItemString(idRegClassDict, "XMM11", PyInt_FromLong(ID_XMM11));
+  PyDict_SetItemString(idRegClassDict, "XMM12", PyInt_FromLong(ID_XMM12));
+  PyDict_SetItemString(idRegClassDict, "XMM13", PyInt_FromLong(ID_XMM13));
+  PyDict_SetItemString(idRegClassDict, "XMM14", PyInt_FromLong(ID_XMM14));
+  PyDict_SetItemString(idRegClassDict, "XMM15", PyInt_FromLong(ID_XMM15));
+
+  /* Create the REG class */
+  PyObject *idRegClass = xPyClass_New(NULL, idRegClassDict, idRegClassName);
+
+  /* Create the IDREF.FLAG class */
+  PyObject *idFlagClassName = xPyString_FromString("FLAG");
+  PyObject *idFlagClassDict = xPyDict_New();
+
+  PyDict_SetItemString(idFlagClassDict, "AF", PyInt_FromLong(ID_AF));
+  PyDict_SetItemString(idFlagClassDict, "CF", PyInt_FromLong(ID_CF));
+  PyDict_SetItemString(idFlagClassDict, "DF", PyInt_FromLong(ID_DF));
+  PyDict_SetItemString(idFlagClassDict, "IF", PyInt_FromLong(ID_IF));
+  PyDict_SetItemString(idFlagClassDict, "OF", PyInt_FromLong(ID_OF));
+  PyDict_SetItemString(idFlagClassDict, "PF", PyInt_FromLong(ID_PF));
+  PyDict_SetItemString(idFlagClassDict, "SF", PyInt_FromLong(ID_SF));
+  PyDict_SetItemString(idFlagClassDict, "TF", PyInt_FromLong(ID_TF));
+  PyDict_SetItemString(idFlagClassDict, "ZF", PyInt_FromLong(ID_ZF));
+
+  /* Create the FLAG class */
+  PyObject *idFlagClass = xPyClass_New(NULL, idFlagClassDict, idFlagClassName);
+
+  /* Add REG and FLAG into IDREF */
+  PyDict_SetItemString(idRefClassDict, "REG", idRegClass);
+  PyDict_SetItemString(idRefClassDict, "FLAG", idFlagClass);
+
+  /* Create the IDREF class */
+  PyObject *idRefClass = xPyClass_New(NULL, idRefClassDict, idRefClassName);
+
+  /* add IDREF into triton module */
+  PyModule_AddObject(tritonModule, "IDREF", idRefClass);
 
   /* Constants Triton internal */
   PyModule_AddIntConstant(tritonModule, "CB_BEFORE",  CB_BEFORE);
