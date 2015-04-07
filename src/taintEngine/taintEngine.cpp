@@ -101,7 +101,7 @@ void TaintEngine::operator=(const TaintEngine &other)
 
 
 /* Returns true of false if the memory address is currently tainted */
-bool TaintEngine::isMemoryTainted(uint64_t addr)
+bool TaintEngine::isMemTainted(uint64_t addr)
 {
   std::list<uint64_t>::iterator i;
   for(i = this->taintedAddresses.begin(); i != this->taintedAddresses.end(); i++){
@@ -141,7 +141,7 @@ void TaintEngine::untaintReg(uint64_t regID)
 /* Taint the address */
 void TaintEngine::taintAddress(uint64_t addr)
 {
-  if (!this->isMemoryTainted(addr))
+  if (!this->isMemTainted(addr))
     this->taintedAddresses.push_front(addr);
 }
 
@@ -186,7 +186,7 @@ bool TaintEngine::assignmentSpreadTaintRegImm(uint64_t regDst)
 bool TaintEngine::assignmentSpreadTaintRegMem(uint64_t regDst, uint64_t memSrc, uint32_t readSize)
 {
   for (uint64_t offset = 0; offset != readSize; offset++){
-    if (this->isMemoryTainted(memSrc+offset)){
+    if (this->isMemTainted(memSrc+offset)){
       this->taintReg(regDst);
       return TAINTED;
     }
@@ -204,7 +204,7 @@ bool TaintEngine::assignmentSpreadTaintMemMem(uint64_t memDst, uint64_t memSrc, 
 {
   bool isTainted = !TAINTED;
   for (uint64_t offset = 0; offset != readSize; offset++){
-    if (this->isMemoryTainted(memSrc+offset)){
+    if (this->isMemTainted(memSrc+offset)){
       this->taintAddress(memDst+offset);
       isTainted = TAINTED;
     }
@@ -270,7 +270,7 @@ bool TaintEngine::aluSpreadTaintRegReg(uint64_t regDst, uint64_t regSrc)
 bool TaintEngine::aluSpreadTaintRegMem(uint64_t regDst, uint64_t memSrc, uint32_t readSize)
 {
   for (uint64_t offset = 0; offset < readSize; offset++){
-    if (this->isMemoryTainted(memSrc+offset)){
+    if (this->isMemTainted(memSrc+offset)){
       this->taintReg(regDst);
       return TAINTED;
     }
@@ -282,7 +282,7 @@ bool TaintEngine::aluSpreadTaintRegMem(uint64_t regDst, uint64_t memSrc, uint32_
 bool TaintEngine::aluSpreadTaintMemImm(uint64_t memDst, uint32_t writeSize)
 {
   for (uint64_t offset = 0; offset < writeSize; offset++){
-    if (this->isMemoryTainted(memDst+offset)){
+    if (this->isMemTainted(memDst+offset)){
       return TAINTED;
     }
   }
@@ -301,7 +301,7 @@ bool TaintEngine::aluSpreadTaintMemReg(uint64_t memDst, uint64_t regSrc, uint32_
   }
 
   for (offset = 0; offset != writeSize; offset++){
-    if (this->isMemoryTainted(memDst+offset))
+    if (this->isMemTainted(memDst+offset))
       return TAINTED;
   }
 

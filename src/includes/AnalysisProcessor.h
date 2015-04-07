@@ -39,7 +39,7 @@ class AnalysisProcessor {
 
     // Taint interface.
     // Taint the symbolic element if the taint occurs.
-    bool isMemoryTainted(uint64_t addr);
+    bool isMemTainted(uint64_t addr);
     bool isRegTainted(uint64_t reg);
     void taintReg(uint64_t reg);
     void untaintReg(uint64_t reg);

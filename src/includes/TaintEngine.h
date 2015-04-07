@@ -24,7 +24,7 @@ class TaintEngine {
 
 
   public:
-    bool        isMemoryTainted(uint64_t addr);
+    bool        isMemTainted(uint64_t addr);
     bool        isRegTainted(uint64_t regID);
     void        taintAddress(uint64_t addr);
     void        untaintAddress(uint64_t addr);

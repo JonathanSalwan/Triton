@@ -4,10 +4,13 @@
 #include <python2.7/Python.h>
 #include <set>
 
+#include "AnalysisProcessor.h"
 #include "pin.H"
 
 #define CB_BEFORE 0
 #define CB_AFTER  1
+
+extern AnalysisProcessor ap;
 
 
 /* NameSapce for all Python Bindings variables */
@@ -70,12 +73,57 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
 }
 
 
-static char Triton_runProgram_doc[] = "Start the Pin instrumentation";
-static PyObject *Triton_runProgram(PyObject *self, PyObject *noarg)
+static char Triton_dumpTrace_doc[] = "Dump the trace at the end of the execution";
+static PyObject *Triton_dumpTrace(PyObject *self, PyObject *flag)
 {
-  // Never returns - Rock 'n roll baby \o/
-  PIN_StartProgram();
+  if (!PyBool_Check(flag)){
+    PyErr_Format(PyExc_TypeError, "dumpTrace(): expected a boolean");
+    PyErr_Print();
+    exit(-1);
+  }
+  PyTritonOptions::dumpTrace = (flag == Py_True);
   return Py_None;
+}
+
+
+static char Triton_dumpStats_doc[] = "Dump statistics at the end of the execution";
+static PyObject *Triton_dumpStats(PyObject *self, PyObject *flag)
+{
+  if (!PyBool_Check(flag)){
+    PyErr_Format(PyExc_TypeError, "dumpStats(): expected a boolean");
+    PyErr_Print();
+    exit(-1);
+  }
+  PyTritonOptions::dumpStats = (flag == Py_True);
+  return Py_None;
+}
+
+
+static char Triton_isMemTainted_doc[] = "Check if the memory is tainted";
+static PyObject *Triton_isMemTainted(PyObject *self, PyObject *mem)
+{
+  if (!PyLong_Check(mem) && !PyInt_Check(mem)){
+    PyErr_Format(PyExc_TypeError, "isMemTainted(): expected an address (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+  if (ap.isMemTainted(PyInt_AsLong(mem)) == true)
+    return Py_True;
+  return Py_False;
+}
+
+
+static char Triton_isRegTainted_doc[] = "Check if the register is tainted";
+static PyObject *Triton_isRegTainted(PyObject *self, PyObject *reg)
+{
+  if (!PyLong_Check(reg) && !PyInt_Check(reg)){
+    PyErr_Format(PyExc_TypeError, "isRegTainted(): expected a reg (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+  if (ap.isRegTainted(PyInt_AsLong(reg)) == true)
+    return Py_True;
+  return Py_False;
 }
 
 
@@ -88,6 +136,15 @@ static PyObject *Triton_opcodeToString(PyObject *self, PyObject *opcode)
     exit(-1);
   }
   return Py_BuildValue("s", OPCODE_StringShort(PyInt_AsLong(opcode)).c_str());
+}
+
+
+static char Triton_runProgram_doc[] = "Start the Pin instrumentation";
+static PyObject *Triton_runProgram(PyObject *self, PyObject *noarg)
+{
+  // Never returns - Rock 'n roll baby \o/
+  PIN_StartProgram();
+  return Py_None;
 }
 
 
@@ -129,32 +186,6 @@ static PyObject *Triton_stopAnalysisFromAddr(PyObject *self, PyObject *addr)
     exit(-1);
   }
   PyTritonOptions::stopAnalysisFromAddr.insert(PyLong_AsLong(addr));
-  return Py_None;
-}
-
-
-static char Triton_dumpTrace_doc[] = "Dump the trace at the end of the execution";
-static PyObject *Triton_dumpTrace(PyObject *self, PyObject *flag)
-{
-  if (!PyBool_Check(flag)){
-    PyErr_Format(PyExc_TypeError, "dumpTrace(): expected a boolean");
-    PyErr_Print();
-    exit(-1);
-  }
-  PyTritonOptions::dumpTrace = (flag == Py_True);
-  return Py_None;
-}
-
-
-static char Triton_dumpStats_doc[] = "Dump statistics at the end of the execution";
-static PyObject *Triton_dumpStats(PyObject *self, PyObject *flag)
-{
-  if (!PyBool_Check(flag)){
-    PyErr_Format(PyExc_TypeError, "dumpStats(): expected a boolean");
-    PyErr_Print();
-    exit(-1);
-  }
-  PyTritonOptions::dumpStats = (flag == Py_True);
   return Py_None;
 }
 
@@ -246,6 +277,8 @@ PyMethodDef pythonCallbacks[] = {
   {"addCallback",             Triton_addCallback,             METH_VARARGS, Triton_addCallback_doc},
   {"dumpStats",               Triton_dumpStats,               METH_O,       Triton_dumpStats_doc},
   {"dumpTrace",               Triton_dumpTrace,               METH_O,       Triton_dumpTrace_doc},
+  {"isMemTainted",            Triton_isMemTainted,            METH_O,       Triton_isMemTainted_doc},
+  {"isRegTainted",            Triton_isRegTainted,            METH_O,       Triton_isRegTainted_doc},
   {"opcodeToString",          Triton_opcodeToString,          METH_O,       Triton_opcodeToString_doc},
   {"runProgram",              Triton_runProgram,              METH_NOARGS,  Triton_runProgram_doc},
   {"startAnalysisFromAddr",   Triton_startAnalysisFromAddr,   METH_O,       Triton_startAnalysisFromAddr_doc},

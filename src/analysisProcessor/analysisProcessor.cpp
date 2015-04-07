@@ -129,9 +129,9 @@ bool AnalysisProcessor::isRegTainted(uint64_t reg)
 }
 
 
-bool AnalysisProcessor::isMemoryTainted(uint64_t addr)
+bool AnalysisProcessor::isMemTainted(uint64_t addr)
 {
-  return this->taintEngine.isMemoryTainted(addr);
+  return this->taintEngine.isMemTainted(addr);
 }
 
 
