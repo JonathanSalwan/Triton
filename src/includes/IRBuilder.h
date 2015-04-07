@@ -20,10 +20,10 @@ class IRBuilder {
     virtual ~IRBuilder() { }
 
     // Returns the opcode of the instruction.
-    virtual uint64_t getOpcode(void) const = 0;
+    virtual uint32_t getOpcode(void) const = 0;
 
     // Set the opcode of the instruction.
-    virtual void setOpcode(uint64_t op) = 0;
+    virtual void setOpcode(uint32_t op) = 0;
 
     // Returns the address of the instruction.
     virtual uint64_t getAddress(void) const = 0;

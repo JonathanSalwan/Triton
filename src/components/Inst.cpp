@@ -34,14 +34,14 @@ uint64_t Inst::getThreadId(void)
 
 
 /* Returns the opcode of the instruction */
-uint64_t Inst::getOpcode(void)
+uint32_t Inst::getOpcode(void)
 {
   return this->opcode;
 }
 
 
 /* Set the opcode of the instruction */
-void Inst::setOpcode(uint64_t op)
+void Inst::setOpcode(uint32_t op)
 {
   this->opcode = op;
 }

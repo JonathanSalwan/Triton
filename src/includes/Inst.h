@@ -14,7 +14,7 @@ class Inst {
     uint64_t                          address;
     std::string                       disassembly;
     std::list<SymbolicElement*>       symbolicElements;
-    uint64_t                          opcode;
+    uint32_t                          opcode;
 
   public:
     const std::list<SymbolicElement*> &getSymbolicElements(void);
@@ -22,8 +22,8 @@ class Inst {
     size_t                            numberOfElements(void);
     uint64_t                          getAddress(void);
     uint64_t                          getThreadId(void);
-    uint64_t                          getOpcode(void);
-    void                              setOpcode(uint64_t op);
+    uint32_t                          getOpcode(void);
+    void                              setOpcode(uint32_t op);
     void                              addElement(SymbolicElement *se);
 
     Inst(uint64_t threadId,uint64_t address, const std::string &insDis);

@@ -16,13 +16,13 @@ BaseIRBuilder::BaseIRBuilder(uint64_t address, const std::string &s):
 }
 
 
-uint64_t BaseIRBuilder::getOpcode(void) const
+uint32_t BaseIRBuilder::getOpcode(void) const
 {
   return this->opcode;
 }
 
 
-void BaseIRBuilder::setOpcode(uint64_t op)
+void BaseIRBuilder::setOpcode(uint32_t op)
 {
   this->opcode = op;
 }
