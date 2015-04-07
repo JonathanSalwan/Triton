@@ -33,6 +33,8 @@ LIBS =		-L$(PIN_ROOT)/intel64/lib \
 
 SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/bindings/python/callbacks.cpp \
+		./src/bindings/python/initFlagEnv.cpp \
+		./src/bindings/python/initRegEnv.cpp \
 		./src/bindings/python/init.cpp \
 		./src/bindings/python/processingPyConf.cpp \
 		./src/bindings/python/xPyFunc.cpp \
