@@ -79,6 +79,18 @@ static PyObject *Triton_runProgram(PyObject *self, PyObject *noarg)
 }
 
 
+static char Triton_opcodeToString_doc[] = "Returns a string with the opcode of the instruction";
+static PyObject *Triton_opcodeToString(PyObject *self, PyObject *opcode)
+{
+  if (!PyLong_Check(opcode) && !PyInt_Check(opcode)){
+    PyErr_Format(PyExc_TypeError, "opcodeToString(): expected an opcode (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+  return Py_BuildValue("s", OPCODE_StringShort(PyInt_AsLong(opcode)).c_str());
+}
+
+
 static char Triton_startAnalysisFromSymbol_doc[] = "Start the symbolic execution from a specific name point";
 static PyObject *Triton_startAnalysisFromSymbol(PyObject *self, PyObject *name)
 {
@@ -234,6 +246,7 @@ PyMethodDef pythonCallbacks[] = {
   {"addCallback",             Triton_addCallback,             METH_VARARGS, Triton_addCallback_doc},
   {"dumpStats",               Triton_dumpStats,               METH_O,       Triton_dumpStats_doc},
   {"dumpTrace",               Triton_dumpTrace,               METH_O,       Triton_dumpTrace_doc},
+  {"opcodeToString",          Triton_opcodeToString,          METH_O,       Triton_opcodeToString_doc},
   {"runProgram",              Triton_runProgram,              METH_NOARGS,  Triton_runProgram_doc},
   {"startAnalysisFromAddr",   Triton_startAnalysisFromAddr,   METH_O,       Triton_startAnalysisFromAddr_doc},
   {"startAnalysisFromSymbol", Triton_startAnalysisFromSymbol, METH_O,       Triton_startAnalysisFromSymbol_doc},
