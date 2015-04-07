@@ -7,12 +7,14 @@
 
 void initRegEnv(PyObject *);
 void initFlagEnv(PyObject *);
+void initOpcodeEnv(PyObject *);
 
 /*
  * Triton: [IDREF, callback, CB_AFTER, CB_BEFORE]
- * IDREF: [REG, FLAG]
+ * IDREF: [REG, FLAG, OPCODE]
  * REG: [RAX, RBX, XMM0, ...]
  * FLAG: [AF, OF, ZF, ...]
+ * OPCODE: [AAA, MOV, MOVSX, XOR, ...]
  */
 
 PyObject *initBindings(void)
@@ -31,6 +33,7 @@ PyObject *initBindings(void)
   PyObject *idRefClassName = xPyString_FromString("IDREF");
   PyObject *idRefClassDict = xPyDict_New();
 
+
   /* Create the IDREF.REG class */
   PyObject *idRegClassName = xPyString_FromString("REG");
   PyObject *idRegClassDict = xPyDict_New();
@@ -40,6 +43,7 @@ PyObject *initBindings(void)
 
   /* Create the REG class */
   PyObject *idRegClass = xPyClass_New(NULL, idRegClassDict, idRegClassName);
+
 
   /* Create the IDREF.FLAG class */
   PyObject *idFlagClassName = xPyString_FromString("FLAG");
@@ -51,9 +55,22 @@ PyObject *initBindings(void)
   /* Create the FLAG class */
   PyObject *idFlagClass = xPyClass_New(NULL, idFlagClassDict, idFlagClassName);
 
-  /* Add REG and FLAG into IDREF */
+
+  /* Create the IDREF.OPCODE class */
+  PyObject *idOpcodeClassName = xPyString_FromString("OPCODE");
+  PyObject *idOpcodeClassDict = xPyDict_New();
+
+  /* Add registers ref into IDREF.REG class */
+  initOpcodeEnv(idOpcodeClassDict);
+
+  /* Create the OPCODE class */
+  PyObject *idOpcodeClass = xPyClass_New(NULL, idOpcodeClassDict, idOpcodeClassName);
+
+
+  /* Add REG, FLAG, OPCODE into IDREF */
   PyDict_SetItemString(idRefClassDict, "REG", idRegClass);
   PyDict_SetItemString(idRefClassDict, "FLAG", idFlagClass);
+  PyDict_SetItemString(idRefClassDict, "OPCODE", idOpcodeClass);
 
   /* Create the IDREF class */
   PyObject *idRefClass = xPyClass_New(NULL, idRefClassDict, idRefClassName);
