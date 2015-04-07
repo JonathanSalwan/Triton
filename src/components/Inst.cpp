@@ -32,6 +32,21 @@ uint64_t Inst::getThreadId(void)
   return this->threadId;
 }
 
+
+/* Returns the opcode of the instruction */
+uint64_t Inst::getOpcode(void)
+{
+  return this->opcode;
+}
+
+
+/* Set the opcode of the instruction */
+void Inst::setOpcode(uint64_t op)
+{
+  this->opcode = op;
+}
+
+
 /* Adds a new symbolic element */
 void Inst::addElement(SymbolicElement *se)
 {

@@ -16,12 +16,25 @@ BaseIRBuilder::BaseIRBuilder(uint64_t address, const std::string &s):
 }
 
 
-uint64_t BaseIRBuilder::getAddress() const
+uint64_t BaseIRBuilder::getOpcode(void) const
+{
+  return this->opcode;
+}
+
+
+void BaseIRBuilder::setOpcode(uint64_t op)
+{
+  this->opcode = op;
+}
+
+
+uint64_t BaseIRBuilder::getAddress(void) const
 {
   return this->address;
 }
 
-const std::string &BaseIRBuilder::getDisassembly() const
+
+const std::string &BaseIRBuilder::getDisassembly(void) const
 {
   return this->disas;
 }

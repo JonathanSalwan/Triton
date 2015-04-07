@@ -46,6 +46,9 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
   Inst *inst = irb->process(ctxH, ap);
   trace.addInstruction(inst);
 
+  /* Export some information from Irb to Inst */
+  inst->setOpcode(irb->getOpcode());
+
   /* Python callback after instruction processing */
   processingPyConf.callbackAfter(inst, ctxH);
 }

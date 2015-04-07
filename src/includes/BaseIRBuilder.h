@@ -16,8 +16,10 @@ class BaseIRBuilder: public IRBuilder {
     // Constructor take the two main informations of an instruction.
     BaseIRBuilder(uint64_t address, const std::string &disassembly);
 
-    virtual uint64_t getAddress() const;
-    virtual const std::string &getDisassembly() const;
+    virtual uint64_t getOpcode(void) const;
+    virtual void setOpcode(uint64_t op);
+    virtual uint64_t getAddress(void) const;
+    virtual const std::string &getDisassembly(void) const;
 
     // Add an operand to IRBuilder.
     // If it's type is:
@@ -32,6 +34,7 @@ class BaseIRBuilder: public IRBuilder {
     virtual void checkSetup() const;
 
   protected:
+    uint64_t        opcode;
     uint64_t        address;
     std::string     disas;
     bool            needSetup;

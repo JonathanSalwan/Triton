@@ -107,6 +107,7 @@ void ProcessingPyConf::callbackAfter(Inst *inst, const ContextHandler &ctxH)
     PyObject *dictInstClass = xPyDict_New();
     PyDict_SetItemString(dictInstClass, "address", PyInt_FromLong(inst->getAddress()));
     PyDict_SetItemString(dictInstClass, "threadId", PyInt_FromLong(inst->getThreadId()));
+    PyDict_SetItemString(dictInstClass, "opcode", PyInt_FromLong(inst->getOpcode()));
     PyDict_SetItemString(dictInstClass, "assembly", PyString_FromFormat("%s", inst->getDisassembly().c_str()));
 
     /* Setup the symbolic element list */
@@ -173,6 +174,7 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, const ContextHandler &ctxH
     PyObject *dictInstClass = xPyDict_New();
     PyDict_SetItemString(dictInstClass, "address", PyInt_FromLong(irb->getAddress()));
     PyDict_SetItemString(dictInstClass, "threadId", PyInt_FromLong(ctxH.getThreadId()));
+    PyDict_SetItemString(dictInstClass, "opcode", PyInt_FromLong(irb->getOpcode()));
     PyDict_SetItemString(dictInstClass, "assembly", PyString_FromFormat("%s", irb->getDisassembly().c_str()));
     /* Before the processing, the symbolic element list is empty */
     PyObject *SEList = xPyList_New(0);

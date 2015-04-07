@@ -19,11 +19,17 @@ class IRBuilder {
 
     virtual ~IRBuilder() { }
 
+    // Returns the opcode of the instruction.
+    virtual uint64_t getOpcode(void) const = 0;
+
+    // Set the opcode of the instruction.
+    virtual void setOpcode(uint64_t op) = 0;
+
     // Returns the address of the instruction.
-    virtual uint64_t getAddress() const = 0;
+    virtual uint64_t getAddress(void) const = 0;
 
     // Returns the assembler instruction.
-    virtual const std::string &getDisassembly() const = 0;
+    virtual const std::string &getDisassembly(void) const = 0;
 
     // Add an operand to IRBuilder.
     // If it's type is:

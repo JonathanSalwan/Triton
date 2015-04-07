@@ -97,6 +97,9 @@ IRBuilder *createIRBuilder(INS ins) {
     ir->addOperand(type, val, size);
   }
 
+  // Setup the opcode in the IRbuilder
+  ir->setOpcode(opcode);
+
   return ir;
 }
 
