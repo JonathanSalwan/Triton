@@ -47,7 +47,7 @@ void PopIRBuilder::reg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &
   uint64_t          reg       = std::get<1>(this->operands[0]); // Reg poped
   uint64_t          mem       = std::get<1>(this->operands[1]); // The src memory read
   uint32_t          readSize  = std::get<2>(this->operands[1]);
-  uint64_t          symMem    = ap.getMemorySymbolicID(mem);
+  uint64_t          symMem    = ap.getMemSymbolicID(mem);
 
   /* Create the SMT semantic */
   /* OP_1 */
@@ -80,7 +80,7 @@ void PopIRBuilder::mem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &
   uint32_t          writeSize = std::get<2>(this->operands[0]);
   uint64_t          memSrc    = std::get<1>(this->operands[1]); // The dst memory read
   uint32_t          readSize  = std::get<2>(this->operands[1]);
-  uint64_t          symMem    = ap.getMemorySymbolicID(memSrc);
+  uint64_t          symMem    = ap.getMemSymbolicID(memSrc);
 
   /* Create the SMT semantic */
   /* OP_1 */

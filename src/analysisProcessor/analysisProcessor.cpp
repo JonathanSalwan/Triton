@@ -38,8 +38,8 @@ uint64_t AnalysisProcessor::getRegSymbolicID(uint64_t regID) {
 }
 
 
-uint64_t AnalysisProcessor::getMemorySymbolicID(uint64_t address) {
-  return this->symEngine.isMemoryReference(address);
+uint64_t AnalysisProcessor::getMemSymbolicID(uint64_t address) {
+  return this->symEngine.getMemSymbolicID(address);
 }
 
 
@@ -188,6 +188,7 @@ void AnalysisProcessor::aluSpreadTaintMemReg(SymbolicElement *se, uint64_t memDs
   se->isTainted = this->taintEngine.aluSpreadTaintMemReg(memDst, regSrc, writeSize);
 }
 
+
 // SolverEngine Facade
 
 SolverEngine &AnalysisProcessor::getSolverEngine()
@@ -195,12 +196,14 @@ SolverEngine &AnalysisProcessor::getSolverEngine()
   return this->solverEngine;
 }
 
+
 // Statistics Facade
 
 Stats &AnalysisProcessor::getStats()
 {
   return this->stats;
 }
+
 
 void AnalysisProcessor::displayStats(void)
 {

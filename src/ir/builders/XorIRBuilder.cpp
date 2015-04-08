@@ -109,7 +109,7 @@ void XorIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   uint64_t          reg      = std::get<1>(this->operands[0]);
 
   uint64_t          symReg   = ap.getRegSymbolicID(ctxH.translateRegID(reg));
-  uint64_t          symMem   = ap.getMemorySymbolicID(mem);
+  uint64_t          symMem   = ap.getMemSymbolicID(mem);
   uint32_t          regSize  = ctxH.getRegisterSize(reg);
 
   /* Create the SMT semantic */
@@ -154,7 +154,7 @@ void XorIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   uint64_t          mem       = std::get<1>(this->operands[0]);
   uint64_t          imm       = std::get<1>(this->operands[1]);
 
-  uint64_t          symMem    = ap.getMemorySymbolicID(mem);
+  uint64_t          symMem    = ap.getMemSymbolicID(mem);
 
   /* Create the SMT semantic */
   /* OP_1 */
@@ -197,7 +197,7 @@ void XorIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   uint32_t          regSize   = ctxH.getRegisterSize(reg);
 
   uint64_t          symReg    = ap.getRegSymbolicID(ctxH.translateRegID(reg));
-  uint64_t          symMem    = ap.getMemorySymbolicID(mem);
+  uint64_t          symMem    = ap.getMemSymbolicID(mem);
 
   /* Create the SMT semantic */
   // OP_1

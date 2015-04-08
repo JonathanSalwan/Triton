@@ -111,7 +111,7 @@ void PushIRBuilder::mem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst 
   uint32_t          readSize  = std::get<2>(this->operands[0]);
   uint64_t          memDst    = std::get<1>(this->operands[1]); // The dst memory writing
   uint32_t          writeSize = std::get<2>(this->operands[1]);
-  uint64_t          symMem    = ap.getMemorySymbolicID(memOp);
+  uint64_t          symMem    = ap.getMemSymbolicID(memOp);
 
   /* Create the SMT semantic side effect */
   inst.addElement(alignStack(ap, ctxH, writeSize));

@@ -86,7 +86,7 @@ void MovIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   uint64_t          reg      = std::get<1>(this->operands[0]);
   uint64_t          regSize  = ctxH.getRegisterSize(reg);
 
-  uint64_t          symMem   = ap.getMemorySymbolicID(mem);
+  uint64_t          symMem   = ap.getMemSymbolicID(mem);
 
   /* Create the SMT semantic */
   if (symMem != UNSET)

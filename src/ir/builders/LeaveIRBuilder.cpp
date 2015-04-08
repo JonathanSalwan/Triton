@@ -46,7 +46,7 @@ void LeaveIRBuilder::none(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   uint64_t            symRegRBP = ap.getRegSymbolicID(ID_RBP);
   uint64_t            readMem   = std::get<1>(this->operands[0]); // The src memory read
   uint32_t            readSize  = std::get<2>(this->operands[0]);
-  uint64_t            symMem    = ap.getMemorySymbolicID(readMem);
+  uint64_t            symMem    = ap.getMemSymbolicID(readMem);
 
   // RSP = RBP; -----------------------------
   if (symRegRBP != UNSET)

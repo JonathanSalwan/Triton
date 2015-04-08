@@ -133,7 +133,7 @@ SymbolicEngine::~SymbolicEngine()
 
 
 /* Returns the reference memory if it's referenced otherwise returns UNSET */
-uint64_t SymbolicEngine::isMemoryReference(uint64_t addr)
+uint64_t SymbolicEngine::getMemSymbolicID(uint64_t addr)
 {
   std::map<uint64_t, uint64_t>::iterator it;
   if ((it = this->memoryReference.find(addr)) != this->memoryReference.end())

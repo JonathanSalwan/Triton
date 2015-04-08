@@ -26,7 +26,7 @@ class AnalysisProcessor {
 
     // Returns the ID of the symbolic element currently present in the
     // symbolic memory. If there is no symbolic element, it returns UNSET.
-    uint64_t getMemorySymbolicID(uint64_t address);
+    uint64_t getMemSymbolicID(uint64_t address);
 
     // Returns the symbolic engine reference
     SymbolicEngine &getSymbolicEngine();
