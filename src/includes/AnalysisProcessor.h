@@ -43,8 +43,8 @@ class AnalysisProcessor {
     bool isRegTainted(uint64_t reg);
     void taintReg(uint64_t reg);
     void untaintReg(uint64_t reg);
-    void taintAddress(uint64_t addr);
-    void untaintAddress(uint64_t addr);
+    void taintMem(uint64_t addr);
+    void untaintMem(uint64_t addr);
 
     /* ALU Spreading */
     void aluSpreadTaintMemImm(SymbolicElement *se, uint64_t memDst, uint32_t writeSize);

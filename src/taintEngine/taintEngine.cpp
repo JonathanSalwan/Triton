@@ -139,7 +139,7 @@ void TaintEngine::untaintReg(uint64_t regID)
 
 
 /* Taint the address */
-void TaintEngine::taintAddress(uint64_t addr)
+void TaintEngine::taintMem(uint64_t addr)
 {
   if (!this->isMemTainted(addr))
     this->taintedAddresses.push_front(addr);
@@ -147,7 +147,7 @@ void TaintEngine::taintAddress(uint64_t addr)
 
 
 /* Untaint the address */
-void TaintEngine::untaintAddress(uint64_t addr)
+void TaintEngine::untaintMem(uint64_t addr)
 {
   this->taintedAddresses.remove(addr);
 }
@@ -205,7 +205,7 @@ bool TaintEngine::assignmentSpreadTaintMemMem(uint64_t memDst, uint64_t memSrc, 
   bool isTainted = !TAINTED;
   for (uint64_t offset = 0; offset != readSize; offset++){
     if (this->isMemTainted(memSrc+offset)){
-      this->taintAddress(memDst+offset);
+      this->taintMem(memDst+offset);
       isTainted = TAINTED;
     }
   }
@@ -219,7 +219,7 @@ bool TaintEngine::assignmentSpreadTaintMemMem(uint64_t memDst, uint64_t memSrc, 
 bool TaintEngine::assignmentSpreadTaintMemImm(uint64_t memDst, uint32_t writeSize)
 {
   for (uint64_t offset = 0; offset != writeSize; offset++)
-    this->untaintAddress(memDst+offset);
+    this->untaintMem(memDst+offset);
   return !TAINTED;
 }
 
@@ -232,10 +232,10 @@ bool TaintEngine::assignmentSpreadTaintMemReg(uint64_t memDst, uint64_t regSrc, 
 {
   if (this->isRegTainted(regSrc)){
     for (uint64_t offset = 0; offset != writeSize; offset++)
-      this->taintAddress(memDst+offset);
+      this->taintMem(memDst+offset);
     return TAINTED;
   }
-  this->untaintAddress(memDst);
+  this->untaintMem(memDst);
   return !TAINTED;
 }
 
@@ -296,7 +296,7 @@ bool TaintEngine::aluSpreadTaintMemReg(uint64_t memDst, uint64_t regSrc, uint32_
 
   if (this->isRegTainted(regSrc)){
     for (offset = 0; offset != writeSize; offset++)
-      this->taintAddress(memDst+offset);
+      this->taintMem(memDst+offset);
     return TAINTED;
   }
 

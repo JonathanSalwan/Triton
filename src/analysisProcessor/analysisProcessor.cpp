@@ -147,15 +147,15 @@ void AnalysisProcessor::untaintReg(uint64_t reg)
 }
 
 
-void AnalysisProcessor::taintAddress(uint64_t addr)
+void AnalysisProcessor::taintMem(uint64_t addr)
 {
-  this->taintEngine.taintAddress(addr);
+  this->taintEngine.taintMem(addr);
 }
 
 
-void AnalysisProcessor::untaintAddress(uint64_t addr)
+void AnalysisProcessor::untaintMem(uint64_t addr)
 {
-  this->taintEngine.untaintAddress(addr);
+  this->taintEngine.untaintMem(addr);
 }
 
 
