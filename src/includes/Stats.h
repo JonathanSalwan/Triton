@@ -27,6 +27,9 @@ class Stats {
     void      incNumberOfExpressions(void);
     void      incNumberOfUnknownInstruction(void);
 
+    uint64_t  getNumberOfBranchesTaken(void);
+    uint64_t  getNumberOfExpressions(void);
+    uint64_t  getumberOfUnknownInstruction(void);
 };
 
 #endif     /* !__STATISTICS_H__ */

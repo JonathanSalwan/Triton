@@ -60,3 +60,21 @@ void Stats::incNumberOfBranchesTaken(void)
   this->numberOfBranchesTaken++;
 }
 
+
+uint64_t  Stats::getNumberOfBranchesTaken(void)
+{
+  return this->numberOfBranchesTaken;
+}
+
+
+uint64_t  Stats::getNumberOfExpressions(void)
+{
+  return this->numberOfExpressions;
+}
+
+
+uint64_t  Stats::getumberOfUnknownInstruction(void)
+{
+  return this->numberOfUnknownInstruction;
+}
+
