@@ -117,7 +117,7 @@ static char Triton_isRegTainted_doc[] = "Check if the register is tainted";
 static PyObject *Triton_isRegTainted(PyObject *self, PyObject *reg)
 {
   if (!PyLong_Check(reg) && !PyInt_Check(reg)){
-    PyErr_Format(PyExc_TypeError, "isRegTainted(): expected a reg (integer) as argument");
+    PyErr_Format(PyExc_TypeError, "isRegTainted(): expected a reg id (integer) as argument");
     PyErr_Print();
     exit(-1);
   }
@@ -190,6 +190,19 @@ static PyObject *Triton_stopAnalysisFromAddr(PyObject *self, PyObject *addr)
 }
 
 
+static char Triton_taintReg_doc[] = "Taint a register";
+static PyObject *Triton_taintReg(PyObject *self, PyObject *reg)
+{
+  if (!PyLong_Check(reg) && !PyInt_Check(reg)){
+    PyErr_Format(PyExc_TypeError, "taintReg(): expected a reg id (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+  ap.taintReg(PyInt_AsLong(reg));
+  return Py_None;
+}
+
+
 static char Triton_taintRegFromAddr_doc[] = "Taint specific registers from an address";
 static PyObject *Triton_taintRegFromAddr(PyObject *self, PyObject *args)
 {
@@ -218,7 +231,7 @@ static PyObject *Triton_taintRegFromAddr(PyObject *self, PyObject *args)
   for (Py_ssize_t i = 0; i < PyList_Size(regs); i++){
     PyObject *item = PyList_GetItem(regs, i);
     if (!PyLong_Check(item) && !PyInt_Check(item)){
-      PyErr_Format(PyExc_TypeError, "taintRegFromAddr(): The second argument must be a list of integer");
+      PyErr_Format(PyExc_TypeError, "taintRegFromAddr(): The second argument must be a list of reg id (integer)");
       PyErr_Print();
       exit(-1);
     }
@@ -227,6 +240,19 @@ static PyObject *Triton_taintRegFromAddr(PyObject *self, PyObject *args)
 
   /* Update taint configuration */
   PyTritonOptions::taintRegFromAddr.insert(std::pair<uint64_t, std::list<uint64_t>>(PyLong_AsLong(addr), regsList));
+  return Py_None;
+}
+
+
+static char Triton_untaintReg_doc[] = "Untaint a register";
+static PyObject *Triton_untaintReg(PyObject *self, PyObject *reg)
+{
+  if (!PyLong_Check(reg) && !PyInt_Check(reg)){
+    PyErr_Format(PyExc_TypeError, "untaintReg(): expected a reg id (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+  ap.untaintReg(PyInt_AsLong(reg));
   return Py_None;
 }
 
@@ -259,7 +285,7 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
   for (Py_ssize_t i = 0; i < PyList_Size(regs); i++){
     PyObject *item = PyList_GetItem(regs, i);
     if (!PyLong_Check(item) && !PyInt_Check(item)){
-      PyErr_Format(PyExc_TypeError, "untaintRegFromAddr(): The second argument must be a list of integer");
+      PyErr_Format(PyExc_TypeError, "untaintRegFromAddr(): The second argument must be a list of reg id (integer)");
       PyErr_Print();
       exit(-1);
     }
@@ -284,7 +310,9 @@ PyMethodDef pythonCallbacks[] = {
   {"startAnalysisFromAddr",   Triton_startAnalysisFromAddr,   METH_O,       Triton_startAnalysisFromAddr_doc},
   {"startAnalysisFromSymbol", Triton_startAnalysisFromSymbol, METH_O,       Triton_startAnalysisFromSymbol_doc},
   {"stopAnalysisFromAddr",    Triton_stopAnalysisFromAddr,    METH_O,       Triton_stopAnalysisFromAddr_doc},
+  {"taintReg",                Triton_taintReg,                METH_O,       Triton_taintReg_doc},
   {"taintRegFromAddr",        Triton_taintRegFromAddr,        METH_VARARGS, Triton_taintRegFromAddr_doc},
+  {"untaintReg",              Triton_untaintReg,              METH_O,       Triton_untaintReg_doc},
   {"untaintRegFromAddr",      Triton_untaintRegFromAddr,      METH_VARARGS, Triton_untaintRegFromAddr_doc},
   {NULL,                      NULL,                           0,            NULL}
 };
