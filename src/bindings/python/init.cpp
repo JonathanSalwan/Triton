@@ -2,6 +2,7 @@
 #include <iostream>
 #include <python2.7/Python.h>
 
+#include "SymbolicEngine.h"
 #include "PythonBindings.h"
 #include "xPyFunc.h"
 
@@ -81,6 +82,7 @@ PyObject *initBindings(void)
   /* Constants Triton internal */
   PyModule_AddIntConstant(tritonModule, "CB_BEFORE",  CB_BEFORE);
   PyModule_AddIntConstant(tritonModule, "CB_AFTER",   CB_AFTER);
+  PyModule_AddObject(tritonModule,      "UNSET",      Py_BuildValue("k", UNSET)); // Py_BuildValue for unsigned long
 
   return tritonModule;
 }

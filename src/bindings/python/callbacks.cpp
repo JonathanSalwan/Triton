@@ -99,6 +99,30 @@ static PyObject *Triton_dumpStats(PyObject *self, PyObject *flag)
 }
 
 
+static char Triton_getMemSymbolicID_doc[] = "Get the symbolic memory reference";
+static PyObject *Triton_getMemSymbolicID(PyObject *self, PyObject *addr)
+{
+  if (!PyLong_Check(addr) && !PyInt_Check(addr)){
+    PyErr_Format(PyExc_TypeError, "getMemSymbolicID(): expected a memory address (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+  return Py_BuildValue("k", ap.getMemSymbolicID(PyLong_AsLong(addr)));
+}
+
+
+static char Triton_getRegSymbolicID_doc[] = "Get the symbolic register reference";
+static PyObject *Triton_getRegSymbolicID(PyObject *self, PyObject *reg)
+{
+  if (!PyLong_Check(reg) && !PyInt_Check(reg)){
+    PyErr_Format(PyExc_TypeError, "getMemSymbolicID(): expected a register id (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+  return Py_BuildValue("k", ap.getRegSymbolicID(PyLong_AsLong(reg)));
+}
+
+
 static char Triton_isMemTainted_doc[] = "Check if the memory is tainted";
 static PyObject *Triton_isMemTainted(PyObject *self, PyObject *mem)
 {
@@ -117,7 +141,7 @@ static char Triton_isRegTainted_doc[] = "Check if the register is tainted";
 static PyObject *Triton_isRegTainted(PyObject *self, PyObject *reg)
 {
   if (!PyLong_Check(reg) && !PyInt_Check(reg)){
-    PyErr_Format(PyExc_TypeError, "isRegTainted(): expected a reg id (integer) as argument");
+    PyErr_Format(PyExc_TypeError, "isRegTainted(): expected a register id (integer) as argument");
     PyErr_Print();
     exit(-1);
   }
@@ -207,7 +231,7 @@ static char Triton_taintReg_doc[] = "Taint a register";
 static PyObject *Triton_taintReg(PyObject *self, PyObject *reg)
 {
   if (!PyLong_Check(reg) && !PyInt_Check(reg)){
-    PyErr_Format(PyExc_TypeError, "taintReg(): expected a reg id (integer) as argument");
+    PyErr_Format(PyExc_TypeError, "taintReg(): expected a register id (integer) as argument");
     PyErr_Print();
     exit(-1);
   }
@@ -244,7 +268,7 @@ static PyObject *Triton_taintRegFromAddr(PyObject *self, PyObject *args)
   for (Py_ssize_t i = 0; i < PyList_Size(regs); i++){
     PyObject *item = PyList_GetItem(regs, i);
     if (!PyLong_Check(item) && !PyInt_Check(item)){
-      PyErr_Format(PyExc_TypeError, "taintRegFromAddr(): The second argument must be a list of reg id (integer)");
+      PyErr_Format(PyExc_TypeError, "taintRegFromAddr(): The second argument must be a list of register id (integer)");
       PyErr_Print();
       exit(-1);
     }
@@ -274,7 +298,7 @@ static char Triton_untaintReg_doc[] = "Untaint a register";
 static PyObject *Triton_untaintReg(PyObject *self, PyObject *reg)
 {
   if (!PyLong_Check(reg) && !PyInt_Check(reg)){
-    PyErr_Format(PyExc_TypeError, "untaintReg(): expected a reg id (integer) as argument");
+    PyErr_Format(PyExc_TypeError, "untaintReg(): expected a register id (integer) as argument");
     PyErr_Print();
     exit(-1);
   }
@@ -311,7 +335,7 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
   for (Py_ssize_t i = 0; i < PyList_Size(regs); i++){
     PyObject *item = PyList_GetItem(regs, i);
     if (!PyLong_Check(item) && !PyInt_Check(item)){
-      PyErr_Format(PyExc_TypeError, "untaintRegFromAddr(): The second argument must be a list of reg id (integer)");
+      PyErr_Format(PyExc_TypeError, "untaintRegFromAddr(): The second argument must be a list of register id (integer)");
       PyErr_Print();
       exit(-1);
     }
@@ -329,6 +353,8 @@ PyMethodDef pythonCallbacks[] = {
   {"addCallback",             Triton_addCallback,             METH_VARARGS, Triton_addCallback_doc},
   {"dumpStats",               Triton_dumpStats,               METH_O,       Triton_dumpStats_doc},
   {"dumpTrace",               Triton_dumpTrace,               METH_O,       Triton_dumpTrace_doc},
+  {"getMemSymbolicID",        Triton_getMemSymbolicID,        METH_O,       Triton_getMemSymbolicID_doc},
+  {"getRegSymbolicID",        Triton_getRegSymbolicID,        METH_O,       Triton_getRegSymbolicID_doc},
   {"isMemTainted",            Triton_isMemTainted,            METH_O,       Triton_isMemTainted_doc},
   {"isRegTainted",            Triton_isRegTainted,            METH_O,       Triton_isRegTainted_doc},
   {"opcodeToString",          Triton_opcodeToString,          METH_O,       Triton_opcodeToString_doc},

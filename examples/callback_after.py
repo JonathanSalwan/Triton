@@ -134,7 +134,7 @@ def my_callback_after(instruction):
 if __name__ == '__main__':
 
     # Start the symbolic analysis from the 'check' function
-    startAnalysisFromSymbol('main')
+    startAnalysisFromSymbol('check')
 
     # Add a callback.
     # CB_BEFORE: Add the callback before the instruction processing
