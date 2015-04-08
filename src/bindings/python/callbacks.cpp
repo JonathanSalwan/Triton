@@ -190,6 +190,19 @@ static PyObject *Triton_stopAnalysisFromAddr(PyObject *self, PyObject *addr)
 }
 
 
+static char Triton_taintMem_doc[] = "Taint an address memory";
+static PyObject *Triton_taintMem(PyObject *self, PyObject *mem)
+{
+  if (!PyLong_Check(mem) && !PyInt_Check(mem)){
+    PyErr_Format(PyExc_TypeError, "TaintMem(): expected a memory address (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+  ap.taintMem(PyInt_AsLong(mem));
+  return Py_None;
+}
+
+
 static char Triton_taintReg_doc[] = "Taint a register";
 static PyObject *Triton_taintReg(PyObject *self, PyObject *reg)
 {
@@ -240,6 +253,19 @@ static PyObject *Triton_taintRegFromAddr(PyObject *self, PyObject *args)
 
   /* Update taint configuration */
   PyTritonOptions::taintRegFromAddr.insert(std::pair<uint64_t, std::list<uint64_t>>(PyLong_AsLong(addr), regsList));
+  return Py_None;
+}
+
+
+static char Triton_untaintMem_doc[] = "Untaint an address memory";
+static PyObject *Triton_untaintMem(PyObject *self, PyObject *mem)
+{
+  if (!PyLong_Check(mem) && !PyInt_Check(mem)){
+    PyErr_Format(PyExc_TypeError, "untaintMem(): expected a memory address (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+  ap.untaintMem(PyInt_AsLong(mem));
   return Py_None;
 }
 
@@ -310,8 +336,10 @@ PyMethodDef pythonCallbacks[] = {
   {"startAnalysisFromAddr",   Triton_startAnalysisFromAddr,   METH_O,       Triton_startAnalysisFromAddr_doc},
   {"startAnalysisFromSymbol", Triton_startAnalysisFromSymbol, METH_O,       Triton_startAnalysisFromSymbol_doc},
   {"stopAnalysisFromAddr",    Triton_stopAnalysisFromAddr,    METH_O,       Triton_stopAnalysisFromAddr_doc},
+  {"taintMem",                Triton_taintMem,                METH_O,       Triton_taintMem_doc},
   {"taintReg",                Triton_taintReg,                METH_O,       Triton_taintReg_doc},
   {"taintRegFromAddr",        Triton_taintRegFromAddr,        METH_VARARGS, Triton_taintRegFromAddr_doc},
+  {"untaintMem",              Triton_untaintMem,              METH_O,       Triton_untaintMem_doc},
   {"untaintReg",              Triton_untaintReg,              METH_O,       Triton_untaintReg_doc},
   {"untaintRegFromAddr",      Triton_untaintRegFromAddr,      METH_VARARGS, Triton_untaintRegFromAddr_doc},
   {NULL,                      NULL,                           0,            NULL}
