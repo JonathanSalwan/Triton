@@ -40,6 +40,12 @@ const std::string &BaseIRBuilder::getDisassembly(void) const
 }
 
 
+const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &BaseIRBuilder::getOperands(void) const
+{
+  return this->operands;
+}
+
+
 void BaseIRBuilder::addOperand(IRBuilderOperand::operand_t type, uint64_t value, uint32_t size)
 {
   if (IRBuilder::isMemOperand(type))

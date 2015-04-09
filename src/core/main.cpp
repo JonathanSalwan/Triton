@@ -48,6 +48,9 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
 
   /* Export some information from Irb to Inst */
   inst->setOpcode(irb->getOpcode());
+  inst->setOperands(irb->getOperands());
+
+  std::cout << "A:" << irb->getOperands() << " B:" << inst->getOperands() << std::endl;
 
   /* Python callback after instruction processing */
   processingPyConf.callbackAfter(inst, ctxH);

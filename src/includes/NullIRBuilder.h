@@ -16,6 +16,10 @@ class NullIRBuilder: public BaseIRBuilder {
 
     void addOperand(IRBuilderOperand::operand_t type, uint64_t value = 0) { }
 
+    const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &getOperands(void){
+      return this->operands;
+    }
+
     Inst *process(const ContextHandler &ctxH, AnalysisProcessor &ap) const {
       ap.incNumberOfUnknownInstruction(); /* Used for statistics */
       return new Inst(ctxH.getThreadId(), this->address, this->disas);

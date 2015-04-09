@@ -29,6 +29,9 @@ class IRBuilder {
     // Returns the assembler instruction.
     virtual const std::string &getDisassembly(void) const = 0;
 
+    // Returns the operands vector.
+    virtual const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &getOperands(void) const = 0;
+
     // Add an operand to IRBuilder.
     // If it's type is:
     //  - IMM (Immediate), the value is the immediate value.

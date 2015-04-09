@@ -21,6 +21,8 @@ class BaseIRBuilder: public IRBuilder {
     virtual uint64_t getAddress(void) const;
     virtual const std::string &getDisassembly(void) const;
 
+    virtual const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &getOperands(void) const;
+
     // Add an operand to IRBuilder.
     // If it's type is:
     //  - IMM (Immediate), the value is the immediate value.
