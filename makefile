@@ -33,10 +33,11 @@ LIBS =		-L$(PIN_ROOT)/intel64/lib \
 
 SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/bindings/python/callbacks.cpp \
+		./src/bindings/python/init.cpp \
 		./src/bindings/python/initFlagEnv.cpp \
 		./src/bindings/python/initOpcodeEnv.cpp \
+		./src/bindings/python/initOperandEnv.cpp \
 		./src/bindings/python/initRegEnv.cpp \
-		./src/bindings/python/init.cpp \
 		./src/bindings/python/processingPyConf.cpp \
 		./src/bindings/python/xPyFunc.cpp \
 		./src/components/Inst.cpp \
@@ -58,8 +59,8 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/SubIRBuilder.cpp \
 		./src/ir/builders/XorIRBuilder.cpp \
 		./src/ir/templates/NoneOperandTemplate.cpp \
-		./src/ir/templates/OperandTemplate.cpp \
 		./src/ir/templates/OneOperandTemplate.cpp \
+		./src/ir/templates/OperandTemplate.cpp \
 		./src/ir/templates/TwoOperandsTemplate.cpp \
 		./src/solverEngine/smt2lib.cpp \
 		./src/solverEngine/solverEngine.cpp \

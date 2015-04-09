@@ -6,9 +6,10 @@
 #include "PythonBindings.h"
 #include "xPyFunc.h"
 
-void initRegEnv(PyObject *);
 void initFlagEnv(PyObject *);
 void initOpcodeEnv(PyObject *);
+void initOperandEnv(PyObject *);
+void initRegEnv(PyObject *);
 
 /*
  * Triton: [IDREF, callback, CB_AFTER, CB_BEFORE]
@@ -35,6 +36,8 @@ PyObject *initBindings(void)
   PyObject *idRefClassDict = xPyDict_New();
 
 
+  // REG ---------------------
+
   /* Create the IDREF.REG class */
   PyObject *idRegClassName = xPyString_FromString("REG");
   PyObject *idRegClassDict = xPyDict_New();
@@ -45,6 +48,10 @@ PyObject *initBindings(void)
   /* Create the REG class */
   PyObject *idRegClass = xPyClass_New(NULL, idRegClassDict, idRegClassName);
 
+  // REG ---------------------
+
+
+  // FLAG ---------------------
 
   /* Create the IDREF.FLAG class */
   PyObject *idFlagClassName = xPyString_FromString("FLAG");
@@ -56,22 +63,44 @@ PyObject *initBindings(void)
   /* Create the FLAG class */
   PyObject *idFlagClass = xPyClass_New(NULL, idFlagClassDict, idFlagClassName);
 
+  // FLAG ---------------------
+
+
+  // OPCODE ---------------------
 
   /* Create the IDREF.OPCODE class */
   PyObject *idOpcodeClassName = xPyString_FromString("OPCODE");
   PyObject *idOpcodeClassDict = xPyDict_New();
 
-  /* Add registers ref into IDREF.REG class */
+  /* Add registers ref into IDREF.OPCODE class */
   initOpcodeEnv(idOpcodeClassDict);
 
   /* Create the OPCODE class */
   PyObject *idOpcodeClass = xPyClass_New(NULL, idOpcodeClassDict, idOpcodeClassName);
+
+  // OPCODE ---------------------
+
+
+  // OPERAND ---------------------
+
+  /* Create the IDREF.OPERAND class */
+  PyObject *idOperandClassName = xPyString_FromString("OPERAND");
+  PyObject *idOperandClassDict = xPyDict_New();
+
+  /* Add registers ref into IDREF.OPERAND class */
+  initOperandEnv(idOperandClassDict);
+
+  /* Create the OPCODE class */
+  PyObject *idOperandClass = xPyClass_New(NULL, idOperandClassDict, idOperandClassName);
+
+  // OPERAND ---------------------
 
 
   /* Add REG, FLAG, OPCODE into IDREF */
   PyDict_SetItemString(idRefClassDict, "REG", idRegClass);
   PyDict_SetItemString(idRefClassDict, "FLAG", idFlagClass);
   PyDict_SetItemString(idRefClassDict, "OPCODE", idOpcodeClass);
+  PyDict_SetItemString(idRefClassDict, "OPERAND", idOperandClass);
 
   /* Create the IDREF class */
   PyObject *idRefClass = xPyClass_New(NULL, idRefClassDict, idRefClassName);
