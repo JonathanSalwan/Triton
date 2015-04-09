@@ -10,7 +10,7 @@ void OneOperandTemplate::templateMethod(
     const ContextHandler &ctxH,
     AnalysisProcessor &ap,
     Inst &inst,
-    const std::vector< std::tuple<IRBuilder::operand_t, uint64_t, uint32_t> > &operands,
+    const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &operands,
     std::string insName) const
 {
   // If there is no operand
@@ -19,11 +19,11 @@ void OneOperandTemplate::templateMethod(
     this->none(ctxH, ap, inst);
 
   // reg
-  if (std::get<0>(operands[0]) == IRBuilder::REG)
+  if (std::get<0>(operands[0]) == IRBuilderOperand::REG)
     this->reg(ctxH, ap, inst);
 
   // imm
-  if (std::get<0>(operands[0]) == IRBuilder::IMM)
+  if (std::get<0>(operands[0]) == IRBuilderOperand::IMM)
     this->imm(ctxH, ap, inst);
 
   // mem

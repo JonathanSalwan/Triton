@@ -40,7 +40,7 @@ const std::string &BaseIRBuilder::getDisassembly(void) const
 }
 
 
-void BaseIRBuilder::addOperand(IRBuilder::operand_t type, uint64_t value, uint32_t size)
+void BaseIRBuilder::addOperand(IRBuilderOperand::operand_t type, uint64_t value, uint32_t size)
 {
   if (IRBuilder::isMemOperand(type))
     this->needSetup = true;

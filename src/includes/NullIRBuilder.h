@@ -14,7 +14,7 @@ class NullIRBuilder: public BaseIRBuilder {
     NullIRBuilder(uint64_t address, const std::string &disas):
       BaseIRBuilder(address, disas) { }
 
-    void addOperand(IRBuilder::operand_t type, uint64_t value = 0) { }
+    void addOperand(IRBuilderOperand::operand_t type, uint64_t value = 0) { }
 
     Inst *process(const ContextHandler &ctxH, AnalysisProcessor &ap) const {
       ap.incNumberOfUnknownInstruction(); /* Used for statistics */

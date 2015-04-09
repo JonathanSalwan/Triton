@@ -66,16 +66,16 @@ IRBuilder *createIRBuilder(INS ins) {
   const UINT32 n = INS_OperandCount(ins);
 
   for (UINT32 i = 0; i < n; ++i) {
-    IRBuilder::operand_t  type;
-    UINT32                size = 0;
-    UINT64                val  = 0;
+    IRBuilderOperand::operand_t   type;
+    UINT32                        size = 0;
+    UINT64                        val  = 0;
 
     if (INS_OperandIsImmediate(ins, i)) {
-      type = IRBuilder::IMM;
+      type = IRBuilderOperand::IMM;
       val = INS_OperandImmediate(ins, i);
     }
     else if (INS_OperandIsReg(ins, i)) {
-      type = IRBuilder::REG;
+      type = IRBuilderOperand::REG;
       val  = INS_OperandReg(ins, i);
     }
     else if (INS_MemoryOperandCount(ins) > 0) {
@@ -83,11 +83,11 @@ IRBuilder *createIRBuilder(INS ins) {
       // makes INS_MemoryReadSize crash.
 
       if (INS_MemoryOperandIsRead(ins, 0)) {
-        type = IRBuilder::MEM_R;
+        type = IRBuilderOperand::MEM_R;
         size = INS_MemoryReadSize(ins);
       }
       else {
-        type = IRBuilder::MEM_W;
+        type = IRBuilderOperand::MEM_W;
         size = INS_MemoryWriteSize(ins);
       }
     }

@@ -8,14 +8,12 @@
 
 #include "AnalysisProcessor.h"
 #include "ContextHandler.h"
+#include "IRBuilderOperand.h"
 #include "Inst.h"
-
 
 // IR interface
 class IRBuilder {
   public:
-    // Define each type of operand.
-    enum operand_t { IMM, REG, MEM_R, MEM_W };
 
     virtual ~IRBuilder() { }
 
@@ -37,7 +35,7 @@ class IRBuilder {
     //  - REG (Register), the value is the register ID.
     //  - MEM_*, the value doesn't mean anything and it's unused.
     //    The object will need a setup before any processing.
-    virtual void addOperand(IRBuilder::operand_t, uint64_t value, uint32_t size) = 0;
+    virtual void addOperand(IRBuilderOperand::operand_t, uint64_t value, uint32_t size) = 0;
 
     // Set the value for the MEM_* operand, if there is no such kind of operand
     // it does nothing.
@@ -52,8 +50,8 @@ class IRBuilder {
     virtual Inst *process(const ContextHandler &ctxH, AnalysisProcessor &ap) const = 0;
 
     // Check if the operand is of type MEM_*
-    static bool isMemOperand(IRBuilder::operand_t type) {
-      return (type == IRBuilder::MEM_R) || (type == IRBuilder::MEM_W);
+    static bool isMemOperand(IRBuilderOperand::operand_t type) {
+      return (type == IRBuilderOperand::MEM_R) || (type == IRBuilderOperand::MEM_W);
     }
 
 };

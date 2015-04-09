@@ -10,7 +10,7 @@ void NoneOperandTemplate::templateMethod(
     const ContextHandler &ctxH,
     AnalysisProcessor &ap,
     Inst &inst,
-    const std::vector< std::tuple<IRBuilder::operand_t, uint64_t, uint32_t> > &operands,
+    const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &operands,
     std::string insName) const
 {
   // none but we must apply the semantic
