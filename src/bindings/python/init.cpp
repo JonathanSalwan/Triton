@@ -7,9 +7,11 @@
 #include "xPyFunc.h"
 
 void initFlagEnv(PyObject *);
+void initOpcodeCategoryEnv(PyObject *);
 void initOpcodeEnv(PyObject *);
 void initOperandEnv(PyObject *);
 void initRegEnv(PyObject *);
+
 
 /*
  * Triton: [IDREF, callback, CB_AFTER, CB_BEFORE]
@@ -17,6 +19,8 @@ void initRegEnv(PyObject *);
  * REG: [RAX, RBX, XMM0, ...]
  * FLAG: [AF, OF, ZF, ...]
  * OPCODE: [AAA, MOV, MOVSX, XOR, ...]
+ * OPERAND: [IMM, REG, MEM_R, MEM_W]
+ * OPCODE_CATEGORY: [XED_CATEGORY_AES, XED_CATEGORY_CMOV, ...]
  */
 
 PyObject *initBindings(void)
@@ -81,6 +85,21 @@ PyObject *initBindings(void)
   // OPCODE ---------------------
 
 
+  // OPCODE_CATEGORY ---------------------
+
+  /* Create the IDREF.OPCODE_CATEGORY class */
+  PyObject *idOpcodeCategoryClassName = xPyString_FromString("OPCODE_CATEGORY");
+  PyObject *idOpcodeCategoryClassDict = xPyDict_New();
+
+  /* Add registers ref into IDREF.OPCODE_CATEGORY class */
+  initOpcodeCategoryEnv(idOpcodeCategoryClassDict);
+
+  /* Create the OPCODE_CATEGORY class */
+  PyObject *idOpcodeCategoryClass = xPyClass_New(NULL, idOpcodeCategoryClassDict, idOpcodeCategoryClassName);
+
+  // OPCODE_CATEGORY ---------------------
+
+
   // OPERAND ---------------------
 
   /* Create the IDREF.OPERAND class */
@@ -96,11 +115,12 @@ PyObject *initBindings(void)
   // OPERAND ---------------------
 
 
-  /* Add REG, FLAG, OPCODE into IDREF */
-  PyDict_SetItemString(idRefClassDict, "REG", idRegClass);
+  /* Add REG, FLAG, OPCODE, OPCODE_CATEGORY, OPERAND into IDREF */
   PyDict_SetItemString(idRefClassDict, "FLAG", idFlagClass);
   PyDict_SetItemString(idRefClassDict, "OPCODE", idOpcodeClass);
+  PyDict_SetItemString(idRefClassDict, "OPCODE_CATEGORY", idOpcodeCategoryClass);
   PyDict_SetItemString(idRefClassDict, "OPERAND", idOperandClass);
+  PyDict_SetItemString(idRefClassDict, "REG", idRegClass);
 
   /* Create the IDREF class */
   PyObject *idRefClass = xPyClass_New(NULL, idRefClassDict, idRefClassName);
