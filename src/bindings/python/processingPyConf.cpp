@@ -108,7 +108,9 @@ void ProcessingPyConf::callbackAfter(Inst *inst, const ContextHandler &ctxH)
     PyDict_SetItemString(dictInstClass, "address", PyInt_FromLong(inst->getAddress()));
     PyDict_SetItemString(dictInstClass, "threadId", PyInt_FromLong(inst->getThreadId()));
     PyDict_SetItemString(dictInstClass, "opcode", PyInt_FromLong(inst->getOpcode()));
+    PyDict_SetItemString(dictInstClass, "opcodeCategory", PyInt_FromLong(inst->getOpcodeCategory()));
     PyDict_SetItemString(dictInstClass, "assembly", PyString_FromFormat("%s", inst->getDisassembly().c_str()));
+    PyDict_SetItemString(dictInstClass, "isBranch", PyBool_FromLong(inst->isBranch()));
 
     /* Setup the symbolic element list */
     PyObject *SEList                         = xPyList_New(inst->numberOfElements());
@@ -175,7 +177,10 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, const ContextHandler &ctxH
     PyDict_SetItemString(dictInstClass, "address", PyInt_FromLong(irb->getAddress()));
     PyDict_SetItemString(dictInstClass, "threadId", PyInt_FromLong(ctxH.getThreadId()));
     PyDict_SetItemString(dictInstClass, "opcode", PyInt_FromLong(irb->getOpcode()));
+    PyDict_SetItemString(dictInstClass, "opcodeCategory", PyInt_FromLong(irb->getOpcodeCategory()));
     PyDict_SetItemString(dictInstClass, "assembly", PyString_FromFormat("%s", irb->getDisassembly().c_str()));
+    PyDict_SetItemString(dictInstClass, "isBranch", PyBool_FromLong(irb->isBranch()));
+
     /* Before the processing, the symbolic element list is empty */
     PyObject *SEList = xPyList_New(0);
     PyDict_SetItemString(dictInstClass, "symbolicElements", SEList);
