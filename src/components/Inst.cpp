@@ -1,4 +1,6 @@
+
 #include "Inst.h"
+#include "xed-category-enum.h"
 
 
 Inst::Inst(uint64_t threadId, uint64_t address, const std::string &insDis):
@@ -40,10 +42,31 @@ uint32_t Inst::getOpcode(void)
 }
 
 
+/* Get the opcode category of the instruction */
+int32_t Inst::getOpcodeCategory(void)
+{
+  return this->opcodeCategory;
+}
+
+
 /* Set the opcode of the instruction */
 void Inst::setOpcode(uint32_t op)
 {
   this->opcode = op;
+}
+
+
+/* Set the opcode category of the instruction */
+void Inst::setOpcodeCategory(int32_t category)
+{
+  this->opcodeCategory = category;
+}
+
+
+/* Returns true of false if it's a branch instruction */
+bool Inst::isBranch(void)
+{
+  return (this->opcodeCategory == XED_CATEGORY_COND_BR);
 }
 
 

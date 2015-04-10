@@ -23,6 +23,15 @@ class IRBuilder {
     // Set the opcode of the instruction.
     virtual void setOpcode(uint32_t op) = 0;
 
+    // Set the opcode category.
+    virtual void setOpcodeCategory(int32_t category) = 0;
+
+    // Get the opcode category.
+    virtual int32_t getOpcodeCategory(void) = 0;
+
+    // Returns true or false if the instruction is branch.
+    virtual bool isBranch(void) = 0;
+
     // Returns the address of the instruction.
     virtual uint64_t getAddress(void) const = 0;
 

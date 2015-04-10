@@ -48,6 +48,7 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
 
   /* Export some information from Irb to Inst */
   inst->setOpcode(irb->getOpcode());
+  inst->setOpcodeCategory(irb->getOpcodeCategory());
   inst->setOperands(irb->getOperands());
 
   /* Python callback after instruction processing */

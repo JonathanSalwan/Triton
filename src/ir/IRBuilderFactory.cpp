@@ -99,6 +99,7 @@ IRBuilder *createIRBuilder(INS ins) {
 
   // Setup the opcode in the IRbuilder
   ir->setOpcode(opcode);
+  ir->setOpcodeCategory(INS_Category(ins));
 
   return ir;
 }

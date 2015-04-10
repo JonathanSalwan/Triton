@@ -1,6 +1,7 @@
 #include <boost/format.hpp>
 #include <stdexcept>
 
+#include "xed-category-enum.h"
 #include "BaseIRBuilder.h"
 
 boost::format outputInstruction("%1% %|15t| %2% %|55t|");
@@ -25,6 +26,24 @@ uint32_t BaseIRBuilder::getOpcode(void) const
 void BaseIRBuilder::setOpcode(uint32_t op)
 {
   this->opcode = op;
+}
+
+
+void BaseIRBuilder::setOpcodeCategory(int32_t category)
+{
+  this->opcodeCategory = category;
+}
+
+
+int32_t BaseIRBuilder::getOpcodeCategory(void)
+{
+  return this->opcodeCategory;
+}
+
+
+bool BaseIRBuilder::isBranch(void)
+{
+  return (this->opcodeCategory == XED_CATEGORY_COND_BR);
 }
 
 
