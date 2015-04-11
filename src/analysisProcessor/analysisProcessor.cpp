@@ -280,11 +280,11 @@ uint64_t AnalysisProcessor::getMemValue(uint64_t mem, uint32_t readSize)
 }
 
 
-uint64_t AnalysisProcessor::translateRegID(uint64_t regID)
+uint64_t AnalysisProcessor::convertPinReg2TritonReg(uint64_t regID)
 {
   if (!this->currentCtxH)
     return 0;
-  return this->currentCtxH->translateRegID(regID);
+  return this->currentCtxH->convertPinReg2TritonReg(regID);
 }
 
 

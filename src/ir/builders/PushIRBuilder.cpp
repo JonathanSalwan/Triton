@@ -49,7 +49,7 @@ void PushIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          mem       = std::get<1>(this->operands[1]); // The dst memory writing
   uint32_t          writeSize = std::get<2>(this->operands[1]);
 
-  uint64_t          symReg    = ap.getRegSymbolicID(ap.translateRegID(reg));
+  uint64_t          symReg    = ap.getRegSymbolicID(ap.convertPinReg2TritonReg(reg));
   uint32_t          regSize   = ap.getRegisterSize(reg);
 
   /* Create the SMT semantic side effect */
@@ -69,7 +69,7 @@ void PushIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createMemSE(expr, mem);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintMemReg(se, mem, ap.translateRegID(reg), writeSize);
+  ap.assignmentSpreadTaintMemReg(se, mem, ap.convertPinReg2TritonReg(reg), writeSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);

@@ -19,7 +19,7 @@ void SubIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          reg     = std::get<1>(this->operands[0]);
   uint64_t          imm     = std::get<1>(this->operands[1]);
 
-  uint64_t          symReg  = ap.getRegSymbolicID(ap.translateRegID(reg));
+  uint64_t          symReg  = ap.getRegSymbolicID(ap.convertPinReg2TritonReg(reg));
   uint32_t          regSize = ap.getRegisterSize(reg);
 
   /* Create the SMT semantic */
@@ -36,10 +36,10 @@ void SubIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ap.translateRegID(reg));
+  se = ap.createRegSE(expr, ap.convertPinReg2TritonReg(reg));
 
   /* Apply the taint */
-  ap.aluSpreadTaintRegImm(se, ap.translateRegID(reg));
+  ap.aluSpreadTaintRegImm(se, ap.convertPinReg2TritonReg(reg));
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -60,8 +60,8 @@ void SubIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          reg1     = std::get<1>(this->operands[0]);
   uint64_t          reg2     = std::get<1>(this->operands[1]);
 
-  uint64_t          symReg1  = ap.getRegSymbolicID(ap.translateRegID(reg1));
-  uint64_t          symReg2  = ap.getRegSymbolicID(ap.translateRegID(reg2));
+  uint64_t          symReg1  = ap.getRegSymbolicID(ap.convertPinReg2TritonReg(reg1));
+  uint64_t          symReg2  = ap.getRegSymbolicID(ap.convertPinReg2TritonReg(reg2));
   uint32_t          regSize1 = ap.getRegisterSize(reg1);
   uint32_t          regSize2 = ap.getRegisterSize(reg2);
 
@@ -83,10 +83,10 @@ void SubIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ap.translateRegID(reg1));
+  se = ap.createRegSE(expr, ap.convertPinReg2TritonReg(reg1));
 
   /* Apply the taint */
-  ap.aluSpreadTaintRegReg(se, ap.translateRegID(reg1), ap.translateRegID(reg2));
+  ap.aluSpreadTaintRegReg(se, ap.convertPinReg2TritonReg(reg1), ap.convertPinReg2TritonReg(reg2));
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -108,7 +108,7 @@ void SubIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          mem      = std::get<1>(this->operands[1]);
   uint64_t          reg      = std::get<1>(this->operands[0]);
 
-  uint64_t          symReg   = ap.getRegSymbolicID(ap.translateRegID(reg));
+  uint64_t          symReg   = ap.getRegSymbolicID(ap.convertPinReg2TritonReg(reg));
   uint64_t          symMem   = ap.getMemSymbolicID(mem);
   uint32_t          regSize  = ap.getRegisterSize(reg);
 
@@ -129,10 +129,10 @@ void SubIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ap.translateRegID(reg));
+  se = ap.createRegSE(expr, ap.convertPinReg2TritonReg(reg));
 
   /* Apply the taint */
-  ap.aluSpreadTaintRegMem(se, ap.translateRegID(reg), mem, readSize);
+  ap.aluSpreadTaintRegMem(se, ap.convertPinReg2TritonReg(reg), mem, readSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -196,7 +196,7 @@ void SubIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          reg       = std::get<1>(this->operands[1]);
   uint32_t          regSize   = ap.getRegisterSize(reg);
 
-  uint64_t          symReg    = ap.getRegSymbolicID(ap.translateRegID(reg));
+  uint64_t          symReg    = ap.getRegSymbolicID(ap.convertPinReg2TritonReg(reg));
   uint64_t          symMem    = ap.getMemSymbolicID(mem);
 
   /* Create the SMT semantic */
@@ -219,7 +219,7 @@ void SubIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createMemSE(expr, mem);
 
   /* Apply the taint */
-  ap.aluSpreadTaintMemReg(se, mem, ap.translateRegID(reg), writeSize);
+  ap.aluSpreadTaintMemReg(se, mem, ap.convertPinReg2TritonReg(reg), writeSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);

@@ -60,10 +60,10 @@ void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ap.translateRegID(reg));
+  se = ap.createRegSE(expr, ap.convertPinReg2TritonReg(reg));
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintMemReg(se, mem, ap.translateRegID(reg), readSize);
+  ap.assignmentSpreadTaintMemReg(se, mem, ap.convertPinReg2TritonReg(reg), readSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);

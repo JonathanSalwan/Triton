@@ -18,7 +18,7 @@ class PINContextHandler: public ContextHandler {
     uint64_t  getMemValue(uint64_t mem, uint32_t readSize) const;
     uint64_t  getRegisterSize(uint64_t regID) const;
     uint64_t  getRegisterValue(uint64_t regID) const;
-    uint64_t  translateRegID(uint64_t regID) const;
+    uint64_t  convertPinReg2TritonReg(uint64_t regID) const;
 
   private:
     CONTEXT   *_ctx;

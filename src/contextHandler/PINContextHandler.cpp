@@ -170,7 +170,7 @@ uint64_t PINContextHandler::getMemValue(uint64_t mem, uint32_t readSize) const
 
 // In some cases, we need to convert Pin registers to your own ID
 // Mainly used in the Taint and the Symbolic engine.
-uint64_t PINContextHandler::translateRegID(uint64_t regID) const
+uint64_t PINContextHandler::convertPinReg2TritonReg(uint64_t regID) const
 {
   switch(regID){
     case REG_RAX:
