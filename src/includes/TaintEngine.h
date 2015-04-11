@@ -9,6 +9,7 @@
 #define TAINTED     1
 #define UNTAINTED   !TAINTED
 
+
 class TaintEngine {
 
   private:
@@ -16,7 +17,12 @@ class TaintEngine {
     /* Tainted addresses */
     std::list<uint64_t> taintedAddresses;
 
-    /* Tainted registers */
+    /* 
+     *Tainted registers.
+     * Currently this is an over approximation of the taint.
+     * uint64_t because in the next version, the taint will be 
+     * a mask with sub-register.
+     */
     uint64_t taintedReg[33];
 
     /* Initialization of an object */

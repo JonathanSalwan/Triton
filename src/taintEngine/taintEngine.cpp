@@ -7,39 +7,39 @@
 TaintEngine::TaintEngine()
 {
   /* Init all registers to not tainted */
-  this->taintedReg[ID_RAX]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RBX]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RCX]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RDX]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RDI]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RSI]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RBP]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RSP]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_RIP]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R8]    = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R9]    = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R10]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R11]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R12]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R13]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R14]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_R15]   = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM0]  = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM1]  = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM2]  = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM3]  = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM4]  = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM5]  = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM6]  = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM7]  = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM8]  = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM9]  = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM10] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM11] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM12] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM13] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM14] = (uint64_t)!TAINTED;
-  this->taintedReg[ID_XMM15] = (uint64_t)!TAINTED;
+  this->taintedReg[ID_RAX]   = !TAINTED;
+  this->taintedReg[ID_RBX]   = !TAINTED;
+  this->taintedReg[ID_RCX]   = !TAINTED;
+  this->taintedReg[ID_RDX]   = !TAINTED;
+  this->taintedReg[ID_RDI]   = !TAINTED;
+  this->taintedReg[ID_RSI]   = !TAINTED;
+  this->taintedReg[ID_RBP]   = !TAINTED;
+  this->taintedReg[ID_RSP]   = !TAINTED;
+  this->taintedReg[ID_RIP]   = !TAINTED;
+  this->taintedReg[ID_R8]    = !TAINTED;
+  this->taintedReg[ID_R9]    = !TAINTED;
+  this->taintedReg[ID_R10]   = !TAINTED;
+  this->taintedReg[ID_R11]   = !TAINTED;
+  this->taintedReg[ID_R12]   = !TAINTED;
+  this->taintedReg[ID_R13]   = !TAINTED;
+  this->taintedReg[ID_R14]   = !TAINTED;
+  this->taintedReg[ID_R15]   = !TAINTED;
+  this->taintedReg[ID_XMM0]  = !TAINTED;
+  this->taintedReg[ID_XMM1]  = !TAINTED;
+  this->taintedReg[ID_XMM2]  = !TAINTED;
+  this->taintedReg[ID_XMM3]  = !TAINTED;
+  this->taintedReg[ID_XMM4]  = !TAINTED;
+  this->taintedReg[ID_XMM5]  = !TAINTED;
+  this->taintedReg[ID_XMM6]  = !TAINTED;
+  this->taintedReg[ID_XMM7]  = !TAINTED;
+  this->taintedReg[ID_XMM8]  = !TAINTED;
+  this->taintedReg[ID_XMM9]  = !TAINTED;
+  this->taintedReg[ID_XMM10] = !TAINTED;
+  this->taintedReg[ID_XMM11] = !TAINTED;
+  this->taintedReg[ID_XMM12] = !TAINTED;
+  this->taintedReg[ID_XMM13] = !TAINTED;
+  this->taintedReg[ID_XMM14] = !TAINTED;
+  this->taintedReg[ID_XMM15] = !TAINTED;
 }
 
 
@@ -110,6 +110,7 @@ bool TaintEngine::isMemTainted(uint64_t addr)
   }
   return !TAINTED;
 }
+
 
 /* Returns true of false if the register is currently tainted */
 bool TaintEngine::isRegTainted(uint64_t regID)

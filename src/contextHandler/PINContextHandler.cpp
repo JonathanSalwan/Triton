@@ -1,11 +1,18 @@
-#include "PINContextHandler.h"
 
 #include <iostream>
 #include <stdexcept>
 #include <sys/mman.h>
 #include <unistd.h>
 
-PINContextHandler::PINContextHandler(CONTEXT *ctx, THREADID id): _ctx(ctx), _threadId(id) { }
+#include "PINContextHandler.h"
+
+
+
+PINContextHandler::PINContextHandler(CONTEXT *ctx, THREADID id): 
+  _ctx(ctx),
+  _threadId(id)
+{
+}
 
 
 /* In some cases, Pin need the Highest size register like
@@ -123,11 +130,13 @@ static REG getHighReg(REG reg)
   }
 }
 
+
 // REG is a enum, so the cast is from a bigger type.
 static inline REG safecast(uint64_t regID)
 {
   return static_cast<REG>(regID);
 }
+
 
 // There is no verification on the validity of the ID.
 uint64_t PINContextHandler::getRegisterValue(uint64_t regID) const
@@ -135,10 +144,12 @@ uint64_t PINContextHandler::getRegisterValue(uint64_t regID) const
   return PIN_GetContextReg(_ctx, getHighReg(safecast(regID)));
 }
 
+
 uint64_t PINContextHandler::getRegisterSize(uint64_t regID) const
 {
   return REG_Size(safecast(regID));
 }
+
 
 /* Tricks to check if the address is mapped */
 static bool isAddressMapped(ADDRINT addr) {
@@ -148,6 +159,7 @@ static bool isAddressMapped(ADDRINT addr) {
     return false;
   return true;
 }
+
 
 /* Used to deref a pointer address and returns the targeted byte by size of read */
 uint64_t PINContextHandler::getMemValue(uint64_t mem, uint32_t readSize) const
@@ -167,6 +179,7 @@ uint64_t PINContextHandler::getMemValue(uint64_t mem, uint32_t readSize) const
   throw std::runtime_error("Error: Invalid read size");
   return 0; // Never go there
 }
+
 
 // In some cases, we need to convert Pin registers to your own ID
 // Mainly used in the Taint and the Symbolic engine.
@@ -282,6 +295,7 @@ uint64_t PINContextHandler::convertPinReg2TritonReg(uint64_t regID) const
       return -1;
   }
 }
+
 
 // Convert a Triton register to a Pin register
 uint64_t PINContextHandler::convertTritonReg2PinReg(uint64_t regID) const

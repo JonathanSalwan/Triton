@@ -182,7 +182,7 @@ static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
   uint64_t tritonReg = PyLong_AsLong(reg);
   uint64_t pinReg = ap.convertTritonReg2PinReg(tritonReg);
 
-  if (pinReg == (uint64_t)-1){
+  if (pinReg == static_cast<uint64_t>(-1)){
     PyErr_Format(PyExc_TypeError, "getRegValue(): Register ID not supported");
     PyErr_Print();
     exit(-1);
