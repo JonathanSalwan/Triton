@@ -287,22 +287,38 @@ uint64_t PINContextHandler::translateRegID(uint64_t regID) const
 uint64_t PINContextHandler::convertTritonReg2PinReg(uint64_t regID) const
 {
   switch(regID){
-    case ID_RAX:  return REG_RAX;
-    case ID_RBX:  return REG_RBX;
-    case ID_RCX:  return REG_RCX;
-    case ID_RDI:  return REG_RDI;
-    case ID_RSI:  return REG_RSI;
-    case ID_RBP:  return REG_RBP;
-    case ID_RSP:  return REG_RSP;
-    case ID_RIP:  return REG_RIP;
-    case REG_R8:  return ID_R8;
-    case REG_R9:  return ID_R9;
-    case REG_R10: return ID_R10;
-    case REG_R11: return ID_R11;
-    case REG_R12: return ID_R12;
-    case REG_R13: return ID_R13;
-    case REG_R14: return ID_R14;
-    case REG_R15: return ID_R15;
+    case ID_RAX:   return REG_RAX;
+    case ID_RBX:   return REG_RBX;
+    case ID_RCX:   return REG_RCX;
+    case ID_RDI:   return REG_RDI;
+    case ID_RSI:   return REG_RSI;
+    case ID_RBP:   return REG_RBP;
+    case ID_RSP:   return REG_RSP;
+    case ID_RIP:   return REG_RIP;
+    case ID_R8:    return REG_R8;
+    case ID_R9:    return REG_R9;
+    case ID_R10:   return REG_R10;
+    case ID_R11:   return REG_R11;
+    case ID_R12:   return REG_R12;
+    case ID_R13:   return REG_R13;
+    case ID_R14:   return REG_R14;
+    case ID_R15:   return REG_R15;
+    case ID_XMM0:  return REG_XMM0;
+    case ID_XMM1:  return REG_XMM1;
+    case ID_XMM2:  return REG_XMM2;
+    case ID_XMM3:  return REG_XMM3;
+    case ID_XMM4:  return REG_XMM4;
+    case ID_XMM5:  return REG_XMM5;
+    case ID_XMM6:  return REG_XMM6;
+    case ID_XMM7:  return REG_XMM7;
+    case ID_XMM8:  return REG_XMM8;
+    case ID_XMM9:  return REG_XMM9;
+    case ID_XMM10: return REG_XMM10;
+    case ID_XMM11: return REG_XMM11;
+    case ID_XMM12: return REG_XMM12;
+    case ID_XMM13: return REG_XMM13;
+    case ID_XMM14: return REG_XMM14;
+    case ID_XMM15: return REG_XMM15;
     default: return -1;
   }
 }
