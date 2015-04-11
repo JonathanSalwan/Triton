@@ -111,6 +111,47 @@ static PyObject *Triton_getMemSymbolicID(PyObject *self, PyObject *addr)
 }
 
 
+static char Triton_getMemValue_doc[] = "Get the current value of the memory";
+static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
+{
+
+  PyObject *addr;
+  PyObject *readSize;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &addr, &readSize);
+
+  if (!ap.getCurrentCtxH()){
+    PyErr_Format(PyExc_TypeError, "getMemValue(): Can't call getMemValue() right now. You must run the program before.");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  if (!PyLong_Check(addr) && !PyInt_Check(addr)){
+    PyErr_Format(PyExc_TypeError, "getMemValue(): expected an address (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  uint64_t ad = PyLong_AsLong(addr);
+  uint64_t rs = PyLong_AsLong(readSize);
+
+  if (rs != 8 && rs != 4 && rs != 2 && rs != 1){
+    PyErr_Format(PyExc_TypeError, "getMemValue(): The readSize argument must be: 8, 4, 2 or 1");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  if (PIN_CheckReadAccess(reinterpret_cast<void*>(ad)) == false){
+    PyErr_Format(PyExc_TypeError, "getMemValue(): The targeted address memory can not be read");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  return Py_BuildValue("k", ap.getMemoryValue(ad, rs));
+}
+
+
 static char Triton_getRegSymbolicID_doc[] = "Get the symbolic register reference";
 static PyObject *Triton_getRegSymbolicID(PyObject *self, PyObject *reg)
 {
@@ -382,6 +423,7 @@ PyMethodDef pythonCallbacks[] = {
   {"dumpStats",               Triton_dumpStats,               METH_O,       Triton_dumpStats_doc},
   {"dumpTrace",               Triton_dumpTrace,               METH_O,       Triton_dumpTrace_doc},
   {"getMemSymbolicID",        Triton_getMemSymbolicID,        METH_O,       Triton_getMemSymbolicID_doc},
+  {"getMemValue",             Triton_getMemValue,             METH_VARARGS, Triton_getMemValue_doc},
   {"getRegSymbolicID",        Triton_getRegSymbolicID,        METH_O,       Triton_getRegSymbolicID_doc},
   {"getRegValue",             Triton_getRegValue,             METH_O,       Triton_getRegValue_doc},
   {"isMemTainted",            Triton_isMemTainted,            METH_O,       Triton_isMemTainted_doc},
