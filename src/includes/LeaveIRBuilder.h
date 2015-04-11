@@ -13,10 +13,10 @@ class LeaveIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
     LeaveIRBuilder(uint64_t address, const std::string &disassembly);
 
     // From BaseIRBuilder
-    virtual Inst *process(const ContextHandler &ctxH, AnalysisProcessor &ap) const;
+    virtual Inst *process(AnalysisProcessor &ap) const;
 
     // From OneOperandTemplate
-    virtual void none(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const;
+    virtual void none(AnalysisProcessor &ap, Inst &inst) const;
 };
 
 #endif // _LEAVEIRBUILDER_H_

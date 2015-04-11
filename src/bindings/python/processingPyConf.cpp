@@ -98,7 +98,7 @@ void ProcessingPyConf::untaintRegFromAddr(IRBuilder *irb)
  * - isTainted (bool)
  *
  */
-void ProcessingPyConf::callbackAfter(Inst *inst, const ContextHandler &ctxH)
+void ProcessingPyConf::callbackAfter(Inst *inst, AnalysisProcessor *ap)
 {
   // Check if there is a callback wich must be called at each instruction instrumented
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackAfter){
@@ -167,7 +167,7 @@ void ProcessingPyConf::callbackAfter(Inst *inst, const ContextHandler &ctxH)
 }
 
 
-void ProcessingPyConf::callbackBefore(IRBuilder *irb, const ContextHandler &ctxH)
+void ProcessingPyConf::callbackBefore(IRBuilder *irb, AnalysisProcessor *ap)
 {
   // Check if there is a callback wich must be called at each instruction instrumented
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackBefore){
@@ -175,7 +175,7 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, const ContextHandler &ctxH
     /* Create the class dictionary */
     PyObject *dictInstClass = xPyDict_New();
     PyDict_SetItemString(dictInstClass, "address", PyInt_FromLong(irb->getAddress()));
-    PyDict_SetItemString(dictInstClass, "threadId", PyInt_FromLong(ctxH.getThreadId()));
+    PyDict_SetItemString(dictInstClass, "threadId", PyInt_FromLong(ap->getThreadId()));
     PyDict_SetItemString(dictInstClass, "opcode", PyInt_FromLong(irb->getOpcode()));
     PyDict_SetItemString(dictInstClass, "opcodeCategory", PyInt_FromLong(irb->getOpcodeCategory()));
     PyDict_SetItemString(dictInstClass, "assembly", PyString_FromFormat("%s", irb->getDisassembly().c_str()));
@@ -208,7 +208,7 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, const ContextHandler &ctxH
 }
 
 
-void ProcessingPyConf::applyConfBeforeProcessing(IRBuilder *irb, CONTEXT *ctx, THREADID threadId)
+void ProcessingPyConf::applyConfBeforeProcessing(IRBuilder *irb)
 {
   this->startAnalysisFromAddr(irb);
   this->stopAnalysisFromAddr(irb);

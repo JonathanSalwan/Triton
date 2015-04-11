@@ -28,63 +28,63 @@ static uint64_t deltaSize(uint64_t size1, uint64_t size2) {
 }
 
 
-void MovIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void MovIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
   uint64_t          reg = std::get<1>(this->operands[0]);
   uint64_t          imm = std::get<1>(this->operands[1]);
-  uint64_t          size = ctxH.getRegisterSize(reg);
+  uint64_t          size = ap.getRegisterSize(reg);
 
   /* Create the SMT semantic */
   expr << smt2lib::bv(imm, size * REG_SIZE);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ctxH.translateRegID(reg));
+  se = ap.createRegSE(expr, ap.translateRegID(reg));
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintRegImm(se, ctxH.translateRegID(reg));
+  ap.assignmentSpreadTaintRegImm(se, ap.translateRegID(reg));
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
 }
 
 
-void MovIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void MovIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
   uint64_t          reg1    = std::get<1>(this->operands[0]);
   uint64_t          reg2    = std::get<1>(this->operands[1]);
-  uint64_t          size1 = ctxH.getRegisterSize(reg1);
-  uint64_t          size2 = ctxH.getRegisterSize(reg2);
+  uint64_t          size1 = ap.getRegisterSize(reg1);
+  uint64_t          size2 = ap.getRegisterSize(reg2);
 
-  uint64_t          symReg2 = ap.getRegSymbolicID(ctxH.translateRegID(reg2));
+  uint64_t          symReg2 = ap.getRegSymbolicID(ap.translateRegID(reg2));
 
   /* Create the SMT semantic */
   if (symReg2 != UNSET)
     expr << smt2lib::extract(size2, "#" + std::to_string(symReg2));
   else
-    expr << smt2lib::bv(ctxH.getRegisterValue(reg2), size1 * REG_SIZE);
+    expr << smt2lib::bv(ap.getRegisterValue(reg2), size1 * REG_SIZE);
 
   expr.str(this->extender(expr.str(), deltaSize(size1, size2)));
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ctxH.translateRegID(reg1));
+  se = ap.createRegSE(expr, ap.translateRegID(reg1));
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintRegReg(se, ctxH.translateRegID(reg1), ctxH.translateRegID(reg2));
+  ap.assignmentSpreadTaintRegReg(se, ap.translateRegID(reg1), ap.translateRegID(reg2));
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
 }
 
 
-void MovIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void MovIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
   uint32_t          readSize = std::get<2>(this->operands[1]);
   uint64_t          mem      = std::get<1>(this->operands[1]);
   uint64_t          reg      = std::get<1>(this->operands[0]);
-  uint64_t          regSize  = ctxH.getRegisterSize(reg);
+  uint64_t          regSize  = ap.getRegisterSize(reg);
 
   uint64_t          symMem   = ap.getMemSymbolicID(mem);
 
@@ -92,22 +92,22 @@ void MovIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symMem != UNSET)
     expr << smt2lib::extract(readSize, "#" + std::to_string(symMem));
   else
-    expr << smt2lib::bv(ctxH.getMemoryValue(mem, readSize), readSize * REG_SIZE);
+    expr << smt2lib::bv(ap.getMemoryValue(mem, readSize), readSize * REG_SIZE);
 
   expr.str(this->extender(expr.str(), deltaSize(regSize, readSize)));
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ctxH.translateRegID(reg));
+  se = ap.createRegSE(expr, ap.translateRegID(reg));
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintRegMem(se, ctxH.translateRegID(reg), mem, readSize);
+  ap.assignmentSpreadTaintRegMem(se, ap.translateRegID(reg), mem, readSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
 }
 
 
-void MovIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void MovIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
   uint32_t          writeSize = std::get<2>(this->operands[0]);
@@ -128,40 +128,40 @@ void MovIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 }
 
 
-void MovIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void MovIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
   uint32_t          writeSize = std::get<2>(this->operands[0]);
   uint64_t          mem       = std::get<1>(this->operands[0]);
   uint64_t          reg       = std::get<1>(this->operands[1]);
-  uint64_t          regSize   = ctxH.getRegisterSize(reg);
+  uint64_t          regSize   = ap.getRegisterSize(reg);
 
-  uint64_t          symReg    = ap.getRegSymbolicID(ctxH.translateRegID(reg));
+  uint64_t          symReg    = ap.getRegSymbolicID(ap.translateRegID(reg));
 
   /* Create the SMT semantic */
   if (symReg != UNSET)
     expr << smt2lib::extract(regSize, "#" + std::to_string(symReg));
   else
-    expr << smt2lib::bv(ctxH.getRegisterValue(reg), writeSize * REG_SIZE);
+    expr << smt2lib::bv(ap.getRegisterValue(reg), writeSize * REG_SIZE);
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintMemReg(se, mem, ctxH.translateRegID(reg), writeSize);
+  ap.assignmentSpreadTaintMemReg(se, mem, ap.translateRegID(reg), writeSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
 }
 
 
-Inst *MovIRBuilder::process(const ContextHandler &ctxH, AnalysisProcessor &ap) const {
+Inst *MovIRBuilder::process(AnalysisProcessor &ap) const {
   checkSetup();
 
-  Inst *inst = new Inst(ctxH.getThreadId(), this->address, this->disas);
+  Inst *inst = new Inst(ap.getThreadId(), this->address, this->disas);
 
   try {
-    this->templateMethod(ctxH, ap, *inst, this->operands, "MOV");
+    this->templateMethod(ap, *inst, this->operands, "MOV");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
   }
   catch (std::exception &e) {

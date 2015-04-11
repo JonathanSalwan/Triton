@@ -15,7 +15,6 @@ class NoneOperandTemplate: public OperandTemplate {
     virtual ~NoneOperandTemplate() { }
 
     virtual void templateMethod(
-        const ContextHandler &ctxH,
         AnalysisProcessor &ap,
         Inst &inst,
         const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &operands,
@@ -24,7 +23,7 @@ class NoneOperandTemplate: public OperandTemplate {
   protected:
     // Primitives uses in the templateMethod, must be implemented by subclasses.
 
-    virtual void none(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const = 0;
+    virtual void none(AnalysisProcessor &ap, Inst &inst) const = 0;
 };
 
 #endif // _NONEOPERANDTEMPLATE_H_

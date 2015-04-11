@@ -13,7 +13,7 @@ LeaveIRBuilder::LeaveIRBuilder(uint64_t address, const std::string &disassembly)
 }
 
 
-static SymbolicElement *alignStack(AnalysisProcessor &ap, const ContextHandler &ctxH, uint32_t readSize)
+static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t readSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
@@ -25,7 +25,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, const ContextHandler &
   if (symReg != UNSET)
     op1 << "#" << std::dec << symReg;
   else
-    op1 << smt2lib::bv(ctxH.getRegisterValue(REG_RSP), readSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getRegisterValue(REG_RSP), readSize * REG_SIZE);
 
   op2 << smt2lib::bv(readSize, readSize * REG_SIZE);
 
@@ -40,7 +40,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, const ContextHandler &
   return se;
 }
 
-void LeaveIRBuilder::none(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement     *se1, *se2;
   std::stringstream   expr1, expr2;
   uint64_t            symRegRBP = ap.getRegSymbolicID(ID_RBP);
@@ -52,7 +52,7 @@ void LeaveIRBuilder::none(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symRegRBP != UNSET)
     expr1 << smt2lib::extract(8, "#" + std::to_string(symRegRBP));
   else
-    expr1 << smt2lib::bv(ctxH.getRegisterValue(REG_RBP), 8 * REG_SIZE);
+    expr1 << smt2lib::bv(ap.getRegisterValue(REG_RBP), 8 * REG_SIZE);
 
   /* Create the symbolic element */
   se1 = ap.createRegSE(expr1, ID_RSP);
@@ -65,7 +65,7 @@ void LeaveIRBuilder::none(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symMem != UNSET)
     expr2 << "#" << std::dec << symMem;
   else
-    expr2 << smt2lib::bv(ctxH.getMemoryValue(readMem, readSize), readSize * REG_SIZE);
+    expr2 << smt2lib::bv(ap.getMemoryValue(readMem, readSize), readSize * REG_SIZE);
 
   /* Create the symbolic element */
   se2 = ap.createRegSE(expr2, ID_RBP);
@@ -77,17 +77,17 @@ void LeaveIRBuilder::none(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   /* Add the symbolic element to the current inst */
   inst.addElement(se1);
   inst.addElement(se2);
-  inst.addElement(alignStack(ap, ctxH, readSize));
+  inst.addElement(alignStack(ap, readSize));
 }
 
 
-Inst *LeaveIRBuilder::process(const ContextHandler &ctxH, AnalysisProcessor &ap) const {
+Inst *LeaveIRBuilder::process(AnalysisProcessor &ap) const {
   this->checkSetup();
 
-  Inst *inst = new Inst(ctxH.getThreadId(), this->address, this->disas);
+  Inst *inst = new Inst(ap.getThreadId(), this->address, this->disas);
 
   try {
-    this->templateMethod(ctxH, ap, *inst, this->operands, "LEAVE");
+    this->templateMethod(ap, *inst, this->operands, "LEAVE");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
   }
   catch (std::exception &e) {

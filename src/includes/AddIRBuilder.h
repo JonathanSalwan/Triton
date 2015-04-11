@@ -13,18 +13,18 @@ class AddIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     AddIRBuilder(uint64_t address, const std::string &disassembly);
 
     // From BaseIRBuilder
-    virtual Inst *process(const ContextHandler &ctxH, AnalysisProcessor &ap) const;
+    virtual Inst *process(AnalysisProcessor &ap) const;
 
     // From TwoOperandsTemplate
-    virtual void regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const;
+    virtual void regImm(AnalysisProcessor &ap, Inst &inst) const;
 
-    virtual void regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const;
+    virtual void regReg(AnalysisProcessor &ap, Inst &inst) const;
 
-    virtual void regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const;
+    virtual void regMem(AnalysisProcessor &ap, Inst &inst) const;
 
-    virtual void memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const;
+    virtual void memImm(AnalysisProcessor &ap, Inst &inst) const;
 
-    virtual void memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const;
+    virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
 #endif // _ADDIRBUILDER_H_

@@ -1,6 +1,7 @@
 #ifndef _ANALYSISPROCESSOR_H_
 #define _ANALYSISPROCESSOR_H_
 
+#include "PINContextHandler.h"
 #include "SolverEngine.h"
 #include "Stats.h"
 #include "SymbolicEngine.h"
@@ -10,6 +11,32 @@
 class AnalysisProcessor {
   public:
     AnalysisProcessor();
+
+    /* 
+     * The this->currentCtxH attribute must be updated at each instruction processing.
+     * This is a dirty hack which allows Python Bindings to access to the current CPU
+     * context.
+     */
+    void updateCurrentCtxH(CONTEXT *ctx, THREADID threadId);
+    PINContextHandler *getCurrentCtxH(void);
+
+    // Context Handler Facade  
+    // ----------------------
+
+    // Returns the thread Id.
+    THREADID getThreadId(void);
+
+    // Returns the value of the register.
+    uint64_t getRegisterValue(uint64_t regID);
+
+    // Returns the size of the register.
+    uint64_t getRegisterSize(uint64_t regID);
+
+    // Returns the value of the memory.
+    uint64_t getMemoryValue(uint64_t mem, uint32_t readSize);
+
+    // Translates a Pin REG into a Triton REG.
+    uint64_t translateRegID(uint64_t regID);
 
     // Symbolic Engine Facade
     // ----------------------
@@ -77,10 +104,11 @@ class AnalysisProcessor {
 
 
   private:
-    SymbolicEngine  symEngine;
-    SolverEngine    solverEngine;
-    TaintEngine     taintEngine;
-    Stats           stats;
+    SymbolicEngine    symEngine;
+    SolverEngine      solverEngine;
+    TaintEngine       taintEngine;
+    Stats             stats;
+    PINContextHandler *currentCtxH;
 };
 
 #endif //_ANALYSISPROCESSOR_H_

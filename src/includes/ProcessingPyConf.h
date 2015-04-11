@@ -19,10 +19,10 @@ class ProcessingPyConf
     ProcessingPyConf(AnalysisProcessor *ap, Trigger *analysisTrigger);
     ~ProcessingPyConf();
 
-    void applyConfBeforeProcessing(IRBuilder *irb, CONTEXT *ctx, THREADID threadId);
+    void applyConfBeforeProcessing(IRBuilder *irb);
 
-    void callbackAfter(Inst *inst, const ContextHandler &ctxH);
-    void callbackBefore(IRBuilder *irb, const ContextHandler &ctxH);
+    void callbackAfter(Inst *inst, AnalysisProcessor *ap);
+    void callbackBefore(IRBuilder *irb, AnalysisProcessor *ap);
 
     void startAnalysisFromAddr(IRBuilder *irb);
     void stopAnalysisFromAddr(IRBuilder *irb);

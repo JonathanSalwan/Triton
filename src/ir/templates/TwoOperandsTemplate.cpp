@@ -7,7 +7,6 @@
 
 
 void TwoOperandsTemplate::templateMethod(
-    const ContextHandler &ctxH,
     AnalysisProcessor &ap,
     Inst &inst,
     const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &operands,
@@ -21,26 +20,26 @@ void TwoOperandsTemplate::templateMethod(
   // reg, imm
   if (std::get<0>(operands[0]) == IRBuilderOperand::REG &&
       std::get<0>(operands[1]) == IRBuilderOperand::IMM)
-    this->regImm(ctxH, ap, inst);
+    this->regImm(ap, inst);
 
   // reg, reg
   if (std::get<0>(operands[0]) == IRBuilderOperand::REG &&
       std::get<0>(operands[1]) == IRBuilderOperand::REG)
-    this->regReg(ctxH, ap, inst);
+    this->regReg(ap, inst);
 
   // reg, mem
   if (std::get<0>(operands[0]) == IRBuilderOperand::REG &&
       IRBuilder::isMemOperand(std::get<0>(operands[1])))
-    this->regMem(ctxH, ap, inst);
+    this->regMem(ap, inst);
 
   // mem, imm
   if (IRBuilder::isMemOperand(std::get<0>(operands[0])) &&
       std::get<0>(operands[1]) == IRBuilderOperand::IMM)
-    this->memImm(ctxH, ap, inst);
+    this->memImm(ap, inst);
 
   // mem, reg
   if (IRBuilder::isMemOperand(std::get<0>(operands[0])) &&
       std::get<0>(operands[1]) == IRBuilderOperand::REG)
-    this->memReg(ctxH, ap, inst);
+    this->memReg(ap, inst);
 }
 

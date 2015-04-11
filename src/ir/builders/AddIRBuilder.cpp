@@ -13,21 +13,21 @@ AddIRBuilder::AddIRBuilder(uint64_t address, const std::string &disassembly):
 }
 
 
-void AddIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void AddIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
   uint64_t          reg     = std::get<1>(this->operands[0]);
   uint64_t          imm     = std::get<1>(this->operands[1]);
 
-  uint64_t          symReg  = ap.getRegSymbolicID(ctxH.translateRegID(reg));
-  uint32_t          regSize = ctxH.getRegisterSize(reg);
+  uint64_t          symReg  = ap.getRegSymbolicID(ap.translateRegID(reg));
+  uint32_t          regSize = ap.getRegisterSize(reg);
 
   /* Create the SMT semantic */
   /* OP_1 */
   if (symReg != UNSET)
     op1 << "#" << std::dec << symReg;
   else
-    op1 << smt2lib::bv(ctxH.getRegisterValue(reg), regSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getRegisterValue(reg), regSize * REG_SIZE);
 
   /* OP_2 */
   op2 << smt2lib::bv(imm, regSize * REG_SIZE);
@@ -36,10 +36,10 @@ void AddIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   expr << smt2lib::bvadd(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ctxH.translateRegID(reg));
+  se = ap.createRegSE(expr, ap.translateRegID(reg));
 
   /* Apply the taint */
-  ap.aluSpreadTaintRegImm(se, ctxH.translateRegID(reg));
+  ap.aluSpreadTaintRegImm(se, ap.translateRegID(reg));
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -54,16 +54,16 @@ void AddIRBuilder::regImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 }
 
 
-void AddIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void AddIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
   uint64_t          reg1     = std::get<1>(this->operands[0]);
   uint64_t          reg2     = std::get<1>(this->operands[1]);
 
-  uint64_t          symReg1  = ap.getRegSymbolicID(ctxH.translateRegID(reg1));
-  uint64_t          symReg2  = ap.getRegSymbolicID(ctxH.translateRegID(reg2));
-  uint32_t          regSize1 = ctxH.getRegisterSize(reg1);
-  uint32_t          regSize2 = ctxH.getRegisterSize(reg2);
+  uint64_t          symReg1  = ap.getRegSymbolicID(ap.translateRegID(reg1));
+  uint64_t          symReg2  = ap.getRegSymbolicID(ap.translateRegID(reg2));
+  uint32_t          regSize1 = ap.getRegisterSize(reg1);
+  uint32_t          regSize2 = ap.getRegisterSize(reg2);
 
 
   /* Create the SMT semantic */
@@ -71,22 +71,22 @@ void AddIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symReg1 != UNSET)
     op1 << "#" << std::dec << symReg1;
   else
-    op1 << smt2lib::bv(ctxH.getRegisterValue(reg1), regSize1 * REG_SIZE);
+    op1 << smt2lib::bv(ap.getRegisterValue(reg1), regSize1 * REG_SIZE);
 
   // OP_2
   if (symReg2 != UNSET)
     op2 << smt2lib::extract(regSize2, "#" + std::to_string(symReg2));
   else
-    op2 << smt2lib::bv(ctxH.getRegisterValue(reg2), regSize2 * REG_SIZE);
+    op2 << smt2lib::bv(ap.getRegisterValue(reg2), regSize2 * REG_SIZE);
 
   // Final expr
   expr << smt2lib::bvadd(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ctxH.translateRegID(reg1));
+  se = ap.createRegSE(expr, ap.translateRegID(reg1));
 
   /* Apply the taint */
-  ap.aluSpreadTaintRegReg(se, ctxH.translateRegID(reg1), ctxH.translateRegID(reg2));
+  ap.aluSpreadTaintRegReg(se, ap.translateRegID(reg1), ap.translateRegID(reg2));
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -101,38 +101,38 @@ void AddIRBuilder::regReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 }
 
 
-void AddIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void AddIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
   uint32_t          readSize = std::get<2>(this->operands[1]);
   uint64_t          mem      = std::get<1>(this->operands[1]);
   uint64_t          reg      = std::get<1>(this->operands[0]);
 
-  uint64_t          symReg   = ap.getRegSymbolicID(ctxH.translateRegID(reg));
+  uint64_t          symReg   = ap.getRegSymbolicID(ap.translateRegID(reg));
   uint64_t          symMem   = ap.getMemSymbolicID(mem);
-  uint32_t          regSize  = ctxH.getRegisterSize(reg);
+  uint32_t          regSize  = ap.getRegisterSize(reg);
 
   /* Create the SMT semantic */
   // OP_1
   if (symReg != UNSET)
     op1 << "#" << std::dec << symReg;
   else
-    op1 << smt2lib::bv(ctxH.getRegisterValue(reg), readSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getRegisterValue(reg), readSize * REG_SIZE);
 
   // OP_2
   if (symMem != UNSET)
     op2 << "#" << std::dec << symMem;
   else
-    op2 << smt2lib::bv(ctxH.getMemoryValue(mem, readSize), readSize * REG_SIZE);
+    op2 << smt2lib::bv(ap.getMemoryValue(mem, readSize), readSize * REG_SIZE);
 
   // Final expr
   expr << smt2lib::bvadd(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ctxH.translateRegID(reg));
+  se = ap.createRegSE(expr, ap.translateRegID(reg));
 
   /* Apply the taint */
-  ap.aluSpreadTaintRegMem(se, ctxH.translateRegID(reg), mem, readSize);
+  ap.aluSpreadTaintRegMem(se, ap.translateRegID(reg), mem, readSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -147,7 +147,7 @@ void AddIRBuilder::regMem(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 }
 
 
-void AddIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void AddIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
   uint32_t          writeSize = std::get<2>(this->operands[0]);
@@ -161,7 +161,7 @@ void AddIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symMem != UNSET)
     op1 << "#" << std::dec << symMem;
   else
-    op1 << smt2lib::bv(ctxH.getMemoryValue(mem, writeSize), writeSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getMemoryValue(mem, writeSize), writeSize * REG_SIZE);
 
   /* OP_2 */
   op2 << smt2lib::bv(imm, writeSize * REG_SIZE);
@@ -188,15 +188,15 @@ void AddIRBuilder::memImm(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 }
 
 
-void AddIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void AddIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
   uint32_t          writeSize = std::get<2>(this->operands[0]);
   uint64_t          mem       = std::get<1>(this->operands[0]);
   uint64_t          reg       = std::get<1>(this->operands[1]);
-  uint32_t          regSize   = ctxH.getRegisterSize(reg);
+  uint32_t          regSize   = ap.getRegisterSize(reg);
 
-  uint64_t          symReg    = ap.getRegSymbolicID(ctxH.translateRegID(reg));
+  uint64_t          symReg    = ap.getRegSymbolicID(ap.translateRegID(reg));
   uint64_t          symMem    = ap.getMemSymbolicID(mem);
 
   /* Create the SMT semantic */
@@ -204,13 +204,13 @@ void AddIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   if (symMem != UNSET)
     op1 << "#" << std::dec << symMem;
   else
-    op1 << smt2lib::bv(ctxH.getMemoryValue(mem, writeSize), writeSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getMemoryValue(mem, writeSize), writeSize * REG_SIZE);
 
   // OP_1
   if (symReg != UNSET)
     op2 << smt2lib::extract(regSize, "#" + std::to_string(symReg));
   else
-    op2 << smt2lib::bv(ctxH.getRegisterValue(reg), writeSize * REG_SIZE);
+    op2 << smt2lib::bv(ap.getRegisterValue(reg), writeSize * REG_SIZE);
 
   // Final expr
   expr << smt2lib::bvadd(op1.str(), op2.str());
@@ -219,7 +219,7 @@ void AddIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
   se = ap.createMemSE(expr, mem);
 
   /* Apply the taint */
-  ap.aluSpreadTaintMemReg(se, mem, ctxH.translateRegID(reg), writeSize);
+  ap.aluSpreadTaintMemReg(se, mem, ap.translateRegID(reg), writeSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -234,13 +234,13 @@ void AddIRBuilder::memReg(const ContextHandler &ctxH, AnalysisProcessor &ap, Ins
 }
 
 
-Inst *AddIRBuilder::process(const ContextHandler &ctxH, AnalysisProcessor &ap) const {
+Inst *AddIRBuilder::process(AnalysisProcessor &ap) const {
   this->checkSetup();
 
-  Inst *inst = new Inst(ctxH.getThreadId(), this->address, this->disas);
+  Inst *inst = new Inst(ap.getThreadId(), this->address, this->disas);
 
   try {
-    this->templateMethod(ctxH, ap, *inst, this->operands, "ADD");
+    this->templateMethod(ap, *inst, this->operands, "ADD");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
   }
   catch (std::exception &e) {

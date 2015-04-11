@@ -14,7 +14,7 @@ PushIRBuilder::PushIRBuilder(uint64_t address, const std::string &disassembly):
 
 
 
-static SymbolicElement *alignStack(AnalysisProcessor &ap, const ContextHandler &ctxH, uint32_t writeSize)
+static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t writeSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
@@ -26,7 +26,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, const ContextHandler &
   if (symReg != UNSET)
     op1 << "#" << std::dec << symReg;
   else
-    op1 << smt2lib::bv(ctxH.getRegisterValue(REG_RSP), writeSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getRegisterValue(REG_RSP), writeSize * REG_SIZE);
 
   op2 << smt2lib::bv(writeSize, writeSize * REG_SIZE);
 
@@ -42,25 +42,25 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, const ContextHandler &
 }
 
 
-void PushIRBuilder::reg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void PushIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
   uint64_t          reg       = std::get<1>(this->operands[0]); // Reg pushed
   uint64_t          mem       = std::get<1>(this->operands[1]); // The dst memory writing
   uint32_t          writeSize = std::get<2>(this->operands[1]);
 
-  uint64_t          symReg    = ap.getRegSymbolicID(ctxH.translateRegID(reg));
-  uint32_t          regSize   = ctxH.getRegisterSize(reg);
+  uint64_t          symReg    = ap.getRegSymbolicID(ap.translateRegID(reg));
+  uint32_t          regSize   = ap.getRegisterSize(reg);
 
   /* Create the SMT semantic side effect */
-  inst.addElement(alignStack(ap, ctxH, writeSize));
+  inst.addElement(alignStack(ap, writeSize));
 
   /* Create the SMT semantic */
   /* OP_1 */
   if (symReg != UNSET)
     op1 << "#" << std::dec << symReg;
   else
-    op1 << smt2lib::bv(ctxH.getRegisterValue(reg), regSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getRegisterValue(reg), regSize * REG_SIZE);
 
   /* Finale expr */
   expr << op1.str();
@@ -69,14 +69,14 @@ void PushIRBuilder::reg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst 
   se = ap.createMemSE(expr, mem);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintMemReg(se, mem, ctxH.translateRegID(reg), writeSize);
+  ap.assignmentSpreadTaintMemReg(se, mem, ap.translateRegID(reg), writeSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
 }
 
 
-void PushIRBuilder::imm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void PushIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
   uint64_t          imm       = std::get<1>(this->operands[0]); // Imm pushed
@@ -84,7 +84,7 @@ void PushIRBuilder::imm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst 
   uint32_t          writeSize = std::get<2>(this->operands[1]);
 
   /* Create the SMT semantic side effect */
-  inst.addElement(alignStack(ap, ctxH, writeSize));
+  inst.addElement(alignStack(ap, writeSize));
 
   /* Create the SMT semantic */
   /* OP_1 */
@@ -104,7 +104,7 @@ void PushIRBuilder::imm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst 
 }
 
 
-void PushIRBuilder::mem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void PushIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
   uint64_t          memOp     = std::get<1>(this->operands[0]); // Mem pushed
@@ -114,14 +114,14 @@ void PushIRBuilder::mem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst 
   uint64_t          symMem    = ap.getMemSymbolicID(memOp);
 
   /* Create the SMT semantic side effect */
-  inst.addElement(alignStack(ap, ctxH, writeSize));
+  inst.addElement(alignStack(ap, writeSize));
 
   /* Create the SMT semantic */
   /* OP_1 */
   if (symMem != UNSET)
     op1 << "#" << std::dec << symMem;
   else
-    op1 << smt2lib::bv(ctxH.getMemoryValue(memOp, readSize), readSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getMemoryValue(memOp, readSize), readSize * REG_SIZE);
 
   /* Finale expr */
   expr << op1.str();
@@ -137,19 +137,19 @@ void PushIRBuilder::mem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst 
 }
 
 
-void PushIRBuilder::none(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void PushIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   /* There is no <push none> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *PushIRBuilder::process(const ContextHandler &ctxH, AnalysisProcessor &ap) const {
+Inst *PushIRBuilder::process(AnalysisProcessor &ap) const {
   this->checkSetup();
 
-  Inst *inst = new Inst(ctxH.getThreadId(), this->address, this->disas);
+  Inst *inst = new Inst(ap.getThreadId(), this->address, this->disas);
 
   try {
-    this->templateMethod(ctxH, ap, *inst, this->operands, "PUSH");
+    this->templateMethod(ap, *inst, this->operands, "PUSH");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
   }
   catch (std::exception &e) {

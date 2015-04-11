@@ -13,16 +13,16 @@ class PushIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
     PushIRBuilder(uint64_t address, const std::string &disassembly);
 
     // From BaseIRBuilder
-    virtual Inst *process(const ContextHandler &ctxH, AnalysisProcessor &ap) const;
+    virtual Inst *process(AnalysisProcessor &ap) const;
 
     // From OneOperandTemplate
-    virtual void none(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const;
+    virtual void none(AnalysisProcessor &ap, Inst &inst) const;
 
-    virtual void reg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const;
+    virtual void reg(AnalysisProcessor &ap, Inst &inst) const;
 
-    virtual void imm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const;
+    virtual void imm(AnalysisProcessor &ap, Inst &inst) const;
 
-    virtual void mem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const;
+    virtual void mem(AnalysisProcessor &ap, Inst &inst) const;
 };
 
 #endif // _PUSHIRBUILDER_H_

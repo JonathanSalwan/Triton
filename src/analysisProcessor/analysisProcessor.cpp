@@ -6,8 +6,23 @@ AnalysisProcessor::AnalysisProcessor():
   solverEngine(&this->symEngine),
   taintEngine()
 {
-
+  this->currentCtxH = NULL;
 }
+
+
+void AnalysisProcessor::updateCurrentCtxH(CONTEXT *ctx, THREADID threadId)
+{
+  if (this->currentCtxH != NULL)
+    delete this->currentCtxH;
+  this->currentCtxH = new PINContextHandler(ctx, threadId);
+}
+
+
+PINContextHandler *AnalysisProcessor::getCurrentCtxH(void)
+{
+  return this->currentCtxH;
+}
+
 
 // Symbolic Engine Facade
 // ----------------------
@@ -227,4 +242,39 @@ void AnalysisProcessor::incNumberOfUnknownInstruction(void)
 {
   this->stats.incNumberOfUnknownInstruction();
 }
+
+
+// ContextHandler Facade
+
+/* Returns the thread id  */
+THREADID AnalysisProcessor::getThreadId(void)
+{
+  return this->currentCtxH->getThreadId();
+}
+
+
+// There is no verification on the validity of the ID.
+uint64_t AnalysisProcessor::getRegisterValue(uint64_t regID)
+{
+  return this->currentCtxH->getRegisterValue(regID);
+}
+
+
+uint64_t AnalysisProcessor::getRegisterSize(uint64_t regID)
+{
+  return this->currentCtxH->getRegisterSize(regID);
+}
+
+
+uint64_t AnalysisProcessor::getMemoryValue(uint64_t mem, uint32_t readSize)
+{
+  return this->currentCtxH->getMemoryValue(mem, readSize);
+}
+
+
+uint64_t AnalysisProcessor::translateRegID(uint64_t regID)
+{
+  return this->currentCtxH->translateRegID(regID);
+}
+
 

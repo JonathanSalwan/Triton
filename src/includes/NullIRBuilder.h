@@ -20,9 +20,9 @@ class NullIRBuilder: public BaseIRBuilder {
       return this->operands;
     }
 
-    Inst *process(const ContextHandler &ctxH, AnalysisProcessor &ap) const {
+    Inst *process(AnalysisProcessor &ap) const {
       ap.incNumberOfUnknownInstruction(); /* Used for statistics */
-      return new Inst(ctxH.getThreadId(), this->address, this->disas);
+      return new Inst(ap.getCurrentCtxH()->getThreadId(), this->address, this->disas);
     }
 };
 

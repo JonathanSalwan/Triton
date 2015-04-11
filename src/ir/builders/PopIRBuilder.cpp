@@ -13,7 +13,7 @@ PopIRBuilder::PopIRBuilder(uint64_t address, const std::string &disassembly):
 }
 
 
-static SymbolicElement *alignStack(AnalysisProcessor &ap, const ContextHandler &ctxH, uint32_t readSize)
+static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t readSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
@@ -25,7 +25,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, const ContextHandler &
   if (symReg != UNSET)
     op1 << "#" << std::dec << symReg;
   else
-    op1 << smt2lib::bv(ctxH.getRegisterValue(REG_RSP), readSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getRegisterValue(REG_RSP), readSize * REG_SIZE);
 
   op2 << smt2lib::bv(readSize, readSize * REG_SIZE);
 
@@ -41,7 +41,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, const ContextHandler &
 }
 
 
-void PopIRBuilder::reg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
   uint64_t          reg       = std::get<1>(this->operands[0]); // Reg poped
@@ -54,26 +54,26 @@ void PopIRBuilder::reg(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &
   if (symMem != UNSET)
     op1 << "#" << std::dec << symMem;
   else
-    op1 << smt2lib::bv(ctxH.getMemoryValue(mem, readSize), readSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getMemoryValue(mem, readSize), readSize * REG_SIZE);
 
   /* Finale expr */
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ctxH.translateRegID(reg));
+  se = ap.createRegSE(expr, ap.translateRegID(reg));
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintMemReg(se, mem, ctxH.translateRegID(reg), readSize);
+  ap.assignmentSpreadTaintMemReg(se, mem, ap.translateRegID(reg), readSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
 
   /* Create the SMT semantic side effect */
-  inst.addElement(alignStack(ap, ctxH, readSize));
+  inst.addElement(alignStack(ap, readSize));
 }
 
 
-void PopIRBuilder::mem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void PopIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
   uint64_t          memOp     = std::get<1>(this->operands[0]); // Mem poped
@@ -87,7 +87,7 @@ void PopIRBuilder::mem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &
   if (symMem != UNSET)
     op1 << "#" << std::dec << symMem;
   else
-    op1 << smt2lib::bv(ctxH.getMemoryValue(memSrc, readSize), readSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getMemoryValue(memSrc, readSize), readSize * REG_SIZE);
 
   /* Finale expr */
   expr << op1.str();
@@ -102,29 +102,29 @@ void PopIRBuilder::mem(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &
   inst.addElement(se);
 
   /* Create the SMT semantic side effect */
-  inst.addElement(alignStack(ap, ctxH, writeSize));
+  inst.addElement(alignStack(ap, writeSize));
 }
 
 
-void PopIRBuilder::imm(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void PopIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   /* There is no <pop imm> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void PopIRBuilder::none(const ContextHandler &ctxH, AnalysisProcessor &ap, Inst &inst) const {
+void PopIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   /* There is no <pop none> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *PopIRBuilder::process(const ContextHandler &ctxH, AnalysisProcessor &ap) const {
+Inst *PopIRBuilder::process(AnalysisProcessor &ap) const {
   this->checkSetup();
 
-  Inst *inst = new Inst(ctxH.getThreadId(), this->address, this->disas);
+  Inst *inst = new Inst(ap.getThreadId(), this->address, this->disas);
 
   try {
-    this->templateMethod(ctxH, ap, *inst, this->operands, "POP");
+    this->templateMethod(ap, *inst, this->operands, "POP");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
   }
   catch (std::exception &e) {
