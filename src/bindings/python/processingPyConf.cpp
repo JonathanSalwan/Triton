@@ -84,9 +84,12 @@ void ProcessingPyConf::untaintRegFromAddr(IRBuilder *irb)
  * Class Instruction:
  *
  * - address (integer)
- * - threadId (integer)
  * - assembly (string)
+ * - isBranch (bool)
+ * - opcode (integer)
+ * - opcodeCategory (IDREF.OPCODE_CATEGORY)
  * - symbolicElements (list of SymbolicElement)
+ * - threadId (integer)
  *
  *
  * Class SymbolicElement:
