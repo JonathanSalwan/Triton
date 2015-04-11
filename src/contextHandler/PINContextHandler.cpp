@@ -283,6 +283,30 @@ uint64_t PINContextHandler::translateRegID(uint64_t regID) const
   }
 }
 
+// Convert a Triton register to a Pin register
+uint64_t PINContextHandler::convertTritonReg2PinReg(uint64_t regID) const
+{
+  switch(regID){
+    case ID_RAX:  return REG_RAX;
+    case ID_RBX:  return REG_RBX;
+    case ID_RCX:  return REG_RCX;
+    case ID_RDI:  return REG_RDI;
+    case ID_RSI:  return REG_RSI;
+    case ID_RBP:  return REG_RBP;
+    case ID_RSP:  return REG_RSP;
+    case ID_RIP:  return REG_RIP;
+    case REG_R8:  return ID_R8;
+    case REG_R9:  return ID_R9;
+    case REG_R10: return ID_R10;
+    case REG_R11: return ID_R11;
+    case REG_R12: return ID_R12;
+    case REG_R13: return ID_R13;
+    case REG_R14: return ID_R14;
+    case REG_R15: return ID_R15;
+    default: return -1;
+  }
+}
+
 
 /* Returns the thread id  */
 THREADID PINContextHandler::getThreadID(void) const

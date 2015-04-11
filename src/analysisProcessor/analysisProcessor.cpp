@@ -249,6 +249,8 @@ void AnalysisProcessor::incNumberOfUnknownInstruction(void)
 /* Returns the thread id  */
 THREADID AnalysisProcessor::getThreadID(void)
 {
+  if (!this->currentCtxH)
+    return -1;
   return this->currentCtxH->getThreadID();
 }
 
@@ -256,25 +258,40 @@ THREADID AnalysisProcessor::getThreadID(void)
 // There is no verification on the validity of the ID.
 uint64_t AnalysisProcessor::getRegisterValue(uint64_t regID)
 {
+  if (!this->currentCtxH)
+    return 0;
   return this->currentCtxH->getRegisterValue(regID);
 }
 
 
 uint64_t AnalysisProcessor::getRegisterSize(uint64_t regID)
 {
+  if (!this->currentCtxH)
+    return 0;
   return this->currentCtxH->getRegisterSize(regID);
 }
 
 
 uint64_t AnalysisProcessor::getMemoryValue(uint64_t mem, uint32_t readSize)
 {
+  if (!this->currentCtxH)
+    return 0;
   return this->currentCtxH->getMemoryValue(mem, readSize);
 }
 
 
 uint64_t AnalysisProcessor::translateRegID(uint64_t regID)
 {
+  if (!this->currentCtxH)
+    return 0;
   return this->currentCtxH->translateRegID(regID);
 }
 
+
+uint64_t AnalysisProcessor::convertTritonReg2PinReg(uint64_t regID)
+{
+  if (!this->currentCtxH)
+    return 0;
+  return this->currentCtxH->convertTritonReg2PinReg(regID);
+}
 

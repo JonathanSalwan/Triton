@@ -38,6 +38,9 @@ class AnalysisProcessor {
     // Translates a Pin REG into a Triton REG.
     uint64_t translateRegID(uint64_t regID);
 
+    // Convert a Triton register to a Pin register
+    uint64_t convertTritonReg2PinReg(uint64_t regID);
+
     // Symbolic Engine Facade
     // ----------------------
 

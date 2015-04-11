@@ -13,11 +13,12 @@ class PINContextHandler: public ContextHandler {
   public:
     PINContextHandler(CONTEXT *ctx, THREADID threadId);
 
-    uint64_t  getRegisterValue(uint64_t regID) const;
-    uint64_t  getRegisterSize(uint64_t regID) const;
-    uint64_t  translateRegID(uint64_t regID) const;
-    uint64_t  getMemoryValue(uint64_t mem, uint32_t readSize) const;
     THREADID  getThreadID(void) const;
+    uint64_t  convertTritonReg2PinReg(uint64_t regID) const;
+    uint64_t  getMemoryValue(uint64_t mem, uint32_t readSize) const;
+    uint64_t  getRegisterSize(uint64_t regID) const;
+    uint64_t  getRegisterValue(uint64_t regID) const;
+    uint64_t  translateRegID(uint64_t regID) const;
 
   private:
     CONTEXT   *_ctx;

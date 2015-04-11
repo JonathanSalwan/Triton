@@ -123,6 +123,34 @@ static PyObject *Triton_getRegSymbolicID(PyObject *self, PyObject *reg)
 }
 
 
+static char Triton_getRegValue_doc[] = "Get the current value of the register";
+static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
+{
+  if (!PyLong_Check(reg) && !PyInt_Check(reg)){
+    PyErr_Format(PyExc_TypeError, "getRegValue(): expected a register id (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  if (!ap.getCurrentCtxH()){
+    PyErr_Format(PyExc_TypeError, "getRegValue(): Can't call getRegValue() right now. You must run the program before.");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  uint64_t tritonReg = PyLong_AsLong(reg);
+  uint64_t pinReg = ap.convertTritonReg2PinReg(tritonReg);
+
+  if (pinReg == (uint64_t)-1){
+    PyErr_Format(PyExc_TypeError, "getRegValue(): Register ID not supported");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  return Py_BuildValue("k", ap.getRegisterValue(pinReg));
+}
+
+
 static char Triton_isMemTainted_doc[] = "Check if the memory is tainted";
 static PyObject *Triton_isMemTainted(PyObject *self, PyObject *mem)
 {
@@ -355,6 +383,7 @@ PyMethodDef pythonCallbacks[] = {
   {"dumpTrace",               Triton_dumpTrace,               METH_O,       Triton_dumpTrace_doc},
   {"getMemSymbolicID",        Triton_getMemSymbolicID,        METH_O,       Triton_getMemSymbolicID_doc},
   {"getRegSymbolicID",        Triton_getRegSymbolicID,        METH_O,       Triton_getRegSymbolicID_doc},
+  {"getRegValue",             Triton_getRegValue,             METH_O,       Triton_getRegValue_doc},
   {"isMemTainted",            Triton_isMemTainted,            METH_O,       Triton_isMemTainted_doc},
   {"isRegTainted",            Triton_isRegTainted,            METH_O,       Triton_isRegTainted_doc},
   {"opcodeToString",          Triton_opcodeToString,          METH_O,       Triton_opcodeToString_doc},
