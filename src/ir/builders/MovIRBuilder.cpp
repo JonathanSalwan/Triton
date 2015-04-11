@@ -92,7 +92,7 @@ void MovIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   if (symMem != UNSET)
     expr << smt2lib::extract(readSize, "#" + std::to_string(symMem));
   else
-    expr << smt2lib::bv(ap.getMemoryValue(mem, readSize), readSize * REG_SIZE);
+    expr << smt2lib::bv(ap.getMemValue(mem, readSize), readSize * REG_SIZE);
 
   expr.str(this->extender(expr.str(), deltaSize(regSize, readSize)));
 

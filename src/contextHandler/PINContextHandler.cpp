@@ -150,7 +150,7 @@ static bool isAddressMapped(ADDRINT addr) {
 }
 
 /* Used to deref a pointer address and returns the targeted byte by size of read */
-uint64_t PINContextHandler::getMemoryValue(uint64_t mem, uint32_t readSize) const
+uint64_t PINContextHandler::getMemValue(uint64_t mem, uint32_t readSize) const
 {
 
   if (!isAddressMapped(mem)){

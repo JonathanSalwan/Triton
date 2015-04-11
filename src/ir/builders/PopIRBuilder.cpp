@@ -54,7 +54,7 @@ void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   if (symMem != UNSET)
     op1 << "#" << std::dec << symMem;
   else
-    op1 << smt2lib::bv(ap.getMemoryValue(mem, readSize), readSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getMemValue(mem, readSize), readSize * REG_SIZE);
 
   /* Finale expr */
   expr << op1.str();
@@ -87,7 +87,7 @@ void PopIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   if (symMem != UNSET)
     op1 << "#" << std::dec << symMem;
   else
-    op1 << smt2lib::bv(ap.getMemoryValue(memSrc, readSize), readSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getMemValue(memSrc, readSize), readSize * REG_SIZE);
 
   /* Finale expr */
   expr << op1.str();

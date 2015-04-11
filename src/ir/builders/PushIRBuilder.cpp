@@ -121,7 +121,7 @@ void PushIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   if (symMem != UNSET)
     op1 << "#" << std::dec << symMem;
   else
-    op1 << smt2lib::bv(ap.getMemoryValue(memOp, readSize), readSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getMemValue(memOp, readSize), readSize * REG_SIZE);
 
   /* Finale expr */
   expr << op1.str();

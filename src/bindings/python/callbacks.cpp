@@ -148,7 +148,7 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
     exit(-1);
   }
 
-  return Py_BuildValue("k", ap.getMemoryValue(ad, rs));
+  return Py_BuildValue("k", ap.getMemValue(ad, rs));
 }
 
 

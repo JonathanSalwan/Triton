@@ -65,7 +65,7 @@ void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   if (symMem != UNSET)
     expr2 << "#" << std::dec << symMem;
   else
-    expr2 << smt2lib::bv(ap.getMemoryValue(readMem, readSize), readSize * REG_SIZE);
+    expr2 << smt2lib::bv(ap.getMemValue(readMem, readSize), readSize * REG_SIZE);
 
   /* Create the symbolic element */
   se2 = ap.createRegSE(expr2, ID_RBP);

@@ -33,7 +33,7 @@ class AnalysisProcessor {
     uint64_t getRegisterSize(uint64_t regID);
 
     // Returns the value of the memory.
-    uint64_t getMemoryValue(uint64_t mem, uint32_t readSize);
+    uint64_t getMemValue(uint64_t mem, uint32_t readSize);
 
     // Translates a Pin REG into a Triton REG.
     uint64_t translateRegID(uint64_t regID);

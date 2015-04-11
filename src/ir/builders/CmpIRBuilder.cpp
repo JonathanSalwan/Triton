@@ -132,7 +132,7 @@ void CmpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   if (symMem != UNSET)
     op2 << "#" << std::dec << symMem;
   else
-    op2 << smt2lib::bv(ap.getMemoryValue(mem, readSize), readSize * REG_SIZE);
+    op2 << smt2lib::bv(ap.getMemValue(mem, readSize), readSize * REG_SIZE);
 
   // Final expr
   expr << smt2lib::bvsub(op1.str(), op2.str());
@@ -170,7 +170,7 @@ void CmpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   if (symMem != UNSET)
     op1 << "#" << std::dec << symMem;
   else
-    op1 << smt2lib::bv(ap.getMemoryValue(mem, writeSize), writeSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getMemValue(mem, writeSize), writeSize * REG_SIZE);
 
   /* OP_2 */
   op2 << smt2lib::sx(smt2lib::bv(imm, writeSize * REG_SIZE), 0);
@@ -213,7 +213,7 @@ void CmpIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   if (symMem != UNSET)
     op1 << "#" << std::dec << symMem;
   else
-    op1 << smt2lib::bv(ap.getMemoryValue(mem, writeSize), writeSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getMemValue(mem, writeSize), writeSize * REG_SIZE);
 
   // OP_2
   if (symReg != UNSET)
