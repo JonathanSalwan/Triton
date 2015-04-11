@@ -158,7 +158,7 @@ void MovIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
 Inst *MovIRBuilder::process(AnalysisProcessor &ap) const {
   checkSetup();
 
-  Inst *inst = new Inst(ap.getThreadId(), this->address, this->disas);
+  Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
     this->templateMethod(ap, *inst, this->operands, "MOV");

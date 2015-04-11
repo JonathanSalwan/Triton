@@ -146,7 +146,7 @@ void PushIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
 Inst *PushIRBuilder::process(AnalysisProcessor &ap) const {
   this->checkSetup();
 
-  Inst *inst = new Inst(ap.getThreadId(), this->address, this->disas);
+  Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
     this->templateMethod(ap, *inst, this->operands, "PUSH");

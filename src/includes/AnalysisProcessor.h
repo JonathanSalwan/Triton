@@ -24,7 +24,7 @@ class AnalysisProcessor {
     // ----------------------
 
     // Returns the thread Id.
-    THREADID getThreadId(void);
+    THREADID getThreadID(void);
 
     // Returns the value of the register.
     uint64_t getRegisterValue(uint64_t regID);

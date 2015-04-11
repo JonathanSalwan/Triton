@@ -53,7 +53,7 @@ void Trace::display(std::ostream &os)
 
       os << colr.str()
          << boost::format(outputInstruction)
-          % std::to_string(inst->getThreadId())
+          % std::to_string(inst->getThreadID())
           % boost::io::group(std::hex, std::showbase, inst->getAddress())
           % inst->getDisassembly()
          << expr.str()

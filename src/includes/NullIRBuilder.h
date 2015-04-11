@@ -22,7 +22,7 @@ class NullIRBuilder: public BaseIRBuilder {
 
     Inst *process(AnalysisProcessor &ap) const {
       ap.incNumberOfUnknownInstruction(); /* Used for statistics */
-      return new Inst(ap.getCurrentCtxH()->getThreadId(), this->address, this->disas);
+      return new Inst(ap.getCurrentCtxH()->getThreadID(), this->address, this->disas);
     }
 };
 

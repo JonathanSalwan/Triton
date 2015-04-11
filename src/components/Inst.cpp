@@ -29,7 +29,7 @@ uint64_t Inst::getAddress(void)
 
 
 /* Returns the thread ID of the instruction */
-uint64_t Inst::getThreadId(void)
+uint64_t Inst::getThreadID(void)
 {
   return this->threadId;
 }

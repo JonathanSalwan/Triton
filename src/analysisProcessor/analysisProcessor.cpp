@@ -247,9 +247,9 @@ void AnalysisProcessor::incNumberOfUnknownInstruction(void)
 // ContextHandler Facade
 
 /* Returns the thread id  */
-THREADID AnalysisProcessor::getThreadId(void)
+THREADID AnalysisProcessor::getThreadID(void)
 {
-  return this->currentCtxH->getThreadId();
+  return this->currentCtxH->getThreadID();
 }
 
 

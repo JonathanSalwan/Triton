@@ -109,7 +109,7 @@ void ProcessingPyConf::callbackAfter(Inst *inst, AnalysisProcessor *ap)
     /* Create the class dictionary */
     PyObject *dictInstClass = xPyDict_New();
     PyDict_SetItemString(dictInstClass, "address", PyInt_FromLong(inst->getAddress()));
-    PyDict_SetItemString(dictInstClass, "threadId", PyInt_FromLong(inst->getThreadId()));
+    PyDict_SetItemString(dictInstClass, "threadId", PyInt_FromLong(inst->getThreadID()));
     PyDict_SetItemString(dictInstClass, "opcode", PyInt_FromLong(inst->getOpcode()));
     PyDict_SetItemString(dictInstClass, "opcodeCategory", PyInt_FromLong(inst->getOpcodeCategory()));
     PyDict_SetItemString(dictInstClass, "assembly", PyString_FromFormat("%s", inst->getDisassembly().c_str()));
@@ -178,7 +178,7 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, AnalysisProcessor *ap)
     /* Create the class dictionary */
     PyObject *dictInstClass = xPyDict_New();
     PyDict_SetItemString(dictInstClass, "address", PyInt_FromLong(irb->getAddress()));
-    PyDict_SetItemString(dictInstClass, "threadId", PyInt_FromLong(ap->getThreadId()));
+    PyDict_SetItemString(dictInstClass, "threadId", PyInt_FromLong(ap->getThreadID()));
     PyDict_SetItemString(dictInstClass, "opcode", PyInt_FromLong(irb->getOpcode()));
     PyDict_SetItemString(dictInstClass, "opcodeCategory", PyInt_FromLong(irb->getOpcodeCategory()));
     PyDict_SetItemString(dictInstClass, "assembly", PyString_FromFormat("%s", irb->getDisassembly().c_str()));

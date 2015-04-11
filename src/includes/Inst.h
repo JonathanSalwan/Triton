@@ -28,7 +28,7 @@ class Inst {
     uint32_t                          getOpcode(void);
     int32_t                           getOpcodeCategory(void);
     uint64_t                          getAddress(void);
-    uint64_t                          getThreadId(void);
+    uint64_t                          getThreadID(void);
     void                              addElement(SymbolicElement *se);
     void                              setOpcode(uint32_t op);
     void                              setOpcodeCategory(int32_t category);

@@ -285,7 +285,7 @@ uint64_t PINContextHandler::translateRegID(uint64_t regID) const
 
 
 /* Returns the thread id  */
-THREADID PINContextHandler::getThreadId(void) const
+THREADID PINContextHandler::getThreadID(void) const
 {
   return this->_threadId;
 }
