@@ -25,7 +25,7 @@ void SubIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the SMT semantic */
   /* OP_1 */
   if (symReg != UNSET)
-    op1 << "#" << std::dec << symReg;
+    op1 << smt2lib::extract(regSize, "#" + std::to_string(symReg));
   else
     op1 << smt2lib::bv(ap.getRegisterValue(reg), regSize * REG_SIZE);
 
@@ -69,7 +69,7 @@ void SubIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the SMT semantic */
   // OP_1
   if (symReg1 != UNSET)
-    op1 << "#" << std::dec << symReg1;
+    op1 << smt2lib::extract(regSize1, "#" + std::to_string(symReg1));
   else
     op1 << smt2lib::bv(ap.getRegisterValue(reg1), regSize1 * REG_SIZE);
 
@@ -115,7 +115,7 @@ void SubIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the SMT semantic */
   // OP_1
   if (symReg != UNSET)
-    op1 << "#" << std::dec << symReg;
+    op1 << smt2lib::extract(regSize, "#" + std::to_string(symReg));
   else
     op1 << smt2lib::bv(ap.getRegisterValue(reg), readSize * REG_SIZE);
 
