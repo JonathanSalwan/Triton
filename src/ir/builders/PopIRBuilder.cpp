@@ -25,7 +25,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t readSize)
   if (symReg != UNSET)
     op1 << "#" << std::dec << symReg;
   else
-    op1 << smt2lib::bv(ap.getRegisterValue(REG_RSP), readSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getRegisterValue(ID_RSP), readSize * REG_SIZE);
 
   op2 << smt2lib::bv(readSize, readSize * REG_SIZE);
 
@@ -60,10 +60,10 @@ void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ap.convertPinReg2TritonReg(reg));
+  se = ap.createRegSE(expr, reg);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintMemReg(se, mem, ap.convertPinReg2TritonReg(reg), readSize);
+  ap.assignmentSpreadTaintMemReg(se, mem, reg, readSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);

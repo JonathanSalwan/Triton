@@ -1,16 +1,17 @@
 #include <string>
 
 #include "pin.H"
-#include "IRBuilderHeaders.h"
 
+#include "IRBuilderHeaders.h"
+#include "PINConverter.h"
 
 
 // Returns a pointer to an IRBuilder object.
 // It is up to the user to delete it when times come.
 IRBuilder *createIRBuilder(INS ins) {
-  UINT64 address    = INS_Address(ins);
-  std::string disas = INS_Disassemble(ins);
-  INT32 opcode      = INS_Opcode(ins);
+  UINT64 address         = INS_Address(ins);
+  std::string disas      = INS_Disassemble(ins);
+  INT32 opcode           = INS_Opcode(ins);
 
   IRBuilder *ir = NULL;
 
@@ -76,7 +77,7 @@ IRBuilder *createIRBuilder(INS ins) {
     }
     else if (INS_OperandIsReg(ins, i)) {
       type = IRBuilderOperand::REG;
-      val  = INS_OperandReg(ins, i);
+      val  = PINConverter::convertDBIReg2TritonReg(INS_OperandReg(ins, i));
     }
     else if (INS_MemoryOperandCount(ins) > 0) {
       // check needed because instructions like "nop dword ptr [eax], ebx"

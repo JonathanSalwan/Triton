@@ -1,8 +1,6 @@
 #ifndef  __REGISTERS_H__
 #define  __REGISTERS_H__
 
-#include "pin.H" // Used for XED REG define
-
 #define REG_SIZE      8   // In byte
 #define REG_SIZE_SSE  16  // In byte
 

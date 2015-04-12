@@ -37,7 +37,7 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
     irb->setup(ea);
 
   /* Update the current context handler */
-  ap.updateCurrentCtxH(ctx, threadId);
+  ap.updateCurrentCtxH(new PINContextHandler(ctx, threadId));
 
   /* Setup Information into Irb */
   irb->setThreadID(ap.getThreadID());

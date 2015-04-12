@@ -8,19 +8,19 @@ AnalysisProcessor::AnalysisProcessor():
   stats(),
   trace()
 {
-  this->currentCtxH = NULL;
+  this->currentCtxH = nullptr;
 }
 
 
-void AnalysisProcessor::updateCurrentCtxH(CONTEXT *ctx, THREADID threadId)
+void AnalysisProcessor::updateCurrentCtxH(ContextHandler *ctxtHandler)
 {
-  if (this->currentCtxH != NULL)
+  if (this->currentCtxH != nullptr)
     delete this->currentCtxH;
-  this->currentCtxH = new PINContextHandler(ctx, threadId);
+  this->currentCtxH = ctxtHandler;
 }
 
 
-PINContextHandler *AnalysisProcessor::getCurrentCtxH(void)
+ContextHandler *AnalysisProcessor::getCurrentCtxH(void)
 {
   return this->currentCtxH;
 }
@@ -304,7 +304,7 @@ uint64_t AnalysisProcessor::getTimeOfExecution(void)
 // ContextHandler Facade
 
 /* Returns the thread id  */
-THREADID AnalysisProcessor::getThreadID(void)
+uint32_t AnalysisProcessor::getThreadID(void)
 {
   if (!this->currentCtxH)
     return -1;
@@ -331,25 +331,7 @@ uint64_t AnalysisProcessor::getRegisterSize(uint64_t regID)
 
 uint64_t AnalysisProcessor::getMemValue(uint64_t mem, uint32_t readSize)
 {
-  if (!this->currentCtxH)
-    return 0;
   return this->currentCtxH->getMemValue(mem, readSize);
-}
-
-
-uint64_t AnalysisProcessor::convertPinReg2TritonReg(uint64_t regID)
-{
-  if (!this->currentCtxH)
-    return 0;
-  return this->currentCtxH->convertPinReg2TritonReg(regID);
-}
-
-
-uint64_t AnalysisProcessor::convertTritonReg2PinReg(uint64_t regID)
-{
-  if (!this->currentCtxH)
-    return 0;
-  return this->currentCtxH->convertTritonReg2PinReg(regID);
 }
 
 // Trace Facade
@@ -371,5 +353,3 @@ void AnalysisProcessor::saveTrace(std::stringstream &file)
   if (file.str().empty() == false)
     this->trace.save(file);
 }
-
-
