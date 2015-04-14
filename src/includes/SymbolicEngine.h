@@ -53,6 +53,7 @@ class SymbolicEngine {
   public:
 
     /* Symbolic trace */
+    /* sizeof(symbolicReg) = enum REG */
     uint64_t              symbolicReg[42];
 
     /* public methods */

@@ -9,7 +9,7 @@
 enum regID_t
 {
   /* Register ID used in the Taint and Symbolic Engines */
-  ID_RAX,
+  ID_RAX = 0,
   ID_RBX,
   ID_RCX,
   ID_RDX,

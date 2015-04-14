@@ -22,6 +22,7 @@ class TaintEngine {
      * Currently this is an over approximation of the taint.
      * uint64_t because in the next version, the taint will be 
      * a mask with sub-register.
+     * sizeof(taintedReg) = enum REG - Flags
      */
     uint64_t taintedReg[33];
 
