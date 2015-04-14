@@ -241,6 +241,70 @@ static PyObject *Triton_runProgram(PyObject *self, PyObject *noarg)
 }
 
 
+static char Triton_setMemValue_doc[] = "Insert value in the runtime memory";
+static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
+{
+  PyObject *addr;
+  PyObject *writeSize;
+  PyObject *value;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O|O", &addr, &writeSize, &value);
+
+  if (!PyLong_Check(addr) && !PyInt_Check(addr)){
+    PyErr_Format(PyExc_TypeError, "setMemValue(): expected an address (integer) as first argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  if (!PyLong_Check(writeSize) && !PyInt_Check(writeSize)){
+    PyErr_Format(PyExc_TypeError, "setMemValue(): expected an integer as second argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  if (!PyLong_Check(value) && !PyInt_Check(value)){
+    PyErr_Format(PyExc_TypeError, "setMemValue(): expected an integer as third argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  uint64_t ad = PyLong_AsLong(addr);
+  uint64_t ws = PyLong_AsLong(writeSize);
+
+  if (ws != 8 && ws != 4 && ws != 2 && ws != 1){
+    PyErr_Format(PyExc_TypeError, "setMemValue(): The writeSize argument must be: 8, 4, 2 or 1");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  if (PIN_CheckWriteAccess(reinterpret_cast<void*>(ad)) == false){
+    PyErr_Format(PyExc_TypeError, "setMemValue(): Can not write into the targeted address memory");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  uint64_t va = PyLong_AsLong(value);
+
+  switch (ws){
+    case 1:
+      *((char *)ad) = va; break;
+      break;
+    case 2:
+      *((short *)ad) = va;
+      break;
+    case 4:
+      *((uint32_t *)ad) = va;
+      break;
+    case 8:
+      *((uint64_t *)ad) = va;
+      break;
+  }
+
+  return Py_None;
+}
+
+
 static char Triton_startAnalysisFromSymbol_doc[] = "Start the symbolic execution from a specific name point";
 static PyObject *Triton_startAnalysisFromSymbol(PyObject *self, PyObject *name)
 {
@@ -430,6 +494,7 @@ PyMethodDef pythonCallbacks[] = {
   {"isRegTainted",            Triton_isRegTainted,            METH_O,       Triton_isRegTainted_doc},
   {"opcodeToString",          Triton_opcodeToString,          METH_O,       Triton_opcodeToString_doc},
   {"runProgram",              Triton_runProgram,              METH_NOARGS,  Triton_runProgram_doc},
+  {"setMemValue",             Triton_setMemValue,             METH_VARARGS, Triton_setMemValue_doc},
   {"startAnalysisFromAddr",   Triton_startAnalysisFromAddr,   METH_O,       Triton_startAnalysisFromAddr_doc},
   {"startAnalysisFromSymbol", Triton_startAnalysisFromSymbol, METH_O,       Triton_startAnalysisFromSymbol_doc},
   {"stopAnalysisFromAddr",    Triton_stopAnalysisFromAddr,    METH_O,       Triton_stopAnalysisFromAddr_doc},
