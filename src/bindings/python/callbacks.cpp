@@ -197,7 +197,7 @@ static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
 }
 
 
-static char Triton_getSymExprFromID_doc[] = "Returns the symbolic element from its id";
+static char Triton_getSymExprFromID_doc[] = "Returns a SymbolicElement class corresponding to the symbolic element ID.";
 static PyObject *Triton_getSymExprFromID(PyObject *self, PyObject *id)
 {
   uint64_t        exprId;
