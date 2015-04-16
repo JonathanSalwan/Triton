@@ -17,8 +17,10 @@ class BaseIRBuilder: public IRBuilder {
     BaseIRBuilder(uint64_t address, const std::string &disassembly);
 
     virtual uint32_t            getOpcode(void) const;
+    virtual uint64_t            getThreadID(void) const;
     virtual void                setOpcode(uint32_t op);
     virtual void                setOpcodeCategory(int32_t category);
+    virtual void                setThreadID(uint64_t threadId);
     virtual int32_t             getOpcodeCategory(void);
     virtual bool                isBranch(void);
     virtual uint64_t            getAddress(void) const;
@@ -44,6 +46,7 @@ class BaseIRBuilder: public IRBuilder {
     std::string     disas;
     bool            needSetup;
     int32_t         opcodeCategory;
+    uint64_t        threadId;
     std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > operands;
 };
 

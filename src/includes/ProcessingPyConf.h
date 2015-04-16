@@ -8,6 +8,7 @@
 #include "PINContextHandler.h"
 #include "PythonBindings.h"
 #include "Trigger.h"
+#include "TritonPyObject.h"
 
 class ProcessingPyConf
 {

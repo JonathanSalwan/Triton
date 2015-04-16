@@ -20,8 +20,14 @@ class IRBuilder {
     // Returns the opcode of the instruction.
     virtual uint32_t getOpcode(void) const = 0;
 
+    // Returns the thread ID of the Irb.
+    virtual uint64_t getThreadID(void) const = 0;
+
     // Set the opcode of the instruction.
     virtual void setOpcode(uint32_t op) = 0;
+
+    // Set the opcode of the instruction.
+    virtual void setThreadID(uint64_t threadId) = 0;
 
     // Set the opcode category.
     virtual void setOpcodeCategory(int32_t category) = 0;

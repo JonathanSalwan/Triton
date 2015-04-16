@@ -1,23 +1,8 @@
 
 #include "ProcessingPyConf.h"
+#include "TritonPyObject.h"
 #include "xPyFunc.h"
 
-
-
-static PyObject *PySymbolicElement(SymbolicElement *element)
-{
-  PyObject *dictSEClass = xPyDict_New();
-  PyDict_SetItemString(dictSEClass, "source", PyString_FromFormat("%s", element->getSource()->str().c_str()));
-  PyDict_SetItemString(dictSEClass, "destination", PyString_FromFormat("%s", element->getDestination()->str().c_str()));
-  PyDict_SetItemString(dictSEClass, "expression", PyString_FromFormat("%s", element->getExpression()->str().c_str()));
-  PyDict_SetItemString(dictSEClass, "id", PyInt_FromLong(element->getID()));
-  PyDict_SetItemString(dictSEClass, "isTainted", PyBool_FromLong(element->isTainted));
-
-  PyObject *SEClassName = xPyString_FromString("SymbolicElement");
-  PyObject *SEClass  = xPyClass_New(NULL, dictSEClass, SEClassName);
-
-  return SEClass;
-}
 
 
 ProcessingPyConf::ProcessingPyConf(AnalysisProcessor *ap, Trigger *analysisTrigger)
@@ -79,59 +64,14 @@ void ProcessingPyConf::untaintRegFromAddr(IRBuilder *irb)
 /*
  * When a callback is setup (triton.addCallback()), a class (Instruction) is
  * sent to the callback function as unique argument.
- *
- *
- * Class Instruction:
- *
- * - address (integer)
- * - assembly (string)
- * - isBranch (bool)
- * - opcode (integer)
- * - opcodeCategory (IDREF.OPCODE_CATEGORY)
- * - symbolicElements (list of SymbolicElement)
- * - threadId (integer)
- *
- *
- * Class SymbolicElement:
- *
- * - source (string)
- * - destination (string)
- * - expression (string)
- * - id (integer)
- * - isTainted (bool)
- *
  */
 void ProcessingPyConf::callbackAfter(Inst *inst, AnalysisProcessor *ap)
 {
   // Check if there is a callback wich must be called at each instruction instrumented
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackAfter){
 
-    /* Create the class dictionary */
-    PyObject *dictInstClass = xPyDict_New();
-    PyDict_SetItemString(dictInstClass, "address", PyInt_FromLong(inst->getAddress()));
-    PyDict_SetItemString(dictInstClass, "assembly", PyString_FromFormat("%s", inst->getDisassembly().c_str()));
-    PyDict_SetItemString(dictInstClass, "isBranch", PyBool_FromLong(inst->isBranch()));
-    PyDict_SetItemString(dictInstClass, "opcode", PyInt_FromLong(inst->getOpcode()));
-    PyDict_SetItemString(dictInstClass, "opcodeCategory", PyInt_FromLong(inst->getOpcodeCategory()));
-    PyDict_SetItemString(dictInstClass, "routineName", PyString_FromFormat("%s", RTN_FindNameByAddress(inst->getAddress()).c_str()));
-    PyDict_SetItemString(dictInstClass, "threadId", PyInt_FromLong(inst->getThreadID()));
-
-    /* Setup the symbolic element list */
-    PyObject *SEList                         = xPyList_New(inst->numberOfElements());
-    std::list<SymbolicElement*> symElements  = inst->getSymbolicElements();
-    std::list<SymbolicElement*>::iterator it = symElements.begin();
-
-    Py_ssize_t index = 0;
-    for ( ; it != symElements.end(); it++){
-      PyList_SetItem(SEList, index, PySymbolicElement(*it));
-      index++;
-    }
-
-    PyDict_SetItemString(dictInstClass, "symbolicElements", SEList);
-
-    /* Create the Instruction class */
-    PyObject *instClassName = xPyString_FromString("Instruction");
-    PyObject *instClass  = xPyClass_New(NULL, dictInstClass, instClassName);
+    /* Create the Instruction Python class */
+    PyObject *instClass = PyInstruction(inst);
 
     /* CallObject needs a tuple. The size of the tuple is the number of arguments.
      * Triton sends only one argument to the callback. This argument is the Instruction
@@ -143,30 +83,7 @@ void ProcessingPyConf::callbackAfter(Inst *inst, AnalysisProcessor *ap)
       exit(1);
     }
 
-    /* Go through all symbolicElements in SEList. */
-    /* Free all items in the symbolicElement class. */
-    for (index = 0; index < PyList_Size(SEList); index++){
-      /* Get the object in the list */
-      PyObject *o = PyList_GetItem(SEList, index);
-      /* Cast the PyObject to PyClassObject */
-      PyClassObject *co = reinterpret_cast<PyClassObject*>(o);
-      /* Free the class name object */
-      Py_DECREF(co->cl_name);
-      /* Clear/Free the class dictionary items */
-      PyDict_Clear(co->cl_dict);
-      /* Free the class dictionary object */
-      Py_DECREF(co->cl_dict);
-      /* Free the initial object */
-      Py_DECREF(o);
-      /* Next object */
-      index++;
-    }
-
-    PyDict_Clear(dictInstClass);  /* Clear all items in the dictionary */
-    Py_DECREF(SEList);            /* Free the allocated symbolic element list */
-    Py_DECREF(dictInstClass);     /* Free the allocated dictionary */
-    Py_DECREF(instClassName);     /* Free the allocated Inst class name */
-    Py_DECREF(args);              /* Free the allocated tuple */
+    Py_DECREF(args);
   }
 }
 
@@ -176,23 +93,8 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, AnalysisProcessor *ap)
   // Check if there is a callback wich must be called at each instruction instrumented
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackBefore){
 
-    /* Create the class dictionary */
-    PyObject *dictInstClass = xPyDict_New();
-    PyDict_SetItemString(dictInstClass, "address", PyInt_FromLong(irb->getAddress()));
-    PyDict_SetItemString(dictInstClass, "assembly", PyString_FromFormat("%s", irb->getDisassembly().c_str()));
-    PyDict_SetItemString(dictInstClass, "isBranch", PyBool_FromLong(irb->isBranch()));
-    PyDict_SetItemString(dictInstClass, "opcode", PyInt_FromLong(irb->getOpcode()));
-    PyDict_SetItemString(dictInstClass, "opcodeCategory", PyInt_FromLong(irb->getOpcodeCategory()));
-    PyDict_SetItemString(dictInstClass, "routineName", PyString_FromFormat("%s", RTN_FindNameByAddress(irb->getAddress()).c_str()));
-    PyDict_SetItemString(dictInstClass, "threadId", PyInt_FromLong(ap->getThreadID()));
-
-    /* Before the processing, the symbolic element list is empty */
-    PyObject *SEList = xPyList_New(0);
-    PyDict_SetItemString(dictInstClass, "symbolicElements", SEList);
-
-    /* Create the Instruction class */
-    PyObject *instClassName = xPyString_FromString("Instruction");
-    PyObject *instClass  = xPyClass_New(NULL, dictInstClass, instClassName);
+    /* Create the Instruction Python class */
+    PyObject *instClass = PyInstruction(irb);
 
     /* CallObject needs a tuple. The size of the tuple is the number of arguments.
      * Triton sends only one argument to the callback. This argument is the Instruction
@@ -204,11 +106,7 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, AnalysisProcessor *ap)
       exit(1);
     }
 
-    PyDict_Clear(dictInstClass);  /* Clear all items in the dictionary */
-    Py_DECREF(SEList);            /* Free the allocated symbolic element list */
-    Py_DECREF(dictInstClass);     /* Free the allocated dictionary */
-    Py_DECREF(instClassName);     /* Free the allocated Inst class name */
-    Py_DECREF(args);              /* Free the allocated tuple */
+    Py_DECREF(args);
   }
 }
 

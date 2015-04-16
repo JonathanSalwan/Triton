@@ -41,6 +41,9 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
   /* Update the current context handler */
   ap.updateCurrentCtxH(ctx, threadId);
 
+  /* Setup Information into Irb */
+  irb->setThreadID(ap.getThreadID());
+
   /* Python callback before instruction processing */
   processingPyConf.callbackBefore(irb, &ap);
 

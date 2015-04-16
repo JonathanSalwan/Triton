@@ -5,6 +5,7 @@
 #include <set>
 
 #include "AnalysisProcessor.h"
+#include "TritonPyObject.h"
 #include "pin.H"
 
 #define CB_BEFORE 0
@@ -114,9 +115,10 @@ static PyObject *Triton_getMemSymbolicID(PyObject *self, PyObject *addr)
 static char Triton_getMemValue_doc[] = "Get the current value of the memory";
 static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
 {
-
   PyObject *addr;
   PyObject *readSize;
+  uint64_t ad;
+  uint64_t rs;
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "O|O", &addr, &readSize);
@@ -133,8 +135,8 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
     exit(-1);
   }
 
-  uint64_t ad = PyLong_AsLong(addr);
-  uint64_t rs = PyLong_AsLong(readSize);
+  ad = PyLong_AsLong(addr);
+  rs = PyLong_AsLong(readSize);
 
   if (rs != 8 && rs != 4 && rs != 2 && rs != 1){
     PyErr_Format(PyExc_TypeError, "getMemValue(): The readSize argument must be: 8, 4, 2 or 1");
@@ -167,6 +169,9 @@ static PyObject *Triton_getRegSymbolicID(PyObject *self, PyObject *reg)
 static char Triton_getRegValue_doc[] = "Get the current value of the register";
 static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
 {
+  uint64_t tritonReg;
+  uint64_t pinReg;
+
   if (!PyLong_Check(reg) && !PyInt_Check(reg)){
     PyErr_Format(PyExc_TypeError, "getRegValue(): expected a register id (integer) as argument");
     PyErr_Print();
@@ -179,8 +184,8 @@ static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
     exit(-1);
   }
 
-  uint64_t tritonReg = PyLong_AsLong(reg);
-  uint64_t pinReg = ap.convertTritonReg2PinReg(tritonReg);
+  tritonReg = PyLong_AsLong(reg);
+  pinReg = ap.convertTritonReg2PinReg(tritonReg);
 
   if (pinReg == static_cast<uint64_t>(-1)){
     PyErr_Format(PyExc_TypeError, "getRegValue(): Register ID not supported");
@@ -189,6 +194,28 @@ static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
   }
 
   return Py_BuildValue("k", ap.getRegisterValue(pinReg));
+}
+
+
+static char Triton_getSymExprFromID_doc[] = "Returns the symbolic element from its id";
+static PyObject *Triton_getSymExprFromID(PyObject *self, PyObject *id)
+{
+  uint64_t        exprId;
+  SymbolicElement *expr;
+
+  if (!PyLong_Check(id) && !PyInt_Check(id)){
+    PyErr_Format(PyExc_TypeError, "getSymExprFromID(): expected an id (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  exprId = PyLong_AsLong(id);
+  expr = ap.getElementFromId(exprId);
+
+  if (expr == NULL)
+    return Py_None;
+
+  return PySymbolicElement(expr);
 }
 
 
@@ -245,8 +272,11 @@ static char Triton_setMemValue_doc[] = "Insert value in the runtime memory";
 static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
 {
   PyObject *addr;
-  PyObject *writeSize;
   PyObject *value;
+  PyObject *writeSize;
+  uint64_t ad; // address
+  uint64_t va; // value
+  uint64_t ws; // write size
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "O|O|O", &addr, &writeSize, &value);
@@ -269,8 +299,8 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
     exit(-1);
   }
 
-  uint64_t ad = PyLong_AsLong(addr);
-  uint64_t ws = PyLong_AsLong(writeSize);
+  ad = PyLong_AsLong(addr);
+  ws = PyLong_AsLong(writeSize);
 
   if (ws != 8 && ws != 4 && ws != 2 && ws != 1){
     PyErr_Format(PyExc_TypeError, "setMemValue(): The writeSize argument must be: 8, 4, 2 or 1");
@@ -284,7 +314,7 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
     exit(-1);
   }
 
-  uint64_t va = PyLong_AsLong(value);
+  va = PyLong_AsLong(value);
 
   switch (ws){
     case 1:
@@ -490,6 +520,7 @@ PyMethodDef pythonCallbacks[] = {
   {"getMemValue",             Triton_getMemValue,             METH_VARARGS, Triton_getMemValue_doc},
   {"getRegSymbolicID",        Triton_getRegSymbolicID,        METH_O,       Triton_getRegSymbolicID_doc},
   {"getRegValue",             Triton_getRegValue,             METH_O,       Triton_getRegValue_doc},
+  {"getSymExprFromID",        Triton_getSymExprFromID,        METH_O,       Triton_getSymExprFromID_doc},
   {"isMemTainted",            Triton_isMemTainted,            METH_O,       Triton_isMemTainted_doc},
   {"isRegTainted",            Triton_isRegTainted,            METH_O,       Triton_isRegTainted_doc},
   {"opcodeToString",          Triton_opcodeToString,          METH_O,       Triton_opcodeToString_doc},

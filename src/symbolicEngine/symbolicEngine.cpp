@@ -109,12 +109,9 @@ SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
 /* Get the symbolic element pointer from a symbolic ID */
 SymbolicElement *SymbolicEngine::getElementFromId(uint64_t id)
 {
-  try {
-    return this->symbolicVector[id];
-  }
-  catch (std::out_of_range& oor) {
+  if (id > this->symbolicVector.size())
     return NULL;
-  }
+  return this->symbolicVector[id];
 }
 
 

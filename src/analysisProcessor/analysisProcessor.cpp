@@ -58,6 +58,12 @@ uint64_t AnalysisProcessor::getMemSymbolicID(uint64_t address) {
 }
 
 
+SymbolicElement *AnalysisProcessor::getElementFromId(uint64_t id)
+{
+  return this->symEngine.getElementFromId(id);
+}
+
+
 // Taint Engine Facade
 // -------------------
 

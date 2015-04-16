@@ -23,6 +23,12 @@ uint32_t BaseIRBuilder::getOpcode(void) const
 }
 
 
+uint64_t BaseIRBuilder::getThreadID(void) const
+{
+  return this->threadId;
+}
+
+
 void BaseIRBuilder::setOpcode(uint32_t op)
 {
   this->opcode = op;
@@ -32,6 +38,12 @@ void BaseIRBuilder::setOpcode(uint32_t op)
 void BaseIRBuilder::setOpcodeCategory(int32_t category)
 {
   this->opcodeCategory = category;
+}
+
+
+void BaseIRBuilder::setThreadID(uint64_t threadId)
+{
+  this->threadId = threadId;
 }
 
 
