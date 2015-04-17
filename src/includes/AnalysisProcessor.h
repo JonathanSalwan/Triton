@@ -61,6 +61,9 @@ class AnalysisProcessor {
     // Returns the symbolic element from its id.
     SymbolicElement *getElementFromId(uint64_t id);
 
+    // Returns the backtracked symbolic expression from an id.
+    std::string getBacktrackedExpressionFromId(uint64_t id);
+
     // Returns the symbolic engine reference
     SymbolicEngine &getSymbolicEngine();
 

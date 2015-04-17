@@ -3,6 +3,8 @@
 #include "Registers.h"
 
 
+
+
 SymbolicEngine::SymbolicEngine()
 {
   /* Init all symbolic registers/flags to UNSET (init state) */
@@ -112,6 +114,56 @@ SymbolicElement *SymbolicEngine::getElementFromId(uint64_t id)
   if (id > this->symbolicVector.size())
     return NULL;
   return this->symbolicVector[id];
+}
+
+
+/* Replace a symbolic element ID by its source expression */
+std::string SymbolicEngine::replaceEq(std::string str, const std::string from, const std::string to)
+{
+  size_t start_pos = str.find(from);
+  if(start_pos == std::string::npos)
+      return NULL;
+  str.replace(start_pos, from.length(), to);
+  return str;
+}
+
+
+std::string SymbolicEngine::deepReplace(std::stringstream &formula)
+{
+  int               value;
+  size_t            found;
+  std::stringstream from;
+  std::stringstream to;
+
+  found = formula.str().find("#") + 1;
+  std::string subs = formula.str().substr(found, std::string::npos);
+  value = atoi(subs.c_str());
+  from << "#" << value;
+
+  to.str(this->getElementFromId(value)->getSource()->str());
+
+  formula.str(this->replaceEq(formula.str(), from.str(), to.str()));
+  return formula.str();
+}
+
+
+/* Returns the symbolic expression backtracked from an ID. */
+std::string SymbolicEngine::getBacktrackedExpressionFromId(uint64_t id)
+{
+  SymbolicElement   *element;
+  std::stringstream formula;
+
+  element = this->getElementFromId(id);
+  if (element == NULL)
+    return "";
+
+  std::cout << id << std::endl;
+
+  formula.str(element->getSource()->str());
+  while (formula.str().find("#") != std::string::npos)
+    formula.str(this->deepReplace(formula));
+
+  return formula.str();
 }
 
 

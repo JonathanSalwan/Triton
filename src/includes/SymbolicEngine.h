@@ -10,6 +10,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <sstream>
 
 #include "SymbolicElement.h"
 #include "SMT2Lib.h"
@@ -49,6 +50,10 @@ class SymbolicEngine {
     /* List of symbolic elements ID */
     std::vector<SymbolicElement *> symbolicVector;
 
+    /* Private classes used by getBacktrackedExpressionFromId() */
+    std::string deepReplace(std::stringstream &formula);
+    std::string replaceEq(std::string str, const std::string from, const std::string to);
+
 
   public:
 
@@ -58,6 +63,7 @@ class SymbolicEngine {
 
     /* public methods */
     SymbolicElement       *getElementFromId(uint64_t id);
+    std::string           getBacktrackedExpressionFromId(uint64_t id);
     SymbolicElement       *newSymbolicElement(std::stringstream &src);
     std::string           getSmt2LibVarsDecl();
     uint64_t              getRegSymbolicID(uint64_t regID);

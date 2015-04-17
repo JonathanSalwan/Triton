@@ -64,6 +64,12 @@ SymbolicElement *AnalysisProcessor::getElementFromId(uint64_t id)
 }
 
 
+std::string AnalysisProcessor::getBacktrackedExpressionFromId(uint64_t id)
+{
+  return this->symEngine.getBacktrackedExpressionFromId(id);
+}
+
+
 // Taint Engine Facade
 // -------------------
 

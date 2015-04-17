@@ -100,6 +100,23 @@ static PyObject *Triton_dumpStats(PyObject *self, PyObject *flag)
 }
 
 
+static char Triton_getBacktrackedExprFromID_doc[] = "Returns the backtracked expression from an expression id";
+static PyObject *Triton_getBacktrackedExprFromID(PyObject *self, PyObject *id)
+{
+  std::string backtrackedExpr;
+
+  if (!PyLong_Check(id) && !PyInt_Check(id)){
+    PyErr_Format(PyExc_TypeError, "getBacktrackedExprFromID(): expected an id (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+  backtrackedExpr = ap.getBacktrackedExpressionFromId(PyLong_AsLong(id));
+  if (backtrackedExpr.empty())
+    return Py_None;
+  return Py_BuildValue("s", backtrackedExpr.c_str());
+}
+
+
 static char Triton_getMemSymbolicID_doc[] = "Get the symbolic memory reference";
 static PyObject *Triton_getMemSymbolicID(PyObject *self, PyObject *addr)
 {
@@ -513,28 +530,29 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
 
 
 PyMethodDef pythonCallbacks[] = {
-  {"addCallback",             Triton_addCallback,             METH_VARARGS, Triton_addCallback_doc},
-  {"dumpStats",               Triton_dumpStats,               METH_O,       Triton_dumpStats_doc},
-  {"dumpTrace",               Triton_dumpTrace,               METH_O,       Triton_dumpTrace_doc},
-  {"getMemSymbolicID",        Triton_getMemSymbolicID,        METH_O,       Triton_getMemSymbolicID_doc},
-  {"getMemValue",             Triton_getMemValue,             METH_VARARGS, Triton_getMemValue_doc},
-  {"getRegSymbolicID",        Triton_getRegSymbolicID,        METH_O,       Triton_getRegSymbolicID_doc},
-  {"getRegValue",             Triton_getRegValue,             METH_O,       Triton_getRegValue_doc},
-  {"getSymExprFromID",        Triton_getSymExprFromID,        METH_O,       Triton_getSymExprFromID_doc},
-  {"isMemTainted",            Triton_isMemTainted,            METH_O,       Triton_isMemTainted_doc},
-  {"isRegTainted",            Triton_isRegTainted,            METH_O,       Triton_isRegTainted_doc},
-  {"opcodeToString",          Triton_opcodeToString,          METH_O,       Triton_opcodeToString_doc},
-  {"runProgram",              Triton_runProgram,              METH_NOARGS,  Triton_runProgram_doc},
-  {"setMemValue",             Triton_setMemValue,             METH_VARARGS, Triton_setMemValue_doc},
-  {"startAnalysisFromAddr",   Triton_startAnalysisFromAddr,   METH_O,       Triton_startAnalysisFromAddr_doc},
-  {"startAnalysisFromSymbol", Triton_startAnalysisFromSymbol, METH_O,       Triton_startAnalysisFromSymbol_doc},
-  {"stopAnalysisFromAddr",    Triton_stopAnalysisFromAddr,    METH_O,       Triton_stopAnalysisFromAddr_doc},
-  {"taintMem",                Triton_taintMem,                METH_O,       Triton_taintMem_doc},
-  {"taintReg",                Triton_taintReg,                METH_O,       Triton_taintReg_doc},
-  {"taintRegFromAddr",        Triton_taintRegFromAddr,        METH_VARARGS, Triton_taintRegFromAddr_doc},
-  {"untaintMem",              Triton_untaintMem,              METH_O,       Triton_untaintMem_doc},
-  {"untaintReg",              Triton_untaintReg,              METH_O,       Triton_untaintReg_doc},
-  {"untaintRegFromAddr",      Triton_untaintRegFromAddr,      METH_VARARGS, Triton_untaintRegFromAddr_doc},
-  {NULL,                      NULL,                           0,            NULL}
+  {"addCallback",              Triton_addCallback,              METH_VARARGS, Triton_addCallback_doc},
+  {"dumpStats",                Triton_dumpStats,                METH_O,       Triton_dumpStats_doc},
+  {"dumpTrace",                Triton_dumpTrace,                METH_O,       Triton_dumpTrace_doc},
+  {"getBacktrackedExprFromID", Triton_getBacktrackedExprFromID, METH_O,       Triton_getBacktrackedExprFromID_doc},
+  {"getMemSymbolicID",         Triton_getMemSymbolicID,         METH_O,       Triton_getMemSymbolicID_doc},
+  {"getMemValue",              Triton_getMemValue,              METH_VARARGS, Triton_getMemValue_doc},
+  {"getRegSymbolicID",         Triton_getRegSymbolicID,         METH_O,       Triton_getRegSymbolicID_doc},
+  {"getRegValue",              Triton_getRegValue,              METH_O,       Triton_getRegValue_doc},
+  {"getSymExprFromID",         Triton_getSymExprFromID,         METH_O,       Triton_getSymExprFromID_doc},
+  {"isMemTainted",             Triton_isMemTainted,             METH_O,       Triton_isMemTainted_doc},
+  {"isRegTainted",             Triton_isRegTainted,             METH_O,       Triton_isRegTainted_doc},
+  {"opcodeToString",           Triton_opcodeToString,           METH_O,       Triton_opcodeToString_doc},
+  {"runProgram",               Triton_runProgram,               METH_NOARGS,  Triton_runProgram_doc},
+  {"setMemValue",              Triton_setMemValue,              METH_VARARGS, Triton_setMemValue_doc},
+  {"startAnalysisFromAddr",    Triton_startAnalysisFromAddr,    METH_O,       Triton_startAnalysisFromAddr_doc},
+  {"startAnalysisFromSymbol",  Triton_startAnalysisFromSymbol,  METH_O,       Triton_startAnalysisFromSymbol_doc},
+  {"stopAnalysisFromAddr",     Triton_stopAnalysisFromAddr,     METH_O,       Triton_stopAnalysisFromAddr_doc},
+  {"taintMem",                 Triton_taintMem,                 METH_O,       Triton_taintMem_doc},
+  {"taintReg",                 Triton_taintReg,                 METH_O,       Triton_taintReg_doc},
+  {"taintRegFromAddr",         Triton_taintRegFromAddr,         METH_VARARGS, Triton_taintRegFromAddr_doc},
+  {"untaintMem",               Triton_untaintMem,               METH_O,       Triton_untaintMem_doc},
+  {"untaintReg",               Triton_untaintReg,               METH_O,       Triton_untaintReg_doc},
+  {"untaintRegFromAddr",       Triton_untaintRegFromAddr,       METH_VARARGS, Triton_untaintRegFromAddr_doc},
+  {NULL,                      NULL,                             0,            NULL}
 };
 
