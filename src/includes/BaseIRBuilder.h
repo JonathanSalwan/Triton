@@ -16,15 +16,15 @@ class BaseIRBuilder: public IRBuilder {
     // Constructor take the two main informations of an instruction.
     BaseIRBuilder(uint64_t address, const std::string &disassembly);
 
+    virtual bool                isBranch(void);
+    virtual const std::string   &getDisassembly(void) const;
+    virtual int32_t             getOpcodeCategory(void);
     virtual uint32_t            getOpcode(void) const;
+    virtual uint64_t            getAddress(void) const;
     virtual uint64_t            getThreadID(void) const;
     virtual void                setOpcode(uint32_t op);
     virtual void                setOpcodeCategory(int32_t category);
     virtual void                setThreadID(uint64_t threadId);
-    virtual int32_t             getOpcodeCategory(void);
-    virtual bool                isBranch(void);
-    virtual uint64_t            getAddress(void) const;
-    virtual const std::string   &getDisassembly(void) const;
 
     virtual const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &getOperands(void) const;
 
