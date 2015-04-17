@@ -100,13 +100,13 @@ static PyObject *Triton_dumpStats(PyObject *self, PyObject *flag)
 }
 
 
-static char Triton_getBacktrackedExprFromID_doc[] = "Returns the backtracked expression from an expression id";
+static char Triton_getBacktrackedExprFromID_doc[] = "Returns the backtracked symbolic expression from an expression id";
 static PyObject *Triton_getBacktrackedExprFromID(PyObject *self, PyObject *id)
 {
   std::string backtrackedExpr;
 
   if (!PyLong_Check(id) && !PyInt_Check(id)){
-    PyErr_Format(PyExc_TypeError, "getBacktrackedExprFromID(): expected an id (integer) as argument");
+    PyErr_Format(PyExc_TypeError, "getBacktrackedSymExpr(): expected an id (integer) as argument");
     PyErr_Print();
     exit(-1);
   }
@@ -221,7 +221,7 @@ static PyObject *Triton_getSymExprFromID(PyObject *self, PyObject *id)
   SymbolicElement *expr;
 
   if (!PyLong_Check(id) && !PyInt_Check(id)){
-    PyErr_Format(PyExc_TypeError, "getSymExprFromID(): expected an id (integer) as argument");
+    PyErr_Format(PyExc_TypeError, "getSymExpr(): expected an id (integer) as argument");
     PyErr_Print();
     exit(-1);
   }
@@ -533,12 +533,12 @@ PyMethodDef pythonCallbacks[] = {
   {"addCallback",              Triton_addCallback,              METH_VARARGS, Triton_addCallback_doc},
   {"dumpStats",                Triton_dumpStats,                METH_O,       Triton_dumpStats_doc},
   {"dumpTrace",                Triton_dumpTrace,                METH_O,       Triton_dumpTrace_doc},
-  {"getBacktrackedExprFromID", Triton_getBacktrackedExprFromID, METH_O,       Triton_getBacktrackedExprFromID_doc},
+  {"getBacktrackedSymExpr",    Triton_getBacktrackedExprFromID, METH_O,       Triton_getBacktrackedExprFromID_doc},
   {"getMemSymbolicID",         Triton_getMemSymbolicID,         METH_O,       Triton_getMemSymbolicID_doc},
   {"getMemValue",              Triton_getMemValue,              METH_VARARGS, Triton_getMemValue_doc},
   {"getRegSymbolicID",         Triton_getRegSymbolicID,         METH_O,       Triton_getRegSymbolicID_doc},
   {"getRegValue",              Triton_getRegValue,              METH_O,       Triton_getRegValue_doc},
-  {"getSymExprFromID",         Triton_getSymExprFromID,         METH_O,       Triton_getSymExprFromID_doc},
+  {"getSymExpr",               Triton_getSymExprFromID,         METH_O,       Triton_getSymExprFromID_doc},
   {"isMemTainted",             Triton_isMemTainted,             METH_O,       Triton_isMemTainted_doc},
   {"isRegTainted",             Triton_isRegTainted,             METH_O,       Triton_isRegTainted_doc},
   {"opcodeToString",           Triton_opcodeToString,           METH_O,       Triton_opcodeToString_doc},
