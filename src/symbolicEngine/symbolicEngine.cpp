@@ -157,8 +157,6 @@ std::string SymbolicEngine::getBacktrackedExpressionFromId(uint64_t id)
   if (element == NULL)
     return "";
 
-  std::cout << id << std::endl;
-
   formula.str(element->getSource()->str());
   while (formula.str().find("#") != std::string::npos)
     formula.str(this->deepReplace(formula));
