@@ -262,6 +262,18 @@ void AnalysisProcessor::incNumberOfUnknownInstruction(void)
 }
 
 
+void AnalysisProcessor::incNumberOfBranchesTaken(void)
+{
+  this->stats.incNumberOfBranchesTaken();
+}
+
+
+void AnalysisProcessor::incNumberOfBranchesTaken(bool isBranch)
+{
+  if (isBranch)
+    this->stats.incNumberOfBranchesTaken();
+}
+
 // ContextHandler Facade
 
 /* Returns the thread id  */

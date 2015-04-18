@@ -110,6 +110,8 @@ class AnalysisProcessor {
     // Returns a reference to the Stats object.
     Stats     &getStats();
     void      displayStats(void);
+    void      incNumberOfBranchesTaken(void);
+    void      incNumberOfBranchesTaken(bool isBranch);
     void      incNumberOfExpressions(uint64_t val);
     void      incNumberOfExpressions(void);
     void      incNumberOfUnknownInstruction(void);

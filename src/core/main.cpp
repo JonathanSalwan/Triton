@@ -55,6 +55,9 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
   inst->setOpcodeCategory(irb->getOpcodeCategory());
   inst->setOperands(irb->getOperands());
 
+  /* Update statistics */
+  ap.incNumberOfBranchesTaken(inst->isBranch());
+
   /* Python callback after instruction processing */
   processingPyConf.callbackAfter(inst, &ap);
 }
