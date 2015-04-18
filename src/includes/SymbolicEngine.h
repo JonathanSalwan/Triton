@@ -45,7 +45,7 @@ class SymbolicEngine {
     std::map<uint64_t, uint64_t> symVarMemoryReference;
 
     /* List of variables decl in smt2lib */
-    std::list<std::string> smt2libVarDeclList;
+    std::list<std::string> symVarDeclaration;
 
     /* List of symbolic elements ID */
     std::vector<SymbolicElement *> symbolicVector;

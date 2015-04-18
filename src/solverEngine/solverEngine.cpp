@@ -3,46 +3,6 @@
 #include "Colors.h"
 
 
-/* Replace a symbolic element ID by its source expression */
-static std::string replaceEq(std::string str, const std::string from, const std::string to)
-{
-  size_t start_pos = str.find(from);
-  if(start_pos == std::string::npos)
-      return NULL;
-  str.replace(start_pos, from.length(), to);
-  return str;
-}
-
-
-/* Reconstructs all symbolic elements ID */
-static std::string formulaReconstruction(SymbolicEngine *symbolicEngine, uint64_t id)
-{
-  int value;
-  std::size_t found;
-  std::stringstream formula;
-
-  std::stringstream from;
-  std::stringstream to;
-
-  formula.str(symbolicEngine->getElementFromId(id)->getSource()->str());
-  while (formula.str().find("#") != std::string::npos){
-
-    from.str("");
-    to.str("");
-
-    found = formula.str().find("#") + 1;
-    std::string subs = formula.str().substr(found, std::string::npos);
-    value = atoi(subs.c_str());
-    from << "#" << value;
-    to.str(symbolicEngine->getElementFromId(value)->getSource()->str());
-
-    formula.str(replaceEq(formula.str(), from.str(), to.str()));
-  }
-
-  return formula.str();
-}
-
-
 SolverEngine::SolverEngine(SymbolicEngine *symEngine)
 {
   this->symEngine = symEngine;
@@ -51,70 +11,52 @@ SolverEngine::SolverEngine(SymbolicEngine *symEngine)
 
 SolverEngine::~SolverEngine()
 {
-  delete this->solver;
-  delete this->ctx;
 }
 
 
-/* Solve a formula based on the symbolic element ID */
-void SolverEngine::solveFromID(uint64_t id)
+std::list< std::pair<std::string, unsigned long long> > SolverEngine::getModel(std::string expr)
 {
-  std::stringstream formula;
-
-  /* Reconstruct the full formula by backward analysis */
-  formula.str(formulaReconstruction(symEngine, this->symEngine->symbolicReg[ID_ZF]));
-
+  std::list< std::pair<std::string, unsigned long long> > ret;
+  std::stringstream   formula;
+  z3::check_result    checkResult;
+  z3::context         *ctx;
+  z3::solver          *solver;
+  
   /* First, set the QF_AUFBV flag */
-  this->formula << smt2lib::init();
-
+  formula << smt2lib::init();
+  
   /* Then, delcare all symbolic variables */
-  this->formula << this->symEngine->getSmt2LibVarsDecl();
+  formula << this->symEngine->getSmt2LibVarsDecl();
 
-  /* And concat the formula */
-  this->formula << formula.str();
+  /* And concat the user expression */
+  formula << expr;
 
-  this->ctx = new z3::context();
+  /* Create the context and AST */
+  ctx = new z3::context();
+  Z3_ast ast = Z3_parse_smtlib2_string(*ctx, formula.str().c_str(), 0, 0, 0, 0, 0, 0);
+  z3::expr eq(*ctx, ast);
 
-  Z3_ast ast = Z3_parse_smtlib2_string(*this->ctx, this->formula.str().c_str(), 0, 0, 0, 0, 0, 0);
-  z3::expr eq(*this->ctx, ast);
-  this->solver = new z3::solver(*this->ctx);
-  this->solver->add(eq);
-  this->checkResult = this->solver->check();
-}
+  /* Create a solver and add the expression */
+  solver = new z3::solver(*ctx);
+  solver->add(eq);
 
+  /* Check */
+  checkResult = solver->check();
 
-/* Hard display the current model */
-void SolverEngine::displayModel()
-{
-  std::cout << BLUE << "----- Model -----" << std::endl;
-  if (this->checkResult == z3::sat){
-    z3::model m = this->solver->get_model();
-    std::cout << m << std::endl;
+  /* Check if it is sat */
+  if (checkResult == z3::sat){
+    /* Get model */
+    z3::model m = solver->get_model();
+    /* Traversing the model */
+    for (unsigned i = 0; i < m.size(); i++) {
+      unsigned long long value = 0; 
+      z3::func_decl v = m[i];
+      Z3_get_numeral_uint64(*ctx, m.get_const_interp(v), &value);
+      ret.push_back(make_pair(v.name().str(), value));
+    }
   }
-  else {
-    std::cout << "UNSAT" << std::endl;
-  }
-  std::cout << "-----------------" << ENDC << std::endl;
-}
 
-
-/* Returns the current model */
-z3::model SolverEngine::getModel()
-{
-  return this->solver->get_model();
-}
-
-
-/* Returns the result's status of the current model */
-z3::check_result SolverEngine::getCheckResult()
-{
-  return this->checkResult;
-}
-
-
-/* Returns the full symbolic formula */
-std::string SolverEngine::getFormula()
-{
-  return this->formula.str();
+  delete solver;
+  return ret;
 }
 

@@ -224,6 +224,12 @@ SolverEngine &AnalysisProcessor::getSolverEngine()
 }
 
 
+std::list< std::pair<std::string, unsigned long long> > AnalysisProcessor::getModel(std::string expr)
+{
+  return this->solverEngine.getModel(expr);
+}
+
+
 // Statistics Facade
 
 Stats &AnalysisProcessor::getStats()

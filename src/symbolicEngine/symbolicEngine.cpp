@@ -24,7 +24,7 @@ void SymbolicEngine::init(const SymbolicEngine &other)
   this->numberOfSymVar        = other.numberOfSymVar;
   this->memoryReference       = other.memoryReference;
   this->symVarMemoryReference = other.symVarMemoryReference;
-  this->smt2libVarDeclList    = other.smt2libVarDeclList;
+  this->symVarDeclaration    = other.symVarDeclaration;
   this->symbolicVector        = other.symbolicVector;
 }
 
@@ -171,7 +171,7 @@ std::string SymbolicEngine::getSmt2LibVarsDecl()
   std::list<std::string>::iterator i;
   std::stringstream stream;
 
-  for(i = this->smt2libVarDeclList.begin(); i != this->smt2libVarDeclList.end(); i++)
+  for(i = this->symVarDeclaration.begin(); i != this->symVarDeclaration.end(); i++)
     stream << *i;
 
   return stream.str();
@@ -197,7 +197,7 @@ void SymbolicEngine::addSymVarMemoryReference(uint64_t mem, uint64_t symVarID)
 /* Add a new symbolic variable */
 void SymbolicEngine::addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize)
 {
-  this->smt2libVarDeclList.push_front(smt2lib::declare(symVarID, readSize));
+  this->symVarDeclaration.push_front(smt2lib::declare(symVarID, readSize));
 }
 
 

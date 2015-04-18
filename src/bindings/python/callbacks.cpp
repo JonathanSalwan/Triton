@@ -7,6 +7,7 @@
 #include "AnalysisProcessor.h"
 #include "TritonPyObject.h"
 #include "pin.H"
+#include "xPyFunc.h"
 
 #define CB_BEFORE 0
 #define CB_AFTER  1
@@ -168,6 +169,30 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
   }
 
   return Py_BuildValue("k", ap.getMemValue(ad, rs));
+}
+
+
+static char Triton_getModel_doc[] = "Returns a model of the symbolic expression";
+static PyObject *Triton_getModel(PyObject *self, PyObject *expr)
+{
+  std::list< std::pair<std::string, unsigned long long> >::iterator it;
+  std::list< std::pair<std::string, unsigned long long> > models;
+
+  if (!PyString_Check(expr)){
+    PyErr_Format(PyExc_TypeError, "getModel(): expected an expression (string) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  /* Get models */
+  models = ap.getModel(PyString_AsString(expr));
+
+  /* Craft the model dictionary */
+  PyObject *modelsDict = xPyDict_New();
+  for (it = models.begin() ; it != models.end(); it++)
+    PyDict_SetItemString(modelsDict, it->first.c_str(), Py_BuildValue("k", it->second));
+
+  return modelsDict;
 }
 
 
@@ -536,6 +561,7 @@ PyMethodDef pythonCallbacks[] = {
   {"getBacktrackedSymExpr",    Triton_getBacktrackedSymExpr,    METH_O,       Triton_getBacktrackedSymExpr_doc},
   {"getMemSymbolicID",         Triton_getMemSymbolicID,         METH_O,       Triton_getMemSymbolicID_doc},
   {"getMemValue",              Triton_getMemValue,              METH_VARARGS, Triton_getMemValue_doc},
+  {"getModel",                 Triton_getModel,                 METH_O,       Triton_getModel_doc},
   {"getRegSymbolicID",         Triton_getRegSymbolicID,         METH_O,       Triton_getRegSymbolicID_doc},
   {"getRegValue",              Triton_getRegValue,              METH_O,       Triton_getRegValue_doc},
   {"getSymExpr",               Triton_getSymExpr,               METH_O,       Triton_getSymExpr_doc},

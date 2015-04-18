@@ -98,11 +98,14 @@ class AnalysisProcessor {
     void assignmentSpreadTaintRegReg(SymbolicElement *se, uint64_t regDst, uint64_t regSrc);
 
     // SolverEngine Facade
+    // -------------------
 
     // Returns a reference to the solver engine.
-    SolverEngine &getSolverEngine();
+    SolverEngine                                            &getSolverEngine();
+    std::list< std::pair<std::string, unsigned long long> > getModel(std::string expr);
 
     // Statistics Facade
+    // -----------------
 
     // Returns a reference to the Stats object.
     Stats     &getStats();
