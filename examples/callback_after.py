@@ -1,6 +1,7 @@
 
 # Output
 #
+# $ ../../../pin -t ./triton.so -script ./examples/get_expressions.py -- ./samples/crackmes/crackme_xor a
 # 0x40056d: push rbp
 #          ->  #0 = (bvsub (_ bv140734006985528 64) (_ bv8 64))
 #          ->  #1 = (_ bv140734006985568 64)

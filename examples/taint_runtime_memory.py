@@ -12,7 +12,7 @@ def cbefore(instruction):
         rax = getRegValue(IDREF.REG.RAX)
         taintMem(rax)
 
-
+# $ ../../../pin -t ./triton.so -script ./examples/get_expressions.py -- ./samples/crackmes/crackme_xor a
 # [...]
 # 0x400588: add rax, rdx
 #          ->  #15 = (bvadd #14 ((_ extract 63 0) #13))

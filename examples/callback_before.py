@@ -3,6 +3,7 @@ from triton import *
 
 # Output
 #
+# $ ../../../pin -t ./triton.so -script ./examples/get_expressions.py -- ./samples/crackmes/crackme_xor a
 # TID (0) 0x40056d push rbp
 # TID (0) 0x40056e mov rbp, rsp
 # TID (0) 0x400571 mov qword ptr [rbp-0x18], rdi
