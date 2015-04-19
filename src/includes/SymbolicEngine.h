@@ -64,6 +64,7 @@ class SymbolicEngine {
     /* public methods */
     SymbolicElement       *getElementFromId(uint64_t id);
     SymbolicElement       *newSymbolicElement(std::stringstream &src);
+    bool                  convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
     std::string           getBacktrackedExpressionFromId(uint64_t id);
     std::string           getSmt2LibVarsDecl();
     uint64_t              getMemSymbolicID(uint64_t addr);
@@ -74,7 +75,6 @@ class SymbolicEngine {
     void                  addMemoryReference(uint64_t mem, uint64_t id);
     void                  addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize);
     void                  addSymVarMemoryReference(uint64_t mem, uint64_t symVarID);
-    void                  convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
     void                  init(const SymbolicEngine &other);
     void                  operator=(const SymbolicEngine &other);
 

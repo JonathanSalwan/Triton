@@ -104,9 +104,10 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
     exit(-1);
   }
 
-  ap.convertExprToSymVar(ei, vs);
+  if (ap.convertExprToSymVar(ei, vs) == false)
+    return Py_False;
 
-  return Py_None;
+  return Py_True;
 }
 
 

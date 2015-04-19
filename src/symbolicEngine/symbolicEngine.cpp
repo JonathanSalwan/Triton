@@ -193,14 +193,14 @@ uint64_t SymbolicEngine::getUniqueSymVarID()
  * convertExprToSymVar(43, 8)
  * #43 = SymVar_4
  */
-void SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize)
+bool SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize)
 {
   SymbolicElement   *element = this->getElementFromId(exprId);
   std::stringstream newExpr;
   uint64_t          symVarID;
 
   if (element == NULL)
-    return;
+    return false;
 
   if (symVarSize != 1 && symVarSize != 2 && symVarSize != 4 && symVarSize != 8)
     throw std::runtime_error("SymbolicEngine::createSymVarFromExprID() - Invalid symVarSize");
@@ -210,6 +210,7 @@ void SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize)
 
   newExpr << "SymVar_" << std::dec << symVarID;
   element->setSrcExpr(newExpr);
+  return true;
 }
 
 
