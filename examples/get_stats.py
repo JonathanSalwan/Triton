@@ -23,7 +23,7 @@ if __name__ == '__main__':
     startAnalysisFromSymbol('main')
 
     # Dump stats at the end of the execution
-    addCallback(fini, CB_FINI)
+    addCallback(fini, IDREF.CALLBACK.FINI)
 
     # Run the instrumentation - Never returns
     runProgram()

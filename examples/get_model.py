@@ -35,8 +35,8 @@ if __name__ == '__main__':
     # Start the symbolic analysis from the 'check' function
     startAnalysisFromSymbol('check')
 
-    addCallback(cbefore, CB_BEFORE)
-    addCallback(cafter, CB_AFTER)
+    addCallback(cbefore, IDREF.CALLBACK.BEFORE)
+    addCallback(cafter, IDREF.CALLBACK.AFTER)
 
     # Run the instrumentation - Never returns
     runProgram()

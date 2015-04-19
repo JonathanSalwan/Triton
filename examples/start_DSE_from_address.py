@@ -13,7 +13,7 @@ if __name__ == '__main__':
     triton.stopAnalysisFromAddr(0x4005c9)
 
     # When the instruction is over, call the fini function
-    triton.addCallback(fini, triton.CB_FINI)
+    triton.addCallback(fini, triton.IDREF.CALLBACK.FINI)
 
     # Run the instrumentation - Never returns
     triton.runProgram()

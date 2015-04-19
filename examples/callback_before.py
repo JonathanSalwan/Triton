@@ -44,10 +44,10 @@ if __name__ == '__main__':
     startAnalysisFromSymbol('check')
 
     # Add a callback.
-    # CB_BEFORE: Add the callback before the instruction processing
-    # CB_AFTER:  Add the callback after the instruction processing
-    # CB_FINI:   Add the callback at the end of the execution
-    addCallback(my_callback_before, CB_BEFORE)
+    # BEFORE: Add the callback before the instruction processing
+    # AFTER:  Add the callback after the instruction processing
+    # FINI:   Add the callback at the end of the execution
+    addCallback(my_callback_before, IDREF.CALLBACK.BEFORE)
 
     # Run the instrumentation - Never returns
     runProgram()

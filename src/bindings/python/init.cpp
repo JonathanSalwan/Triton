@@ -6,22 +6,13 @@
 #include "PythonBindings.h"
 #include "xPyFunc.h"
 
+void initCallbackEnv(PyObject *);
 void initFlagEnv(PyObject *);
 void initOpcodeCategoryEnv(PyObject *);
 void initOpcodeEnv(PyObject *);
 void initOperandEnv(PyObject *);
 void initRegEnv(PyObject *);
 
-
-/*
- * Triton: [IDREF, callback, CB_AFTER, CB_BEFORE, CB_FINI]
- * IDREF: [REG, FLAG, OPCODE]
- * REG: [RAX, RBX, XMM0, ...]
- * FLAG: [AF, OF, ZF, ...]
- * OPCODE: [AAA, MOV, MOVSX, XOR, ...]
- * OPERAND: [IMM, REG, MEM_R, MEM_W]
- * OPCODE_CATEGORY: [XED_CATEGORY_AES, XED_CATEGORY_CMOV, ...]
- */
 
 PyObject *initBindings(void)
 {
@@ -114,8 +105,23 @@ PyObject *initBindings(void)
 
   // OPERAND ---------------------
 
+  // CALLBACK ---------------------
+
+  /* Create the IDREF.CALLBACK class */
+  PyObject *idCallbackClassName = xPyString_FromString("CALLBACK");
+  PyObject *idCallbackClassDict = xPyDict_New();
+
+  /* Add registers ref into IDREF.CALLBACK class */
+  initCallbackEnv(idCallbackClassDict);
+
+  /* Create the OPCODE class */
+  PyObject *idCallbackClass = xPyClass_New(NULL, idCallbackClassDict, idCallbackClassName);
+
+  // CALLBACK ---------------------
+
 
   /* Add REG, FLAG, OPCODE, OPCODE_CATEGORY, OPERAND into IDREF */
+  PyDict_SetItemString(idRefClassDict, "CALLBACK", idCallbackClass);
   PyDict_SetItemString(idRefClassDict, "FLAG", idFlagClass);
   PyDict_SetItemString(idRefClassDict, "OPCODE", idOpcodeClass);
   PyDict_SetItemString(idRefClassDict, "OPCODE_CATEGORY", idOpcodeCategoryClass);
@@ -129,10 +135,7 @@ PyObject *initBindings(void)
   PyModule_AddObject(tritonModule, "IDREF", idRefClass);
 
   /* Constants Triton internal */
-  PyModule_AddIntConstant(tritonModule, "CB_BEFORE",  CB_BEFORE);
-  PyModule_AddIntConstant(tritonModule, "CB_AFTER",   CB_AFTER);
-  PyModule_AddIntConstant(tritonModule, "CB_FINI",    CB_FINI);
-  PyModule_AddObject(tritonModule,      "UNSET",      Py_BuildValue("k", UNSET)); // Py_BuildValue for unsigned long
+  PyModule_AddObject(tritonModule, "UNSET", Py_BuildValue("k", UNSET)); // Py_BuildValue for unsigned long
 
   return tritonModule;
 }

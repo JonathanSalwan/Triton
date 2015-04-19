@@ -18,7 +18,7 @@ if __name__ == '__main__':
     untaintRegFromAddr(0x40058e, [IDREF.REG.RCX])
 
     # When the instruction is over, call the fini function
-    addCallback(fini, CB_FINI)
+    addCallback(fini, IDREF.CALLBACK.FINI)
 
     # Run the instrumentation - Never returns
     runProgram()
