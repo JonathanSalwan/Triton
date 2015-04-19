@@ -6,6 +6,7 @@
 #include "Stats.h"
 #include "SymbolicEngine.h"
 #include "TaintEngine.h"
+#include "Trace.h"
 
 
 class AnalysisProcessor {
@@ -115,6 +116,17 @@ class AnalysisProcessor {
     void      incNumberOfExpressions(uint64_t val);
     void      incNumberOfExpressions(void);
     void      incNumberOfUnknownInstruction(void);
+    uint64_t  getNumberOfBranchesTaken(void);
+    uint64_t  getNumberOfExpressions(void);
+    uint64_t  getTimeOfExecution(void);
+    uint64_t  getNumberOfUnknownInstruction(void);
+
+    // Trace Facade
+    // ------------
+
+    Trace     &getTrace();
+    void      addInstructionToTrace(Inst *instruction);
+    void      saveTrace(std::stringstream &file);
 
 
   private:
@@ -122,6 +134,7 @@ class AnalysisProcessor {
     SolverEngine      solverEngine;
     TaintEngine       taintEngine;
     Stats             stats;
+    Trace             trace;
     PINContextHandler *currentCtxH;
 };
 

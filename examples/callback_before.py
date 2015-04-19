@@ -45,7 +45,8 @@ if __name__ == '__main__':
 
     # Add a callback.
     # CB_BEFORE: Add the callback before the instruction processing
-    # CB_AFTER: Add the callback after the instruction processing
+    # CB_AFTER:  Add the callback after the instruction processing
+    # CB_FINI:   Add the callback at the end of the execution
     addCallback(my_callback_before, CB_BEFORE)
 
     # Run the instrumentation - Never returns

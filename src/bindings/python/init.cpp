@@ -14,7 +14,7 @@ void initRegEnv(PyObject *);
 
 
 /*
- * Triton: [IDREF, callback, CB_AFTER, CB_BEFORE]
+ * Triton: [IDREF, callback, CB_AFTER, CB_BEFORE, CB_FINI]
  * IDREF: [REG, FLAG, OPCODE]
  * REG: [RAX, RBX, XMM0, ...]
  * FLAG: [AF, OF, ZF, ...]
@@ -131,6 +131,7 @@ PyObject *initBindings(void)
   /* Constants Triton internal */
   PyModule_AddIntConstant(tritonModule, "CB_BEFORE",  CB_BEFORE);
   PyModule_AddIntConstant(tritonModule, "CB_AFTER",   CB_AFTER);
+  PyModule_AddIntConstant(tritonModule, "CB_FINI",    CB_FINI);
   PyModule_AddObject(tritonModule,      "UNSET",      Py_BuildValue("k", UNSET)); // Py_BuildValue for unsigned long
 
   return tritonModule;

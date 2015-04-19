@@ -1,6 +1,11 @@
 
 from triton import *
 
+
+def fini():
+    triton.saveTrace('trace.log')
+
+
 if __name__ == '__main__':
 
     # Start the symbolic analysis from the 'check' function
@@ -12,8 +17,8 @@ if __name__ == '__main__':
     # Untaint the RCX register when the address 0x40058e is executed
     untaintRegFromAddr(0x40058e, [IDREF.REG.RCX])
 
-    # Dump the symbolic trace at the end of the execution
-    dumpTrace(True)
+    # When the instruction is over, call the fini function
+    addCallback(fini, CB_FINI)
 
     # Run the instrumentation - Never returns
     runProgram()

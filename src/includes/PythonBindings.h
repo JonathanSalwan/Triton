@@ -8,6 +8,7 @@
 
 #define CB_BEFORE 0
 #define CB_AFTER  1
+#define CB_FINI   2
 
 extern PyMethodDef pythonCallbacks[];
 
@@ -15,7 +16,7 @@ namespace PyTritonOptions {
 
   /* Debug configurations */
   extern bool dumpStats;
-  extern bool dumpTrace;
+  extern std::stringstream saveTrace;
 
   /* Execution configurations */
   extern char *startAnalysisFromSymbol;
@@ -25,6 +26,7 @@ namespace PyTritonOptions {
   /* Callback configurations */
   extern PyObject *callbackBefore; // Before the instruction processing
   extern PyObject *callbackAfter;  // After the instruction processing
+  extern PyObject *callbackFini;   // At the end of the execution
 
   /* Taint configurations */
   extern std::map<uint64_t, std::list<uint64_t>> taintRegFromAddr;

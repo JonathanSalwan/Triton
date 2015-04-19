@@ -1,17 +1,19 @@
 
 import triton
 
+
+def fini():
+    triton.saveTrace('trace.log')
+
+
 if __name__ == '__main__':
 
     # Start the symbolic analysis from the 'check' function
     triton.startAnalysisFromSymbol('check')
 
-    # Dump the symbolic trace at the end of the execution
-    triton.dumpTrace(True)
-
-    # Dump some statistics at the end of the execution
-    triton.dumpStats(True)
-
+    # When the instruction is over, call the fini function
+    triton.addCallback(fini, triton.CB_FINI)
+    
     # Run the instrumentation - Never returns
     triton.runProgram()
 

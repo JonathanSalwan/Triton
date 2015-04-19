@@ -24,6 +24,7 @@ class ProcessingPyConf
 
     void callbackAfter(Inst *inst, AnalysisProcessor *ap);
     void callbackBefore(IRBuilder *irb, AnalysisProcessor *ap);
+    void callbackFini(void);
 
     void startAnalysisFromAddr(IRBuilder *irb);
     void stopAnalysisFromAddr(IRBuilder *irb);

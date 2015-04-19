@@ -12,7 +12,6 @@ class Stats {
     uint64_t numberOfBranchesTaken;
     uint64_t numberOfExpressions;
     uint64_t numberOfUnknownInstruction;
-    uint64_t timeOfExecution;
 
     high_resolution_clock::time_point start;
     high_resolution_clock::time_point end;
@@ -29,7 +28,8 @@ class Stats {
 
     uint64_t  getNumberOfBranchesTaken(void);
     uint64_t  getNumberOfExpressions(void);
-    uint64_t  getumberOfUnknownInstruction(void);
+    uint64_t  getTimeOfExecution(void);
+    uint64_t  getNumberOfUnknownInstruction(void);
 };
 
 #endif     /* !__STATISTICS_H__ */

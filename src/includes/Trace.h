@@ -29,6 +29,7 @@ class Trace {
 
     // Display the trace: all the instructions and their expressions.
     void display(std::ostream &os = std::cout);
+    void save(std::stringstream &file);
 };
 
 #endif /* !_TRACE_H_ */

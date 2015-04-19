@@ -12,7 +12,6 @@
 #include "Inst.h"
 #include "PINContextHandler.h"
 #include "ProcessingPyConf.h"
-#include "Trace.h"
 #include "Trigger.h"
 
 
@@ -20,7 +19,6 @@
 KNOB<std::string>   KnobPythonModule(KNOB_MODE_WRITEONCE, "pintool", "script", "", "Python script");
 
 AnalysisProcessor   ap;
-Trace               trace;
 Trigger             analysisTrigger = Trigger();
 ProcessingPyConf    processingPyConf(&ap, &analysisTrigger);
 
@@ -48,7 +46,7 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
   processingPyConf.callbackBefore(irb, &ap);
 
   Inst *inst = irb->process(ap);
-  trace.addInstruction(inst);
+  ap.addInstructionToTrace(inst);
 
   /* Export some information from Irb to Inst */
   inst->setOpcode(irb->getOpcode());
@@ -125,12 +123,10 @@ VOID IMG_Instrumentation(IMG img, VOID *)
 
 VOID Fini(INT32, VOID *)
 {
-  if (PyTritonOptions::dumpTrace == true)
-    trace.display();
+  /* Python callback at the end of execution */
+  processingPyConf.callbackFini();
 
-  if (PyTritonOptions::dumpStats == true)
-    ap.displayStats();
-
+  /* End of Python */
   Py_Finalize();
 }
 

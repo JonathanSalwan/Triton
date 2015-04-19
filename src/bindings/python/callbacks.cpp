@@ -11,25 +11,22 @@
 
 #define CB_BEFORE 0
 #define CB_AFTER  1
+#define CB_FINI   2
 
 extern AnalysisProcessor ap;
 
 
 /* NameSapce for all Python Bindings variables */
 namespace PyTritonOptions {
-
-  /* Debug configurations */
-  bool dumpStats = false;
-  bool dumpTrace = false;
-
   /* Execution configurations */
-  char *startAnalysisFromSymbol = NULL;
-  std::set<uint64_t> startAnalysisFromAddr;
-  std::set<uint64_t> stopAnalysisFromAddr;
+  char                *startAnalysisFromSymbol = NULL;
+  std::set<uint64_t>  startAnalysisFromAddr;
+  std::set<uint64_t>  stopAnalysisFromAddr;
 
   /* Callback configurations */
   PyObject *callbackBefore = NULL; // Before the instruction processing
   PyObject *callbackAfter  = NULL; // After the instruction processing
+  PyObject *callbackFini   = NULL; // At the end of the execution
 
   /* Taint configurations */
   std::map<uint64_t, std::list<uint64_t>> taintRegFromAddr;   // <addr, [reg1, reg2]>
@@ -63,40 +60,19 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
 
   if (PyLong_AsLong(flag) == CB_BEFORE)
     PyTritonOptions::callbackBefore = function;
+
   else if ((PyLong_AsLong(flag) == CB_AFTER))
     PyTritonOptions::callbackAfter = function;
+
+  else if ((PyLong_AsLong(flag) == CB_FINI))
+    PyTritonOptions::callbackFini = function;
+
   else {
-    PyErr_Format(PyExc_TypeError, "addCallback(): expected CB_BEFORE or CB_AFTER as second argument");
+    PyErr_Format(PyExc_TypeError, "addCallback(): expected CB_BEFORE, CB_AFTER or CB_FINI as second argument");
     PyErr_Print();
     exit(-1);
   }
 
-  return Py_None;
-}
-
-
-static char Triton_dumpTrace_doc[] = "Dump the trace at the end of the execution";
-static PyObject *Triton_dumpTrace(PyObject *self, PyObject *flag)
-{
-  if (!PyBool_Check(flag)){
-    PyErr_Format(PyExc_TypeError, "dumpTrace(): expected a boolean");
-    PyErr_Print();
-    exit(-1);
-  }
-  PyTritonOptions::dumpTrace = (flag == Py_True);
-  return Py_None;
-}
-
-
-static char Triton_dumpStats_doc[] = "Dump statistics at the end of the execution";
-static PyObject *Triton_dumpStats(PyObject *self, PyObject *flag)
-{
-  if (!PyBool_Check(flag)){
-    PyErr_Format(PyExc_TypeError, "dumpStats(): expected a boolean");
-    PyErr_Print();
-    exit(-1);
-  }
-  PyTritonOptions::dumpStats = (flag == Py_True);
   return Py_None;
 }
 
@@ -239,6 +215,18 @@ static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
 }
 
 
+static char Triton_getStats_doc[] = "Returns statistics of the execution";
+static PyObject *Triton_getStats(PyObject *self, PyObject *noargs)
+{
+  PyObject *stats = xPyDict_New();
+  PyDict_SetItemString(stats, "branches",     PyLong_FromLong(ap.getNumberOfBranchesTaken()));
+  PyDict_SetItemString(stats, "expressions",  PyLong_FromLong(ap.getNumberOfExpressions()));
+  PyDict_SetItemString(stats, "time",         PyLong_FromLong(ap.getTimeOfExecution()));
+  PyDict_SetItemString(stats, "unknownExpr",  PyLong_FromLong(ap.getNumberOfUnknownInstruction()));
+  return stats;
+}
+
+
 static char Triton_getSymExpr_doc[] = "Returns a SymbolicElement class corresponding to the symbolic element ID.";
 static PyObject *Triton_getSymExpr(PyObject *self, PyObject *id)
 {
@@ -306,6 +294,20 @@ static PyObject *Triton_runProgram(PyObject *self, PyObject *noarg)
 {
   // Never returns - Rock 'n roll baby \o/
   PIN_StartProgram();
+  return Py_None;
+}
+
+
+static char Triton_saveTrace_doc[] = "Save the trace in a file";
+static PyObject *Triton_saveTrace(PyObject *self, PyObject *file)
+{
+  if (!PyString_Check(file)){
+    PyErr_Format(PyExc_TypeError, "saveTrace(): expected a string as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+  std::stringstream f(PyString_AsString(file));
+  ap.saveTrace(f);
   return Py_None;
 }
 
@@ -556,19 +558,19 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
 
 PyMethodDef pythonCallbacks[] = {
   {"addCallback",              Triton_addCallback,              METH_VARARGS, Triton_addCallback_doc},
-  {"dumpStats",                Triton_dumpStats,                METH_O,       Triton_dumpStats_doc},
-  {"dumpTrace",                Triton_dumpTrace,                METH_O,       Triton_dumpTrace_doc},
   {"getBacktrackedSymExpr",    Triton_getBacktrackedSymExpr,    METH_O,       Triton_getBacktrackedSymExpr_doc},
   {"getMemSymbolicID",         Triton_getMemSymbolicID,         METH_O,       Triton_getMemSymbolicID_doc},
   {"getMemValue",              Triton_getMemValue,              METH_VARARGS, Triton_getMemValue_doc},
   {"getModel",                 Triton_getModel,                 METH_O,       Triton_getModel_doc},
   {"getRegSymbolicID",         Triton_getRegSymbolicID,         METH_O,       Triton_getRegSymbolicID_doc},
   {"getRegValue",              Triton_getRegValue,              METH_O,       Triton_getRegValue_doc},
+  {"getStats",                 Triton_getStats,                 METH_NOARGS,  Triton_getStats_doc},
   {"getSymExpr",               Triton_getSymExpr,               METH_O,       Triton_getSymExpr_doc},
   {"isMemTainted",             Triton_isMemTainted,             METH_O,       Triton_isMemTainted_doc},
   {"isRegTainted",             Triton_isRegTainted,             METH_O,       Triton_isRegTainted_doc},
   {"opcodeToString",           Triton_opcodeToString,           METH_O,       Triton_opcodeToString_doc},
   {"runProgram",               Triton_runProgram,               METH_NOARGS,  Triton_runProgram_doc},
+  {"saveTrace",                Triton_saveTrace,                METH_O,       Triton_saveTrace_doc},
   {"setMemValue",              Triton_setMemValue,              METH_VARARGS, Triton_setMemValue_doc},
   {"startAnalysisFromAddr",    Triton_startAnalysisFromAddr,    METH_O,       Triton_startAnalysisFromAddr_doc},
   {"startAnalysisFromSymbol",  Triton_startAnalysisFromSymbol,  METH_O,       Triton_startAnalysisFromSymbol_doc},
@@ -581,4 +583,5 @@ PyMethodDef pythonCallbacks[] = {
   {"untaintRegFromAddr",       Triton_untaintRegFromAddr,       METH_VARARGS, Triton_untaintRegFromAddr_doc},
   {NULL,                      NULL,                             0,            NULL}
 };
+
 

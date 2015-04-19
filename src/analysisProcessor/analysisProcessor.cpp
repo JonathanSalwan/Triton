@@ -4,7 +4,9 @@
 AnalysisProcessor::AnalysisProcessor():
   symEngine(),
   solverEngine(&this->symEngine),
-  taintEngine()
+  taintEngine(),
+  stats(),
+  trace()
 {
   this->currentCtxH = NULL;
 }
@@ -274,6 +276,31 @@ void AnalysisProcessor::incNumberOfBranchesTaken(bool isBranch)
     this->stats.incNumberOfBranchesTaken();
 }
 
+
+uint64_t AnalysisProcessor::getNumberOfBranchesTaken(void)
+{
+  return this->stats.getNumberOfBranchesTaken();
+}
+
+
+uint64_t AnalysisProcessor::getNumberOfExpressions(void)
+{
+  return this->stats.getNumberOfExpressions();
+}
+
+
+uint64_t AnalysisProcessor::getNumberOfUnknownInstruction(void)
+{
+  return this->stats.getNumberOfUnknownInstruction();
+}
+
+
+uint64_t AnalysisProcessor::getTimeOfExecution(void)
+{
+  return this->stats.getTimeOfExecution();
+}
+
+
 // ContextHandler Facade
 
 /* Returns the thread id  */
@@ -324,4 +351,25 @@ uint64_t AnalysisProcessor::convertTritonReg2PinReg(uint64_t regID)
     return 0;
   return this->currentCtxH->convertTritonReg2PinReg(regID);
 }
+
+// Trace Facade
+
+Trace &AnalysisProcessor::getTrace()
+{
+  return this->trace;
+}
+
+
+void AnalysisProcessor::addInstructionToTrace(Inst *instruction)
+{
+  this->trace.addInstruction(instruction);
+}
+
+
+void AnalysisProcessor::saveTrace(std::stringstream &file)
+{
+  if (file.str().empty() == false)
+    this->trace.save(file);
+}
+
 
