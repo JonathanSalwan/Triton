@@ -47,6 +47,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/components/Stats.cpp \
 		./src/components/Trace.cpp \
 		./src/contextHandler/PINContextHandler.cpp \
+		./src/contextHandler/PINConverter.cpp \
 		./src/core/main.cpp \
 		./src/ir/IRBuilderFactory.cpp \
 		./src/ir/builders/AddIRBuilder.cpp \

@@ -249,7 +249,6 @@ static char Triton_getRegValue_doc[] = "Get the current value of the register";
 static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
 {
   uint64_t tritonReg;
-  uint64_t pinReg;
 
   if (!PyLong_Check(reg) && !PyInt_Check(reg)){
     PyErr_Format(PyExc_TypeError, "getRegValue(): expected a register id (integer) as argument");
@@ -264,15 +263,10 @@ static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
   }
 
   tritonReg = PyLong_AsLong(reg);
-  pinReg = ap.convertTritonReg2PinReg(tritonReg);
-
-  if (pinReg == static_cast<uint64_t>(-1)){
-    PyErr_Format(PyExc_TypeError, "getRegValue(): Register ID not supported");
-    PyErr_Print();
-    exit(-1);
-  }
-
-  return Py_BuildValue("k", ap.getRegisterValue(pinReg));
+  //TODO: I deleted the check on the register ID. Right now the conversion from
+  //      Triton register ID to Pin ID is handled inside getRegisterValue.
+  //      I propose to use exception for this kind of check, now.
+  return Py_BuildValue("k", ap.getRegisterValue(tritonReg));
 }
 
 

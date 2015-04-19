@@ -25,7 +25,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t readSize)
   if (symReg != UNSET)
     op1 << "#" << std::dec << symReg;
   else
-    op1 << smt2lib::bv(ap.getRegisterValue(REG_RSP), readSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getRegisterValue(ID_RSP), readSize * REG_SIZE);
 
   op2 << smt2lib::bv(readSize, readSize * REG_SIZE);
 
@@ -52,7 +52,7 @@ void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   if (symRegRBP != UNSET)
     expr1 << smt2lib::extract(8, "#" + std::to_string(symRegRBP));
   else
-    expr1 << smt2lib::bv(ap.getRegisterValue(REG_RBP), 8 * REG_SIZE);
+    expr1 << smt2lib::bv(ap.getRegisterValue(ID_RBP), 8 * REG_SIZE);
 
   /* Create the symbolic element */
   se1 = ap.createRegSE(expr1, ID_RSP);

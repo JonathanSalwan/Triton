@@ -33,16 +33,16 @@ void MovIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr;
   uint64_t          reg = std::get<1>(this->operands[0]);
   uint64_t          imm = std::get<1>(this->operands[1]);
-  uint64_t          size = ap.getRegisterSize(reg);
+  uint64_t          size = std::get<2>(this->operands[0]);
 
   /* Create the SMT semantic */
   expr << smt2lib::bv(imm, size * REG_SIZE);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ap.convertPinReg2TritonReg(reg));
+  se = ap.createRegSE(expr, reg);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintRegImm(se, ap.convertPinReg2TritonReg(reg));
+  ap.assignmentSpreadTaintRegImm(se, reg);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -54,10 +54,10 @@ void MovIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr;
   uint64_t          reg1    = std::get<1>(this->operands[0]);
   uint64_t          reg2    = std::get<1>(this->operands[1]);
-  uint64_t          size1 = ap.getRegisterSize(reg1);
-  uint64_t          size2 = ap.getRegisterSize(reg2);
+  uint64_t          size1 = std::get<2>(this->operands[0]);
+  uint64_t          size2 = std::get<2>(this->operands[1]);
 
-  uint64_t          symReg2 = ap.getRegSymbolicID(ap.convertPinReg2TritonReg(reg2));
+  uint64_t          symReg2 = ap.getRegSymbolicID(reg2);
 
   /* Create the SMT semantic */
   if (symReg2 != UNSET)
@@ -68,10 +68,10 @@ void MovIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   expr.str(this->extender(expr.str(), deltaSize(size1, size2)));
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ap.convertPinReg2TritonReg(reg1));
+  se = ap.createRegSE(expr, reg1);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintRegReg(se, ap.convertPinReg2TritonReg(reg1), ap.convertPinReg2TritonReg(reg2));
+  ap.assignmentSpreadTaintRegReg(se, reg1, reg2);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -84,7 +84,7 @@ void MovIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          readSize = std::get<2>(this->operands[1]);
   uint64_t          mem      = std::get<1>(this->operands[1]);
   uint64_t          reg      = std::get<1>(this->operands[0]);
-  uint64_t          regSize  = ap.getRegisterSize(reg);
+  uint64_t          regSize  = std::get<2>(this->operands[1]);
 
   uint64_t          symMem   = ap.getMemSymbolicID(mem);
 
@@ -97,10 +97,10 @@ void MovIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   expr.str(this->extender(expr.str(), deltaSize(regSize, readSize)));
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ap.convertPinReg2TritonReg(reg));
+  se = ap.createRegSE(expr, reg);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintRegMem(se, ap.convertPinReg2TritonReg(reg), mem, readSize);
+  ap.assignmentSpreadTaintRegMem(se, reg, mem, readSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -134,9 +134,9 @@ void MovIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          writeSize = std::get<2>(this->operands[0]);
   uint64_t          mem       = std::get<1>(this->operands[0]);
   uint64_t          reg       = std::get<1>(this->operands[1]);
-  uint64_t          regSize   = ap.getRegisterSize(reg);
+  uint64_t          regSize   = std::get<2>(this->operands[1]);
 
-  uint64_t          symReg    = ap.getRegSymbolicID(ap.convertPinReg2TritonReg(reg));
+  uint64_t          symReg    = ap.getRegSymbolicID(reg);
 
   /* Create the SMT semantic */
   if (symReg != UNSET)
@@ -148,7 +148,7 @@ void MovIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createMemSE(expr, mem);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintMemReg(se, mem, ap.convertPinReg2TritonReg(reg), writeSize);
+  ap.assignmentSpreadTaintMemReg(se, mem, reg, writeSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);

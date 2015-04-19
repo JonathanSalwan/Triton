@@ -19,8 +19,8 @@ void XorIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          reg     = std::get<1>(this->operands[0]);
   uint64_t          imm     = std::get<1>(this->operands[1]);
 
-  uint64_t          symReg  = ap.getRegSymbolicID(ap.convertPinReg2TritonReg(reg));
-  uint32_t          regSize = ap.getRegisterSize(reg);
+  uint64_t          symReg  = ap.getRegSymbolicID(reg);
+  uint32_t          regSize = std::get<2>(this->operands[0]);
 
   /* Create the SMT semantic */
   /* OP_1 */
@@ -36,10 +36,10 @@ void XorIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvxor(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ap.convertPinReg2TritonReg(reg));
+  se = ap.createRegSE(expr, reg);
 
   /* Apply the taint */
-  ap.aluSpreadTaintRegImm(se, ap.convertPinReg2TritonReg(reg));
+  ap.aluSpreadTaintRegImm(se, reg);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -60,10 +60,10 @@ void XorIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          reg1     = std::get<1>(this->operands[0]);
   uint64_t          reg2     = std::get<1>(this->operands[1]);
 
-  uint64_t          symReg1  = ap.getRegSymbolicID(ap.convertPinReg2TritonReg(reg1));
-  uint64_t          symReg2  = ap.getRegSymbolicID(ap.convertPinReg2TritonReg(reg2));
-  uint32_t          regSize1 = ap.getRegisterSize(reg1);
-  uint32_t          regSize2 = ap.getRegisterSize(reg2);
+  uint64_t          symReg1  = ap.getRegSymbolicID(reg1);
+  uint64_t          symReg2  = ap.getRegSymbolicID(reg2);
+  uint32_t          regSize1 = std::get<2>(this->operands[0]);
+  uint32_t          regSize2 = std::get<2>(this->operands[1]);
 
 
   /* Create the SMT semantic */
@@ -83,10 +83,10 @@ void XorIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvxor(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ap.convertPinReg2TritonReg(reg1));
+  se = ap.createRegSE(expr, reg1);
 
   /* Apply the taint */
-  ap.aluSpreadTaintRegReg(se, ap.convertPinReg2TritonReg(reg1), ap.convertPinReg2TritonReg(reg2));
+  ap.aluSpreadTaintRegReg(se, reg1, reg2);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -108,9 +108,9 @@ void XorIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          mem      = std::get<1>(this->operands[1]);
   uint64_t          reg      = std::get<1>(this->operands[0]);
 
-  uint64_t          symReg   = ap.getRegSymbolicID(ap.convertPinReg2TritonReg(reg));
+  uint64_t          symReg   = ap.getRegSymbolicID(reg);
   uint64_t          symMem   = ap.getMemSymbolicID(mem);
-  uint32_t          regSize  = ap.getRegisterSize(reg);
+  uint32_t          regSize  = std::get<2>(this->operands[1]);
 
   /* Create the SMT semantic */
   // OP_1
@@ -129,10 +129,10 @@ void XorIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvxor(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ap.convertPinReg2TritonReg(reg));
+  se = ap.createRegSE(expr, reg);
 
   /* Apply the taint */
-  ap.aluSpreadTaintRegMem(se, ap.convertPinReg2TritonReg(reg), mem, readSize);
+  ap.aluSpreadTaintRegMem(se, reg, mem, readSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -194,9 +194,9 @@ void XorIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          writeSize = std::get<2>(this->operands[0]);
   uint64_t          mem       = std::get<1>(this->operands[0]);
   uint64_t          reg       = std::get<1>(this->operands[1]);
-  uint32_t          regSize   = ap.getRegisterSize(reg);
+  uint32_t          regSize   = std::get<2>(this->operands[1]);
 
-  uint64_t          symReg    = ap.getRegSymbolicID(ap.convertPinReg2TritonReg(reg));
+  uint64_t          symReg    = ap.getRegSymbolicID(reg);
   uint64_t          symMem    = ap.getMemSymbolicID(mem);
 
   /* Create the SMT semantic */
@@ -219,7 +219,7 @@ void XorIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createMemSE(expr, mem);
 
   /* Apply the taint */
-  ap.aluSpreadTaintMemReg(se, mem, ap.convertPinReg2TritonReg(reg), writeSize);
+  ap.aluSpreadTaintMemReg(se, mem, reg, writeSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
