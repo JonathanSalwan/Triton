@@ -2,11 +2,11 @@
 from triton import *
 
 # $ ../../../pin -t ./triton.so -script ./examples/get_model.py -- ./samples/crackmes/crackme_xor elite
-# {'SymVar_0': 101}
-# {'SymVar_1': 108}
-# {'SymVar_2': 105}
-# {'SymVar_3': 116}
-# {'SymVar_4': 101}
+# {'SymVar_0': "0x65, 'e'"}
+# {'SymVar_1': "0x6c, 'l'"}
+# {'SymVar_2': "0x69, 'i'"}
+# {'SymVar_3': "0x74, 't'"}
+# {'SymVar_4': "0x65, 'e'"}
 # Win
 # $
 
