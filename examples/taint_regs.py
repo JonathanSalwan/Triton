@@ -3,7 +3,7 @@ from triton import *
 
 
 def fini():
-    triton.saveTrace('trace.log')
+    saveTrace('trace.log')
 
 
 if __name__ == '__main__':
