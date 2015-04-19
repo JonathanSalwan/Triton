@@ -50,7 +50,7 @@ void PushIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          writeSize = std::get<2>(this->operands[1]);
 
   uint64_t          symReg    = ap.getRegSymbolicID(reg);
-  uint32_t          regSize   = ap.getRegisterSize(reg);
+  uint32_t          regSize   = std::get<2>(this->operands[0]);
 
   /* Create the SMT semantic side effect */
   inst.addElement(alignStack(ap, writeSize));

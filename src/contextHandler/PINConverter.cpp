@@ -122,6 +122,7 @@ uint64_t PINConverter::convertTritonReg2DBIReg(uint64_t regID) {
     case ID_RAX:   return REG_RAX;
     case ID_RBX:   return REG_RBX;
     case ID_RCX:   return REG_RCX;
+    case ID_RDX:   return REG_RDX;
     case ID_RDI:   return REG_RDI;
     case ID_RSI:   return REG_RSI;
     case ID_RBP:   return REG_RBP;

@@ -30,9 +30,6 @@ class AnalysisProcessor {
     // Returns the value of the register.
     uint64_t getRegisterValue(uint64_t regID);
 
-    // Returns the size of the register.
-    uint64_t getRegisterSize(uint64_t regID);
-
     // Returns the value of the memory.
     uint64_t getMemValue(uint64_t mem, uint32_t readSize);
 

@@ -27,14 +27,11 @@ static inline REG safecast(uint64_t regID)
 uint64_t PINContextHandler::getRegisterValue(uint64_t TritRegID) const
 {
   REG reg = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
+
+  if (reg == -1 || !REG_valid(reg))
+    throw std::runtime_error("Error: Invalid PIN register id.");
+
   return PIN_GetContextReg(_ctx, reg);
-}
-
-
-uint64_t PINContextHandler::getRegisterSize(uint64_t TritRegID) const
-{
-  REG reg = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
-  return REG_Size(reg);
 }
 
 

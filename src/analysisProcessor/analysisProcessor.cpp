@@ -321,14 +321,6 @@ uint64_t AnalysisProcessor::getRegisterValue(uint64_t regID)
 }
 
 
-uint64_t AnalysisProcessor::getRegisterSize(uint64_t regID)
-{
-  if (!this->currentCtxH)
-    return 0;
-  return this->currentCtxH->getRegisterSize(regID);
-}
-
-
 uint64_t AnalysisProcessor::getMemValue(uint64_t mem, uint32_t readSize)
 {
   return this->currentCtxH->getMemValue(mem, readSize);

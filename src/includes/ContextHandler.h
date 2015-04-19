@@ -10,9 +10,6 @@ class ContextHandler {
 
     virtual uint64_t getRegisterValue(uint64_t regID) const = 0;
 
-    // Returns the size in bytes of the register.
-    virtual uint64_t getRegisterSize(uint64_t regID) const = 0;
-
     // Returns the memory value with a safety dereference
     virtual uint64_t getMemValue(uint64_t mem, uint32_t readSize) const = 0;
 
