@@ -15,6 +15,7 @@ SymbolicEngine::SymbolicEngine()
   this->numberOfSymVar = 0;
 }
 
+
 void SymbolicEngine::init(const SymbolicEngine &other)
 {
   for (uint64_t i = 0; i < (sizeof(this->symbolicReg) / sizeof(this->symbolicReg[0])); i++){
@@ -24,7 +25,7 @@ void SymbolicEngine::init(const SymbolicEngine &other)
   this->numberOfSymVar        = other.numberOfSymVar;
   this->memoryReference       = other.memoryReference;
   this->symVarMemoryReference = other.symVarMemoryReference;
-  this->symVarDeclaration    = other.symVarDeclaration;
+  this->symVarDeclaration     = other.symVarDeclaration;
   this->symbolicVector        = other.symbolicVector;
 }
 
@@ -183,6 +184,32 @@ std::string SymbolicEngine::getSmt2LibVarsDecl()
 uint64_t SymbolicEngine::getUniqueSymVarID()
 {
   return this->numberOfSymVar++;
+}
+
+
+/* Convert an expression ID to a symbolic variable */
+/* e.g:
+ * #43 = (_ bv10 8)
+ * convertExprToSymVar(43, 8)
+ * #43 = SymVar_4
+ */
+void SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize)
+{
+  SymbolicElement   *element = this->getElementFromId(exprId);
+  std::stringstream newExpr;
+  uint64_t          symVarID;
+
+  if (element == NULL)
+    return;
+
+  if (symVarSize != 1 && symVarSize != 2 && symVarSize != 4 && symVarSize != 8)
+    throw std::runtime_error("SymbolicEngine::createSymVarFromExprID() - Invalid symVarSize");
+
+  symVarID = this->getUniqueSymVarID();
+  this->addSmt2LibVarDecl(symVarID, symVarSize);
+
+  newExpr << "SymVar_" << std::dec << symVarID;
+  element->setSrcExpr(newExpr);
 }
 
 

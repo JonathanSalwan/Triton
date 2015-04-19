@@ -68,6 +68,9 @@ class AnalysisProcessor {
     // Returns the symbolic engine reference
     SymbolicEngine &getSymbolicEngine();
 
+    // Converts an expression to a symbolic variable
+    void convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
+
     // Taint Engine Facade
     // -------------------
 
