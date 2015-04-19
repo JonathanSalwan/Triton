@@ -46,11 +46,11 @@ void Trace::save(std::stringstream &file)
 
       for (auto se : inst->getSymbolicElements()){
 
-        if (count == 0) expr << se->getExpression()->str();
-        else            expr << std::endl << boost::format(outputExpression) << se->getExpression()->str();
-
         if (se->isTainted)
           colr.str(GREEN);
+
+        if (count == 0) expr << colr.str() << se->getExpression()->str() << ENDC;
+        else            expr << std::endl << colr.str() << boost::format(outputExpression) << se->getExpression()->str() << ENDC;
 
         count++;
       }
