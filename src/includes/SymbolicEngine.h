@@ -64,6 +64,7 @@ class SymbolicEngine {
     /* public methods */
     SymbolicElement       *getElementFromId(uint64_t id);
     SymbolicElement       *newSymbolicElement(std::stringstream &src);
+    bool                  assignExprToSymVar(uint64_t exprId, uint64_t symVarId);
     bool                  convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
     std::string           getBacktrackedExpressionFromId(uint64_t id);
     std::string           getSmt2LibVarsDecl();

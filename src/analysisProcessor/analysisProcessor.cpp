@@ -78,6 +78,12 @@ bool AnalysisProcessor::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize
 }
 
 
+bool AnalysisProcessor::assignExprToSymVar(uint64_t exprId, uint64_t symVarId)
+{
+  return this->symEngine.assignExprToSymVar(exprId, symVarId);
+}
+
+
 // Taint Engine Facade
 // -------------------
 

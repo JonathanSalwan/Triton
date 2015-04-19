@@ -111,6 +111,33 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
 }
 
 
+static char Triton_assignExprToSymVar_doc[] = "Assigns a symbolic variable to an expression";
+static PyObject *Triton_assignExprToSymVar(PyObject *self, PyObject *args)
+{
+  PyObject *exprId, *symVarId;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &exprId, &symVarId);
+
+  if (!PyLong_Check(exprId) && !PyInt_Check(exprId)) {
+    PyErr_Format(PyExc_TypeError, "assignExprToSymVar(): expected an integer as first argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  if (!PyLong_Check(symVarId) && !PyInt_Check(symVarId)) {
+    PyErr_Format(PyExc_TypeError, "assignExprToSymVar(): expected an integer as second argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  if (ap.assignExprToSymVar(PyLong_AsLong(exprId), PyLong_AsLong(symVarId)) == false)
+    return Py_False;
+
+  return Py_True;
+}
+
+
 static char Triton_getBacktrackedSymExpr_doc[] = "Returns the backtracked symbolic expression from an expression id";
 static PyObject *Triton_getBacktrackedSymExpr(PyObject *self, PyObject *id)
 {
@@ -592,6 +619,7 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
 
 PyMethodDef pythonCallbacks[] = {
   {"addCallback",               Triton_addCallback,               METH_VARARGS, Triton_addCallback_doc},
+  {"assignExprToSymVar",        Triton_assignExprToSymVar,        METH_VARARGS, Triton_assignExprToSymVar_doc},
   {"convertExprToSymVar",       Triton_convertExprToSymVar,       METH_VARARGS, Triton_convertExprToSymVar_doc},
   {"getBacktrackedSymExpr",     Triton_getBacktrackedSymExpr,     METH_O,       Triton_getBacktrackedSymExpr_doc},
   {"getMemSymbolicID",          Triton_getMemSymbolicID,          METH_O,       Triton_getMemSymbolicID_doc},

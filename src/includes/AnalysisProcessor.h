@@ -71,6 +71,9 @@ class AnalysisProcessor {
     // Converts an expression to a symbolic variable
     bool convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
 
+    // Assigns a symbolic variable to an expression
+    bool assignExprToSymVar(uint64_t exprId, uint64_t symVarId);
+
     // Taint Engine Facade
     // -------------------
 

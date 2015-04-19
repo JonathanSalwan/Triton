@@ -187,8 +187,9 @@ uint64_t SymbolicEngine::getUniqueSymVarID()
 }
 
 
-/* Convert an expression ID to a symbolic variable */
-/* e.g:
+/*
+ * Converts an expression ID to a symbolic variable.
+ * e.g:
  * #43 = (_ bv10 8)
  * convertExprToSymVar(43, 8)
  * #43 = SymVar_4
@@ -210,6 +211,29 @@ bool SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize)
 
   newExpr << "SymVar_" << std::dec << symVarID;
   element->setSrcExpr(newExpr);
+
+  return true;
+}
+
+/*
+ * Assigns a symbolic variable to an expression.
+ * Unlike convertExprToSymVar(), this fonction doesn't
+ * create a new symbolic variable.
+ */
+bool SymbolicEngine::assignExprToSymVar(uint64_t exprId, uint64_t symVarId)
+{
+  SymbolicElement   *element = this->getElementFromId(exprId);
+  std::stringstream newExpr;
+
+  if (element == NULL)
+    return false;
+
+  if (symVarId >= this->numberOfSymVar)
+    return false;
+
+  newExpr << "SymVar_" << std::dec << symVarId;
+  element->setSrcExpr(newExpr);
+
   return true;
 }
 
