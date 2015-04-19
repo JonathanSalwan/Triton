@@ -5,13 +5,10 @@
 #include <set>
 
 #include "AnalysisProcessor.h"
+#include "CallbackDefine.h"
 #include "TritonPyObject.h"
 #include "pin.H"
 #include "xPyFunc.h"
-
-#define CB_BEFORE 0
-#define CB_AFTER  1
-#define CB_FINI   2
 
 extern AnalysisProcessor ap;
 
