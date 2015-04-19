@@ -20,7 +20,6 @@ class Stats {
     Stats();
     ~Stats();
 
-    void      display(void);
     void      incNumberOfBranchesTaken(void);
     void      incNumberOfExpressions(uint64_t val);
     void      incNumberOfExpressions(void);

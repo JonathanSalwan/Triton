@@ -240,12 +240,6 @@ Stats &AnalysisProcessor::getStats()
 }
 
 
-void AnalysisProcessor::displayStats(void)
-{
-  this->stats.display();
-}
-
-
 void AnalysisProcessor::incNumberOfExpressions(void)
 {
   this->stats.incNumberOfExpressions();

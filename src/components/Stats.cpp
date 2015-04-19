@@ -21,21 +21,6 @@ Stats::~Stats()
 }
 
 
-void Stats::display(void)
-{
-  this->end = high_resolution_clock::now();
-  boost::format frmt("%1% %|35t| : %2%");
-  
-  uint64_t timeOfExecution = std::chrono::duration_cast<std::chrono::seconds>(this->end - this->start).count();
-
-  std::cout << "---- Statistics ----" << std::endl;
-  std::cout << boost::format(frmt) % "Number of symbolic expressions" % std::to_string(this->numberOfExpressions) << std::endl;
-  std::cout << boost::format(frmt) % "Number of unknown instructions" % std::to_string(this->numberOfUnknownInstruction) << std::endl;
-  std::cout << boost::format(frmt) % "Number of branches taken" % std::to_string(this->numberOfBranchesTaken) << std::endl;
-  std::cout << boost::format(frmt) % "Time of execution" % std::to_string(timeOfExecution) << " seconds" << std::endl;
-}
-
-
 void Stats::incNumberOfExpressions(void)
 {
   this->numberOfExpressions++;

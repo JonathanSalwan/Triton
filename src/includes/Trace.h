@@ -28,7 +28,6 @@ class Trace {
     std::list<Inst *> &getInstructions();
 
     // Display the trace: all the instructions and their expressions.
-    void display(std::ostream &os = std::cout);
     void save(std::stringstream &file);
 };
 
