@@ -27,7 +27,7 @@ def cafter(instruction):
     if instruction.address == 0x4005ae:
         zfId = getRegSymbolicID(IDREF.FLAG.ZF)
         expr = getBacktrackedSymExpr(zfId)
-        print {k: "%x, '%c'" % (v, v) for k, v in getModel(expr).items()}
+        print {k: "0x%x, '%c'" % (v, v) for k, v in getModel(expr).items()}
 
 
 if __name__ == '__main__':
