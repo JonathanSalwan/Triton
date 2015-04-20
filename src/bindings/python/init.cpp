@@ -12,6 +12,7 @@ void initOpcodeCategoryEnv(PyObject *);
 void initOpcodeEnv(PyObject *);
 void initOperandEnv(PyObject *);
 void initRegEnv(PyObject *);
+void initSyscallEnv(PyObject *);
 
 
 PyObject *initBindings(void)
@@ -114,10 +115,24 @@ PyObject *initBindings(void)
   /* Add registers ref into IDREF.CALLBACK class */
   initCallbackEnv(idCallbackClassDict);
 
-  /* Create the OPCODE class */
+  /* Create the CALLBACK class */
   PyObject *idCallbackClass = xPyClass_New(NULL, idCallbackClassDict, idCallbackClassName);
 
   // CALLBACK ---------------------
+  //
+  // SYSCALL ---------------------
+
+  /* Create the IDREF.SYSCALL class */
+  PyObject *idSyscallClassName = xPyString_FromString("SYSCALL");
+  PyObject *idSyscallClassDict = xPyDict_New();
+
+  /* Add registers ref into IDREF.SYSCALL class */
+  initSyscallEnv(idSyscallClassDict);
+
+  /* Create the SYSCALL class */
+  PyObject *idSyscallClass = xPyClass_New(NULL, idSyscallClassDict, idSyscallClassName);
+
+  // SYSCALL ---------------------
 
 
   /* Add REG, FLAG, OPCODE, OPCODE_CATEGORY, OPERAND into IDREF */
@@ -127,6 +142,7 @@ PyObject *initBindings(void)
   PyDict_SetItemString(idRefClassDict, "OPCODE_CATEGORY", idOpcodeCategoryClass);
   PyDict_SetItemString(idRefClassDict, "OPERAND", idOperandClass);
   PyDict_SetItemString(idRefClassDict, "REG", idRegClass);
+  PyDict_SetItemString(idRefClassDict, "SYSCALL", idSyscallClass);
 
   /* Create the IDREF class */
   PyObject *idRefClass = xPyClass_New(NULL, idRefClassDict, idRefClassName);

@@ -40,6 +40,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/bindings/python/initOpcodeEnv.cpp \
 		./src/bindings/python/initOperandEnv.cpp \
 		./src/bindings/python/initRegEnv.cpp \
+		./src/bindings/python/initSyscallEnv.cpp \
 		./src/bindings/python/processingPyConf.cpp \
 		./src/bindings/python/tritonPyObject.cpp \
 		./src/bindings/python/xPyFunc.cpp \
