@@ -24,6 +24,9 @@ class Trace {
     /* Add an instruction into the Trace */
     void addInstruction(Inst *instruction);
 
+    /* Returns the last instruction added */
+    Inst *getLastInstruction(void);
+
     /* Get all instructions from the Trace */
     std::list<Inst *> &getInstructions();
 

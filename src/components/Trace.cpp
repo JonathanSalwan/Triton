@@ -24,6 +24,13 @@ void Trace::addInstruction(Inst *instruction)
 }
 
 
+/* Returns the last instuction added */
+Inst *Trace::getLastInstruction(void)
+{
+  return this->instructions.back();
+}
+
+
 /* Returns the instructions list in the trace */
 std::list<Inst *> &Trace::getInstructions()
 {

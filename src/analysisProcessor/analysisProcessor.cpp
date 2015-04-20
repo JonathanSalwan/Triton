@@ -346,6 +346,12 @@ void AnalysisProcessor::addInstructionToTrace(Inst *instruction)
 }
 
 
+Inst *AnalysisProcessor::getLastInstruction(void)
+{
+  return this->trace.getLastInstruction();
+}
+
+
 void AnalysisProcessor::saveTrace(std::stringstream &file)
 {
   if (file.str().empty() == false)

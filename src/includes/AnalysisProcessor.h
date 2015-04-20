@@ -120,6 +120,7 @@ class AnalysisProcessor {
     // Trace Facade
     // ------------
 
+    Inst      *getLastInstruction(void);
     Trace     &getTrace();
     void      addInstructionToTrace(Inst *instruction);
     void      saveTrace(std::stringstream &file);
