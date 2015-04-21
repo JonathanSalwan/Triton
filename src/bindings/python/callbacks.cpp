@@ -82,6 +82,44 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
 }
 
 
+static char Triton_checkReadAccess_doc[] = "Checks whether the memory page which contains this address has a read access protection";
+static PyObject *Triton_checkReadAccess(PyObject *self, PyObject *addr)
+{
+  uint64_t ad;
+
+  if (!PyLong_Check(addr) && !PyInt_Check(addr)){
+    PyErr_Format(PyExc_TypeError, "checkReadAccess(): expected an address (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  ad = PyLong_AsLong(addr);
+  if (PIN_CheckReadAccess(reinterpret_cast<void*>(ad)) == true)
+    return Py_True;
+
+  return Py_False;
+}
+
+
+static char Triton_checkWriteAccess_doc[] = "Checks whether the memory page which contains this address has a write access protection";
+static PyObject *Triton_checkWriteAccess(PyObject *self, PyObject *addr)
+{
+  uint64_t ad;
+
+  if (!PyLong_Check(addr) && !PyInt_Check(addr)){
+    PyErr_Format(PyExc_TypeError, "checkWriteAccess(): expected an address (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  ad = PyLong_AsLong(addr);
+  if (PIN_CheckWriteAccess(reinterpret_cast<void*>(ad)) == true)
+    return Py_True;
+
+  return Py_False;
+}
+
+
 static char Triton_convertExprToSymVar_doc[] = "Converts an expression to a symbolic variable";
 static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
 {
@@ -693,6 +731,8 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
 PyMethodDef pythonCallbacks[] = {
   {"addCallback",               Triton_addCallback,               METH_VARARGS, Triton_addCallback_doc},
   {"assignExprToSymVar",        Triton_assignExprToSymVar,        METH_VARARGS, Triton_assignExprToSymVar_doc},
+  {"checkReadAccess",           Triton_checkReadAccess,           METH_O,       Triton_checkReadAccess_doc},
+  {"checkWriteAccess",          Triton_checkWriteAccess,          METH_O,       Triton_checkWriteAccess_doc},
   {"convertExprToSymVar",       Triton_convertExprToSymVar,       METH_VARARGS, Triton_convertExprToSymVar_doc},
   {"getBacktrackedSymExpr",     Triton_getBacktrackedSymExpr,     METH_O,       Triton_getBacktrackedSymExpr_doc},
   {"getMemSymbolicID",          Triton_getMemSymbolicID,          METH_O,       Triton_getMemSymbolicID_doc},
