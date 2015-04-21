@@ -312,6 +312,77 @@ static PyObject *Triton_getSymExpr(PyObject *self, PyObject *id)
 }
 
 
+static char Triton_getSyscallArgument_doc[] = "Returns the syscall argument.";
+static PyObject *Triton_getSyscallArgument(PyObject *self, PyObject *args)
+{
+  PyObject *num;
+  PyObject *std;
+  uint64_t ret;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &std, &num);
+
+  if (!PyLong_Check(std) && !PyInt_Check(std)){
+    PyErr_Format(PyExc_TypeError, "getSyscallArgument(): expected an id (integer) as first argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  if (!PyLong_Check(num) && !PyInt_Check(num)){
+    PyErr_Format(PyExc_TypeError, "getSyscallArgument(): expected an id (integer) as second argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  LEVEL_CORE::SYSCALL_STANDARD standard = static_cast<LEVEL_CORE::SYSCALL_STANDARD>(PyLong_AsLong(std));;
+  CONTEXT *ctx = static_cast<CONTEXT*>(ap.getCurrentCtxH()->getCtx());
+
+  ret = PIN_GetSyscallArgument(ctx, standard, PyLong_AsLong(num));
+
+  return PyLong_FromLong(ret);
+}
+
+
+static char Triton_getSyscallNumber_doc[] = "Returns the syscall number. This function must be called inside the syscall entry callback. Otherwise returns results in undefined behavior.";
+static PyObject *Triton_getSyscallNumber(PyObject *self, PyObject *std)
+{
+  uint64_t syscallNumber;
+
+  if (!PyLong_Check(std) && !PyInt_Check(std)){
+    PyErr_Format(PyExc_TypeError, "getSyscallNumber(): expected an id (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  LEVEL_CORE::SYSCALL_STANDARD standard = static_cast<LEVEL_CORE::SYSCALL_STANDARD>(PyLong_AsLong(std));;
+  CONTEXT *ctx = static_cast<CONTEXT*>(ap.getCurrentCtxH()->getCtx());
+
+  syscallNumber = PIN_GetSyscallNumber(ctx, standard);
+
+  return PyLong_FromLong(syscallNumber);
+}
+
+
+static char Triton_getSyscallReturn_doc[] = "Returns the syscall return value.";
+static PyObject *Triton_getSyscallReturn(PyObject *self, PyObject *std)
+{
+  uint64_t ret;
+
+  if (!PyLong_Check(std) && !PyInt_Check(std)){
+    PyErr_Format(PyExc_TypeError, "getSyscallReturn(): expected an id (integer) as argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  LEVEL_CORE::SYSCALL_STANDARD standard = static_cast<LEVEL_CORE::SYSCALL_STANDARD>(PyLong_AsLong(std));;
+  CONTEXT *ctx = static_cast<CONTEXT*>(ap.getCurrentCtxH()->getCtx());
+
+  ret = PIN_GetSyscallReturn(ctx, standard);
+
+  return PyLong_FromLong(ret);
+}
+
+
 static char Triton_isMemTainted_doc[] = "Check if the memory is tainted";
 static PyObject *Triton_isMemTainted(PyObject *self, PyObject *mem)
 {
@@ -631,6 +702,9 @@ PyMethodDef pythonCallbacks[] = {
   {"getRegValue",               Triton_getRegValue,               METH_O,       Triton_getRegValue_doc},
   {"getStats",                  Triton_getStats,                  METH_NOARGS,  Triton_getStats_doc},
   {"getSymExpr",                Triton_getSymExpr,                METH_O,       Triton_getSymExpr_doc},
+  {"getSyscallArgument",        Triton_getSyscallArgument,        METH_VARARGS, Triton_getSyscallArgument_doc},
+  {"getSyscallNumber",          Triton_getSyscallNumber,          METH_O,       Triton_getSyscallNumber_doc},
+  {"getSyscallReturn",          Triton_getSyscallReturn,          METH_O,       Triton_getSyscallReturn_doc},
   {"isMemTainted",              Triton_isMemTainted,              METH_O,       Triton_isMemTainted_doc},
   {"isRegTainted",              Triton_isRegTainted,              METH_O,       Triton_isRegTainted_doc},
   {"opcodeToString",            Triton_opcodeToString,            METH_O,       Triton_opcodeToString_doc},

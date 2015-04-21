@@ -22,6 +22,10 @@ static inline REG safecast(uint64_t regID)
   return static_cast<REG>(regID);
 }
 
+void *PINContextHandler::getCtx(void) const
+{
+  return this->_ctx;
+}
 
 // There is no verification on the validity of the ID.
 uint64_t PINContextHandler::getRegisterValue(uint64_t TritRegID) const

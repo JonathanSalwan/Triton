@@ -137,6 +137,9 @@ VOID callbackSyscallEntry(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std,
   // Analysis locked
     return;
 
+  /* Update the current context handler */
+  ap.updateCurrentCtxH(new PINContextHandler(ctx, threadId));
+
   /* Python callback at the end of execution */
   processingPyConf.callbackSyscallEntry(threadId, std);
 }
@@ -147,6 +150,9 @@ VOID callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, 
   if (!analysisTrigger.getState())
   // Analysis locked
     return;
+
+  /* Update the current context handler */
+  ap.updateCurrentCtxH(new PINContextHandler(ctx, threadId));
 
   /* Python callback at the end of execution */
   processingPyConf.callbackSyscallExit(threadId, std);

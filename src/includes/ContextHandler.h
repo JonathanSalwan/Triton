@@ -15,6 +15,9 @@ class ContextHandler {
 
     // Returns the thread ID
     virtual uint32_t getThreadID(void) const = 0;
+
+    // Returns the context
+    virtual void *getCtx(void) const = 0;
 };
 
 #endif // _CONTEXTHANDLER_H_
