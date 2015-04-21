@@ -1,6 +1,18 @@
 
 from triton import *
 
+# Output
+#
+# $ ../../../pin -t ./triton.so -script examples/callback_syscall.py  -- ./samples/crackmes/crackme_xor a
+# -> Syscall Entry
+# <- Syscall return 0
+# -> Syscall Entry
+# <- Syscall return 7f1bed69f000
+# -> Syscall Entry
+#    sys_write(1, 7f1bed69f000, 6)
+# loose
+# <- Syscall return 6
+
 
 def my_callback_syscall_entry(threadId, std):
 
