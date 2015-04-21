@@ -21,9 +21,11 @@ namespace PyTritonOptions {
   std::set<uint64_t>  stopAnalysisFromAddr;
 
   /* Callback configurations */
-  PyObject *callbackBefore = NULL; // Before the instruction processing
-  PyObject *callbackAfter  = NULL; // After the instruction processing
-  PyObject *callbackFini   = NULL; // At the end of the execution
+  PyObject *callbackBefore        = NULL; // Before the instruction processing
+  PyObject *callbackAfter         = NULL; // After the instruction processing
+  PyObject *callbackFini          = NULL; // At the end of the execution
+  PyObject *callbackSyscallEntry  = NULL; // Before syscall processing
+  PyObject *callbackSyscallExit   = NULL; // After syscall processing
 
   /* Taint configurations */
   std::map<uint64_t, std::list<uint64_t>> taintRegFromAddr;   // <addr, [reg1, reg2]>
@@ -64,8 +66,14 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
   else if ((PyLong_AsLong(flag) == CB_FINI))
     PyTritonOptions::callbackFini = function;
 
+  else if ((PyLong_AsLong(flag) == CB_SYSCALL_ENTRY))
+    PyTritonOptions::callbackSyscallEntry = function;
+
+  else if ((PyLong_AsLong(flag) == CB_SYSCALL_EXIT))
+    PyTritonOptions::callbackSyscallExit = function;
+
   else {
-    PyErr_Format(PyExc_TypeError, "addCallback(): expected CB_BEFORE, CB_AFTER or CB_FINI as second argument");
+    PyErr_Format(PyExc_TypeError, "addCallback(): expected an IDREF.CALLBACK as second argument");
     PyErr_Print();
     exit(-1);
   }

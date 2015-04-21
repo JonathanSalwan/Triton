@@ -113,13 +113,53 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, AnalysisProcessor *ap)
 
 void ProcessingPyConf::callbackFini(void)
 {
-  // Check if there is a callback wich must be called at each instruction instrumented
+  // Check if there is a callback wich must be called at the end of the execution
   if (PyTritonOptions::callbackFini){
 
     /* CallObject needs a tuple. The size of the tuple is the number of arguments.
-     * There is no argument sent to the callbacl. */
+     * There is no argument sent to the callback. */
     PyObject *args = xPyTuple_New(0);
     if (PyObject_CallObject(PyTritonOptions::callbackFini, args) == NULL){
+      PyErr_Print();
+      exit(1);
+    }
+
+    Py_DECREF(args);
+  }
+}
+
+
+void ProcessingPyConf::callbackSyscallEntry(uint64_t threadId, uint64_t std)
+{
+  // Check if there is a callback wich must be called before the syscall processing
+  if (PyTritonOptions::callbackSyscallEntry){
+
+    /* CallObject needs a tuple. The size of the tuple is the number of arguments.
+     * threadId and Std are sent to the callback. */
+    PyObject *args = xPyTuple_New(2);
+    PyTuple_SetItem(args, 0, PyLong_FromLong(threadId));
+    PyTuple_SetItem(args, 1, PyLong_FromLong(std));
+    if (PyObject_CallObject(PyTritonOptions::callbackSyscallEntry, args) == NULL){
+      PyErr_Print();
+      exit(1);
+    }
+
+    Py_DECREF(args);
+  }
+}
+
+
+void ProcessingPyConf::callbackSyscallExit(uint64_t threadId, uint64_t std)
+{
+  // Check if there is a callback wich must be called after the syscall processing
+  if (PyTritonOptions::callbackSyscallExit){
+
+    /* CallObject needs a tuple. The size of the tuple is the number of arguments.
+     * threadId and Std are sent to the callback. */
+    PyObject *args = xPyTuple_New(2);
+    PyTuple_SetItem(args, 0, PyLong_FromLong(threadId));
+    PyTuple_SetItem(args, 1, PyLong_FromLong(std));
+    if (PyObject_CallObject(PyTritonOptions::callbackSyscallExit, args) == NULL){
       PyErr_Print();
       exit(1);
     }
@@ -136,4 +176,5 @@ void ProcessingPyConf::applyConfBeforeProcessing(IRBuilder *irb)
   this->taintRegFromAddr(irb);
   this->untaintRegFromAddr(irb);
 }
+
 

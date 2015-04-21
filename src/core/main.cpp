@@ -131,6 +131,28 @@ VOID Fini(INT32, VOID *)
 }
 
 
+VOID callbackSyscallEntry(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, void *v)
+{
+  if (!analysisTrigger.getState())
+  // Analysis locked
+    return;
+
+  /* Python callback at the end of execution */
+  processingPyConf.callbackSyscallEntry(threadId, std);
+}
+
+
+VOID callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, void *v)
+{
+  if (!analysisTrigger.getState())
+  // Analysis locked
+    return;
+
+  /* Python callback at the end of execution */
+  processingPyConf.callbackSyscallExit(threadId, std);
+}
+
+
 // Usage function if Pin fail to start.
 // Display the help message.
 INT32 Usage()
@@ -158,6 +180,12 @@ int main(int argc, char *argv[])
 
   // End instrumentation callback
   PIN_AddFiniFunction(Fini, NULL);
+
+  // Syscall entry callback
+  PIN_AddSyscallEntryFunction(callbackSyscallEntry, 0);
+
+  // Syscall exit callback
+  PIN_AddSyscallExitFunction(callbackSyscallExit, 0);
 
   // Exec the python bindings file
   if (!execBindings(KnobPythonModule.Value().c_str())) {

@@ -23,9 +23,11 @@ namespace PyTritonOptions {
   extern std::set<uint64_t> stopAnalysisFromAddr;
 
   /* Callback configurations */
-  extern PyObject *callbackBefore; // Before the instruction processing
-  extern PyObject *callbackAfter;  // After the instruction processing
-  extern PyObject *callbackFini;   // At the end of the execution
+  extern PyObject *callbackBefore;        // Before the instruction processing
+  extern PyObject *callbackAfter;         // After the instruction processing
+  extern PyObject *callbackFini;          // At the end of the execution
+  extern PyObject *callbackSyscallEntry;  // Before syscall processing
+  extern PyObject *callbackSyscallExit;   // After syscall processing
 
   /* Taint configurations */
   extern std::map<uint64_t, std::list<uint64_t>> taintRegFromAddr;
