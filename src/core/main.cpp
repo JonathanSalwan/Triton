@@ -125,28 +125,29 @@ void toggleWrapper(bool flag)
 
 VOID IMG_Instrumentation(IMG img, VOID *)
 {
-  /* This callback is used to lock and target the analysis */
-  /* Mainly used to target an area */
-  if (PyTritonOptions::startAnalysisFromSymbol == nullptr)
-    return;
-  RTN targetRTN = RTN_FindByName(img, PyTritonOptions::startAnalysisFromSymbol);
-  if (RTN_Valid(targetRTN)){
-    RTN_Open(targetRTN);
+  /* Lock / Unlock the Analysis */
+  if (PyTritonOptions::startAnalysisFromSymbol != nullptr){
 
-    RTN_InsertCall(targetRTN,
-        IPOINT_BEFORE,
-        (AFUNPTR) toggleWrapper,
-        IARG_BOOL, true,
-        IARG_END);
+    RTN targetRTN = RTN_FindByName(img, PyTritonOptions::startAnalysisFromSymbol);
+    if (RTN_Valid(targetRTN)){
+      RTN_Open(targetRTN);
 
-    RTN_InsertCall(targetRTN,
-        IPOINT_AFTER,
-        (AFUNPTR) toggleWrapper,
-        IARG_BOOL, false,
-        IARG_END);
+      RTN_InsertCall(targetRTN,
+          IPOINT_BEFORE,
+          (AFUNPTR) toggleWrapper,
+          IARG_BOOL, true,
+          IARG_END);
 
-    RTN_Close(targetRTN);
+      RTN_InsertCall(targetRTN,
+          IPOINT_AFTER,
+          (AFUNPTR) toggleWrapper,
+          IARG_BOOL, false,
+          IARG_END);
+
+      RTN_Close(targetRTN);
+    }
   }
+
 }
 
 
