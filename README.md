@@ -3,7 +3,7 @@
 * [Taint engine](https://github.com/JonathanSalwan/Triton/wiki/Taint-Engine>)
 * [Dynamic symbolic execution engine](https://github.com/JonathanSalwan/Triton/wiki/Symbolic-Engine>)
 * [Snapshot engine](https://github.com/JonathanSalwan/Triton/wiki/Snapshot-Engine)
-* Translation of x64 instruction into [SMT2-LIB representation](https://github.com/JonathanSalwan/Triton/wiki/SMT2-LIB-Representation)
+* Translation of x64 instructions into [SMT2-LIB representation](https://github.com/JonathanSalwan/Triton/wiki/SMT2-LIB-Representation)
 * [Z3 interface](https://github.com/JonathanSalwan/Triton/wiki/Solver-Engine-Z3) to solve constraints
 * [Python bindings](https://github.com/JonathanSalwan/Triton/wiki/Python-Bindings)
 
@@ -12,6 +12,6 @@ for vulnerabilities research and can provide some reverse engineering assistance
 
 All information and examples about **Triton** are published on the [wiki](https://github.com/JonathanSalwan/Triton/wiki)
 
-As Triton is a young project, please, **don't blame us** if it is not yet reliable. [Pull requests](https://github.com/JonathanSalwan/Triton/issues)
-are always better than troll =).
+As Triton is a young project, please, **don't blame us** if it is not yet reliable. [Open issues](https://github.com/JonathanSalwan/Triton/issues)
+or [Pull requests](https://github.com/JonathanSalwan/Triton/pulls) are always better than troll =).
 
