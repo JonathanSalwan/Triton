@@ -22,6 +22,7 @@ namespace PyTritonOptions {
 
   /* Callback configurations */
   PyObject *callbackBefore        = NULL; // Before the instruction processing
+  PyObject *callbackBeforeIRProc  = NULL; // Before the IR processing
   PyObject *callbackAfter         = NULL; // After the instruction processing
   PyObject *callbackFini          = NULL; // At the end of the execution
   PyObject *callbackSyscallEntry  = NULL; // Before syscall processing
@@ -59,6 +60,9 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
 
   if (PyLong_AsLong(flag) == CB_BEFORE)
     PyTritonOptions::callbackBefore = function;
+
+  else if ((PyLong_AsLong(flag) == CB_BEFORE_IRPROC))
+    PyTritonOptions::callbackBeforeIRProc = function;
 
   else if ((PyLong_AsLong(flag) == CB_AFTER))
     PyTritonOptions::callbackAfter = function;

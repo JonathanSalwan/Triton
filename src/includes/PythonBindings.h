@@ -24,6 +24,7 @@ namespace PyTritonOptions {
 
   /* Callback configurations */
   extern PyObject *callbackBefore;        // Before the instruction processing
+  extern PyObject *callbackBeforeIRProc;  // Before the IR processing
   extern PyObject *callbackAfter;         // After the instruction processing
   extern PyObject *callbackFini;          // At the end of the execution
   extern PyObject *callbackSyscallEntry;  // Before syscall processing

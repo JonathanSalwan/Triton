@@ -88,10 +88,33 @@ void ProcessingPyConf::callbackAfter(Inst *inst, AnalysisProcessor *ap)
 }
 
 
-void ProcessingPyConf::callbackBefore(IRBuilder *irb, AnalysisProcessor *ap)
+void ProcessingPyConf::callbackBefore(Inst *inst, AnalysisProcessor *ap)
 {
   // Check if there is a callback wich must be called at each instruction instrumented
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackBefore){
+
+    /* Create the Instruction Python class */
+    PyObject *instClass = PyInstruction(inst);
+
+    /* CallObject needs a tuple. The size of the tuple is the number of arguments.
+     * Triton sends only one argument to the callback. This argument is the Instruction
+     * class and contains all information. */
+    PyObject *args = xPyTuple_New(1);
+    PyTuple_SetItem(args, 0, instClass);
+    if (PyObject_CallObject(PyTritonOptions::callbackBefore, args) == NULL){
+      PyErr_Print();
+      exit(1);
+    }
+
+    Py_DECREF(args);
+  }
+}
+
+
+void ProcessingPyConf::callbackBeforeIRProc(IRBuilder *irb, AnalysisProcessor *ap)
+{
+  // Check if there is a callback wich must be called at each instruction instrumented
+  if (this->analysisTrigger->getState() && PyTritonOptions::callbackBeforeIRProc){
 
     /* Create the Instruction Python class */
     PyObject *instClass = PyInstruction(irb);
@@ -101,7 +124,7 @@ void ProcessingPyConf::callbackBefore(IRBuilder *irb, AnalysisProcessor *ap)
      * class and contains all information. */
     PyObject *args = xPyTuple_New(1);
     PyTuple_SetItem(args, 0, instClass);
-    if (PyObject_CallObject(PyTritonOptions::callbackBefore, args) == NULL){
+    if (PyObject_CallObject(PyTritonOptions::callbackBeforeIRProc, args) == NULL){
       PyErr_Print();
       exit(1);
     }

@@ -14,7 +14,7 @@ from triton import *
 #
 # When the instruction located in 0x40058b is executed, 
 # we taint the memory that RAX holds.
-def cbefore(instruction):
+def cbeforeIR(instruction):
 
     if instruction.address == 0x40058b:
         rax = getRegValue(IDREF.REG.RAX)
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     # Start the symbolic analysis from the 'check' function
     startAnalysisFromSymbol('check')
 
-    addCallback(cbefore, IDREF.CALLBACK.BEFORE)
+    addCallback(cbeforeIR, IDREF.CALLBACK.BEFORE_IRPROC)
     addCallback(cafter, IDREF.CALLBACK.AFTER)
 
     # Run the instrumentation - Never returns

@@ -24,7 +24,7 @@ ProcessingPyConf    processingPyConf(&ap, &analysisTrigger);
 
 
 
-VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
+VOID callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
 {
   /* Some configurations must be applied before processing */
   processingPyConf.applyConfBeforeProcessing(irb);
@@ -42,8 +42,8 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
   /* Setup Information into Irb */
   irb->setThreadID(ap.getThreadID());
 
-  /* Python callback before instruction processing */
-  processingPyConf.callbackBefore(irb, &ap);
+  /* Python callback before IR processing */
+  processingPyConf.callbackBeforeIRProc(irb, &ap);
 
   Inst *inst = irb->process(ap);
   ap.addInstructionToTrace(inst);
@@ -52,6 +52,25 @@ VOID callback(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID thr
   inst->setOpcode(irb->getOpcode());
   inst->setOpcodeCategory(irb->getOpcodeCategory());
   inst->setOperands(irb->getOperands());
+
+  /* Python callback before instruction processing */
+  processingPyConf.callbackBefore(inst, &ap);
+}
+
+
+VOID callbackAfter(CONTEXT *ctx, THREADID threadId)
+{
+  Inst *inst;
+
+  if (!analysisTrigger.getState())
+  // Analysis locked
+    return;
+
+  /* Update the current context handler */
+  ap.updateCurrentCtxH(new PINContextHandler(ctx, threadId));
+
+  /* Get the last instruction */
+  inst = ap.getLastInstruction();
 
   /* Update statistics */
   ap.incNumberOfBranchesTaken(inst->isBranch());
@@ -67,8 +86,9 @@ VOID TRACE_Instrumentation(TRACE trace, VOID *v)
     for (INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins)) {
       IRBuilder *irb = createIRBuilder(ins);
 
+      /* Callback before */
       if (INS_MemoryOperandCount(ins) > 0)
-        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR) callback,
+        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR) callbackBefore,
             IARG_PTR, irb,
             IARG_CONTEXT,
             IARG_BOOL, true,
@@ -76,13 +96,23 @@ VOID TRACE_Instrumentation(TRACE trace, VOID *v)
             IARG_THREAD_ID,
             IARG_END);
       else
-        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR) callback,
+        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR) callbackBefore,
             IARG_PTR, irb,
             IARG_CONTEXT,
             IARG_BOOL, false,
             IARG_ADDRINT, 0,
             IARG_THREAD_ID,
             IARG_END);
+
+      /* Callback after */
+      /* Syscall after context must be catcher with IDREF.CALLBACK.SYSCALL_EXIT */
+      if (INS_IsSyscall(ins) == false){
+        IPOINT where = IPOINT_AFTER;
+        if (INS_HasFallThrough(ins) == false)
+          where = IPOINT_TAKEN_BRANCH;
+        INS_InsertCall(ins, where, (AFUNPTR)callbackAfter, IARG_CONTEXT, IARG_THREAD_ID, IARG_END);
+      }
+
     }
   }
 }

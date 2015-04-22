@@ -10,7 +10,7 @@ _ENDC  = "\033[0m"
 # NOTE: doesn't works yet. Need more semantics supported.
 
 
-def cbefore(instruction):
+def cbeforeIR(instruction):
     
     # 400544 mov [rbp+user_password], rdi
     # RDI points on the user password
@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     startAnalysisFromSymbol('check')
 
-    addCallback(cbefore, IDREF.CALLBACK.BEFORE)
+    addCallback(cbeforeIR, IDREF.CALLBACK.BEFORE_IRPROC)
     addCallback(cafter, IDREF.CALLBACK.AFTER)
     addCallback(fini, IDREF.CALLBACK.FINI)
 
