@@ -15,10 +15,10 @@ class PINContextHandler: public ContextHandler {
 
     void      *getCtx(void) const;
     uint32_t  getThreadID(void) const;
-    uint64_t  convertTritonReg2PinReg(uint64_t regID) const;
     uint64_t  getMemValue(uint64_t mem, uint32_t readSize) const;
     uint64_t  getRegisterSize(uint64_t regID) const;
     uint64_t  getRegisterValue(uint64_t regID) const;
+    void      setRegisterValue(uint64_t TritRegID, uint64_t value) const;
 
   private:
     CONTEXT   *_ctx;

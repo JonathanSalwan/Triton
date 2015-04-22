@@ -23,7 +23,6 @@ Trigger             analysisTrigger = Trigger();
 ProcessingPyConf    processingPyConf(&ap, &analysisTrigger);
 
 
-
 VOID callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
 {
   /* Some configurations must be applied before processing */

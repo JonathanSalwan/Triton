@@ -6,6 +6,7 @@
 
 #include "AnalysisProcessor.h"
 #include "CallbackDefine.h"
+#include "PINConverter.h"
 #include "TritonPyObject.h"
 #include "pin.H"
 #include "xPyFunc.h"
@@ -488,7 +489,7 @@ static PyObject *Triton_saveTrace(PyObject *self, PyObject *file)
 }
 
 
-static char Triton_setMemValue_doc[] = "Insert value in the runtime memory";
+static char Triton_setMemValue_doc[] = "Insert value into the runtime memory";
 static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
 {
   PyObject *addr;
@@ -550,6 +551,37 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
       *((uint64_t *)ad) = va;
       break;
   }
+
+  return Py_None;
+}
+
+
+static char Triton_setRegValue_doc[] = "Insert value into the current context register";
+static PyObject *Triton_setRegValue(PyObject *self, PyObject *args)
+{
+  PyObject *reg;
+  PyObject *value;
+  uint64_t tr;
+  uint64_t va;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &reg, &value);
+
+  if (!PyLong_Check(reg) && !PyInt_Check(reg)){
+    PyErr_Format(PyExc_TypeError, "setRegValue(): expected an IDREF.REG as first argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  if (!PyLong_Check(value) && !PyInt_Check(value)){
+    PyErr_Format(PyExc_TypeError, "setRegValue(): expected an integer as second argument");
+    PyErr_Print();
+    exit(-1);
+  }
+
+  va = PyLong_AsLong(value);
+  tr = PyLong_AsLong(reg);
+  ap.setRegisterValue(tr, va);
 
   return Py_None;
 }
@@ -755,6 +787,7 @@ PyMethodDef pythonCallbacks[] = {
   {"runProgram",                Triton_runProgram,                METH_NOARGS,  Triton_runProgram_doc},
   {"saveTrace",                 Triton_saveTrace,                 METH_O,       Triton_saveTrace_doc},
   {"setMemValue",               Triton_setMemValue,               METH_VARARGS, Triton_setMemValue_doc},
+  {"setRegValue",               Triton_setRegValue,               METH_VARARGS, Triton_setRegValue_doc},
   {"startAnalysisFromAddr",     Triton_startAnalysisFromAddr,     METH_O,       Triton_startAnalysisFromAddr_doc},
   {"startAnalysisFromSymbol",   Triton_startAnalysisFromSymbol,   METH_O,       Triton_startAnalysisFromSymbol_doc},
   {"stopAnalysisFromAddr",      Triton_stopAnalysisFromAddr,      METH_O,       Triton_stopAnalysisFromAddr_doc},

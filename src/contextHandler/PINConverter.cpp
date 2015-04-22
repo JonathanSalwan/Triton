@@ -155,3 +155,4 @@ uint64_t PINConverter::convertTritonReg2DBIReg(uint64_t regID) {
     default: return -1;
   }
 }
+

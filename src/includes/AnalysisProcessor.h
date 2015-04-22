@@ -30,6 +30,9 @@ class AnalysisProcessor {
     // Returns the value of the register.
     uint64_t getRegisterValue(uint64_t regID);
 
+    // Set the value into the register.
+    void setRegisterValue(uint64_t regID, uint64_t value);
+
     // Returns the value of the memory.
     uint64_t getMemValue(uint64_t mem, uint32_t readSize);
 

@@ -326,6 +326,14 @@ uint64_t AnalysisProcessor::getRegisterValue(uint64_t regID)
   return this->currentCtxH->getRegisterValue(regID);
 }
 
+// There is no verification on the validity of the ID.
+void AnalysisProcessor::setRegisterValue(uint64_t regID, uint64_t value)
+{
+  if (!this->currentCtxH)
+    return ;
+  this->currentCtxH->setRegisterValue(regID, value);
+}
+
 
 uint64_t AnalysisProcessor::getMemValue(uint64_t mem, uint32_t readSize)
 {
