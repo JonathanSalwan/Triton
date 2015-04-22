@@ -13,7 +13,7 @@ IRBuilder *createIRBuilder(INS ins) {
   std::string disas      = INS_Disassemble(ins);
   INT32 opcode           = INS_Opcode(ins);
 
-  IRBuilder *ir = NULL;
+  IRBuilder *ir = nullptr;
 
   switch (opcode) {
 

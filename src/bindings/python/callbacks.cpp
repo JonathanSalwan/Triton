@@ -17,17 +17,17 @@ extern AnalysisProcessor ap;
 /* NameSapce for all Python Bindings variables */
 namespace PyTritonOptions {
   /* Execution configurations */
-  char                *startAnalysisFromSymbol = NULL;
+  char                *startAnalysisFromSymbol = nullptr;
   std::set<uint64_t>  startAnalysisFromAddr;
   std::set<uint64_t>  stopAnalysisFromAddr;
 
   /* Callback configurations */
-  PyObject *callbackBefore        = NULL; // Before the instruction processing
-  PyObject *callbackBeforeIRProc  = NULL; // Before the IR processing
-  PyObject *callbackAfter         = NULL; // After the instruction processing
-  PyObject *callbackFini          = NULL; // At the end of the execution
-  PyObject *callbackSyscallEntry  = NULL; // Before syscall processing
-  PyObject *callbackSyscallExit   = NULL; // After syscall processing
+  PyObject *callbackBefore        = nullptr; // Before the instruction processing
+  PyObject *callbackBeforeIRProc  = nullptr; // Before the IR processing
+  PyObject *callbackAfter         = nullptr; // After the instruction processing
+  PyObject *callbackFini          = nullptr; // At the end of the execution
+  PyObject *callbackSyscallEntry  = nullptr; // Before syscall processing
+  PyObject *callbackSyscallExit   = nullptr; // After syscall processing
 
   /* Taint configurations */
   std::map<uint64_t, std::list<uint64_t>> taintRegFromAddr;   // <addr, [reg1, reg2]>
@@ -348,7 +348,7 @@ static PyObject *Triton_getSymExpr(PyObject *self, PyObject *id)
   exprId = PyLong_AsLong(id);
   expr = ap.getElementFromId(exprId);
 
-  if (expr == NULL)
+  if (expr == nullptr)
     return Py_None;
 
   return PySymbolicElement(expr);
@@ -797,7 +797,7 @@ PyMethodDef pythonCallbacks[] = {
   {"untaintMem",                Triton_untaintMem,                METH_O,       Triton_untaintMem_doc},
   {"untaintReg",                Triton_untaintReg,                METH_O,       Triton_untaintReg_doc},
   {"untaintRegFromAddr",        Triton_untaintRegFromAddr,        METH_VARARGS, Triton_untaintRegFromAddr_doc},
-  {NULL,                        NULL,                             0,            NULL}
+  {nullptr,                     nullptr,                          0,            nullptr}
 };
 
 

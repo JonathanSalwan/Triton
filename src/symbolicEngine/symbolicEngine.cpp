@@ -49,7 +49,7 @@ SymbolicEngine::~SymbolicEngine()
   for (; it != this->symbolicVector.end(); ++it) {
     SymbolicElement *tmp = *it;
     delete tmp;
-    tmp = NULL;
+    tmp = nullptr;
   }
 
 }
@@ -113,7 +113,7 @@ SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
 SymbolicElement *SymbolicEngine::getElementFromId(uint64_t id)
 {
   if (id > this->symbolicVector.size())
-    return NULL;
+    return nullptr;
   return this->symbolicVector[id];
 }
 
@@ -123,7 +123,7 @@ std::string SymbolicEngine::replaceEq(std::string str, const std::string from, c
 {
   size_t start_pos = str.find(from);
   if(start_pos == std::string::npos)
-      return NULL;
+      return nullptr;
   str.replace(start_pos, from.length(), to);
   return str;
 }
@@ -155,7 +155,7 @@ std::string SymbolicEngine::getBacktrackedExpressionFromId(uint64_t id)
   std::stringstream formula;
 
   element = this->getElementFromId(id);
-  if (element == NULL)
+  if (element == nullptr)
     return "";
 
   formula.str(element->getSource()->str());
@@ -200,7 +200,7 @@ bool SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize)
   std::stringstream newExpr;
   uint64_t          symVarID;
 
-  if (element == NULL)
+  if (element == nullptr)
     return false;
 
   if (symVarSize != 1 && symVarSize != 2 && symVarSize != 4 && symVarSize != 8)
@@ -225,7 +225,7 @@ bool SymbolicEngine::assignExprToSymVar(uint64_t exprId, uint64_t symVarId)
   SymbolicElement   *element = this->getElementFromId(exprId);
   std::stringstream newExpr;
 
-  if (element == NULL)
+  if (element == nullptr)
     return false;
 
   if (symVarId >= this->numberOfSymVar)

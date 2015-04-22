@@ -127,7 +127,7 @@ VOID IMG_Instrumentation(IMG img, VOID *)
 {
   /* This callback is used to lock and target the analysis */
   /* Mainly used to target an area */
-  if (PyTritonOptions::startAnalysisFromSymbol == NULL)
+  if (PyTritonOptions::startAnalysisFromSymbol == nullptr)
     return;
   RTN targetRTN = RTN_FindByName(img, PyTritonOptions::startAnalysisFromSymbol);
   if (RTN_Valid(targetRTN)){
@@ -208,13 +208,13 @@ int main(int argc, char *argv[])
   initBindings();
 
   // Image callback
-  IMG_AddInstrumentFunction(IMG_Instrumentation, NULL);
+  IMG_AddInstrumentFunction(IMG_Instrumentation, nullptr);
 
   // Instruction callback
-  TRACE_AddInstrumentFunction(TRACE_Instrumentation, NULL);
+  TRACE_AddInstrumentFunction(TRACE_Instrumentation, nullptr);
 
   // End instrumentation callback
-  PIN_AddFiniFunction(Fini, NULL);
+  PIN_AddFiniFunction(Fini, nullptr);
 
   // Syscall entry callback
   PIN_AddSyscallEntryFunction(callbackSyscallEntry, 0);

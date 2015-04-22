@@ -23,7 +23,7 @@ PyObject *PySymbolicElement(SymbolicElement *element)
   PyDict_SetItemString(dictSEClass, "isTainted",    PyBool_FromLong(element->isTainted));
 
   PyObject *SEClassName = xPyString_FromString("SymbolicElement");
-  PyObject *SEClass  = xPyClass_New(NULL, dictSEClass, SEClassName);
+  PyObject *SEClass  = xPyClass_New(nullptr, dictSEClass, SEClassName);
 
   Py_DECREF(dictSEClass);
   Py_DECREF(SEClassName);
@@ -74,7 +74,7 @@ PyObject *PyInstruction(Inst *inst)
 
   /* Create the Instruction class */
   PyObject *instClassName = xPyString_FromString("Instruction");
-  PyObject *instClass  = xPyClass_New(NULL, dictInstClass, instClassName);
+  PyObject *instClass  = xPyClass_New(nullptr, dictInstClass, instClassName);
 
   Py_DECREF(dictInstClass);
   Py_DECREF(instClassName);
@@ -113,7 +113,7 @@ PyObject *PyInstruction(IRBuilder *irb)
 
   /* Create the Instruction class */
   PyObject *instClassName = xPyString_FromString("Instruction");
-  PyObject *instClass  = xPyClass_New(NULL, dictInstClass, instClassName);
+  PyObject *instClass  = xPyClass_New(nullptr, dictInstClass, instClassName);
 
   Py_DECREF(dictInstClass);
   Py_DECREF(instClassName);

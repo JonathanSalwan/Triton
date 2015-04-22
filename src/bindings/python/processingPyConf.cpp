@@ -78,7 +78,7 @@ void ProcessingPyConf::callbackAfter(Inst *inst, AnalysisProcessor *ap)
      * class and contains all information. */
     PyObject *args = xPyTuple_New(1);
     PyTuple_SetItem(args, 0, instClass);
-    if (PyObject_CallObject(PyTritonOptions::callbackAfter, args) == NULL){
+    if (PyObject_CallObject(PyTritonOptions::callbackAfter, args) == nullptr){
       PyErr_Print();
       exit(1);
     }
@@ -101,7 +101,7 @@ void ProcessingPyConf::callbackBefore(Inst *inst, AnalysisProcessor *ap)
      * class and contains all information. */
     PyObject *args = xPyTuple_New(1);
     PyTuple_SetItem(args, 0, instClass);
-    if (PyObject_CallObject(PyTritonOptions::callbackBefore, args) == NULL){
+    if (PyObject_CallObject(PyTritonOptions::callbackBefore, args) == nullptr){
       PyErr_Print();
       exit(1);
     }
@@ -124,7 +124,7 @@ void ProcessingPyConf::callbackBeforeIRProc(IRBuilder *irb, AnalysisProcessor *a
      * class and contains all information. */
     PyObject *args = xPyTuple_New(1);
     PyTuple_SetItem(args, 0, instClass);
-    if (PyObject_CallObject(PyTritonOptions::callbackBeforeIRProc, args) == NULL){
+    if (PyObject_CallObject(PyTritonOptions::callbackBeforeIRProc, args) == nullptr){
       PyErr_Print();
       exit(1);
     }
@@ -142,7 +142,7 @@ void ProcessingPyConf::callbackFini(void)
     /* CallObject needs a tuple. The size of the tuple is the number of arguments.
      * There is no argument sent to the callback. */
     PyObject *args = xPyTuple_New(0);
-    if (PyObject_CallObject(PyTritonOptions::callbackFini, args) == NULL){
+    if (PyObject_CallObject(PyTritonOptions::callbackFini, args) == nullptr){
       PyErr_Print();
       exit(1);
     }
@@ -162,7 +162,7 @@ void ProcessingPyConf::callbackSyscallEntry(uint64_t threadId, uint64_t std)
     PyObject *args = xPyTuple_New(2);
     PyTuple_SetItem(args, 0, PyLong_FromLong(threadId));
     PyTuple_SetItem(args, 1, PyLong_FromLong(std));
-    if (PyObject_CallObject(PyTritonOptions::callbackSyscallEntry, args) == NULL){
+    if (PyObject_CallObject(PyTritonOptions::callbackSyscallEntry, args) == nullptr){
       PyErr_Print();
       exit(1);
     }
@@ -182,7 +182,7 @@ void ProcessingPyConf::callbackSyscallExit(uint64_t threadId, uint64_t std)
     PyObject *args = xPyTuple_New(2);
     PyTuple_SetItem(args, 0, PyLong_FromLong(threadId));
     PyTuple_SetItem(args, 1, PyLong_FromLong(std));
-    if (PyObject_CallObject(PyTritonOptions::callbackSyscallExit, args) == NULL){
+    if (PyObject_CallObject(PyTritonOptions::callbackSyscallExit, args) == nullptr){
       PyErr_Print();
       exit(1);
     }

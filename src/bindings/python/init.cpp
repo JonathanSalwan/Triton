@@ -21,7 +21,7 @@ PyObject *initBindings(void)
 
   PyObject *tritonModule = Py_InitModule("triton", pythonCallbacks);
 
-  if (tritonModule == NULL) {
+  if (tritonModule == nullptr) {
     std::cerr << "Failed to initialize Triton bindings" << std::endl;
     PyErr_Print();
     exit(1);
@@ -42,7 +42,7 @@ PyObject *initBindings(void)
   initRegEnv(idRegClassDict);
 
   /* Create the REG class */
-  PyObject *idRegClass = xPyClass_New(NULL, idRegClassDict, idRegClassName);
+  PyObject *idRegClass = xPyClass_New(nullptr, idRegClassDict, idRegClassName);
 
   // REG ---------------------
 
@@ -57,7 +57,7 @@ PyObject *initBindings(void)
   initFlagEnv(idFlagClassDict);
 
   /* Create the FLAG class */
-  PyObject *idFlagClass = xPyClass_New(NULL, idFlagClassDict, idFlagClassName);
+  PyObject *idFlagClass = xPyClass_New(nullptr, idFlagClassDict, idFlagClassName);
 
   // FLAG ---------------------
 
@@ -72,7 +72,7 @@ PyObject *initBindings(void)
   initOpcodeEnv(idOpcodeClassDict);
 
   /* Create the OPCODE class */
-  PyObject *idOpcodeClass = xPyClass_New(NULL, idOpcodeClassDict, idOpcodeClassName);
+  PyObject *idOpcodeClass = xPyClass_New(nullptr, idOpcodeClassDict, idOpcodeClassName);
 
   // OPCODE ---------------------
 
@@ -87,7 +87,7 @@ PyObject *initBindings(void)
   initOpcodeCategoryEnv(idOpcodeCategoryClassDict);
 
   /* Create the OPCODE_CATEGORY class */
-  PyObject *idOpcodeCategoryClass = xPyClass_New(NULL, idOpcodeCategoryClassDict, idOpcodeCategoryClassName);
+  PyObject *idOpcodeCategoryClass = xPyClass_New(nullptr, idOpcodeCategoryClassDict, idOpcodeCategoryClassName);
 
   // OPCODE_CATEGORY ---------------------
 
@@ -102,7 +102,7 @@ PyObject *initBindings(void)
   initOperandEnv(idOperandClassDict);
 
   /* Create the OPCODE class */
-  PyObject *idOperandClass = xPyClass_New(NULL, idOperandClassDict, idOperandClassName);
+  PyObject *idOperandClass = xPyClass_New(nullptr, idOperandClassDict, idOperandClassName);
 
   // OPERAND ---------------------
 
@@ -116,7 +116,7 @@ PyObject *initBindings(void)
   initCallbackEnv(idCallbackClassDict);
 
   /* Create the CALLBACK class */
-  PyObject *idCallbackClass = xPyClass_New(NULL, idCallbackClassDict, idCallbackClassName);
+  PyObject *idCallbackClass = xPyClass_New(nullptr, idCallbackClassDict, idCallbackClassName);
 
   // CALLBACK ---------------------
   //
@@ -130,7 +130,7 @@ PyObject *initBindings(void)
   initSyscallEnv(idSyscallClassDict);
 
   /* Create the SYSCALL class */
-  PyObject *idSyscallClass = xPyClass_New(NULL, idSyscallClassDict, idSyscallClassName);
+  PyObject *idSyscallClass = xPyClass_New(nullptr, idSyscallClassDict, idSyscallClassName);
 
   // SYSCALL ---------------------
 
@@ -145,7 +145,7 @@ PyObject *initBindings(void)
   PyDict_SetItemString(idRefClassDict, "SYSCALL", idSyscallClass);
 
   /* Create the IDREF class */
-  PyObject *idRefClass = xPyClass_New(NULL, idRefClassDict, idRefClassName);
+  PyObject *idRefClass = xPyClass_New(nullptr, idRefClassDict, idRefClassName);
 
   /* add IDREF into triton module */
   PyModule_AddObject(tritonModule, "IDREF", idRefClass);
@@ -160,7 +160,7 @@ PyObject *initBindings(void)
 bool execBindings(const char *fileName)
 {
   FILE *fd = fopen(fileName, "r");
-  if (fd == NULL) {
+  if (fd == nullptr) {
     perror("fopen");
     return false;
   }
