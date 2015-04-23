@@ -56,7 +56,7 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
   if (PyLong_AsLong(flag) == CB_BEFORE)
     PyTritonOptions::callbackBefore = function;
 
-  else if ((PyLong_AsLong(flag) == CB_BEFORE_IRPROC))
+  else if ((PyLong_AsLong(flag) == CB_BEFORE_SYMPROC))
     PyTritonOptions::callbackBeforeIRProc = function;
 
   else if ((PyLong_AsLong(flag) == CB_AFTER))
