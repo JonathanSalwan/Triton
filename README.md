@@ -11,7 +11,7 @@ Based on these components, **Triton** provides
 [runtime behavior analysis](https://github.com/JonathanSalwan/Triton/wiki/Runtime-Behavior-Analysis) for vulnerabilities 
 research and can provide some reverse engineering assistance.
 
-The [wiki](https://github.com/JonathanSalwan/Triton/wiki) describes **Triton** under the hood. As Triton is a young project, 
+The [wiki](https://github.com/JonathanSalwan/Triton/wiki) describes **Triton** under the hood. As **Triton** is a young project, 
 please, **don't blame us** if it is not yet reliable. [Open issues](https://github.com/JonathanSalwan/Triton/issues) or 
 [pull requests](https://github.com/JonathanSalwan/Triton/pulls) are always better than troll =).
 
