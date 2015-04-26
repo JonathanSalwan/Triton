@@ -541,15 +541,20 @@ static PyObject *Triton_syscallToString(PyObject *self, PyObject *args)
   if (!PyLong_Check(num) && !PyInt_Check(num))
     return PyErr_Format(PyExc_TypeError, "syscallToString(): expected a syscall number (integer) as second argument");
 
+  const char *s = nullptr;
   std::stringstream syscall("");
   switch (PyLong_AsLong(std)){
     case SYSCALL_STANDARD_IA32E_LINUX:
-      syscall.str(syscallNumberLinux64ToString(PyLong_AsLong(num)));
+      s = syscallNumberLinux64ToString(PyLong_AsLong(num));
       break;
     default:
-      return PyErr_Format(PyExc_TypeError, "syscallToString(): IDREF.SYSCALL unsupported");
+      return PyErr_Format(PyExc_TypeError, "syscallToString(): IDREF.SYSCALL standard unsupported");
   }
 
+  if (s == nullptr)
+    return PyErr_Format(PyExc_TypeError, "syscallToString(): IDREF.SYSCALL number unsupported");
+
+  syscall.str(s);
   return Py_BuildValue("s", syscall.str().c_str());
 }
 
