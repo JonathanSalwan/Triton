@@ -4,19 +4,18 @@ from triton import *
 # Output
 #
 # $ ../../../pin -t ./triton.so -script examples/callback_syscall.py  -- ./samples/crackmes/crackme_xor a
-# -> Syscall Entry
+# -> Syscall Entry: fstat
 # <- Syscall return 0
-# -> Syscall Entry
-# <- Syscall return 7f1bed69f000
-# -> Syscall Entry
-#    sys_write(1, 7f1bed69f000, 6)
+# -> Syscall Entry: mmap
+# <- Syscall return 7fb7f06e1000
+# -> Syscall Entry: write
+#    sys_write(1, 7fb7f06e1000, 6)
 # loose
 # <- Syscall return 6
 
-
 def my_callback_syscall_entry(threadId, std):
 
-    print '-> Syscall Entry'
+    print '-> Syscall Entry: %s' %(syscallToString(std, getSyscallNumber(std)))
 
     if getSyscallNumber(std) == IDREF.SYSCALL.LINUX_64.WRITE:
         arg0 = getSyscallArgument(std, 0)

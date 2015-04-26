@@ -1,0 +1,1036 @@
+[0m[0]  0x400530         push rbp                               [0m#0 = (bvsub (_ bv140737488346120 64) (_ bv8 64))[0m
+[0m                                                             #1 = (_ bv140737488346352 64)[0m[0m
+[0m[0]  0x400531         mov rbp, rsp                           [0m#2 = ((_ extract 63 0) #0)[0m[0m
+[0m[0]  0x400534         push r15                               [0m#3 = (bvsub #0 (_ bv8 64))[0m
+[0m                                                             #4 = (_ bv5942353879053649315 64)[0m[0m
+[0m[0]  0x400536         push r14                               [0m#5 = (bvsub #3 (_ bv8 64))[0m
+[0m                                                             #6 = (_ bv3 64)[0m[0m
+[0m[0]  0x400538         push r13                               [0m#7 = (bvsub #5 (_ bv8 64))[0m
+[0m                                                             #8 = (_ bv2 64)[0m[0m
+[0m[0]  0x40053a         push r12                               [0m#9 = (bvsub #7 (_ bv8 64))[0m
+[0m                                                             #10 = (_ bv17461849687044731669 64)[0m[0m
+[0m[0]  0x40053c         push rbx                               [0m#11 = (bvsub #9 (_ bv8 64))[0m
+[0m                                                             #12 = (_ bv140737488346176 64)[0m[0m
+[0m[0]  0x40053d         sub rsp, 0xd8                          [0m#13 = (bvsub ((_ extract 63 0) #11) (_ bv216 64))[0m
+[0m                                                             #14 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #13 (bvxor ((_ extract 63 0) #11) (_ bv216 64))))))[0m
+[0m                                                             #15 = (assert (bvult #13 ((_ extract 63 0) #11)))[0m
+[0m                                                             #16 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #11) (bvnot (_ bv216 64))) (bvxor ((_ extract 63 0) #11) #13))) (_ bv1 1)))[0m
+[0m                                                             #17 = (assert (= (parity_flag ((_ extract 7 0) #13)) (_ bv0 1)))[0m
+[0m                                                             #18 = (assert (= ((_ extract 63 63) #13) (_ bv1 1)))[0m
+[0m                                                             #19 = (assert (= #13 (_ bv0 64)))[0m[0m
+[0m[0]  0x400544         mov qword ptr [rbp-0xa0], rdi          [0m#20 = (_ bv140737488347458 64)[0m[0m
+[0m[0]  0x40054b         xor r13d, r13d                         [0m#21 = (bvxor (_ bv2 32) (_ bv2 32))[0m
+[0m                                                             #22 = (assert (= (_ bv16 32) (bvand (_ bv16 32) (bvxor #21 (bvxor (_ bv2 32) (_ bv2 32))))))[0m
+[0m                                                             #23 = (assert (bvult #21 (_ bv2 32)))[0m
+[0m                                                             #24 = (assert (= ((_ extract 31 31) (bvand (bvxor (_ bv2 32) (bvnot (_ bv2 32))) (bvxor (_ bv2 32) #21))) (_ bv1 1)))[0m
+[0m                                                             #25 = (assert (= (parity_flag ((_ extract 7 0) #21)) (_ bv0 1)))[0m
+[0m                                                             #26 = (assert (= ((_ extract 31 31) #21) (_ bv1 1)))[0m
+[0m                                                             #27 = (assert (= #21 (_ bv0 32)))[0m[0m
+[0m[0]  0x40054e         mov ecx, 0x1                           [0m#28 = (_ bv1 32)[0m[0m
+[0m[0]  0x400553         mov dword ptr [rbp-0x5c], eax          [0m#29 = (_ bv140737488346584 32)[0m[0m
+[0m[0]  0x400556         mov dword ptr [rbp-0x44], eax          [0m#30 = (_ bv140737488346584 32)[0m[0m
+[0m[0]  0x400559         mov qword ptr [rbp-0x68], rax          [0m#31 = (_ bv140737488346584 64)[0m[0m
+[0m[0]  0x40055d         jmp 0x400580                           [0m
+[0m[0]  0x400580         mov rax, rcx                           [0m#32 = ((_ extract 63 0) #28)[0m[0m
+[0m[0]  0x400583         lea rcx, ptr [rax-0x1]                 [0m
+[0m[0]  0x400587         cmp rcx, 0xa                           [0m#33 = (bvsub ((_ extract 63 0) #28) ((_ sign_extend 0) (_ bv10 64)))[0m
+[0m                                                             #34 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #33 (bvxor ((_ extract 63 0) #28) ((_ sign_extend 0) (_ bv10 64)))))))[0m
+[0m                                                             #35 = (assert (bvult #33 ((_ extract 63 0) #28)))[0m
+[0m                                                             #36 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #28) (bvnot ((_ sign_extend 0) (_ bv10 64)))) (bvxor ((_ extract 63 0) #28) #33))) (_ bv1 1)))[0m
+[0m                                                             #37 = (assert (= (parity_flag ((_ extract 7 0) #33)) (_ bv0 1)))[0m
+[0m                                                             #38 = (assert (= ((_ extract 63 63) #33) (_ bv1 1)))[0m
+[0m                                                             #39 = (assert (= #33 (_ bv0 64)))[0m[0m
+[0m[0]  0x40058b         jnbe 0x400560                          [0m
+[0m[0]  0x40058d         jmp qword ptr [rcx*8+0x401488]         [0m
+[0m[0]  0x400594         mov rsi, rsp                           [0m#40 = ((_ extract 63 0) #13)[0m[0m
+[0m[0]  0x400597         add rsi, 0xfffffffffffffff0            [0m#41 = (bvadd ((_ extract 63 0) #40) (_ bv18446744073709551600 64))[0m
+[0m                                                             #42 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #41 (bvxor ((_ extract 63 0) #40) (_ bv18446744073709551600 64))))))[0m
+[0m                                                             #43 = (assert (bvult #41 ((_ extract 63 0) #40)))[0m
+[0m                                                             #44 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #40) (bvnot (_ bv18446744073709551600 64))) (bvxor ((_ extract 63 0) #40) #41))) (_ bv1 1)))[0m
+[0m                                                             #45 = (assert (= (parity_flag ((_ extract 7 0) #41)) (_ bv0 1)))[0m
+[0m                                                             #46 = (assert (= ((_ extract 63 63) #41) (_ bv1 1)))[0m
+[0m                                                             #47 = (assert (= #41 (_ bv0 64)))[0m[0m
+[0m[0]  0x40059b         mov rsp, rsi                           [0m#48 = ((_ extract 63 0) #41)[0m[0m
+[0m[0]  0x40059e         mov rax, rsp                           [0m#49 = ((_ extract 63 0) #48)[0m[0m
+[0m[0]  0x4005a1         lea rcx, ptr [rax-0x10]                [0m
+[0m[0]  0x4005a5         mov qword ptr [rbp-0x68], rcx          [0m#50 = ((_ extract 63 0) #33)[0m[0m
+[0m[0]  0x4005a9         mov rsp, rcx                           [0m#51 = ((_ extract 63 0) #33)[0m[0m
+[0m[0]  0x4005ac         mov rdi, rsp                           [0m#52 = ((_ extract 63 0) #51)[0m[0m
+[0m[0]  0x4005af         add rdi, 0xfffffffffffffff0            [0m#53 = (bvadd ((_ extract 63 0) #52) (_ bv18446744073709551600 64))[0m
+[0m                                                             #54 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #53 (bvxor ((_ extract 63 0) #52) (_ bv18446744073709551600 64))))))[0m
+[0m                                                             #55 = (assert (bvult #53 ((_ extract 63 0) #52)))[0m
+[0m                                                             #56 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #52) (bvnot (_ bv18446744073709551600 64))) (bvxor ((_ extract 63 0) #52) #53))) (_ bv1 1)))[0m
+[0m                                                             #57 = (assert (= (parity_flag ((_ extract 7 0) #53)) (_ bv0 1)))[0m
+[0m                                                             #58 = (assert (= ((_ extract 63 63) #53) (_ bv1 1)))[0m
+[0m                                                             #59 = (assert (= #53 (_ bv0 64)))[0m[0m
+[0m[0]  0x4005b3         mov rsp, rdi                           [0m#60 = ((_ extract 63 0) #53)[0m[0m
+[0m[0]  0x4005b6         mov rcx, qword ptr [rbp-0xa0]          [0m#61 = ((_ extract 63 0) #20)[0m[0m
+[0m[0]  0x4005bd         mov qword ptr [rax-0x10], rcx          [0m#62 = ((_ extract 63 0) #61)[0m[0m
+[0m[0]  0x4005c1         mov rax, r13                           [0m#63 = ((_ extract 63 0) #21)[0m[0m
+[0m[0]  0x4005c4         xor rax, 0x2                           [0m#64 = (bvxor ((_ extract 63 0) #63) (_ bv2 64))[0m
+[0m                                                             #65 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #64 (bvxor ((_ extract 63 0) #63) (_ bv2 64))))))[0m
+[0m                                                             #66 = (assert (bvult #64 ((_ extract 63 0) #63)))[0m
+[0m                                                             #67 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #63) (bvnot (_ bv2 64))) (bvxor ((_ extract 63 0) #63) #64))) (_ bv1 1)))[0m
+[0m                                                             #68 = (assert (= (parity_flag ((_ extract 7 0) #64)) (_ bv0 1)))[0m
+[0m                                                             #69 = (assert (= ((_ extract 63 63) #64) (_ bv1 1)))[0m
+[0m                                                             #70 = (assert (= #64 (_ bv0 64)))[0m[0m
+[0m[0]  0x4005c8         and r13, 0x2                           [0m
+[0m[0]  0x4005cc         lea rcx, ptr [rax+r13*2]               [0m
+[0m[0]  0x4005d0         mov r13d, 0x1                          [0m#71 = (_ bv1 32)[0m[0m
+[0m[0]  0x4005d6         jmp 0x400580                           [0m
+[0m[0]  0x400580         mov rax, rcx                           [0m#72 = ((_ extract 63 0) #61)[0m[0m
+[0m[0]  0x400583         lea rcx, ptr [rax-0x1]                 [0m
+[0m[0]  0x400587         cmp rcx, 0xa                           [0m#73 = (bvsub ((_ extract 63 0) #61) ((_ sign_extend 0) (_ bv10 64)))[0m
+[0m                                                             #74 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #73 (bvxor ((_ extract 63 0) #61) ((_ sign_extend 0) (_ bv10 64)))))))[0m
+[0m                                                             #75 = (assert (bvult #73 ((_ extract 63 0) #61)))[0m
+[0m                                                             #76 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #61) (bvnot ((_ sign_extend 0) (_ bv10 64)))) (bvxor ((_ extract 63 0) #61) #73))) (_ bv1 1)))[0m
+[0m                                                             #77 = (assert (= (parity_flag ((_ extract 7 0) #73)) (_ bv0 1)))[0m
+[0m                                                             #78 = (assert (= ((_ extract 63 63) #73) (_ bv1 1)))[0m
+[0m                                                             #79 = (assert (= #73 (_ bv0 64)))[0m[0m
+[0m[0]  0x40058b         jnbe 0x400560                          [0m
+[0m[0]  0x40058d         jmp qword ptr [rcx*8+0x401488]         [0m
+[0m[0]  0x4005d8         mov dword ptr [rdi], 0x0               [0m#80 = (_ bv0 32)[0m[0m
+[0m[0]  0x4005de         dec r13                                [0m
+[0m[0]  0x4005e1         mov rax, r13                           [0m#81 = ((_ extract 63 0) #71)[0m[0m
+[0m[0]  0x4005e4         xor rax, 0x5                           [0m#82 = (bvxor ((_ extract 63 0) #81) (_ bv5 64))[0m
+[0m                                                             #83 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #82 (bvxor ((_ extract 63 0) #81) (_ bv5 64))))))[0m
+[0m                                                             #84 = (assert (bvult #82 ((_ extract 63 0) #81)))[0m
+[0m                                                             #85 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #81) (bvnot (_ bv5 64))) (bvxor ((_ extract 63 0) #81) #82))) (_ bv1 1)))[0m
+[0m                                                             #86 = (assert (= (parity_flag ((_ extract 7 0) #82)) (_ bv0 1)))[0m
+[0m                                                             #87 = (assert (= ((_ extract 63 63) #82) (_ bv1 1)))[0m
+[0m                                                             #88 = (assert (= #82 (_ bv0 64)))[0m[0m
+[0m[0]  0x4005e8         and r13, 0x5                           [0m
+[0m[0]  0x4005ec         lea rcx, ptr [rax+r13*2]               [0m
+[0m[0]  0x4005f0         mov r13d, 0x2                          [0m#89 = (_ bv2 32)[0m[0m
+[0m[0]  0x4005f6         jmp 0x400580                           [0m
+[0m[0]  0x400580         mov rax, rcx                           [0m#90 = ((_ extract 63 0) #73)[0m[0m
+[0m[0]  0x400583         lea rcx, ptr [rax-0x1]                 [0m
+[0m[0]  0x400587         cmp rcx, 0xa                           [0m#91 = (bvsub ((_ extract 63 0) #73) ((_ sign_extend 0) (_ bv10 64)))[0m
+[0m                                                             #92 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #91 (bvxor ((_ extract 63 0) #73) ((_ sign_extend 0) (_ bv10 64)))))))[0m
+[0m                                                             #93 = (assert (bvult #91 ((_ extract 63 0) #73)))[0m
+[0m                                                             #94 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #73) (bvnot ((_ sign_extend 0) (_ bv10 64)))) (bvxor ((_ extract 63 0) #73) #91))) (_ bv1 1)))[0m
+[0m                                                             #95 = (assert (= (parity_flag ((_ extract 7 0) #91)) (_ bv0 1)))[0m
+[0m                                                             #96 = (assert (= ((_ extract 63 63) #91) (_ bv1 1)))[0m
+[0m                                                             #97 = (assert (= #91 (_ bv0 64)))[0m[0m
+[0m[0]  0x40058b         jnbe 0x400560                          [0m
+[0m[0]  0x40058d         jmp qword ptr [rcx*8+0x401488]         [0m
+[0m[0]  0x400640         mov eax, dword ptr [rdi]               [0m#98 = ((_ extract 31 0) #80)[0m[0m
+[0m[0]  0x400642         mov qword ptr [rbp-0x50], rax          [0m#99 = ((_ extract 63 0) #98)[0m[0m
+[0m[0]  0x400646         movzx r12d, ax                         [0m#100 = ((_ zero_extend 16) ((_ extract 15 0) #98))[0m[0m
+[0m[0]  0x40064a         lea r8, ptr [r12+0x1]                  [0m
+[0m[0]  0x40064f         lea r9, ptr [r12+0x2]                  [0m
+[0m[0]  0x400654         lea r10, ptr [r12+0x3]                 [0m
+[0m[0]  0x400659         mov r11, r8                            [0m#101 = (_ bv1 64)[0m[0m
+[0m[0]  0x40065c         imul r11, r11                          [0m
+[0m[0]  0x400660         mov qword ptr [rbp-0x40], rdi          [0m#102 = ((_ extract 63 0) #53)[0m[0m
+[0m[0]  0x400664         mov rdi, rax                           [0m#103 = ((_ extract 63 0) #98)[0m[0m
+[0m[0]  0x400667         or rdi, 0xffffffffffff0000             [0m
+[0m[0]  0x40066e         xor rdi, 0xffff                        [0m#104 = (bvxor ((_ extract 63 0) #103) (_ bv65535 64))[0m
+[0m                                                             #105 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #104 (bvxor ((_ extract 63 0) #103) (_ bv65535 64))))))[0m
+[0m                                                             #106 = (assert (bvult #104 ((_ extract 63 0) #103)))[0m
+[0m                                                             #107 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #103) (bvnot (_ bv65535 64))) (bvxor ((_ extract 63 0) #103) #104))) (_ bv1 1)))[0m
+[0m                                                             #108 = (assert (= (parity_flag ((_ extract 7 0) #104)) (_ bv0 1)))[0m
+[0m                                                             #109 = (assert (= ((_ extract 63 63) #104) (_ bv1 1)))[0m
+[0m                                                             #110 = (assert (= #104 (_ bv0 64)))[0m[0m
+[0m[0]  0x400675         mov dword ptr [rbp-0x2c], edx          [0m#111 = (_ bv2 32)[0m[0m
+[0m[0]  0x400678         lea rdx, ptr [rdi+r12*1+0x2]           [0m
+[0m[0]  0x40067d         lea rbx, ptr [rdx+rdx*1-0x2]           [0m
+[0m[0]  0x400682         imul rbx, r8                           [0m
+[0m[0]  0x400686         mov r14, r9                            [0m#112 = (_ bv2 64)[0m[0m
+[0m[0]  0x400689         imul r14, r14                          [0m
+[0m[0]  0x40068d         mov r15, r10                           [0m#113 = (_ bv3 64)[0m[0m
+[0m[0]  0x400690         imul r15, r15                          [0m
+[0m[0]  0x400694         mov rax, r11                           [0m#114 = ((_ extract 63 0) #101)[0m[0m
+[0m[0]  0x400697         sub rax, r14                           [0m#115 = (bvsub ((_ extract 63 0) #114) ((_ extract 63 0) #112))[0m
+[0m                                                             #116 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #115 (bvxor ((_ extract 63 0) #114) ((_ extract 63 0) #112))))))[0m
+[0m                                                             #117 = (assert (bvult #115 ((_ extract 63 0) #114)))[0m
+[0m                                                             #118 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #114) (bvnot ((_ extract 63 0) #112))) (bvxor ((_ extract 63 0) #114) #115))) (_ bv1 1)))[0m
+[0m                                                             #119 = (assert (= (parity_flag ((_ extract 7 0) #115)) (_ bv0 1)))[0m
+[0m                                                             #120 = (assert (= ((_ extract 63 63) #115) (_ bv1 1)))[0m
+[0m                                                             #121 = (assert (= #115 (_ bv0 64)))[0m[0m
+[0m[0]  0x40069a         mov rdx, r15                           [0m#122 = ((_ extract 63 0) #113)[0m[0m
+[0m[0]  0x40069d         sub rdx, r11                           [0m#123 = (bvsub ((_ extract 63 0) #122) ((_ extract 63 0) #101))[0m
+[0m                                                             #124 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #123 (bvxor ((_ extract 63 0) #122) ((_ extract 63 0) #101))))))[0m
+[0m                                                             #125 = (assert (bvult #123 ((_ extract 63 0) #122)))[0m
+[0m                                                             #126 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #122) (bvnot ((_ extract 63 0) #101))) (bvxor ((_ extract 63 0) #122) #123))) (_ bv1 1)))[0m
+[0m                                                             #127 = (assert (= (parity_flag ((_ extract 7 0) #123)) (_ bv0 1)))[0m
+[0m                                                             #128 = (assert (= ((_ extract 63 63) #123) (_ bv1 1)))[0m
+[0m                                                             #129 = (assert (= #123 (_ bv0 64)))[0m[0m
+[0m[0]  0x4006a0         add rdx, rbx                           [0m#130 = (bvadd ((_ extract 63 0) #123) (_ bv0 64))[0m
+[0m                                                             #131 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #130 (bvxor ((_ extract 63 0) #123) (_ bv0 64))))))[0m
+[0m                                                             #132 = (assert (bvult #130 ((_ extract 63 0) #123)))[0m
+[0m                                                             #133 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #123) (bvnot (_ bv0 64))) (bvxor ((_ extract 63 0) #123) #130))) (_ bv1 1)))[0m
+[0m                                                             #134 = (assert (= (parity_flag ((_ extract 7 0) #130)) (_ bv0 1)))[0m
+[0m                                                             #135 = (assert (= ((_ extract 63 63) #130) (_ bv1 1)))[0m
+[0m                                                             #136 = (assert (= #130 (_ bv0 64)))[0m[0m
+[0m[0]  0x4006a3         lea rax, ptr [rdx+rax*2]               [0m
+[0m[0]  0x4006a7         mov rdx, r8                            [0m#137 = (_ bv1 64)[0m[0m
+[0m[0]  0x4006aa         mov rcx, 0xda3dae9c262de4bc            [0m#138 = (_ bv15725917459526313148 64)[0m[0m
+[0m[0]  0x4006b4         mov qword ptr [rbp-0x38], rsi          [0m#139 = ((_ extract 63 0) #41)[0m[0m
+[0m[0]  0x4006b8         mov rsi, rcx                           [0m#140 = ((_ extract 63 0) #138)[0m[0m
+[0m[0]  0x4006bb         imul rdx, rsi                          [0m
+[0m[0]  0x4006bf         add rdx, rdi                           [0m#141 = (bvadd ((_ extract 63 0) #137) ((_ extract 63 0) #104))[0m
+[0m                                                             #142 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #141 (bvxor ((_ extract 63 0) #137) ((_ extract 63 0) #104))))))[0m
+[0m                                                             #143 = (assert (bvult #141 ((_ extract 63 0) #137)))[0m
+[0m                                                             #144 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #137) (bvnot ((_ extract 63 0) #104))) (bvxor ((_ extract 63 0) #137) #141))) (_ bv1 1)))[0m
+[0m                                                             #145 = (assert (= (parity_flag ((_ extract 7 0) #141)) (_ bv0 1)))[0m
+[0m                                                             #146 = (assert (= ((_ extract 63 63) #141) (_ bv1 1)))[0m
+[0m                                                             #147 = (assert (= #141 (_ bv0 64)))[0m[0m
+[0m[0]  0x4006c2         imul rdx, r10                          [0m
+[0m[0]  0x4006c6         mov rcx, 0x25c25163d9d21b44            [0m#148 = (_ bv2720826614183238468 64)[0m[0m
+[0m[0]  0x4006d0         lea rbx, ptr [rcx+0x1]                 [0m
+[0m[0]  0x4006d4         imul rbx, r11                          [0m
+[0m[0]  0x4006d8         add rbx, rdx                           [0m#149 = (bvadd (_ bv2720826614183238469 64) ((_ extract 63 0) #141))[0m
+[0m                                                             #150 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #149 (bvxor (_ bv2720826614183238469 64) ((_ extract 63 0) #141))))))[0m
+[0m                                                             #151 = (assert (bvult #149 (_ bv2720826614183238469 64)))[0m
+[0m                                                             #152 = (assert (= ((_ extract 63 63) (bvand (bvxor (_ bv2720826614183238469 64) (bvnot ((_ extract 63 0) #141))) (bvxor (_ bv2720826614183238469 64) #149))) (_ bv1 1)))[0m
+[0m                                                             #153 = (assert (= (parity_flag ((_ extract 7 0) #149)) (_ bv0 1)))[0m
+[0m                                                             #154 = (assert (= ((_ extract 63 63) #149) (_ bv1 1)))[0m
+[0m                                                             #155 = (assert (= #149 (_ bv0 64)))[0m[0m
+[0m[0]  0x4006db         imul rax, r8                           [0m
+[0m[0]  0x4006df         imul rbx, r10                          [0m
+[0m[0]  0x4006e3         add rbx, rax                           [0m#156 = (bvadd ((_ extract 63 0) #149) ((_ extract 63 0) #115))[0m
+[0m                                                             #157 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #156 (bvxor ((_ extract 63 0) #149) ((_ extract 63 0) #115))))))[0m
+[0m                                                             #158 = (assert (bvult #156 ((_ extract 63 0) #149)))[0m
+[0m                                                             #159 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #149) (bvnot ((_ extract 63 0) #115))) (bvxor ((_ extract 63 0) #149) #156))) (_ bv1 1)))[0m
+[0m                                                             #160 = (assert (= (parity_flag ((_ extract 7 0) #156)) (_ bv0 1)))[0m
+[0m                                                             #161 = (assert (= ((_ extract 63 63) #156) (_ bv1 1)))[0m
+[0m                                                             #162 = (assert (= #156 (_ bv0 64)))[0m[0m
+[0m[0]  0x4006e6         mov rdx, r15                           [0m#163 = ((_ extract 63 0) #113)[0m[0m
+[0m[0]  0x4006e9         imul rdx, rcx                          [0m
+[0m[0]  0x4006ed         lea rcx, ptr [rsi-0x2]                 [0m
+[0m[0]  0x4006f1         imul rcx, r11                          [0m
+[0m[0]  0x4006f5         lea rax, ptr [rdi+r12*1+0x3]           [0m
+[0m[0]  0x4006fa         imul rax, rsi                          [0m
+[0m[0]  0x4006fe         lea rax, ptr [rax+r12*2+0x2]           [0m
+[0m[0]  0x400703         imul rax, r9                           [0m
+[0m[0]  0x400707         add rax, rdx                           [0m#164 = (bvadd ((_ extract 63 0) #115) ((_ extract 63 0) #163))[0m
+[0m                                                             #165 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #164 (bvxor ((_ extract 63 0) #115) ((_ extract 63 0) #163))))))[0m
+[0m                                                             #166 = (assert (bvult #164 ((_ extract 63 0) #115)))[0m
+[0m                                                             #167 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #115) (bvnot ((_ extract 63 0) #163))) (bvxor ((_ extract 63 0) #115) #164))) (_ bv1 1)))[0m
+[0m                                                             #168 = (assert (= (parity_flag ((_ extract 7 0) #164)) (_ bv0 1)))[0m
+[0m                                                             #169 = (assert (= ((_ extract 63 63) #164) (_ bv1 1)))[0m
+[0m                                                             #170 = (assert (= #164 (_ bv0 64)))[0m[0m
+[0m[0]  0x40070a         add rax, rcx                           [0m#171 = (bvadd ((_ extract 63 0) #164) ((_ extract 63 0) #148))[0m
+[0m                                                             #172 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #171 (bvxor ((_ extract 63 0) #164) ((_ extract 63 0) #148))))))[0m
+[0m                                                             #173 = (assert (bvult #171 ((_ extract 63 0) #164)))[0m
+[0m                                                             #174 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #164) (bvnot ((_ extract 63 0) #148))) (bvxor ((_ extract 63 0) #164) #171))) (_ bv1 1)))[0m
+[0m                                                             #175 = (assert (= (parity_flag ((_ extract 7 0) #171)) (_ bv0 1)))[0m
+[0m                                                             #176 = (assert (= ((_ extract 63 63) #171) (_ bv1 1)))[0m
+[0m                                                             #177 = (assert (= #171 (_ bv0 64)))[0m[0m
+[0m[0]  0x40070d         imul rax, r9                           [0m
+[0m[0]  0x400711         add rax, rbx                           [0m#178 = (bvadd ((_ extract 63 0) #171) ((_ extract 63 0) #156))[0m
+[0m                                                             #179 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #178 (bvxor ((_ extract 63 0) #171) ((_ extract 63 0) #156))))))[0m
+[0m                                                             #180 = (assert (bvult #178 ((_ extract 63 0) #171)))[0m
+[0m                                                             #181 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #171) (bvnot ((_ extract 63 0) #156))) (bvxor ((_ extract 63 0) #171) #178))) (_ bv1 1)))[0m
+[0m                                                             #182 = (assert (= (parity_flag ((_ extract 7 0) #178)) (_ bv0 1)))[0m
+[0m                                                             #183 = (assert (= ((_ extract 63 63) #178) (_ bv1 1)))[0m
+[0m                                                             #184 = (assert (= #178 (_ bv0 64)))[0m[0m
+[0m[0]  0x400714         sub rdi, r14                           [0m#185 = (bvsub ((_ extract 63 0) #104) ((_ extract 63 0) #112))[0m
+[0m                                                             #186 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #185 (bvxor ((_ extract 63 0) #104) ((_ extract 63 0) #112))))))[0m
+[0m                                                             #187 = (assert (bvult #185 ((_ extract 63 0) #104)))[0m
+[0m                                                             #188 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #104) (bvnot ((_ extract 63 0) #112))) (bvxor ((_ extract 63 0) #104) #185))) (_ bv1 1)))[0m
+[0m                                                             #189 = (assert (= (parity_flag ((_ extract 7 0) #185)) (_ bv0 1)))[0m
+[0m                                                             #190 = (assert (= ((_ extract 63 63) #185) (_ bv1 1)))[0m
+[0m                                                             #191 = (assert (= #185 (_ bv0 64)))[0m[0m
+[0m[0]  0x400717         add rdi, r15                           [0m#192 = (bvadd ((_ extract 63 0) #185) ((_ extract 63 0) #113))[0m
+[0m                                                             #193 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #192 (bvxor ((_ extract 63 0) #185) ((_ extract 63 0) #113))))))[0m
+[0m                                                             #194 = (assert (bvult #192 ((_ extract 63 0) #185)))[0m
+[0m                                                             #195 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #185) (bvnot ((_ extract 63 0) #113))) (bvxor ((_ extract 63 0) #185) #192))) (_ bv1 1)))[0m
+[0m                                                             #196 = (assert (= (parity_flag ((_ extract 7 0) #192)) (_ bv0 1)))[0m
+[0m                                                             #197 = (assert (= ((_ extract 63 63) #192) (_ bv1 1)))[0m
+[0m                                                             #198 = (assert (= #192 (_ bv0 64)))[0m[0m
+[0m[0]  0x40071a         imul rdi, r8                           [0m
+[0m[0]  0x40071e         mov rcx, 0xfffffffffffffffd            [0m#199 = (_ bv18446744073709551613 64)[0m[0m
+[0m[0]  0x400725         sub rcx, r12                           [0m#200 = (bvsub ((_ extract 63 0) #199) ((_ extract 63 0) #100))[0m
+[0m                                                             #201 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #200 (bvxor ((_ extract 63 0) #199) ((_ extract 63 0) #100))))))[0m
+[0m                                                             #202 = (assert (bvult #200 ((_ extract 63 0) #199)))[0m
+[0m                                                             #203 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #199) (bvnot ((_ extract 63 0) #100))) (bvxor ((_ extract 63 0) #199) #200))) (_ bv1 1)))[0m
+[0m                                                             #204 = (assert (= (parity_flag ((_ extract 7 0) #200)) (_ bv0 1)))[0m
+[0m                                                             #205 = (assert (= ((_ extract 63 63) #200) (_ bv1 1)))[0m
+[0m                                                             #206 = (assert (= #200 (_ bv0 64)))[0m[0m
+[0m[0]  0x400728         imul rcx, r9                           [0m
+[0m[0]  0x40072c         add rcx, rdi                           [0m#207 = (bvadd ((_ extract 63 0) #200) ((_ extract 63 0) #192))[0m
+[0m                                                             #208 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #207 (bvxor ((_ extract 63 0) #200) ((_ extract 63 0) #192))))))[0m
+[0m                                                             #209 = (assert (bvult #207 ((_ extract 63 0) #200)))[0m
+[0m                                                             #210 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #200) (bvnot ((_ extract 63 0) #192))) (bvxor ((_ extract 63 0) #200) #207))) (_ bv1 1)))[0m
+[0m                                                             #211 = (assert (= (parity_flag ((_ extract 7 0) #207)) (_ bv0 1)))[0m
+[0m                                                             #212 = (assert (= ((_ extract 63 63) #207) (_ bv1 1)))[0m
+[0m                                                             #213 = (assert (= #207 (_ bv0 64)))[0m[0m
+[0m[0]  0x40072f         mov rdi, qword ptr [rbp-0x40]          [0m#214 = ((_ extract 63 0) #102)[0m[0m
+[0m[0]  0x400733         cqo                                    [0m
+[0m[0]  0x400735         idiv rcx                               [0m
+[0m[0]  0x400738         lea rcx, ptr [r13-0x3]                 [0m
+[0m[0]  0x40073c         add r13, 0xfffffffffffffffe            [0m#215 = (bvadd ((_ extract 63 0) #89) (_ bv18446744073709551614 64))[0m
+[0m                                                             #216 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #215 (bvxor ((_ extract 63 0) #89) (_ bv18446744073709551614 64))))))[0m
+[0m                                                             #217 = (assert (bvult #215 ((_ extract 63 0) #89)))[0m
+[0m                                                             #218 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #89) (bvnot (_ bv18446744073709551614 64))) (bvxor ((_ extract 63 0) #89) #215))) (_ bv1 1)))[0m
+[0m                                                             #219 = (assert (= (parity_flag ((_ extract 7 0) #215)) (_ bv0 1)))[0m
+[0m                                                             #220 = (assert (= ((_ extract 63 63) #215) (_ bv1 1)))[0m
+[0m                                                             #221 = (assert (= #215 (_ bv0 64)))[0m[0m
+[0m[0]  0x400740         imul r13, rcx                          [0m
+[0m[0]  0x400744         mov rcx, r13                           [0m#222 = ((_ extract 63 0) #215)[0m[0m
+[0m[0]  0x400747         and rcx, 0x9                           [0m
+[0m[0]  0x40074b         mov rdx, r13                           [0m#223 = ((_ extract 63 0) #215)[0m[0m
+[0m[0]  0x40074e         or rdx, 0x9                            [0m
+[0m[0]  0x400752         add rdx, rcx                           [0m#224 = (bvadd ((_ extract 63 0) #223) ((_ extract 63 0) #222))[0m
+[0m                                                             #225 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #224 (bvxor ((_ extract 63 0) #223) ((_ extract 63 0) #222))))))[0m
+[0m                                                             #226 = (assert (bvult #224 ((_ extract 63 0) #223)))[0m
+[0m                                                             #227 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #223) (bvnot ((_ extract 63 0) #222))) (bvxor ((_ extract 63 0) #223) #224))) (_ bv1 1)))[0m
+[0m                                                             #228 = (assert (= (parity_flag ((_ extract 7 0) #224)) (_ bv0 1)))[0m
+[0m                                                             #229 = (assert (= ((_ extract 63 63) #224) (_ bv1 1)))[0m
+[0m                                                             #230 = (assert (= #224 (_ bv0 64)))[0m[0m
+[0m[0]  0x400755         lea rcx, ptr [r13+r13*1]               [0m
+[0m[0]  0x40075a         or rcx, 0x10                           [0m
+[0m[0]  0x40075e         xor r13, 0x8                           [0m#231 = (bvxor ((_ extract 63 0) #215) (_ bv8 64))[0m
+[0m                                                             #232 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #231 (bvxor ((_ extract 63 0) #215) (_ bv8 64))))))[0m
+[0m                                                             #233 = (assert (bvult #231 ((_ extract 63 0) #215)))[0m
+[0m                                                             #234 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #215) (bvnot (_ bv8 64))) (bvxor ((_ extract 63 0) #215) #231))) (_ bv1 1)))[0m
+[0m                                                             #235 = (assert (= (parity_flag ((_ extract 7 0) #231)) (_ bv0 1)))[0m
+[0m                                                             #236 = (assert (= ((_ extract 63 63) #231) (_ bv1 1)))[0m
+[0m                                                             #237 = (assert (= #231 (_ bv0 64)))[0m[0m
+[0m[0]  0x400762         sub rcx, r13                           [0m#238 = (bvsub ((_ extract 63 0) #222) ((_ extract 63 0) #231))[0m
+[0m                                                             #239 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #238 (bvxor ((_ extract 63 0) #222) ((_ extract 63 0) #231))))))[0m
+[0m                                                             #240 = (assert (bvult #238 ((_ extract 63 0) #222)))[0m
+[0m                                                             #241 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #222) (bvnot ((_ extract 63 0) #231))) (bvxor ((_ extract 63 0) #222) #238))) (_ bv1 1)))[0m
+[0m                                                             #242 = (assert (= (parity_flag ((_ extract 7 0) #238)) (_ bv0 1)))[0m
+[0m                                                             #243 = (assert (= ((_ extract 63 63) #238) (_ bv1 1)))[0m
+[0m                                                             #244 = (assert (= #238 (_ bv0 64)))[0m[0m
+[0m[0]  0x400765         mov esi, 0x9eca612e                    [0m#245 = (_ bv2664063278 32)[0m[0m
+[0m[0]  0x40076a         lea eax, ptr [rsi+rax*1+0x3b07ba1b]    [0m
+[0m[0]  0x400771         mov rsi, qword ptr [rbp-0x38]          [0m#246 = ((_ extract 63 0) #139)[0m[0m
+[0m[0]  0x400775         mov rbx, qword ptr [rbp-0x50]          [0m#247 = ((_ extract 63 0) #99)[0m[0m
+[0m[0]  0x400779         cmp ebx, eax                           [0m#248 = (bvsub ((_ extract 31 0) #247) ((_ extract 31 0) #178))[0m
+[0m                                                             #249 = (assert (= (_ bv16 32) (bvand (_ bv16 32) (bvxor #248 (bvxor ((_ extract 31 0) #247) ((_ extract 31 0) #178))))))[0m
+[0m                                                             #250 = (assert (bvult #248 ((_ extract 31 0) #247)))[0m
+[0m                                                             #251 = (assert (= ((_ extract 31 31) (bvand (bvxor ((_ extract 31 0) #247) (bvnot ((_ extract 31 0) #178))) (bvxor ((_ extract 31 0) #247) #248))) (_ bv1 1)))[0m
+[0m                                                             #252 = (assert (= (parity_flag ((_ extract 7 0) #248)) (_ bv0 1)))[0m
+[0m                                                             #253 = (assert (= ((_ extract 31 31) #248) (_ bv1 1)))[0m
+[0m                                                             #254 = (assert (= #248 (_ bv0 32)))[0m[0m
+[0m[0]  0x40077b         cmovl rcx, rdx                         [0m
+[0m[0]  0x40077f         mov edx, dword ptr [rbp-0x2c]          [0m#255 = ((_ extract 31 0) #111)[0m[0m
+[0m[0]  0x400782         mov r13d, 0x5                          [0m#256 = (_ bv5 32)[0m[0m
+[0m[0]  0x400788         jmp 0x400580                           [0m
+[0m[0]  0x400580         mov rax, rcx                           [0m#257 = ((_ extract 63 0) #238)[0m[0m
+[0m[0]  0x400583         lea rcx, ptr [rax-0x1]                 [0m
+[0m[0]  0x400587         cmp rcx, 0xa                           [0m#258 = (bvsub ((_ extract 63 0) #238) ((_ sign_extend 0) (_ bv10 64)))[0m
+[0m                                                             #259 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #258 (bvxor ((_ extract 63 0) #238) ((_ sign_extend 0) (_ bv10 64)))))))[0m
+[0m                                                             #260 = (assert (bvult #258 ((_ extract 63 0) #238)))[0m
+[0m                                                             #261 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #238) (bvnot ((_ sign_extend 0) (_ bv10 64)))) (bvxor ((_ extract 63 0) #238) #258))) (_ bv1 1)))[0m
+[0m                                                             #262 = (assert (= (parity_flag ((_ extract 7 0) #258)) (_ bv0 1)))[0m
+[0m                                                             #263 = (assert (= ((_ extract 63 63) #258) (_ bv1 1)))[0m
+[0m                                                             #264 = (assert (= #258 (_ bv0 64)))[0m[0m
+[0m[0]  0x40058b         jnbe 0x400560                          [0m
+[0m[0]  0x40058d         jmp qword ptr [rcx*8+0x401488]         [0m
+[0m[0]  0x400ebe         mov eax, dword ptr [rdi]               [0m#265 = ((_ extract 31 0) #80)[0m[0m
+[0m[0]  0x400ec0         mov dword ptr [rbp-0x5c], eax          [0m#266 = ((_ extract 31 0) #265)[0m[0m
+[0m[0]  0x400ec3         add r13, 0xfffffffffffffffb            [0m#267 = (bvadd ((_ extract 63 0) #256) (_ bv18446744073709551611 64))[0m
+[0m                                                             #268 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #267 (bvxor ((_ extract 63 0) #256) (_ bv18446744073709551611 64))))))[0m
+[0m                                                             #269 = (assert (bvult #267 ((_ extract 63 0) #256)))[0m
+[0m                                                             #270 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #256) (bvnot (_ bv18446744073709551611 64))) (bvxor ((_ extract 63 0) #256) #267))) (_ bv1 1)))[0m
+[0m                                                             #271 = (assert (= (parity_flag ((_ extract 7 0) #267)) (_ bv0 1)))[0m
+[0m                                                             #272 = (assert (= ((_ extract 63 63) #267) (_ bv1 1)))[0m
+[0m                                                             #273 = (assert (= #267 (_ bv0 64)))[0m[0m
+[0m[0]  0x400ec7         mov rax, r13                           [0m#274 = ((_ extract 63 0) #267)[0m[0m
+[0m[0]  0x400eca         xor rax, 0x6                           [0m#275 = (bvxor ((_ extract 63 0) #274) (_ bv6 64))[0m
+[0m                                                             #276 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #275 (bvxor ((_ extract 63 0) #274) (_ bv6 64))))))[0m
+[0m                                                             #277 = (assert (bvult #275 ((_ extract 63 0) #274)))[0m
+[0m                                                             #278 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #274) (bvnot (_ bv6 64))) (bvxor ((_ extract 63 0) #274) #275))) (_ bv1 1)))[0m
+[0m                                                             #279 = (assert (= (parity_flag ((_ extract 7 0) #275)) (_ bv0 1)))[0m
+[0m                                                             #280 = (assert (= ((_ extract 63 63) #275) (_ bv1 1)))[0m
+[0m                                                             #281 = (assert (= #275 (_ bv0 64)))[0m[0m
+[0m[0]  0x400ece         and r13, 0x6                           [0m
+[0m[0]  0x400ed2         lea rcx, ptr [rax+r13*2]               [0m
+[0m[0]  0x400ed6         mov r13d, 0x9                          [0m#282 = (_ bv9 32)[0m[0m
+[0m[0]  0x400edc         jmp 0x400580                           [0m
+[0m[0]  0x400580         mov rax, rcx                           [0m#283 = ((_ extract 63 0) #258)[0m[0m
+[0m[0]  0x400583         lea rcx, ptr [rax-0x1]                 [0m
+[0m[0]  0x400587         cmp rcx, 0xa                           [0m#284 = (bvsub ((_ extract 63 0) #258) ((_ sign_extend 0) (_ bv10 64)))[0m
+[0m                                                             #285 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #284 (bvxor ((_ extract 63 0) #258) ((_ sign_extend 0) (_ bv10 64)))))))[0m
+[0m                                                             #286 = (assert (bvult #284 ((_ extract 63 0) #258)))[0m
+[0m                                                             #287 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #258) (bvnot ((_ sign_extend 0) (_ bv10 64)))) (bvxor ((_ extract 63 0) #258) #284))) (_ bv1 1)))[0m
+[0m                                                             #288 = (assert (= (parity_flag ((_ extract 7 0) #284)) (_ bv0 1)))[0m
+[0m                                                             #289 = (assert (= ((_ extract 63 63) #284) (_ bv1 1)))[0m
+[0m                                                             #290 = (assert (= #284 (_ bv0 64)))[0m[0m
+[0m[0]  0x40058b         jnbe 0x400560                          [0m
+[0m[0]  0x40058d         jmp qword ptr [rcx*8+0x401488]         [0m
+[0m[0]  0x40078d         movsxd rax, dword ptr [rbp-0x5c]       [0m#291 = ((_ sign_extend 0) ((_ extract 31 0) #266))[0m[0m
+[0m[0]  0x400791         mov rcx, qword ptr [rbp-0x68]          [0m#292 = ((_ extract 63 0) #50)[0m[0m
+[0m[0]  0x400795         mov rcx, qword ptr [rcx]               [0m#293 = ((_ extract 63 0) #62)[0m[0m
+[92m[0]  0x400798         movsx eax, byte ptr [rcx+rax*1]        [92m#294 = SymVar_0[0m[0m
+[92m[0]  0x40079c         mov qword ptr [rbp-0x50], rax          [92m#295 = ((_ extract 63 0) #294)[0m[0m
+[92m[0]  0x4007a0         movzx r15d, ax                         [92m#296 = ((_ zero_extend 16) ((_ extract 15 0) #294))[0m[0m
+[0m[0]  0x4007a4         lea r9, ptr [r15+0x1]                  [0m
+[0m[0]  0x4007a8         lea r8, ptr [r15+0x2]                  [0m
+[0m[0]  0x4007ac         lea r10, ptr [r15+0x3]                 [0m
+[0m[0]  0x4007b0         mov rbx, r9                            [0m#297 = (_ bv98 64)[0m[0m
+[0m[0]  0x4007b3         imul rbx, rbx                          [0m
+[0m[0]  0x4007b7         mov qword ptr [rbp-0x38], rsi          [0m#298 = ((_ extract 63 0) #246)[0m[0m
+[92m[0]  0x4007bb         mov rsi, rax                           [92m#299 = ((_ extract 63 0) #294)[0m[0m
+[0m[0]  0x4007be         or rsi, 0xffffffffffff0000             [0m
+[92m[0]  0x4007c5         xor rsi, 0xffff                        [92m#300 = (bvxor ((_ extract 63 0) #299) (_ bv65535 64))[0m
+[92m                                                             #301 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #300 (bvxor ((_ extract 63 0) #299) (_ bv65535 64))))))[0m
+[92m                                                             #302 = (assert (bvult #300 ((_ extract 63 0) #299)))[0m
+[92m                                                             #303 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #299) (bvnot (_ bv65535 64))) (bvxor ((_ extract 63 0) #299) #300))) (_ bv1 1)))[0m
+[92m                                                             #304 = (assert (= (parity_flag ((_ extract 7 0) #300)) (_ bv0 1)))[0m
+[92m                                                             #305 = (assert (= ((_ extract 63 63) #300) (_ bv1 1)))[0m
+[92m                                                             #306 = (assert (= #300 (_ bv0 64)))[0m[0m
+[0m[0]  0x4007cc         mov dword ptr [rbp-0x2c], edx          [0m#307 = ((_ extract 31 0) #255)[0m[0m
+[0m[0]  0x4007cf         lea rdx, ptr [rsi+r15*1+0x2]           [0m
+[0m[0]  0x4007d4         lea rax, ptr [rdx+rdx*1-0x2]           [0m
+[0m[0]  0x4007d9         imul rax, r9                           [0m
+[0m[0]  0x4007dd         mov r11, r8                            [0m#308 = (_ bv99 64)[0m[0m
+[0m[0]  0x4007e0         imul r11, r11                          [0m
+[0m[0]  0x4007e4         mov r14, r10                           [0m#309 = (_ bv100 64)[0m[0m
+[0m[0]  0x4007e7         imul r14, r14                          [0m
+[0m[0]  0x4007eb         mov qword ptr [rbp-0x40], rdi          [0m#310 = ((_ extract 63 0) #214)[0m[0m
+[0m[0]  0x4007ef         mov rdi, rbx                           [0m#311 = ((_ extract 63 0) #297)[0m[0m
+[0m[0]  0x4007f2         sub rdi, r11                           [0m#312 = (bvsub ((_ extract 63 0) #311) ((_ extract 63 0) #308))[0m
+[0m                                                             #313 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #312 (bvxor ((_ extract 63 0) #311) ((_ extract 63 0) #308))))))[0m
+[0m                                                             #314 = (assert (bvult #312 ((_ extract 63 0) #311)))[0m
+[0m                                                             #315 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #311) (bvnot ((_ extract 63 0) #308))) (bvxor ((_ extract 63 0) #311) #312))) (_ bv1 1)))[0m
+[0m                                                             #316 = (assert (= (parity_flag ((_ extract 7 0) #312)) (_ bv0 1)))[0m
+[0m                                                             #317 = (assert (= ((_ extract 63 63) #312) (_ bv1 1)))[0m
+[0m                                                             #318 = (assert (= #312 (_ bv0 64)))[0m[0m
+[0m[0]  0x4007f5         mov rdx, r14                           [0m#319 = ((_ extract 63 0) #309)[0m[0m
+[0m[0]  0x4007f8         sub rdx, rbx                           [0m#320 = (bvsub ((_ extract 63 0) #319) ((_ extract 63 0) #297))[0m
+[0m                                                             #321 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #320 (bvxor ((_ extract 63 0) #319) ((_ extract 63 0) #297))))))[0m
+[0m                                                             #322 = (assert (bvult #320 ((_ extract 63 0) #319)))[0m
+[0m                                                             #323 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #319) (bvnot ((_ extract 63 0) #297))) (bvxor ((_ extract 63 0) #319) #320))) (_ bv1 1)))[0m
+[0m                                                             #324 = (assert (= (parity_flag ((_ extract 7 0) #320)) (_ bv0 1)))[0m
+[0m                                                             #325 = (assert (= ((_ extract 63 63) #320) (_ bv1 1)))[0m
+[0m                                                             #326 = (assert (= #320 (_ bv0 64)))[0m[0m
+[92m[0]  0x4007fb         add rdx, rax                           [92m#327 = (bvadd ((_ extract 63 0) #320) ((_ extract 63 0) #294))[0m
+[92m                                                             #328 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #327 (bvxor ((_ extract 63 0) #320) ((_ extract 63 0) #294))))))[0m
+[92m                                                             #329 = (assert (bvult #327 ((_ extract 63 0) #320)))[0m
+[92m                                                             #330 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #320) (bvnot ((_ extract 63 0) #294))) (bvxor ((_ extract 63 0) #320) #327))) (_ bv1 1)))[0m
+[92m                                                             #331 = (assert (= (parity_flag ((_ extract 7 0) #327)) (_ bv0 1)))[0m
+[92m                                                             #332 = (assert (= ((_ extract 63 63) #327) (_ bv1 1)))[0m
+[92m                                                             #333 = (assert (= #327 (_ bv0 64)))[0m[0m
+[0m[0]  0x4007fe         lea rax, ptr [rdx+rdi*2]               [0m
+[0m[0]  0x400802         imul rax, r9                           [0m
+[0m[0]  0x400806         mov rdx, r9                            [0m#334 = (_ bv98 64)[0m[0m
+[0m[0]  0x400809         mov rcx, 0x33d30386f5c9b81c            [0m#335 = (_ bv3734332394204411932 64)[0m[0m
+[0m[0]  0x400813         imul rdx, rcx                          [0m
+[92m[0]  0x400817         add rdx, rsi                           [92m#336 = (bvadd ((_ extract 63 0) #334) ((_ extract 63 0) #300))[0m
+[92m                                                             #337 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #336 (bvxor ((_ extract 63 0) #334) ((_ extract 63 0) #300))))))[0m
+[92m                                                             #338 = (assert (bvult #336 ((_ extract 63 0) #334)))[0m
+[92m                                                             #339 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #334) (bvnot ((_ extract 63 0) #300))) (bvxor ((_ extract 63 0) #334) #336))) (_ bv1 1)))[0m
+[92m                                                             #340 = (assert (= (parity_flag ((_ extract 7 0) #336)) (_ bv0 1)))[0m
+[92m                                                             #341 = (assert (= ((_ extract 63 63) #336) (_ bv1 1)))[0m
+[92m                                                             #342 = (assert (= #336 (_ bv0 64)))[0m[0m
+[0m[0]  0x40081a         imul rdx, r10                          [0m
+[0m[0]  0x40081e         mov rdi, rbx                           [0m#343 = ((_ extract 63 0) #297)[0m[0m
+[0m[0]  0x400821         mov r12, 0xcc2cfc790a3647e5            [0m#344 = (_ bv14712411679505139685 64)[0m[0m
+[0m[0]  0x40082b         imul rdi, r12                          [0m
+[92m[0]  0x40082f         add rdi, rdx                           [92m#345 = (bvadd ((_ extract 63 0) #343) ((_ extract 63 0) #336))[0m
+[92m                                                             #346 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #345 (bvxor ((_ extract 63 0) #343) ((_ extract 63 0) #336))))))[0m
+[92m                                                             #347 = (assert (bvult #345 ((_ extract 63 0) #343)))[0m
+[92m                                                             #348 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #343) (bvnot ((_ extract 63 0) #336))) (bvxor ((_ extract 63 0) #343) #345))) (_ bv1 1)))[0m
+[92m                                                             #349 = (assert (= (parity_flag ((_ extract 7 0) #345)) (_ bv0 1)))[0m
+[92m                                                             #350 = (assert (= ((_ extract 63 63) #345) (_ bv1 1)))[0m
+[92m                                                             #351 = (assert (= #345 (_ bv0 64)))[0m[0m
+[0m[0]  0x400832         imul rdi, r10                          [0m
+[92m[0]  0x400836         add rdi, rax                           [92m#352 = (bvadd ((_ extract 63 0) #345) ((_ extract 63 0) #294))[0m
+[92m                                                             #353 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #352 (bvxor ((_ extract 63 0) #345) ((_ extract 63 0) #294))))))[0m
+[92m                                                             #354 = (assert (bvult #352 ((_ extract 63 0) #345)))[0m
+[92m                                                             #355 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #345) (bvnot ((_ extract 63 0) #294))) (bvxor ((_ extract 63 0) #345) #352))) (_ bv1 1)))[0m
+[92m                                                             #356 = (assert (= (parity_flag ((_ extract 7 0) #352)) (_ bv0 1)))[0m
+[92m                                                             #357 = (assert (= ((_ extract 63 63) #352) (_ bv1 1)))[0m
+[92m                                                             #358 = (assert (= #352 (_ bv0 64)))[0m[0m
+[0m[0]  0x400839         lea rdx, ptr [r12-0x1]                 [0m
+[0m[0]  0x40083e         imul rdx, r14                          [0m
+[0m[0]  0x400842         lea rax, ptr [rsi+r15*1+0x3]           [0m
+[0m[0]  0x400847         imul rax, rcx                          [0m
+[0m[0]  0x40084b         lea rax, ptr [rax+r15*2+0x2]           [0m
+[0m[0]  0x400850         imul rax, r8                           [0m
+[0m[0]  0x400854         lea rcx, ptr [rcx-0x2]                 [0m
+[0m[0]  0x400858         imul rcx, rbx                          [0m
+[92m[0]  0x40085c         add rax, rdx                           [92m#359 = (bvadd ((_ extract 63 0) #294) ((_ extract 63 0) #336))[0m
+[92m                                                             #360 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #359 (bvxor ((_ extract 63 0) #294) ((_ extract 63 0) #336))))))[0m
+[92m                                                             #361 = (assert (bvult #359 ((_ extract 63 0) #294)))[0m
+[92m                                                             #362 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #294) (bvnot ((_ extract 63 0) #336))) (bvxor ((_ extract 63 0) #294) #359))) (_ bv1 1)))[0m
+[92m                                                             #363 = (assert (= (parity_flag ((_ extract 7 0) #359)) (_ bv0 1)))[0m
+[92m                                                             #364 = (assert (= ((_ extract 63 63) #359) (_ bv1 1)))[0m
+[92m                                                             #365 = (assert (= #359 (_ bv0 64)))[0m[0m
+[92m[0]  0x40085f         add rax, rcx                           [92m#366 = (bvadd ((_ extract 63 0) #359) ((_ extract 63 0) #335))[0m
+[92m                                                             #367 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #366 (bvxor ((_ extract 63 0) #359) ((_ extract 63 0) #335))))))[0m
+[92m                                                             #368 = (assert (bvult #366 ((_ extract 63 0) #359)))[0m
+[92m                                                             #369 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #359) (bvnot ((_ extract 63 0) #335))) (bvxor ((_ extract 63 0) #359) #366))) (_ bv1 1)))[0m
+[92m                                                             #370 = (assert (= (parity_flag ((_ extract 7 0) #366)) (_ bv0 1)))[0m
+[92m                                                             #371 = (assert (= ((_ extract 63 63) #366) (_ bv1 1)))[0m
+[92m                                                             #372 = (assert (= #366 (_ bv0 64)))[0m[0m
+[0m[0]  0x400862         imul rax, r8                           [0m
+[92m[0]  0x400866         add rax, rdi                           [92m#373 = (bvadd ((_ extract 63 0) #366) ((_ extract 63 0) #352))[0m
+[92m                                                             #374 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #373 (bvxor ((_ extract 63 0) #366) ((_ extract 63 0) #352))))))[0m
+[92m                                                             #375 = (assert (bvult #373 ((_ extract 63 0) #366)))[0m
+[92m                                                             #376 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #366) (bvnot ((_ extract 63 0) #352))) (bvxor ((_ extract 63 0) #366) #373))) (_ bv1 1)))[0m
+[92m                                                             #377 = (assert (= (parity_flag ((_ extract 7 0) #373)) (_ bv0 1)))[0m
+[92m                                                             #378 = (assert (= ((_ extract 63 63) #373) (_ bv1 1)))[0m
+[92m                                                             #379 = (assert (= #373 (_ bv0 64)))[0m[0m
+[92m[0]  0x400869         sub rsi, r11                           [92m#380 = (bvsub ((_ extract 63 0) #300) ((_ extract 63 0) #308))[0m
+[92m                                                             #381 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #380 (bvxor ((_ extract 63 0) #300) ((_ extract 63 0) #308))))))[0m
+[92m                                                             #382 = (assert (bvult #380 ((_ extract 63 0) #300)))[0m
+[92m                                                             #383 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #300) (bvnot ((_ extract 63 0) #308))) (bvxor ((_ extract 63 0) #300) #380))) (_ bv1 1)))[0m
+[92m                                                             #384 = (assert (= (parity_flag ((_ extract 7 0) #380)) (_ bv0 1)))[0m
+[92m                                                             #385 = (assert (= ((_ extract 63 63) #380) (_ bv1 1)))[0m
+[92m                                                             #386 = (assert (= #380 (_ bv0 64)))[0m[0m
+[92m[0]  0x40086c         add rsi, r14                           [92m#387 = (bvadd ((_ extract 63 0) #380) ((_ extract 63 0) #309))[0m
+[92m                                                             #388 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #387 (bvxor ((_ extract 63 0) #380) ((_ extract 63 0) #309))))))[0m
+[92m                                                             #389 = (assert (bvult #387 ((_ extract 63 0) #380)))[0m
+[92m                                                             #390 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #380) (bvnot ((_ extract 63 0) #309))) (bvxor ((_ extract 63 0) #380) #387))) (_ bv1 1)))[0m
+[92m                                                             #391 = (assert (= (parity_flag ((_ extract 7 0) #387)) (_ bv0 1)))[0m
+[92m                                                             #392 = (assert (= ((_ extract 63 63) #387) (_ bv1 1)))[0m
+[92m                                                             #393 = (assert (= #387 (_ bv0 64)))[0m[0m
+[0m[0]  0x40086f         imul rsi, r9                           [0m
+[0m[0]  0x400873         mov rcx, 0xfffffffffffffffd            [0m#394 = (_ bv18446744073709551613 64)[0m[0m
+[92m[0]  0x40087a         sub rcx, r15                           [92m#395 = (bvsub ((_ extract 63 0) #394) ((_ extract 63 0) #296))[0m
+[92m                                                             #396 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #395 (bvxor ((_ extract 63 0) #394) ((_ extract 63 0) #296))))))[0m
+[92m                                                             #397 = (assert (bvult #395 ((_ extract 63 0) #394)))[0m
+[92m                                                             #398 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #394) (bvnot ((_ extract 63 0) #296))) (bvxor ((_ extract 63 0) #394) #395))) (_ bv1 1)))[0m
+[92m                                                             #399 = (assert (= (parity_flag ((_ extract 7 0) #395)) (_ bv0 1)))[0m
+[92m                                                             #400 = (assert (= ((_ extract 63 63) #395) (_ bv1 1)))[0m
+[92m                                                             #401 = (assert (= #395 (_ bv0 64)))[0m[0m
+[0m[0]  0x40087d         imul rcx, r8                           [0m
+[92m[0]  0x400881         add rcx, rsi                           [92m#402 = (bvadd ((_ extract 63 0) #395) ((_ extract 63 0) #387))[0m
+[92m                                                             #403 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #402 (bvxor ((_ extract 63 0) #395) ((_ extract 63 0) #387))))))[0m
+[92m                                                             #404 = (assert (bvult #402 ((_ extract 63 0) #395)))[0m
+[92m                                                             #405 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #395) (bvnot ((_ extract 63 0) #387))) (bvxor ((_ extract 63 0) #395) #402))) (_ bv1 1)))[0m
+[92m                                                             #406 = (assert (= (parity_flag ((_ extract 7 0) #402)) (_ bv0 1)))[0m
+[92m                                                             #407 = (assert (= ((_ extract 63 63) #402) (_ bv1 1)))[0m
+[92m                                                             #408 = (assert (= #402 (_ bv0 64)))[0m[0m
+[0m[0]  0x400884         cqo                                    [0m
+[0m[0]  0x400886         idiv rcx                               [0m
+[92m[0]  0x400889         mov qword ptr [rbp-0x58], rax          [92m#409 = ((_ extract 63 0) #373)[0m[0m
+[0m[0]  0x40088d         lea rcx, ptr [rax+r12*1]               [0m
+[92m[0]  0x400891         mov rax, qword ptr [rbp-0x50]          [92m#410 = SymVar_1[0m[0m
+[92m[0]  0x400895         sub eax, ecx                           [92m#411 = (bvsub ((_ extract 31 0) #410) ((_ extract 31 0) #402))[0m
+[92m                                                             #412 = (assert (= (_ bv16 32) (bvand (_ bv16 32) (bvxor #411 (bvxor ((_ extract 31 0) #410) ((_ extract 31 0) #402))))))[0m
+[92m                                                             #413 = (assert (bvult #411 ((_ extract 31 0) #410)))[0m
+[92m                                                             #414 = (assert (= ((_ extract 31 31) (bvand (bvxor ((_ extract 31 0) #410) (bvnot ((_ extract 31 0) #402))) (bvxor ((_ extract 31 0) #410) #411))) (_ bv1 1)))[0m
+[92m                                                             #415 = (assert (= (parity_flag ((_ extract 7 0) #411)) (_ bv0 1)))[0m
+[92m                                                             #416 = (assert (= ((_ extract 31 31) #411) (_ bv1 1)))[0m
+[92m                                                             #417 = (assert (= #411 (_ bv0 32)))[0m[0m
+[92m[0]  0x400897         mov qword ptr [rbp-0x50], rax          [92m#418 = ((_ extract 63 0) #411)[0m[0m
+[92m[0]  0x40089b         movzx r14d, cx                         [92m#419 = ((_ zero_extend 16) ((_ extract 15 0) #402))[0m[0m
+[0m[0]  0x40089f         lea r9, ptr [r14+0x1]                  [0m
+[0m[0]  0x4008a3         lea r8, ptr [r14+0x2]                  [0m
+[0m[0]  0x4008a7         lea r11, ptr [r14+0x3]                 [0m
+[0m[0]  0x4008ab         mov r12, r9                            [0m#420 = (_ bv2 64)[0m[0m
+[0m[0]  0x4008ae         imul r12, r12                          [0m
+[0m[0]  0x4008b2         or rcx, 0xffffffffffff0000             [0m
+[92m[0]  0x4008b9         xor rcx, 0xffff                        [92m#421 = (bvxor ((_ extract 63 0) #402) (_ bv65535 64))[0m
+[92m                                                             #422 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #421 (bvxor ((_ extract 63 0) #402) (_ bv65535 64))))))[0m
+[92m                                                             #423 = (assert (bvult #421 ((_ extract 63 0) #402)))[0m
+[92m                                                             #424 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #402) (bvnot (_ bv65535 64))) (bvxor ((_ extract 63 0) #402) #421))) (_ bv1 1)))[0m
+[92m                                                             #425 = (assert (= (parity_flag ((_ extract 7 0) #421)) (_ bv0 1)))[0m
+[92m                                                             #426 = (assert (= ((_ extract 63 63) #421) (_ bv1 1)))[0m
+[92m                                                             #427 = (assert (= #421 (_ bv0 64)))[0m[0m
+[0m[0]  0x4008c0         lea rbx, ptr [rcx+r14*1+0x2]           [0m
+[0m[0]  0x4008c5         lea rax, ptr [rbx+rbx*1-0x2]           [0m
+[0m[0]  0x4008ca         imul rax, r9                           [0m
+[0m[0]  0x4008ce         mov r10, r8                            [0m#428 = (_ bv3 64)[0m[0m
+[0m[0]  0x4008d1         imul r10, r10                          [0m
+[0m[0]  0x4008d5         mov r15, r11                           [0m#429 = ((_ extract 63 0) #308)[0m[0m
+[0m[0]  0x4008d8         imul r15, r15                          [0m
+[0m[0]  0x4008dc         mov rdi, r12                           [0m#430 = ((_ extract 63 0) #420)[0m[0m
+[0m[0]  0x4008df         sub rdi, r10                           [0m#431 = (bvsub ((_ extract 63 0) #430) ((_ extract 63 0) #428))[0m
+[0m                                                             #432 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #431 (bvxor ((_ extract 63 0) #430) ((_ extract 63 0) #428))))))[0m
+[0m                                                             #433 = (assert (bvult #431 ((_ extract 63 0) #430)))[0m
+[0m                                                             #434 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #430) (bvnot ((_ extract 63 0) #428))) (bvxor ((_ extract 63 0) #430) #431))) (_ bv1 1)))[0m
+[0m                                                             #435 = (assert (= (parity_flag ((_ extract 7 0) #431)) (_ bv0 1)))[0m
+[0m                                                             #436 = (assert (= ((_ extract 63 63) #431) (_ bv1 1)))[0m
+[0m                                                             #437 = (assert (= #431 (_ bv0 64)))[0m[0m
+[0m[0]  0x4008e2         mov rbx, r15                           [0m#438 = ((_ extract 63 0) #429)[0m[0m
+[0m[0]  0x4008e5         sub rbx, r12                           [0m#439 = (bvsub ((_ extract 63 0) #438) ((_ extract 63 0) #420))[0m
+[0m                                                             #440 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #439 (bvxor ((_ extract 63 0) #438) ((_ extract 63 0) #420))))))[0m
+[0m                                                             #441 = (assert (bvult #439 ((_ extract 63 0) #438)))[0m
+[0m                                                             #442 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #438) (bvnot ((_ extract 63 0) #420))) (bvxor ((_ extract 63 0) #438) #439))) (_ bv1 1)))[0m
+[0m                                                             #443 = (assert (= (parity_flag ((_ extract 7 0) #439)) (_ bv0 1)))[0m
+[0m                                                             #444 = (assert (= ((_ extract 63 63) #439) (_ bv1 1)))[0m
+[0m                                                             #445 = (assert (= #439 (_ bv0 64)))[0m[0m
+[92m[0]  0x4008e8         add rbx, rax                           [92m#446 = (bvadd ((_ extract 63 0) #439) ((_ extract 63 0) #411))[0m
+[92m                                                             #447 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #446 (bvxor ((_ extract 63 0) #439) ((_ extract 63 0) #411))))))[0m
+[92m                                                             #448 = (assert (bvult #446 ((_ extract 63 0) #439)))[0m
+[92m                                                             #449 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #439) (bvnot ((_ extract 63 0) #411))) (bvxor ((_ extract 63 0) #439) #446))) (_ bv1 1)))[0m
+[92m                                                             #450 = (assert (= (parity_flag ((_ extract 7 0) #446)) (_ bv0 1)))[0m
+[92m                                                             #451 = (assert (= ((_ extract 63 63) #446) (_ bv1 1)))[0m
+[92m                                                             #452 = (assert (= #446 (_ bv0 64)))[0m[0m
+[0m[0]  0x4008eb         lea rax, ptr [rbx+rdi*2]               [0m
+[0m[0]  0x4008ef         imul rax, r9                           [0m
+[0m[0]  0x4008f3         mov rdi, r9                            [0m#453 = (_ bv2 64)[0m[0m
+[0m[0]  0x4008f6         mov rdx, 0x760d7dea87530c94            [0m#454 = (_ bv8506593717418921108 64)[0m[0m
+[0m[0]  0x400900         imul rdi, rdx                          [0m
+[92m[0]  0x400904         add rdi, rcx                           [92m#455 = (bvadd ((_ extract 63 0) #453) ((_ extract 63 0) #421))[0m
+[92m                                                             #456 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #455 (bvxor ((_ extract 63 0) #453) ((_ extract 63 0) #421))))))[0m
+[92m                                                             #457 = (assert (bvult #455 ((_ extract 63 0) #453)))[0m
+[92m                                                             #458 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #453) (bvnot ((_ extract 63 0) #421))) (bvxor ((_ extract 63 0) #453) #455))) (_ bv1 1)))[0m
+[92m                                                             #459 = (assert (= (parity_flag ((_ extract 7 0) #455)) (_ bv0 1)))[0m
+[92m                                                             #460 = (assert (= ((_ extract 63 63) #455) (_ bv1 1)))[0m
+[92m                                                             #461 = (assert (= #455 (_ bv0 64)))[0m[0m
+[0m[0]  0x400907         imul rdi, r11                          [0m
+[0m[0]  0x40090b         mov rbx, 0x89f2821578acf36c            [0m#462 = (_ bv9940150356290630508 64)[0m[0m
+[0m[0]  0x400915         mov rsi, rbx                           [0m#463 = ((_ extract 63 0) #462)[0m[0m
+[0m[0]  0x400918         lea rbx, ptr [rsi+0x1]                 [0m
+[0m[0]  0x40091c         imul rbx, r12                          [0m
+[92m[0]  0x400920         add rbx, rdi                           [92m#464 = (bvadd ((_ extract 63 0) #462) ((_ extract 63 0) #455))[0m
+[92m                                                             #465 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #464 (bvxor ((_ extract 63 0) #462) ((_ extract 63 0) #455))))))[0m
+[92m                                                             #466 = (assert (bvult #464 ((_ extract 63 0) #462)))[0m
+[92m                                                             #467 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #462) (bvnot ((_ extract 63 0) #455))) (bvxor ((_ extract 63 0) #462) #464))) (_ bv1 1)))[0m
+[92m                                                             #468 = (assert (= (parity_flag ((_ extract 7 0) #464)) (_ bv0 1)))[0m
+[92m                                                             #469 = (assert (= ((_ extract 63 63) #464) (_ bv1 1)))[0m
+[92m                                                             #470 = (assert (= #464 (_ bv0 64)))[0m[0m
+[0m[0]  0x400923         imul rbx, r11                          [0m
+[92m[0]  0x400927         add rbx, rax                           [92m#471 = (bvadd ((_ extract 63 0) #464) ((_ extract 63 0) #411))[0m
+[92m                                                             #472 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #471 (bvxor ((_ extract 63 0) #464) ((_ extract 63 0) #411))))))[0m
+[92m                                                             #473 = (assert (bvult #471 ((_ extract 63 0) #464)))[0m
+[92m                                                             #474 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #464) (bvnot ((_ extract 63 0) #411))) (bvxor ((_ extract 63 0) #464) #471))) (_ bv1 1)))[0m
+[92m                                                             #475 = (assert (= (parity_flag ((_ extract 7 0) #471)) (_ bv0 1)))[0m
+[92m                                                             #476 = (assert (= ((_ extract 63 63) #471) (_ bv1 1)))[0m
+[92m                                                             #477 = (assert (= #471 (_ bv0 64)))[0m[0m
+[0m[0]  0x40092a         mov rdi, r15                           [0m#478 = ((_ extract 63 0) #429)[0m[0m
+[0m[0]  0x40092d         imul rdi, rsi                          [0m
+[0m[0]  0x400931         lea rax, ptr [rcx+r14*1+0x3]           [0m
+[0m[0]  0x400936         imul rax, rdx                          [0m
+[0m[0]  0x40093a         lea rax, ptr [rax+r14*2+0x2]           [0m
+[0m[0]  0x40093f         imul rax, r8                           [0m
+[0m[0]  0x400943         lea rdx, ptr [rdx-0x2]                 [0m
+[0m[0]  0x400947         imul rdx, r12                          [0m
+[92m[0]  0x40094b         add rax, rdi                           [92m#479 = (bvadd ((_ extract 63 0) #411) ((_ extract 63 0) #478))[0m
+[92m                                                             #480 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #479 (bvxor ((_ extract 63 0) #411) ((_ extract 63 0) #478))))))[0m
+[92m                                                             #481 = (assert (bvult #479 ((_ extract 63 0) #411)))[0m
+[92m                                                             #482 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #411) (bvnot ((_ extract 63 0) #478))) (bvxor ((_ extract 63 0) #411) #479))) (_ bv1 1)))[0m
+[92m                                                             #483 = (assert (= (parity_flag ((_ extract 7 0) #479)) (_ bv0 1)))[0m
+[92m                                                             #484 = (assert (= ((_ extract 63 63) #479) (_ bv1 1)))[0m
+[92m                                                             #485 = (assert (= #479 (_ bv0 64)))[0m[0m
+[92m[0]  0x40094e         add rax, rdx                           [92m#486 = (bvadd ((_ extract 63 0) #479) ((_ extract 63 0) #454))[0m
+[92m                                                             #487 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #486 (bvxor ((_ extract 63 0) #479) ((_ extract 63 0) #454))))))[0m
+[92m                                                             #488 = (assert (bvult #486 ((_ extract 63 0) #479)))[0m
+[92m                                                             #489 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #479) (bvnot ((_ extract 63 0) #454))) (bvxor ((_ extract 63 0) #479) #486))) (_ bv1 1)))[0m
+[92m                                                             #490 = (assert (= (parity_flag ((_ extract 7 0) #486)) (_ bv0 1)))[0m
+[92m                                                             #491 = (assert (= ((_ extract 63 63) #486) (_ bv1 1)))[0m
+[92m                                                             #492 = (assert (= #486 (_ bv0 64)))[0m[0m
+[0m[0]  0x400951         imul rax, r8                           [0m
+[92m[0]  0x400955         add rax, rbx                           [92m#493 = (bvadd ((_ extract 63 0) #486) ((_ extract 63 0) #471))[0m
+[92m                                                             #494 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #493 (bvxor ((_ extract 63 0) #486) ((_ extract 63 0) #471))))))[0m
+[92m                                                             #495 = (assert (bvult #493 ((_ extract 63 0) #486)))[0m
+[92m                                                             #496 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #486) (bvnot ((_ extract 63 0) #471))) (bvxor ((_ extract 63 0) #486) #493))) (_ bv1 1)))[0m
+[92m                                                             #497 = (assert (= (parity_flag ((_ extract 7 0) #493)) (_ bv0 1)))[0m
+[92m                                                             #498 = (assert (= ((_ extract 63 63) #493) (_ bv1 1)))[0m
+[92m                                                             #499 = (assert (= #493 (_ bv0 64)))[0m[0m
+[92m[0]  0x400958         sub rcx, r10                           [92m#500 = (bvsub ((_ extract 63 0) #421) ((_ extract 63 0) #428))[0m
+[92m                                                             #501 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #500 (bvxor ((_ extract 63 0) #421) ((_ extract 63 0) #428))))))[0m
+[92m                                                             #502 = (assert (bvult #500 ((_ extract 63 0) #421)))[0m
+[92m                                                             #503 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #421) (bvnot ((_ extract 63 0) #428))) (bvxor ((_ extract 63 0) #421) #500))) (_ bv1 1)))[0m
+[92m                                                             #504 = (assert (= (parity_flag ((_ extract 7 0) #500)) (_ bv0 1)))[0m
+[92m                                                             #505 = (assert (= ((_ extract 63 63) #500) (_ bv1 1)))[0m
+[92m                                                             #506 = (assert (= #500 (_ bv0 64)))[0m[0m
+[92m[0]  0x40095b         add rcx, r15                           [92m#507 = (bvadd ((_ extract 63 0) #500) ((_ extract 63 0) #429))[0m
+[92m                                                             #508 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #507 (bvxor ((_ extract 63 0) #500) ((_ extract 63 0) #429))))))[0m
+[92m                                                             #509 = (assert (bvult #507 ((_ extract 63 0) #500)))[0m
+[92m                                                             #510 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #500) (bvnot ((_ extract 63 0) #429))) (bvxor ((_ extract 63 0) #500) #507))) (_ bv1 1)))[0m
+[92m                                                             #511 = (assert (= (parity_flag ((_ extract 7 0) #507)) (_ bv0 1)))[0m
+[92m                                                             #512 = (assert (= ((_ extract 63 63) #507) (_ bv1 1)))[0m
+[92m                                                             #513 = (assert (= #507 (_ bv0 64)))[0m[0m
+[0m[0]  0x40095e         imul rcx, r9                           [0m
+[0m[0]  0x400962         mov rdi, 0xfffffffffffffffd            [0m#514 = (_ bv18446744073709551613 64)[0m[0m
+[92m[0]  0x400969         sub rdi, r14                           [92m#515 = (bvsub ((_ extract 63 0) #514) ((_ extract 63 0) #419))[0m
+[92m                                                             #516 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #515 (bvxor ((_ extract 63 0) #514) ((_ extract 63 0) #419))))))[0m
+[92m                                                             #517 = (assert (bvult #515 ((_ extract 63 0) #514)))[0m
+[92m                                                             #518 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #514) (bvnot ((_ extract 63 0) #419))) (bvxor ((_ extract 63 0) #514) #515))) (_ bv1 1)))[0m
+[92m                                                             #519 = (assert (= (parity_flag ((_ extract 7 0) #515)) (_ bv0 1)))[0m
+[92m                                                             #520 = (assert (= ((_ extract 63 63) #515) (_ bv1 1)))[0m
+[92m                                                             #521 = (assert (= #515 (_ bv0 64)))[0m[0m
+[0m[0]  0x40096c         imul rdi, r8                           [0m
+[92m[0]  0x400970         add rdi, rcx                           [92m#522 = (bvadd ((_ extract 63 0) #515) ((_ extract 63 0) #507))[0m
+[92m                                                             #523 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #522 (bvxor ((_ extract 63 0) #515) ((_ extract 63 0) #507))))))[0m
+[92m                                                             #524 = (assert (bvult #522 ((_ extract 63 0) #515)))[0m
+[92m                                                             #525 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #515) (bvnot ((_ extract 63 0) #507))) (bvxor ((_ extract 63 0) #515) #522))) (_ bv1 1)))[0m
+[92m                                                             #526 = (assert (= (parity_flag ((_ extract 7 0) #522)) (_ bv0 1)))[0m
+[92m                                                             #527 = (assert (= ((_ extract 63 63) #522) (_ bv1 1)))[0m
+[92m                                                             #528 = (assert (= #522 (_ bv0 64)))[0m[0m
+[0m[0]  0x400973         cqo                                    [0m
+[0m[0]  0x400975         idiv rdi                               [0m
+[92m[0]  0x400978         mov qword ptr [rbp-0x70], rax          [92m#529 = ((_ extract 63 0) #493)[0m[0m
+[92m[0]  0x40097c         mov rcx, qword ptr [rbp-0x58]          [92m#530 = SymVar_2[0m[0m
+[92m[0]  0x400980         add rcx, 0x47e7                        [92m#531 = (bvadd ((_ extract 63 0) #530) (_ bv18407 64))[0m
+[92m                                                             #532 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #531 (bvxor ((_ extract 63 0) #530) (_ bv18407 64))))))[0m
+[92m                                                             #533 = (assert (bvult #531 ((_ extract 63 0) #530)))[0m
+[92m                                                             #534 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #530) (bvnot (_ bv18407 64))) (bvxor ((_ extract 63 0) #530) #531))) (_ bv1 1)))[0m
+[92m                                                             #535 = (assert (= (parity_flag ((_ extract 7 0) #531)) (_ bv0 1)))[0m
+[92m                                                             #536 = (assert (= ((_ extract 63 63) #531) (_ bv1 1)))[0m
+[92m                                                             #537 = (assert (= #531 (_ bv0 64)))[0m[0m
+[92m[0]  0x400987         movzx ebx, cx                          [92m#538 = ((_ zero_extend 16) ((_ extract 15 0) #531))[0m[0m
+[0m[0]  0x40098a         lea r11, ptr [rbx+0x1]                 [0m
+[0m[0]  0x40098e         lea r15, ptr [rbx+0x2]                 [0m
+[0m[0]  0x400992         mov qword ptr [rbp-0x90], r15          [0m#539 = ((_ extract 63 0) #429)[0m[0m
+[0m[0]  0x400999         lea rdx, ptr [rbx+0x3]                 [0m
+[0m[0]  0x40099d         mov qword ptr [rbp-0x88], rdx          [0m#540 = ((_ extract 63 0) #454)[0m[0m
+[0m[0]  0x4009a4         mov r10, r11                           [0m#541 = ((_ extract 63 0) #308)[0m[0m
+[0m[0]  0x4009a7         imul r10, r10                          [0m
+[0m[0]  0x4009ab         or rcx, 0xffffffffffff0000             [0m
+[92m[0]  0x4009b2         xor rcx, 0xffff                        [92m#542 = (bvxor ((_ extract 63 0) #531) (_ bv65535 64))[0m
+[92m                                                             #543 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #542 (bvxor ((_ extract 63 0) #531) (_ bv65535 64))))))[0m
+[92m                                                             #544 = (assert (bvult #542 ((_ extract 63 0) #531)))[0m
+[92m                                                             #545 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #531) (bvnot (_ bv65535 64))) (bvxor ((_ extract 63 0) #531) #542))) (_ bv1 1)))[0m
+[92m                                                             #546 = (assert (= (parity_flag ((_ extract 7 0) #542)) (_ bv0 1)))[0m
+[92m                                                             #547 = (assert (= ((_ extract 63 63) #542) (_ bv1 1)))[0m
+[92m                                                             #548 = (assert (= #542 (_ bv0 64)))[0m[0m
+[92m[0]  0x4009b9         mov qword ptr [rbp-0x58], rcx          [92m#549 = ((_ extract 63 0) #542)[0m[0m
+[0m[0]  0x4009bd         lea rax, ptr [rcx+rbx*1+0x2]           [0m
+[92m[0]  0x4009c2         mov rsi, rcx                           [92m#550 = ((_ extract 63 0) #542)[0m[0m
+[0m[0]  0x4009c5         lea rax, ptr [rax+rax*1-0x2]           [0m
+[0m[0]  0x4009ca         imul rax, r11                          [0m
+[0m[0]  0x4009ce         imul r15, r15                          [0m
+[0m[0]  0x4009d2         mov r9, rdx                            [0m#551 = ((_ extract 63 0) #454)[0m[0m
+[0m[0]  0x4009d5         mov rdi, rdx                           [0m#552 = ((_ extract 63 0) #454)[0m[0m
+[0m[0]  0x4009d8         imul r9, r9                            [0m
+[0m[0]  0x4009dc         mov rcx, r10                           [0m#553 = ((_ extract 63 0) #541)[0m[0m
+[0m[0]  0x4009df         sub rcx, r15                           [0m#554 = (bvsub ((_ extract 63 0) #553) ((_ extract 63 0) #429))[0m
+[0m                                                             #555 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #554 (bvxor ((_ extract 63 0) #553) ((_ extract 63 0) #429))))))[0m
+[0m                                                             #556 = (assert (bvult #554 ((_ extract 63 0) #553)))[0m
+[0m                                                             #557 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #553) (bvnot ((_ extract 63 0) #429))) (bvxor ((_ extract 63 0) #553) #554))) (_ bv1 1)))[0m
+[0m                                                             #558 = (assert (= (parity_flag ((_ extract 7 0) #554)) (_ bv0 1)))[0m
+[0m                                                             #559 = (assert (= ((_ extract 63 63) #554) (_ bv1 1)))[0m
+[0m                                                             #560 = (assert (= #554 (_ bv0 64)))[0m[0m
+[0m[0]  0x4009e2         mov r12, r9                            [0m#561 = ((_ extract 63 0) #551)[0m[0m
+[0m[0]  0x4009e5         sub r12, r10                           [0m#562 = (bvsub ((_ extract 63 0) #561) ((_ extract 63 0) #541))[0m
+[0m                                                             #563 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #562 (bvxor ((_ extract 63 0) #561) ((_ extract 63 0) #541))))))[0m
+[0m                                                             #564 = (assert (bvult #562 ((_ extract 63 0) #561)))[0m
+[0m                                                             #565 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #561) (bvnot ((_ extract 63 0) #541))) (bvxor ((_ extract 63 0) #561) #562))) (_ bv1 1)))[0m
+[0m                                                             #566 = (assert (= (parity_flag ((_ extract 7 0) #562)) (_ bv0 1)))[0m
+[0m                                                             #567 = (assert (= ((_ extract 63 63) #562) (_ bv1 1)))[0m
+[0m                                                             #568 = (assert (= #562 (_ bv0 64)))[0m[0m
+[92m[0]  0x4009e8         add rax, r12                           [92m#569 = (bvadd ((_ extract 63 0) #493) ((_ extract 63 0) #562))[0m
+[92m                                                             #570 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #569 (bvxor ((_ extract 63 0) #493) ((_ extract 63 0) #562))))))[0m
+[92m                                                             #571 = (assert (bvult #569 ((_ extract 63 0) #493)))[0m
+[92m                                                             #572 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #493) (bvnot ((_ extract 63 0) #562))) (bvxor ((_ extract 63 0) #493) #569))) (_ bv1 1)))[0m
+[92m                                                             #573 = (assert (= (parity_flag ((_ extract 7 0) #569)) (_ bv0 1)))[0m
+[92m                                                             #574 = (assert (= ((_ extract 63 63) #569) (_ bv1 1)))[0m
+[92m                                                             #575 = (assert (= #569 (_ bv0 64)))[0m[0m
+[0m[0]  0x4009eb         lea rax, ptr [rax+rcx*2]               [0m
+[92m[0]  0x4009ef         mov qword ptr [rbp-0x98], rax          [92m#576 = ((_ extract 63 0) #569)[0m[0m
+[0m[0]  0x4009f6         mov rax, r11                           [0m#577 = ((_ extract 63 0) #308)[0m[0m
+[0m[0]  0x4009f9         mov r8, r10                            [0m#578 = ((_ extract 63 0) #541)[0m[0m
+[0m[0]  0x4009fc         mov rcx, 0x5b2b7aef1a7761ce            [0m#579 = (_ bv6569479648809804238 64)[0m[0m
+[0m[0]  0x400a06         mov rdx, rcx                           [0m#580 = ((_ extract 63 0) #579)[0m[0m
+[0m[0]  0x400a09         imul rax, rdx                          [0m
+[92m[0]  0x400a0d         mov rcx, rsi                           [92m#581 = ((_ extract 63 0) #550)[0m[0m
+[92m[0]  0x400a10         add rax, rcx                           [92m#582 = (bvadd ((_ extract 63 0) #577) ((_ extract 63 0) #581))[0m
+[92m                                                             #583 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #582 (bvxor ((_ extract 63 0) #577) ((_ extract 63 0) #581))))))[0m
+[92m                                                             #584 = (assert (bvult #582 ((_ extract 63 0) #577)))[0m
+[92m                                                             #585 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #577) (bvnot ((_ extract 63 0) #581))) (bvxor ((_ extract 63 0) #577) #582))) (_ bv1 1)))[0m
+[92m                                                             #586 = (assert (= (parity_flag ((_ extract 7 0) #582)) (_ bv0 1)))[0m
+[92m                                                             #587 = (assert (= ((_ extract 63 63) #582) (_ bv1 1)))[0m
+[92m                                                             #588 = (assert (= #582 (_ bv0 64)))[0m[0m
+[0m[0]  0x400a13         imul rax, rdi                          [0m
+[0m[0]  0x400a17         mov r14, rdi                           [0m#589 = ((_ extract 63 0) #552)[0m[0m
+[0m[0]  0x400a1a         mov rsi, 0xa4d48510e5889e33            [0m#590 = (_ bv11877264424899747379 64)[0m[0m
+[0m[0]  0x400a24         imul r8, rsi                           [0m
+[92m[0]  0x400a28         add r8, rax                            [92m#591 = (bvadd ((_ extract 63 0) #578) ((_ extract 63 0) #582))[0m
+[92m                                                             #592 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #591 (bvxor ((_ extract 63 0) #578) ((_ extract 63 0) #582))))))[0m
+[92m                                                             #593 = (assert (bvult #591 ((_ extract 63 0) #578)))[0m
+[92m                                                             #594 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #578) (bvnot ((_ extract 63 0) #582))) (bvxor ((_ extract 63 0) #578) #591))) (_ bv1 1)))[0m
+[92m                                                             #595 = (assert (= (parity_flag ((_ extract 7 0) #591)) (_ bv0 1)))[0m
+[92m                                                             #596 = (assert (= ((_ extract 63 63) #591) (_ bv1 1)))[0m
+[92m                                                             #597 = (assert (= #591 (_ bv0 64)))[0m[0m
+[0m[0]  0x400a2b         lea rax, ptr [rcx+rbx*1+0x3]           [0m
+[92m[0]  0x400a30         mov qword ptr [rbp-0x80], rax          [92m#598 = ((_ extract 63 0) #582)[0m[0m
+[0m[0]  0x400a34         lea rcx, ptr [r10+r10*1]               [0m
+[92m[0]  0x400a38         mov qword ptr [rbp-0x78], rcx          [92m#599 = ((_ extract 63 0) #581)[0m[0m
+[0m[0]  0x400a3c         mov rsi, r10                           [0m#600 = ((_ extract 63 0) #541)[0m[0m
+[0m[0]  0x400a3f         imul rax, rdx                          [0m
+[0m[0]  0x400a43         lea rax, ptr [rax+rbx*2+0x2]           [0m
+[0m[0]  0x400a48         mov rdi, qword ptr [rbp-0x90]          [0m#601 = ((_ extract 63 0) #539)[0m[0m
+[0m[0]  0x400a4f         imul rax, rdi                          [0m
+[0m[0]  0x400a53         sub rsi, r9                            [0m#602 = (bvsub ((_ extract 63 0) #600) ((_ extract 63 0) #551))[0m
+[0m                                                             #603 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #602 (bvxor ((_ extract 63 0) #600) ((_ extract 63 0) #551))))))[0m
+[0m                                                             #604 = (assert (bvult #602 ((_ extract 63 0) #600)))[0m
+[0m                                                             #605 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #600) (bvnot ((_ extract 63 0) #551))) (bvxor ((_ extract 63 0) #600) #602))) (_ bv1 1)))[0m
+[0m                                                             #606 = (assert (= (parity_flag ((_ extract 7 0) #602)) (_ bv0 1)))[0m
+[0m                                                             #607 = (assert (= ((_ extract 63 63) #602) (_ bv1 1)))[0m
+[0m                                                             #608 = (assert (= #602 (_ bv0 64)))[0m[0m
+[0m[0]  0x400a56         imul rsi, rdx                          [0m
+[92m[0]  0x400a5a         sub rax, rcx                           [92m#609 = (bvsub ((_ extract 63 0) #582) ((_ extract 63 0) #581))[0m
+[92m                                                             #610 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #609 (bvxor ((_ extract 63 0) #582) ((_ extract 63 0) #581))))))[0m
+[92m                                                             #611 = (assert (bvult #609 ((_ extract 63 0) #582)))[0m
+[92m                                                             #612 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #582) (bvnot ((_ extract 63 0) #581))) (bvxor ((_ extract 63 0) #582) #609))) (_ bv1 1)))[0m
+[92m                                                             #613 = (assert (= (parity_flag ((_ extract 7 0) #609)) (_ bv0 1)))[0m
+[92m                                                             #614 = (assert (= ((_ extract 63 63) #609) (_ bv1 1)))[0m
+[92m                                                             #615 = (assert (= #609 (_ bv0 64)))[0m[0m
+[92m[0]  0x400a5d         add rax, rsi                           [92m#616 = (bvadd ((_ extract 63 0) #609) ((_ extract 63 0) #602))[0m
+[92m                                                             #617 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #616 (bvxor ((_ extract 63 0) #609) ((_ extract 63 0) #602))))))[0m
+[92m                                                             #618 = (assert (bvult #616 ((_ extract 63 0) #609)))[0m
+[92m                                                             #619 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #609) (bvnot ((_ extract 63 0) #602))) (bvxor ((_ extract 63 0) #609) #616))) (_ bv1 1)))[0m
+[92m                                                             #620 = (assert (= (parity_flag ((_ extract 7 0) #616)) (_ bv0 1)))[0m
+[92m                                                             #621 = (assert (= ((_ extract 63 63) #616) (_ bv1 1)))[0m
+[92m                                                             #622 = (assert (= #616 (_ bv0 64)))[0m[0m
+[92m[0]  0x400a60         mov rcx, qword ptr [rbp-0x98]          [92m#623 = SymVar_3[0m[0m
+[0m[0]  0x400a67         imul rcx, r11                          [0m
+[0m[0]  0x400a6b         imul r8, r14                           [0m
+[92m[0]  0x400a6f         add r8, rcx                            [92m#624 = (bvadd ((_ extract 63 0) #591) ((_ extract 63 0) #623))[0m
+[92m                                                             #625 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #624 (bvxor ((_ extract 63 0) #591) ((_ extract 63 0) #623))))))[0m
+[92m                                                             #626 = (assert (bvult #624 ((_ extract 63 0) #591)))[0m
+[92m                                                             #627 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #591) (bvnot ((_ extract 63 0) #623))) (bvxor ((_ extract 63 0) #591) #624))) (_ bv1 1)))[0m
+[92m                                                             #628 = (assert (= (parity_flag ((_ extract 7 0) #624)) (_ bv0 1)))[0m
+[92m                                                             #629 = (assert (= ((_ extract 63 63) #624) (_ bv1 1)))[0m
+[92m                                                             #630 = (assert (= #624 (_ bv0 64)))[0m[0m
+[92m[0]  0x400a72         mov r14, rcx                           [92m#631 = ((_ extract 63 0) #623)[0m[0m
+[0m[0]  0x400a75         mov rcx, rdi                           [0m#632 = ((_ extract 63 0) #601)[0m[0m
+[0m[0]  0x400a78         imul rax, rcx                          [0m
+[92m[0]  0x400a7c         add rax, r8                            [92m#633 = (bvadd ((_ extract 63 0) #616) ((_ extract 63 0) #624))[0m
+[92m                                                             #634 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #633 (bvxor ((_ extract 63 0) #616) ((_ extract 63 0) #624))))))[0m
+[92m                                                             #635 = (assert (bvult #633 ((_ extract 63 0) #616)))[0m
+[92m                                                             #636 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #616) (bvnot ((_ extract 63 0) #624))) (bvxor ((_ extract 63 0) #616) #633))) (_ bv1 1)))[0m
+[92m                                                             #637 = (assert (= (parity_flag ((_ extract 7 0) #633)) (_ bv0 1)))[0m
+[92m                                                             #638 = (assert (= ((_ extract 63 63) #633) (_ bv1 1)))[0m
+[92m                                                             #639 = (assert (= #633 (_ bv0 64)))[0m[0m
+[92m[0]  0x400a7f         mov r8, qword ptr [rbp-0x58]           [92m#640 = SymVar_2[0m[0m
+[92m[0]  0x400a83         mov rsi, r8                            [92m#641 = ((_ extract 63 0) #640)[0m[0m
+[92m[0]  0x400a86         sub rsi, r15                           [92m#642 = (bvsub ((_ extract 63 0) #641) ((_ extract 63 0) #429))[0m
+[92m                                                             #643 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #642 (bvxor ((_ extract 63 0) #641) ((_ extract 63 0) #429))))))[0m
+[92m                                                             #644 = (assert (bvult #642 ((_ extract 63 0) #641)))[0m
+[92m                                                             #645 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #641) (bvnot ((_ extract 63 0) #429))) (bvxor ((_ extract 63 0) #641) #642))) (_ bv1 1)))[0m
+[92m                                                             #646 = (assert (= (parity_flag ((_ extract 7 0) #642)) (_ bv0 1)))[0m
+[92m                                                             #647 = (assert (= ((_ extract 63 63) #642) (_ bv1 1)))[0m
+[92m                                                             #648 = (assert (= #642 (_ bv0 64)))[0m[0m
+[92m[0]  0x400a89         add rsi, r9                            [92m#649 = (bvadd ((_ extract 63 0) #642) ((_ extract 63 0) #551))[0m
+[92m                                                             #650 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #649 (bvxor ((_ extract 63 0) #642) ((_ extract 63 0) #551))))))[0m
+[92m                                                             #651 = (assert (bvult #649 ((_ extract 63 0) #642)))[0m
+[92m                                                             #652 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #642) (bvnot ((_ extract 63 0) #551))) (bvxor ((_ extract 63 0) #642) #649))) (_ bv1 1)))[0m
+[92m                                                             #653 = (assert (= (parity_flag ((_ extract 7 0) #649)) (_ bv0 1)))[0m
+[92m                                                             #654 = (assert (= ((_ extract 63 63) #649) (_ bv1 1)))[0m
+[92m                                                             #655 = (assert (= #649 (_ bv0 64)))[0m[0m
+[0m[0]  0x400a8c         mov rdi, 0xfffffffffffffffd            [0m#656 = (_ bv18446744073709551613 64)[0m[0m
+[0m[0]  0x400a93         imul rsi, r11                          [0m
+[92m[0]  0x400a97         sub rdi, rbx                           [92m#657 = (bvsub ((_ extract 63 0) #656) ((_ extract 63 0) #538))[0m
+[92m                                                             #658 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #657 (bvxor ((_ extract 63 0) #656) ((_ extract 63 0) #538))))))[0m
+[92m                                                             #659 = (assert (bvult #657 ((_ extract 63 0) #656)))[0m
+[92m                                                             #660 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #656) (bvnot ((_ extract 63 0) #538))) (bvxor ((_ extract 63 0) #656) #657))) (_ bv1 1)))[0m
+[92m                                                             #661 = (assert (= (parity_flag ((_ extract 7 0) #657)) (_ bv0 1)))[0m
+[92m                                                             #662 = (assert (= ((_ extract 63 63) #657) (_ bv1 1)))[0m
+[92m                                                             #663 = (assert (= #657 (_ bv0 64)))[0m[0m
+[0m[0]  0x400a9a         imul rdi, rcx                          [0m
+[0m[0]  0x400a9e         mov r15, rcx                           [0m#664 = ((_ extract 63 0) #632)[0m[0m
+[92m[0]  0x400aa1         add rdi, rsi                           [92m#665 = (bvadd ((_ extract 63 0) #657) ((_ extract 63 0) #649))[0m
+[92m                                                             #666 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #665 (bvxor ((_ extract 63 0) #657) ((_ extract 63 0) #649))))))[0m
+[92m                                                             #667 = (assert (bvult #665 ((_ extract 63 0) #657)))[0m
+[92m                                                             #668 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #657) (bvnot ((_ extract 63 0) #649))) (bvxor ((_ extract 63 0) #657) #665))) (_ bv1 1)))[0m
+[92m                                                             #669 = (assert (= (parity_flag ((_ extract 7 0) #665)) (_ bv0 1)))[0m
+[92m                                                             #670 = (assert (= ((_ extract 63 63) #665) (_ bv1 1)))[0m
+[92m                                                             #671 = (assert (= #665 (_ bv0 64)))[0m[0m
+[0m[0]  0x400aa4         cqo                                    [0m
+[0m[0]  0x400aa6         idiv rdi                               [0m
+[92m[0]  0x400aa9         mov r9, rax                            [92m#672 = ((_ extract 63 0) #633)[0m[0m
+[0m[0]  0x400aac         mov rax, 0xb6cd442961359ed4            [0m#673 = (_ bv13172259429643820756 64)[0m[0m
+[0m[0]  0x400ab6         imul r11, rax                          [0m
+[92m[0]  0x400aba         add r11, r8                            [92m#674 = (bvadd ((_ extract 63 0) #308) ((_ extract 63 0) #640))[0m
+[92m                                                             #675 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #674 (bvxor ((_ extract 63 0) #308) ((_ extract 63 0) #640))))))[0m
+[92m                                                             #676 = (assert (bvult #674 ((_ extract 63 0) #308)))[0m
+[92m                                                             #677 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #308) (bvnot ((_ extract 63 0) #640))) (bvxor ((_ extract 63 0) #308) #674))) (_ bv1 1)))[0m
+[92m                                                             #678 = (assert (= (parity_flag ((_ extract 7 0) #674)) (_ bv0 1)))[0m
+[92m                                                             #679 = (assert (= ((_ extract 63 63) #674) (_ bv1 1)))[0m
+[92m                                                             #680 = (assert (= #674 (_ bv0 64)))[0m[0m
+[0m[0]  0x400abd         mov rcx, 0x4932bbd69eca612c            [0m#681 = (_ bv5274484644065730860 64)[0m[0m
+[0m[0]  0x400ac7         lea rdx, ptr [rcx+0x1]                 [0m
+[0m[0]  0x400acb         imul rdx, r10                          [0m
+[0m[0]  0x400acf         mov rsi, qword ptr [rbp-0x88]          [0m#682 = ((_ extract 63 0) #540)[0m[0m
+[0m[0]  0x400ad6         imul r11, rsi                          [0m
+[92m[0]  0x400ada         add rdx, r11                           [92m#683 = (bvadd ((_ extract 63 0) #580) ((_ extract 63 0) #674))[0m
+[92m                                                             #684 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #683 (bvxor ((_ extract 63 0) #580) ((_ extract 63 0) #674))))))[0m
+[92m                                                             #685 = (assert (bvult #683 ((_ extract 63 0) #580)))[0m
+[92m                                                             #686 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #580) (bvnot ((_ extract 63 0) #674))) (bvxor ((_ extract 63 0) #580) #683))) (_ bv1 1)))[0m
+[92m                                                             #687 = (assert (= (parity_flag ((_ extract 7 0) #683)) (_ bv0 1)))[0m
+[92m                                                             #688 = (assert (= ((_ extract 63 63) #683) (_ bv1 1)))[0m
+[92m                                                             #689 = (assert (= #683 (_ bv0 64)))[0m[0m
+[0m[0]  0x400add         imul rdx, rsi                          [0m
+[92m[0]  0x400ae1         add rdx, r14                           [92m#690 = (bvadd ((_ extract 63 0) #683) ((_ extract 63 0) #631))[0m
+[92m                                                             #691 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #690 (bvxor ((_ extract 63 0) #683) ((_ extract 63 0) #631))))))[0m
+[92m                                                             #692 = (assert (bvult #690 ((_ extract 63 0) #683)))[0m
+[92m                                                             #693 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #683) (bvnot ((_ extract 63 0) #631))) (bvxor ((_ extract 63 0) #683) #690))) (_ bv1 1)))[0m
+[92m                                                             #694 = (assert (= (parity_flag ((_ extract 7 0) #690)) (_ bv0 1)))[0m
+[92m                                                             #695 = (assert (= ((_ extract 63 63) #690) (_ bv1 1)))[0m
+[92m                                                             #696 = (assert (= #690 (_ bv0 64)))[0m[0m
+[92m[0]  0x400ae4         mov rsi, qword ptr [rbp-0x80]          [92m#697 = SymVar_4[0m[0m
+[0m[0]  0x400ae8         imul rsi, rax                          [0m
+[0m[0]  0x400aec         lea rax, ptr [rsi+rbx*2+0x2]           [0m
+[0m[0]  0x400af1         imul rax, r15                          [0m
+[92m[0]  0x400af5         sub rax, qword ptr [rbp-0x78]          [92m#698 = (bvsub ((_ extract 63 0) #673) #599)[0m
+[92m                                                             #699 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #698 (bvxor ((_ extract 63 0) #673) #599)))))[0m
+[92m                                                             #700 = (assert (bvult #698 ((_ extract 63 0) #673)))[0m
+[92m                                                             #701 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #673) (bvnot #599)) (bvxor ((_ extract 63 0) #673) #698))) (_ bv1 1)))[0m
+[92m                                                             #702 = (assert (= (parity_flag ((_ extract 7 0) #698)) (_ bv0 1)))[0m
+[92m                                                             #703 = (assert (= ((_ extract 63 63) #698) (_ bv1 1)))[0m
+[92m                                                             #704 = (assert (= #698 (_ bv0 64)))[0m[0m
+[0m[0]  0x400af9         imul r12, rcx                          [0m
+[92m[0]  0x400afd         add rax, r12                           [92m#705 = (bvadd ((_ extract 63 0) #698) ((_ extract 63 0) #562))[0m
+[92m                                                             #706 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #705 (bvxor ((_ extract 63 0) #698) ((_ extract 63 0) #562))))))[0m
+[92m                                                             #707 = (assert (bvult #705 ((_ extract 63 0) #698)))[0m
+[92m                                                             #708 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #698) (bvnot ((_ extract 63 0) #562))) (bvxor ((_ extract 63 0) #698) #705))) (_ bv1 1)))[0m
+[92m                                                             #709 = (assert (= (parity_flag ((_ extract 7 0) #705)) (_ bv0 1)))[0m
+[92m                                                             #710 = (assert (= ((_ extract 63 63) #705) (_ bv1 1)))[0m
+[92m                                                             #711 = (assert (= #705 (_ bv0 64)))[0m[0m
+[0m[0]  0x400b00         imul rax, r15                          [0m
+[92m[0]  0x400b04         add rax, rdx                           [92m#712 = (bvadd ((_ extract 63 0) #705) ((_ extract 63 0) #690))[0m
+[92m                                                             #713 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #712 (bvxor ((_ extract 63 0) #705) ((_ extract 63 0) #690))))))[0m
+[92m                                                             #714 = (assert (bvult #712 ((_ extract 63 0) #705)))[0m
+[92m                                                             #715 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #705) (bvnot ((_ extract 63 0) #690))) (bvxor ((_ extract 63 0) #705) #712))) (_ bv1 1)))[0m
+[92m                                                             #716 = (assert (= (parity_flag ((_ extract 7 0) #712)) (_ bv0 1)))[0m
+[92m                                                             #717 = (assert (= ((_ extract 63 63) #712) (_ bv1 1)))[0m
+[92m                                                             #718 = (assert (= #712 (_ bv0 64)))[0m[0m
+[0m[0]  0x400b07         cqo                                    [0m
+[0m[0]  0x400b09         idiv rdi                               [0m
+[0m[0]  0x400b0c         mov rdi, qword ptr [rbp-0x40]          [0m#719 = ((_ extract 63 0) #310)[0m[0m
+[92m[0]  0x400b10         mov rbx, qword ptr [rbp-0x50]          [92m#720 = SymVar_1[0m[0m
+[92m[0]  0x400b14         mov rcx, qword ptr [rbp-0x70]          [92m#721 = SymVar_5[0m[0m
+[0m[0]  0x400b18         lea ecx, ptr [rcx+rbx*1+0x78acf3c1]    [0m
+[0m[0]  0x400b1f         mov esi, 0x9eca612e                    [0m#722 = (_ bv2664063278 32)[0m[0m
+[0m[0]  0x400b24         lea edx, ptr [rsi+r9*1+0x46be3d59]     [0m
+[0m[0]  0x400b2c         and edx, ebx                           [0m
+[92m[0]  0x400b2e         add eax, esi                           [92m#723 = (bvadd ((_ extract 31 0) #712) ((_ extract 31 0) #722))[0m
+[92m                                                             #724 = (assert (= (_ bv16 32) (bvand (_ bv16 32) (bvxor #723 (bvxor ((_ extract 31 0) #712) ((_ extract 31 0) #722))))))[0m
+[92m                                                             #725 = (assert (bvult #723 ((_ extract 31 0) #712)))[0m
+[92m                                                             #726 = (assert (= ((_ extract 31 31) (bvand (bvxor ((_ extract 31 0) #712) (bvnot ((_ extract 31 0) #722))) (bvxor ((_ extract 31 0) #712) #723))) (_ bv1 1)))[0m
+[92m                                                             #727 = (assert (= (parity_flag ((_ extract 7 0) #723)) (_ bv0 1)))[0m
+[92m                                                             #728 = (assert (= ((_ extract 31 31) #723) (_ bv1 1)))[0m
+[92m                                                             #729 = (assert (= #723 (_ bv0 32)))[0m[0m
+[0m[0]  0x400b30         imul eax, edx                          [0m
+[92m[0]  0x400b33         sub ecx, eax                           [92m#730 = (bvsub ((_ extract 31 0) #721) ((_ extract 31 0) #723))[0m
+[92m                                                             #731 = (assert (= (_ bv16 32) (bvand (_ bv16 32) (bvxor #730 (bvxor ((_ extract 31 0) #721) ((_ extract 31 0) #723))))))[0m
+[92m                                                             #732 = (assert (bvult #730 ((_ extract 31 0) #721)))[0m
+[92m                                                             #733 = (assert (= ((_ extract 31 31) (bvand (bvxor ((_ extract 31 0) #721) (bvnot ((_ extract 31 0) #723))) (bvxor ((_ extract 31 0) #721) #730))) (_ bv1 1)))[0m
+[92m                                                             #734 = (assert (= (parity_flag ((_ extract 7 0) #730)) (_ bv0 1)))[0m
+[92m                                                             #735 = (assert (= ((_ extract 31 31) #730) (_ bv1 1)))[0m
+[92m                                                             #736 = (assert (= #730 (_ bv0 32)))[0m[0m
+[0m[0]  0x400b35         movsxd rax, dword ptr [rdi]            [0m#737 = ((_ sign_extend 0) ((_ extract 31 0) #80))[0m[0m
+[0m[0]  0x400b38         mov rdx, qword ptr [rip+0x200dc1]      [0m#738 = (_ bv4199728 64)[0m[0m
+[0m[0]  0x400b3f         movsx eax, byte ptr [rdx+rax*1]        [0m#739 = ((_ sign_extend 0) (_ bv49 8))[0m[0m
+[0m[0]  0x400b43         add r13, 0xfffffffffffffff7            [0m#740 = (bvadd ((_ extract 63 0) #282) (_ bv18446744073709551607 64))[0m
+[0m                                                             #741 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #740 (bvxor ((_ extract 63 0) #282) (_ bv18446744073709551607 64))))))[0m
+[0m                                                             #742 = (assert (bvult #740 ((_ extract 63 0) #282)))[0m
+[0m                                                             #743 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #282) (bvnot (_ bv18446744073709551607 64))) (bvxor ((_ extract 63 0) #282) #740))) (_ bv1 1)))[0m
+[0m                                                             #744 = (assert (= (parity_flag ((_ extract 7 0) #740)) (_ bv0 1)))[0m
+[0m                                                             #745 = (assert (= ((_ extract 63 63) #740) (_ bv1 1)))[0m
+[0m                                                             #746 = (assert (= #740 (_ bv0 64)))[0m[0m
+[0m[0]  0x400b47         mov rdx, r13                           [0m#747 = ((_ extract 63 0) #740)[0m[0m
+[0m[0]  0x400b4a         and rdx, 0x4                           [0m
+[0m[0]  0x400b4e         mov rsi, r13                           [0m#748 = ((_ extract 63 0) #740)[0m[0m
+[0m[0]  0x400b51         or rsi, 0x4                            [0m
+[0m[0]  0x400b55         add rsi, rdx                           [0m#749 = (bvadd ((_ extract 63 0) #748) ((_ extract 63 0) #747))[0m
+[0m                                                             #750 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #749 (bvxor ((_ extract 63 0) #748) ((_ extract 63 0) #747))))))[0m
+[0m                                                             #751 = (assert (bvult #749 ((_ extract 63 0) #748)))[0m
+[0m                                                             #752 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #748) (bvnot ((_ extract 63 0) #747))) (bvxor ((_ extract 63 0) #748) #749))) (_ bv1 1)))[0m
+[0m                                                             #753 = (assert (= (parity_flag ((_ extract 7 0) #749)) (_ bv0 1)))[0m
+[0m                                                             #754 = (assert (= ((_ extract 63 63) #749) (_ bv1 1)))[0m
+[0m                                                             #755 = (assert (= #749 (_ bv0 64)))[0m[0m
+[0m[0]  0x400b58         mov rdx, r13                           [0m#756 = ((_ extract 63 0) #740)[0m[0m
+[0m[0]  0x400b5b         and rdx, 0x7                           [0m
+[0m[0]  0x400b5f         or r13, 0x7                            [0m
+[0m[0]  0x400b63         add r13, rdx                           [0m#757 = (bvadd ((_ extract 63 0) #740) ((_ extract 63 0) #756))[0m
+[0m                                                             #758 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #757 (bvxor ((_ extract 63 0) #740) ((_ extract 63 0) #756))))))[0m
+[0m                                                             #759 = (assert (bvult #757 ((_ extract 63 0) #740)))[0m
+[0m                                                             #760 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #740) (bvnot ((_ extract 63 0) #756))) (bvxor ((_ extract 63 0) #740) #757))) (_ bv1 1)))[0m
+[0m                                                             #761 = (assert (= (parity_flag ((_ extract 7 0) #757)) (_ bv0 1)))[0m
+[0m                                                             #762 = (assert (= ((_ extract 63 63) #757) (_ bv1 1)))[0m
+[0m                                                             #763 = (assert (= #757 (_ bv0 64)))[0m[0m
+[0m[0]  0x400b66         mov edx, dword ptr [rbp-0x2c]          [0m#764 = ((_ extract 31 0) #307)[0m[0m
+[92m[0]  0x400b69         cmp ecx, eax                           [92m#765 = (bvsub ((_ extract 31 0) #730) ((_ extract 31 0) #739))[0m
+[92m                                                             #766 = (assert (= (_ bv16 32) (bvand (_ bv16 32) (bvxor #765 (bvxor ((_ extract 31 0) #730) ((_ extract 31 0) #739))))))[0m
+[92m                                                             #767 = (assert (bvult #765 ((_ extract 31 0) #730)))[0m
+[92m                                                             #768 = (assert (= ((_ extract 31 31) (bvand (bvxor ((_ extract 31 0) #730) (bvnot ((_ extract 31 0) #739))) (bvxor ((_ extract 31 0) #730) #765))) (_ bv1 1)))[0m
+[92m                                                             #769 = (assert (= (parity_flag ((_ extract 7 0) #765)) (_ bv0 1)))[0m
+[92m                                                             #770 = (assert (= ((_ extract 31 31) #765) (_ bv1 1)))[0m
+[92m                                                             #771 = (assert (= #765 (_ bv0 32)))[0m[0m
+[0m[0]  0x400b6b         cmovnz r13, rsi                        [0m
+[0m[0]  0x400b6f         mov rsi, qword ptr [rbp-0x38]          [0m#772 = ((_ extract 63 0) #298)[0m[0m
+[0m[0]  0x400b73         mov rcx, r13                           [0m#773 = ((_ extract 63 0) #757)[0m[0m
+[0m[0]  0x400b76         mov r13d, 0x6                          [0m#774 = (_ bv6 32)[0m[0m
+[0m[0]  0x400b7c         jmp 0x400580                           [0m
+[0m[0]  0x400580         mov rax, rcx                           [0m#775 = ((_ extract 63 0) #773)[0m[0m
+[0m[0]  0x400583         lea rcx, ptr [rax-0x1]                 [0m
+[0m[0]  0x400587         cmp rcx, 0xa                           [0m#776 = (bvsub ((_ extract 63 0) #773) ((_ sign_extend 0) (_ bv10 64)))[0m
+[0m                                                             #777 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #776 (bvxor ((_ extract 63 0) #773) ((_ sign_extend 0) (_ bv10 64)))))))[0m
+[0m                                                             #778 = (assert (bvult #776 ((_ extract 63 0) #773)))[0m
+[0m                                                             #779 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #773) (bvnot ((_ sign_extend 0) (_ bv10 64)))) (bvxor ((_ extract 63 0) #773) #776))) (_ bv1 1)))[0m
+[0m                                                             #780 = (assert (= (parity_flag ((_ extract 7 0) #776)) (_ bv0 1)))[0m
+[0m                                                             #781 = (assert (= ((_ extract 63 63) #776) (_ bv1 1)))[0m
+[0m                                                             #782 = (assert (= #776 (_ bv0 64)))[0m[0m
+[0m[0]  0x40058b         jnbe 0x400560                          [0m
+[0m[0]  0x40058d         jmp qword ptr [rcx*8+0x401488]         [0m
+[0m[0]  0x40061c         mov dword ptr [rsi], 0x1               [0m#783 = (_ bv1 32)[0m[0m
+[0m[0]  0x400622         add r13, 0xfffffffffffffffa            [0m#784 = (bvadd ((_ extract 63 0) #774) (_ bv18446744073709551610 64))[0m
+[0m                                                             #785 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #784 (bvxor ((_ extract 63 0) #774) (_ bv18446744073709551610 64))))))[0m
+[0m                                                             #786 = (assert (bvult #784 ((_ extract 63 0) #774)))[0m
+[0m                                                             #787 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #774) (bvnot (_ bv18446744073709551610 64))) (bvxor ((_ extract 63 0) #774) #784))) (_ bv1 1)))[0m
+[0m                                                             #788 = (assert (= (parity_flag ((_ extract 7 0) #784)) (_ bv0 1)))[0m
+[0m                                                             #789 = (assert (= ((_ extract 63 63) #784) (_ bv1 1)))[0m
+[0m                                                             #790 = (assert (= #784 (_ bv0 64)))[0m[0m
+[0m[0]  0x400626         mov rax, r13                           [0m#791 = ((_ extract 63 0) #784)[0m[0m
+[0m[0]  0x400629         xor rax, 0xa                           [0m#792 = (bvxor ((_ extract 63 0) #791) (_ bv10 64))[0m
+[0m                                                             #793 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #792 (bvxor ((_ extract 63 0) #791) (_ bv10 64))))))[0m
+[0m                                                             #794 = (assert (bvult #792 ((_ extract 63 0) #791)))[0m
+[0m                                                             #795 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #791) (bvnot (_ bv10 64))) (bvxor ((_ extract 63 0) #791) #792))) (_ bv1 1)))[0m
+[0m                                                             #796 = (assert (= (parity_flag ((_ extract 7 0) #792)) (_ bv0 1)))[0m
+[0m                                                             #797 = (assert (= ((_ extract 63 63) #792) (_ bv1 1)))[0m
+[0m                                                             #798 = (assert (= #792 (_ bv0 64)))[0m[0m
+[0m[0]  0x40062d         and r13, 0xa                           [0m
+[0m[0]  0x400631         lea rcx, ptr [rax+r13*2]               [0m
+[0m[0]  0x400635         mov r13d, 0x4                          [0m#799 = (_ bv4 32)[0m[0m
+[0m[0]  0x40063b         jmp 0x400580                           [0m
+[0m[0]  0x400580         mov rax, rcx                           [0m#800 = ((_ extract 63 0) #776)[0m[0m
+[0m[0]  0x400583         lea rcx, ptr [rax-0x1]                 [0m
+[0m[0]  0x400587         cmp rcx, 0xa                           [0m#801 = (bvsub ((_ extract 63 0) #776) ((_ sign_extend 0) (_ bv10 64)))[0m
+[0m                                                             #802 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #801 (bvxor ((_ extract 63 0) #776) ((_ sign_extend 0) (_ bv10 64)))))))[0m
+[0m                                                             #803 = (assert (bvult #801 ((_ extract 63 0) #776)))[0m
+[0m                                                             #804 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #776) (bvnot ((_ sign_extend 0) (_ bv10 64)))) (bvxor ((_ extract 63 0) #776) #801))) (_ bv1 1)))[0m
+[0m                                                             #805 = (assert (= (parity_flag ((_ extract 7 0) #801)) (_ bv0 1)))[0m
+[0m                                                             #806 = (assert (= ((_ extract 63 63) #801) (_ bv1 1)))[0m
+[0m                                                             #807 = (assert (= #801 (_ bv0 64)))[0m[0m
+[0m[0]  0x40058b         jnbe 0x400560                          [0m
+[0m[0]  0x40058d         jmp qword ptr [rcx*8+0x401488]         [0m
+[0m[0]  0x400560         mov edx, dword ptr [rsi]               [0m#808 = ((_ extract 31 0) #783)[0m[0m
+[0m[0]  0x400562         lea rcx, ptr [r13-0x8]                 [0m
+[0m[0]  0x400566         add r13, 0xfffffffffffffffc            [0m#809 = (bvadd ((_ extract 63 0) #799) (_ bv18446744073709551612 64))[0m
+[0m                                                             #810 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #809 (bvxor ((_ extract 63 0) #799) (_ bv18446744073709551612 64))))))[0m
+[0m                                                             #811 = (assert (bvult #809 ((_ extract 63 0) #799)))[0m
+[0m                                                             #812 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #799) (bvnot (_ bv18446744073709551612 64))) (bvxor ((_ extract 63 0) #799) #809))) (_ bv1 1)))[0m
+[0m                                                             #813 = (assert (= (parity_flag ((_ extract 7 0) #809)) (_ bv0 1)))[0m
+[0m                                                             #814 = (assert (= ((_ extract 63 63) #809) (_ bv1 1)))[0m
+[0m                                                             #815 = (assert (= #809 (_ bv0 64)))[0m[0m
+[0m[0]  0x40056a         imul r13, rcx                          [0m
+[0m[0]  0x40056e         mov rcx, r13                           [0m#816 = ((_ extract 63 0) #809)[0m[0m
+[0m[0]  0x400571         xor rcx, 0xb                           [0m#817 = (bvxor ((_ extract 63 0) #816) (_ bv11 64))[0m
+[0m                                                             #818 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #817 (bvxor ((_ extract 63 0) #816) (_ bv11 64))))))[0m
+[0m                                                             #819 = (assert (bvult #817 ((_ extract 63 0) #816)))[0m
+[0m                                                             #820 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #816) (bvnot (_ bv11 64))) (bvxor ((_ extract 63 0) #816) #817))) (_ bv1 1)))[0m
+[0m                                                             #821 = (assert (= (parity_flag ((_ extract 7 0) #817)) (_ bv0 1)))[0m
+[0m                                                             #822 = (assert (= ((_ extract 63 63) #817) (_ bv1 1)))[0m
+[0m                                                             #823 = (assert (= #817 (_ bv0 64)))[0m[0m
+[0m[0]  0x400575         and r13, 0xb                           [0m
+[0m[0]  0x400579         lea rcx, ptr [rcx+r13*2]               [0m
+[0m[0]  0x40057d         mov r13, rax                           [0m#824 = ((_ extract 63 0) #800)[0m[0m
+[0m[0]  0x400580         mov rax, rcx                           [0m#825 = ((_ extract 63 0) #817)[0m[0m
+[0m[0]  0x400583         lea rcx, ptr [rax-0x1]                 [0m
+[0m[0]  0x400587         cmp rcx, 0xa                           [0m#826 = (bvsub ((_ extract 63 0) #817) ((_ sign_extend 0) (_ bv10 64)))[0m
+[0m                                                             #827 = (assert (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #826 (bvxor ((_ extract 63 0) #817) ((_ sign_extend 0) (_ bv10 64)))))))[0m
+[0m                                                             #828 = (assert (bvult #826 ((_ extract 63 0) #817)))[0m
+[0m                                                             #829 = (assert (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #817) (bvnot ((_ sign_extend 0) (_ bv10 64)))) (bvxor ((_ extract 63 0) #817) #826))) (_ bv1 1)))[0m
+[0m                                                             #830 = (assert (= (parity_flag ((_ extract 7 0) #826)) (_ bv0 1)))[0m
+[0m                                                             #831 = (assert (= ((_ extract 63 63) #826) (_ bv1 1)))[0m
+[0m                                                             #832 = (assert (= #826 (_ bv0 64)))[0m[0m
+[0m[0]  0x40058b         jnbe 0x400560                          [0m
+[0m[0]  0x40058d         jmp qword ptr [rcx*8+0x401488]         [0m
+[0m[0]  0x400ee1         mov eax, edx                           [0m#833 = ((_ extract 31 0) #808)[0m[0m
+[0m[0]  0x400ee3         lea rsp, ptr [rbp-0x28]                [0m
+[92m[0]  0x400ee7         pop rbx                                [92m#834 = #12[0m
+[92m                                                             #835 = (bvadd #60 (_ bv8 64))[0m[0m
+[0m[0]  0x400ee8         pop r12                                [0m#836 = #10[0m
+[0m                                                             #837 = (bvadd #835 (_ bv8 64))[0m[0m
+[0m[0]  0x400eea         pop r13                                [0m#838 = #8[0m
+[0m                                                             #839 = (bvadd #837 (_ bv8 64))[0m[0m
+[92m[0]  0x400eec         pop r14                                [92m#840 = #6[0m
+[92m                                                             #841 = (bvadd #839 (_ bv8 64))[0m[0m
+[0m[0]  0x400eee         pop r15                                [0m#842 = #4[0m
+[0m                                                             #843 = (bvadd #841 (_ bv8 64))[0m[0m
+[0m[0]  0x400ef0         pop rbp                                [0m#844 = #1[0m
+[0m                                                             #845 = (bvadd #843 (_ bv8 64))[0m[0m

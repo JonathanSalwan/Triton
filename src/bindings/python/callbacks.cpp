@@ -10,6 +10,7 @@
 #include "TritonPyObject.h"
 #include "pin.H"
 #include "xPyFunc.h"
+#include "Utils.h"
 
 extern AnalysisProcessor ap;
 
@@ -524,6 +525,35 @@ static PyObject *Triton_stopAnalysisFromAddr(PyObject *self, PyObject *addr)
 }
 
 
+static char Triton_syscallToString_doc[] = "Returns the syscall string from a syscall number";
+static PyObject *Triton_syscallToString(PyObject *self, PyObject *args)
+{
+  PyObject *std;
+  PyObject *num;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &std, &num);
+
+  if (!PyLong_Check(std) && !PyInt_Check(std))
+    return PyErr_Format(PyExc_TypeError, "syscallToString(): expected a standard IDREF.SYSCALL as first argument");
+
+
+  if (!PyLong_Check(num) && !PyInt_Check(num))
+    return PyErr_Format(PyExc_TypeError, "syscallToString(): expected a syscall number (integer) as second argument");
+
+  std::stringstream syscall("");
+  switch (PyLong_AsLong(std)){
+    case SYSCALL_STANDARD_IA32E_LINUX:
+      syscall.str(syscallNumberLinux64ToString(PyLong_AsLong(num)));
+      break;
+    default:
+      return PyErr_Format(PyExc_TypeError, "syscallToString(): IDREF.SYSCALL unsupported");
+  }
+
+  return Py_BuildValue("s", syscall.str().c_str());
+}
+
+
 static char Triton_taintMem_doc[] = "Taint an address memory";
 static PyObject *Triton_taintMem(PyObject *self, PyObject *mem)
 {
@@ -664,6 +694,7 @@ PyMethodDef pythonCallbacks[] = {
   {"startAnalysisFromAddr",     Triton_startAnalysisFromAddr,     METH_O,       Triton_startAnalysisFromAddr_doc},
   {"startAnalysisFromSymbol",   Triton_startAnalysisFromSymbol,   METH_O,       Triton_startAnalysisFromSymbol_doc},
   {"stopAnalysisFromAddr",      Triton_stopAnalysisFromAddr,      METH_O,       Triton_stopAnalysisFromAddr_doc},
+  {"syscallToString",           Triton_syscallToString,           METH_VARARGS, Triton_syscallToString_doc},
   {"taintMem",                  Triton_taintMem,                  METH_O,       Triton_taintMem_doc},
   {"taintReg",                  Triton_taintReg,                  METH_O,       Triton_taintReg_doc},
   {"taintRegFromAddr",          Triton_taintRegFromAddr,          METH_VARARGS, Triton_taintRegFromAddr_doc},

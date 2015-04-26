@@ -73,7 +73,8 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/symbolicEngine/symbolicElement.cpp \
 		./src/symbolicEngine/symbolicEngine.cpp \
 		./src/taintEngine/taintEngine.cpp \
-		./src/trigger/trigger.cpp
+		./src/trigger/trigger.cpp \
+		./src/utils/syscallNumberToString.cpp
 
 
 OBJ = $(SRC:.cpp=.o)
