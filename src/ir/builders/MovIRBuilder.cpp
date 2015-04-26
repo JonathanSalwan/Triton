@@ -84,7 +84,7 @@ void MovIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          readSize = std::get<2>(this->operands[1]);
   uint64_t          mem      = std::get<1>(this->operands[1]);
   uint64_t          reg      = std::get<1>(this->operands[0]);
-  uint64_t          regSize  = std::get<2>(this->operands[1]);
+  uint64_t          regSize  = std::get<2>(this->operands[0]);
 
   uint64_t          symMem   = ap.getMemSymbolicID(mem);
 
