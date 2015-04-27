@@ -24,7 +24,7 @@ def mallocExit(threadId):
 
 if __name__ == '__main__':
 
-    # Start the symbolic analysis from the 'check' function
+    # Start the symbolic analysis from the 'main' function
     startAnalysisFromSymbol('main')
 
     # Add a callback.
