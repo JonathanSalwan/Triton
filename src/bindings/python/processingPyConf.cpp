@@ -201,3 +201,14 @@ void ProcessingPyConf::applyConfBeforeProcessing(IRBuilder *irb)
 }
 
 
+void ProcessingPyConf::callbackRoutine(uint64_t threadId, PyObject *callback)
+{
+  PyObject *args = xPyTuple_New(1);
+  PyTuple_SetItem(args, 0, PyLong_FromLong(threadId));
+  if (PyObject_CallObject(callback, args) == nullptr){
+    PyErr_Print();
+    exit(1);
+  }
+  Py_DECREF(args);
+}
+

@@ -117,9 +117,27 @@ VOID TRACE_Instrumentation(TRACE trace, VOID *v)
 }
 
 
-void toggleWrapper(bool flag)
+VOID toggleWrapper(bool flag)
 {
   analysisTrigger.update(flag);
+}
+
+
+VOID callbackRoutineEntry(THREADID threadId, PyObject *callback)
+{
+  if (!analysisTrigger.getState())
+  // Analysis locked
+    return;
+  processingPyConf.callbackRoutine(threadId, callback);
+}
+
+
+VOID callbackRoutineExit(THREADID threadId, PyObject *callback)
+{
+  if (!analysisTrigger.getState())
+  // Analysis locked
+    return;
+  processingPyConf.callbackRoutine(threadId, callback);
 }
 
 
@@ -148,6 +166,27 @@ VOID IMG_Instrumentation(IMG img, VOID *)
     }
   }
 
+  /* Callback on routien entry */
+  std::map<const char *, PyObject *>::iterator it;
+  for (it = PyTritonOptions::callbackRoutineEntry.begin(); it != PyTritonOptions::callbackRoutineEntry.end(); it++){
+    RTN targetRTN = RTN_FindByName(img, it->first);
+    if (RTN_Valid(targetRTN)){
+      RTN_Open(targetRTN);
+      RTN_InsertCall(targetRTN, IPOINT_BEFORE, (AFUNPTR)callbackRoutineEntry, IARG_THREAD_ID, IARG_PTR, it->second, IARG_END);
+      RTN_Close(targetRTN);
+    }
+  }
+
+  /* Callback on routien exit */
+  for (it = PyTritonOptions::callbackRoutineExit.begin(); it != PyTritonOptions::callbackRoutineExit.end(); it++){
+    RTN targetRTN = RTN_FindByName(img, it->first);
+    if (RTN_Valid(targetRTN)){
+      RTN_Open(targetRTN);
+      RTN_InsertCall(targetRTN, IPOINT_AFTER, (AFUNPTR)callbackRoutineExit, IARG_THREAD_ID, IARG_PTR, it->second, IARG_END);
+      RTN_Close(targetRTN);
+    }
+  }
+
 }
 
 
@@ -161,7 +200,7 @@ VOID Fini(INT32, VOID *)
 }
 
 
-VOID callbackSyscallEntry(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, void *v)
+VOID callbackSyscallEntry(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, VOID *v)
 {
   if (!analysisTrigger.getState())
   // Analysis locked
@@ -175,7 +214,7 @@ VOID callbackSyscallEntry(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std,
 }
 
 
-VOID callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, void *v)
+VOID callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, VOID *v)
 {
   if (!analysisTrigger.getState())
   // Analysis locked
