@@ -14,5 +14,7 @@ void initCallbackEnv(PyObject *idCallbackClassDict)
   PyDict_SetItemString(idCallbackClassDict, "FINI", PyInt_FromLong(CB_FINI));
   PyDict_SetItemString(idCallbackClassDict, "SYSCALL_ENTRY", PyInt_FromLong(CB_SYSCALL_ENTRY));
   PyDict_SetItemString(idCallbackClassDict, "SYSCALL_EXIT", PyInt_FromLong(CB_SYSCALL_EXIT));
+  PyDict_SetItemString(idCallbackClassDict, "ROUTINE_ENTRY", PyInt_FromLong(CB_ROUTINE_ENTRY));
+  PyDict_SetItemString(idCallbackClassDict, "ROUTINE_EXIT", PyInt_FromLong(CB_ROUTINE_EXIT));
 }
 

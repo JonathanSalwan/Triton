@@ -23,12 +23,14 @@ namespace PyTritonOptions {
   std::set<uint64_t>  stopAnalysisFromAddr;
 
   /* Callback configurations */
-  PyObject *callbackBefore        = nullptr; // Before the instruction processing
-  PyObject *callbackBeforeIRProc  = nullptr; // Before the IR processing
-  PyObject *callbackAfter         = nullptr; // After the instruction processing
-  PyObject *callbackFini          = nullptr; // At the end of the execution
-  PyObject *callbackSyscallEntry  = nullptr; // Before syscall processing
-  PyObject *callbackSyscallExit   = nullptr; // After syscall processing
+  PyObject *callbackBefore        = nullptr;                // Before the instruction processing
+  PyObject *callbackBeforeIRProc  = nullptr;                // Before the IR processing
+  PyObject *callbackAfter         = nullptr;                // After the instruction processing
+  PyObject *callbackFini          = nullptr;                // At the end of the execution
+  PyObject *callbackSyscallEntry  = nullptr;                // Before syscall processing
+  PyObject *callbackSyscallExit   = nullptr;                // After syscall processing
+  std::map<const char *, PyObject *> callbackRoutineEntry;  // Before routine processing
+  std::map<const char *, PyObject *> callbackRoutineExit;   // After routine processing
 
   /* Taint configurations */
   std::map<uint64_t, std::list<uint64_t>> taintRegFromAddr;   // <addr, [reg1, reg2]>
@@ -43,9 +45,11 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
 {
   PyObject *function;
   PyObject *flag;
+  PyObject *routine = nullptr;
+
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &function, &flag);
+  PyArg_ParseTuple(args, "O|O|O", &function, &flag, &routine);
 
   if (!PyCallable_Check(function))
     return PyErr_Format(PyExc_TypeError, "addCallback(): expected a function callback as first argument");
@@ -71,6 +75,18 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
 
   else if ((PyLong_AsLong(flag) == CB_SYSCALL_EXIT))
     PyTritonOptions::callbackSyscallExit = function;
+
+  else if ((PyLong_AsLong(flag) == CB_ROUTINE_ENTRY)){
+    if (routine == nullptr || !PyString_Check(routine))
+      return PyErr_Format(PyExc_TypeError, "addCallback(): expected a string as third argument");
+    PyTritonOptions::callbackRoutineEntry.insert(std::pair<const char*,PyObject*>(PyString_AsString(routine), function));
+  }
+
+  else if ((PyLong_AsLong(flag) == CB_ROUTINE_EXIT)){
+    if (routine == nullptr || !PyString_Check(routine))
+      return PyErr_Format(PyExc_TypeError, "addCallback(): expected a string as third argument");
+    PyTritonOptions::callbackRoutineExit.insert(std::pair<const char*,PyObject*>(PyString_AsString(routine), function));
+  }
 
   else
     return PyErr_Format(PyExc_TypeError, "addCallback(): expected an IDREF.CALLBACK as second argument");
