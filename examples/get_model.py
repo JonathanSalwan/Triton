@@ -1,5 +1,6 @@
 
-from triton import *
+from    triton import *
+import  smt2lib
 
 # $ ../../../pin -t ./triton.so -script ./examples/get_model.py -- ./samples/crackmes/crackme_xor elite
 # {'SymVar_0': "0x65, 'e'"}
@@ -26,7 +27,8 @@ def cafter(instruction):
 
     if instruction.address == 0x4005ae:
         zfId = getRegSymbolicID(IDREF.FLAG.ZF)
-        expr = getBacktrackedSymExpr(zfId)
+        zfExpr = getBacktrackedSymExpr(zfId)
+        expr = smt2lib.smtAssert(smt2lib.equal(zfExpr, smt2lib.bv(1, 1)))
         print {k: "0x%x, '%c'" % (v, v) for k, v in getModel(expr).items()}
 
 

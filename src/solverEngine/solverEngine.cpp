@@ -30,8 +30,7 @@ std::list< std::pair<std::string, unsigned long long> > SolverEngine::getModel(s
   formula << this->symEngine->getSmt2LibVarsDecl();
 
   /* And concat the user expression */
-  /* TODO #54: The smt2lib::smtAssert must be defined by the user not in this function */
-  formula << smt2lib::smtAssert(smt2lib::equal(expr, smt2lib::bv(1, 1)));
+  formula << expr;
 
   /* Create the context and AST */
   ctx = new z3::context();
