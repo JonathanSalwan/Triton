@@ -12,7 +12,6 @@ void initOpcodeCategoryEnv(PyObject *);
 void initOpcodeEnv(PyObject *);
 void initOperandEnv(PyObject *);
 void initRegEnv(PyObject *);
-void initSmt2LibEnv(PyObject *);
 void initSyscallEnv(PyObject *);
 
 
