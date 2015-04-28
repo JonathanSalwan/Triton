@@ -465,7 +465,7 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
 
   switch (ws){
     case 1:
-      *((char *)ad) = va; break;
+      *((char *)ad) = va;
       break;
     case 2:
       *((short *)ad) = va;
@@ -476,6 +476,8 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
     case 8:
       *((uint64_t *)ad) = va;
       break;
+    default:
+      throw std::runtime_error("Error: Triton_setMemValue() - Invalid write size");
   }
 
   return Py_None;
