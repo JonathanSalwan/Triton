@@ -1,4 +1,5 @@
 #include <string>
+#include <stdexcept>
 
 #include "SMT2Lib.h"
 
@@ -106,6 +107,8 @@ std::string smt2lib::extract(uint64_t regSize)
     case 8:
       stream << "(_ extract 63 0)";
       break;
+    default:
+      throw std::runtime_error("Error: invalid smt2lib::extract regSize");
   }
 
   return stream.str();
@@ -186,3 +189,4 @@ std::string smt2lib::parityFlag(std::string expr)
 {
   return "(parity_flag " + expr + ")";
 }
+
