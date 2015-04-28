@@ -20,7 +20,7 @@ SymbolicElement *EflagsBuilder::af(SymbolicElement *parent,
    * Create the SMT semantic.
    * af = 0x10 == (0x10 & (regDst ^ op1 ^ op2))
    */
-  expr << smt2lib::smtAssert(
+  expr << smt2lib::ite(
             smt2lib::equal(
               smt2lib::bv(0x10, bvSize),
               smt2lib::bvand(
@@ -30,7 +30,9 @@ SymbolicElement *EflagsBuilder::af(SymbolicElement *parent,
                   smt2lib::bvxor(op1.str(), op2.str())
                 )
               )
-            )
+            ),
+            smt2lib::bv(1, 1),
+            smt2lib::bv(0, 1)
           );
 
   /* Create the symbolic element */
@@ -52,11 +54,13 @@ SymbolicElement *EflagsBuilder::cf(SymbolicElement *parent, AnalysisProcessor &a
    * Create the SMT semantic.
    * cf = regDst < op1
    */
-  expr << smt2lib::smtAssert(
+  expr << smt2lib::ite(
             smt2lib::bvult(
               parent->getID2Str(),
               op1.str()
-            )
+            ),
+            smt2lib::bv(1, 1),
+            smt2lib::bv(0, 1)
           );
 
   /* Create the symbolic element */
@@ -83,7 +87,7 @@ SymbolicElement *EflagsBuilder::of(SymbolicElement *parent,
    * Create the SMT semantic.
    * of = high:bool((op1 ^ ~op2) & (op1 ^ regDst))
    */
-  expr << smt2lib::smtAssert(
+  expr << smt2lib::ite(
             smt2lib::equal(
               smt2lib::extract(extractSize, extractSize,
                 smt2lib::bvand(
@@ -92,7 +96,9 @@ SymbolicElement *EflagsBuilder::of(SymbolicElement *parent,
                 )
               ),
               smt2lib::bv(1, 1)
-            )
+            ),
+            smt2lib::bv(1, 1),
+            smt2lib::bv(0, 1)
           );
 
   /* Create the symbolic element */
@@ -116,12 +122,14 @@ SymbolicElement *EflagsBuilder::pf(SymbolicElement *parent, AnalysisProcessor &a
    * pf is set to one if there is a even number of bit set to 1 in the least
    * significant byte of the result.
    */
-  expr << smt2lib::smtAssert(
+  expr << smt2lib::ite(
             smt2lib::equal(
               smt2lib::parityFlag(
                 smt2lib::extract(7, 0, parent->getID2Str())),
               smt2lib::bv(0, 1)
-            )
+            ),
+            smt2lib::bv(1, 1),
+            smt2lib::bv(0, 1)
           );
 
   /* Create the symbolic element */
@@ -144,11 +152,13 @@ SymbolicElement *EflagsBuilder::sf(SymbolicElement *parent, AnalysisProcessor &a
    * Create the SMT semantic.
    * sf = high:bool(regDst)
    */
-  expr << smt2lib::smtAssert(
+  expr << smt2lib::ite(
             smt2lib::equal(
               smt2lib::extract(extractSize, extractSize, parent->getID2Str()),
               smt2lib::bv(1, 1)
-            )
+            ),
+            smt2lib::bv(1, 1),
+            smt2lib::bv(0, 1)
           );
 
   /* Create the symbolic element */
@@ -170,11 +180,13 @@ SymbolicElement *EflagsBuilder::zf(SymbolicElement *parent, AnalysisProcessor &a
    * Create the SMT semantic.
    * zf = 0 == regDst
    */
-  expr << smt2lib::smtAssert(
+  expr << smt2lib::ite(
             smt2lib::equal(
               parent->getID2Str(),
               smt2lib::bv(0, dstSize * REG_SIZE)
-            )
+            ),
+            smt2lib::bv(1, 1),
+            smt2lib::bv(0, 1)
           );
 
   /* Create the symbolic element */

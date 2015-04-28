@@ -1,6 +1,7 @@
 
-#include "SolverEngine.h"
 #include "Colors.h"
+#include "SMT2Lib.h"
+#include "SolverEngine.h"
 
 
 SolverEngine::SolverEngine(SymbolicEngine *symEngine)
@@ -29,7 +30,8 @@ std::list< std::pair<std::string, unsigned long long> > SolverEngine::getModel(s
   formula << this->symEngine->getSmt2LibVarsDecl();
 
   /* And concat the user expression */
-  formula << expr;
+  /* TODO: The smt2lib::smtAssert must be defined by the user not in this function */
+  formula << smt2lib::smtAssert(smt2lib::equal(expr, smt2lib::bv(1, 1)));
 
   /* Create the context and AST */
   ctx = new z3::context();

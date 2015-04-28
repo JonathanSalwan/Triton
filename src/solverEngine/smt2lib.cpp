@@ -165,6 +165,13 @@ std::string smt2lib::smtAssert(std::string expr)
 }
 
 
+/* Returns the 'ite' syntax. */
+std::string smt2lib::ite(std::string expr, std::string thenExpr, std::string elseExpr)
+{
+  return "(ite " + expr + " " + thenExpr + " " + elseExpr + ")";
+}
+
+
 /* Returns the 'equal' syntax. */
 std::string smt2lib::equal(std::string op1, std::string op2)
 {

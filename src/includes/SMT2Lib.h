@@ -47,6 +47,9 @@ namespace smt2lib {
   /* Returns the 'assert' syntax. */
   std::string smtAssert(std::string expr);
 
+  /* Returns the 'ite' syntax. */
+  std::string ite(std::string expr, std::string thenExpr, std::string elseExpr);
+
   /* Returns the 'equal' syntax. */
   /* (= <op1> <op2>) */
   std::string equal(std::string op1, std::string op2);
