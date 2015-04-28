@@ -688,7 +688,7 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
 }
 
 
-PyMethodDef pythonCallbacks[] = {
+PyMethodDef tritonCallbacks[] = {
   {"addCallback",               Triton_addCallback,               METH_VARARGS, Triton_addCallback_doc},
   {"assignExprToSymVar",        Triton_assignExprToSymVar,        METH_VARARGS, Triton_assignExprToSymVar_doc},
   {"checkReadAccess",           Triton_checkReadAccess,           METH_O,       Triton_checkReadAccess_doc},

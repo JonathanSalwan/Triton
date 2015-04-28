@@ -12,17 +12,26 @@ void initOpcodeCategoryEnv(PyObject *);
 void initOpcodeEnv(PyObject *);
 void initOperandEnv(PyObject *);
 void initRegEnv(PyObject *);
+void initSmt2LibEnv(PyObject *);
 void initSyscallEnv(PyObject *);
 
 
-PyObject *initBindings(void)
+void initBindings(void)
 {
   Py_Initialize();
 
-  PyObject *tritonModule = Py_InitModule("triton", pythonCallbacks);
+  PyObject *tritonModule = Py_InitModule("triton", tritonCallbacks);
 
   if (tritonModule == nullptr) {
-    std::cerr << "Failed to initialize Triton bindings" << std::endl;
+    std::cerr << "Failed to initialize the triton bindings" << std::endl;
+    PyErr_Print();
+    exit(1);
+  }
+
+  PyObject *smt2libModule = Py_InitModule("smt2lib", smt2libCallbacks);
+
+  if (smt2libModule == nullptr) {
+    std::cerr << "Failed to initialize the smt2lib bindings" << std::endl;
     PyErr_Print();
     exit(1);
   }
@@ -106,6 +115,7 @@ PyObject *initBindings(void)
 
   // OPERAND ---------------------
 
+
   // CALLBACK ---------------------
 
   /* Create the IDREF.CALLBACK class */
@@ -119,7 +129,8 @@ PyObject *initBindings(void)
   PyObject *idCallbackClass = xPyClass_New(nullptr, idCallbackClassDict, idCallbackClassName);
 
   // CALLBACK ---------------------
-  //
+
+
   // SYSCALL ---------------------
 
   /* Create the IDREF.SYSCALL class */
@@ -147,13 +158,10 @@ PyObject *initBindings(void)
   /* Create the IDREF class */
   PyObject *idRefClass = xPyClass_New(nullptr, idRefClassDict, idRefClassName);
 
-  /* add IDREF into triton module */
+
+  /* add all classes and constants into the triton module */
   PyModule_AddObject(tritonModule, "IDREF", idRefClass);
-
-  /* Constants Triton internal */
   PyModule_AddObject(tritonModule, "UNSET", Py_BuildValue("k", UNSET)); // Py_BuildValue for unsigned long
-
-  return tritonModule;
 }
 
 

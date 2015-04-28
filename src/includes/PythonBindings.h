@@ -8,7 +8,8 @@
 
 #include "CallbackDefine.h"
 
-extern PyMethodDef pythonCallbacks[];
+extern PyMethodDef tritonCallbacks[];
+extern PyMethodDef smt2libCallbacks[];
 
 
 namespace PyTritonOptions {
@@ -39,7 +40,7 @@ namespace PyTritonOptions {
   extern std::map<uint64_t, std::list<uint64_t>> untaintMemFromAddr;
 };
 
-PyObject *initBindings(void);
+void initBindings(void);
 
 /* Returns false if the script file failed to be executed. */
 bool execBindings(const char *fileName);
