@@ -34,6 +34,6 @@ please, **don't blame us** if it is not yet reliable. [Open issues](https://gith
 ### Extra information
 
 * [Publications](https://github.com/JonathanSalwan/Triton/wiki/Publications)
-* [Authors and Acknowledgement](https://github.com/JonathanSalwan/Triton/wiki/Authors-and-Acknowledgement)
+* [Authors and Acknowledgements](https://github.com/JonathanSalwan/Triton/wiki/Authors-and-Acknowledgements)
 
 
