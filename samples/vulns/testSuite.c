@@ -52,5 +52,7 @@ int main(int ac, const char *av[])
   /* Test 5 - Stack overclow */
   test5_stack_overflow();
 
+  free(buff2); // buff2 is freed, buff1 is a mem leak.
+
   return 0;
 }

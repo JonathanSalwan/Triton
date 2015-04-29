@@ -79,6 +79,76 @@ std::string smt2lib::bvnot(std::string op1)
 
 
 /*
+ * Returns the 'bvsge' syntax.
+ * bvsge: signed greater or equal
+ */
+std::string smt2lib::bvsge(std::string op1, std::string op2)
+{
+  return "(bvsge " + op1 + " " + op2 + ")";
+}
+
+
+/*
+ * Returns the 'bvsgt' syntax.
+ * bvsgt: signed greater than
+ */
+std::string smt2lib::bvsgt(std::string op1, std::string op2)
+{
+  return "(bvsgt " + op1 + " " + op2 + ")";
+}
+
+
+/*
+ * Returns the 'bvsle' syntax.
+ * bvsle: signed less or equal
+ */
+std::string smt2lib::bvsle(std::string op1, std::string op2)
+{
+  return "(bvsle " + op1 + " " + op2 + ")";
+}
+
+
+/*
+ * Returns the 'bvslt' syntax.
+ * bvsle: signed less than
+ */
+std::string smt2lib::bvslt(std::string op1, std::string op2)
+{
+  return "(bvslt " + op1 + " " + op2 + ")";
+}
+
+
+/*
+ * Returns the 'bvuge' syntax.
+ * bvuge: unsigned greater or equal
+ */
+std::string smt2lib::bvuge(std::string op1, std::string op2)
+{
+  return "(bvuge " + op1 + " " + op2 + ")";
+}
+
+
+/*
+ * Returns the 'bvugt' syntax.
+ * bvugt: unsigned greater than
+ */
+std::string smt2lib::bvugt(std::string op1, std::string op2)
+{
+  return "(bvugt " + op1 + " " + op2 + ")";
+}
+
+
+/*
+ * Returns the 'bvule' syntax.
+ * bvule: unsigned less or equal
+ */
+std::string smt2lib::bvule(std::string op1, std::string op2)
+{
+  return "(bvule " + op1 + " " + op2 + ")";
+}
+
+
+/*
  * Returns the 'bvult' syntax.
  * bvult: unsigned less than
  */
@@ -204,4 +274,17 @@ std::string smt2lib::bvfalse(void)
   return smt2lib::bv(0, 1);
 }
 
+
+/* Returns the simplify syntax */
+std::string smt2lib::simplify(std::string expr)
+{
+  return "(simplify " + expr + ")";
+}
+
+
+/* Returns the display syntax */
+std::string smt2lib::display(std::string expr)
+{
+  return "(display " + expr + ")";
+}
 

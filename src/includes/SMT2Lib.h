@@ -60,6 +60,34 @@ namespace smt2lib {
   /* (= <op1> <op2>) */
   std::string equal(std::string op1, std::string op2);
 
+  /* returns the 'bvsge' syntax. */
+  /* (bvsge <op1> <op2>) */
+  std::string bvsge(std::string op1, std::string op2);
+
+  /* returns the 'bvsgt' syntax. */
+  /* (bvsgt <op1> <op2>) */
+  std::string bvsgt(std::string op1, std::string op2);
+
+  /* returns the 'bvsle' syntax. */
+  /* (bvsle <op1> <op2>) */
+  std::string bvsle(std::string op1, std::string op2);
+
+  /* returns the 'bvslt' syntax. */
+  /* (bvslt <op1> <op2>) */
+  std::string bvslt(std::string op1, std::string op2);
+
+  /* returns the 'bvuge' syntax. */
+  /* (bvuge <op1> <op2>) */
+  std::string bvuge(std::string op1, std::string op2);
+
+  /* returns the 'bvugt' syntax. */
+  /* (bvugt <op1> <op2>) */
+  std::string bvugt(std::string op1, std::string op2);
+
+  /* returns the 'bvule' syntax. */
+  /* (bvule <op1> <op2>) */
+  std::string bvule(std::string op1, std::string op2);
+
   /* Returns the 'bvult' syntax. */
   /* (bvult <op1> <op2>) */
   std::string bvult(std::string op1, std::string op2);
@@ -68,7 +96,7 @@ namespace smt2lib {
   /* (bvxor <op1> <op2>) */
   std::string bvxor(std::string op1, std::string op2);
 
-  /* Returns the 'bvsub' syntax. */
+  /* returns the 'bvsub' syntax. */
   /* (bvsub <op1> <op2>) */
   std::string bvsub(std::string op1, std::string op2);
 
@@ -84,6 +112,12 @@ namespace smt2lib {
   * Returns the parity flag of one byte. If the number of bits set to 1 is even,
   * it returns (_ bv0 1) and (_ bv1 1) otherwise. */
   std::string parityFlag(std::string expr);
+
+  /* Returns the simplify syntax */
+  std::string simplify(std::string expr);
+
+  /* Returns the display syntax */
+  std::string display(std::string expr);
 }
 
 #endif  /* !__SMTLIB2_UTILS__ */

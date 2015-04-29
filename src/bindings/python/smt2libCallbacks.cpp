@@ -104,6 +104,139 @@ static PyObject *smt2lib_bvtrue(PyObject *self, PyObject *args)
 }
 
 
+static char smt2lib_bvsge_doc[] = "Returns an 'bvsge' expression";
+static PyObject *smt2lib_bvsge(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvsge(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvsge(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvsge(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvsgt_doc[] = "Returns an 'bvsgt' expression";
+static PyObject *smt2lib_bvsgt(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvsgt(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvsgt(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvsgt(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvsle_doc[] = "Returns an 'bvsle' expression";
+static PyObject *smt2lib_bvsle(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvsle(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvsle(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvsle(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvslt_doc[] = "Returns an 'bvslt' expression";
+static PyObject *smt2lib_bvslt(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvslt(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvslt(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvslt(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvuge_doc[] = "Returns an 'bvuge' expression";
+static PyObject *smt2lib_bvuge(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvuge(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvuge(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvuge(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvugt_doc[] = "Returns an 'bvugt' expression";
+static PyObject *smt2lib_bvugt(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvugt(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvugt(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvugt(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvule_doc[] = "Returns an 'bvule' expression";
+static PyObject *smt2lib_bvule(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvule(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvule(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvule(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
 static char smt2lib_bvult_doc[] = "Returns an 'bvult' expression";
 static PyObject *smt2lib_bvult(PyObject *self, PyObject *args)
 {
@@ -139,6 +272,16 @@ static PyObject *smt2lib_bvxor(PyObject *self, PyObject *args)
     return PyErr_Format(PyExc_TypeError, "bvxor(): expected a string as second argument");
 
   return Py_BuildValue("s", smt2lib::bvxor(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_display_doc[] = "Returns a 'display' expression";
+static PyObject *smt2lib_display(PyObject *self, PyObject *op1)
+{
+  if (!PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "display(): expected a string as first argument");
+
+  return Py_BuildValue("s", smt2lib::display(PyString_AsString(op1)).c_str());
 }
 
 
@@ -213,8 +356,18 @@ static PyObject *smt2lib_ite(PyObject *self, PyObject *args)
 }
 
 
-static char smt2lib_assert_doc[] = "Returns an 'assert' expression";
-static PyObject *smt2lib_assert(PyObject *self, PyObject *expr)
+static char smt2lib_simplify_doc[] = "Returns a 'simplify' expression";
+static PyObject *smt2lib_simplify(PyObject *self, PyObject *op1)
+{
+  if (!PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "simplify(): expected a string as first argument");
+
+  return Py_BuildValue("s", smt2lib::simplify(PyString_AsString(op1)).c_str());
+}
+
+
+static char smt2lib_smtAssert_doc[] = "Returns an 'assert' expression";
+static PyObject *smt2lib_smtAssert(PyObject *self, PyObject *expr)
 {
   if (!PyString_Check(expr))
     return PyErr_Format(PyExc_TypeError, "smtAssert(): expected a string as first argument");
@@ -269,12 +422,21 @@ PyMethodDef smt2libCallbacks[] = {
   {"bvnot",       smt2lib_bvnot,      METH_O,           smt2lib_bvnot_doc},
   {"bvsub",       smt2lib_bvsub,      METH_VARARGS,     smt2lib_bvsub_doc},
   {"bvtrue",      smt2lib_bvtrue,     METH_NOARGS,      smt2lib_bvtrue_doc},
+  {"bvsge",       smt2lib_bvsge,      METH_VARARGS,     smt2lib_bvsge_doc},
+  {"bvsgt",       smt2lib_bvsgt,      METH_VARARGS,     smt2lib_bvsgt_doc},
+  {"bvsle",       smt2lib_bvsle,      METH_VARARGS,     smt2lib_bvsle_doc},
+  {"bvslt",       smt2lib_bvslt,      METH_VARARGS,     smt2lib_bvslt_doc},
+  {"bvuge",       smt2lib_bvuge,      METH_VARARGS,     smt2lib_bvuge_doc},
+  {"bvugt",       smt2lib_bvugt,      METH_VARARGS,     smt2lib_bvugt_doc},
+  {"bvule",       smt2lib_bvule,      METH_VARARGS,     smt2lib_bvule_doc},
   {"bvult",       smt2lib_bvult,      METH_VARARGS,     smt2lib_bvult_doc},
   {"bvxor",       smt2lib_bvxor,      METH_VARARGS,     smt2lib_bvxor_doc},
+  {"display",     smt2lib_display,    METH_O,           smt2lib_display_doc},
   {"equal",       smt2lib_equal,      METH_VARARGS,     smt2lib_equal_doc},
   {"extract",     smt2lib_extract,    METH_VARARGS,     smt2lib_extract_doc},
   {"ite",         smt2lib_ite,        METH_VARARGS,     smt2lib_ite_doc},
-  {"smtAssert",   smt2lib_assert,     METH_O,           smt2lib_assert_doc},
+  {"simplify",    smt2lib_simplify,   METH_O,           smt2lib_simplify_doc},
+  {"smtAssert",   smt2lib_smtAssert,  METH_O,           smt2lib_smtAssert_doc},
   {"sx",          smt2lib_sx,         METH_VARARGS,     smt2lib_sx_doc},
   {"zx",          smt2lib_zx,         METH_VARARGS,     smt2lib_zx_doc},
   {nullptr,       nullptr,            0,                nullptr}
