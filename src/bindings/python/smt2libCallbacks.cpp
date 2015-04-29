@@ -23,7 +23,7 @@ static PyObject *smt2lib_bv(PyObject *self, PyObject *args)
 }
 
 
-static char smt2lib_bvadd_doc[] = "Returns an 'bvadd' expression";
+static char smt2lib_bvadd_doc[] = "Returns a 'bvadd' expression";
 static PyObject *smt2lib_bvadd(PyObject *self, PyObject *args)
 {
   PyObject *op1 = nullptr;
@@ -42,7 +42,7 @@ static PyObject *smt2lib_bvadd(PyObject *self, PyObject *args)
 }
 
 
-static char smt2lib_bvand_doc[] = "Returns an 'bvand' expression";
+static char smt2lib_bvand_doc[] = "Returns a 'bvand' expression";
 static PyObject *smt2lib_bvand(PyObject *self, PyObject *args)
 {
   PyObject *op1 = nullptr;
@@ -68,7 +68,7 @@ static PyObject *smt2lib_bvfalse(PyObject *self, PyObject *args)
 }
 
 
-static char smt2lib_bvnot_doc[] = "Returns an 'bvnot' expression";
+static char smt2lib_bvnot_doc[] = "Returns a 'bvnot' expression";
 static PyObject *smt2lib_bvnot(PyObject *self, PyObject *op1)
 {
   if (!PyString_Check(op1))
@@ -78,7 +78,7 @@ static PyObject *smt2lib_bvnot(PyObject *self, PyObject *op1)
 }
 
 
-static char smt2lib_bvsub_doc[] = "Returns an 'bvsub' expression";
+static char smt2lib_bvsub_doc[] = "Returns a 'bvsub' expression";
 static PyObject *smt2lib_bvsub(PyObject *self, PyObject *args)
 {
   PyObject *op1 = nullptr;
@@ -104,7 +104,7 @@ static PyObject *smt2lib_bvtrue(PyObject *self, PyObject *args)
 }
 
 
-static char smt2lib_bvsge_doc[] = "Returns an 'bvsge' expression";
+static char smt2lib_bvsge_doc[] = "Returns a 'bvsge' expression";
 static PyObject *smt2lib_bvsge(PyObject *self, PyObject *args)
 {
   PyObject *op1 = nullptr;
@@ -123,7 +123,7 @@ static PyObject *smt2lib_bvsge(PyObject *self, PyObject *args)
 }
 
 
-static char smt2lib_bvsgt_doc[] = "Returns an 'bvsgt' expression";
+static char smt2lib_bvsgt_doc[] = "Returns a 'bvsgt' expression";
 static PyObject *smt2lib_bvsgt(PyObject *self, PyObject *args)
 {
   PyObject *op1 = nullptr;
@@ -142,7 +142,7 @@ static PyObject *smt2lib_bvsgt(PyObject *self, PyObject *args)
 }
 
 
-static char smt2lib_bvsle_doc[] = "Returns an 'bvsle' expression";
+static char smt2lib_bvsle_doc[] = "Returns a 'bvsle' expression";
 static PyObject *smt2lib_bvsle(PyObject *self, PyObject *args)
 {
   PyObject *op1 = nullptr;
@@ -161,7 +161,7 @@ static PyObject *smt2lib_bvsle(PyObject *self, PyObject *args)
 }
 
 
-static char smt2lib_bvslt_doc[] = "Returns an 'bvslt' expression";
+static char smt2lib_bvslt_doc[] = "Returns a 'bvslt' expression";
 static PyObject *smt2lib_bvslt(PyObject *self, PyObject *args)
 {
   PyObject *op1 = nullptr;
@@ -180,7 +180,7 @@ static PyObject *smt2lib_bvslt(PyObject *self, PyObject *args)
 }
 
 
-static char smt2lib_bvuge_doc[] = "Returns an 'bvuge' expression";
+static char smt2lib_bvuge_doc[] = "Returns a 'bvuge' expression";
 static PyObject *smt2lib_bvuge(PyObject *self, PyObject *args)
 {
   PyObject *op1 = nullptr;
@@ -199,7 +199,7 @@ static PyObject *smt2lib_bvuge(PyObject *self, PyObject *args)
 }
 
 
-static char smt2lib_bvugt_doc[] = "Returns an 'bvugt' expression";
+static char smt2lib_bvugt_doc[] = "Returns a 'bvugt' expression";
 static PyObject *smt2lib_bvugt(PyObject *self, PyObject *args)
 {
   PyObject *op1 = nullptr;
@@ -218,7 +218,7 @@ static PyObject *smt2lib_bvugt(PyObject *self, PyObject *args)
 }
 
 
-static char smt2lib_bvule_doc[] = "Returns an 'bvule' expression";
+static char smt2lib_bvule_doc[] = "Returns a 'bvule' expression";
 static PyObject *smt2lib_bvule(PyObject *self, PyObject *args)
 {
   PyObject *op1 = nullptr;
@@ -237,7 +237,7 @@ static PyObject *smt2lib_bvule(PyObject *self, PyObject *args)
 }
 
 
-static char smt2lib_bvult_doc[] = "Returns an 'bvult' expression";
+static char smt2lib_bvult_doc[] = "Returns a 'bvult' expression";
 static PyObject *smt2lib_bvult(PyObject *self, PyObject *args)
 {
   PyObject *op1 = nullptr;
@@ -256,7 +256,7 @@ static PyObject *smt2lib_bvult(PyObject *self, PyObject *args)
 }
 
 
-static char smt2lib_bvxor_doc[] = "Returns an 'bvxor' expression";
+static char smt2lib_bvxor_doc[] = "Returns a 'bvxor' expression";
 static PyObject *smt2lib_bvxor(PyObject *self, PyObject *args)
 {
   PyObject *op1 = nullptr;
