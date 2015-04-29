@@ -2,11 +2,11 @@
 from triton import *
 
 # $ ../../../pin -t ./triton.so -script ./examples/get_expressions.py -- ./samples/crackmes/crackme_xor elite
-# Expression: (assert (= (bvsub ((_ extract 31 0) ((_ extract 31 0) (bvxor ((_ extract 31 0) (bvsub ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) SymVar_0))) (_ bv1 32))) (_ bv85 32)))) ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) ((_ zero_extend 24) (_ bv49 8)))))) (_ bv0 32)))
-# Expression: (assert (= (bvsub ((_ extract 31 0) ((_ extract 31 0) (bvxor ((_ extract 31 0) (bvsub ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) SymVar_1))) (_ bv1 32))) (_ bv85 32)))) ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) ((_ zero_extend 24) (_ bv62 8)))))) (_ bv0 32)))
-# Expression: (assert (= (bvsub ((_ extract 31 0) ((_ extract 31 0) (bvxor ((_ extract 31 0) (bvsub ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) SymVar_2))) (_ bv1 32))) (_ bv85 32)))) ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) ((_ zero_extend 24) (_ bv61 8)))))) (_ bv0 32)))
-# Expression: (assert (= (bvsub ((_ extract 31 0) ((_ extract 31 0) (bvxor ((_ extract 31 0) (bvsub ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) SymVar_3))) (_ bv1 32))) (_ bv85 32)))) ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) ((_ zero_extend 24) (_ bv38 8)))))) (_ bv0 32)))
-# Expression: (assert (= (bvsub ((_ extract 31 0) ((_ extract 31 0) (bvxor ((_ extract 31 0) (bvsub ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) SymVar_4))) (_ bv1 32))) (_ bv85 32)))) ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) ((_ zero_extend 24) (_ bv49 8)))))) (_ bv0 32)))
+# Expression: (ite (= (bvsub ((_ extract 31 0) ((_ extract 31 0) (bvxor ((_ extract 31 0) (bvsub ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) SymVar_0))) (_ bv1 32))) (_ bv85 32)))) ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) ((_ zero_extend 24) (_ bv49 8)))))) (_ bv0 32)) (_ bv1 1) (_ bv0 1))
+# Expression: (ite (= (bvsub ((_ extract 31 0) ((_ extract 31 0) (bvxor ((_ extract 31 0) (bvsub ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) SymVar_1))) (_ bv1 32))) (_ bv85 32)))) ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) ((_ zero_extend 24) (_ bv62 8)))))) (_ bv0 32)) (_ bv1 1) (_ bv0 1))
+# Expression: (ite (= (bvsub ((_ extract 31 0) ((_ extract 31 0) (bvxor ((_ extract 31 0) (bvsub ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) SymVar_2))) (_ bv1 32))) (_ bv85 32)))) ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) ((_ zero_extend 24) (_ bv61 8)))))) (_ bv0 32)) (_ bv1 1) (_ bv0 1))
+# Expression: (ite (= (bvsub ((_ extract 31 0) ((_ extract 31 0) (bvxor ((_ extract 31 0) (bvsub ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) SymVar_3))) (_ bv1 32))) (_ bv85 32)))) ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) ((_ zero_extend 24) (_ bv38 8)))))) (_ bv0 32)) (_ bv1 1) (_ bv0 1))
+# Expression: (ite (= (bvsub ((_ extract 31 0) ((_ extract 31 0) (bvxor ((_ extract 31 0) (bvsub ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) SymVar_4))) (_ bv1 32))) (_ bv85 32)))) ((_ extract 31 0) ((_ sign_extend 24) ((_ extract 7 0) ((_ zero_extend 24) (_ bv49 8)))))) (_ bv0 32)) (_ bv1 1) (_ bv0 1))
 # Win
 # $ 
 
