@@ -61,6 +61,23 @@ static PyObject *smt2lib_bvand(PyObject *self, PyObject *args)
 }
 
 
+static char smt2lib_bvfalse_doc[] = "Returns an alias on '(_ bv0 1)' expression";
+static PyObject *smt2lib_bvfalse(PyObject *self, PyObject *args)
+{
+  return Py_BuildValue("s", smt2lib::bvfalse().c_str());
+}
+
+
+static char smt2lib_bvnot_doc[] = "Returns an 'bvnot' expression";
+static PyObject *smt2lib_bvnot(PyObject *self, PyObject *op1)
+{
+  if (!PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvnot(): expected a string as first argument");
+
+  return Py_BuildValue("s", smt2lib::bvnot(PyString_AsString(op1)).c_str());
+}
+
+
 static char smt2lib_bvsub_doc[] = "Returns an 'bvsub' expression";
 static PyObject *smt2lib_bvsub(PyObject *self, PyObject *args)
 {
@@ -77,6 +94,13 @@ static PyObject *smt2lib_bvsub(PyObject *self, PyObject *args)
     return PyErr_Format(PyExc_TypeError, "bvsub(): expected a string as second argument");
 
   return Py_BuildValue("s", smt2lib::bvsub(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvtrue_doc[] = "Returns an alias on '(_ bv1 1)' expression";
+static PyObject *smt2lib_bvtrue(PyObject *self, PyObject *args)
+{
+  return Py_BuildValue("s", smt2lib::bvtrue().c_str());
 }
 
 
@@ -241,7 +265,10 @@ PyMethodDef smt2libCallbacks[] = {
   {"bv",          smt2lib_bv,         METH_VARARGS,     smt2lib_bv_doc},
   {"bvadd",       smt2lib_bvadd,      METH_VARARGS,     smt2lib_bvadd_doc},
   {"bvand",       smt2lib_bvand,      METH_VARARGS,     smt2lib_bvand_doc},
+  {"bvfalse",     smt2lib_bvfalse,    METH_NOARGS,      smt2lib_bvfalse_doc},
+  {"bvnot",       smt2lib_bvnot,      METH_O,           smt2lib_bvnot_doc},
   {"bvsub",       smt2lib_bvsub,      METH_VARARGS,     smt2lib_bvsub_doc},
+  {"bvtrue",      smt2lib_bvtrue,     METH_NOARGS,      smt2lib_bvtrue_doc},
   {"bvult",       smt2lib_bvult,      METH_VARARGS,     smt2lib_bvult_doc},
   {"bvxor",       smt2lib_bvxor,      METH_VARARGS,     smt2lib_bvxor_doc},
   {"equal",       smt2lib_equal,      METH_VARARGS,     smt2lib_equal_doc},

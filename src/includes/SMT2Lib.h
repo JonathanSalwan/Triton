@@ -17,6 +17,12 @@ namespace smt2lib {
   /* (_ bv<value> <size>) */
   std::string bv(uint64_t value, uint64_t regSize);
 
+  /* This is an alias on (_ bv1 1) */
+  std::string bvtrue(void);
+
+  /* This is an alias on (_ bv0 1) */
+  std::string bvfalse(void);
+
   /* Returns the 'bvadd' syntax. */
   /* (bvadd <op1> <op2>) */
   std::string bvadd(std::string op1, std::string op2);

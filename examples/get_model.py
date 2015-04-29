@@ -28,7 +28,7 @@ def cafter(instruction):
     if instruction.address == 0x4005ae:
         zfId = getRegSymbolicID(IDREF.FLAG.ZF)
         zfExpr = getBacktrackedSymExpr(zfId)
-        expr = smt2lib.smtAssert(smt2lib.equal(zfExpr, smt2lib.bv(1, 1)))
+        expr = smt2lib.smtAssert(smt2lib.equal(zfExpr, smt2lib.bvtrue())) # (assert (= zf True))
         print {k: "0x%x, '%c'" % (v, v) for k, v in getModel(expr).items()}
 
 

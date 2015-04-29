@@ -190,3 +190,18 @@ std::string smt2lib::parityFlag(std::string expr)
   return "(parity_flag " + expr + ")";
 }
 
+
+/* This is an alias on (_ bv1 1) */
+std::string smt2lib::bvtrue(void)
+{
+  return smt2lib::bv(1, 1);
+}
+
+
+/* This is an alias on (_ bv0 1) */
+std::string smt2lib::bvfalse(void)
+{
+  return smt2lib::bv(0, 1);
+}
+
+
