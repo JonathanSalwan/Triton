@@ -19,6 +19,7 @@ please, **don't blame us** if it is not yet reliable. [Open issues](https://gith
 
 * [Installation](https://github.com/JonathanSalwan/Triton/wiki/Installation)
 * [Examples](https://github.com/JonathanSalwan/Triton/wiki/Examples)
+* [Tools](https://github.com/JonathanSalwan/Triton/wiki/Tools)
 
 ### Internal documentation
 
