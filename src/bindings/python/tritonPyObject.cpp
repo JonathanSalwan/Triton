@@ -38,11 +38,14 @@ PyObject *PySymbolicElement(SymbolicElement *element)
  *
  * - address (integer)
  * - assembly (string)
+ * - imageName (string)
  * - isBranch (bool)
  * - opcode (integer)
  * - opcodeCategory (IDREF.OPCODE_CATEGORY)
+ * - operands ([Operand])
  * - symbolicElements (list of SymbolicElement)
  * - routineName (string)
+ * - sectionName (string)
  * - threadId (integer)
  */
 PyObject *PyInstruction(Inst *inst)
@@ -61,20 +64,38 @@ PyObject *PyInstruction(Inst *inst)
   PyDict_SetItemString(dictInstClass, "threadId",       PyInt_FromLong(inst->getThreadID()));
   PIN_UnlockClient();
 
+
   /* Setup the symbolic element list */
-  PyObject *SEList                         = xPyList_New(inst->numberOfElements());
-  std::list<SymbolicElement*> symElements  = inst->getSymbolicElements();
-  std::list<SymbolicElement*>::iterator it = symElements.begin();
+  PyObject *SEList                          = xPyList_New(inst->numberOfElements());
+  std::list<SymbolicElement*> symElements   = inst->getSymbolicElements();
+  std::list<SymbolicElement*>::iterator it1 = symElements.begin();
 
   Py_ssize_t index = 0;
-  for ( ; it != symElements.end(); it++){
-    PyObject *PySE = PySymbolicElement(*it);
+  for ( ; it1 != symElements.end(); it1++){
+    PyObject *PySE = PySymbolicElement(*it1);
     PyList_SetItem(SEList, index, PySE);
     Py_DECREF(PySE);
     index++;
   }
 
   PyDict_SetItemString(dictInstClass, "symbolicElements", SEList);
+
+
+  /* Setup the operands list */
+  std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > operands = inst->getOperands();
+  std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> >::iterator it2 = operands.begin();
+  PyObject *OperandList = xPyList_New(operands.size());
+
+  index = 0;
+  for ( ; it2 != operands.end(); it2++){
+    PyObject *operand = PyOperand(*it2);
+    PyList_SetItem(OperandList, index, operand);
+    Py_DECREF(operand);
+    index++;
+  }
+
+  PyDict_SetItemString(dictInstClass, "operands", OperandList);
+
 
   /* Create the Instruction class */
   PyObject *instClassName = xPyString_FromString("Instruction");
@@ -92,11 +113,14 @@ PyObject *PyInstruction(Inst *inst)
  *
  * - address (integer)
  * - assembly (string)
+ * - imageName (string)
  * - isBranch (bool)
  * - opcode (integer)
  * - opcodeCategory (IDREF.OPCODE_CATEGORY)
+ * - operands ([Operand])
  * - symbolicElements (list of SymbolicElement)
  * - routineName (string)
+ * - sectionName (string)
  * - threadId (integer)
  */
 PyObject *PyInstruction(IRBuilder *irb)
@@ -114,10 +138,28 @@ PyObject *PyInstruction(IRBuilder *irb)
   PyDict_SetItemString(dictInstClass, "threadId",       PyInt_FromLong(irb->getThreadID()));
   PIN_UnlockClient();
 
+
   /* Before the processing, the symbolic element list is empty */
   PyObject *SEList = xPyList_New(0);
   PyDict_SetItemString(dictInstClass, "symbolicElements", SEList);
   Py_DECREF(SEList);
+
+
+  /* Setup the operands list */
+  std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > operands = irb->getOperands();
+  std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> >::iterator it = operands.begin();
+  PyObject *OperandList = xPyList_New(operands.size());
+
+  Py_ssize_t index = 0;
+  for ( ; it != operands.end(); it++){
+    PyObject *operand = PyOperand(*it);
+    PyList_SetItem(OperandList, index, operand);
+    Py_DECREF(operand);
+    index++;
+  }
+
+  PyDict_SetItemString(dictInstClass, "operands", OperandList);
+
 
   /* Create the Instruction class */
   PyObject *instClassName = xPyString_FromString("Instruction");
@@ -127,5 +169,24 @@ PyObject *PyInstruction(IRBuilder *irb)
   Py_DECREF(instClassName);
 
   return instClass;
+}
+
+
+PyObject *PyOperand(std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> operand)
+{
+  PyObject *dictOperandClass = xPyDict_New();
+  PyDict_SetItemString(dictOperandClass, "type",  PyInt_FromLong(std::get<0>(operand)));
+  PyDict_SetItemString(dictOperandClass, "value", PyInt_FromLong(std::get<1>(operand)));
+  PyDict_SetItemString(dictOperandClass, "size",  PyInt_FromLong(std::get<2>(operand)));
+
+  /* Create the Operand class */
+  PyObject *operandClassName = xPyString_FromString("Operand");
+  PyObject *operandClass  = xPyClass_New(nullptr, dictOperandClass, operandClassName);
+
+  Py_DECREF(dictOperandClass);
+  Py_DECREF(operandClassName);
+  Py_INCREF(operandClass);
+
+  return operandClass;
 }
 
