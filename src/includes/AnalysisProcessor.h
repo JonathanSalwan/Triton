@@ -135,6 +135,8 @@ class AnalysisProcessor {
     SnapshotEngine  &getSnapshotEngine(void);
     bool            isSnapshotLocked(void);
     void            addSnapshotModification(uint64_t addr, char byte);
+    void            takeSnapshot(void);
+    void            restoreSnapshot(void);
 
 
   private:

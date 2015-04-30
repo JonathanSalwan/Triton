@@ -408,6 +408,14 @@ static PyObject *Triton_opcodeToString(PyObject *self, PyObject *opcode)
 }
 
 
+static char Triton_restoreSnapshot_doc[] = "Restore the last snapshot";
+static PyObject *Triton_restoreSnapshot(PyObject *self, PyObject *noarg)
+{
+  ap.restoreSnapshot();
+  return Py_None;
+}
+
+
 static char Triton_runProgram_doc[] = "Start the Pin instrumentation";
 static PyObject *Triton_runProgram(PyObject *self, PyObject *noarg)
 {
@@ -633,6 +641,14 @@ static PyObject *Triton_taintRegFromAddr(PyObject *self, PyObject *args)
 }
 
 
+static char Triton_takeSnapshot_doc[] = "Take a snapshot of the registers states and memory";
+static PyObject *Triton_takeSnapshot(PyObject *self, PyObject *noarg)
+{
+  ap.takeSnapshot();
+  return Py_None;
+}
+
+
 static char Triton_untaintMem_doc[] = "Untaint an address memory";
 static PyObject *Triton_untaintMem(PyObject *self, PyObject *mem)
 {
@@ -710,6 +726,7 @@ PyMethodDef tritonCallbacks[] = {
   {"isMemTainted",              Triton_isMemTainted,              METH_O,       Triton_isMemTainted_doc},
   {"isRegTainted",              Triton_isRegTainted,              METH_O,       Triton_isRegTainted_doc},
   {"opcodeToString",            Triton_opcodeToString,            METH_O,       Triton_opcodeToString_doc},
+  {"restoreSnapshot",           Triton_restoreSnapshot,           METH_NOARGS,  Triton_restoreSnapshot_doc},
   {"runProgram",                Triton_runProgram,                METH_NOARGS,  Triton_runProgram_doc},
   {"saveTrace",                 Triton_saveTrace,                 METH_O,       Triton_saveTrace_doc},
   {"setMemValue",               Triton_setMemValue,               METH_VARARGS, Triton_setMemValue_doc},
@@ -721,6 +738,7 @@ PyMethodDef tritonCallbacks[] = {
   {"taintMem",                  Triton_taintMem,                  METH_O,       Triton_taintMem_doc},
   {"taintReg",                  Triton_taintReg,                  METH_O,       Triton_taintReg_doc},
   {"taintRegFromAddr",          Triton_taintRegFromAddr,          METH_VARARGS, Triton_taintRegFromAddr_doc},
+  {"takeSnapshot",              Triton_takeSnapshot,              METH_NOARGS,  Triton_takeSnapshot_doc},
   {"untaintMem",                Triton_untaintMem,                METH_O,       Triton_untaintMem_doc},
   {"untaintReg",                Triton_untaintReg,                METH_O,       Triton_untaintReg_doc},
   {"untaintRegFromAddr",        Triton_untaintRegFromAddr,        METH_VARARGS, Triton_untaintRegFromAddr_doc},

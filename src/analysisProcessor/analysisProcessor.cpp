@@ -389,3 +389,15 @@ void AnalysisProcessor::addSnapshotModification(uint64_t addr, char byte)
 }
 
 
+void AnalysisProcessor::takeSnapshot(void)
+{
+  CONTEXT *ctx = static_cast<CONTEXT*>(this->getCurrentCtxH()->getCtx());
+  this->snapshotEngine.takeSnapshot(this->symEngine, this->taintEngine, ctx);
+}
+
+
+void AnalysisProcessor::restoreSnapshot(void)
+{
+  CONTEXT *ctx = static_cast<CONTEXT*>(this->getCurrentCtxH()->getCtx());
+  this->snapshotEngine.restoreSnapshot(&this->symEngine, &this->taintEngine, ctx);
+}
