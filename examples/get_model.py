@@ -1,18 +1,35 @@
 
+# $ ../../../pin -t ./triton.so -script ./examples/get_model.py -- ./samples/crackmes/crackme_xor aaaaaaaa
+# [+] Take a snapshot at the prologue of the function
+# [+] Still not the good password. Restore snapshot.
+# [+] Inject the character 'e' in memory
+# [+] Still not the good password. Restore snapshot.
+# [+] Inject the character 'e' in memory
+# [+] Inject the character 'l' in memory
+# [+] Still not the good password. Restore snapshot.
+# [+] Inject the character 'e' in memory
+# [+] Inject the character 'l' in memory
+# [+] Inject the character 'i' in memory
+# [+] Still not the good password. Restore snapshot.
+# [+] Inject the character 'e' in memory
+# [+] Inject the character 'l' in memory
+# [+] Inject the character 'i' in memory
+# [+] Inject the character 't' in memory
+# [+] Still not the good password. Restore snapshot.
+# [+] Inject the character 'e' in memory
+# [+] Inject the character 'l' in memory
+# [+] Inject the character 'i' in memory
+# [+] Inject the character 't' in memory
+# [+] Inject the character 'e' in memory
+# [+] Good password found!
+# [+] Analysis done!
+
+
 from    triton import *
 import  smt2lib
 
 password = dict()
 tmp      = None
-
-# $ ../../../pin -t ./triton.so -script ./examples/get_model.py -- ./samples/crackmes/crackme_xor elite
-# {'SymVar_0': "0x65, 'e'"}
-# {'SymVar_1': "0x6c, 'l'"}
-# {'SymVar_2': "0x69, 'i'"}
-# {'SymVar_3': "0x74, 't'"}
-# {'SymVar_4': "0x65, 'e'"}
-# Win
-# $
 
 # 0x40058b: movzx eax, byte ptr [rax]
 #
@@ -86,4 +103,5 @@ if __name__ == '__main__':
 
     # Run the instrumentation - Never returns
     runProgram()
+
 
