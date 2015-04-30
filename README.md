@@ -1,4 +1,4 @@
-![Triton](http://shell-storm.org/files/triton_logo.png)
+<p align="center"><img src="http://shell-storm.org/files/triton_logo.png"/></p>
 
 **Triton** is a concolic execution framework based on Pin. It provides components like a 
 [taint engine](https://github.com/JonathanSalwan/Triton/wiki/Taint-Engine), a 
