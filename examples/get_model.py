@@ -1,5 +1,5 @@
 
-# $ ../../../pin -t ./triton.so -script ./examples/get_model.py -- ./samples/crackmes/crackme_xor aaaaaaaa
+# $ ../../../pin -t ./triton.so -script ./examples/get_model.py -- ./samples/crackmes/crackme_xor a
 # [+] Take a snapshot at the prologue of the function
 # [+] Still not the good password. Restore snapshot.
 # [+] Inject the character 'e' in memory
@@ -22,6 +22,7 @@
 # [+] Inject the character 't' in memory
 # [+] Inject the character 'e' in memory
 # [+] Good password found!
+# Win
 # [+] Analysis done!
 
 

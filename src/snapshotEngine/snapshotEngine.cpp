@@ -22,7 +22,7 @@ SnapshotEngine::~SnapshotEngine()
 void SnapshotEngine::addModification(uint64_t mem, char byte)
 {
   if (this->locked == UNLOCKED)
-    this->memory.push_back(make_pair(mem, byte));
+    this->memory.push_front(make_pair(mem, byte));
 }
 
 
@@ -48,8 +48,8 @@ void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngi
 {
   /* 1 - Restore all memory modification. */
   list< std::pair<uint64_t, char> >::iterator i;
-  for(i = this->memory.begin(); i != this->memory.end(); ++i){ // TODO: maybe we should restore from the end to the beginning?
-    *(reinterpret_cast<ADDRINT*>(i->first)) = i->second;
+  for(i = this->memory.begin(); i != this->memory.end(); ++i){
+    *(reinterpret_cast<char*>(i->first)) = i->second;
   }
   this->memory.clear();
 
