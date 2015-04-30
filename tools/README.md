@@ -2,6 +2,8 @@
 
 This directory contains some tools based on the Triton's API.
 
+
+
 ## Format string bug analysis
 
 This tool taints all arguments (`*argv[]`) and checks when a printf occurs if
@@ -30,4 +32,35 @@ abcd
 $
 ```
 
+
+
+## Use after free bug and memory leak analysis
+
+This tool maintains a free table (TF) and an allocation table (TA) which
+represents the states of pointers allocated/freed during the execution.
+When a LOAD and STORE instruction occurs, the tool checks if the memory
+access is referenced into TA or TF. 
+
+If the memory access is in TF -> use-after-free.
+
+```
+$ ../../../pin -t ./triton.so -script ./tools/use_after_free_bug_and_memory_leak_analysis.py -- ./samples/vulns/testSuite
+[+] TA <- (0x1bec010, 0x20)
+[+] TA <- (0x1bec040, 0x20)
+[+] TA -> (0x1bec010, 0x20)
+[+] TF <- (0x1bec010, 0x20)
+[!] Use-after-free (0x1bec020) at 0x4006cb: mov byte ptr [rax], 0x43
+[+] TF -> (0x1bec010, 0x20)
+[+] TA <- (0x1bec010, 0x20)
+[+] TA -> (0x1bec040, 0x20)
+[+] TF <- (0x1bec040, 0x20)
+
+Free table:
+        (0x1bec040, 0x20)
+
+Allocation table:
+        (0x1bec010, 0x20)
+
+[!] There is 32 bytes of leaked memory
+```
 
