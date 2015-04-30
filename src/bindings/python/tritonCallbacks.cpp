@@ -95,6 +95,27 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
 }
 
 
+static char Triton_assignExprToSymVar_doc[] = "Assigns a symbolic variable to an expression";
+static PyObject *Triton_assignExprToSymVar(PyObject *self, PyObject *args)
+{
+  PyObject *exprId, *symVarId;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &exprId, &symVarId);
+
+  if (!PyLong_Check(exprId) && !PyInt_Check(exprId))
+    return PyErr_Format(PyExc_TypeError, "assignExprToSymVar(): expected an integer as first argument");
+
+  if (!PyLong_Check(symVarId) && !PyInt_Check(symVarId))
+    return PyErr_Format(PyExc_TypeError, "assignExprToSymVar(): expected an integer as second argument");
+
+  if (ap.assignExprToSymVar(PyLong_AsLong(exprId), PyLong_AsLong(symVarId)) == false)
+    return Py_False;
+
+  return Py_True;
+}
+
+
 static char Triton_checkReadAccess_doc[] = "Checks whether the memory page which contains this address has a read access protection";
 static PyObject *Triton_checkReadAccess(PyObject *self, PyObject *addr)
 {
@@ -155,24 +176,11 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
 }
 
 
-static char Triton_assignExprToSymVar_doc[] = "Assigns a symbolic variable to an expression";
-static PyObject *Triton_assignExprToSymVar(PyObject *self, PyObject *args)
+static char Triton_disableSnapshot_doc[] = "Disable the snapshot engine";
+static PyObject *Triton_disableSnapshot(PyObject *self, PyObject *noarg)
 {
-  PyObject *exprId, *symVarId;
-
-  /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &exprId, &symVarId);
-
-  if (!PyLong_Check(exprId) && !PyInt_Check(exprId))
-    return PyErr_Format(PyExc_TypeError, "assignExprToSymVar(): expected an integer as first argument");
-
-  if (!PyLong_Check(symVarId) && !PyInt_Check(symVarId))
-    return PyErr_Format(PyExc_TypeError, "assignExprToSymVar(): expected an integer as second argument");
-
-  if (ap.assignExprToSymVar(PyLong_AsLong(exprId), PyLong_AsLong(symVarId)) == false)
-    return Py_False;
-
-  return Py_True;
+  ap.disableSnapshot();
+  return Py_None;
 }
 
 
@@ -394,6 +402,15 @@ static PyObject *Triton_isRegTainted(PyObject *self, PyObject *reg)
   if (ap.isRegTainted(PyInt_AsLong(reg)) == true)
     return Py_True;
 
+  return Py_False;
+}
+
+
+static char Triton_isSnapshotEnable_doc[] = "Returns true if the snapshot is enable";
+static PyObject *Triton_isSnapshotEnable(PyObject *self, PyObject *noarg)
+{
+  if (ap.isSnapshotEnable() == true)
+    return Py_True;
   return Py_False;
 }
 
@@ -712,6 +729,7 @@ PyMethodDef tritonCallbacks[] = {
   {"checkReadAccess",           Triton_checkReadAccess,           METH_O,       Triton_checkReadAccess_doc},
   {"checkWriteAccess",          Triton_checkWriteAccess,          METH_O,       Triton_checkWriteAccess_doc},
   {"convertExprToSymVar",       Triton_convertExprToSymVar,       METH_VARARGS, Triton_convertExprToSymVar_doc},
+  {"disableSnapshot",           Triton_disableSnapshot,           METH_NOARGS,  Triton_disableSnapshot_doc},
   {"getBacktrackedSymExpr",     Triton_getBacktrackedSymExpr,     METH_O,       Triton_getBacktrackedSymExpr_doc},
   {"getMemSymbolicID",          Triton_getMemSymbolicID,          METH_O,       Triton_getMemSymbolicID_doc},
   {"getMemValue",               Triton_getMemValue,               METH_VARARGS, Triton_getMemValue_doc},
@@ -725,6 +743,7 @@ PyMethodDef tritonCallbacks[] = {
   {"getSyscallReturn",          Triton_getSyscallReturn,          METH_O,       Triton_getSyscallReturn_doc},
   {"isMemTainted",              Triton_isMemTainted,              METH_O,       Triton_isMemTainted_doc},
   {"isRegTainted",              Triton_isRegTainted,              METH_O,       Triton_isRegTainted_doc},
+  {"isSnapshotEnable",          Triton_isSnapshotEnable,          METH_NOARGS,  Triton_isSnapshotEnable_doc},
   {"opcodeToString",            Triton_opcodeToString,            METH_O,       Triton_opcodeToString_doc},
   {"restoreSnapshot",           Triton_restoreSnapshot,           METH_NOARGS,  Triton_restoreSnapshot_doc},
   {"runProgram",                Triton_runProgram,                METH_NOARGS,  Triton_runProgram_doc},

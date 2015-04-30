@@ -42,7 +42,10 @@ class SymbolicEngine {
      * item1: memory address
      * item2: symbolic variable ID
      */
+    // memory -> symbolic
     std::map<uint64_t, uint64_t> symVarMemoryReference;
+    // symbolic -> memory
+    std::map<uint64_t, uint64_t> symVarMemoryReferenceInverse;
 
     /* List of variables decl in smt2lib */
     std::list<std::string> symVarDeclaration;
@@ -72,7 +75,8 @@ class SymbolicEngine {
     uint64_t              getRegSymbolicID(uint64_t regID);
     uint64_t              getUniqueID();
     uint64_t              getUniqueSymVarID();
-    uint64_t              isSymVarMemory(uint64_t mem);
+    uint64_t              symVarFromMemory(uint64_t mem);
+    uint64_t              memoryFromsymVar(uint64_t symVar);
     void                  addMemoryReference(uint64_t mem, uint64_t id);
     void                  addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize);
     void                  addSymVarMemoryReference(uint64_t mem, uint64_t symVarID);

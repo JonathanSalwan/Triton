@@ -1,4 +1,5 @@
 #include "AnalysisProcessor.h"
+#include "PINContextHandler.h"
 
 
 AnalysisProcessor::AnalysisProcessor():
@@ -61,6 +62,16 @@ uint64_t AnalysisProcessor::getMemSymbolicID(uint64_t address) {
 }
 
 
+uint64_t AnalysisProcessor::symVarFromMemory(uint64_t address) {
+  return this->symEngine.symVarFromMemory(address);
+}
+
+
+uint64_t AnalysisProcessor::memoryFromsymVar(uint64_t symVar) {
+  return this->symEngine.memoryFromsymVar(symVar);
+}
+
+
 SymbolicElement *AnalysisProcessor::getElementFromId(uint64_t id)
 {
   return this->symEngine.getElementFromId(id);
@@ -116,7 +127,7 @@ void AnalysisProcessor::assignmentSpreadTaintRegMem(SymbolicElement *se, uint64_
     uint64_t          symVarID;
 
     /* Check if this memory area is already known as a symbolic variable */
-    symVarID = this->symEngine.isSymVarMemory(memSrc); // TODO: Must use the readSize
+    symVarID = this->symEngine.symVarFromMemory(memSrc); // TODO: Must use the readSize
     if (symVarID == UNSET){
       symVarID = this->symEngine.getUniqueSymVarID();
       this->symEngine.addSmt2LibVarDecl(symVarID, readSize);
@@ -140,7 +151,7 @@ void AnalysisProcessor::assignmentSpreadTaintMemMem(SymbolicElement *se, uint64_
     uint64_t          symVarID;
 
     /* Check if this memory area is already known as a symbolic variable */
-    symVarID = this->symEngine.isSymVarMemory(memSrc); // TODO: Must use the readSize
+    symVarID = this->symEngine.symVarFromMemory(memSrc); // TODO: Must use the readSize
     if (symVarID == UNSET){
       symVarID = this->symEngine.getUniqueSymVarID();
       this->symEngine.addSmt2LibVarDecl(symVarID, readSize);
@@ -399,5 +410,22 @@ void AnalysisProcessor::takeSnapshot(void)
 void AnalysisProcessor::restoreSnapshot(void)
 {
   CONTEXT *ctx = static_cast<CONTEXT*>(this->getCurrentCtxH()->getCtx());
+  this->updateCurrentCtxH(new PINContextHandler(this->snapshotEngine.getCtx(), this->getThreadID()));
   this->snapshotEngine.restoreSnapshot(&this->symEngine, &this->taintEngine, ctx);
 }
+
+
+void AnalysisProcessor::disableSnapshot(void)
+{
+  this->snapshotEngine.disableSnapshot();
+}
+
+
+bool AnalysisProcessor::isSnapshotEnable(void)
+{
+  if (this->snapshotEngine.isLocked())
+    return false;
+  return true;
+}
+
+

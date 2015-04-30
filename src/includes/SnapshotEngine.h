@@ -33,12 +33,13 @@ class SnapshotEngine{
     SnapshotEngine();
     ~SnapshotEngine();
 
-    bool isLocked();
-    void addModification(uint64_t address, char byte);
-    void disableSnapshot();
-    void resetEngine();
-    void restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngine *currentTaintEngine, CONTEXT *ctx);
-    void takeSnapshot(const SymbolicEngine &currentSymEngine, const TaintEngine &currentTaintEngine, CONTEXT *ctx);
+    CONTEXT   *getCtx(void);
+    bool      isLocked();
+    void      addModification(uint64_t address, char byte);
+    void      disableSnapshot();
+    void      resetEngine();
+    void      restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngine *currentTaintEngine, CONTEXT *ctx);
+    void      takeSnapshot(const SymbolicEngine &currentSymEngine, const TaintEngine &currentTaintEngine, CONTEXT *ctx);
 
 };
 

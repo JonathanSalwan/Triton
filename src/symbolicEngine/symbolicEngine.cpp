@@ -21,12 +21,13 @@ void SymbolicEngine::init(const SymbolicEngine &other)
   for (uint64_t i = 0; i < (sizeof(this->symbolicReg) / sizeof(this->symbolicReg[0])); i++){
     this->symbolicReg[i] = other.symbolicReg[i];
   }
-  this->uniqueID              = other.uniqueID;
-  this->numberOfSymVar        = other.numberOfSymVar;
-  this->memoryReference       = other.memoryReference;
-  this->symVarMemoryReference = other.symVarMemoryReference;
-  this->symVarDeclaration     = other.symVarDeclaration;
-  this->symbolicVector        = other.symbolicVector;
+  this->uniqueID                      = other.uniqueID;
+  this->numberOfSymVar                = other.numberOfSymVar;
+  this->memoryReference               = other.memoryReference;
+  this->symVarMemoryReference         = other.symVarMemoryReference;
+  this->symVarMemoryReferenceInverse  = other.symVarMemoryReferenceInverse;
+  this->symVarDeclaration             = other.symVarDeclaration;
+  this->symbolicVector                = other.symbolicVector;
 }
 
 
@@ -65,11 +66,21 @@ uint64_t SymbolicEngine::getMemSymbolicID(uint64_t addr)
 }
 
 
-/* Returns the symbolic var ID if it's referenced otherwise returns UNSET */
-uint64_t SymbolicEngine::isSymVarMemory(uint64_t addr)
+/* Returns the symbolic variable ID from the memory address */
+uint64_t SymbolicEngine::symVarFromMemory(uint64_t addr)
 {
   std::map<uint64_t, uint64_t>::iterator it;
   if ((it = this->symVarMemoryReference.find(addr)) != this->symVarMemoryReference.end())
+    return it->second;
+  return UNSET;
+}
+
+
+/* Returns the address from the symbolic variable ID */
+uint64_t SymbolicEngine::memoryFromsymVar(uint64_t symVar)
+{
+  std::map<uint64_t, uint64_t>::iterator it;
+  if ((it = this->symVarMemoryReferenceInverse.find(symVar)) != this->symVarMemoryReferenceInverse.end())
     return it->second;
   return UNSET;
 }
@@ -243,6 +254,7 @@ bool SymbolicEngine::assignExprToSymVar(uint64_t exprId, uint64_t symVarId)
 void SymbolicEngine::addSymVarMemoryReference(uint64_t mem, uint64_t symVarID)
 {
   this->symVarMemoryReference.insert(std::make_pair(mem, symVarID));
+  this->symVarMemoryReferenceInverse.insert(std::make_pair(symVarID, mem));
 }
 
 

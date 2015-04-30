@@ -69,6 +69,10 @@ class AnalysisProcessor {
     // Assigns a symbolic variable to an expression
     bool assignExprToSymVar(uint64_t exprId, uint64_t symVarId);
 
+    uint64_t memoryFromsymVar(uint64_t symVar);
+    uint64_t symVarFromMemory(uint64_t address);
+
+
     // Taint Engine Facade
     // -------------------
 
@@ -137,6 +141,8 @@ class AnalysisProcessor {
     void            addSnapshotModification(uint64_t addr, char byte);
     void            takeSnapshot(void);
     void            restoreSnapshot(void);
+    void            disableSnapshot(void);
+    bool            isSnapshotEnable(void);
 
 
   private:

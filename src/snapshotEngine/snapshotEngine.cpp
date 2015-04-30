@@ -40,8 +40,6 @@ void SnapshotEngine::takeSnapshot(const SymbolicEngine &currentSymEngine, const 
 
   /* 4 - Save Pin registers context */
   PIN_SaveContext(ctx, &this->pinCtx);
-
-  std::cout << "[snapshot]" << std::endl;
 }
 
 
@@ -50,7 +48,7 @@ void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngi
 {
   /* 1 - Restore all memory modification. */
   list< std::pair<uint64_t, char> >::iterator i;
-  for(i = this->memory.begin(); i != this->memory.end(); ++i){
+  for(i = this->memory.begin(); i != this->memory.end(); ++i){ // TODO: maybe we should restore from the end to the beginning?
     *(reinterpret_cast<ADDRINT*>(i->first)) = i->second;
   }
   this->memory.clear();
@@ -63,8 +61,6 @@ void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngi
 
   /* 4 - Restore Pin registers context */
   PIN_SaveContext(&this->pinCtx, ctx);
-
-  std::cout << "[restore snapshot]" << std::endl;
 
   PIN_ExecuteAt(ctx);
 }
@@ -99,4 +95,9 @@ BOOL SnapshotEngine::isLocked()
   return this->locked;
 }
 
+
+CONTEXT *SnapshotEngine::getCtx(void)
+{
+  return &this->pinCtx;
+}
 
