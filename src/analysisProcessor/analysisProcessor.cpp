@@ -5,6 +5,7 @@ AnalysisProcessor::AnalysisProcessor():
   symEngine(),
   solverEngine(&this->symEngine),
   taintEngine(),
+  snapshotEngine(),
   stats(),
   trace()
 {
@@ -29,7 +30,7 @@ ContextHandler *AnalysisProcessor::getCurrentCtxH(void)
 // Symbolic Engine Facade
 // ----------------------
 
-SymbolicEngine &AnalysisProcessor::getSymbolicEngine() {
+SymbolicEngine &AnalysisProcessor::getSymbolicEngine(void) {
   return this->symEngine;
 }
 
@@ -87,7 +88,7 @@ bool AnalysisProcessor::assignExprToSymVar(uint64_t exprId, uint64_t symVarId)
 // Taint Engine Facade
 // -------------------
 
-TaintEngine &AnalysisProcessor::getTaintEngine() {
+TaintEngine &AnalysisProcessor::getTaintEngine(void) {
   return this->taintEngine;
 }
 
@@ -232,7 +233,7 @@ void AnalysisProcessor::aluSpreadTaintMemReg(SymbolicElement *se, uint64_t memDs
 
 // SolverEngine Facade
 
-SolverEngine &AnalysisProcessor::getSolverEngine()
+SolverEngine &AnalysisProcessor::getSolverEngine(void)
 {
   return this->solverEngine;
 }
@@ -246,7 +247,7 @@ std::list< std::pair<std::string, unsigned long long> > AnalysisProcessor::getMo
 
 // Statistics Facade
 
-Stats &AnalysisProcessor::getStats()
+Stats &AnalysisProcessor::getStats(void)
 {
   return this->stats;
 }
@@ -342,7 +343,7 @@ uint64_t AnalysisProcessor::getMemValue(uint64_t mem, uint32_t readSize)
 
 // Trace Facade
 
-Trace &AnalysisProcessor::getTrace()
+Trace &AnalysisProcessor::getTrace(void)
 {
   return this->trace;
 }
@@ -365,3 +366,26 @@ void AnalysisProcessor::saveTrace(std::stringstream &file)
   if (file.str().empty() == false)
     this->trace.save(file);
 }
+
+
+// Snapshot Engine Facade
+// -------------------
+
+SnapshotEngine &AnalysisProcessor::getSnapshotEngine(void)
+{
+  return this->snapshotEngine;
+}
+
+
+bool AnalysisProcessor::isSnapshotLocked(void)
+{
+  return this->snapshotEngine.isLocked();
+}
+
+
+void AnalysisProcessor::addSnapshotModification(uint64_t addr, char byte)
+{
+  this->snapshotEngine.addModification(addr, byte);
+}
+
+

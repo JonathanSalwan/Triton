@@ -79,6 +79,22 @@ VOID callbackAfter(CONTEXT *ctx, THREADID threadId)
 }
 
 
+VOID callbackSnapshot(UINT64 mem, UINT32 writeSize)
+{
+  if (!analysisTrigger.getState())
+  // Analysis locked
+    return;
+
+  /* If the snapshot is not enable we don't save the memory */
+  if (ap.isSnapshotLocked())
+    return;
+
+  UINT32 i = 0;
+  for (; i < writeSize ; i++)
+    ap.addSnapshotModification(mem+i, *(reinterpret_cast<UINT8*>(mem+i)));
+}
+
+
 VOID TRACE_Instrumentation(TRACE trace, VOID *v)
 {
   for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)){
@@ -111,6 +127,14 @@ VOID TRACE_Instrumentation(TRACE trace, VOID *v)
           where = IPOINT_TAKEN_BRANCH;
         INS_InsertCall(ins, where, (AFUNPTR)callbackAfter, IARG_CONTEXT, IARG_THREAD_ID, IARG_END);
       }
+
+      /* I/O memory monitoring for snapshot */
+      if (INS_OperandCount(ins) > 1 && INS_MemoryOperandIsWritten(ins, 0))
+        INS_InsertCall(
+          ins, IPOINT_BEFORE, (AFUNPTR)callbackSnapshot,
+          IARG_MEMORYOP_EA, 0,
+          IARG_UINT32, INS_MemoryWriteSize(ins),
+          IARG_END);
 
     }
   }

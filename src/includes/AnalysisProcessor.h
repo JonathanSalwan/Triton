@@ -2,6 +2,7 @@
 #define _ANALYSISPROCESSOR_H_
 
 #include "ContextHandler.h"
+#include "SnapshotEngine.h"
 #include "SolverEngine.h"
 #include "Stats.h"
 #include "SymbolicEngine.h"
@@ -60,7 +61,7 @@ class AnalysisProcessor {
     std::string getBacktrackedExpressionFromId(uint64_t id);
 
     // Returns the symbolic engine reference
-    SymbolicEngine &getSymbolicEngine();
+    SymbolicEngine &getSymbolicEngine(void);
 
     // Converts an expression to a symbolic variable
     bool convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
@@ -72,7 +73,7 @@ class AnalysisProcessor {
     // -------------------
 
     // Returns the taint engine reference
-    TaintEngine &getTaintEngine();
+    TaintEngine &getTaintEngine(void);
 
     // Taint interface.
     // Taint the symbolic element if the taint occurs.
@@ -109,7 +110,7 @@ class AnalysisProcessor {
     // -----------------
 
     // Returns a reference to the Stats object.
-    Stats     &getStats();
+    Stats     &getStats(void);
     void      incNumberOfBranchesTaken(void);
     void      incNumberOfBranchesTaken(bool isBranch);
     void      incNumberOfExpressions(uint64_t val);
@@ -124,15 +125,23 @@ class AnalysisProcessor {
     // ------------
 
     Inst      *getLastInstruction(void);
-    Trace     &getTrace();
+    Trace     &getTrace(void);
     void      addInstructionToTrace(Inst *instruction);
     void      saveTrace(std::stringstream &file);
+
+    // Snapshot Facade
+    // ---------------
+
+    SnapshotEngine  &getSnapshotEngine(void);
+    bool            isSnapshotLocked(void);
+    void            addSnapshotModification(uint64_t addr, char byte);
 
 
   private:
     SymbolicEngine    symEngine;
     SolverEngine      solverEngine;
     TaintEngine       taintEngine;
+    SnapshotEngine    snapshotEngine;
     Stats             stats;
     Trace             trace;
     ContextHandler    *currentCtxH;

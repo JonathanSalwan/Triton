@@ -69,6 +69,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/templates/OneOperandTemplate.cpp \
 		./src/ir/templates/OperandTemplate.cpp \
 		./src/ir/templates/TwoOperandsTemplate.cpp \
+		./src/snapshotEngine/snapshotEngine.cpp \
 		./src/solverEngine/smt2lib.cpp \
 		./src/solverEngine/solverEngine.cpp \
 		./src/symbolicEngine/symbolicElement.cpp \
