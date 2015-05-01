@@ -69,7 +69,7 @@ class AnalysisProcessor {
     // Assigns a symbolic variable to an expression
     bool assignExprToSymVar(uint64_t exprId, uint64_t symVarId);
 
-    uint64_t memoryFromsymVar(uint64_t symVar);
+    uint64_t memoryFromSymVar(uint64_t symVar);
     uint64_t symVarFromMemory(uint64_t address);
 
 

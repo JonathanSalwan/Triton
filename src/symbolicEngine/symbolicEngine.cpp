@@ -77,7 +77,7 @@ uint64_t SymbolicEngine::symVarFromMemory(uint64_t addr)
 
 
 /* Returns the address from the symbolic variable ID */
-uint64_t SymbolicEngine::memoryFromsymVar(uint64_t symVar)
+uint64_t SymbolicEngine::memoryFromSymVar(uint64_t symVar)
 {
   std::map<uint64_t, uint64_t>::iterator it;
   if ((it = this->symVarMemoryReferenceInverse.find(symVar)) != this->symVarMemoryReferenceInverse.end())

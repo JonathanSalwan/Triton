@@ -76,7 +76,7 @@ class SymbolicEngine {
     uint64_t              getUniqueID();
     uint64_t              getUniqueSymVarID();
     uint64_t              symVarFromMemory(uint64_t mem);
-    uint64_t              memoryFromsymVar(uint64_t symVar);
+    uint64_t              memoryFromSymVar(uint64_t symVar);
     void                  addMemoryReference(uint64_t mem, uint64_t id);
     void                  addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize);
     void                  addSymVarMemoryReference(uint64_t mem, uint64_t symVarID);

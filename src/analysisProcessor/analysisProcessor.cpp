@@ -31,12 +31,14 @@ ContextHandler *AnalysisProcessor::getCurrentCtxH(void)
 // Symbolic Engine Facade
 // ----------------------
 
-SymbolicEngine &AnalysisProcessor::getSymbolicEngine(void) {
+SymbolicEngine &AnalysisProcessor::getSymbolicEngine(void)
+{
   return this->symEngine;
 }
 
 
-SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_t regID) {
+SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_t regID)
+{
   SymbolicElement *se = this->symEngine.newSymbolicElement(expr);
   this->symEngine.symbolicReg[regID] = se->getID();
 
@@ -44,7 +46,8 @@ SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_
 }
 
 
-SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_t address) {
+SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_t address)
+{
   SymbolicElement *se = symEngine.newSymbolicElement(expr);
   symEngine.addMemoryReference(address, se->getID());
 
@@ -52,23 +55,27 @@ SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_
 }
 
 
-uint64_t AnalysisProcessor::getRegSymbolicID(uint64_t regID) {
+uint64_t AnalysisProcessor::getRegSymbolicID(uint64_t regID)
+{
   return this->symEngine.getRegSymbolicID(regID);
 }
 
 
-uint64_t AnalysisProcessor::getMemSymbolicID(uint64_t address) {
+uint64_t AnalysisProcessor::getMemSymbolicID(uint64_t address)
+{
   return this->symEngine.getMemSymbolicID(address);
 }
 
 
-uint64_t AnalysisProcessor::symVarFromMemory(uint64_t address) {
+uint64_t AnalysisProcessor::symVarFromMemory(uint64_t address)
+{
   return this->symEngine.symVarFromMemory(address);
 }
 
 
-uint64_t AnalysisProcessor::memoryFromsymVar(uint64_t symVar) {
-  return this->symEngine.memoryFromsymVar(symVar);
+uint64_t AnalysisProcessor::memoryFromSymVar(uint64_t symVar)
+{
+  return this->symEngine.memoryFromSymVar(symVar);
 }
 
 
@@ -99,7 +106,8 @@ bool AnalysisProcessor::assignExprToSymVar(uint64_t exprId, uint64_t symVarId)
 // Taint Engine Facade
 // -------------------
 
-TaintEngine &AnalysisProcessor::getTaintEngine(void) {
+TaintEngine &AnalysisProcessor::getTaintEngine(void)
+{
   return this->taintEngine;
 }
 

@@ -40,7 +40,7 @@ namespace PyTritonOptions {
 };
 
 
-static char Triton_addCallback_doc[] = "Add a callback for each instruction instrumented";
+static char Triton_addCallback_doc[] = "Adds a callback for each instruction instrumented";
 static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
 {
   PyObject *function;
@@ -176,7 +176,7 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
 }
 
 
-static char Triton_disableSnapshot_doc[] = "Disable the snapshot engine";
+static char Triton_disableSnapshot_doc[] = "Disables the snapshot engine";
 static PyObject *Triton_disableSnapshot(PyObject *self, PyObject *noarg)
 {
   ap.disableSnapshot();
@@ -200,7 +200,7 @@ static PyObject *Triton_getBacktrackedSymExpr(PyObject *self, PyObject *id)
 }
 
 
-static char Triton_getMemSymbolicID_doc[] = "Get the symbolic memory reference";
+static char Triton_getMemSymbolicID_doc[] = "Gets the symbolic memory reference";
 static PyObject *Triton_getMemSymbolicID(PyObject *self, PyObject *addr)
 {
   if (!PyLong_Check(addr) && !PyInt_Check(addr))
@@ -210,7 +210,7 @@ static PyObject *Triton_getMemSymbolicID(PyObject *self, PyObject *addr)
 }
 
 
-static char Triton_getMemValue_doc[] = "Get the current value of the memory";
+static char Triton_getMemValue_doc[] = "Gets the current value of the memory";
 static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
 {
   PyObject *addr;
@@ -261,7 +261,7 @@ static PyObject *Triton_getModel(PyObject *self, PyObject *expr)
 }
 
 
-static char Triton_getRegSymbolicID_doc[] = "Get the symbolic register reference";
+static char Triton_getRegSymbolicID_doc[] = "Gets the symbolic register reference";
 static PyObject *Triton_getRegSymbolicID(PyObject *self, PyObject *reg)
 {
   if (!PyLong_Check(reg) && !PyInt_Check(reg))
@@ -271,7 +271,7 @@ static PyObject *Triton_getRegSymbolicID(PyObject *self, PyObject *reg)
 }
 
 
-static char Triton_getRegValue_doc[] = "Get the current value of the register";
+static char Triton_getRegValue_doc[] = "Gets the current value of the register";
 static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
 {
   uint64_t tritonReg;
@@ -380,7 +380,7 @@ static PyObject *Triton_getSyscallReturn(PyObject *self, PyObject *std)
 }
 
 
-static char Triton_isMemTainted_doc[] = "Check if the memory is tainted";
+static char Triton_isMemTainted_doc[] = "Checks if the memory is tainted";
 static PyObject *Triton_isMemTainted(PyObject *self, PyObject *mem)
 {
   if (!PyLong_Check(mem) && !PyInt_Check(mem))
@@ -393,7 +393,7 @@ static PyObject *Triton_isMemTainted(PyObject *self, PyObject *mem)
 }
 
 
-static char Triton_isRegTainted_doc[] = "Check if the register is tainted";
+static char Triton_isRegTainted_doc[] = "Checks if the register is tainted";
 static PyObject *Triton_isRegTainted(PyObject *self, PyObject *reg)
 {
   if (!PyLong_Check(reg) && !PyInt_Check(reg))
@@ -415,6 +415,16 @@ static PyObject *Triton_isSnapshotEnable(PyObject *self, PyObject *noarg)
 }
 
 
+static char Triton_memoryFromSymVar_doc[] = "Returns the memory address corresponding to the sym variable ID";
+static PyObject *Triton_memoryFromSymVar(PyObject *self, PyObject *id)
+{
+  if (!PyLong_Check(id) && !PyInt_Check(id))
+    return PyErr_Format(PyExc_TypeError, "memoryFromSymVar(): expected an integer");
+
+  return Py_BuildValue("k", ap.memoryFromSymVar(PyLong_AsLong(id)));
+}
+
+
 static char Triton_opcodeToString_doc[] = "Returns a string with the opcode of the instruction";
 static PyObject *Triton_opcodeToString(PyObject *self, PyObject *opcode)
 {
@@ -425,7 +435,7 @@ static PyObject *Triton_opcodeToString(PyObject *self, PyObject *opcode)
 }
 
 
-static char Triton_restoreSnapshot_doc[] = "Restore the last snapshot";
+static char Triton_restoreSnapshot_doc[] = "Restores the last snapshot";
 static PyObject *Triton_restoreSnapshot(PyObject *self, PyObject *noarg)
 {
   ap.restoreSnapshot();
@@ -433,7 +443,7 @@ static PyObject *Triton_restoreSnapshot(PyObject *self, PyObject *noarg)
 }
 
 
-static char Triton_runProgram_doc[] = "Start the Pin instrumentation";
+static char Triton_runProgram_doc[] = "Starts the Pin instrumentation";
 static PyObject *Triton_runProgram(PyObject *self, PyObject *noarg)
 {
   // Never returns - Rock 'n roll baby \o/
@@ -442,7 +452,7 @@ static PyObject *Triton_runProgram(PyObject *self, PyObject *noarg)
 }
 
 
-static char Triton_saveTrace_doc[] = "Save the trace in a file";
+static char Triton_saveTrace_doc[] = "Saves the trace in a file";
 static PyObject *Triton_saveTrace(PyObject *self, PyObject *file)
 {
   if (!PyString_Check(file))
@@ -455,7 +465,7 @@ static PyObject *Triton_saveTrace(PyObject *self, PyObject *file)
 }
 
 
-static char Triton_setMemValue_doc[] = "Insert value into the runtime memory";
+static char Triton_setMemValue_doc[] = "Inserts value into the runtime memory";
 static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
 {
   PyObject *addr;
@@ -509,7 +519,7 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
 }
 
 
-static char Triton_setRegValue_doc[] = "Insert value into the current context register";
+static char Triton_setRegValue_doc[] = "Inserts value into the current context register";
 static PyObject *Triton_setRegValue(PyObject *self, PyObject *args)
 {
   PyObject *reg;
@@ -534,7 +544,7 @@ static PyObject *Triton_setRegValue(PyObject *self, PyObject *args)
 }
 
 
-static char Triton_startAnalysisFromSymbol_doc[] = "Start the symbolic execution from a specific name point";
+static char Triton_startAnalysisFromSymbol_doc[] = "Starts the symbolic execution from a specific name point";
 static PyObject *Triton_startAnalysisFromSymbol(PyObject *self, PyObject *name)
 {
 
@@ -546,7 +556,7 @@ static PyObject *Triton_startAnalysisFromSymbol(PyObject *self, PyObject *name)
 }
 
 
-static char Triton_startAnalysisFromAddr_doc[] = "Start the symbolic execution from a specific address";
+static char Triton_startAnalysisFromAddr_doc[] = "Starts the symbolic execution from a specific address";
 static PyObject *Triton_startAnalysisFromAddr(PyObject *self, PyObject *addr)
 {
   if (!PyLong_Check(addr) && !PyInt_Check(addr))
@@ -557,7 +567,7 @@ static PyObject *Triton_startAnalysisFromAddr(PyObject *self, PyObject *addr)
 }
 
 
-static char Triton_stopAnalysisFromAddr_doc[] = "Stop the symbolic execution from a specific address";
+static char Triton_stopAnalysisFromAddr_doc[] = "Stops the symbolic execution from a specific address";
 static PyObject *Triton_stopAnalysisFromAddr(PyObject *self, PyObject *addr)
 {
   if (!PyLong_Check(addr) && !PyInt_Check(addr))
@@ -565,6 +575,16 @@ static PyObject *Triton_stopAnalysisFromAddr(PyObject *self, PyObject *addr)
 
   PyTritonOptions::stopAnalysisFromAddr.insert(PyLong_AsLong(addr));
   return Py_None;
+}
+
+
+static char Triton_symVarFromMemory_doc[] = "Returns the symbolic variable ID corresponding to the address";
+static PyObject *Triton_symVarFromMemory(PyObject *self, PyObject *addr)
+{
+  if (!PyLong_Check(addr) && !PyInt_Check(addr))
+    return PyErr_Format(PyExc_TypeError, "symVarFromMemory(): expected an address");
+
+  return Py_BuildValue("k", ap.symVarFromMemory(PyLong_AsLong(addr)));
 }
 
 
@@ -602,7 +622,7 @@ static PyObject *Triton_syscallToString(PyObject *self, PyObject *args)
 }
 
 
-static char Triton_taintMem_doc[] = "Taint an address memory";
+static char Triton_taintMem_doc[] = "Taints an address memory";
 static PyObject *Triton_taintMem(PyObject *self, PyObject *mem)
 {
   if (!PyLong_Check(mem) && !PyInt_Check(mem))
@@ -613,7 +633,7 @@ static PyObject *Triton_taintMem(PyObject *self, PyObject *mem)
 }
 
 
-static char Triton_taintReg_doc[] = "Taint a register";
+static char Triton_taintReg_doc[] = "Taints a register";
 static PyObject *Triton_taintReg(PyObject *self, PyObject *reg)
 {
   if (!PyLong_Check(reg) && !PyInt_Check(reg))
@@ -624,7 +644,7 @@ static PyObject *Triton_taintReg(PyObject *self, PyObject *reg)
 }
 
 
-static char Triton_taintRegFromAddr_doc[] = "Taint specific registers from an address";
+static char Triton_taintRegFromAddr_doc[] = "Taints specific registers from an address";
 static PyObject *Triton_taintRegFromAddr(PyObject *self, PyObject *args)
 {
   PyObject *addr;
@@ -658,7 +678,7 @@ static PyObject *Triton_taintRegFromAddr(PyObject *self, PyObject *args)
 }
 
 
-static char Triton_takeSnapshot_doc[] = "Take a snapshot of the registers states and memory";
+static char Triton_takeSnapshot_doc[] = "Takes a snapshot of the registers states and memory";
 static PyObject *Triton_takeSnapshot(PyObject *self, PyObject *noarg)
 {
   ap.takeSnapshot();
@@ -666,7 +686,7 @@ static PyObject *Triton_takeSnapshot(PyObject *self, PyObject *noarg)
 }
 
 
-static char Triton_untaintMem_doc[] = "Untaint an address memory";
+static char Triton_untaintMem_doc[] = "Untaints an address memory";
 static PyObject *Triton_untaintMem(PyObject *self, PyObject *mem)
 {
   if (!PyLong_Check(mem) && !PyInt_Check(mem))
@@ -677,7 +697,7 @@ static PyObject *Triton_untaintMem(PyObject *self, PyObject *mem)
 }
 
 
-static char Triton_untaintReg_doc[] = "Untaint a register";
+static char Triton_untaintReg_doc[] = "Untaints a register";
 static PyObject *Triton_untaintReg(PyObject *self, PyObject *reg)
 {
   if (!PyLong_Check(reg) && !PyInt_Check(reg))
@@ -688,7 +708,7 @@ static PyObject *Triton_untaintReg(PyObject *self, PyObject *reg)
 }
 
 
-static char Triton_untaintRegFromAddr_doc[] = "Untaint specific registers from an address";
+static char Triton_untaintRegFromAddr_doc[] = "Untaints specific registers from an address";
 static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
 {
   PyObject *addr;
@@ -744,6 +764,7 @@ PyMethodDef tritonCallbacks[] = {
   {"isMemTainted",              Triton_isMemTainted,              METH_O,       Triton_isMemTainted_doc},
   {"isRegTainted",              Triton_isRegTainted,              METH_O,       Triton_isRegTainted_doc},
   {"isSnapshotEnable",          Triton_isSnapshotEnable,          METH_NOARGS,  Triton_isSnapshotEnable_doc},
+  {"memoryFromSymVar",          Triton_memoryFromSymVar,          METH_O,       Triton_memoryFromSymVar_doc},
   {"opcodeToString",            Triton_opcodeToString,            METH_O,       Triton_opcodeToString_doc},
   {"restoreSnapshot",           Triton_restoreSnapshot,           METH_NOARGS,  Triton_restoreSnapshot_doc},
   {"runProgram",                Triton_runProgram,                METH_NOARGS,  Triton_runProgram_doc},
@@ -753,6 +774,7 @@ PyMethodDef tritonCallbacks[] = {
   {"startAnalysisFromAddr",     Triton_startAnalysisFromAddr,     METH_O,       Triton_startAnalysisFromAddr_doc},
   {"startAnalysisFromSymbol",   Triton_startAnalysisFromSymbol,   METH_O,       Triton_startAnalysisFromSymbol_doc},
   {"stopAnalysisFromAddr",      Triton_stopAnalysisFromAddr,      METH_O,       Triton_stopAnalysisFromAddr_doc},
+  {"symVarFromMemory",          Triton_symVarFromMemory,          METH_O,       Triton_symVarFromMemory_doc},
   {"syscallToString",           Triton_syscallToString,           METH_VARARGS, Triton_syscallToString_doc},
   {"taintMem",                  Triton_taintMem,                  METH_O,       Triton_taintMem_doc},
   {"taintReg",                  Triton_taintReg,                  METH_O,       Triton_taintReg_doc},
