@@ -73,6 +73,23 @@ SymbolicElement *EflagsBuilder::cf(SymbolicElement *parent, AnalysisProcessor &a
 }
 
 
+SymbolicElement *EflagsBuilder::clearFlag(AnalysisProcessor &ap, regID_t flag)
+{
+  SymbolicElement     *se;
+  std::stringstream   expr;
+
+  expr << smt2lib::bv(0, 1);
+
+  /* Create the symbolic element */
+  se = ap.createRegSE(expr, flag);
+
+  /* Spread the taint from the parent to the child */
+  se->isTainted = !TAINTED;
+
+  return se;
+}
+
+
 SymbolicElement *EflagsBuilder::of(SymbolicElement *parent,
                                    AnalysisProcessor &ap,
                                    uint32_t dstSize,
