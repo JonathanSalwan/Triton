@@ -3,6 +3,7 @@
 
 #include "AdcIRBuilder.h"
 #include "AddIRBuilder.h"
+#include "AndIRBuilder.h"
 #include "CmpIRBuilder.h"
 #include "IRBuilderFactory.h"
 #include "LeaveIRBuilder.h"
