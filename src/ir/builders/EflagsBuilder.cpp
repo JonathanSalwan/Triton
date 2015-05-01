@@ -45,7 +45,7 @@ SymbolicElement *EflagsBuilder::af(SymbolicElement *parent,
 }
 
 
-SymbolicElement *EflagsBuilder::cf(SymbolicElement *parent, AnalysisProcessor &ap, std::stringstream &op1)
+SymbolicElement *EflagsBuilder::cfAdd(SymbolicElement *parent, AnalysisProcessor &ap, std::stringstream &op1)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
@@ -58,6 +58,34 @@ SymbolicElement *EflagsBuilder::cf(SymbolicElement *parent, AnalysisProcessor &a
             smt2lib::bvult(
               parent->getID2Str(),
               op1.str()
+            ),
+            smt2lib::bv(1, 1),
+            smt2lib::bv(0, 1)
+          );
+
+  /* Create the symbolic element */
+  se = ap.createRegSE(expr, ID_CF);
+
+  /* Spread the taint from the parent to the child */
+  se->isTainted = parent->isTainted;
+
+  return se;
+}
+
+
+SymbolicElement *EflagsBuilder::cfSub(SymbolicElement *parent, AnalysisProcessor &ap, std::stringstream &op1, std::stringstream &op2)
+{
+  SymbolicElement     *se;
+  std::stringstream   expr;
+
+  /*
+   * Create the SMT semantic.
+   * cf = op1 < op2
+   */
+  expr << smt2lib::ite(
+            smt2lib::bvult(
+              op1.str(),
+              op2.str()
             ),
             smt2lib::bv(1, 1),
             smt2lib::bv(0, 1)
@@ -90,11 +118,11 @@ SymbolicElement *EflagsBuilder::clearFlag(AnalysisProcessor &ap, regID_t flag)
 }
 
 
-SymbolicElement *EflagsBuilder::of(SymbolicElement *parent,
-                                   AnalysisProcessor &ap,
-                                   uint32_t dstSize,
-                                   std::stringstream &op1,
-                                   std::stringstream &op2)
+SymbolicElement *EflagsBuilder::ofAdd(SymbolicElement *parent,
+                                      AnalysisProcessor &ap,
+                                      uint32_t dstSize,
+                                      std::stringstream &op1,
+                                      std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
@@ -109,6 +137,44 @@ SymbolicElement *EflagsBuilder::of(SymbolicElement *parent,
               smt2lib::extract(extractSize, extractSize,
                 smt2lib::bvand(
                   smt2lib::bvxor(op1.str(), smt2lib::bvnot(op2.str())),
+                  smt2lib::bvxor(op1.str(), parent->getID2Str())
+                )
+              ),
+              smt2lib::bv(1, 1)
+            ),
+            smt2lib::bv(1, 1),
+            smt2lib::bv(0, 1)
+          );
+
+  /* Create the symbolic element */
+  se = ap.createRegSE(expr, ID_OF);
+
+  /* Spread the taint from the parent to the child */
+  se->isTainted = parent->isTainted;
+
+  return se;
+}
+
+
+SymbolicElement *EflagsBuilder::ofSub(SymbolicElement *parent,
+                                      AnalysisProcessor &ap,
+                                      uint32_t dstSize,
+                                      std::stringstream &op1,
+                                      std::stringstream &op2)
+{
+  SymbolicElement     *se;
+  std::stringstream   expr;
+  uint32_t            extractSize = (dstSize * REG_SIZE) - 1;
+
+  /*
+   * Create the SMT semantic.
+   * of = high:bool((op1 ^ op2) & (op1 ^ regDst))
+   */
+  expr << smt2lib::ite(
+            smt2lib::equal(
+              smt2lib::extract(extractSize, extractSize,
+                smt2lib::bvand(
+                  smt2lib::bvxor(op1.str(), op2.str()),
                   smt2lib::bvxor(op1.str(), parent->getID2Str())
                 )
               ),

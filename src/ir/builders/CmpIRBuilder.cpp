@@ -55,8 +55,8 @@ void CmpIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::af(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::of(se, ap, regSize, op1, op2));
+  inst.addElement(EflagsBuilder::cfSub(se, ap, op1, op2));
+  inst.addElement(EflagsBuilder::ofSub(se, ap, regSize, op1, op2));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, regSize));
   inst.addElement(EflagsBuilder::zf(se, ap, regSize));
@@ -102,8 +102,8 @@ void CmpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::af(se, ap, regSize1, op1, op2));
-  inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::of(se, ap, regSize1, op1, op2));
+  inst.addElement(EflagsBuilder::cfSub(se, ap, op1, op2));
+  inst.addElement(EflagsBuilder::ofSub(se, ap, regSize1, op1, op2));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, regSize1));
   inst.addElement(EflagsBuilder::zf(se, ap, regSize1));
@@ -148,8 +148,8 @@ void CmpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::af(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::of(se, ap, regSize, op1, op2));
+  inst.addElement(EflagsBuilder::cfSub(se, ap, op1, op2));
+  inst.addElement(EflagsBuilder::ofSub(se, ap, regSize, op1, op2));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, regSize));
   inst.addElement(EflagsBuilder::zf(se, ap, regSize));
@@ -189,8 +189,8 @@ void CmpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::af(se, ap, writeSize, op1, op2));
-  inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::of(se, ap, writeSize, op1, op2));
+  inst.addElement(EflagsBuilder::cfSub(se, ap, op1, op2));
+  inst.addElement(EflagsBuilder::ofSub(se, ap, writeSize, op1, op2));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
   inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
@@ -235,8 +235,8 @@ void CmpIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::af(se, ap, writeSize, op1, op2));
-  inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::of(se, ap, writeSize, op1, op2));
+  inst.addElement(EflagsBuilder::cfSub(se, ap, op1, op2));
+  inst.addElement(EflagsBuilder::ofSub(se, ap, writeSize, op1, op2));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
   inst.addElement(EflagsBuilder::zf(se, ap, writeSize));

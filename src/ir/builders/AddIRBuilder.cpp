@@ -46,8 +46,8 @@ void AddIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::af(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::of(se, ap, regSize, op1, op2));
+  inst.addElement(EflagsBuilder::cfAdd(se, ap, op1));
+  inst.addElement(EflagsBuilder::ofAdd(se, ap, regSize, op1, op2));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, regSize));
   inst.addElement(EflagsBuilder::zf(se, ap, regSize));
@@ -93,8 +93,8 @@ void AddIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::af(se, ap, regSize1, op1, op2));
-  inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::of(se, ap, regSize1, op1, op2));
+  inst.addElement(EflagsBuilder::cfAdd(se, ap, op1));
+  inst.addElement(EflagsBuilder::ofAdd(se, ap, regSize1, op1, op2));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, regSize1));
   inst.addElement(EflagsBuilder::zf(se, ap, regSize1));
@@ -139,8 +139,8 @@ void AddIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::af(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::of(se, ap, regSize, op1, op2));
+  inst.addElement(EflagsBuilder::cfAdd(se, ap, op1));
+  inst.addElement(EflagsBuilder::ofAdd(se, ap, regSize, op1, op2));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, regSize));
   inst.addElement(EflagsBuilder::zf(se, ap, regSize));
@@ -180,8 +180,8 @@ void AddIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::af(se, ap, writeSize, op1, op2));
-  inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::of(se, ap, writeSize, op1, op2));
+  inst.addElement(EflagsBuilder::cfAdd(se, ap, op1));
+  inst.addElement(EflagsBuilder::ofAdd(se, ap, writeSize, op1, op2));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
   inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
@@ -226,8 +226,8 @@ void AddIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::af(se, ap, writeSize, op1, op2));
-  inst.addElement(EflagsBuilder::cf(se, ap, op1));
-  inst.addElement(EflagsBuilder::of(se, ap, writeSize, op1, op2));
+  inst.addElement(EflagsBuilder::cfAdd(se, ap, op1));
+  inst.addElement(EflagsBuilder::ofAdd(se, ap, writeSize, op1, op2));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
   inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
