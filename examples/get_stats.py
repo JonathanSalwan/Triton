@@ -14,7 +14,7 @@ def fini():
     print 'Number of branches:              %d' %(stats['branches'])
     print 'Number of expressions:           %d' %(stats['expressions'])
     print 'Number of unknown expression:    %d' %(stats['unknownExpr'])
-    print 'Time of the execution:           %d' %(stats['time'])
+    print 'Time of the execution:           %d seconds' %(stats['time'])
 
 
 if __name__ == '__main__':
