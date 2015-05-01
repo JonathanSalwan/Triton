@@ -1,5 +1,5 @@
-#ifndef _XORIRBUILDER_H_
-#define _XORIRBUILDER_H_
+#ifndef _ORIRBUILDER_H_
+#define _ORIRBUILDER_H_
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -7,10 +7,10 @@
 #include "TwoOperandsTemplate.h"
 
 
-class XorIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
+class OrIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 
   public:
-    XorIRBuilder(uint64_t address, const std::string &disassembly);
+    OrIRBuilder(uint64_t address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;
@@ -27,4 +27,4 @@ class XorIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _XORIRBUILDER_H_
+#endif // _ORIRBUILDER_H_

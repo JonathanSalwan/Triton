@@ -71,6 +71,13 @@ std::string smt2lib::bvand(std::string op1, std::string op2)
 }
 
 
+/* Returns the 'bvor' syntax. */
+std::string smt2lib::bvor(std::string op1, std::string op2)
+{
+  return "(bvor " + op1 + " " + op2 + ")";
+}
+
+
 /* Returns the 'bvnot' syntax. */
 std::string smt2lib::bvnot(std::string op1)
 {

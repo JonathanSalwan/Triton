@@ -11,6 +11,7 @@
 #include "MovsxIRBuilder.h"
 #include "MovzxIRBuilder.h"
 #include "NullIRBuilder.h"
+#include "OrIRBuilder.h"
 #include "PopIRBuilder.h"
 #include "PushIRBuilder.h"
 #include "SbbIRBuilder.h"
