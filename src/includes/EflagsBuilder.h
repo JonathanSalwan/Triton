@@ -13,6 +13,7 @@ namespace EflagsBuilder {
   SymbolicElement *ofAdd(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
   SymbolicElement *ofSub(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
   SymbolicElement *pf(SymbolicElement *parent, AnalysisProcessor &ap);
+  SymbolicElement *setFlag(AnalysisProcessor &ap, regID_t flag);
   SymbolicElement *sf(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize);
   SymbolicElement *zf(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize);
 };
