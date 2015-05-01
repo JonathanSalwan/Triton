@@ -12,6 +12,7 @@
 #include "NullIRBuilder.h"
 #include "PopIRBuilder.h"
 #include "PushIRBuilder.h"
+#include "SbbIRBuilder.h"
 #include "SubIRBuilder.h"
 #include "XorIRBuilder.h"
 

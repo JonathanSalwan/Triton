@@ -54,6 +54,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new PushIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_SBB:
+      ir = new SbbIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_SUB:
       ir = new SubIRBuilder(address, disas);
       break;
