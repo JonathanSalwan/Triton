@@ -5,6 +5,7 @@ int main(){
   asm("mov ecx, 1");
   asm("mov ebx, eax");
   asm("add ecx, ebx");
+  asm("adc eax, ecx");
   asm("cmp ecx, eax");
   asm("cmp ecx, 3");
 }
