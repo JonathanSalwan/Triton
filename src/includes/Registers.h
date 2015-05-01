@@ -44,6 +44,7 @@ enum regID_t
   ID_XMM15,
 
   /* Flags ID used in the Taint and Symbolic Engines */
+  ID_RFLAGS,
   ID_AF,
   ID_CF,
   ID_DF,

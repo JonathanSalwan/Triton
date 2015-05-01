@@ -1,6 +1,7 @@
 #ifndef   __IRBUILDERHEADERS_H__
 #define   __IRBUILDERHEADERS_H__
 
+#include "AdcIRBuilder.h"
 #include "AddIRBuilder.h"
 #include "CmpIRBuilder.h"
 #include "IRBuilderFactory.h"

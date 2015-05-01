@@ -346,6 +346,18 @@ uint64_t AnalysisProcessor::getRegisterValue(uint64_t regID)
   return this->currentCtxH->getRegisterValue(regID);
 }
 
+
+// Returns the concret Carry Flag value
+uint64_t AnalysisProcessor::getCFValue(void)
+{
+  uint64_t rflags;
+  if (!this->currentCtxH)
+    return 0;
+  rflags = this->currentCtxH->getRegisterValue(ID_RFLAGS);
+  return rflags & 1;
+}
+
+
 // There is no verification on the validity of the ID.
 void AnalysisProcessor::setRegisterValue(uint64_t regID, uint64_t value)
 {

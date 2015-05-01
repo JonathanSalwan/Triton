@@ -53,6 +53,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/contextHandler/PINConverter.cpp \
 		./src/core/main.cpp \
 		./src/ir/IRBuilderFactory.cpp \
+		./src/ir/builders/AdcIRBuilder.cpp \
 		./src/ir/builders/AddIRBuilder.cpp \
 		./src/ir/builders/BaseIRBuilder.cpp \
 		./src/ir/builders/CmpIRBuilder.cpp \

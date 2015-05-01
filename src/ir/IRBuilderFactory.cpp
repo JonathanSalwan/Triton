@@ -17,6 +17,10 @@ IRBuilder *createIRBuilder(INS ins) {
 
   switch (opcode) {
 
+    case XED_ICLASS_ADC:
+      ir = new AdcIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_ADD:
       ir = new AddIRBuilder(address, disas);
       break;

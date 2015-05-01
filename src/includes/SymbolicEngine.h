@@ -62,7 +62,7 @@ class SymbolicEngine {
 
     /* Symbolic trace */
     /* sizeof(symbolicReg) = enum REG */
-    uint64_t              symbolicReg[42];
+    uint64_t              symbolicReg[43];
 
     /* public methods */
     SymbolicElement       *getElementFromId(uint64_t id);
