@@ -160,6 +160,7 @@ IRBuilder *createIRBuilder(INS ins) {
   // Setup the opcode in the IRbuilder
   ir->setOpcode(opcode);
   ir->setOpcodeCategory(INS_Category(ins));
+  ir->setNextAddress(INS_NextAddress(ins));
 
   return ir;
 }

@@ -22,9 +22,11 @@ class BaseIRBuilder: public IRBuilder {
     virtual uint32_t            getOpcode(void) const;
     virtual uint64_t            getAddress(void) const;
     virtual uint64_t            getThreadID(void) const;
+    virtual void                setNextAddress(uint64_t nextAddr);
     virtual void                setOpcode(uint32_t op);
     virtual void                setOpcodeCategory(int32_t category);
     virtual void                setThreadID(uint64_t threadId);
+
 
     virtual const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &getOperands(void) const;
 
@@ -43,6 +45,7 @@ class BaseIRBuilder: public IRBuilder {
   protected:
     uint32_t        opcode;
     uint64_t        address;
+    uint64_t        nextAddress;
     std::string     disas;
     bool            needSetup;
     int32_t         opcodeCategory;

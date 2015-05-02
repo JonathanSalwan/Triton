@@ -26,6 +26,9 @@ class IRBuilder {
     // Set the opcode of the instruction.
     virtual void setOpcode(uint32_t op) = 0;
 
+    // Set the next instruction address
+    virtual void setNextAddress(uint64_t nextAddr) = 0;
+
     // Set the opcode of the instruction.
     virtual void setThreadID(uint64_t threadId) = 0;
 

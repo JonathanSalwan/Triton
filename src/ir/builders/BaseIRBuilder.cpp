@@ -35,6 +35,12 @@ void BaseIRBuilder::setOpcode(uint32_t op)
 }
 
 
+void BaseIRBuilder::setNextAddress(uint64_t nextAddress)
+{
+  this->nextAddress = nextAddress;
+}
+
+
 void BaseIRBuilder::setOpcodeCategory(int32_t category)
 {
   this->opcodeCategory = category;
