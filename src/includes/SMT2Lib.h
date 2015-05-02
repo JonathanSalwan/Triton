@@ -122,6 +122,39 @@ namespace smt2lib {
 
   /* Returns the display syntax */
   std::string display(std::string expr);
+
+  /* Returns the 'bvneg' syntax */
+  std::string bvneg(std::string expr);
+
+  /* Returns the 'bvmul' syntax */
+  std::string bvmul(std::string op1, std::string op2);
+
+  /* Returns the 'bvurem' syntax - unsigned remainder */
+  std::string bvurem(std::string op1, std::string op2);
+
+  /* Returns the 'bvsrem' syntax - signed remainder */
+  std::string bvsrem(std::string op1, std::string op2);
+
+  /* Returns the 'bvsmod' syntax */
+  std::string bvsmod(std::string op1, std::string op2);
+
+  /* Returns the 'bvshl' syntax */
+  std::string bvshl(std::string op1, std::string op2);
+
+  /* Returns the 'bvlshr' syntax - unsigned (logical) shift right*/
+  std::string bvlshr(std::string op1, std::string op2);
+
+  /* Returns the 'bvashr' syntax - signed (arithmetical) shift right*/
+  std::string bvashr(std::string op1, std::string op2);
+
+  /* Returns the 'bvnand' syntax */
+  std::string bvnand(std::string op1, std::string op2);
+
+  /* Returns the 'bvnor' syntax */
+  std::string bvnor(std::string op1, std::string op2);
+
+  /* Returns the 'bvxnor' syntax */
+  std::string bvxnor(std::string op1, std::string op2);
 }
 
 #endif  /* !__SMTLIB2_UTILS__ */

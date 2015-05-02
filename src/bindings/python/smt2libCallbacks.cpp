@@ -61,10 +61,115 @@ static PyObject *smt2lib_bvand(PyObject *self, PyObject *args)
 }
 
 
+static char smt2lib_bvashr_doc[] = "Returns a 'bvashr' expression";
+static PyObject *smt2lib_bvashr(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvashr(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvashr(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvashr(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
 static char smt2lib_bvfalse_doc[] = "Returns an alias on '(_ bv0 1)' expression";
 static PyObject *smt2lib_bvfalse(PyObject *self, PyObject *args)
 {
   return Py_BuildValue("s", smt2lib::bvfalse().c_str());
+}
+
+
+static char smt2lib_bvlshr_doc[] = "Returns a 'bvlshr' expression";
+static PyObject *smt2lib_bvlshr(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvlshr(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvlshr(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvlshr(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvmul_doc[] = "Returns a 'bvmul' expression";
+static PyObject *smt2lib_bvmul(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvmul(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvmul(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvmul(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvnand_doc[] = "Returns a 'bvnand' expression";
+static PyObject *smt2lib_bvnand(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvnand(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvnand(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvnand(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvneg_doc[] = "Returns a 'bvneg' expression";
+static PyObject *smt2lib_bvneg(PyObject *self, PyObject *op1)
+{
+  if (!PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvneg(): expected a string as first argument");
+
+  return Py_BuildValue("s", smt2lib::bvneg(PyString_AsString(op1)).c_str());
+}
+
+
+static char smt2lib_bvnor_doc[] = "Returns a 'bvnor' expression";
+static PyObject *smt2lib_bvnor(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvnor(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvnor(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvnor(PyString_AsString(op1), PyString_AsString(op2)).c_str());
 }
 
 
@@ -94,32 +199,6 @@ static PyObject *smt2lib_bvor(PyObject *self, PyObject *args)
     return PyErr_Format(PyExc_TypeError, "bvor(): expected a string as second argument");
 
   return Py_BuildValue("s", smt2lib::bvor(PyString_AsString(op1), PyString_AsString(op2)).c_str());
-}
-
-
-static char smt2lib_bvsub_doc[] = "Returns a 'bvsub' expression";
-static PyObject *smt2lib_bvsub(PyObject *self, PyObject *args)
-{
-  PyObject *op1 = nullptr;
-  PyObject *op2 = nullptr;
-
-  /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
-
-  if (op1 == nullptr || !PyString_Check(op1))
-    return PyErr_Format(PyExc_TypeError, "bvsub(): expected a string as first argument");
-
-  if (op2 == nullptr || !PyString_Check(op2))
-    return PyErr_Format(PyExc_TypeError, "bvsub(): expected a string as second argument");
-
-  return Py_BuildValue("s", smt2lib::bvsub(PyString_AsString(op1), PyString_AsString(op2)).c_str());
-}
-
-
-static char smt2lib_bvtrue_doc[] = "Returns an alias on '(_ bv1 1)' expression";
-static PyObject *smt2lib_bvtrue(PyObject *self, PyObject *args)
-{
-  return Py_BuildValue("s", smt2lib::bvtrue().c_str());
 }
 
 
@@ -161,6 +240,25 @@ static PyObject *smt2lib_bvsgt(PyObject *self, PyObject *args)
 }
 
 
+static char smt2lib_bvshl_doc[] = "Returns a 'bvshl' expression";
+static PyObject *smt2lib_bvshl(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvshl(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvshl(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvshl(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
 static char smt2lib_bvsle_doc[] = "Returns a 'bvsle' expression";
 static PyObject *smt2lib_bvsle(PyObject *self, PyObject *args)
 {
@@ -196,6 +294,70 @@ static PyObject *smt2lib_bvslt(PyObject *self, PyObject *args)
     return PyErr_Format(PyExc_TypeError, "bvslt(): expected a string as second argument");
 
   return Py_BuildValue("s", smt2lib::bvslt(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvsmod_doc[] = "Returns a 'bvsmod' expression";
+static PyObject *smt2lib_bvsmod(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvsmod(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvsmod(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvsmod(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvsrem_doc[] = "Returns a 'bvsrem' expression";
+static PyObject *smt2lib_bvsrem(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvsrem(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvsrem(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvsrem(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvsub_doc[] = "Returns a 'bvsub' expression";
+static PyObject *smt2lib_bvsub(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvsub(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvsub(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvsub(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvtrue_doc[] = "Returns an alias on '(_ bv1 1)' expression";
+static PyObject *smt2lib_bvtrue(PyObject *self, PyObject *args)
+{
+  return Py_BuildValue("s", smt2lib::bvtrue().c_str());
 }
 
 
@@ -272,6 +434,44 @@ static PyObject *smt2lib_bvult(PyObject *self, PyObject *args)
     return PyErr_Format(PyExc_TypeError, "bvult(): expected a string as second argument");
 
   return Py_BuildValue("s", smt2lib::bvult(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvurem_doc[] = "Returns a 'bvurem' expression";
+static PyObject *smt2lib_bvurem(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvurem(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvurem(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvurem(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvxnor_doc[] = "Returns a 'bvxnor' expression";
+static PyObject *smt2lib_bvxnor(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvxnor(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvxnor(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvxnor(PyString_AsString(op1), PyString_AsString(op2)).c_str());
 }
 
 
@@ -437,19 +637,30 @@ PyMethodDef smt2libCallbacks[] = {
   {"bv",          smt2lib_bv,         METH_VARARGS,     smt2lib_bv_doc},
   {"bvadd",       smt2lib_bvadd,      METH_VARARGS,     smt2lib_bvadd_doc},
   {"bvand",       smt2lib_bvand,      METH_VARARGS,     smt2lib_bvand_doc},
+  {"bvashr",      smt2lib_bvashr,     METH_VARARGS,     smt2lib_bvashr_doc},
   {"bvfalse",     smt2lib_bvfalse,    METH_NOARGS,      smt2lib_bvfalse_doc},
+  {"bvlshr",      smt2lib_bvlshr,     METH_VARARGS,     smt2lib_bvlshr_doc},
+  {"bvmul",       smt2lib_bvmul,      METH_VARARGS,     smt2lib_bvmul_doc},
+  {"bvnand",      smt2lib_bvnand,     METH_VARARGS,     smt2lib_bvnand_doc},
+  {"bvneg",       smt2lib_bvneg,      METH_O,           smt2lib_bvneg_doc},
+  {"bvnor",       smt2lib_bvnor,      METH_VARARGS,     smt2lib_bvnor_doc},
   {"bvnot",       smt2lib_bvnot,      METH_O,           smt2lib_bvnot_doc},
   {"bvor",        smt2lib_bvor,       METH_VARARGS,     smt2lib_bvor_doc},
   {"bvsge",       smt2lib_bvsge,      METH_VARARGS,     smt2lib_bvsge_doc},
   {"bvsgt",       smt2lib_bvsgt,      METH_VARARGS,     smt2lib_bvsgt_doc},
+  {"bvshl",       smt2lib_bvshl,      METH_VARARGS,     smt2lib_bvshl_doc},
   {"bvsle",       smt2lib_bvsle,      METH_VARARGS,     smt2lib_bvsle_doc},
   {"bvslt",       smt2lib_bvslt,      METH_VARARGS,     smt2lib_bvslt_doc},
+  {"bvsmod",      smt2lib_bvsmod,     METH_VARARGS,     smt2lib_bvsmod_doc},
+  {"bvsrem",      smt2lib_bvsrem,     METH_VARARGS,     smt2lib_bvsrem_doc},
   {"bvsub",       smt2lib_bvsub,      METH_VARARGS,     smt2lib_bvsub_doc},
   {"bvtrue",      smt2lib_bvtrue,     METH_NOARGS,      smt2lib_bvtrue_doc},
   {"bvuge",       smt2lib_bvuge,      METH_VARARGS,     smt2lib_bvuge_doc},
   {"bvugt",       smt2lib_bvugt,      METH_VARARGS,     smt2lib_bvugt_doc},
   {"bvule",       smt2lib_bvule,      METH_VARARGS,     smt2lib_bvule_doc},
   {"bvult",       smt2lib_bvult,      METH_VARARGS,     smt2lib_bvult_doc},
+  {"bvurem",      smt2lib_bvurem,     METH_VARARGS,     smt2lib_bvurem_doc},
+  {"bvxnor",      smt2lib_bvxnor,     METH_VARARGS,     smt2lib_bvxnor_doc},
   {"bvxor",       smt2lib_bvxor,      METH_VARARGS,     smt2lib_bvxor_doc},
   {"display",     smt2lib_display,    METH_O,           smt2lib_display_doc},
   {"equal",       smt2lib_equal,      METH_VARARGS,     smt2lib_equal_doc},

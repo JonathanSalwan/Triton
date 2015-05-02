@@ -295,3 +295,80 @@ std::string smt2lib::display(std::string expr)
   return "(display " + expr + ")";
 }
 
+
+/* Returns the 'bvneg' syntax */
+std::string smt2lib::bvneg(std::string expr)
+{
+  return "(bvneg " + expr + ")";
+}
+
+
+/* Returns the 'bvmul' syntax */
+std::string smt2lib::bvmul(std::string op1, std::string op2)
+{
+  return "(bvmul " + op1 + " " + op2 + ")";
+}
+
+
+/* Returns the 'bvurem' syntax - unsigned remainder */
+std::string smt2lib::bvurem(std::string op1, std::string op2)
+{
+  return "(bvurem " + op1 + " " + op2 + ")";
+}
+
+
+/* Returns the 'bvsrem' syntax - signed remainder */
+std::string smt2lib::bvsrem(std::string op1, std::string op2)
+{
+  return "(bvsrem " + op1 + " " + op2 + ")";
+}
+
+
+/* Returns the 'bvsmod' syntax */
+std::string smt2lib::bvsmod(std::string op1, std::string op2)
+{
+  return "(bvsmod " + op1 + " " + op2 + ")";
+}
+
+
+/* Returns the 'bvshl' syntax */
+std::string smt2lib::bvshl(std::string op1, std::string op2)
+{
+  return "(bvshl " + op1 + " " + op2 + ")";
+}
+
+
+/* Returns the 'bvlshr' syntax - unsigned (logical) shift right*/
+std::string smt2lib::bvlshr(std::string op1, std::string op2)
+{
+  return "(bvlshr " + op1 + " " + op2 + ")";
+}
+
+
+/* Returns the 'bvashr' syntax - signed (arithmetical) shift right*/
+std::string smt2lib::bvashr(std::string op1, std::string op2)
+{
+  return "(bvashr " + op1 + " " + op2 + ")";
+}
+
+
+/* Returns the 'bvnand' syntax */
+std::string smt2lib::bvnand(std::string op1, std::string op2)
+{
+  return "(bvnand " + op1 + " " + op2 + ")";
+}
+
+
+/* Returns the 'bvnor' syntax */
+std::string smt2lib::bvnor(std::string op1, std::string op2)
+{
+  return "(bvnor " + op1 + " " + op2 + ")";
+}
+
+
+/* Returns the 'bvxnor' syntax */
+std::string smt2lib::bvxnor(std::string op1, std::string op2)
+{
+  return "(bvxnor " + op1 + " " + op2 + ")";
+}
+
