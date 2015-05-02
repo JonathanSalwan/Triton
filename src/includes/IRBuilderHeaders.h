@@ -5,6 +5,7 @@
 #include "AddIRBuilder.h"
 #include "AndIRBuilder.h"
 #include "CmpIRBuilder.h"
+#include "DecIRBuilder.h"
 #include "IRBuilderFactory.h"
 #include "IncIRBuilder.h"
 #include "LeaveIRBuilder.h"

@@ -2,18 +2,18 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "IncIRBuilder.h"
+#include "DecIRBuilder.h"
 #include "Registers.h"
 #include "SMT2Lib.h"
 #include "SymbolicElement.h"
 
 
-IncIRBuilder::IncIRBuilder(uint64_t address, const std::string &disassembly):
+DecIRBuilder::DecIRBuilder(uint64_t address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
 
-void IncIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void DecIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
   uint64_t          reg       = std::get<1>(this->operands[0]);
@@ -32,7 +32,7 @@ void IncIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   op2 << smt2lib::bv(1, regSize * REG_SIZE);
 
   /* Finale expr */
-  expr << smt2lib::bvadd(op1.str(), op2.str());
+  expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, reg);
@@ -45,14 +45,14 @@ void IncIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::af(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::ofAdd(se, ap, regSize, op1, op2));
+  inst.addElement(EflagsBuilder::ofSub(se, ap, regSize, op1, op2));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, regSize));
   inst.addElement(EflagsBuilder::zf(se, ap, regSize));
 }
 
 
-void IncIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void DecIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
   uint64_t          mem       = std::get<1>(this->operands[0]);
@@ -71,7 +71,7 @@ void IncIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   op2 << smt2lib::bv(1, memSize * REG_SIZE);
 
   /* Finale expr */
-  expr << smt2lib::bvadd(op1.str(), op2.str());
+  expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);
@@ -84,32 +84,32 @@ void IncIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   inst.addElement(EflagsBuilder::af(se, ap, memSize, op1, op2));
-  inst.addElement(EflagsBuilder::ofAdd(se, ap, memSize, op1, op2));
+  inst.addElement(EflagsBuilder::ofSub(se, ap, memSize, op1, op2));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, memSize));
   inst.addElement(EflagsBuilder::zf(se, ap, memSize));
 }
 
 
-void IncIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
-  /* There is no <inc imm> available in x86 */
+void DecIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+  /* There is no <dec imm> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void IncIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
-  /* There is no <inc none> available in x86 */
+void DecIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+  /* There is no <dec none> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *IncIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *DecIRBuilder::process(AnalysisProcessor &ap) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "INC");
+    this->templateMethod(ap, *inst, this->operands, "DEC");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
   }
   catch (std::exception &e) {

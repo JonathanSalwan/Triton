@@ -33,6 +33,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new CmpIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_DEC:
+      ir = new DecIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_INC:
       ir = new IncIRBuilder(address, disas);
       break;
