@@ -232,6 +232,12 @@ void AnalysisProcessor::aluSpreadTaintRegReg(SymbolicElement *se, uint64_t regDs
 }
 
 
+void AnalysisProcessor::aluSpreadTaintMemMem(SymbolicElement *se, uint64_t memDst, uint64_t memSrc)
+{
+  se->isTainted = this->taintEngine.aluSpreadTaintMemMem(memDst, memSrc);
+}
+
+
 void AnalysisProcessor::aluSpreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc, uint32_t readSize)
 {
   se->isTainted = this->taintEngine.aluSpreadTaintRegMem(regDst, memSrc, readSize);

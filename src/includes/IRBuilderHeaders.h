@@ -6,6 +6,7 @@
 #include "AndIRBuilder.h"
 #include "CmpIRBuilder.h"
 #include "IRBuilderFactory.h"
+#include "IncIRBuilder.h"
 #include "LeaveIRBuilder.h"
 #include "MovIRBuilder.h"
 #include "MovsxIRBuilder.h"
