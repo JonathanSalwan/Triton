@@ -90,6 +90,14 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new SbbIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_STC:
+      ir = new StcIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_STD:
+      ir = new StdIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_SUB:
       ir = new SubIRBuilder(address, disas);
       break;

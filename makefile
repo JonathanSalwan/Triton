@@ -73,6 +73,8 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/PopIRBuilder.cpp \
 		./src/ir/builders/PushIRBuilder.cpp \
 		./src/ir/builders/SbbIRBuilder.cpp \
+		./src/ir/builders/StcIRBuilder.cpp \
+		./src/ir/builders/StdIRBuilder.cpp \
 		./src/ir/builders/SubIRBuilder.cpp \
 		./src/ir/builders/XorIRBuilder.cpp \
 		./src/ir/templates/NoneOperandTemplate.cpp \

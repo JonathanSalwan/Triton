@@ -21,6 +21,8 @@
 #include "PopIRBuilder.h"
 #include "PushIRBuilder.h"
 #include "SbbIRBuilder.h"
+#include "StcIRBuilder.h"
+#include "StdIRBuilder.h"
 #include "SubIRBuilder.h"
 #include "XorIRBuilder.h"
 
