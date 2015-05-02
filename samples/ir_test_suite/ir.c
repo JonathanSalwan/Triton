@@ -1,6 +1,11 @@
 
 // gcc -masm=intel ./test.c -o test
-int main(){
+
+void check(void)
+{
+  asm("clc");
+  asm("cld");
+  asm("cmc");
   asm("mov eax, 32");
   asm("mov ecx, 1");
   asm("mov ebx, eax");
@@ -10,4 +15,8 @@ int main(){
   asm("sbb eax, ecx");
   asm("cmp ecx, eax");
   asm("cmp ecx, 3");
+}
+
+int main(){
+  check();
 }

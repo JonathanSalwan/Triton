@@ -29,6 +29,18 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new AndIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_CLC:
+      ir = new ClcIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_CLD:
+      ir = new CldIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_CMC:
+      ir = new CmcIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_CMP:
       ir = new CmpIRBuilder(address, disas);
       break;
