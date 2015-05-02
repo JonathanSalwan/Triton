@@ -76,6 +76,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/StcIRBuilder.cpp \
 		./src/ir/builders/StdIRBuilder.cpp \
 		./src/ir/builders/SubIRBuilder.cpp \
+		./src/ir/builders/TestIRBuilder.cpp \
 		./src/ir/builders/XorIRBuilder.cpp \
 		./src/ir/templates/NoneOperandTemplate.cpp \
 		./src/ir/templates/OneOperandTemplate.cpp \

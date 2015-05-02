@@ -24,7 +24,7 @@ Inst *StcIRBuilder::process(AnalysisProcessor &ap) const {
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "CLC");
+    this->templateMethod(ap, *inst, this->operands, "STC");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
   }
   catch (std::exception &e) {

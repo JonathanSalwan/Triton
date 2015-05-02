@@ -47,6 +47,9 @@ class AnalysisProcessor {
     // Returns a symbolic element for the memory address.
     SymbolicElement *createMemSE(std::stringstream &expr, uint64_t address);
 
+    // Returns a symbolic element. This methods is mainly used for temporary expression.
+    SymbolicElement *createSE(std::stringstream &expr);
+
     // Returns the ID of the symbolic element currently present in the
     // symbolic register. If there is no symbolic element, it returns UNSET.
     uint64_t getRegSymbolicID(uint64_t regID);

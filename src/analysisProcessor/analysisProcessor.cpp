@@ -55,6 +55,13 @@ SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_
 }
 
 
+SymbolicElement *AnalysisProcessor::createSE(std::stringstream &expr)
+{
+  SymbolicElement *se = this->symEngine.newSymbolicElement(expr);
+  return se;
+}
+
+
 uint64_t AnalysisProcessor::getRegSymbolicID(uint64_t regID)
 {
   return this->symEngine.getRegSymbolicID(regID);

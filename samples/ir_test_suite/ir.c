@@ -12,6 +12,7 @@ void check(void)
   asm("add ecx, ebx");
   asm("adc eax, ecx");
   asm("inc eax");
+  asm("test eax, eax");
   asm("sbb eax, ecx");
   asm("cmp ecx, eax");
   asm("cmp ecx, 3");
