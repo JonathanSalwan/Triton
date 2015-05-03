@@ -32,7 +32,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t readSize)
   expr << smt2lib::bvadd(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RSP);
+  se = ap.createRegSE(expr, ID_RSP, "Aligns stack");
 
   /* Apply the taint */
   se->isTainted = ap.isRegTainted(ID_RSP);

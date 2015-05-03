@@ -42,8 +42,8 @@ void TestIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   inst.addElement(se);
 
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clear carry flag"));
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clear overflow flag"));
+  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clears carry flag"));
+  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clears overflow flag"));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, regSize));
   inst.addElement(EflagsBuilder::zf(se, ap, regSize));
@@ -85,8 +85,8 @@ void TestIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   inst.addElement(se);
 
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clear carry flag"));
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clear overflow flag"));
+  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clears carry flag"));
+  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clears overflow flag"));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, regSize1));
   inst.addElement(EflagsBuilder::zf(se, ap, regSize1));
@@ -128,8 +128,8 @@ void TestIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   inst.addElement(se);
 
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clear carry flag"));
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clear overflow flag"));
+  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clears carry flag"));
+  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clears overflow flag"));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
   inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
@@ -170,8 +170,8 @@ void TestIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   inst.addElement(se);
 
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clear carry flag"));
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clear overflow flag"));
+  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clears carry flag"));
+  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clears overflow flag"));
   inst.addElement(EflagsBuilder::pf(se, ap));
   inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
   inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
