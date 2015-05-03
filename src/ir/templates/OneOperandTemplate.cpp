@@ -13,7 +13,7 @@ void OneOperandTemplate::templateMethod(
     std::string insName) const
 {
   // If there is no operand
-  // Sometime instructions can have 0 or 1 operand. Like REP and REP imm16
+  // Sometime instructions can have 0 or 1 operand. Like RET and RET imm16
   if (operands.size() == 0)
     this->none(ap, inst);
 

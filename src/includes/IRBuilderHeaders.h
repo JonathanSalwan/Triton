@@ -20,6 +20,7 @@
 #include "OrIRBuilder.h"
 #include "PopIRBuilder.h"
 #include "PushIRBuilder.h"
+#include "RetIRBuilder.h"
 #include "SbbIRBuilder.h"
 #include "StcIRBuilder.h"
 #include "StdIRBuilder.h"

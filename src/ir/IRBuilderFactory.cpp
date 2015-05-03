@@ -86,6 +86,11 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new PushIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_RET_FAR:
+    case XED_ICLASS_RET_NEAR:
+      ir = new RetIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_SBB:
       ir = new SbbIRBuilder(address, disas);
       break;
