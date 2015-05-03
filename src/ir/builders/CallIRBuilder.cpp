@@ -42,14 +42,50 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint64_t writeSize)
 
 
 void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  std::cout << "TODO" << std::endl;
-  //OneOperandTemplate::stop(this->disas);
+  SymbolicElement   *se;
+  std::stringstream expr1, expr2;
+  uint64_t          reg       = std::get<1>(this->operands[0]);
+  uint32_t          regSize   = std::get<2>(this->operands[0]);
+  uint64_t          memDst    = std::get<1>(this->operands[1]); // The dst memory write
+  uint32_t          writeSize = std::get<2>(this->operands[1]);
+  uint64_t          symReg    = ap.getRegSymbolicID(reg);
+
+  /* Create the SMT semantic side effect */
+  inst.addElement(alignStack(ap, writeSize));
+
+  /* Create the SMT semantic */
+  /* *RSP =  Next_RIP */
+  expr1 << smt2lib::bv(this->nextAddress, writeSize * REG_SIZE);
+
+  /* Create the symbolic element */
+  se = ap.createMemSE(expr1, memDst, "Saved RIP");
+
+  /* Apply the taint */
+  ap.assignmentSpreadTaintMemImm(se, memDst, writeSize);
+
+  /* Add the symbolic element to the current inst */
+  inst.addElement(se);
+
+  /* Create the SMT semantic */
+  /* RIP = imm */
+  if (symReg != UNSET)
+    expr2 << "#" << std::dec << symReg;
+  else
+    expr2 << smt2lib::bv(ap.getRegisterValue(reg), regSize * REG_SIZE);
+
+  /* Create the symbolic element */
+  se = ap.createRegSE(expr2, ID_RIP, "RIP");
+
+  /* Apply the taint */
+  ap.assignmentSpreadTaintRegImm(se, ID_RIP);
+
+  /* Add the symbolic element to the current inst */
+  inst.addElement(se);
 }
 
 
 void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
-  std::cout << "TODO" << std::endl;
-  //OneOperandTemplate::stop(this->disas);
+  OneOperandTemplate::stop(this->disas);
 }
 
 
@@ -76,7 +112,7 @@ void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
 
-// TODO: How really works XED_CALL ??
+// TODO: How really works XED_CALL ?? Where is the immediate operand ?
 //
 //  /* Create the SMT semantic */
 //  /* RIP = imm */
