@@ -103,6 +103,7 @@ void RetIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   inst.addElement(se);
 
   /* Create the SMT semantic side effect */
+  inst.addElement(alignStack(ap));
   inst.addElement(alignStack(ap, imm));
 }
 

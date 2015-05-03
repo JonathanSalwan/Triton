@@ -29,6 +29,11 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new AndIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_CALL_FAR:
+    case XED_ICLASS_CALL_NEAR:
+      ir = new CallIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_CLC:
       ir = new ClcIRBuilder(address, disas);
       break;
