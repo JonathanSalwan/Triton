@@ -85,16 +85,11 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
-  OneOperandTemplate::stop(this->disas);
-}
-
-
-void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
-  std::stringstream expr1;//, expr2;
-  //uint64_t          imm       = std::get<1>(this->operands[1]);
-  uint64_t          memDst    = std::get<1>(this->operands[0]); // The dst memory write
-  uint32_t          writeSize = std::get<2>(this->operands[0]);
+  std::stringstream expr1, expr2;
+  uint64_t          imm       = std::get<1>(this->operands[0]);
+  uint64_t          memDst    = std::get<1>(this->operands[1]); // The dst memory write
+  uint32_t          writeSize = std::get<2>(this->operands[1]);
 
   /* Create the SMT semantic side effect */
   inst.addElement(alignStack(ap, writeSize));
@@ -112,20 +107,61 @@ void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
 
-// TODO: How really works XED_CALL ?? Where is the immediate operand ?
-//
-//  /* Create the SMT semantic */
-//  /* RIP = imm */
-//  expr2 << smt2lib::bv(imm, writeSize * REG_SIZE);
-//
-//  /* Create the symbolic element */
-//  se = ap.createRegSE(expr2, ID_RIP, "RIP");
-//
-//  /* Apply the taint */
-//  ap.assignmentSpreadTaintRegImm(se, ID_RIP);
-//
-//  /* Add the symbolic element to the current inst */
-//  inst.addElement(se);
+  /* Create the SMT semantic */
+  /* RIP = imm */
+  expr2 << smt2lib::bv(imm, writeSize * REG_SIZE);
+
+  /* Create the symbolic element */
+  se = ap.createRegSE(expr2, ID_RIP, "RIP");
+
+  /* Apply the taint */
+  ap.assignmentSpreadTaintRegImm(se, ID_RIP);
+
+  /* Add the symbolic element to the current inst */
+  inst.addElement(se);
+}
+
+
+void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+  SymbolicElement   *se;
+  std::stringstream expr1, expr2;
+  uint64_t          mem       = std::get<1>(this->operands[0]);
+  uint64_t          memSize   = std::get<2>(this->operands[0]);
+  uint64_t          memDst    = std::get<1>(this->operands[1]); // The dst memory write
+  uint32_t          writeSize = std::get<2>(this->operands[1]);
+  uint64_t          symMem    = ap.getMemSymbolicID(mem);
+
+  /* Create the SMT semantic side effect */
+  inst.addElement(alignStack(ap, writeSize));
+
+  /* Create the SMT semantic */
+  /* *RSP =  Next_RIP */
+  expr1 << smt2lib::bv(this->nextAddress, writeSize * REG_SIZE);
+
+  /* Create the symbolic element */
+  se = ap.createMemSE(expr1, memDst, "Saved RIP");
+
+  /* Apply the taint */
+  ap.assignmentSpreadTaintMemImm(se, memDst, writeSize);
+
+  /* Add the symbolic element to the current inst */
+  inst.addElement(se);
+
+  /* Create the SMT semantic */
+  /* RIP = imm */
+  if (symMem != UNSET)
+    expr2 << "#" << std::dec << symMem;
+  else
+    expr2 << smt2lib::bv(mem, memSize * REG_SIZE);
+
+  /* Create the symbolic element */
+  se = ap.createRegSE(expr2, ID_RIP, "RIP");
+
+  /* Apply the taint */
+  ap.assignmentSpreadTaintRegImm(se, ID_RIP);
+
+  /* Add the symbolic element to the current inst */
+  inst.addElement(se);
 }
 
 

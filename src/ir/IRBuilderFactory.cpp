@@ -133,6 +133,14 @@ IRBuilder *createIRBuilder(INS ins) {
     UINT32                        size = 0;
     UINT64                        val  = 0;
 
+    /* Special case */
+    if (INS_IsDirectBranchOrCall(ins)){
+      ir->addOperand(IRBuilderOperand::IMM, INS_DirectBranchOrCallTargetAddress(ins), 0);
+      if (INS_MemoryOperandIsWritten(ins, 0))
+        ir->addOperand(IRBuilderOperand::MEM_W, 0, INS_MemoryWriteSize(ins));
+      break;
+    }
+
     if (INS_OperandIsImmediate(ins, i)) {
       type = IRBuilderOperand::IMM;
       val = INS_OperandImmediate(ins, i);
