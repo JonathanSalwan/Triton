@@ -111,6 +111,7 @@ Inst *DecIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "DEC");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
+    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
   }
   catch (std::exception &e) {
     delete inst;
