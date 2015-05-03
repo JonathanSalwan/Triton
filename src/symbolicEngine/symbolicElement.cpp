@@ -8,6 +8,21 @@ SymbolicElement::SymbolicElement(std::stringstream &dst, std::stringstream &src,
   this->source      = new std::stringstream(src.str());
   this->destination = new std::stringstream(dst.str());
   this->expression  = new std::stringstream();
+  this->comment     = new std::string();
+
+  *this->expression << (*this->destination).str() << " = " << (*this->source).str();
+
+  this->id = id;
+}
+
+
+SymbolicElement::SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id, std::string &comment)
+{
+  this->isTainted   = false;
+  this->source      = new std::stringstream(src.str());
+  this->destination = new std::stringstream(dst.str());
+  this->expression  = new std::stringstream();
+  this->comment     = new std::string(comment);
 
   *this->expression << (*this->destination).str() << " = " << (*this->source).str();
 
@@ -17,9 +32,10 @@ SymbolicElement::SymbolicElement(std::stringstream &dst, std::stringstream &src,
 
 SymbolicElement::~SymbolicElement()
 {
-  delete this->source;
+  delete this->comment;
   delete this->destination;
   delete this->expression;
+  delete this->source;
 }
 
 
@@ -27,6 +43,13 @@ SymbolicElement::~SymbolicElement()
 std::stringstream *SymbolicElement::getExpression(void)
 {
   return this->expression;
+}
+
+
+/* Returns the comment of the element */
+std::string *SymbolicElement::getComment(void)
+{
+  return this->comment;
 }
 
 

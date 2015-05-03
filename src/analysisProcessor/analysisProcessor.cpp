@@ -46,6 +46,15 @@ SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_
 }
 
 
+SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_t regID, std::string comment)
+{
+  SymbolicElement *se = this->symEngine.newSymbolicElement(expr, comment);
+  this->symEngine.symbolicReg[regID] = se->getID();
+
+  return se;
+}
+
+
 SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_t address)
 {
   SymbolicElement *se = symEngine.newSymbolicElement(expr);
@@ -55,9 +64,25 @@ SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_
 }
 
 
+SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_t address, std::string comment)
+{
+  SymbolicElement *se = symEngine.newSymbolicElement(expr, comment);
+  symEngine.addMemoryReference(address, se->getID());
+
+  return se;
+}
+
+
 SymbolicElement *AnalysisProcessor::createSE(std::stringstream &expr)
 {
   SymbolicElement *se = this->symEngine.newSymbolicElement(expr);
+  return se;
+}
+
+
+SymbolicElement *AnalysisProcessor::createSE(std::stringstream &expr, std::string comment)
+{
+  SymbolicElement *se = this->symEngine.newSymbolicElement(expr, comment);
   return se;
 }
 

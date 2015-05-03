@@ -109,13 +109,22 @@ SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
   uint64_t          id;
 
   id = this->getUniqueID();
-
   dst << "#" << std::dec << id;
-
   SymbolicElement *elem = new SymbolicElement(dst, src, id);
-
   this->symbolicVector.push_back(elem);
+  return elem;
+}
 
+/* Create a new symbolic element with comment */
+SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src, std::string &comment)
+{
+  std::stringstream dst;
+  uint64_t          id;
+
+  id = this->getUniqueID();
+  dst << "#" << std::dec << id;
+  SymbolicElement *elem = new SymbolicElement(dst, src, id, comment);
+  this->symbolicVector.push_back(elem);
   return elem;
 }
 

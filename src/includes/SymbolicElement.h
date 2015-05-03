@@ -11,6 +11,7 @@
 class SymbolicElement {
 
   private:
+    std::string         *comment;
     std::stringstream   *destination;
     std::stringstream   *expression;
     std::stringstream   *source;
@@ -21,13 +22,15 @@ class SymbolicElement {
     bool                isTainted;
 
     std::string         getID2Str(void);
+    std::string         *getComment(void);
+    std::stringstream   *getDestination(void);
     std::stringstream   *getExpression(void);
     std::stringstream   *getSource(void);
-    std::stringstream   *getDestination(void);
     uint64_t            getID(void);
     void                setSrcExpr(std::stringstream &src);
 
     SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id);
+    SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id, std::string &comment);
     ~SymbolicElement();
 };
 

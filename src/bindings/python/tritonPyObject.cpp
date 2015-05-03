@@ -7,11 +7,12 @@
 /*
  * Class SymbolicElement:
  *
- * - source (string)
+ * - comment (string)
  * - destination (string)
  * - expression (string)
  * - id (integer)
  * - isTainted (bool)
+ * - source (string)
  */
 PyObject *PySymbolicElement(SymbolicElement *element)
 {
@@ -19,6 +20,12 @@ PyObject *PySymbolicElement(SymbolicElement *element)
   PyDict_SetItemString(dictSEClass, "source",       PyString_FromFormat("%s", element->getSource()->str().c_str()));
   PyDict_SetItemString(dictSEClass, "destination",  PyString_FromFormat("%s", element->getDestination()->str().c_str()));
   PyDict_SetItemString(dictSEClass, "expression",   PyString_FromFormat("%s", element->getExpression()->str().c_str()));
+
+  PyObject *comment = Py_None;
+  if (element->getComment()->empty() == false)
+    comment = PyString_FromFormat("%s", element->getComment()->c_str());
+
+  PyDict_SetItemString(dictSEClass, "comment",      comment);
   PyDict_SetItemString(dictSEClass, "id",           PyInt_FromLong(element->getID()));
   PyDict_SetItemString(dictSEClass, "isTainted",    PyBool_FromLong(element->isTainted));
 

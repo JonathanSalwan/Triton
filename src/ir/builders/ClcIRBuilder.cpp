@@ -14,7 +14,7 @@ ClcIRBuilder::ClcIRBuilder(uint64_t address, const std::string &disassembly):
 
 
 void ClcIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF));
+  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clear carry flag"));
 }
 
 
