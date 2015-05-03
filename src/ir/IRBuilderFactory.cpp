@@ -141,36 +141,43 @@ IRBuilder *createIRBuilder(INS ins) {
       break;
     }
 
+    /* Immediate */
     if (INS_OperandIsImmediate(ins, i)) {
       type = IRBuilderOperand::IMM;
       val = INS_OperandImmediate(ins, i);
     }
+
+    /* Register */
     else if (INS_OperandIsReg(ins, i)) {
       type = IRBuilderOperand::REG;
       REG reg = INS_OperandReg(ins, i);
       val  = PINConverter::convertDBIReg2TritonReg(reg); // store the register ID.
-
       if (REG_valid(reg)) {
         // check needed because instructions like "xgetbv 0" make
         // REG_Size crash.
         size = REG_Size(reg);
       }
     }
-    else if (INS_MemoryOperandCount(ins) > 0) {
-      // check needed because instructions like "nop dword ptr [eax], ebx"
-      // make INS_MemoryReadSize crash.
 
+    /* Memory */
+    else if (INS_MemoryOperandCount(ins) > 0) {
+      /* Memory read */
       if (INS_MemoryOperandIsRead(ins, 0)) {
         type = IRBuilderOperand::MEM_R;
         size = INS_MemoryReadSize(ins);
       }
+      /* Memory write */
       else {
         type = IRBuilderOperand::MEM_W;
         size = INS_MemoryWriteSize(ins);
       }
     }
-    else
+    // TODO: Effective address = Displacement + BaseReg + IndexReg * Scale
+    /* Undefined */
+    else {
+      //std::cout << "[DEBUG] Unknown kind of operand: " << INS_Disassemble(ins) << std::endl;
       continue;
+    }
 
     ir->addOperand(type, val, size);
   }
