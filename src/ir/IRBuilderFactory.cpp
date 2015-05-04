@@ -58,6 +58,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new IncIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_JZ:
+      ir = new JzIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_LEAVE:
       ir = new LeaveIRBuilder(address, disas);
       break;

@@ -66,6 +66,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/DecIRBuilder.cpp \
 		./src/ir/builders/EflagsBuilder.cpp \
 		./src/ir/builders/IncIRBuilder.cpp \
+		./src/ir/builders/JzIRBuilder.cpp \
 		./src/ir/builders/LeaveIRBuilder.cpp \
 		./src/ir/builders/MovIRBuilder.cpp \
 		./src/ir/builders/MovsxIRBuilder.cpp \
