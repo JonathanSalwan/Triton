@@ -33,19 +33,24 @@ class SymbolicEngine {
     /*
      * Addresses -> symbolic expression
      * item1: memory address
-     * item2: reference ID
+     * item2: symbolic reference ID
      */
     std::map<uint64_t, uint64_t> memoryReference;
 
     /*
-     * Z3 Symbolic Addresse -> variable
-     * item1: memory address
-     * item2: symbolic variable ID
+     * Z3 Symbolic Addresse <-> variable
      */
-    // memory -> symbolic
-    std::map<uint64_t, uint64_t> symVarMemoryReference;
-    // symbolic -> memory
-    std::map<uint64_t, uint64_t> symVarMemoryReferenceInverse;
+    std::map<uint64_t, uint64_t> symVarMemoryReference;         // memory -> symbolic
+    std::map<uint64_t, uint64_t> symVarMemoryReferenceInverse;  // symbolic -> memory
+
+    /*
+     * List of path constaints (PC).
+     * Item = symbolic reference ID.
+     *
+     * When a branch instruction is executed,
+     * it must add the PC in this list.
+     */
+    std::list<uint64_t> pathConstaints;
 
     /* List of variables decl in smt2lib */
     std::list<std::string> symVarDeclaration;
@@ -76,9 +81,10 @@ class SymbolicEngine {
     uint64_t              getRegSymbolicID(uint64_t regID);
     uint64_t              getUniqueID();
     uint64_t              getUniqueSymVarID();
-    uint64_t              symVarFromMemory(uint64_t mem);
     uint64_t              memoryFromSymVar(uint64_t symVar);
+    uint64_t              symVarFromMemory(uint64_t mem);
     void                  addMemoryReference(uint64_t mem, uint64_t id);
+    void                  addPathConstraint(uint64_t exprId);
     void                  addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize);
     void                  addSymVarMemoryReference(uint64_t mem, uint64_t symVarID);
     void                  init(const SymbolicEngine &other);

@@ -280,3 +280,11 @@ void SymbolicEngine::addMemoryReference(uint64_t mem, uint64_t id)
   this->memoryReference[mem] = id;
 }
 
+
+/* The a path constraint in the PC list */
+void SymbolicEngine::addPathConstraint(uint64_t exprId)
+{
+  this->pathConstaints.push_back(exprId);
+}
+
+

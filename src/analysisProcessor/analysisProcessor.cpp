@@ -135,6 +135,12 @@ bool AnalysisProcessor::assignExprToSymVar(uint64_t exprId, uint64_t symVarId)
 }
 
 
+void AnalysisProcessor::addPathConstraint(uint64_t exprId)
+{
+  this->symEngine.addPathConstraint(exprId);
+}
+
+
 // Taint Engine Facade
 // -------------------
 

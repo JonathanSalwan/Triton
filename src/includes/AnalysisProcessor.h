@@ -76,8 +76,12 @@ class AnalysisProcessor {
     // Assigns a symbolic variable to an expression
     bool assignExprToSymVar(uint64_t exprId, uint64_t symVarId);
 
+    // Link: Address <-> Symbolic Variable ID
     uint64_t memoryFromSymVar(uint64_t symVar);
     uint64_t symVarFromMemory(uint64_t address);
+
+    // The a path constraint in the PC list
+    void addPathConstraint(uint64_t exprId);
 
 
     // Taint Engine Facade
