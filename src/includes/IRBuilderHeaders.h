@@ -12,6 +12,7 @@
 #include "DecIRBuilder.h"
 #include "IRBuilderFactory.h"
 #include "IncIRBuilder.h"
+#include "JnzIRBuilder.h"
 #include "JzIRBuilder.h"
 #include "LeaveIRBuilder.h"
 #include "MovIRBuilder.h"
