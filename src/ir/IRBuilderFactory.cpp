@@ -64,6 +64,7 @@ IRBuilder *createIRBuilder(INS ins) {
 
     case XED_ICLASS_JNB:
       ir = new JnbIRBuilder(address, disas);
+      break;
 
     case XED_ICLASS_JNS:
       ir = new JnsIRBuilder(address, disas);
