@@ -2,7 +2,7 @@
 PIN_ROOT =	../../..
 
 ifndef SYSCALL_HEADER
-  SYSCALL_HEADER = $(shell locate asm/unistd_64.h | head -n 1)
+  SYSCALL_HEADER = /usr/include/asm/unistd_64.h
 endif
 
 NAME = 		triton

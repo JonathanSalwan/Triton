@@ -4,5 +4,4 @@ pintool.log
 *.swp
 *.o
 *.so
-note_perso
-smt2_branches
+src/utils/syscalls.cpp
