@@ -1,4 +1,9 @@
 #! /usr/bin/env python
+#
+# This script is used to generate the file src/utils/syscalls.cpp.
+# As the list of syscalls depends of your Kernel version. We must
+# generate the list at the compile time.
+#
 
 from __future__ import print_function
 
