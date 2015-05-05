@@ -5,6 +5,7 @@
 #include <map>
 #include <python2.7/Python.h>
 #include <set>
+#include <string>
 
 #include "CallbackDefine.h"
 

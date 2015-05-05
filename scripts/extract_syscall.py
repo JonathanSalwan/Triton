@@ -7,18 +7,8 @@ import sys
 import re
 
 PREAMBULE = """
-#include <python2.7/Python.h>
-
-#include "PythonBindings.h"
-#include "Registers.h"
-#include "asm/unistd_64.h"
-
-
-void initLinux64Env(PyObject *idLinux64ClassDict)
-{\
+#include "Syscalls.h"
 """
-
-SMT = '  PyDict_SetItemString(idLinux64ClassDict, "%s", PyInt_FromLong(%s));'
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -27,13 +17,18 @@ if __name__ == "__main__":
                         type=str)
     args = parser.parse_args()
 
-    regex = re.compile(r"(__NR_\w+)")
-
-    print(PREAMBULE)
+    regex = re.compile(r"#define\s+(__NR_\w+)\s+\d+")
 
     with open(args.file) as hfile:
+        print(PREAMBULE)
+        print("const char *syscallmap[] = {")
+
+        counter = 0
         for match in regex.finditer(hfile.read()):
             name = match.groups()[0]
-            print(SMT % (name[5:].upper(), name))
+            print('  "%s", // %s' % (name[5:].upper(), name))
+            counter += 1
 
-    print("}")
+    print("};")
+    print()
+    print("const unsigned int NB_SYSCALL = %d;" % counter)

@@ -1,6 +1,10 @@
 # Path to the pin kit directory
 PIN_ROOT =	../../..
 
+ifndef SYSCALL_HEADER
+  SYSCALL_HEADER = $(shell locate asm/unistd_64.h | head -n 1)
+endif
+
 NAME = 		triton
 
 CXX =		g++
@@ -93,7 +97,8 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/symbolicEngine/symbolicEngine.cpp \
 		./src/taintEngine/taintEngine.cpp \
 		./src/trigger/trigger.cpp \
-		./src/utils/syscallNumberToString.cpp
+		./src/utils/syscallNumberToString.cpp \
+		./src/utils/syscalls.cpp
 
 
 OBJ = $(SRC:.cpp=.o)
@@ -105,9 +110,11 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	$(CXX) -shared -Wl,--hash-style=sysv -Wl,-Bsymbolic -Wl,--version-script=$(PIN_ROOT)/source/include/pin/pintool.ver -o $(NAME).so $(OBJ) $(LIBS)
 
+./src/utils/syscalls.cpp: ./scripts/extract_syscall.py
+	$< $(SYSCALL_HEADER) >$@ || rm $@
 
 clean:
-	 /bin/rm -f $(OBJ)
+	 /bin/rm -f $(OBJ) ./src/utils/syscalls.cpp
 
 cleanall: clean
 	 /bin/rm -f $(NAME).so
