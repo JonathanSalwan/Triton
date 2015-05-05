@@ -34,7 +34,7 @@ void initSyscallEnv(PyObject *idSyscallClassDict)
   initLinux64Env(idLinux64ClassDict);
 
   /* Create the OPCODE_CATEGORY class */
-  PyObject *idLinux64Class = xPyClass_New(NULL, idLinux64ClassDict, idLinux64ClassName);
+  PyObject *idLinux64Class = xPyClass_New(nullptr, idLinux64ClassDict, idLinux64ClassName);
 
   // OPCODE_CATEGORY ---------------------
 
