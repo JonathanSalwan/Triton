@@ -17,6 +17,7 @@
 #include "JnpIRBuilder.h"
 #include "JnsIRBuilder.h"
 #include "JnzIRBuilder.h"
+#include "JoIRBuilder.h"
 #include "JpIRBuilder.h"
 #include "JsIRBuilder.h"
 #include "JzIRBuilder.h"
