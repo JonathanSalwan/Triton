@@ -66,6 +66,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new JbIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_JL:
+      ir = new JlIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_JNB:
       ir = new JnbIRBuilder(address, disas);
       break;
