@@ -74,6 +74,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new JnbeIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_JNL:
+      ir = new JnlIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_JNO:
       ir = new JnoIRBuilder(address, disas);
       break;
