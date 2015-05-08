@@ -13,6 +13,7 @@
 #include "IRBuilderFactory.h"
 #include "IncIRBuilder.h"
 #include "JbIRBuilder.h"
+#include "JbeIRBuilder.h"
 #include "JnbIRBuilder.h"
 #include "JnbeIRBuilder.h"
 #include "JnoIRBuilder.h"
