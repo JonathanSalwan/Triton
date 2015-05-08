@@ -72,6 +72,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/IncIRBuilder.cpp \
 		./src/ir/builders/JbIRBuilder.cpp \
 		./src/ir/builders/JnbIRBuilder.cpp \
+		./src/ir/builders/JnbeIRBuilder.cpp \
 		./src/ir/builders/JnoIRBuilder.cpp \
 		./src/ir/builders/JnpIRBuilder.cpp \
 		./src/ir/builders/JnsIRBuilder.cpp \
