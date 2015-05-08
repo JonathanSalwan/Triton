@@ -33,12 +33,12 @@ void JbeIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* 
    * Finale expr
-   * JNBE: Jump if below or equal (CF=1 and ZF=1).
-   * SMT: (= (bvand zf cf) (_ bv1 1))
+   * JNBE: Jump if below or equal (CF=1 or ZF=1).
+   * SMT: (= (bvor zf cf) (_ bv1 1))
    */
   expr << smt2lib::ite(
             smt2lib::equal(
-              smt2lib::bvand(
+              smt2lib::bvor(
                 op1.str(),
                 op2.str()
               ),
