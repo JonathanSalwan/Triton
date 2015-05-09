@@ -19,6 +19,7 @@
 #include "JnbIRBuilder.h"
 #include "JnbeIRBuilder.h"
 #include "JnlIRBuilder.h"
+#include "JnleIRBuilder.h"
 #include "JnoIRBuilder.h"
 #include "JnpIRBuilder.h"
 #include "JnsIRBuilder.h"
