@@ -15,21 +15,21 @@ JlIRBuilder::JlIRBuilder(uint64_t address, const std::string &disassembly):
 
 void JlIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
-  std::stringstream expr, op1, op2;
+  std::stringstream expr, sf, of;
   uint64_t          imm   = std::get<1>(this->operands[0]);
   uint64_t          symSF = ap.getRegSymbolicID(ID_SF);
   uint64_t          symOF = ap.getRegSymbolicID(ID_OF);
 
   /* Create the SMT semantic */
   if (symSF != UNSET)
-    op1 << "#" << std::dec << symSF;
+    sf << "#" << std::dec << symSF;
   else
-    op1 << smt2lib::bv(ap.getRegisterValue(ID_SF), 1);
+    sf << smt2lib::bv(ap.getRegisterValue(ID_SF), 1);
 
   if (symOF != UNSET)
-    op2 << "#" << std::dec << symOF;
+    of << "#" << std::dec << symOF;
   else
-    op2 << smt2lib::bv(ap.getRegisterValue(ID_OF), 1);
+    of << smt2lib::bv(ap.getRegisterValue(ID_OF), 1);
 
   /* 
    * Finale expr
@@ -38,7 +38,7 @@ void JlIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
    */
   expr << smt2lib::ite(
             smt2lib::equal(
-                smt2lib::bvxor(op1.str(), op2.str()),
+                smt2lib::bvxor(sf.str(), of.str()),
                 smt2lib::bvtrue()
             ),
             smt2lib::bv(imm, REG_SIZE_BIT),

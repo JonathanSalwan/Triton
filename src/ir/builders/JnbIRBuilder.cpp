@@ -15,20 +15,20 @@ JnbIRBuilder::JnbIRBuilder(uint64_t address, const std::string &disassembly):
 
 void JnbIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
-  std::stringstream expr, op1;
+  std::stringstream expr, cf;
   uint64_t          imm   = std::get<1>(this->operands[0]);
   uint64_t          symCF = ap.getRegSymbolicID(ID_CF);
 
   /* Create the SMT semantic */
   if (symCF != UNSET)
-    op1 << "#" << std::dec << symCF;
+    cf << "#" << std::dec << symCF;
   else
-    op1 << smt2lib::bv(ap.getRegisterValue(ID_CF), 1);
+    cf << smt2lib::bv(ap.getRegisterValue(ID_CF), 1);
 
   /* Finale expr */
   expr << smt2lib::ite(
             smt2lib::equal(
-              op1.str(),
+              cf.str(),
               smt2lib::bvfalse()),
             smt2lib::bv(imm, REG_SIZE_BIT),
             smt2lib::bv(this->nextAddress, REG_SIZE_BIT));

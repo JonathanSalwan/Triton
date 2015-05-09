@@ -15,20 +15,20 @@ JzIRBuilder::JzIRBuilder(uint64_t address, const std::string &disassembly):
 
 void JzIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
-  std::stringstream expr, op1;
+  std::stringstream expr, zf;
   uint64_t          imm   = std::get<1>(this->operands[0]);
   uint64_t          symZF = ap.getRegSymbolicID(ID_ZF);
 
   /* Create the SMT semantic */
   if (symZF != UNSET)
-    op1 << "#" << std::dec << symZF;
+    zf << "#" << std::dec << symZF;
   else
-    op1 << smt2lib::bv(ap.getRegisterValue(ID_ZF), 1);
+    zf << smt2lib::bv(ap.getRegisterValue(ID_ZF), 1);
 
   /* Finale expr */
   expr << smt2lib::ite(
             smt2lib::equal(
-              op1.str(),
+              zf.str(),
               smt2lib::bvtrue()),
             smt2lib::bv(imm, REG_SIZE_BIT),
             smt2lib::bv(this->nextAddress, REG_SIZE_BIT));

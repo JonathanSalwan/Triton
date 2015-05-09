@@ -15,21 +15,21 @@ JnbeIRBuilder::JnbeIRBuilder(uint64_t address, const std::string &disassembly):
 
 void JnbeIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
-  std::stringstream expr, op1, op2;
+  std::stringstream expr, cf, zf;
   uint64_t          imm   = std::get<1>(this->operands[0]);
   uint64_t          symCF = ap.getRegSymbolicID(ID_CF);
   uint64_t          symZF = ap.getRegSymbolicID(ID_ZF);
 
   /* Create the SMT semantic */
   if (symCF != UNSET)
-    op1 << "#" << std::dec << symCF;
+    cf << "#" << std::dec << symCF;
   else
-    op1 << smt2lib::bv(ap.getRegisterValue(ID_CF), 1);
+    cf << smt2lib::bv(ap.getRegisterValue(ID_CF), 1);
 
   if (symZF != UNSET)
-    op2 << "#" << std::dec << symZF;
+    zf << "#" << std::dec << symZF;
   else
-    op2 << smt2lib::bv(ap.getRegisterValue(ID_ZF), 1);
+    zf << smt2lib::bv(ap.getRegisterValue(ID_ZF), 1);
 
   /* 
    * Finale expr
@@ -39,8 +39,8 @@ void JnbeIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::ite(
             smt2lib::equal(
               smt2lib::bvand(
-                smt2lib::bvnot(op1.str()),
-                smt2lib::bvnot(op2.str())
+                smt2lib::bvnot(cf.str()),
+                smt2lib::bvnot(zf.str())
               ),
               smt2lib::bvtrue()
             ),

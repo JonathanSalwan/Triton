@@ -15,20 +15,20 @@ JnpIRBuilder::JnpIRBuilder(uint64_t address, const std::string &disassembly):
 
 void JnpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
-  std::stringstream expr, op1;
+  std::stringstream expr, pf;
   uint64_t          imm   = std::get<1>(this->operands[0]);
   uint64_t          symPF = ap.getRegSymbolicID(ID_PF);
 
   /* Create the SMT semantic */
   if (symPF != UNSET)
-    op1 << "#" << std::dec << symPF;
+    pf << "#" << std::dec << symPF;
   else
-    op1 << smt2lib::bv(ap.getRegisterValue(ID_PF), 1);
+    pf << smt2lib::bv(ap.getRegisterValue(ID_PF), 1);
 
   /* Finale expr */
   expr << smt2lib::ite(
             smt2lib::equal(
-              op1.str(),
+              pf.str(),
               smt2lib::bvfalse()),
             smt2lib::bv(imm, REG_SIZE_BIT),
             smt2lib::bv(this->nextAddress, REG_SIZE_BIT));

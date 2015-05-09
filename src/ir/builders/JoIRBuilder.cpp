@@ -15,20 +15,20 @@ JoIRBuilder::JoIRBuilder(uint64_t address, const std::string &disassembly):
 
 void JoIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
-  std::stringstream expr, op1;
+  std::stringstream expr, of;
   uint64_t          imm   = std::get<1>(this->operands[0]);
   uint64_t          symOF = ap.getRegSymbolicID(ID_OF);
 
   /* Create the SMT semantic */
   if (symOF != UNSET)
-    op1 << "#" << std::dec << symOF;
+    of << "#" << std::dec << symOF;
   else
-    op1 << smt2lib::bv(ap.getRegisterValue(ID_OF), 1);
+    of << smt2lib::bv(ap.getRegisterValue(ID_OF), 1);
 
   /* Finale expr */
   expr << smt2lib::ite(
             smt2lib::equal(
-              op1.str(),
+              of.str(),
               smt2lib::bvtrue()),
             smt2lib::bv(imm, REG_SIZE_BIT),
             smt2lib::bv(this->nextAddress, REG_SIZE_BIT));
