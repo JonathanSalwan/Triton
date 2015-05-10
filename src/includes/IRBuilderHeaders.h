@@ -10,6 +10,7 @@
 #include "CldIRBuilder.h"
 #include "CmcIRBuilder.h"
 #include "CmpIRBuilder.h"
+#include "CwdeIRBuilder.h"
 #include "DecIRBuilder.h"
 #include "IRBuilderFactory.h"
 #include "IncIRBuilder.h"
