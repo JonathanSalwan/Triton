@@ -31,6 +31,9 @@ void CwdeIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the symbolic element */
   se = ap.createRegSE(expr, ID_RAX);
 
+  /* Apply the taint */
+  ap.aluSpreadTaintRegReg(se, ID_RAX, ID_RAX);
+
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
 }

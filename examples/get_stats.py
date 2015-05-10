@@ -1,12 +1,12 @@
 
 from triton import *
 
-# $ ../../../pin -t ./triton.so -script ./examples/get_stats.py -- ./samples/crackmes/crackme_xor a
-# loose
-# Number of branches:              230
-# Number of expressions:           2063
-# Number of unknown expression:    582
-# Time of the execution:           6
+# $ ../../../pin -t ./triton.so -script ./examples/get_stats.py -- ./samples/crackmes/crackme_xor elite
+# Win
+# Number of branches:              141
+# Number of expressions:           3535
+# Number of unknown expression:    103
+# Time of the execution:           16 seconds
 # $
 
 def fini():
