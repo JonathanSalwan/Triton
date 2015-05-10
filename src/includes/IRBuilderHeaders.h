@@ -19,6 +19,7 @@
 #include "JbeIRBuilder.h"
 #include "JlIRBuilder.h"
 #include "JleIRBuilder.h"
+#include "JmpIRBuilder.h"
 #include "JnbIRBuilder.h"
 #include "JnbeIRBuilder.h"
 #include "JnlIRBuilder.h"
