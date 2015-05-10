@@ -124,6 +124,7 @@ OBJ = $(SRC:.cpp=.o)
 
 # Rules
 all: $(NAME)
+	strip $(NAME).so
 
 $(NAME): $(OBJ)
 	$(CXX) -shared -Wl,--hash-style=sysv -Wl,-Bsymbolic -Wl,--version-script=$(PIN_ROOT)/source/include/pin/pintool.ver -o $(NAME).so $(OBJ) $(LIBS)
