@@ -34,6 +34,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new CallIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_CBW:
+      ir = new CbwIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_CDQE:
       ir = new CdqeIRBuilder(address, disas);
       break;
