@@ -27,6 +27,9 @@ void check(void)
   asm("movzx ecx, al");
   asm("movzx rdx, word ptr [rsp-0x2]");
   asm("movsx rax, word ptr [rsp-0x2]");
+  asm("movapd xmm0, xmmword ptr [rsp+112]");
+  asm("movapd xmm1, xmm2");
+  asm("movapd xmm3, xmm0");
 }
 
 int main(){

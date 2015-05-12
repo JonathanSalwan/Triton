@@ -40,6 +40,28 @@ uint64_t PINContextHandler::getRegisterValue(uint64_t TritRegID) const
 
 
 // There is no verification on the validity of the ID.
+__uint128_t PINContextHandler::getSSERegisterValue(uint64_t TritRegID) const
+{
+  REG reg                 = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
+  __uint128_t value       = 0;
+  unsigned char *tmp      = (unsigned char*)malloc(16);
+
+  if (tmp == nullptr)
+    throw std::runtime_error("Error: Not enough memory.");
+
+  if (reg == -1 || !REG_valid(reg))
+    throw std::runtime_error("Error: Invalid PIN register id.");
+
+  PIN_GetContextRegval(this->_ctx, reg, tmp);
+
+  value = *((__uint128_t *)tmp);
+  free(tmp);
+
+  return value;
+}
+
+
+// There is no verification on the validity of the ID.
 void PINContextHandler::setRegisterValue(uint64_t TritRegID, uint64_t value) const
 {
   REG reg = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
@@ -49,6 +71,26 @@ void PINContextHandler::setRegisterValue(uint64_t TritRegID, uint64_t value) con
 
   PIN_SetContextReg(this->_ctx, reg, value);
   PIN_ExecuteAt(this->_ctx);
+}
+
+
+// There is no verification on the validity of the ID.
+void PINContextHandler::setSSERegisterValue(uint64_t TritRegID, __uint128_t value) const
+{
+  REG reg = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
+  unsigned char *tmp      = (unsigned char*)malloc(16);
+
+  if (tmp == nullptr)
+    throw std::runtime_error("Error: Not enough memory.");
+
+  if (reg == -1 || !REG_valid(reg))
+    throw std::runtime_error("Error: Invalid PIN register id.");
+
+  *(__uint128_t *)tmp = value;
+
+  PIN_SetContextRegval(this->_ctx, reg, tmp);
+  PIN_ExecuteAt(this->_ctx);
+  free(tmp);
 }
 
 
@@ -63,7 +105,7 @@ static bool isAddressMapped(ADDRINT addr) {
 
 
 /* Used to deref a pointer address and returns the targeted byte by size of read */
-uint64_t PINContextHandler::getMemValue(uint64_t mem, uint32_t readSize) const
+__uint128_t PINContextHandler::getMemValue(uint64_t mem, uint32_t readSize) const
 {
 
   if (!isAddressMapped(mem)){
@@ -72,10 +114,11 @@ uint64_t PINContextHandler::getMemValue(uint64_t mem, uint32_t readSize) const
   }
 
   switch(readSize){
-    case 1: return static_cast<UINT64>(*(reinterpret_cast<UINT8 *>(mem)));
-    case 2: return static_cast<UINT64>(*(reinterpret_cast<UINT16 *>(mem)));
-    case 4: return static_cast<UINT64>(*(reinterpret_cast<UINT32 *>(mem)));
-    case 8: return static_cast<UINT64>(*(reinterpret_cast<UINT64 *>(mem)));
+    case 1:  return static_cast<__uint128_t>(*(reinterpret_cast<UINT8 *>(mem)));
+    case 2:  return static_cast<__uint128_t>(*(reinterpret_cast<UINT16 *>(mem)));
+    case 4:  return static_cast<__uint128_t>(*(reinterpret_cast<UINT32 *>(mem)));
+    case 8:  return static_cast<__uint128_t>(*(reinterpret_cast<UINT64 *>(mem)));
+    case 16: return static_cast<__uint128_t>(*(reinterpret_cast<__uint128_t *>(mem)));
   }
   throw std::runtime_error("Error: Invalid read size");
   return 0; // Never go there

@@ -391,6 +391,14 @@ uint64_t AnalysisProcessor::getRegisterValue(uint64_t regID)
 }
 
 
+__uint128_t AnalysisProcessor::getSSERegisterValue(uint64_t regID)
+{
+  if (!this->currentCtxH)
+    return 0;
+  return this->currentCtxH->getSSERegisterValue(regID);
+}
+
+
 // Returns the concret Carry Flag value
 uint64_t AnalysisProcessor::getCFValue(void)
 {
@@ -408,6 +416,14 @@ void AnalysisProcessor::setRegisterValue(uint64_t regID, uint64_t value)
   if (!this->currentCtxH)
     return ;
   this->currentCtxH->setRegisterValue(regID, value);
+}
+
+
+void AnalysisProcessor::setSSERegisterValue(uint64_t regID, __uint128_t value)
+{
+  if (!this->currentCtxH)
+    return ;
+  this->currentCtxH->setSSERegisterValue(regID, value);
 }
 
 

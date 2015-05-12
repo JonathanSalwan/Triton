@@ -108,6 +108,57 @@ uint64_t PINConverter::convertDBIReg2TritonReg(uint64_t regID){
     case REG_R15B:
       return ID_R15;
 
+    case REG_RFLAGS:
+      return ID_RFLAGS;
+
+    case REG_XMM0:
+      return ID_XMM0;
+
+    case REG_XMM1:
+      return ID_XMM1;
+
+    case REG_XMM2:
+      return ID_XMM2;
+
+    case REG_XMM3:
+      return ID_XMM3;
+
+    case REG_XMM4:
+      return ID_XMM4;
+
+    case REG_XMM5:
+      return ID_XMM5;
+
+    case REG_XMM6:
+      return ID_XMM6;
+
+    case REG_XMM7:
+      return ID_XMM7;
+
+    case REG_XMM8:
+      return ID_XMM8;
+
+    case REG_XMM9:
+      return ID_XMM9;
+
+    case REG_XMM10:
+      return ID_XMM10;
+
+    case REG_XMM11:
+      return ID_XMM11;
+
+    case REG_XMM12:
+      return ID_XMM12;
+
+    case REG_XMM13:
+      return ID_XMM13;
+
+    case REG_XMM14:
+      return ID_XMM14;
+
+    case REG_XMM15:
+      return ID_XMM15;
+
     default:
       return -1;
   }

@@ -184,6 +184,9 @@ std::string smt2lib::extract(uint64_t regSize)
     case 8:
       stream << "(_ extract 63 0)";
       break;
+    case 16:
+      stream << "(_ extract 127 0)";
+      break;
     default:
       throw std::runtime_error("Error: invalid smt2lib::extract regSize");
   }
@@ -231,6 +234,9 @@ std::string smt2lib::declare(uint64_t idSymVar, uint64_t BitVecSize)
       break;
     case 8:
       stream << "(declare-fun SymVar_" << idSymVar << " () (_ BitVec 64))";
+      break;
+    case 16:
+      stream << "(declare-fun SymVar_" << idSymVar << " () (_ BitVec 128))";
       break;
   }
 

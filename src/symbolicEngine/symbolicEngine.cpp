@@ -223,7 +223,7 @@ bool SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize)
   if (element == nullptr)
     return false;
 
-  if (symVarSize != 1 && symVarSize != 2 && symVarSize != 4 && symVarSize != 8)
+  if (symVarSize != 1 && symVarSize != 2 && symVarSize != 4 && symVarSize != 8 && symVarSize != 16)
     throw std::runtime_error("SymbolicEngine::createSymVarFromExprID() - Invalid symVarSize");
 
   symVarID = this->getUniqueSymVarID();

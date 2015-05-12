@@ -166,8 +166,8 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
   ei = PyLong_AsLong(exprId);
   vs = PyLong_AsLong(symVarSize);
 
-  if (vs != 8 && vs != 4 && vs != 2 && vs != 1)
-    return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): The symVarSize argument must be: 8, 4, 2 or 1");
+  if (vs != 16 && vs != 8 && vs != 4 && vs != 2 && vs != 1)
+    return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): The symVarSize argument must be: 16, 8, 4, 2 or 1");
 
   if (ap.convertExprToSymVar(ei, vs) == false)
     return Py_False;
@@ -230,8 +230,8 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
   ad = PyLong_AsLong(addr);
   rs = PyLong_AsLong(readSize);
 
-  if (rs != 8 && rs != 4 && rs != 2 && rs != 1)
-    return PyErr_Format(PyExc_TypeError, "getMemValue(): The readSize argument must be: 8, 4, 2 or 1");
+  if (rs != 16 && rs != 8 && rs != 4 && rs != 2 && rs != 1)
+    return PyErr_Format(PyExc_TypeError, "getMemValue(): The readSize argument must be: 16, 8, 4, 2 or 1");
 
   if (PIN_CheckReadAccess(reinterpret_cast<void*>(ad)) == false)
     return PyErr_Format(PyExc_TypeError, "getMemValue(): The targeted address memory can not be read");
@@ -283,9 +283,9 @@ static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
     return PyErr_Format(PyExc_TypeError, "getRegValue(): Can't call getRegValue() right now. You must run the program before.");
 
   tritonReg = PyLong_AsLong(reg);
-  //TODO: I deleted the check on the register ID. Right now the conversion from
-  //      Triton register ID to Pin ID is handled inside getRegisterValue.
-  //      I propose to use exception for this kind of check, now.
+
+  if (tritonReg >= ID_XMM0 && tritonReg <= ID_XMM15)
+    return Py_BuildValue("k", ap.getSSERegisterValue(tritonReg));
   return Py_BuildValue("k", ap.getRegisterValue(tritonReg));
 }
 
@@ -471,9 +471,9 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
   PyObject *addr;
   PyObject *value;
   PyObject *writeSize;
-  uint64_t ad; // address
-  uint64_t va; // value
-  uint64_t ws; // write size
+  __uint128_t va; // value
+  uint64_t    ad; // address
+  uint64_t    ws; // write size
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "O|O|O", &addr, &writeSize, &value);
@@ -490,8 +490,8 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
   ad = PyLong_AsLong(addr);
   ws = PyLong_AsLong(writeSize);
 
-  if (ws != 8 && ws != 4 && ws != 2 && ws != 1)
-    return PyErr_Format(PyExc_TypeError, "setMemValue(): The writeSize argument must be: 8, 4, 2 or 1");
+  if (ws != 16 && ws != 8 && ws != 4 && ws != 2 && ws != 1)
+    return PyErr_Format(PyExc_TypeError, "setMemValue(): The writeSize argument must be: 16, 8, 4, 2 or 1");
 
   if (PIN_CheckWriteAccess(reinterpret_cast<void*>(ad)) == false)
     return PyErr_Format(PyExc_TypeError, "setMemValue(): Can not write into the targeted address memory");
@@ -511,6 +511,9 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
     case 8:
       *((uint64_t *)ad) = va;
       break;
+    case 16:
+      *((__uint128_t *)ad) = va;
+      break;
     default:
       throw std::runtime_error("Error: Triton_setMemValue() - Invalid write size");
   }
@@ -524,8 +527,8 @@ static PyObject *Triton_setRegValue(PyObject *self, PyObject *args)
 {
   PyObject *reg;
   PyObject *value;
+  __uint128_t va;
   uint64_t tr;
-  uint64_t va;
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "O|O", &reg, &value);
@@ -538,7 +541,11 @@ static PyObject *Triton_setRegValue(PyObject *self, PyObject *args)
 
   va = PyLong_AsLong(value);
   tr = PyLong_AsLong(reg);
-  ap.setRegisterValue(tr, va);
+
+  if (tr >= ID_XMM0 && tr <= ID_XMM15)
+    ap.setSSERegisterValue(tr, va);
+  else
+    ap.setRegisterValue(tr, va);
 
   return Py_None;
 }
