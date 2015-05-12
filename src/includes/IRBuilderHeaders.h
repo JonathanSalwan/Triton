@@ -35,6 +35,7 @@
 #include "LeaveIRBuilder.h"
 #include "MovIRBuilder.h"
 #include "MovapdIRBuilder.h"
+#include "MovapsIRBuilder.h"
 #include "MovsxIRBuilder.h"
 #include "MovzxIRBuilder.h"
 #include "NotIRBuilder.h"

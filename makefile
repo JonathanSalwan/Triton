@@ -93,6 +93,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/LeaveIRBuilder.cpp \
 		./src/ir/builders/MovIRBuilder.cpp \
 		./src/ir/builders/MovapdIRBuilder.cpp \
+		./src/ir/builders/MovapsIRBuilder.cpp \
 		./src/ir/builders/MovsxIRBuilder.cpp \
 		./src/ir/builders/MovzxIRBuilder.cpp \
 		./src/ir/builders/NotIRBuilder.cpp \

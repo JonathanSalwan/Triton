@@ -150,6 +150,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new MovapdIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_MOVAPS:
+      ir = new MovapsIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_MOVSX:
     case XED_ICLASS_MOVSXD:
       ir = new MovsxIRBuilder(address, disas);

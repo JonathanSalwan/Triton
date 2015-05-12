@@ -30,6 +30,9 @@ void check(void)
   asm("movapd xmm0, xmmword ptr [rsp+112]");
   asm("movapd xmm1, xmm2");
   asm("movapd xmm3, xmm0");
+  asm("movaps xmm0, xmmword ptr [rsp+112]");
+  asm("movaps xmm1, xmm2");
+  asm("movaps xmm3, xmm0");
 }
 
 int main(){
