@@ -496,7 +496,7 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
   if (PIN_CheckWriteAccess(reinterpret_cast<void*>(ad)) == false)
     return PyErr_Format(PyExc_TypeError, "setMemValue(): Can not write into the targeted address memory");
 
-  va = PyLong_AsLong(value);
+  va = PyLong_AsLongLong(value);
 
   switch (ws){
     case 1:
@@ -539,7 +539,7 @@ static PyObject *Triton_setRegValue(PyObject *self, PyObject *args)
   if (!PyLong_Check(value) && !PyInt_Check(value))
     return PyErr_Format(PyExc_TypeError, "setRegValue(): expected an integer as second argument");
 
-  va = PyLong_AsLong(value);
+  va = PyLong_AsLongLong(value);
   tr = PyLong_AsLong(reg);
 
   if (tr >= ID_XMM0 && tr <= ID_XMM15)

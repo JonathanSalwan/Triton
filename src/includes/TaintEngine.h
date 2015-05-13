@@ -24,7 +24,7 @@ class TaintEngine {
      * a mask with sub-register.
      * sizeof(taintedReg) = enum REG - Flags
      */
-    uint64_t taintedReg[33];
+    uint64_t taintedReg[41];
 
     /* Initialization of an object */
     void init(const TaintEngine &other);
