@@ -8,6 +8,8 @@ instruction into the [SMT2-LIB representation](https://github.com/JonathanSalwan
 a [Z3 interface](https://github.com/JonathanSalwan/Triton/wiki/Solver-Engine-Z3) to solve constraints 
 and [Python bindings](https://github.com/JonathanSalwan/Triton/wiki/Python-Bindings).
 
+<p align="center"><img src="http://shell-storm.org/files/triton_archi_3.svg"/></p>
+
 Based on these components, **Triton** provides 
 [runtime behavior analysis](https://github.com/JonathanSalwan/Triton/wiki/Runtime-Behavior-Analysis) for vulnerabilities 
 research and can provide some reverse engineering assistance.
@@ -15,8 +17,6 @@ research and can provide some reverse engineering assistance.
 The [wiki](https://github.com/JonathanSalwan/Triton/wiki) describes **Triton** under the hood. As **Triton** is a young project, 
 please, **don't blame us** if it is not yet reliable. [Open issues](https://github.com/JonathanSalwan/Triton/issues) or 
 [pull requests](https://github.com/JonathanSalwan/Triton/pulls) are always better than troll =).
-
-<p align="center"><img src="http://shell-storm.org/files/triton_archi_3.svg"/></p>
 
 ### Quick start
 
