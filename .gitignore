@@ -1,4 +1,5 @@
 obj-intel64/*
+data/*
 pin.log
 pintool.log
 *.swp
