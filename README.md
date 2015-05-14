@@ -16,7 +16,7 @@ The [wiki](https://github.com/JonathanSalwan/Triton/wiki) describes **Triton** u
 please, **don't blame us** if it is not yet reliable. [Open issues](https://github.com/JonathanSalwan/Triton/issues) or 
 [pull requests](https://github.com/JonathanSalwan/Triton/pulls) are always better than troll =).
 
-<p align="center"><img src="http://shell-storm.org/files/triton_archi.svg"/></p>
+<p align="center"><img src="http://shell-storm.org/files/triton_archi_3.svg"/></p>
 
 ### Quick start
 
