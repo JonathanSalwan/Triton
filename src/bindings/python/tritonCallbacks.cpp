@@ -284,8 +284,14 @@ static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
 
   tritonReg = PyLong_AsLong(reg);
 
-  if (tritonReg >= ID_XMM0 && tritonReg <= ID_XMM15)
-    return Py_BuildValue("K", ap.getSSERegisterValue(tritonReg));
+  if (tritonReg >= ID_XMM0 && tritonReg <= ID_XMM15){
+    char tmp[128 + 1] = {0};
+    __uint128_t value = ap.getSSERegisterValue(tritonReg);
+    uint64_t low      = value & 0xffffffffffffffff;
+    uint64_t high     = (value >> 64) & 0xffffffffffffffff;
+    sprintf(tmp, "%lx%lx", high, low);
+    return PyLong_FromString(tmp, nullptr, 16);
+  }
   return Py_BuildValue("k", ap.getRegisterValue(tritonReg));
 }
 
