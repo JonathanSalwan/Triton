@@ -51,7 +51,7 @@ __uint128_t PINContextHandler::getSSERegisterValue(uint64_t TritRegID) const
 
   PIN_GetContextRegval(this->_ctx, reg, reinterpret_cast<UINT8 *>(&tmp));
 
-  value = reinterpret_cast<__uint128_t>(&tmp);
+  value = *reinterpret_cast<__uint128_t*>(&tmp);
 
   return value;
 }

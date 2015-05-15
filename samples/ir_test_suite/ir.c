@@ -3,7 +3,7 @@
 
 void check(void)
 {
-  int tab[4] = {1, 2, 3, 4};
+  int tab[4] = {0x11111111, 0x22222222, 0x33333333, 0x44444444};
 
   asm("clc");
   asm("cld");
@@ -27,10 +27,10 @@ void check(void)
   asm("movzx ecx, al");
   asm("movzx rdx, word ptr [rsp-0x2]");
   asm("movsx rax, word ptr [rsp-0x2]");
-  asm("movapd xmm0, xmmword ptr [rbp-0x10]");
+  asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab));
   asm("movapd xmm1, xmm2");
   asm("movapd xmm3, xmm0");
-  asm("movaps xmm0, xmmword ptr [rbp-0x10]");
+  asm("movaps xmm0, xmmword ptr [%0]" :: "r"(tab));
   asm("movaps xmm1, xmm2");
   asm("movaps xmm3, xmm0");
 }
