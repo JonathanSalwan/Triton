@@ -3,7 +3,7 @@
 
 void check(void)
 {
-  short x = -1;
+  int tab[4] = {1, 2, 3, 4};
 
   asm("clc");
   asm("cld");
@@ -11,10 +11,10 @@ void check(void)
   asm("mov eax, 32");
   asm("mov ecx, 1");
   asm("mov ebx, eax");
-  asm("mov rbx, word ptr [rsp-0x2]");
+  asm("mov rbx, qword ptr [rsp-0x2]");
   asm("mov rax, 2");
-  asm("mov rcx, word ptr [rsp+rax*1]");
-  asm("mov word ptr [rsp+rax*1], rcx");
+  asm("mov rcx, qword ptr [rsp+rax*1]");
+  asm("mov qword ptr [rsp+rax*1], rcx");
   asm("add ecx, ebx");
   asm("adc eax, ecx");
   asm("inc eax");
@@ -27,10 +27,10 @@ void check(void)
   asm("movzx ecx, al");
   asm("movzx rdx, word ptr [rsp-0x2]");
   asm("movsx rax, word ptr [rsp-0x2]");
-  asm("movapd xmm0, xmmword ptr [rsp+112]");
+  asm("movapd xmm0, xmmword ptr [rbp-0x10]");
   asm("movapd xmm1, xmm2");
   asm("movapd xmm3, xmm0");
-  asm("movaps xmm0, xmmword ptr [rsp+112]");
+  asm("movaps xmm0, xmmword ptr [rbp-0x10]");
   asm("movaps xmm1, xmm2");
   asm("movaps xmm3, xmm0");
 }

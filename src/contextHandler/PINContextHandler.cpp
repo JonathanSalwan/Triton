@@ -44,18 +44,14 @@ __uint128_t PINContextHandler::getSSERegisterValue(uint64_t TritRegID) const
 {
   REG reg                 = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
   __uint128_t value       = 0;
-  unsigned char *tmp      = (unsigned char*)malloc(16);
-
-  if (tmp == nullptr)
-    throw std::runtime_error("Error: Not enough memory.");
+  PIN_REGISTER tmp;
 
   if (reg == -1 || !REG_valid(reg))
     throw std::runtime_error("Error: Invalid PIN register id.");
 
-  PIN_GetContextRegval(this->_ctx, reg, tmp);
+  PIN_GetContextRegval(this->_ctx, reg, reinterpret_cast<UINT8 *>(&tmp));
 
-  value = *((__uint128_t *)tmp);
-  free(tmp);
+  value = reinterpret_cast<__uint128_t>(&tmp);
 
   return value;
 }
