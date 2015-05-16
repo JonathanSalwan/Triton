@@ -141,6 +141,12 @@ void AnalysisProcessor::addPathConstraint(uint64_t exprId)
 }
 
 
+std::list<uint64_t> AnalysisProcessor::getPathConstraints(void)
+{
+  return this->symEngine.getPathConstraints();
+}
+
+
 // Taint Engine Facade
 // -------------------
 

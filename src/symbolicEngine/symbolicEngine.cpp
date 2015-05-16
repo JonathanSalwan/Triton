@@ -288,3 +288,10 @@ void SymbolicEngine::addPathConstraint(uint64_t exprId)
 }
 
 
+/* Returns the path constrains list */
+std::list<uint64_t> SymbolicEngine::getPathConstraints(void)
+{
+  return this->pathConstaints;
+}
+
+

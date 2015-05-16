@@ -75,6 +75,7 @@ class SymbolicEngine {
     SymbolicElement       *newSymbolicElement(std::stringstream &src, std::string &comment);
     bool                  assignExprToSymVar(uint64_t exprId, uint64_t symVarId);
     bool                  convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
+    std::list<uint64_t>   getPathConstraints(void);
     std::string           getBacktrackedExpressionFromId(uint64_t id);
     std::string           getSmt2LibVarsDecl();
     uint64_t              getMemSymbolicID(uint64_t addr);

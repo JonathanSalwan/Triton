@@ -261,6 +261,28 @@ static PyObject *Triton_getModel(PyObject *self, PyObject *expr)
 }
 
 
+static char Triton_getPathConstraints_doc[] = "Returns the list of path constraints";
+static PyObject *Triton_getPathConstraints(PyObject *self, PyObject *noargs)
+{
+  PyObject                        *ppc;
+  std::list<uint64_t>             pc;
+  std::list<uint64_t>::iterator   it;
+  Py_ssize_t                      size = 0;
+
+  pc    = ap.getPathConstraints();
+  size  = pc.size();
+  ppc   = xPyList_New(size);
+
+  Py_ssize_t index = 0;
+  for (it = pc.begin(); it != pc.end(); it++){
+    PyList_SetItem(ppc, index, Py_BuildValue("k", *it));
+    index += 1;
+  }
+
+  return ppc;
+}
+
+
 static char Triton_getRegSymbolicID_doc[] = "Gets the symbolic register reference";
 static PyObject *Triton_getRegSymbolicID(PyObject *self, PyObject *reg)
 {
@@ -767,6 +789,7 @@ PyMethodDef tritonCallbacks[] = {
   {"getMemSymbolicID",          Triton_getMemSymbolicID,          METH_O,       Triton_getMemSymbolicID_doc},
   {"getMemValue",               Triton_getMemValue,               METH_VARARGS, Triton_getMemValue_doc},
   {"getModel",                  Triton_getModel,                  METH_O,       Triton_getModel_doc},
+  {"getPathConstraints",        Triton_getPathConstraints,        METH_NOARGS,  Triton_getPathConstraints_doc},
   {"getRegSymbolicID",          Triton_getRegSymbolicID,          METH_O,       Triton_getRegSymbolicID_doc},
   {"getRegValue",               Triton_getRegValue,               METH_O,       Triton_getRegValue_doc},
   {"getStats",                  Triton_getStats,                  METH_NOARGS,  Triton_getStats_doc},

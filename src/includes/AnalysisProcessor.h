@@ -84,6 +84,7 @@ class AnalysisProcessor {
 
     // The a path constraint in the PC list
     void addPathConstraint(uint64_t exprId);
+    std::list<uint64_t> getPathConstraints(void);
 
 
     // Taint Engine Facade
