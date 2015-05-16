@@ -40,46 +40,17 @@ uint64_t PINContextHandler::getFlagValue(uint64_t TritFlagID) const
   rflags = PIN_GetContextReg(this->_ctx, reg);
 
   switch (TritFlagID){
-
-    case ID_AF:
-      return (rflags >> 4) & 1;
-      break;
-
-    case ID_CF:
-      return rflags & 1;
-      break;
-
-    case ID_DF:
-      return (rflags >> 10) & 1;
-      break;
-
-    case ID_IF:
-      return (rflags >> 9) & 1;
-      break;
-
-    case ID_OF:
-      return (rflags >> 11) & 1;
-      break;
-
-    case ID_PF:
-      return (rflags >> 2) & 1;
-      break;
-
-    case ID_SF:
-      return (rflags >> 7) & 1;
-      break;
-
-    case ID_TF:
-      return (rflags >> 8) & 1;
-      break;
-
-    case ID_ZF:
-      return (rflags >> 6) & 1;
-      break;
-
+    case ID_AF: return (rflags >> 4) & 1;
+    case ID_CF: return rflags & 1;
+    case ID_DF: return (rflags >> 10) & 1;
+    case ID_IF: return (rflags >> 9) & 1;
+    case ID_OF: return (rflags >> 11) & 1;
+    case ID_PF: return (rflags >> 2) & 1;
+    case ID_SF: return (rflags >> 7) & 1;
+    case ID_TF: return (rflags >> 8) & 1;
+    case ID_ZF: return (rflags >> 6) & 1;
     default:
       throw std::runtime_error("Error: Invalid Flag id.");
-
   }
   return 0;
 }
