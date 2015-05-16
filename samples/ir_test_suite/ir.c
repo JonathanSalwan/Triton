@@ -21,7 +21,10 @@ void check(void)
   asm("test eax, eax");
   asm("sbb eax, ecx");
   asm("cmp ecx, eax");
+  asm("mov ecx, 3");
+  asm("mov ebx, 5");
   asm("cmp ecx, 3");
+  asm("cmovz eax, ebx");
   asm("mov al, -1");
   asm("movsx eax, al");
   asm("movzx ecx, al");
