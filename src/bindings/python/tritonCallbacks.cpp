@@ -299,7 +299,7 @@ static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
   uint64_t tritonReg;
 
   if (!PyLong_Check(reg) && !PyInt_Check(reg))
-    return PyErr_Format(PyExc_TypeError, "getRegValue(): expected a register id (integer) as argument");
+    return PyErr_Format(PyExc_TypeError, "getRegValue(): expected a register id (IDREF.REG) as argument");
 
   if (!ap.getCurrentCtxH())
     return PyErr_Format(PyExc_TypeError, "getRegValue(): Can't call getRegValue() right now. You must run the program before.");
@@ -315,6 +315,23 @@ static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
     return PyLong_FromString(tmp, nullptr, 16);
   }
   return Py_BuildValue("k", ap.getRegisterValue(tritonReg));
+}
+
+
+static char Triton_getFlagValue_doc[] = "Gets the current value of the flag";
+static PyObject *Triton_getFlagValue(PyObject *self, PyObject *flag)
+{
+  uint64_t tritonFlag;
+
+  if (!PyLong_Check(flag) && !PyInt_Check(flag))
+    return PyErr_Format(PyExc_TypeError, "getFlagValue(): expected a flag id (IDREF.FLAG) as argument");
+
+  if (!ap.getCurrentCtxH())
+    return PyErr_Format(PyExc_TypeError, "getFlagValue(): Can't call getFlagValue() right now. You must run the program before.");
+
+  tritonFlag = PyLong_AsLong(flag);
+
+  return Py_BuildValue("k", ap.getFlagValue(tritonFlag));
 }
 
 
@@ -786,6 +803,7 @@ PyMethodDef tritonCallbacks[] = {
   {"convertExprToSymVar",       Triton_convertExprToSymVar,       METH_VARARGS, Triton_convertExprToSymVar_doc},
   {"disableSnapshot",           Triton_disableSnapshot,           METH_NOARGS,  Triton_disableSnapshot_doc},
   {"getBacktrackedSymExpr",     Triton_getBacktrackedSymExpr,     METH_O,       Triton_getBacktrackedSymExpr_doc},
+  {"getFlagValue",              Triton_getFlagValue,              METH_O,       Triton_getFlagValue_doc},
   {"getMemSymbolicID",          Triton_getMemSymbolicID,          METH_O,       Triton_getMemSymbolicID_doc},
   {"getMemValue",               Triton_getMemValue,               METH_VARARGS, Triton_getMemValue_doc},
   {"getModel",                  Triton_getModel,                  METH_O,       Triton_getModel_doc},
