@@ -24,6 +24,7 @@ void check(void)
   asm("mov ecx, 3");
   asm("mov ebx, 5");
   asm("cmp ecx, 3");
+  asm("cmovl eax, ebx");
   asm("cmovno eax, ebx");
   asm("cmovnp eax, ebx");
   asm("cmovns eax, ebx");
