@@ -33,7 +33,7 @@ void CmovzIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   if (symZF != UNSET)
     zf << "#" << std::dec << symZF;
   else
-    zf << smt2lib::bv(ap.getRegisterValue(ID_ZF), 1);
+    zf << smt2lib::bv(ap.getFlagValue(ID_ZF), 1);
 
   /* Create the reg1 SMT semantic */
   if (symReg1 != UNSET)
@@ -58,7 +58,7 @@ void CmovzIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(expr, reg1);
 
   /* Apply the taint via the concretization */
-  if (ap.getRegisterValue(ID_ZF) == 1)
+  if (ap.getFlagValue(ID_ZF) == 1)
     ap.assignmentSpreadTaintRegReg(se, reg1, reg2);
 
   /* Add the symbolic element to the current inst */
@@ -81,7 +81,7 @@ void CmovzIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   if (symZF != UNSET)
     zf << "#" << std::dec << symZF;
   else
-    zf << smt2lib::bv(ap.getRegisterValue(ID_ZF), 1);
+    zf << smt2lib::bv(ap.getFlagValue(ID_ZF), 1);
 
   /* Create the reg SMT semantic */
   if (symReg != UNSET)
@@ -106,7 +106,7 @@ void CmovzIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(expr, reg);
 
   /* Apply the taint via the concretization */
-  if (ap.getRegisterValue(ID_ZF) == 1)
+  if (ap.getFlagValue(ID_ZF) == 1)
     ap.assignmentSpreadTaintRegMem(se, reg, mem, readSize);
 
   /* Add the symbolic element to the current inst */

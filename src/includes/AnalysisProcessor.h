@@ -30,6 +30,7 @@ class AnalysisProcessor {
 
     // Returns the value of the register.
     uint64_t getRegisterValue(uint64_t regID);
+    uint64_t getFlagValue(uint64_t flagID);
     __uint128_t getSSERegisterValue(uint64_t regID);
     uint64_t getCFValue(void);
 

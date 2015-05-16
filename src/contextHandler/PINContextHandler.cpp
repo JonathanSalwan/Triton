@@ -27,12 +27,70 @@ void *PINContextHandler::getCtx(void) const
   return this->_ctx;
 }
 
+
+// There is no verification on the validity of the ID.
+uint64_t PINContextHandler::getFlagValue(uint64_t TritFlagID) const
+{
+  uint64_t rflags;
+  REG reg = safecast(PINConverter::convertTritonReg2DBIReg(ID_RFLAGS));
+
+  if (reg == -1 || !REG_valid(reg))
+    throw std::runtime_error("Error: Invalid PIN register id.");
+
+  rflags = PIN_GetContextReg(this->_ctx, reg);
+
+  switch (TritFlagID){
+
+    case ID_AF:
+      return (rflags >> 4) & 1;
+      break;
+
+    case ID_CF:
+      return rflags & 1;
+      break;
+
+    case ID_DF:
+      return (rflags >> 10) & 1;
+      break;
+
+    case ID_IF:
+      return (rflags >> 9) & 1;
+      break;
+
+    case ID_OF:
+      return (rflags >> 11) & 1;
+      break;
+
+    case ID_PF:
+      return (rflags >> 2) & 1;
+      break;
+
+    case ID_SF:
+      return (rflags >> 7) & 1;
+      break;
+
+    case ID_TF:
+      return (rflags >> 8) & 1;
+      break;
+
+    case ID_ZF:
+      return (rflags >> 6) & 1;
+      break;
+
+    default:
+      throw std::runtime_error("Error: Invalid Flag id.");
+
+  }
+  return 0;
+}
+
+
 // There is no verification on the validity of the ID.
 uint64_t PINContextHandler::getRegisterValue(uint64_t TritRegID) const
 {
   REG reg = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
 
-  if (reg == -1 || !REG_valid(reg))
+  if (reg == -1 || !REG_valid(reg) || (TritRegID >= ID_XMM0 && TritRegID <= ID_XMM15))
     throw std::runtime_error("Error: Invalid PIN register id.");
 
   return PIN_GetContextReg(this->_ctx, reg);
@@ -46,7 +104,7 @@ __uint128_t PINContextHandler::getSSERegisterValue(uint64_t TritRegID) const
   __uint128_t value       = 0;
   PIN_REGISTER tmp;
 
-  if (reg == -1 || !REG_valid(reg))
+  if (reg == -1 || !REG_valid(reg) || !(TritRegID >= ID_XMM0 && TritRegID <= ID_XMM15))
     throw std::runtime_error("Error: Invalid PIN register id.");
 
   PIN_GetContextRegval(this->_ctx, reg, reinterpret_cast<UINT8 *>(&tmp));
@@ -62,7 +120,7 @@ void PINContextHandler::setRegisterValue(uint64_t TritRegID, uint64_t value) con
 {
   REG reg = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
 
-  if (reg == -1 || !REG_valid(reg))
+  if (reg == -1 || !REG_valid(reg) || (TritRegID >= ID_XMM0 && TritRegID <= ID_XMM15))
     throw std::runtime_error("Error: Invalid PIN register id.");
 
   PIN_SetContextReg(this->_ctx, reg, value);
@@ -79,7 +137,7 @@ void PINContextHandler::setSSERegisterValue(uint64_t TritRegID, __uint128_t valu
   if (tmp == nullptr)
     throw std::runtime_error("Error: Not enough memory.");
 
-  if (reg == -1 || !REG_valid(reg))
+  if (reg == -1 || !REG_valid(reg) || !(TritRegID >= ID_XMM0 && TritRegID <= ID_XMM15))
     throw std::runtime_error("Error: Invalid PIN register id.");
 
   *(__uint128_t *)tmp = value;

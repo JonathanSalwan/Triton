@@ -23,7 +23,7 @@ void JpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   if (symPF != UNSET)
     pf << "#" << std::dec << symPF;
   else
-    pf << smt2lib::bv(ap.getRegisterValue(ID_PF), 1);
+    pf << smt2lib::bv(ap.getFlagValue(ID_PF), 1);
 
   /* Finale expr */
   expr << smt2lib::ite(

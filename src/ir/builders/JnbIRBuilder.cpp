@@ -23,7 +23,7 @@ void JnbIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   if (symCF != UNSET)
     cf << "#" << std::dec << symCF;
   else
-    cf << smt2lib::bv(ap.getRegisterValue(ID_CF), 1);
+    cf << smt2lib::bv(ap.getFlagValue(ID_CF), 1);
 
   /* Finale expr */
   expr << smt2lib::ite(

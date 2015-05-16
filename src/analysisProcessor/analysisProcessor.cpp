@@ -397,6 +397,14 @@ uint64_t AnalysisProcessor::getRegisterValue(uint64_t regID)
 }
 
 
+uint64_t AnalysisProcessor::getFlagValue(uint64_t flagID)
+{
+  if (!this->currentCtxH)
+    return 0;
+  return this->currentCtxH->getFlagValue(flagID);
+}
+
+
 __uint128_t AnalysisProcessor::getSSERegisterValue(uint64_t regID)
 {
   if (!this->currentCtxH)

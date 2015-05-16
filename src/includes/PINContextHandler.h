@@ -18,6 +18,7 @@ class PINContextHandler: public ContextHandler {
     __uint128_t getMemValue(uint64_t mem, uint32_t readSize) const;
     uint64_t    getRegisterSize(uint64_t regID) const;
     uint64_t    getRegisterValue(uint64_t regID) const;
+    uint64_t    getFlagValue(uint64_t TritFlagID) const;
     __uint128_t getSSERegisterValue(uint64_t regID) const;
     void        setRegisterValue(uint64_t TritRegID, uint64_t value) const;
     void        setSSERegisterValue(uint64_t TritRegID, __uint128_t value) const;

@@ -23,7 +23,7 @@ void JnsIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   if (symSF != UNSET)
     sf << "#" << std::dec << symSF;
   else
-    sf << smt2lib::bv(ap.getRegisterValue(ID_SF), 1);
+    sf << smt2lib::bv(ap.getFlagValue(ID_SF), 1);
 
   /* Finale expr */
   expr << smt2lib::ite(

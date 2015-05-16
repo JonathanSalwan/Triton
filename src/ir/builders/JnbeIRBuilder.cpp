@@ -24,12 +24,12 @@ void JnbeIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   if (symCF != UNSET)
     cf << "#" << std::dec << symCF;
   else
-    cf << smt2lib::bv(ap.getRegisterValue(ID_CF), 1);
+    cf << smt2lib::bv(ap.getFlagValue(ID_CF), 1);
 
   if (symZF != UNSET)
     zf << "#" << std::dec << symZF;
   else
-    zf << smt2lib::bv(ap.getRegisterValue(ID_ZF), 1);
+    zf << smt2lib::bv(ap.getFlagValue(ID_ZF), 1);
 
   /* 
    * Finale expr

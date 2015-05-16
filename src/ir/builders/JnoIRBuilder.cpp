@@ -23,7 +23,7 @@ void JnoIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   if (symOF != UNSET)
     of << "#" << std::dec << symOF;
   else
-    of << smt2lib::bv(ap.getRegisterValue(ID_OF), 1);
+    of << smt2lib::bv(ap.getFlagValue(ID_OF), 1);
 
   /* Finale expr */
   expr << smt2lib::ite(

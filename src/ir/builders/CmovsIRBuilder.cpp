@@ -33,7 +33,7 @@ void CmovsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   if (symSF != UNSET)
     sf << "#" << std::dec << symSF;
   else
-    sf << smt2lib::bv(ap.getRegisterValue(ID_SF), 1);
+    sf << smt2lib::bv(ap.getFlagValue(ID_SF), 1);
 
   /* Create the reg1 SMT semantic */
   if (symReg1 != UNSET)
@@ -58,7 +58,7 @@ void CmovsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(expr, reg1);
 
   /* Apply the taint via the concretization */
-  if (ap.getRegisterValue(ID_SF) == 1)
+  if (ap.getFlagValue(ID_SF) == 1)
     ap.assignmentSpreadTaintRegReg(se, reg1, reg2);
 
   /* Add the symbolic element to the current inst */
@@ -81,7 +81,7 @@ void CmovsIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   if (symSF != UNSET)
     sf << "#" << std::dec << symSF;
   else
-    sf << smt2lib::bv(ap.getRegisterValue(ID_SF), 1);
+    sf << smt2lib::bv(ap.getFlagValue(ID_SF), 1);
 
   /* Create the reg SMT semantic */
   if (symReg != UNSET)
@@ -106,7 +106,7 @@ void CmovsIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(expr, reg);
 
   /* Apply the taint via the concretization */
-  if (ap.getRegisterValue(ID_SF) == 1)
+  if (ap.getFlagValue(ID_SF) == 1)
     ap.assignmentSpreadTaintRegMem(se, reg, mem, readSize);
 
   /* Add the symbolic element to the current inst */

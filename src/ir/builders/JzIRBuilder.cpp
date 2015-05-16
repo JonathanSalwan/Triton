@@ -23,7 +23,7 @@ void JzIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   if (symZF != UNSET)
     zf << "#" << std::dec << symZF;
   else
-    zf << smt2lib::bv(ap.getRegisterValue(ID_ZF), 1);
+    zf << smt2lib::bv(ap.getFlagValue(ID_ZF), 1);
 
   /* Finale expr */
   expr << smt2lib::ite(
