@@ -67,6 +67,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/ClcIRBuilder.cpp \
 		./src/ir/builders/CldIRBuilder.cpp \
 		./src/ir/builders/CmcIRBuilder.cpp \
+		./src/ir/builders/CmovsIRBuilder.cpp \
 		./src/ir/builders/CmovzIRBuilder.cpp \
 		./src/ir/builders/CmpIRBuilder.cpp \
 		./src/ir/builders/ControlFlow.cpp \

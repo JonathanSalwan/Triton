@@ -2,38 +2,38 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "CmovzIRBuilder.h"
+#include "CmovsIRBuilder.h"
 #include "Registers.h"
 #include "SMT2Lib.h"
 #include "SymbolicElement.h"
 
 
-CmovzIRBuilder::CmovzIRBuilder(uint64_t address, const std::string &disassembly):
+CmovsIRBuilder::CmovsIRBuilder(uint64_t address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly){
 }
 
 
-void CmovzIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void CmovsIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void CmovzIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void CmovsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
-  std::stringstream expr, reg1e, reg2e, zf;
+  std::stringstream expr, reg1e, reg2e, sf;
   uint64_t          reg1    = std::get<1>(this->operands[0]);
   uint64_t          reg2    = std::get<1>(this->operands[1]);
   uint64_t          size1   = std::get<2>(this->operands[0]);
   uint64_t          size2   = std::get<2>(this->operands[1]);
   uint64_t          symReg1 = ap.getRegSymbolicID(reg1);
   uint64_t          symReg2 = ap.getRegSymbolicID(reg2);
-  uint64_t          symZF   = ap.getRegSymbolicID(ID_ZF);
+  uint64_t          symSF   = ap.getRegSymbolicID(ID_SF);
 
   /* Create the SMT semantic */
-  if (symZF != UNSET)
-    zf << "#" << std::dec << symZF;
+  if (symSF != UNSET)
+    sf << "#" << std::dec << symSF;
   else
-    zf << smt2lib::bv(ap.getRegisterValue(ID_ZF), 1);
+    sf << smt2lib::bv(ap.getRegisterValue(ID_SF), 1);
 
   /* Create the reg1 SMT semantic */
   if (symReg1 != UNSET)
@@ -49,7 +49,7 @@ void CmovzIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
   expr << smt2lib::ite(
             smt2lib::equal(
-              zf.str(),
+              sf.str(),
               smt2lib::bvtrue()),
             reg2e.str(),
             reg1e.str());
@@ -58,7 +58,7 @@ void CmovzIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(expr, reg1);
 
   /* Apply the taint via the concretization */
-  if (ap.getRegisterValue(ID_ZF) == 1)
+  if (ap.getRegisterValue(ID_SF) == 1)
     ap.assignmentSpreadTaintRegReg(se, reg1, reg2);
 
   /* Add the symbolic element to the current inst */
@@ -66,22 +66,22 @@ void CmovzIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void CmovzIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void CmovsIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
-  std::stringstream expr, reg1e, mem1e, zf;
+  std::stringstream expr, reg1e, mem1e, sf;
   uint32_t          readSize = std::get<2>(this->operands[1]);
   uint64_t          mem      = std::get<1>(this->operands[1]);
   uint64_t          reg      = std::get<1>(this->operands[0]);
   uint64_t          regSize  = std::get<2>(this->operands[0]);
   uint64_t          symReg   = ap.getRegSymbolicID(reg);
   uint64_t          symMem   = ap.getMemSymbolicID(mem);
-  uint64_t          symZF    = ap.getRegSymbolicID(ID_ZF);
+  uint64_t          symSF    = ap.getRegSymbolicID(ID_SF);
 
   /* Create the SMT semantic */
-  if (symZF != UNSET)
-    zf << "#" << std::dec << symZF;
+  if (symSF != UNSET)
+    sf << "#" << std::dec << symSF;
   else
-    zf << smt2lib::bv(ap.getRegisterValue(ID_ZF), 1);
+    sf << smt2lib::bv(ap.getRegisterValue(ID_SF), 1);
 
   /* Create the reg SMT semantic */
   if (symReg != UNSET)
@@ -97,7 +97,7 @@ void CmovzIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
   expr << smt2lib::ite(
             smt2lib::equal(
-              zf.str(),
+              sf.str(),
               smt2lib::bvtrue()),
             mem1e.str(),
             reg1e.str());
@@ -106,7 +106,7 @@ void CmovzIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(expr, reg);
 
   /* Apply the taint via the concretization */
-  if (ap.getRegisterValue(ID_ZF) == 1)
+  if (ap.getRegisterValue(ID_SF) == 1)
     ap.assignmentSpreadTaintRegMem(se, reg, mem, readSize);
 
   /* Add the symbolic element to the current inst */
@@ -114,23 +114,23 @@ void CmovzIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void CmovzIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void CmovsIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void CmovzIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void CmovsIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-Inst *CmovzIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *CmovsIRBuilder::process(AnalysisProcessor &ap) const {
   checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "CMOVZ");
+    this->templateMethod(ap, *inst, this->operands, "CMOVS");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
     inst->addElement(ControlFlow::rip(ap, this->nextAddress));
   }
