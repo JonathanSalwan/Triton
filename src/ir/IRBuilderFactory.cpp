@@ -54,6 +54,14 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new CmcIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_CMOVO:
+      ir = new CmovoIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_CMOVP:
+      ir = new CmovpIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_CMOVS:
       ir = new CmovsIRBuilder(address, disas);
       break;

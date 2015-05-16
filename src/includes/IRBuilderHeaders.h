@@ -10,6 +10,8 @@
 #include "ClcIRBuilder.h"
 #include "CldIRBuilder.h"
 #include "CmcIRBuilder.h"
+#include "CmovoIRBuilder.h"
+#include "CmovpIRBuilder.h"
 #include "CmovsIRBuilder.h"
 #include "CmovzIRBuilder.h"
 #include "CmpIRBuilder.h"
