@@ -252,6 +252,70 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new SbbIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_SETB:
+      ir = new SetbIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETBE:
+      ir = new SetbeIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETL:
+      ir = new SetlIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETLE:
+      ir = new SetleIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETNB:
+      ir = new SetnbIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETNBE:
+      ir = new SetnbeIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETNL:
+      ir = new SetnlIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETNLE:
+      ir = new SetnleIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETNO:
+      ir = new SetnoIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETNP:
+      ir = new SetnpIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETNS:
+      ir = new SetnsIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETNZ:
+      ir = new SetnzIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETO:
+      ir = new SetoIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETP:
+      ir = new SetpIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETS:
+      ir = new SetsIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_SETZ:
+      ir = new SetzIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_STC:
       ir = new StcIRBuilder(address, disas);
       break;

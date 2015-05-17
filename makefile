@@ -118,6 +118,22 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/PushIRBuilder.cpp \
 		./src/ir/builders/RetIRBuilder.cpp \
 		./src/ir/builders/SbbIRBuilder.cpp \
+		./src/ir/builders/SetbIRBuilder.cpp \
+		./src/ir/builders/SetbeIRBuilder.cpp \
+		./src/ir/builders/SetlIRBuilder.cpp \
+		./src/ir/builders/SetleIRBuilder.cpp \
+		./src/ir/builders/SetnbIRBuilder.cpp \
+		./src/ir/builders/SetnbeIRBuilder.cpp \
+		./src/ir/builders/SetnlIRBuilder.cpp \
+		./src/ir/builders/SetnleIRBuilder.cpp \
+		./src/ir/builders/SetnoIRBuilder.cpp \
+		./src/ir/builders/SetnpIRBuilder.cpp \
+		./src/ir/builders/SetnsIRBuilder.cpp \
+		./src/ir/builders/SetnzIRBuilder.cpp \
+		./src/ir/builders/SetoIRBuilder.cpp \
+		./src/ir/builders/SetpIRBuilder.cpp \
+		./src/ir/builders/SetsIRBuilder.cpp \
+		./src/ir/builders/SetzIRBuilder.cpp \
 		./src/ir/builders/StcIRBuilder.cpp \
 		./src/ir/builders/StdIRBuilder.cpp \
 		./src/ir/builders/SubIRBuilder.cpp \
