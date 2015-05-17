@@ -12,6 +12,7 @@
 #include "CmcIRBuilder.h"
 #include "CmovlIRBuilder.h"
 #include "CmovnlIRBuilder.h"
+#include "CmovnleIRBuilder.h"
 #include "CmovnoIRBuilder.h"
 #include "CmovnpIRBuilder.h"
 #include "CmovnsIRBuilder.h"
