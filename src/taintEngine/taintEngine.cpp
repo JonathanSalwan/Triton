@@ -1,4 +1,6 @@
 
+#include <stdexcept>
+
 #include "TaintEngine.h"
 #include "Registers.h"
 
@@ -68,7 +70,19 @@ void TaintEngine::taintReg(uint64_t regID)
 }
 
 
-/* Set the taint */
+/* Set the taint on memory */
+void TaintEngine::setTaintMem(uint64_t mem, uint64_t flag)
+{
+  if (flag == TAINTED)
+    this->taintMem(mem);
+  else if (flag == !TAINTED)
+    this->untaintMem(mem);
+  else
+    throw std::runtime_error("Error: Invalid flag in setTainMem()");
+}
+
+
+/* Set the taint on register */
 void TaintEngine::setTaintReg(uint64_t regID, uint64_t flag)
 {
   if (regID >= (sizeof(this->taintedReg) / sizeof(this->taintedReg[0])))

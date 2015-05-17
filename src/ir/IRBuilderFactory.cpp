@@ -332,6 +332,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new TestIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_XCHG:
+      ir = new XchgIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_XOR:
       ir = new XorIRBuilder(address, disas);
       break;

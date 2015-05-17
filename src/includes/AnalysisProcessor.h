@@ -98,6 +98,7 @@ class AnalysisProcessor {
     // Taint the symbolic element if the taint occurs.
     bool isMemTainted(uint64_t addr);
     bool isRegTainted(uint64_t reg);
+    void setTaintMem(uint64_t mem, uint64_t flag);
     void setTaintReg(uint64_t reg, uint64_t flag);
     void taintMem(uint64_t addr);
     void taintReg(uint64_t reg);

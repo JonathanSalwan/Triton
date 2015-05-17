@@ -39,6 +39,11 @@ void check(void)
   asm("movzx rdx, word ptr [rsp-0x2]");
   asm("movsx rax, word ptr [rsp-0x2]");
   asm("setz al");
+  asm("mov rax, 3");
+  asm("mov rbx, 5");
+  asm("xchg rax, rbx");
+  asm("xchg [rsp-0x2], rax");
+  asm("xchg rbx, [rsp-0x2]");
 
   // SSE
   asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab));

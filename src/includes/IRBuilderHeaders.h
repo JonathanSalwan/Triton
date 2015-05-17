@@ -81,6 +81,7 @@
 #include "StdIRBuilder.h"
 #include "SubIRBuilder.h"
 #include "TestIRBuilder.h"
+#include "XchgIRBuilder.h"
 #include "XorIRBuilder.h"
 
 #endif     /* !__IRBUILDERHEADERS_H__ */

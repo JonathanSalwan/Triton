@@ -31,6 +31,7 @@ class TaintEngine {
   public:
     bool        isMemTainted(uint64_t addr);
     bool        isRegTainted(uint64_t regID);
+    void        setTaintMem(uint64_t mem, uint64_t flag);
     void        setTaintReg(uint64_t regID, uint64_t flag);
     void        taintMem(uint64_t addr);
     void        taintReg(uint64_t regID);

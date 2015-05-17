@@ -245,6 +245,13 @@ void AnalysisProcessor::taintReg(uint64_t reg)
   this->taintEngine.taintReg(reg);
 }
 
+
+void AnalysisProcessor::setTaintMem(uint64_t mem, uint64_t flag)
+{
+  this->taintEngine.setTaintMem(mem, flag);
+}
+
+
 void AnalysisProcessor::setTaintReg(uint64_t reg, uint64_t flag)
 {
   this->taintEngine.setTaintReg(reg, flag);
