@@ -58,6 +58,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new CmovlIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_CMOVNL:
+      ir = new CmovnlIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_CMOVNO:
       ir = new CmovnoIRBuilder(address, disas);
       break;

@@ -11,6 +11,7 @@
 #include "CldIRBuilder.h"
 #include "CmcIRBuilder.h"
 #include "CmovlIRBuilder.h"
+#include "CmovnlIRBuilder.h"
 #include "CmovnoIRBuilder.h"
 #include "CmovnpIRBuilder.h"
 #include "CmovnsIRBuilder.h"
