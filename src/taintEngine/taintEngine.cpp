@@ -68,6 +68,15 @@ void TaintEngine::taintReg(uint64_t regID)
 }
 
 
+/* Set the taint */
+void TaintEngine::setTaintReg(uint64_t regID, uint64_t flag)
+{
+  if (regID >= (sizeof(this->taintedReg) / sizeof(this->taintedReg[0])))
+    return ;
+  this->taintedReg[regID] = flag;
+}
+
+
 /* Untaint the register */
 void TaintEngine::untaintReg(uint64_t regID)
 {

@@ -20,11 +20,9 @@ class TaintEngine {
     /* 
      *Tainted registers.
      * Currently this is an over approximation of the taint.
-     * uint64_t because in the next version, the taint will be 
-     * a mask with sub-register.
-     * sizeof(taintedReg) = enum REG - Flags
+     * sizeof(taintedReg) = enum REG
      */
-    uint64_t taintedReg[41];
+    uint64_t taintedReg[51];
 
     /* Initialization of an object */
     void init(const TaintEngine &other);
@@ -33,9 +31,10 @@ class TaintEngine {
   public:
     bool        isMemTainted(uint64_t addr);
     bool        isRegTainted(uint64_t regID);
+    void        setTaintReg(uint64_t regID, uint64_t flag);
     void        taintMem(uint64_t addr);
-    void        untaintMem(uint64_t addr);
     void        taintReg(uint64_t regID);
+    void        untaintMem(uint64_t addr);
     void        untaintReg(uint64_t regID);
 
     void        operator=(const TaintEngine &other);

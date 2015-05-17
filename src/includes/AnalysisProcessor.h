@@ -98,10 +98,11 @@ class AnalysisProcessor {
     // Taint the symbolic element if the taint occurs.
     bool isMemTainted(uint64_t addr);
     bool isRegTainted(uint64_t reg);
-    void taintReg(uint64_t reg);
-    void untaintReg(uint64_t reg);
+    void setTaintReg(uint64_t reg, uint64_t flag);
     void taintMem(uint64_t addr);
+    void taintReg(uint64_t reg);
     void untaintMem(uint64_t addr);
+    void untaintReg(uint64_t reg);
 
     /* ALU Spreading */
     void aluSpreadTaintMemImm(SymbolicElement *se, uint64_t memDst, uint32_t writeSize);

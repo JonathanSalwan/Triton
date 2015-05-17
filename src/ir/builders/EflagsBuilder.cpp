@@ -40,6 +40,7 @@ SymbolicElement *EflagsBuilder::af(SymbolicElement *parent,
 
   /* Spread the taint from the parent to the child */
   se->isTainted = parent->isTainted;
+  ap.setTaintReg(ID_AF, se->isTainted);
 
   return se;
 }
@@ -68,6 +69,7 @@ SymbolicElement *EflagsBuilder::cfAdd(SymbolicElement *parent, AnalysisProcessor
 
   /* Spread the taint from the parent to the child */
   se->isTainted = parent->isTainted;
+  ap.setTaintReg(ID_CF, se->isTainted);
 
   return se;
 }
@@ -96,6 +98,7 @@ SymbolicElement *EflagsBuilder::cfSub(SymbolicElement *parent, AnalysisProcessor
 
   /* Spread the taint from the parent to the child */
   se->isTainted = parent->isTainted;
+  ap.setTaintReg(ID_CF, se->isTainted);
 
   return se;
 }
@@ -113,6 +116,7 @@ SymbolicElement *EflagsBuilder::clearFlag(AnalysisProcessor &ap, regID_t flag)
 
   /* Spread the taint from the parent to the child */
   se->isTainted = !TAINTED;
+  ap.setTaintReg(flag, !TAINTED);
 
   return se;
 }
@@ -130,6 +134,7 @@ SymbolicElement *EflagsBuilder::clearFlag(AnalysisProcessor &ap, regID_t flag, s
 
   /* Spread the taint from the parent to the child */
   se->isTainted = !TAINTED;
+  ap.setTaintReg(flag, !TAINTED);
 
   return se;
 }
@@ -168,6 +173,7 @@ SymbolicElement *EflagsBuilder::ofAdd(SymbolicElement *parent,
 
   /* Spread the taint from the parent to the child */
   se->isTainted = parent->isTainted;
+  ap.setTaintReg(ID_OF, se->isTainted);
 
   return se;
 }
@@ -206,6 +212,7 @@ SymbolicElement *EflagsBuilder::ofSub(SymbolicElement *parent,
 
   /* Spread the taint from the parent to the child */
   se->isTainted = parent->isTainted;
+  ap.setTaintReg(ID_OF, se->isTainted);
 
   return se;
 }
@@ -237,6 +244,7 @@ SymbolicElement *EflagsBuilder::pf(SymbolicElement *parent, AnalysisProcessor &a
 
   /* Spread the taint from the parent to the child */
   se->isTainted = parent->isTainted;
+  ap.setTaintReg(ID_PF, se->isTainted);
 
   return se;
 }
@@ -254,6 +262,7 @@ SymbolicElement *EflagsBuilder::setFlag(AnalysisProcessor &ap, regID_t flag)
 
   /* Spread the taint from the parent to the child */
   se->isTainted = !TAINTED;
+  ap.setTaintReg(flag, !TAINTED);
 
   return se;
 }
@@ -271,6 +280,7 @@ SymbolicElement *EflagsBuilder::setFlag(AnalysisProcessor &ap, regID_t flag, std
 
   /* Spread the taint from the parent to the child */
   se->isTainted = !TAINTED;
+  ap.setTaintReg(flag, !TAINTED);
 
   return se;
 }
@@ -300,6 +310,7 @@ SymbolicElement *EflagsBuilder::sf(SymbolicElement *parent, AnalysisProcessor &a
 
   /* Spread the taint from the parent to the child */
   se->isTainted = parent->isTainted;
+  ap.setTaintReg(ID_SF, se->isTainted);
 
   return se;
 }
@@ -328,6 +339,7 @@ SymbolicElement *EflagsBuilder::zf(SymbolicElement *parent, AnalysisProcessor &a
 
   /* Spread the taint from the parent to the child */
   se->isTainted = parent->isTainted;
+  ap.setTaintReg(ID_ZF, se->isTainted);
 
   return se;
 }
