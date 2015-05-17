@@ -49,6 +49,10 @@ void SetnoIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the symbolic element */
   se = ap.createRegSE(expr, reg);
 
+  /* Apply the taint via the concretization */
+  if (ap.getFlagValue(ID_OF) == 0)
+    ap.assignmentSpreadTaintRegReg(se, reg, ID_OF);
+
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
 }
@@ -84,6 +88,10 @@ void SetnoIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);
+
+  /* Apply the taint via the concretization */
+  if (ap.getFlagValue(ID_OF) == 0)
+    ap.assignmentSpreadTaintMemReg(se, mem, ID_OF, memSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);

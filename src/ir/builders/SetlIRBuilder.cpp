@@ -55,6 +55,14 @@ void SetlIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the symbolic element */
   se = ap.createRegSE(expr, reg);
 
+  /* Apply the taint via the concretization */
+  if (ap.getFlagValue(ID_SF) ^ ap.getFlagValue(ID_OF)) {
+    if (ap.isRegTainted(ID_SF) == TAINTED)
+      ap.assignmentSpreadTaintRegReg(se, reg, ID_SF);
+    else
+      ap.assignmentSpreadTaintRegReg(se, reg, ID_OF);
+  }
+
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
 }
@@ -96,6 +104,14 @@ void SetlIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);
+
+  /* Apply the taint via the concretization */
+  if (ap.getFlagValue(ID_SF) ^ ap.getFlagValue(ID_OF)) {
+    if (ap.isRegTainted(ID_SF) == TAINTED)
+      ap.assignmentSpreadTaintMemReg(se, mem, ID_SF, memSize);
+    else
+      ap.assignmentSpreadTaintMemReg(se, mem, ID_OF, memSize);
+  }
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);

@@ -61,6 +61,16 @@ void SetnleIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the symbolic element */
   se = ap.createRegSE(expr, reg);
 
+  /* Apply the taint via the concretization */
+  if (((ap.getFlagValue(ID_SF) ^ ap.getFlagValue(ID_OF)) | ap.getFlagValue(ID_ZF)) == 0) {
+    if (ap.isRegTainted(ID_SF) == TAINTED)
+      ap.assignmentSpreadTaintRegReg(se, reg, ID_SF);
+    else if (ap.isRegTainted(ID_OF) == TAINTED)
+      ap.assignmentSpreadTaintRegReg(se, reg, ID_OF);
+    else
+      ap.assignmentSpreadTaintRegReg(se, reg, ID_ZF);
+  }
+
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
 }
@@ -108,6 +118,16 @@ void SetnleIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);
+
+  /* Apply the taint via the concretization */
+  if (((ap.getFlagValue(ID_SF) ^ ap.getFlagValue(ID_OF)) | ap.getFlagValue(ID_ZF)) == 0) {
+    if (ap.isRegTainted(ID_SF) == TAINTED)
+      ap.assignmentSpreadTaintMemReg(se, mem, ID_SF, memSize);
+    else if (ap.isRegTainted(ID_OF) == TAINTED)
+      ap.assignmentSpreadTaintMemReg(se, mem, ID_OF, memSize);
+    else
+      ap.assignmentSpreadTaintMemReg(se, mem, ID_ZF, memSize);
+  }
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);

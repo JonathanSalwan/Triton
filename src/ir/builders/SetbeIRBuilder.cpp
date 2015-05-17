@@ -59,6 +59,14 @@ void SetbeIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the symbolic element */
   se = ap.createRegSE(expr, reg);
 
+  /* Apply the taint via the concretization */
+  if (ap.getFlagValue(ID_CF) | ap.getFlagValue(ID_ZF)) {
+    if (ap.isRegTainted(ID_CF) == TAINTED)
+      ap.assignmentSpreadTaintRegReg(se, reg, ID_CF);
+    else
+      ap.assignmentSpreadTaintRegReg(se, reg, ID_ZF);
+  }
+
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
 }
@@ -104,6 +112,14 @@ void SetbeIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);
+
+  /* Apply the taint via the concretization */
+  if (ap.getFlagValue(ID_CF) | ap.getFlagValue(ID_ZF)) {
+    if (ap.isRegTainted(ID_CF) == TAINTED)
+      ap.assignmentSpreadTaintMemReg(se, mem, ID_CF, memSize);
+    else
+      ap.assignmentSpreadTaintMemReg(se, mem, ID_ZF, memSize);
+  }
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);

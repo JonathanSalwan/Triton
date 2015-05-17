@@ -49,6 +49,10 @@ void SetnzIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the symbolic element */
   se = ap.createRegSE(expr, reg);
 
+  /* Apply the taint via the concretization */
+  if (ap.getFlagValue(ID_ZF) == 0)
+    ap.assignmentSpreadTaintRegReg(se, reg, ID_ZF);
+
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
 }
@@ -84,6 +88,10 @@ void SetnzIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the symbolic element */
   se = ap.createMemSE(expr, mem);
+
+  /* Apply the taint via the concretization */
+  if (ap.getFlagValue(ID_ZF) == 0)
+    ap.assignmentSpreadTaintMemReg(se, mem, ID_ZF, memSize);
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
