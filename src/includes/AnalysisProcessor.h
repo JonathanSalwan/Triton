@@ -82,6 +82,7 @@ class AnalysisProcessor {
     // Link: Address <-> Symbolic Variable ID
     uint64_t getMemoryFromSymVar(uint64_t symVar);
     uint64_t getSymVarFromMemory(uint64_t address);
+    uint64_t getSymVarSize(uint64_t symVarId);
 
     // The a path constraint in the PC list
     void addPathConstraint(uint64_t exprId);

@@ -386,6 +386,16 @@ static PyObject *Triton_getSymVarFromMemory(PyObject *self, PyObject *addr)
 }
 
 
+static char Triton_getSymVarSize_doc[] = "Returns the size of the symbolic variable";
+static PyObject *Triton_getSymVarSize(PyObject *self, PyObject *symVarId)
+{
+  if (!PyLong_Check(symVarId) && !PyInt_Check(symVarId))
+    return PyErr_Format(PyExc_TypeError, "getSymVarSize(): expected a symbolic variable ID");
+
+  return Py_BuildValue("k", ap.getSymVarSize(PyLong_AsLong(symVarId)));
+}
+
+
 static char Triton_getSyscallArgument_doc[] = "Returns the syscall argument.";
 static PyObject *Triton_getSyscallArgument(PyObject *self, PyObject *args)
 {
@@ -814,6 +824,7 @@ PyMethodDef tritonCallbacks[] = {
   {"getStats",                  Triton_getStats,                  METH_NOARGS,  Triton_getStats_doc},
   {"getSymExpr",                Triton_getSymExpr,                METH_O,       Triton_getSymExpr_doc},
   {"getSymVarFromMemory",       Triton_getSymVarFromMemory,       METH_O,       Triton_getSymVarFromMemory_doc},
+  {"getSymVarSize",             Triton_getSymVarSize,             METH_O,       Triton_getSymVarSize_doc},
   {"getSyscallArgument",        Triton_getSyscallArgument,        METH_VARARGS, Triton_getSyscallArgument_doc},
   {"getSyscallNumber",          Triton_getSyscallNumber,          METH_O,       Triton_getSyscallNumber_doc},
   {"getSyscallReturn",          Triton_getSyscallReturn,          METH_O,       Triton_getSyscallReturn_doc},

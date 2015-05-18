@@ -104,6 +104,11 @@ uint64_t AnalysisProcessor::getSymVarFromMemory(uint64_t address)
   return this->symEngine.getSymVarFromMemory(address);
 }
 
+uint64_t AnalysisProcessor::getSymVarSize(uint64_t symVarId)
+{
+  return this->symEngine.getSymVarSize(symVarId);
+}
+
 
 uint64_t AnalysisProcessor::getMemoryFromSymVar(uint64_t symVar)
 {

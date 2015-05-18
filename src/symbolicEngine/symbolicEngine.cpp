@@ -77,6 +77,16 @@ uint64_t SymbolicEngine::getSymVarFromMemory(uint64_t addr)
 }
 
 
+/* Returns the size of the symbolic variable otherwise returns UNSET */
+uint64_t SymbolicEngine::getSymVarSize(uint64_t symVarId)
+{
+  std::map<uint64_t, uint64_t>::iterator it;
+  if ((it = this->symVarSizeReference.find(symVarId)) != this->symVarSizeReference.end())
+    return it->second;
+  return UNSET;
+}
+
+
 /* Returns the address from the symbolic variable ID */
 uint64_t SymbolicEngine::getMemoryFromSymVar(uint64_t symVar)
 {
