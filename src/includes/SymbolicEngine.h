@@ -42,6 +42,7 @@ class SymbolicEngine {
      */
     std::map<uint64_t, uint64_t> symVarMemoryReference;         // memory -> symbolic
     std::map<uint64_t, uint64_t> symVarMemoryReferenceInverse;  // symbolic -> memory
+    std::map<uint64_t, uint64_t> symVarSizeReference;           // symbolic -> bitvec size
 
     /*
      * List of path constaints (PC).
@@ -82,11 +83,11 @@ class SymbolicEngine {
     uint64_t              getRegSymbolicID(uint64_t regID);
     uint64_t              getUniqueID();
     uint64_t              getUniqueSymVarID();
-    uint64_t              memoryFromSymVar(uint64_t symVar);
-    uint64_t              symVarFromMemory(uint64_t mem);
+    uint64_t              getMemoryFromSymVar(uint64_t symVar);
+    uint64_t              getSymVarFromMemory(uint64_t mem);
     void                  addMemoryReference(uint64_t mem, uint64_t id);
     void                  addPathConstraint(uint64_t exprId);
-    void                  addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize);
+    void                  addSmt2LibVarDecl(uint64_t symVarID, uint64_t size);
     void                  addSymVarMemoryReference(uint64_t mem, uint64_t symVarID);
     void                  init(const SymbolicEngine &other);
     void                  operator=(const SymbolicEngine &other);

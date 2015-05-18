@@ -240,6 +240,16 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
 }
 
 
+static char Triton_getMemoryFromSymVar_doc[] = "Returns the memory address corresponding to the sym variable ID";
+static PyObject *Triton_getMemoryFromSymVar(PyObject *self, PyObject *id)
+{
+  if (!PyLong_Check(id) && !PyInt_Check(id))
+    return PyErr_Format(PyExc_TypeError, "getMemoryFromSymVar(): expected an integer");
+
+  return Py_BuildValue("k", ap.getMemoryFromSymVar(PyLong_AsLong(id)));
+}
+
+
 static char Triton_getModel_doc[] = "Returns a model of the symbolic expression";
 static PyObject *Triton_getModel(PyObject *self, PyObject *expr)
 {
@@ -366,6 +376,16 @@ static PyObject *Triton_getSymExpr(PyObject *self, PyObject *id)
 }
 
 
+static char Triton_getSymVarFromMemory_doc[] = "Returns the symbolic variable ID corresponding to the address";
+static PyObject *Triton_getSymVarFromMemory(PyObject *self, PyObject *addr)
+{
+  if (!PyLong_Check(addr) && !PyInt_Check(addr))
+    return PyErr_Format(PyExc_TypeError, "getSymVarFromMemory(): expected an address");
+
+  return Py_BuildValue("k", ap.getSymVarFromMemory(PyLong_AsLong(addr)));
+}
+
+
 static char Triton_getSyscallArgument_doc[] = "Returns the syscall argument.";
 static PyObject *Triton_getSyscallArgument(PyObject *self, PyObject *args)
 {
@@ -457,16 +477,6 @@ static PyObject *Triton_isSnapshotEnable(PyObject *self, PyObject *noarg)
   if (ap.isSnapshotEnable() == true)
     return Py_True;
   return Py_False;
-}
-
-
-static char Triton_memoryFromSymVar_doc[] = "Returns the memory address corresponding to the sym variable ID";
-static PyObject *Triton_memoryFromSymVar(PyObject *self, PyObject *id)
-{
-  if (!PyLong_Check(id) && !PyInt_Check(id))
-    return PyErr_Format(PyExc_TypeError, "memoryFromSymVar(): expected an integer");
-
-  return Py_BuildValue("k", ap.memoryFromSymVar(PyLong_AsLong(id)));
 }
 
 
@@ -627,16 +637,6 @@ static PyObject *Triton_stopAnalysisFromAddr(PyObject *self, PyObject *addr)
 
   PyTritonOptions::stopAnalysisFromAddr.insert(PyLong_AsLong(addr));
   return Py_None;
-}
-
-
-static char Triton_symVarFromMemory_doc[] = "Returns the symbolic variable ID corresponding to the address";
-static PyObject *Triton_symVarFromMemory(PyObject *self, PyObject *addr)
-{
-  if (!PyLong_Check(addr) && !PyInt_Check(addr))
-    return PyErr_Format(PyExc_TypeError, "symVarFromMemory(): expected an address");
-
-  return Py_BuildValue("k", ap.symVarFromMemory(PyLong_AsLong(addr)));
 }
 
 
@@ -806,19 +806,20 @@ PyMethodDef tritonCallbacks[] = {
   {"getFlagValue",              Triton_getFlagValue,              METH_O,       Triton_getFlagValue_doc},
   {"getMemSymbolicID",          Triton_getMemSymbolicID,          METH_O,       Triton_getMemSymbolicID_doc},
   {"getMemValue",               Triton_getMemValue,               METH_VARARGS, Triton_getMemValue_doc},
+  {"getMemoryFromSymVar",       Triton_getMemoryFromSymVar,       METH_O,       Triton_getMemoryFromSymVar_doc},
   {"getModel",                  Triton_getModel,                  METH_O,       Triton_getModel_doc},
   {"getPathConstraints",        Triton_getPathConstraints,        METH_NOARGS,  Triton_getPathConstraints_doc},
   {"getRegSymbolicID",          Triton_getRegSymbolicID,          METH_O,       Triton_getRegSymbolicID_doc},
   {"getRegValue",               Triton_getRegValue,               METH_O,       Triton_getRegValue_doc},
   {"getStats",                  Triton_getStats,                  METH_NOARGS,  Triton_getStats_doc},
   {"getSymExpr",                Triton_getSymExpr,                METH_O,       Triton_getSymExpr_doc},
+  {"getSymVarFromMemory",       Triton_getSymVarFromMemory,       METH_O,       Triton_getSymVarFromMemory_doc},
   {"getSyscallArgument",        Triton_getSyscallArgument,        METH_VARARGS, Triton_getSyscallArgument_doc},
   {"getSyscallNumber",          Triton_getSyscallNumber,          METH_O,       Triton_getSyscallNumber_doc},
   {"getSyscallReturn",          Triton_getSyscallReturn,          METH_O,       Triton_getSyscallReturn_doc},
   {"isMemTainted",              Triton_isMemTainted,              METH_O,       Triton_isMemTainted_doc},
   {"isRegTainted",              Triton_isRegTainted,              METH_O,       Triton_isRegTainted_doc},
   {"isSnapshotEnable",          Triton_isSnapshotEnable,          METH_NOARGS,  Triton_isSnapshotEnable_doc},
-  {"memoryFromSymVar",          Triton_memoryFromSymVar,          METH_O,       Triton_memoryFromSymVar_doc},
   {"opcodeToString",            Triton_opcodeToString,            METH_O,       Triton_opcodeToString_doc},
   {"restoreSnapshot",           Triton_restoreSnapshot,           METH_NOARGS,  Triton_restoreSnapshot_doc},
   {"runProgram",                Triton_runProgram,                METH_NOARGS,  Triton_runProgram_doc},
@@ -828,7 +829,6 @@ PyMethodDef tritonCallbacks[] = {
   {"startAnalysisFromAddr",     Triton_startAnalysisFromAddr,     METH_O,       Triton_startAnalysisFromAddr_doc},
   {"startAnalysisFromSymbol",   Triton_startAnalysisFromSymbol,   METH_O,       Triton_startAnalysisFromSymbol_doc},
   {"stopAnalysisFromAddr",      Triton_stopAnalysisFromAddr,      METH_O,       Triton_stopAnalysisFromAddr_doc},
-  {"symVarFromMemory",          Triton_symVarFromMemory,          METH_O,       Triton_symVarFromMemory_doc},
   {"syscallToString",           Triton_syscallToString,           METH_VARARGS, Triton_syscallToString_doc},
   {"taintMem",                  Triton_taintMem,                  METH_O,       Triton_taintMem_doc},
   {"taintReg",                  Triton_taintReg,                  METH_O,       Triton_taintReg_doc},

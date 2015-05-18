@@ -26,6 +26,7 @@ void SymbolicEngine::init(const SymbolicEngine &other)
   this->memoryReference               = other.memoryReference;
   this->symVarMemoryReference         = other.symVarMemoryReference;
   this->symVarMemoryReferenceInverse  = other.symVarMemoryReferenceInverse;
+  this->symVarSizeReference           = other.symVarSizeReference;
   this->symVarDeclaration             = other.symVarDeclaration;
   this->symbolicVector                = other.symbolicVector;
 }
@@ -67,7 +68,7 @@ uint64_t SymbolicEngine::getMemSymbolicID(uint64_t addr)
 
 
 /* Returns the symbolic variable ID from the memory address */
-uint64_t SymbolicEngine::symVarFromMemory(uint64_t addr)
+uint64_t SymbolicEngine::getSymVarFromMemory(uint64_t addr)
 {
   std::map<uint64_t, uint64_t>::iterator it;
   if ((it = this->symVarMemoryReference.find(addr)) != this->symVarMemoryReference.end())
@@ -77,7 +78,7 @@ uint64_t SymbolicEngine::symVarFromMemory(uint64_t addr)
 
 
 /* Returns the address from the symbolic variable ID */
-uint64_t SymbolicEngine::memoryFromSymVar(uint64_t symVar)
+uint64_t SymbolicEngine::getMemoryFromSymVar(uint64_t symVar)
 {
   std::map<uint64_t, uint64_t>::iterator it;
   if ((it = this->symVarMemoryReferenceInverse.find(symVar)) != this->symVarMemoryReferenceInverse.end())
@@ -268,9 +269,10 @@ void SymbolicEngine::addSymVarMemoryReference(uint64_t mem, uint64_t symVarID)
 
 
 /* Add a new symbolic variable */
-void SymbolicEngine::addSmt2LibVarDecl(uint64_t symVarID, uint64_t readSize)
+void SymbolicEngine::addSmt2LibVarDecl(uint64_t symVarID, uint64_t size)
 {
-  this->symVarDeclaration.push_front(smt2lib::declare(symVarID, readSize));
+  this->symVarSizeReference.insert(std::make_pair(symVarID, size));
+  this->symVarDeclaration.push_front(smt2lib::declare(symVarID, size));
 }
 
 

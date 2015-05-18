@@ -99,15 +99,15 @@ uint64_t AnalysisProcessor::getMemSymbolicID(uint64_t address)
 }
 
 
-uint64_t AnalysisProcessor::symVarFromMemory(uint64_t address)
+uint64_t AnalysisProcessor::getSymVarFromMemory(uint64_t address)
 {
-  return this->symEngine.symVarFromMemory(address);
+  return this->symEngine.getSymVarFromMemory(address);
 }
 
 
-uint64_t AnalysisProcessor::memoryFromSymVar(uint64_t symVar)
+uint64_t AnalysisProcessor::getMemoryFromSymVar(uint64_t symVar)
 {
-  return this->symEngine.memoryFromSymVar(symVar);
+  return this->symEngine.getMemoryFromSymVar(symVar);
 }
 
 
@@ -179,7 +179,7 @@ void AnalysisProcessor::assignmentSpreadTaintRegMem(SymbolicElement *se, uint64_
     uint64_t          symVarID;
 
     /* Check if this memory area is already known as a symbolic variable */
-    symVarID = this->symEngine.symVarFromMemory(memSrc); // TODO: Must use the readSize
+    symVarID = this->symEngine.getSymVarFromMemory(memSrc); // TODO: Must use the readSize
     if (symVarID == UNSET){
       symVarID = this->symEngine.getUniqueSymVarID();
       this->symEngine.addSmt2LibVarDecl(symVarID, readSize);
@@ -203,7 +203,7 @@ void AnalysisProcessor::assignmentSpreadTaintMemMem(SymbolicElement *se, uint64_
     uint64_t          symVarID;
 
     /* Check if this memory area is already known as a symbolic variable */
-    symVarID = this->symEngine.symVarFromMemory(memSrc); // TODO: Must use the readSize
+    symVarID = this->symEngine.getSymVarFromMemory(memSrc); // TODO: Must use the readSize
     if (symVarID == UNSET){
       symVarID = this->symEngine.getUniqueSymVarID();
       this->symEngine.addSmt2LibVarDecl(symVarID, readSize);
