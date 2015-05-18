@@ -190,7 +190,7 @@ VOID IMG_Instrumentation(IMG img, VOID *)
     }
   }
 
-  /* Callback on routien entry */
+  /* Callback on routine entry */
   std::map<const char *, PyObject *>::iterator it;
   for (it = PyTritonOptions::callbackRoutineEntry.begin(); it != PyTritonOptions::callbackRoutineEntry.end(); it++){
     RTN targetRTN = RTN_FindByName(img, it->first);
@@ -201,7 +201,7 @@ VOID IMG_Instrumentation(IMG img, VOID *)
     }
   }
 
-  /* Callback on routien exit */
+  /* Callback on routine exit */
   for (it = PyTritonOptions::callbackRoutineExit.begin(); it != PyTritonOptions::callbackRoutineExit.end(); it++){
     RTN targetRTN = RTN_FindByName(img, it->first);
     if (RTN_Valid(targetRTN)){
@@ -210,7 +210,6 @@ VOID IMG_Instrumentation(IMG img, VOID *)
       RTN_Close(targetRTN);
     }
   }
-
 }
 
 
