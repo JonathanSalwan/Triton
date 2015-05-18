@@ -15,6 +15,9 @@
 #include "SymbolicElement.h"
 #include "SMT2Lib.h"
 
+/* The name of the symbolic variables */
+#define SYMVAR_NAME       "SymVar_"
+#define SYMVAR_NAME_SIZE  (sizeof(SYMVAR_NAME) - 1)
 
 const uint64_t UNSET = -1;
 

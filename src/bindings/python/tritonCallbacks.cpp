@@ -241,12 +241,32 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
 
 
 static char Triton_getMemoryFromSymVar_doc[] = "Returns the memory address corresponding to the sym variable ID";
-static PyObject *Triton_getMemoryFromSymVar(PyObject *self, PyObject *id)
+static PyObject *Triton_getMemoryFromSymVar(PyObject *self, PyObject *symVar)
 {
-  if (!PyLong_Check(id) && !PyInt_Check(id))
-    return PyErr_Format(PyExc_TypeError, "getMemoryFromSymVar(): expected an integer");
+  uint64_t id = 0;
 
-  return Py_BuildValue("k", ap.getMemoryFromSymVar(PyLong_AsLong(id)));
+  if (!PyLong_Check(symVar) && !PyInt_Check(symVar) && !PyString_Check(symVar))
+    return PyErr_Format(PyExc_TypeError, "getMemoryFromSymVar(): expected a symbolic variable ID or a symbolic variable name");
+
+  if (PyLong_Check(symVar) || PyInt_Check(symVar))
+    id = PyLong_AsLong(symVar);
+
+  else if (PyString_Check(symVar)){
+    std::string name(PyString_AsString(symVar));
+    std::size_t found = name.find(SYMVAR_NAME);
+    if (found != std::string::npos && found == 0){
+      try {
+        id = std::stoll(name.c_str() + SYMVAR_NAME_SIZE);
+      }
+      catch (const std::invalid_argument &ia) {
+        return PyErr_Format(PyExc_TypeError, "getMemoryFromSymVar(): Invalid symbolic variable name");
+      }
+    }
+    else
+      return PyErr_Format(PyExc_TypeError, "getMemoryFromSymVar(): Invalid symbolic variable name");
+  }
+
+  return Py_BuildValue("k", ap.getMemoryFromSymVar(id));
 }
 
 
@@ -387,12 +407,32 @@ static PyObject *Triton_getSymVarFromMemory(PyObject *self, PyObject *addr)
 
 
 static char Triton_getSymVarSize_doc[] = "Returns the size of the symbolic variable";
-static PyObject *Triton_getSymVarSize(PyObject *self, PyObject *symVarId)
+static PyObject *Triton_getSymVarSize(PyObject *self, PyObject *symVar)
 {
-  if (!PyLong_Check(symVarId) && !PyInt_Check(symVarId))
-    return PyErr_Format(PyExc_TypeError, "getSymVarSize(): expected a symbolic variable ID");
+  uint64_t id = 0;
 
-  return Py_BuildValue("k", ap.getSymVarSize(PyLong_AsLong(symVarId)));
+  if (!PyLong_Check(symVar) && !PyInt_Check(symVar) && !PyString_Check(symVar))
+    return PyErr_Format(PyExc_TypeError, "getSymVarSize(): expected a symbolic variable ID or a symbolic variable name");
+
+  if (PyLong_Check(symVar) || PyInt_Check(symVar))
+    id = PyLong_AsLong(symVar);
+
+  else if (PyString_Check(symVar)){
+    std::string name(PyString_AsString(symVar));
+    std::size_t found = name.find(SYMVAR_NAME);
+    if (found != std::string::npos && found == 0){
+      try {
+        id = std::stoll(name.c_str() + SYMVAR_NAME_SIZE);
+      }
+      catch (const std::invalid_argument &ia) {
+        return PyErr_Format(PyExc_TypeError, "getSymVarSize(): Invalid symbolic variable name");
+      }
+    }
+    else
+      return PyErr_Format(PyExc_TypeError, "getSymVarSize(): Invalid symbolic variable name");
+  }
+  std::cout << id << std::endl;
+  return Py_BuildValue("k", ap.getSymVarSize(id));
 }
 
 

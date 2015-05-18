@@ -240,7 +240,7 @@ bool SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize)
   symVarID = this->getUniqueSymVarID();
   this->addSmt2LibVarDecl(symVarID, symVarSize);
 
-  newExpr << "SymVar_" << std::dec << symVarID;
+  newExpr << SYMVAR_NAME << std::dec << symVarID;
   element->setSrcExpr(newExpr);
 
   return true;
@@ -262,7 +262,7 @@ bool SymbolicEngine::assignExprToSymVar(uint64_t exprId, uint64_t symVarId)
   if (symVarId >= this->numberOfSymVar)
     return false;
 
-  newExpr << "SymVar_" << std::dec << symVarId;
+  newExpr << SYMVAR_NAME << std::dec << symVarId;
   element->setSrcExpr(newExpr);
 
   return true;

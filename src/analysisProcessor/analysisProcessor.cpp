@@ -191,7 +191,7 @@ void AnalysisProcessor::assignmentSpreadTaintRegMem(SymbolicElement *se, uint64_
       this->symEngine.addSymVarMemoryReference(memSrc, symVarID);
     }
 
-    newExpr << "SymVar_" << std::dec << symVarID;
+    newExpr << SYMVAR_NAME << std::dec << symVarID;
     se->setSrcExpr(newExpr);
   }
 }
@@ -215,7 +215,7 @@ void AnalysisProcessor::assignmentSpreadTaintMemMem(SymbolicElement *se, uint64_
       this->symEngine.addSymVarMemoryReference(memSrc, symVarID);
     }
 
-    newExpr << "SymVar_" << std::dec << symVarID;
+    newExpr << SYMVAR_NAME << std::dec << symVarID;
     se->setSrcExpr(newExpr);
   }
 }
