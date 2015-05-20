@@ -48,7 +48,7 @@ class IRBuilder {
     virtual const std::string &getDisassembly(void) const = 0;
 
     // Returns the operands vector.
-    virtual const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &getOperands(void) const = 0;
+    virtual const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > &getOperands(void) const = 0;
 
     // Add an operand to IRBuilder.
     // If it's type is:
@@ -56,7 +56,13 @@ class IRBuilder {
     //  - REG (Register), the value is the register ID.
     //  - MEM_*, the value doesn't mean anything and it's unused.
     //    The object will need a setup before any processing.
-    virtual void addOperand(IRBuilderOperand::operand_t, uint64_t value, uint32_t size) = 0;
+    virtual void addOperand(IRBuilderOperand::operand_t,
+                            uint64_t value,
+                            uint32_t size,
+                            uint64_t displacement,
+                            uint64_t baseReg,
+                            uint64_t indexReg,
+                            uint64_t memoryScale) = 0;
 
     // Set the value for the MEM_* operand, if there is no such kind of operand
     // it does nothing.

@@ -9,6 +9,7 @@
 // Returns a pointer to an IRBuilder object.
 // It is up to the user to delete it when times come.
 IRBuilder *createIRBuilder(INS ins) {
+
   UINT64 address         = INS_Address(ins);
   std::string disas      = INS_Disassemble(ins);
   INT32 opcode           = INS_Opcode(ins);
@@ -202,6 +203,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new JzIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_LEA:
+      ir = new LeaIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_LEAVE:
       ir = new LeaveIRBuilder(address, disas);
       break;
@@ -349,15 +354,21 @@ IRBuilder *createIRBuilder(INS ins) {
   const UINT32 n = INS_OperandCount(ins);
 
   for (UINT32 i = 0; i < n; ++i) {
-    IRBuilderOperand::operand_t   type;
-    UINT32                        size = 0;
-    UINT64                        val  = 0;
+    IRBuilderOperand::operand_t type;
+    UINT32 size = 0;
+    UINT64 val  = 0;
+
+    //Effective address = Displacement + BaseReg + IndexReg * Scale
+    UINT64 displacement = 0;
+    UINT64 baseReg = 0;
+    UINT64 indexReg = 0;
+    UINT64 memoryScale = 0;
 
     /* Special case */
     if (INS_IsDirectBranchOrCall(ins)){
-      ir->addOperand(IRBuilderOperand::IMM, INS_DirectBranchOrCallTargetAddress(ins), 0);
+      ir->addOperand(IRBuilderOperand::IMM, INS_DirectBranchOrCallTargetAddress(ins), 0, 0, 0, 0, 0);
       if (INS_MemoryOperandIsWritten(ins, 0))
-        ir->addOperand(IRBuilderOperand::MEM_W, 0, INS_MemoryWriteSize(ins));
+        ir->addOperand(IRBuilderOperand::MEM_W, 0, INS_MemoryWriteSize(ins), 0, 0, 0, 0);
       break;
     }
 
@@ -371,7 +382,7 @@ IRBuilder *createIRBuilder(INS ins) {
     else if (INS_OperandIsReg(ins, i)) {
       type = IRBuilderOperand::REG;
       REG reg = INS_OperandReg(ins, i);
-      val  = PINConverter::convertDBIReg2TritonReg(reg); // store the register ID.
+      val = PINConverter::convertDBIReg2TritonReg(reg); // store the register ID.
       if (REG_valid(reg)) {
         // check needed because instructions like "xgetbv 0" make
         // REG_Size crash.
@@ -392,14 +403,30 @@ IRBuilder *createIRBuilder(INS ins) {
         size = INS_MemoryWriteSize(ins);
       }
     }
-    // TODO: Effective address = Displacement + BaseReg + IndexReg * Scale
+
+    /* load effective address instruction */
+    else if (INS_OperandIsAddressGenerator(ins, i)) {
+      REG reg;
+      type          = IRBuilderOperand::LEA;
+      displacement  = INS_OperandMemoryDisplacement(ins, i);
+      memoryScale   = INS_OperandMemoryScale(ins, i);
+
+      reg = INS_OperandMemoryBaseReg(ins, i);
+      if (REG_valid(reg))
+        baseReg = PINConverter::convertDBIReg2TritonReg(reg);
+
+      reg = INS_OperandMemoryIndexReg(ins, i);
+      if (REG_valid(reg))
+      indexReg = PINConverter::convertDBIReg2TritonReg(reg);
+    }
+
     /* Undefined */
     else {
-      //std::cout << "[DEBUG] Unknown kind of operand: " << INS_Disassemble(ins) << std::endl;
+      // std::cout << "[DEBUG] Unknown kind of operand: " << INS_Disassemble(ins) << std::endl;
       continue;
     }
 
-    ir->addOperand(type, val, size);
+    ir->addOperand(type, val, size, displacement, baseReg, indexReg, memoryScale);
   }
 
   // Setup the opcode in the IRbuilder

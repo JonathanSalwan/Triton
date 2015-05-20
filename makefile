@@ -106,6 +106,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/JpIRBuilder.cpp \
 		./src/ir/builders/JsIRBuilder.cpp \
 		./src/ir/builders/JzIRBuilder.cpp \
+		./src/ir/builders/LeaIRBuilder.cpp \
 		./src/ir/builders/LeaveIRBuilder.cpp \
 		./src/ir/builders/MovIRBuilder.cpp \
 		./src/ir/builders/MovapdIRBuilder.cpp \

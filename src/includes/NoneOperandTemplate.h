@@ -17,7 +17,7 @@ class NoneOperandTemplate: public OperandTemplate {
     virtual void templateMethod(
         AnalysisProcessor &ap,
         Inst &inst,
-        const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &operands,
+        const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > &operands,
         std::string instructionName) const;
 
   protected:

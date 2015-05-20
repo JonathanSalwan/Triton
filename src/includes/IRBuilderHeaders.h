@@ -48,6 +48,7 @@
 #include "JpIRBuilder.h"
 #include "JsIRBuilder.h"
 #include "JzIRBuilder.h"
+#include "LeaIRBuilder.h"
 #include "LeaveIRBuilder.h"
 #include "MovIRBuilder.h"
 #include "MovapdIRBuilder.h"

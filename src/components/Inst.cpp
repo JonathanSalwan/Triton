@@ -71,14 +71,14 @@ bool Inst::isBranch(void)
 
 
 /* Returns the operands vector */
-const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &Inst::getOperands(void)
+const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > &Inst::getOperands(void)
 {
   return this->operands;
 }
 
 
 /* Set the operands vector */
-void Inst::setOperands(const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &operands)
+void Inst::setOperands(const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > &operands)
 {
   this->operands = operands;
 }

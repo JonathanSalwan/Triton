@@ -77,18 +77,25 @@ const std::string &BaseIRBuilder::getDisassembly(void) const
 }
 
 
-const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &BaseIRBuilder::getOperands(void) const
+const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > &BaseIRBuilder::getOperands(void) const
 {
   return this->operands;
 }
 
 
-void BaseIRBuilder::addOperand(IRBuilderOperand::operand_t type, uint64_t value, uint32_t size)
+void BaseIRBuilder::addOperand(
+  IRBuilderOperand::operand_t type, 
+  uint64_t value, 
+  uint32_t size, 
+  uint64_t displacement, 
+  uint64_t baseReg,
+  uint64_t indexReg,
+  uint64_t memoryScale)
 {
   if (IRBuilder::isMemOperand(type))
     this->needSetup = true;
 
-  this->operands.push_back(std::make_tuple(type, value, size));
+  this->operands.push_back(std::make_tuple(type, value, size, displacement, baseReg, indexReg, memoryScale));
 }
 
 

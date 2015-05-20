@@ -11,7 +11,7 @@
 
 PyObject *PyInstruction(IRBuilder *irb);
 PyObject *PyInstruction(Inst *inst);
-PyObject *PyOperand(std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> operand);
+PyObject *PyOperand(std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> operand);
 PyObject *PySymbolicElement(SymbolicElement *element);
 
 

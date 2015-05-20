@@ -99,6 +99,7 @@ VOID TRACE_Instrumentation(TRACE trace, VOID *v)
 {
   for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)){
     for (INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins)) {
+
       IRBuilder *irb = createIRBuilder(ins);
 
       /* Callback before */

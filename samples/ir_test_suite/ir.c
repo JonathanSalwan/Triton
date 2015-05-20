@@ -43,6 +43,13 @@ void check(void)
   asm("mov rbx, 5");
   asm("xchg rax, rbx");
   asm("xchg [rsp-0x2], rax");
+  asm("mov rbx, 9");
+  asm("mov rax, 8");
+  asm("lea rsi, [rbx]");
+  asm("lea rsi, [rbx+8]");
+  asm("lea rsi, [rbx+8*rax]");
+  asm("lea rsi, [rbx+8*rax+4]");
+  asm("lea rsi, [rbx+8+4*rax]");
 
   // SSE
   asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab));

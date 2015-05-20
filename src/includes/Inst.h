@@ -18,12 +18,12 @@ class Inst {
     std::list<SymbolicElement*>       symbolicElements;
     uint32_t                          opcode;
     int32_t                           opcodeCategory;
-    std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > operands;
+    std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > operands;
 
   public:
     const std::list<SymbolicElement*> &getSymbolicElements(void);
     const std::string                 &getDisassembly(void);
-    const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &getOperands(void);
+    const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > &getOperands(void);
     size_t                            numberOfElements(void);
     uint32_t                          getOpcode(void);
     int32_t                           getOpcodeCategory(void);
@@ -33,7 +33,7 @@ class Inst {
     void                              setOpcode(uint32_t op);
     void                              setOpcodeCategory(int32_t category);
     bool                              isBranch(void);
-    void                              setOperands(const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &operands);
+    void                              setOperands(const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > &operands);
 
     Inst(uint64_t threadId,uint64_t address, const std::string &insDis);
     ~Inst();

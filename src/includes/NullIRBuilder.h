@@ -14,9 +14,10 @@ class NullIRBuilder: public BaseIRBuilder {
     NullIRBuilder(uint64_t address, const std::string &disas):
       BaseIRBuilder(address, disas) { }
 
-    void addOperand(IRBuilderOperand::operand_t type, uint64_t value = 0) { }
+    void addOperand(IRBuilderOperand::operand_t type, uint64_t value = 0){
+    }
 
-    const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t> > &getOperands(void){
+    const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > &getOperands(void){
       return this->operands;
     }
 
