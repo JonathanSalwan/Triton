@@ -53,6 +53,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/components/Inst.cpp \
 		./src/components/Stats.cpp \
 		./src/components/Trace.cpp \
+		./src/components/TritonOperand.cpp \
 		./src/contextHandler/PINContextHandler.cpp \
 		./src/contextHandler/PINConverter.cpp \
 		./src/core/main.cpp \
