@@ -8,6 +8,7 @@
 #include "Inst.h"
 #include "IRBuilder.h"
 #include "OperandTemplate.h"
+#include "TritonOperand.h"
 
 
 class TwoOperandsTemplate: public OperandTemplate {
@@ -17,7 +18,7 @@ class TwoOperandsTemplate: public OperandTemplate {
     virtual void templateMethod(
         AnalysisProcessor &ap,
         Inst &inst,
-        const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > &operands,
+        const std::vector<TritonOperand> &operands,
         std::string instructionName) const;
 
   protected:

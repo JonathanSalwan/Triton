@@ -16,7 +16,7 @@ JmpIRBuilder::JmpIRBuilder(uint64_t address, const std::string &disassembly):
 void JmpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
-  uint64_t          imm = std::get<1>(this->operands[0]);
+  uint64_t          imm = this->operands[0].getValue();
 
   /* Finale expr */
   expr << smt2lib::bv(imm, REG_SIZE_BIT);
@@ -32,9 +32,9 @@ void JmpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint64_t          reg     = std::get<1>(this->operands[0]);
+  uint64_t          reg     = this->operands[0].getValue();
   uint64_t          symReg  = ap.getRegSymbolicID(reg);
-  uint32_t          regSize = std::get<2>(this->operands[0]);
+  uint32_t          regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   /* OP_1 */
@@ -57,9 +57,9 @@ void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void JmpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint64_t          mem     = std::get<1>(this->operands[0]);
+  uint64_t          mem     = this->operands[0].getValue();
   uint64_t          symMem  = ap.getMemSymbolicID(mem);
-  uint32_t          memSize = std::get<2>(this->operands[0]);
+  uint32_t          memSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   /* OP_1 */

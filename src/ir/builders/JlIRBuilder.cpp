@@ -16,7 +16,7 @@ JlIRBuilder::JlIRBuilder(uint64_t address, const std::string &disassembly):
 void JlIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, sf, of;
-  uint64_t          imm   = std::get<1>(this->operands[0]);
+  uint64_t          imm   = this->operands[0].getValue();
   uint64_t          symSF = ap.getRegSymbolicID(ID_SF);
   uint64_t          symOF = ap.getRegSymbolicID(ID_OF);
 

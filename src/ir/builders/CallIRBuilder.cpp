@@ -44,10 +44,10 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint64_t writeSize)
 void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr1, expr2;
-  uint64_t          reg       = std::get<1>(this->operands[0]);
-  uint32_t          regSize   = std::get<2>(this->operands[0]);
-  uint64_t          memDst    = std::get<1>(this->operands[1]); // The dst memory write
-  uint32_t          writeSize = std::get<2>(this->operands[1]);
+  uint64_t          reg       = this->operands[0].getValue();
+  uint32_t          regSize   = this->operands[0].getSize();
+  uint64_t          memDst    = this->operands[1].getValue(); // The dst memory write
+  uint32_t          writeSize = this->operands[1].getSize();
   uint64_t          symReg    = ap.getRegSymbolicID(reg);
 
   /* Create the SMT semantic side effect */
@@ -87,9 +87,9 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr1, expr2;
-  uint64_t          imm       = std::get<1>(this->operands[0]);
-  uint64_t          memDst    = std::get<1>(this->operands[1]); // The dst memory write
-  uint32_t          writeSize = std::get<2>(this->operands[1]);
+  uint64_t          imm       = this->operands[0].getValue();
+  uint64_t          memDst    = this->operands[1].getValue(); // The dst memory write
+  uint32_t          writeSize = this->operands[1].getSize();
 
   /* Create the SMT semantic side effect */
   inst.addElement(alignStack(ap, writeSize));
@@ -125,10 +125,10 @@ void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr1, expr2;
-  uint64_t          mem       = std::get<1>(this->operands[0]);
-  uint64_t          memSize   = std::get<2>(this->operands[0]);
-  uint64_t          memDst    = std::get<1>(this->operands[1]); // The dst memory write
-  uint32_t          writeSize = std::get<2>(this->operands[1]);
+  uint64_t          mem       = this->operands[0].getValue();
+  uint64_t          memSize   = this->operands[0].getSize();
+  uint64_t          memDst    = this->operands[1].getValue(); // The dst memory write
+  uint32_t          writeSize = this->operands[1].getSize();
   uint64_t          symMem    = ap.getMemSymbolicID(mem);
 
   /* Create the SMT semantic side effect */

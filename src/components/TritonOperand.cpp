@@ -11,7 +11,7 @@ TritonOperand::TritonOperand(IRBuilderOperand::operand_t type,
 {
   this->type          = type;
   this->value         = value;
-  this->size          = size; 
+  this->size          = size;
   this->displacement  = 0;
   this->baseReg       = 0;
   this->indexReg      = 0;
@@ -29,11 +29,22 @@ TritonOperand::TritonOperand(IRBuilderOperand::operand_t type,
 {
   this->type          = type;
   this->value         = value;
-  this->size          = size; 
+  this->size          = size;
   this->displacement  = displacement;
   this->baseReg       = baseReg;
   this->indexReg      = indexReg;
   this->memoryScale   = memoryScale;
+}
+
+TritonOperand::TritonOperand(const TritonOperand &copy)
+{
+  this->type          = copy.type;
+  this->value         = copy.value;
+  this->size          = copy.size;
+  this->displacement  = copy.displacement;
+  this->baseReg       = copy.baseReg;
+  this->indexReg      = copy.indexReg;
+  this->memoryScale   = copy.memoryScale;
 }
 
 
@@ -41,37 +52,42 @@ TritonOperand::~TritonOperand(){
 }
 
 
-IRBuilderOperand::operand_t TritonOperand::getType(void) {
+IRBuilderOperand::operand_t TritonOperand::getType(void) const {
   return this->type;
 }
 
 
-uint64_t TritonOperand::getValue(void) {
+uint64_t TritonOperand::getValue(void) const {
   return this->value;
 }
 
 
-uint64_t TritonOperand::getSize(void) {
+void TritonOperand::setValue(uint64_t value) {
+  this->value = value;
+}
+
+
+uint64_t TritonOperand::getSize(void) const {
   return this->size;
 }
 
 
-uint64_t TritonOperand::getDisplacement(void) {
+uint64_t TritonOperand::getDisplacement(void) const {
   return this->displacement;
 }
 
 
-uint64_t TritonOperand::getBaseReg(void) {
+uint64_t TritonOperand::getBaseReg(void) const {
   return this->baseReg;
 }
 
 
-uint64_t TritonOperand::getIndexReg(void) {
+uint64_t TritonOperand::getIndexReg(void) const {
   return this->indexReg;
 }
 
 
-uint64_t TritonOperand::getMemoryScale(void) {
+uint64_t TritonOperand::getMemoryScale(void) const {
   return this->memoryScale;
 }
 
@@ -89,6 +105,18 @@ uint64_t TritonOperand::operator[](const int index){
       throw std::out_of_range("Error: TritonOperand - Index out of range");
   }
   return 0;
+}
+
+
+void TritonOperand::operator=(const TritonOperand &other)
+{
+  this->type          = other.type;
+  this->value         = other.value;
+  this->size          = other.size; 
+  this->displacement  = other.displacement;
+  this->baseReg       = other.baseReg;
+  this->indexReg      = other.indexReg;
+  this->memoryScale   = other.memoryScale;
 }
 
 

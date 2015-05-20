@@ -26,12 +26,12 @@ void LeaIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, reg1e, dis2e, base2e, index2e, scale2e;
-  uint64_t          reg           = std::get<1>(this->operands[0]);
-  uint64_t          regSize       = std::get<2>(this->operands[0]);
-  uint64_t          displacement  = std::get<3>(this->operands[1]);
-  uint64_t          baseReg       = std::get<4>(this->operands[1]);
-  uint64_t          indexReg      = std::get<5>(this->operands[1]);
-  uint64_t          memoryScale   = std::get<6>(this->operands[1]);
+  uint64_t          reg           = this->operands[0].getValue();
+  uint64_t          regSize       = this->operands[0].getSize();
+  uint64_t          displacement  = this->operands[1].getDisplacement();
+  uint64_t          baseReg       = this->operands[1].getBaseReg();
+  uint64_t          indexReg      = this->operands[1].getIndexReg();
+  uint64_t          memoryScale   = this->operands[1].getMemoryScale();
   uint64_t          symBaseReg    = ap.getRegSymbolicID(baseReg);
   uint64_t          symIndexReg   = 0;
 

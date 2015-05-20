@@ -16,7 +16,7 @@ JnsIRBuilder::JnsIRBuilder(uint64_t address, const std::string &disassembly):
 void JnsIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, sf;
-  uint64_t          imm   = std::get<1>(this->operands[0]);
+  uint64_t          imm   = this->operands[0].getValue();
   uint64_t          symSF = ap.getRegSymbolicID(ID_SF);
 
   /* Create the SMT semantic */

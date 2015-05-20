@@ -78,9 +78,9 @@ void RetIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void RetIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint64_t          imm       = std::get<1>(this->operands[0]);
-  uint64_t          memSrc    = std::get<1>(this->operands[1]); // The dst memory read
-  uint32_t          readSize  = std::get<2>(this->operands[1]);
+  uint64_t          imm       = this->operands[0].getValue();
+  uint64_t          memSrc    = this->operands[1].getValue(); // The dst memory read
+  uint32_t          readSize  = this->operands[1].getSize();
   uint64_t          symMem    = ap.getMemSymbolicID(memSrc);
 
   /* Create the SMT semantic */
@@ -111,8 +111,8 @@ void RetIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 void RetIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint64_t          memSrc    = std::get<1>(this->operands[0]); // The dst memory read
-  uint32_t          readSize  = std::get<2>(this->operands[0]);
+  uint64_t          memSrc    = this->operands[0].getValue(); // The dst memory read
+  uint32_t          readSize  = this->operands[0].getSize();
   uint64_t          symMem    = ap.getMemSymbolicID(memSrc);
 
   /* Create the SMT semantic */

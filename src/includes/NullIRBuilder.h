@@ -6,6 +6,7 @@
 #include <string>
 
 #include "BaseIRBuilder.h"
+#include "TritonOperand.h"
 
 
 // Null object, it's purpose is to handle "nicely" not implemented instructions.
@@ -14,10 +15,10 @@ class NullIRBuilder: public BaseIRBuilder {
     NullIRBuilder(uint64_t address, const std::string &disas):
       BaseIRBuilder(address, disas) { }
 
-    void addOperand(IRBuilderOperand::operand_t type, uint64_t value = 0){
+    void addOperand(const TritonOperand &operand){
     }
 
-    const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > &getOperands(void){
+    const std::vector<TritonOperand> &getOperands(void){
       return this->operands;
     }
 

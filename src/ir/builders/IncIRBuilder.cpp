@@ -16,8 +16,8 @@ IncIRBuilder::IncIRBuilder(uint64_t address, const std::string &disassembly):
 void IncIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint64_t          reg       = std::get<1>(this->operands[0]);
-  uint32_t          regSize   = std::get<2>(this->operands[0]);
+  uint64_t          reg       = this->operands[0].getValue();
+  uint32_t          regSize   = this->operands[0].getSize();
   uint64_t          symReg    = ap.getRegSymbolicID(reg);
 
   /* Create the SMT semantic */
@@ -55,8 +55,8 @@ void IncIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void IncIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint64_t          mem       = std::get<1>(this->operands[0]);
-  uint32_t          memSize   = std::get<2>(this->operands[0]);
+  uint64_t          mem       = this->operands[0].getValue();
+  uint32_t          memSize   = this->operands[0].getSize();
   uint64_t          symMem    = ap.getMemSymbolicID(mem);
 
   /* Create the SMT semantic */

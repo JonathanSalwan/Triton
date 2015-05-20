@@ -21,9 +21,9 @@ void MovapsIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void MovapsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
-  uint64_t          reg1      = std::get<1>(this->operands[0]);
-  uint64_t          reg2      = std::get<1>(this->operands[1]);
-  uint64_t          reg2Size  = std::get<2>(this->operands[1]);
+  uint64_t          reg1      = this->operands[0].getValue();
+  uint64_t          reg2      = this->operands[1].getValue();
+  uint64_t          reg2Size  = this->operands[1].getSize();
   uint64_t          symReg2   = ap.getRegSymbolicID(reg2);
 
   /* Create the SMT semantic */
@@ -46,9 +46,9 @@ void MovapsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void MovapsIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
-  uint32_t          readSize = std::get<2>(this->operands[1]);
-  uint64_t          mem      = std::get<1>(this->operands[1]);
-  uint64_t          reg      = std::get<1>(this->operands[0]);
+  uint32_t          readSize = this->operands[1].getSize();
+  uint64_t          mem      = this->operands[1].getValue();
+  uint64_t          reg      = this->operands[0].getValue();
   uint64_t          symMem   = ap.getMemSymbolicID(mem);
 
   /* Create the SMT semantic */
@@ -76,10 +76,10 @@ void MovapsIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 void MovapsIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
-  uint32_t          writeSize = std::get<2>(this->operands[0]);
-  uint64_t          mem       = std::get<1>(this->operands[0]);
-  uint64_t          reg       = std::get<1>(this->operands[1]);
-  uint64_t          regSize   = std::get<2>(this->operands[1]);
+  uint32_t          writeSize = this->operands[0].getSize();
+  uint64_t          mem       = this->operands[0].getValue();
+  uint64_t          reg       = this->operands[1].getValue();
+  uint64_t          regSize   = this->operands[1].getSize();
   uint64_t          symReg    = ap.getRegSymbolicID(reg);
 
   /* Create the SMT semantic */

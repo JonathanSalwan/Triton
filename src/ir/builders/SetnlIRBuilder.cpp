@@ -21,8 +21,8 @@ void SetnlIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 void SetnlIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, reg1e, sf, of;
-  uint64_t          reg     = std::get<1>(this->operands[0]);
-  uint64_t          regSize = std::get<2>(this->operands[0]);
+  uint64_t          reg     = this->operands[0].getValue();
+  uint64_t          regSize = this->operands[0].getSize();
   uint64_t          symReg  = ap.getRegSymbolicID(reg);
   uint64_t          symSF   = ap.getRegSymbolicID(ID_SF);
   uint64_t          symOF   = ap.getRegSymbolicID(ID_OF);
@@ -72,8 +72,8 @@ void SetnlIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void SetnlIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, mem1e, sf, of;
-  uint64_t          mem     = std::get<1>(this->operands[0]);
-  uint64_t          memSize = std::get<2>(this->operands[0]);
+  uint64_t          mem     = this->operands[0].getValue();
+  uint64_t          memSize = this->operands[0].getSize();
   uint64_t          symMem  = ap.getMemSymbolicID(mem);
   uint64_t          symSF   = ap.getRegSymbolicID(ID_SF);
   uint64_t          symOF   = ap.getRegSymbolicID(ID_OF);

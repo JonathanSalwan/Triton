@@ -31,9 +31,9 @@ static uint64_t deltaSize(uint64_t size1, uint64_t size2) {
 void MovIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
-  uint64_t          reg = std::get<1>(this->operands[0]);
-  uint64_t          imm = std::get<1>(this->operands[1]);
-  uint64_t          size = std::get<2>(this->operands[0]);
+  uint64_t          reg = this->operands[0].getValue();
+  uint64_t          imm = this->operands[1].getValue();
+  uint64_t          size = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   expr << smt2lib::bv(imm, size * REG_SIZE);
@@ -52,10 +52,10 @@ void MovIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void MovIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
-  uint64_t          reg1    = std::get<1>(this->operands[0]);
-  uint64_t          reg2    = std::get<1>(this->operands[1]);
-  uint64_t          size1 = std::get<2>(this->operands[0]);
-  uint64_t          size2 = std::get<2>(this->operands[1]);
+  uint64_t          reg1    = this->operands[0].getValue();
+  uint64_t          reg2    = this->operands[1].getValue();
+  uint64_t          size1 = this->operands[0].getSize();
+  uint64_t          size2 = this->operands[1].getSize();
 
   uint64_t          symReg2 = ap.getRegSymbolicID(reg2);
 
@@ -81,10 +81,10 @@ void MovIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void MovIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
-  uint32_t          readSize = std::get<2>(this->operands[1]);
-  uint64_t          mem      = std::get<1>(this->operands[1]);
-  uint64_t          reg      = std::get<1>(this->operands[0]);
-  uint64_t          regSize  = std::get<2>(this->operands[0]);
+  uint32_t          readSize = this->operands[1].getSize();
+  uint64_t          mem      = this->operands[1].getValue();
+  uint64_t          reg      = this->operands[0].getValue();
+  uint64_t          regSize  = this->operands[0].getSize();
 
   uint64_t          symMem   = ap.getMemSymbolicID(mem);
 
@@ -110,9 +110,9 @@ void MovIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 void MovIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
-  uint32_t          writeSize = std::get<2>(this->operands[0]);
-  uint64_t          mem       = std::get<1>(this->operands[0]);
-  uint64_t          imm       = std::get<1>(this->operands[1]);
+  uint32_t          writeSize = this->operands[0].getSize();
+  uint64_t          mem       = this->operands[0].getValue();
+  uint64_t          imm       = this->operands[1].getValue();
 
   /* Create the SMT semantic */
   expr << smt2lib::bv(imm, writeSize * REG_SIZE);
@@ -131,10 +131,10 @@ void MovIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 void MovIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
-  uint32_t          writeSize = std::get<2>(this->operands[0]);
-  uint64_t          mem       = std::get<1>(this->operands[0]);
-  uint64_t          reg       = std::get<1>(this->operands[1]);
-  uint64_t          regSize   = std::get<2>(this->operands[1]);
+  uint32_t          writeSize = this->operands[0].getSize();
+  uint64_t          mem       = this->operands[0].getValue();
+  uint64_t          reg       = this->operands[1].getValue();
+  uint64_t          regSize   = this->operands[1].getSize();
 
   uint64_t          symReg    = ap.getRegSymbolicID(reg);
 

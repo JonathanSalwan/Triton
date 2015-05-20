@@ -77,33 +77,26 @@ const std::string &BaseIRBuilder::getDisassembly(void) const
 }
 
 
-const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > &BaseIRBuilder::getOperands(void) const
+const std::vector<TritonOperand> &BaseIRBuilder::getOperands(void) const
 {
   return this->operands;
 }
 
 
-void BaseIRBuilder::addOperand(
-  IRBuilderOperand::operand_t type, 
-  uint64_t value, 
-  uint32_t size, 
-  uint64_t displacement, 
-  uint64_t baseReg,
-  uint64_t indexReg,
-  uint64_t memoryScale)
+void BaseIRBuilder::addOperand(const TritonOperand &operand)
 {
-  if (IRBuilder::isMemOperand(type))
+  if (IRBuilder::isMemOperand(operand.getType()))
     this->needSetup = true;
 
-  this->operands.push_back(std::make_tuple(type, value, size, displacement, baseReg, indexReg, memoryScale));
+  this->operands.push_back(operand);
 }
 
 
 void BaseIRBuilder::setup(uint64_t mem_value)
 {
   for (auto it = this->operands.begin(); it != this->operands.end(); ++it)
-    if (IRBuilder::isMemOperand(std::get<0>(*it))) {
-      std::get<1>(*it) = mem_value;
+    if (IRBuilder::isMemOperand(it->getType())) {
+      it->setValue(mem_value);
       this->needSetup = false;
       break;
     }
@@ -115,3 +108,4 @@ void BaseIRBuilder::checkSetup() const {
     throw std::runtime_error("Error: IRBuilder.setup must be call before "
                              "IRBuilder.process, when there are MEM_* operands.");
 }
+

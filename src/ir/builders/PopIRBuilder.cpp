@@ -44,9 +44,9 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t readSize)
 void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint64_t          reg       = std::get<1>(this->operands[0]); // Reg poped
-  uint64_t          mem       = std::get<1>(this->operands[1]); // The src memory read
-  uint32_t          readSize  = std::get<2>(this->operands[1]);
+  uint64_t          reg       = this->operands[0].getValue(); // Reg poped
+  uint64_t          mem       = this->operands[1].getValue(); // The src memory read
+  uint32_t          readSize  = this->operands[1].getSize();
   uint64_t          symMem    = ap.getMemSymbolicID(mem);
 
   /* Create the SMT semantic */
@@ -76,10 +76,10 @@ void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void PopIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint64_t          memOp     = std::get<1>(this->operands[0]); // Mem poped
-  uint32_t          writeSize = std::get<2>(this->operands[0]);
-  uint64_t          memSrc    = std::get<1>(this->operands[1]); // The dst memory read
-  uint32_t          readSize  = std::get<2>(this->operands[1]);
+  uint64_t          memOp     = this->operands[0].getValue(); // Mem poped
+  uint32_t          writeSize = this->operands[0].getSize();
+  uint64_t          memSrc    = this->operands[1].getValue(); // The dst memory read
+  uint32_t          readSize  = this->operands[1].getSize();
   uint64_t          symMem    = ap.getMemSymbolicID(memSrc);
 
   /* Create the SMT semantic */

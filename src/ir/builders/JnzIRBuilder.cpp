@@ -16,7 +16,7 @@ JnzIRBuilder::JnzIRBuilder(uint64_t address, const std::string &disassembly):
 void JnzIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, zf;
-  uint64_t          imm   = std::get<1>(this->operands[0]);
+  uint64_t          imm   = this->operands[0].getValue();
   uint64_t          symZF = ap.getRegSymbolicID(ID_ZF);
 
   /* Create the SMT semantic */

@@ -9,6 +9,7 @@
 #include "ContextHandler.h"
 #include "ControlFlow.h"
 #include "IRBuilder.h"
+#include "TritonOperand.h"
 
 // Abstract class which is main purpose is too implement common methods
 // shared by its children classes.
@@ -29,7 +30,7 @@ class BaseIRBuilder: public IRBuilder {
     virtual void                setThreadID(uint64_t threadId);
 
 
-    virtual const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > &getOperands(void) const;
+    virtual const std::vector<TritonOperand> &getOperands(void) const;
 
     // Add an operand to IRBuilder.
     // If it's type is:
@@ -37,27 +38,21 @@ class BaseIRBuilder: public IRBuilder {
     //  - REG (Register), the value is the register ID.
     //  - MEM_*, the value doesn't mean anything and it's unused.
     //    The object will need a setup before any processing.
-    virtual void addOperand(IRBuilderOperand::operand_t type, 
-                            uint64_t value = 0, 
-                            uint32_t size = 0,
-                            uint64_t displacement = 0, 
-                            uint64_t baseReg = 0,
-                            uint64_t indexReg = 0,
-                            uint64_t memoryScale = 0);
+    virtual void addOperand(const TritonOperand &operand);
 
     virtual void setup(uint64_t mem_value);
 
     virtual void checkSetup() const;
 
   protected:
-    uint32_t        opcode;
-    uint64_t        address;
-    uint64_t        nextAddress;
-    std::string     disas;
-    bool            needSetup;
-    int32_t         opcodeCategory;
-    uint64_t        threadId;
-    std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > operands;
+    uint32_t                    opcode;
+    uint64_t                    address;
+    uint64_t                    nextAddress;
+    std::string                 disas;
+    bool                        needSetup;
+    int32_t                     opcodeCategory;
+    uint64_t                    threadId;
+    std::vector<TritonOperand>  operands;
 };
 
 #endif // _BASEIRBUILDER_H_

@@ -16,7 +16,7 @@ JnbIRBuilder::JnbIRBuilder(uint64_t address, const std::string &disassembly):
 void JnbIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, cf;
-  uint64_t          imm   = std::get<1>(this->operands[0]);
+  uint64_t          imm   = this->operands[0].getValue();
   uint64_t          symCF = ap.getRegSymbolicID(ID_CF);
 
   /* Create the SMT semantic */

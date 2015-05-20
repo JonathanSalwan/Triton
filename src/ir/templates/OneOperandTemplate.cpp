@@ -9,7 +9,7 @@
 void OneOperandTemplate::templateMethod(
     AnalysisProcessor &ap,
     Inst &inst,
-    const std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > &operands,
+    const std::vector<TritonOperand> &operands,
     std::string insName) const
 {
   // If there is no operand
@@ -18,15 +18,15 @@ void OneOperandTemplate::templateMethod(
     this->none(ap, inst);
 
   // reg
-  if (std::get<0>(operands[0]) == IRBuilderOperand::REG)
+  if (operands[0].getType() == IRBuilderOperand::REG)
     this->reg(ap, inst);
 
   // imm
-  if (std::get<0>(operands[0]) == IRBuilderOperand::IMM)
+  if (operands[0].getType() == IRBuilderOperand::IMM)
     this->imm(ap, inst);
 
   // mem
-  if (IRBuilder::isMemOperand(std::get<0>(operands[0])))
+  if (IRBuilder::isMemOperand(operands[0].getType()))
     this->mem(ap, inst);
 }
 

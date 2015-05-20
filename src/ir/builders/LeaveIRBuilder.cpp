@@ -44,8 +44,8 @@ void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement     *se1, *se2;
   std::stringstream   expr1, expr2;
   uint64_t            symRegRBP = ap.getRegSymbolicID(ID_RBP);
-  uint64_t            readMem   = std::get<1>(this->operands[0]); // The src memory read
-  uint32_t            readSize  = std::get<2>(this->operands[0]);
+  uint64_t            readMem   = this->operands[0].getValue(); // The src memory read
+  uint32_t            readSize  = this->operands[0].getSize();
   uint64_t            symMem    = ap.getMemSymbolicID(readMem);
 
   // RSP = RBP; -----------------------------

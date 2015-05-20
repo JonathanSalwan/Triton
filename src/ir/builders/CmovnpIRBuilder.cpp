@@ -21,10 +21,10 @@ void CmovnpIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void CmovnpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, reg1e, reg2e, pf;
-  uint64_t          reg1    = std::get<1>(this->operands[0]);
-  uint64_t          reg2    = std::get<1>(this->operands[1]);
-  uint64_t          size1   = std::get<2>(this->operands[0]);
-  uint64_t          size2   = std::get<2>(this->operands[1]);
+  uint64_t          reg1    = this->operands[0].getValue();
+  uint64_t          reg2    = this->operands[1].getValue();
+  uint64_t          size1   = this->operands[0].getSize();
+  uint64_t          size2   = this->operands[1].getSize();
   uint64_t          symReg1 = ap.getRegSymbolicID(reg1);
   uint64_t          symReg2 = ap.getRegSymbolicID(reg2);
   uint64_t          symPF   = ap.getRegSymbolicID(ID_PF);
@@ -69,10 +69,10 @@ void CmovnpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void CmovnpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, reg1e, mem1e, pf;
-  uint32_t          readSize = std::get<2>(this->operands[1]);
-  uint64_t          mem      = std::get<1>(this->operands[1]);
-  uint64_t          reg      = std::get<1>(this->operands[0]);
-  uint64_t          regSize  = std::get<2>(this->operands[0]);
+  uint32_t          readSize = this->operands[1].getSize();
+  uint64_t          mem      = this->operands[1].getValue();
+  uint64_t          reg      = this->operands[0].getValue();
+  uint64_t          regSize  = this->operands[0].getSize();
   uint64_t          symReg   = ap.getRegSymbolicID(reg);
   uint64_t          symMem   = ap.getMemSymbolicID(mem);
   uint64_t          symPF    = ap.getRegSymbolicID(ID_PF);

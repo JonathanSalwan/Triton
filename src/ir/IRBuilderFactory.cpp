@@ -366,9 +366,9 @@ IRBuilder *createIRBuilder(INS ins) {
 
     /* Special case */
     if (INS_IsDirectBranchOrCall(ins)){
-      ir->addOperand(IRBuilderOperand::IMM, INS_DirectBranchOrCallTargetAddress(ins), 0, 0, 0, 0, 0);
+      ir->addOperand(TritonOperand(IRBuilderOperand::IMM, INS_DirectBranchOrCallTargetAddress(ins), 0));
       if (INS_MemoryOperandIsWritten(ins, 0))
-        ir->addOperand(IRBuilderOperand::MEM_W, 0, INS_MemoryWriteSize(ins), 0, 0, 0, 0);
+        ir->addOperand(TritonOperand(IRBuilderOperand::MEM_W, 0, INS_MemoryWriteSize(ins)));
       break;
     }
 
@@ -426,7 +426,7 @@ IRBuilder *createIRBuilder(INS ins) {
       continue;
     }
 
-    ir->addOperand(type, val, size, displacement, baseReg, indexReg, memoryScale);
+    ir->addOperand(TritonOperand(type, val, size, displacement, baseReg, indexReg, memoryScale));
   }
 
   // Setup the opcode in the IRbuilder

@@ -1,4 +1,5 @@
 
+#include "TritonOperand.h"
 #include "TritonPyObject.h"
 #include "pin.H"
 #include "xPyFunc.h"
@@ -89,8 +90,8 @@ PyObject *PyInstruction(Inst *inst)
 
 
   /* Setup the operands list */
-  std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > operands = inst->getOperands();
-  std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> >::iterator it2 = operands.begin();
+  std::vector<TritonOperand> operands = inst->getOperands();
+  std::vector<TritonOperand>::iterator it2 = operands.begin();
   PyObject *OperandList = xPyList_New(operands.size());
 
   index = 0;
@@ -153,8 +154,8 @@ PyObject *PyInstruction(IRBuilder *irb)
 
 
   /* Setup the operands list */
-  std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> > operands = irb->getOperands();
-  std::vector< std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> >::iterator it = operands.begin();
+  std::vector<TritonOperand> operands = irb->getOperands();
+  std::vector<TritonOperand>::iterator it = operands.begin();
   PyObject *OperandList = xPyList_New(operands.size());
 
   Py_ssize_t index = 0;
@@ -179,16 +180,16 @@ PyObject *PyInstruction(IRBuilder *irb)
 }
 
 
-PyObject *PyOperand(std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> operand)
+PyObject *PyOperand(TritonOperand operand)
 {
   PyObject *dictOperandClass = xPyDict_New();
-  PyDict_SetItemString(dictOperandClass, "type",          PyLong_FromLong(std::get<0>(operand)));
-  PyDict_SetItemString(dictOperandClass, "value",         PyLong_FromLong(std::get<1>(operand)));
-  PyDict_SetItemString(dictOperandClass, "size",          PyLong_FromLong(std::get<2>(operand)));
-  PyDict_SetItemString(dictOperandClass, "displacement",  PyLong_FromLong(std::get<3>(operand)));
-  PyDict_SetItemString(dictOperandClass, "baseReg",       PyLong_FromLong(std::get<4>(operand)));
-  PyDict_SetItemString(dictOperandClass, "indexReg",      PyLong_FromLong(std::get<5>(operand)));
-  PyDict_SetItemString(dictOperandClass, "memoryScale",   PyLong_FromLong(std::get<6>(operand)));
+  PyDict_SetItemString(dictOperandClass, "type",          PyLong_FromLong(operand.getType()));
+  PyDict_SetItemString(dictOperandClass, "value",         PyLong_FromLong(operand.getValue()));
+  PyDict_SetItemString(dictOperandClass, "size",          PyLong_FromLong(operand.getSize()));
+  PyDict_SetItemString(dictOperandClass, "displacement",  PyLong_FromLong(operand.getDisplacement()));
+  PyDict_SetItemString(dictOperandClass, "baseReg",       PyLong_FromLong(operand.getBaseReg()));
+  PyDict_SetItemString(dictOperandClass, "indexReg",      PyLong_FromLong(operand.getIndexReg()));
+  PyDict_SetItemString(dictOperandClass, "memoryScale",   PyLong_FromLong(operand.getMemoryScale()));
 
   /* Create the Operand class */
   PyObject *operandClassName = xPyString_FromString("Operand");

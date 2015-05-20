@@ -21,12 +21,12 @@ void XchgIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void XchgIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se1, *se2;
   std::stringstream expr1, expr2, op1, op2;
-  uint64_t          reg1          = std::get<1>(this->operands[0]);
-  uint64_t          reg2          = std::get<1>(this->operands[1]);
+  uint64_t          reg1          = this->operands[0].getValue();
+  uint64_t          reg2          = this->operands[1].getValue();
   uint64_t          symReg1       = ap.getRegSymbolicID(reg1);
   uint64_t          symReg2       = ap.getRegSymbolicID(reg2);
-  uint32_t          regSize1      = std::get<2>(this->operands[0]);
-  uint32_t          regSize2      = std::get<2>(this->operands[1]);
+  uint32_t          regSize1      = this->operands[0].getSize();
+  uint32_t          regSize2      = this->operands[1].getSize();
   uint64_t          tmpReg1Taint  = ap.isRegTainted(reg1);
   uint64_t          tmpReg2Taint  = ap.isRegTainted(reg2);
 
@@ -62,12 +62,12 @@ void XchgIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void XchgIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se1, *se2;
   std::stringstream expr1, expr2, op1, op2;
-  uint64_t          reg1          = std::get<1>(this->operands[0]);
-  uint64_t          mem2          = std::get<1>(this->operands[1]);
+  uint64_t          reg1          = this->operands[0].getValue();
+  uint64_t          mem2          = this->operands[1].getValue();
   uint64_t          symReg1       = ap.getRegSymbolicID(reg1);
   uint64_t          symMem2       = ap.getMemSymbolicID(mem2);
-  uint32_t          regSize1      = std::get<2>(this->operands[0]);
-  uint32_t          memSize2      = std::get<2>(this->operands[1]);
+  uint32_t          regSize1      = this->operands[0].getSize();
+  uint32_t          memSize2      = this->operands[1].getSize();
   uint64_t          tmpReg1Taint  = ap.isRegTainted(reg1);
   uint64_t          tmpMem2Taint  = ap.isMemTainted(mem2);
 
@@ -108,12 +108,12 @@ void XchgIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 void XchgIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se1, *se2;
   std::stringstream expr1, expr2, op1, op2;
-  uint64_t          mem1          = std::get<1>(this->operands[0]);
-  uint64_t          reg2          = std::get<1>(this->operands[1]);
+  uint64_t          mem1          = this->operands[0].getValue();
+  uint64_t          reg2          = this->operands[1].getValue();
   uint64_t          symMem1       = ap.getMemSymbolicID(mem1);
   uint64_t          symReg2       = ap.getRegSymbolicID(reg2);
-  uint32_t          memSize1      = std::get<2>(this->operands[0]);
-  uint32_t          regSize2      = std::get<2>(this->operands[1]);
+  uint32_t          memSize1      = this->operands[0].getSize();
+  uint32_t          regSize2      = this->operands[1].getSize();
   uint64_t          tmpMem1Taint  = ap.isMemTainted(mem1);
   uint64_t          tmpReg2Taint  = ap.isRegTainted(reg2);
 

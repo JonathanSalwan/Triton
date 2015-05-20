@@ -4,14 +4,15 @@
 
 #include <python2.7/Python.h>
 #include "IRBuilder.h"
+#include "IRBuilderOperand.h"
 #include "Inst.h"
 #include "SymbolicEngine.h"
-#include "IRBuilderOperand.h"
+#include "TritonOperand.h"
 
 
 PyObject *PyInstruction(IRBuilder *irb);
 PyObject *PyInstruction(Inst *inst);
-PyObject *PyOperand(std::tuple<IRBuilderOperand::operand_t, uint64_t, uint32_t, uint64_t, uint64_t, uint64_t, uint64_t> operand);
+PyObject *PyOperand(TritonOperand operand);
 PyObject *PySymbolicElement(SymbolicElement *element);
 
 

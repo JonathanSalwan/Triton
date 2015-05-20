@@ -16,7 +16,7 @@ JnoIRBuilder::JnoIRBuilder(uint64_t address, const std::string &disassembly):
 void JnoIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, of;
-  uint64_t          imm   = std::get<1>(this->operands[0]);
+  uint64_t          imm   = this->operands[0].getValue();
   uint64_t          symOF = ap.getRegSymbolicID(ID_OF);
 
   /* Create the SMT semantic */

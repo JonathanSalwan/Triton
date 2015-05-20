@@ -16,11 +16,11 @@ XorIRBuilder::XorIRBuilder(uint64_t address, const std::string &disassembly):
 void XorIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint64_t          reg     = std::get<1>(this->operands[0]);
-  uint64_t          imm     = std::get<1>(this->operands[1]);
+  uint64_t          reg     = this->operands[0].getValue();
+  uint64_t          imm     = this->operands[1].getValue();
 
   uint64_t          symReg  = ap.getRegSymbolicID(reg);
-  uint32_t          regSize = std::get<2>(this->operands[0]);
+  uint32_t          regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   /* OP_1 */
@@ -56,13 +56,13 @@ void XorIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void XorIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint64_t          reg1     = std::get<1>(this->operands[0]);
-  uint64_t          reg2     = std::get<1>(this->operands[1]);
+  uint64_t          reg1     = this->operands[0].getValue();
+  uint64_t          reg2     = this->operands[1].getValue();
 
   uint64_t          symReg1  = ap.getRegSymbolicID(reg1);
   uint64_t          symReg2  = ap.getRegSymbolicID(reg2);
-  uint32_t          regSize1 = std::get<2>(this->operands[0]);
-  uint32_t          regSize2 = std::get<2>(this->operands[1]);
+  uint32_t          regSize1 = this->operands[0].getSize();
+  uint32_t          regSize2 = this->operands[1].getSize();
 
 
   /* Create the SMT semantic */
@@ -102,13 +102,13 @@ void XorIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void XorIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint32_t          readSize = std::get<2>(this->operands[1]);
-  uint64_t          mem      = std::get<1>(this->operands[1]);
-  uint64_t          reg      = std::get<1>(this->operands[0]);
+  uint32_t          readSize = this->operands[1].getSize();
+  uint64_t          mem      = this->operands[1].getValue();
+  uint64_t          reg      = this->operands[0].getValue();
 
   uint64_t          symReg   = ap.getRegSymbolicID(reg);
   uint64_t          symMem   = ap.getMemSymbolicID(mem);
-  uint32_t          regSize  = std::get<2>(this->operands[1]);
+  uint32_t          regSize  = this->operands[1].getSize();
 
   /* Create the SMT semantic */
   // OP_1
@@ -147,9 +147,9 @@ void XorIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 void XorIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint32_t          writeSize = std::get<2>(this->operands[0]);
-  uint64_t          mem       = std::get<1>(this->operands[0]);
-  uint64_t          imm       = std::get<1>(this->operands[1]);
+  uint32_t          writeSize = this->operands[0].getSize();
+  uint64_t          mem       = this->operands[0].getValue();
+  uint64_t          imm       = this->operands[1].getValue();
 
   uint64_t          symMem    = ap.getMemSymbolicID(mem);
 
@@ -187,10 +187,10 @@ void XorIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 void XorIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint32_t          writeSize = std::get<2>(this->operands[0]);
-  uint64_t          mem       = std::get<1>(this->operands[0]);
-  uint64_t          reg       = std::get<1>(this->operands[1]);
-  uint32_t          regSize   = std::get<2>(this->operands[1]);
+  uint32_t          writeSize = this->operands[0].getSize();
+  uint64_t          mem       = this->operands[0].getValue();
+  uint64_t          reg       = this->operands[1].getValue();
+  uint32_t          regSize   = this->operands[1].getSize();
 
   uint64_t          symReg    = ap.getRegSymbolicID(reg);
   uint64_t          symMem    = ap.getMemSymbolicID(mem);
