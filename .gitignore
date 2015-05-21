@@ -6,3 +6,5 @@ pintool.log
 *.o
 *.so
 src/utils/syscalls.cpp
+.gdb_history
+peda-session*
