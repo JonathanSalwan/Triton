@@ -59,6 +59,8 @@
 #include "NotIRBuilder.h"
 #include "NullIRBuilder.h"
 #include "OrIRBuilder.h"
+#include "OrpdIRBuilder.h"
+#include "OrpsIRBuilder.h"
 #include "PopIRBuilder.h"
 #include "PushIRBuilder.h"
 #include "RetIRBuilder.h"

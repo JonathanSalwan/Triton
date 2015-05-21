@@ -244,6 +244,14 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new OrIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_ORPD:
+      ir = new OrpdIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_ORPS:
+      ir = new OrpsIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_POP:
       ir = new PopIRBuilder(address, disas);
       break;

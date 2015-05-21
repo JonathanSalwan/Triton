@@ -117,6 +117,8 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/NegIRBuilder.cpp \
 		./src/ir/builders/NotIRBuilder.cpp \
 		./src/ir/builders/OrIRBuilder.cpp \
+		./src/ir/builders/OrpdIRBuilder.cpp \
+		./src/ir/builders/OrpsIRBuilder.cpp \
 		./src/ir/builders/PopIRBuilder.cpp \
 		./src/ir/builders/PushIRBuilder.cpp \
 		./src/ir/builders/RetIRBuilder.cpp \
