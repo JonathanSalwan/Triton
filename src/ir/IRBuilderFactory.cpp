@@ -30,20 +30,20 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new AndIRBuilder(address, disas);
       break;
 
-    case XED_ICLASS_ANDPD:
-      ir = new AndpdIRBuilder(address, disas);
-      break;
-
-    case XED_ICLASS_ANDPS:
-      ir = new AndpsIRBuilder(address, disas);
-      break;
-
     case XED_ICLASS_ANDNPD:
       ir = new AndnpdIRBuilder(address, disas);
       break;
 
     case XED_ICLASS_ANDNPS:
       ir = new AndnpsIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_ANDPD:
+      ir = new AndpdIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_ANDPS:
+      ir = new AndpsIRBuilder(address, disas);
       break;
 
     case XED_ICLASS_CALL_FAR:

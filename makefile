@@ -61,10 +61,10 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/AdcIRBuilder.cpp \
 		./src/ir/builders/AddIRBuilder.cpp \
 		./src/ir/builders/AndIRBuilder.cpp \
-		./src/ir/builders/AndpdIRBuilder.cpp \
-		./src/ir/builders/AndpsIRBuilder.cpp \
 		./src/ir/builders/AndnpdIRBuilder.cpp \
 		./src/ir/builders/AndnpsIRBuilder.cpp \
+		./src/ir/builders/AndpdIRBuilder.cpp \
+		./src/ir/builders/AndpsIRBuilder.cpp \
 		./src/ir/builders/BaseIRBuilder.cpp \
 		./src/ir/builders/CallIRBuilder.cpp \
 		./src/ir/builders/CbwIRBuilder.cpp \
