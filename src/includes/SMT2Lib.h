@@ -155,6 +155,12 @@ namespace smt2lib {
 
   /* Returns the 'bvxnor' syntax */
   std::string bvxnor(std::string op1, std::string op2);
+
+  /* Returns the 'bvudiv' syntax */
+  std::string bvudiv(std::string op1, std::string op2);
+
+  /* Returns the 'bvsdiv' syntax */
+  std::string bvsdiv(std::string op1, std::string op2);
 }
 
 #endif  /* !__SMTLIB2_UTILS__ */

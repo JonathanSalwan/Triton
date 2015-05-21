@@ -202,6 +202,25 @@ static PyObject *smt2lib_bvor(PyObject *self, PyObject *args)
 }
 
 
+static char smt2lib_bvsdiv_doc[] = "Returns a 'bvsdiv' expression";
+static PyObject *smt2lib_bvsdiv(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvsdiv(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvsdiv(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvsdiv(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
 static char smt2lib_bvsge_doc[] = "Returns a 'bvsge' expression";
 static PyObject *smt2lib_bvsge(PyObject *self, PyObject *args)
 {
@@ -358,6 +377,25 @@ static char smt2lib_bvtrue_doc[] = "Returns an alias on '(_ bv1 1)' expression";
 static PyObject *smt2lib_bvtrue(PyObject *self, PyObject *args)
 {
   return Py_BuildValue("s", smt2lib::bvtrue().c_str());
+}
+
+
+static char smt2lib_bvudiv_doc[] = "Returns a 'bvudiv' expression";
+static PyObject *smt2lib_bvudiv(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvudiv(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvudiv(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvudiv(PyString_AsString(op1), PyString_AsString(op2)).c_str());
 }
 
 
@@ -646,6 +684,7 @@ PyMethodDef smt2libCallbacks[] = {
   {"bvnor",       smt2lib_bvnor,      METH_VARARGS,     smt2lib_bvnor_doc},
   {"bvnot",       smt2lib_bvnot,      METH_O,           smt2lib_bvnot_doc},
   {"bvor",        smt2lib_bvor,       METH_VARARGS,     smt2lib_bvor_doc},
+  {"bvsdiv",      smt2lib_bvsdiv,     METH_VARARGS,     smt2lib_bvsdiv_doc},
   {"bvsge",       smt2lib_bvsge,      METH_VARARGS,     smt2lib_bvsge_doc},
   {"bvsgt",       smt2lib_bvsgt,      METH_VARARGS,     smt2lib_bvsgt_doc},
   {"bvshl",       smt2lib_bvshl,      METH_VARARGS,     smt2lib_bvshl_doc},
@@ -655,6 +694,7 @@ PyMethodDef smt2libCallbacks[] = {
   {"bvsrem",      smt2lib_bvsrem,     METH_VARARGS,     smt2lib_bvsrem_doc},
   {"bvsub",       smt2lib_bvsub,      METH_VARARGS,     smt2lib_bvsub_doc},
   {"bvtrue",      smt2lib_bvtrue,     METH_NOARGS,      smt2lib_bvtrue_doc},
+  {"bvudiv",      smt2lib_bvudiv,     METH_VARARGS,     smt2lib_bvudiv_doc},
   {"bvuge",       smt2lib_bvuge,      METH_VARARGS,     smt2lib_bvuge_doc},
   {"bvugt",       smt2lib_bvugt,      METH_VARARGS,     smt2lib_bvugt_doc},
   {"bvule",       smt2lib_bvule,      METH_VARARGS,     smt2lib_bvule_doc},

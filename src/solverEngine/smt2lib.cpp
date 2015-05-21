@@ -378,3 +378,17 @@ std::string smt2lib::bvxnor(std::string op1, std::string op2)
   return "(bvxnor " + op1 + " " + op2 + ")";
 }
 
+
+/* Returns the 'bvsdiv' syntax */
+std::string smt2lib::bvsdiv(std::string op1, std::string op2)
+{
+  return "(bvsdiv " + op1 + " " + op2 + ")";
+}
+
+
+/* Returns the 'bvudiv' syntax */
+std::string smt2lib::bvudiv(std::string op1, std::string op2)
+{
+  return "(bvudiv " + op1 + " " + op2 + ")";
+}
+
