@@ -35,13 +35,13 @@ void OrpdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   if (symReg1 != UNSET)
     op1 << smt2lib::extract(regSize1, "#" + std::to_string(symReg1));
   else
-    op1 << smt2lib::bv(ap.getRegisterValue(reg1), regSize1 * REG_SIZE);
+    op1 << smt2lib::bv(ap.getSSERegisterValue(reg1), regSize1 * REG_SIZE);
 
   // OP_2
   if (symReg2 != UNSET)
     op2 << smt2lib::extract(regSize2, "#" + std::to_string(symReg2));
   else
-    op2 << smt2lib::bv(ap.getRegisterValue(reg2), regSize1 * REG_SIZE);
+    op2 << smt2lib::bv(ap.getSSERegisterValue(reg2), regSize1 * REG_SIZE);
 
   // Final expr
   expr << smt2lib::bvor(op1.str(), op2.str());
@@ -73,7 +73,7 @@ void OrpdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   if (symReg != UNSET)
     op1 << smt2lib::extract(regSize, "#" + std::to_string(symReg));
   else
-    op1 << smt2lib::bv(ap.getRegisterValue(reg), readSize * REG_SIZE);
+    op1 << smt2lib::bv(ap.getSSERegisterValue(reg), readSize * REG_SIZE);
 
   // OP_2
   if (symMem != UNSET)
