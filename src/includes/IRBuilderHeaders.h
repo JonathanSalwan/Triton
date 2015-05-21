@@ -91,5 +91,7 @@
 #include "TestIRBuilder.h"
 #include "XchgIRBuilder.h"
 #include "XorIRBuilder.h"
+#include "XorpdIRBuilder.h"
+#include "XorpsIRBuilder.h"
 
 #endif     /* !__IRBUILDERHEADERS_H__ */

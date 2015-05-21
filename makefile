@@ -149,6 +149,8 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/TestIRBuilder.cpp \
 		./src/ir/builders/XchgIRBuilder.cpp \
 		./src/ir/builders/XorIRBuilder.cpp \
+		./src/ir/builders/XorpdIRBuilder.cpp \
+		./src/ir/builders/XorpsIRBuilder.cpp \
 		./src/ir/templates/NoneOperandTemplate.cpp \
 		./src/ir/templates/OneOperandTemplate.cpp \
 		./src/ir/templates/OperandTemplate.cpp \

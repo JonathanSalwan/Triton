@@ -62,6 +62,8 @@ void check(void)
   asm("movaps xmm3, xmm0");
   asm("orpd xmm0, xmm1");
   asm("orps xmm1, xmm3");
+  asm("xorpd xmm0, xmm1");
+  asm("xorps xmm1, xmm3");
   asm("andpd xmm1, xmm3");
   asm("andps xmm1, xmm3");
   asm("andnpd xmm1, xmm3");

@@ -373,6 +373,14 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new XorIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_XORPD:
+      ir = new XorpdIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_XORPS:
+      ir = new XorpsIRBuilder(address, disas);
+      break;
+
     default:
       ir = new NullIRBuilder(address, disas);
       break;
