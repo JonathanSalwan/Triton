@@ -40,6 +40,8 @@ void check(void)
   asm("movsx rax, word ptr [rsp-0x2]");
   asm("setz al");
   asm("mov rax, 3");
+  asm("neg rax");
+  asm("mov rax, 3");
   asm("mov rbx, 5");
   asm("xchg rax, rbx");
   asm("xchg [rsp-0x2], rax");

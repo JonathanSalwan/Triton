@@ -55,6 +55,7 @@
 #include "MovapsIRBuilder.h"
 #include "MovsxIRBuilder.h"
 #include "MovzxIRBuilder.h"
+#include "NegIRBuilder.h"
 #include "NotIRBuilder.h"
 #include "NullIRBuilder.h"
 #include "OrIRBuilder.h"

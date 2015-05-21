@@ -232,6 +232,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new MovzxIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_NEG:
+      ir = new NegIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_NOT:
       ir = new NotIRBuilder(address, disas);
       break;
