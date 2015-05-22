@@ -5,6 +5,7 @@ void check(void)
 {
   int tab[4] = {0x11111111, 0x22222222, 0x33333333, 0x44444444};
 
+  asm("mov edi, esi");
   asm("clc");
   asm("cld");
   asm("cmc");

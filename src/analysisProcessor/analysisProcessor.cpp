@@ -161,9 +161,9 @@ std::string AnalysisProcessor::buildSymbolicRegOperand(uint64_t regID, uint64_t 
     op << smt2lib::extract(regSize, "#" + std::to_string(symReg));
   else {
     if (regID >= ID_XMM0 && regID <= ID_XMM15)
-      op << smt2lib::bv(this->getSSERegisterValue(regID), regSize * REG_SIZE);
+      op << smt2lib::extract(regSize, smt2lib::bv(this->getSSERegisterValue(regID), REG_SIZE_SSE_BIT));
     else
-      op << smt2lib::bv(this->getRegisterValue(regID), regSize * REG_SIZE);
+      op << smt2lib::extract(regSize, smt2lib::bv(this->getRegisterValue(regID), REG_SIZE_BIT));
   }
 
   return op.str();
@@ -179,9 +179,9 @@ std::string AnalysisProcessor::buildSymbolicRegOperand(uint64_t regID, uint64_t 
     op << smt2lib::extract(highExtract, lowExtract, "#" + std::to_string(symReg));
   else {
     if (regID >= ID_XMM0 && regID <= ID_XMM15)
-      op << smt2lib::bv(this->getSSERegisterValue(regID), regSize * REG_SIZE);
+      op << smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getSSERegisterValue(regID), REG_SIZE_SSE_BIT));
     else
-      op << smt2lib::bv(this->getRegisterValue(regID), regSize * REG_SIZE);
+      op << smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getRegisterValue(regID), REG_SIZE_BIT));
   }
 
   return op.str();
