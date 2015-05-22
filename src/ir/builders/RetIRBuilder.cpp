@@ -17,17 +17,10 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
-  uint64_t            symReg = ap.getRegSymbolicID(ID_RSP);
 
-  /*
-   * Create the SMT semantic.
-   */
-  if (symReg != UNSET)
-    op1 << "#" << std::dec << symReg;
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(ID_RSP), 8 * REG_SIZE);
-
-  op2 << smt2lib::bv(REG_SIZE, 8 * REG_SIZE);
+  /* Create the SMT semantic */
+  op1 << ap.buildSymbolicRegOperand(ID_RSP, REG_SIZE);
+  op2 << smt2lib::bv(REG_SIZE, REG_SIZE_BIT);
 
   expr << smt2lib::bvadd(op1.str(), op2.str());
 
@@ -45,17 +38,10 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint64_t imm)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
-  uint64_t            symReg = ap.getRegSymbolicID(ID_RSP);
 
-  /*
-   * Create the SMT semantic.
-   */
-  if (symReg != UNSET)
-    op1 << "#" << std::dec << symReg;
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(ID_RSP), 8 * REG_SIZE);
-
-  op2 << smt2lib::bv(imm, 8 * REG_SIZE);
+  /* Create the SMT semantic */
+  op1 << ap.buildSymbolicRegOperand(ID_RSP, REG_SIZE);
+  op2 << smt2lib::bv(imm, REG_SIZE_BIT);
 
   expr << smt2lib::bvadd(op1.str(), op2.str());
 
@@ -81,14 +67,9 @@ void RetIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          imm       = this->operands[0].getValue();
   uint64_t          memSrc    = this->operands[1].getValue(); // The dst memory read
   uint32_t          readSize  = this->operands[1].getSize();
-  uint64_t          symMem    = ap.getMemSymbolicID(memSrc);
 
   /* Create the SMT semantic */
-  /* OP_1 */
-  if (symMem != UNSET)
-    op1 << "#" << std::dec << symMem;
-  else
-    op1 << smt2lib::bv(ap.getMemValue(memSrc, readSize), readSize * REG_SIZE);
+  op1 << ap.buildSymbolicMemOperand(memSrc, readSize);
 
   /* Finale expr */
   expr << op1.str();
@@ -113,14 +94,9 @@ void RetIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr, op1;
   uint64_t          memSrc    = this->operands[0].getValue(); // The dst memory read
   uint32_t          readSize  = this->operands[0].getSize();
-  uint64_t          symMem    = ap.getMemSymbolicID(memSrc);
 
   /* Create the SMT semantic */
-  /* OP_1 */
-  if (symMem != UNSET)
-    op1 << "#" << std::dec << symMem;
-  else
-    op1 << smt2lib::bv(ap.getMemValue(memSrc, readSize), readSize * REG_SIZE);
+  op1 << ap.buildSymbolicMemOperand(memSrc, readSize);
 
   /* Finale expr */
   expr << op1.str();

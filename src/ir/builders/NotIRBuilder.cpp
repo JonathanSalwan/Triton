@@ -18,14 +18,9 @@ void NotIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr, op1;
   uint64_t          reg       = this->operands[0].getValue();
   uint32_t          regSize   = this->operands[0].getSize();
-  uint64_t          symReg    = ap.getRegSymbolicID(reg);
 
   /* Create the SMT semantic */
-  /* OP_1 */
-  if (symReg != UNSET)
-    op1 << "#" << std::dec << symReg;
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(reg), regSize * REG_SIZE);
+  op1 << ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Finale expr */
   expr << smt2lib::bvnot(op1.str());
@@ -46,14 +41,9 @@ void NotIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr, op1;
   uint64_t          mem       = this->operands[0].getValue();
   uint32_t          memSize   = this->operands[0].getSize();
-  uint64_t          symMem    = ap.getMemSymbolicID(mem);
 
   /* Create the SMT semantic */
-  /* OP_1 */
-  if (symMem != UNSET)
-    op1 << "#" << std::dec << symMem;
-  else
-    op1 << smt2lib::bv(ap.getMemValue(mem, memSize), memSize * REG_SIZE);
+  op1 << ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Finale expr */
   expr << smt2lib::bvnot(op1.str());

@@ -18,18 +18,10 @@ void OrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr, op1, op2;
   uint64_t          reg     = this->operands[0].getValue();
   uint64_t          imm     = this->operands[1].getValue();
-
-  uint64_t          symReg  = ap.getRegSymbolicID(reg);
   uint32_t          regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  /* OP_1 */
-  if (symReg != UNSET)
-    op1 << smt2lib::extract(regSize, "#" + std::to_string(symReg));
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(reg), regSize * REG_SIZE);
-
-  /* OP_2 */
+  op1 << ap.buildSymbolicRegOperand(reg, regSize);
   op2 << smt2lib::bv(imm, regSize * REG_SIZE);
 
   /* Finale expr */
@@ -58,27 +50,14 @@ void OrIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr, op1, op2;
   uint64_t          reg1     = this->operands[0].getValue();
   uint64_t          reg2     = this->operands[1].getValue();
-
-  uint64_t          symReg1  = ap.getRegSymbolicID(reg1);
-  uint64_t          symReg2  = ap.getRegSymbolicID(reg2);
   uint32_t          regSize1 = this->operands[0].getSize();
   uint32_t          regSize2 = this->operands[1].getSize();
 
-
   /* Create the SMT semantic */
-  // OP_1
-  if (symReg1 != UNSET)
-    op1 << smt2lib::extract(regSize1, "#" + std::to_string(symReg1));
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(reg1), regSize1 * REG_SIZE);
+  op1 << ap.buildSymbolicRegOperand(reg1, regSize1);
+  op2 << ap.buildSymbolicRegOperand(reg2, regSize2);
 
-  // OP_2
-  if (symReg2 != UNSET)
-    op2 << smt2lib::extract(regSize2, "#" + std::to_string(symReg2));
-  else
-    op2 << smt2lib::bv(ap.getRegisterValue(reg2), regSize1 * REG_SIZE);
-
-  // Final expr
+  /* Final expr */
   expr << smt2lib::bvor(op1.str(), op2.str());
 
   /* Create the symbolic element */
@@ -105,25 +84,13 @@ void OrIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          readSize = this->operands[1].getSize();
   uint64_t          mem      = this->operands[1].getValue();
   uint64_t          reg      = this->operands[0].getValue();
-
-  uint64_t          symReg   = ap.getRegSymbolicID(reg);
-  uint64_t          symMem   = ap.getMemSymbolicID(mem);
   uint32_t          regSize  = this->operands[1].getSize();
 
   /* Create the SMT semantic */
-  // OP_1
-  if (symReg != UNSET)
-    op1 << smt2lib::extract(regSize, "#" + std::to_string(symReg));
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(reg), readSize * REG_SIZE);
+  op1 << ap.buildSymbolicRegOperand(reg, regSize);
+  op2 << ap.buildSymbolicMemOperand(mem, readSize);
 
-  // OP_2
-  if (symMem != UNSET)
-    op2 << "#" << std::dec << symMem;
-  else
-    op2 << smt2lib::bv(ap.getMemValue(mem, readSize), readSize * REG_SIZE);
-
-  // Final expr
+  /* Final expr */
   expr << smt2lib::bvor(op1.str(), op2.str());
 
   /* Create the symbolic element */
@@ -151,16 +118,8 @@ void OrIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          mem       = this->operands[0].getValue();
   uint64_t          imm       = this->operands[1].getValue();
 
-  uint64_t          symMem    = ap.getMemSymbolicID(mem);
-
   /* Create the SMT semantic */
-  /* OP_1 */
-  if (symMem != UNSET)
-    op1 << "#" << std::dec << symMem;
-  else
-    op1 << smt2lib::bv(ap.getMemValue(mem, writeSize), writeSize * REG_SIZE);
-
-  /* OP_2 */
+  op1 << ap.buildSymbolicMemOperand(mem, writeSize);
   op2 << smt2lib::bv(imm, writeSize * REG_SIZE);
 
   /* Final expr */
@@ -192,23 +151,11 @@ void OrIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          reg       = this->operands[1].getValue();
   uint32_t          regSize   = this->operands[1].getSize();
 
-  uint64_t          symReg    = ap.getRegSymbolicID(reg);
-  uint64_t          symMem    = ap.getMemSymbolicID(mem);
-
   /* Create the SMT semantic */
-  // OP_1
-  if (symMem != UNSET)
-    op1 << "#" << std::dec << symMem;
-  else
-    op1 << smt2lib::bv(ap.getMemValue(mem, writeSize), writeSize * REG_SIZE);
+  op1 << ap.buildSymbolicMemOperand(mem, writeSize);
+  op2 << ap.buildSymbolicRegOperand(reg, regSize);
 
-  // OP_2
-  if (symReg != UNSET)
-    op2 << smt2lib::extract(regSize, "#" + std::to_string(symReg));
-  else
-    op2 << smt2lib::bv(ap.getRegisterValue(reg), writeSize * REG_SIZE);
-
-  // Final expr
+  /* Final expr */
   expr << smt2lib::bvor(op1.str(), op2.str());
 
   /* Create the symbolic element */

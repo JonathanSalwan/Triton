@@ -18,16 +18,9 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t writeSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
-  uint64_t            symReg = ap.getRegSymbolicID(ID_RSP);
 
-  /*
-   * Create the SMT semantic.
-   */
-  if (symReg != UNSET)
-    op1 << "#" << std::dec << symReg;
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(ID_RSP), writeSize * REG_SIZE);
-
+  /* Create the SMT semantic */
+  op1 << ap.buildSymbolicRegOperand(ID_RSP, writeSize);
   op2 << smt2lib::bv(writeSize, writeSize * REG_SIZE);
 
   expr << smt2lib::bvsub(op1.str(), op2.str());
@@ -48,19 +41,13 @@ void PushIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          reg       = this->operands[0].getValue(); // Reg pushed
   uint64_t          mem       = this->operands[1].getValue(); // The dst memory writing
   uint32_t          writeSize = this->operands[1].getSize();
-
-  uint64_t          symReg    = ap.getRegSymbolicID(reg);
   uint32_t          regSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic side effect */
   inst.addElement(alignStack(ap, writeSize));
 
   /* Create the SMT semantic */
-  /* OP_1 */
-  if (symReg != UNSET)
-    op1 << "#" << std::dec << symReg;
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(reg), regSize * REG_SIZE);
+  op1 << ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Finale expr */
   expr << op1.str();
@@ -111,17 +98,12 @@ void PushIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          readSize  = this->operands[0].getSize();
   uint64_t          memDst    = this->operands[1].getValue(); // The dst memory writing
   uint32_t          writeSize = this->operands[1].getSize();
-  uint64_t          symMem    = ap.getMemSymbolicID(memOp);
 
   /* Create the SMT semantic side effect */
   inst.addElement(alignStack(ap, writeSize));
 
   /* Create the SMT semantic */
-  /* OP_1 */
-  if (symMem != UNSET)
-    op1 << "#" << std::dec << symMem;
-  else
-    op1 << smt2lib::bv(ap.getMemValue(memOp, readSize), readSize * REG_SIZE);
+  op1 << ap.buildSymbolicMemOperand(memOp, readSize);
 
   /* Finale expr */
   expr << op1.str();
