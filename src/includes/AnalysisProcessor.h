@@ -32,7 +32,6 @@ class AnalysisProcessor {
     uint64_t getRegisterValue(uint64_t regID);
     uint64_t getFlagValue(uint64_t flagID);
     __uint128_t getSSERegisterValue(uint64_t regID);
-    uint64_t getCFValue(void);
 
     // Set the value into the register.
     void setRegisterValue(uint64_t regID, uint64_t value);
@@ -40,6 +39,13 @@ class AnalysisProcessor {
 
     // Returns the value of the memory.
     uint64_t getMemValue(uint64_t mem, uint32_t readSize);
+
+    // Build a symbolic register operand
+    std::string buildSymbolicRegOperand(uint64_t regID, uint64_t regSize);
+    std::string buildSymbolicRegOperand(uint64_t regID, uint64_t regSize, uint64_t highExtract, uint64_t lowExtract);
+    std::string buildSymbolicMemOperand(uint64_t mem, uint64_t memSize);
+    std::string buildSymbolicFlagOperand(uint64_t flagID, uint64_t size);
+    std::string buildSymbolicFlagOperand(uint64_t flagID);
 
     // Symbolic Engine Facade
     // ----------------------

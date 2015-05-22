@@ -152,6 +152,84 @@ std::list<uint64_t> AnalysisProcessor::getPathConstraints(void)
 }
 
 
+std::string AnalysisProcessor::buildSymbolicRegOperand(uint64_t regID, uint64_t regSize)
+{
+  std::stringstream   op;
+  uint64_t            symReg = this->getRegSymbolicID(regID);
+
+  if (symReg != UNSET)
+    op << smt2lib::extract(regSize, "#" + std::to_string(symReg));
+  else {
+    if (regID >= ID_XMM0 && regID <= ID_XMM15)
+      op << smt2lib::bv(this->getSSERegisterValue(regID), regSize * REG_SIZE);
+    else
+      op << smt2lib::bv(this->getRegisterValue(regID), regSize * REG_SIZE);
+  }
+
+  return op.str();
+}
+
+
+std::string AnalysisProcessor::buildSymbolicRegOperand(uint64_t regID, uint64_t regSize, uint64_t highExtract, uint64_t lowExtract)
+{
+  std::stringstream   op;
+  uint64_t            symReg = this->getRegSymbolicID(regID);
+
+  if (symReg != UNSET)
+    op << smt2lib::extract(highExtract, lowExtract, "#" + std::to_string(symReg));
+  else {
+    if (regID >= ID_XMM0 && regID <= ID_XMM15)
+      op << smt2lib::bv(this->getSSERegisterValue(regID), regSize * REG_SIZE);
+    else
+      op << smt2lib::bv(this->getRegisterValue(regID), regSize * REG_SIZE);
+  }
+
+  return op.str();
+}
+
+
+std::string AnalysisProcessor::buildSymbolicMemOperand(uint64_t mem, uint64_t memSize)
+{
+  std::stringstream   op;
+  uint64_t            symMem = this->getMemSymbolicID(mem);
+
+  if (symMem != UNSET)
+    op << "#" << std::dec << symMem;
+  else
+    op << smt2lib::bv(this->getMemValue(mem, memSize), memSize * REG_SIZE);
+
+  return op.str();
+}
+
+
+std::string AnalysisProcessor::buildSymbolicFlagOperand(uint64_t flagID, uint64_t size)
+{
+  std::stringstream   op;
+  uint64_t            symFlag = this->getRegSymbolicID(flagID);
+
+  if (symFlag != UNSET)
+    op << smt2lib::zx("#" + std::to_string(symFlag), (size * REG_SIZE) - 1);
+  else
+    op << smt2lib::bv(this->getFlagValue(flagID), size * REG_SIZE);
+
+  return op.str();
+}
+
+
+std::string AnalysisProcessor::buildSymbolicFlagOperand(uint64_t flagID)
+{
+  std::stringstream   op;
+  uint64_t            symFlag = this->getRegSymbolicID(flagID);
+
+  if (symFlag != UNSET)
+    op << "#" + std::to_string(symFlag);
+  else
+    op << smt2lib::bv(this->getFlagValue(flagID), 1);
+
+  return op.str();
+}
+
+
 // Taint Engine Facade
 // -------------------
 
@@ -427,17 +505,6 @@ __uint128_t AnalysisProcessor::getSSERegisterValue(uint64_t regID)
   if (!this->currentCtxH)
     return 0;
   return this->currentCtxH->getSSERegisterValue(regID);
-}
-
-
-// Returns the concret Carry Flag value
-uint64_t AnalysisProcessor::getCFValue(void)
-{
-  uint64_t rflags;
-  if (!this->currentCtxH)
-    return 0;
-  rflags = this->currentCtxH->getRegisterValue(ID_RFLAGS);
-  return rflags & 1;
 }
 
 

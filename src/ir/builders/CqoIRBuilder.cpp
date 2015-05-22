@@ -16,13 +16,9 @@ CqoIRBuilder::CqoIRBuilder(uint64_t address, const std::string &disassembly):
 void CqoIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se1, *se2, *se3;
   std::stringstream expr1, expr2, expr3, op1;
-  uint64_t          symRAX = ap.getRegSymbolicID(ID_RAX);
 
   /* Create the SMT semantic */
-  if (symRAX != UNSET)
-    op1 << smt2lib::extract(63, 0, "#" + std::to_string(symRAX));
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(ID_RAX), REG_SIZE_BIT);
+  op1 << ap.buildSymbolicRegOperand(ID_RAX, REG_SIZE, 63, 0);
 
   /* Expression 1: TMP = 128 bitvec (RDX:RAX) */
   expr1 << smt2lib::sx(op1.str(), 64);

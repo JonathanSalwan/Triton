@@ -9,6 +9,7 @@ void check(void)
   asm("cld");
   asm("cmc");
   asm("mov eax, 32");
+  asm("cbw");
   asm("mov ecx, 1");
   asm("mov ebx, eax");
   asm("mov rbx, qword ptr [rsp-0x2]");
@@ -24,6 +25,7 @@ void check(void)
   asm("mov ecx, 3");
   asm("mov ebx, 5");
   asm("cmp ecx, 3");
+  asm("cmovb eax, ebx");
   asm("cmovl eax, ebx");
   asm("cmovno eax, ebx");
   asm("cmovnp eax, ebx");

@@ -37,7 +37,7 @@ void SbbIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   if (symCF != UNSET)
     op3 << smt2lib::zx("#" + std::to_string(symCF), (regSize * REG_SIZE) - 1);
   else
-    op3 << smt2lib::bv(ap.getCFValue(), regSize * REG_SIZE);
+    op3 << smt2lib::bv(ap.getFlagValue(ID_CF), regSize * REG_SIZE);
 
   /* Finale expr */
   expr << smt2lib::bvsub(op1.str(), smt2lib::bvadd(op2.str(), op3.str()));
@@ -91,7 +91,7 @@ void SbbIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   if (symCF != UNSET)
     op3 << smt2lib::zx("#" + std::to_string(symCF), (regSize1 * REG_SIZE) - 1);
   else
-    op3 << smt2lib::bv(ap.getCFValue(), regSize1 * REG_SIZE);
+    op3 << smt2lib::bv(ap.getFlagValue(ID_CF), regSize1 * REG_SIZE);
 
   // Final expr
   expr << smt2lib::bvsub(op1.str(), smt2lib::bvadd(op2.str(), op3.str()));
@@ -144,7 +144,7 @@ void SbbIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   if (symCF != UNSET)
     op3 << smt2lib::zx("#" + std::to_string(symCF), (regSize * REG_SIZE) - 1);
   else
-    op3 << smt2lib::bv(ap.getCFValue(), regSize * REG_SIZE);
+    op3 << smt2lib::bv(ap.getFlagValue(ID_CF), regSize * REG_SIZE);
 
   // Final expr
   expr << smt2lib::bvsub(op1.str(), smt2lib::bvadd(op2.str(), op3.str()));
@@ -192,7 +192,7 @@ void SbbIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   if (symCF != UNSET)
     op3 << smt2lib::zx("#" + std::to_string(symCF), (writeSize * REG_SIZE) - 1);
   else
-    op3 << smt2lib::bv(ap.getCFValue(), writeSize * REG_SIZE);
+    op3 << smt2lib::bv(ap.getFlagValue(ID_CF), writeSize * REG_SIZE);
 
   /* Final expr */
   expr << smt2lib::bvsub(op1.str(), smt2lib::bvadd(op2.str(), op3.str()));
@@ -245,7 +245,7 @@ void SbbIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   if (symCF != UNSET)
     op3 << smt2lib::zx("#" + std::to_string(symCF), (writeSize * REG_SIZE) - 1);
   else
-    op3 << smt2lib::bv(ap.getCFValue(), writeSize * REG_SIZE);
+    op3 << smt2lib::bv(ap.getFlagValue(ID_CF), writeSize * REG_SIZE);
 
   // Final expr
   expr << smt2lib::bvsub(op1.str(), smt2lib::bvadd(op2.str(), op3.str()));

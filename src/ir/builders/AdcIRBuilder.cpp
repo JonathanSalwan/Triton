@@ -18,26 +18,12 @@ void AdcIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr, op1, op2, op3;
   uint64_t          reg     = this->operands[0].getValue();
   uint64_t          imm     = this->operands[1].getValue();
-
-  uint64_t          symReg  = ap.getRegSymbolicID(reg);
-  uint64_t          symCF   = ap.getRegSymbolicID(ID_CF);
   uint32_t          regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  /* OP_1 */
-  if (symReg != UNSET)
-    op1 << smt2lib::extract(regSize, "#" + std::to_string(symReg));
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(reg), regSize * REG_SIZE);
-
-  /* OP_2 */
+  op1 << ap.buildSymbolicRegOperand(reg, regSize);
   op2 << smt2lib::bv(imm, regSize * REG_SIZE);
-
-  /* OP_3 CF */
-  if (symCF != UNSET)
-    op3 << smt2lib::zx("#" + std::to_string(symCF), (regSize * REG_SIZE) - 1);
-  else
-    op3 << smt2lib::bv(ap.getCFValue(), regSize * REG_SIZE);
+  op3 << ap.buildSymbolicFlagOperand(ID_CF, regSize);
 
   /* Finale expr */
   expr << smt2lib::bvadd(smt2lib::bvadd(op1.str(), op2.str()), op3.str());
@@ -66,32 +52,13 @@ void AdcIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr, op1, op2, op3;
   uint64_t          reg1     = this->operands[0].getValue();
   uint64_t          reg2     = this->operands[1].getValue();
-
-  uint64_t          symReg1  = ap.getRegSymbolicID(reg1);
-  uint64_t          symReg2  = ap.getRegSymbolicID(reg2);
-  uint64_t          symCF    = ap.getRegSymbolicID(ID_CF);
   uint32_t          regSize1 = this->operands[0].getSize();
   uint32_t          regSize2 = this->operands[1].getSize();
 
-
   /* Create the SMT semantic */
-  // OP_1
-  if (symReg1 != UNSET)
-    op1 << smt2lib::extract(regSize1, "#" + std::to_string(symReg1));
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(reg1), regSize1 * REG_SIZE);
-
-  // OP_2
-  if (symReg2 != UNSET)
-    op2 << smt2lib::extract(regSize2, "#" + std::to_string(symReg2));
-  else
-    op2 << smt2lib::bv(ap.getRegisterValue(reg2), regSize2 * REG_SIZE);
-
-  /* OP_3 CF */
-  if (symCF != UNSET)
-    op3 << smt2lib::zx("#" + std::to_string(symCF), (regSize1 * REG_SIZE) - 1);
-  else
-    op3 << smt2lib::bv(ap.getCFValue(), regSize1 * REG_SIZE);
+  op1 << ap.buildSymbolicRegOperand(reg1, regSize1);
+  op2 << ap.buildSymbolicRegOperand(reg2, regSize2);
+  op3 << ap.buildSymbolicFlagOperand(ID_CF, regSize1);
 
   // Final expr
   expr << smt2lib::bvadd(smt2lib::bvadd(op1.str(), op2.str()), op3.str());
@@ -121,30 +88,12 @@ void AdcIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          readSize = this->operands[1].getSize();
   uint64_t          mem      = this->operands[1].getValue();
   uint64_t          reg      = this->operands[0].getValue();
-
-  uint64_t          symReg   = ap.getRegSymbolicID(reg);
-  uint64_t          symMem   = ap.getMemSymbolicID(mem);
-  uint64_t          symCF    = ap.getMemSymbolicID(ID_CF);
   uint32_t          regSize  = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  // OP_1
-  if (symReg != UNSET)
-    op1 << smt2lib::extract(regSize, "#" + std::to_string(symReg));
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(reg), readSize * REG_SIZE);
-
-  // OP_2
-  if (symMem != UNSET)
-    op2 << "#" << std::dec << symMem;
-  else
-    op2 << smt2lib::bv(ap.getMemValue(mem, readSize), readSize * REG_SIZE);
-
-  /* OP_3 CF */
-  if (symCF != UNSET)
-    op3 << smt2lib::zx("#" + std::to_string(symCF), (regSize * REG_SIZE) - 1);
-  else
-    op3 << smt2lib::bv(ap.getCFValue(), regSize * REG_SIZE);
+  op1 << ap.buildSymbolicRegOperand(reg, regSize);
+  op2 << ap.buildSymbolicMemOperand(mem, readSize);
+  op3 << ap.buildSymbolicFlagOperand(ID_CF, regSize);
 
   // Final expr
   expr << smt2lib::bvadd(smt2lib::bvadd(op1.str(), op2.str()), op3.str());
@@ -175,24 +124,10 @@ void AdcIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          mem       = this->operands[0].getValue();
   uint64_t          imm       = this->operands[1].getValue();
 
-  uint64_t          symMem    = ap.getMemSymbolicID(mem);
-  uint64_t          symCF     = ap.getMemSymbolicID(ID_CF);
-
   /* Create the SMT semantic */
-  /* OP_1 */
-  if (symMem != UNSET)
-    op1 << "#" << std::dec << symMem;
-  else
-    op1 << smt2lib::bv(ap.getMemValue(mem, writeSize), writeSize * REG_SIZE);
-
-  /* OP_2 */
+  op1 << ap.buildSymbolicMemOperand(mem, writeSize);
   op2 << smt2lib::bv(imm, writeSize * REG_SIZE);
-
-  /* OP_3 CF */
-  if (symCF != UNSET)
-    op3 << smt2lib::zx("#" + std::to_string(symCF), (writeSize * REG_SIZE) - 1);
-  else
-    op3 << smt2lib::bv(ap.getCFValue(), writeSize * REG_SIZE);
+  op3 << ap.buildSymbolicFlagOperand(ID_CF, writeSize);
 
   /* Final expr */
   expr << smt2lib::bvadd(smt2lib::bvadd(op1.str(), op2.str()), op3.str());
@@ -224,28 +159,10 @@ void AdcIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          reg       = this->operands[1].getValue();
   uint32_t          regSize   = this->operands[1].getSize();
 
-  uint64_t          symReg    = ap.getRegSymbolicID(reg);
-  uint64_t          symMem    = ap.getMemSymbolicID(mem);
-  uint64_t          symCF     = ap.getMemSymbolicID(ID_CF);
-
   /* Create the SMT semantic */
-  // OP_1
-  if (symMem != UNSET)
-    op1 << "#" << std::dec << symMem;
-  else
-    op1 << smt2lib::bv(ap.getMemValue(mem, writeSize), writeSize * REG_SIZE);
-
-  // OP_1
-  if (symReg != UNSET)
-    op2 << smt2lib::extract(regSize, "#" + std::to_string(symReg));
-  else
-    op2 << smt2lib::bv(ap.getRegisterValue(reg), writeSize * REG_SIZE);
-
-  /* OP_3 CF */
-  if (symCF != UNSET)
-    op3 << smt2lib::zx("#" + std::to_string(symCF), (writeSize * REG_SIZE) - 1);
-  else
-    op3 << smt2lib::bv(ap.getCFValue(), writeSize * REG_SIZE);
+  op1 << ap.buildSymbolicMemOperand(mem, writeSize);
+  op2 << ap.buildSymbolicRegOperand(reg, regSize);
+  op3 << ap.buildSymbolicFlagOperand(ID_CF, regSize);
 
   // Final expr
   expr << smt2lib::bvadd(smt2lib::bvadd(op1.str(), op2.str()), op3.str());

@@ -17,16 +17,9 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint64_t writeSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
-  uint64_t            symReg = ap.getRegSymbolicID(ID_RSP);
 
-  /*
-   * Create the SMT semantic.
-   */
-  if (symReg != UNSET)
-    op1 << "#" << std::dec << symReg;
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(ID_RSP), writeSize * REG_SIZE);
-
+  /* Create the SMT semantic */
+  op1 << ap.buildSymbolicRegOperand(ID_RSP, writeSize);
   op2 << smt2lib::bv(REG_SIZE, writeSize * REG_SIZE);
 
   expr << smt2lib::bvsub(op1.str(), op2.str());
@@ -48,7 +41,6 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          regSize   = this->operands[0].getSize();
   uint64_t          memDst    = this->operands[1].getValue(); // The dst memory write
   uint32_t          writeSize = this->operands[1].getSize();
-  uint64_t          symReg    = ap.getRegSymbolicID(reg);
 
   /* Create the SMT semantic side effect */
   inst.addElement(alignStack(ap, writeSize));
@@ -67,11 +59,8 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   inst.addElement(se);
 
   /* Create the SMT semantic */
-  /* RIP = imm */
-  if (symReg != UNSET)
-    expr2 << "#" << std::dec << symReg;
-  else
-    expr2 << smt2lib::bv(ap.getRegisterValue(reg), regSize * REG_SIZE);
+  /* RIP = reg */
+  expr2 << ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr2, ID_RIP, "RIP");
@@ -129,7 +118,6 @@ void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          memSize   = this->operands[0].getSize();
   uint64_t          memDst    = this->operands[1].getValue(); // The dst memory write
   uint32_t          writeSize = this->operands[1].getSize();
-  uint64_t          symMem    = ap.getMemSymbolicID(mem);
 
   /* Create the SMT semantic side effect */
   inst.addElement(alignStack(ap, writeSize));
@@ -149,10 +137,7 @@ void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   /* RIP = imm */
-  if (symMem != UNSET)
-    expr2 << "#" << std::dec << symMem;
-  else
-    expr2 << smt2lib::bv(mem, memSize * REG_SIZE);
+  expr2 << ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr2, ID_RIP, "RIP");

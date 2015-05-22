@@ -16,12 +16,9 @@ CmcIRBuilder::CmcIRBuilder(uint64_t address, const std::string &disassembly):
 void CmcIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement     *se;
   std::stringstream   expr, op1;
-  uint64_t            symCF = ap.getRegSymbolicID(ID_CF);
 
-  if (symCF != UNSET)
-    op1 << "#" + std::to_string(symCF);
-  else
-    op1 << smt2lib::bv(ap.getCFValue(), 1);
+  /* Create the SMT semantic */
+  op1 << ap.buildSymbolicFlagOperand(ID_CF);
 
   /* Finale expr */
   expr << smt2lib::bvnot(op1.str());

@@ -16,14 +16,9 @@ CdqeIRBuilder::CdqeIRBuilder(uint64_t address, const std::string &disassembly):
 void CdqeIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint64_t          symReg = ap.getRegSymbolicID(ID_RAX);
 
   /* Create the SMT semantic */
-  /* OP_1 */
-  if (symReg != UNSET)
-    op1 << smt2lib::extract(31, 0, "#" + std::to_string(symReg));
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(ID_RAX), REG_SIZE_BIT);
+  op1 << ap.buildSymbolicRegOperand(ID_RAX, REG_SIZE, 31, 0);
 
   /* Finale expr */
   expr << smt2lib::sx(op1.str(), 32);

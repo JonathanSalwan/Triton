@@ -8,9 +8,9 @@
 SymbolicEngine::SymbolicEngine()
 {
   /* Init all symbolic registers/flags to UNSET (init state) */
-  for (uint64_t i = 0; i < (sizeof(this->symbolicReg) / sizeof(this->symbolicReg[0])); i++){
+  for (uint64_t i = 0; i < ID_LAST_ITEM; i++)
     this->symbolicReg[i] = UNSET;
-  }
+
   /* Init the number of symbolic variable used */
   this->numberOfSymVar = 0;
 }
@@ -18,9 +18,9 @@ SymbolicEngine::SymbolicEngine()
 
 void SymbolicEngine::init(const SymbolicEngine &other)
 {
-  for (uint64_t i = 0; i < (sizeof(this->symbolicReg) / sizeof(this->symbolicReg[0])); i++){
+  for (uint64_t i = 0; i < ID_LAST_ITEM; i++)
     this->symbolicReg[i] = other.symbolicReg[i];
-  }
+
   this->uniqueID                      = other.uniqueID;
   this->numberOfSymVar                = other.numberOfSymVar;
   this->memoryReference               = other.memoryReference;
@@ -99,7 +99,7 @@ uint64_t SymbolicEngine::getMemoryFromSymVar(uint64_t symVar)
 
 /* Return the reg reference or UNSET */
 uint64_t SymbolicEngine::getRegSymbolicID(uint64_t regID) {
-  if (regID >= (sizeof(this->symbolicReg) / sizeof(this->symbolicReg[0])))
+  if (regID >= ID_LAST_ITEM)
     return UNSET;
   return this->symbolicReg[regID];
 }
