@@ -52,6 +52,7 @@ void check(void)
   asm("lea rsi, [rbx+8*rax]");
   asm("lea rsi, [rbx+8*rax+4]");
   asm("lea rsi, [rbx+8+4*rax]");
+  asm("cqo");
 
   // SSE
   asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab));

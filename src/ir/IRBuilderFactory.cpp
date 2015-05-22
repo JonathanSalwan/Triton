@@ -139,6 +139,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new CmpIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_CQO:
+      ir = new CqoIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_CWDE:
       ir = new CwdeIRBuilder(address, disas);
       break;
