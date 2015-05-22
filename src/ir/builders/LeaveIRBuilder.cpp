@@ -17,16 +17,9 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t readSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
-  uint64_t            symReg = ap.getRegSymbolicID(ID_RSP);
 
-  /*
-   * Create the SMT semantic.
-   */
-  if (symReg != UNSET)
-    op1 << "#" << std::dec << symReg;
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(ID_RSP), readSize * REG_SIZE);
-
+  /* Create the SMT semantic */
+  op1 << ap.buildSymbolicRegOperand(ID_RSP, REG_SIZE);
   op2 << smt2lib::bv(readSize, readSize * REG_SIZE);
 
   expr << smt2lib::bvadd(op1.str(), op2.str());
@@ -43,16 +36,11 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t readSize)
 void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement     *se1, *se2;
   std::stringstream   expr1, expr2;
-  uint64_t            symRegRBP = ap.getRegSymbolicID(ID_RBP);
   uint64_t            readMem   = this->operands[0].getValue(); // The src memory read
   uint32_t            readSize  = this->operands[0].getSize();
-  uint64_t            symMem    = ap.getMemSymbolicID(readMem);
 
   // RSP = RBP; -----------------------------
-  if (symRegRBP != UNSET)
-    expr1 << smt2lib::extract(8, "#" + std::to_string(symRegRBP));
-  else
-    expr1 << smt2lib::bv(ap.getRegisterValue(ID_RBP), 8 * REG_SIZE);
+  expr1 << ap.buildSymbolicRegOperand(ID_RBP, REG_SIZE);
 
   /* Create the symbolic element */
   se1 = ap.createRegSE(expr1, ID_RSP);
@@ -62,10 +50,7 @@ void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   // RSP = RBP; -----------------------------
 
   // RBP = Pop(); ---------------------------
-  if (symMem != UNSET)
-    expr2 << "#" << std::dec << symMem;
-  else
-    expr2 << smt2lib::bv(ap.getMemValue(readMem, readSize), readSize * REG_SIZE);
+  expr2 << ap.buildSymbolicMemOperand(readMem, readSize);
 
   /* Create the symbolic element */
   se2 = ap.createRegSE(expr2, ID_RBP);

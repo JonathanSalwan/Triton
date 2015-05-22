@@ -17,19 +17,10 @@ void JlIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, sf, of;
   uint64_t          imm   = this->operands[0].getValue();
-  uint64_t          symSF = ap.getRegSymbolicID(ID_SF);
-  uint64_t          symOF = ap.getRegSymbolicID(ID_OF);
 
   /* Create the SMT semantic */
-  if (symSF != UNSET)
-    sf << "#" << std::dec << symSF;
-  else
-    sf << smt2lib::bv(ap.getFlagValue(ID_SF), 1);
-
-  if (symOF != UNSET)
-    of << "#" << std::dec << symOF;
-  else
-    of << smt2lib::bv(ap.getFlagValue(ID_OF), 1);
+  sf << ap.buildSymbolicFlagOperand(ID_SF);
+  of << ap.buildSymbolicFlagOperand(ID_OF);
 
   /* 
    * Finale expr

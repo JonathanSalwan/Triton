@@ -17,25 +17,11 @@ void JnleIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, sf, of, zf;
   uint64_t          imm   = this->operands[0].getValue();
-  uint64_t          symOF = ap.getRegSymbolicID(ID_OF);
-  uint64_t          symSF = ap.getRegSymbolicID(ID_SF);
-  uint64_t          symZF = ap.getRegSymbolicID(ID_ZF);
 
   /* Create the SMT semantic */
-  if (symSF != UNSET)
-    sf << "#" << std::dec << symSF;
-  else
-    sf << smt2lib::bv(ap.getFlagValue(ID_SF), 1);
-
-  if (symOF != UNSET)
-    of << "#" << std::dec << symOF;
-  else
-    of << smt2lib::bv(ap.getFlagValue(ID_OF), 1);
-
-  if (symZF != UNSET)
-    zf << "#" << std::dec << symZF;
-  else
-    zf << smt2lib::bv(ap.getFlagValue(ID_ZF), 1);
+  sf << ap.buildSymbolicFlagOperand(ID_SF);
+  of << ap.buildSymbolicFlagOperand(ID_OF);
+  zf << ap.buildSymbolicFlagOperand(ID_ZF);
 
   /* 
    * Finale expr

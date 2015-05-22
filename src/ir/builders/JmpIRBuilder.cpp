@@ -33,15 +33,10 @@ void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
   uint64_t          reg     = this->operands[0].getValue();
-  uint64_t          symReg  = ap.getRegSymbolicID(reg);
   uint32_t          regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  /* OP_1 */
-  if (symReg != UNSET)
-    op1 << smt2lib::extract(regSize, "#" + std::to_string(symReg));
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(reg), regSize * REG_SIZE);
+  op1 << ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Finale expr */
   expr << op1.str();
@@ -58,15 +53,10 @@ void JmpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
   uint64_t          mem     = this->operands[0].getValue();
-  uint64_t          symMem  = ap.getMemSymbolicID(mem);
   uint32_t          memSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  /* OP_1 */
-  if (symMem != UNSET)
-    op1 << "#" << std::dec << symMem;
-  else
-    op1 << smt2lib::bv(ap.getMemValue(mem, memSize), memSize * REG_SIZE);
+  op1 << ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Finale expr */
   expr << op1.str();

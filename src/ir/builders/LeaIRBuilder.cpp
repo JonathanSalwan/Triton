@@ -32,24 +32,13 @@ void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   uint64_t          baseReg       = this->operands[1].getBaseReg();
   uint64_t          indexReg      = this->operands[1].getIndexReg();
   uint64_t          memoryScale   = this->operands[1].getMemoryScale();
-  uint64_t          symBaseReg    = ap.getRegSymbolicID(baseReg);
-  uint64_t          symIndexReg   = 0;
-
 
   /* Base register */
-  if (symBaseReg != UNSET)
-    base2e << smt2lib::extract(regSize, "#" + std::to_string(symBaseReg));
-  else
-    base2e << smt2lib::bv(ap.getRegisterValue(baseReg), regSize * REG_SIZE);
+  base2e << ap.buildSymbolicRegOperand(baseReg, regSize);
 
   /* Index register if it exists */
-  if (indexReg){
-    symIndexReg = ap.getRegSymbolicID(indexReg);
-    if (symIndexReg != UNSET)
-      index2e << smt2lib::extract(regSize, "#" + std::to_string(symIndexReg));
-    else
-      index2e << smt2lib::bv(ap.getRegisterValue(indexReg), regSize * REG_SIZE);
-  }
+  if (indexReg)
+    index2e << ap.buildSymbolicRegOperand(indexReg, regSize);
   else
     index2e << smt2lib::bv(0, regSize * REG_SIZE);
 

@@ -17,19 +17,10 @@ void JbeIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, cf, zf;
   uint64_t          imm   = this->operands[0].getValue();
-  uint64_t          symCF = ap.getRegSymbolicID(ID_CF);
-  uint64_t          symZF = ap.getRegSymbolicID(ID_ZF);
 
   /* Create the SMT semantic */
-  if (symCF != UNSET)
-    cf << "#" << std::dec << symCF;
-  else
-    cf << smt2lib::bv(ap.getFlagValue(ID_CF), 1);
-
-  if (symZF != UNSET)
-    zf << "#" << std::dec << symZF;
-  else
-    zf << smt2lib::bv(ap.getFlagValue(ID_ZF), 1);
+  cf << ap.buildSymbolicFlagOperand(ID_CF);
+  zf << ap.buildSymbolicFlagOperand(ID_ZF);
 
   /* 
    * Finale expr

@@ -17,13 +17,9 @@ void JpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, pf;
   uint64_t          imm   = this->operands[0].getValue();
-  uint64_t          symPF = ap.getRegSymbolicID(ID_PF);
 
   /* Create the SMT semantic */
-  if (symPF != UNSET)
-    pf << "#" << std::dec << symPF;
-  else
-    pf << smt2lib::bv(ap.getFlagValue(ID_PF), 1);
+  pf << ap.buildSymbolicFlagOperand(ID_PF);
 
   /* Finale expr */
   expr << smt2lib::ite(

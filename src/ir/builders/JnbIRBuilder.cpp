@@ -17,13 +17,9 @@ void JnbIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, cf;
   uint64_t          imm   = this->operands[0].getValue();
-  uint64_t          symCF = ap.getRegSymbolicID(ID_CF);
 
   /* Create the SMT semantic */
-  if (symCF != UNSET)
-    cf << "#" << std::dec << symCF;
-  else
-    cf << smt2lib::bv(ap.getFlagValue(ID_CF), 1);
+  cf << ap.buildSymbolicFlagOperand(ID_CF);
 
   /* Finale expr */
   expr << smt2lib::ite(

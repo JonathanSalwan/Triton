@@ -17,13 +17,9 @@ void JzIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, zf;
   uint64_t          imm   = this->operands[0].getValue();
-  uint64_t          symZF = ap.getRegSymbolicID(ID_ZF);
 
   /* Create the SMT semantic */
-  if (symZF != UNSET)
-    zf << "#" << std::dec << symZF;
-  else
-    zf << smt2lib::bv(ap.getFlagValue(ID_ZF), 1);
+  zf << ap.buildSymbolicFlagOperand(ID_ZF);
 
   /* Finale expr */
   expr << smt2lib::ite(

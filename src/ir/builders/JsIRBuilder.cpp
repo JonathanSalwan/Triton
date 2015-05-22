@@ -17,13 +17,9 @@ void JsIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, sf;
   uint64_t          imm   = this->operands[0].getValue();
-  uint64_t          symSF = ap.getRegSymbolicID(ID_SF);
 
   /* Create the SMT semantic */
-  if (symSF != UNSET)
-    sf << "#" << std::dec << symSF;
-  else
-    sf << smt2lib::bv(ap.getFlagValue(ID_SF), 1);
+  sf << ap.buildSymbolicFlagOperand(ID_SF);
 
   /* Finale expr */
   expr << smt2lib::ite(

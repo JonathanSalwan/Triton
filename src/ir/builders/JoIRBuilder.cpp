@@ -17,13 +17,9 @@ void JoIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, of;
   uint64_t          imm   = this->operands[0].getValue();
-  uint64_t          symOF = ap.getRegSymbolicID(ID_OF);
 
   /* Create the SMT semantic */
-  if (symOF != UNSET)
-    of << "#" << std::dec << symOF;
-  else
-    of << smt2lib::bv(ap.getFlagValue(ID_OF), 1);
+  of << ap.buildSymbolicFlagOperand(ID_OF);
 
   /* Finale expr */
   expr << smt2lib::ite(
