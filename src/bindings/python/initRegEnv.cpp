@@ -25,14 +25,6 @@ void initRegEnv(PyObject *idRegClassDict)
   PyDict_SetItemString(idRegClassDict, "R13", PyInt_FromLong(ID_R13));
   PyDict_SetItemString(idRegClassDict, "R14", PyInt_FromLong(ID_R14));
   PyDict_SetItemString(idRegClassDict, "R15", PyInt_FromLong(ID_R15));
-  PyDict_SetItemString(idRegClassDict, "MM0", PyInt_FromLong(ID_MM0));
-  PyDict_SetItemString(idRegClassDict, "MM1", PyInt_FromLong(ID_MM1));
-  PyDict_SetItemString(idRegClassDict, "MM2", PyInt_FromLong(ID_MM2));
-  PyDict_SetItemString(idRegClassDict, "MM3", PyInt_FromLong(ID_MM3));
-  PyDict_SetItemString(idRegClassDict, "MM4", PyInt_FromLong(ID_MM4));
-  PyDict_SetItemString(idRegClassDict, "MM5", PyInt_FromLong(ID_MM5));
-  PyDict_SetItemString(idRegClassDict, "MM6", PyInt_FromLong(ID_MM6));
-  PyDict_SetItemString(idRegClassDict, "MM7", PyInt_FromLong(ID_MM7));
   PyDict_SetItemString(idRegClassDict, "XMM0", PyInt_FromLong(ID_XMM0));
   PyDict_SetItemString(idRegClassDict, "XMM1", PyInt_FromLong(ID_XMM1));
   PyDict_SetItemString(idRegClassDict, "XMM2", PyInt_FromLong(ID_XMM2));

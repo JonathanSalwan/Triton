@@ -6,6 +6,8 @@
 #include <sstream>
 #include <stdint.h>
 
+#include "Registers.h"
+
 #define TAINTED     1
 #define UNTAINTED   !TAINTED
 
@@ -22,7 +24,7 @@ class TaintEngine {
      * Currently this is an over approximation of the taint.
      * sizeof(taintedReg) = enum REG
      */
-    uint64_t taintedReg[51];
+    uint64_t taintedReg[ID_LAST_ITEM];
 
     /* Initialization of an object */
     void init(const TaintEngine &other);

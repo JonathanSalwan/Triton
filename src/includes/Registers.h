@@ -27,16 +27,6 @@ enum regID_t
   ID_R14,
   ID_R15,
 
-  /* MMX */
-  ID_MM0,
-  ID_MM1,
-  ID_MM2,
-  ID_MM3,
-  ID_MM4,
-  ID_MM5,
-  ID_MM6,
-  ID_MM7,
-
   /* SSE */
   ID_XMM0,
   ID_XMM1,
@@ -66,6 +56,9 @@ enum regID_t
   ID_SF,
   ID_TF,
   ID_ZF,
+
+  /* Must be the last item */
+  ID_LAST_ITEM
 };
 
 #endif //__REGISTERS_H__

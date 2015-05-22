@@ -14,6 +14,7 @@
 
 #include "SymbolicElement.h"
 #include "SMT2Lib.h"
+#include "Registers.h"
 
 /* The name of the symbolic variables */
 #define SYMVAR_NAME       "SymVar_"
@@ -71,7 +72,7 @@ class SymbolicEngine {
 
     /* Symbolic trace */
     /* sizeof(symbolicReg) = enum REG */
-    uint64_t              symbolicReg[51];
+    uint64_t              symbolicReg[ID_LAST_ITEM];
 
     /* public methods */
     SymbolicElement       *getElementFromId(uint64_t id);

@@ -336,9 +336,6 @@ static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
 
   tritonReg = PyLong_AsLong(reg);
 
-  if (tritonReg >= ID_MM0 && tritonReg <= ID_MM7)
-    return PyErr_Format(PyExc_TypeError, "getRegValue(): Unsupported MMX registers");
-
   if (tritonReg >= ID_XMM0 && tritonReg <= ID_XMM15){
     char tmp[32+1] = {0};
     __uint128_t value = ap.getSSERegisterValue(tritonReg);
@@ -649,9 +646,6 @@ static PyObject *Triton_setRegValue(PyObject *self, PyObject *args)
 
   va = PyLong_AsLongLong(value);
   tr = PyLong_AsLong(reg);
-
-  if (tr >= ID_MM0 && tr <= ID_MM7)
-    return PyErr_Format(PyExc_TypeError, "setRegValue(): Unsupported MMX registers");
 
   if (tr >= ID_XMM0 && tr <= ID_XMM15)
     ap.setSSERegisterValue(tr, va);
