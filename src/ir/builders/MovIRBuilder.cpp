@@ -8,23 +8,9 @@
 #include "SymbolicElement.h"
 
 
-// Returns this argument. Only useful for fill the extender member.
-template<typename T, typename INT>
-static T nullf(T t, INT size) {
-  return t;
-}
-
 
 MovIRBuilder::MovIRBuilder(uint64_t address, const std::string &disassembly):
-  BaseIRBuilder(address, disassembly),
-  extender(&nullf<std::string, uint64_t>) {
-
-}
-
-
-// Return the difference in bits of two registers size given in bytes.
-static uint64_t deltaSize(uint64_t size1, uint64_t size2) {
-  return (std::max(size1, size2) * REG_SIZE) - (std::min(size1, size2) * REG_SIZE);
+  BaseIRBuilder(address, disassembly) {
 }
 
 
@@ -54,13 +40,10 @@ void MovIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr;
   uint64_t          reg1  = this->operands[0].getValue();
   uint64_t          reg2  = this->operands[1].getValue();
-  uint64_t          size1 = this->operands[0].getSize();
   uint64_t          size2 = this->operands[1].getSize();
 
   /* Create the SMT semantic */
   expr << ap.buildSymbolicRegOperand(reg2, size2);
-
-  expr.str(this->extender(expr.str(), deltaSize(size1, size2)));
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, reg1);
@@ -79,12 +62,9 @@ void MovIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          readSize = this->operands[1].getSize();
   uint64_t          mem      = this->operands[1].getValue();
   uint64_t          reg      = this->operands[0].getValue();
-  uint64_t          regSize  = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   expr << ap.buildSymbolicMemOperand(mem, readSize);
-
-  expr.str(this->extender(expr.str(), deltaSize(regSize, readSize)));
 
   /* Create the symbolic element */
   se = ap.createRegSE(expr, reg);

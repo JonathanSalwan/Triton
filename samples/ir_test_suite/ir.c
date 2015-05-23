@@ -5,7 +5,6 @@ void check(void)
 {
   int tab[4] = {0x11111111, 0x22222222, 0x33333333, 0x44444444};
 
-  asm("mov edi, esi");
   asm("clc");
   asm("cld");
   asm("cmc");
@@ -39,6 +38,7 @@ void check(void)
   asm("mov al, -1");
   asm("movsx eax, al");
   asm("movzx ecx, al");
+  asm("movzx rcx, al");
   asm("movzx rdx, word ptr [rsp-0x2]");
   asm("movsx rax, word ptr [rsp-0x2]");
   asm("setz al");
@@ -56,6 +56,11 @@ void check(void)
   asm("lea rsi, [rbx+8*rax+4]");
   asm("lea rsi, [rbx+8+4*rax]");
   asm("cqo");
+
+  // Check concat symbolic expression
+  asm("mov rsi, 0xffffffffffffffff");
+  asm("mov sil, 0x99");
+  asm("cmp rsi, 0xffffffffffffff99");
 
   // SSE
   asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab));
