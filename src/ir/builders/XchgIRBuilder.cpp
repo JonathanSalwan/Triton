@@ -23,23 +23,14 @@ void XchgIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr1, expr2, op1, op2;
   uint64_t          reg1          = this->operands[0].getValue();
   uint64_t          reg2          = this->operands[1].getValue();
-  uint64_t          symReg1       = ap.getRegSymbolicID(reg1);
-  uint64_t          symReg2       = ap.getRegSymbolicID(reg2);
   uint32_t          regSize1      = this->operands[0].getSize();
   uint32_t          regSize2      = this->operands[1].getSize();
   uint64_t          tmpReg1Taint  = ap.isRegTainted(reg1);
   uint64_t          tmpReg2Taint  = ap.isRegTainted(reg2);
 
   /* Create the SMT semantic */
-  if (symReg1 != UNSET)
-    op1 << smt2lib::extract(regSize1, "#" + std::to_string(symReg1));
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(reg1), regSize1 * REG_SIZE);
-
-  if (symReg2 != UNSET)
-    op2 << smt2lib::extract(regSize2, "#" + std::to_string(symReg2));
-  else
-    op2 << smt2lib::bv(ap.getRegisterValue(reg2), regSize2 * REG_SIZE);
+  op1 << ap.buildSymbolicRegOperand(reg1, regSize1);
+  op2 << ap.buildSymbolicRegOperand(reg2, regSize2);
 
   // Final expr
   expr1 << op2.str();
@@ -64,23 +55,14 @@ void XchgIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr1, expr2, op1, op2;
   uint64_t          reg1          = this->operands[0].getValue();
   uint64_t          mem2          = this->operands[1].getValue();
-  uint64_t          symReg1       = ap.getRegSymbolicID(reg1);
-  uint64_t          symMem2       = ap.getMemSymbolicID(mem2);
   uint32_t          regSize1      = this->operands[0].getSize();
   uint32_t          memSize2      = this->operands[1].getSize();
   uint64_t          tmpReg1Taint  = ap.isRegTainted(reg1);
   uint64_t          tmpMem2Taint  = ap.isMemTainted(mem2);
 
   /* Create the SMT semantic */
-  if (symReg1 != UNSET)
-    op1 << smt2lib::extract(regSize1, "#" + std::to_string(symReg1));
-  else
-    op1 << smt2lib::bv(ap.getRegisterValue(reg1), regSize1 * REG_SIZE);
-
-  if (symMem2 != UNSET)
-    op2 << smt2lib::extract(memSize2, "#" + std::to_string(symMem2));
-  else
-    op2 << smt2lib::bv(ap.getMemValue(mem2, memSize2), memSize2 * REG_SIZE);
+  op1 << ap.buildSymbolicRegOperand(reg1, regSize1);
+  op2 << ap.buildSymbolicMemOperand(mem2, memSize2);
 
   // Final expr
   expr1 << op2.str();
@@ -110,23 +92,14 @@ void XchgIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr1, expr2, op1, op2;
   uint64_t          mem1          = this->operands[0].getValue();
   uint64_t          reg2          = this->operands[1].getValue();
-  uint64_t          symMem1       = ap.getMemSymbolicID(mem1);
-  uint64_t          symReg2       = ap.getRegSymbolicID(reg2);
   uint32_t          memSize1      = this->operands[0].getSize();
   uint32_t          regSize2      = this->operands[1].getSize();
   uint64_t          tmpMem1Taint  = ap.isMemTainted(mem1);
   uint64_t          tmpReg2Taint  = ap.isRegTainted(reg2);
 
   /* Create the SMT semantic */
-  if (symMem1 != UNSET)
-    op1 << smt2lib::extract(memSize1, "#" + std::to_string(symMem1));
-  else
-    op1 << smt2lib::bv(ap.getMemValue(mem1, memSize1), memSize1 * REG_SIZE);
-
-  if (symReg2 != UNSET)
-    op2 << smt2lib::extract(regSize2, "#" + std::to_string(symReg2));
-  else
-    op2 << smt2lib::bv(ap.getRegisterValue(reg2), regSize2 * REG_SIZE);
+  op1 << ap.buildSymbolicMemOperand(mem1, memSize1);
+  op2 << ap.buildSymbolicRegOperand(reg2, regSize2);
 
   // Final expr
   expr1 << op2.str();

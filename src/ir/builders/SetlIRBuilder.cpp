@@ -23,26 +23,11 @@ void SetlIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr, reg1e, sf, of;
   uint64_t          reg     = this->operands[0].getValue();
   uint64_t          regSize = this->operands[0].getSize();
-  uint64_t          symReg  = ap.getRegSymbolicID(reg);
-  uint64_t          symSF   = ap.getRegSymbolicID(ID_SF);
-  uint64_t          symOF   = ap.getRegSymbolicID(ID_OF);
 
   /* Create the flag SMT semantic */
-  if (symSF != UNSET)
-    sf << "#" << std::dec << symSF;
-  else
-    sf << smt2lib::bv(ap.getFlagValue(ID_SF), 1);
-
-  if (symOF != UNSET)
-    of << "#" << std::dec << symOF;
-  else
-    of << smt2lib::bv(ap.getFlagValue(ID_OF), 1);
-
-  /* Create the reg1 SMT semantic */
-  if (symReg != UNSET)
-    reg1e << smt2lib::extract(regSize, "#" + std::to_string(symReg));
-  else
-    reg1e << smt2lib::bv(ap.getRegisterValue(reg), regSize * REG_SIZE);
+  sf << ap.buildSymbolicFlagOperand(ID_SF);
+  of << ap.buildSymbolicFlagOperand(ID_OF);
+  reg1e << ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Finale expr */
   expr << smt2lib::ite(
@@ -73,26 +58,11 @@ void SetlIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr, mem1e, sf, of;
   uint64_t          mem     = this->operands[0].getValue();
   uint64_t          memSize = this->operands[0].getSize();
-  uint64_t          symMem  = ap.getMemSymbolicID(mem);
-  uint64_t          symSF   = ap.getRegSymbolicID(ID_SF);
-  uint64_t          symOF   = ap.getRegSymbolicID(ID_OF);
 
   /* Create the flag SMT semantic */
-  if (symSF != UNSET)
-    sf << "#" << std::dec << symSF;
-  else
-    sf << smt2lib::bv(ap.getFlagValue(ID_SF), 1);
-
-  if (symOF != UNSET)
-    of << "#" << std::dec << symOF;
-  else
-    of << smt2lib::bv(ap.getFlagValue(ID_OF), 1);
-
-  /* Create the reg1 SMT semantic */
-  if (symMem != UNSET)
-    mem1e << smt2lib::extract(memSize, "#" + std::to_string(symMem));
-  else
-    mem1e << smt2lib::bv(ap.getMemValue(mem, memSize), memSize * REG_SIZE);
+  sf << ap.buildSymbolicFlagOperand(ID_SF);
+  of << ap.buildSymbolicFlagOperand(ID_OF);
+  mem1e << ap.buildSymbolicRegOperand(mem, memSize);
 
   /* Finale expr */
   expr << smt2lib::ite(

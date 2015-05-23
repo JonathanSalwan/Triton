@@ -23,20 +23,10 @@ void SetpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr, reg1e, pf;
   uint64_t          reg     = this->operands[0].getValue();
   uint64_t          regSize = this->operands[0].getSize();
-  uint64_t          symReg  = ap.getRegSymbolicID(reg);
-  uint64_t          symPF   = ap.getRegSymbolicID(ID_PF);
 
   /* Create the SMT semantic */
-  if (symPF != UNSET)
-    pf << "#" << std::dec << symPF;
-  else
-    pf << smt2lib::bv(ap.getFlagValue(ID_PF), 1);
-
-  /* Create the reg1 SMT semantic */
-  if (symReg != UNSET)
-    reg1e << smt2lib::extract(regSize, "#" + std::to_string(symReg));
-  else
-    reg1e << smt2lib::bv(ap.getRegisterValue(reg), regSize * REG_SIZE);
+  pf << ap.buildSymbolicFlagOperand(ID_PF);
+  reg1e << ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Finale expr */
   expr << smt2lib::ite(
@@ -63,20 +53,10 @@ void SetpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   std::stringstream expr, mem1e, pf;
   uint64_t          mem     = this->operands[0].getValue();
   uint64_t          memSize = this->operands[0].getSize();
-  uint64_t          symMem  = ap.getMemSymbolicID(mem);
-  uint64_t          symPF   = ap.getRegSymbolicID(ID_PF);
 
   /* Create the SMT semantic */
-  if (symPF != UNSET)
-    pf << "#" << std::dec << symPF;
-  else
-    pf << smt2lib::bv(ap.getFlagValue(ID_PF), 1);
-
-  /* Create the reg1 SMT semantic */
-  if (symMem != UNSET)
-    mem1e << smt2lib::extract(memSize, "#" + std::to_string(symMem));
-  else
-    mem1e << smt2lib::bv(ap.getMemValue(mem, memSize), memSize * REG_SIZE);
+  pf << ap.buildSymbolicFlagOperand(ID_PF);
+  mem1e << ap.buildSymbolicRegOperand(mem, memSize);
 
   /* Finale expr */
   expr << smt2lib::ite(
