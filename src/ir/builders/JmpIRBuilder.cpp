@@ -22,7 +22,7 @@ void JmpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bv(imm, REG_SIZE_BIT);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RIP, "RIP");
+  se = ap.createRegSE(expr, ID_RIP, REG_SIZE, "RIP");
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -42,7 +42,7 @@ void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RIP, "RIP");
+  se = ap.createRegSE(expr, ID_RIP, REG_SIZE, "RIP");
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);
@@ -62,7 +62,7 @@ void JmpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RIP, "RIP");
+  se = ap.createRegSE(expr, ID_RIP, REG_SIZE, "RIP");
 
   /* Add the symbolic element to the current inst */
   inst.addElement(se);

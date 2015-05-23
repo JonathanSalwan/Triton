@@ -17,7 +17,7 @@ SymbolicElement *ControlFlow::rip(AnalysisProcessor &ap, uint64_t nextAddr)
   expr << smt2lib::bv(nextAddr, 64);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RIP, "RIP");
+  se = ap.createRegSE(expr, ID_RIP, REG_SIZE, "RIP");
 
   return se;
 }

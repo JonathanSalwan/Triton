@@ -13,6 +13,10 @@ namespace smt2lib {
   /* utilies function used by the others functions (parity for example). */
   std::string init();
 
+  /* Returns the 'concat' syntax */
+  /* (concat expr1 expr2) */
+  std::string concat(std::string expr1, std::string expr2);
+
   /* Returns the 'bv' syntax based on a value and a size. */
   /* (_ bv<value> <size>) */
   std::string bv(uint64_t value, uint64_t regSize);

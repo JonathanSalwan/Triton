@@ -53,7 +53,7 @@ void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvadd(dis2e.str(), smt2lib::bvadd(base2e.str(), smt2lib::bvmul(index2e.str(), scale2e.str())));
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg);
+  se = ap.createRegSE(expr, reg, regSize);
 
   /* Apply the taint via the concretization */
   if (ap.isRegTainted(baseReg) == TAINTED)

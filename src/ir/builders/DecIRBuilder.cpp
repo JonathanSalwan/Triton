@@ -27,7 +27,7 @@ void DecIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg);
+  se = ap.createRegSE(expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, reg, reg);

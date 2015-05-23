@@ -24,7 +24,7 @@ void CbwIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::sx(op1.str(), 8);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RAX);
+  se = ap.createRegSE(expr, ID_RAX, WORD_SIZE);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, ID_RAX, ID_RAX);

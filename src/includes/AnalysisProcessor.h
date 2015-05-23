@@ -53,6 +53,8 @@ class AnalysisProcessor {
     // Returns a symbolic element for the register (regID).
     SymbolicElement *createRegSE(std::stringstream &expr, uint64_t regID);
     SymbolicElement *createRegSE(std::stringstream &expr, uint64_t regID, std::string comment);
+    SymbolicElement *createRegSE(std::stringstream &expr, uint64_t regID, uint64_t regSize);
+    SymbolicElement *createRegSE(std::stringstream &expr, uint64_t regID, uint64_t regSize, std::string comment);
 
     // Returns a symbolic element for the memory address.
     SymbolicElement *createMemSE(std::stringstream &expr, uint64_t address);

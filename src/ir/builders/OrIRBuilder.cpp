@@ -28,7 +28,7 @@ void OrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvor(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg);
+  se = ap.createRegSE(expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegImm(se, reg);
@@ -61,7 +61,7 @@ void OrIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvor(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg1);
+  se = ap.createRegSE(expr, reg1, regSize1);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, reg1, reg2);
@@ -94,7 +94,7 @@ void OrIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvor(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg);
+  se = ap.createRegSE(expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegMem(se, reg, mem, readSize);

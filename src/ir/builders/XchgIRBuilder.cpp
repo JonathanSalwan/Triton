@@ -37,8 +37,8 @@ void XchgIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   expr2 << op1.str();
 
   /* Create the symbolic element */
-  se1 = ap.createRegSE(expr1, reg1);
-  se2 = ap.createRegSE(expr2, reg2);
+  se1 = ap.createRegSE(expr1, reg1, regSize1);
+  se2 = ap.createRegSE(expr2, reg2, regSize2);
 
   /* Apply the taint */
   ap.setTaintReg(reg1, tmpReg2Taint);
@@ -69,7 +69,7 @@ void XchgIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   expr2 << op1.str();
 
   /* Create the symbolic element */
-  se1 = ap.createRegSE(expr1, reg1);
+  se1 = ap.createRegSE(expr1, reg1, regSize1);
   se2 = ap.createMemSE(expr2, mem2);
 
   /* Apply the taint */
@@ -107,7 +107,7 @@ void XchgIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the symbolic element */
   se1 = ap.createMemSE(expr1, mem1);
-  se2 = ap.createRegSE(expr2, reg2);
+  se2 = ap.createRegSE(expr2, reg2, regSize2);
 
   /* Apply the taint */
   ap.setTaintMem(mem1, tmpReg2Taint);

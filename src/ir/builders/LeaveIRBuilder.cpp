@@ -25,7 +25,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t readSize)
   expr << smt2lib::bvadd(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RSP, "Aligns stack");
+  se = ap.createRegSE(expr, ID_RSP, REG_SIZE, "Aligns stack");
 
   /* Apply the taint */
   se->isTainted = ap.isRegTainted(ID_RSP);
@@ -43,7 +43,7 @@ void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   expr1 << ap.buildSymbolicRegOperand(ID_RBP, REG_SIZE);
 
   /* Create the symbolic element */
-  se1 = ap.createRegSE(expr1, ID_RSP);
+  se1 = ap.createRegSE(expr1, ID_RSP, REG_SIZE);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegReg(se1, ID_RSP, ID_RBP);
@@ -53,7 +53,7 @@ void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   expr2 << ap.buildSymbolicMemOperand(readMem, readSize);
 
   /* Create the symbolic element */
-  se2 = ap.createRegSE(expr2, ID_RBP);
+  se2 = ap.createRegSE(expr2, ID_RBP, REG_SIZE);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegMem(se2, ID_RBP, readMem, readSize);

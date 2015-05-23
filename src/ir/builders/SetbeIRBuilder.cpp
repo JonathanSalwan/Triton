@@ -41,7 +41,7 @@ void SetbeIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
             smt2lib::bv(0, 8));
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg);
+  se = ap.createRegSE(expr, reg, regSize);
 
   /* Apply the taint via the concretization */
   if (ap.getFlagValue(ID_CF) | ap.getFlagValue(ID_ZF)) {

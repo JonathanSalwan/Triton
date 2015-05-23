@@ -1,8 +1,18 @@
 #ifndef  __REGISTERS_H__
 #define  __REGISTERS_H__
 
+#define BYTE_SIZE         1   // In byte
+#define BYTE_SIZE_BIT     4   // In bits
+
+#define WORD_SIZE         2   // In byte
+#define WORD_SIZE_BIT     16  // In bits
+
+#define DWORD_SIZE        4   // In byte
+#define DWORD_SIZE_BIT    32  // In bits
+
 #define REG_SIZE          8   // In byte
 #define REG_SIZE_BIT      64  // In bits
+
 #define REG_SIZE_SSE      16  // In byte
 #define REG_SIZE_SSE_BIT  128 // In bits
 

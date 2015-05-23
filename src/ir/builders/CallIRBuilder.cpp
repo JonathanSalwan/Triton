@@ -25,7 +25,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint64_t writeSize)
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RSP, "Aligns stack");
+  se = ap.createRegSE(expr, ID_RSP, REG_SIZE, "Aligns stack");
 
   /* Apply the taint */
   se->isTainted = ap.isRegTainted(ID_RSP);
@@ -63,7 +63,7 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr2 << ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr2, ID_RIP, "RIP");
+  se = ap.createRegSE(expr2, ID_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegImm(se, ID_RIP);
@@ -101,7 +101,7 @@ void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   expr2 << smt2lib::bv(imm, writeSize * REG_SIZE);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr2, ID_RIP, "RIP");
+  se = ap.createRegSE(expr2, ID_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegImm(se, ID_RIP);
@@ -140,7 +140,7 @@ void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr2 << ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr2, ID_RIP, "RIP");
+  se = ap.createRegSE(expr2, ID_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegImm(se, ID_RIP);

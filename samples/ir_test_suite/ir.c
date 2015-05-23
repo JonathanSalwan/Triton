@@ -5,6 +5,10 @@ void check(void)
 {
   int tab[4] = {0x11111111, 0x22222222, 0x33333333, 0x44444444};
 
+  // Check concat symbolic expression
+  asm("mov sil, 0x99");
+  asm("cmp rsi, 0xffffffffffffff99");
+
   asm("clc");
   asm("cld");
   asm("cmc");

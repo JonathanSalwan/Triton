@@ -21,6 +21,14 @@ std::string smt2lib::init()
   return "(set-logic QF_AUFBV)\n" + parityDef + "\n";
 }
 
+
+/* Returns the 'concat' syntax. */
+std::string smt2lib::concat(std::string expr1, std::string expr2)
+{
+  return "(concat " + expr1 + " " + expr2 + ")";
+}
+
+
 /* Returns the 'bv' syntax based on a value and a size.
  * Mainly used for the SMT translation */
 std::string smt2lib::bv(uint64_t value, uint64_t size)

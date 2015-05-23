@@ -34,7 +34,7 @@ void MovsxIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::sx(op1.str(), (size1 * REG_SIZE) - (size2 * REG_SIZE));
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg1);
+  se = ap.createRegSE(expr, reg1, size1);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegReg(se, reg1, reg2);
@@ -59,7 +59,7 @@ void MovsxIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::sx(op1.str(), (regSize * REG_SIZE) - (readSize * REG_SIZE));
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg);
+  se = ap.createRegSE(expr, reg, regSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegMem(se, reg, mem, readSize);

@@ -44,7 +44,7 @@ void CmovbeIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
             reg1e.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg1);
+  se = ap.createRegSE(expr, reg1, size1);
 
   /* Apply the taint via the concretization */
   if (ap.getFlagValue(ID_CF) | ap.getFlagValue(ID_ZF))
@@ -81,7 +81,7 @@ void CmovbeIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
             reg1e.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg);
+  se = ap.createRegSE(expr, reg, regSize);
 
   /* Apply the taint via the concretization */
   if (ap.getFlagValue(ID_CF) | ap.getFlagValue(ID_ZF))

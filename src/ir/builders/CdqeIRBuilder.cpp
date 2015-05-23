@@ -24,7 +24,7 @@ void CdqeIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::sx(op1.str(), 32);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RAX);
+  se = ap.createRegSE(expr, ID_RAX, REG_SIZE);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, ID_RAX, ID_RAX);

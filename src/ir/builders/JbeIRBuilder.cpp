@@ -39,7 +39,7 @@ void JbeIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
             smt2lib::bv(this->nextAddress, REG_SIZE_BIT));
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RIP, "RIP");
+  se = ap.createRegSE(expr, ID_RIP, REG_SIZE, "RIP");
 
   /* Add the constraint in the PathConstraints list */
   ap.addPathConstraint(se->getID());

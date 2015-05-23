@@ -25,7 +25,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t readSize)
   expr << smt2lib::bvadd(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RSP, "Aligns stack");
+  se = ap.createRegSE(expr, ID_RSP, REG_SIZE, "Aligns stack");
 
   /* Apply the taint */
   se->isTainted = ap.isRegTainted(ID_RSP);
@@ -38,6 +38,7 @@ void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
   uint64_t          reg       = this->operands[0].getValue(); // Reg poped
+  uint64_t          regSize   = this->operands[0].getSize();  // Reg size poped
   uint64_t          mem       = this->operands[1].getValue(); // The src memory read
   uint32_t          readSize  = this->operands[1].getSize();
 
@@ -48,7 +49,7 @@ void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg);
+  se = ap.createRegSE(expr, reg, regSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemReg(se, mem, reg, readSize);

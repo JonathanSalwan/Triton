@@ -22,6 +22,7 @@ void MovapdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr;
   uint64_t          reg1      = this->operands[0].getValue();
+  uint64_t          reg1Size  = this->operands[0].getSize();
   uint64_t          reg2      = this->operands[1].getValue();
   uint64_t          reg2Size  = this->operands[1].getSize();
 
@@ -29,7 +30,7 @@ void MovapdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << ap.buildSymbolicRegOperand(reg2, reg2Size);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg1);
+  se = ap.createRegSE(expr, reg1, reg1Size);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegReg(se, reg1, reg2);
@@ -45,12 +46,13 @@ void MovapdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          readSize = this->operands[1].getSize();
   uint64_t          mem      = this->operands[1].getValue();
   uint64_t          reg      = this->operands[0].getValue();
+  uint64_t          regSize  = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   expr << ap.buildSymbolicMemOperand(mem, readSize);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg);
+  se = ap.createRegSE(expr, reg, regSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegMem(se, reg, mem, readSize);

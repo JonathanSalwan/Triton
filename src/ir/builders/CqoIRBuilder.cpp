@@ -26,11 +26,11 @@ void CqoIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Expression 2: RAX = TMP[63...0] */
   expr2 << smt2lib::extract(63, 0, se1->getID2Str());
-  se2 = ap.createRegSE(expr2, ID_RAX, "RAX");
+  se2 = ap.createRegSE(expr2, ID_RAX, REG_SIZE, "RAX");
 
   /* Expression 3: RDX = TMP[127...64] */
   expr3 << smt2lib::extract(127, 64, se1->getID2Str());
-  se3 = ap.createRegSE(expr3, ID_RDX, "RDX");
+  se3 = ap.createRegSE(expr3, ID_RDX, REG_SIZE, "RDX");
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se3, ID_RDX, ID_RAX);

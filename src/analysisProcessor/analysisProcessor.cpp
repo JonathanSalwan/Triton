@@ -55,6 +55,68 @@ SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_
 }
 
 
+SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_t regID, uint64_t regSize)
+{
+  std::stringstream finalExpr, origReg;
+
+  origReg << this->buildSymbolicRegOperand(regID, REG_SIZE);
+
+  switch (regSize) {
+    case 1:
+      finalExpr << smt2lib::concat(smt2lib::extract(63, 8, origReg.str()), expr.str());
+      break;
+    case 2:
+      finalExpr << smt2lib::concat(smt2lib::extract(63, 16, origReg.str()), expr.str());
+      break;
+    case 4:
+      finalExpr << smt2lib::concat(smt2lib::extract(63, 32, origReg.str()), expr.str());
+      break;
+    case 8:
+      finalExpr << expr.str();
+      break;
+    case 16:
+      finalExpr << expr.str();
+      break;
+  }
+
+  SymbolicElement *se = this->symEngine.newSymbolicElement(finalExpr);
+  this->symEngine.symbolicReg[regID] = se->getID();
+
+  return se;
+}
+
+
+SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_t regID, uint64_t regSize, std::string comment)
+{
+  std::stringstream finalExpr, origReg;
+
+  origReg << this->buildSymbolicRegOperand(regID, REG_SIZE);
+
+  switch (regSize) {
+    case 1:
+      finalExpr << smt2lib::concat(smt2lib::extract(63, 8, origReg.str()), expr.str());
+      break;
+    case 2:
+      finalExpr << smt2lib::concat(smt2lib::extract(63, 16, origReg.str()), expr.str());
+      break;
+    case 4:
+      finalExpr << smt2lib::concat(smt2lib::extract(63, 32, origReg.str()), expr.str());
+      break;
+    case 8:
+      finalExpr << expr.str();
+      break;
+    case 16:
+      finalExpr << expr.str();
+      break;
+  }
+
+  SymbolicElement *se = this->symEngine.newSymbolicElement(finalExpr, comment);
+  this->symEngine.symbolicReg[regID] = se->getID();
+
+  return se;
+}
+
+
 SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_t address)
 {
   SymbolicElement *se = symEngine.newSymbolicElement(expr);
@@ -258,7 +320,7 @@ void AnalysisProcessor::assignmentSpreadTaintRegMem(SymbolicElement *se, uint64_
   /* Use symbolic variable if the memory is tainted */
   if (se->isTainted) {
 
-    std::stringstream newExpr;
+    std::stringstream newExpr, finalExpr;
     uint64_t          symVarID;
 
     /* Check if this memory area is already known as a symbolic variable */
@@ -268,9 +330,9 @@ void AnalysisProcessor::assignmentSpreadTaintRegMem(SymbolicElement *se, uint64_
       this->symEngine.addSmt2LibVarDecl(symVarID, readSize);
       this->symEngine.addSymVarMemoryReference(memSrc, symVarID);
     }
-
     newExpr << SYMVAR_NAME << std::dec << symVarID;
-    se->setSrcExpr(newExpr);
+    finalExpr << smt2lib::zx(newExpr.str(), REG_SIZE_BIT - (readSize * REG_SIZE));
+    se->setSrcExpr(finalExpr);
   }
 }
 
@@ -282,7 +344,7 @@ void AnalysisProcessor::assignmentSpreadTaintMemMem(SymbolicElement *se, uint64_
   /* Use symbolic variable if the memory is tainted */
   if (se->isTainted) {
 
-    std::stringstream newExpr;
+    std::stringstream newExpr, finalExpr;
     uint64_t          symVarID;
 
     /* Check if this memory area is already known as a symbolic variable */
@@ -292,9 +354,9 @@ void AnalysisProcessor::assignmentSpreadTaintMemMem(SymbolicElement *se, uint64_
       this->symEngine.addSmt2LibVarDecl(symVarID, readSize);
       this->symEngine.addSymVarMemoryReference(memSrc, symVarID);
     }
-
     newExpr << SYMVAR_NAME << std::dec << symVarID;
-    se->setSrcExpr(newExpr);
+    finalExpr << smt2lib::zx(newExpr.str(), REG_SIZE_BIT - (readSize * REG_SIZE));
+    se->setSrcExpr(finalExpr);
   }
 }
 
