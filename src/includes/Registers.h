@@ -10,8 +10,11 @@
 #define DWORD_SIZE        4   // In byte
 #define DWORD_SIZE_BIT    32  // In bits
 
-#define REG_SIZE          8   // In byte
-#define REG_SIZE_BIT      64  // In bits
+#define QWORD_SIZE        8   // In byte
+#define QWORD_SIZE_BIT    64  // In byte
+
+#define REG_SIZE          QWORD_SIZE
+#define REG_SIZE_BIT      QWORD_SIZE_BIT
 
 #define REG_SIZE_SSE      16  // In byte
 #define REG_SIZE_SSE_BIT  128 // In bits
