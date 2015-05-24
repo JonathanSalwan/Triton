@@ -108,11 +108,11 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName)
 
       /* ---- Speed up process ---- */
       IMG currentImgName = IMG_FindByAddress(INS_Address(ins));
-      if (!IMG_Valid(currentImgName))
-        continue;
+      if (!analysisTrigger.getState() && !IMG_Valid(currentImgName))
+        break;
       boost::filesystem::path pcurrent(IMG_Name(currentImgName));
-      if (strcmp(pname.leaf().c_str(), pcurrent.leaf().c_str()))
-        continue;
+      if (!analysisTrigger.getState() && strcmp(pname.leaf().c_str(), pcurrent.leaf().c_str()))
+        break;
       /* ---- End of speed up process ---- */
 
       IRBuilder *irb = createIRBuilder(ins);
