@@ -13,7 +13,10 @@
 #include "PINContextHandler.h"
 #include "ProcessingPyConf.h"
 #include "Trigger.h"
+#include <boost/filesystem.hpp>
 
+using boost::filesystem::absolute;
+using boost::filesystem::path;
 
 /* Pin options: -script */
 KNOB<std::string>   KnobPythonModule(KNOB_MODE_WRITEONCE, "pintool", "script", "", "Python script");
@@ -23,13 +26,14 @@ Trigger             analysisTrigger = Trigger();
 ProcessingPyConf    processingPyConf(&ap, &analysisTrigger);
 
 
-VOID callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
+
+static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
 {
   /* Some configurations must be applied before processing */
   processingPyConf.applyConfBeforeProcessing(irb);
 
   if (!analysisTrigger.getState())
-  // Analysis locked
+  /* Analysis locked */
     return;
 
   if (hasEA)
@@ -57,12 +61,12 @@ VOID callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREAD
 }
 
 
-VOID callbackAfter(CONTEXT *ctx, THREADID threadId)
+static void callbackAfter(CONTEXT *ctx, THREADID threadId)
 {
   Inst *inst;
 
   if (!analysisTrigger.getState())
-  // Analysis locked
+  /* Analysis locked */
     return;
 
   /* Update the current context handler */
@@ -79,26 +83,37 @@ VOID callbackAfter(CONTEXT *ctx, THREADID threadId)
 }
 
 
-VOID callbackSnapshot(UINT64 mem, UINT32 writeSize)
+static void callbackSnapshot(UINT64 mem, UINT32 writeSize)
 {
   if (!analysisTrigger.getState())
-  // Analysis locked
+  /* Analysis locked */
     return;
 
   /* If the snapshot is not enable we don't save the memory */
   if (ap.isSnapshotLocked())
     return;
 
-  UINT32 i = 0;
+  uint32_t i = 0;
   for (; i < writeSize ; i++)
     ap.addSnapshotModification(mem+i, *(reinterpret_cast<UINT8*>(mem+i)));
 }
 
 
-VOID TRACE_Instrumentation(TRACE trace, VOID *v)
+static void TRACE_Instrumentation(TRACE trace, VOID *programName)
 {
+  boost::filesystem::path pname(reinterpret_cast<char*>(programName));
+
   for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)){
     for (INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins)) {
+
+      /* ---- Speed up process ---- */
+      IMG currentImgName = IMG_FindByAddress(INS_Address(ins));
+      if (!IMG_Valid(currentImgName))
+        continue;
+      boost::filesystem::path pcurrent(IMG_Name(currentImgName));
+      if (strcmp(pname.leaf().c_str(), pcurrent.leaf().c_str()))
+        continue;
+      /* ---- End of speed up process ---- */
 
       IRBuilder *irb = createIRBuilder(ins);
 
@@ -142,31 +157,31 @@ VOID TRACE_Instrumentation(TRACE trace, VOID *v)
 }
 
 
-VOID toggleWrapper(bool flag)
+static void toggleWrapper(bool flag)
 {
   analysisTrigger.update(flag);
 }
 
 
-VOID callbackRoutineEntry(THREADID threadId, PyObject *callback)
+static void callbackRoutineEntry(THREADID threadId, PyObject *callback)
 {
   if (!analysisTrigger.getState())
-  // Analysis locked
+  /* Analysis locked */
     return;
   processingPyConf.callbackRoutine(threadId, callback);
 }
 
 
-VOID callbackRoutineExit(THREADID threadId, PyObject *callback)
+static void callbackRoutineExit(THREADID threadId, PyObject *callback)
 {
   if (!analysisTrigger.getState())
-  // Analysis locked
+  /* Analysis locked */
     return;
   processingPyConf.callbackRoutine(threadId, callback);
 }
 
 
-VOID IMG_Instrumentation(IMG img, VOID *)
+static void IMG_Instrumentation(IMG img, VOID *)
 {
   /* Lock / Unlock the Analysis */
   if (PyTritonOptions::startAnalysisFromSymbol != nullptr){
@@ -214,7 +229,8 @@ VOID IMG_Instrumentation(IMG img, VOID *)
 }
 
 
-VOID Fini(INT32, VOID *)
+/* Callback at the end of the execution */
+static void Fini(INT32, VOID *)
 {
   /* Python callback at the end of execution */
   processingPyConf.callbackFini();
@@ -224,10 +240,11 @@ VOID Fini(INT32, VOID *)
 }
 
 
-VOID callbackSyscallEntry(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, VOID *v)
+/* Callback at the syscall entry */
+static void callbackSyscallEntry(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, VOID *v)
 {
   if (!analysisTrigger.getState())
-  // Analysis locked
+  /* Analysis locked */
     return;
 
   /* Update the current context handler */
@@ -238,10 +255,11 @@ VOID callbackSyscallEntry(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std,
 }
 
 
-VOID callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, VOID *v)
+/* Callback at the syscall exit */
+static void callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, VOID *v)
 {
   if (!analysisTrigger.getState())
-  // Analysis locked
+  /* Analysis locked */
     return;
 
   /* Update the current context handler */
@@ -252,12 +270,26 @@ VOID callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, 
 }
 
 
-// Usage function if Pin fail to start.
-// Display the help message.
-INT32 Usage()
+/* 
+ * Usage function if Pin fail to start.
+ * Display the help message.
+ */
+static int32_t Usage()
 {
   std::cerr << KNOB_BASE::StringKnobSummary() << std::endl;
   return -1;
+}
+
+
+/* Get the name of the target binary */
+static char *getProgramName(char *argv[])
+{
+  uint64_t offset;
+  for (offset = 0; argv[offset]; offset++){
+    if (!strcmp(argv[offset], "--") && argv[offset+1])
+      return argv[offset+1];
+  }
+  return nullptr;
 }
 
 
@@ -268,25 +300,25 @@ int main(int argc, char *argv[])
   if(PIN_Init(argc, argv))
       return Usage();
 
-  // Init Python Bindings
+  /* Init Python Bindings */
   initBindings();
 
-  // Image callback
+  /* Image callback */
   IMG_AddInstrumentFunction(IMG_Instrumentation, nullptr);
 
-  // Instruction callback
-  TRACE_AddInstrumentFunction(TRACE_Instrumentation, nullptr);
+  /* Instruction callback */
+  TRACE_AddInstrumentFunction(TRACE_Instrumentation, getProgramName(argv));
 
-  // End instrumentation callback
+  /* End instrumentation callback */
   PIN_AddFiniFunction(Fini, nullptr);
 
-  // Syscall entry callback
+  /* Syscall entry callback */
   PIN_AddSyscallEntryFunction(callbackSyscallEntry, 0);
 
-  // Syscall exit callback
+  /* Syscall exit callback */
   PIN_AddSyscallExitFunction(callbackSyscallExit, 0);
 
-  // Exec the python bindings file
+  /* Exec the python bindings file */
   if (!execBindings(KnobPythonModule.Value().c_str())) {
     std::cerr << "Error: Script file can't be found!" << std::endl;
     exit(1);
