@@ -31,7 +31,6 @@ please, **don't blame us** if it is not yet reliable. [Open issues](https://gith
 * [Snapshot Engine](https://github.com/JonathanSalwan/Triton/wiki/Snapshot-Engine)
 * [SMT2-LIB Representation](https://github.com/JonathanSalwan/Triton/wiki/SMT2-LIB-Representation)
 * [Solver Engine - Z3](https://github.com/JonathanSalwan/Triton/wiki/Solver-Engine-Z3)
-* [Runtime Behavior Analysis](https://github.com/JonathanSalwan/Triton/wiki/Runtime-Behavior-Analysis)
 * [SMT Semantics Supported](https://github.com/JonathanSalwan/Triton/wiki/SMT-Semantics-Supported)
 * [Python Bindings](https://github.com/JonathanSalwan/Triton/wiki/Python-Bindings)
 
