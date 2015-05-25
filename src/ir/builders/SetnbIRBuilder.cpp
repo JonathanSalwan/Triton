@@ -56,7 +56,7 @@ void SetnbIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   cf << ap.buildSymbolicFlagOperand(ID_CF);
-  mem1e << ap.buildSymbolicRegOperand(mem, memSize);
+  mem1e << ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Finale expr */
   expr << smt2lib::ite(

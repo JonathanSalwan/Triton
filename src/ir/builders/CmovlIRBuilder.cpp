@@ -63,7 +63,7 @@ void CmovlIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   sf << ap.buildSymbolicFlagOperand(ID_SF);
   of << ap.buildSymbolicFlagOperand(ID_OF);
   reg1e << ap.buildSymbolicRegOperand(reg, regSize);
-  mem1e << ap.buildSymbolicRegOperand(mem, readSize);
+  mem1e << ap.buildSymbolicMemOperand(mem, readSize);
 
   expr << smt2lib::ite(
             smt2lib::equal(

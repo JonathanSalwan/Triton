@@ -66,7 +66,7 @@ void SetnleIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   sf << ap.buildSymbolicFlagOperand(ID_SF);
   of << ap.buildSymbolicFlagOperand(ID_OF);
   zf << ap.buildSymbolicFlagOperand(ID_ZF);
-  mem1e << ap.buildSymbolicRegOperand(mem, memSize);
+  mem1e << ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Finale expr */
   expr << smt2lib::ite(

@@ -56,7 +56,7 @@ void SetoIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   of << ap.buildSymbolicFlagOperand(ID_OF);
-  mem1e << ap.buildSymbolicRegOperand(mem, memSize);
+  mem1e << ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Finale expr */
   expr << smt2lib::ite(

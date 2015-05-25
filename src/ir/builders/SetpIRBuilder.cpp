@@ -56,7 +56,7 @@ void SetpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   pf << ap.buildSymbolicFlagOperand(ID_PF);
-  mem1e << ap.buildSymbolicRegOperand(mem, memSize);
+  mem1e << ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Finale expr */
   expr << smt2lib::ite(
