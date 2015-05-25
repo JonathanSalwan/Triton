@@ -182,12 +182,23 @@ $(NAME): $(OBJ)
 	$< $(SYSCALL_HEADER) >$@ || rm $@
 
 clean:
-	 /bin/rm -f $(OBJ) ./src/utils/syscalls.cpp
+	/bin/rm -f $(OBJ) ./src/utils/syscalls.cpp
 
 cleanall: clean
-	 /bin/rm -f $(NAME).so
+	/bin/rm -f $(NAME).so
+
+TRITON_LIB_PATH=$(shell pwd)/$(NAME).so
+PIN_BIN_PATH=$(shell pwd)/$(PIN_ROOT)/pin.sh
+
+install:
+	cp ./scripts/triton /usr/bin/triton
+	sed 's%TRITON_LIB_PATH=%TRITON_LIB_PATH=$(TRITON_LIB_PATH)%g' -i /usr/bin/triton
+	sed 's%PIN_BIN_PATH=%PIN_BIN_PATH=$(PIN_BIN_PATH)%g' -i /usr/bin/triton
+
+uninstall:
+	/bin/rm -f /usr/bin/triton
 
 re: cleanall all
 
-.PHONY: re clean cleanall all
+.PHONY: re clean cleanall all install uninstall
 
