@@ -21,14 +21,15 @@ void SymbolicEngine::init(const SymbolicEngine &other)
   for (uint64_t i = 0; i < ID_LAST_ITEM; i++)
     this->symbolicReg[i] = other.symbolicReg[i];
 
-  this->uniqueID                      = other.uniqueID;
-  this->numberOfSymVar                = other.numberOfSymVar;
   this->memoryReference               = other.memoryReference;
+  this->numberOfSymVar                = other.numberOfSymVar;
+  this->pathConstaints                = other.pathConstaints;
+  this->symVarDeclaration             = other.symVarDeclaration;
   this->symVarMemoryReference         = other.symVarMemoryReference;
   this->symVarMemoryReferenceInverse  = other.symVarMemoryReferenceInverse;
   this->symVarSizeReference           = other.symVarSizeReference;
-  this->symVarDeclaration             = other.symVarDeclaration;
   this->symbolicVector                = other.symbolicVector;
+  this->uniqueID                      = other.uniqueID;
 }
 
 
