@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 PIN_BIN_PATH=
 TRITON_LIB_PATH=
