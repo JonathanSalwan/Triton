@@ -72,7 +72,7 @@ void MovlpsIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::extract(63, 0, op2.str());
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem);
+  se = ap.createMemSE(expr, mem, writeSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemReg(se, mem, reg, writeSize);

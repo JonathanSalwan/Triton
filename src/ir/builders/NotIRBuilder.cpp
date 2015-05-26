@@ -49,7 +49,7 @@ void NotIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvnot(op1.str());
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem);
+  se = ap.createMemSE(expr, mem, memSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintMemMem(se, mem, mem);

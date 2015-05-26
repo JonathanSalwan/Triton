@@ -119,7 +119,7 @@ SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_
 }
 
 
-SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_t address)
+SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_t address, uint64_t writeSize)
 {
   SymbolicElement *se = symEngine.newSymbolicElement(expr);
   symEngine.addMemoryReference(address, se->getID());
@@ -128,7 +128,7 @@ SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_
 }
 
 
-SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_t address, std::string comment)
+SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_t address, uint64_t writeSize, std::string comment)
 {
   SymbolicElement *se = symEngine.newSymbolicElement(expr, comment);
   symEngine.addMemoryReference(address, se->getID());

@@ -79,7 +79,7 @@ void MovdquIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem);
+  se = ap.createMemSE(expr, mem, writeSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemReg(se, mem, reg, writeSize);

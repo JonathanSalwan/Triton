@@ -53,7 +53,7 @@ void PushIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem);
+  se = ap.createMemSE(expr, mem, writeSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemReg(se, mem, reg, writeSize);
@@ -81,7 +81,7 @@ void PushIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem);
+  se = ap.createMemSE(expr, mem, writeSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemImm(se, mem, writeSize);
@@ -109,7 +109,7 @@ void PushIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, memDst);
+  se = ap.createMemSE(expr, memDst, writeSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemMem(se, memDst, memOp, readSize);

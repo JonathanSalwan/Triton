@@ -77,7 +77,7 @@ void PopIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, memOp);
+  se = ap.createMemSE(expr, memOp, writeSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemMem(se, memOp, memSrc, readSize);

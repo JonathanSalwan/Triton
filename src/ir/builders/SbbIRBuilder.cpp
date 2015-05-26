@@ -133,7 +133,7 @@ void SbbIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvsub(op1.str(), smt2lib::bvadd(op2.str(), op3.str()));
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem);
+  se = ap.createMemSE(expr, mem, writeSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintMemImm(se, mem, writeSize);
@@ -168,7 +168,7 @@ void SbbIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvsub(op1.str(), smt2lib::bvadd(op2.str(), op3.str()));
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem);
+  se = ap.createMemSE(expr, mem, writeSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintMemReg(se, mem, reg, writeSize);

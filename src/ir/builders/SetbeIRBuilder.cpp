@@ -79,7 +79,7 @@ void SetbeIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
             smt2lib::bv(0, 8));
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem);
+  se = ap.createMemSE(expr, mem, memSize);
 
   /* Apply the taint via the concretization */
   if (ap.getFlagValue(ID_CF) | ap.getFlagValue(ID_ZF)) {

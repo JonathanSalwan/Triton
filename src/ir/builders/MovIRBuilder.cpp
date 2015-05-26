@@ -90,7 +90,7 @@ void MovIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bv(imm, writeSize * REG_SIZE);
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem);
+  se = ap.createMemSE(expr, mem, writeSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemImm(se, mem, writeSize);
@@ -112,7 +112,7 @@ void MovIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem);
+  se = ap.createMemSE(expr, mem, writeSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemReg(se, mem, reg, writeSize);

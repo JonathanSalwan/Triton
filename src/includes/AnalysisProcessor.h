@@ -55,8 +55,8 @@ class AnalysisProcessor {
     SymbolicElement *createRegSE(std::stringstream &expr, uint64_t regID, uint64_t regSize, std::string comment);
 
     /* Returns a symbolic element for the memory address */
-    SymbolicElement *createMemSE(std::stringstream &expr, uint64_t address);
-    SymbolicElement *createMemSE(std::stringstream &expr, uint64_t address, std::string comment);
+    SymbolicElement *createMemSE(std::stringstream &expr, uint64_t address, uint64_t writeSize);
+    SymbolicElement *createMemSE(std::stringstream &expr, uint64_t address, uint64_t writeSize, std::string comment);
 
     /* Returns a symbolic element. This methods is mainly used for temporary expression */
     SymbolicElement *createSE(std::stringstream &expr);

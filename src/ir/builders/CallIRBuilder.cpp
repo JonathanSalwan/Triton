@@ -50,7 +50,7 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr1 << smt2lib::bv(this->nextAddress, writeSize * REG_SIZE);
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr1, memDst, "Saved RIP");
+  se = ap.createMemSE(expr1, memDst, writeSize, "Saved RIP");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemImm(se, memDst, writeSize);
@@ -88,7 +88,7 @@ void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   expr1 << smt2lib::bv(this->nextAddress, writeSize * REG_SIZE);
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr1, memDst, "Saved RIP");
+  se = ap.createMemSE(expr1, memDst, writeSize, "Saved RIP");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemImm(se, memDst, writeSize);
@@ -127,7 +127,7 @@ void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr1 << smt2lib::bv(this->nextAddress, writeSize * REG_SIZE);
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr1, memDst, "Saved RIP");
+  se = ap.createMemSE(expr1, memDst, writeSize, "Saved RIP");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemImm(se, memDst, writeSize);
