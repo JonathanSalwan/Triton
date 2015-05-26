@@ -54,7 +54,6 @@ SymbolicEngine::~SymbolicEngine()
     delete tmp;
     tmp = nullptr;
   }
-
 }
 
 
@@ -126,6 +125,7 @@ SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
   this->symbolicVector.push_back(elem);
   return elem;
 }
+
 
 /* Create a new symbolic element with comment */
 SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src, std::string &comment)

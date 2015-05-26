@@ -8,7 +8,7 @@
 
 TaintEngine::TaintEngine()
 {
-  for (uint64_t i = 0; i < (sizeof(this->taintedReg) / sizeof(this->taintedReg[0])); i++){
+  for (uint64_t i = 0; i < ID_LAST_ITEM; i++){
     this->taintedReg[i] = !TAINTED;
   }
 }
@@ -16,7 +16,7 @@ TaintEngine::TaintEngine()
 
 void TaintEngine::init(const TaintEngine &other)
 {
-  for (uint64_t i = 0; i < (sizeof(this->taintedReg) / sizeof(this->taintedReg[0])); i++){
+  for (uint64_t i = 0; i < ID_LAST_ITEM; i++){
     this->taintedReg[i] = other.taintedReg[i];
   }
   this->taintedAddresses = other.taintedAddresses;
@@ -55,7 +55,7 @@ bool TaintEngine::isMemTainted(uint64_t addr)
 /* Returns true of false if the register is currently tainted */
 bool TaintEngine::isRegTainted(uint64_t regID)
 {
-  if (regID >= (sizeof(this->taintedReg) / sizeof(this->taintedReg[0])))
+  if (regID >= ID_LAST_ITEM)
     return !TAINTED;
   return this->taintedReg[regID];
 }
@@ -64,7 +64,7 @@ bool TaintEngine::isRegTainted(uint64_t regID)
 /* Taint the register */
 void TaintEngine::taintReg(uint64_t regID)
 {
-  if (regID >= (sizeof(this->taintedReg) / sizeof(this->taintedReg[0])))
+  if (regID >= ID_LAST_ITEM)
     return ;
   this->taintedReg[regID] = TAINTED;
 }
@@ -85,7 +85,7 @@ void TaintEngine::setTaintMem(uint64_t mem, uint64_t flag)
 /* Set the taint on register */
 void TaintEngine::setTaintReg(uint64_t regID, uint64_t flag)
 {
-  if (regID >= (sizeof(this->taintedReg) / sizeof(this->taintedReg[0])))
+  if (regID >= ID_LAST_ITEM)
     return ;
   this->taintedReg[regID] = flag;
 }
@@ -94,7 +94,7 @@ void TaintEngine::setTaintReg(uint64_t regID, uint64_t flag)
 /* Untaint the register */
 void TaintEngine::untaintReg(uint64_t regID)
 {
-  if (regID >= (sizeof(this->taintedReg) / sizeof(this->taintedReg[0])))
+  if (regID >= ID_LAST_ITEM)
     return ;
   this->taintedReg[regID] = !TAINTED;
 }
