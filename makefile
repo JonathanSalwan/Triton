@@ -192,6 +192,7 @@ PIN_BIN_PATH=$(shell pwd)/$(PIN_ROOT)/pin.sh
 
 install:
 	cp ./scripts/triton /usr/bin/triton
+	chmod 755 /usr/bin/triton
 	sed 's%TRITON_LIB_PATH=%TRITON_LIB_PATH=$(TRITON_LIB_PATH)%g' -i /usr/bin/triton
 	sed 's%PIN_BIN_PATH=%PIN_BIN_PATH=$(PIN_BIN_PATH)%g' -i /usr/bin/triton
 
