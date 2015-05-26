@@ -255,8 +255,24 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new MovhlpsIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_MOVHPD:
+      ir = new MovhpdIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_MOVHPS:
+      ir = new MovhpsIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_MOVLHPS:
       ir = new MovlhpsIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_MOVLPD:
+      ir = new MovlpdIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_MOVLPS:
+      ir = new MovlpsIRBuilder(address, disas);
       break;
 
     case XED_ICLASS_MOVSX:
