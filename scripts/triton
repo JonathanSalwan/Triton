@@ -6,14 +6,14 @@ TRITON_LIB_PATH=
 if [ -z "$1" ]
   then
     echo "You need to specify a script"
-    echo "Syntax: ./triton <your_script.py> <target binary> <target binary args>"
+    echo "Syntax: ./triton <your_script.py> <target binary> [target binary args]"
     exit
 fi
 
 if [ -z "$2" ]
   then
     echo "You need to specify a target binary"
-    echo "Syntax: ./triton <your_script.py> <target binary> <target binary args>"
+    echo "Syntax: ./triton <your_script.py> <target binary> [target binary args]"
     exit
 fi
 
