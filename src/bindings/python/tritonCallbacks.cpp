@@ -148,6 +148,34 @@ static PyObject *Triton_checkWriteAccess(PyObject *self, PyObject *addr)
 }
 
 
+static char Triton_concretizeMem_doc[] = "Concretize a memory reference";
+static PyObject *Triton_concretizeMem(PyObject *self, PyObject *addr)
+{
+  uint64_t ad;
+
+  if (!PyLong_Check(addr) && !PyInt_Check(addr))
+    return PyErr_Format(PyExc_TypeError, "concretizeMem(): expected an address (integer) as argument");
+
+  ad = PyLong_AsLong(addr);
+  ap.concretizeMem(ad);
+  return Py_None;
+}
+
+
+static char Triton_concretizeReg_doc[] = "Concretize a register reference";
+static PyObject *Triton_concretizeReg(PyObject *self, PyObject *regId)
+{
+  uint64_t reg;
+
+  if (!PyLong_Check(regId) && !PyInt_Check(regId))
+    return PyErr_Format(PyExc_TypeError, "concretizeReg(): expected a IDREF.REG as argument");
+
+  reg = PyLong_AsLong(regId);
+  ap.concretizeReg(reg);
+  return Py_None;
+}
+
+
 static char Triton_convertExprToSymVar_doc[] = "Converts an expression to a symbolic variable";
 static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
 {
@@ -850,6 +878,8 @@ PyMethodDef tritonCallbacks[] = {
   {"assignExprToSymVar",        Triton_assignExprToSymVar,        METH_VARARGS, Triton_assignExprToSymVar_doc},
   {"checkReadAccess",           Triton_checkReadAccess,           METH_O,       Triton_checkReadAccess_doc},
   {"checkWriteAccess",          Triton_checkWriteAccess,          METH_O,       Triton_checkWriteAccess_doc},
+  {"concretizeMem",             Triton_concretizeMem,             METH_O,       Triton_concretizeMem_doc},
+  {"concretizeReg",             Triton_concretizeReg,             METH_O,       Triton_concretizeReg_doc},
   {"convertExprToSymVar",       Triton_convertExprToSymVar,       METH_VARARGS, Triton_convertExprToSymVar_doc},
   {"disableSnapshot",           Triton_disableSnapshot,           METH_NOARGS,  Triton_disableSnapshot_doc},
   {"getBacktrackedSymExpr",     Triton_getBacktrackedSymExpr,     METH_O,       Triton_getBacktrackedSymExpr_doc},

@@ -57,6 +57,29 @@ SymbolicEngine::~SymbolicEngine()
 }
 
 
+/*
+ * Concretize a register. If the register is setup at UNSETthe next assignment
+ * will be over the concretization. This method must be called before symbolic
+ * processing.
+ */
+void SymbolicEngine::concretizeReg(uint64_t regID) {
+  if (regID >= ID_LAST_ITEM)
+    return ;
+  this->symbolicReg[regID] = UNSET;
+}
+
+
+/*
+ * Concretize a memory. If the memory is not found into the map, the next
+ * assignment will be over the concretization. This method must be called
+ * before symbolic processing.
+ */
+void SymbolicEngine::concretizeMem(uint64_t mem)
+{
+  this->memoryReference.erase(mem);
+}
+
+
 /* Returns the reference memory if it's referenced otherwise returns UNSET */
 uint64_t SymbolicEngine::getMemSymbolicID(uint64_t addr)
 {

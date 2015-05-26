@@ -292,6 +292,19 @@ std::string AnalysisProcessor::buildSymbolicFlagOperand(uint64_t flagID)
 }
 
 
+
+void AnalysisProcessor::concretizeReg(uint64_t regID)
+{
+  this->symEngine.concretizeReg(regID);
+}
+
+
+void AnalysisProcessor::concretizeMem(uint64_t mem)
+{
+  this->symEngine.concretizeMem(mem);
+}
+
+
 // Taint Engine Facade
 // -------------------
 
