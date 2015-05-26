@@ -9,6 +9,16 @@ void check(void)
   asm("mov sil, 0x99");
   asm("cmp rsi, 0xffffffffffffff99");
 
+  asm("mov rax, -1");
+  asm("mov al, 0x99");
+  asm("mov ax, 0x99");
+  asm("mov eax, 0x99");
+
+  asm("mov rax, -1");
+  asm("xor al, 0x99");
+  asm("xor ax, 0x99");
+  asm("xor eax, 0x99");
+
   asm("clc");
   asm("cld");
   asm("cmc");

@@ -69,7 +69,8 @@ SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_
       finalExpr << smt2lib::concat(smt2lib::extract(63, 16, origReg.str()), expr.str());
       break;
     case 4:
-      finalExpr << smt2lib::concat(smt2lib::extract(63, 32, origReg.str()), expr.str());
+      /* In AMD64, if a reg32 is written, it clears the 32-bit MSB of the corresponding register (Thx Wisk!) */
+      finalExpr << smt2lib::zx(expr.str(), 32);
       break;
     case 8:
       finalExpr << expr.str();
@@ -100,7 +101,8 @@ SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_
       finalExpr << smt2lib::concat(smt2lib::extract(63, 16, origReg.str()), expr.str());
       break;
     case 4:
-      finalExpr << smt2lib::concat(smt2lib::extract(63, 32, origReg.str()), expr.str());
+      /* In AMD64, if a reg32 is written, it clears the 32-bit MSB of the corresponding register (Thx Wisk!) */
+      finalExpr << smt2lib::zx(expr.str(), 32);
       break;
     case 8:
       finalExpr << expr.str();
