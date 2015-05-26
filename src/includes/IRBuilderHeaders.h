@@ -60,6 +60,8 @@
 #include "MovapsIRBuilder.h"
 #include "MovdqaIRBuilder.h"
 #include "MovdquIRBuilder.h"
+#include "MovhlpsIRBuilder.h"
+#include "MovlhpsIRBuilder.h"
 #include "MovsxIRBuilder.h"
 #include "MovzxIRBuilder.h"
 #include "NegIRBuilder.h"

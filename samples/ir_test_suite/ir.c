@@ -85,6 +85,8 @@ void check(void)
   asm("movaps xmm3, xmm0");
   asm("movdqa xmm4, xmm2");
   asm("movdqu xmm5, xmm0");
+  asm("movhlps xmm6, xmm4");
+  asm("movlhps xmm7, xmm5");
   asm("orpd xmm0, xmm1");
   asm("orps xmm1, xmm3");
   asm("xorpd xmm0, xmm1");
