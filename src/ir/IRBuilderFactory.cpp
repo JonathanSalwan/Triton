@@ -243,6 +243,14 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new MovapsIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_MOVDQA:
+      ir = new MovdqaIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_MOVDQU:
+      ir = new MovdquIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_MOVSX:
     case XED_ICLASS_MOVSXD:
       ir = new MovsxIRBuilder(address, disas);

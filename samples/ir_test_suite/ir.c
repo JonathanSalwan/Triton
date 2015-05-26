@@ -83,6 +83,8 @@ void check(void)
   asm("movaps xmm0, xmmword ptr [%0]" :: "r"(tab));
   asm("movaps xmm1, xmm2");
   asm("movaps xmm3, xmm0");
+  asm("movdqa xmm4, xmm2");
+  asm("movdqu xmm5, xmm0");
   asm("orpd xmm0, xmm1");
   asm("orps xmm1, xmm3");
   asm("xorpd xmm0, xmm1");
