@@ -118,9 +118,9 @@ std::string EflagsExpressions::cfShl(SymbolicElement *parent,
    * cf = (op1 >> (op1 - op2) & 1) if op1 != 0
    */
   expr << smt2lib::ite(
-            smt2lib::bvnot(smt2lib::equal(op1.str(), smt2lib::bv(0, bvSize))),
-            smt2lib::extract(0, 0, (op1.str(), smt2lib::bvsub(op1.str(), op2.str()))),
-            ap.buildSymbolicFlagOperand(ID_CF)
+            smt2lib::equal(op1.str(), smt2lib::bv(0, bvSize)),
+            ap.buildSymbolicFlagOperand(ID_CF),
+            smt2lib::extract(0, 0, (op1.str(), smt2lib::bvsub(op1.str(), op2.str())))
           );
 
   return expr.str();
@@ -225,14 +225,14 @@ std::string EflagsExpressions::ofShl(SymbolicElement *parent,
   
   /*
    * Create the SMT semantic.
-   * of = bit_cast((op1 >> (op1 - 1)) ^ (op1 >> (op1 - 2)), int1(1)); if op1 != 0
+   * of = bit_cast((op1 >> (op1 - 1)) ^ (op1 >> (op1 - 2)), int1(1)); if op1 == 1
    */
   expr << smt2lib::ite(
-            smt2lib::bvnot(smt2lib::equal(op1.str(), smt2lib::bv(0, bvSize))),
+            smt2lib::equal(op1.str(), smt2lib::bv(1, bvSize)),
             smt2lib::extract(0, 0,
               smt2lib::bvxor(
-                smt2lib::bvshr(op1.str(), smt2lib::bvsub(op1.str(), smt2lib::bv(1, bvSize))),
-                smt2lib::bvshr(op1.str(), smt2lib::bvsub(op1.str(), smt2lib::bv(2, bvSize)))
+                smt2lib::bvashr(op1.str(), smt2lib::bvsub(op1.str(), smt2lib::bv(1, bvSize))),
+                smt2lib::bvashr(op1.str(), smt2lib::bvsub(op1.str(), smt2lib::bv(2, bvSize)))
               )
             ),
             ap.buildSymbolicFlagOperand(ID_OF)
@@ -307,9 +307,9 @@ std::string EflagsExpressions::pfShl(SymbolicElement *parent,
    * pf if op1 != 0
    */
   expr << smt2lib::ite(
-            smt2lib::bvnot(smt2lib::equal(op1.str(), smt2lib::bv(0, bvSize))),
-            EflagsExpressions::pf(parent),
-            ap.buildSymbolicFlagOperand(ID_PF)
+            smt2lib::equal(op1.str(), smt2lib::bv(0, bvSize)),
+            ap.buildSymbolicFlagOperand(ID_PF),
+            EflagsExpressions::pf(parent)
           );
 
   return expr.str();
@@ -361,9 +361,9 @@ std::string EflagsExpressions::sfShl(SymbolicElement *parent,
    * sf if op1 != 0
    */
   expr << smt2lib::ite(
-            smt2lib::bvnot(smt2lib::equal(op1.str(), smt2lib::bv(0, bvSize))),
-            EflagsExpressions::sf(parent, extractSize),
-            ap.buildSymbolicFlagOperand(ID_SF)
+            smt2lib::equal(op1.str(), smt2lib::bv(0, bvSize)),
+            ap.buildSymbolicFlagOperand(ID_SF),
+            EflagsExpressions::sf(parent, extractSize)
           );
 
   return expr.str();
@@ -404,9 +404,9 @@ std::string EflagsExpressions::zfShl(SymbolicElement *parent,
    * zf if op1 != 0
    */
   expr << smt2lib::ite(
-            smt2lib::bvnot(smt2lib::equal(op1.str(), smt2lib::bv(0, bvSize))),
-            EflagsExpressions::zf(parent, bvSize),
-            ap.buildSymbolicFlagOperand(ID_ZF)
+            smt2lib::equal(op1.str(), smt2lib::bv(0, bvSize)),
+            ap.buildSymbolicFlagOperand(ID_ZF),
+            EflagsExpressions::zf(parent, bvSize)
           );
 
   return expr.str();

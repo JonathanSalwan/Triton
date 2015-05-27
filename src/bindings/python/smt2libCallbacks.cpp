@@ -278,25 +278,6 @@ static PyObject *smt2lib_bvshl(PyObject *self, PyObject *args)
 }
 
 
-static char smt2lib_bvshr_doc[] = "Returns a 'bvshr' expression";
-static PyObject *smt2lib_bvshr(PyObject *self, PyObject *args)
-{
-  PyObject *op1 = nullptr;
-  PyObject *op2 = nullptr;
-
-  /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
-
-  if (op1 == nullptr || !PyString_Check(op1))
-    return PyErr_Format(PyExc_TypeError, "bvshr(): expected a string as first argument");
-
-  if (op2 == nullptr || !PyString_Check(op2))
-    return PyErr_Format(PyExc_TypeError, "bvshr(): expected a string as second argument");
-
-  return Py_BuildValue("s", smt2lib::bvshr(PyString_AsString(op1), PyString_AsString(op2)).c_str());
-}
-
-
 static char smt2lib_bvsle_doc[] = "Returns a 'bvsle' expression";
 static PyObject *smt2lib_bvsle(PyObject *self, PyObject *args)
 {
@@ -707,7 +688,6 @@ PyMethodDef smt2libCallbacks[] = {
   {"bvsge",       smt2lib_bvsge,      METH_VARARGS,     smt2lib_bvsge_doc},
   {"bvsgt",       smt2lib_bvsgt,      METH_VARARGS,     smt2lib_bvsgt_doc},
   {"bvshl",       smt2lib_bvshl,      METH_VARARGS,     smt2lib_bvshl_doc},
-  {"bvshr",       smt2lib_bvshr,      METH_VARARGS,     smt2lib_bvshr_doc},
   {"bvsle",       smt2lib_bvsle,      METH_VARARGS,     smt2lib_bvsle_doc},
   {"bvslt",       smt2lib_bvslt,      METH_VARARGS,     smt2lib_bvslt_doc},
   {"bvsmod",      smt2lib_bvsmod,     METH_VARARGS,     smt2lib_bvsmod_doc},
