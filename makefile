@@ -95,6 +95,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/CwdeIRBuilder.cpp \
 		./src/ir/builders/DecIRBuilder.cpp \
 		./src/ir/builders/EflagsBuilder.cpp \
+		./src/ir/builders/EflagsExpressions.cpp \
 		./src/ir/builders/IncIRBuilder.cpp \
 		./src/ir/builders/JbIRBuilder.cpp \
 		./src/ir/builders/JbeIRBuilder.cpp \
@@ -153,6 +154,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/SetpIRBuilder.cpp \
 		./src/ir/builders/SetsIRBuilder.cpp \
 		./src/ir/builders/SetzIRBuilder.cpp \
+		./src/ir/builders/ShlIRBuilder.cpp \
 		./src/ir/builders/StcIRBuilder.cpp \
 		./src/ir/builders/StdIRBuilder.cpp \
 		./src/ir/builders/SubIRBuilder.cpp \

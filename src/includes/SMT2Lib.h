@@ -145,6 +145,9 @@ namespace smt2lib {
   /* Returns the 'bvshl' syntax */
   std::string bvshl(std::string op1, std::string op2);
 
+  /* Returns the 'bvshr' syntax */
+  std::string bvshr(std::string op1, std::string op2);
+
   /* Returns the 'bvlshr' syntax - unsigned (logical) shift right*/
   std::string bvlshr(std::string op1, std::string op2);
 

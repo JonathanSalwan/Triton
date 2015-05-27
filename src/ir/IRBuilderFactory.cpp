@@ -385,6 +385,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new SetzIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_SHL:
+      ir = new ShlIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_STC:
       ir = new StcIRBuilder(address, disas);
       break;

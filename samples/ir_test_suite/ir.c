@@ -76,6 +76,11 @@ void check(void)
   asm("mov sil, 0x99");
   asm("cmp rsi, 0xffffffffffffff99");
 
+  asm("shl rax, 3");
+  asm("shl rax, 0");
+  asm("shl rax, cl");
+  asm("shl rax");
+
   // SSE
   asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab));
   asm("movapd xmm1, xmm2");
