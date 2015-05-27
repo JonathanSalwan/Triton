@@ -231,8 +231,8 @@ std::string EflagsExpressions::ofShl(SymbolicElement *parent,
             smt2lib::equal(op1.str(), smt2lib::bv(1, bvSize)),
             smt2lib::extract(0, 0,
               smt2lib::bvxor(
-                smt2lib::bvashr(op1.str(), smt2lib::bvsub(op1.str(), smt2lib::bv(1, bvSize))),
-                smt2lib::bvashr(op1.str(), smt2lib::bvsub(op1.str(), smt2lib::bv(2, bvSize)))
+                smt2lib::bvlshr(op1.str(), smt2lib::bvsub(op1.str(), smt2lib::bv(1, bvSize))),
+                smt2lib::bvlshr(op1.str(), smt2lib::bvsub(op1.str(), smt2lib::bv(2, bvSize)))
               )
             ),
             ap.buildSymbolicFlagOperand(ID_OF)
