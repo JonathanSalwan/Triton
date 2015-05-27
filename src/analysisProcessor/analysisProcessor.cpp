@@ -121,19 +121,179 @@ SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_
 
 SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_t address, uint64_t writeSize)
 {
-  SymbolicElement *se = symEngine.newSymbolicElement(expr);
-  symEngine.addMemoryReference(address, se->getID());
+  SymbolicElement *ret = nullptr;
+  std::list<SymbolicElement *> SEList;
+  std::list<SymbolicElement *>::iterator it;
 
-  return se;
+  std::stringstream tmp;
+
+  /* 
+   * As the x86's memory can be accessed without aligning, each byte of the
+   * memory must be assigned to an unique reference.
+   */
+  switch (writeSize) {
+    case 16:
+      /* Symbolize the [127..120] bits */
+      tmp.str(smt2lib::extract(127, 120, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+      /* Symbolize the [119..112] bits */
+      tmp.str(smt2lib::extract(119, 112, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+      /* Symbolize the [111..104] bits */
+      tmp.str(smt2lib::extract(111, 104, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+      /* Symbolize the [103..96] bits */
+      tmp.str(smt2lib::extract(103, 96, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+      /* Symbolize the [95..88] bits */
+      tmp.str(smt2lib::extract(95, 88, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+      /* Symbolize the [87..80] bits */
+      tmp.str(smt2lib::extract(87, 80, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+      /* Symbolize the [79..72] bits */
+      tmp.str(smt2lib::extract(79, 72, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+      /* Symbolize the [71..64] bits */
+      tmp.str(smt2lib::extract(71, 64, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+
+    case 8:
+      /* Symbolize the [63..56] bits */
+      tmp.str(smt2lib::extract(63, 56, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+      /* Symbolize the [55..48] bits */
+      tmp.str(smt2lib::extract(55, 48, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+      /* Symbolize the [47..40] bits */
+      tmp.str(smt2lib::extract(47, 40, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+      /* Symbolize the [39..32] bits */
+      tmp.str(smt2lib::extract(39, 32, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+
+    case 4:
+      /* Symbolize the [31..24] bits */
+      tmp.str(smt2lib::extract(31, 24, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+      /* Symbolize the [23..16] bits */
+      tmp.str(smt2lib::extract(23, 16, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+
+    case 2:
+      /* Symbolize the [15..8] bits */
+      tmp.str(smt2lib::extract(15, 8, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+
+    case 1:
+      /* Symbolize the [7..0] bits */
+      tmp.str(smt2lib::extract(7, 0, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp));
+      break;
+
+    default:
+      throw std::runtime_error("Error: AnalysisProcessor::createMemSE() - Invalid writeSize");
+      break;
+  }
+
+  uint64_t offset = 0;
+  for (it = SEList.begin(); it != SEList.end(); it++) {
+    if (offset == 0)
+      ret = *it;
+    this->symEngine.addMemoryReference(address + offset, (*it)->getID());
+    offset++;
+  }
+
+  return ret;
 }
 
 
 SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_t address, uint64_t writeSize, std::string comment)
 {
-  SymbolicElement *se = symEngine.newSymbolicElement(expr, comment);
-  symEngine.addMemoryReference(address, se->getID());
+  SymbolicElement *ret = nullptr;
+  std::list<SymbolicElement *> SEList;
+  std::list<SymbolicElement *>::iterator it;
 
-  return se;
+  std::stringstream tmp;
+
+  /* 
+   * As the x86's memory can be accessed without aligning, each byte of the
+   * memory must be assigned to an unique reference.
+   */
+  switch (writeSize) {
+    case 16:
+      /* Symbolize the [127..120] bits */
+      tmp.str(smt2lib::extract(127, 120, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+      /* Symbolize the [119..112] bits */
+      tmp.str(smt2lib::extract(119, 112, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+      /* Symbolize the [111..104] bits */
+      tmp.str(smt2lib::extract(111, 104, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+      /* Symbolize the [103..96] bits */
+      tmp.str(smt2lib::extract(103, 96, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+      /* Symbolize the [95..88] bits */
+      tmp.str(smt2lib::extract(95, 88, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+      /* Symbolize the [87..80] bits */
+      tmp.str(smt2lib::extract(87, 80, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+      /* Symbolize the [79..72] bits */
+      tmp.str(smt2lib::extract(79, 72, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+      /* Symbolize the [71..64] bits */
+      tmp.str(smt2lib::extract(71, 64, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+
+    case 8:
+      /* Symbolize the [63..56] bits */
+      tmp.str(smt2lib::extract(63, 56, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+      /* Symbolize the [55..48] bits */
+      tmp.str(smt2lib::extract(55, 48, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+      /* Symbolize the [47..40] bits */
+      tmp.str(smt2lib::extract(47, 40, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+      /* Symbolize the [39..32] bits */
+      tmp.str(smt2lib::extract(39, 32, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+
+    case 4:
+      /* Symbolize the [31..24] bits */
+      tmp.str(smt2lib::extract(31, 24, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+      /* Symbolize the [23..16] bits */
+      tmp.str(smt2lib::extract(23, 16, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+
+    case 2:
+      /* Symbolize the [15..8] bits */
+      tmp.str(smt2lib::extract(15, 8, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+
+    case 1:
+      /* Symbolize the [7..0] bits */
+      tmp.str(smt2lib::extract(7, 0, expr.str()));
+      SEList.push_back(symEngine.newSymbolicElement(tmp, comment));
+      break;
+
+    default:
+      throw std::runtime_error("Error: AnalysisProcessor::createMemSE() - Invalid writeSize");
+      break;
+  }
+
+  uint64_t offset = 0;
+  for (it = SEList.begin(); it != SEList.end(); it++) {
+    if (offset == 0)
+      ret = *it;
+    this->symEngine.addMemoryReference(address + offset, (*it)->getID());
+    offset++;
+  }
+
+  return ret;
 }
 
 
