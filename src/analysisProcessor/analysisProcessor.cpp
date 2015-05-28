@@ -129,13 +129,19 @@ SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_
    * memory must be assigned to an unique reference.
    */
   while (writeSize){
-    /* Extract each byte */
-    tmp.str(smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr.str()));
-    SymbolicElement *se = symEngine.newSymbolicElement(tmp);
-    /* Assign memory with little endian */
-    this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
-    if (writeSize == 1)
+    /* Extract each byte if the size > 8 bit */
+    if (writeSize > 1){
+      tmp.str(smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr.str()));
+      SymbolicElement *se = symEngine.newSymbolicElement(tmp);
+      /* Assign memory with little endian */
+      this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
+    }
+    /* Otherwise keep the full formula */
+    else {
+      SymbolicElement *se = symEngine.newSymbolicElement(expr);
+      this->symEngine.addMemoryReference(address, se->getID());
       ret = se;
+    }
     writeSize--;
   }
 
@@ -153,13 +159,19 @@ SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_
    * memory must be assigned to an unique reference.
    */
   while (writeSize){
-    /* Extract each byte */
-    tmp.str(smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr.str()));
-    SymbolicElement *se = symEngine.newSymbolicElement(tmp, comment);
-    /* Assign memory with little endian */
-    this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
-    if (writeSize == 1)
+    /* Extract each byte if the size > 8 bit */
+    if (writeSize > 1){
+      tmp.str(smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr.str()));
+      SymbolicElement *se = symEngine.newSymbolicElement(tmp, comment);
+      /* Assign memory with little endian */
+      this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
+    }
+    /* Otherwise keep the full formula */
+    else {
+      SymbolicElement *se = symEngine.newSymbolicElement(expr, comment);
+      this->symEngine.addMemoryReference(address, se->getID());
       ret = se;
+    }
     writeSize--;
   }
 
@@ -284,15 +296,37 @@ std::string AnalysisProcessor::buildSymbolicRegOperand(uint64_t regID, uint64_t 
 
 std::string AnalysisProcessor::buildSymbolicMemOperand(uint64_t mem, uint64_t memSize)
 {
-  std::stringstream   op;
-  uint64_t            symMem = this->getMemSymbolicID(mem);
+  std::vector<std::string>  opVec;
+  std::stringstream         tmp;
+  uint64_t                  symMem, offset;
 
-  if (symMem != UNSET)
-    op << "#" << std::dec << symMem;
-  else
-    op << smt2lib::bv(this->getMemValue(mem, memSize), memSize * REG_SIZE);
+  offset = 0;
+  while (memSize) {
+    symMem = this->getMemSymbolicID(mem + memSize - 1);
+    tmp.str("");
+    if (symMem != UNSET)
+      tmp << "#" << std::dec << symMem;
+    else
+      tmp << smt2lib::bv(this->getMemValue(mem + offset, 1), REG_SIZE);
+    opVec.push_back(smt2lib::extract(7, 0, tmp.str())); 
+    offset++;
+    memSize--;
+  }
 
-  return op.str();
+  tmp.str("");
+  switch (opVec.size()) {
+    case 16:
+    case 8:
+    case 4:
+    case 2:
+      tmp.str(smt2lib::concat(opVec));
+      break;
+    case 1:
+      tmp.str(opVec[0]);
+      break;
+  }
+
+  return tmp.str();
 }
 
 

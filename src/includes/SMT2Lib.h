@@ -5,6 +5,7 @@
 #include <sstream>
 #include <cstdint>
 #include <string>
+#include <vector>
 
 
 namespace smt2lib {
@@ -16,6 +17,7 @@ namespace smt2lib {
   /* Returns the 'concat' syntax */
   /* (concat expr1 expr2) */
   std::string concat(std::string expr1, std::string expr2);
+  std::string concat(std::vector<std::string> exprs);
 
   /* Returns the 'bv' syntax based on a value and a size. */
   /* (_ bv<value> <size>) */

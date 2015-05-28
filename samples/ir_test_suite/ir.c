@@ -10,6 +10,8 @@ void check(void)
   asm("cmp rsi, 0xffffffffffffff99");
 
   asm("mov rax, -1");
+  asm("push rax");
+  asm("pop rbx");
   asm("mov al, 0x99");
   asm("mov ax, 0x99");
   asm("mov eax, 0x99");

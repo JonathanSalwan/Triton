@@ -29,6 +29,27 @@ std::string smt2lib::concat(std::string expr1, std::string expr2)
 }
 
 
+/* Returns the 'concat' syntax. */
+std::string smt2lib::concat(std::vector<std::string> exprs)
+{
+  std::stringstream   expr;
+  uint64_t            index;
+
+  if (exprs.size() <= 1)
+    throw std::runtime_error("Error: smt2lib::concat invalid vector size");
+
+  index = 0;
+  expr << "(concat";
+  while (index != exprs.size()){
+    expr << " " << exprs[index];
+    index++;
+  }
+  expr << ")";
+
+  return expr.str();
+}
+
+
 /* Returns the 'bv' syntax based on a value and a size.
  * Mainly used for the SMT translation */
 std::string smt2lib::bv(uint64_t value, uint64_t size)
