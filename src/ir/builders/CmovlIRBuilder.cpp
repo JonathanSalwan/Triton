@@ -40,14 +40,12 @@ void CmovlIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
             reg1e.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg1, size1);
+  se = ap.createRegSE(inst, expr, reg1, size1);
 
   /* Apply the taint via the concretization */
   if (ap.getFlagValue(ID_SF) ^ ap.getFlagValue(ID_OF))
     ap.assignmentSpreadTaintRegReg(se, reg1, reg2);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -73,14 +71,12 @@ void CmovlIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
             reg1e.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, regSize);
+  se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint via the concretization */
   if (ap.getFlagValue(ID_SF) ^ ap.getFlagValue(ID_OF))
     ap.assignmentSpreadTaintRegMem(se, reg, mem, readSize);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -102,7 +98,7 @@ Inst *CmovlIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "CMOVL");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

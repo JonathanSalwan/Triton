@@ -25,13 +25,10 @@ void MovIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bv(imm, size * REG_SIZE);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, size);
+  se = ap.createRegSE(inst, expr, reg, size);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegImm(se, reg);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -47,13 +44,10 @@ void MovIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << ap.buildSymbolicRegOperand(reg2, size2);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg1, size1);
+  se = ap.createRegSE(inst, expr, reg1, size1);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegReg(se, reg1, reg2);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -69,13 +63,10 @@ void MovIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   expr << ap.buildSymbolicMemOperand(mem, readSize);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, regSize);
+  se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegMem(se, reg, mem, readSize);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -90,13 +81,10 @@ void MovIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bv(imm, writeSize * REG_SIZE);
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem, writeSize);
+  se = ap.createMemSE(inst, expr, mem, writeSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemImm(se, mem, writeSize);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -112,13 +100,10 @@ void MovIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem, writeSize);
+  se = ap.createMemSE(inst, expr, mem, writeSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemReg(se, mem, reg, writeSize);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -130,7 +115,7 @@ Inst *MovIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "MOV");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

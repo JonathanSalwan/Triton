@@ -26,13 +26,10 @@ void NotIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvnot(op1.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, regSize);
+  se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, reg, reg);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -49,13 +46,10 @@ void NotIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvnot(op1.str());
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem, memSize);
+  se = ap.createMemSE(inst, expr, mem, memSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintMemMem(se, mem, mem);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -79,7 +73,7 @@ Inst *NotIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "NOT");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

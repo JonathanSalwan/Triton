@@ -34,13 +34,10 @@ void OrpdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvor(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg1, regSize1);
+  se = ap.createRegSE(inst, expr, reg1, regSize1);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, reg1, reg2);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -60,13 +57,10 @@ void OrpdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvor(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, regSize);
+  se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegMem(se, reg, mem, readSize);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -88,7 +82,7 @@ Inst *OrpdIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "ORPD");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

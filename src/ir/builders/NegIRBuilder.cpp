@@ -26,21 +26,18 @@ void NegIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvneg(op1.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, regSize);
+  se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::afNeg(se, ap, regSize, op1));
-  inst.addElement(EflagsBuilder::cfNeg(se, ap, regSize, op1));
-  inst.addElement(EflagsBuilder::ofNeg(se, ap, regSize, op1));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
+  EflagsBuilder::afNeg(inst, se, ap, regSize, op1);
+  EflagsBuilder::cfNeg(inst, se, ap, regSize, op1);
+  EflagsBuilder::ofNeg(inst, se, ap, regSize, op1);
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, regSize);
+  EflagsBuilder::zf(inst, se, ap, regSize);
 }
 
 
@@ -57,21 +54,18 @@ void NegIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvneg(op1.str());
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem, memSize);
+  se = ap.createMemSE(inst, expr, mem, memSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintMemMem(se, mem, mem);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::afNeg(se, ap, memSize, op1));
-  inst.addElement(EflagsBuilder::cfNeg(se, ap, memSize, op1));
-  inst.addElement(EflagsBuilder::ofNeg(se, ap, memSize, op1));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, memSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, memSize));
+  EflagsBuilder::afNeg(inst, se, ap, memSize, op1);
+  EflagsBuilder::cfNeg(inst, se, ap, memSize, op1);
+  EflagsBuilder::ofNeg(inst, se, ap, memSize, op1);
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, memSize);
+  EflagsBuilder::zf(inst, se, ap, memSize);
 }
 
 
@@ -95,7 +89,7 @@ Inst *NegIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "NEG");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

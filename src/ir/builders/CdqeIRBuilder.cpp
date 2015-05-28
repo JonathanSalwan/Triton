@@ -24,13 +24,10 @@ void CdqeIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::sx(op1.str(), 32);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RAX, REG_SIZE);
+  se = ap.createRegSE(inst, expr, ID_RAX, REG_SIZE);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, ID_RAX, ID_RAX);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -42,7 +39,7 @@ Inst *CdqeIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "CDQE");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

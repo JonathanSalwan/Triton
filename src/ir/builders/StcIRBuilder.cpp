@@ -14,7 +14,7 @@ StcIRBuilder::StcIRBuilder(uint64_t address, const std::string &disassembly):
 
 
 void StcIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
-  inst.addElement(EflagsBuilder::setFlag(ap, ID_CF));
+  EflagsBuilder::setFlag(inst, ap, ID_CF);
 }
 
 
@@ -26,7 +26,7 @@ Inst *StcIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "STC");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

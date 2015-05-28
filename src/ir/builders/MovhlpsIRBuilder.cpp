@@ -37,13 +37,10 @@ void MovhlpsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
           );
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg1, regSize1);
+  se = ap.createRegSE(inst, expr, reg1, regSize1);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegReg(se, reg1, reg2);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -70,7 +67,7 @@ Inst *MovhlpsIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "MOVHLPS");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

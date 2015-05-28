@@ -28,20 +28,17 @@ void OrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvor(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, regSize);
+  se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegImm(se, reg);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clears carry flag"));
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clears overflow flag"));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
+  EflagsBuilder::clearFlag(inst, ap, ID_CF, "Clears carry flag");
+  EflagsBuilder::clearFlag(inst, ap, ID_OF, "Clears overflow flag");
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, regSize);
+  EflagsBuilder::zf(inst, se, ap, regSize);
 }
 
 
@@ -61,20 +58,17 @@ void OrIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvor(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg1, regSize1);
+  se = ap.createRegSE(inst, expr, reg1, regSize1);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, reg1, reg2);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clears carry flag"));
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clears overflow flag"));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, regSize1));
-  inst.addElement(EflagsBuilder::zf(se, ap, regSize1));
+  EflagsBuilder::clearFlag(inst, ap, ID_CF, "Clears carry flag");
+  EflagsBuilder::clearFlag(inst, ap, ID_OF, "Clears overflow flag");
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, regSize1);
+  EflagsBuilder::zf(inst, se, ap, regSize1);
 }
 
 
@@ -94,20 +88,17 @@ void OrIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvor(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, regSize);
+  se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegMem(se, reg, mem, readSize);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clears carry flag"));
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clears overflow flag"));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
+  EflagsBuilder::clearFlag(inst, ap, ID_CF, "Clears carry flag");
+  EflagsBuilder::clearFlag(inst, ap, ID_OF, "Clears overflow flag");
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, regSize);
+  EflagsBuilder::zf(inst, se, ap, regSize);
 }
 
 
@@ -126,20 +117,17 @@ void OrIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvor(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem, writeSize);
+  se = ap.createMemSE(inst, expr, mem, writeSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintMemImm(se, mem, writeSize);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clears carry flag"));
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clears overflow flag"));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
+  EflagsBuilder::clearFlag(inst, ap, ID_CF, "Clears carry flag");
+  EflagsBuilder::clearFlag(inst, ap, ID_OF, "Clears overflow flag");
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, writeSize);
+  EflagsBuilder::zf(inst, se, ap, writeSize);
 }
 
 
@@ -159,20 +147,17 @@ void OrIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvor(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem, writeSize);
+  se = ap.createMemSE(inst, expr, mem, writeSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintMemReg(se, mem, reg, writeSize);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clears carry flag"));
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clears overflow flag"));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
+  EflagsBuilder::clearFlag(inst, ap, ID_CF, "Clears carry flag");
+  EflagsBuilder::clearFlag(inst, ap, ID_OF, "Clears overflow flag");
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, writeSize);
+  EflagsBuilder::zf(inst, se, ap, writeSize);
 }
 
 
@@ -184,7 +169,7 @@ Inst *OrIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "OR");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

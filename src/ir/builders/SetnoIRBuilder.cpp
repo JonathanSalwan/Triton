@@ -37,14 +37,12 @@ void SetnoIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
             smt2lib::bv(0, 8));
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, regSize);
+  se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint via the concretization */
   if (ap.getFlagValue(ID_OF) == 0)
     ap.assignmentSpreadTaintRegReg(se, reg, ID_OF);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -67,14 +65,12 @@ void SetnoIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
             smt2lib::bv(0, 8));
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem, memSize);
+  se = ap.createMemSE(inst, expr, mem, memSize);
 
   /* Apply the taint via the concretization */
   if (ap.getFlagValue(ID_OF) == 0)
     ap.assignmentSpreadTaintMemReg(se, mem, ID_OF, memSize);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -91,7 +87,7 @@ Inst *SetnoIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "SETNO");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

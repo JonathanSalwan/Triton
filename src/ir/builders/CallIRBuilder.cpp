@@ -13,7 +13,7 @@ CallIRBuilder::CallIRBuilder(uint64_t address, const std::string &disassembly):
 }
 
 
-static SymbolicElement *alignStack(AnalysisProcessor &ap, uint64_t writeSize)
+static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint64_t writeSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
@@ -25,7 +25,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint64_t writeSize)
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RSP, REG_SIZE, "Aligns stack");
+  se = ap.createRegSE(inst, expr, ID_RSP, REG_SIZE, "Aligns stack");
 
   /* Apply the taint */
   se->isTainted = ap.isRegTainted(ID_RSP);
@@ -43,33 +43,27 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          writeSize = this->operands[1].getSize();
 
   /* Create the SMT semantic side effect */
-  inst.addElement(alignStack(ap, writeSize));
+  alignStack(inst, ap, writeSize);
 
   /* Create the SMT semantic */
   /* *RSP =  Next_RIP */
   expr1 << smt2lib::bv(this->nextAddress, writeSize * REG_SIZE);
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr1, memDst, writeSize, "Saved RIP");
+  se = ap.createMemSE(inst, expr1, memDst, writeSize, "Saved RIP");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemImm(se, memDst, writeSize);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 
   /* Create the SMT semantic */
   /* RIP = reg */
   expr2 << ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr2, ID_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr2, ID_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegImm(se, ID_RIP);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -81,33 +75,27 @@ void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          writeSize = this->operands[1].getSize();
 
   /* Create the SMT semantic side effect */
-  inst.addElement(alignStack(ap, writeSize));
+  alignStack(inst, ap, writeSize);
 
   /* Create the SMT semantic */
   /* *RSP =  Next_RIP */
   expr1 << smt2lib::bv(this->nextAddress, writeSize * REG_SIZE);
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr1, memDst, writeSize, "Saved RIP");
+  se = ap.createMemSE(inst, expr1, memDst, writeSize, "Saved RIP");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemImm(se, memDst, writeSize);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 
   /* Create the SMT semantic */
   /* RIP = imm */
   expr2 << smt2lib::bv(imm, writeSize * REG_SIZE);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr2, ID_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr2, ID_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegImm(se, ID_RIP);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -120,33 +108,27 @@ void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          writeSize = this->operands[1].getSize();
 
   /* Create the SMT semantic side effect */
-  inst.addElement(alignStack(ap, writeSize));
+  alignStack(inst, ap, writeSize);
 
   /* Create the SMT semantic */
   /* *RSP =  Next_RIP */
   expr1 << smt2lib::bv(this->nextAddress, writeSize * REG_SIZE);
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr1, memDst, writeSize, "Saved RIP");
+  se = ap.createMemSE(inst, expr1, memDst, writeSize, "Saved RIP");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemImm(se, memDst, writeSize);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 
   /* Create the SMT semantic */
   /* RIP = imm */
   expr2 << ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr2, ID_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr2, ID_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegImm(se, ID_RIP);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 

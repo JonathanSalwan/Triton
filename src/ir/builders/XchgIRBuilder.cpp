@@ -37,16 +37,12 @@ void XchgIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   expr2 << op1.str();
 
   /* Create the symbolic element */
-  se1 = ap.createRegSE(expr1, reg1, regSize1);
-  se2 = ap.createRegSE(expr2, reg2, regSize2);
+  se1 = ap.createRegSE(inst, expr1, reg1, regSize1);
+  se2 = ap.createRegSE(inst, expr2, reg2, regSize2);
 
   /* Apply the taint */
-  ap.setTaintReg(reg1, tmpReg2Taint);
-  ap.setTaintReg(reg2, tmpReg1Taint);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se1);
-  inst.addElement(se2);
+  ap.setTaintReg(se1, reg1, tmpReg2Taint);
+  ap.setTaintReg(se2, reg2, tmpReg1Taint);
 }
 
 
@@ -69,16 +65,12 @@ void XchgIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   expr2 << op1.str();
 
   /* Create the symbolic element */
-  se1 = ap.createRegSE(expr1, reg1, regSize1);
-  se2 = ap.createMemSE(expr2, mem2, memSize2);
+  se1 = ap.createRegSE(inst, expr1, reg1, regSize1);
+  se2 = ap.createMemSE(inst, expr2, mem2, memSize2);
 
   /* Apply the taint */
-  ap.setTaintReg(reg1, tmpMem2Taint);
-  ap.setTaintMem(mem2, tmpReg1Taint);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se1);
-  inst.addElement(se2);
+  ap.setTaintReg(se1, reg1, tmpMem2Taint);
+  ap.setTaintMem(se2, mem2, tmpReg1Taint);
 }
 
 
@@ -106,16 +98,12 @@ void XchgIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   expr2 << op1.str();
 
   /* Create the symbolic element */
-  se1 = ap.createMemSE(expr1, mem1, memSize1);
-  se2 = ap.createRegSE(expr2, reg2, regSize2);
+  se1 = ap.createMemSE(inst, expr1, mem1, memSize1);
+  se2 = ap.createRegSE(inst, expr2, reg2, regSize2);
 
   /* Apply the taint */
-  ap.setTaintMem(mem1, tmpReg2Taint);
-  ap.setTaintReg(reg2, tmpMem1Taint);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se1);
-  inst.addElement(se2);
+  ap.setTaintMem(se1, mem1, tmpReg2Taint);
+  ap.setTaintReg(se2, reg2, tmpMem1Taint);
 }
 
 
@@ -127,7 +115,7 @@ Inst *XchgIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "XCHG");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

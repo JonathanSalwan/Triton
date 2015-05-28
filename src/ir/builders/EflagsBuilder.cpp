@@ -6,7 +6,8 @@
 
 
 
-SymbolicElement *EflagsBuilder::af(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::af(Inst &inst,
+                                   SymbolicElement *parent,
                                    AnalysisProcessor &ap,
                                    uint32_t dstSize,
                                    std::stringstream &op1,
@@ -19,17 +20,17 @@ SymbolicElement *EflagsBuilder::af(SymbolicElement *parent,
   expr << EflagsExpressions::af(parent, bvSize, op1, op2);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_AF, "Adjust flag");
+  se = ap.createRegSE(inst, expr, ID_AF, "Adjust flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_AF, se->isTainted);
+  ap.setTaintReg(se, ID_AF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::afNeg(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::afNeg(Inst &inst,
+                                      SymbolicElement *parent,
                                       AnalysisProcessor &ap,
                                       uint32_t dstSize,
                                       std::stringstream &op1)
@@ -41,17 +42,17 @@ SymbolicElement *EflagsBuilder::afNeg(SymbolicElement *parent,
   expr << EflagsExpressions::afNeg(parent, bvSize, op1);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_AF, "Adjust flag");
+  se = ap.createRegSE(inst, expr, ID_AF, "Adjust flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_AF, se->isTainted);
+  ap.setTaintReg(se, ID_AF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::cfAdd(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::cfAdd(Inst &inst,
+                                      SymbolicElement *parent,
                                       AnalysisProcessor &ap,
                                       std::stringstream &op1)
 {
@@ -61,17 +62,17 @@ SymbolicElement *EflagsBuilder::cfAdd(SymbolicElement *parent,
   expr << EflagsExpressions::cfAdd(parent, op1);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_CF, se->isTainted);
+  ap.setTaintReg(se, ID_CF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::cfNeg(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::cfNeg(Inst &inst,
+                                      SymbolicElement *parent,
                                       AnalysisProcessor &ap,
                                       uint32_t dstSize,
                                       std::stringstream &op1)
@@ -83,17 +84,17 @@ SymbolicElement *EflagsBuilder::cfNeg(SymbolicElement *parent,
   expr << EflagsExpressions::cfNeg(bvSize, op1);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_CF, se->isTainted);
+  ap.setTaintReg(se, ID_CF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::cfShl(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::cfShl(Inst &inst,
+                                      SymbolicElement *parent,
                                       AnalysisProcessor &ap,
                                       uint32_t dstSize,
                                       std::stringstream &op1,
@@ -106,17 +107,17 @@ SymbolicElement *EflagsBuilder::cfShl(SymbolicElement *parent,
   expr << EflagsExpressions::cfShl(parent, ap, bvSize, op1, op2);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_CF, se->isTainted);
+  ap.setTaintReg(se, ID_CF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::cfSub(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::cfSub(Inst &inst,
+                                      SymbolicElement *parent,
                                       AnalysisProcessor &ap,
                                       std::stringstream &op1,
                                       std::stringstream &op2)
@@ -127,17 +128,17 @@ SymbolicElement *EflagsBuilder::cfSub(SymbolicElement *parent,
   expr << EflagsExpressions::cfSub(op1, op2);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_CF, se->isTainted);
+  ap.setTaintReg(se, ID_CF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::clearFlag(AnalysisProcessor &ap,
+SymbolicElement *EflagsBuilder::clearFlag(Inst &inst,
+                                          AnalysisProcessor &ap,
                                           regID_t flag)
 {
   SymbolicElement     *se;
@@ -146,17 +147,17 @@ SymbolicElement *EflagsBuilder::clearFlag(AnalysisProcessor &ap,
   expr << EflagsExpressions::clearFlag();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, flag);
+  se = ap.createRegSE(inst, expr, flag);
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = !TAINTED;
-  ap.setTaintReg(flag, !TAINTED);
+  ap.setTaintReg(se, flag, !TAINTED);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::clearFlag(AnalysisProcessor &ap,
+SymbolicElement *EflagsBuilder::clearFlag(Inst &inst,
+                                          AnalysisProcessor &ap,
                                           regID_t flag,
                                           std::string comment)
 {
@@ -166,17 +167,17 @@ SymbolicElement *EflagsBuilder::clearFlag(AnalysisProcessor &ap,
   expr << EflagsExpressions::clearFlag();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, flag, comment);
+  se = ap.createRegSE(inst, expr, flag, comment);
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = !TAINTED;
-  ap.setTaintReg(flag, !TAINTED);
+  ap.setTaintReg(se, flag, !TAINTED);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::ofAdd(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::ofAdd(Inst &inst,
+                                      SymbolicElement *parent,
                                       AnalysisProcessor &ap,
                                       uint32_t dstSize,
                                       std::stringstream &op1,
@@ -189,17 +190,17 @@ SymbolicElement *EflagsBuilder::ofAdd(SymbolicElement *parent,
   expr << EflagsExpressions::ofAdd(parent, extractSize, op1, op2);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_OF, "Overflow flag");
+  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_OF, se->isTainted);
+  ap.setTaintReg(se, ID_OF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::ofNeg(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::ofNeg(Inst &inst,
+                                      SymbolicElement *parent,
                                       AnalysisProcessor &ap,
                                       uint32_t dstSize,
                                       std::stringstream &op1)
@@ -211,17 +212,17 @@ SymbolicElement *EflagsBuilder::ofNeg(SymbolicElement *parent,
   expr << EflagsExpressions::ofNeg(parent, bvSize, op1);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_OF, "Overflow flag");
+  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_OF, se->isTainted);
+  ap.setTaintReg(se, ID_OF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::ofShl(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::ofShl(Inst &inst,
+                                      SymbolicElement *parent,
                                       AnalysisProcessor &ap,
                                       uint32_t dstSize,
                                       std::stringstream &op1)
@@ -233,17 +234,17 @@ SymbolicElement *EflagsBuilder::ofShl(SymbolicElement *parent,
   expr << EflagsExpressions::ofShl(parent, ap, bvSize, op1);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_OF, "Overflow flag");
+  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_OF, se->isTainted);
+  ap.setTaintReg(se, ID_OF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::ofSub(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::ofSub(Inst &inst,
+                                      SymbolicElement *parent,
                                       AnalysisProcessor &ap,
                                       uint32_t dstSize,
                                       std::stringstream &op1,
@@ -256,17 +257,17 @@ SymbolicElement *EflagsBuilder::ofSub(SymbolicElement *parent,
   expr << EflagsExpressions::ofSub(parent, extractSize, op1, op2);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_OF, "Overflow flag");
+  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_OF, se->isTainted);
+  ap.setTaintReg(se, ID_OF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::pf(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::pf(Inst &inst,
+                                   SymbolicElement *parent,
                                    AnalysisProcessor &ap)
 {
   SymbolicElement     *se;
@@ -275,17 +276,17 @@ SymbolicElement *EflagsBuilder::pf(SymbolicElement *parent,
   expr << EflagsExpressions::pf(parent);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_PF, "Parity flag");
+  se = ap.createRegSE(inst, expr, ID_PF, "Parity flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_PF, se->isTainted);
+  ap.setTaintReg(se, ID_PF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::pfShl(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::pfShl(Inst &inst,
+                                      SymbolicElement *parent,
                                       AnalysisProcessor &ap,
                                       uint32_t dstSize,
                                       std::stringstream &op1)
@@ -297,17 +298,17 @@ SymbolicElement *EflagsBuilder::pfShl(SymbolicElement *parent,
   expr << EflagsExpressions::pfShl(parent, ap, bvSize, op1);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_PF, "Parity flag");
+  se = ap.createRegSE(inst, expr, ID_PF, "Parity flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_PF, se->isTainted);
+  ap.setTaintReg(se, ID_PF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::setFlag(AnalysisProcessor &ap,
+SymbolicElement *EflagsBuilder::setFlag(Inst &inst,
+                                        AnalysisProcessor &ap,
                                         regID_t flag)
 {
   SymbolicElement     *se;
@@ -316,17 +317,17 @@ SymbolicElement *EflagsBuilder::setFlag(AnalysisProcessor &ap,
   expr << EflagsExpressions::setFlag();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, flag);
+  se = ap.createRegSE(inst, expr, flag);
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = !TAINTED;
-  ap.setTaintReg(flag, !TAINTED);
+  ap.setTaintReg(se, flag, !TAINTED);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::setFlag(AnalysisProcessor &ap,
+SymbolicElement *EflagsBuilder::setFlag(Inst &inst,
+                                        AnalysisProcessor &ap,
                                         regID_t flag,
                                         std::string comment)
 {
@@ -336,17 +337,17 @@ SymbolicElement *EflagsBuilder::setFlag(AnalysisProcessor &ap,
   expr << EflagsExpressions::setFlag();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, flag, comment);
+  se = ap.createRegSE(inst, expr, flag, comment);
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = !TAINTED;
-  ap.setTaintReg(flag, !TAINTED);
+  ap.setTaintReg(se, flag, !TAINTED);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::sf(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::sf(Inst &inst,
+                                   SymbolicElement *parent,
                                    AnalysisProcessor &ap,
                                    uint32_t dstSize)
 {
@@ -357,17 +358,17 @@ SymbolicElement *EflagsBuilder::sf(SymbolicElement *parent,
   expr << EflagsExpressions::sf(parent, extractSize);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_SF, "Sign flag");
+  se = ap.createRegSE(inst, expr, ID_SF, "Sign flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_SF, se->isTainted);
+  ap.setTaintReg(se, ID_SF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::sfShl(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::sfShl(Inst &inst,
+                                      SymbolicElement *parent,
                                       AnalysisProcessor &ap,
                                       uint32_t dstSize,
                                       std::stringstream &op1)
@@ -380,17 +381,18 @@ SymbolicElement *EflagsBuilder::sfShl(SymbolicElement *parent,
   expr << EflagsExpressions::sfShl(parent, ap, bvSize, extractSize, op1);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
   se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_CF, se->isTainted);
+  ap.setTaintReg(se, ID_SF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::zf(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::zf(Inst &inst,
+                                   SymbolicElement *parent,
                                    AnalysisProcessor &ap,
                                    uint32_t dstSize)
 {
@@ -401,17 +403,17 @@ SymbolicElement *EflagsBuilder::zf(SymbolicElement *parent,
   expr << EflagsExpressions::zf(parent, bvSize);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_ZF, "Zero flag");
+  se = ap.createRegSE(inst, expr, ID_ZF, "Zero flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_ZF, se->isTainted);
+  ap.setTaintReg(se, ID_ZF, parent->isTainted);
 
   return se;
 }
 
 
-SymbolicElement *EflagsBuilder::zfShl(SymbolicElement *parent,
+SymbolicElement *EflagsBuilder::zfShl(Inst &inst,
+                                      SymbolicElement *parent,
                                       AnalysisProcessor &ap,
                                       uint32_t dstSize,
                                       std::stringstream &op1)
@@ -423,11 +425,11 @@ SymbolicElement *EflagsBuilder::zfShl(SymbolicElement *parent,
   expr << EflagsExpressions::zfShl(parent, ap, bvSize, op1);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_ZF, "Zero flag");
+  se = ap.createRegSE(inst, expr, ID_ZF, "Zero flag");
 
   /* Spread the taint from the parent to the child */
-  se->isTainted = parent->isTainted;
-  ap.setTaintReg(ID_ZF, se->isTainted);
+  ap.setTaintReg(se, ID_ZF, parent->isTainted);
 
   return se;
 }
+

@@ -28,17 +28,14 @@ void TestIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvand(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createSE(expr);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
+  se = ap.createSE(inst, expr);
 
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clears carry flag"));
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clears overflow flag"));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
+  EflagsBuilder::clearFlag(inst, ap, ID_CF, "Clears carry flag");
+  EflagsBuilder::clearFlag(inst, ap, ID_OF, "Clears overflow flag");
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, regSize);
+  EflagsBuilder::zf(inst, se, ap, regSize);
 }
 
 
@@ -58,17 +55,14 @@ void TestIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvand(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createSE(expr);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
+  se = ap.createSE(inst, expr);
 
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clears carry flag"));
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clears overflow flag"));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, regSize1));
-  inst.addElement(EflagsBuilder::zf(se, ap, regSize1));
+  EflagsBuilder::clearFlag(inst, ap, ID_CF, "Clears carry flag");
+  EflagsBuilder::clearFlag(inst, ap, ID_OF, "Clears overflow flag");
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, regSize1);
+  EflagsBuilder::zf(inst, se, ap, regSize1);
 }
 
 
@@ -93,17 +87,14 @@ void TestIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvand(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createSE(expr);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
+  se = ap.createSE(inst, expr);
 
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clears carry flag"));
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clears overflow flag"));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
+  EflagsBuilder::clearFlag(inst, ap, ID_CF, "Clears carry flag");
+  EflagsBuilder::clearFlag(inst, ap, ID_OF, "Clears overflow flag");
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, writeSize);
+  EflagsBuilder::zf(inst, se, ap, writeSize);
 }
 
 
@@ -123,17 +114,14 @@ void TestIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvand(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createSE(expr);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
+  se = ap.createSE(inst, expr);
 
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_CF, "Clears carry flag"));
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_OF, "Clears overflow flag"));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
+  EflagsBuilder::clearFlag(inst, ap, ID_CF, "Clears carry flag");
+  EflagsBuilder::clearFlag(inst, ap, ID_OF, "Clears overflow flag");
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, writeSize);
+  EflagsBuilder::zf(inst, se, ap, writeSize);
 }
 
 
@@ -145,7 +133,7 @@ Inst *TestIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "TEST");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

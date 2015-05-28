@@ -28,20 +28,17 @@ void ShlIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvshl(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, regSize);
+  se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::cfShl(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::ofShl(se, ap, regSize, op1));
-  inst.addElement(EflagsBuilder::pfShl(se, ap, regSize, op1));
-  inst.addElement(EflagsBuilder::sfShl(se, ap, regSize, op1));
-  inst.addElement(EflagsBuilder::zfShl(se, ap, regSize, op1));
+  EflagsBuilder::cfShl(inst, se, ap, regSize, op1, op2);
+  EflagsBuilder::ofShl(inst, se, ap, regSize, op1);
+  EflagsBuilder::pfShl(inst, se, ap, regSize, op1);
+  EflagsBuilder::sfShl(inst, se, ap, regSize, op1);
+  EflagsBuilder::zfShl(inst, se, ap, regSize, op1);
 }
 
 
@@ -59,20 +56,17 @@ void ShlIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvshl(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, regSize);
+  se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::cfShl(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::ofShl(se, ap, regSize, op1));
-  inst.addElement(EflagsBuilder::pfShl(se, ap, regSize, op1));
-  inst.addElement(EflagsBuilder::sfShl(se, ap, regSize, op1));
-  inst.addElement(EflagsBuilder::zfShl(se, ap, regSize, op1));
+  EflagsBuilder::cfShl(inst, se, ap, regSize, op1, op2);
+  EflagsBuilder::ofShl(inst, se, ap, regSize, op1);
+  EflagsBuilder::pfShl(inst, se, ap, regSize, op1);
+  EflagsBuilder::sfShl(inst, se, ap, regSize, op1);
+  EflagsBuilder::zfShl(inst, se, ap, regSize, op1);
 }
 
 
@@ -96,20 +90,17 @@ void ShlIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvshl(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem, writeSize);
+  se = ap.createMemSE(inst, expr, mem, writeSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintMemMem(se, mem, mem);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::cfShl(se, ap, writeSize, op1, op2));
-  inst.addElement(EflagsBuilder::ofShl(se, ap, writeSize, op1));
-  inst.addElement(EflagsBuilder::pfShl(se, ap, writeSize, op1));
-  inst.addElement(EflagsBuilder::sfShl(se, ap, writeSize, op1));
-  inst.addElement(EflagsBuilder::zfShl(se, ap, writeSize, op1));
+  EflagsBuilder::cfShl(inst, se, ap, writeSize, op1, op2);
+  EflagsBuilder::ofShl(inst, se, ap, writeSize, op1);
+  EflagsBuilder::pfShl(inst, se, ap, writeSize, op1);
+  EflagsBuilder::sfShl(inst, se, ap, writeSize, op1);
+  EflagsBuilder::zfShl(inst, se, ap, writeSize, op1);
 }
 
 
@@ -126,7 +117,7 @@ Inst *ShlIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "SHL");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

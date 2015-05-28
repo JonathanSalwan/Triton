@@ -13,7 +13,7 @@ LeaveIRBuilder::LeaveIRBuilder(uint64_t address, const std::string &disassembly)
 }
 
 
-static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t readSize)
+static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint32_t readSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
@@ -25,7 +25,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t readSize)
   expr << smt2lib::bvadd(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RSP, REG_SIZE, "Aligns stack");
+  se = ap.createRegSE(inst, expr, ID_RSP, REG_SIZE, "Aligns stack");
 
   /* Apply the taint */
   se->isTainted = ap.isRegTainted(ID_RSP);
@@ -43,7 +43,7 @@ void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   expr1 << ap.buildSymbolicRegOperand(ID_RBP, REG_SIZE);
 
   /* Create the symbolic element */
-  se1 = ap.createRegSE(expr1, ID_RSP, REG_SIZE);
+  se1 = ap.createRegSE(inst, expr1, ID_RSP, REG_SIZE);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegReg(se1, ID_RSP, ID_RBP);
@@ -53,16 +53,14 @@ void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   expr2 << ap.buildSymbolicMemOperand(readMem, readSize);
 
   /* Create the symbolic element */
-  se2 = ap.createRegSE(expr2, ID_RBP, REG_SIZE);
+  se2 = ap.createRegSE(inst, expr2, ID_RBP, REG_SIZE);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegMem(se2, ID_RBP, readMem, readSize);
   // RBP = Pop(); ---------------------------
   
   /* Add the symbolic element to the current inst */
-  inst.addElement(se1);
-  inst.addElement(se2);
-  inst.addElement(alignStack(ap, readSize));
+  alignStack(inst, ap, readSize);
 }
 
 
@@ -74,7 +72,7 @@ Inst *LeaveIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "LEAVE");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

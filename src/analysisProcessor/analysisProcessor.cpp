@@ -37,25 +37,25 @@ SymbolicEngine &AnalysisProcessor::getSymbolicEngine(void)
 }
 
 
-SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_t regID)
+SymbolicElement *AnalysisProcessor::createRegSE(Inst &inst, std::stringstream &expr, uint64_t regID)
 {
   SymbolicElement *se = this->symEngine.newSymbolicElement(expr);
   this->symEngine.symbolicReg[regID] = se->getID();
-
+  inst.addElement(se);
   return se;
 }
 
 
-SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_t regID, std::string comment)
+SymbolicElement *AnalysisProcessor::createRegSE(Inst &inst, std::stringstream &expr, uint64_t regID, std::string comment)
 {
   SymbolicElement *se = this->symEngine.newSymbolicElement(expr, comment);
   this->symEngine.symbolicReg[regID] = se->getID();
-
+  inst.addElement(se);
   return se;
 }
 
 
-SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_t regID, uint64_t regSize)
+SymbolicElement *AnalysisProcessor::createRegSE(Inst &inst, std::stringstream &expr, uint64_t regID, uint64_t regSize)
 {
   std::stringstream finalExpr, origReg;
 
@@ -82,12 +82,13 @@ SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_
 
   SymbolicElement *se = this->symEngine.newSymbolicElement(finalExpr);
   this->symEngine.symbolicReg[regID] = se->getID();
+  inst.addElement(se);
 
   return se;
 }
 
 
-SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_t regID, uint64_t regSize, std::string comment)
+SymbolicElement *AnalysisProcessor::createRegSE(Inst &inst, std::stringstream &expr, uint64_t regID, uint64_t regSize, std::string comment)
 {
   std::stringstream finalExpr, origReg;
 
@@ -114,12 +115,13 @@ SymbolicElement *AnalysisProcessor::createRegSE(std::stringstream &expr, uint64_
 
   SymbolicElement *se = this->symEngine.newSymbolicElement(finalExpr, comment);
   this->symEngine.symbolicReg[regID] = se->getID();
+  inst.addElement(se);
 
   return se;
 }
 
 
-SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_t address, uint64_t writeSize)
+SymbolicElement *AnalysisProcessor::createMemSE(Inst &inst, std::stringstream &expr, uint64_t address, uint64_t writeSize)
 {
   SymbolicElement   *ret = nullptr;
   std::stringstream tmp;
@@ -133,12 +135,14 @@ SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_
     if (writeSize > 1){
       tmp.str(smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr.str()));
       SymbolicElement *se = symEngine.newSymbolicElement(tmp);
+      inst.addElement(se);
       /* Assign memory with little endian */
       this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
     }
     /* Otherwise keep the full formula */
     else {
       SymbolicElement *se = symEngine.newSymbolicElement(expr);
+      inst.addElement(se);
       this->symEngine.addMemoryReference(address, se->getID());
       ret = se;
     }
@@ -149,7 +153,7 @@ SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_
 }
 
 
-SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_t address, uint64_t writeSize, std::string comment)
+SymbolicElement *AnalysisProcessor::createMemSE(Inst &inst, std::stringstream &expr, uint64_t address, uint64_t writeSize, std::string comment)
 {
   SymbolicElement   *ret = nullptr;
   std::stringstream tmp;
@@ -163,12 +167,14 @@ SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_
     if (writeSize > 1){
       tmp.str(smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr.str()));
       SymbolicElement *se = symEngine.newSymbolicElement(tmp, comment);
+      inst.addElement(se);
       /* Assign memory with little endian */
       this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
     }
     /* Otherwise keep the full formula */
     else {
       SymbolicElement *se = symEngine.newSymbolicElement(expr, comment);
+      inst.addElement(se);
       this->symEngine.addMemoryReference(address, se->getID());
       ret = se;
     }
@@ -179,16 +185,18 @@ SymbolicElement *AnalysisProcessor::createMemSE(std::stringstream &expr, uint64_
 }
 
 
-SymbolicElement *AnalysisProcessor::createSE(std::stringstream &expr)
+SymbolicElement *AnalysisProcessor::createSE(Inst &inst, std::stringstream &expr)
 {
   SymbolicElement *se = this->symEngine.newSymbolicElement(expr);
+  inst.addElement(se);
   return se;
 }
 
 
-SymbolicElement *AnalysisProcessor::createSE(std::stringstream &expr, std::string comment)
+SymbolicElement *AnalysisProcessor::createSE(Inst &inst, std::stringstream &expr, std::string comment)
 {
   SymbolicElement *se = this->symEngine.newSymbolicElement(expr, comment);
+  inst.addElement(se);
   return se;
 }
 
@@ -470,15 +478,17 @@ void AnalysisProcessor::taintReg(uint64_t reg)
 }
 
 
-void AnalysisProcessor::setTaintMem(uint64_t mem, uint64_t flag)
+void AnalysisProcessor::setTaintMem(SymbolicElement *se, uint64_t mem, uint64_t flag)
 {
   this->taintEngine.setTaintMem(mem, flag);
+  se->isTainted = flag;
 }
 
 
-void AnalysisProcessor::setTaintReg(uint64_t reg, uint64_t flag)
+void AnalysisProcessor::setTaintReg(SymbolicElement *se, uint64_t reg, uint64_t flag)
 {
   this->taintEngine.setTaintReg(reg, flag);
+  se->isTainted = flag;
 }
 
 

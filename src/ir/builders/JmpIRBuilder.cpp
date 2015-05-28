@@ -14,7 +14,6 @@ JmpIRBuilder::JmpIRBuilder(uint64_t address, const std::string &disassembly):
 
 
 void JmpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
   std::stringstream expr;
   uint64_t          imm = this->operands[0].getValue();
 
@@ -22,15 +21,11 @@ void JmpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bv(imm, REG_SIZE_BIT);
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RIP, REG_SIZE, "RIP");
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
+  ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
 }
 
 
 void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
   std::stringstream expr, op1;
   uint64_t          reg     = this->operands[0].getValue();
   uint32_t          regSize = this->operands[0].getSize();
@@ -42,15 +37,11 @@ void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RIP, REG_SIZE, "RIP");
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
+  ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
 }
 
 
 void JmpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
   std::stringstream expr, op1;
   uint64_t          mem     = this->operands[0].getValue();
   uint32_t          memSize = this->operands[0].getSize();
@@ -62,10 +53,7 @@ void JmpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RIP, REG_SIZE, "RIP");
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
+  ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
 }
 
 

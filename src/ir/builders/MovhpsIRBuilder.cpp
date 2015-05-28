@@ -41,13 +41,11 @@ void MovhpsIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
           );
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, regSize);
+  se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegMem(se, reg, mem, readSize);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -71,13 +69,11 @@ void MovhpsIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::extract(127, 64, op2.str());
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem, writeSize);
+  se = ap.createMemSE(inst, expr, mem, writeSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemReg(se, mem, reg, writeSize);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -89,7 +85,7 @@ Inst *MovhpsIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "MOVHPS");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

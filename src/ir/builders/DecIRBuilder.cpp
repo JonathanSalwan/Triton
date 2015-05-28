@@ -27,20 +27,17 @@ void DecIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, regSize);
+  se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::af(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::ofSub(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
+  EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
+  EflagsBuilder::ofSub(inst, se, ap, regSize, op1, op2);
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, regSize);
+  EflagsBuilder::zf(inst, se, ap, regSize);
 }
 
 
@@ -58,20 +55,17 @@ void DecIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, mem, memSize);
+  se = ap.createMemSE(inst, expr, mem, memSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintMemMem(se, mem, mem);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::af(se, ap, memSize, op1, op2));
-  inst.addElement(EflagsBuilder::ofSub(se, ap, memSize, op1, op2));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, memSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, memSize));
+  EflagsBuilder::af(inst, se, ap, memSize, op1, op2);
+  EflagsBuilder::ofSub(inst, se, ap, memSize, op1, op2);
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, memSize);
+  EflagsBuilder::zf(inst, se, ap, memSize);
 }
 
 
@@ -95,7 +89,7 @@ Inst *DecIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "DEC");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

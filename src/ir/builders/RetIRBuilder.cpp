@@ -13,7 +13,7 @@ RetIRBuilder::RetIRBuilder(uint64_t address, const std::string &disassembly):
 }
 
 
-static SymbolicElement *alignStack(AnalysisProcessor &ap)
+static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
@@ -25,7 +25,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap)
   expr << smt2lib::bvadd(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RSP, REG_SIZE, "Aligns stack");
+  se = ap.createRegSE(inst, expr, ID_RSP, REG_SIZE, "Aligns stack");
 
   /* Apply the taint */
   se->isTainted = ap.isRegTainted(ID_RSP);
@@ -34,7 +34,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap)
 }
 
 
-static SymbolicElement *alignStack(AnalysisProcessor &ap, uint64_t imm)
+static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint64_t imm)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
@@ -46,7 +46,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint64_t imm)
   expr << smt2lib::bvadd(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RSP, REG_SIZE, "Aligns stack");
+  se = ap.createRegSE(inst, expr, ID_RSP, REG_SIZE, "Aligns stack");
 
   /* Apply the taint */
   se->isTainted = ap.isRegTainted(ID_RSP);
@@ -75,17 +75,14 @@ void RetIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegMem(se, ID_RIP, memSrc, readSize);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Create the SMT semantic side effect */
-  inst.addElement(alignStack(ap));
-  inst.addElement(alignStack(ap, imm));
+  alignStack(inst, ap);
+  alignStack(inst, ap, imm);
 }
 
 
@@ -102,16 +99,13 @@ void RetIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegMem(se, ID_RIP, memSrc, readSize);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Create the SMT semantic side effect */
-  inst.addElement(alignStack(ap));
+  alignStack(inst, ap);
 }
 
 

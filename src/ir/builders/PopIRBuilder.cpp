@@ -13,7 +13,7 @@ PopIRBuilder::PopIRBuilder(uint64_t address, const std::string &disassembly):
 }
 
 
-static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t readSize)
+static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint32_t readSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
@@ -25,7 +25,7 @@ static SymbolicElement *alignStack(AnalysisProcessor &ap, uint32_t readSize)
   expr << smt2lib::bvadd(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, ID_RSP, REG_SIZE, "Aligns stack");
+  se = ap.createRegSE(inst, expr, ID_RSP, REG_SIZE, "Aligns stack");
 
   /* Apply the taint */
   se->isTainted = ap.isRegTainted(ID_RSP);
@@ -49,16 +49,13 @@ void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, regSize);
+  se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemReg(se, mem, reg, readSize);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Create the SMT semantic side effect */
-  inst.addElement(alignStack(ap, readSize));
+  alignStack(inst, ap, readSize);
 }
 
 
@@ -77,16 +74,13 @@ void PopIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr << op1.str();
 
   /* Create the symbolic element */
-  se = ap.createMemSE(expr, memOp, writeSize);
+  se = ap.createMemSE(inst, expr, memOp, writeSize);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintMemMem(se, memOp, memSrc, readSize);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
-
   /* Create the SMT semantic side effect */
-  inst.addElement(alignStack(ap, writeSize));
+  alignStack(inst, ap, writeSize);
 }
 
 
@@ -110,7 +104,7 @@ Inst *PopIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "POP");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

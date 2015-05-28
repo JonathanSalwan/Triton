@@ -37,18 +37,15 @@ void CmpIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createSE(expr, "Temporary Compare");
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
+  se = ap.createSE(inst, expr, "Temporary Compare");
 
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::af(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::cfSub(se, ap, op1, op2));
-  inst.addElement(EflagsBuilder::ofSub(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
+  EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
+  EflagsBuilder::cfSub(inst, se, ap, op1, op2);
+  EflagsBuilder::ofSub(inst, se, ap, regSize, op1, op2);
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, regSize);
+  EflagsBuilder::zf(inst, se, ap, regSize);
 }
 
 
@@ -68,18 +65,15 @@ void CmpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createSE(expr, "Temporary Compare");
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
+  se = ap.createSE(inst, expr, "Temporary Compare");
 
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::af(se, ap, regSize1, op1, op2));
-  inst.addElement(EflagsBuilder::cfSub(se, ap, op1, op2));
-  inst.addElement(EflagsBuilder::ofSub(se, ap, regSize1, op1, op2));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, regSize1));
-  inst.addElement(EflagsBuilder::zf(se, ap, regSize1));
+  EflagsBuilder::af(inst, se, ap, regSize1, op1, op2);
+  EflagsBuilder::cfSub(inst, se, ap, op1, op2);
+  EflagsBuilder::ofSub(inst, se, ap, regSize1, op1, op2);
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, regSize1);
+  EflagsBuilder::zf(inst, se, ap, regSize1);
 }
 
 
@@ -99,18 +93,15 @@ void CmpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createSE(expr);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
+  se = ap.createSE(inst, expr);
 
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::af(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::cfSub(se, ap, op1, op2));
-  inst.addElement(EflagsBuilder::ofSub(se, ap, regSize, op1, op2));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, regSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, regSize));
+  EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
+  EflagsBuilder::cfSub(inst, se, ap, op1, op2);
+  EflagsBuilder::ofSub(inst, se, ap, regSize, op1, op2);
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, regSize);
+  EflagsBuilder::zf(inst, se, ap, regSize);
 }
 
 
@@ -129,18 +120,15 @@ void CmpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createSE(expr);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
+  se = ap.createSE(inst, expr);
 
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::af(se, ap, writeSize, op1, op2));
-  inst.addElement(EflagsBuilder::cfSub(se, ap, op1, op2));
-  inst.addElement(EflagsBuilder::ofSub(se, ap, writeSize, op1, op2));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
+  EflagsBuilder::af(inst, se, ap, writeSize, op1, op2);
+  EflagsBuilder::cfSub(inst, se, ap, op1, op2);
+  EflagsBuilder::ofSub(inst, se, ap, writeSize, op1, op2);
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, writeSize);
+  EflagsBuilder::zf(inst, se, ap, writeSize);
 }
 
 
@@ -160,18 +148,15 @@ void CmpIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
   /* Create the symbolic element */
-  se = ap.createSE(expr);
-
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
+  se = ap.createSE(inst, expr);
 
   /* Add the symbolic flags element to the current inst */
-  inst.addElement(EflagsBuilder::af(se, ap, writeSize, op1, op2));
-  inst.addElement(EflagsBuilder::cfSub(se, ap, op1, op2));
-  inst.addElement(EflagsBuilder::ofSub(se, ap, writeSize, op1, op2));
-  inst.addElement(EflagsBuilder::pf(se, ap));
-  inst.addElement(EflagsBuilder::sf(se, ap, writeSize));
-  inst.addElement(EflagsBuilder::zf(se, ap, writeSize));
+  EflagsBuilder::af(inst, se, ap, writeSize, op1, op2);
+  EflagsBuilder::cfSub(inst, se, ap, op1, op2);
+  EflagsBuilder::ofSub(inst, se, ap, writeSize, op1, op2);
+  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::sf(inst, se, ap, writeSize);
+  EflagsBuilder::zf(inst, se, ap, writeSize);
 }
 
 
@@ -183,7 +168,7 @@ Inst *CmpIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "CMP");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

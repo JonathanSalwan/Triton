@@ -14,7 +14,7 @@ CldIRBuilder::CldIRBuilder(uint64_t address, const std::string &disassembly):
 
 
 void CldIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
-  inst.addElement(EflagsBuilder::clearFlag(ap, ID_DF, "Clears direction flag"));
+  EflagsBuilder::clearFlag(inst, ap, ID_DF, "Clears direction flag");
 }
 
 
@@ -26,7 +26,7 @@ Inst *CldIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "CLD");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

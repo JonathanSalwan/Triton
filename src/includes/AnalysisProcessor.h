@@ -2,6 +2,7 @@
 #define _ANALYSISPROCESSOR_H_
 
 #include "ContextHandler.h"
+#include "Inst.h"
 #include "SnapshotEngine.h"
 #include "SolverEngine.h"
 #include "Stats.h"
@@ -49,18 +50,18 @@ class AnalysisProcessor {
      */
 
     /* Returns a symbolic element for the register (regID) */
-    SymbolicElement *createRegSE(std::stringstream &expr, uint64_t regID);
-    SymbolicElement *createRegSE(std::stringstream &expr, uint64_t regID, std::string comment);
-    SymbolicElement *createRegSE(std::stringstream &expr, uint64_t regID, uint64_t regSize);
-    SymbolicElement *createRegSE(std::stringstream &expr, uint64_t regID, uint64_t regSize, std::string comment);
+    SymbolicElement *createRegSE(Inst &inst, std::stringstream &expr, uint64_t regID);
+    SymbolicElement *createRegSE(Inst &inst, std::stringstream &expr, uint64_t regID, std::string comment);
+    SymbolicElement *createRegSE(Inst &inst, std::stringstream &expr, uint64_t regID, uint64_t regSize);
+    SymbolicElement *createRegSE(Inst &inst, std::stringstream &expr, uint64_t regID, uint64_t regSize, std::string comment);
 
     /* Returns a symbolic element for the memory address */
-    SymbolicElement *createMemSE(std::stringstream &expr, uint64_t address, uint64_t writeSize);
-    SymbolicElement *createMemSE(std::stringstream &expr, uint64_t address, uint64_t writeSize, std::string comment);
+    SymbolicElement *createMemSE(Inst &inst, std::stringstream &expr, uint64_t address, uint64_t writeSize);
+    SymbolicElement *createMemSE(Inst &inst, std::stringstream &expr, uint64_t address, uint64_t writeSize, std::string comment);
 
     /* Returns a symbolic element. This methods is mainly used for temporary expression */
-    SymbolicElement *createSE(std::stringstream &expr);
-    SymbolicElement *createSE(std::stringstream &expr, std::string comment);
+    SymbolicElement *createSE(Inst &inst, std::stringstream &expr);
+    SymbolicElement *createSE(Inst &inst, std::stringstream &expr, std::string comment);
 
     /*
      * Returns the ID of the symbolic element currently present in the
@@ -124,8 +125,8 @@ class AnalysisProcessor {
      */
     bool isMemTainted(uint64_t addr);
     bool isRegTainted(uint64_t reg);
-    void setTaintMem(uint64_t mem, uint64_t flag);
-    void setTaintReg(uint64_t reg, uint64_t flag);
+    void setTaintMem(SymbolicElement *se, uint64_t mem, uint64_t flag);
+    void setTaintReg(SymbolicElement *se, uint64_t reg, uint64_t flag);
     void taintMem(uint64_t addr);
     void taintReg(uint64_t reg);
     void untaintMem(uint64_t addr);

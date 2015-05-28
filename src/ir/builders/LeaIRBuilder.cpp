@@ -53,7 +53,7 @@ void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   expr << smt2lib::bvadd(dis2e.str(), smt2lib::bvadd(base2e.str(), smt2lib::bvmul(index2e.str(), scale2e.str())));
 
   /* Create the symbolic element */
-  se = ap.createRegSE(expr, reg, regSize);
+  se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint via the concretization */
   if (ap.isRegTainted(baseReg) == TAINTED)
@@ -61,8 +61,6 @@ void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   else
     ap.assignmentSpreadTaintRegReg(se, reg, indexReg);
 
-  /* Add the symbolic element to the current inst */
-  inst.addElement(se);
 }
 
 
@@ -84,7 +82,7 @@ Inst *LeaIRBuilder::process(AnalysisProcessor &ap) const {
   try {
     this->templateMethod(ap, *inst, this->operands, "LEA");
     ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
-    inst->addElement(ControlFlow::rip(ap, this->nextAddress));
+    ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;
