@@ -151,7 +151,7 @@ SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
 
 
 /* Create a new symbolic element with comment */
-SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src, std::string &comment)
+SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src, std::string comment)
 {
   std::stringstream dst;
   uint64_t          id;

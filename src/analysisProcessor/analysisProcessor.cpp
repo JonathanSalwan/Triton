@@ -134,7 +134,7 @@ SymbolicElement *AnalysisProcessor::createMemSE(Inst &inst, std::stringstream &e
     /* Extract each byte if the size > 8 bit */
     if (writeSize > 1){
       tmp.str(smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr.str()));
-      SymbolicElement *se = symEngine.newSymbolicElement(tmp);
+      SymbolicElement *se = symEngine.newSymbolicElement(tmp, "byte reference");
       inst.addElement(se);
       /* Assign memory with little endian */
       this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
@@ -166,7 +166,7 @@ SymbolicElement *AnalysisProcessor::createMemSE(Inst &inst, std::stringstream &e
     /* Extract each byte if the size > 8 bit */
     if (writeSize > 1){
       tmp.str(smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr.str()));
-      SymbolicElement *se = symEngine.newSymbolicElement(tmp, comment);
+      SymbolicElement *se = symEngine.newSymbolicElement(tmp, "byte reference");
       inst.addElement(se);
       /* Assign memory with little endian */
       this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
