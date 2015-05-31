@@ -82,6 +82,10 @@ void check(void)
   asm("shl rax, 0");
   asm("shl rax, cl");
   asm("shl rax");
+  asm("shr rax, 3");
+  asm("shr rax, 0");
+  asm("shr rax, cl");
+  asm("shr rax");
 
   // SSE
   asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab));

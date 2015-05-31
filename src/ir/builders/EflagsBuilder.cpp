@@ -116,6 +116,29 @@ SymbolicElement *EflagsBuilder::cfShl(Inst &inst,
 }
 
 
+SymbolicElement *EflagsBuilder::cfShr(Inst &inst,
+                                      SymbolicElement *parent,
+                                      AnalysisProcessor &ap,
+                                      uint32_t dstSize,
+                                      std::stringstream &op1,
+                                      std::stringstream &op2)
+{
+  SymbolicElement     *se;
+  std::stringstream   expr;
+  uint32_t            bvSize = (dstSize * REG_SIZE);
+
+  expr << EflagsExpressions::cfShr(parent, ap, bvSize, op1, op2);
+
+  /* Create the symbolic element */
+  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
+
+  /* Spread the taint from the parent to the child */
+  ap.setTaintReg(se, ID_CF, parent->isTainted);
+
+  return se;
+}
+
+
 SymbolicElement *EflagsBuilder::cfSub(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
@@ -232,6 +255,28 @@ SymbolicElement *EflagsBuilder::ofShl(Inst &inst,
   uint32_t            bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::ofShl(parent, ap, bvSize, op1);
+
+  /* Create the symbolic element */
+  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
+
+  /* Spread the taint from the parent to the child */
+  ap.setTaintReg(se, ID_OF, parent->isTainted);
+
+  return se;
+}
+
+
+SymbolicElement *EflagsBuilder::ofShr(Inst &inst,
+                                      SymbolicElement *parent,
+                                      AnalysisProcessor &ap,
+                                      uint32_t dstSize,
+                                      std::stringstream &op1)
+{
+  SymbolicElement     *se;
+  std::stringstream   expr;
+  uint32_t            bvSize = (dstSize * REG_SIZE);
+
+  expr << EflagsExpressions::ofShr(parent, ap, bvSize, op1);
 
   /* Create the symbolic element */
   se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");

@@ -95,6 +95,7 @@
 #include "SetsIRBuilder.h"
 #include "SetzIRBuilder.h"
 #include "ShlIRBuilder.h"
+#include "ShrIRBuilder.h"
 #include "StcIRBuilder.h"
 #include "StdIRBuilder.h"
 #include "SubIRBuilder.h"

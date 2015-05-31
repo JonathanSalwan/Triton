@@ -155,6 +155,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/ir/builders/SetsIRBuilder.cpp \
 		./src/ir/builders/SetzIRBuilder.cpp \
 		./src/ir/builders/ShlIRBuilder.cpp \
+		./src/ir/builders/ShrIRBuilder.cpp \
 		./src/ir/builders/StcIRBuilder.cpp \
 		./src/ir/builders/StdIRBuilder.cpp \
 		./src/ir/builders/SubIRBuilder.cpp \
