@@ -386,6 +386,7 @@ IRBuilder *createIRBuilder(INS ins) {
       break;
 
     case XED_ICLASS_SHL:
+      // XED_ICLASS_SAL is also a SHL
       ir = new ShlIRBuilder(address, disas);
       break;
 
