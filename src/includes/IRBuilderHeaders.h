@@ -100,6 +100,7 @@
 #include "StdIRBuilder.h"
 #include "SubIRBuilder.h"
 #include "TestIRBuilder.h"
+#include "XaddIRBuilder.h"
 #include "XchgIRBuilder.h"
 #include "XorIRBuilder.h"
 #include "XorpdIRBuilder.h"
