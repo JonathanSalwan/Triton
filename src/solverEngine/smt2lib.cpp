@@ -373,13 +373,6 @@ std::string smt2lib::bvshl(std::string op1, std::string op2)
 }
 
 
-/* Returns the 'bvshr' syntax */
-std::string smt2lib::bvshr(std::string op1, std::string op2)
-{
-  return "(bvshr " + op1 + " " + op2 + ")";
-}
-
-
 /* Returns the 'bvlshr' syntax - unsigned (logical) shift right*/
 std::string smt2lib::bvlshr(std::string op1, std::string op2)
 {
