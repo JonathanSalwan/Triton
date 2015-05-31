@@ -10,8 +10,7 @@ and [Python bindings](https://github.com/JonathanSalwan/Triton/wiki/Python-Bindi
 
 <p align="center"><img src="http://shell-storm.org/files/triton_archi_3.svg"/></p>
 
-Based on these components, **Triton** provides 
-[runtime behavior analysis](https://github.com/JonathanSalwan/Triton/wiki/Runtime-Behavior-Analysis) for vulnerabilities 
+Based on these components, **Triton** offers the possibility to build tools for vulnerabilities 
 research and can provide some reverse engineering assistance.
 
 The [wiki](https://github.com/JonathanSalwan/Triton/wiki) describes **Triton** under the hood. As **Triton** is a young project, 
