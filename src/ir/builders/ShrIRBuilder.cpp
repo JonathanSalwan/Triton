@@ -35,10 +35,10 @@ void ShrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   EflagsBuilder::cfShr(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::ofShr(inst, se, ap, regSize, op1);
-  EflagsBuilder::pfShl(inst, se, ap, regSize, op1); /* Same that shl */
-  EflagsBuilder::sfShl(inst, se, ap, regSize, op1); /* Same that shl */
-  EflagsBuilder::zfShl(inst, se, ap, regSize, op1); /* Same that shl */
+  EflagsBuilder::ofShr(inst, se, ap, regSize, op1, op2);
+  EflagsBuilder::pfShl(inst, se, ap, regSize, op2); /* Same that shl */
+  EflagsBuilder::sfShl(inst, se, ap, regSize, op2); /* Same that shl */
+  EflagsBuilder::zfShl(inst, se, ap, regSize, op2); /* Same that shl */
 }
 
 
@@ -63,10 +63,10 @@ void ShrIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   EflagsBuilder::cfShr(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::ofShr(inst, se, ap, regSize, op1);
-  EflagsBuilder::pfShl(inst, se, ap, regSize, op1); /* Same that shl */
-  EflagsBuilder::sfShl(inst, se, ap, regSize, op1); /* Same that shl */
-  EflagsBuilder::zfShl(inst, se, ap, regSize, op1); /* Same that shl */
+  EflagsBuilder::ofShr(inst, se, ap, regSize, op1, op2);
+  EflagsBuilder::pfShl(inst, se, ap, regSize, op2); /* Same that shl */
+  EflagsBuilder::sfShl(inst, se, ap, regSize, op2); /* Same that shl */
+  EflagsBuilder::zfShl(inst, se, ap, regSize, op2); /* Same that shl */
 }
 
 
@@ -97,10 +97,10 @@ void ShrIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags element to the current inst */
   EflagsBuilder::cfShr(inst, se, ap, writeSize, op1, op2);
-  EflagsBuilder::ofShr(inst, se, ap, writeSize, op1);
-  EflagsBuilder::pfShl(inst, se, ap, writeSize, op1) /* Same that shl */;
-  EflagsBuilder::sfShl(inst, se, ap, writeSize, op1) /* Same that shl */;
-  EflagsBuilder::zfShl(inst, se, ap, writeSize, op1) /* Same that shl */;
+  EflagsBuilder::ofShr(inst, se, ap, writeSize, op1, op2);
+  EflagsBuilder::pfShl(inst, se, ap, writeSize, op2) /* Same that shl */;
+  EflagsBuilder::sfShl(inst, se, ap, writeSize, op2) /* Same that shl */;
+  EflagsBuilder::zfShl(inst, se, ap, writeSize, op2) /* Same that shl */;
 }
 
 

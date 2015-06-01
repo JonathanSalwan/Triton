@@ -317,6 +317,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new RetIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_SAR:
+      ir = new SarIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_SBB:
       ir = new SbbIRBuilder(address, disas);
       break;

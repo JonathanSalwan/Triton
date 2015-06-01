@@ -15,6 +15,7 @@ namespace EflagsBuilder {
 
   SymbolicElement *cfAdd(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, std::stringstream &op1);
   SymbolicElement *cfNeg(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1);
+  SymbolicElement *cfSar(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
   SymbolicElement *cfShl(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
   SymbolicElement *cfShr(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
   SymbolicElement *cfSub(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, std::stringstream &op1, std::stringstream &op2);
@@ -24,21 +25,22 @@ namespace EflagsBuilder {
 
   SymbolicElement *ofAdd(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
   SymbolicElement *ofNeg(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1);
-  SymbolicElement *ofShl(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1);
-  SymbolicElement *ofShr(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1);
+  SymbolicElement *ofSar(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op2);
+  SymbolicElement *ofShl(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
+  SymbolicElement *ofShr(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
   SymbolicElement *ofSub(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
 
   SymbolicElement *pf(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap);
-  SymbolicElement *pfShl(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1);
+  SymbolicElement *pfShl(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op2);
 
   SymbolicElement *setFlag(Inst &inst, AnalysisProcessor &ap, regID_t flag);
   SymbolicElement *setFlag(Inst &inst, AnalysisProcessor &ap, regID_t flag, std::string comment);
 
   SymbolicElement *sf(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize);
-  SymbolicElement *sfShl(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1);
+  SymbolicElement *sfShl(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op2);
 
   SymbolicElement *zf(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize);
-  SymbolicElement *zfShl(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1);
+  SymbolicElement *zfShl(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op2);
 };
 
 #endif // _EFLAGSBUILDER_H_

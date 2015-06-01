@@ -77,6 +77,7 @@
 #include "PopIRBuilder.h"
 #include "PushIRBuilder.h"
 #include "RetIRBuilder.h"
+#include "SarIRBuilder.h"
 #include "SbbIRBuilder.h"
 #include "SetbIRBuilder.h"
 #include "SetbeIRBuilder.h"
