@@ -84,6 +84,7 @@ std::string EflagsExpressions::cfAdd(SymbolicElement *parent,
   return expr.str();
 }
 
+
 std::string EflagsExpressions::cfNeg(uint32_t bvSize,
                                      std::stringstream &op1)
 {
