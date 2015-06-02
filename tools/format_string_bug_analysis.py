@@ -21,7 +21,7 @@
 ## [+] 004 bytes tainted from the argv[1] (0x7fff367da0f4) pointer
 ## [+] 028 bytes tainted from the argv[0] (0x7fff367da0d7) pointer
 ## [+] Analyzing the printf prologue argument.
-## [+] Possible format string bug found. The first arugment contains some tainted bytes.
+## [+] Possible format string bug found. The first argument contains some tainted bytes.
 ##          [trace] 0x4005e6: mov byte ptr [rax], 0x0
 ##          [trace] 0x4005e9: mov rax, qword ptr [rbp-0x8]
 ##          [trace] 0x4005ed: mov rdi, rax
@@ -55,7 +55,7 @@ def printfAnalysis(threadId):
     index = 0
     while getMemValue(arg + index, 1) != 0x00:
         if isMemTainted(arg + index) == True:
-            print '[+] Possible format string bug found. The first arugment contains some tainted bytes.' 
+            print '[+] Possible format string bug found. The first argument contains some tainted bytes.' 
             global TRACE
             for t in TRACE:
                 print '\t [trace] %#x: %s' %(t[0], t[1])
