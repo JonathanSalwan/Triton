@@ -1,8 +1,8 @@
 
-#include "TritonOperand.h"
-#include "TritonPyObject.h"
-#include "pin.H"
-#include "xPyFunc.h"
+#include <TritonOperand.h>
+#include <TritonPyObject.h>
+#include <pin.H>
+#include <xPyFunc.h>
 
 
 /*

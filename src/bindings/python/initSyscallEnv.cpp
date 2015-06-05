@@ -1,11 +1,11 @@
 
 #include <python2.7/Python.h>
 
-#include "IRBuilderOperand.h"
-#include "PythonBindings.h"
-#include "xPyFunc.h"
+#include <IRBuilderOperand.h>
+#include <PythonBindings.h>
+#include <xPyFunc.h>
 
-#include "pin.H"
+#include <pin.H>
 
 
 void initLinux64Env(PyObject *);

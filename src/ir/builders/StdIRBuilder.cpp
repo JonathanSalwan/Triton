@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "StdIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <StdIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 StdIRBuilder::StdIRBuilder(uint64_t address, const std::string &disassembly):

@@ -4,13 +4,13 @@
 #include <python2.7/Python.h>
 #include <set>
 
-#include "AnalysisProcessor.h"
-#include "CallbackDefine.h"
-#include "PINConverter.h"
-#include "TritonPyObject.h"
-#include "pin.H"
-#include "xPyFunc.h"
-#include "Utils.h"
+#include <AnalysisProcessor.h>
+#include <CallbackDefine.h>
+#include <PINConverter.h>
+#include <TritonPyObject.h>
+#include <pin.H>
+#include <xPyFunc.h>
+#include <Utils.h>
 
 extern AnalysisProcessor ap;
 

@@ -3,8 +3,8 @@
 
 #include <boost/format.hpp>
 
-#include "Colors.h"
-#include "Trace.h"
+#include <Colors.h>
+#include <Trace.h>
 
 
 Trace::Trace()

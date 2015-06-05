@@ -1,8 +1,8 @@
 #include <boost/format.hpp>
 #include <stdexcept>
 
-#include "xed-category-enum.h"
-#include "BaseIRBuilder.h"
+#include <xed-category-enum.h>
+#include <BaseIRBuilder.h>
 
 boost::format outputInstruction("%1% %|15t| %2% %|55t|");
 

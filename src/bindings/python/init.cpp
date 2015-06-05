@@ -2,9 +2,9 @@
 #include <iostream>
 #include <python2.7/Python.h>
 
-#include "SymbolicEngine.h"
-#include "PythonBindings.h"
-#include "xPyFunc.h"
+#include <SymbolicEngine.h>
+#include <PythonBindings.h>
+#include <xPyFunc.h>
 
 void initCallbackEnv(PyObject *);
 void initFlagEnv(PyObject *);

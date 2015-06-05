@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "JbIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <JbIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 JbIRBuilder::JbIRBuilder(uint64_t address, const std::string &disassembly):

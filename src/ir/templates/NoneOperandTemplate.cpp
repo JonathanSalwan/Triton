@@ -1,9 +1,9 @@
 #include <tuple>
 #include <stdexcept>
 
-#include "AnalysisProcessor.h"
-#include "Inst.h"
-#include "NoneOperandTemplate.h"
+#include <AnalysisProcessor.h>
+#include <Inst.h>
+#include <NoneOperandTemplate.h>
 
 
 void NoneOperandTemplate::templateMethod(

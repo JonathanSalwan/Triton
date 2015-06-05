@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "JnleIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <JnleIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 JnleIRBuilder::JnleIRBuilder(uint64_t address, const std::string &disassembly):

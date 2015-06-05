@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "CmovbeIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <CmovbeIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 CmovbeIRBuilder::CmovbeIRBuilder(uint64_t address, const std::string &disassembly):

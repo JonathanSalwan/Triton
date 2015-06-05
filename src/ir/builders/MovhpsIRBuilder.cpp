@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "MovhpsIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <MovhpsIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 MovhpsIRBuilder::MovhpsIRBuilder(uint64_t address, const std::string &disassembly):

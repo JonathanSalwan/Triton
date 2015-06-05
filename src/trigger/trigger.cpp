@@ -1,4 +1,4 @@
-#include "Trigger.h"
+#include <Trigger.h>
 
 Trigger::Trigger(): state(false) { }
 

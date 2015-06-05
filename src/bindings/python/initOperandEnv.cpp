@@ -1,8 +1,8 @@
 
 #include <python2.7/Python.h>
 
-#include "PythonBindings.h"
-#include "IRBuilderOperand.h"
+#include <PythonBindings.h>
+#include <IRBuilderOperand.h>
 
 
 void initOperandEnv(PyObject *idOperandClassDict)

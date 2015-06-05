@@ -1,7 +1,7 @@
 
-#include "Colors.h"
-#include "SMT2Lib.h"
-#include "SolverEngine.h"
+#include <Colors.h>
+#include <SMT2Lib.h>
+#include <SolverEngine.h>
 
 
 SolverEngine::SolverEngine(SymbolicEngine *symEngine)

@@ -4,15 +4,15 @@
 #include <stdexcept>
 #include <vector>
 
-#include "pin.H"
+#include <pin.H>
 
-#include "AnalysisProcessor.h"
-#include "IRBuilder.h"
-#include "IRBuilderFactory.h"
-#include "Inst.h"
-#include "PINContextHandler.h"
-#include "ProcessingPyConf.h"
-#include "Trigger.h"
+#include <AnalysisProcessor.h>
+#include <IRBuilder.h>
+#include <IRBuilderFactory.h>
+#include <Inst.h>
+#include <PINContextHandler.h>
+#include <ProcessingPyConf.h>
+#include <Trigger.h>
 #include <boost/filesystem.hpp>
 
 using boost::filesystem::absolute;

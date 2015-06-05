@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "JmpIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <JmpIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 JmpIRBuilder::JmpIRBuilder(uint64_t address, const std::string &disassembly):

@@ -1,7 +1,7 @@
 
-#include "ProcessingPyConf.h"
-#include "TritonPyObject.h"
-#include "xPyFunc.h"
+#include <ProcessingPyConf.h>
+#include <TritonPyObject.h>
+#include <xPyFunc.h>
 
 
 

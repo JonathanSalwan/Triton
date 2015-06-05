@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "NegIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <NegIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 NegIRBuilder::NegIRBuilder(uint64_t address, const std::string &disassembly):

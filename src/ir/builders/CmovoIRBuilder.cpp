@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "CmovoIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <CmovoIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 CmovoIRBuilder::CmovoIRBuilder(uint64_t address, const std::string &disassembly):

@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "CmpIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <CmpIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 // Compares the first source operand with the second source operand 

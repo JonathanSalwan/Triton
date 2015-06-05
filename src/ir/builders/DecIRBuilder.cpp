@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "DecIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <DecIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 DecIRBuilder::DecIRBuilder(uint64_t address, const std::string &disassembly):

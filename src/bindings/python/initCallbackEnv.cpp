@@ -1,9 +1,9 @@
 
 #include <python2.7/Python.h>
 
-#include "CallbackDefine.h"
-#include "IRBuilderOperand.h"
-#include "PythonBindings.h"
+#include <CallbackDefine.h>
+#include <IRBuilderOperand.h>
+#include <PythonBindings.h>
 
 
 void initCallbackEnv(PyObject *idCallbackClassDict)

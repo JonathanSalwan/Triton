@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "ShrIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <ShrIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 ShrIRBuilder::ShrIRBuilder(uint64_t address, const std::string &disassembly):

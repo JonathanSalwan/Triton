@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "CmovnpIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <CmovnpIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 CmovnpIRBuilder::CmovnpIRBuilder(uint64_t address, const std::string &disassembly):

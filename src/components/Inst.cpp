@@ -1,6 +1,6 @@
 
-#include "Inst.h"
-#include "xed-category-enum.h"
+#include <Inst.h>
+#include <xed-category-enum.h>
 
 
 Inst::Inst(uint64_t threadId, uint64_t address, const std::string &insDis):

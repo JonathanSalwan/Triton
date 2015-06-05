@@ -2,7 +2,7 @@
 #include <python2.7/Python.h>
 #include <xed-iclass-enum.h>
 
-#include "PythonBindings.h"
+#include <PythonBindings.h>
 
 
 void initOpcodeEnv(PyObject *idOpcodeClassDict)

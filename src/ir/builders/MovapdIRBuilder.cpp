@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "MovapdIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <MovapdIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 MovapdIRBuilder::MovapdIRBuilder(uint64_t address, const std::string &disassembly):

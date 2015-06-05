@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "CqoIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <CqoIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 CqoIRBuilder::CqoIRBuilder(uint64_t address, const std::string &disassembly):

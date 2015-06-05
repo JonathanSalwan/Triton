@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "OrpdIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <OrpdIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 OrpdIRBuilder::OrpdIRBuilder(uint64_t address, const std::string &disassembly):

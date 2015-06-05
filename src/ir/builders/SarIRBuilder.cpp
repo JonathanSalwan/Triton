@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "SarIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <SarIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 SarIRBuilder::SarIRBuilder(uint64_t address, const std::string &disassembly):

@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "ClcIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <ClcIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 ClcIRBuilder::ClcIRBuilder(uint64_t address, const std::string &disassembly):

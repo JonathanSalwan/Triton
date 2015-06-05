@@ -1,9 +1,9 @@
 
 #include <python2.7/Python.h>
 
-#include "PythonBindings.h"
-#include "Registers.h"
-#include "Syscalls.h"
+#include <PythonBindings.h>
+#include <Registers.h>
+#include <Syscalls.h>
 
 extern const char*syscallmap[];
 

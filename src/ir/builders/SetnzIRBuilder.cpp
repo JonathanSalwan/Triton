@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "SetnzIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <SetnzIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 SetnzIRBuilder::SetnzIRBuilder(uint64_t address, const std::string &disassembly):

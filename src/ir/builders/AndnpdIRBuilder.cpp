@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "AndnpdIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <AndnpdIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 AndnpdIRBuilder::AndnpdIRBuilder(uint64_t address, const std::string &disassembly):

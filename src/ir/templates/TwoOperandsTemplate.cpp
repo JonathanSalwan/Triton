@@ -1,9 +1,9 @@
 #include <tuple>
 #include <stdexcept>
 
-#include "AnalysisProcessor.h"
-#include "Inst.h"
-#include "TwoOperandsTemplate.h"
+#include <AnalysisProcessor.h>
+#include <Inst.h>
+#include <TwoOperandsTemplate.h>
 
 
 void TwoOperandsTemplate::templateMethod(

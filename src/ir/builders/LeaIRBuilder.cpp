@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "LeaIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <LeaIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 LeaIRBuilder::LeaIRBuilder(uint64_t address, const std::string &disassembly):

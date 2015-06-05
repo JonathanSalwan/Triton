@@ -1,8 +1,8 @@
 
 #include <python2.7/Python.h>
 
-#include "PythonBindings.h"
-#include "xed-category-enum.h"
+#include <PythonBindings.h>
+#include <xed-category-enum.h>
 
 
 void initOpcodeCategoryEnv(PyObject *idOpcodeCategoryClassDict)

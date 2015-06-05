@@ -1,8 +1,8 @@
 
 #include <python2.7/Python.h>
 
-#include "PythonBindings.h"
-#include "Registers.h"
+#include <PythonBindings.h>
+#include <Registers.h>
 
 
 void initFlagEnv(PyObject *idFlagClassDict)

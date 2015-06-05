@@ -1,9 +1,9 @@
 #include <tuple>
 #include <stdexcept>
 
-#include "AnalysisProcessor.h"
-#include "Inst.h"
-#include "OneOperandTemplate.h"
+#include <AnalysisProcessor.h>
+#include <Inst.h>
+#include <OneOperandTemplate.h>
 
 
 void OneOperandTemplate::templateMethod(

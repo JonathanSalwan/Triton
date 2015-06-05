@@ -2,10 +2,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "JoIRBuilder.h"
-#include "Registers.h"
-#include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include <JoIRBuilder.h>
+#include <Registers.h>
+#include <SMT2Lib.h>
+#include <SymbolicElement.h>
 
 
 JoIRBuilder::JoIRBuilder(uint64_t address, const std::string &disassembly):

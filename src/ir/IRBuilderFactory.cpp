@@ -1,9 +1,9 @@
 #include <string>
 
-#include "pin.H"
+#include <pin.H>
 
-#include "IRBuilderHeaders.h"
-#include "PINConverter.h"
+#include <IRBuilderHeaders.h>
+#include <PINConverter.h>
 
 
 // Returns a pointer to an IRBuilder object.

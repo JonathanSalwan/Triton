@@ -1,7 +1,7 @@
 
 #include <python2.7/Python.h>
 
-#include "SMT2Lib.h"
+#include <SMT2Lib.h>
 
 
 static char smt2lib_bv_doc[] = "Returns a 'bv' expression";

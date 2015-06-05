@@ -1,7 +1,7 @@
 #include <string>
 #include <stdexcept>
 
-#include "SMT2Lib.h"
+#include <SMT2Lib.h>
 
 static const std::string parityDef =
   "(define-fun parity_flag ((x!1 (_ BitVec 8))) (_ BitVec 1) "
