@@ -18,6 +18,7 @@ class NullIRBuilder: public BaseIRBuilder {
     void addOperand(const TritonOperand &operand){
     }
 
+    using BaseIRBuilder::getOperands;
     const std::vector<TritonOperand> &getOperands(void){
       return this->operands;
     }
