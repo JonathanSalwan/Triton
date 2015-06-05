@@ -1,5 +1,5 @@
-#ifndef _TRIGGER_H_
-#define _TRIGGER_H_
+#ifndef TRIGGER_H
+#define TRIGGER_H
 
 class Trigger {
   public:
@@ -25,4 +25,4 @@ class Trigger {
     bool state;
 };
 
-#endif // _TRIGGER_H_
+#endif // TRIGGER_H

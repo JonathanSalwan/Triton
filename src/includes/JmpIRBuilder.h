@@ -1,5 +1,5 @@
-#ifndef _JMPIRBUILDER_H_
-#define _JMPIRBUILDER_H_
+#ifndef JMPIRBUILDER_H
+#define JMPIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -25,4 +25,4 @@ class JmpIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
     virtual void mem(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _JMPIRBUILDER_H_
+#endif // JMPIRBUILDER_H

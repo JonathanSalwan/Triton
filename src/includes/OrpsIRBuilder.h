@@ -1,5 +1,5 @@
-#ifndef _ORPSIRBUILDER_H_
-#define _ORPSIRBUILDER_H_
+#ifndef ORPSIRBUILDER_H
+#define ORPSIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -27,4 +27,4 @@ class OrpsIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _ORPSIRBUILDER_H_
+#endif // ORPSIRBUILDER_H

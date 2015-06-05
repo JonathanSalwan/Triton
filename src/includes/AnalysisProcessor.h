@@ -1,5 +1,5 @@
-#ifndef _ANALYSISPROCESSOR_H_
-#define _ANALYSISPROCESSOR_H_
+#ifndef ANALYSISPROCESSOR_H
+#define ANALYSISPROCESSOR_H
 
 #include "ContextHandler.h"
 #include "Inst.h"

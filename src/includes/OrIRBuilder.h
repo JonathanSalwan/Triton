@@ -1,5 +1,5 @@
-#ifndef _ORIRBUILDER_H_
-#define _ORIRBUILDER_H_
+#ifndef ORIRBUILDER_H
+#define ORIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -27,4 +27,4 @@ class OrIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _ORIRBUILDER_H_
+#endif // ORIRBUILDER_H

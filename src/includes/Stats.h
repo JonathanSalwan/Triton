@@ -1,5 +1,5 @@
-#ifndef   __STATISTICS_H__
-#define   __STATISTICS_H__
+#ifndef   STATISTICS_H
+#define   STATISTICS_H
 
 #include <chrono>
 #include <cstdint>

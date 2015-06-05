@@ -1,6 +1,6 @@
 
-#ifndef   __CONTROLFLOW_H__
-#define   __CONTROLFLOW_H__
+#ifndef   CONTROLFLOW_H
+#define   CONTROLFLOW_H
 
 #include "AnalysisProcessor.h"
 #include "Inst.h"

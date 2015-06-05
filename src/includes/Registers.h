@@ -1,5 +1,5 @@
-#ifndef  __REGISTERS_H__
-#define  __REGISTERS_H__
+#ifndef  REGISTERS_H
+#define  REGISTERS_H
 
 #define BYTE_SIZE         1   // In byte
 #define BYTE_SIZE_BIT     4   // In bits

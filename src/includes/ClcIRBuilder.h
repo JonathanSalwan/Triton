@@ -1,5 +1,5 @@
-#ifndef _CLCIRBUILDER_H_
-#define _CLCIRBUILDER_H_
+#ifndef CLCIRBUILDER_H
+#define CLCIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -19,4 +19,4 @@ class ClcIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
     virtual void none(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _CLCIRBUILDER_H_
+#endif // CLCIRBUILDER_H

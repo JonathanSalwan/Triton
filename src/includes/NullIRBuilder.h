@@ -1,5 +1,5 @@
-#ifndef _NULLIRBUILDER_H_
-#define _NULLIRBUILDER_H_
+#ifndef NULLIRBUILDER_H
+#define NULLIRBUILDER_H
 
 #include <cstdint>
 
@@ -29,4 +29,4 @@ class NullIRBuilder: public BaseIRBuilder {
     }
 };
 
-#endif // _NULLIRBUILDER_H_
+#endif // NULLIRBUILDER_H

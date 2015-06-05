@@ -1,5 +1,5 @@
-#ifndef _RETIRBUILDER_H_
-#define _RETIRBUILDER_H_
+#ifndef RETIRBUILDER_H
+#define RETIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -25,4 +25,4 @@ class RetIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
     virtual void mem(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _RETIRBUILDER_H_
+#endif // RETIRBUILDER_H

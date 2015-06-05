@@ -1,5 +1,5 @@
-#ifndef _CALLIRBUILDER_H_
-#define _CALLIRBUILDER_H_
+#ifndef CALLIRBUILDER_H
+#define CALLIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -25,4 +25,4 @@ class CallIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
     virtual void mem(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _CALLIRBUILDER_H_
+#endif // CALLIRBUILDER_H

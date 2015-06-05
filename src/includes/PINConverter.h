@@ -1,5 +1,5 @@
-#ifndef _PINCONVERTER_H_
-#define _PINCONVERTER_H_
+#ifndef PINCONVERTER_H
+#define PINCONVERTER_H
 
 #include "pin.H"
 

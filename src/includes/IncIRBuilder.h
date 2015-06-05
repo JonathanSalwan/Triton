@@ -1,5 +1,5 @@
-#ifndef _INCIRBUILDER_H_
-#define _INCIRBUILDER_H_
+#ifndef INCIRBUILDER_H
+#define INCIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -25,4 +25,4 @@ class IncIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
     virtual void mem(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _INCIRBUILDER_H_
+#endif // INCIRBUILDER_H

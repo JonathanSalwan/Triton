@@ -1,5 +1,5 @@
-#ifndef _SYMBOLICELEMENT_H_
-#define _SYMBOLICELEMENT_H_
+#ifndef SYMBOLICELEMENT_H
+#define SYMBOLICELEMENT_H
 
 #include <stdint.h>
 

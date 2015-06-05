@@ -1,5 +1,5 @@
-#ifndef _CMOVZIRBUILDER_H_
-#define _CMOVZIRBUILDER_H_
+#ifndef CMOVZIRBUILDER_H
+#define CMOVZIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "Inst.h"
@@ -25,4 +25,4 @@ class CmovzIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate  {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _CMOVZIRBUILDER_H_
+#endif // CMOVZIRBUILDER_H

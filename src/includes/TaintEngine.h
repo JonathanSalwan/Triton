@@ -1,6 +1,6 @@
 
-#ifndef   __TAINTENGINE_H__
-#define   __TAINTENGINE_H__
+#ifndef   TAINTENGINE_H
+#define   TAINTENGINE_H
 
 #include <list>
 #include <sstream>

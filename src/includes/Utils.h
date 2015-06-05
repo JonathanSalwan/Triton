@@ -1,6 +1,6 @@
 
-#ifndef   __UTILS_H__
-#define   __UTILS_H__
+#ifndef   UTILS_H
+#define   UTILS_H
 
 #include <iostream>
 

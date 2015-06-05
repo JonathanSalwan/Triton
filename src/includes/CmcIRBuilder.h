@@ -1,5 +1,5 @@
-#ifndef _CMCIRBUILDER_H_
-#define _CMCIRBUILDER_H_
+#ifndef CMCIRBUILDER_H
+#define CMCIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -19,4 +19,4 @@ class CmcIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
     virtual void none(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _CMCIRBUILDER_H_
+#endif // CMCIRBUILDER_H

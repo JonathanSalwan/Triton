@@ -1,5 +1,5 @@
-#ifndef _INST_H_
-#define _INST_H_
+#ifndef INST_H
+#define INST_H
 
 #include <list>
 #include <string>

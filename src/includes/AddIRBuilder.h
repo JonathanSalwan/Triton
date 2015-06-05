@@ -1,5 +1,5 @@
-#ifndef _ADDIRBUILDER_H_
-#define _ADDIRBUILDER_H_
+#ifndef ADDIRBUILDER_H
+#define ADDIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -27,4 +27,4 @@ class AddIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _ADDIRBUILDER_H_
+#endif // ADDIRBUILDER_H

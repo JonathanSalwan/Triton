@@ -1,5 +1,5 @@
-#ifndef _EFLAGSBUILDER_H_
-#define _EFLAGSBUILDER_H_
+#ifndef EFLAGSBUILDER_H
+#define EFLAGSBUILDER_H
 
 #include "AnalysisProcessor.h"
 #include "Inst.h"
@@ -43,5 +43,5 @@ namespace EflagsBuilder {
   SymbolicElement *zfShl(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op2);
 };
 
-#endif // _EFLAGSBUILDER_H_
+#endif // EFLAGSBUILDER_H
 

@@ -1,6 +1,6 @@
 
-#ifndef   __TRITONPYOBJECT_H__
-#define   __TRITONPYOBJECT_H__
+#ifndef   TRITONPYOBJECT_H
+#define   TRITONPYOBJECT_H
 
 #include <python2.7/Python.h>
 #include "IRBuilder.h"

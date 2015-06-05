@@ -1,5 +1,5 @@
-#ifndef _ONEOPERANDTEMPLATE_H_
-#define _ONEOPERANDTEMPLATE_H_
+#ifndef ONEOPERANDTEMPLATE_H
+#define ONEOPERANDTEMPLATE_H
 
 #include <vector>
 
@@ -34,4 +34,4 @@ class OneOperandTemplate: public OperandTemplate {
     virtual void mem(AnalysisProcessor &ap, Inst &inst) const = 0;
 };
 
-#endif // _ONEOPERANDTEMPLATE_H_
+#endif // ONEOPERANDTEMPLATE_H

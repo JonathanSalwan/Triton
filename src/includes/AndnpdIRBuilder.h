@@ -1,5 +1,5 @@
-#ifndef _ANDNPDIRBUILDER_H_
-#define _ANDNPDIRBUILDER_H_
+#ifndef ANDNPDIRBUILDER_H
+#define ANDNPDIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -27,4 +27,4 @@ class AndnpdIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _ANDNPDIRBUILDER_H_
+#endif // ANDNPDIRBUILDER_H

@@ -1,5 +1,5 @@
-#ifndef _LEAIRBUILDER_H_
-#define _LEAIRBUILDER_H_
+#ifndef LEAIRBUILDER_H
+#define LEAIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -27,4 +27,4 @@ class LeaIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _LEAIRBUILDER_H_
+#endif // LEAIRBUILDER_H

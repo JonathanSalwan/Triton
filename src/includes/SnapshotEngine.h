@@ -1,6 +1,6 @@
 
-#ifndef   __SNAPSHOTENGINE_H__
-#define   __SNAPSHOTENGINE_H__
+#ifndef   SNAPSHOTENGINE_H
+#define   SNAPSHOTENGINE_H
 
 #include <list>
 

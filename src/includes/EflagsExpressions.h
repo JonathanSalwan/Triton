@@ -1,5 +1,5 @@
-#ifndef   __EFLAGSEXPRESSIONS_H__
-#define   __EFLAGSEXPRESSIONS_H__
+#ifndef   EFLAGSEXPRESSIONS_H
+#define   EFLAGSEXPRESSIONS_H
 
 #include "AnalysisProcessor.h"
 #include "SMT2Lib.h"

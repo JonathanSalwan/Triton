@@ -1,5 +1,5 @@
-#ifndef _SETNBEIRBUILDER_H_
-#define _SETNBEIRBUILDER_H_
+#ifndef SETNBEIRBUILDER_H
+#define SETNBEIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -25,4 +25,4 @@ class SetnbeIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
     virtual void mem(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _SETNBEIRBUILDER_H_
+#endif // SETNBEIRBUILDER_H

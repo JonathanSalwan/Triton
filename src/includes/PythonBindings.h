@@ -1,5 +1,5 @@
-#ifndef   __PYTHONBINDINGS_H__
-#define   __PYTHONBINDINGS_H__
+#ifndef   PYTHONBINDINGS_H
+#define   PYTHONBINDINGS_H
 
 #include <list>
 #include <map>

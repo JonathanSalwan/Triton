@@ -1,5 +1,5 @@
-#ifndef _IRBUILDER_H_
-#define _IRBUILDER_H_
+#ifndef IRBUILDER_H
+#define IRBUILDER_H
 
 #include <cstdint>
 
@@ -79,4 +79,4 @@ class IRBuilder {
 
 };
 
-#endif // _IRBUILDER_H_
+#endif // IRBUILDER_H

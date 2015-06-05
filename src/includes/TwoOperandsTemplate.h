@@ -1,5 +1,5 @@
-#ifndef _TWOOPERANDSTEMPLATE_H_
-#define _TWOOPERANDSTEMPLATE_H_
+#ifndef TWOOPERANDSTEMPLATE_H
+#define TWOOPERANDSTEMPLATE_H
 
 #include <vector>
 
@@ -35,4 +35,4 @@ class TwoOperandsTemplate: public OperandTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const = 0;
 };
 
-#endif // _TWOOPERANDSTEMPLATE_H_
+#endif // TWOOPERANDSTEMPLATE_H

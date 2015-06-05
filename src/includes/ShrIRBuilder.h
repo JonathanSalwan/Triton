@@ -1,5 +1,5 @@
-#ifndef _SHRIRBUILDER_H_
-#define _SHRIRBUILDER_H_
+#ifndef SHRIRBUILDER_H
+#define SHRIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -27,4 +27,4 @@ class ShrIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _SHRIRBUILDER_H_
+#endif // SHRIRBUILDER_H

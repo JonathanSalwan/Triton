@@ -1,5 +1,5 @@
-#ifndef   __IRBUILDERHEADERS_H__
-#define   __IRBUILDERHEADERS_H__
+#ifndef   IRBUILDERHEADERS_H
+#define   IRBUILDERHEADERS_H
 
 #include "AdcIRBuilder.h"
 #include "AddIRBuilder.h"

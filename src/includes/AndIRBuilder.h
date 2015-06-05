@@ -1,5 +1,5 @@
-#ifndef _ANDIRBUILDER_H_
-#define _ANDIRBUILDER_H_
+#ifndef ANDIRBUILDER_H
+#define ANDIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -27,4 +27,4 @@ class AndIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _ANDIRBUILDER_H_
+#endif // ANDIRBUILDER_H

@@ -1,5 +1,5 @@
-#ifndef _OPERANDTEMPLATE_H_
-#define _OPERANDTEMPLATE_H_
+#ifndef OPERANDTEMPLATE_H
+#define OPERANDTEMPLATE_H
 
 #include <stdexcept>
 #include <string>
@@ -15,4 +15,4 @@ class OperandTemplate {
 
 };
 
-#endif // _OPERANDTEMPLATE_H_
+#endif // OPERANDTEMPLATE_H

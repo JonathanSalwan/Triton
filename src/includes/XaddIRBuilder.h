@@ -1,5 +1,5 @@
-#ifndef _XADDIRBUILDER_H_
-#define _XADDIRBUILDER_H_
+#ifndef XADDIRBUILDER_H
+#define XADDIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -27,4 +27,4 @@ class XaddIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _XADDIRBUILDER_H_
+#endif // XADDIRBUILDER_H

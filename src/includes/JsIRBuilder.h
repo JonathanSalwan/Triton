@@ -1,5 +1,5 @@
-#ifndef _JSIRBUILDER_H_
-#define _JSIRBUILDER_H_
+#ifndef JSIRBUILDER_H
+#define JSIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -25,4 +25,4 @@ class JsIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
     virtual void mem(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _JSIRBUILDER_H_
+#endif // JSIRBUILDER_H

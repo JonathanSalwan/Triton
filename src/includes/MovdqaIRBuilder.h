@@ -1,5 +1,5 @@
-#ifndef _MOVDQAIRBUILDER_H_
-#define _MOVDQAIRBUILDER_H_
+#ifndef MOVDQAIRBUILDER_H
+#define MOVDQAIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "Inst.h"
@@ -25,4 +25,4 @@ class MovdqaIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate  {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _MOVDQAIRBUILDER_H_
+#endif // MOVDQAIRBUILDER_H

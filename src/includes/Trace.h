@@ -1,5 +1,5 @@
-#ifndef _TRACE_H_
-#define _TRACE_H_
+#ifndef TRACE_H
+#define TRACE_H
 
 #include <cstdint>
 

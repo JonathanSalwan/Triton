@@ -1,6 +1,6 @@
 
-#ifndef   __COLORS_H__
-#define   __COLORS_H__
+#ifndef   COLORS_H
+#define   COLORS_H
 
 #define BLUE   "\033[94m"
 #define GREEN  "\033[92m"

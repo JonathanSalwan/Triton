@@ -1,5 +1,5 @@
-#ifndef _CONTEXTHANDLER_H_
-#define _CONTEXTHANDLER_H_
+#ifndef CONTEXTHANDLER_H
+#define CONTEXTHANDLER_H
 
 #include <cstdint>
 
@@ -18,4 +18,4 @@ class ContextHandler {
     virtual void        *getCtx(void) const = 0;
 };
 
-#endif // _CONTEXTHANDLER_H_
+#endif // CONTEXTHANDLER_H

@@ -1,5 +1,5 @@
-#ifndef _JZIRBUILDER_H_
-#define _JZIRBUILDER_H_
+#ifndef JZIRBUILDER_H
+#define JZIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -25,4 +25,4 @@ class JzIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
     virtual void mem(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _JZIRBUILDER_H_
+#endif // JZIRBUILDER_H

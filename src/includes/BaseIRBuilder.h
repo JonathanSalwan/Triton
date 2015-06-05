@@ -1,5 +1,5 @@
-#ifndef _BASEIRBUILDER_H_
-#define _BASEIRBUILDER_H_
+#ifndef BASEIRBUILDER_H
+#define BASEIRBUILDER_H
 
 #include <ostream>
 #include <sstream>
@@ -55,4 +55,4 @@ class BaseIRBuilder: public IRBuilder {
     std::vector<TritonOperand>  operands;
 };
 
-#endif // _BASEIRBUILDER_H_
+#endif // BASEIRBUILDER_H

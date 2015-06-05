@@ -1,6 +1,6 @@
 
-#ifndef   __SOLVERENGINE_H__
-#define   __SOLVERENGINE_H__
+#ifndef   SOLVERENGINE_H
+#define   SOLVERENGINE_H
 
 #include <cstdlib>
 #include <cstdint>

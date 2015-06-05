@@ -1,6 +1,6 @@
 
-#ifndef   __SYMBOLICENGINE_H__
-#define   __SYMBOLICENGINE_H__
+#ifndef   SYMBOLICENGINE_H
+#define   SYMBOLICENGINE_H
 
 #include <cstdint>
 

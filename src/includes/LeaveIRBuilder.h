@@ -1,5 +1,5 @@
-#ifndef _LEAVEIRBUILDER_H_
-#define _LEAVEIRBUILDER_H_
+#ifndef LEAVEIRBUILDER_H
+#define LEAVEIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -19,4 +19,4 @@ class LeaveIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
     virtual void none(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _LEAVEIRBUILDER_H_
+#endif // LEAVEIRBUILDER_H

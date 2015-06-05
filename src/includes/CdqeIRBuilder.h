@@ -1,5 +1,5 @@
-#ifndef _CDQEIRBUILDER_H_
-#define _CDQEIRBUILDER_H_
+#ifndef CDQEIRBUILDER_H
+#define CDQEIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -19,4 +19,4 @@ class CdqeIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
     virtual void none(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _CDQEIRBUILDER_H_
+#endif // CDQEIRBUILDER_H

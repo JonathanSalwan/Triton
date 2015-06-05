@@ -1,5 +1,5 @@
-#ifndef _XORIRBUILDER_H_
-#define _XORIRBUILDER_H_
+#ifndef XORIRBUILDER_H
+#define XORIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -27,4 +27,4 @@ class XorIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _XORIRBUILDER_H_
+#endif // XORIRBUILDER_H

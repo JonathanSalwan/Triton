@@ -1,5 +1,5 @@
-#ifndef _CWDEIRBUILDER_H_
-#define _CWDEIRBUILDER_H_
+#ifndef CWDEIRBUILDER_H
+#define CWDEIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -19,4 +19,4 @@ class CwdeIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
     virtual void none(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _CWDEIRBUILDER_H_
+#endif // CWDEIRBUILDER_H

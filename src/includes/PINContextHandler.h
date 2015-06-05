@@ -1,5 +1,5 @@
-#ifndef _PINCONTEXTHANDLER_H_
-#define _PINCONTEXTHANDLER_H_
+#ifndef PINCONTEXTHANDLER_H
+#define PINCONTEXTHANDLER_H
 
 #include <cstdint>
 
@@ -28,4 +28,4 @@ class PINContextHandler: public ContextHandler {
     THREADID  _threadId;
 };
 
-#endif // _PINCONTEXTHANDLER_H_
+#endif // PINCONTEXTHANDLER_H

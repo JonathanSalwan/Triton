@@ -1,6 +1,6 @@
 
-#ifndef   __CALLBACKDEFINE_H__
-#define   __CALLBACKDEFINE_H__
+#ifndef   CALLBACKDEFINE_H
+#define   CALLBACKDEFINE_H
 
 #define CB_BEFORE           0
 #define CB_BEFORE_SYMPROC   1

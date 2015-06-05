@@ -1,5 +1,5 @@
-#ifndef _XCHGIRBUILDER_H_
-#define _XCHGIRBUILDER_H_
+#ifndef XCHGIRBUILDER_H
+#define XCHGIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -27,4 +27,4 @@ class XchgIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _XCHGIRBUILDER_H_
+#endif // XCHGIRBUILDER_H

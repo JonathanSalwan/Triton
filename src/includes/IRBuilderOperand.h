@@ -1,6 +1,6 @@
 
-#ifndef   __RBUILDEROPERAND_H__
-#define   __RBUILDEROPERAND_H__
+#ifndef   RBUILDEROPERAND_H
+#define   RBUILDEROPERAND_H
 
 // Define each type of operand.
 namespace IRBuilderOperand

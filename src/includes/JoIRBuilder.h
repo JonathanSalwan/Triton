@@ -1,5 +1,5 @@
-#ifndef _JOIRBUILDER_H_
-#define _JOIRBUILDER_H_
+#ifndef JOIRBUILDER_H
+#define JOIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -25,4 +25,4 @@ class JoIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
     virtual void mem(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _JOIRBUILDER_H_
+#endif // JOIRBUILDER_H

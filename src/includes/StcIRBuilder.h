@@ -1,5 +1,5 @@
-#ifndef _STCIRBUILDER_H_
-#define _STCIRBUILDER_H_
+#ifndef STCIRBUILDER_H
+#define STCIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -19,4 +19,4 @@ class StcIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
     virtual void none(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _STCIRBUILDER_H_
+#endif // STCIRBUILDER_H

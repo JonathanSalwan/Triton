@@ -1,5 +1,5 @@
-#ifndef _TESTIRBUILDER_H_
-#define _TESTIRBUILDER_H_
+#ifndef TESTIRBUILDER_H
+#define TESTIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -27,4 +27,4 @@ class TestIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _TESTIRBUILDER_H_
+#endif // TESTIRBUILDER_H

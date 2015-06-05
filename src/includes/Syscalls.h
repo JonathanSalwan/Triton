@@ -1,9 +1,9 @@
-#ifndef _SYSCALLS_H_
-#define _SYSCALLS_H_
+#ifndef SYSCALLS_H
+#define SYSCALLS_H
 
 #include <asm/unistd_64.h>
 
 extern const unsigned int NB_SYSCALL;
 extern const char *syscallmap[];
 
-#endif // _SYSCALLS_H_
+#endif // SYSCALLS_H

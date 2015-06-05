@@ -1,5 +1,5 @@
-#ifndef _ADCIRBUILDER_H_
-#define _ADCIRBUILDER_H_
+#ifndef ADCIRBUILDER_H
+#define ADCIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -27,4 +27,4 @@ class AdcIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _ADCIRBUILDER_H_
+#endif // ADCIRBUILDER_H

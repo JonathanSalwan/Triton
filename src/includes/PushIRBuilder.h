@@ -1,5 +1,5 @@
-#ifndef _PUSHIRBUILDER_H_
-#define _PUSHIRBUILDER_H_
+#ifndef PUSHIRBUILDER_H
+#define PUSHIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -25,4 +25,4 @@ class PushIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
     virtual void mem(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _PUSHIRBUILDER_H_
+#endif // PUSHIRBUILDER_H

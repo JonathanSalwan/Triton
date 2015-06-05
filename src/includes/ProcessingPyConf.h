@@ -1,6 +1,6 @@
 
-#ifndef   __PROCESSINGPYCONF_H__
-#define   __PROCESSINGPYCONF_H__
+#ifndef   PROCESSINGPYCONF_H
+#define   PROCESSINGPYCONF_H
 
 #include "AnalysisProcessor.h"
 #include "IRBuilder.h"

@@ -1,5 +1,5 @@
-#ifndef _NOTIRBUILDER_H_
-#define _NOTIRBUILDER_H_
+#ifndef NOTIRBUILDER_H
+#define NOTIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -25,4 +25,4 @@ class NotIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
     virtual void mem(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _NOTIRBUILDER_H_
+#endif // NOTIRBUILDER_H

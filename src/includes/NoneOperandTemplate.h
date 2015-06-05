@@ -1,5 +1,5 @@
-#ifndef _NONEOPERANDTEMPLATE_H_
-#define _NONEOPERANDTEMPLATE_H_
+#ifndef NONEOPERANDTEMPLATE_H
+#define NONEOPERANDTEMPLATE_H
 
 #include <vector>
 
@@ -27,4 +27,4 @@ class NoneOperandTemplate: public OperandTemplate {
     virtual void none(AnalysisProcessor &ap, Inst &inst) const = 0;
 };
 
-#endif // _NONEOPERANDTEMPLATE_H_
+#endif // NONEOPERANDTEMPLATE_H

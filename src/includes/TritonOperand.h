@@ -1,6 +1,6 @@
 
-#ifndef   __TRITONOPERAND_H__
-#define   __TRITONOPERAND_H__
+#ifndef   TRITONOPERAND_H
+#define   TRITONOPERAND_H
 
 #include <cstdint>
 #include "IRBuilderOperand.h"

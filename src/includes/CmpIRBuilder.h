@@ -1,5 +1,5 @@
-#ifndef _CMPIRBUILDER_H_
-#define _CMPIRBUILDER_H_
+#ifndef CMPIRBUILDER_H
+#define CMPIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -27,4 +27,4 @@ class CmpIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _ADDIRBUILDER_H_
+#endif // ADDIRBUILDER_H

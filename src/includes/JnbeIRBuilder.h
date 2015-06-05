@@ -1,5 +1,5 @@
-#ifndef _JNBEIRBUILDER_H_
-#define _JNBEIRBUILDER_H_
+#ifndef JNBEIRBUILDER_H
+#define JNBEIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -25,4 +25,4 @@ class JnbeIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
     virtual void mem(AnalysisProcessor &ap, Inst &inst) const;
 };
 
-#endif // _JNBEIRBUILDER_H_
+#endif // JNBEIRBUILDER_H

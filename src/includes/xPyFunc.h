@@ -1,6 +1,6 @@
 
-#ifndef   __XPYFUNC_H__
-#define   __XPYFUNC_H__
+#ifndef   XPYFUNC_H
+#define   XPYFUNC_H
 
 #include <python2.7/Python.h>
 
