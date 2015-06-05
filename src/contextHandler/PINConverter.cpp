@@ -160,7 +160,7 @@ uint64_t PINConverter::convertDBIReg2TritonReg(uint64_t regID){
       return ID_XMM15;
 
     default:
-      return -1;
+      return ID_INVALID;
   }
 }
 
@@ -204,7 +204,8 @@ uint64_t PINConverter::convertTritonReg2DBIReg(uint64_t regID) {
     case ID_XMM13:  return REG_XMM13;
     case ID_XMM14:  return REG_XMM14;
     case ID_XMM15:  return REG_XMM15;
-    default: return -1;
+    default:
+      return REG_INVALID_;
   }
 }
 
