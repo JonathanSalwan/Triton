@@ -202,6 +202,44 @@ static PyObject *smt2lib_bvor(PyObject *self, PyObject *args)
 }
 
 
+static char smt2lib_bvror_doc[] = "Returns a 'bvror' expression";
+static PyObject *smt2lib_bvror(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvror(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvror(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvror(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
+static char smt2lib_bvrol_doc[] = "Returns a 'bvrol' expression";
+static PyObject *smt2lib_bvrol(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PyString_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "bvrol(): expected a string as first argument");
+
+  if (op2 == nullptr || !PyString_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "bvrol(): expected a string as second argument");
+
+  return Py_BuildValue("s", smt2lib::bvrol(PyString_AsString(op1), PyString_AsString(op2)).c_str());
+}
+
+
 static char smt2lib_bvsdiv_doc[] = "Returns a 'bvsdiv' expression";
 static PyObject *smt2lib_bvsdiv(PyObject *self, PyObject *args)
 {
@@ -684,6 +722,8 @@ PyMethodDef smt2libCallbacks[] = {
   {"bvnor",       smt2lib_bvnor,      METH_VARARGS,     smt2lib_bvnor_doc},
   {"bvnot",       smt2lib_bvnot,      METH_O,           smt2lib_bvnot_doc},
   {"bvor",        smt2lib_bvor,       METH_VARARGS,     smt2lib_bvor_doc},
+  {"bvrol",       smt2lib_bvrol,      METH_VARARGS,     smt2lib_bvrol_doc},
+  {"bvror",       smt2lib_bvror,      METH_VARARGS,     smt2lib_bvror_doc},
   {"bvsdiv",      smt2lib_bvsdiv,     METH_VARARGS,     smt2lib_bvsdiv_doc},
   {"bvsge",       smt2lib_bvsge,      METH_VARARGS,     smt2lib_bvsge_doc},
   {"bvsgt",       smt2lib_bvsgt,      METH_VARARGS,     smt2lib_bvsgt_doc},

@@ -106,6 +106,14 @@ namespace smt2lib {
   /* (bvor <op1> <op2>) */
   std::string bvor(std::string op1, std::string op2);
 
+  /* Returns the 'bvror' syntax. */
+  /* ((_ rotate_right <op1>) <op2>) */
+  std::string bvror(std::string op1, std::string op2);
+
+  /* Returns the 'bvrol' syntax. */
+  /* ((_ rotate_left <op1>) <op2>) */
+  std::string bvrol(std::string op1, std::string op2);
+
   /* returns the 'bvsub' syntax. */
   /* (bvsub <op1> <op2>) */
   std::string bvsub(std::string op1, std::string op2);
