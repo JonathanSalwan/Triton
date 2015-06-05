@@ -16,8 +16,7 @@ AnalysisProcessor::AnalysisProcessor():
 
 void AnalysisProcessor::updateCurrentCtxH(ContextHandler *ctxtHandler)
 {
-  if (this->currentCtxH != nullptr)
-    delete this->currentCtxH;
+  delete this->currentCtxH;
   this->currentCtxH = ctxtHandler;
 }
 

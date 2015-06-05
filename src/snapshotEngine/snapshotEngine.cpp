@@ -79,12 +79,10 @@ void SnapshotEngine::resetEngine()
 {
   this->memory.clear();
 
-  if (this->snapshotSymEngine)
-    delete this->snapshotSymEngine;
+  delete this->snapshotSymEngine;
   this->snapshotSymEngine = nullptr;
 
-  if (this->snapshotTaintEngine)
-    delete this->snapshotTaintEngine;
+  delete this->snapshotTaintEngine;
   this->snapshotTaintEngine = nullptr;
 }
 
