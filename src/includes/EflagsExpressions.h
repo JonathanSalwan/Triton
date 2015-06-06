@@ -14,6 +14,7 @@ namespace EflagsExpressions {
 
   std::string cfAdd(SymbolicElement *parent, std::stringstream &op1);
   std::string cfNeg(uint32_t bvSize, std::stringstream &op1);
+  std::string cfMul(SymbolicElement *parent, std::stringstream &op1);
   std::string cfSar(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op1, std::stringstream &op2);
   std::string cfShl(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op1, std::stringstream &op2);
   std::string cfShr(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op1, std::stringstream &op2);
@@ -23,6 +24,7 @@ namespace EflagsExpressions {
 
   std::string ofAdd(SymbolicElement *parent, uint32_t extractSize, std::stringstream &op1, std::stringstream &op2);
   std::string ofNeg(SymbolicElement *parent, uint32_t bvSize, std::stringstream &op1);
+  std::string ofMul(SymbolicElement *parent, std::stringstream &op1);
   std::string ofSar(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op2);
   std::string ofShl(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op1, std::stringstream &op2);
   std::string ofShr(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op1, std::stringstream &op2);

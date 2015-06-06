@@ -159,6 +159,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new IdivIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_IMUL:
+      ir = new ImulIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_INC:
       ir = new IncIRBuilder(address, disas);
       break;

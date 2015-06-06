@@ -37,6 +37,7 @@
 #include "DivIRBuilder.h"
 #include "IRBuilderFactory.h"
 #include "IdivIRBuilder.h"
+#include "ImulIRBuilder.h"
 #include "IncIRBuilder.h"
 #include "JbIRBuilder.h"
 #include "JbeIRBuilder.h"

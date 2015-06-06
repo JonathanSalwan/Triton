@@ -92,6 +92,13 @@ void check(void)
   asm("idiv ecx");
   asm("idiv rcx");
 
+  asm("mov rcx, 2");
+  asm("mov rdx, 3");
+  asm("imul cx");
+  asm("imul ecx, edx");
+  asm("imul ecx, 1");
+  asm("imul rcx, rcx, 4");
+
   // SSE
   asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab));
   asm("movapd xmm1, xmm2");

@@ -106,6 +106,27 @@ std::string EflagsExpressions::cfNeg(uint32_t bvSize,
 }
 
 
+std::string EflagsExpressions::cfMul(SymbolicElement *parent,
+                                     std::stringstream &op1)
+{
+  std::stringstream expr;
+
+  /*
+   * Create the SMT semantic.
+   * of = 0 if res == op1 else 1
+   */
+  expr << smt2lib::ite(
+            smt2lib::equal(
+              parent->getID2Str(),
+              op1.str()
+            ),
+            smt2lib::bv(0, 1),
+            smt2lib::bv(1, 1));
+
+  return expr.str();
+}
+
+
 std::string EflagsExpressions::cfSar(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
                                      uint32_t bvSize,
@@ -264,6 +285,27 @@ std::string EflagsExpressions::ofNeg(SymbolicElement *parent,
             smt2lib::bv(1, 1),
             smt2lib::bv(0, 1)
           );
+
+  return expr.str();
+}
+
+
+std::string EflagsExpressions::ofMul(SymbolicElement *parent,
+                                     std::stringstream &op1)
+{
+  std::stringstream expr;
+
+  /*
+   * Create the SMT semantic.
+   * of = 0 if res == op1 else 1
+   */
+  expr << smt2lib::ite(
+            smt2lib::equal(
+              parent->getID2Str(),
+              op1.str()
+            ),
+            smt2lib::bv(0, 1),
+            smt2lib::bv(1, 1));
 
   return expr.str();
 }
