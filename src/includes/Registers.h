@@ -2,7 +2,7 @@
 #define  REGISTERS_H
 
 #define BYTE_SIZE         1   // In byte
-#define BYTE_SIZE_BIT     4   // In bits
+#define BYTE_SIZE_BIT     8   // In bits
 
 #define WORD_SIZE         2   // In byte
 #define WORD_SIZE_BIT     16  // In bits

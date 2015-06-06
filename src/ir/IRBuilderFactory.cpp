@@ -151,6 +151,14 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new DecIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_DIV:
+      ir = new DivIRBuilder(address, disas);
+      break;
+
+    case XED_ICLASS_IDIV:
+      ir = new IdivIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_INC:
       ir = new IncIRBuilder(address, disas);
       break;
