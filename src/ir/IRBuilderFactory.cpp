@@ -449,8 +449,8 @@ IRBuilder *createIRBuilder(INS ins) {
 
     //Effective address = Displacement + BaseReg + IndexReg * Scale
     UINT64 displacement = 0;
-    UINT64 baseReg = 0;
-    UINT64 indexReg = 0;
+    UINT64 baseReg = ID_INVALID;
+    UINT64 indexReg = ID_INVALID;
     UINT64 memoryScale = 0;
 
     /* Special case */
