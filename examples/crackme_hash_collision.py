@@ -14,7 +14,7 @@ import  smt2lib
 #
 # This Triton code will try to break and find a hash collision.
 #
-# $ triton ./examples/crackme_hash.py ./samples/crackmes/crackme_hash aaaaa
+# $ triton ./examples/crackme_hash_collision.py ./samples/crackmes/crackme_hash aaaaa
 # [+] Please wait, computing in progress...
 # {
 #   'SymVar_0': "0x6c, 'l'", 
@@ -49,38 +49,34 @@ def cafter(instruction):
         raxExpr = getBacktrackedSymExpr(raxId)
         expr = str()
 
+        # We want printable characters
         # (assert (bvsgt SymVar_0 96)
         # (assert (bvslt SymVar_0 123)
-        expr += '\n'
         expr += smt2lib.smtAssert(smt2lib.bvugt('SymVar_0', smt2lib.bv(96, 64)))
         expr += smt2lib.smtAssert(smt2lib.bvult('SymVar_0', smt2lib.bv(123, 64)))
 
         # (assert (bvsgt SymVar_1 96)
         # (assert (bvslt SymVar_1 123)
-        expr += '\n'
         expr += smt2lib.smtAssert(smt2lib.bvugt('SymVar_1', smt2lib.bv(96, 64)))
         expr += smt2lib.smtAssert(smt2lib.bvult('SymVar_1', smt2lib.bv(123, 64)))
 
         # (assert (bvsgt SymVar_2 96)
         # (assert (bvslt SymVar_2 123)
-        expr += '\n'
         expr += smt2lib.smtAssert(smt2lib.bvugt('SymVar_2', smt2lib.bv(96, 64)))
         expr += smt2lib.smtAssert(smt2lib.bvult('SymVar_2', smt2lib.bv(123, 64)))
 
         # (assert (bvsgt SymVar_3 96)
         # (assert (bvslt SymVar_3 123)
-        expr += '\n'
         expr += smt2lib.smtAssert(smt2lib.bvugt('SymVar_3', smt2lib.bv(96, 64)))
         expr += smt2lib.smtAssert(smt2lib.bvult('SymVar_3', smt2lib.bv(123, 64)))
 
         # (assert (bvsgt SymVar_4 96)
         # (assert (bvslt SymVar_4 123)
-        expr += '\n'
         expr += smt2lib.smtAssert(smt2lib.bvugt('SymVar_4', smt2lib.bv(96, 64)))
         expr += smt2lib.smtAssert(smt2lib.bvult('SymVar_4', smt2lib.bv(123, 64)))
 
+        # We want the collision
         # (assert (= rax 0xad6d)
-        expr += '\n'
         expr += smt2lib.smtAssert(smt2lib.equal(raxExpr, smt2lib.bv(0xad6d, 64)))
         print {k: "0x%x, '%c'" % (v, v) for k, v in getModel(expr).items()}
 
