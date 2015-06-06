@@ -6,13 +6,13 @@ import  smt2lib
 # This example breaks a simple hash routine.
 #
 # Check the ./samples/crackmes/crackme_hash.c file. This file builds 
-# an 'hash' and checks the checksum 0xad6d.
+# a 'hash' and checks the checksum 0xad6d.
 #
 # The needed password is 'elite'. Example: 
 # $ ./samples/crackmes/crackme_hash elite
 # Win
 #
-# This Triton code will try to break and find an hash collision.
+# This Triton code will try to break and find a hash collision.
 #
 # $ triton ./examples/crackme_hash.py ./samples/crackmes/crackme_hash aaaaa
 # [+] Please wait, computing in progress...
