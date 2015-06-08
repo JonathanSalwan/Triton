@@ -31,7 +31,7 @@ void CmpIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicRegOperand(reg, regSize);
-  op2 << smt2lib::sx(smt2lib::bv(imm, regSize * REG_SIZE), 0);
+  op2 << smt2lib::bv(imm, regSize * REG_SIZE);
 
   /* Finale expr */
   expr << smt2lib::bvsub(op1.str(), op2.str());
@@ -114,7 +114,7 @@ void CmpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicMemOperand(mem, writeSize);
-  op2 << smt2lib::sx(smt2lib::bv(imm, writeSize * REG_SIZE), 0);
+  op2 << smt2lib::bv(imm, writeSize * REG_SIZE);
 
   /* Final expr */
   expr << smt2lib::bvsub(op1.str(), op2.str());

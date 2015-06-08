@@ -20,13 +20,13 @@ void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          regSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  divisor << smt2lib::sx(ap.buildSymbolicRegOperand(reg, regSize), 0);
+  divisor << ap.buildSymbolicRegOperand(reg, regSize);
 
   switch (regSize) {
 
     case 1:
       /* AX */
-      dividend << smt2lib::sx(ap.buildSymbolicRegOperand(ID_RAX, WORD_SIZE), 0);
+      dividend << ap.buildSymbolicRegOperand(ID_RAX, WORD_SIZE);
       /* res = AX / Source */
       result << smt2lib::bvsdiv(dividend.str(), smt2lib::zx(divisor.str(), BYTE_SIZE_BIT));
       /* mod = AX % Source */
@@ -45,7 +45,7 @@ void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
     case 2:
       /* DX:AX */
-      dividend << smt2lib::sx(smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, WORD_SIZE), ap.buildSymbolicRegOperand(ID_RAX, WORD_SIZE)), 0);
+      dividend << smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, WORD_SIZE), ap.buildSymbolicRegOperand(ID_RAX, WORD_SIZE));
       /* res = DX:AX / Source */
       result << smt2lib::extract(15, 0, smt2lib::bvsdiv(dividend.str(), smt2lib::zx(divisor.str(), WORD_SIZE_BIT)));
       /* mod = DX:AX % Source */
@@ -62,7 +62,7 @@ void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
     case 4:
       /* EDX:EAX */
-      dividend << smt2lib::sx(smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, DWORD_SIZE), ap.buildSymbolicRegOperand(ID_RAX, DWORD_SIZE)), 0);
+      dividend << smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, DWORD_SIZE), ap.buildSymbolicRegOperand(ID_RAX, DWORD_SIZE));
       /* res = EDX:EAX / Source */
       result << smt2lib::extract(31, 0, smt2lib::bvsdiv(dividend.str(), smt2lib::zx(divisor.str(), DWORD_SIZE_BIT)));
       /* mod = EDX:EAX % Source */
@@ -79,7 +79,7 @@ void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
     case 8:
       /* RDX:RAX */
-      dividend << smt2lib::sx(smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE), ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE)), 0);
+      dividend << smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE), ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE));
       /* res = RDX:RAX / Source */
       result << smt2lib::extract(63, 0, smt2lib::bvsdiv(dividend.str(), smt2lib::zx(divisor.str(), QWORD_SIZE_BIT)));
       /* mod = RDX:RAX % Source */
@@ -104,13 +104,13 @@ void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          memSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  divisor << smt2lib::sx(ap.buildSymbolicMemOperand(mem, memSize), 0);
+  divisor << ap.buildSymbolicMemOperand(mem, memSize);
 
   switch (memSize) {
 
     case 1:
       /* AX */
-      dividend << smt2lib::sx(ap.buildSymbolicRegOperand(ID_RAX, WORD_SIZE), 0);
+      dividend << ap.buildSymbolicRegOperand(ID_RAX, WORD_SIZE);
       /* res = AX / Source */
       result << smt2lib::bvsdiv(dividend.str(), smt2lib::zx(divisor.str(), BYTE_SIZE_BIT));
       /* mod = AX % Source */
@@ -129,7 +129,7 @@ void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
     case 2:
       /* DX:AX */
-      dividend << smt2lib::sx(smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, WORD_SIZE), ap.buildSymbolicRegOperand(ID_RAX, WORD_SIZE)), 0);
+      dividend << smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, WORD_SIZE), ap.buildSymbolicRegOperand(ID_RAX, WORD_SIZE));
       /* res = DX:AX / Source */
       result << smt2lib::extract(15, 0, smt2lib::bvsdiv(dividend.str(), smt2lib::zx(divisor.str(), WORD_SIZE_BIT)));
       /* mod = DX:AX % Source */
@@ -146,7 +146,7 @@ void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
     case 4:
       /* EDX:EAX */
-      dividend << smt2lib::sx(smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, DWORD_SIZE), ap.buildSymbolicRegOperand(ID_RAX, DWORD_SIZE)), 0);
+      dividend << smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, DWORD_SIZE), ap.buildSymbolicRegOperand(ID_RAX, DWORD_SIZE));
       /* res = EDX:EAX / Source */
       result << smt2lib::extract(31, 0, smt2lib::bvsdiv(dividend.str(), smt2lib::zx(divisor.str(), DWORD_SIZE_BIT)));
       /* mod = EDX:EAX % Source */
@@ -163,7 +163,7 @@ void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
     case 8:
       /* RDX:RAX */
-      dividend << smt2lib::sx(smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE), ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE)), 0);
+      dividend << smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE), ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE));
       /* res = RDX:RAX / Source */
       result << smt2lib::extract(63, 0, smt2lib::bvsdiv(dividend.str(), smt2lib::zx(divisor.str(), QWORD_SIZE_BIT)));
       /* mod = RDX:RAX % Source */

@@ -21,8 +21,8 @@ void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   uint32_t          regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << smt2lib::sx(ap.buildSymbolicRegOperand(reg, regSize), 0);
-  op2 << smt2lib::sx(smt2lib::bv(imm, regSize * REG_SIZE), 0);
+  op1 << ap.buildSymbolicRegOperand(reg, regSize);
+  op2 << smt2lib::bv(imm, regSize * REG_SIZE);
 
   /* Finale expr */
   expr << smt2lib::bvmul(op1.str(), op2.str());
@@ -53,9 +53,9 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
     imm = this->operands[2].getValue();
 
   /* Create the SMT semantic */
-  op1 << smt2lib::sx(ap.buildSymbolicRegOperand(reg1, regSize1), 0);
-  op2 << smt2lib::sx(ap.buildSymbolicRegOperand(reg2, regSize2), 0);
-  op3 << smt2lib::sx(smt2lib::bv(imm, regSize1 * REG_SIZE), 0);
+  op1 << ap.buildSymbolicRegOperand(reg1, regSize1);
+  op2 << ap.buildSymbolicRegOperand(reg2, regSize2);
+  op3 << smt2lib::bv(imm, regSize1 * REG_SIZE);
 
   /* Finale expr */
   if (imm == 0)
@@ -89,9 +89,9 @@ void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
     imm = this->operands[2].getValue();
 
   /* Create the SMT semantic */
-  op1 << smt2lib::sx(ap.buildSymbolicRegOperand(reg, regSize), 0);
-  op2 << smt2lib::sx(ap.buildSymbolicMemOperand(mem, memSize), 0);
-  op3 << smt2lib::sx(smt2lib::bv(imm, regSize * REG_SIZE), 0);
+  op1 << ap.buildSymbolicRegOperand(reg, regSize);
+  op2 << ap.buildSymbolicMemOperand(mem, memSize);
+  op3 << smt2lib::bv(imm, regSize * REG_SIZE);
 
   /* Finale expr */
   if (imm == 0)
