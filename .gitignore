@@ -8,3 +8,4 @@ pintool.log
 src/utils/syscalls.cpp
 .gdb_history
 peda-session*
+*.i64

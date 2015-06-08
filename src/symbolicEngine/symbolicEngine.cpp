@@ -128,7 +128,7 @@ uint64_t SymbolicEngine::getRegSymbolicID(uint64_t regID) {
 }
 
 
-/* Get an unique ID. 
+/* Get an unique ID.
  * Mainly used when a new symbolic element is created */
 uint64_t SymbolicEngine::getUniqueID()
 {

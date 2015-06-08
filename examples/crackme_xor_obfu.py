@@ -2,7 +2,7 @@
 import smt2lib
 from triton import *
 
-# $ triton ./examples/crackme_xor_obfu.py ./samples/crackmes/crackme_xor_obfu a
+# $ triton ./examples/crackme_xor_obfu.py ./samples/crackmes/crackme_xor_obfu A
 
 def cafter(instruction):
 
@@ -18,14 +18,18 @@ def cafter(instruction):
     if instruction.address == 0x400b69:
         zfId = getRegSymbolicID(IDREF.FLAG.ZF)
         zfExpr = getBacktrackedSymExpr(zfId)
-        expr = smt2lib.smtAssert(smt2lib.equal(zfExpr, smt2lib.bvtrue())) # (assert (= zf true)
-        print expr
+        expr = str()
+        expr += smt2lib.smtAssert(smt2lib.bvugt('SymVar_0', smt2lib.bv(96, 64)))    # printable char
+        expr += smt2lib.smtAssert(smt2lib.bvult('SymVar_0', smt2lib.bv(123, 64)))   # printable char
+        expr += smt2lib.smtAssert(smt2lib.equal(zfExpr, smt2lib.bvtrue()))          # (assert (= zf true)
         print getModel(expr)
+
+    return
 
 
 if __name__ == '__main__':
-    startAnalysisFromAddr(0x4011dd)
-    stopAnalysisFromAddr(0x40120b)
+    startAnalysisFromAddr(0x0000000000400891)
+    stopAnalysisFromAddr(0x0000000000400b76)
     addCallback(cafter, IDREF.CALLBACK.AFTER)
     runProgram()
 
