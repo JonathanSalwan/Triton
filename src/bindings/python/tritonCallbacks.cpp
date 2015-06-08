@@ -459,7 +459,6 @@ static PyObject *Triton_getSymVarSize(PyObject *self, PyObject *symVar)
     else
       return PyErr_Format(PyExc_TypeError, "getSymVarSize(): Invalid symbolic variable name");
   }
-  std::cout << id << std::endl;
   return Py_BuildValue("k", ap.getSymVarSize(id));
 }
 
