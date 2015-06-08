@@ -25,7 +25,12 @@ void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   op2 << smt2lib::bv(imm, regSize * REG_SIZE);
 
   /* Finale expr */
-  expr << smt2lib::bvmul(op1.str(), op2.str());
+  expr << smt2lib::extract(regSize,
+            smt2lib::bvmul(
+              smt2lib::sx(op1.str(), regSize * REG_SIZE),
+              smt2lib::sx(op2.str(), regSize * REG_SIZE)
+            )
+          );
 
   /* Create the symbolic element */
   se = ap.createRegSE(inst, expr, reg, regSize);
@@ -59,9 +64,19 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Finale expr */
   if (imm == 0)
-    expr << smt2lib::bvmul(op1.str(), op2.str());
+    expr << smt2lib::extract(regSize1,
+              smt2lib::bvmul(
+                smt2lib::sx(op1.str(), regSize1 * REG_SIZE),
+                smt2lib::sx(op2.str(), regSize2 * REG_SIZE)
+              )
+            );
   else
-    expr << smt2lib::bvmul(op2.str(), op3.str());
+    expr << smt2lib::extract(regSize1,
+              smt2lib::bvmul(
+                smt2lib::sx(op2.str(), regSize1 * REG_SIZE),
+                smt2lib::sx(op3.str(), regSize2 * REG_SIZE)
+              )
+            );
 
   /* Create the symbolic element */
   se = ap.createRegSE(inst, expr, reg1, regSize1);
@@ -95,9 +110,19 @@ void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Finale expr */
   if (imm == 0)
-    expr << smt2lib::bvmul(op1.str(), op2.str());
+    expr << smt2lib::extract(regSize,
+              smt2lib::bvmul(
+                smt2lib::sx(op1.str(), regSize * REG_SIZE),
+                smt2lib::sx(op2.str(), regSize * REG_SIZE)
+              )
+            );
   else
-    expr << smt2lib::bvmul(op2.str(), op3.str());
+    expr << smt2lib::extract(regSize,
+              smt2lib::bvmul(
+                smt2lib::sx(op2.str(), regSize * REG_SIZE),
+                smt2lib::sx(op3.str(), regSize * REG_SIZE)
+              )
+            );
 
   /* Create the symbolic element */
   se = ap.createRegSE(inst, expr, reg, regSize);

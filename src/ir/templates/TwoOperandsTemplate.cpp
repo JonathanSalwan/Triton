@@ -12,7 +12,7 @@ void TwoOperandsTemplate::templateMethod(
     const std::vector<TritonOperand> &operands,
     std::string insName) const
 {
-  if (operands.size() < 2) // TODO, MOV = 2, ADD = 3, virer le < et mettre un template 3op
+  if (operands.size() < 2)
     throw std::runtime_error("Wrong numbers of operands: "
                            + insName
                            + " instruction must have two operands.");

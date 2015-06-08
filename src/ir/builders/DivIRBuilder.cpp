@@ -31,11 +31,11 @@ void DivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
       result << smt2lib::bvudiv(dividend.str(), smt2lib::zx(divisor.str(), BYTE_SIZE_BIT));
       /* mod = AX % Source */
       mod << smt2lib::bvurem(dividend.str(), smt2lib::zx(divisor.str(), BYTE_SIZE_BIT));
-      /* AL = res */
       /* AH = mod */
+      /* AL = res */
       expr << smt2lib::concat(
-                smt2lib::extract(7, 0, result.str()), /* AL = res */
-                smt2lib::extract(7, 0, mod.str())     /* AH = mod */
+                smt2lib::extract(7, 0, mod.str()),   /* AH = mod */
+                smt2lib::extract(7, 0, result.str()) /* AL = res */
               );
       /* Create the symbolic element */
       se = ap.createRegSE(inst, expr, ID_RAX, WORD_SIZE);
@@ -115,11 +115,11 @@ void DivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
       result << smt2lib::bvudiv(dividend.str(), smt2lib::zx(divisor.str(), BYTE_SIZE_BIT));
       /* mod = AX % Source */
       mod << smt2lib::bvurem(dividend.str(), smt2lib::zx(divisor.str(), BYTE_SIZE_BIT));
-      /* AL = res */
       /* AH = mod */
+      /* AL = res */
       expr << smt2lib::concat(
-                smt2lib::extract(7, 0, result.str()), /* AL = res */
-                smt2lib::extract(7, 0, mod.str())     /* AH = mod */
+                smt2lib::extract(7, 0, mod.str()),   /* AH = mod */
+                smt2lib::extract(7, 0, result.str()) /* AL = res */
               );
       /* Create the symbolic element */
       se = ap.createRegSE(inst, expr, ID_RAX, WORD_SIZE);

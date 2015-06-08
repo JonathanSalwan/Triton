@@ -315,7 +315,7 @@ std::string AnalysisProcessor::buildSymbolicMemOperand(uint64_t mem, uint64_t me
       tmp << "#" << std::dec << symMem;
     else
       tmp << smt2lib::bv(this->getMemValue(mem + offset, 1), REG_SIZE);
-    opVec.push_back(smt2lib::extract(7, 0, tmp.str())); 
+    opVec.push_back(smt2lib::extract(7, 0, tmp.str()));
     offset++;
     memSize--;
   }
