@@ -176,10 +176,7 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
   if (vs != 16 && vs != 8 && vs != 4 && vs != 2 && vs != 1)
     return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): The symVarSize argument must be: 16, 8, 4, 2 or 1");
 
-  if (ap.convertExprToSymVar(ei, vs) == false)
-    return Py_False;
-
-  return Py_True;
+  return Py_BuildValue("k", ap.convertExprToSymVar(ei, vs));
 }
 
 

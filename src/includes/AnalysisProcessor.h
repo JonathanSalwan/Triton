@@ -85,10 +85,7 @@ class AnalysisProcessor {
     SymbolicEngine &getSymbolicEngine(void);
 
     /* Converts an expression to a symbolic variable */
-    bool convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
-
-    /* Assigns a symbolic variable to an expression */
-    bool assignExprToSymVar(uint64_t exprId, uint64_t symVarId);
+    uint64_t convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
 
     /* Link: Address <-> Symbolic Variable ID */
     uint64_t getMemoryFromSymVar(uint64_t symVar);

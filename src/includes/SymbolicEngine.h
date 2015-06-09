@@ -65,11 +65,10 @@ class SymbolicEngine {
     SymbolicElement       *newSymbolicElement(std::stringstream &src);
     SymbolicElement       *newSymbolicElement(std::stringstream &src, std::string comment);
     SymbolicVariable      *addSymbolicVariable(uint64_t symVarSize);
-    bool                  assignExprToSymVar(uint64_t exprId, uint64_t symVarId);
-    bool                  convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
     std::list<uint64_t>   getPathConstraints(void);
     std::string           getBacktrackedExpressionFromId(uint64_t id);
     std::string           getVariablesDeclaration(void);
+    uint64_t              convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
     uint64_t              getMemSymbolicID(uint64_t addr);
     uint64_t              getRegSymbolicID(uint64_t regID);
     uint64_t              getSymVarSize(uint64_t symVarId);

@@ -229,7 +229,7 @@ std::string AnalysisProcessor::getBacktrackedExpressionFromId(uint64_t id)
 }
 
 
-bool AnalysisProcessor::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize)
+uint64_t AnalysisProcessor::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize)
 {
   return this->symEngine.convertExprToSymVar(exprId, symVarSize);
 }
