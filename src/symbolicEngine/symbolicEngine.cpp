@@ -10,9 +10,7 @@ SymbolicEngine::SymbolicEngine()
   /* Init all symbolic registers/flags to UNSET (init state) */
   for (uint64_t i = 0; i < ID_LAST_ITEM; i++)
     this->symbolicReg[i] = UNSET;
-
-  /* Init the number of symbolic variable used */
-  this->numberOfSymVar = 0;
+  this->uniqueID = 0;
 }
 
 
@@ -21,15 +19,11 @@ void SymbolicEngine::init(const SymbolicEngine &other)
   for (uint64_t i = 0; i < ID_LAST_ITEM; i++)
     this->symbolicReg[i] = other.symbolicReg[i];
 
-  this->memoryReference               = other.memoryReference;
-  this->numberOfSymVar                = other.numberOfSymVar;
-  this->pathConstaints                = other.pathConstaints;
-  this->symVarDeclaration             = other.symVarDeclaration;
-  this->symVarMemoryReference         = other.symVarMemoryReference;
-  this->symVarMemoryReferenceInverse  = other.symVarMemoryReferenceInverse;
-  this->symVarSizeReference           = other.symVarSizeReference;
-  this->symbolicVector                = other.symbolicVector;
   this->uniqueID                      = other.uniqueID;
+  this->memoryReference               = other.memoryReference;
+  this->pathConstaints                = other.pathConstaints;
+  this->symbolicExpressions           = other.symbolicExpressions;
+  this->symbolicVariables             = other.symbolicVariables;
 }
 
 
@@ -47,9 +41,9 @@ void SymbolicEngine::operator=(const SymbolicEngine &other)
 
 SymbolicEngine::~SymbolicEngine()
 {
-  std::vector<SymbolicElement *>::iterator it = this->symbolicVector.begin();
+  std::vector<SymbolicElement *>::iterator it = this->symbolicExpressions.begin();
 
-  for (; it != this->symbolicVector.end(); ++it) {
+  for (; it != this->symbolicExpressions.end(); ++it) {
     SymbolicElement *tmp = *it;
     delete tmp;
     tmp = nullptr;
@@ -90,33 +84,12 @@ uint64_t SymbolicEngine::getMemSymbolicID(uint64_t addr)
 }
 
 
-/* Returns the symbolic variable ID from the memory address */
-uint64_t SymbolicEngine::getSymVarFromMemory(uint64_t addr)
-{
-  std::map<uint64_t, uint64_t>::iterator it;
-  if ((it = this->symVarMemoryReference.find(addr)) != this->symVarMemoryReference.end())
-    return it->second;
-  return UNSET;
-}
-
-
 /* Returns the size of the symbolic variable otherwise returns UNSET */
 uint64_t SymbolicEngine::getSymVarSize(uint64_t symVarId)
 {
-  std::map<uint64_t, uint64_t>::iterator it;
-  if ((it = this->symVarSizeReference.find(symVarId)) != this->symVarSizeReference.end())
-    return it->second;
-  return UNSET;
-}
-
-
-/* Returns the address from the symbolic variable ID */
-uint64_t SymbolicEngine::getMemoryFromSymVar(uint64_t symVar)
-{
-  std::map<uint64_t, uint64_t>::iterator it;
-  if ((it = this->symVarMemoryReferenceInverse.find(symVar)) != this->symVarMemoryReferenceInverse.end())
-    return it->second;
-  return UNSET;
+  if (symVarId >= this->symbolicVariables.size())
+    return UNSET;
+  return this->symbolicVariables[symVarId]->getSymVarSize();
 }
 
 
@@ -127,7 +100,7 @@ uint64_t SymbolicEngine::getRegSymbolicID(uint64_t regID) {
   return this->symbolicReg[regID];
 }
 
-
+/* Create a new symbolic element */
 /* Get an unique ID.
  * Mainly used when a new symbolic element is created */
 uint64_t SymbolicEngine::getUniqueID()
@@ -136,7 +109,6 @@ uint64_t SymbolicEngine::getUniqueID()
 }
 
 
-/* Create a new symbolic element */
 SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
 {
   std::stringstream dst;
@@ -145,7 +117,7 @@ SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
   id = this->getUniqueID();
   dst << "#" << std::dec << id;
   SymbolicElement *elem = new SymbolicElement(dst, src, id);
-  this->symbolicVector.push_back(elem);
+  this->symbolicExpressions.push_back(elem);
   return elem;
 }
 
@@ -159,7 +131,7 @@ SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src, std:
   id = this->getUniqueID();
   dst << "#" << std::dec << id;
   SymbolicElement *elem = new SymbolicElement(dst, src, id, comment);
-  this->symbolicVector.push_back(elem);
+  this->symbolicExpressions.push_back(elem);
   return elem;
 }
 
@@ -167,9 +139,9 @@ SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src, std:
 /* Get the symbolic element pointer from a symbolic ID */
 SymbolicElement *SymbolicEngine::getElementFromId(uint64_t id)
 {
-  if (id > this->symbolicVector.size())
+  if (id > this->symbolicExpressions.size())
     return nullptr;
-  return this->symbolicVector[id];
+  return this->symbolicExpressions[id];
 }
 
 
@@ -222,23 +194,15 @@ std::string SymbolicEngine::getBacktrackedExpressionFromId(uint64_t id)
 
 
 /* Returns the list of the symbolic variables declared in the trace */
-std::string SymbolicEngine::getSmt2LibVarsDecl()
+std::string SymbolicEngine::getVariablesDeclaration(void)
 {
-  std::list<std::string>::iterator i;
+  std::vector<SymbolicVariable*>::iterator it;
   std::stringstream stream;
 
-  for(i = this->symVarDeclaration.begin(); i != this->symVarDeclaration.end(); i++)
-    stream << *i;
+  for(it = this->symbolicVariables.begin(); it != this->symbolicVariables.end(); it++)
+    stream << smt2lib::declare((*it)->getSymVarName(), (*it)->getSymVarSize());
 
   return stream.str();
-}
-
-
-/* Returns an unique ID for symbolic variable
- * Mainly used when a symbolic variable is created */
-uint64_t SymbolicEngine::getUniqueSymVarID()
-{
-  return this->numberOfSymVar++;
 }
 
 
@@ -251,9 +215,9 @@ uint64_t SymbolicEngine::getUniqueSymVarID()
  */
 bool SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize)
 {
-  SymbolicElement   *element = this->getElementFromId(exprId);
-  std::stringstream newExpr;
-  uint64_t          symVarID;
+  SymbolicVariable   *symVar  = nullptr;
+  SymbolicElement    *element = this->getElementFromId(exprId);
+  std::stringstream  newExpr;
 
   if (element == nullptr)
     return false;
@@ -261,14 +225,14 @@ bool SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize)
   if (symVarSize != 1 && symVarSize != 2 && symVarSize != 4 && symVarSize != 8 && symVarSize != 16)
     throw std::runtime_error("SymbolicEngine::createSymVarFromExprID() - Invalid symVarSize");
 
-  symVarID = this->getUniqueSymVarID();
-  this->addSmt2LibVarDecl(symVarID, symVarSize);
+  symVar = this->addSymbolicVariable(symVarSize);
 
-  newExpr << SYMVAR_NAME << std::dec << symVarID;
+  newExpr << symVar->getSymVarName();
   element->setSrcExpr(newExpr);
 
   return true;
 }
+
 
 /*
  * Assigns a symbolic variable to an expression.
@@ -283,30 +247,27 @@ bool SymbolicEngine::assignExprToSymVar(uint64_t exprId, uint64_t symVarId)
   if (element == nullptr)
     return false;
 
-  if (symVarId >= this->numberOfSymVar)
+  if (symVarId >= this->symbolicVariables.size())
     return false;
 
-  newExpr << SYMVAR_NAME << std::dec << symVarId;
+  newExpr << this->symbolicVariables[symVarId]->getSymVarName();
   element->setSrcExpr(newExpr);
 
   return true;
 }
 
 
-/* Assigns a memory address to a symbolic variable
- * Mainly used to know where come from a symbolic variable */
-void SymbolicEngine::addSymVarMemoryReference(uint64_t mem, uint64_t symVarID)
-{
-  this->symVarMemoryReference.insert(std::make_pair(mem, symVarID));
-  this->symVarMemoryReferenceInverse.insert(std::make_pair(symVarID, mem));
-}
-
-
 /* Add a new symbolic variable */
-void SymbolicEngine::addSmt2LibVarDecl(uint64_t symVarID, uint64_t size)
+SymbolicVariable *SymbolicEngine::addSymbolicVariable(uint64_t symVarSize)
 {
-  this->symVarSizeReference.insert(std::make_pair(symVarID, size));
-  this->symVarDeclaration.push_front(smt2lib::declare(symVarID, size));
+  uint64_t uniqueID = this->symbolicVariables.size();
+  SymbolicVariable *symVar = new SymbolicVariable(uniqueID, symVarSize);
+
+  if (symVar == nullptr)
+    throw std::runtime_error("SymbolicEngine::addSymbolicVariable() - Cannot allocate a new symbolic variable");
+
+  this->symbolicVariables.push_back(symVar);
+  return symVar;
 }
 
 

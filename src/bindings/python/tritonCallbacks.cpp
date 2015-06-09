@@ -268,36 +268,6 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
 }
 
 
-static char Triton_getMemoryFromSymVar_doc[] = "Returns the memory address corresponding to the sym variable ID";
-static PyObject *Triton_getMemoryFromSymVar(PyObject *self, PyObject *symVar)
-{
-  uint64_t id = 0;
-
-  if (!PyLong_Check(symVar) && !PyInt_Check(symVar) && !PyString_Check(symVar))
-    return PyErr_Format(PyExc_TypeError, "getMemoryFromSymVar(): expected a symbolic variable ID or a symbolic variable name");
-
-  if (PyLong_Check(symVar) || PyInt_Check(symVar))
-    id = PyLong_AsLong(symVar);
-
-  else if (PyString_Check(symVar)){
-    std::string name(PyString_AsString(symVar));
-    std::size_t found = name.find(SYMVAR_NAME);
-    if (found != std::string::npos && found == 0){
-      try {
-        id = std::stoll(name.c_str() + SYMVAR_NAME_SIZE);
-      }
-      catch (const std::invalid_argument &ia) {
-        return PyErr_Format(PyExc_TypeError, "getMemoryFromSymVar(): Invalid symbolic variable name");
-      }
-    }
-    else
-      return PyErr_Format(PyExc_TypeError, "getMemoryFromSymVar(): Invalid symbolic variable name");
-  }
-
-  return Py_BuildValue("k", ap.getMemoryFromSymVar(id));
-}
-
-
 static char Triton_getModel_doc[] = "Returns a model of the symbolic expression";
 static PyObject *Triton_getModel(PyObject *self, PyObject *expr)
 {
@@ -421,16 +391,6 @@ static PyObject *Triton_getSymExpr(PyObject *self, PyObject *id)
     return Py_None;
 
   return PySymbolicElement(expr);
-}
-
-
-static char Triton_getSymVarFromMemory_doc[] = "Returns the symbolic variable ID corresponding to the address";
-static PyObject *Triton_getSymVarFromMemory(PyObject *self, PyObject *addr)
-{
-  if (!PyLong_Check(addr) && !PyInt_Check(addr))
-    return PyErr_Format(PyExc_TypeError, "getSymVarFromMemory(): expected an address");
-
-  return Py_BuildValue("k", ap.getSymVarFromMemory(PyLong_AsLong(addr)));
 }
 
 
@@ -885,14 +845,12 @@ PyMethodDef tritonCallbacks[] = {
   {"getFlagValue",              Triton_getFlagValue,              METH_O,       Triton_getFlagValue_doc},
   {"getMemSymbolicID",          Triton_getMemSymbolicID,          METH_O,       Triton_getMemSymbolicID_doc},
   {"getMemValue",               Triton_getMemValue,               METH_VARARGS, Triton_getMemValue_doc},
-  {"getMemoryFromSymVar",       Triton_getMemoryFromSymVar,       METH_O,       Triton_getMemoryFromSymVar_doc},
   {"getModel",                  Triton_getModel,                  METH_O,       Triton_getModel_doc},
   {"getPathConstraints",        Triton_getPathConstraints,        METH_NOARGS,  Triton_getPathConstraints_doc},
   {"getRegSymbolicID",          Triton_getRegSymbolicID,          METH_O,       Triton_getRegSymbolicID_doc},
   {"getRegValue",               Triton_getRegValue,               METH_O,       Triton_getRegValue_doc},
   {"getStats",                  Triton_getStats,                  METH_NOARGS,  Triton_getStats_doc},
   {"getSymExpr",                Triton_getSymExpr,                METH_O,       Triton_getSymExpr_doc},
-  {"getSymVarFromMemory",       Triton_getSymVarFromMemory,       METH_O,       Triton_getSymVarFromMemory_doc},
   {"getSymVarSize",             Triton_getSymVarSize,             METH_O,       Triton_getSymVarSize_doc},
   {"getSyscallArgument",        Triton_getSyscallArgument,        METH_VARARGS, Triton_getSyscallArgument_doc},
   {"getSyscallNumber",          Triton_getSyscallNumber,          METH_O,       Triton_getSyscallNumber_doc},

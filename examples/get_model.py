@@ -13,7 +13,7 @@ from   triton import *
 
 # 0x40058b: movzx eax, byte ptr [rax]
 #
-# When the instruction located in 0x40058b is executed, 
+# When the instruction located in 0x40058b is executed,
 # we taint the memory that RAX holds.
 def cbeforeSymProc(instruction):
 
@@ -24,6 +24,9 @@ def cbeforeSymProc(instruction):
 
 # 0x4005ae: cmp ecx, eax
 def cafter(instruction):
+
+    if instruction.address == 0x40058b:
+        convertExprToSymVar(getRegSymbolicID(IDREF.REG.RAX), 4)
 
     if instruction.address == 0x4005ae:
         zfId = getRegSymbolicID(IDREF.FLAG.ZF)

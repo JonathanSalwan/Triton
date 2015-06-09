@@ -27,7 +27,7 @@ std::list< std::pair<std::string, unsigned long long> > SolverEngine::getModel(s
   formula << smt2lib::init();
 
   /* Then, delcare all symbolic variables */
-  formula << this->symEngine->getSmt2LibVarsDecl();
+  formula << this->symEngine->getVariablesDeclaration();
 
   /* And concat the user expression */
   formula << expr;

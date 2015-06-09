@@ -211,21 +211,9 @@ uint64_t AnalysisProcessor::getMemSymbolicID(uint64_t address)
   return this->symEngine.getMemSymbolicID(address);
 }
 
-
-uint64_t AnalysisProcessor::getSymVarFromMemory(uint64_t address)
-{
-  return this->symEngine.getSymVarFromMemory(address);
-}
-
 uint64_t AnalysisProcessor::getSymVarSize(uint64_t symVarId)
 {
   return this->symEngine.getSymVarSize(symVarId);
-}
-
-
-uint64_t AnalysisProcessor::getMemoryFromSymVar(uint64_t symVar)
-{
-  return this->symEngine.getMemoryFromSymVar(symVar);
 }
 
 
@@ -402,48 +390,12 @@ void AnalysisProcessor::assignmentSpreadTaintRegImm(SymbolicElement *se, uint64_
 void AnalysisProcessor::assignmentSpreadTaintRegMem(SymbolicElement *se, uint64_t regDst, uint64_t memSrc, uint32_t readSize)
 {
   se->isTainted = this->taintEngine.assignmentSpreadTaintRegMem(regDst, memSrc, readSize);
-
-  /* Use symbolic variable if the memory is tainted */
-  if (se->isTainted) {
-
-    std::stringstream newExpr, finalExpr;
-    uint64_t          symVarID;
-
-    /* Check if this memory area is already known as a symbolic variable */
-    symVarID = this->symEngine.getSymVarFromMemory(memSrc); // TODO: Must use the readSize
-    if (symVarID == UNSET){
-      symVarID = this->symEngine.getUniqueSymVarID();
-      this->symEngine.addSmt2LibVarDecl(symVarID, readSize);
-      this->symEngine.addSymVarMemoryReference(memSrc, symVarID);
-    }
-    newExpr << SYMVAR_NAME << std::dec << symVarID;
-    finalExpr << smt2lib::zx(newExpr.str(), REG_SIZE_BIT - (readSize * REG_SIZE));
-    se->setSrcExpr(finalExpr);
-  }
 }
 
 
 void AnalysisProcessor::assignmentSpreadTaintMemMem(SymbolicElement *se, uint64_t memDst, uint64_t memSrc, uint32_t readSize)
 {
   se->isTainted = this->taintEngine.assignmentSpreadTaintMemMem(memDst, memSrc, readSize);
-
-  /* Use symbolic variable if the memory is tainted */
-  if (se->isTainted) {
-
-    std::stringstream newExpr, finalExpr;
-    uint64_t          symVarID;
-
-    /* Check if this memory area is already known as a symbolic variable */
-    symVarID = this->symEngine.getSymVarFromMemory(memSrc); // TODO: Must use the readSize
-    if (symVarID == UNSET){
-      symVarID = this->symEngine.getUniqueSymVarID();
-      this->symEngine.addSmt2LibVarDecl(symVarID, readSize);
-      this->symEngine.addSymVarMemoryReference(memSrc, symVarID);
-    }
-    newExpr << SYMVAR_NAME << std::dec << symVarID;
-    finalExpr << smt2lib::zx(newExpr.str(), REG_SIZE_BIT - (readSize * REG_SIZE));
-    se->setSrcExpr(finalExpr);
-  }
 }
 
 

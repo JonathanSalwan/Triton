@@ -279,25 +279,25 @@ std::string smt2lib::extract(uint64_t high, uint64_t low, std::string expr)
 
 /* Returns the 'declare' syntax is symbolic variable and a bit vector.
  * Mainly used for the SMT translation */
-std::string smt2lib::declare(uint64_t idSymVar, uint64_t BitVecSize)
+std::string smt2lib::declare(std::string symVarName, uint64_t symVarSize)
 {
   std::stringstream stream;
 
-  switch(BitVecSize){
+  switch(symVarSize){
     case 1:
-      stream << "(declare-fun SymVar_" << idSymVar << " () (_ BitVec 8))";
+      stream << "(declare-fun " << symVarName << " () (_ BitVec 8))";
       break;
     case 2:
-      stream << "(declare-fun SymVar_" << idSymVar << " () (_ BitVec 16))";
+      stream << "(declare-fun " << symVarName << " () (_ BitVec 16))";
       break;
     case 4:
-      stream << "(declare-fun SymVar_" << idSymVar << " () (_ BitVec 32))";
+      stream << "(declare-fun " << symVarName << " () (_ BitVec 32))";
       break;
     case 8:
-      stream << "(declare-fun SymVar_" << idSymVar << " () (_ BitVec 64))";
+      stream << "(declare-fun " << symVarName << " () (_ BitVec 64))";
       break;
     case 16:
-      stream << "(declare-fun SymVar_" << idSymVar << " () (_ BitVec 128))";
+      stream << "(declare-fun " << symVarName << " () (_ BitVec 128))";
       break;
   }
 

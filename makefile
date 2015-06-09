@@ -178,6 +178,7 @@ SRC =           ./src/analysisProcessor/analysisProcessor.cpp \
 		./src/solverEngine/solverEngine.cpp \
 		./src/symbolicEngine/symbolicElement.cpp \
 		./src/symbolicEngine/symbolicEngine.cpp \
+		./src/symbolicEngine/symbolicVariable.cpp \
 		./src/taintEngine/taintEngine.cpp \
 		./src/trigger/trigger.cpp \
 		./src/utils/syscallNumberToString.cpp \

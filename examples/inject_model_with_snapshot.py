@@ -29,24 +29,26 @@
 from    triton import *
 import  smt2lib
 
-password = dict()
+password  = dict()
+symVarMem = None
 
-# 0x40058b: movzx eax, byte ptr [rax]
-#
-# When the instruction located in 0x40058b is executed, 
-# we taint the memory that RAX holds.
-def cbeforeSymProc(instruction):
+
+def csym(instruction):
+    # 0x40058b: movzx eax, byte ptr [rax]
     if instruction.address == 0x40058b:
-        rax = getRegValue(IDREF.REG.RAX)
-        taintMem(rax)
-        if rax in password:
-            setMemValue(rax, 1, password[rax])
-            print '[+] Inject the character \'%c\' in memory' %(chr(password[rax]))
+        global symVarMem
+        symVarMem = getRegValue(IDREF.REG.RAX)
     return
 
 
-# 0x4005ae: cmp ecx, eax
 def cafter(instruction):
+
+    # 0x40058b: movzx eax, byte ptr [rax]
+    if instruction.address == 0x40058b:
+        raxId = getRegSymbolicID(IDREF.REG.RAX)
+        convertExprToSymVar(raxId, 4)
+
+    # 0x4005ae: cmp ecx, eax
     if instruction.address == 0x4005ae:
         zfId    = getRegSymbolicID(IDREF.FLAG.ZF)
         zfExpr  = getBacktrackedSymExpr(zfId)
@@ -54,17 +56,26 @@ def cafter(instruction):
         models  = getModel(expr)
         global password
         for k, v in models.items():
-            password.update({getMemoryFromSymVar(k): v})
+            password.update({symVarMem: v})
+
     return
 
 
 def cbefore(instruction):
+
     # Prologue of the function
     global snapshot
     if instruction.address == 0x40056d and isSnapshotEnable() == False:
         takeSnapshot()
         print '[+] Take a snapshot at the prologue of the function'
         return
+
+    # 0x40058b: movzx eax, byte ptr [rax]
+    if instruction.address == 0x40058b:
+        rax = getRegValue(IDREF.REG.RAX)
+        if rax in password:
+            setMemValue(rax, 1, password[rax])
+            print '[+] Inject the character \'%c\' in memory' %(chr(password[rax]))
 
     # Epilogue of the function
     if instruction.address == 0x4005c8:
@@ -91,9 +102,9 @@ if __name__ == '__main__':
     # Start the symbolic analysis from the 'check' function
     startAnalysisFromSymbol('check')
 
-    addCallback(cbeforeSymProc, IDREF.CALLBACK.BEFORE_SYMPROC)
     addCallback(cafter,         IDREF.CALLBACK.AFTER)
     addCallback(cbefore,        IDREF.CALLBACK.BEFORE)
+    addCallback(csym,           IDREF.CALLBACK.BEFORE_SYMPROC)
     addCallback(fini,           IDREF.CALLBACK.FINI)
 
     # Run the instrumentation - Never returns

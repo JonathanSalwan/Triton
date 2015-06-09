@@ -39,8 +39,8 @@ namespace smt2lib {
   /* Returns a zero extendend version to size bits of the expression. */
   std::string zx(std::string expr, uint64_t size);
 
-  /* Returns the 'declare' syntax based on a id symbolic variable and a bit victor. */
-  std::string declare(uint64_t idSymVar, uint64_t BitVecSize);
+  /* Returns the 'declare' syntax based on the symbolic variable name and its size. */
+  std::string declare(std::string symVarName, uint64_t symVarSize);
 
   /* Returns the 'extract' syntax based on a reg size. */
   std::string extract(uint64_t regSize);

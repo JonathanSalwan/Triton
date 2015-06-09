@@ -44,7 +44,7 @@ void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Displacement */
   dis2e << smt2lib::bv(displacement, regSize * REG_SIZE);
-  
+
   /* Scale */
   scale2e << smt2lib::bv(memoryScale, regSize * REG_SIZE);
 
