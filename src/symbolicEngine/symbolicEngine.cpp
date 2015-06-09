@@ -234,29 +234,6 @@ bool SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize)
 }
 
 
-/*
- * Assigns a symbolic variable to an expression.
- * Unlike convertExprToSymVar(), this fonction doesn't
- * create a new symbolic variable.
- */
-bool SymbolicEngine::assignExprToSymVar(uint64_t exprId, uint64_t symVarId)
-{
-  SymbolicElement   *element = this->getElementFromId(exprId);
-  std::stringstream newExpr;
-
-  if (element == nullptr)
-    return false;
-
-  if (symVarId >= this->symbolicVariables.size())
-    return false;
-
-  newExpr << this->symbolicVariables[symVarId]->getSymVarName();
-  element->setSrcExpr(newExpr);
-
-  return true;
-}
-
-
 /* Add a new symbolic variable */
 SymbolicVariable *SymbolicEngine::addSymbolicVariable(uint64_t symVarSize)
 {

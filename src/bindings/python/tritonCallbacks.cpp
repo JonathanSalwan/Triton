@@ -95,27 +95,6 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
 }
 
 
-static char Triton_assignExprToSymVar_doc[] = "Assigns a symbolic variable to an expression";
-static PyObject *Triton_assignExprToSymVar(PyObject *self, PyObject *args)
-{
-  PyObject *exprId, *symVarId;
-
-  /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &exprId, &symVarId);
-
-  if (!PyLong_Check(exprId) && !PyInt_Check(exprId))
-    return PyErr_Format(PyExc_TypeError, "assignExprToSymVar(): expected an integer as first argument");
-
-  if (!PyLong_Check(symVarId) && !PyInt_Check(symVarId))
-    return PyErr_Format(PyExc_TypeError, "assignExprToSymVar(): expected an integer as second argument");
-
-  if (ap.assignExprToSymVar(PyLong_AsLong(exprId), PyLong_AsLong(symVarId)) == false)
-    return Py_False;
-
-  return Py_True;
-}
-
-
 static char Triton_checkReadAccess_doc[] = "Checks whether the memory page which contains this address has a read access protection";
 static PyObject *Triton_checkReadAccess(PyObject *self, PyObject *addr)
 {
@@ -834,7 +813,6 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
 
 PyMethodDef tritonCallbacks[] = {
   {"addCallback",               Triton_addCallback,               METH_VARARGS, Triton_addCallback_doc},
-  {"assignExprToSymVar",        Triton_assignExprToSymVar,        METH_VARARGS, Triton_assignExprToSymVar_doc},
   {"checkReadAccess",           Triton_checkReadAccess,           METH_O,       Triton_checkReadAccess_doc},
   {"checkWriteAccess",          Triton_checkWriteAccess,          METH_O,       Triton_checkWriteAccess_doc},
   {"concretizeMem",             Triton_concretizeMem,             METH_O,       Triton_concretizeMem_doc},
