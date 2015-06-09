@@ -41,10 +41,19 @@ void SymbolicEngine::operator=(const SymbolicEngine &other)
 
 SymbolicEngine::~SymbolicEngine()
 {
-  std::vector<SymbolicElement *>::iterator it = this->symbolicExpressions.begin();
+  std::vector<SymbolicElement *>::iterator it1 = this->symbolicExpressions.begin();
+  std::vector<SymbolicVariable *>::iterator it2 = this->symbolicVariables.begin();
 
-  for (; it != this->symbolicExpressions.end(); ++it) {
-    SymbolicElement *tmp = *it;
+  /* Delete all symbolic expressions */
+  for (; it1 != this->symbolicExpressions.end(); ++it1) {
+    SymbolicElement *tmp = *it1;
+    delete tmp;
+    tmp = nullptr;
+  }
+
+  /* Delete all symbolic variables */
+  for (; it2 != this->symbolicVariables.end(); ++it2) {
+    SymbolicVariable *tmp = *it2;
     delete tmp;
     tmp = nullptr;
   }
@@ -101,7 +110,6 @@ SymbolicVariable *SymbolicEngine::getSymVar(std::string symVarName)
     if ((*it)->getSymVarName() == symVarName)
       return *it;
   }
-
   return nullptr;
 }
 
@@ -159,7 +167,7 @@ SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src, std:
 /* Get the symbolic element pointer from a symbolic ID */
 SymbolicElement *SymbolicEngine::getElementFromId(uint64_t id)
 {
-  if (id > this->symbolicExpressions.size())
+  if (id >= this->symbolicExpressions.size())
     return nullptr;
   return this->symbolicExpressions[id];
 }

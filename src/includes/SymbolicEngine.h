@@ -24,6 +24,7 @@ const uint64_t UNSET = -1;
 class SymbolicEngine {
 
   private:
+
     /* Symbolic expressions ID */
     uint64_t uniqueID;
 
@@ -58,7 +59,7 @@ class SymbolicEngine {
 
     /* Symbolic trace */
     /* sizeof(symbolicReg) = enum REG */
-    uint64_t              symbolicReg[ID_LAST_ITEM];
+    uint64_t                        symbolicReg[ID_LAST_ITEM];
 
     /* public methods */
     SymbolicElement                 *getElementFromId(uint64_t id);
