@@ -61,24 +61,25 @@ class SymbolicEngine {
     uint64_t              symbolicReg[ID_LAST_ITEM];
 
     /* public methods */
-    SymbolicElement       *getElementFromId(uint64_t id);
-    SymbolicElement       *newSymbolicElement(std::stringstream &src);
-    SymbolicElement       *newSymbolicElement(std::stringstream &src, std::string comment);
-    SymbolicVariable      *addSymbolicVariable(uint64_t symVarSize);
-    std::list<uint64_t>   getPathConstraints(void);
-    std::string           getBacktrackedExpressionFromId(uint64_t id);
-    std::string           getVariablesDeclaration(void);
-    uint64_t              convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
-    uint64_t              getMemSymbolicID(uint64_t addr);
-    uint64_t              getRegSymbolicID(uint64_t regID);
-    uint64_t              getSymVarSize(uint64_t symVarId);
-    uint64_t              getUniqueID();
-    void                  addMemoryReference(uint64_t mem, uint64_t id);
-    void                  addPathConstraint(uint64_t exprId);
-    void                  concretizeMem(uint64_t mem);
-    void                  concretizeReg(uint64_t regID);
-    void                  init(const SymbolicEngine &other);
-    void                  operator=(const SymbolicEngine &other);
+    SymbolicElement                 *getElementFromId(uint64_t id);
+    SymbolicElement                 *newSymbolicElement(std::stringstream &src);
+    SymbolicElement                 *newSymbolicElement(std::stringstream &src, std::string comment);
+    SymbolicVariable                *addSymbolicVariable(uint64_t symVarSize);
+    SymbolicVariable                *getSymVar(uint64_t symVarId);
+    std::list<uint64_t>             getPathConstraints(void);
+    std::string                     getBacktrackedExpressionFromId(uint64_t id);
+    std::string                     getVariablesDeclaration(void);
+    std::vector<SymbolicVariable *> getSymVars(void);
+    uint64_t                        convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
+    uint64_t                        getMemSymbolicID(uint64_t addr);
+    uint64_t                        getRegSymbolicID(uint64_t regID);
+    uint64_t                        getUniqueID();
+    void                            addMemoryReference(uint64_t mem, uint64_t id);
+    void                            addPathConstraint(uint64_t exprId);
+    void                            concretizeMem(uint64_t mem);
+    void                            concretizeReg(uint64_t regID);
+    void                            init(const SymbolicEngine &other);
+    void                            operator=(const SymbolicEngine &other);
 
     SymbolicEngine();
     SymbolicEngine(const SymbolicEngine &copy);

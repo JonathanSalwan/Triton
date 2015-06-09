@@ -83,13 +83,19 @@ uint64_t SymbolicEngine::getMemSymbolicID(uint64_t addr)
   return UNSET;
 }
 
-
-/* Returns the size of the symbolic variable otherwise returns UNSET */
-uint64_t SymbolicEngine::getSymVarSize(uint64_t symVarId)
+/* Returns the symbolic variable otherwise returns nullptr */
+SymbolicVariable *SymbolicEngine::getSymVar(uint64_t symVarId)
 {
   if (symVarId >= this->symbolicVariables.size())
-    return UNSET;
-  return this->symbolicVariables[symVarId]->getSymVarSize();
+    return nullptr;
+  return this->symbolicVariables[symVarId];
+}
+
+
+/* Returns all symbolic variables */
+std::vector<SymbolicVariable *> SymbolicEngine::getSymVars(void)
+{
+  return this->symbolicVariables;
 }
 
 

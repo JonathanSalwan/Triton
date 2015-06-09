@@ -31,13 +31,38 @@ PyObject *PySymbolicElement(SymbolicElement *element)
   PyDict_SetItemString(dictSEClass, "isTainted",    PyBool_FromLong(element->isTainted));
 
   PyObject *SEClassName = xPyString_FromString("SymbolicElement");
-  PyObject *SEClass  = xPyClass_New(nullptr, dictSEClass, SEClassName);
+  PyObject *SEClass = xPyClass_New(nullptr, dictSEClass, SEClassName);
 
   Py_DECREF(dictSEClass);
   Py_DECREF(SEClassName);
   Py_INCREF(SEClass);
 
   return SEClass;
+}
+
+
+/*
+ * Class SymbolicVariable:
+ *
+ * - id (integer)
+ * - size (integer)
+ * - name (string)
+ */
+PyObject *PySymbolicVariable(SymbolicVariable *symVar)
+{
+  PyObject *dictSVClass = xPyDict_New();
+  PyDict_SetItemString(dictSVClass, "id",    PyInt_FromLong(symVar->getSymVarId()));
+  PyDict_SetItemString(dictSVClass, "size",  PyInt_FromLong(symVar->getSymVarSize()));
+  PyDict_SetItemString(dictSVClass, "name",  PyString_FromFormat("%s", symVar->getSymVarName().c_str()));
+
+  PyObject *SVClassName = xPyString_FromString("SymbolicVariable");
+  PyObject *SVClass = xPyClass_New(nullptr, dictSVClass, SVClassName);
+
+  Py_DECREF(dictSVClass);
+  Py_DECREF(SVClassName);
+  Py_INCREF(SVClass);
+
+  return SVClass;
 }
 
 

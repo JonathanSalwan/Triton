@@ -211,9 +211,16 @@ uint64_t AnalysisProcessor::getMemSymbolicID(uint64_t address)
   return this->symEngine.getMemSymbolicID(address);
 }
 
-uint64_t AnalysisProcessor::getSymVarSize(uint64_t symVarId)
+
+SymbolicVariable *AnalysisProcessor::getSymVar(uint64_t symVarId)
 {
-  return this->symEngine.getSymVarSize(symVarId);
+  return this->symEngine.getSymVar(symVarId);
+}
+
+
+std::vector<SymbolicVariable *> AnalysisProcessor::getSymVars(void)
+{
+  return this->symEngine.getSymVars();
 }
 
 

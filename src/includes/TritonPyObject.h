@@ -7,6 +7,7 @@
 #include "IRBuilderOperand.h"
 #include "Inst.h"
 #include "SymbolicEngine.h"
+#include "SymbolicVariable.h"
 #include "TritonOperand.h"
 
 
@@ -14,6 +15,7 @@ PyObject *PyInstruction(IRBuilder *irb);
 PyObject *PyInstruction(Inst *inst);
 PyObject *PyOperand(TritonOperand operand);
 PyObject *PySymbolicElement(SymbolicElement *element);
+PyObject *PySymbolicVariable(SymbolicVariable *symVar);
 
 
 #endif     /* !__TRITONPYOBJECT_H__ */

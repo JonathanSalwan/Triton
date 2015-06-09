@@ -364,38 +364,67 @@ static PyObject *Triton_getSymExpr(PyObject *self, PyObject *id)
   expr = ap.getElementFromId(exprId);
 
   if (expr == nullptr)
-    return Py_None;
+    return PyErr_Format(PyExc_TypeError, "getSymExpr(): Invalid symbolic expression ID");
 
   return PySymbolicElement(expr);
 }
 
 
-static char Triton_getSymVarSize_doc[] = "Returns the size of the symbolic variable";
-static PyObject *Triton_getSymVarSize(PyObject *self, PyObject *symVar)
+static char Triton_getSymVar_doc[] = "Returns the symbolic variable class";
+static PyObject *Triton_getSymVar(PyObject *self, PyObject *symVarId)
 {
+  SymbolicVariable *symVar;
   uint64_t id = 0;
 
-  if (!PyLong_Check(symVar) && !PyInt_Check(symVar) && !PyString_Check(symVar))
-    return PyErr_Format(PyExc_TypeError, "getSymVarSize(): expected a symbolic variable ID or a symbolic variable name");
+  if (!PyLong_Check(symVarId) && !PyInt_Check(symVarId))
+    return PyErr_Format(PyExc_TypeError, "getSymVar(): expected a symbolic variable ID");
 
-  if (PyLong_Check(symVar) || PyInt_Check(symVar))
-    id = PyLong_AsLong(symVar);
+  id = PyLong_AsLong(symVarId);
 
-  else if (PyString_Check(symVar)){
-    std::string name(PyString_AsString(symVar));
-    std::size_t found = name.find(SYMVAR_NAME);
-    if (found != std::string::npos && found == 0){
-      try {
-        id = std::stoll(name.c_str() + SYMVAR_NAME_SIZE);
-      }
-      catch (const std::invalid_argument &ia) {
-        return PyErr_Format(PyExc_TypeError, "getSymVarSize(): Invalid symbolic variable name");
-      }
-    }
-    else
-      return PyErr_Format(PyExc_TypeError, "getSymVarSize(): Invalid symbolic variable name");
+  symVar = ap.getSymVar(id);
+  if (symVar == nullptr)
+    return PyErr_Format(PyExc_TypeError, "getSymVar(): Invalid symbolic variable ID");
+
+  return PySymbolicVariable(symVar);
+}
+
+
+static char Triton_getSymVarSize_doc[] = "Returns the size of the symbolic variable";
+static PyObject *Triton_getSymVarSize(PyObject *self, PyObject *symVarId)
+{
+  SymbolicVariable *symVar;
+  uint64_t id = 0;
+
+  if (!PyLong_Check(symVarId) && !PyInt_Check(symVarId))
+    return PyErr_Format(PyExc_TypeError, "getSymVarSize(): expected a symbolic variable ID");
+
+  id = PyLong_AsLong(symVarId);
+
+  symVar = ap.getSymVar(id);
+  if (symVar == nullptr)
+    return PyErr_Format(PyExc_TypeError, "getSymVarSize(): Invalid symbolic variable ID");
+
+  return Py_BuildValue("k", symVar->getSymVarSize());
+}
+
+
+static char Triton_getSymVars_doc[] = "Returns the list of symbolic variables";
+static PyObject *Triton_getSymVars(PyObject *self, PyObject *noArg)
+{
+  std::vector<SymbolicVariable *> symVars;
+  std::vector<SymbolicVariable *>::iterator it;
+  PyObject *symVarsList;
+
+  symVars = ap.getSymVars();
+  symVarsList = xPyList_New(symVars.size());
+
+  Py_ssize_t index = 0;
+  for (it = symVars.begin(); it != symVars.end(); it++){
+    PyList_SetItem(symVarsList, index, PySymbolicVariable(*it));
+    index += 1;
   }
-  return Py_BuildValue("k", ap.getSymVarSize(id));
+
+  return symVarsList;
 }
 
 
@@ -826,7 +855,9 @@ PyMethodDef tritonCallbacks[] = {
   {"getRegValue",               Triton_getRegValue,               METH_O,       Triton_getRegValue_doc},
   {"getStats",                  Triton_getStats,                  METH_NOARGS,  Triton_getStats_doc},
   {"getSymExpr",                Triton_getSymExpr,                METH_O,       Triton_getSymExpr_doc},
+  {"getSymVar",                 Triton_getSymVar,                 METH_O,       Triton_getSymVar_doc},
   {"getSymVarSize",             Triton_getSymVarSize,             METH_O,       Triton_getSymVarSize_doc},
+  {"getSymVars",                Triton_getSymVars,                METH_NOARGS,  Triton_getSymVars_doc},
   {"getSyscallArgument",        Triton_getSyscallArgument,        METH_VARARGS, Triton_getSyscallArgument_doc},
   {"getSyscallNumber",          Triton_getSyscallNumber,          METH_O,       Triton_getSyscallNumber_doc},
   {"getSyscallReturn",          Triton_getSyscallReturn,          METH_O,       Triton_getSyscallReturn_doc},

@@ -87,10 +87,11 @@ class AnalysisProcessor {
     /* Converts an expression to a symbolic variable */
     uint64_t convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
 
-    /* Link: Address <-> Symbolic Variable ID */
-    uint64_t getMemoryFromSymVar(uint64_t symVar);
-    uint64_t getSymVarFromMemory(uint64_t address);
-    uint64_t getSymVarSize(uint64_t symVarId);
+    /* Returns the symbolic variable from ID */
+    SymbolicVariable *getSymVar(uint64_t symVarId);
+
+    /* Returns all symbolic variables */
+    std::vector<SymbolicVariable *> getSymVars(void);
 
     /* The a path constraint in the PC list */
     void addPathConstraint(uint64_t exprId);
