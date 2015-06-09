@@ -65,7 +65,7 @@ class SymbolicEngine {
     SymbolicElement                 *getElementFromId(uint64_t id);
     SymbolicElement                 *newSymbolicElement(std::stringstream &src);
     SymbolicElement                 *newSymbolicElement(std::stringstream &src, std::string comment);
-    SymbolicVariable                *addSymbolicVariable(uint64_t symVarSize);
+    SymbolicVariable                *addSymbolicVariable(SymVar::kind kind, uint64_t kindValue, uint64_t concreteValue, uint64_t size);
     SymbolicVariable                *getSymVar(uint64_t symVarId);
     SymbolicVariable                *getSymVar(std::string symVarName);
     std::list<uint64_t>             getPathConstraints(void);

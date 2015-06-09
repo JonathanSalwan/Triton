@@ -253,7 +253,7 @@ uint64_t SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSiz
   if (symVarSize != 1 && symVarSize != 2 && symVarSize != 4 && symVarSize != 8 && symVarSize != 16)
     throw std::runtime_error("SymbolicEngine::createSymVarFromExprID() - Invalid symVarSize");
 
-  symVar = this->addSymbolicVariable(symVarSize);
+  symVar = this->addSymbolicVariable(SymVar::kind::UNDEF, 0, 0, symVarSize);
 
   newExpr << symVar->getSymVarName();
   element->setSrcExpr(newExpr);
@@ -263,10 +263,10 @@ uint64_t SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSiz
 
 
 /* Add a new symbolic variable */
-SymbolicVariable *SymbolicEngine::addSymbolicVariable(uint64_t symVarSize)
+SymbolicVariable *SymbolicEngine::addSymbolicVariable(SymVar::kind kind, uint64_t kindValue, uint64_t concreteValue, uint64_t size)
 {
   uint64_t uniqueID = this->symbolicVariables.size();
-  SymbolicVariable *symVar = new SymbolicVariable(uniqueID, symVarSize);
+  SymbolicVariable *symVar = new SymbolicVariable(kind, kindValue, concreteValue, uniqueID, size);
 
   if (symVar == nullptr)
     throw std::runtime_error("SymbolicEngine::addSymbolicVariable() - Cannot allocate a new symbolic variable");

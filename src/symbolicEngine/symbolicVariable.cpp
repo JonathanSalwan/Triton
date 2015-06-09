@@ -2,17 +2,27 @@
 #include <SymbolicVariable.h>
 
 
-SymbolicVariable::SymbolicVariable(uint64_t symVarID, uint64_t symVarSize)
+SymbolicVariable::SymbolicVariable(SymVar::kind kind,
+                                   uint64_t kindValue,
+                                   uint64_t concreteValue,
+                                   uint64_t id,
+                                   uint64_t size)
 {
-  this->symVarID = symVarID;
-  this->symVarSize = symVarSize;
-  this->symVarName = SYMVAR_NAME + std::to_string(symVarID);
+  this->symVarConcreteValue = concreteValue;
+  this->symVarId            = id;
+  this->symVarKind          = kind;
+  this->symVarKindValue     = kindValue;
+  this->symVarName          = SYMVAR_NAME + std::to_string(id);
+  this->symVarSize          = size;
 }
 
 
 SymbolicVariable::SymbolicVariable(const SymbolicVariable &copy)
 {
-  this->symVarID            = copy.symVarID;
+  this->symVarConcreteValue = copy.symVarConcreteValue;
+  this->symVarId            = copy.symVarId;
+  this->symVarKind          = copy.symVarKind;
+  this->symVarKindValue     = copy.symVarKindValue;
   this->symVarName          = copy.symVarName;
   this->symVarSize          = copy.symVarSize;
 }
@@ -23,15 +33,33 @@ SymbolicVariable::~SymbolicVariable()
 }
 
 
+SymVar::kind SymbolicVariable::getSymVarKind(void)
+{
+  return this->symVarKind;
+}
+
+
 std::string SymbolicVariable::getSymVarName(void)
 {
   return this->symVarName;
 }
 
 
+uint64_t SymbolicVariable::getSymVarConcreteValue(void)
+{
+  return this->symVarConcreteValue;
+}
+
+
 uint64_t SymbolicVariable::getSymVarId(void)
 {
-  return this->symVarID;
+  return this->symVarId;
+}
+
+
+uint64_t SymbolicVariable::getSymVarKindValue(void)
+{
+  return this->symVarKindValue;
 }
 
 
