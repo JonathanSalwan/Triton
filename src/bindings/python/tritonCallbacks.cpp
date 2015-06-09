@@ -371,17 +371,18 @@ static PyObject *Triton_getSymExpr(PyObject *self, PyObject *id)
 
 
 static char Triton_getSymVar_doc[] = "Returns the symbolic variable class";
-static PyObject *Triton_getSymVar(PyObject *self, PyObject *symVarId)
+static PyObject *Triton_getSymVar(PyObject *self, PyObject *symVarPy)
 {
   SymbolicVariable *symVar;
-  uint64_t id = 0;
 
-  if (!PyLong_Check(symVarId) && !PyInt_Check(symVarId))
-    return PyErr_Format(PyExc_TypeError, "getSymVar(): expected a symbolic variable ID");
+  if (!PyLong_Check(symVarPy) && !PyInt_Check(symVarPy) && !PyString_Check(symVarPy))
+    return PyErr_Format(PyExc_TypeError, "getSymVar(): expected a symbolic variable ID or a symbolic variable name");
 
-  id = PyLong_AsLong(symVarId);
+  if (PyLong_Check(symVarPy) || PyInt_Check(symVarPy))
+    symVar = ap.getSymVar(PyLong_AsLong(symVarPy));
+  else
+    symVar = ap.getSymVar(PyString_AsString(symVarPy));
 
-  symVar = ap.getSymVar(id);
   if (symVar == nullptr)
     return PyErr_Format(PyExc_TypeError, "getSymVar(): Invalid symbolic variable ID");
 
@@ -390,17 +391,18 @@ static PyObject *Triton_getSymVar(PyObject *self, PyObject *symVarId)
 
 
 static char Triton_getSymVarSize_doc[] = "Returns the size of the symbolic variable";
-static PyObject *Triton_getSymVarSize(PyObject *self, PyObject *symVarId)
+static PyObject *Triton_getSymVarSize(PyObject *self, PyObject *symVarPy)
 {
   SymbolicVariable *symVar;
-  uint64_t id = 0;
 
-  if (!PyLong_Check(symVarId) && !PyInt_Check(symVarId))
-    return PyErr_Format(PyExc_TypeError, "getSymVarSize(): expected a symbolic variable ID");
+  if (!PyLong_Check(symVarPy) && !PyInt_Check(symVarPy) && !PyString_Check(symVarPy))
+    return PyErr_Format(PyExc_TypeError, "getSymVarSize(): expected a symbolic variable ID or a symbolic variable name");
 
-  id = PyLong_AsLong(symVarId);
+  if (PyLong_Check(symVarPy) || PyInt_Check(symVarPy))
+    symVar = ap.getSymVar(PyLong_AsLong(symVarPy));
+  else
+    symVar = ap.getSymVar(PyString_AsString(symVarPy));
 
-  symVar = ap.getSymVar(id);
   if (symVar == nullptr)
     return PyErr_Format(PyExc_TypeError, "getSymVarSize(): Invalid symbolic variable ID");
 

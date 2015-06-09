@@ -66,6 +66,7 @@ class SymbolicEngine {
     SymbolicElement                 *newSymbolicElement(std::stringstream &src, std::string comment);
     SymbolicVariable                *addSymbolicVariable(uint64_t symVarSize);
     SymbolicVariable                *getSymVar(uint64_t symVarId);
+    SymbolicVariable                *getSymVar(std::string symVarName);
     std::list<uint64_t>             getPathConstraints(void);
     std::string                     getBacktrackedExpressionFromId(uint64_t id);
     std::string                     getVariablesDeclaration(void);

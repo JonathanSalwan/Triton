@@ -92,6 +92,20 @@ SymbolicVariable *SymbolicEngine::getSymVar(uint64_t symVarId)
 }
 
 
+/* Returns the symbolic variable otherwise returns nullptr */
+SymbolicVariable *SymbolicEngine::getSymVar(std::string symVarName)
+{
+  std::vector<SymbolicVariable *>::iterator it;
+
+  for (it = this->symbolicVariables.begin(); it != this->symbolicVariables.end(); it++){
+    if ((*it)->getSymVarName() == symVarName)
+      return *it;
+  }
+
+  return nullptr;
+}
+
+
 /* Returns all symbolic variables */
 std::vector<SymbolicVariable *> SymbolicEngine::getSymVars(void)
 {

@@ -87,8 +87,9 @@ class AnalysisProcessor {
     /* Converts an expression to a symbolic variable */
     uint64_t convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
 
-    /* Returns the symbolic variable from ID */
+    /* Returns the symbolic variable from ID or std::string */
     SymbolicVariable *getSymVar(uint64_t symVarId);
+    SymbolicVariable *getSymVar(std::string symVarName);
 
     /* Returns all symbolic variables */
     std::vector<SymbolicVariable *> getSymVars(void);

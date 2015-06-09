@@ -218,6 +218,12 @@ SymbolicVariable *AnalysisProcessor::getSymVar(uint64_t symVarId)
 }
 
 
+SymbolicVariable *AnalysisProcessor::getSymVar(std::string symVarName)
+{
+  return this->symEngine.getSymVar(symVarName);
+}
+
+
 std::vector<SymbolicVariable *> AnalysisProcessor::getSymVars(void)
 {
   return this->symEngine.getSymVars();
