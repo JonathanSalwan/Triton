@@ -1,5 +1,5 @@
-#ifndef  REGISTERS_H
-#define  REGISTERS_H
+#ifndef  TRITON_REGISTERS_H
+#define  TRITON_REGISTERS_H
 
 #define BYTE_SIZE         1   // In byte
 #define BYTE_SIZE_BIT     8   // In bits

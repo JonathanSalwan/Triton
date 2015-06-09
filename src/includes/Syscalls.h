@@ -1,5 +1,5 @@
-#ifndef SYSCALLS_H
-#define SYSCALLS_H
+#ifndef TRITON_SYSCALLS_H
+#define TRITON_SYSCALLS_H
 
 #include <asm/unistd_64.h>
 

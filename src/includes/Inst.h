@@ -1,5 +1,5 @@
-#ifndef INST_H
-#define INST_H
+#ifndef TRITON_INST_H
+#define TRITON_INST_H
 
 #include <list>
 #include <string>
