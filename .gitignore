@@ -10,3 +10,4 @@ src/utils/syscalls.cpp
 peda-session*
 *.i64
 build/*
+triton
