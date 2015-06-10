@@ -1,0 +1,23 @@
+Linux
+=====
+
+Triton's dependencies:
+
+* Pin 2.14-71313
+* Z3 4.3.1
+* Python 2.7
+* libboost
+
+Compilation:
+
+$ cd pin-2.14-71313-gcc.4.4.7-linux/source/tools/
+$ git clone git@github.com:JonathanSalwan/Triton.git
+$ cd Triton
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+
+Test:
+
+$ ./triton ./examples/callback_after.py ./samples/ir_test_suite/ir

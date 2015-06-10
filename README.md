@@ -33,6 +33,10 @@ please, **don't blame us** if it is not yet reliable. [Open issues](https://gith
 * [SMT Semantics Supported](https://github.com/JonathanSalwan/Triton/wiki/SMT-Semantics-Supported)
 * [Python Bindings](https://github.com/JonathanSalwan/Triton/wiki/Python-Bindings)
 
+### Blog post
+
+* [Triton hunder the hood - First approach with the framework](http://blog.quarkslab.com/triton-under-the-hood.html)
+
 ### Extra information
 
 * [Publications](https://github.com/JonathanSalwan/Triton/wiki/Publications)
