@@ -1,0 +1,15 @@
+#ifndef TRITON_VERSION_H
+#define TRITON_VERSION_H
+
+namespace TritonVersion
+{
+  enum
+  {
+    MAJOR = @VERSION_MAJOR@,
+    MINOR = @VERSION_MINOR@,
+    BUILD = @VERSION_BUILD@
+  };
+}
+
+#endif // TRITON_VERSION_H
+
