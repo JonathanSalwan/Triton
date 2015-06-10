@@ -42,7 +42,7 @@ class AnalysisProcessor {
     void          setSSERegisterValue(uint64_t regID, __uint128_t value);
 
     /* Returns the value of the memory */
-    uint64_t      getMemValue(uint64_t mem, uint32_t readSize);
+    __uint128_t   getMemValue(uint64_t mem, uint32_t readSize);
 
     /*
      * Symbolic Engine Facade

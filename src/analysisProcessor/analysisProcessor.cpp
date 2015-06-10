@@ -634,7 +634,7 @@ void AnalysisProcessor::setSSERegisterValue(uint64_t regID, __uint128_t value)
 }
 
 
-uint64_t AnalysisProcessor::getMemValue(uint64_t mem, uint32_t readSize)
+__uint128_t AnalysisProcessor::getMemValue(uint64_t mem, uint32_t readSize)
 {
   return this->currentCtxH->getMemValue(mem, readSize);
 }

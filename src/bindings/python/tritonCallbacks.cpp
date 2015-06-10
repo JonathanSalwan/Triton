@@ -240,6 +240,16 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
   if (PIN_CheckReadAccess(reinterpret_cast<void*>(ad)) == false)
     return PyErr_Format(PyExc_TypeError, "getMemValue(): The targeted address memory can not be read");
 
+  /* If this is a 128-bits read size, we must use PyLong_FromString() */
+  if (rs == 16){
+    char tmp[32+1] = {0};
+    __uint128_t value = ap.getMemValue(ad, rs);
+    uint64_t high = (value >> 64) & 0xffffffffffffffff;
+    uint64_t low = value & 0xffffffffffffffff;
+    snprintf(tmp, sizeof(tmp), "%lx%lx", high, low);
+    return PyLong_FromString(tmp, nullptr, 16);
+  }
+
   return Py_BuildValue("k", ap.getMemValue(ad, rs));
 }
 
