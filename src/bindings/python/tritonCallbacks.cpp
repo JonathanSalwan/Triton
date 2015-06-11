@@ -180,6 +180,56 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
 }
 
 
+static char Triton_convertMemToSymVar_doc[] = "Converts a memory address to a symbolic variable";
+static PyObject *Triton_convertMemToSymVar(PyObject *self, PyObject *args)
+{
+  PyObject *memAddr, *symVarSize;
+  uint64_t vs, ma;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &memAddr, &symVarSize);
+
+  if (!PyLong_Check(memAddr) && !PyInt_Check(memAddr))
+    return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): expected a memory address as first argument");
+
+  if (!PyLong_Check(symVarSize) && !PyInt_Check(symVarSize))
+    return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): expected a size as second argument");
+
+  ma = PyLong_AsLong(memAddr);
+  vs = PyLong_AsLong(symVarSize);
+
+  if (vs != 16 && vs != 8 && vs != 4 && vs != 2 && vs != 1)
+    return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): The symVarSize argument must be: 16, 8, 4, 2 or 1");
+
+  return Py_BuildValue("k", ap.convertMemToSymVar(ma, vs));
+}
+
+
+static char Triton_convertRegToSymVar_doc[] = "Converts a register to a symbolic variable";
+static PyObject *Triton_convertRegToSymVar(PyObject *self, PyObject *args)
+{
+  PyObject *regId, *symVarSize;
+  uint64_t vs, ri;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &regId, &symVarSize);
+
+  if (!PyLong_Check(regId) && !PyInt_Check(regId))
+    return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): expected a IDREF.REG as first argument");
+
+  if (!PyLong_Check(symVarSize) && !PyInt_Check(symVarSize))
+    return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): expected a size as second argument");
+
+  ri = PyLong_AsLong(regId);
+  vs = PyLong_AsLong(symVarSize);
+
+  if (vs != 16 && vs != 8 && vs != 4 && vs != 2 && vs != 1)
+    return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): The symVarSize argument must be: 16, 8, 4, 2 or 1");
+
+  return Py_BuildValue("k", ap.convertRegToSymVar(ri, vs));
+}
+
+
 static char Triton_disableSnapshot_doc[] = "Disables the snapshot engine";
 static PyObject *Triton_disableSnapshot(PyObject *self, PyObject *noarg)
 {
@@ -856,6 +906,8 @@ PyMethodDef tritonCallbacks[] = {
   {"concretizeMem",             Triton_concretizeMem,             METH_O,       Triton_concretizeMem_doc},
   {"concretizeReg",             Triton_concretizeReg,             METH_O,       Triton_concretizeReg_doc},
   {"convertExprToSymVar",       Triton_convertExprToSymVar,       METH_VARARGS, Triton_convertExprToSymVar_doc},
+  {"convertMemToSymVar",        Triton_convertMemToSymVar,        METH_VARARGS, Triton_convertMemToSymVar_doc},
+  {"convertRegToSymVar",        Triton_convertRegToSymVar,        METH_VARARGS, Triton_convertRegToSymVar_doc},
   {"disableSnapshot",           Triton_disableSnapshot,           METH_NOARGS,  Triton_disableSnapshot_doc},
   {"getBacktrackedSymExpr",     Triton_getBacktrackedSymExpr,     METH_O,       Triton_getBacktrackedSymExpr_doc},
   {"getFlagValue",              Triton_getFlagValue,              METH_O,       Triton_getFlagValue_doc},

@@ -45,8 +45,7 @@ def cafter(instruction):
 
     # 0x40058b: movzx eax, byte ptr [rax]
     if instruction.address == 0x40058b:
-        raxId = getRegSymbolicID(IDREF.REG.RAX)
-        convertExprToSymVar(raxId, 4)
+        convertRegToSymVar(IDREF.REG.RAX, 4)
 
     # 0x4005ae: cmp ecx, eax
     if instruction.address == 0x4005ae:
