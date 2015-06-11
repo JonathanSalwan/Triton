@@ -7,10 +7,11 @@
 #include <AnalysisProcessor.h>
 #include <CallbackDefine.h>
 #include <PINConverter.h>
+#include <PythonUtils.h>
 #include <TritonPyObject.h>
+#include <Utils.h>
 #include <pin.H>
 #include <xPyFunc.h>
-#include <Utils.h>
 
 extern AnalysisProcessor ap;
 
@@ -290,14 +291,10 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
   if (PIN_CheckReadAccess(reinterpret_cast<void*>(ad)) == false)
     return PyErr_Format(PyExc_TypeError, "getMemValue(): The targeted address memory can not be read");
 
-  /* If this is a 128-bits read size, we must use PyLong_FromString() */
+  /* If this is a 128-bits read size, we must use uint128ToPyLongObject() */
   if (rs == 16){
-    char tmp[32+1] = {0};
     __uint128_t value = ap.getMemValue(ad, rs);
-    uint64_t high = (value >> 64) & 0xffffffffffffffff;
-    uint64_t low = value & 0xffffffffffffffff;
-    snprintf(tmp, sizeof(tmp), "%lx%lx", high, low);
-    return PyLong_FromString(tmp, nullptr, 16);
+    return uint128ToPyLongObject(value);
   }
 
   return Py_BuildValue("k", ap.getMemValue(ad, rs));
@@ -371,13 +368,10 @@ static PyObject *Triton_getRegValue(PyObject *self, PyObject *reg)
   tritonReg = PyLong_AsLong(reg);
 
   if (tritonReg >= ID_XMM0 && tritonReg <= ID_XMM15){
-    char tmp[32+1] = {0};
     __uint128_t value = ap.getSSERegisterValue(tritonReg);
-    uint64_t high = (value >> 64) & 0xffffffffffffffff;
-    uint64_t low = value & 0xffffffffffffffff;
-    snprintf(tmp, sizeof(tmp), "%lx%lx", high, low);
-    return PyLong_FromString(tmp, nullptr, 16);
+    return uint128ToPyLongObject(value);
   }
+
   return Py_BuildValue("k", ap.getRegisterValue(tritonReg));
 }
 
@@ -655,7 +649,7 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
   if (PIN_CheckWriteAccess(reinterpret_cast<void*>(ad)) == false)
     return PyErr_Format(PyExc_TypeError, "setMemValue(): Can not write into the targeted address memory");
 
-  va = PyLong_AsLongLong(value);
+  va = PyLongObjectToUint128(value);
   ap.setMemValue(ad, ws, va);
 
   return Py_None;
@@ -679,7 +673,7 @@ static PyObject *Triton_setRegValue(PyObject *self, PyObject *args)
   if (!PyLong_Check(value) && !PyInt_Check(value))
     return PyErr_Format(PyExc_TypeError, "setRegValue(): expected an integer as second argument");
 
-  va = PyLong_AsLongLong(value);
+  va = PyLongObjectToUint128(value);
   tr = PyLong_AsLong(reg);
 
   if (tr >= ID_XMM0 && tr <= ID_XMM15)

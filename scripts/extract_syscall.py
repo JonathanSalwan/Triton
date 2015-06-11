@@ -12,7 +12,7 @@ import sys
 import re
 
 PREAMBULE = """
-#include "Syscalls.h"
+#include <Syscalls.h>
 """
 
 if __name__ == "__main__":
