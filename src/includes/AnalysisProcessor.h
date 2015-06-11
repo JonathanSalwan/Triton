@@ -43,6 +43,7 @@ class AnalysisProcessor {
 
     /* Returns the value of the memory */
     __uint128_t   getMemValue(uint64_t mem, uint32_t readSize);
+    void          setMemValue(uint64_t mem, uint32_t writeSize, __uint128_t value);
 
     /*
      * Symbolic Engine Facade

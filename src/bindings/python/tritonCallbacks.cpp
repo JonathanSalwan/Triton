@@ -656,26 +656,7 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
     return PyErr_Format(PyExc_TypeError, "setMemValue(): Can not write into the targeted address memory");
 
   va = PyLong_AsLongLong(value);
-
-  switch (ws){
-    case 1:
-      *((char *)ad) = va;
-      break;
-    case 2:
-      *((short *)ad) = va;
-      break;
-    case 4:
-      *((uint32_t *)ad) = va;
-      break;
-    case 8:
-      *((uint64_t *)ad) = va;
-      break;
-    case 16:
-      *((__uint128_t *)ad) = va;
-      break;
-    default:
-      throw std::runtime_error("Error: Triton_setMemValue() - Invalid write size");
-  }
+  ap.setMemValue(ad, ws, va);
 
   return Py_None;
 }

@@ -1,8 +1,6 @@
 
 #include <iostream>
 #include <stdexcept>
-#include <sys/mman.h>
-#include <unistd.h>
 
 #include <PINContextHandler.h>
 #include <PINConverter.h>
@@ -119,21 +117,11 @@ void PINContextHandler::setSSERegisterValue(uint64_t TritRegID, __uint128_t valu
 }
 
 
-/* Tricks to check if the address is mapped */
-static bool isAddressMapped(ADDRINT addr) {
-  int pagesize = getpagesize();
-  void *foo = (void *)(addr / pagesize * pagesize);
-  if (munlock(foo, 1) == -1)
-    return false;
-  return true;
-}
-
-
 /* Used to deref a pointer address and returns the targeted byte by size of read */
 __uint128_t PINContextHandler::getMemValue(uint64_t mem, uint32_t readSize) const
 {
 
-  if (!isAddressMapped(mem)){
+  if (PIN_CheckReadAccess(reinterpret_cast<void*>(mem)) == false) {
     std::cout << "[Bugs] Invalid read at " << std::hex << mem << std::endl;
     exit(0);
   }
@@ -145,8 +133,40 @@ __uint128_t PINContextHandler::getMemValue(uint64_t mem, uint32_t readSize) cons
     case 8:  return static_cast<__uint128_t>(*(reinterpret_cast<UINT64 *>(mem)));
     case 16: return static_cast<__uint128_t>(*(reinterpret_cast<__uint128_t *>(mem)));
   }
-  throw std::runtime_error("Error: getMemValue() - Invalid read size");
+  throw std::runtime_error("Error: PINContextHandler::getMemValue() - Invalid read size");
   return 0; // Never go there
+}
+
+
+/* Used to inject value into memory */
+void PINContextHandler::setMemValue(uint64_t mem, uint32_t writeSize, __uint128_t value) const
+{
+
+  if (PIN_CheckWriteAccess(reinterpret_cast<void*>(mem)) == false) {
+    std::cout << "[Bugs] Invalid write at " << std::hex << mem << std::endl;
+    exit(0);
+  }
+
+  switch(writeSize){
+    case 1:
+      *((char *)mem) = value;
+      break;
+    case 2:
+      *((short *)mem) = value;
+      break;
+    case 4:
+      *((uint32_t *)mem) = value;
+      break;
+    case 8:
+      *((uint64_t *)mem) = value;
+      break;
+    case 16:
+      *((__uint128_t *)mem) = value;
+      break;
+    default:
+      throw std::runtime_error("Error: PINContextHandler::setMemValue() - Invalid write size");
+  }
+
 }
 
 

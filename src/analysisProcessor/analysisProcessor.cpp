@@ -651,6 +651,13 @@ __uint128_t AnalysisProcessor::getMemValue(uint64_t mem, uint32_t readSize)
   return this->currentCtxH->getMemValue(mem, readSize);
 }
 
+
+void AnalysisProcessor::setMemValue(uint64_t mem, uint32_t writeSize, __uint128_t value)
+{
+  this->currentCtxH->setMemValue(mem, writeSize, value);
+}
+
+
 // Trace Facade
 
 Trace &AnalysisProcessor::getTrace(void)
