@@ -92,6 +92,7 @@ uint64_t SymbolicEngine::getMemSymbolicID(uint64_t addr)
   return UNSET;
 }
 
+
 /* Returns the symbolic variable otherwise returns nullptr */
 SymbolicVariable *SymbolicEngine::getSymVar(uint64_t symVarId)
 {
@@ -127,6 +128,7 @@ uint64_t SymbolicEngine::getRegSymbolicID(uint64_t regID) {
     return UNSET;
   return this->symbolicReg[regID];
 }
+
 
 /* Create a new symbolic element */
 /* Get an unique ID.
@@ -251,9 +253,68 @@ uint64_t SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSiz
     return UNSET;
 
   if (symVarSize != 1 && symVarSize != 2 && symVarSize != 4 && symVarSize != 8 && symVarSize != 16)
-    throw std::runtime_error("SymbolicEngine::createSymVarFromExprID() - Invalid symVarSize");
+    throw std::runtime_error("SymbolicEngine::convertExprToSymVar() - Invalid symVarSize");
 
-  symVar = this->addSymbolicVariable(SymVar::kind::UNDEF, 0, 0, symVarSize);
+  symVar = this->addSymbolicVariable(SymVar::kind::UNDEF, 0, symVarSize);
+
+  newExpr << symVar->getSymVarName();
+  element->setSrcExpr(newExpr);
+
+  return symVar->getSymVarId();
+}
+
+
+uint64_t SymbolicEngine::convertMemToSymVar(uint64_t memAddr, uint64_t symVarSize)
+{
+  SymbolicVariable   *symVar  = nullptr;
+  SymbolicElement    *element = nullptr;
+  std::stringstream  newExpr;
+  uint64_t           memSymId = UNSET;
+
+  memSymId = this->getMemSymbolicID(memAddr);
+  if (memSymId == UNSET)
+    throw std::runtime_error("SymbolicEngine::convertMemToSymVar() - This memory address is UNSET");
+
+  element = this->getElementFromId(memSymId);
+
+  if (element == nullptr)
+    return UNSET;
+
+  if (symVarSize != 1 && symVarSize != 2 && symVarSize != 4 && symVarSize != 8 && symVarSize != 16)
+    throw std::runtime_error("SymbolicEngine::convertMemToSymVar() - Invalid symVarSize");
+
+  symVar = this->addSymbolicVariable(SymVar::kind::MEM, memAddr, symVarSize);
+
+  newExpr << symVar->getSymVarName();
+  element->setSrcExpr(newExpr);
+
+  return symVar->getSymVarId();
+}
+
+
+uint64_t SymbolicEngine::convertRegToSymVar(uint64_t regId, uint64_t symVarSize)
+{
+  SymbolicVariable   *symVar  = nullptr;
+  SymbolicElement    *element = nullptr;
+  std::stringstream  newExpr;
+  uint64_t           regSymId = UNSET;
+
+  if (regId >= ID_LAST_ITEM)
+    throw std::runtime_error("SymbolicEngine::convertRegToSymVar() - Invalid register ID");
+
+  regSymId = this->getRegSymbolicID(regId);
+  if (regSymId == UNSET)
+    throw std::runtime_error("SymbolicEngine::convertRegToSymVar() - This register ID is UNSET");
+
+  element = this->getElementFromId(regSymId);
+
+  if (element == nullptr)
+    return UNSET;
+
+  if (symVarSize != 1 && symVarSize != 2 && symVarSize != 4 && symVarSize != 8 && symVarSize != 16)
+    throw std::runtime_error("SymbolicEngine::convertRegToSymVar() - Invalid symVarSize");
+
+  symVar = this->addSymbolicVariable(SymVar::kind::REG, regId, symVarSize);
 
   newExpr << symVar->getSymVarName();
   element->setSrcExpr(newExpr);
@@ -263,10 +324,10 @@ uint64_t SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSiz
 
 
 /* Add a new symbolic variable */
-SymbolicVariable *SymbolicEngine::addSymbolicVariable(SymVar::kind kind, uint64_t kindValue, uint64_t concreteValue, uint64_t size)
+SymbolicVariable *SymbolicEngine::addSymbolicVariable(SymVar::kind kind, uint64_t kindValue, uint64_t size)
 {
   uint64_t uniqueID = this->symbolicVariables.size();
-  SymbolicVariable *symVar = new SymbolicVariable(kind, kindValue, concreteValue, uniqueID, size);
+  SymbolicVariable *symVar = new SymbolicVariable(kind, kindValue, uniqueID, size);
 
   if (symVar == nullptr)
     throw std::runtime_error("SymbolicEngine::addSymbolicVariable() - Cannot allocate a new symbolic variable");

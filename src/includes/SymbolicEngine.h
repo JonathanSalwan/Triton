@@ -64,7 +64,7 @@ class SymbolicEngine {
     SymbolicElement                 *getElementFromId(uint64_t id);
     SymbolicElement                 *newSymbolicElement(std::stringstream &src);
     SymbolicElement                 *newSymbolicElement(std::stringstream &src, std::string comment);
-    SymbolicVariable                *addSymbolicVariable(SymVar::kind kind, uint64_t kindValue, uint64_t concreteValue, uint64_t size);
+    SymbolicVariable                *addSymbolicVariable(SymVar::kind kind, uint64_t kindValue, uint64_t size);
     SymbolicVariable                *getSymVar(uint64_t symVarId);
     SymbolicVariable                *getSymVar(std::string symVarName);
     std::list<uint64_t>             getPathConstraints(void);
@@ -72,6 +72,8 @@ class SymbolicEngine {
     std::string                     getVariablesDeclaration(void);
     std::vector<SymbolicVariable *> getSymVars(void);
     uint64_t                        convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
+    uint64_t                        convertMemToSymVar(uint64_t memAddr, uint64_t symVarSize);
+    uint64_t                        convertRegToSymVar(uint64_t regId, uint64_t symVarSize);
     uint64_t                        getMemSymbolicID(uint64_t addr);
     uint64_t                        getRegSymbolicID(uint64_t regID);
     uint64_t                        getUniqueID();

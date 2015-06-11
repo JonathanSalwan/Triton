@@ -84,8 +84,10 @@ class AnalysisProcessor {
     /* Returns the symbolic engine reference */
     SymbolicEngine &getSymbolicEngine(void);
 
-    /* Converts an expression to a symbolic variable */
+    /* Converts an expression, register or memory to a symbolic variable */
     uint64_t convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
+    uint64_t convertMemToSymVar(uint64_t memAddr, uint64_t symVarSize);
+    uint64_t convertRegToSymVar(uint64_t regId, uint64_t symVarSize);
 
     /* Returns the symbolic variable from ID or std::string */
     SymbolicVariable *getSymVar(uint64_t symVarId);

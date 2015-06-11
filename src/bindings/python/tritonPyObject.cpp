@@ -44,7 +44,6 @@ PyObject *PySymbolicElement(SymbolicElement *element)
 /*
  * Class SymbolicVariable:
  *
- * - concreteValue (integer)
  * - id (integer)
  * - kind (IDREF.SYMVAR)
  * - kindValue (IDREG.REG or integer, it depends of the kind)
@@ -54,12 +53,11 @@ PyObject *PySymbolicElement(SymbolicElement *element)
 PyObject *PySymbolicVariable(SymbolicVariable *symVar)
 {
   PyObject *dictSVClass = xPyDict_New();
-  PyDict_SetItemString(dictSVClass, "concreteValue",  PyInt_FromLong(symVar->getSymVarConcreteValue()));
-  PyDict_SetItemString(dictSVClass, "id",             PyInt_FromLong(symVar->getSymVarId()));
-  PyDict_SetItemString(dictSVClass, "kind",           PyInt_FromLong(symVar->getSymVarKind()));
-  PyDict_SetItemString(dictSVClass, "kindValue",      PyInt_FromLong(symVar->getSymVarKindValue()));
-  PyDict_SetItemString(dictSVClass, "name",           PyString_FromFormat("%s", symVar->getSymVarName().c_str()));
-  PyDict_SetItemString(dictSVClass, "size",           PyInt_FromLong(symVar->getSymVarSize()));
+  PyDict_SetItemString(dictSVClass, "id",        PyInt_FromLong(symVar->getSymVarId()));
+  PyDict_SetItemString(dictSVClass, "kind",      PyInt_FromLong(symVar->getSymVarKind()));
+  PyDict_SetItemString(dictSVClass, "kindValue", PyInt_FromLong(symVar->getSymVarKindValue()));
+  PyDict_SetItemString(dictSVClass, "name",      PyString_FromFormat("%s", symVar->getSymVarName().c_str()));
+  PyDict_SetItemString(dictSVClass, "size",      PyInt_FromLong(symVar->getSymVarSize()));
 
   PyObject *SVClassName = xPyString_FromString("SymbolicVariable");
   PyObject *SVClass = xPyClass_New(nullptr, dictSVClass, SVClassName);
