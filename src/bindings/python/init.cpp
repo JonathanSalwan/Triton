@@ -8,12 +8,14 @@
 
 void initCallbackEnv(PyObject *);
 void initFlagEnv(PyObject *);
+void initMiscEnv(PyObject *);
 void initOpcodeCategoryEnv(PyObject *);
 void initOpcodeEnv(PyObject *);
 void initOperandEnv(PyObject *);
 void initRegEnv(PyObject *);
 void initSymVarEnv(PyObject *);
 void initSyscallEnv(PyObject *);
+void initVersionEnv(PyObject *);
 
 
 void initBindings(void)
@@ -69,6 +71,21 @@ void initBindings(void)
   PyObject *idFlagClass = xPyClass_New(nullptr, idFlagClassDict, idFlagClassName);
 
   // FLAG ---------------------
+
+
+  // MISC ---------------------
+
+  /* Create the IDREF.MISC class */
+  PyObject *idMiscClassName = xPyString_FromString("MISC");
+  PyObject *idMiscClassDict = xPyDict_New();
+
+  /* Add registers ref into IDREF.MISC class */
+  initMiscEnv(idMiscClassDict);
+
+  /* Create the MISC class */
+  PyObject *idMiscClass = xPyClass_New(nullptr, idMiscClassDict, idMiscClassName);
+
+  // MISC ---------------------
 
 
   // OPCODE ---------------------
@@ -161,23 +178,38 @@ void initBindings(void)
   // SYSCALL ---------------------
 
 
+  // VERSION ---------------------
+
+  /* Create the IDREF.VERSION class */
+  PyObject *idVersionClassName = xPyString_FromString("VERSION");
+  PyObject *idVersionClassDict = xPyDict_New();
+
+  /* Add registers ref into IDREF.VERSION class */
+  initVersionEnv(idVersionClassDict);
+
+  /* Create the VERSION class */
+  PyObject *idVersionClass = xPyClass_New(nullptr, idVersionClassDict, idVersionClassName);
+
+  // VERSION ---------------------
+
+
   /* Add all classes into IDREF */
   PyDict_SetItemString(idRefClassDict, "CALLBACK", idCallbackClass);
   PyDict_SetItemString(idRefClassDict, "FLAG", idFlagClass);
+  PyDict_SetItemString(idRefClassDict, "MISC", idMiscClass);
   PyDict_SetItemString(idRefClassDict, "OPCODE", idOpcodeClass);
   PyDict_SetItemString(idRefClassDict, "OPCODE_CATEGORY", idOpcodeCategoryClass);
   PyDict_SetItemString(idRefClassDict, "OPERAND", idOperandClass);
   PyDict_SetItemString(idRefClassDict, "REG", idRegClass);
   PyDict_SetItemString(idRefClassDict, "SYMVAR", idSymVarClass);
   PyDict_SetItemString(idRefClassDict, "SYSCALL", idSyscallClass);
+  PyDict_SetItemString(idRefClassDict, "VERSION", idVersionClass);
 
   /* Create the IDREF class */
   PyObject *idRefClass = xPyClass_New(nullptr, idRefClassDict, idRefClassName);
 
-
   /* add all classes and constants into the triton module */
   PyModule_AddObject(tritonModule, "IDREF", idRefClass);
-  PyModule_AddObject(tritonModule, "UNSET", Py_BuildValue("k", UNSET)); // Py_BuildValue for unsigned long
 }
 
 

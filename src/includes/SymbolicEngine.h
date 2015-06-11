@@ -12,12 +12,11 @@
 #include <vector>
 #include <sstream>
 
+#include "Misc.h"
 #include "Registers.h"
 #include "SMT2Lib.h"
 #include "SymbolicElement.h"
 #include "SymbolicVariable.h"
-
-const uint64_t UNSET = -1;
 
 
 /* Symbolic Engine */
