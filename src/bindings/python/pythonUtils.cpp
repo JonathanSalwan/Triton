@@ -1,58 +1,67 @@
 
 #include <python2.7/Python.h>
+#include <python2.7/longintrepr.h>
 
 #include <PythonBindings.h>
 #include <PythonUtils.h>
 
+// Based on python-2.7/blob/master/Objects/longobject.c
 
-__uint128_t PyLongObjectToUint128(PyObject *value)
+
+__uint128_t PyLongObjectToUint128(PyObject *vv)
 {
-  __uint128_t v;
-  uint64_t size = 0;
-  uint64_t high = 0, low = 0;
-  PyObject *hex = nullptr;
-  PyObject *format = nullptr;
-  PyObject *format_args = nullptr;
+  register PyLongObject *v;
+  __uint128_t x, prev;
+  Py_ssize_t i;
 
-  format_args = Py_BuildValue("(O)", value);
-  format = PyString_FromString("%x");
-  hex = PyString_Format(format, format_args);
-
-  PyObject* valueAsStr = PyObject_Str(hex);
-  std::string stringValue(PyString_AsString(valueAsStr));
-
-  size = stringValue.size();
-
-  if (size > 32)
-    throw std::runtime_error("Error: PyLongObjectToUint128() must be <= 128 bits");
-
-  if (size <= 16){
-    low = std::strtoul(stringValue.c_str(), nullptr, 16);
-  }
-  else {
-    high = std::strtoul(stringValue.substr(0, size - 16).c_str(), nullptr, 16);
-    low = std::strtoul(stringValue.substr(size - 16).c_str(), nullptr, 16);
+  if (vv == NULL || !PyLong_Check(vv)) {
+    if (vv != NULL && PyInt_Check(vv)) {
+        __uint128_t val = PyInt_AsLong(vv);
+        if (val < 0)
+          throw std::runtime_error("Error: PyLongObjectToUint128() - can't convert negative value to unsigned long");
+        return val;
+    }
+    throw std::runtime_error("Error: PyLongObjectToUint128() - Bad internal call");
   }
 
-  v = high;
-  v <<= 64;
-  v |= low;
+  v = (PyLongObject *)vv;
+  i = Py_SIZE(v);
+  x = 0;
+  if (i < 0)
+    throw std::runtime_error("Error: PyLongObjectToUint128() - can't convert negative value to unsigned long");
 
-  Py_DECREF(valueAsStr);
-  Py_DECREF(format_args);
-  Py_DECREF(format);
-  Py_DECREF(hex);
+  while (--i >= 0) {
+      prev = x;
+      x = (x << PyLong_SHIFT) | v->ob_digit[i];
+      if ((x >> PyLong_SHIFT) != prev)
+          throw std::runtime_error("Error: PyLongObjectToUint128() - long int too large to convert");
+  }
 
-  return v;
+  return x;
 }
 
 
 PyObject *uint128ToPyLongObject(__uint128_t value)
 {
-  char tmp[32+1] = {0};
-  uint64_t high = (value >> 64) & 0xffffffffffffffff;
-  uint64_t low = value & 0xffffffffffffffff;
-  snprintf(tmp, sizeof(tmp), "%lx%lx", high, low);
-  return PyLong_FromString(tmp, nullptr, 16);
+  PyLongObject *v;
+  __uint128_t t;
+  int ndigits = 0;
+
+  /* Count the number of Python digits. */
+  t = value;
+  while (t) {
+    ++ndigits;
+    t >>= PyLong_SHIFT;
+  }
+
+  v = _PyLong_New(ndigits);
+  digit *p = v->ob_digit;
+  Py_SIZE(v) = ndigits;
+  while (value) {
+    *p++ = (digit)(value & PyLong_MASK);
+    value >>= PyLong_SHIFT;
+  }
+
+  return (PyObject *)v;
 }
 
