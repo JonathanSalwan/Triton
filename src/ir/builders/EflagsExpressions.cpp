@@ -113,7 +113,7 @@ std::string EflagsExpressions::cfMul(SymbolicElement *parent,
 
   /*
    * Create the SMT semantic.
-   * of = 0 if res == op1 else 1
+   * cf = 0 if res == op1 else 1
    */
   expr << smt2lib::ite(
             smt2lib::equal(
@@ -140,7 +140,7 @@ std::string EflagsExpressions::cfSar(SymbolicElement *parent,
    * if op2 != 0:
    *   if op2 > bvSize:
    *     cf.id = ((op1 >> (bvSize - 1)) & 1)
-   *   else: 
+   *   else:
    *     cf.id = ((op1 >> (op2 - 1)) & 1)
    */
   expr << smt2lib::ite(
@@ -430,7 +430,7 @@ std::string EflagsExpressions::pf(SymbolicElement *parent)
             ),
             smt2lib::bv(1, 1),
             smt2lib::bv(0, 1)
-          ); 
+          );
 
   return expr.str();
 }

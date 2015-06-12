@@ -12,3 +12,6 @@ peda-session*
 *.i64
 build/*
 triton
+*.db
+tools/generate_db.py
+tools/ida.py
