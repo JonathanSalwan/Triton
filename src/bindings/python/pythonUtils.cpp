@@ -24,7 +24,7 @@ __uint128_t PyLongObjectToUint128(PyObject *vv)
     throw std::runtime_error("Error: PyLongObjectToUint128() - Bad internal call");
   }
 
-  v = (PyLongObject *)vv;
+  v = reinterpret_cast<PyLongObject *>(vv);
   i = Py_SIZE(v);
   x = 0;
   if (i < 0)
@@ -58,7 +58,7 @@ PyObject *uint128ToPyLongObject(__uint128_t value)
   digit *p = v->ob_digit;
   Py_SIZE(v) = ndigits;
   while (value) {
-    *p++ = (digit)(value & PyLong_MASK);
+    *p++ = static_cast<digit>(value & PyLong_MASK);
     value >>= PyLong_SHIFT;
   }
 
