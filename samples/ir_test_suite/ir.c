@@ -99,6 +99,11 @@ void check(void)
   asm("imul ecx, 1");
   asm("imul rcx, rcx, 4");
 
+  asm("mul cl");
+  asm("mul cx");
+  asm("mul ecx");
+  asm("mul rcx");
+
   // SSE
   asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab));
   asm("movapd xmm1, xmm2");

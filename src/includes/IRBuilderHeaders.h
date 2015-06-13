@@ -71,6 +71,7 @@
 #include "MovlpsIRBuilder.h"
 #include "MovsxIRBuilder.h"
 #include "MovzxIRBuilder.h"
+#include "MulIRBuilder.h"
 #include "NegIRBuilder.h"
 #include "NotIRBuilder.h"
 #include "NullIRBuilder.h"

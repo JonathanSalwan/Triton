@@ -39,8 +39,8 @@ void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegImm(se, reg);
 
   /* Add the symbolic flags element to the current inst */
-  EflagsBuilder::cfMul(inst, se, ap, regSize, op1);
-  EflagsBuilder::ofMul(inst, se, ap, regSize, op1);
+  EflagsBuilder::cfImul(inst, se, ap, regSize, op1);
+  EflagsBuilder::ofImul(inst, se, ap, regSize, op1);
   EflagsBuilder::sf(inst, se, ap, regSize);
 }
 
@@ -85,8 +85,8 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg1, reg2);
 
   /* Add the symbolic flags element to the current inst */
-  EflagsBuilder::cfMul(inst, se, ap, regSize1, op1);
-  EflagsBuilder::ofMul(inst, se, ap, regSize1, op1);
+  EflagsBuilder::cfImul(inst, se, ap, regSize1, op1);
+  EflagsBuilder::ofImul(inst, se, ap, regSize1, op1);
   EflagsBuilder::sf(inst, se, ap, regSize1);
 }
 
@@ -131,8 +131,8 @@ void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegMem(se, reg, mem, memSize);
 
   /* Add the symbolic flags element to the current inst */
-  EflagsBuilder::cfMul(inst, se, ap, regSize, op1);
-  EflagsBuilder::ofMul(inst, se, ap, regSize, op1);
+  EflagsBuilder::cfImul(inst, se, ap, regSize, op1);
+  EflagsBuilder::ofImul(inst, se, ap, regSize, op1);
   EflagsBuilder::sf(inst, se, ap, regSize);
 }
 

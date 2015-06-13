@@ -35,7 +35,7 @@ std::string EflagsExpressions::af(SymbolicElement *parent,
 
 
 std::string EflagsExpressions::afNeg(SymbolicElement *parent,
-                                     uint32_t bvSize, 
+                                     uint32_t bvSize,
                                      std::stringstream &op1)
 {
   std::stringstream expr;
@@ -106,7 +106,7 @@ std::string EflagsExpressions::cfNeg(uint32_t bvSize,
 }
 
 
-std::string EflagsExpressions::cfMul(SymbolicElement *parent,
+std::string EflagsExpressions::cfImul(SymbolicElement *parent,
                                      std::stringstream &op1)
 {
   std::stringstream expr;
@@ -119,6 +119,27 @@ std::string EflagsExpressions::cfMul(SymbolicElement *parent,
             smt2lib::equal(
               parent->getID2Str(),
               op1.str()
+            ),
+            smt2lib::bv(0, 1),
+            smt2lib::bv(1, 1));
+
+  return expr.str();
+}
+
+
+std::string EflagsExpressions::cfMul(uint32_t bvSize,
+                                     std::stringstream &up)
+{
+  std::stringstream expr;
+
+  /*
+   * Create the SMT semantic.
+   * cf = 0 if up == 0 else 1
+   */
+  expr << smt2lib::ite(
+            smt2lib::equal(
+              up.str(),
+              smt2lib::bv(0, bvSize)
             ),
             smt2lib::bv(0, 1),
             smt2lib::bv(1, 1));
@@ -290,7 +311,7 @@ std::string EflagsExpressions::ofNeg(SymbolicElement *parent,
 }
 
 
-std::string EflagsExpressions::ofMul(SymbolicElement *parent,
+std::string EflagsExpressions::ofImul(SymbolicElement *parent,
                                      std::stringstream &op1)
 {
   std::stringstream expr;
@@ -303,6 +324,27 @@ std::string EflagsExpressions::ofMul(SymbolicElement *parent,
             smt2lib::equal(
               parent->getID2Str(),
               op1.str()
+            ),
+            smt2lib::bv(0, 1),
+            smt2lib::bv(1, 1));
+
+  return expr.str();
+}
+
+
+std::string EflagsExpressions::ofMul(uint32_t bvSize,
+                                     std::stringstream &up)
+{
+  std::stringstream expr;
+
+  /*
+   * Create the SMT semantic.
+   * of = 0 if up == 0 else 1
+   */
+  expr << smt2lib::ite(
+            smt2lib::equal(
+              up.str(),
+              smt2lib::bv(0, bvSize)
             ),
             smt2lib::bv(0, 1),
             smt2lib::bv(1, 1));

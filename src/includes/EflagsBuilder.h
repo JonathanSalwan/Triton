@@ -14,8 +14,9 @@ namespace EflagsBuilder {
   SymbolicElement *afNeg(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1);
 
   SymbolicElement *cfAdd(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, std::stringstream &op1);
+  SymbolicElement *cfImul(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1);
+  SymbolicElement *cfMul(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &up);
   SymbolicElement *cfNeg(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1);
-  SymbolicElement *cfMul(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1);
   SymbolicElement *cfSar(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
   SymbolicElement *cfShl(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
   SymbolicElement *cfShr(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
@@ -25,8 +26,9 @@ namespace EflagsBuilder {
   SymbolicElement *clearFlag(Inst &inst, AnalysisProcessor &ap, regID_t flag, std::string comment);
 
   SymbolicElement *ofAdd(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
+  SymbolicElement *ofImul(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1);
+  SymbolicElement *ofMul(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &up);
   SymbolicElement *ofNeg(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1);
-  SymbolicElement *ofMul(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1);
   SymbolicElement *ofSar(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op2);
   SymbolicElement *ofShl(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
   SymbolicElement *ofShr(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32_t dstSize, std::stringstream &op1, std::stringstream &op2);
