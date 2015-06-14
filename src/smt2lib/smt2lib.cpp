@@ -1,7 +1,9 @@
 #include <string>
 #include <stdexcept>
 
+#include <CpuSize.h>
 #include <SMT2Lib.h>
+
 
 static const std::string parityDef =
   "(define-fun parity_flag ((x!1 (_ BitVec 8))) (_ BitVec 1) "
@@ -251,19 +253,19 @@ std::string smt2lib::extract(uint64_t regSize)
   std::stringstream stream;
 
   switch(regSize){
-    case 1:
+    case BYTE_SIZE:
       stream << "(_ extract 7 0)";
       break;
-    case 2:
+    case WORD_SIZE:
       stream << "(_ extract 15 0)";
       break;
-    case 4:
+    case DWORD_SIZE:
       stream << "(_ extract 31 0)";
       break;
-    case 8:
+    case QWORD_SIZE:
       stream << "(_ extract 63 0)";
       break;
-    case 16:
+    case DQWORD_SIZE:
       stream << "(_ extract 127 0)";
       break;
     default:
@@ -302,19 +304,19 @@ std::string smt2lib::declare(std::string symVarName, uint64_t symVarSize)
   std::stringstream stream;
 
   switch(symVarSize){
-    case 1:
+    case BYTE_SIZE:
       stream << "(declare-fun " << symVarName << " () (_ BitVec 8))";
       break;
-    case 2:
+    case WORD_SIZE:
       stream << "(declare-fun " << symVarName << " () (_ BitVec 16))";
       break;
-    case 4:
+    case DWORD_SIZE:
       stream << "(declare-fun " << symVarName << " () (_ BitVec 32))";
       break;
-    case 8:
+    case QWORD_SIZE:
       stream << "(declare-fun " << symVarName << " () (_ BitVec 64))";
       break;
-    case 16:
+    case DQWORD_SIZE:
       stream << "(declare-fun " << symVarName << " () (_ BitVec 128))";
       break;
   }

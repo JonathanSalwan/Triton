@@ -26,7 +26,7 @@ void MulIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   switch (regSize) {
 
     /* AX = AL * r/m8 */
-    case 1:
+    case BYTE_SIZE:
       /* Final expr */
       expr << smt2lib::bvmul(
                 smt2lib::zx(op1.str(), BYTE_SIZE_BIT),
@@ -43,7 +43,7 @@ void MulIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
       break;
 
     /* DX:AX = AX * r/m16 */
-    case 2:
+    case WORD_SIZE:
       /* Final expr */
       expr << smt2lib::bvmul(
                 smt2lib::zx(op1.str(), WORD_SIZE_BIT),
@@ -65,7 +65,7 @@ void MulIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
       break;
 
     /* EDX:EAX = EAX * r/m32 */
-    case 4:
+    case DWORD_SIZE:
       /* Final expr */
       expr << smt2lib::bvmul(
                 smt2lib::zx(op1.str(), DWORD_SIZE_BIT),
@@ -87,7 +87,7 @@ void MulIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
       break;
 
     /* RDX:RAX = RAX * r/m64 */
-    case 8:
+    case QWORD_SIZE:
       /* Final expr */
       expr << smt2lib::bvmul(
                 smt2lib::zx(op1.str(), QWORD_SIZE_BIT),
@@ -126,7 +126,7 @@ void MulIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   switch (memSize) {
 
     /* AX = AL * r/m8 */
-    case 1:
+    case BYTE_SIZE:
       /* Final expr */
       expr << smt2lib::bvmul(
                 smt2lib::zx(op1.str(), BYTE_SIZE_BIT),
@@ -143,7 +143,7 @@ void MulIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
       break;
 
     /* DX:AX = AX * r/m16 */
-    case 2:
+    case WORD_SIZE:
       /* Final expr */
       expr << smt2lib::bvmul(
                 smt2lib::zx(op1.str(), WORD_SIZE_BIT),
@@ -165,7 +165,7 @@ void MulIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
       break;
 
     /* EDX:EAX = EAX * r/m32 */
-    case 4:
+    case DWORD_SIZE:
       /* Final expr */
       expr << smt2lib::bvmul(
                 smt2lib::zx(op1.str(), DWORD_SIZE_BIT),
@@ -187,7 +187,7 @@ void MulIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
       break;
 
     /* RDX:RAX = RAX * r/m64 */
-    case 8:
+    case QWORD_SIZE:
       /* Final expr */
       expr << smt2lib::bvmul(
                 smt2lib::zx(op1.str(), QWORD_SIZE_BIT),

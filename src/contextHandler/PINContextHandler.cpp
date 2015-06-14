@@ -39,7 +39,7 @@ uint64_t PINContextHandler::getFlagValue(uint64_t TritFlagID) const
 
   switch (TritFlagID){
     case ID_AF: return (rflags >> 4) & 1;
-    case ID_CF: return rflags & 1;
+    case ID_CF: return (rflags & 1);
     case ID_DF: return (rflags >> 10) & 1;
     case ID_IF: return (rflags >> 9) & 1;
     case ID_OF: return (rflags >> 11) & 1;
@@ -127,11 +127,11 @@ __uint128_t PINContextHandler::getMemValue(uint64_t mem, uint32_t readSize) cons
   }
 
   switch(readSize){
-    case 1:  return static_cast<__uint128_t>(*(reinterpret_cast<UINT8 *>(mem)));
-    case 2:  return static_cast<__uint128_t>(*(reinterpret_cast<UINT16 *>(mem)));
-    case 4:  return static_cast<__uint128_t>(*(reinterpret_cast<UINT32 *>(mem)));
-    case 8:  return static_cast<__uint128_t>(*(reinterpret_cast<UINT64 *>(mem)));
-    case 16: return static_cast<__uint128_t>(*(reinterpret_cast<__uint128_t *>(mem)));
+    case BYTE_SIZE:   return static_cast<__uint128_t>(*(reinterpret_cast<UINT8 *>(mem)));
+    case WORD_SIZE:   return static_cast<__uint128_t>(*(reinterpret_cast<UINT16 *>(mem)));
+    case DWORD_SIZE:  return static_cast<__uint128_t>(*(reinterpret_cast<UINT32 *>(mem)));
+    case QWORD_SIZE:  return static_cast<__uint128_t>(*(reinterpret_cast<UINT64 *>(mem)));
+    case DQWORD_SIZE: return static_cast<__uint128_t>(*(reinterpret_cast<__uint128_t *>(mem)));
   }
   throw std::runtime_error("Error: PINContextHandler::getMemValue() - Invalid read size");
   return 0; // Never go there
@@ -148,19 +148,19 @@ void PINContextHandler::setMemValue(uint64_t mem, uint32_t writeSize, __uint128_
   }
 
   switch(writeSize){
-    case 1:
+    case BYTE_SIZE:
       *((char *)mem) = value;
       break;
-    case 2:
+    case WORD_SIZE:
       *((short *)mem) = value;
       break;
-    case 4:
+    case DWORD_SIZE:
       *((uint32_t *)mem) = value;
       break;
-    case 8:
+    case QWORD_SIZE:
       *((uint64_t *)mem) = value;
       break;
-    case 16:
+    case DQWORD_SIZE:
       *((__uint128_t *)mem) = value;
       break;
     default:

@@ -252,7 +252,7 @@ uint64_t SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSiz
   if (element == nullptr)
     return UNSET;
 
-  if (symVarSize != 1 && symVarSize != 2 && symVarSize != 4 && symVarSize != 8 && symVarSize != 16)
+  if (symVarSize != BYTE_SIZE && symVarSize != WORD_SIZE && symVarSize != DWORD_SIZE && symVarSize != QWORD_SIZE && symVarSize != DQWORD_SIZE)
     throw std::runtime_error("SymbolicEngine::convertExprToSymVar() - Invalid symVarSize");
 
   symVar = this->addSymbolicVariable(SymVar::kind::UNDEF, 0, symVarSize);
@@ -280,7 +280,7 @@ uint64_t SymbolicEngine::convertMemToSymVar(uint64_t memAddr, uint64_t symVarSiz
   if (element == nullptr)
     return UNSET;
 
-  if (symVarSize != 1 && symVarSize != 2 && symVarSize != 4 && symVarSize != 8 && symVarSize != 16)
+  if (symVarSize != BYTE_SIZE && symVarSize != WORD_SIZE && symVarSize != DWORD_SIZE && symVarSize != QWORD_SIZE && symVarSize != DQWORD_SIZE)
     throw std::runtime_error("SymbolicEngine::convertMemToSymVar() - Invalid symVarSize");
 
   symVar = this->addSymbolicVariable(SymVar::kind::MEM, memAddr, symVarSize);
@@ -311,7 +311,7 @@ uint64_t SymbolicEngine::convertRegToSymVar(uint64_t regId, uint64_t symVarSize)
   if (element == nullptr)
     return UNSET;
 
-  if (symVarSize != 1 && symVarSize != 2 && symVarSize != 4 && symVarSize != 8 && symVarSize != 16)
+  if (symVarSize != BYTE_SIZE && symVarSize != WORD_SIZE && symVarSize != DWORD_SIZE && symVarSize != QWORD_SIZE && symVarSize != DQWORD_SIZE)
     throw std::runtime_error("SymbolicEngine::convertRegToSymVar() - Invalid symVarSize");
 
   symVar = this->addSymbolicVariable(SymVar::kind::REG, regId, symVarSize);

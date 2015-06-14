@@ -25,12 +25,12 @@ void BswapIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
   std::list<std::string> bytes;
   switch (regSize) {
-    case 8:
+    case QWORD_SIZE:
       bytes.push_front(smt2lib::extract(63, 56, op1.str()));
       bytes.push_front(smt2lib::extract(55, 48, op1.str()));
       bytes.push_front(smt2lib::extract(47, 40, op1.str()));
       bytes.push_front(smt2lib::extract(39, 32, op1.str()));
-    case 4:
+    case DWORD_SIZE:
       bytes.push_front(smt2lib::extract(31, 24, op1.str()));
       bytes.push_front(smt2lib::extract(23, 16, op1.str()));
       bytes.push_front(smt2lib::extract(15, 8, op1.str()));

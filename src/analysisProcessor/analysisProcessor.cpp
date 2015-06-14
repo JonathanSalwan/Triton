@@ -61,20 +61,20 @@ SymbolicElement *AnalysisProcessor::createRegSE(Inst &inst, std::stringstream &e
   origReg << this->buildSymbolicRegOperand(regID, REG_SIZE);
 
   switch (regSize) {
-    case 1:
+    case BYTE_SIZE:
       finalExpr << smt2lib::concat(smt2lib::extract(63, 8, origReg.str()), expr.str());
       break;
-    case 2:
+    case WORD_SIZE:
       finalExpr << smt2lib::concat(smt2lib::extract(63, 16, origReg.str()), expr.str());
       break;
-    case 4:
+    case DWORD_SIZE:
       /* In AMD64, if a reg32 is written, it clears the 32-bit MSB of the corresponding register (Thx Wisk!) */
-      finalExpr << smt2lib::zx(expr.str(), 32);
+      finalExpr << smt2lib::zx(expr.str(), DWORD_SIZE_BIT);
       break;
-    case 8:
+    case QWORD_SIZE:
       finalExpr << expr.str();
       break;
-    case 16:
+    case DQWORD_SIZE:
       finalExpr << expr.str();
       break;
   }
@@ -94,20 +94,20 @@ SymbolicElement *AnalysisProcessor::createRegSE(Inst &inst, std::stringstream &e
   origReg << this->buildSymbolicRegOperand(regID, REG_SIZE);
 
   switch (regSize) {
-    case 1:
+    case BYTE_SIZE:
       finalExpr << smt2lib::concat(smt2lib::extract(63, 8, origReg.str()), expr.str());
       break;
-    case 2:
+    case WORD_SIZE:
       finalExpr << smt2lib::concat(smt2lib::extract(63, 16, origReg.str()), expr.str());
       break;
-    case 4:
+    case DWORD_SIZE:
       /* In AMD64, if a reg32 is written, it clears the 32-bit MSB of the corresponding register (Thx Wisk!) */
-      finalExpr << smt2lib::zx(expr.str(), 32);
+      finalExpr << smt2lib::zx(expr.str(), DWORD_SIZE_BIT);
       break;
-    case 8:
+    case QWORD_SIZE:
       finalExpr << expr.str();
       break;
-    case 16:
+    case DQWORD_SIZE:
       finalExpr << expr.str();
       break;
   }
@@ -130,8 +130,8 @@ SymbolicElement *AnalysisProcessor::createMemSE(Inst &inst, std::stringstream &e
    * memory must be assigned to an unique reference.
    */
   while (writeSize){
-    /* Extract each byte if the size > 8 bit */
-    if (writeSize > 1){
+    /* Extract each byte if the size > 1 byte (8 bits) */
+    if (writeSize > BYTE_SIZE){
       tmp.str(smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr.str()));
       SymbolicElement *se = symEngine.newSymbolicElement(tmp, "byte reference");
       inst.addElement(se);
@@ -162,8 +162,8 @@ SymbolicElement *AnalysisProcessor::createMemSE(Inst &inst, std::stringstream &e
    * memory must be assigned to an unique reference.
    */
   while (writeSize){
-    /* Extract each byte if the size > 8 bit */
-    if (writeSize > 1){
+    /* Extract each byte if the size > 1 byte (8 bits) */
+    if (writeSize > BYTE_SIZE){
       tmp.str(smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr.str()));
       SymbolicElement *se = symEngine.newSymbolicElement(tmp, "byte reference");
       inst.addElement(se);
@@ -281,7 +281,7 @@ std::string AnalysisProcessor::buildSymbolicRegOperand(uint64_t regID, uint64_t 
     op << smt2lib::extract(regSize, "#" + std::to_string(symReg));
   else {
     if (regID >= ID_XMM0 && regID <= ID_XMM15)
-      op << smt2lib::extract(regSize, smt2lib::bv(this->getSSERegisterValue(regID), REG_SIZE_SSE_BIT));
+      op << smt2lib::extract(regSize, smt2lib::bv(this->getSSERegisterValue(regID), SSE_REG_SIZE_BIT));
     else
       op << smt2lib::extract(regSize, smt2lib::bv(this->getRegisterValue(regID), REG_SIZE_BIT));
   }
@@ -299,7 +299,7 @@ std::string AnalysisProcessor::buildSymbolicRegOperand(uint64_t regID, uint64_t 
     op << smt2lib::extract(highExtract, lowExtract, "#" + std::to_string(symReg));
   else {
     if (regID >= ID_XMM0 && regID <= ID_XMM15)
-      op << smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getSSERegisterValue(regID), REG_SIZE_SSE_BIT));
+      op << smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getSSERegisterValue(regID), SSE_REG_SIZE_BIT));
     else
       op << smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getRegisterValue(regID), REG_SIZE_BIT));
   }
@@ -329,13 +329,13 @@ std::string AnalysisProcessor::buildSymbolicMemOperand(uint64_t mem, uint64_t me
 
   tmp.str("");
   switch (opVec.size()) {
-    case 16:
-    case 8:
-    case 4:
-    case 2:
+    case DQWORD_SIZE:
+    case QWORD_SIZE:
+    case DWORD_SIZE:
+    case WORD_SIZE:
       tmp.str(smt2lib::concat(opVec));
       break;
-    case 1:
+    case BYTE_SIZE:
       tmp.str(opVec[0]);
       break;
   }

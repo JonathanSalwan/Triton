@@ -174,8 +174,8 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
   ei = PyLong_AsLong(exprId);
   vs = PyLong_AsLong(symVarSize);
 
-  if (vs != 16 && vs != 8 && vs != 4 && vs != 2 && vs != 1)
-    return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): The symVarSize argument must be: 16, 8, 4, 2 or 1");
+  if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
+    return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
   return Py_BuildValue("k", ap.convertExprToSymVar(ei, vs));
 }
@@ -199,8 +199,8 @@ static PyObject *Triton_convertMemToSymVar(PyObject *self, PyObject *args)
   ma = PyLong_AsLong(memAddr);
   vs = PyLong_AsLong(symVarSize);
 
-  if (vs != 16 && vs != 8 && vs != 4 && vs != 2 && vs != 1)
-    return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): The symVarSize argument must be: 16, 8, 4, 2 or 1");
+  if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
+    return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
   return Py_BuildValue("k", ap.convertMemToSymVar(ma, vs));
 }
@@ -224,8 +224,8 @@ static PyObject *Triton_convertRegToSymVar(PyObject *self, PyObject *args)
   ri = PyLong_AsLong(regId);
   vs = PyLong_AsLong(symVarSize);
 
-  if (vs != 16 && vs != 8 && vs != 4 && vs != 2 && vs != 1)
-    return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): The symVarSize argument must be: 16, 8, 4, 2 or 1");
+  if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
+    return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
   return Py_BuildValue("k", ap.convertRegToSymVar(ri, vs));
 }
@@ -285,14 +285,14 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
   ad = PyLong_AsLong(addr);
   rs = PyLong_AsLong(readSize);
 
-  if (rs != 16 && rs != 8 && rs != 4 && rs != 2 && rs != 1)
-    return PyErr_Format(PyExc_TypeError, "getMemValue(): The readSize argument must be: 16, 8, 4, 2 or 1");
+  if (rs != DQWORD_SIZE && rs != QWORD_SIZE && rs != DWORD_SIZE && rs != WORD_SIZE && rs != BYTE_SIZE)
+    return PyErr_Format(PyExc_TypeError, "getMemValue(): The readSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
   if (PIN_CheckReadAccess(reinterpret_cast<void*>(ad)) == false)
     return PyErr_Format(PyExc_TypeError, "getMemValue(): The targeted address memory can not be read");
 
   /* If this is a 128-bits read size, we must use uint128ToPyLongObject() */
-  if (rs == 16){
+  if (rs == DQWORD_SIZE){
     __uint128_t value = ap.getMemValue(ad, rs);
     return uint128ToPyLongObject(value);
   }
@@ -643,8 +643,8 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
   ad = PyLong_AsLong(addr);
   ws = PyLong_AsLong(writeSize);
 
-  if (ws != 16 && ws != 8 && ws != 4 && ws != 2 && ws != 1)
-    return PyErr_Format(PyExc_TypeError, "setMemValue(): The writeSize argument must be: 16, 8, 4, 2 or 1");
+  if (ws != DQWORD_SIZE && ws != QWORD_SIZE && ws != DWORD_SIZE && ws != WORD_SIZE && ws != BYTE_SIZE)
+    return PyErr_Format(PyExc_TypeError, "setMemValue(): The writeSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
   if (PIN_CheckWriteAccess(reinterpret_cast<void*>(ad)) == false)
     return PyErr_Format(PyExc_TypeError, "setMemValue(): Can not write into the targeted address memory");

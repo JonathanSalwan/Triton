@@ -1,23 +1,8 @@
 #ifndef  TRITON_REGISTERS_H
 #define  TRITON_REGISTERS_H
 
-#define BYTE_SIZE         1   // In byte
-#define BYTE_SIZE_BIT     8   // In bits
+#include "CpuSize.h"
 
-#define WORD_SIZE         2   // In byte
-#define WORD_SIZE_BIT     16  // In bits
-
-#define DWORD_SIZE        4   // In byte
-#define DWORD_SIZE_BIT    32  // In bits
-
-#define QWORD_SIZE        8   // In byte
-#define QWORD_SIZE_BIT    64  // In byte
-
-#define REG_SIZE          QWORD_SIZE
-#define REG_SIZE_BIT      QWORD_SIZE_BIT
-
-#define REG_SIZE_SSE      16  // In byte
-#define REG_SIZE_SSE_BIT  128 // In bits
 
 enum regID_t
 {

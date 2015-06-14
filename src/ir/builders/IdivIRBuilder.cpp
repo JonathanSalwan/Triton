@@ -24,7 +24,7 @@ void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
   switch (regSize) {
 
-    case 1:
+    case BYTE_SIZE:
       /* AX */
       dividend << ap.buildSymbolicRegOperand(ID_RAX, WORD_SIZE);
       /* res = AX / Source */
@@ -43,7 +43,7 @@ void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
       ap.aluSpreadTaintRegReg(se, ID_RAX, reg);
       break;
 
-    case 2:
+    case WORD_SIZE:
       /* DX:AX */
       dividend << smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, WORD_SIZE), ap.buildSymbolicRegOperand(ID_RAX, WORD_SIZE));
       /* res = DX:AX / Source */
@@ -60,7 +60,7 @@ void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
       ap.aluSpreadTaintRegReg(se, ID_RDX, reg);
       break;
 
-    case 4:
+    case DWORD_SIZE:
       /* EDX:EAX */
       dividend << smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, DWORD_SIZE), ap.buildSymbolicRegOperand(ID_RAX, DWORD_SIZE));
       /* res = EDX:EAX / Source */
@@ -77,7 +77,7 @@ void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
       ap.aluSpreadTaintRegReg(se, ID_RDX, reg);
       break;
 
-    case 8:
+    case QWORD_SIZE:
       /* RDX:RAX */
       dividend << smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE), ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE));
       /* res = RDX:RAX / Source */
@@ -108,7 +108,7 @@ void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
   switch (memSize) {
 
-    case 1:
+    case BYTE_SIZE:
       /* AX */
       dividend << ap.buildSymbolicRegOperand(ID_RAX, WORD_SIZE);
       /* res = AX / Source */
@@ -127,7 +127,7 @@ void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
       ap.aluSpreadTaintRegMem(se, ID_RAX, mem, memSize);
       break;
 
-    case 2:
+    case WORD_SIZE:
       /* DX:AX */
       dividend << smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, WORD_SIZE), ap.buildSymbolicRegOperand(ID_RAX, WORD_SIZE));
       /* res = DX:AX / Source */
@@ -144,7 +144,7 @@ void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
       ap.aluSpreadTaintRegMem(se, ID_RDX, mem, memSize);
       break;
 
-    case 4:
+    case DWORD_SIZE:
       /* EDX:EAX */
       dividend << smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, DWORD_SIZE), ap.buildSymbolicRegOperand(ID_RAX, DWORD_SIZE));
       /* res = EDX:EAX / Source */
@@ -161,7 +161,7 @@ void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
       ap.aluSpreadTaintRegMem(se, ID_RDX, mem, memSize);
       break;
 
-    case 8:
+    case QWORD_SIZE:
       /* RDX:RAX */
       dividend << smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE), ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE));
       /* res = RDX:RAX / Source */

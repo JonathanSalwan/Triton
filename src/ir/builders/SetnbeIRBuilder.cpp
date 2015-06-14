@@ -37,8 +37,8 @@ void SetnbeIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
                 smt2lib::bvnot(zf.str())
               ),
               smt2lib::bvtrue()),
-            smt2lib::bv(1, 8),
-            smt2lib::bv(0, 8));
+            smt2lib::bv(1, BYTE_SIZE_BIT),
+            smt2lib::bv(0, BYTE_SIZE_BIT));
 
   /* Create the symbolic element */
   se = ap.createRegSE(inst, expr, reg, regSize);
@@ -73,8 +73,8 @@ void SetnbeIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
                 smt2lib::bvnot(zf.str())
               ),
               smt2lib::bvtrue()),
-            smt2lib::bv(1, 8),
-            smt2lib::bv(0, 8));
+            smt2lib::bv(1, BYTE_SIZE_BIT),
+            smt2lib::bv(0, BYTE_SIZE_BIT));
 
   /* Create the symbolic element */
   se = ap.createMemSE(inst, expr, mem, memSize);
