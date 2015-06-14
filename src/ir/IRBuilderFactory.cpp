@@ -46,6 +46,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new AndpsIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_BSWAP:
+      ir = new BswapIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_CALL_FAR:
     case XED_ICLASS_CALL_NEAR:
       ir = new CallIRBuilder(address, disas);

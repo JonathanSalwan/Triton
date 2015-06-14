@@ -1,11 +1,12 @@
 
-#ifndef  __SMT2LIB_UTILS__
-#define  __SMT2LIB_UTILS__
+#ifndef  SMT2LIB_UTILS
+#define  SMT2LIB_UTILS
 
 #include <sstream>
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <list>
 
 
 namespace smt2lib {
@@ -18,6 +19,7 @@ namespace smt2lib {
   /* (concat expr1 expr2) */
   std::string concat(std::string expr1, std::string expr2);
   std::string concat(std::vector<std::string> exprs);
+  std::string concat(std::list<std::string> exprs);
 
   /* Returns the 'bv' syntax based on a value and a size. */
   /* (_ bv<value> <size>) */
@@ -177,5 +179,5 @@ namespace smt2lib {
   std::string bvsdiv(std::string op1, std::string op2);
 }
 
-#endif  /* !__SMTLIB2_UTILS__ */
+#endif  /* !SMTLIB2_UTILS */
 

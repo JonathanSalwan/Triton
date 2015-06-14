@@ -8,6 +8,7 @@
 #include "AndnpsIRBuilder.h"
 #include "AndpdIRBuilder.h"
 #include "AndpsIRBuilder.h"
+#include "BswapIRBuilder.h"
 #include "CallIRBuilder.h"
 #include "CbwIRBuilder.h"
 #include "CdqeIRBuilder.h"

@@ -104,6 +104,9 @@ void check(void)
   asm("mul ecx");
   asm("mul rcx");
 
+  asm("bswap ecx");
+  asm("bswap rdx");
+
   // SSE
   asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab));
   asm("movapd xmm1, xmm2");
