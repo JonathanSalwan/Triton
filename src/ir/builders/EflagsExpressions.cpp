@@ -85,27 +85,6 @@ std::string EflagsExpressions::cfAdd(SymbolicElement *parent,
 }
 
 
-std::string EflagsExpressions::cfNeg(uint32_t bvSize,
-                                     std::stringstream &op1)
-{
-  std::stringstream expr;
-
-  /*
-   * Create the SMT semantic.
-   * cf = 0 if op1 == 0 else 1
-   */
-  expr << smt2lib::ite(
-            smt2lib::equal(
-              op1.str(),
-              smt2lib::bv(0, bvSize)
-            ),
-            smt2lib::bv(0, 1),
-            smt2lib::bv(1, 1));
-
-  return expr.str();
-}
-
-
 std::string EflagsExpressions::cfImul(SymbolicElement *parent,
                                      std::stringstream &op1)
 {
@@ -143,6 +122,83 @@ std::string EflagsExpressions::cfMul(uint32_t bvSize,
             ),
             smt2lib::bv(0, 1),
             smt2lib::bv(1, 1));
+
+  return expr.str();
+}
+
+
+std::string EflagsExpressions::cfNeg(uint32_t bvSize,
+                                     std::stringstream &op1)
+{
+  std::stringstream expr;
+
+  /*
+   * Create the SMT semantic.
+   * cf = 0 if op1 == 0 else 1
+   */
+  expr << smt2lib::ite(
+            smt2lib::equal(
+              op1.str(),
+              smt2lib::bv(0, bvSize)
+            ),
+            smt2lib::bv(0, 1),
+            smt2lib::bv(1, 1));
+
+  return expr.str();
+}
+
+
+std::string EflagsExpressions::cfRol(SymbolicElement *parent,
+                                     AnalysisProcessor &ap,
+                                     uint32_t bvSize,
+                                     std::stringstream &op2)
+{
+  std::stringstream expr;
+
+  /*
+   * Create the SMT semantic.
+   * cf = (res & 1) if op2 != 0 else undefined
+   * As the second operand can't be symbolized, there is
+   * no symbolic expression available. So, we must use the
+   * op2's concretization.
+   */
+  if (std::stoi(op2.str()) != 0)
+    expr << smt2lib::extract(0, 0, parent->getID2Str());
+  else
+    expr << ap.buildSymbolicFlagOperand(ID_CF);
+
+  return expr.str();
+}
+
+
+std::string EflagsExpressions::cfRor(SymbolicElement *parent,
+                                     AnalysisProcessor &ap,
+                                     uint32_t bvSize,
+                                     std::stringstream &op2)
+{
+  std::stringstream expr;
+
+  /*
+   * Create the SMT semantic.
+   * cf = (res >> bvSize - 1) & 1 if op2 != 0 else undefined
+   * As the second operand can't be symbolized, there is
+   * no symbolic expression available. So, we must use the
+   * op2's concretization.
+   */
+  if (std::stoi(op2.str()) != 0) {
+    expr << smt2lib::extract(0, 0,
+      smt2lib::bvlshr(
+        parent->getID2Str(),
+        smt2lib::bvsub(
+          smt2lib::bv(bvSize, bvSize),
+          smt2lib::bv(1, bvSize)
+        )
+      )
+    );
+  }
+  else {
+    expr << ap.buildSymbolicFlagOperand(ID_CF);
+  }
 
   return expr.str();
 }
@@ -283,34 +339,6 @@ std::string EflagsExpressions::ofAdd(SymbolicElement *parent,
 }
 
 
-std::string EflagsExpressions::ofNeg(SymbolicElement *parent,
-                                     uint32_t bvSize,
-                                     std::stringstream &op1)
-{
-  std::stringstream expr;
-
-  /*
-   * Create the SMT semantic.
-   * of = bit_cast((res & op1) >> (bvSize - 1), int1(1));
-   */
-  expr << smt2lib::ite(
-            smt2lib::equal(
-              smt2lib::extract(0, 0,
-                smt2lib::bvshl(
-                  smt2lib::bvand(parent->getID2Str(), op1.str()),
-                  smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(1, bvSize))
-                )
-              ),
-              smt2lib::bv(1, 1)
-            ),
-            smt2lib::bv(1, 1),
-            smt2lib::bv(0, 1)
-          );
-
-  return expr.str();
-}
-
-
 std::string EflagsExpressions::ofImul(SymbolicElement *parent,
                                      std::stringstream &op1)
 {
@@ -348,6 +376,103 @@ std::string EflagsExpressions::ofMul(uint32_t bvSize,
             ),
             smt2lib::bv(0, 1),
             smt2lib::bv(1, 1));
+
+  return expr.str();
+}
+
+
+std::string EflagsExpressions::ofNeg(SymbolicElement *parent,
+                                     uint32_t bvSize,
+                                     std::stringstream &op1)
+{
+  std::stringstream expr;
+
+  /*
+   * Create the SMT semantic.
+   * of = bit_cast((res & op1) >> (bvSize - 1), int1(1));
+   */
+  expr << smt2lib::ite(
+            smt2lib::equal(
+              smt2lib::extract(0, 0,
+                smt2lib::bvshl(
+                  smt2lib::bvand(parent->getID2Str(), op1.str()),
+                  smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(1, bvSize))
+                )
+              ),
+              smt2lib::bv(1, 1)
+            ),
+            smt2lib::bv(1, 1),
+            smt2lib::bv(0, 1)
+          );
+
+  return expr.str();
+}
+
+
+std::string EflagsExpressions::ofRol(SymbolicElement *parent,
+                                     AnalysisProcessor &ap,
+                                     uint32_t bvSize,
+                                     std::stringstream &op2)
+{
+  std::stringstream expr;
+
+  /*
+   * Create the SMT semantic.
+   * of = ((cf ^ (res >> (bvsize - 1))) & 1) if op2 == 1 else undefined
+   * As the second operand can't be symbolized, there is
+   * no symbolic expression available. So, we must use the
+   * op2's concretization.
+   */
+  if (std::stoi(op2.str()) == 1) {
+    expr << smt2lib::extract(0, 0,
+              smt2lib::bvxor(
+                ap.buildSymbolicFlagOperand(ID_CF),
+                smt2lib::bvshl(
+                  parent->getID2Str(),
+                  smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(1, bvSize))
+                )
+              )
+            );
+  }
+  else {
+    expr << ap.buildSymbolicFlagOperand(ID_OF);
+  }
+
+  return expr.str();
+}
+
+
+std::string EflagsExpressions::ofRor(SymbolicElement *parent,
+                                     AnalysisProcessor &ap,
+                                     uint32_t bvSize,
+                                     std::stringstream &op2)
+{
+  std::stringstream expr;
+
+  /*
+   * Create the SMT semantic.
+   * of = (((res >> (bvSize - 1)) ^ (res >> (bvSize - 2))) & 1) if op2 == 1 else undefined
+   * As the second operand can't be symbolized, there is
+   * no symbolic expression available. So, we must use the
+   * op2's concretization.
+   */
+  if (std::stoi(op2.str()) == 1) {
+    expr << smt2lib::extract(0, 0,
+              smt2lib::bvxor(
+                smt2lib::bvshl(
+                  parent->getID2Str(),
+                  smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(1, bvSize))
+                ),
+                smt2lib::bvshl(
+                  parent->getID2Str(),
+                  smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(2, bvSize))
+                )
+              )
+            );
+  }
+  else {
+    expr << ap.buildSymbolicFlagOperand(ID_OF);
+  }
 
   return expr.str();
 }

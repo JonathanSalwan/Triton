@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 project(triton)
 
 # Get and increment the build number
@@ -52,7 +52,7 @@ link_directories("${PIN_ROOT}/extras/xed-intel64/lib")
 FILE(
     GLOB_RECURSE
     syscalls_table_file
-    /usr/include/*/unistd_64.h
+    /usr/include/*unistd_64.h
 )
 
 # If the unistd_64.h is not found, we exit

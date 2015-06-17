@@ -93,7 +93,7 @@ void SarIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createMemSE(inst, expr, mem, writeSize);
 
   /* Apply the taint */
-  ap.aluSpreadTaintMemMem(se, mem, mem);
+  ap.aluSpreadTaintMemMem(se, mem, mem, writeSize);
 
   /* Add the symbolic flags element to the current inst */
   EflagsBuilder::cfSar(inst, se, ap, writeSize, op1, op2);

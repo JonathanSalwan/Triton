@@ -107,6 +107,15 @@ void check(void)
   asm("bswap ecx");
   asm("bswap rdx");
 
+  asm("xor rcx, rcx");
+  asm("mov cl, 3");
+  asm("rol rdx, cl");
+  asm("rol rdx, 4");
+  asm("rol rdx, 1");
+  asm("ror rdx, cl");
+  asm("ror rdx, 4");
+  asm("ror rdx, 1");
+
   // SSE
   asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab));
   asm("movapd xmm1, xmm2");

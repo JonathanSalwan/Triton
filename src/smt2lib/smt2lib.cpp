@@ -128,34 +128,34 @@ std::string smt2lib::bvor(std::string op1, std::string op2)
 
 
 /* Returns the 'bvror' syntax. */
-/* op1 must be a concretization constant */
+/* op2 must be a concretization constant */
 std::string smt2lib::bvror(std::string op1, std::string op2)
 {
   /* Check if op1 is a concretization constant */
-  std::string::const_iterator it = op1.begin();
-  while (it != op1.end()) {
+  std::string::const_iterator it = op2.begin();
+  while (it != op2.end()) {
     if (std::isdigit(*it) == false)
-      throw std::runtime_error("Error: invalid smt2lib::ror - op1 must be a concretization constant");
+      throw std::runtime_error("Error: invalid smt2lib::ror - op2 must be a concretization constant");
     it++;
   }
 
-  return "((_ rotate_right " + op1 + ") " + op2 + ")";
+  return "((_ rotate_right " + op2 + ") " + op1 + ")";
 }
 
 
 /* Returns the 'bvrol' syntax. */
-/* op1 must be a concretization constant */
+/* op2 must be a concretization constant */
 std::string smt2lib::bvrol(std::string op1, std::string op2)
 {
   /* Check if op1 is a concretization constant */
-  std::string::const_iterator it = op1.begin();
-  while (it != op1.end()) {
+  std::string::const_iterator it = op2.begin();
+  while (it != op2.end()) {
     if (std::isdigit(*it) == false)
-      throw std::runtime_error("Error: invalid smt2lib::rol - op1 must be a concretization constant");
+      throw std::runtime_error("Error: invalid smt2lib::rol - op2 must be a concretization constant");
     it++;
   }
 
-  return "((_ rotate_left " + op1 + ") " + op2 + ")";
+  return "((_ rotate_left " + op2 + ") " + op1 + ")";
 }
 
 

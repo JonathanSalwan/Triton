@@ -57,7 +57,7 @@ void NegIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createMemSE(inst, expr, mem, memSize);
 
   /* Apply the taint */
-  ap.aluSpreadTaintMemMem(se, mem, mem);
+  ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 
   /* Add the symbolic flags element to the current inst */
   EflagsBuilder::afNeg(inst, se, ap, memSize, op1);

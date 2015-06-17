@@ -49,7 +49,7 @@ void NotIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createMemSE(inst, expr, mem, memSize);
 
   /* Apply the taint */
-  ap.aluSpreadTaintMemMem(se, mem, mem);
+  ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 }
 
 

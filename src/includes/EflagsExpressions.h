@@ -16,6 +16,8 @@ namespace EflagsExpressions {
   std::string cfImul(SymbolicElement *parent, std::stringstream &op1);
   std::string cfMul(uint32_t bvSize, std::stringstream &up);
   std::string cfNeg(uint32_t bvSize, std::stringstream &op1);
+  std::string cfRol(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op2);
+  std::string cfRor(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op2);
   std::string cfSar(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op1, std::stringstream &op2);
   std::string cfShl(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op1, std::stringstream &op2);
   std::string cfShr(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op1, std::stringstream &op2);
@@ -27,6 +29,8 @@ namespace EflagsExpressions {
   std::string ofImul(SymbolicElement *parent, std::stringstream &op1);
   std::string ofMul(uint32_t bvSize, std::stringstream &up);
   std::string ofNeg(SymbolicElement *parent, uint32_t bvSize, std::stringstream &op1);
+  std::string ofRol(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op2);
+  std::string ofRor(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op2);
   std::string ofSar(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op2);
   std::string ofShl(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op1, std::stringstream &op2);
   std::string ofShr(SymbolicElement *parent, AnalysisProcessor &ap, uint32_t bvSize, std::stringstream &op1, std::stringstream &op2);

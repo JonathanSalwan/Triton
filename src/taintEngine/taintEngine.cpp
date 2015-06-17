@@ -212,7 +212,7 @@ bool TaintEngine::aluSpreadTaintRegImm(uint64_t regDst)
 
 
 /*
- * If the RegSrc is tainted we taint the regDst, otherwise 
+ * If the RegSrc is tainted we taint the regDst, otherwise
  * we check if regDst is tainted and returns the status.
  */
 bool TaintEngine::aluSpreadTaintRegReg(uint64_t regDst, uint64_t regSrc)
@@ -226,21 +226,25 @@ bool TaintEngine::aluSpreadTaintRegReg(uint64_t regDst, uint64_t regSrc)
 
 
 /*
- * If the MemSrc is tainted we taint the memDst, otherwise 
+ * If the MemSrc is tainted we taint the memDst, otherwise
  * we check if memDst is tainted and returns the status.
  */
-bool TaintEngine::aluSpreadTaintMemMem(uint64_t memDst, uint64_t memSrc)
+bool TaintEngine::aluSpreadTaintMemMem(uint64_t memDst, uint64_t memSrc, uint32_t writeSize)
 {
-  if (this->isMemTainted(memSrc)){
-    this->taintMem(memDst);
-    return TAINTED;
+  bool tainted = !TAINTED;
+
+  for (uint64_t offset = 0; offset < writeSize; offset++){
+    if (this->isMemTainted(memSrc+offset)){
+      this->taintMem(memDst+offset);
+      tainted = TAINTED;
+    }
   }
-  return this->isMemTainted(memDst);
+  return tainted;
 }
 
 
 /*
- * If the Mem is tainted we taint the regDst, otherwise 
+ * If the Mem is tainted we taint the regDst, otherwise
  * we check if regDst is tainted and returns the status.
  */
 bool TaintEngine::aluSpreadTaintRegMem(uint64_t regDst, uint64_t memSrc, uint32_t readSize)
