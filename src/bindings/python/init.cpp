@@ -7,6 +7,7 @@
 #include <xPyFunc.h>
 
 void initCallbackEnv(PyObject *);
+void initCpuSizeEnv(PyObject *);
 void initFlagEnv(PyObject *);
 void initMiscEnv(PyObject *);
 void initOpcodeCategoryEnv(PyObject *);
@@ -43,19 +44,34 @@ void initBindings(void)
   PyObject *idRefClassDict = xPyDict_New();
 
 
-  // REG ---------------------
+  // CALLBACK ---------------------
 
-  /* Create the IDREF.REG class */
-  PyObject *idRegClassName = xPyString_FromString("REG");
-  PyObject *idRegClassDict = xPyDict_New();
+  /* Create the IDREF.CALLBACK class */
+  PyObject *idCallbackClassName = xPyString_FromString("CALLBACK");
+  PyObject *idCallbackClassDict = xPyDict_New();
 
-  /* Add registers ref into IDREF.REG class */
-  initRegEnv(idRegClassDict);
+  /* Add registers ref into IDREF.CALLBACK class */
+  initCallbackEnv(idCallbackClassDict);
 
-  /* Create the REG class */
-  PyObject *idRegClass = xPyClass_New(nullptr, idRegClassDict, idRegClassName);
+  /* Create the CALLBACK class */
+  PyObject *idCallbackClass = xPyClass_New(nullptr, idCallbackClassDict, idCallbackClassName);
 
-  // REG ---------------------
+  // CALLBACK ---------------------
+
+
+  // CPUSIZE ---------------------
+
+  /* Create the IDREF.CPUSIZE class */
+  PyObject *idCpuSizeClassName = xPyString_FromString("CPUSIZE");
+  PyObject *idCpuSizeClassDict = xPyDict_New();
+
+  /* Add registers ref into IDREF.CPUSIZE class */
+  initCpuSizeEnv(idCpuSizeClassDict);
+
+  /* Create the CPUSIZE class */
+  PyObject *idCpuSizeClass = xPyClass_New(nullptr, idCpuSizeClassDict, idCpuSizeClassName);
+
+  // CPUSIZE ---------------------
 
 
   // FLAG ---------------------
@@ -133,20 +149,19 @@ void initBindings(void)
   // OPERAND ---------------------
 
 
-  // CALLBACK ---------------------
+  // REG ---------------------
 
-  /* Create the IDREF.CALLBACK class */
-  PyObject *idCallbackClassName = xPyString_FromString("CALLBACK");
-  PyObject *idCallbackClassDict = xPyDict_New();
+  /* Create the IDREF.REG class */
+  PyObject *idRegClassName = xPyString_FromString("REG");
+  PyObject *idRegClassDict = xPyDict_New();
 
-  /* Add registers ref into IDREF.CALLBACK class */
-  initCallbackEnv(idCallbackClassDict);
+  /* Add registers ref into IDREF.REG class */
+  initRegEnv(idRegClassDict);
 
-  /* Create the CALLBACK class */
-  PyObject *idCallbackClass = xPyClass_New(nullptr, idCallbackClassDict, idCallbackClassName);
+  /* Create the REG class */
+  PyObject *idRegClass = xPyClass_New(nullptr, idRegClassDict, idRegClassName);
 
-  // CALLBACK ---------------------
-
+  // REG ---------------------
 
   // SYMVAR ---------------------
 
@@ -195,6 +210,7 @@ void initBindings(void)
 
   /* Add all classes into IDREF */
   PyDict_SetItemString(idRefClassDict, "CALLBACK", idCallbackClass);
+  PyDict_SetItemString(idRefClassDict, "CPUSIZE", idCpuSizeClass);
   PyDict_SetItemString(idRefClassDict, "FLAG", idFlagClass);
   PyDict_SetItemString(idRefClassDict, "MISC", idMiscClass);
   PyDict_SetItemString(idRefClassDict, "OPCODE", idOpcodeClass);

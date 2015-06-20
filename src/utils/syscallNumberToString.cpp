@@ -3,7 +3,7 @@
 #include <Syscalls.h>
 
 
-extern const char*syscallmap[];
+extern const char *syscallmap[];
 
 const char *syscallNumberLinux64ToString(uint64_t syscallNumber)
 {

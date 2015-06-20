@@ -731,7 +731,6 @@ static PyObject *Triton_syscallToString(PyObject *self, PyObject *args)
   if (!PyLong_Check(std) && !PyInt_Check(std))
     return PyErr_Format(PyExc_TypeError, "syscallToString(): expected a standard IDREF.SYSCALL as first argument");
 
-
   if (!PyLong_Check(num) && !PyInt_Check(num))
     return PyErr_Format(PyExc_TypeError, "syscallToString(): expected a syscall number (integer) as second argument");
 
