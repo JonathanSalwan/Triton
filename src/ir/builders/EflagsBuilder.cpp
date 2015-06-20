@@ -9,13 +9,13 @@
 SymbolicElement *EflagsBuilder::af(Inst &inst,
                                    SymbolicElement *parent,
                                    AnalysisProcessor &ap,
-                                   uint32_t dstSize,
+                                   uint32 dstSize,
                                    std::stringstream &op1,
                                    std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::af(parent, bvSize, op1, op2);
 
@@ -32,12 +32,12 @@ SymbolicElement *EflagsBuilder::af(Inst &inst,
 SymbolicElement *EflagsBuilder::afNeg(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op1)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::afNeg(parent, bvSize, op1);
 
@@ -74,7 +74,7 @@ SymbolicElement *EflagsBuilder::cfAdd(Inst &inst,
 SymbolicElement *EflagsBuilder::cfImul(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op1)
 {
   SymbolicElement     *se;
@@ -95,12 +95,12 @@ SymbolicElement *EflagsBuilder::cfImul(Inst &inst,
 SymbolicElement *EflagsBuilder::cfMul(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &up)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::cfMul(bvSize, up);
 
@@ -117,12 +117,12 @@ SymbolicElement *EflagsBuilder::cfMul(Inst &inst,
 SymbolicElement *EflagsBuilder::cfNeg(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op1)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::cfNeg(bvSize, op1);
 
@@ -139,12 +139,12 @@ SymbolicElement *EflagsBuilder::cfNeg(Inst &inst,
 SymbolicElement *EflagsBuilder::cfRol(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::cfRol(parent, ap, bvSize, op2);
 
@@ -161,12 +161,12 @@ SymbolicElement *EflagsBuilder::cfRol(Inst &inst,
 SymbolicElement *EflagsBuilder::cfRor(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::cfRor(parent, ap, bvSize, op2);
 
@@ -183,13 +183,13 @@ SymbolicElement *EflagsBuilder::cfRor(Inst &inst,
 SymbolicElement *EflagsBuilder::cfSar(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op1,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::cfSar(parent, ap, bvSize, op1, op2);
 
@@ -206,13 +206,13 @@ SymbolicElement *EflagsBuilder::cfSar(Inst &inst,
 SymbolicElement *EflagsBuilder::cfShl(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op1,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::cfShl(parent, ap, bvSize, op1, op2);
 
@@ -229,13 +229,13 @@ SymbolicElement *EflagsBuilder::cfShl(Inst &inst,
 SymbolicElement *EflagsBuilder::cfShr(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op1,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::cfShr(parent, ap, bvSize, op1, op2);
 
@@ -312,13 +312,13 @@ SymbolicElement *EflagsBuilder::clearFlag(Inst &inst,
 SymbolicElement *EflagsBuilder::ofAdd(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op1,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            extractSize = (dstSize * REG_SIZE) - 1;
+  uint32              extractSize = (dstSize * REG_SIZE) - 1;
 
   expr << EflagsExpressions::ofAdd(parent, extractSize, op1, op2);
 
@@ -335,7 +335,7 @@ SymbolicElement *EflagsBuilder::ofAdd(Inst &inst,
 SymbolicElement *EflagsBuilder::ofImul(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op1)
 {
   SymbolicElement     *se;
@@ -356,12 +356,12 @@ SymbolicElement *EflagsBuilder::ofImul(Inst &inst,
 SymbolicElement *EflagsBuilder::ofMul(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &up)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::ofMul(bvSize, up);
 
@@ -378,12 +378,12 @@ SymbolicElement *EflagsBuilder::ofMul(Inst &inst,
 SymbolicElement *EflagsBuilder::ofNeg(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op1)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::ofNeg(parent, bvSize, op1);
 
@@ -400,12 +400,12 @@ SymbolicElement *EflagsBuilder::ofNeg(Inst &inst,
 SymbolicElement *EflagsBuilder::ofRol(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::ofRol(parent, ap, bvSize, op2);
 
@@ -422,12 +422,12 @@ SymbolicElement *EflagsBuilder::ofRol(Inst &inst,
 SymbolicElement *EflagsBuilder::ofRor(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::ofRor(parent, ap, bvSize, op2);
 
@@ -444,12 +444,12 @@ SymbolicElement *EflagsBuilder::ofRor(Inst &inst,
 SymbolicElement *EflagsBuilder::ofSar(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::ofSar(parent, ap, bvSize, op2);
 
@@ -466,13 +466,13 @@ SymbolicElement *EflagsBuilder::ofSar(Inst &inst,
 SymbolicElement *EflagsBuilder::ofShl(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op1,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::ofShl(parent, ap, bvSize, op1, op2);
 
@@ -489,13 +489,13 @@ SymbolicElement *EflagsBuilder::ofShl(Inst &inst,
 SymbolicElement *EflagsBuilder::ofShr(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op1,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::ofShr(parent, ap, bvSize, op1, op2);
 
@@ -512,13 +512,13 @@ SymbolicElement *EflagsBuilder::ofShr(Inst &inst,
 SymbolicElement *EflagsBuilder::ofSub(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op1,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            extractSize = (dstSize * REG_SIZE) - 1;
+  uint32              extractSize = (dstSize * REG_SIZE) - 1;
 
   expr << EflagsExpressions::ofSub(parent, extractSize, op1, op2);
 
@@ -554,12 +554,12 @@ SymbolicElement *EflagsBuilder::pf(Inst &inst,
 SymbolicElement *EflagsBuilder::pfShl(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::pfShl(parent, ap, bvSize, op2);
 
@@ -615,11 +615,11 @@ SymbolicElement *EflagsBuilder::setFlag(Inst &inst,
 SymbolicElement *EflagsBuilder::sf(Inst &inst,
                                    SymbolicElement *parent,
                                    AnalysisProcessor &ap,
-                                   uint32_t dstSize)
+                                   uint32 dstSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            extractSize = (dstSize * REG_SIZE) - 1;
+  uint32              extractSize = (dstSize * REG_SIZE) - 1;
 
   expr << EflagsExpressions::sf(parent, extractSize);
 
@@ -636,13 +636,13 @@ SymbolicElement *EflagsBuilder::sf(Inst &inst,
 SymbolicElement *EflagsBuilder::sfShl(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
-  uint32_t            extractSize = (dstSize * REG_SIZE) - 1;
+  uint32              bvSize = (dstSize * REG_SIZE);
+  uint32              extractSize = (dstSize * REG_SIZE) - 1;
 
   expr << EflagsExpressions::sfShl(parent, ap, bvSize, extractSize, op2);
 
@@ -660,11 +660,11 @@ SymbolicElement *EflagsBuilder::sfShl(Inst &inst,
 SymbolicElement *EflagsBuilder::zf(Inst &inst,
                                    SymbolicElement *parent,
                                    AnalysisProcessor &ap,
-                                   uint32_t dstSize)
+                                   uint32 dstSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::zf(parent, bvSize);
 
@@ -681,12 +681,12 @@ SymbolicElement *EflagsBuilder::zf(Inst &inst,
 SymbolicElement *EflagsBuilder::zfShl(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
-                                      uint32_t dstSize,
+                                      uint32 dstSize,
                                       std::stringstream &op2)
 {
   SymbolicElement     *se;
   std::stringstream   expr;
-  uint32_t            bvSize = (dstSize * REG_SIZE);
+  uint32              bvSize = (dstSize * REG_SIZE);
 
   expr << EflagsExpressions::zfShl(parent, ap, bvSize, op2);
 

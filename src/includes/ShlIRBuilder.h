@@ -10,7 +10,7 @@
 class ShlIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 
   public:
-    ShlIRBuilder(uint64_t address, const std::string &disassembly);
+    ShlIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

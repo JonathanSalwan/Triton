@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-JoIRBuilder::JoIRBuilder(uint64_t address, const std::string &disassembly):
+JoIRBuilder::JoIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -16,7 +16,7 @@ JoIRBuilder::JoIRBuilder(uint64_t address, const std::string &disassembly):
 void JoIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, of;
-  uint64_t          imm   = this->operands[0].getValue();
+  uint64            imm   = this->operands[0].getValue();
 
   /* Create the SMT semantic */
   of << ap.buildSymbolicFlagOperand(ID_OF);

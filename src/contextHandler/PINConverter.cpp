@@ -1,7 +1,7 @@
 #include <PINConverter.h>
 
 
-uint64_t PINConverter::convertDBIReg2TritonReg(uint64_t regID){
+uint64 PINConverter::convertDBIReg2TritonReg(uint64 regID){
   switch(regID){
     case REG_RAX:
     case REG_EAX:
@@ -168,7 +168,7 @@ uint64_t PINConverter::convertDBIReg2TritonReg(uint64_t regID){
 /* Convert a Triton register to a Pin register.
  * Besides, it can return only 64 bits wised registers.
  */
-uint64_t PINConverter::convertTritonReg2DBIReg(uint64_t regID) {
+uint64 PINConverter::convertTritonReg2DBIReg(uint64 regID) {
   switch(regID){
     case ID_RAX:    return REG_RAX;
     case ID_RBX:    return REG_RBX;

@@ -10,7 +10,7 @@
 class JnbIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    JnbIRBuilder(uint64_t address, const std::string &disassembly);
+    JnbIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

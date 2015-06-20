@@ -8,12 +8,12 @@
 #include <SymbolicElement.h>
 
 
-LeaveIRBuilder::LeaveIRBuilder(uint64_t address, const std::string &disassembly):
+LeaveIRBuilder::LeaveIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
 
-static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint32_t readSize)
+static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 readSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
@@ -36,8 +36,8 @@ static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint32_t r
 void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement     *se1, *se2;
   std::stringstream   expr1, expr2;
-  uint64_t            readMem   = this->operands[0].getValue(); // The src memory read
-  uint32_t            readSize  = this->operands[0].getSize();
+  uint64              readMem   = this->operands[0].getValue(); // The src memory read
+  uint32              readSize  = this->operands[0].getSize();
 
   // RSP = RBP; -----------------------------
   expr1 << ap.buildSymbolicRegOperand(ID_RBP, REG_SIZE);

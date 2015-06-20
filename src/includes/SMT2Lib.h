@@ -3,7 +3,7 @@
 #define  SMT2LIB_UTILS
 
 #include <sstream>
-#include <cstdint>
+#include "TritonTypes.h"
 #include <string>
 #include <vector>
 #include <list>
@@ -23,7 +23,7 @@ namespace smt2lib {
 
   /* Returns the 'bv' syntax based on a value and a size. */
   /* (_ bv<value> <size>) */
-  std::string bv(uint64_t value, uint64_t regSize);
+  std::string bv(uint64 value, uint64 regSize);
 
   /* This is an alias on (_ bv1 1) */
   std::string bvtrue(void);
@@ -36,27 +36,27 @@ namespace smt2lib {
   std::string bvadd(std::string op1, std::string op2);
 
   /* Returns a sign extended version to size bits of the expression. */
-  std::string sx(std::string expr, uint64_t size);
+  std::string sx(std::string expr, uint64 size);
 
   /* Returns a zero extendend version to size bits of the expression. */
-  std::string zx(std::string expr, uint64_t size);
+  std::string zx(std::string expr, uint64 size);
 
   /* Returns the 'declare' syntax based on the symbolic variable name and its size. */
-  std::string declare(std::string symVarName, uint64_t symVarSize);
+  std::string declare(std::string symVarName, uint64 symVarSize);
 
   /* Returns the 'extract' syntax based on a reg size. */
-  std::string extract(uint64_t regSize);
+  std::string extract(uint64 regSize);
 
   /* Returns the 'extract' syntax based on a reg size. */
-  std::string extract(uint64_t regSize, std::string expr);
+  std::string extract(uint64 regSize, std::string expr);
 
   /* Returns the 'extract' syntax based on a high and low bit. */
   /* (extract <high> <low>) */
-  std::string extract(uint64_t high, uint64_t low);
+  std::string extract(uint64 high, uint64 low);
 
   /* Returns the 'extract' syntax based on a high, low bit and an expression. */
   /* ((extract <high> <low>)<expr>) */
-  std::string extract(uint64_t high, uint64_t low, std::string expr);
+  std::string extract(uint64 high, uint64 low, std::string expr);
 
   /* Returns the 'assert' syntax. */
   std::string smtAssert(std::string expr);

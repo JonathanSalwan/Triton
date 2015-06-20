@@ -9,7 +9,7 @@
 
 
 
-MovsxIRBuilder::MovsxIRBuilder(uint64_t address, const std::string &disassembly):
+MovsxIRBuilder::MovsxIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -22,10 +22,10 @@ void MovsxIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void MovsxIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint64_t          reg1  = this->operands[0].getValue();
-  uint64_t          reg2  = this->operands[1].getValue();
-  uint64_t          size1 = this->operands[0].getSize();
-  uint64_t          size2 = this->operands[1].getSize();
+  uint64            reg1  = this->operands[0].getValue();
+  uint64            reg2  = this->operands[1].getValue();
+  uint64            size1 = this->operands[0].getSize();
+  uint64            size2 = this->operands[1].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicRegOperand(reg2, size2);
@@ -44,10 +44,10 @@ void MovsxIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void MovsxIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint32_t          readSize = this->operands[1].getSize();
-  uint64_t          mem      = this->operands[1].getValue();
-  uint64_t          reg      = this->operands[0].getValue();
-  uint64_t          regSize  = this->operands[0].getSize();
+  uint32            readSize = this->operands[1].getSize();
+  uint64            mem      = this->operands[1].getValue();
+  uint64            reg      = this->operands[0].getValue();
+  uint64            regSize  = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicMemOperand(mem, readSize);

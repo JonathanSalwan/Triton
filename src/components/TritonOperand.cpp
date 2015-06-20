@@ -6,8 +6,8 @@
 
 
 TritonOperand::TritonOperand(IRBuilderOperand::operand_t type,
-              uint64_t value,
-              uint64_t size)
+              uint64 value,
+              uint64 size)
 {
   this->type          = type;
   this->value         = value;
@@ -20,12 +20,12 @@ TritonOperand::TritonOperand(IRBuilderOperand::operand_t type,
 
 
 TritonOperand::TritonOperand(IRBuilderOperand::operand_t type,
-              uint64_t value,
-              uint64_t size,
-              uint64_t displacement,
-              uint64_t baseReg,
-              uint64_t indexReg,
-              uint64_t memoryScale)
+              uint64 value,
+              uint64 size,
+              uint64 displacement,
+              uint64 baseReg,
+              uint64 indexReg,
+              uint64 memoryScale)
 {
   this->type          = type;
   this->value         = value;
@@ -57,42 +57,42 @@ IRBuilderOperand::operand_t TritonOperand::getType(void) const {
 }
 
 
-uint64_t TritonOperand::getValue(void) const {
+uint64 TritonOperand::getValue(void) const {
   return this->value;
 }
 
 
-void TritonOperand::setValue(uint64_t value) {
+void TritonOperand::setValue(uint64 value) {
   this->value = value;
 }
 
 
-uint64_t TritonOperand::getSize(void) const {
+uint64 TritonOperand::getSize(void) const {
   return this->size;
 }
 
 
-uint64_t TritonOperand::getDisplacement(void) const {
+uint64 TritonOperand::getDisplacement(void) const {
   return this->displacement;
 }
 
 
-uint64_t TritonOperand::getBaseReg(void) const {
+uint64 TritonOperand::getBaseReg(void) const {
   return this->baseReg;
 }
 
 
-uint64_t TritonOperand::getIndexReg(void) const {
+uint64 TritonOperand::getIndexReg(void) const {
   return this->indexReg;
 }
 
 
-uint64_t TritonOperand::getMemoryScale(void) const {
+uint64 TritonOperand::getMemoryScale(void) const {
   return this->memoryScale;
 }
 
 
-uint64_t TritonOperand::operator[](const int index){
+uint64 TritonOperand::operator[](const int index){
   switch (index){
     case 0: return this->type;
     case 1: return this->value;

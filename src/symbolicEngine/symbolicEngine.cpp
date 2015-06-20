@@ -8,7 +8,7 @@
 SymbolicEngine::SymbolicEngine()
 {
   /* Init all symbolic registers/flags to UNSET (init state) */
-  for (uint64_t i = 0; i < ID_LAST_ITEM; i++)
+  for (uint64 i = 0; i < ID_LAST_ITEM; i++)
     this->symbolicReg[i] = UNSET;
   this->uniqueID = 0;
 }
@@ -16,7 +16,7 @@ SymbolicEngine::SymbolicEngine()
 
 void SymbolicEngine::init(const SymbolicEngine &other)
 {
-  for (uint64_t i = 0; i < ID_LAST_ITEM; i++)
+  for (uint64 i = 0; i < ID_LAST_ITEM; i++)
     this->symbolicReg[i] = other.symbolicReg[i];
 
   this->uniqueID                      = other.uniqueID;
@@ -65,7 +65,7 @@ SymbolicEngine::~SymbolicEngine()
  * will be over the concretization. This method must be called before symbolic
  * processing.
  */
-void SymbolicEngine::concretizeReg(uint64_t regID) {
+void SymbolicEngine::concretizeReg(uint64 regID) {
   if (regID >= ID_LAST_ITEM)
     return ;
   this->symbolicReg[regID] = UNSET;
@@ -77,16 +77,16 @@ void SymbolicEngine::concretizeReg(uint64_t regID) {
  * assignment will be over the concretization. This method must be called
  * before symbolic processing.
  */
-void SymbolicEngine::concretizeMem(uint64_t mem)
+void SymbolicEngine::concretizeMem(uint64 mem)
 {
   this->memoryReference.erase(mem);
 }
 
 
 /* Returns the reference memory if it's referenced otherwise returns UNSET */
-uint64_t SymbolicEngine::getMemSymbolicID(uint64_t addr)
+uint64 SymbolicEngine::getMemSymbolicID(uint64 addr)
 {
-  std::map<uint64_t, uint64_t>::iterator it;
+  std::map<uint64, uint64>::iterator it;
   if ((it = this->memoryReference.find(addr)) != this->memoryReference.end())
     return it->second;
   return UNSET;
@@ -94,7 +94,7 @@ uint64_t SymbolicEngine::getMemSymbolicID(uint64_t addr)
 
 
 /* Returns the symbolic variable otherwise returns nullptr */
-SymbolicVariable *SymbolicEngine::getSymVar(uint64_t symVarId)
+SymbolicVariable *SymbolicEngine::getSymVar(uint64 symVarId)
 {
   if (symVarId >= this->symbolicVariables.size())
     return nullptr;
@@ -123,7 +123,7 @@ std::vector<SymbolicVariable *> SymbolicEngine::getSymVars(void)
 
 
 /* Return the reg reference or UNSET */
-uint64_t SymbolicEngine::getRegSymbolicID(uint64_t regID) {
+uint64 SymbolicEngine::getRegSymbolicID(uint64 regID) {
   if (regID >= ID_LAST_ITEM)
     return UNSET;
   return this->symbolicReg[regID];
@@ -133,7 +133,7 @@ uint64_t SymbolicEngine::getRegSymbolicID(uint64_t regID) {
 /* Create a new symbolic element */
 /* Get an unique ID.
  * Mainly used when a new symbolic element is created */
-uint64_t SymbolicEngine::getUniqueID()
+uint64 SymbolicEngine::getUniqueID()
 {
   return this->uniqueID++;
 }
@@ -142,7 +142,7 @@ uint64_t SymbolicEngine::getUniqueID()
 SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
 {
   std::stringstream dst;
-  uint64_t          id;
+  uint64            id;
 
   id = this->getUniqueID();
   dst << "#" << std::dec << id;
@@ -156,7 +156,7 @@ SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src)
 SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src, std::string comment)
 {
   std::stringstream dst;
-  uint64_t          id;
+  uint64            id;
 
   id = this->getUniqueID();
   dst << "#" << std::dec << id;
@@ -167,7 +167,7 @@ SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src, std:
 
 
 /* Get the symbolic element pointer from a symbolic ID */
-SymbolicElement *SymbolicEngine::getElementFromId(uint64_t id)
+SymbolicElement *SymbolicEngine::getElementFromId(uint64 id)
 {
   if (id >= this->symbolicExpressions.size())
     return nullptr;
@@ -206,7 +206,7 @@ std::string SymbolicEngine::deepReplace(std::stringstream &formula)
 
 
 /* Returns the symbolic expression backtracked from an ID. */
-std::string SymbolicEngine::getBacktrackedExpressionFromId(uint64_t id)
+std::string SymbolicEngine::getBacktrackedExpressionFromId(uint64 id)
 {
   SymbolicElement   *element;
   std::stringstream formula;
@@ -243,7 +243,7 @@ std::string SymbolicEngine::getVariablesDeclaration(void)
  * convertExprToSymVar(43, 8)
  * #43 = SymVar_4
  */
-uint64_t SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSize)
+uint64 SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symVarSize)
 {
   SymbolicVariable   *symVar  = nullptr;
   SymbolicElement    *element = this->getElementFromId(exprId);
@@ -264,12 +264,12 @@ uint64_t SymbolicEngine::convertExprToSymVar(uint64_t exprId, uint64_t symVarSiz
 }
 
 
-uint64_t SymbolicEngine::convertMemToSymVar(uint64_t memAddr, uint64_t symVarSize)
+uint64 SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize)
 {
   SymbolicVariable   *symVar  = nullptr;
   SymbolicElement    *element = nullptr;
   std::stringstream  newExpr;
-  uint64_t           memSymId = UNSET;
+  uint64             memSymId = UNSET;
 
   memSymId = this->getMemSymbolicID(memAddr);
   if (memSymId == UNSET)
@@ -292,12 +292,12 @@ uint64_t SymbolicEngine::convertMemToSymVar(uint64_t memAddr, uint64_t symVarSiz
 }
 
 
-uint64_t SymbolicEngine::convertRegToSymVar(uint64_t regId, uint64_t symVarSize)
+uint64 SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVarSize)
 {
   SymbolicVariable   *symVar  = nullptr;
   SymbolicElement    *element = nullptr;
   std::stringstream  newExpr;
-  uint64_t           regSymId = UNSET;
+  uint64             regSymId = UNSET;
 
   if (regId >= ID_LAST_ITEM)
     throw std::runtime_error("SymbolicEngine::convertRegToSymVar() - Invalid register ID");
@@ -324,9 +324,9 @@ uint64_t SymbolicEngine::convertRegToSymVar(uint64_t regId, uint64_t symVarSize)
 
 
 /* Add a new symbolic variable */
-SymbolicVariable *SymbolicEngine::addSymbolicVariable(SymVar::kind kind, uint64_t kindValue, uint64_t size)
+SymbolicVariable *SymbolicEngine::addSymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 size)
 {
-  uint64_t uniqueID = this->symbolicVariables.size();
+  uint64 uniqueID = this->symbolicVariables.size();
   SymbolicVariable *symVar = new SymbolicVariable(kind, kindValue, uniqueID, size);
 
   if (symVar == nullptr)
@@ -338,21 +338,21 @@ SymbolicVariable *SymbolicEngine::addSymbolicVariable(SymVar::kind kind, uint64_
 
 
 /* Add and assign a new memory reference */
-void SymbolicEngine::addMemoryReference(uint64_t mem, uint64_t id)
+void SymbolicEngine::addMemoryReference(uint64 mem, uint64 id)
 {
   this->memoryReference[mem] = id;
 }
 
 
 /* The a path constraint in the PC list */
-void SymbolicEngine::addPathConstraint(uint64_t exprId)
+void SymbolicEngine::addPathConstraint(uint64 exprId)
 {
   this->pathConstaints.push_back(exprId);
 }
 
 
 /* Returns the path constrains list */
-std::list<uint64_t> SymbolicEngine::getPathConstraints(void)
+std::list<uint64> SymbolicEngine::getPathConstraints(void)
 {
   return this->pathConstaints;
 }

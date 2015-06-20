@@ -3,7 +3,7 @@
 #define   SOLVERENGINE_H
 
 #include <cstdlib>
-#include <cstdint>
+#include "TritonTypes.h"
 #include <string>
 
 #include <z3++.h>

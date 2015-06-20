@@ -10,7 +10,7 @@
 class SetpIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    SetpIRBuilder(uint64_t address, const std::string &disassembly);
+    SetpIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-JbeIRBuilder::JbeIRBuilder(uint64_t address, const std::string &disassembly):
+JbeIRBuilder::JbeIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -16,7 +16,7 @@ JbeIRBuilder::JbeIRBuilder(uint64_t address, const std::string &disassembly):
 void JbeIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, cf, zf;
-  uint64_t          imm   = this->operands[0].getValue();
+  uint64            imm   = this->operands[0].getValue();
 
   /* Create the SMT semantic */
   cf << ap.buildSymbolicFlagOperand(ID_CF);

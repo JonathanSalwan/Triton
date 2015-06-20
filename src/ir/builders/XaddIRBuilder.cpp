@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-XaddIRBuilder::XaddIRBuilder(uint64_t address, const std::string &disassembly):
+XaddIRBuilder::XaddIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -21,12 +21,12 @@ void XaddIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void XaddIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se1, *se2;
   std::stringstream expr1, expr2, op1, op2;
-  uint64_t          reg1          = this->operands[0].getValue();
-  uint64_t          reg2          = this->operands[1].getValue();
-  uint32_t          regSize1      = this->operands[0].getSize();
-  uint32_t          regSize2      = this->operands[1].getSize();
-  uint64_t          tmpReg1Taint  = ap.isRegTainted(reg1);
-  uint64_t          tmpReg2Taint  = ap.isRegTainted(reg2);
+  uint64            reg1          = this->operands[0].getValue();
+  uint64            reg2          = this->operands[1].getValue();
+  uint32            regSize1      = this->operands[0].getSize();
+  uint32            regSize2      = this->operands[1].getSize();
+  uint64            tmpReg1Taint  = ap.isRegTainted(reg1);
+  uint64            tmpReg2Taint  = ap.isRegTainted(reg2);
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicRegOperand(reg1, regSize1);
@@ -67,12 +67,12 @@ void XaddIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 void XaddIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se1, *se2;
   std::stringstream expr1, expr2, op1, op2;
-  uint64_t          mem1          = this->operands[0].getValue();
-  uint64_t          reg2          = this->operands[1].getValue();
-  uint32_t          memSize1      = this->operands[0].getSize();
-  uint32_t          regSize2      = this->operands[1].getSize();
-  uint64_t          tmpMem1Taint  = ap.isMemTainted(mem1);
-  uint64_t          tmpReg2Taint  = ap.isRegTainted(reg2);
+  uint64            mem1          = this->operands[0].getValue();
+  uint64            reg2          = this->operands[1].getValue();
+  uint32            memSize1      = this->operands[0].getSize();
+  uint32            regSize2      = this->operands[1].getSize();
+  uint64            tmpMem1Taint  = ap.isMemTainted(mem1);
+  uint64            tmpReg2Taint  = ap.isRegTainted(reg2);
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicMemOperand(mem1, memSize1);

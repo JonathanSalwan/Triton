@@ -5,7 +5,7 @@
 
 
 std::string EflagsExpressions::af(SymbolicElement *parent,
-                                  uint32_t bvSize,
+                                  uint32 bvSize,
                                   std::stringstream &op1,
                                   std::stringstream &op2)
 {
@@ -35,7 +35,7 @@ std::string EflagsExpressions::af(SymbolicElement *parent,
 
 
 std::string EflagsExpressions::afNeg(SymbolicElement *parent,
-                                     uint32_t bvSize,
+                                     uint32 bvSize,
                                      std::stringstream &op1)
 {
   std::stringstream expr;
@@ -106,7 +106,7 @@ std::string EflagsExpressions::cfImul(SymbolicElement *parent,
 }
 
 
-std::string EflagsExpressions::cfMul(uint32_t bvSize,
+std::string EflagsExpressions::cfMul(uint32 bvSize,
                                      std::stringstream &up)
 {
   std::stringstream expr;
@@ -127,7 +127,7 @@ std::string EflagsExpressions::cfMul(uint32_t bvSize,
 }
 
 
-std::string EflagsExpressions::cfNeg(uint32_t bvSize,
+std::string EflagsExpressions::cfNeg(uint32 bvSize,
                                      std::stringstream &op1)
 {
   std::stringstream expr;
@@ -150,7 +150,7 @@ std::string EflagsExpressions::cfNeg(uint32_t bvSize,
 
 std::string EflagsExpressions::cfRol(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
-                                     uint32_t bvSize,
+                                     uint32 bvSize,
                                      std::stringstream &op2)
 {
   std::stringstream expr;
@@ -173,7 +173,7 @@ std::string EflagsExpressions::cfRol(SymbolicElement *parent,
 
 std::string EflagsExpressions::cfRor(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
-                                     uint32_t bvSize,
+                                     uint32 bvSize,
                                      std::stringstream &op2)
 {
   std::stringstream expr;
@@ -206,7 +206,7 @@ std::string EflagsExpressions::cfRor(SymbolicElement *parent,
 
 std::string EflagsExpressions::cfSar(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
-                                     uint32_t bvSize,
+                                     uint32 bvSize,
                                      std::stringstream &op1,
                                      std::stringstream &op2)
 {
@@ -236,7 +236,7 @@ std::string EflagsExpressions::cfSar(SymbolicElement *parent,
 
 std::string EflagsExpressions::cfShl(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
-                                     uint32_t bvSize,
+                                     uint32 bvSize,
                                      std::stringstream &op1,
                                      std::stringstream &op2)
 {
@@ -258,7 +258,7 @@ std::string EflagsExpressions::cfShl(SymbolicElement *parent,
 
 std::string EflagsExpressions::cfShr(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
-                                     uint32_t bvSize,
+                                     uint32 bvSize,
                                      std::stringstream &op1,
                                      std::stringstream &op2)
 {
@@ -311,7 +311,7 @@ std::string EflagsExpressions::clearFlag(void)
 
 
 std::string EflagsExpressions::ofAdd(SymbolicElement *parent,
-                                     uint32_t extractSize,
+                                     uint32 extractSize,
                                      std::stringstream &op1,
                                      std::stringstream &op2)
 {
@@ -360,7 +360,7 @@ std::string EflagsExpressions::ofImul(SymbolicElement *parent,
 }
 
 
-std::string EflagsExpressions::ofMul(uint32_t bvSize,
+std::string EflagsExpressions::ofMul(uint32 bvSize,
                                      std::stringstream &up)
 {
   std::stringstream expr;
@@ -382,7 +382,7 @@ std::string EflagsExpressions::ofMul(uint32_t bvSize,
 
 
 std::string EflagsExpressions::ofNeg(SymbolicElement *parent,
-                                     uint32_t bvSize,
+                                     uint32 bvSize,
                                      std::stringstream &op1)
 {
   std::stringstream expr;
@@ -411,7 +411,7 @@ std::string EflagsExpressions::ofNeg(SymbolicElement *parent,
 
 std::string EflagsExpressions::ofRol(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
-                                     uint32_t bvSize,
+                                     uint32 bvSize,
                                      std::stringstream &op2)
 {
   std::stringstream expr;
@@ -444,7 +444,7 @@ std::string EflagsExpressions::ofRol(SymbolicElement *parent,
 
 std::string EflagsExpressions::ofRor(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
-                                     uint32_t bvSize,
+                                     uint32 bvSize,
                                      std::stringstream &op2)
 {
   std::stringstream expr;
@@ -480,7 +480,7 @@ std::string EflagsExpressions::ofRor(SymbolicElement *parent,
 
 std::string EflagsExpressions::ofSar(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
-                                     uint32_t bvSize,
+                                     uint32 bvSize,
                                      std::stringstream &op2)
 {
   std::stringstream expr;
@@ -501,7 +501,7 @@ std::string EflagsExpressions::ofSar(SymbolicElement *parent,
 
 std::string EflagsExpressions::ofShl(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
-                                     uint32_t bvSize,
+                                     uint32 bvSize,
                                      std::stringstream &op1,
                                      std::stringstream &op2)
 {
@@ -528,7 +528,7 @@ std::string EflagsExpressions::ofShl(SymbolicElement *parent,
 
 std::string EflagsExpressions::ofShr(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
-                                     uint32_t bvSize,
+                                     uint32 bvSize,
                                      std::stringstream &op1,
                                      std::stringstream &op2)
 {
@@ -551,7 +551,7 @@ std::string EflagsExpressions::ofShr(SymbolicElement *parent,
 
 
 std::string EflagsExpressions::ofSub(SymbolicElement *parent,
-                                     uint32_t extractSize,
+                                     uint32 extractSize,
                                      std::stringstream &op1,
                                      std::stringstream &op2)
 {
@@ -605,7 +605,7 @@ std::string EflagsExpressions::pf(SymbolicElement *parent)
 
 std::string EflagsExpressions::pfShl(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
-                                     uint32_t bvSize,
+                                     uint32 bvSize,
                                      std::stringstream &op2)
 {
   std::stringstream expr;
@@ -635,7 +635,7 @@ std::string EflagsExpressions::setFlag(void)
 
 
 std::string EflagsExpressions::sf(SymbolicElement *parent,
-                                  uint32_t extractSize)
+                                  uint32 extractSize)
 {
   std::stringstream expr;
 
@@ -658,8 +658,8 @@ std::string EflagsExpressions::sf(SymbolicElement *parent,
 
 std::string EflagsExpressions::sfShl(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
-                                     uint32_t bvSize,
-                                     uint32_t extractSize,
+                                     uint32 bvSize,
+                                     uint32 extractSize,
                                      std::stringstream &op2)
 {
   std::stringstream expr;
@@ -679,7 +679,7 @@ std::string EflagsExpressions::sfShl(SymbolicElement *parent,
 
 
 std::string EflagsExpressions::zf(SymbolicElement *parent,
-                                  uint32_t bvSize)
+                                  uint32 bvSize)
 {
   std::stringstream expr;
 
@@ -702,7 +702,7 @@ std::string EflagsExpressions::zf(SymbolicElement *parent,
 
 std::string EflagsExpressions::zfShl(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
-                                     uint32_t bvSize,
+                                     uint32 bvSize,
                                      std::stringstream &op2)
 {
   std::stringstream expr;

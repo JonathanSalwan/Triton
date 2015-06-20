@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-SetoIRBuilder::SetoIRBuilder(uint64_t address, const std::string &disassembly):
+SetoIRBuilder::SetoIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -21,8 +21,8 @@ void SetoIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 void SetoIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, reg1e, of;
-  uint64_t          reg     = this->operands[0].getValue();
-  uint64_t          regSize = this->operands[0].getSize();
+  uint64            reg     = this->operands[0].getValue();
+  uint64            regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   of << ap.buildSymbolicFlagOperand(ID_OF);
@@ -49,8 +49,8 @@ void SetoIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void SetoIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, mem1e, of;
-  uint64_t          mem     = this->operands[0].getValue();
-  uint64_t          memSize = this->operands[0].getSize();
+  uint64            mem     = this->operands[0].getValue();
+  uint64            memSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   of << ap.buildSymbolicFlagOperand(ID_OF);

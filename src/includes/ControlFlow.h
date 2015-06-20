@@ -7,7 +7,7 @@
 #include "SymbolicElement.h"
 
 namespace ControlFlow {
-  SymbolicElement *rip(Inst &inst, AnalysisProcessor &ap, uint64_t nextAddr);
+  SymbolicElement *rip(Inst &inst, AnalysisProcessor &ap, uint64 nextAddr);
 };
 
 #endif     /* !__CONTROLFLOW_H__ */

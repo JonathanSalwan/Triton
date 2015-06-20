@@ -1,22 +1,22 @@
 #ifndef CONTEXTHANDLER_H
 #define CONTEXTHANDLER_H
 
-#include <cstdint>
+#include "TritonTypes.h"
 
 
 class ContextHandler {
   public:
     virtual ~ContextHandler() { }
 
-    virtual __uint128_t getMemValue(uint64_t mem, uint32_t readSize) const = 0;
-    virtual __uint128_t getSSERegisterValue(uint64_t regID) const = 0;
-    virtual uint32_t    getThreadID(void) const = 0;
-    virtual uint64_t    getFlagValue(uint64_t TritFlagID) const = 0;
-    virtual uint64_t    getRegisterValue(uint64_t regID) const = 0;
-    virtual void        *getCtx(void) const = 0;
-    virtual void        setMemValue(uint64_t mem, uint32_t readSize, __uint128_t value) const = 0;
-    virtual void        setRegisterValue(uint64_t regID, uint64_t value) const = 0;
-    virtual void        setSSERegisterValue(uint64_t regID, __uint128_t value) const = 0;
+    virtual uint128 getMemValue(uint64 mem, uint32 readSize) const = 0;
+    virtual uint128 getSSERegisterValue(uint64 regID) const = 0;
+    virtual uint32  getThreadID(void) const = 0;
+    virtual uint64  getFlagValue(uint64 TritFlagID) const = 0;
+    virtual uint64  getRegisterValue(uint64 regID) const = 0;
+    virtual void    *getCtx(void) const = 0;
+    virtual void    setMemValue(uint64 mem, uint32 readSize, uint128 value) const = 0;
+    virtual void    setRegisterValue(uint64 regID, uint64 value) const = 0;
+    virtual void    setSSERegisterValue(uint64 regID, uint128 value) const = 0;
 };
 
 #endif // CONTEXTHANDLER_H

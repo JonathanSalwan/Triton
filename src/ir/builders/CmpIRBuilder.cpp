@@ -17,7 +17,7 @@
 // first operand.
 
 
-CmpIRBuilder::CmpIRBuilder(uint64_t address, const std::string &disassembly):
+CmpIRBuilder::CmpIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -25,9 +25,9 @@ CmpIRBuilder::CmpIRBuilder(uint64_t address, const std::string &disassembly):
 void CmpIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint64_t          reg     = this->operands[0].getValue();
-  uint64_t          imm     = this->operands[1].getValue();
-  uint32_t          regSize = this->operands[0].getSize();
+  uint64            reg     = this->operands[0].getValue();
+  uint64            imm     = this->operands[1].getValue();
+  uint32            regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicRegOperand(reg, regSize);
@@ -52,10 +52,10 @@ void CmpIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void CmpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint64_t          reg1     = this->operands[0].getValue();
-  uint64_t          reg2     = this->operands[1].getValue();
-  uint32_t          regSize1 = this->operands[0].getSize();
-  uint32_t          regSize2 = this->operands[1].getSize();
+  uint64            reg1     = this->operands[0].getValue();
+  uint64            reg2     = this->operands[1].getValue();
+  uint32            regSize1 = this->operands[0].getSize();
+  uint32            regSize2 = this->operands[1].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicRegOperand(reg1, regSize1);
@@ -80,10 +80,10 @@ void CmpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void CmpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint32_t          readSize = this->operands[1].getSize();
-  uint64_t          mem      = this->operands[1].getValue();
-  uint64_t          reg      = this->operands[0].getValue();
-  uint32_t          regSize  = this->operands[0].getSize();
+  uint32            readSize = this->operands[1].getSize();
+  uint64            mem      = this->operands[1].getValue();
+  uint64            reg      = this->operands[0].getValue();
+  uint32            regSize  = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicRegOperand(reg, regSize);
@@ -108,9 +108,9 @@ void CmpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 void CmpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint32_t          writeSize = this->operands[0].getSize();
-  uint64_t          mem       = this->operands[0].getValue();
-  uint64_t          imm       = this->operands[1].getValue();
+  uint32            writeSize = this->operands[0].getSize();
+  uint64            mem       = this->operands[0].getValue();
+  uint64            imm       = this->operands[1].getValue();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicMemOperand(mem, writeSize);
@@ -135,10 +135,10 @@ void CmpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 void CmpIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint32_t          writeSize = this->operands[0].getSize();
-  uint64_t          mem       = this->operands[0].getValue();
-  uint64_t          reg       = this->operands[1].getValue();
-  uint32_t          regSize   = this->operands[1].getSize();
+  uint32            writeSize = this->operands[0].getSize();
+  uint64            mem       = this->operands[0].getValue();
+  uint64            reg       = this->operands[1].getValue();
+  uint32            regSize   = this->operands[1].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicMemOperand(mem, writeSize);

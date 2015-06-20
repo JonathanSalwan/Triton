@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-MulIRBuilder::MulIRBuilder(uint64_t address, const std::string &disassembly):
+MulIRBuilder::MulIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -16,8 +16,8 @@ MulIRBuilder::MulIRBuilder(uint64_t address, const std::string &disassembly):
 void MulIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2, rax, rdx;
-  uint64_t          reg       = this->operands[0].getValue();
-  uint32_t          regSize   = this->operands[0].getSize();
+  uint64            reg       = this->operands[0].getValue();
+  uint32            regSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicRegOperand(ID_RAX, regSize);
@@ -116,8 +116,8 @@ void MulIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void MulIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2, rax, rdx;
-  uint64_t          mem       = this->operands[0].getValue();
-  uint32_t          memSize   = this->operands[0].getSize();
+  uint64            mem       = this->operands[0].getValue();
+  uint32            memSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicRegOperand(ID_RAX, memSize);

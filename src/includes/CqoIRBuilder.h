@@ -10,7 +10,7 @@
 class CqoIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
 
   public:
-    CqoIRBuilder(uint64_t address, const std::string &disassembly);
+    CqoIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

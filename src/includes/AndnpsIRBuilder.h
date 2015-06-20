@@ -10,7 +10,7 @@
 class AndnpsIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 
   public:
-    AndnpsIRBuilder(uint64_t address, const std::string &disassembly);
+    AndnpsIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

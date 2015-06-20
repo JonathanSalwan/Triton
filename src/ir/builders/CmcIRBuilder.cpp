@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-CmcIRBuilder::CmcIRBuilder(uint64_t address, const std::string &disassembly):
+CmcIRBuilder::CmcIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

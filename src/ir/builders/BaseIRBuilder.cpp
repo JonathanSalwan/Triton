@@ -7,7 +7,7 @@
 boost::format outputInstruction("%1% %|15t| %2% %|55t|");
 
 
-BaseIRBuilder::BaseIRBuilder(uint64_t address, const std::string &s):
+BaseIRBuilder::BaseIRBuilder(uint64 address, const std::string &s):
   address(address),
   disas(s),
   needSetup(false),
@@ -17,25 +17,25 @@ BaseIRBuilder::BaseIRBuilder(uint64_t address, const std::string &s):
 }
 
 
-uint32_t BaseIRBuilder::getOpcode(void) const
+uint32 BaseIRBuilder::getOpcode(void) const
 {
   return this->opcode;
 }
 
 
-uint64_t BaseIRBuilder::getThreadID(void) const
+uint64 BaseIRBuilder::getThreadID(void) const
 {
   return this->threadId;
 }
 
 
-void BaseIRBuilder::setOpcode(uint32_t op)
+void BaseIRBuilder::setOpcode(uint32 op)
 {
   this->opcode = op;
 }
 
 
-void BaseIRBuilder::setNextAddress(uint64_t nextAddress)
+void BaseIRBuilder::setNextAddress(uint64 nextAddress)
 {
   this->nextAddress = nextAddress;
 }
@@ -47,7 +47,7 @@ void BaseIRBuilder::setOpcodeCategory(int32_t category)
 }
 
 
-void BaseIRBuilder::setThreadID(uint64_t threadId)
+void BaseIRBuilder::setThreadID(uint64 threadId)
 {
   this->threadId = threadId;
 }
@@ -65,7 +65,7 @@ bool BaseIRBuilder::isBranch(void)
 }
 
 
-uint64_t BaseIRBuilder::getAddress(void) const
+uint64 BaseIRBuilder::getAddress(void) const
 {
   return this->address;
 }
@@ -92,7 +92,7 @@ void BaseIRBuilder::addOperand(const TritonOperand &operand)
 }
 
 
-void BaseIRBuilder::setup(uint64_t mem_value)
+void BaseIRBuilder::setup(uint64 mem_value)
 {
   for (auto it = this->operands.begin(); it != this->operands.end(); ++it)
     if (IRBuilder::isMemOperand(it->getType())) {

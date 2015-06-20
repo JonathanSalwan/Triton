@@ -6,6 +6,8 @@
 #include <sstream>
 #include <string>
 
+#include "TritonTypes.h"
+
 
 /* Symbolic element */
 class SymbolicElement {
@@ -15,7 +17,7 @@ class SymbolicElement {
     std::stringstream   *destination;
     std::stringstream   *expression;
     std::stringstream   *source;
-    uint64_t            id;
+    uint64              id;
 
 
   public:
@@ -26,11 +28,11 @@ class SymbolicElement {
     std::stringstream   *getDestination(void);
     std::stringstream   *getExpression(void);
     std::stringstream   *getSource(void);
-    uint64_t            getID(void);
+    uint64              getID(void);
     void                setSrcExpr(std::stringstream &src);
 
-    SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id);
-    SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id, std::string &comment);
+    SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64 id);
+    SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64 id, std::string &comment);
     ~SymbolicElement();
 };
 

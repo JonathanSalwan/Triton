@@ -2,8 +2,8 @@
 #ifndef   SYMBOLICVARIABLE_H
 #define   SYMBOLICVARIABLE_H
 
-#include <cstdint>
 #include <string>
+#include "TritonTypes.h"
 
 /* The name of the symbolic variables */
 #define SYMVAR_NAME       "SymVar_"
@@ -27,21 +27,21 @@ class SymbolicVariable {
   private:
     SymVar::kind  symVarKind;
     std::string   symVarName;
-    uint64_t      symVarId;
-    uint64_t      symVarKindValue;
-    uint64_t      symVarSize;
+    uint64        symVarId;
+    uint64        symVarKindValue;
+    uint64        symVarSize;
 
   public:
 
-    SymbolicVariable(SymVar::kind kind, uint64_t kindValue, uint64_t id, uint64_t size);
+    SymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 id, uint64 size);
     SymbolicVariable(const SymbolicVariable &copy);
     ~SymbolicVariable();
 
     SymVar::kind  getSymVarKind(void);
     std::string   getSymVarName(void);
-    uint64_t      getSymVarId(void);
-    uint64_t      getSymVarKindValue(void);
-    uint64_t      getSymVarSize(void);
+    uint64        getSymVarId(void);
+    uint64        getSymVarKindValue(void);
+    uint64        getSymVarSize(void);
 
 };
 

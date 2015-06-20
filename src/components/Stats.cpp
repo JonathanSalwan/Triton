@@ -27,7 +27,7 @@ void Stats::incNumberOfExpressions(void)
 }
 
 
-void Stats::incNumberOfExpressions(uint64_t val)
+void Stats::incNumberOfExpressions(uint64 val)
 {
   this->numberOfExpressions += val;
 }
@@ -45,28 +45,28 @@ void Stats::incNumberOfBranchesTaken(void)
 }
 
 
-uint64_t  Stats::getNumberOfBranchesTaken(void)
+uint64  Stats::getNumberOfBranchesTaken(void)
 {
   return this->numberOfBranchesTaken;
 }
 
 
-uint64_t  Stats::getNumberOfExpressions(void)
+uint64  Stats::getNumberOfExpressions(void)
 {
   return this->numberOfExpressions;
 }
 
 
-uint64_t  Stats::getNumberOfUnknownInstruction(void)
+uint64  Stats::getNumberOfUnknownInstruction(void)
 {
   return this->numberOfUnknownInstruction;
 }
 
 
-uint64_t  Stats::getTimeOfExecution(void)
+uint64  Stats::getTimeOfExecution(void)
 {
   this->end = high_resolution_clock::now();
-  uint64_t timeOfExecution = std::chrono::duration_cast<std::chrono::seconds>(this->end - this->start).count();
+  uint64 timeOfExecution = std::chrono::duration_cast<std::chrono::seconds>(this->end - this->start).count();
   return timeOfExecution;
 }
 

@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-MovlhpsIRBuilder::MovlhpsIRBuilder(uint64_t address, const std::string &disassembly):
+MovlhpsIRBuilder::MovlhpsIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -21,10 +21,10 @@ void MovlhpsIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void MovlhpsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint64_t          reg1      = this->operands[0].getValue();
-  uint64_t          regSize1  = this->operands[0].getSize();
-  uint64_t          reg2      = this->operands[1].getValue();
-  uint64_t          regSize2  = this->operands[1].getSize();
+  uint64            reg1      = this->operands[0].getValue();
+  uint64            regSize1  = this->operands[0].getSize();
+  uint64            reg2      = this->operands[1].getValue();
+  uint64            regSize2  = this->operands[1].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicRegOperand(reg1, regSize1);

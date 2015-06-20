@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-ImulIRBuilder::ImulIRBuilder(uint64_t address, const std::string &disassembly):
+ImulIRBuilder::ImulIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -16,9 +16,9 @@ ImulIRBuilder::ImulIRBuilder(uint64_t address, const std::string &disassembly):
 void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint64_t          reg     = this->operands[0].getValue();
-  uint64_t          imm     = this->operands[1].getValue();
-  uint32_t          regSize = this->operands[0].getSize();
+  uint64            reg     = this->operands[0].getValue();
+  uint64            imm     = this->operands[1].getValue();
+  uint32            regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicRegOperand(reg, regSize);
@@ -48,11 +48,11 @@ void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2, op3;
-  uint64_t          reg1     = this->operands[0].getValue();
-  uint32_t          regSize1 = this->operands[0].getSize();
-  uint64_t          reg2     = this->operands[1].getValue();
-  uint32_t          regSize2 = this->operands[1].getSize();
-  uint64_t          imm      = 0;
+  uint64            reg1     = this->operands[0].getValue();
+  uint32            regSize1 = this->operands[0].getSize();
+  uint64            reg2     = this->operands[1].getValue();
+  uint32            regSize2 = this->operands[1].getSize();
+  uint64            imm      = 0;
 
   if (this->operands[2].getType() == IRBuilderOperand::IMM)
     imm = this->operands[2].getValue();
@@ -94,11 +94,11 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2, op3;
-  uint64_t          reg     = this->operands[0].getValue();
-  uint32_t          regSize = this->operands[0].getSize();
-  uint64_t          mem     = this->operands[1].getValue();
-  uint32_t          memSize = this->operands[1].getSize();
-  uint64_t          imm     = 0;
+  uint64            reg     = this->operands[0].getValue();
+  uint32            regSize = this->operands[0].getSize();
+  uint64            mem     = this->operands[1].getValue();
+  uint32            memSize = this->operands[1].getSize();
+  uint64            imm     = 0;
 
   if (this->operands[2].getType() == IRBuilderOperand::IMM)
     imm = this->operands[2].getValue();

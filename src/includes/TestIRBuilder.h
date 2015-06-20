@@ -10,7 +10,7 @@
 class TestIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 
   public:
-    TestIRBuilder(uint64_t address, const std::string &disassembly);
+    TestIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

@@ -26,9 +26,9 @@ class ProcessingPyConf
     void callbackBefore(Inst *inst, AnalysisProcessor *ap);
     void callbackBeforeIRProc(IRBuilder *irb, AnalysisProcessor *ap);
     void callbackFini(void);
-    void callbackRoutine(uint64_t threadId, PyObject *callback);
-    void callbackSyscallEntry(uint64_t threadId, uint64_t std);
-    void callbackSyscallExit(uint64_t threadId, uint64_t std);
+    void callbackRoutine(uint64 threadId, PyObject *callback);
+    void callbackSyscallEntry(uint64 threadId, uint64 std);
+    void callbackSyscallExit(uint64 threadId, uint64 std);
 
     void startAnalysisFromAddr(IRBuilder *irb);
     void stopAnalysisFromAddr(IRBuilder *irb);

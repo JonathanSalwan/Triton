@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-RolIRBuilder::RolIRBuilder(uint64_t address, const std::string &disassembly):
+RolIRBuilder::RolIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -16,9 +16,9 @@ RolIRBuilder::RolIRBuilder(uint64_t address, const std::string &disassembly):
 void RolIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint64_t          reg     = this->operands[0].getValue();
-  uint64_t          imm     = this->operands[1].getValue();
-  uint32_t          regSize = this->operands[0].getSize();
+  uint64            reg     = this->operands[0].getValue();
+  uint64            imm     = this->operands[1].getValue();
+  uint32            regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicRegOperand(reg, regSize);
@@ -46,8 +46,8 @@ void RolIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void RolIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint64_t          reg1     = this->operands[0].getValue();
-  uint32_t          regSize1 = this->operands[0].getSize();
+  uint64            reg1     = this->operands[0].getValue();
+  uint32            regSize1 = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicRegOperand(reg1, regSize1);
@@ -80,9 +80,9 @@ void RolIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 void RolIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint32_t          writeSize = this->operands[0].getSize();
-  uint64_t          mem       = this->operands[0].getValue();
-  uint64_t          imm       = this->operands[1].getValue();
+  uint32            writeSize = this->operands[0].getSize();
+  uint64            mem       = this->operands[0].getValue();
+  uint64            imm       = this->operands[1].getValue();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicMemOperand(mem, writeSize);
@@ -110,8 +110,8 @@ void RolIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 void RolIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint32_t          writeSize = this->operands[0].getSize();
-  uint64_t          mem       = this->operands[0].getValue();
+  uint32            writeSize = this->operands[0].getSize();
+  uint64            mem       = this->operands[0].getValue();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicMemOperand(mem, writeSize);

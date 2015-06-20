@@ -10,7 +10,7 @@
 class CallIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    CallIRBuilder(uint64_t address, const std::string &disassembly);
+    CallIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

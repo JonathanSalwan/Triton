@@ -10,7 +10,7 @@
 class PopIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    PopIRBuilder(uint64_t address, const std::string &disassembly);
+    PopIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

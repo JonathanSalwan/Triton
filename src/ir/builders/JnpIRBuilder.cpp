@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-JnpIRBuilder::JnpIRBuilder(uint64_t address, const std::string &disassembly):
+JnpIRBuilder::JnpIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -16,7 +16,7 @@ JnpIRBuilder::JnpIRBuilder(uint64_t address, const std::string &disassembly):
 void JnpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, pf;
-  uint64_t          imm   = this->operands[0].getValue();
+  uint64            imm   = this->operands[0].getValue();
 
   /* Create the SMT semantic */
   pf << ap.buildSymbolicFlagOperand(ID_PF);

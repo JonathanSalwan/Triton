@@ -10,7 +10,7 @@
 class RolIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 
   public:
-    RolIRBuilder(uint64_t address, const std::string &disassembly);
+    RolIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

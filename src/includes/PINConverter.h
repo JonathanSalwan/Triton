@@ -4,6 +4,8 @@
 #include "pin.H"
 
 #include "Registers.h"
+#include "TritonTypes.h"
+
 
 namespace PINConverter {
 
@@ -12,12 +14,12 @@ namespace PINConverter {
  * Used by several classes and modules dedicated to Pin. */
 
 
-uint64_t convertDBIReg2TritonReg(uint64_t regID);
+uint64 convertDBIReg2TritonReg(uint64 regID);
 
 /* Convert a Triton register to a Pin register.
  * Besides, it can return only 64 bits wised registers.
  */
-uint64_t convertTritonReg2DBIReg(uint64_t regID);
+uint64 convertTritonReg2DBIReg(uint64 regID);
 
 }
 

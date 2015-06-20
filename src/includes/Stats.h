@@ -2,16 +2,16 @@
 #define   STATISTICS_H
 
 #include <chrono>
-#include <cstdint>
+#include "TritonTypes.h"
 
 using namespace std::chrono;
 
 class Stats {
 
   private:
-    uint64_t numberOfBranchesTaken;
-    uint64_t numberOfExpressions;
-    uint64_t numberOfUnknownInstruction;
+    uint64 numberOfBranchesTaken;
+    uint64 numberOfExpressions;
+    uint64 numberOfUnknownInstruction;
 
     high_resolution_clock::time_point start;
     high_resolution_clock::time_point end;
@@ -20,15 +20,15 @@ class Stats {
     Stats();
     ~Stats();
 
-    void      incNumberOfBranchesTaken(void);
-    void      incNumberOfExpressions(uint64_t val);
-    void      incNumberOfExpressions(void);
-    void      incNumberOfUnknownInstruction(void);
+    void    incNumberOfBranchesTaken(void);
+    void    incNumberOfExpressions(uint64 val);
+    void    incNumberOfExpressions(void);
+    void    incNumberOfUnknownInstruction(void);
 
-    uint64_t  getNumberOfBranchesTaken(void);
-    uint64_t  getNumberOfExpressions(void);
-    uint64_t  getTimeOfExecution(void);
-    uint64_t  getNumberOfUnknownInstruction(void);
+    uint64  getNumberOfBranchesTaken(void);
+    uint64  getNumberOfExpressions(void);
+    uint64  getTimeOfExecution(void);
+    uint64  getNumberOfUnknownInstruction(void);
 };
 
 #endif     /* !__STATISTICS_H__ */

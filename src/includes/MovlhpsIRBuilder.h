@@ -8,7 +8,7 @@
 
 class MovlhpsIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate  {
   public:
-    MovlhpsIRBuilder(uint64_t address, const std::string &disassembly);
+    MovlhpsIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

@@ -71,6 +71,7 @@ void check(void)
   asm("lea rsi, [rbx+8*rax]");
   asm("lea rsi, [rbx+8*rax+4]");
   asm("lea rsi, [rbx+8+4*rax]");
+  asm("lea rsi, [r12*4+0x8]");
   asm("cqo");
 
   // Check concat symbolic expression

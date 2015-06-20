@@ -9,7 +9,7 @@
 #include <SymbolicElement.h>
 
 
-BswapIRBuilder::BswapIRBuilder(uint64_t address, const std::string &disassembly):
+BswapIRBuilder::BswapIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -17,8 +17,8 @@ BswapIRBuilder::BswapIRBuilder(uint64_t address, const std::string &disassembly)
 void BswapIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint64_t          reg       = this->operands[0].getValue();
-  uint32_t          regSize   = this->operands[0].getSize();
+  uint64            reg       = this->operands[0].getValue();
+  uint32            regSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicRegOperand(reg, regSize);

@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-CmovnzIRBuilder::CmovnzIRBuilder(uint64_t address, const std::string &disassembly):
+CmovnzIRBuilder::CmovnzIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly){
 }
 
@@ -21,10 +21,10 @@ void CmovnzIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void CmovnzIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, reg1e, reg2e, zf;
-  uint64_t          reg1    = this->operands[0].getValue();
-  uint64_t          reg2    = this->operands[1].getValue();
-  uint64_t          size1   = this->operands[0].getSize();
-  uint64_t          size2   = this->operands[1].getSize();
+  uint64            reg1    = this->operands[0].getValue();
+  uint64            reg2    = this->operands[1].getValue();
+  uint64            size1   = this->operands[0].getSize();
+  uint64            size2   = this->operands[1].getSize();
 
   /* Create the SMT semantic */
   zf << ap.buildSymbolicFlagOperand(ID_ZF);
@@ -51,10 +51,10 @@ void CmovnzIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void CmovnzIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, reg1e, mem1e, zf;
-  uint32_t          readSize = this->operands[1].getSize();
-  uint64_t          mem      = this->operands[1].getValue();
-  uint64_t          reg      = this->operands[0].getValue();
-  uint64_t          regSize  = this->operands[0].getSize();
+  uint32            readSize = this->operands[1].getSize();
+  uint64            mem      = this->operands[1].getValue();
+  uint64            reg      = this->operands[0].getValue();
+  uint64            regSize  = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   zf << ap.buildSymbolicFlagOperand(ID_ZF);

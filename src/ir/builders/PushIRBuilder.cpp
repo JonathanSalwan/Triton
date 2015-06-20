@@ -8,13 +8,13 @@
 #include <SymbolicElement.h>
 
 
-PushIRBuilder::PushIRBuilder(uint64_t address, const std::string &disassembly):
+PushIRBuilder::PushIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
 
 
-static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint32_t writeSize)
+static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 writeSize)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
@@ -38,10 +38,10 @@ static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint32_t w
 void PushIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint64_t          reg       = this->operands[0].getValue(); // Reg pushed
-  uint64_t          mem       = this->operands[1].getValue(); // The dst memory writing
-  uint32_t          writeSize = this->operands[1].getSize();
-  uint32_t          regSize   = this->operands[0].getSize();
+  uint64            reg       = this->operands[0].getValue(); // Reg pushed
+  uint64            mem       = this->operands[1].getValue(); // The dst memory writing
+  uint32            writeSize = this->operands[1].getSize();
+  uint32            regSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic side effect */
   alignStack(inst, ap, writeSize);
@@ -64,9 +64,9 @@ void PushIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void PushIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint64_t          imm       = this->operands[0].getValue(); // Imm pushed
-  uint64_t          mem       = this->operands[1].getValue(); // The dst memory writing
-  uint32_t          writeSize = this->operands[1].getSize();
+  uint64            imm       = this->operands[0].getValue(); // Imm pushed
+  uint64            mem       = this->operands[1].getValue(); // The dst memory writing
+  uint32            writeSize = this->operands[1].getSize();
 
   /* Create the SMT semantic side effect */
   alignStack(inst, ap, writeSize);
@@ -90,10 +90,10 @@ void PushIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 void PushIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint64_t          memOp     = this->operands[0].getValue(); // Mem pushed
-  uint32_t          readSize  = this->operands[0].getSize();
-  uint64_t          memDst    = this->operands[1].getValue(); // The dst memory writing
-  uint32_t          writeSize = this->operands[1].getSize();
+  uint64            memOp     = this->operands[0].getValue(); // Mem pushed
+  uint32            readSize  = this->operands[0].getSize();
+  uint64            memDst    = this->operands[1].getValue(); // The dst memory writing
+  uint32            writeSize = this->operands[1].getSize();
 
   /* Create the SMT semantic side effect */
   alignStack(inst, ap, writeSize);

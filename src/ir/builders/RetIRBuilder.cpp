@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-RetIRBuilder::RetIRBuilder(uint64_t address, const std::string &disassembly):
+RetIRBuilder::RetIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -34,7 +34,7 @@ static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap)
 }
 
 
-static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint64_t imm)
+static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint64 imm)
 {
   SymbolicElement     *se;
   std::stringstream   expr, op1, op2;
@@ -64,9 +64,9 @@ void RetIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void RetIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint64_t          imm       = this->operands[0].getValue();
-  uint64_t          memSrc    = this->operands[1].getValue(); // The dst memory read
-  uint32_t          readSize  = this->operands[1].getSize();
+  uint64            imm       = this->operands[0].getValue();
+  uint64            memSrc    = this->operands[1].getValue(); // The dst memory read
+  uint32            readSize  = this->operands[1].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicMemOperand(memSrc, readSize);
@@ -89,8 +89,8 @@ void RetIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 void RetIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1;
-  uint64_t          memSrc    = this->operands[0].getValue(); // The dst memory read
-  uint32_t          readSize  = this->operands[0].getSize();
+  uint64            memSrc    = this->operands[0].getValue(); // The dst memory read
+  uint32            readSize  = this->operands[0].getSize();
 
   /* Create the SMT semantic */
   op1 << ap.buildSymbolicMemOperand(memSrc, readSize);

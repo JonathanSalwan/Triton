@@ -3,9 +3,9 @@
 
 
 SymbolicVariable::SymbolicVariable(SymVar::kind kind,
-                                   uint64_t kindValue,
-                                   uint64_t id,
-                                   uint64_t size)
+                                   uint64 kindValue,
+                                   uint64 id,
+                                   uint64 size)
 {
   this->symVarId        = id;
   this->symVarKind      = kind;
@@ -42,19 +42,19 @@ std::string SymbolicVariable::getSymVarName(void)
 }
 
 
-uint64_t SymbolicVariable::getSymVarId(void)
+uint64 SymbolicVariable::getSymVarId(void)
 {
   return this->symVarId;
 }
 
 
-uint64_t SymbolicVariable::getSymVarKindValue(void)
+uint64 SymbolicVariable::getSymVarKindValue(void)
 {
   return this->symVarKindValue;
 }
 
 
-uint64_t SymbolicVariable::getSymVarSize(void)
+uint64 SymbolicVariable::getSymVarSize(void)
 {
   return this->symVarSize;
 }

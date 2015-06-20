@@ -8,7 +8,7 @@
 
 class MovapdIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate  {
   public:
-    MovapdIRBuilder(uint64_t address, const std::string &disassembly);
+    MovapdIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

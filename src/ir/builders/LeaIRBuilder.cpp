@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-LeaIRBuilder::LeaIRBuilder(uint64_t address, const std::string &disassembly):
+LeaIRBuilder::LeaIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -26,15 +26,18 @@ void LeaIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, reg1e, dis2e, base2e, index2e, scale2e;
-  uint64_t          reg           = this->operands[0].getValue();
-  uint64_t          regSize       = this->operands[0].getSize();
-  uint64_t          displacement  = this->operands[1].getDisplacement();
-  uint64_t          baseReg       = this->operands[1].getBaseReg();
-  uint64_t          indexReg      = this->operands[1].getIndexReg();
-  uint64_t          memoryScale   = this->operands[1].getMemoryScale();
+  uint64            reg           = this->operands[0].getValue();
+  uint64            regSize       = this->operands[0].getSize();
+  uint64            displacement  = this->operands[1].getDisplacement();
+  uint64            baseReg       = this->operands[1].getBaseReg();
+  uint64            indexReg      = this->operands[1].getIndexReg();
+  uint64            memoryScale   = this->operands[1].getMemoryScale();
 
   /* Base register */
-  base2e << ap.buildSymbolicRegOperand(baseReg, regSize);
+  if (baseReg)
+    base2e << ap.buildSymbolicRegOperand(baseReg, regSize);
+  else
+    base2e << smt2lib::bv(0, regSize * REG_SIZE);
 
   /* Index register if it exists */
   if (indexReg)

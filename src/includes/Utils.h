@@ -4,6 +4,6 @@
 
 #include <iostream>
 
-const char *syscallNumberLinux64ToString(uint64_t syscallNumber);
+const char *syscallNumberLinux64ToString(uint64 syscallNumber);
 
 #endif     /* !__UTILS_H__ */

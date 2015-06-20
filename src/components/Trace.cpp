@@ -47,7 +47,7 @@ void Trace::save(std::stringstream &file)
   boost::format outputExpression("%|61t|");
 
   for (auto inst : this->instructions){
-    uint64_t count = 0;
+    uint64 count = 0;
     if (inst != nullptr) {
       std::stringstream expr(""), colr(ENDC);
 

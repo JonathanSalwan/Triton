@@ -7,6 +7,7 @@
 #include <stdint.h>
 
 #include "Registers.h"
+#include "TritonTypes.h"
 
 #define TAINTED     1
 #define UNTAINTED   !TAINTED
@@ -17,46 +18,46 @@ class TaintEngine {
   private:
 
     /* Tainted addresses */
-    std::list<uint64_t> taintedAddresses;
+    std::list<uint64> taintedAddresses;
 
     /*
      *Tainted registers.
      * Currently this is an over approximation of the taint.
      * sizeof(taintedReg) = enum REG
      */
-    uint64_t taintedReg[ID_LAST_ITEM];
+    uint64 taintedReg[ID_LAST_ITEM];
 
     /* Initialization of an object */
     void init(const TaintEngine &other);
 
 
   public:
-    bool        isMemTainted(uint64_t addr);
-    bool        isRegTainted(uint64_t regID);
-    void        setTaintMem(uint64_t mem, uint64_t flag);
-    void        setTaintReg(uint64_t regID, uint64_t flag);
-    void        taintMem(uint64_t addr);
-    void        taintReg(uint64_t regID);
-    void        untaintMem(uint64_t addr);
-    void        untaintReg(uint64_t regID);
+    bool        isMemTainted(uint64 addr);
+    bool        isRegTainted(uint64 regID);
+    void        setTaintMem(uint64 mem, uint64 flag);
+    void        setTaintReg(uint64 regID, uint64 flag);
+    void        taintMem(uint64 addr);
+    void        taintReg(uint64 regID);
+    void        untaintMem(uint64 addr);
+    void        untaintReg(uint64 regID);
 
     void        operator=(const TaintEngine &other);
 
     /* ALU Spreading */
-    bool        aluSpreadTaintMemImm(uint64_t memDst, uint32_t writeSize);
-    bool        aluSpreadTaintMemReg(uint64_t memDst, uint64_t regSrc, uint32_t writeSize);
-    bool        aluSpreadTaintRegImm(uint64_t regDst);
-    bool        aluSpreadTaintRegMem(uint64_t regDst, uint64_t memSrc, uint32_t readSize);
-    bool        aluSpreadTaintRegReg(uint64_t regDst, uint64_t regSrc);
-    bool        aluSpreadTaintMemMem(uint64_t memDst, uint64_t memSrc, uint32_t writeSize);
+    bool        aluSpreadTaintMemImm(uint64 memDst, uint32 writeSize);
+    bool        aluSpreadTaintMemReg(uint64 memDst, uint64 regSrc, uint32 writeSize);
+    bool        aluSpreadTaintRegImm(uint64 regDst);
+    bool        aluSpreadTaintRegMem(uint64 regDst, uint64 memSrc, uint32 readSize);
+    bool        aluSpreadTaintRegReg(uint64 regDst, uint64 regSrc);
+    bool        aluSpreadTaintMemMem(uint64 memDst, uint64 memSrc, uint32 writeSize);
 
     /* Assignment Spreading */
-    bool        assignmentSpreadTaintMemImm(uint64_t memDst, uint32_t writeSize);
-    bool        assignmentSpreadTaintMemReg(uint64_t memDst, uint64_t regSrc, uint32_t writeSize);
-    bool        assignmentSpreadTaintRegImm(uint64_t regDst);
-    bool        assignmentSpreadTaintRegMem(uint64_t regDst, uint64_t memSrc, uint32_t readSize);
-    bool        assignmentSpreadTaintMemMem(uint64_t memDst, uint64_t memSrc, uint32_t readSize);
-    bool        assignmentSpreadTaintRegReg(uint64_t regDst, uint64_t regSrc);
+    bool        assignmentSpreadTaintMemImm(uint64 memDst, uint32 writeSize);
+    bool        assignmentSpreadTaintMemReg(uint64 memDst, uint64 regSrc, uint32 writeSize);
+    bool        assignmentSpreadTaintRegImm(uint64 regDst);
+    bool        assignmentSpreadTaintRegMem(uint64 regDst, uint64 memSrc, uint32 readSize);
+    bool        assignmentSpreadTaintMemMem(uint64 memDst, uint64 memSrc, uint32 readSize);
+    bool        assignmentSpreadTaintRegReg(uint64 regDst, uint64 regSrc);
 
     TaintEngine();
     TaintEngine(const TaintEngine &copy);

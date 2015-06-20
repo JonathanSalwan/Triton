@@ -10,7 +10,7 @@
 // It is up to the user to delete it when times come.
 IRBuilder *createIRBuilder(INS ins) {
 
-  UINT64 address         = INS_Address(ins);
+  uint64 address         = INS_Address(ins);
   std::string disas      = INS_Disassemble(ins);
   INT32 opcode           = INS_Opcode(ins);
 
@@ -468,18 +468,18 @@ IRBuilder *createIRBuilder(INS ins) {
   }
 
   // Populate the operands
-  const UINT32 n = INS_OperandCount(ins);
+  const uint32 n = INS_OperandCount(ins);
 
-  for (UINT32 i = 0; i < n; ++i) {
+  for (uint32 i = 0; i < n; ++i) {
     IRBuilderOperand::operand_t type;
-    UINT32 size = 0;
-    UINT64 val  = 0;
+    uint32 size = 0;
+    uint64 val  = 0;
 
     //Effective address = Displacement + BaseReg + IndexReg * Scale
-    UINT64 displacement = 0;
-    UINT64 baseReg = ID_INVALID;
-    UINT64 indexReg = ID_INVALID;
-    UINT64 memoryScale = 0;
+    uint64 displacement = 0;
+    uint64 baseReg      = ID_INVALID;
+    uint64 indexReg     = ID_INVALID;
+    uint64 memoryScale  = 0;
 
     /* Special case */
     if (INS_IsDirectBranchOrCall(ins)){
@@ -534,7 +534,7 @@ IRBuilder *createIRBuilder(INS ins) {
 
       reg = INS_OperandMemoryIndexReg(ins, i);
       if (REG_valid(reg))
-      indexReg = PINConverter::convertDBIReg2TritonReg(reg);
+        indexReg = PINConverter::convertDBIReg2TritonReg(reg);
     }
 
     /* Undefined */

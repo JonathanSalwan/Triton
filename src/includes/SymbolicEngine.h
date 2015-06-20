@@ -2,8 +2,6 @@
 #ifndef   SYMBOLICENGINE_H
 #define   SYMBOLICENGINE_H
 
-#include <cstdint>
-
 #include <map>
 #include <list>
 #include <stdexcept>
@@ -17,6 +15,7 @@
 #include "SMT2Lib.h"
 #include "SymbolicElement.h"
 #include "SymbolicVariable.h"
+#include "TritonTypes.h"
 
 
 /* Symbolic Engine */
@@ -25,7 +24,7 @@ class SymbolicEngine {
   private:
 
     /* Symbolic expressions ID */
-    uint64_t uniqueID;
+    uint64 uniqueID;
 
     /* List of symbolic variables */
     std::vector<SymbolicVariable *> symbolicVariables;
@@ -38,7 +37,7 @@ class SymbolicEngine {
      * item1: memory address
      * item2: symbolic reference ID
      */
-    std::map<uint64_t, uint64_t> memoryReference;
+    std::map<uint64, uint64> memoryReference;
 
     /*
      * List of path constaints (PC).
@@ -47,7 +46,7 @@ class SymbolicEngine {
      * When a branch instruction is executed,
      * it must add the PC in this list.
      */
-    std::list<uint64_t> pathConstaints;
+    std::list<uint64> pathConstaints;
 
     /* Private classes used by getBacktrackedExpressionFromId() */
     std::string deepReplace(std::stringstream &formula);
@@ -58,29 +57,29 @@ class SymbolicEngine {
 
     /* Symbolic trace */
     /* sizeof(symbolicReg) = enum REG */
-    uint64_t                        symbolicReg[ID_LAST_ITEM];
+    uint64                          symbolicReg[ID_LAST_ITEM];
 
     /* public methods */
-    SymbolicElement                 *getElementFromId(uint64_t id);
+    SymbolicElement                 *getElementFromId(uint64 id);
     SymbolicElement                 *newSymbolicElement(std::stringstream &src);
     SymbolicElement                 *newSymbolicElement(std::stringstream &src, std::string comment);
-    SymbolicVariable                *addSymbolicVariable(SymVar::kind kind, uint64_t kindValue, uint64_t size);
-    SymbolicVariable                *getSymVar(uint64_t symVarId);
+    SymbolicVariable                *addSymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 size);
+    SymbolicVariable                *getSymVar(uint64 symVarId);
     SymbolicVariable                *getSymVar(std::string symVarName);
-    std::list<uint64_t>             getPathConstraints(void);
-    std::string                     getBacktrackedExpressionFromId(uint64_t id);
+    std::list<uint64>               getPathConstraints(void);
+    std::string                     getBacktrackedExpressionFromId(uint64 id);
     std::string                     getVariablesDeclaration(void);
     std::vector<SymbolicVariable *> getSymVars(void);
-    uint64_t                        convertExprToSymVar(uint64_t exprId, uint64_t symVarSize);
-    uint64_t                        convertMemToSymVar(uint64_t memAddr, uint64_t symVarSize);
-    uint64_t                        convertRegToSymVar(uint64_t regId, uint64_t symVarSize);
-    uint64_t                        getMemSymbolicID(uint64_t addr);
-    uint64_t                        getRegSymbolicID(uint64_t regID);
-    uint64_t                        getUniqueID();
-    void                            addMemoryReference(uint64_t mem, uint64_t id);
-    void                            addPathConstraint(uint64_t exprId);
-    void                            concretizeMem(uint64_t mem);
-    void                            concretizeReg(uint64_t regID);
+    uint64                          convertExprToSymVar(uint64 exprId, uint64 symVarSize);
+    uint64                          convertMemToSymVar(uint64 memAddr, uint64 symVarSize);
+    uint64                          convertRegToSymVar(uint64 regId, uint64 symVarSize);
+    uint64                          getMemSymbolicID(uint64 addr);
+    uint64                          getRegSymbolicID(uint64 regID);
+    uint64                          getUniqueID();
+    void                            addMemoryReference(uint64 mem, uint64 id);
+    void                            addPathConstraint(uint64 exprId);
+    void                            concretizeMem(uint64 mem);
+    void                            concretizeReg(uint64 regID);
     void                            init(const SymbolicEngine &other);
     void                            operator=(const SymbolicEngine &other);
 

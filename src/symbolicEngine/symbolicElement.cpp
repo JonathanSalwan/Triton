@@ -2,7 +2,7 @@
 #include <SymbolicEngine.h>
 
 
-SymbolicElement::SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id)
+SymbolicElement::SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64 id)
 {
   this->isTainted   = false;
   this->source      = new std::stringstream(src.str());
@@ -16,7 +16,7 @@ SymbolicElement::SymbolicElement(std::stringstream &dst, std::stringstream &src,
 }
 
 
-SymbolicElement::SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64_t id, std::string &comment)
+SymbolicElement::SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64 id, std::string &comment)
 {
   this->isTainted   = false;
   this->source      = new std::stringstream(src.str());
@@ -68,7 +68,7 @@ std::stringstream *SymbolicElement::getDestination(void)
 
 
 /* Returns the ID of the symbolic element */
-uint64_t SymbolicElement::getID(void)
+uint64 SymbolicElement::getID(void)
 {
   return this->id;
 }

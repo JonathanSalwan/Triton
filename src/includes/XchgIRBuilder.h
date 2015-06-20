@@ -10,7 +10,7 @@
 class XchgIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 
   public:
-    XchgIRBuilder(uint64_t address, const std::string &disassembly);
+    XchgIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

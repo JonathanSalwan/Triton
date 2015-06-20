@@ -10,7 +10,7 @@
 class CdqeIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
 
   public:
-    CdqeIRBuilder(uint64_t address, const std::string &disassembly);
+    CdqeIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

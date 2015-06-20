@@ -10,15 +10,15 @@
 // Based on python-2.7/blob/master/Objects/longobject.c
 
 
-__uint128_t PyLongObjectToUint128(PyObject *vv)
+uint128 PyLongObjectToUint128(PyObject *vv)
 {
   register PyLongObject *v;
-  __uint128_t x, prev;
+  uint128 x, prev;
   Py_ssize_t i;
 
   if (vv == NULL || !PyLong_Check(vv)) {
     if (vv != NULL && PyInt_Check(vv)) {
-        __uint128_t val = PyInt_AsLong(vv);
+        uint128 val = PyInt_AsLong(vv);
         if (val < 0)
           throw std::runtime_error("Error: PyLongObjectToUint128() - can't convert negative value to unsigned long");
         return val;
@@ -43,10 +43,10 @@ __uint128_t PyLongObjectToUint128(PyObject *vv)
 }
 
 
-PyObject *uint128ToPyLongObject(__uint128_t value)
+PyObject *uint128ToPyLongObject(uint128 value)
 {
   PyLongObject *v;
-  __uint128_t t;
+  uint128 t;
   int ndigits = 0;
 
   /* Count the number of Python digits. */

@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-CdqeIRBuilder::CdqeIRBuilder(uint64_t address, const std::string &disassembly):
+CdqeIRBuilder::CdqeIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

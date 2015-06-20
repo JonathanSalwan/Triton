@@ -10,7 +10,7 @@
 class StcIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
 
   public:
-    StcIRBuilder(uint64_t address, const std::string &disassembly);
+    StcIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

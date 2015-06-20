@@ -8,7 +8,7 @@
 #include <SymbolicElement.h>
 
 
-CwdeIRBuilder::CwdeIRBuilder(uint64_t address, const std::string &disassembly):
+CwdeIRBuilder::CwdeIRBuilder(uint64 address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

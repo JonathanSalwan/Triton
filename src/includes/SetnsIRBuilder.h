@@ -10,7 +10,7 @@
 class SetnsIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    SetnsIRBuilder(uint64_t address, const std::string &disassembly);
+    SetnsIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

@@ -83,7 +83,7 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId)
 }
 
 
-static void callbackSnapshot(UINT64 mem, UINT32 writeSize)
+static void callbackSnapshot(uint64 mem, uint32 writeSize)
 {
   if (!analysisTrigger.getState())
   /* Analysis locked */
@@ -93,9 +93,9 @@ static void callbackSnapshot(UINT64 mem, UINT32 writeSize)
   if (ap.isSnapshotLocked())
     return;
 
-  uint32_t i = 0;
+  uint32 i = 0;
   for (; i < writeSize ; i++)
-    ap.addSnapshotModification(mem+i, *(reinterpret_cast<UINT8*>(mem+i)));
+    ap.addSnapshotModification(mem+i, *(reinterpret_cast<uint8*>(mem+i)));
 }
 
 
@@ -285,7 +285,7 @@ static int32_t Usage()
 /* Get the name of the target binary */
 static char *getProgramName(char *argv[])
 {
-  uint64_t offset;
+  uint64 offset;
   for (offset = 0; argv[offset]; offset++){
     if (!strcmp(argv[offset], "--") && argv[offset+1])
       return argv[offset+1];

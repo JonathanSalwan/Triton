@@ -3,7 +3,7 @@
 #include <xed-category-enum.h>
 
 
-Inst::Inst(uint64_t threadId, uint64_t address, const std::string &insDis):
+Inst::Inst(uint64 threadId, uint64 address, const std::string &insDis):
   threadId(threadId), address(address), disassembly(insDis)
 {
 }
@@ -22,21 +22,21 @@ const std::string &Inst::getDisassembly(void)
 
 
 /* Returns the instruction address */
-uint64_t Inst::getAddress(void)
+uint64 Inst::getAddress(void)
 {
   return this->address;
 }
 
 
 /* Returns the thread ID of the instruction */
-uint64_t Inst::getThreadID(void)
+uint64 Inst::getThreadID(void)
 {
   return this->threadId;
 }
 
 
 /* Returns the opcode of the instruction */
-uint32_t Inst::getOpcode(void)
+uint32 Inst::getOpcode(void)
 {
   return this->opcode;
 }
@@ -50,7 +50,7 @@ int32_t Inst::getOpcodeCategory(void)
 
 
 /* Set the opcode of the instruction */
-void Inst::setOpcode(uint32_t op)
+void Inst::setOpcode(uint32 op)
 {
   this->opcode = op;
 }

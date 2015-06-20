@@ -10,7 +10,7 @@
 class JbeIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    JbeIRBuilder(uint64_t address, const std::string &disassembly);
+    JbeIRBuilder(uint64 address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;
