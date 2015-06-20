@@ -22,12 +22,19 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wno-unknown-pragmas")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FLAG_CXX}")
 
-# Specific GNU CXX Flags
-if(CMAKE_COMPILER_IS_GNUCXX)
+# Specific Linux CXX Flags
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DUSING_XED -DTARGET_IA32E -DHOST_IA32E -DTARGET_LINUX")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-stack-protector -fomit-frame-pointer -fno-strict-aliasing")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--hash-style=sysv -Wl,-Bsymbolic")
-endif(CMAKE_COMPILER_IS_GNUCXX)
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+
+# Specific OSX CXX Flags
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DTARGET_IA32E -DHOST_IA32E -DTARGET_MAC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fomit-frame-pointer -fno-strict-aliasing")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-exported_symbols_list")
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 # Conventions
 add_definitions(-fPIC)
@@ -49,16 +56,27 @@ link_directories("${PIN_ROOT}/extras/xed-intel64/lib")
 
 # Triton have to generate a syscalls table from the kernel source
 # This following code tries to find the unistd_64.h header.
-FILE(
-    GLOB_RECURSE
-    syscalls_table_files
-    /usr/include/*unistd_64.h
-)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    FILE(
+        GLOB_RECURSE
+        syscalls_table_files
+        /usr/include/*unistd_64.h
+    )
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    FILE(
+        GLOB_RECURSE
+        syscalls_table_files
+        /usr/include/sys/syscall.h
+    )
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
 LIST(GET syscalls_table_files 0 syscalls_table_file)
 
-# If the unistd_64.h is not found, we exit
+# If the unistd_64.h or syscall.h is not found, we exit
 if (NOT EXISTS ${syscalls_table_file})
-    message(FATAL_ERROR "unistd_64.h is missing, please check the INSTALL file")
+    message(FATAL_ERROR "unistd_64.h or syscall.h is missing, please check the INSTALL file")
 endif()
 
 # We generate the syscalls.cpp from the unistd_64.h

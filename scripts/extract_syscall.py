@@ -10,6 +10,7 @@ from __future__ import print_function
 import argparse
 import sys
 import re
+import platform
 
 PREAMBULE = """
 #include <Syscalls.h>
@@ -22,7 +23,10 @@ if __name__ == "__main__":
                         type=str)
     args = parser.parse_args()
 
-    regex = re.compile(r"#define\s+(__NR_\w+)\s+\d+")
+    if platform.system() == 'Linux':
+        regex = re.compile(r"#define\s+(__NR_)(\w+)\s+(\d+)")
+    elif platform.system() == 'Darwin':
+        regex = re.compile(r"#define\s+(SYS_)(\w+)\s+(\d+)")
 
     with open(args.file) as hfile:
         print(PREAMBULE)
@@ -30,10 +34,17 @@ if __name__ == "__main__":
 
         counter = 0
         for match in regex.finditer(hfile.read()):
-            name = match.groups()[0]
-            print('  "%s", // %s' % (name[5:].upper(), name))
+            prefix = str(match.groups()[0])
+            name   = str(match.groups()[1])
+            sysid  = int(match.groups()[2])
+            if counter != sysid:
+                for i in range(sysid - counter):
+                    print('  "UNDEF", // undefined')
+                    counter += 1
+            print('  "%s", // %s%s' % (name.upper(), prefix, name))
             counter += 1
 
     print("};")
     print()
     print("const unsigned int NB_SYSCALL = %d;" % counter)
+
