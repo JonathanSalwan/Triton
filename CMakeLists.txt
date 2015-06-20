@@ -51,9 +51,10 @@ link_directories("${PIN_ROOT}/extras/xed-intel64/lib")
 # This following code tries to find the unistd_64.h header.
 FILE(
     GLOB_RECURSE
-    syscalls_table_file
+    syscalls_table_files
     /usr/include/*unistd_64.h
 )
+LIST(GET syscalls_table_files 0 syscalls_table_file)
 
 # If the unistd_64.h is not found, we exit
 if (NOT EXISTS ${syscalls_table_file})
