@@ -1,10 +1,10 @@
 <p align="center"><img src="http://shell-storm.org/files/triton_logo_1.png"/></p>
 
-**Triton** is a concolic execution framework based on Pin. It provides components like a 
-[taint engine](https://github.com/JonathanSalwan/Triton/wiki/Taint-Engine), a 
-[dynamic symbolic execution engine](https://github.com/JonathanSalwan/Triton/wiki/Symbolic-Engine), a 
-[snapshot engine](https://github.com/JonathanSalwan/Triton/wiki/Snapshot-Engine), translation of x64 
-instruction into the [SMT2-LIB representation](https://github.com/JonathanSalwan/Triton/wiki/SMT2-LIB-Representation), 
+**Triton** is a concolic execution framework based on Pin. It provides components like a
+[taint engine](https://github.com/JonathanSalwan/Triton/wiki/Taint-Engine), a
+[dynamic symbolic execution engine](https://github.com/JonathanSalwan/Triton/wiki/Symbolic-Engine), a
+[snapshot engine](https://github.com/JonathanSalwan/Triton/wiki/Snapshot-Engine), translation of x64
+instruction into the [SMT2-LIB representation](https://github.com/JonathanSalwan/Triton/wiki/SMT2-LIB-Representation),
 a [Z3 interface](https://github.com/JonathanSalwan/Triton/wiki/Solver-Engine-Z3) to solve constraints 
 and [Python bindings](https://github.com/JonathanSalwan/Triton/wiki/Python-Bindings).
 
@@ -13,8 +13,8 @@ and [Python bindings](https://github.com/JonathanSalwan/Triton/wiki/Python-Bindi
 Based on these components, **Triton** offers the possibility to build tools for vulnerabilities 
 research and can provide some reverse engineering assistance.
 
-The [wiki](https://github.com/JonathanSalwan/Triton/wiki) describes **Triton** under the hood. As **Triton** is a young project, 
-please, **don't blame us** if it is not yet reliable. [Open issues](https://github.com/JonathanSalwan/Triton/issues) or 
+The [wiki](https://github.com/JonathanSalwan/Triton/wiki) describes **Triton** under the hood. As **Triton** is a young project,
+please, **don't blame us** if it is not yet reliable. [Open issues](https://github.com/JonathanSalwan/Triton/issues) or
 [pull requests](https://github.com/JonathanSalwan/Triton/pulls) are always better than troll =).
 
 ### Quick start
