@@ -125,6 +125,6 @@ CREATE TABLE expressions(id INTEGER PRIMARY KEY, expr TEXT);
 CREATE TABLE memoryAccess(addr INTEGER, accessType TEXT, accessSize INTEGER, accessAddr INTEGER, contentAsString TEXT, contentAsInteger INTEGER);
 CREATE TABLE registersValue(addr INTEGER, id INTEGER, name TEXT, size INTEGER, content INTEGER);
 
-sqlite> select * from expressions where id=3173;
-3173|(bvsub (concat ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv0 8))) (_ bv0 32))
+sqlite> select * from expressions where id=3194;
+3194|(bvadd ((_ extract 63 0) #3107) (_ bv8 64))
 ```
