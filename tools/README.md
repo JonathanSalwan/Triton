@@ -12,7 +12,7 @@ memory area which contains tainted bytes, that means there is a possible
 vulnerability.
 
 ```
-$ ../../../pin -t ./triton.so -script ./tools/format_string_bug_analysis.py -- ./samples/vulns/formatString abcd titutatatoto
+$ ./triton ./tools/format_string_bug_analysis.py ./samples/vulns/formatString abcd titutatatoto
 [+] 012 bytes tainted from the argv[2] (0x7fff367da0f9) pointer
 [+] 004 bytes tainted from the argv[1] (0x7fff367da0f4) pointer
 [+] 028 bytes tainted from the argv[0] (0x7fff367da0d7) pointer
@@ -39,12 +39,12 @@ $
 This tool maintains a free table (TF) and an allocation table (TA) which
 represents the states of pointers allocated/freed during the execution.
 When a LOAD and STORE instruction occurs, the tool checks if the memory
-access is referenced into TA or TF. 
+access is referenced into TA or TF.
 
 If the memory access is in TF -> use-after-free.
 
 ```
-$ ../../../pin -t ./triton.so -script ./tools/use_after_free_bug_and_memory_leak_analysis.py -- ./samples/vulns/testSuite
+$ ./triton ./tools/use_after_free_bug_and_memory_leak_analysis.py ./samples/vulns/testSuite
 [+] TA <- (0x1bec010, 0x20)
 [+] TA <- (0x1bec040, 0x20)
 [+] TA -> (0x1bec010, 0x20)
@@ -74,7 +74,7 @@ the access' size and the value. May be useful to track quickly some
 specific data.
 
 ```
-$ ../../../pin -t ./triton.so -script ./tools/memory_tracer.py -- ./samples/vulns/testSuite
+$ ./triton ./tools/memory_tracer.py ./samples/vulns/testSuite
 [...]
 [R:4] 0x0000004005fa: mov eax, dword ptr [rbp-0x8]      R:0x00007fff51aa7c08: 04 00 00 00 (0x4)
 [W:1] 0x000000400606: mov byte ptr [rax], 0x45          W:0x00007fff51aa7c08: 45 (0x45)
@@ -96,4 +96,35 @@ $ ../../../pin -t ./triton.so -script ./tools/memory_tracer.py -- ./samples/vuln
 [W:8] 0x7f9bdd0e7899: push rbx                          W:0x00007fff51aa7be8: 00 00 00 00 00 00 00 00 (0x0)
 [R:8] 0x7f9bdd0e78a1: mov rax, qword ptr [rsi+0x8]      R:0x000000000173b038: 31 00 00 00 00 00 00 00 (0x31)
 [...]
+```
+
+
+
+## Database generation
+
+Sometime it's useful to work offline and to apply advanced DBA
+based on a concrete trace. This tool is used to generate a database
+which will may be then loaded into several tools like IDA or may be
+used to perform more analysis. This database contains all instructions
+executed with their symbolic expressions, their memory access information
+and their registers value information.
+
+```
+$ ./triton ./tools/generate_db.py ./samples/crackmes/crackme_xor test
+[+] Database created.
+loose
+[+] Trace dumped.
+
+$ sqlite3 ./trace.db
+SQLite version 3.8.10.1 2015-05-09 12:14:55
+Enter ".help" for usage hints.
+
+sqlite> .schema
+CREATE TABLE instructions(addr INTEGER, assembly TEXT, exprs TEXT);
+CREATE TABLE expressions(id INTEGER PRIMARY KEY, expr TEXT);
+CREATE TABLE memoryAccess(addr INTEGER, accessType TEXT, accessSize INTEGER, accessAddr INTEGER, contentAsString TEXT, contentAsInteger INTEGER);
+CREATE TABLE registersValue(addr INTEGER, id INTEGER, name TEXT, size INTEGER, content INTEGER);
+
+sqlite> select * from expressions where id=3173;
+3173|(bvsub (concat ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv0 8))) (_ bv0 32))
 ```
