@@ -772,6 +772,40 @@ static PyObject *Triton_taintMem(PyObject *self, PyObject *mem)
   return Py_None;
 }
 
+static char Triton_taintMemFromAddr_doc[] = "Taints specific memory address from an address";
+static PyObject *Triton_taintMemFromAddr(PyObject *self, PyObject *args)
+{
+  PyObject *addr;
+  PyObject *mems;
+  std::list<uint64> memsList;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &addr, &mems);
+
+  /* Check if the first arg (addr) is a integer */
+  if (!PyLong_Check(addr) && !PyInt_Check(addr))
+    return PyErr_Format(PyExc_TypeError, "taintMemFromAddr(): expected an address as first argument");
+
+  /* Check if the second arg (mems) is a list */
+  if (!PyList_Check(mems))
+    return PyErr_Format(PyExc_TypeError, "taintMemFromAddr(): expected a list as second argument");
+
+  /* Check if the mems list contains only integer item and craft a std::list */
+  for (Py_ssize_t i = 0; i < PyList_Size(mems); i++){
+    PyObject *item = PyList_GetItem(mems, i);
+
+    if (!PyLong_Check(item) && !PyInt_Check(item))
+      return PyErr_Format(PyExc_TypeError, "taintMemFromAddr(): The second argument must be a list of addresses (integer)");
+
+    memsList.push_back(PyLong_AsLong(item));
+  }
+
+  /* Update taint configuration */
+  PyTritonOptions::taintMemFromAddr.insert(std::pair<uint64, std::list<uint64>>(PyLong_AsLong(addr), memsList));
+  return Py_None;
+}
+
+
 
 static char Triton_taintReg_doc[] = "Taints a register";
 static PyObject *Triton_taintReg(PyObject *self, PyObject *reg)
@@ -818,6 +852,8 @@ static PyObject *Triton_taintRegFromAddr(PyObject *self, PyObject *args)
 }
 
 
+
+
 static char Triton_takeSnapshot_doc[] = "Takes a snapshot of the registers states and memory";
 static PyObject *Triton_takeSnapshot(PyObject *self, PyObject *noarg)
 {
@@ -835,6 +871,41 @@ static PyObject *Triton_untaintMem(PyObject *self, PyObject *mem)
   ap.untaintMem(PyInt_AsLong(mem));
   return Py_None;
 }
+
+static char Triton_untaintMemFromAddr_doc[] = "Untaints specific memory addresses from an address";
+static PyObject *Triton_untaintMemFromAddr(PyObject *self, PyObject *args)
+{
+  PyObject *addr;
+  PyObject *mems;
+  std::list<uint64> memsList;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &addr, &mems);
+
+  /* Check if the first arg (addr) is a integer */
+  if (!PyLong_Check(addr) && !PyInt_Check(addr))
+    return PyErr_Format(PyExc_TypeError, "untaintMemFromAddr(): expected an address as first argument");
+
+  /* Check if the second arg (mems) is a list */
+  if (!PyList_Check(mems))
+    return PyErr_Format(PyExc_TypeError, "untaintMemFromAddr(): expected a list as second argument");
+
+  /* Check if the mems list contains only integer item and craft a std::list */
+  for (Py_ssize_t i = 0; i < PyList_Size(mems); i++){
+    PyObject *item = PyList_GetItem(mems, i);
+
+    if (!PyLong_Check(item) && !PyInt_Check(item))
+      return PyErr_Format(PyExc_TypeError, "untaintMemFromAddr(): The second argument must be a list of register id (integer)");
+
+    memsList.push_back(PyLong_AsLong(item));
+  }
+
+  /* Update taint configuration */
+  PyTritonOptions::untaintMemFromAddr.insert(std::pair<uint64, std::list<uint64>>(PyLong_AsLong(addr), memsList));
+
+  return Py_None;
+}
+
 
 
 static char Triton_untaintReg_doc[] = "Untaints a register";
@@ -883,6 +954,8 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
 }
 
 
+
+
 PyMethodDef tritonCallbacks[] = {
   {"addCallback",               Triton_addCallback,               METH_VARARGS, Triton_addCallback_doc},
   {"checkReadAccess",           Triton_checkReadAccess,           METH_O,       Triton_checkReadAccess_doc},
@@ -924,10 +997,12 @@ PyMethodDef tritonCallbacks[] = {
   {"stopAnalysisFromAddr",      Triton_stopAnalysisFromAddr,      METH_O,       Triton_stopAnalysisFromAddr_doc},
   {"syscallToString",           Triton_syscallToString,           METH_VARARGS, Triton_syscallToString_doc},
   {"taintMem",                  Triton_taintMem,                  METH_O,       Triton_taintMem_doc},
+  {"taintMemFromAddr",          Triton_taintMemFromAddr,          METH_VARARGS, Triton_taintMemFromAddr_doc},
   {"taintReg",                  Triton_taintReg,                  METH_O,       Triton_taintReg_doc},
   {"taintRegFromAddr",          Triton_taintRegFromAddr,          METH_VARARGS, Triton_taintRegFromAddr_doc},
   {"takeSnapshot",              Triton_takeSnapshot,              METH_NOARGS,  Triton_takeSnapshot_doc},
   {"untaintMem",                Triton_untaintMem,                METH_O,       Triton_untaintMem_doc},
+  {"untaintMemFromAddr",        Triton_untaintMemFromAddr,        METH_VARARGS, Triton_untaintMemFromAddr_doc},
   {"untaintReg",                Triton_untaintReg,                METH_O,       Triton_untaintReg_doc},
   {"untaintRegFromAddr",        Triton_untaintRegFromAddr,        METH_VARARGS, Triton_untaintRegFromAddr_doc},
   {nullptr,                     nullptr,                          0,            nullptr}
