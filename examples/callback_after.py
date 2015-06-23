@@ -145,7 +145,6 @@
 
 from triton import *
 
-
 # A callback must be a function with one argument. This argument is
 # always the Instruction class and contains all information
 def my_callback_after(instruction):

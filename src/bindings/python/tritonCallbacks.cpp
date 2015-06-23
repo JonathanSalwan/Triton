@@ -344,11 +344,21 @@ static PyObject *Triton_getPathConstraints(PyObject *self, PyObject *noargs)
 }
 
 
+static char Triton_getRegName_doc[] = "Gets the register name";
+static PyObject *Triton_getRegName(PyObject *self, PyObject *reg)
+{
+  if (!PyLong_Check(reg) && !PyInt_Check(reg))
+    return PyErr_Format(PyExc_TypeError, "getRegName(): expected a register id (integer) as argument");
+
+  return Py_BuildValue("s", PINConverter::getRegisterName(PyLong_AsLong(reg)).c_str());
+}
+
+
 static char Triton_getRegSymbolicID_doc[] = "Gets the symbolic register reference";
 static PyObject *Triton_getRegSymbolicID(PyObject *self, PyObject *reg)
 {
   if (!PyLong_Check(reg) && !PyInt_Check(reg))
-    return PyErr_Format(PyExc_TypeError, "getMemSymbolicID(): expected a register id (integer) as argument");
+    return PyErr_Format(PyExc_TypeError, "getRegSymbolicID(): expected a register id (integer) as argument");
 
   return Py_BuildValue("k", ap.getRegSymbolicID(PyLong_AsLong(reg)));
 }
@@ -889,6 +899,7 @@ PyMethodDef tritonCallbacks[] = {
   {"getMemValue",               Triton_getMemValue,               METH_VARARGS, Triton_getMemValue_doc},
   {"getModel",                  Triton_getModel,                  METH_O,       Triton_getModel_doc},
   {"getPathConstraints",        Triton_getPathConstraints,        METH_NOARGS,  Triton_getPathConstraints_doc},
+  {"getRegName",                Triton_getRegName,                METH_O,       Triton_getRegName_doc},
   {"getRegSymbolicID",          Triton_getRegSymbolicID,          METH_O,       Triton_getRegSymbolicID_doc},
   {"getRegValue",               Triton_getRegValue,               METH_O,       Triton_getRegValue_doc},
   {"getStats",                  Triton_getStats,                  METH_NOARGS,  Triton_getStats_doc},
