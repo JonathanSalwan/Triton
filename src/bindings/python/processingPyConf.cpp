@@ -32,6 +32,19 @@ void ProcessingPyConf::stopAnalysisFromAddr(IRBuilder *irb)
     this->analysisTrigger->update(false);
 }
 
+void ProcessingPyConf::taintMemFromAddr(IRBuilder *irb)
+{
+  // Apply this bindings only if the analysis is enable
+  if (!this->analysisTrigger->getState())
+    return;
+
+  // Check if there is memory tainted via the python bindings
+  std::list<uint64> memsTainted = PyTritonOptions::taintMemFromAddr[irb->getAddress()];
+  std::list<uint64>::iterator it = memsTainted.begin();
+  for ( ; it != memsTainted.end(); it++)
+    this->ap->taintMem(*it);
+}
+
 
 void ProcessingPyConf::taintRegFromAddr(IRBuilder *irb)
 {
@@ -46,6 +59,19 @@ void ProcessingPyConf::taintRegFromAddr(IRBuilder *irb)
     this->ap->taintReg(*it);
 }
 
+
+void ProcessingPyConf::untaintMemFromAddr(IRBuilder *irb)
+{
+  // Apply this bindings only if the analysis is enable
+  if (!this->analysisTrigger->getState())
+    return;
+
+  // Check if there is memories untainted via the python bindings
+  std::list<uint64> memsUntainted = PyTritonOptions::untaintMemFromAddr[irb->getAddress()];
+  std::list<uint64>::iterator it = memsUntainted.begin();
+  for ( ; it != memsUntainted.end(); it++)
+    this->ap->untaintMem(*it);
+}
 
 void ProcessingPyConf::untaintRegFromAddr(IRBuilder *irb)
 {
@@ -196,7 +222,9 @@ void ProcessingPyConf::applyConfBeforeProcessing(IRBuilder *irb)
 {
   this->startAnalysisFromAddr(irb);
   this->stopAnalysisFromAddr(irb);
+  this->taintMemFromAddr(irb);
   this->taintRegFromAddr(irb);
+  this->untaintMemFromAddr(irb);
   this->untaintRegFromAddr(irb);
 }
 

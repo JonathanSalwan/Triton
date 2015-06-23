@@ -33,7 +33,9 @@ class ProcessingPyConf
     void startAnalysisFromAddr(IRBuilder *irb);
     void stopAnalysisFromAddr(IRBuilder *irb);
 
+    void taintMemFromAddr(IRBuilder *irb);
     void taintRegFromAddr(IRBuilder *irb);
+    void untaintMemFromAddr(IRBuilder *irb);
     void untaintRegFromAddr(IRBuilder *irb);
 };
 
