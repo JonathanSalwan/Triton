@@ -178,7 +178,6 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
   if (!PyString_Check(varComment))
       return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): expected a comment (string) as third argument");
 
-
   ei = PyLong_AsLong(exprId);
   vs = PyLong_AsLong(symVarSize);
   vc = PyString_AsString(varComment);
