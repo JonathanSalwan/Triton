@@ -394,6 +394,30 @@ TaintEngine &AnalysisProcessor::getTaintEngine(void)
 }
 
 
+void AnalysisProcessor::assignmentSpreadTaintExprMem(SymbolicElement *se, uint64 memSrc, uint32 readSize)
+{
+  se->isTainted = this->taintEngine.assignmentSpreadTaintExprMem(memSrc, readSize);
+}
+
+
+void AnalysisProcessor::assignmentSpreadTaintExprReg(SymbolicElement *se, uint64 regSrc)
+{
+  se->isTainted = this->taintEngine.assignmentSpreadTaintExprReg(regSrc);
+}
+
+
+void AnalysisProcessor::assignmentSpreadTaintExprRegMem(SymbolicElement *se, uint64 regSrc, uint64 memSrc, uint32 readSize)
+{
+  se->isTainted = this->taintEngine.assignmentSpreadTaintExprRegMem(regSrc, memSrc, readSize);
+}
+
+
+void AnalysisProcessor::assignmentSpreadTaintExprRegReg(SymbolicElement *se, uint64 regSrc1, uint64 regSrc2)
+{
+  se->isTainted = this->taintEngine.assignmentSpreadTaintExprRegReg(regSrc1, regSrc2);
+}
+
+
 void AnalysisProcessor::assignmentSpreadTaintRegReg(SymbolicElement *se, uint64 regDst, uint64 regSrc)
 {
   se->isTainted = this->taintEngine.assignmentSpreadTaintRegReg(regDst, regSrc);

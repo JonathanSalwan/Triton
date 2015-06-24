@@ -52,11 +52,15 @@ class TaintEngine {
     bool        aluSpreadTaintMemMem(uint64 memDst, uint64 memSrc, uint32 writeSize);
 
     /* Assignment Spreading */
+    bool        assignmentSpreadTaintExprMem(uint64 memSrc, uint32 readSize);
+    bool        assignmentSpreadTaintExprReg(uint64 regSrc);
+    bool        assignmentSpreadTaintExprRegMem(uint64 regSrc, uint64 memSrc, uint32 readSize);
+    bool        assignmentSpreadTaintExprRegReg(uint64 regSrc1, uint64 regSrc2);
     bool        assignmentSpreadTaintMemImm(uint64 memDst, uint32 writeSize);
+    bool        assignmentSpreadTaintMemMem(uint64 memDst, uint64 memSrc, uint32 readSize);
     bool        assignmentSpreadTaintMemReg(uint64 memDst, uint64 regSrc, uint32 writeSize);
     bool        assignmentSpreadTaintRegImm(uint64 regDst);
     bool        assignmentSpreadTaintRegMem(uint64 regDst, uint64 memSrc, uint32 readSize);
-    bool        assignmentSpreadTaintMemMem(uint64 memDst, uint64 memSrc, uint32 readSize);
     bool        assignmentSpreadTaintRegReg(uint64 regDst, uint64 regSrc);
 
     TaintEngine();

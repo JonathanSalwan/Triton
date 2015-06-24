@@ -8,12 +8,12 @@
 #include <SymbolicElement.h>
 
 
-// Compares the first source operand with the second source operand 
-// and sets the status flags in the EFLAGS register according to the 
-// results. The comparison is performed by subtracting the second 
+// Compares the first source operand with the second source operan
+// and sets the status flags in the EFLAGS register according to the
+// results. The comparison is performed by subtracting the second
 // operand from the first operand and then setting the status flags 
-// in the same manner as the SUB instruction. When an immediate value 
-// is used as an operand, it is sign-extended to the length of the 
+// in the same manner as the SUB instruction. When an immediate value
+// is used as an operand, it is sign-extended to the length of the
 // first operand.
 
 
@@ -38,6 +38,9 @@ void CmpIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the symbolic element */
   se = ap.createSE(inst, expr, "Temporary Compare");
+
+  /* Apply the taint */
+  ap.assignmentSpreadTaintExprReg(se, reg);
 
   /* Add the symbolic flags element to the current inst */
   EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
@@ -67,6 +70,9 @@ void CmpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the symbolic element */
   se = ap.createSE(inst, expr, "Temporary Compare");
 
+  /* Apply the taint */
+  ap.assignmentSpreadTaintExprRegReg(se, reg1, reg2);
+
   /* Add the symbolic flags element to the current inst */
   EflagsBuilder::af(inst, se, ap, regSize1, op1, op2);
   EflagsBuilder::cfSub(inst, se, ap, op1, op2);
@@ -95,6 +101,9 @@ void CmpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the symbolic element */
   se = ap.createSE(inst, expr);
 
+  /* Apply the taint */
+  ap.assignmentSpreadTaintExprRegMem(se, reg, mem, readSize);
+
   /* Add the symbolic flags element to the current inst */
   EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
   EflagsBuilder::cfSub(inst, se, ap, op1, op2);
@@ -108,13 +117,13 @@ void CmpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 void CmpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint32            writeSize = this->operands[0].getSize();
+  uint32            readSize  = this->operands[0].getSize();
   uint64            mem       = this->operands[0].getValue();
   uint64            imm       = this->operands[1].getValue();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicMemOperand(mem, writeSize);
-  op2 << smt2lib::bv(imm, writeSize * REG_SIZE);
+  op1 << ap.buildSymbolicMemOperand(mem, readSize);
+  op2 << smt2lib::bv(imm, readSize * REG_SIZE);
 
   /* Final expr */
   expr << smt2lib::bvsub(op1.str(), op2.str());
@@ -122,26 +131,29 @@ void CmpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the symbolic element */
   se = ap.createSE(inst, expr);
 
+  /* Apply the taint */
+  ap.assignmentSpreadTaintExprMem(se, mem, readSize);
+
   /* Add the symbolic flags element to the current inst */
-  EflagsBuilder::af(inst, se, ap, writeSize, op1, op2);
+  EflagsBuilder::af(inst, se, ap, readSize, op1, op2);
   EflagsBuilder::cfSub(inst, se, ap, op1, op2);
-  EflagsBuilder::ofSub(inst, se, ap, writeSize, op1, op2);
+  EflagsBuilder::ofSub(inst, se, ap, readSize, op1, op2);
   EflagsBuilder::pf(inst, se, ap);
-  EflagsBuilder::sf(inst, se, ap, writeSize);
-  EflagsBuilder::zf(inst, se, ap, writeSize);
+  EflagsBuilder::sf(inst, se, ap, readSize);
+  EflagsBuilder::zf(inst, se, ap, readSize);
 }
 
 
 void CmpIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicElement   *se;
   std::stringstream expr, op1, op2;
-  uint32            writeSize = this->operands[0].getSize();
+  uint32            readSize  = this->operands[0].getSize();
   uint64            mem       = this->operands[0].getValue();
   uint64            reg       = this->operands[1].getValue();
   uint32            regSize   = this->operands[1].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicMemOperand(mem, writeSize);
+  op1 << ap.buildSymbolicMemOperand(mem, readSize);
   op2 << ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Final expr */
@@ -150,13 +162,16 @@ void CmpIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the symbolic element */
   se = ap.createSE(inst, expr);
 
+  /* Apply the taint */
+  ap.assignmentSpreadTaintExprRegMem(se, reg, mem, readSize);
+
   /* Add the symbolic flags element to the current inst */
-  EflagsBuilder::af(inst, se, ap, writeSize, op1, op2);
+  EflagsBuilder::af(inst, se, ap, readSize, op1, op2);
   EflagsBuilder::cfSub(inst, se, ap, op1, op2);
-  EflagsBuilder::ofSub(inst, se, ap, writeSize, op1, op2);
+  EflagsBuilder::ofSub(inst, se, ap, readSize, op1, op2);
   EflagsBuilder::pf(inst, se, ap);
-  EflagsBuilder::sf(inst, se, ap, writeSize);
-  EflagsBuilder::zf(inst, se, ap, writeSize);
+  EflagsBuilder::sf(inst, se, ap, readSize);
+  EflagsBuilder::zf(inst, se, ap, readSize);
 }
 
 

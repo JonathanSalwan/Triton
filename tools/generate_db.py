@@ -63,7 +63,7 @@ def before(instruction):
     seId = [se.id for se in instruction.symbolicElements]
     cursor.execute("INSERT INTO instructions VALUES (%d, '%s', '%s')" %(addr, asm, str(seId)[1:-1].replace(',','')))
     for se in instruction.symbolicElements:
-        cursor.execute("INSERT INTO expressions VALUES (%d, '%s')" %(se.id, se.source))
+        cursor.execute("INSERT INTO expressions VALUES (%d, '%s', %d)" %(se.id, se.source, se.isTainted))
 
     # Dump registers value
     for operand in instruction.operands:
@@ -87,7 +87,7 @@ def buildDb():
     # Instructions information
     cursor.execute("CREATE TABLE IF NOT EXISTS instructions(addr INTEGER, assembly TEXT, exprs TEXT)")
     # Symbolic expression information
-    cursor.execute("CREATE TABLE IF NOT EXISTS expressions(id INTEGER PRIMARY KEY, expr TEXT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS expressions(id INTEGER PRIMARY KEY, expr TEXT, tainted BOOL)")
     # Memory access (LOAD / STORE) information
     cursor.execute("CREATE TABLE IF NOT EXISTS memoryAccess(addr INTEGER, accessType TEXT, accessSize INTEGER, accessAddr INTEGER, contentAsString TEXT, contentAsInteger INTEGER)")
     # Registers values information
