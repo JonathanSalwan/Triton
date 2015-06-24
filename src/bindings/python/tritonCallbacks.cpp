@@ -194,7 +194,7 @@ static PyObject *Triton_convertMemToSymVar(PyObject *self, PyObject *args)
 {
   PyObject *memAddr, *symVarSize, *varComment = nullptr;
   uint64 vs, ma;
-  const char* vc;
+  std::string vc;
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "O|O|O", &memAddr, &symVarSize, &varComment);
@@ -227,7 +227,7 @@ static PyObject *Triton_convertRegToSymVar(PyObject *self, PyObject *args)
 {
   PyObject *regId, *symVarSize, *varComment = nullptr;
   uint64 vs, ri;
-  char *vc;
+  std::string vc;
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "O|O|O", &regId, &symVarSize, &varComment);
@@ -796,21 +796,19 @@ static PyObject *Triton_syscallToString(PyObject *self, PyObject *args)
   if (!PyLong_Check(num) && !PyInt_Check(num))
     return PyErr_Format(PyExc_TypeError, "syscallToString(): expected a syscall number (integer) as second argument");
 
-  const char *s = nullptr;
-  std::stringstream syscall("");
+  const char *syscall = nullptr;
   switch (PyLong_AsLong(std)){
     case SYSCALL_STANDARD_IA32E_LINUX:
-      s = syscallNumberLinux64ToString(PyLong_AsLong(num));
+      syscall = syscallNumberLinux64ToString(PyLong_AsLong(num));
       break;
     default:
       return PyErr_Format(PyExc_TypeError, "syscallToString(): IDREF.SYSCALL standard unsupported");
   }
 
-  if (s == nullptr)
+  if (syscall == nullptr)
     return PyErr_Format(PyExc_TypeError, "syscallToString(): IDREF.SYSCALL number unsupported");
 
-  syscall.str(s);
-  return Py_BuildValue("s", syscall.str().c_str());
+  return Py_BuildValue("s", syscall);
 }
 
 
