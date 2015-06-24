@@ -49,6 +49,7 @@ PyObject *PySymbolicElement(SymbolicElement *element)
  * - kindValue (IDREG.REG or integer, it depends of the kind)
  * - name (string)
  * - size (integer)
+ * - comment(string)
  */
 PyObject *PySymbolicVariable(SymbolicVariable *symVar)
 {
@@ -58,6 +59,8 @@ PyObject *PySymbolicVariable(SymbolicVariable *symVar)
   PyDict_SetItemString(dictSVClass, "kindValue", PyInt_FromLong(symVar->getSymVarKindValue()));
   PyDict_SetItemString(dictSVClass, "name",      PyString_FromFormat("%s", symVar->getSymVarName().c_str()));
   PyDict_SetItemString(dictSVClass, "size",      PyInt_FromLong(symVar->getSymVarSize()));
+  PyDict_SetItemString(dictSVClass, "comment",   PyString_FromFormat("%s", symVar->getSymVarComment().c_str()));
+
 
   PyObject *SVClassName = xPyString_FromString("SymbolicVariable");
   PyObject *SVClass = xPyClass_New(nullptr, dictSVClass, SVClassName);

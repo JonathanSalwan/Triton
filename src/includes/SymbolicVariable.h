@@ -30,10 +30,11 @@ class SymbolicVariable {
     uint64        symVarId;
     uint64        symVarKindValue;
     uint64        symVarSize;
+    std::string   symVarComment;
 
   public:
 
-    SymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 id, uint64 size);
+    SymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 id, uint64 size, std::string comment);
     SymbolicVariable(const SymbolicVariable &copy);
     ~SymbolicVariable();
 
@@ -42,6 +43,7 @@ class SymbolicVariable {
     uint64        getSymVarId(void);
     uint64        getSymVarKindValue(void);
     uint64        getSymVarSize(void);
+    std::string   getSymVarComment(void);
 
 };
 

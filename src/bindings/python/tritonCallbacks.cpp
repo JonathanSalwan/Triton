@@ -159,11 +159,15 @@ static PyObject *Triton_concretizeReg(PyObject *self, PyObject *regId)
 static char Triton_convertExprToSymVar_doc[] = "Converts an expression to a symbolic variable";
 static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
 {
-  PyObject *exprId, *symVarSize;
+  PyObject *exprId, *symVarSize, *varComment = nullptr;
   uint64 vs, ei;
+  std::string vc;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &exprId, &symVarSize);
+  PyArg_ParseTuple(args, "O|O|O", &exprId, &symVarSize, &varComment);
+
+  if (varComment == nullptr)
+    varComment = PyString_FromString("");
 
   if (!PyLong_Check(exprId) && !PyInt_Check(exprId))
     return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): expected an integer as first argument");
@@ -171,24 +175,32 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
   if (!PyLong_Check(symVarSize) && !PyInt_Check(symVarSize))
     return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): expected an integer as second argument");
 
+  if (!PyString_Check(varComment))
+      return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): expected a comment (string) as third argument");
+
   ei = PyLong_AsLong(exprId);
   vs = PyLong_AsLong(symVarSize);
+  vc = PyString_AsString(varComment);
 
   if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
     return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
-  return Py_BuildValue("k", ap.convertExprToSymVar(ei, vs));
+  return Py_BuildValue("k", ap.convertExprToSymVar(ei, vs, vc));
 }
 
 
 static char Triton_convertMemToSymVar_doc[] = "Converts a memory address to a symbolic variable";
 static PyObject *Triton_convertMemToSymVar(PyObject *self, PyObject *args)
 {
-  PyObject *memAddr, *symVarSize;
+  PyObject *memAddr, *symVarSize, *varComment = nullptr;
   uint64 vs, ma;
+  const char* vc;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &memAddr, &symVarSize);
+  PyArg_ParseTuple(args, "O|O|O", &memAddr, &symVarSize, &varComment);
+
+  if (varComment == nullptr)
+    varComment = PyString_FromString("");
 
   if (!PyLong_Check(memAddr) && !PyInt_Check(memAddr))
     return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): expected a memory address as first argument");
@@ -196,24 +208,32 @@ static PyObject *Triton_convertMemToSymVar(PyObject *self, PyObject *args)
   if (!PyLong_Check(symVarSize) && !PyInt_Check(symVarSize))
     return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): expected a size as second argument");
 
+  if (!PyString_Check(varComment))
+      return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): expected a comment (string) as third argument");
+
   ma = PyLong_AsLong(memAddr);
   vs = PyLong_AsLong(symVarSize);
+  vc = PyString_AsString(varComment);
 
   if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
     return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
-  return Py_BuildValue("k", ap.convertMemToSymVar(ma, vs));
+  return Py_BuildValue("k", ap.convertMemToSymVar(ma, vs, vc));
 }
 
 
 static char Triton_convertRegToSymVar_doc[] = "Converts a register to a symbolic variable";
 static PyObject *Triton_convertRegToSymVar(PyObject *self, PyObject *args)
 {
-  PyObject *regId, *symVarSize;
+  PyObject *regId, *symVarSize, *varComment = nullptr;
   uint64 vs, ri;
+  char *vc;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &regId, &symVarSize);
+  PyArg_ParseTuple(args, "O|O|O", &regId, &symVarSize, &varComment);
+
+  if (varComment == nullptr)
+    varComment = PyString_FromString("");
 
   if (!PyLong_Check(regId) && !PyInt_Check(regId))
     return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): expected a IDREF.REG as first argument");
@@ -221,13 +241,17 @@ static PyObject *Triton_convertRegToSymVar(PyObject *self, PyObject *args)
   if (!PyLong_Check(symVarSize) && !PyInt_Check(symVarSize))
     return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): expected a size as second argument");
 
+  if (!PyString_Check(varComment))
+      return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): expected a comment (string) as third argument");
+
   ri = PyLong_AsLong(regId);
   vs = PyLong_AsLong(symVarSize);
+  vc = PyString_AsString(varComment);
 
   if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
     return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
-  return Py_BuildValue("k", ap.convertRegToSymVar(ri, vs));
+  return Py_BuildValue("k", ap.convertRegToSymVar(ri, vs, vc));
 }
 
 

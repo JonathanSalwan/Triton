@@ -243,7 +243,7 @@ std::string SymbolicEngine::getVariablesDeclaration(void)
  * convertExprToSymVar(43, 8)
  * #43 = SymVar_4
  */
-uint64 SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symVarSize)
+uint64 SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symVarSize, std::string symVarComment)
 {
   SymbolicVariable   *symVar  = nullptr;
   SymbolicElement    *element = this->getElementFromId(exprId);
@@ -255,7 +255,7 @@ uint64 SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symVarSize)
   if (symVarSize != BYTE_SIZE && symVarSize != WORD_SIZE && symVarSize != DWORD_SIZE && symVarSize != QWORD_SIZE && symVarSize != DQWORD_SIZE)
     throw std::runtime_error("SymbolicEngine::convertExprToSymVar() - Invalid symVarSize");
 
-  symVar = this->addSymbolicVariable(SymVar::kind::UNDEF, 0, symVarSize);
+  symVar = this->addSymbolicVariable(SymVar::kind::UNDEF, 0, symVarSize, symVarComment);
 
   newExpr << symVar->getSymVarName();
   element->setSrcExpr(newExpr);
@@ -264,7 +264,7 @@ uint64 SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symVarSize)
 }
 
 
-uint64 SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize)
+uint64 SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment)
 {
   SymbolicVariable   *symVar  = nullptr;
   SymbolicElement    *element = nullptr;
@@ -283,7 +283,7 @@ uint64 SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize)
   if (symVarSize != BYTE_SIZE && symVarSize != WORD_SIZE && symVarSize != DWORD_SIZE && symVarSize != QWORD_SIZE && symVarSize != DQWORD_SIZE)
     throw std::runtime_error("SymbolicEngine::convertMemToSymVar() - Invalid symVarSize");
 
-  symVar = this->addSymbolicVariable(SymVar::kind::MEM, memAddr, symVarSize);
+  symVar = this->addSymbolicVariable(SymVar::kind::MEM, memAddr, symVarSize, symVarComment);
 
   newExpr << symVar->getSymVarName();
   element->setSrcExpr(newExpr);
@@ -292,7 +292,7 @@ uint64 SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize)
 }
 
 
-uint64 SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVarSize)
+uint64 SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVarSize, std::string symVarComment)
 {
   SymbolicVariable   *symVar  = nullptr;
   SymbolicElement    *element = nullptr;
@@ -314,7 +314,7 @@ uint64 SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVarSize)
   if (symVarSize != BYTE_SIZE && symVarSize != WORD_SIZE && symVarSize != DWORD_SIZE && symVarSize != QWORD_SIZE && symVarSize != DQWORD_SIZE)
     throw std::runtime_error("SymbolicEngine::convertRegToSymVar() - Invalid symVarSize");
 
-  symVar = this->addSymbolicVariable(SymVar::kind::REG, regId, symVarSize);
+  symVar = this->addSymbolicVariable(SymVar::kind::REG, regId, symVarSize, symVarComment);
 
   newExpr << symVar->getSymVarName();
   element->setSrcExpr(newExpr);
@@ -324,10 +324,10 @@ uint64 SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVarSize)
 
 
 /* Add a new symbolic variable */
-SymbolicVariable *SymbolicEngine::addSymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 size)
+SymbolicVariable *SymbolicEngine::addSymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 size, std::string comment)
 {
   uint64 uniqueID = this->symbolicVariables.size();
-  SymbolicVariable *symVar = new SymbolicVariable(kind, kindValue, uniqueID, size);
+  SymbolicVariable *symVar = new SymbolicVariable(kind, kindValue, uniqueID, size, comment);
 
   if (symVar == nullptr)
     throw std::runtime_error("SymbolicEngine::addSymbolicVariable() - Cannot allocate a new symbolic variable");
