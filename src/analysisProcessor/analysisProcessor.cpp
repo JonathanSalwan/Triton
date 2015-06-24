@@ -242,21 +242,21 @@ std::string AnalysisProcessor::getBacktrackedExpressionFromId(uint64 id)
 }
 
 
-uint64 AnalysisProcessor::convertExprToSymVar(uint64 exprId, uint64 symVarSize)
+uint64 AnalysisProcessor::convertExprToSymVar(uint64 exprId, uint64 symVarSize, std::string symVarComment)
 {
-  return this->symEngine.convertExprToSymVar(exprId, symVarSize);
+  return this->symEngine.convertExprToSymVar(exprId, symVarSize, symVarComment);
 }
 
 
-uint64 AnalysisProcessor::convertMemToSymVar(uint64 memAddr, uint64 symVarSize)
+uint64 AnalysisProcessor::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment)
 {
-  return this->symEngine.convertMemToSymVar(memAddr, symVarSize);
+  return this->symEngine.convertMemToSymVar(memAddr, symVarSize, symVarComment);
 }
 
 
-uint64 AnalysisProcessor::convertRegToSymVar(uint64 regId, uint64 symVarSize)
+uint64 AnalysisProcessor::convertRegToSymVar(uint64 regId, uint64 symVarSize, std::string symVarComment)
 {
-  return this->symEngine.convertRegToSymVar(regId, symVarSize);
+  return this->symEngine.convertRegToSymVar(regId, symVarSize, symVarComment);
 }
 
 

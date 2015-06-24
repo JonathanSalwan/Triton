@@ -5,13 +5,15 @@
 SymbolicVariable::SymbolicVariable(SymVar::kind kind,
                                    uint64 kindValue,
                                    uint64 id,
-                                   uint64 size)
+                                   uint64 size,
+                                   std::string comment)
 {
   this->symVarId        = id;
   this->symVarKind      = kind;
   this->symVarKindValue = kindValue;
   this->symVarName      = SYMVAR_NAME + std::to_string(id);
   this->symVarSize      = size;
+  this->symVarComment   = comment;
 }
 
 
@@ -22,6 +24,7 @@ SymbolicVariable::SymbolicVariable(const SymbolicVariable &copy)
   this->symVarKindValue = copy.symVarKindValue;
   this->symVarName      = copy.symVarName;
   this->symVarSize      = copy.symVarSize;
+  this->symVarComment   = copy.symVarComment;
 }
 
 
@@ -59,4 +62,7 @@ uint64 SymbolicVariable::getSymVarSize(void)
   return this->symVarSize;
 }
 
-
+std::string SymbolicVariable::getSymVarComment(void)
+{
+  return this->symVarComment;
+}
