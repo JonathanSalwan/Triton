@@ -428,6 +428,34 @@ static PyObject *Triton_getFlagValue(PyObject *self, PyObject *flag)
 }
 
 
+static char Triton_getRegs_doc[] = "Returns informations about all registers";
+static PyObject *Triton_getRegs(PyObject *self, PyObject *noargs)
+{
+  PyObject *regs = xPyDict_New();
+
+  /* Build all Registers */
+  for (uint64 regId = ID_RAX; regId < ID_RFLAGS; regId++){
+    PyObject *reg = xPyDict_New();
+    if (regId >= ID_XMM0 && regId <= ID_XMM15)
+      PyDict_SetItemString(reg, "concreteValue", uint128ToPyLongObject(ap.getSSERegisterValue(regId)));
+    else
+      PyDict_SetItemString(reg, "concreteValue", Py_BuildValue("k", ap.getRegisterValue(regId)));
+    PyDict_SetItemString(reg, "symbolicExpr", Py_BuildValue("k", ap.getRegSymbolicID(regId)));
+    PyDict_SetItem(regs, Py_BuildValue("k", regId), reg);
+  }
+
+  /* Build all Flags */
+  for (uint64 flagId = ID_AF; flagId <= ID_ZF; flagId++){
+    PyObject *flag = xPyDict_New();
+    PyDict_SetItemString(flag, "concreteValue", Py_BuildValue("k", ap.getFlagValue(flagId)));
+    PyDict_SetItemString(flag, "symbolicExpr", Py_BuildValue("k", ap.getRegSymbolicID(flagId)));
+    PyDict_SetItem(regs, Py_BuildValue("k", flagId), flag);
+  }
+
+  return regs;
+}
+
+
 static char Triton_getStats_doc[] = "Returns statistics of the execution";
 static PyObject *Triton_getStats(PyObject *self, PyObject *noargs)
 {
@@ -1000,6 +1028,7 @@ PyMethodDef tritonCallbacks[] = {
   {"getRegName",                Triton_getRegName,                METH_O,       Triton_getRegName_doc},
   {"getRegSymbolicID",          Triton_getRegSymbolicID,          METH_O,       Triton_getRegSymbolicID_doc},
   {"getRegValue",               Triton_getRegValue,               METH_O,       Triton_getRegValue_doc},
+  {"getRegs",                   Triton_getRegs,                   METH_NOARGS,  Triton_getRegs_doc},
   {"getStats",                  Triton_getStats,                  METH_NOARGS,  Triton_getStats_doc},
   {"getSymExpr",                Triton_getSymExpr,                METH_O,       Triton_getSymExpr_doc},
   {"getSymVar",                 Triton_getSymVar,                 METH_O,       Triton_getSymVar_doc},
