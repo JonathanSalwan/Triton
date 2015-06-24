@@ -174,6 +174,53 @@ bool TaintEngine::assignmentSpreadTaintMemMem(uint64 memDst, uint64 memSrc, uint
   return isTainted;
 }
 
+
+/*
+ * Returns True if the memory is tainted.
+ */
+bool TaintEngine::assignmentSpreadTaintExprMem(uint64 memSrc, uint32 readSize)
+{
+  for (uint64 offset = 0; offset != readSize; offset++){
+    if (this->isMemTainted(memSrc+offset)){
+      return TAINTED;
+    }
+  }
+  return !TAINTED;
+}
+
+
+/*
+ * If the reg is tainted, we returns true to taint the SE.
+ */
+bool TaintEngine::assignmentSpreadTaintExprReg(uint64 regSrc)
+{
+  return this->isRegTainted(regSrc);
+}
+
+
+/*
+ * If the reg1 or mem are tainted, we returns true to taint the SE.
+ */
+bool TaintEngine::assignmentSpreadTaintExprRegMem(uint64 regSrc, uint64 memSrc, uint32 readSize)
+{
+  for (uint64 offset = 0; offset != readSize; offset++){
+    if (this->isMemTainted(memSrc+offset)){
+      return TAINTED;
+    }
+  }
+  return this->isRegTainted(regSrc);
+}
+
+
+/*
+ * If the reg1 or reg2 are tainted, we returns true to taint the SE.
+ */
+bool TaintEngine::assignmentSpreadTaintExprRegReg(uint64 regSrc1, uint64 regSrc2)
+{
+  return this->isRegTainted(regSrc1) | this->isRegTainted(regSrc2);
+}
+
+
 /*
  * Untaint the memDst.
  * Returns false.

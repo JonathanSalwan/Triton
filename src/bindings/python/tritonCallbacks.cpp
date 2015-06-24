@@ -16,7 +16,7 @@
 extern AnalysisProcessor ap;
 
 
-/* NameSapce for all Python Bindings variables */
+/* NameSpace for all Python Bindings variables */
 namespace PyTritonOptions {
   /* Execution configurations */
   char              *startAnalysisFromSymbol = nullptr;
