@@ -35,7 +35,7 @@ please, **don't blame us** if it is not yet reliable. [Open issues](https://gith
 
 ### Blog post
 
-* [Triton hunder the hood - First approach with the framework](http://blog.quarkslab.com/triton-under-the-hood.html)
+* [Triton under the hood - First approach with the framework](http://blog.quarkslab.com/triton-under-the-hood.html)
 
 ### Extra information
 
