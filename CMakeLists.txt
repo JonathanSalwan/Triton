@@ -8,7 +8,7 @@ file(WRITE ${CMAKE_SOURCE_DIR}/.build_number ${NEW_BUILD_NUMBER})
 
 # Triton version
 set(VERSION_MAJOR 0)
-set(VERSION_MINOR 0)
+set(VERSION_MINOR 1)
 set(VERSION_BUILD ${BUILD_NUMBER})
 
 set(CMAKE_BUILD_TYPE Release)
