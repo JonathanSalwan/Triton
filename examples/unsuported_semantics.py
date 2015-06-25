@@ -12,9 +12,9 @@ def cbefore(instruction):
     if len(instruction.symbolicElements) == 0:
         mnemonic = opcodeToString(instruction.opcode)
         if mnemonic in unsuportedSemantics:
-            unsuportedSemantics[mnemonic] += 1
+            unsuportedSemantics[mnemonic][1] += 1
         else:
-            unsuportedSemantics.update({mnemonic: 1})
+            unsuportedSemantics.update({mnemonic: [instruction.address,1]})
     return
 
 
@@ -22,7 +22,7 @@ def cfini():
     l = unsuportedSemantics.items()
     l.sort(key=itemgetter(1), reverse=True)
     for i in l:
-        print '%s: %d' %(i[0].lower(), i[1])
+        print '%s at %x' %(i[0].lower(), i[1][0])
     return
 
 
