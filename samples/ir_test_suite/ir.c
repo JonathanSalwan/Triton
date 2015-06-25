@@ -123,6 +123,12 @@ void check(void)
   asm("rcl rdx, 4");
   asm("rcl rdx, 1");
 
+  asm("xor rcx, rcx");
+  asm("mov cl, 3");
+  asm("rcr rdx, cl");
+  asm("rcr rdx, 4");
+  asm("rcr rdx, 1");
+
   // SSE
   asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab));
   asm("movapd xmm1, xmm2");

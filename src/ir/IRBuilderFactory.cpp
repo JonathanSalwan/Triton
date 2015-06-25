@@ -345,6 +345,10 @@ IRBuilder *createIRBuilder(INS ins) {
       ir = new RolIRBuilder(address, disas);
       break;
 
+    case XED_ICLASS_RCR:
+      ir = new RcrIRBuilder(address, disas);
+      break;
+
     case XED_ICLASS_ROR:
       ir = new RorIRBuilder(address, disas);
       break;

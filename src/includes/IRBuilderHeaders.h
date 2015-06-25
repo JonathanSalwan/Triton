@@ -84,6 +84,7 @@
 #include "RetIRBuilder.h"
 #include "RclIRBuilder.h"
 #include "RolIRBuilder.h"
+#include "RcrIRBuilder.h"
 #include "RorIRBuilder.h"
 #include "SarIRBuilder.h"
 #include "SbbIRBuilder.h"
