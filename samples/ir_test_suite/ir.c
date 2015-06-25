@@ -117,6 +117,12 @@ void check(void)
   asm("ror rdx, 4");
   asm("ror rdx, 1");
 
+  asm("xor rcx, rcx");
+  asm("mov cl, 3");
+  asm("rcl rdx, cl");
+  asm("rcl rdx, 4");
+  asm("rcl rdx, 1");
+
   // SSE
   asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab));
   asm("movapd xmm1, xmm2");

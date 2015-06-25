@@ -82,6 +82,7 @@
 #include "PopIRBuilder.h"
 #include "PushIRBuilder.h"
 #include "RetIRBuilder.h"
+#include "RclIRBuilder.h"
 #include "RolIRBuilder.h"
 #include "RorIRBuilder.h"
 #include "SarIRBuilder.h"

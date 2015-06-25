@@ -38,7 +38,7 @@ void RolIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
   /* Add the symbolic flags element to the current inst */
-  EflagsBuilder::cfRol(inst, se, ap, regSize, op2);
+  EflagsBuilder::cfRol(inst, se, ap, op2);
   EflagsBuilder::ofRol(inst, se, ap, regSize, op2);
 }
 
@@ -67,7 +67,7 @@ void RolIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg1, reg1);
 
   /* Add the symbolic flags element to the current inst */
-  EflagsBuilder::cfRol(inst, se, ap, regSize1, op2);
+  EflagsBuilder::cfRol(inst, se, ap, op2);
   EflagsBuilder::ofRol(inst, se, ap, regSize1, op2);
 }
 
@@ -102,7 +102,7 @@ void RolIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintMemMem(se, mem, mem, writeSize);
 
   /* Add the symbolic flags element to the current inst */
-  EflagsBuilder::cfRol(inst, se, ap, writeSize, op2);
+  EflagsBuilder::cfRol(inst, se, ap, op2);
   EflagsBuilder::ofRol(inst, se, ap, writeSize, op2);
 }
 
@@ -131,7 +131,7 @@ void RolIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintMemMem(se, mem, mem, writeSize);
 
   /* Add the symbolic flags element to the current inst */
-  EflagsBuilder::cfRol(inst, se, ap, writeSize, op2);
+  EflagsBuilder::cfRol(inst, se, ap, op2);
   EflagsBuilder::ofRol(inst, se, ap, writeSize, op2);
 }
 

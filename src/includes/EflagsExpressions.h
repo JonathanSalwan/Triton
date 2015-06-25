@@ -16,7 +16,8 @@ namespace EflagsExpressions {
   std::string cfImul(SymbolicElement *parent, std::stringstream &op1);
   std::string cfMul(uint32 bvSize, std::stringstream &up);
   std::string cfNeg(uint32 bvSize, std::stringstream &op1);
-  std::string cfRol(SymbolicElement *parent, AnalysisProcessor &ap, uint32 bvSize, std::stringstream &op2);
+  std::string cfRcl(SymbolicElement *parent, AnalysisProcessor &ap, uint32 bvSize, std::stringstream &op2);
+  std::string cfRol(SymbolicElement *parent, AnalysisProcessor &ap, std::stringstream &op2);
   std::string cfRor(SymbolicElement *parent, AnalysisProcessor &ap, uint32 bvSize, std::stringstream &op2);
   std::string cfSar(SymbolicElement *parent, AnalysisProcessor &ap, uint32 bvSize, std::stringstream &op1, std::stringstream &op2);
   std::string cfShl(SymbolicElement *parent, AnalysisProcessor &ap, uint32 bvSize, std::stringstream &op1, std::stringstream &op2);

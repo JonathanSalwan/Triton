@@ -17,7 +17,8 @@ namespace EflagsBuilder {
   SymbolicElement *cfImul(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32 dstSize, std::stringstream &op1);
   SymbolicElement *cfMul(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32 dstSize, std::stringstream &up);
   SymbolicElement *cfNeg(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32 dstSize, std::stringstream &op1);
-  SymbolicElement *cfRol(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32 dstSize, std::stringstream &op2);
+  SymbolicElement *cfRcl(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32 dstSize, std::stringstream &op2);
+  SymbolicElement *cfRol(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, std::stringstream &op2);
   SymbolicElement *cfRor(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32 dstSize, std::stringstream &op2);
   SymbolicElement *cfSar(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32 dstSize, std::stringstream &op1, std::stringstream &op2);
   SymbolicElement *cfShl(Inst &inst, SymbolicElement *parent, AnalysisProcessor &ap, uint32 dstSize, std::stringstream &op1, std::stringstream &op2);

@@ -148,9 +148,31 @@ std::string EflagsExpressions::cfNeg(uint32 bvSize,
 }
 
 
-std::string EflagsExpressions::cfRol(SymbolicElement *parent,
+std::string EflagsExpressions::cfRcl(SymbolicElement *parent,
                                      AnalysisProcessor &ap,
                                      uint32 bvSize,
+                                     std::stringstream &op2)
+{
+  std::stringstream expr;
+
+  /*
+   * Create the SMT semantic.
+   * cf = (res & 1) if op2 != 0 else undefined
+   * As the second operand can't be symbolized, there is
+   * no symbolic expression available. So, we must use the
+   * op2's concretization.
+   */
+  if (std::stoi(op2.str()) != 0)
+    expr << smt2lib::extract(bvSize, bvSize, parent->getID2Str());
+  else
+    expr << ap.buildSymbolicFlagOperand(ID_CF);
+
+  return expr.str();
+}
+
+
+std::string EflagsExpressions::cfRol(SymbolicElement *parent,
+                                     AnalysisProcessor &ap,
                                      std::stringstream &op2)
 {
   std::stringstream expr;

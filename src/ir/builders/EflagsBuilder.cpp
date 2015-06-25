@@ -136,7 +136,7 @@ SymbolicElement *EflagsBuilder::cfNeg(Inst &inst,
 }
 
 
-SymbolicElement *EflagsBuilder::cfRol(Inst &inst,
+SymbolicElement *EflagsBuilder::cfRcl(Inst &inst,
                                       SymbolicElement *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
@@ -146,7 +146,27 @@ SymbolicElement *EflagsBuilder::cfRol(Inst &inst,
   std::stringstream   expr;
   uint32              bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::cfRol(parent, ap, bvSize, op2);
+  expr << EflagsExpressions::cfRcl(parent, ap, bvSize, op2);
+
+  /* Create the symbolic element */
+  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
+
+  /* Spread the taint from the parent to the child */
+  ap.setTaintReg(se, ID_CF, parent->isTainted);
+
+  return se;
+}
+
+
+SymbolicElement *EflagsBuilder::cfRol(Inst &inst,
+                                      SymbolicElement *parent,
+                                      AnalysisProcessor &ap,
+                                      std::stringstream &op2)
+{
+  SymbolicElement     *se;
+  std::stringstream   expr;
+
+  expr << EflagsExpressions::cfRol(parent, ap, op2);
 
   /* Create the symbolic element */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
