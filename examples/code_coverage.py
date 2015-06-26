@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # $ triton $PIN_ROOT/source/tools/Triton/examples/code_coverage.py $PIN_ROOT/source/tools/Triton/samples/others/code_coverage a
-
+# TODO : convertToSymVar, retturn the symvar
 from triton import *
 import smt2lib
 
@@ -12,17 +12,19 @@ class Node:
         self.instruction = instruction
         self.if_true = None
         self.if_false = None
+        self.true_v = False
+        self.false_v = False
         self.expr = None
+        self.symVars = dict()
 
 
 cond = dict()
-t = dict()
-f = dict()
 addrCmp = dict()
 addrDone = []
 workList = []
 def csym(instruction):
     global addrCmp
+    global workList
 
     if instruction.opcode == IDREF.OPCODE.CMP and instruction.address not in addrCmp: # we are one a cmp
         print "[+] New cmp instr"
@@ -30,9 +32,11 @@ def csym(instruction):
             if op.type == IDREF.OPERAND.MEM_R:
                 addr = op.value
                 sid = convertMemToSymVar(addr, IDREF.CPUSIZE.QWORD, "addr")
-                addrCmp[instruction.address] = {'true': None, 'false': None}
-
+                n = Node(instruction)
+                addrCmp[instruction.address] = n
         print instruction.assembly
+        print "[+] Add node to the work list"
+        workList.append(n)
 
 
     return
@@ -43,36 +47,36 @@ def cafter(instruction):
     global workList
 
     if instruction.opcode == IDREF.OPCODE.CMP:
-        if addrCmp[instruction.address]['true'] is None:
-            addrDone.append(instruction.address)
-            addrCmp[instruction.address]['true'] = dict()
+        zfValue = getFlagValue(IDREF.FLAG.ZF)
+        node = addrCmp[instruction.address]
+
+        node.true_v = True if zfValue == 1 else False
+        node.true_f = True if zfValue == 0 else False
+
+        if node.if_true is None:
             zfId    = getRegSymbolicID(IDREF.FLAG.ZF)
             zfExpr  = getBacktrackedSymExpr(zfId)
+            node.expr = zfExpr if node.expr is None else None
             expr    = smt2lib.smtAssert(smt2lib.equal(zfExpr, smt2lib.bvtrue())) # (assert (= zf True))
             models  = getModel(expr)
+            node.if_true = dict()
             for k, v in models.items():
                 sm = getSymVar(k)
-                if sm.kind == IDREF.SYMVAR.MEM:
-                    addr = sm.kindValue
-                    workList.append((addr,v))
-                addrCmp[instruction.address]['true'][k] = v
+                addr = sm.kindValue
+                node.if_true[addr] = v
 
 
-        if addrCmp[instruction.address]['false'] is None:
-            addrDone.append(instruction.address)
-            addrCmp[instruction.address]['false'] = dict()
+        if node.if_false is None:
+            zfId    = getRegSymbolicID(IDREF.FLAG.ZF)
+            zfExpr  = getBacktrackedSymExpr(zfId)
+            node.expr = zfExpr if node.expr is None else None
             expr    = smt2lib.smtAssert(smt2lib.equal(zfExpr, smt2lib.bvfalse())) # (assert (= zf False))
             models  = getModel(expr)
+            node.if_false = dict()
             for k, v in models.items():
                 sm = getSymVar(k)
-                if sm.kind == IDREF.SYMVAR.MEM:
-                    addr = sm.kindValue
-                    workList.append((addr,v))
-                addrCmp[instruction.address]['false'][k] = v
-
-
-                #password.update({symVarMem: v})
-                #print k,v
+                addr = sm.kindValue
+                node.if_false[addr] = v
 
         return
 
@@ -92,23 +96,27 @@ def cbefore(instruction):
     if instruction.address == 0x400532:
         print "BB3"
         return
+
+
+
     if instruction.address == 0x400506 and not isSnapshotEnable():
         takeSnapshot()
         print "[+] Take a snapshot at the prologue of the function"
         return
 
     if instruction.address == 0x40053B and len(workList) == 0:
-        print '[+] We can coverage all graph'
+        print '[+] We coveraged all graph'
         disableSnapshot()
         return
 
 
     if instruction.address == 0x40053B:
         #print workList
-        addr,v = workList.pop()
-        print "[+] We set %x to %d"%(addr, v)
-        setMemValue(addr, IDREF.CPUSIZE.QWORD, v)
-        restoreSnapshot()
+        n = workList.pop()
+
+        #print "[+] We set %x to %d"%(addr, v)
+        #setMemValue(addr, IDREF.CPUSIZE.QWORD, v)
+        #restoreSnapshot()
         return
         #restoreSnapshot()
 
@@ -117,8 +125,6 @@ def cbefore(instruction):
 
 
 def fini():
-    for add in addrCmp:
-        print hex(add), addrCmp[add]
     #print addrCmp
     print '[+] Done !'
 
