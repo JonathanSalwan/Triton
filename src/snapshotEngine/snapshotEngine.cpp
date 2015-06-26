@@ -62,6 +62,7 @@ void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngi
   /* 4 - Restore Pin registers context */
   PIN_SaveContext(&this->pinCtx, ctx);
 
+  PIN_UnlockClient();
   PIN_ExecuteAt(ctx);
 }
 

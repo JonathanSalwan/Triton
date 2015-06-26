@@ -93,6 +93,7 @@ void PINContextHandler::setRegisterValue(uint64 TritRegID, uint64 value) const
     throw std::runtime_error("Error: setRegisterValue() - Invalid PIN register id.");
 
   PIN_SetContextReg(this->_ctx, reg, value);
+  PIN_UnlockClient();
   PIN_ExecuteAt(this->_ctx);
 }
 
@@ -112,6 +113,7 @@ void PINContextHandler::setSSERegisterValue(uint64 TritRegID, uint128 value) con
   *(uint128 *)tmp = value;
 
   PIN_SetContextRegval(this->_ctx, reg, tmp);
+  PIN_UnlockClient();
   PIN_ExecuteAt(this->_ctx);
   free(tmp);
 }

@@ -27,6 +27,18 @@ ContextHandler *AnalysisProcessor::getCurrentCtxH(void)
 }
 
 
+void AnalysisProcessor::lock(void)
+{
+  PIN_LockClient();
+}
+
+
+void AnalysisProcessor::unlock(void)
+{
+  PIN_UnlockClient();
+}
+
+
 // Symbolic Engine Facade
 // ----------------------
 

@@ -36,6 +36,9 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
   /* Analysis locked */
     return;
 
+  /* Mutex */
+  ap.lock();
+
   if (hasEA)
     irb->setup(ea);
 
@@ -58,6 +61,9 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
 
   /* Python callback before instruction processing */
   processingPyConf.callbackBefore(inst, &ap);
+
+  /* Mutex */
+  ap.unlock();
 }
 
 
@@ -68,6 +74,9 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId)
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return;
+
+  /* Mutex */
+  ap.lock();
 
   /* Update the current context handler */
   ap.updateCurrentCtxH(new PINContextHandler(ctx, threadId));
@@ -80,6 +89,9 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId)
 
   /* Python callback after instruction processing */
   processingPyConf.callbackAfter(inst, &ap);
+
+  /* Mutex */
+  ap.unlock();
 }
 
 
@@ -93,9 +105,15 @@ static void callbackSnapshot(uint64 mem, uint32 writeSize)
   if (ap.isSnapshotLocked())
     return;
 
+  /* Mutex */
+  ap.lock();
+
   uint32 i = 0;
   for (; i < writeSize ; i++)
     ap.addSnapshotModification(mem+i, *(reinterpret_cast<uint8*>(mem+i)));
+
+  /* Mutex */
+  ap.unlock();
 }
 
 
@@ -160,7 +178,9 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName)
 
 static void toggleWrapper(bool flag)
 {
+  ap.lock();
   analysisTrigger.update(flag);
+  ap.unlock();
 }
 
 
@@ -169,7 +189,10 @@ static void callbackRoutineEntry(THREADID threadId, PyObject *callback)
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return;
+
+  ap.lock();
   processingPyConf.callbackRoutine(threadId, callback);
+  ap.unlock();
 }
 
 
@@ -178,7 +201,10 @@ static void callbackRoutineExit(THREADID threadId, PyObject *callback)
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return;
+
+  ap.lock();
   processingPyConf.callbackRoutine(threadId, callback);
+  ap.unlock();
 }
 
 
@@ -248,11 +274,17 @@ static void callbackSyscallEntry(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDA
   /* Analysis locked */
     return;
 
+  /* Mutex */
+  ap.lock();
+
   /* Update the current context handler */
   ap.updateCurrentCtxH(new PINContextHandler(ctx, threadId));
 
   /* Python callback at the end of execution */
   processingPyConf.callbackSyscallEntry(threadId, std);
+
+  /* Mutex */
+  ap.unlock();
 }
 
 
@@ -263,15 +295,21 @@ static void callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDAR
   /* Analysis locked */
     return;
 
+  /* Mutex */
+  ap.lock();
+
   /* Update the current context handler */
   ap.updateCurrentCtxH(new PINContextHandler(ctx, threadId));
 
   /* Python callback at the end of execution */
   processingPyConf.callbackSyscallExit(threadId, std);
+
+  /* Mutex */
+  ap.unlock();
 }
 
 
-/* 
+/*
  * Usage function if Pin fail to start.
  * Display the help message.
  */

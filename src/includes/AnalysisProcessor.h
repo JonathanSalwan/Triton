@@ -25,6 +25,10 @@ class AnalysisProcessor {
     void            updateCurrentCtxH(ContextHandler *ctxtHandler);
     ContextHandler *getCurrentCtxH(void);
 
+    /* Mutex */
+    void            lock(void);
+    void            unlock(void);
+
     /*
      * Context Handler Facade
      * ----------------------

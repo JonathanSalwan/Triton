@@ -4,6 +4,8 @@
 #include <pin.H>
 #include <xPyFunc.h>
 
+extern AnalysisProcessor ap;
+
 
 /*
  * Class SymbolicElement:
@@ -92,7 +94,7 @@ PyObject *PyInstruction(Inst *inst)
 {
   /* Create the class dictionary */
   PyObject *dictInstClass = xPyDict_New();
-  PIN_LockClient();
+  ap.lock();
   PyDict_SetItemString(dictInstClass, "address",        PyInt_FromLong(inst->getAddress()));
   PyDict_SetItemString(dictInstClass, "assembly",       PyString_FromFormat("%s", inst->getDisassembly().c_str()));
   PyDict_SetItemString(dictInstClass, "imageName",      PyString_FromFormat("%s", IMG_Name(SEC_Img(RTN_Sec(RTN_FindByAddress(inst->getAddress())))).c_str()));
@@ -102,7 +104,7 @@ PyObject *PyInstruction(Inst *inst)
   PyDict_SetItemString(dictInstClass, "routineName",    PyString_FromFormat("%s", RTN_FindNameByAddress(inst->getAddress()).c_str()));
   PyDict_SetItemString(dictInstClass, "sectionName",    PyString_FromFormat("%s", SEC_Name(RTN_Sec(RTN_FindByAddress(inst->getAddress()))).c_str()));
   PyDict_SetItemString(dictInstClass, "threadId",       PyInt_FromLong(inst->getThreadID()));
-  PIN_UnlockClient();
+  ap.unlock();
 
 
   /* Setup the symbolic element list */
@@ -166,7 +168,7 @@ PyObject *PyInstruction(Inst *inst)
 PyObject *PyInstruction(IRBuilder *irb)
 {
   PyObject *dictInstClass = xPyDict_New();
-  PIN_LockClient();
+  ap.lock();
   PyDict_SetItemString(dictInstClass, "address",        PyInt_FromLong(irb->getAddress()));
   PyDict_SetItemString(dictInstClass, "assembly",       PyString_FromFormat("%s", irb->getDisassembly().c_str()));
   PyDict_SetItemString(dictInstClass, "imageName",      PyString_FromFormat("%s", IMG_Name(SEC_Img(RTN_Sec(RTN_FindByAddress(irb->getAddress())))).c_str()));
@@ -176,7 +178,7 @@ PyObject *PyInstruction(IRBuilder *irb)
   PyDict_SetItemString(dictInstClass, "routineName",    PyString_FromFormat("%s", RTN_FindNameByAddress(irb->getAddress()).c_str()));
   PyDict_SetItemString(dictInstClass, "sectionName",    PyString_FromFormat("%s", SEC_Name(RTN_Sec(RTN_FindByAddress(irb->getAddress()))).c_str()));
   PyDict_SetItemString(dictInstClass, "threadId",       PyInt_FromLong(irb->getThreadID()));
-  PIN_UnlockClient();
+  ap.unlock();
 
 
   /* Before the processing, the symbolic element list is empty */
