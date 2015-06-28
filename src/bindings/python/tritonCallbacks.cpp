@@ -328,8 +328,8 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
 static char Triton_getModel_doc[] = "Returns a model of the symbolic expression";
 static PyObject *Triton_getModel(PyObject *self, PyObject *expr)
 {
-  std::list< std::pair<std::string, unsigned long long> >::iterator it;
-  std::list< std::pair<std::string, unsigned long long> > models;
+  std::list< std::pair<std::string, uint64> >::iterator it;
+  std::list< std::pair<std::string, uint64> > models;
 
   if (!PyString_Check(expr))
     return PyErr_Format(PyExc_TypeError, "getModel(): expected an expression (string) as argument");

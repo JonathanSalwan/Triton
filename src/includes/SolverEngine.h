@@ -10,6 +10,7 @@
 
 #include "Registers.h"
 #include "SymbolicEngine.h"
+#include "TritonTypes.h"
 
 
 class SolverEngine
@@ -18,7 +19,7 @@ class SolverEngine
     SymbolicEngine *symEngine;
 
   public:
-    std::list< std::pair<std::string, unsigned long long> > getModel(std::string expr);
+    std::list< std::pair<std::string, uint64> > getModel(std::string expr);
 
     SolverEngine(SymbolicEngine *sym);
     ~SolverEngine();

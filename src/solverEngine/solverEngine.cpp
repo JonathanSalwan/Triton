@@ -15,9 +15,9 @@ SolverEngine::~SolverEngine()
 }
 
 
-std::list< std::pair<std::string, unsigned long long> > SolverEngine::getModel(std::string expr)
+std::list< std::pair<std::string, uint64> > SolverEngine::getModel(std::string expr)
 {
-  std::list< std::pair<std::string, unsigned long long> > ret;
+  std::list< std::pair<std::string, uint64> > ret;
   std::stringstream   formula;
   z3::check_result    checkResult;
   z3::context         *ctx;
@@ -50,8 +50,8 @@ std::list< std::pair<std::string, unsigned long long> > SolverEngine::getModel(s
     /* Get model */
     z3::model m = solver->get_model();
     /* Traversing the model */
-    for (unsigned i = 0; i < m.size(); i++) {
-      unsigned long long value = 0;
+    for (uint32 i = 0; i < m.size(); i++) {
+      uint64 value = 0;
       z3::func_decl v = m[i];
       Z3_get_numeral_uint64(*ctx, m.get_const_interp(v), &value);
       ret.push_back(make_pair(v.name().str(), value));
