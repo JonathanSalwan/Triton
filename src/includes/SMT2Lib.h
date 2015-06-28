@@ -13,7 +13,8 @@ namespace smt2lib {
 
   /* Returns a string which defines the default logic and */
   /* utilies function used by the others functions (parity for example). */
-  std::string init();
+  std::string logic(void);
+  std::string global(void);
 
  /* Return a call to the parity_flag function.
   * Returns the parity flag of one byte. If the number of bits set to 1 is even,

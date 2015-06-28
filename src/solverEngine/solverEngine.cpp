@@ -23,8 +23,9 @@ std::list< std::pair<std::string, unsigned long long> > SolverEngine::getModel(s
   z3::context         *ctx;
   z3::solver          *solver;
 
-  /* First, set the QF_AUFBV flag */
-  formula << smt2lib::init();
+  /* First, set the QF_AUFBV flag and add global declarations */
+  formula << smt2lib::logic();
+  formula << smt2lib::global();
 
   /* Then, delcare all symbolic variables */
   formula << this->symEngine->getVariablesDeclaration();

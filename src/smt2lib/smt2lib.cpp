@@ -18,9 +18,19 @@ static const std::string parityDef =
           "(_ bv15 8))))))";
 
 
-std::string smt2lib::init()
+std::string smt2lib::global(void)
 {
-  return "(set-logic QF_AUFBV)\n" + parityDef + "\n";
+  std::stringstream expr;
+  expr << parityDef << std::endl;
+  return expr.str();
+}
+
+
+std::string smt2lib::logic(void)
+{
+  std::stringstream expr;
+  expr << "(set-logic QF_AUFBV)" << std::endl;
+  return expr.str();
 }
 
 
