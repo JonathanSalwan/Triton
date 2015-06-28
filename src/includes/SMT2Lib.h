@@ -15,31 +15,16 @@ namespace smt2lib {
   /* utilies function used by the others functions (parity for example). */
   std::string init();
 
+ /* Return a call to the parity_flag function.
+  * Returns the parity flag of one byte. If the number of bits set to 1 is even,
+  * it returns (_ bv0 1) and (_ bv1 1) otherwise. */
+  std::string parityFlag(std::string expr);
+
   /* Returns the 'concat' syntax */
   /* (concat expr1 expr2) */
   std::string concat(std::string expr1, std::string expr2);
   std::string concat(std::vector<std::string> exprs);
   std::string concat(std::list<std::string> exprs);
-
-  /* Returns the 'bv' syntax based on a value and a size. */
-  /* (_ bv<value> <size>) */
-  std::string bv(uint64 value, uint64 regSize);
-
-  /* This is an alias on (_ bv1 1) */
-  std::string bvtrue(void);
-
-  /* This is an alias on (_ bv0 1) */
-  std::string bvfalse(void);
-
-  /* Returns the 'bvadd' syntax. */
-  /* (bvadd <op1> <op2>) */
-  std::string bvadd(std::string op1, std::string op2);
-
-  /* Returns a sign extended version to size bits of the expression. */
-  std::string sx(std::string expr, uint64 size);
-
-  /* Returns a zero extendend version to size bits of the expression. */
-  std::string zx(std::string expr, uint64 size);
 
   /* Returns the 'declare' syntax based on the symbolic variable name and its size. */
   std::string declare(std::string symVarName, uint64 symVarSize);
@@ -67,6 +52,32 @@ namespace smt2lib {
   /* Returns the 'equal' syntax. */
   /* (= <op1> <op2>) */
   std::string equal(std::string op1, std::string op2);
+
+  /* Returns the simplify syntax */
+  std::string simplify(std::string expr);
+
+  /* Returns the display syntax */
+  std::string display(std::string expr);
+
+  /* Returns a sign extended version to size bits of the expression. */
+  std::string sx(std::string expr, uint64 size);
+
+  /* Returns a zero extendend version to size bits of the expression. */
+  std::string zx(std::string expr, uint64 size);
+
+  /* Returns the 'bv' syntax based on a value and a size. */
+  /* (_ bv<value> <size>) */
+  std::string bv(uint64 value, uint64 regSize);
+
+  /* This is an alias on (_ bv1 1) */
+  std::string bvtrue(void);
+
+  /* This is an alias on (_ bv0 1) */
+  std::string bvfalse(void);
+
+  /* Returns the 'bvadd' syntax. */
+  /* (bvadd <op1> <op2>) */
+  std::string bvadd(std::string op1, std::string op2);
 
   /* returns the 'bvsge' syntax. */
   /* (bvsge <op1> <op2>) */
@@ -127,17 +138,6 @@ namespace smt2lib {
   /* Returns the 'bvnot' syntax. */
   /* (bvnot <op1>) */
   std::string bvnot(std::string op1);
-
- /* Return a call to the parity_flag function.
-  * Returns the parity flag of one byte. If the number of bits set to 1 is even,
-  * it returns (_ bv0 1) and (_ bv1 1) otherwise. */
-  std::string parityFlag(std::string expr);
-
-  /* Returns the simplify syntax */
-  std::string simplify(std::string expr);
-
-  /* Returns the display syntax */
-  std::string display(std::string expr);
 
   /* Returns the 'bvneg' syntax */
   std::string bvneg(std::string expr);
