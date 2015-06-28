@@ -560,7 +560,7 @@ SolverEngine &AnalysisProcessor::getSolverEngine(void)
 }
 
 
-std::list< std::pair<std::string, uint64> > AnalysisProcessor::getModel(std::string expr)
+std::list<Smodel> AnalysisProcessor::getModel(std::string expr)
 {
   return this->solverEngine.getModel(expr);
 }

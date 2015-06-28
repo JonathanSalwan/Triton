@@ -8,6 +8,7 @@
 #include <CallbackDefine.h>
 #include <PINConverter.h>
 #include <PythonUtils.h>
+#include <Smodel.h>
 #include <TritonPyObject.h>
 #include <Utils.h>
 #include <pin.H>
@@ -328,8 +329,8 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
 static char Triton_getModel_doc[] = "Returns a model of the symbolic expression";
 static PyObject *Triton_getModel(PyObject *self, PyObject *expr)
 {
-  std::list< std::pair<std::string, uint64> >::iterator it;
-  std::list< std::pair<std::string, uint64> > models;
+  std::list<Smodel>::iterator it;
+  std::list<Smodel> models;
 
   if (!PyString_Check(expr))
     return PyErr_Format(PyExc_TypeError, "getModel(): expected an expression (string) as argument");
@@ -340,7 +341,7 @@ static PyObject *Triton_getModel(PyObject *self, PyObject *expr)
   /* Craft the model dictionary */
   PyObject *modelsDict = xPyDict_New();
   for (it = models.begin() ; it != models.end(); it++)
-    PyDict_SetItemString(modelsDict, it->first.c_str(), Py_BuildValue("k", it->second));
+    PyDict_SetItemString(modelsDict, it->getName().c_str(), Py_BuildValue("k", it->getValue()));
 
   return modelsDict;
 }

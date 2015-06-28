@@ -1,5 +1,4 @@
 
-#include <Colors.h>
 #include <SMT2Lib.h>
 #include <SolverEngine.h>
 
@@ -15,11 +14,10 @@ SolverEngine::~SolverEngine()
 }
 
 
-std::list< std::pair<std::string, uint64> > SolverEngine::getModel(std::string expr)
+std::list<Smodel> SolverEngine::getModel(std::string expr)
 {
-  std::list< std::pair<std::string, uint64> > ret;
+  std::list<Smodel>   ret;
   std::stringstream   formula;
-  z3::check_result    checkResult;
   z3::context         *ctx;
   z3::solver          *solver;
 
@@ -42,11 +40,8 @@ std::list< std::pair<std::string, uint64> > SolverEngine::getModel(std::string e
   solver = new z3::solver(*ctx);
   solver->add(eq);
 
-  /* Check */
-  checkResult = solver->check();
-
   /* Check if it is sat */
-  if (checkResult == z3::sat){
+  if (solver->check() == z3::sat){
     /* Get model */
     z3::model m = solver->get_model();
     /* Traversing the model */
@@ -54,7 +49,7 @@ std::list< std::pair<std::string, uint64> > SolverEngine::getModel(std::string e
       uint64 value = 0;
       z3::func_decl v = m[i];
       Z3_get_numeral_uint64(*ctx, m.get_const_interp(v), &value);
-      ret.push_back(make_pair(v.name().str(), value));
+      ret.push_back(Smodel(v.name().str(), value));
     }
   }
 

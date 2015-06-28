@@ -167,7 +167,7 @@ class AnalysisProcessor {
 
     /* Returns a reference to the solver engine. */
     SolverEngine &getSolverEngine();
-    std::list< std::pair<std::string, uint64> > getModel(std::string expr);
+    std::list<Smodel> getModel(std::string expr);
 
 
     /*
