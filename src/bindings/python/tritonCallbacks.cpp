@@ -330,20 +330,63 @@ static char Triton_getModel_doc[] = "Returns a model of the symbolic expression"
 static PyObject *Triton_getModel(PyObject *self, PyObject *expr)
 {
   std::list<Smodel>::iterator it;
-  std::list<Smodel> models;
+  std::list<Smodel> model;
 
   if (!PyString_Check(expr))
     return PyErr_Format(PyExc_TypeError, "getModel(): expected an expression (string) as argument");
 
-  /* Get models */
-  models = ap.getModel(PyString_AsString(expr));
+  /* Get model */
+  model = ap.getModel(PyString_AsString(expr));
 
   /* Craft the model dictionary */
-  PyObject *modelsDict = xPyDict_New();
-  for (it = models.begin() ; it != models.end(); it++)
-    PyDict_SetItemString(modelsDict, it->getName().c_str(), Py_BuildValue("k", it->getValue()));
+  PyObject *modelDict = xPyDict_New();
+  for (it = model.begin() ; it != model.end(); it++)
+    PyDict_SetItemString(modelDict, it->getName().c_str(), Py_BuildValue("k", it->getValue()));
 
-  return modelsDict;
+  return modelDict;
+}
+
+
+static char Triton_getModels_doc[] = "Returns all models of the symbolic expression";
+static PyObject *Triton_getModels(PyObject *self, PyObject *args)
+{
+  PyObject                        *expr;
+  PyObject                        *limit;
+  PyObject                        *modelsList;
+  std::vector<std::list<Smodel>>  models;
+  uint64                          limit_c = 0;
+  uint64                          modelsSize = 0;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &expr, &limit);
+
+  if (!PyString_Check(expr))
+    return PyErr_Format(PyExc_TypeError, "getModels(): expected an expression (string) as first argument");
+
+  if (!PyLong_Check(limit) && !PyInt_Check(limit))
+    return PyErr_Format(PyExc_TypeError, "getModels(): expected a limit (integer) as second argument");
+
+  limit_c = PyLong_AsLong(limit);
+  if (limit_c == 0)
+    return PyErr_Format(PyExc_TypeError, "getModels(): The limit must be greater than 0");
+
+  /* Get models */
+  models        = ap.getModels(PyString_AsString(expr), limit_c);
+  modelsSize    = models.size();
+  modelsList    = xPyList_New(modelsSize);
+
+  for (uint64 index = 0; index < modelsSize; index++){
+    std::list<Smodel> model = models[index];
+    std::list<Smodel>::iterator it;
+    /* Craft the model dictionary */
+    PyObject *modelDict = xPyDict_New();
+    for (it = model.begin() ; it != model.end(); it++)
+      PyDict_SetItemString(modelDict, it->getName().c_str(), Py_BuildValue("k", it->getValue()));
+
+    PyList_SetItem(modelsList, index, modelDict);
+  }
+
+  return modelsList;
 }
 
 
@@ -1022,6 +1065,7 @@ PyMethodDef tritonCallbacks[] = {
   {"getMemSymbolicID",          Triton_getMemSymbolicID,          METH_O,       Triton_getMemSymbolicID_doc},
   {"getMemValue",               Triton_getMemValue,               METH_VARARGS, Triton_getMemValue_doc},
   {"getModel",                  Triton_getModel,                  METH_O,       Triton_getModel_doc},
+  {"getModels",                 Triton_getModels,                 METH_VARARGS, Triton_getModels_doc},
   {"getPathConstraints",        Triton_getPathConstraints,        METH_NOARGS,  Triton_getPathConstraints_doc},
   {"getRegName",                Triton_getRegName,                METH_O,       Triton_getRegName_doc},
   {"getRegSymbolicID",          Triton_getRegSymbolicID,          METH_O,       Triton_getRegSymbolicID_doc},

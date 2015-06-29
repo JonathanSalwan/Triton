@@ -566,6 +566,12 @@ std::list<Smodel> AnalysisProcessor::getModel(std::string expr)
 }
 
 
+std::vector<std::list<Smodel>> AnalysisProcessor::getModels(std::string expr, uint64 limit)
+{
+  return this->solverEngine.getModels(expr, limit);
+}
+
+
 // Statistics Facade
 
 Stats &AnalysisProcessor::getStats(void)

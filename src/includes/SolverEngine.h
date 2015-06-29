@@ -3,7 +3,9 @@
 #define   SOLVERENGINE_H
 
 #include <cstdlib>
+#include <list>
 #include <string>
+#include <vector>
 
 #include <z3++.h>
 
@@ -19,7 +21,8 @@ class SolverEngine
     SymbolicEngine *symEngine;
 
   public:
-    std::list<Smodel> getModel(std::string expr);
+    std::list<Smodel>               getModel(std::string expr);
+    std::vector<std::list<Smodel>>  getModels(std::string expr, uint64 limit);
 
     SolverEngine(SymbolicEngine *sym);
     ~SolverEngine();
