@@ -511,11 +511,11 @@ static PyObject *Triton_getStats(PyObject *self, PyObject *noargs)
 }
 
 
-static char Triton_getSymExpr_doc[] = "Returns a SymbolicElement class corresponding to the symbolic element ID.";
+static char Triton_getSymExpr_doc[] = "Returns a SymbolicExpression class corresponding to the symbolic expression ID.";
 static PyObject *Triton_getSymExpr(PyObject *self, PyObject *id)
 {
   uint64          exprId;
-  SymbolicElement *expr;
+  SymbolicExpression *expr;
 
   if (!PyLong_Check(id) && !PyInt_Check(id))
     return PyErr_Format(PyExc_TypeError, "getSymExpr(): expected an id (integer) as argument");
@@ -526,7 +526,7 @@ static PyObject *Triton_getSymExpr(PyObject *self, PyObject *id)
   if (expr == nullptr)
     return PyErr_Format(PyExc_TypeError, "getSymExpr(): Invalid symbolic expression ID");
 
-  return PySymbolicElement(expr);
+  return PySymbolicExpression(expr);
 }
 
 

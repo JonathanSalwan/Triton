@@ -5,7 +5,7 @@
 #include <CmpIRBuilder.h>
 #include <Registers.h>
 #include <SMT2Lib.h>
-#include <SymbolicElement.h>
+#include <SymbolicExpression.h>
 
 
 // Compares the first source operand with the second source operan
@@ -23,7 +23,7 @@ CmpIRBuilder::CmpIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void CmpIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1, op2;
   uint64            reg     = this->operands[0].getValue();
   uint64            imm     = this->operands[1].getValue();
@@ -36,13 +36,13 @@ void CmpIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   /* Finale expr */
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createSE(inst, expr, "Temporary Compare");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintExprReg(se, reg);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
   EflagsBuilder::cfSub(inst, se, ap, op1, op2);
   EflagsBuilder::ofSub(inst, se, ap, regSize, op1, op2);
@@ -53,7 +53,7 @@ void CmpIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void CmpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1, op2;
   uint64            reg1     = this->operands[0].getValue();
   uint64            reg2     = this->operands[1].getValue();
@@ -67,13 +67,13 @@ void CmpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Final expr */
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createSE(inst, expr, "Temporary Compare");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintExprRegReg(se, reg1, reg2);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, regSize1, op1, op2);
   EflagsBuilder::cfSub(inst, se, ap, op1, op2);
   EflagsBuilder::ofSub(inst, se, ap, regSize1, op1, op2);
@@ -84,7 +84,7 @@ void CmpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void CmpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1, op2;
   uint32            readSize = this->operands[1].getSize();
   uint64            mem      = this->operands[1].getValue();
@@ -98,13 +98,13 @@ void CmpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   /* Final expr */
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createSE(inst, expr);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintExprRegMem(se, reg, mem, readSize);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
   EflagsBuilder::cfSub(inst, se, ap, op1, op2);
   EflagsBuilder::ofSub(inst, se, ap, regSize, op1, op2);
@@ -115,7 +115,7 @@ void CmpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void CmpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1, op2;
   uint32            readSize  = this->operands[0].getSize();
   uint64            mem       = this->operands[0].getValue();
@@ -128,13 +128,13 @@ void CmpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   /* Final expr */
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createSE(inst, expr);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintExprMem(se, mem, readSize);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, readSize, op1, op2);
   EflagsBuilder::cfSub(inst, se, ap, op1, op2);
   EflagsBuilder::ofSub(inst, se, ap, readSize, op1, op2);
@@ -145,7 +145,7 @@ void CmpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void CmpIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1, op2;
   uint32            readSize  = this->operands[0].getSize();
   uint64            mem       = this->operands[0].getValue();
@@ -159,13 +159,13 @@ void CmpIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Final expr */
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createSE(inst, expr);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintExprRegMem(se, reg, mem, readSize);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, readSize, op1, op2);
   EflagsBuilder::cfSub(inst, se, ap, op1, op2);
   EflagsBuilder::ofSub(inst, se, ap, readSize, op1, op2);
@@ -182,7 +182,7 @@ Inst *CmpIRBuilder::process(AnalysisProcessor &ap) const {
 
   try {
     this->templateMethod(ap, *inst, this->operands, "CMP");
-    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
     ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {

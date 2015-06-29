@@ -55,34 +55,34 @@ class AnalysisProcessor {
      * ----------------------
      */
 
-    /* Returns a symbolic element for the register (regID) */
-    SymbolicElement *createRegSE(Inst &inst, std::stringstream &expr, uint64 regID);
-    SymbolicElement *createRegSE(Inst &inst, std::stringstream &expr, uint64 regID, std::string comment);
-    SymbolicElement *createRegSE(Inst &inst, std::stringstream &expr, uint64 regID, uint64 regSize);
-    SymbolicElement *createRegSE(Inst &inst, std::stringstream &expr, uint64 regID, uint64 regSize, std::string comment);
+    /* Returns a symbolic expression for the register (regID) */
+    SymbolicExpression *createRegSE(Inst &inst, std::stringstream &expr, uint64 regID);
+    SymbolicExpression *createRegSE(Inst &inst, std::stringstream &expr, uint64 regID, std::string comment);
+    SymbolicExpression *createRegSE(Inst &inst, std::stringstream &expr, uint64 regID, uint64 regSize);
+    SymbolicExpression *createRegSE(Inst &inst, std::stringstream &expr, uint64 regID, uint64 regSize, std::string comment);
 
-    /* Returns a symbolic element for the memory address */
-    SymbolicElement *createMemSE(Inst &inst, std::stringstream &expr, uint64 address, uint64 writeSize);
-    SymbolicElement *createMemSE(Inst &inst, std::stringstream &expr, uint64 address, uint64 writeSize, std::string comment);
+    /* Returns a symbolic expression for the memory address */
+    SymbolicExpression *createMemSE(Inst &inst, std::stringstream &expr, uint64 address, uint64 writeSize);
+    SymbolicExpression *createMemSE(Inst &inst, std::stringstream &expr, uint64 address, uint64 writeSize, std::string comment);
 
-    /* Returns a symbolic element. This methods is mainly used for temporary expression */
-    SymbolicElement *createSE(Inst &inst, std::stringstream &expr);
-    SymbolicElement *createSE(Inst &inst, std::stringstream &expr, std::string comment);
+    /* Returns a symbolic expression. This methods is mainly used for temporary expression */
+    SymbolicExpression *createSE(Inst &inst, std::stringstream &expr);
+    SymbolicExpression *createSE(Inst &inst, std::stringstream &expr, std::string comment);
 
     /*
-     * Returns the ID of the symbolic element currently present in the
-     * symbolic register. If there is no symbolic element, it returns UNSET
+     * Returns the ID of the symbolic expression currently present in the
+     * symbolic register. If there is no symbolic expression, it returns UNSET
      */
     uint64 getRegSymbolicID(uint64 regID);
 
     /*
-     * Returns the ID of the symbolic element currently present in the
-     * symbolic memory. If there is no symbolic element, it returns UNSET
+     * Returns the ID of the symbolic expression currently present in the
+     * symbolic memory. If there is no symbolic expression, it returns UNSET
      */
     uint64 getMemSymbolicID(uint64 address);
 
-    /* Returns the symbolic element from its id */
-    SymbolicElement *getExpressionFromId(uint64 id);
+    /* Returns the symbolic expression from its id */
+    SymbolicExpression *getExpressionFromId(uint64 id);
 
     /* Returns the backtracked symbolic expression from an id */
     std::string getBacktrackedExpressionFromId(uint64 id);
@@ -128,36 +128,36 @@ class AnalysisProcessor {
 
     /*
      * Taint interface.
-     * Taint the symbolic element if the taint occurs.
+     * Taint the symbolic expression if the taint occurs.
      */
     bool isMemTainted(uint64 addr);
     bool isRegTainted(uint64 reg);
-    void setTaintMem(SymbolicElement *se, uint64 mem, uint64 flag);
-    void setTaintReg(SymbolicElement *se, uint64 reg, uint64 flag);
+    void setTaintMem(SymbolicExpression *se, uint64 mem, uint64 flag);
+    void setTaintReg(SymbolicExpression *se, uint64 reg, uint64 flag);
     void taintMem(uint64 addr);
     void taintReg(uint64 reg);
     void untaintMem(uint64 addr);
     void untaintReg(uint64 reg);
 
     /* ALU Spreading */
-    void aluSpreadTaintMemImm(SymbolicElement *se, uint64 memDst, uint32 writeSize);
-    void aluSpreadTaintMemReg(SymbolicElement *se, uint64 memDst, uint64 regSrc, uint32 writeSize);
-    void aluSpreadTaintRegImm(SymbolicElement *se, uint64 regDst);
-    void aluSpreadTaintRegMem(SymbolicElement *se, uint64 regDst, uint64 memSrc, uint32 readSize);
-    void aluSpreadTaintRegReg(SymbolicElement *se, uint64 regDst, uint64 regSrc);
-    void aluSpreadTaintMemMem(SymbolicElement *se, uint64 memDst, uint64 memSrc, uint32 writeSize);
+    void aluSpreadTaintMemImm(SymbolicExpression *se, uint64 memDst, uint32 writeSize);
+    void aluSpreadTaintMemReg(SymbolicExpression *se, uint64 memDst, uint64 regSrc, uint32 writeSize);
+    void aluSpreadTaintRegImm(SymbolicExpression *se, uint64 regDst);
+    void aluSpreadTaintRegMem(SymbolicExpression *se, uint64 regDst, uint64 memSrc, uint32 readSize);
+    void aluSpreadTaintRegReg(SymbolicExpression *se, uint64 regDst, uint64 regSrc);
+    void aluSpreadTaintMemMem(SymbolicExpression *se, uint64 memDst, uint64 memSrc, uint32 writeSize);
 
     /* Assignment Spreading */
-    void assignmentSpreadTaintExprMem(SymbolicElement *se, uint64 memSrc, uint32 readSize);
-    void assignmentSpreadTaintExprReg(SymbolicElement *se, uint64 regSrc);
-    void assignmentSpreadTaintExprRegMem(SymbolicElement *se, uint64 regSrc, uint64 memSrc, uint32 readSize);
-    void assignmentSpreadTaintExprRegReg(SymbolicElement *se, uint64 regSrc1, uint64 regSrc2);
-    void assignmentSpreadTaintMemImm(SymbolicElement *se, uint64 memDst, uint64 writeSize);
-    void assignmentSpreadTaintMemMem(SymbolicElement *se, uint64 memDst, uint64 memSrc, uint32 readSize);
-    void assignmentSpreadTaintMemReg(SymbolicElement *se, uint64 memDst, uint64 regSrc, uint64 writeSize);
-    void assignmentSpreadTaintRegImm(SymbolicElement *se, uint64 regDst);
-    void assignmentSpreadTaintRegMem(SymbolicElement *se, uint64 regDst, uint64 memSrc, uint32 readSize);
-    void assignmentSpreadTaintRegReg(SymbolicElement *se, uint64 regDst, uint64 regSrc);
+    void assignmentSpreadTaintExprMem(SymbolicExpression *se, uint64 memSrc, uint32 readSize);
+    void assignmentSpreadTaintExprReg(SymbolicExpression *se, uint64 regSrc);
+    void assignmentSpreadTaintExprRegMem(SymbolicExpression *se, uint64 regSrc, uint64 memSrc, uint32 readSize);
+    void assignmentSpreadTaintExprRegReg(SymbolicExpression *se, uint64 regSrc1, uint64 regSrc2);
+    void assignmentSpreadTaintMemImm(SymbolicExpression *se, uint64 memDst, uint64 writeSize);
+    void assignmentSpreadTaintMemMem(SymbolicExpression *se, uint64 memDst, uint64 memSrc, uint32 readSize);
+    void assignmentSpreadTaintMemReg(SymbolicExpression *se, uint64 memDst, uint64 regSrc, uint64 writeSize);
+    void assignmentSpreadTaintRegImm(SymbolicExpression *se, uint64 regDst);
+    void assignmentSpreadTaintRegMem(SymbolicExpression *se, uint64 regDst, uint64 memSrc, uint32 readSize);
+    void assignmentSpreadTaintRegReg(SymbolicExpression *se, uint64 regDst, uint64 regSrc);
 
 
     /*

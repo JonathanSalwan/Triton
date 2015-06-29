@@ -17,7 +17,7 @@ def cbeforeSymProc(instruction):
 
 def cafter(instruction):
     print '%#x: %s' %(instruction.address, instruction.assembly)
-    for se in instruction.symbolicElements:
+    for se in instruction.symbolicExpressions:
         if se.isTainted == True:
             print '\t -> %s%s%s' %(GREEN, se.expression, ENDC)
         else:

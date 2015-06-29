@@ -4,10 +4,10 @@
 
 #include "AnalysisProcessor.h"
 #include "Inst.h"
-#include "SymbolicElement.h"
+#include "SymbolicExpression.h"
 
 namespace ControlFlow {
-  SymbolicElement *rip(Inst &inst, AnalysisProcessor &ap, uint64 nextAddr);
+  SymbolicExpression *rip(Inst &inst, AnalysisProcessor &ap, uint64 nextAddr);
 };
 
 #endif     /* !__CONTROLFLOW_H__ */

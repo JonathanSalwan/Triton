@@ -5,7 +5,7 @@
 #include <LeaIRBuilder.h>
 #include <Registers.h>
 #include <SMT2Lib.h>
-#include <SymbolicElement.h>
+#include <SymbolicExpression.h>
 
 
 LeaIRBuilder::LeaIRBuilder(uint64 address, const std::string &disassembly):
@@ -24,7 +24,7 @@ void LeaIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, reg1e, dis2e, base2e, index2e, scale2e;
   uint64            reg           = this->operands[0].getValue();
   uint64            regSize       = this->operands[0].getSize();
@@ -55,7 +55,7 @@ void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   /* Effective address = Displacement + BaseReg + IndexReg * Scale */
   expr << smt2lib::bvadd(dis2e.str(), smt2lib::bvadd(base2e.str(), smt2lib::bvmul(index2e.str(), scale2e.str())));
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint via the concretization */
@@ -84,7 +84,7 @@ Inst *LeaIRBuilder::process(AnalysisProcessor &ap) const {
 
   try {
     this->templateMethod(ap, *inst, this->operands, "LEA");
-    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
     ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {

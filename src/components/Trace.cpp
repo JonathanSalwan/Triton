@@ -51,7 +51,7 @@ void Trace::save(std::stringstream &file)
     if (inst != nullptr) {
       std::stringstream expr(""), colr(ENDC);
 
-      for (auto se : inst->getSymbolicElements()){
+      for (auto se : inst->getSymbolicExpressions()){
 
         if (se->isTainted)
           colr.str(GREEN);

@@ -5,7 +5,7 @@
 #include <MovlpsIRBuilder.h>
 #include <Registers.h>
 #include <SMT2Lib.h>
-#include <SymbolicElement.h>
+#include <SymbolicExpression.h>
 
 
 MovlpsIRBuilder::MovlpsIRBuilder(uint64 address, const std::string &disassembly):
@@ -24,7 +24,7 @@ void MovlpsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void MovlpsIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1, op2;
   uint32            readSize = this->operands[1].getSize();
   uint64            mem      = this->operands[1].getValue();
@@ -40,7 +40,7 @@ void MovlpsIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
             smt2lib::extract(63, 0, op2.str())    /* Destination[0..63] = Source */
           );
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
@@ -54,7 +54,7 @@ void MovlpsIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void MovlpsIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1, op2;
   uint32            writeSize = this->operands[0].getSize();
   uint64            mem       = this->operands[0].getValue();
@@ -68,7 +68,7 @@ void MovlpsIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Destination = Source[0..63] */
   expr << smt2lib::extract(63, 0, op2.str());
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, writeSize);
 
   /* Apply the taint */
@@ -83,7 +83,7 @@ Inst *MovlpsIRBuilder::process(AnalysisProcessor &ap) const {
 
   try {
     this->templateMethod(ap, *inst, this->operands, "MOVLPS");
-    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
     ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {

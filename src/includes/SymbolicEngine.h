@@ -13,7 +13,7 @@
 #include "Misc.h"
 #include "Registers.h"
 #include "SMT2Lib.h"
-#include "SymbolicElement.h"
+#include "SymbolicExpression.h"
 #include "SymbolicVariable.h"
 #include "TritonTypes.h"
 
@@ -30,7 +30,7 @@ class SymbolicEngine {
     std::vector<SymbolicVariable *> symbolicVariables;
 
     /* List of symbolic expressions */
-    std::vector<SymbolicElement *> symbolicExpressions;
+    std::vector<SymbolicExpression *> symbolicExpressions;
 
     /*
      * Addresses -> symbolic expression
@@ -60,16 +60,16 @@ class SymbolicEngine {
     uint64                          symbolicReg[ID_LAST_ITEM];
 
     /* public methods */
-    SymbolicElement                 *getExpressionFromId(uint64 id);
-    SymbolicElement                 *newSymbolicElement(std::stringstream &src);
-    SymbolicElement                 *newSymbolicElement(std::stringstream &src, std::string comment);
+    SymbolicExpression                 *getExpressionFromId(uint64 id);
+    SymbolicExpression                 *newSymbolicExpression(std::stringstream &src);
+    SymbolicExpression                 *newSymbolicExpression(std::stringstream &src, std::string comment);
     SymbolicVariable                *addSymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 size, std::string comment);
     SymbolicVariable                *getSymVar(std::string symVarName);
     SymbolicVariable                *getSymVar(uint64 symVarId);
     std::list<uint64>               getPathConstraints(void);
     std::string                     getBacktrackedExpressionFromId(uint64 id);
     std::string                     getVariablesDeclaration(void);
-    std::vector<SymbolicElement *>  getExpressions(void);
+    std::vector<SymbolicExpression *>  getExpressions(void);
     std::vector<SymbolicVariable *> getSymVars(void);
     uint64                          convertExprToSymVar(uint64 exprId, uint64 symVarSize, std::string symVarComment);
     uint64                          convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment);

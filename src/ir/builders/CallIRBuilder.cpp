@@ -5,7 +5,7 @@
 #include <CallIRBuilder.h>
 #include <Registers.h>
 #include <SMT2Lib.h>
-#include <SymbolicElement.h>
+#include <SymbolicExpression.h>
 
 
 CallIRBuilder::CallIRBuilder(uint64 address, const std::string &disassembly):
@@ -13,9 +13,9 @@ CallIRBuilder::CallIRBuilder(uint64 address, const std::string &disassembly):
 }
 
 
-static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint64 writeSize)
+static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint64 writeSize)
 {
-  SymbolicElement     *se;
+  SymbolicExpression    *se;
   std::stringstream   expr, op1, op2;
 
   /* Create the SMT semantic */
@@ -24,7 +24,7 @@ static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint64 wri
 
   expr << smt2lib::bvsub(op1.str(), op2.str());
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_RSP, REG_SIZE, "Aligns stack");
 
   /* Apply the taint */
@@ -35,7 +35,7 @@ static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint64 wri
 
 
 void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr1, expr2;
   uint64            reg       = this->operands[0].getValue();
   uint32            regSize   = this->operands[0].getSize();
@@ -49,7 +49,7 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   /* *RSP =  Next_RIP */
   expr1 << smt2lib::bv(this->nextAddress, writeSize * REG_SIZE);
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr1, memDst, writeSize, "Saved RIP");
 
   /* Apply the taint */
@@ -59,7 +59,7 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   /* RIP = reg */
   expr2 << ap.buildSymbolicRegOperand(reg, regSize);
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr2, ID_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
@@ -68,7 +68,7 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr1, expr2;
   uint64            imm       = this->operands[0].getValue();
   uint64            memDst    = this->operands[1].getValue(); // The dst memory write
@@ -81,7 +81,7 @@ void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   /* *RSP =  Next_RIP */
   expr1 << smt2lib::bv(this->nextAddress, writeSize * REG_SIZE);
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr1, memDst, writeSize, "Saved RIP");
 
   /* Apply the taint */
@@ -91,7 +91,7 @@ void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   /* RIP = imm */
   expr2 << smt2lib::bv(imm, writeSize * REG_SIZE);
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr2, ID_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
@@ -100,7 +100,7 @@ void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr1, expr2;
   uint64            mem       = this->operands[0].getValue();
   uint64            memSize   = this->operands[0].getSize();
@@ -114,7 +114,7 @@ void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   /* *RSP =  Next_RIP */
   expr1 << smt2lib::bv(this->nextAddress, writeSize * REG_SIZE);
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr1, memDst, writeSize, "Saved RIP");
 
   /* Apply the taint */
@@ -124,7 +124,7 @@ void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   /* RIP = imm */
   expr2 << ap.buildSymbolicMemOperand(mem, memSize);
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr2, ID_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
@@ -144,7 +144,7 @@ Inst *CallIRBuilder::process(AnalysisProcessor &ap) const {
 
   try {
     this->templateMethod(ap, *inst, this->operands, "CALL");
-    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
   }
   catch (std::exception &e) {
     delete inst;

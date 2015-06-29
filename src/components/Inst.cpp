@@ -84,23 +84,23 @@ void Inst::setOperands(const std::vector<TritonOperand> &operands)
 }
 
 
-/* Adds a new symbolic element */
-void Inst::addElement(SymbolicElement *se)
+/* Adds a new symbolic expression */
+void Inst::addExpression(SymbolicExpression *se)
 {
-  this->symbolicElements.push_back(se);
+  this->symbolicExpressions.push_back(se);
 }
 
 
-/* Returns the elements list */
-const std::list<SymbolicElement*> &Inst::getSymbolicElements(void)
+/* Returns the expressions list */
+const std::list<SymbolicExpression*> &Inst::getSymbolicExpressions(void)
 {
-  return this->symbolicElements;
+  return this->symbolicExpressions;
 }
 
 
-/* Returns the number of elements */
-size_t Inst::numberOfElements(void)
+/* Returns the number of expressions */
+size_t Inst::numberOfExpressions(void)
 {
-  return this->symbolicElements.size();
+  return this->symbolicExpressions.size();
 }
 

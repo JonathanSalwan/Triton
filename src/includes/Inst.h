@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "IRBuilderOperand.h"
-#include "SymbolicElement.h"
+#include "SymbolicExpression.h"
 #include "TritonOperand.h"
 
 
@@ -17,21 +17,21 @@ class Inst {
     uint64                          threadId;
     uint64                          address;
     std::string                     disassembly;
-    std::list<SymbolicElement*>     symbolicElements;
+    std::list<SymbolicExpression*>     symbolicExpressions;
     uint32                          opcode;
     int32_t                         opcodeCategory;
     std::vector<TritonOperand>      operands;
 
   public:
-    const std::list<SymbolicElement*> &getSymbolicElements(void);
+    const std::list<SymbolicExpression*> &getSymbolicExpressions(void);
     const std::string                 &getDisassembly(void);
     const std::vector<TritonOperand>  &getOperands(void);
-    size_t                            numberOfElements(void);
+    size_t                            numberOfExpressions(void);
     uint32                            getOpcode(void);
     int32_t                           getOpcodeCategory(void);
     uint64                            getAddress(void);
     uint64                            getThreadID(void);
-    void                              addElement(SymbolicElement *se);
+    void                              addExpression(SymbolicExpression *se);
     void                              setOpcode(uint32 op);
     void                              setOpcodeCategory(int32_t category);
     bool                              isBranch(void);

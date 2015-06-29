@@ -5,7 +5,7 @@
 #include <JmpIRBuilder.h>
 #include <Registers.h>
 #include <SMT2Lib.h>
-#include <SymbolicElement.h>
+#include <SymbolicExpression.h>
 
 
 JmpIRBuilder::JmpIRBuilder(uint64 address, const std::string &disassembly):
@@ -20,7 +20,7 @@ void JmpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   /* Finale expr */
   expr << smt2lib::bv(imm, REG_SIZE_BIT);
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
 }
 
@@ -36,7 +36,7 @@ void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   /* Finale expr */
   expr << op1.str();
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
 }
 
@@ -52,7 +52,7 @@ void JmpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   /* Finale expr */
   expr << op1.str();
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
 }
 
@@ -69,7 +69,7 @@ Inst *JmpIRBuilder::process(AnalysisProcessor &ap) const {
 
   try {
     this->templateMethod(ap, *inst, this->operands, "JMP");
-    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
   }
   catch (std::exception &e) {
     delete inst;

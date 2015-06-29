@@ -5,7 +5,7 @@
 #include <ShrIRBuilder.h>
 #include <Registers.h>
 #include <SMT2Lib.h>
-#include <SymbolicElement.h>
+#include <SymbolicExpression.h>
 
 
 ShrIRBuilder::ShrIRBuilder(uint64 address, const std::string &disassembly):
@@ -14,7 +14,7 @@ ShrIRBuilder::ShrIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void ShrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1, op2;
   uint64            reg     = this->operands[0].getValue();
   uint64            imm     = this->operands[1].getValue();
@@ -27,13 +27,13 @@ void ShrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   /* Finale expr */
   expr << smt2lib::bvlshr(op1.str(), op2.str());
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::cfShr(inst, se, ap, regSize, op1, op2);
   EflagsBuilder::ofShr(inst, se, ap, regSize, op1, op2);
   EflagsBuilder::pfShl(inst, se, ap, regSize, op2); /* Same that shl */
@@ -43,7 +43,7 @@ void ShrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void ShrIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1, op2;
   uint64            reg     = this->operands[0].getValue();
   uint32            regSize = this->operands[0].getSize();
@@ -55,13 +55,13 @@ void ShrIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Finale expr */
   expr << smt2lib::bvlshr(op1.str(), op2.str());
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::cfShr(inst, se, ap, regSize, op1, op2);
   EflagsBuilder::ofShr(inst, se, ap, regSize, op1, op2);
   EflagsBuilder::pfShl(inst, se, ap, regSize, op2); /* Same that shl */
@@ -76,7 +76,7 @@ void ShrIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void ShrIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1, op2;
   uint32            writeSize = this->operands[0].getSize();
   uint64            mem       = this->operands[0].getValue();
@@ -89,13 +89,13 @@ void ShrIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   /* Final expr */
   expr << smt2lib::bvlshr(op1.str(), op2.str());
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, writeSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintMemMem(se, mem, mem, writeSize);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::cfShr(inst, se, ap, writeSize, op1, op2);
   EflagsBuilder::ofShr(inst, se, ap, writeSize, op1, op2);
   EflagsBuilder::pfShl(inst, se, ap, writeSize, op2) /* Same that shl */;
@@ -116,7 +116,7 @@ Inst *ShrIRBuilder::process(AnalysisProcessor &ap) const {
 
   try {
     this->templateMethod(ap, *inst, this->operands, "SHR");
-    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
     ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {

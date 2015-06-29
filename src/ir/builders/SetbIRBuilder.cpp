@@ -5,7 +5,7 @@
 #include <SetbIRBuilder.h>
 #include <Registers.h>
 #include <SMT2Lib.h>
-#include <SymbolicElement.h>
+#include <SymbolicExpression.h>
 
 
 SetbIRBuilder::SetbIRBuilder(uint64 address, const std::string &disassembly):
@@ -19,7 +19,7 @@ void SetbIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void SetbIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, reg1e, cf;
   uint64            reg     = this->operands[0].getValue();
   uint64            regSize = this->operands[0].getSize();
@@ -36,7 +36,7 @@ void SetbIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
             smt2lib::bv(1, BYTE_SIZE_BIT),
             smt2lib::bv(0, BYTE_SIZE_BIT));
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint via the concretization */
@@ -47,7 +47,7 @@ void SetbIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void SetbIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, mem1e, cf;
   uint64            mem     = this->operands[0].getValue();
   uint64            memSize = this->operands[0].getSize();
@@ -64,7 +64,7 @@ void SetbIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
             smt2lib::bv(1, BYTE_SIZE_BIT),
             smt2lib::bv(0, BYTE_SIZE_BIT));
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, memSize);
 
   /* Apply the taint via the concretization */
@@ -86,7 +86,7 @@ Inst *SetbIRBuilder::process(AnalysisProcessor &ap) const {
 
   try {
     this->templateMethod(ap, *inst, this->operands, "SETB");
-    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
     ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {

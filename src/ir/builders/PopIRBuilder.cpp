@@ -5,7 +5,7 @@
 #include <PopIRBuilder.h>
 #include <Registers.h>
 #include <SMT2Lib.h>
-#include <SymbolicElement.h>
+#include <SymbolicExpression.h>
 
 
 PopIRBuilder::PopIRBuilder(uint64 address, const std::string &disassembly):
@@ -13,9 +13,9 @@ PopIRBuilder::PopIRBuilder(uint64 address, const std::string &disassembly):
 }
 
 
-static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 readSize)
+static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 readSize)
 {
-  SymbolicElement     *se;
+  SymbolicExpression    *se;
   std::stringstream   expr, op1, op2;
 
   /* Create the SMT semantic. */
@@ -24,7 +24,7 @@ static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 rea
 
   expr << smt2lib::bvadd(op1.str(), op2.str());
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_RSP, REG_SIZE, "Aligns stack");
 
   /* Apply the taint */
@@ -35,7 +35,7 @@ static SymbolicElement *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 rea
 
 
 void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1;
   uint64            reg       = this->operands[0].getValue(); // Reg poped
   uint64            regSize   = this->operands[0].getSize();  // Reg size poped
@@ -48,7 +48,7 @@ void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   /* Finale expr */
   expr << op1.str();
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
@@ -60,7 +60,7 @@ void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void PopIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1;
   uint64            memOp     = this->operands[0].getValue(); // Mem poped
   uint32            writeSize = this->operands[0].getSize();
@@ -73,7 +73,7 @@ void PopIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   /* Finale expr */
   expr << op1.str();
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, memOp, writeSize);
 
   /* Apply the taint */
@@ -103,7 +103,7 @@ Inst *PopIRBuilder::process(AnalysisProcessor &ap) const {
 
   try {
     this->templateMethod(ap, *inst, this->operands, "POP");
-    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
     ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {
