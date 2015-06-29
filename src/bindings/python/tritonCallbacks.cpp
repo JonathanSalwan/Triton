@@ -521,7 +521,7 @@ static PyObject *Triton_getSymExpr(PyObject *self, PyObject *id)
     return PyErr_Format(PyExc_TypeError, "getSymExpr(): expected an id (integer) as argument");
 
   exprId = PyLong_AsLong(id);
-  expr = ap.getElementFromId(exprId);
+  expr = ap.getExpressionFromId(exprId);
 
   if (expr == nullptr)
     return PyErr_Format(PyExc_TypeError, "getSymExpr(): Invalid symbolic expression ID");

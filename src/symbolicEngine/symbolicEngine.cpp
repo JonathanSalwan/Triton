@@ -167,11 +167,18 @@ SymbolicElement *SymbolicEngine::newSymbolicElement(std::stringstream &src, std:
 
 
 /* Get the symbolic element pointer from a symbolic ID */
-SymbolicElement *SymbolicEngine::getElementFromId(uint64 id)
+SymbolicElement *SymbolicEngine::getExpressionFromId(uint64 id)
 {
   if (id >= this->symbolicExpressions.size())
     return nullptr;
   return this->symbolicExpressions[id];
+}
+
+
+/* Returns all symbolic expressions */
+std::vector<SymbolicElement *> SymbolicEngine::getExpressions(void)
+{
+  return this->symbolicExpressions;
 }
 
 
@@ -198,7 +205,7 @@ std::string SymbolicEngine::deepReplace(std::stringstream &formula)
   value = atoi(subs.c_str());
   from << "#" << value;
 
-  to.str(this->getElementFromId(value)->getSource()->str());
+  to.str(this->getExpressionFromId(value)->getSource()->str());
 
   formula.str(this->replaceEq(formula.str(), from.str(), to.str()));
   return formula.str();
@@ -211,7 +218,7 @@ std::string SymbolicEngine::getBacktrackedExpressionFromId(uint64 id)
   SymbolicElement   *element;
   std::stringstream formula;
 
-  element = this->getElementFromId(id);
+  element = this->getExpressionFromId(id);
   if (element == nullptr)
     return "";
 
@@ -246,7 +253,7 @@ std::string SymbolicEngine::getVariablesDeclaration(void)
 uint64 SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symVarSize, std::string symVarComment)
 {
   SymbolicVariable   *symVar  = nullptr;
-  SymbolicElement    *element = this->getElementFromId(exprId);
+  SymbolicElement    *element = this->getExpressionFromId(exprId);
   std::stringstream  newExpr;
 
   if (element == nullptr)
@@ -275,7 +282,7 @@ uint64 SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std
   if (memSymId == UNSET)
     throw std::runtime_error("SymbolicEngine::convertMemToSymVar() - This memory address is UNSET");
 
-  element = this->getElementFromId(memSymId);
+  element = this->getExpressionFromId(memSymId);
 
   if (element == nullptr)
     return UNSET;
@@ -306,7 +313,7 @@ uint64 SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVarSize, std::
   if (regSymId == UNSET)
     throw std::runtime_error("SymbolicEngine::convertRegToSymVar() - This register ID is UNSET");
 
-  element = this->getElementFromId(regSymId);
+  element = this->getExpressionFromId(regSymId);
 
   if (element == nullptr)
     return UNSET;

@@ -82,7 +82,7 @@ class AnalysisProcessor {
     uint64 getMemSymbolicID(uint64 address);
 
     /* Returns the symbolic element from its id */
-    SymbolicElement *getElementFromId(uint64 id);
+    SymbolicElement *getExpressionFromId(uint64 id);
 
     /* Returns the backtracked symbolic expression from an id */
     std::string getBacktrackedExpressionFromId(uint64 id);

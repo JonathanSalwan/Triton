@@ -242,9 +242,9 @@ std::vector<SymbolicVariable *> AnalysisProcessor::getSymVars(void)
 }
 
 
-SymbolicElement *AnalysisProcessor::getElementFromId(uint64 id)
+SymbolicElement *AnalysisProcessor::getExpressionFromId(uint64 id)
 {
-  return this->symEngine.getElementFromId(id);
+  return this->symEngine.getExpressionFromId(id);
 }
 
 
