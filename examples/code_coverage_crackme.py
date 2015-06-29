@@ -6,18 +6,6 @@
 from triton import *
 import smt2lib
 
-class Node:
-    def __init__(self, instruction):
-        #self.num = 0
-        self.instruction = instruction
-        self.if_true = None
-        self.if_false = None
-        self.true_v = False
-        self.false_v = False
-        self.expr = None
-        self.symVars = dict()
-
-
 cond = dict()
 addrCmp = dict()
 addrDone = []
@@ -26,12 +14,13 @@ workList = []
 todo = []
 done = []
 def csym(instruction):
-    global addrCmp
-    global workList
-    if instruction.address == 0x40050D:
+    if instruction.address == 0x400575:
         #print todo
-        addr = getRegValue(IDREF.REG.RBP) - 0x14
-        sid = convertMemToSymVar(addr, IDREF.CPUSIZE.QWORD, "addr")
+        addr = getRegValue(IDREF.REG.RBP) - 0x18 # point on passwd input
+        pointeur = getMemValue(addr, IDREF.CPUSIZE.QWORD)
+        for i in range(8):
+            sid = convertMemToSymVar(pointeur + i * 8, IDREF.CPUSIZE.WORD, "addr_%d"%i)
+
         convertRegToSymVar(IDREF.REG.RIP, IDREF.CPUSIZE.QWORD, "rip")
         if len(todo) != 0:
             addr,value = todo.pop()
@@ -89,29 +78,32 @@ def cbefore(instruction):
                     #restoreSnapshot()
 
 
-    if instruction.address == 0x400513:
+    if instruction.address == 0x4005B2:
         print "BB1"
         return
-    if instruction.address == 0x400522:
+    if instruction.address == 0x4005C3:
         print "BB2"
         return
 
-    if instruction.address == 0x400531:
+    if instruction.address == 0x4005B9:
         print "BB3"
         return
 
 
 
-    if instruction.address == 0x40050A and not isSnapshotEnable():
+
+
+
+    if instruction.address == 0x40056D and not isSnapshotEnable():
         takeSnapshot()
         return
 
-    if instruction.address == 0x40053B and len(todo) == 0:
-        print '[+] We coveraged all graph'
-        return
+   # if instruction.address == 0x4005C8 and len(todo) == 0:
+        #print '[+] We coveraged all graph'
+        #return
 
 
-    if instruction.address == 0x40053B:
+    if instruction.address == 0x4005C8:
         #print workList
         #print "[+] We set %x to %d"%(addr, v)
         #setMemValue(addr, IDREF.CPUSIZE.QWORD, v)
