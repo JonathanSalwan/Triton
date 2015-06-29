@@ -514,8 +514,8 @@ static PyObject *Triton_getStats(PyObject *self, PyObject *noargs)
 static char Triton_getSymExpr_doc[] = "Returns a SymbolicExpression class corresponding to the symbolic expression ID.";
 static PyObject *Triton_getSymExpr(PyObject *self, PyObject *id)
 {
-  uint64          exprId;
-  SymbolicExpression *expr;
+  uint64              exprId;
+  SymbolicExpression  *expr;
 
   if (!PyLong_Check(id) && !PyInt_Check(id))
     return PyErr_Format(PyExc_TypeError, "getSymExpr(): expected an id (integer) as argument");
@@ -527,6 +527,23 @@ static PyObject *Triton_getSymExpr(PyObject *self, PyObject *id)
     return PyErr_Format(PyExc_TypeError, "getSymExpr(): Invalid symbolic expression ID");
 
   return PySymbolicExpression(expr);
+}
+
+
+static char Triton_getSymExprs_doc[] = "Returns all SymbolicExpression class.";
+static PyObject *Triton_getSymExprs(PyObject *self, PyObject *noargs)
+{
+  PyObject                          *ret;
+  std::vector<SymbolicExpression *> exprs;
+  uint64                            numberOfExprs = 0;
+
+  exprs = ap.getExpressions();
+  numberOfExprs = exprs.size();
+  ret = xPyList_New(numberOfExprs);
+  for (uint64 index = 0; index < numberOfExprs; index++)
+    PyList_SetItem(ret, index, PySymbolicExpression(exprs[index]));
+
+  return ret;
 }
 
 
@@ -1073,6 +1090,7 @@ PyMethodDef tritonCallbacks[] = {
   {"getRegs",                   Triton_getRegs,                   METH_NOARGS,  Triton_getRegs_doc},
   {"getStats",                  Triton_getStats,                  METH_NOARGS,  Triton_getStats_doc},
   {"getSymExpr",                Triton_getSymExpr,                METH_O,       Triton_getSymExpr_doc},
+  {"getSymExprs",               Triton_getSymExprs,               METH_NOARGS,  Triton_getSymExprs_doc},
   {"getSymVar",                 Triton_getSymVar,                 METH_O,       Triton_getSymVar_doc},
   {"getSymVarSize",             Triton_getSymVarSize,             METH_O,       Triton_getSymVarSize_doc},
   {"getSymVars",                Triton_getSymVars,                METH_NOARGS,  Triton_getSymVars_doc},

@@ -84,6 +84,9 @@ class AnalysisProcessor {
     /* Returns the symbolic expression from its id */
     SymbolicExpression *getExpressionFromId(uint64 id);
 
+    /* Returns all symbolic expressions */
+    std::vector<SymbolicExpression *> getExpressions(void);
+
     /* Returns the backtracked symbolic expression from an id */
     std::string getBacktrackedExpressionFromId(uint64 id);
 

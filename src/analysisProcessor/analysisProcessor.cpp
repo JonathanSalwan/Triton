@@ -248,6 +248,12 @@ SymbolicExpression *AnalysisProcessor::getExpressionFromId(uint64 id)
 }
 
 
+std::vector<SymbolicExpression *> AnalysisProcessor::getExpressions(void)
+{
+  return this->symEngine.getExpressions();
+}
+
+
 std::string AnalysisProcessor::getBacktrackedExpressionFromId(uint64 id)
 {
   return this->symEngine.getBacktrackedExpressionFromId(id);
