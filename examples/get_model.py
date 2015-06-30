@@ -2,7 +2,7 @@
 import smt2lib
 from   triton import *
 
-# $ ../../../pin -t ./triton.so -script ./examples/get_model.py -- ./samples/crackmes/crackme_xor elite
+# $ ./triton ./examples/get_model.py ./samples/crackmes/crackme_xor elite
 # {'SymVar_0': "0x65, 'e'"}
 # {'SymVar_1': "0x6c, 'l'"}
 # {'SymVar_2': "0x69, 'i'"}

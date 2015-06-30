@@ -3,7 +3,7 @@ from triton import *
 
 # Output
 #
-# $ ../../../pin -t ./triton.so -script examples/callback_syscall.py  -- ./samples/crackmes/crackme_xor a
+# $ ./triton examples/callback_syscall.py  ./samples/crackmes/crackme_xor a
 # -> Syscall Entry: fstat
 # <- Syscall return 0
 # -> Syscall Entry: mmap

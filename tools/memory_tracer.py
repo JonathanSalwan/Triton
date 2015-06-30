@@ -15,7 +15,7 @@
 ## Output:
 ## -------
 ##
-## $ ../../../pin -t ./triton.so -script ./tools/memory_tracer.py -- ./samples/vulns/testSuite
+## $ ./triton ./tools/memory_tracer.py ./samples/vulns/testSuite
 ## [...]
 ## [R:4] 0x0000004005fa: mov eax, dword ptr [rbp-0x8]      R:0x00007fff51aa7c08: 04 00 00 00 (0x4)
 ## [W:1] 0x000000400606: mov byte ptr [rax], 0x45          W:0x00007fff51aa7c08: 45 (0x45)

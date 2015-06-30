@@ -1,7 +1,7 @@
 
 from triton import *
 
-# $ ../../../pin -t ./triton.so -script ./examples/get_stats.py -- ./samples/crackmes/crackme_xor elite
+# $ ./triton ./examples/get_stats.py ./samples/crackmes/crackme_xor elite
 # Win
 # Number of branches:              141
 # Number of expressions:           3535

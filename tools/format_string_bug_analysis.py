@@ -16,7 +16,7 @@
 ## Output:
 ## -------
 ##
-## $ ../../../pin -t ./triton.so -script ./tools/format_string_bug_analysis.py -- ./samples/vulns/formatString abcd titutatatoto
+## $ ./triton ./tools/format_string_bug_analysis.py ./samples/vulns/formatString abcd titutatatoto
 ## [+] 012 bytes tainted from the argv[2] (0x7fff367da0f9) pointer
 ## [+] 004 bytes tainted from the argv[1] (0x7fff367da0f4) pointer
 ## [+] 028 bytes tainted from the argv[0] (0x7fff367da0d7) pointer
