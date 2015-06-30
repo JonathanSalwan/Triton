@@ -190,7 +190,7 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
   if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
     return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
-  return Py_BuildValue("k", ap.convertExprToSymVar(ei, vs, vc));
+  return PySymbolicVariable(ap.convertExprToSymVar(ei, vs, vc));
 }
 
 
@@ -223,7 +223,7 @@ static PyObject *Triton_convertMemToSymVar(PyObject *self, PyObject *args)
   if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
     return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
-  return Py_BuildValue("k", ap.convertMemToSymVar(ma, vs, vc));
+  return PySymbolicVariable(ap.convertMemToSymVar(ma, vs, vc));
 }
 
 
@@ -256,7 +256,7 @@ static PyObject *Triton_convertRegToSymVar(PyObject *self, PyObject *args)
   if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
     return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
-  return Py_BuildValue("k", ap.convertRegToSymVar(ri, vs, vc));
+  return PySymbolicVariable(ap.convertRegToSymVar(ri, vs, vc));
 }
 
 
