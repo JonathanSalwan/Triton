@@ -61,7 +61,7 @@ SymbolicEngine::~SymbolicEngine()
 
 
 /*
- * Concretize a register. If the register is setup at UNSETthe next assignment
+ * Concretize a register. If the register is setup as UNSET the next assignment
  * will be over the concretization. This method must be called before symbolic
  * processing.
  */

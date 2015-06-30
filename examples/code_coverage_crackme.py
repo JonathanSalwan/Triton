@@ -6,22 +6,20 @@
 from triton import *
 import smt2lib
 
-cond = dict()
-addrCmp = dict()
-addrDone = []
-workList = []
-
+sidVar = []
 todo = []
 done = []
 def csym(instruction):
     if instruction.address == 0x400575:
-        #print todo
+
         addr = getRegValue(IDREF.REG.RBP) - 0x18 # point on passwd input
         pointeur = getMemValue(addr, IDREF.CPUSIZE.QWORD)
-        for i in range(8):
-            sid = convertMemToSymVar(pointeur + i * 8, IDREF.CPUSIZE.WORD, "addr_%d"%i)
 
-        convertRegToSymVar(IDREF.REG.RIP, IDREF.CPUSIZE.QWORD, "rip")
+        for i in range(8):
+            print "We set %x to symvar"%(pointeur + i)
+            sid = convertMemToSymVar(pointeur + i, IDREF.CPUSIZE.BYTE, "addr_%d"%i)
+            sidVar.append(sid)
+
         if len(todo) != 0:
             addr,value = todo.pop()
             print "We inject %d in %x"%(value,addr)
@@ -31,15 +29,50 @@ def csym(instruction):
 
 
 
+
+
+
+
     return
 
 def cafter(instruction):
+    if instruction.address == 0x40058B:
+
+
+        addr = getRegValue(IDREF.REG.RBP) - 0x18 # point on passwd input
+        pointeur = getMemValue(addr, IDREF.CPUSIZE.QWORD)
+        s = getSymVar(sidVar[0])
+        #print getBacktrackedSymExpr(s.id)
+        rax = getRegValue(IDREF.REG.RAX)
+        print "RAX = %x"%rax
+
+
+        #print map(hex,sidVar)
+        rax = getRegValue(IDREF.REG.RAX)
+        #raxId   = getRegSymbolicID(IDREF.REG.RAX)
+        raxId = sidVar[0]
+        print getSymVar(raxId).comment
+        raxExpr = getBacktrackedSymExpr(raxId)
+        #print raxExpr
+        expr    = smt2lib.smtAssert(smt2lib.equal(raxExpr, smt2lib.bv(8, 8))) # (assert (= zf True))
+        models  = getModel(expr)
+        #print "hello"
+        for k, v in models.items():
+            s = getSymVar(k)
+            print "\t",s.comment,v
+                    #restoreSnapshot(
 
     return
 
 
 def cbefore(instruction):
-
+    if instruction.address == 0x4005BD:
+        addr = getRegValue(IDREF.REG.RBP) - 0x18 # point on passwd input
+        pointeur = getMemValue(addr, IDREF.CPUSIZE.QWORD)
+        s = getSymVar(sidVar[0])
+        print getBacktrackedSymExpr(s.id)
+        #rax = getRegValue(IDREF.REG.RAX)
+        #print "RAX = %x"%rax
     if instruction.isBranch:
         print instruction.assembly
         for operand in instruction.operands:
@@ -98,16 +131,10 @@ def cbefore(instruction):
         takeSnapshot()
         return
 
-   # if instruction.address == 0x4005C8 and len(todo) == 0:
-        #print '[+] We coveraged all graph'
-        #return
 
 
     if instruction.address == 0x4005C8:
-        #print workList
-        #print "[+] We set %x to %d"%(addr, v)
-        #setMemValue(addr, IDREF.CPUSIZE.QWORD, v)
-        restoreSnapshot()
+        #restoreSnapshot()
         return
         #restoreSnapshot()
 
