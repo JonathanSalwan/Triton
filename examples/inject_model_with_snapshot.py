@@ -1,5 +1,5 @@
 
-# $ ../../../pin -t ./triton.so -script ./examples/inject_model_with_snapshot.py -- ./samples/crackmes/crackme_xor a
+# $ ./triton ./examples/inject_model_with_snapshot.py ./samples/crackmes/crackme_xor a
 # [+] Take a snapshot at the prologue of the function
 # [+] Still not the good password. Restore snapshot.
 # [+] Inject the character 'e' in memory

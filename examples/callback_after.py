@@ -1,7 +1,7 @@
 
 # Output
 #
-# $ ../../../pin -t ./triton.so -script ./examples/callback_after.py -- ./samples/crackmes/crackme_xor a
+# $ ./triton ./examples/callback_after.py ./samples/crackmes/crackme_xor a
 # 0x40056d: push rbp
 #          -> #0 = (bvsub (_ bv140735022953896 64) (_ bv8 64)) ; Aligns stack
 #          -> #1 = (_ bv140735022953936 64) 
