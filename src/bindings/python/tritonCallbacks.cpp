@@ -25,10 +25,11 @@ namespace PyTritonOptions {
   std::set<uint64>  stopAnalysisFromAddr;
 
   /* Callback configurations */
+  PyObject *callbackAfter         = nullptr;                // After the instruction processing
   PyObject *callbackBefore        = nullptr;                // Before the instruction processing
   PyObject *callbackBeforeIRProc  = nullptr;                // Before the IR processing
-  PyObject *callbackAfter         = nullptr;                // After the instruction processing
   PyObject *callbackFini          = nullptr;                // At the end of the execution
+  PyObject *callbackSignals       = nullptr;                // When a signal occurs
   PyObject *callbackSyscallEntry  = nullptr;                // Before syscall processing
   PyObject *callbackSyscallExit   = nullptr;                // After syscall processing
   std::map<const char *, PyObject *> callbackRoutineEntry;  // Before routine processing
@@ -71,6 +72,9 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
 
   else if ((PyLong_AsLong(flag) == CB_FINI))
     PyTritonOptions::callbackFini = function;
+
+  else if ((PyLong_AsLong(flag) == CB_SIGNALS))
+    PyTritonOptions::callbackSignals = function;
 
   else if ((PyLong_AsLong(flag) == CB_SYSCALL_ENTRY))
     PyTritonOptions::callbackSyscallEntry = function;

@@ -309,6 +309,35 @@ static void callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDAR
 }
 
 
+/* Callback when a signals occurs */
+static bool callbackSignals(THREADID threadId, sint32 sig, CONTEXT *ctx, bool hasHandler, const EXCEPTION_INFO *pExceptInfo, void *v)
+{
+  if (!analysisTrigger.getState())
+  /* Analysis locked */
+    return false;
+
+  /* Mutex */
+  ap.lock();
+
+  /* Update the current context handler */
+  ap.updateCurrentCtxH(new PINContextHandler(ctx, threadId));
+
+  /* Python callback at the end of execution */
+  processingPyConf.callbackSignals(threadId, sig);
+
+  /* Mutex */
+  ap.unlock();
+
+  /*
+   * We must exit. If you don't want to exit,
+   * you must use the restoreSnapshot() function.
+   */
+  exit(0);
+
+  return true;
+}
+
+
 /*
  * Usage function if Pin fail to start.
  * Display the help message.
@@ -356,6 +385,13 @@ int main(int argc, char *argv[])
 
   /* Syscall exit callback */
   PIN_AddSyscallExitFunction(callbackSyscallExit, 0);
+
+  /* Signals callback */
+  PIN_InterceptSignal(SIGFPE,  callbackSignals, 0); /* Floating point exception */
+  PIN_InterceptSignal(SIGILL,  callbackSignals, 0); /* Illegal Instruction */
+  PIN_InterceptSignal(SIGKILL, callbackSignals, 0); /* Kill signal */
+  PIN_InterceptSignal(SIGPIPE, callbackSignals, 0); /* Broken pipe: write to pipe with no readers */
+  PIN_InterceptSignal(SIGSEGV, callbackSignals, 0); /* Invalid memory reference */
 
   /* Exec the python bindings file */
   if (!execBindings(KnobPythonModule.Value().c_str())) {
