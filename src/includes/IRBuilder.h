@@ -38,7 +38,7 @@ class IRBuilder {
     virtual void setOpcodeCategory(int32_t category) = 0;
 
     // Get the opcode category.
-    virtual int32_t getOpcodeCategory(void) = 0;
+    virtual int32_t getOpcodeCategory(void) const = 0;
 
     // Returns true or false if the instruction is branch.
     virtual bool isBranch(void) = 0;
@@ -46,8 +46,23 @@ class IRBuilder {
     // Returns the address of the instruction.
     virtual uint64 getAddress(void) const = 0;
 
+    // Returns the base address.
+    virtual uint64 getBaseAddress(void) const = 0;
+
+    // Returns the offset of the instruction in the file.
+    virtual uint64 getOffset(void) const = 0;
+
     // Returns the assembler instruction.
     virtual const std::string &getDisassembly(void) const = 0;
+
+    // Returns the image name.
+    virtual const std::string &getImageName(void) const = 0;
+
+    // Returns the section name.
+    virtual const std::string &getSectionName(void) const = 0;
+
+    // Returns the routine name.
+    virtual const std::string &getRoutineName(void) const = 0;
 
     // Returns the operands vector.
     virtual const std::vector<TritonOperand> &getOperands(void) const = 0;
