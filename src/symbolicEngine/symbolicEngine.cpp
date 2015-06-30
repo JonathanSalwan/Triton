@@ -61,7 +61,7 @@ SymbolicEngine::~SymbolicEngine()
 
 
 /*
- * Concretize a register. If the register is setup at UNSETthe next assignment
+ * Concretize a register. If the register is setup as UNSET the next assignment
  * will be over the concretization. This method must be called before symbolic
  * processing.
  */
@@ -272,10 +272,13 @@ uint64 SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std
   uint64             memSymId = UNSET;
 
   memSymId = this->getMemSymbolicID(memAddr);
-  if (memSymId == UNSET)
-    throw std::runtime_error("SymbolicEngine::convertMemToSymVar() - This memory address is UNSET");
-
-  element = this->getElementFromId(memSymId);
+  /* If the symbolic variable is UNSET, we create it */
+  if (memSymId == UNSET){
+    std::stringstream src("");
+    element = this->newSymbolicElement(src,"New Symbolic element [MEM]");
+  }else{
+    element = this->getElementFromId(memSymId);
+  }
 
   if (element == nullptr)
     return UNSET;
