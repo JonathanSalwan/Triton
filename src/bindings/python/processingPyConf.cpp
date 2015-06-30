@@ -178,6 +178,26 @@ void ProcessingPyConf::callbackFini(void)
 }
 
 
+void ProcessingPyConf::callbackSignals(uint64 threadId, sint32 sig)
+{
+  // Check if there is a callback wich must be called when a signal occurs
+  if (PyTritonOptions::callbackSignals){
+
+    /* CallObject needs a tuple. The size of the tuple is the number of arguments.
+     * threadId and sig are sent to the callback. */
+    PyObject *args = xPyTuple_New(2);
+    PyTuple_SetItem(args, 0, PyLong_FromLong(threadId));
+    PyTuple_SetItem(args, 1, Py_BuildValue("i", sig));
+    if (PyObject_CallObject(PyTritonOptions::callbackSignals, args) == nullptr){
+      PyErr_Print();
+      exit(1);
+    }
+
+    Py_DECREF(args);
+  }
+}
+
+
 void ProcessingPyConf::callbackSyscallEntry(uint64 threadId, uint64 std)
 {
   // Check if there is a callback wich must be called before the syscall processing

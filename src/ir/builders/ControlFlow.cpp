@@ -5,9 +5,9 @@
 
 
 
-SymbolicElement *ControlFlow::rip(Inst &inst, AnalysisProcessor &ap, uint64 nextAddr)
+SymbolicExpression *ControlFlow::rip(Inst &inst, AnalysisProcessor &ap, uint64 nextAddr)
 {
-  SymbolicElement     *se;
+  SymbolicExpression    *se;
   std::stringstream   expr;
 
   /*
@@ -16,7 +16,7 @@ SymbolicElement *ControlFlow::rip(Inst &inst, AnalysisProcessor &ap, uint64 next
    */
   expr << smt2lib::bv(nextAddr, 64);
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
 
   return se;

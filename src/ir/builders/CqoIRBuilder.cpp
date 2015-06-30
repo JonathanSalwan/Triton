@@ -5,7 +5,7 @@
 #include <CqoIRBuilder.h>
 #include <Registers.h>
 #include <SMT2Lib.h>
-#include <SymbolicElement.h>
+#include <SymbolicExpression.h>
 
 
 CqoIRBuilder::CqoIRBuilder(uint64 address, const std::string &disassembly):
@@ -14,7 +14,7 @@ CqoIRBuilder::CqoIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void CqoIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se1, *se3;
+  SymbolicExpression  *se1, *se3;
   std::stringstream expr1, expr2, expr3, op1;
 
   /* Create the SMT semantic */
@@ -44,7 +44,7 @@ Inst *CqoIRBuilder::process(AnalysisProcessor &ap) const {
 
   try {
     this->templateMethod(ap, *inst, this->operands, "CQO");
-    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
     ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {

@@ -14,7 +14,7 @@
 PyObject *PyInstruction(IRBuilder *irb);
 PyObject *PyInstruction(Inst *inst);
 PyObject *PyOperand(TritonOperand operand);
-PyObject *PySymbolicElement(SymbolicElement *element);
+PyObject *PySymbolicExpression(SymbolicExpression *expression);
 PyObject *PySymbolicVariable(SymbolicVariable *symVar);
 
 

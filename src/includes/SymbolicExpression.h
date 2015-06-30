@@ -1,5 +1,5 @@
-#ifndef SYMBOLICELEMENT_H
-#define SYMBOLICELEMENT_H
+#ifndef SYMBOLICEXPRESSION_H
+#define SYMBOLICEXPRESSION_H
 
 #include <stdint.h>
 
@@ -9,8 +9,8 @@
 #include "TritonTypes.h"
 
 
-/* Symbolic element */
-class SymbolicElement {
+/* Symbolic expression */
+class SymbolicExpression {
 
   private:
     std::string         *comment;
@@ -31,9 +31,9 @@ class SymbolicElement {
     uint64              getID(void);
     void                setSrcExpr(std::stringstream &src);
 
-    SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64 id);
-    SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64 id, std::string &comment);
-    ~SymbolicElement();
+    SymbolicExpression(std::stringstream &dst, std::stringstream &src, uint64 id);
+    SymbolicExpression(std::stringstream &dst, std::stringstream &src, uint64 id, std::string &comment);
+    ~SymbolicExpression();
 };
 
-#endif /* !_SYMBOLICELEMENT_H_ */
+#endif /* !_SYMBOLICEXPRESSION_H_ */

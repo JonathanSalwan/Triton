@@ -5,7 +5,7 @@
 #include <MovapdIRBuilder.h>
 #include <Registers.h>
 #include <SMT2Lib.h>
-#include <SymbolicElement.h>
+#include <SymbolicExpression.h>
 
 
 MovapdIRBuilder::MovapdIRBuilder(uint64 address, const std::string &disassembly):
@@ -19,7 +19,7 @@ void MovapdIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void MovapdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr;
   uint64            reg1      = this->operands[0].getValue();
   uint64            reg1Size  = this->operands[0].getSize();
@@ -29,7 +29,7 @@ void MovapdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the SMT semantic */
   expr << ap.buildSymbolicRegOperand(reg2, reg2Size);
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg1, reg1Size);
 
   /* Apply the taint */
@@ -38,7 +38,7 @@ void MovapdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void MovapdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr;
   uint32            readSize = this->operands[1].getSize();
   uint64            mem      = this->operands[1].getValue();
@@ -48,7 +48,7 @@ void MovapdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the SMT semantic */
   expr << ap.buildSymbolicMemOperand(mem, readSize);
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
@@ -62,7 +62,7 @@ void MovapdIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void MovapdIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr;
   uint32            writeSize = this->operands[0].getSize();
   uint64            mem       = this->operands[0].getValue();
@@ -72,7 +72,7 @@ void MovapdIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the SMT semantic */
   expr << ap.buildSymbolicRegOperand(reg, regSize);
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, writeSize);
 
   /* Apply the taint */
@@ -87,7 +87,7 @@ Inst *MovapdIRBuilder::process(AnalysisProcessor &ap) const {
 
   try {
     this->templateMethod(ap, *inst, this->operands, "MOVAPD");
-    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
     ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {

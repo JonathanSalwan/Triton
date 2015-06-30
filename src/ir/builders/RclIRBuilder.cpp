@@ -5,7 +5,7 @@
 #include <RclIRBuilder.h>
 #include <Registers.h>
 #include <SMT2Lib.h>
-#include <SymbolicElement.h>
+#include <SymbolicExpression.h>
 
 
 RclIRBuilder::RclIRBuilder(uint64 address, const std::string &disassembly):
@@ -14,7 +14,7 @@ RclIRBuilder::RclIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void RclIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se1, *se2;
+  SymbolicExpression  *se1, *se2;
   std::stringstream expr, op1, op2, cf, res;
   uint64            reg     = this->operands[0].getValue();
   uint64            imm     = this->operands[1].getValue();
@@ -44,20 +44,20 @@ void RclIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   /* Result expression */
   res << smt2lib::extract(regSize, expr.str());
 
-  /* Create the symbolic element for the result */
+  /* Create the symbolic expression for the result */
   se2 = ap.createRegSE(inst, res, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se2, reg, reg);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::cfRcl(inst, se1, ap, regSize, op2);
   EflagsBuilder::ofRol(inst, se2, ap, regSize, op2); /* Same as ROL */
 }
 
 
 void RclIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se1, *se2;
+  SymbolicExpression  *se1, *se2;
   std::stringstream expr, op1, op2, cf, res;
   uint64            reg1     = this->operands[0].getValue();
   uint32            regSize1 = this->operands[0].getSize();
@@ -86,13 +86,13 @@ void RclIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Result expression */
   res << smt2lib::extract(regSize1, expr.str());
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se2 = ap.createRegSE(inst, res, reg1, regSize1);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se2, reg1, reg1);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::cfRcl(inst, se1, ap, regSize1, op2);
   EflagsBuilder::ofRol(inst, se2, ap, regSize1, op2); /* Same as ROL */
 }
@@ -104,7 +104,7 @@ void RclIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void RclIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se1, *se2;
+  SymbolicExpression  *se1, *se2;
   std::stringstream expr, op1, op2, cf, res;
   uint32            writeSize = this->operands[0].getSize();
   uint64            mem       = this->operands[0].getValue();
@@ -134,20 +134,20 @@ void RclIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   /* Result expression */
   res << smt2lib::extract(writeSize, expr.str());
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se2 = ap.createMemSE(inst, res, mem, writeSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintMemMem(se2, mem, mem, writeSize);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::cfRcl(inst, se1, ap, writeSize, op2);
   EflagsBuilder::ofRol(inst, se2, ap, writeSize, op2); /* Same as ROL */
 }
 
 
 void RclIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se1, *se2;
+  SymbolicExpression  *se1, *se2;
   std::stringstream expr, op1, op2, cf, res;
   uint32            writeSize = this->operands[0].getSize();
   uint64            mem       = this->operands[0].getValue();
@@ -176,13 +176,13 @@ void RclIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Result expression */
   res << smt2lib::extract(writeSize, expr.str());
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se2 = ap.createMemSE(inst, res, mem, writeSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintMemMem(se2, mem, mem, writeSize);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::cfRcl(inst, se1, ap, writeSize, op2);
   EflagsBuilder::ofRol(inst, se2, ap, writeSize, op2); /* Same as ROL */
 }
@@ -195,7 +195,7 @@ Inst *RclIRBuilder::process(AnalysisProcessor &ap) const {
 
   try {
     this->templateMethod(ap, *inst, this->operands, "RCL");
-    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
     ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {

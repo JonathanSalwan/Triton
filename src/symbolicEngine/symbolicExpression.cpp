@@ -2,7 +2,7 @@
 #include <SymbolicEngine.h>
 
 
-SymbolicElement::SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64 id)
+SymbolicExpression::SymbolicExpression(std::stringstream &dst, std::stringstream &src, uint64 id)
 {
   this->isTainted   = false;
   this->source      = new std::stringstream(src.str());
@@ -16,7 +16,7 @@ SymbolicElement::SymbolicElement(std::stringstream &dst, std::stringstream &src,
 }
 
 
-SymbolicElement::SymbolicElement(std::stringstream &dst, std::stringstream &src, uint64 id, std::string &comment)
+SymbolicExpression::SymbolicExpression(std::stringstream &dst, std::stringstream &src, uint64 id, std::string &comment)
 {
   this->isTainted   = false;
   this->source      = new std::stringstream(src.str());
@@ -30,7 +30,7 @@ SymbolicElement::SymbolicElement(std::stringstream &dst, std::stringstream &src,
 }
 
 
-SymbolicElement::~SymbolicElement()
+SymbolicExpression::~SymbolicExpression()
 {
   delete this->comment;
   delete this->destination;
@@ -39,43 +39,43 @@ SymbolicElement::~SymbolicElement()
 }
 
 
-/* Returns the SMT dst and src expression of the symbolic element */
-std::stringstream *SymbolicElement::getExpression(void)
+/* Returns the SMT dst and src expression of the symbolic expression */
+std::stringstream *SymbolicExpression::getExpression(void)
 {
   return this->expression;
 }
 
 
-/* Returns the comment of the element */
-std::string *SymbolicElement::getComment(void)
+/* Returns the comment of the expression */
+std::string *SymbolicExpression::getComment(void)
 {
   return this->comment;
 }
 
 
-/* Returns the SMT src expression of the symbolic element */
-std::stringstream *SymbolicElement::getSource(void)
+/* Returns the SMT src expression of the symbolic expression */
+std::stringstream *SymbolicExpression::getSource(void)
 {
   return this->source;
 }
 
 
-/* Returns the SMT dst expression of the symbolic element */
-std::stringstream *SymbolicElement::getDestination(void)
+/* Returns the SMT dst expression of the symbolic expression */
+std::stringstream *SymbolicExpression::getDestination(void)
 {
   return this->destination;
 }
 
 
-/* Returns the ID of the symbolic element */
-uint64 SymbolicElement::getID(void)
+/* Returns the ID of the symbolic expression */
+uint64 SymbolicExpression::getID(void)
 {
   return this->id;
 }
 
 
-/* Returns a std::string ID of the symbolic element */
-std::string SymbolicElement::getID2Str(void)
+/* Returns a std::string ID of the symbolic expression */
+std::string SymbolicExpression::getID2Str(void)
 {
   std::stringstream expr;
   expr << "#" << std::dec << this->id;
@@ -84,7 +84,7 @@ std::string SymbolicElement::getID2Str(void)
 
 
 /* Set the destination expression */
-void SymbolicElement::setSrcExpr(std::stringstream &src)
+void SymbolicExpression::setSrcExpr(std::stringstream &src)
 {
   delete this->expression;
   delete this->source;

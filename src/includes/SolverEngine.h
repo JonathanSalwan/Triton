@@ -3,13 +3,16 @@
 #define   SOLVERENGINE_H
 
 #include <cstdlib>
-#include "TritonTypes.h"
+#include <list>
 #include <string>
+#include <vector>
 
 #include <z3++.h>
 
 #include "Registers.h"
+#include "Smodel.h"
 #include "SymbolicEngine.h"
+#include "TritonTypes.h"
 
 
 class SolverEngine
@@ -18,7 +21,8 @@ class SolverEngine
     SymbolicEngine *symEngine;
 
   public:
-    std::list< std::pair<std::string, unsigned long long> > getModel(std::string expr);
+    std::list<Smodel>               getModel(std::string expr);
+    std::vector<std::list<Smodel>>  getModels(std::string expr, uint64 limit);
 
     SolverEngine(SymbolicEngine *sym);
     ~SolverEngine();

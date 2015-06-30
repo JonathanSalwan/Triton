@@ -8,25 +8,37 @@ import  smt2lib
 # Check the ./samples/crackmes/crackme_hash.c file. This file builds 
 # a 'hash' and checks the checksum 0xad6d.
 #
-# The needed password is 'elite'. Example: 
+# The needed password is 'elite'. Example:
 # $ ./samples/crackmes/crackme_hash elite
 # Win
 #
 # This Triton code will try to break and find a hash collision.
 #
-# $ triton ./examples/crackme_hash_collision.py ./samples/crackmes/crackme_hash aaaaa
+# $ ./triton ./examples/crackme_hash_collision.py ./samples/crackmes/crackme_hash aaaaa
 # [+] Please wait, computing in progress...
-# {
-#   'SymVar_0': "0x6c, 'l'", 
-#   'SymVar_1': "0x72, 'r'", 
-#   'SymVar_2': "0x64, 'd'", 
-#   'SymVar_3': "0x78, 'x'", 
-#   'SymVar_4': "0x71, 'q'"
-# }
+# {'SymVar_1': "0x72, 'r'", 'SymVar_0': "0x6c, 'l'", 'SymVar_3': "0x78, 'x'", 'SymVar_2': "0x64, 'd'", 'SymVar_4': "0x71, 'q'"}
+# {'SymVar_1': "0x78, 'x'", 'SymVar_0': "0x6e, 'n'", 'SymVar_3': "0x62, 'b'", 'SymVar_2': "0x61, 'a'", 'SymVar_4': "0x6a, 'j'"}
+# {'SymVar_1': "0x68, 'h'", 'SymVar_0': "0x6e, 'n'", 'SymVar_3': "0x62, 'b'", 'SymVar_2': "0x61, 'a'", 'SymVar_4': "0x7a, 'z'"}
+# {'SymVar_1': "0x70, 'p'", 'SymVar_0': "0x6e, 'n'", 'SymVar_3': "0x62, 'b'", 'SymVar_2': "0x61, 'a'", 'SymVar_4': "0x62, 'b'"}
+# {'SymVar_1': "0x72, 'r'", 'SymVar_0': "0x6f, 'o'", 'SymVar_3': "0x62, 'b'", 'SymVar_2': "0x62, 'b'", 'SymVar_4': "0x62, 'b'"}
+# {'SymVar_1': "0x7a, 'z'", 'SymVar_0': "0x6f, 'o'", 'SymVar_3': "0x62, 'b'", 'SymVar_2': "0x62, 'b'", 'SymVar_4': "0x6a, 'j'"}
+# {'SymVar_1': "0x7a, 'z'", 'SymVar_0': "0x6e, 'n'", 'SymVar_3': "0x62, 'b'", 'SymVar_2': "0x63, 'c'", 'SymVar_4': "0x6a, 'j'"}
+# {'SymVar_1': "0x78, 'x'", 'SymVar_0': "0x6e, 'n'", 'SymVar_3': "0x62, 'b'", 'SymVar_2': "0x63, 'c'", 'SymVar_4': "0x68, 'h'"}
+# {'SymVar_1': "0x78, 'x'", 'SymVar_0': "0x6e, 'n'", 'SymVar_3': "0x72, 'r'", 'SymVar_2': "0x63, 'c'", 'SymVar_4': "0x78, 'x'"}
+# {'SymVar_1': "0x7a, 'z'", 'SymVar_0': "0x6e, 'n'", 'SymVar_3': "0x70, 'p'", 'SymVar_2': "0x63, 'c'", 'SymVar_4': "0x78, 'x'"}
+# {'SymVar_1': "0x7a, 'z'", 'SymVar_0': "0x6f, 'o'", 'SymVar_3': "0x70, 'p'", 'SymVar_2': "0x62, 'b'", 'SymVar_4': "0x78, 'x'"}
+# {'SymVar_1': "0x70, 'p'", 'SymVar_0': "0x6b, 'k'", 'SymVar_3': "0x72, 'r'", 'SymVar_2': "0x62, 'b'", 'SymVar_4': "0x74, 't'"}
+# {'SymVar_1': "0x72, 'r'", 'SymVar_0': "0x6f, 'o'", 'SymVar_3': "0x70, 'p'", 'SymVar_2': "0x62, 'b'", 'SymVar_4': "0x70, 'p'"}
+# {'SymVar_1': "0x72, 'r'", 'SymVar_0': "0x6f, 'o'", 'SymVar_3': "0x72, 'r'", 'SymVar_2': "0x62, 'b'", 'SymVar_4': "0x72, 'r'"}
+# {'SymVar_1': "0x72, 'r'", 'SymVar_0': "0x6e, 'n'", 'SymVar_3': "0x73, 's'", 'SymVar_2': "0x62, 'b'", 'SymVar_4': "0x70, 'p'"}
+# {'SymVar_1': "0x62, 'b'", 'SymVar_0': "0x6e, 'n'", 'SymVar_3': "0x63, 'c'", 'SymVar_2': "0x62, 'b'", 'SymVar_4': "0x70, 'p'"}
+# {'SymVar_1': "0x6a, 'j'", 'SymVar_0': "0x66, 'f'", 'SymVar_3': "0x73, 's'", 'SymVar_2': "0x62, 'b'", 'SymVar_4': "0x70, 'p'"}
+# {'SymVar_1': "0x62, 'b'", 'SymVar_0': "0x62, 'b'", 'SymVar_3': "0x73, 's'", 'SymVar_2': "0x66, 'f'", 'SymVar_4': "0x70, 'p'"}
+# {'SymVar_1': "0x62, 'b'", 'SymVar_0': "0x62, 'b'", 'SymVar_3': "0x70, 'p'", 'SymVar_2': "0x67, 'g'", 'SymVar_4': "0x70, 'p'"}
+# {'SymVar_1': "0x62, 'b'", 'SymVar_0': "0x62, 'b'", 'SymVar_3': "0x72, 'r'", 'SymVar_2': "0x67, 'g'", 'SymVar_4': "0x72, 'r'"}
 # loose
 #
-# Triton found the collision : lrdxq
-#
+# Triton found several collisions. Example with the first collision:
 # $ ./samples/crackmes/crackme_hash lrdxq
 # Win
 # $
@@ -34,7 +46,7 @@ import  smt2lib
 
 
 def cafter(instruction):
-    
+
     # movzx esi,BYTE PTR [rax]
     # RAX points on the user password
     if instruction.address == 0x400572:
@@ -78,7 +90,11 @@ def cafter(instruction):
         # We want the collision
         # (assert (= rax 0xad6d)
         expr += smt2lib.smtAssert(smt2lib.equal(raxExpr, smt2lib.bv(0xad6d, 64)))
-        print {k: "0x%x, '%c'" % (v, v) for k, v in getModel(expr).items()}
+
+        # Get max 20 different models
+        models = getModels(expr, 20)
+        for model in models:
+            print {k: "0x%x, '%c'" % (v, v) for k, v in model.items()}
 
 
 if __name__ == '__main__':

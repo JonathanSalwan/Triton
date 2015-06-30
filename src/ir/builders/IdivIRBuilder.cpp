@@ -5,7 +5,7 @@
 #include <IdivIRBuilder.h>
 #include <Registers.h>
 #include <SMT2Lib.h>
-#include <SymbolicElement.h>
+#include <SymbolicExpression.h>
 
 
 IdivIRBuilder::IdivIRBuilder(uint64 address, const std::string &disassembly):
@@ -14,7 +14,7 @@ IdivIRBuilder::IdivIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, result, dividend, divisor, mod;
   uint64            reg       = this->operands[0].getValue();
   uint32            regSize   = this->operands[0].getSize();
@@ -37,7 +37,7 @@ void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
                 smt2lib::extract(7, 0, mod.str()),   /* AH = mod */
                 smt2lib::extract(7, 0, result.str()) /* AL = res */
               );
-      /* Create the symbolic element */
+      /* Create the symbolic expression */
       se = ap.createRegSE(inst, expr, ID_RAX, WORD_SIZE);
       /* Apply the taint */
       ap.aluSpreadTaintRegReg(se, ID_RAX, reg);
@@ -50,11 +50,11 @@ void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
       result << smt2lib::extract(15, 0, smt2lib::bvsdiv(dividend.str(), smt2lib::sx(divisor.str(), WORD_SIZE_BIT)));
       /* mod = DX:AX % Source */
       mod << smt2lib::extract(15, 0, smt2lib::bvsrem(dividend.str(), smt2lib::sx(divisor.str(), WORD_SIZE_BIT)));
-      /* Create the symbolic element for AX */
+      /* Create the symbolic expression for AX */
       se = ap.createRegSE(inst, result, ID_RAX, WORD_SIZE);
       /* Apply the taint for AX */
       ap.aluSpreadTaintRegReg(se, ID_RAX, reg);
-      /* Create the symbolic element for DX */
+      /* Create the symbolic expression for DX */
       se = ap.createRegSE(inst, mod, ID_RDX, WORD_SIZE);
       /* Apply the taint for DX */
       ap.aluSpreadTaintRegReg(se, ID_RDX, reg);
@@ -67,11 +67,11 @@ void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
       result << smt2lib::extract(31, 0, smt2lib::bvsdiv(dividend.str(), smt2lib::sx(divisor.str(), DWORD_SIZE_BIT)));
       /* mod = EDX:EAX % Source */
       mod << smt2lib::extract(31, 0, smt2lib::bvsrem(dividend.str(), smt2lib::sx(divisor.str(), DWORD_SIZE_BIT)));
-      /* Create the symbolic element for EAX */
+      /* Create the symbolic expression for EAX */
       se = ap.createRegSE(inst, result, ID_RAX, DWORD_SIZE);
       /* Apply the taint for EAX */
       ap.aluSpreadTaintRegReg(se, ID_RAX, reg);
-      /* Create the symbolic element for EDX */
+      /* Create the symbolic expression for EDX */
       se = ap.createRegSE(inst, mod, ID_RDX, DWORD_SIZE);
       /* Apply the taint for EDX */
       ap.aluSpreadTaintRegReg(se, ID_RDX, reg);
@@ -84,11 +84,11 @@ void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
       result << smt2lib::extract(63, 0, smt2lib::bvsdiv(dividend.str(), smt2lib::sx(divisor.str(), QWORD_SIZE_BIT)));
       /* mod = RDX:RAX % Source */
       mod << smt2lib::extract(63, 0, smt2lib::bvsrem(dividend.str(), smt2lib::sx(divisor.str(), QWORD_SIZE_BIT)));
-      /* Create the symbolic element for RAX */
+      /* Create the symbolic expression for RAX */
       se = ap.createRegSE(inst, result, ID_RAX, QWORD_SIZE);
       /* Apply the taint for RAX */
       ap.aluSpreadTaintRegReg(se, ID_RAX, reg);
-      /* Create the symbolic element for RDX */
+      /* Create the symbolic expression for RDX */
       se = ap.createRegSE(inst, mod, ID_RDX, QWORD_SIZE);
       /* Apply the taint for RDX */
       ap.aluSpreadTaintRegReg(se, ID_RDX, reg);
@@ -98,7 +98,7 @@ void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, result, dividend, divisor, mod;
   uint64            mem       = this->operands[0].getValue();
   uint32            memSize   = this->operands[0].getSize();
@@ -121,7 +121,7 @@ void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
                 smt2lib::extract(7, 0, mod.str()),   /* AH = mod */
                 smt2lib::extract(7, 0, result.str()) /* AL = res */
               );
-      /* Create the symbolic element */
+      /* Create the symbolic expression */
       se = ap.createRegSE(inst, expr, ID_RAX, WORD_SIZE);
       /* Apply the taint */
       ap.aluSpreadTaintRegMem(se, ID_RAX, mem, memSize);
@@ -134,11 +134,11 @@ void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
       result << smt2lib::extract(15, 0, smt2lib::bvsdiv(dividend.str(), smt2lib::sx(divisor.str(), WORD_SIZE_BIT)));
       /* mod = DX:AX % Source */
       mod << smt2lib::extract(15, 0, smt2lib::bvsrem(dividend.str(), smt2lib::sx(divisor.str(), WORD_SIZE_BIT)));
-      /* Create the symbolic element for AX */
+      /* Create the symbolic expression for AX */
       se = ap.createRegSE(inst, result, ID_RAX, WORD_SIZE);
       /* Apply the taint for AX */
       ap.aluSpreadTaintRegMem(se, ID_RAX, mem, memSize);
-      /* Create the symbolic element for DX */
+      /* Create the symbolic expression for DX */
       se = ap.createRegSE(inst, mod, ID_RDX, WORD_SIZE);
       /* Apply the taint for DX */
       ap.aluSpreadTaintRegMem(se, ID_RDX, mem, memSize);
@@ -151,11 +151,11 @@ void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
       result << smt2lib::extract(31, 0, smt2lib::bvsdiv(dividend.str(), smt2lib::sx(divisor.str(), DWORD_SIZE_BIT)));
       /* mod = EDX:EAX % Source */
       mod << smt2lib::extract(31, 0, smt2lib::bvsrem(dividend.str(), smt2lib::sx(divisor.str(), DWORD_SIZE_BIT)));
-      /* Create the symbolic element for EAX */
+      /* Create the symbolic expression for EAX */
       se = ap.createRegSE(inst, result, ID_RAX, DWORD_SIZE);
       /* Apply the taint for EAX */
       ap.aluSpreadTaintRegMem(se, ID_RAX, mem, memSize);
-      /* Create the symbolic element for EDX */
+      /* Create the symbolic expression for EDX */
       se = ap.createRegSE(inst, mod, ID_RDX, DWORD_SIZE);
       /* Apply the taint for EDX */
       ap.aluSpreadTaintRegMem(se, ID_RDX, mem, memSize);
@@ -168,11 +168,11 @@ void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
       result << smt2lib::extract(63, 0, smt2lib::bvsdiv(dividend.str(), smt2lib::sx(divisor.str(), QWORD_SIZE_BIT)));
       /* mod = RDX:RAX % Source */
       mod << smt2lib::extract(63, 0, smt2lib::bvsrem(dividend.str(), smt2lib::sx(divisor.str(), QWORD_SIZE_BIT)));
-      /* Create the symbolic element for RAX */
+      /* Create the symbolic expression for RAX */
       se = ap.createRegSE(inst, result, ID_RAX, QWORD_SIZE);
       /* Apply the taint for RAX */
       ap.aluSpreadTaintRegMem(se, ID_RAX, mem, memSize);
-      /* Create the symbolic element for RDX */
+      /* Create the symbolic expression for RDX */
       se = ap.createRegSE(inst, mod, ID_RDX, QWORD_SIZE);
       /* Apply the taint for RDX */
       ap.aluSpreadTaintRegMem(se, ID_RDX, mem, memSize);
@@ -200,7 +200,7 @@ Inst *IdivIRBuilder::process(AnalysisProcessor &ap) const {
 
   try {
     this->templateMethod(ap, *inst, this->operands, "IDIV");
-    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
     ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {

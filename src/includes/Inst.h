@@ -7,35 +7,45 @@
 #include <vector>
 
 #include "IRBuilderOperand.h"
-#include "SymbolicElement.h"
+#include "SymbolicExpression.h"
 #include "TritonOperand.h"
 
 
 class Inst {
 
   private:
-    uint64                          threadId;
-    uint64                          address;
-    std::string                     disassembly;
-    std::list<SymbolicElement*>     symbolicElements;
-    uint32                          opcode;
-    int32_t                         opcodeCategory;
-    std::vector<TritonOperand>      operands;
+    int32_t                               opcodeCategory;
+    std::list<SymbolicExpression*>        symbolicExpressions;
+    std::string                           disassembly;
+    std::string                           imageName;
+    std::string                           routineName;
+    std::string                           sectionName;
+    std::vector<TritonOperand>            operands;
+    uint32                                opcode;
+    uint64                                address;
+    uint64                                baseAddress;
+    uint64                                offset;
+    uint64                                threadId;
 
   public:
-    const std::list<SymbolicElement*> &getSymbolicElements(void);
-    const std::string                 &getDisassembly(void);
-    const std::vector<TritonOperand>  &getOperands(void);
-    size_t                            numberOfElements(void);
-    uint32                            getOpcode(void);
-    int32_t                           getOpcodeCategory(void);
-    uint64                            getAddress(void);
-    uint64                            getThreadID(void);
-    void                              addElement(SymbolicElement *se);
-    void                              setOpcode(uint32 op);
-    void                              setOpcodeCategory(int32_t category);
-    bool                              isBranch(void);
-    void                              setOperands(const std::vector<TritonOperand> &operands);
+    bool                                  isBranch(void);
+    const std::list<SymbolicExpression*>  &getSymbolicExpressions(void);
+    const std::string                     &getDisassembly(void);
+    const std::string                     &getImageName(void);
+    const std::string                     &getRoutineName(void);
+    const std::string                     &getSectionName(void);
+    const std::vector<TritonOperand>      &getOperands(void);
+    int32_t                               getOpcodeCategory(void);
+    size_t                                numberOfExpressions(void);
+    uint32                                getOpcode(void);
+    uint64                                getAddress(void);
+    uint64                                getBaseAddress(void);
+    uint64                                getOffset(void);
+    uint64                                getThreadID(void);
+    void                                  addExpression(SymbolicExpression *se);
+    void                                  setOpcode(uint32 op);
+    void                                  setOpcodeCategory(int32_t category);
+    void                                  setOperands(const std::vector<TritonOperand> &operands);
 
     Inst(uint64 threadId,uint64 address, const std::string &insDis);
     ~Inst();

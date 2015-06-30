@@ -1,19 +1,22 @@
 #include <boost/format.hpp>
 #include <stdexcept>
 
-#include <xed-category-enum.h>
+#include <pin.H>
 #include <BaseIRBuilder.h>
 
 boost::format outputInstruction("%1% %|15t| %2% %|55t|");
 
 
-BaseIRBuilder::BaseIRBuilder(uint64 address, const std::string &s):
-  address(address),
-  disas(s),
-  needSetup(false),
-  operands()
+BaseIRBuilder::BaseIRBuilder(uint64 address, const std::string &dis)
 {
-
+  this->address     = address;
+  this->baseAddress = IMG_LowAddress(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
+  this->disas       = dis;
+  this->imageName   = IMG_Name(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
+  this->needSetup   = false;
+  this->offset      = this->address - this->baseAddress;
+  this->routineName = RTN_FindNameByAddress(address);
+  this->sectionName = SEC_Name(RTN_Sec(RTN_FindByAddress(address)));
 }
 
 
@@ -53,7 +56,7 @@ void BaseIRBuilder::setThreadID(uint64 threadId)
 }
 
 
-int32_t BaseIRBuilder::getOpcodeCategory(void)
+int32_t BaseIRBuilder::getOpcodeCategory(void) const
 {
   return this->opcodeCategory;
 }
@@ -71,9 +74,39 @@ uint64 BaseIRBuilder::getAddress(void) const
 }
 
 
+uint64 BaseIRBuilder::getBaseAddress(void) const
+{
+  return this->baseAddress;
+}
+
+
+uint64 BaseIRBuilder::getOffset(void) const
+{
+  return this->offset;
+}
+
+
 const std::string &BaseIRBuilder::getDisassembly(void) const
 {
   return this->disas;
+}
+
+
+const std::string &BaseIRBuilder::getImageName(void) const
+{
+  return this->imageName;
+}
+
+
+const std::string &BaseIRBuilder::getSectionName(void) const
+{
+  return this->imageName;
+}
+
+
+const std::string &BaseIRBuilder::getRoutineName(void) const
+{
+  return this->routineName;
 }
 
 

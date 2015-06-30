@@ -5,7 +5,7 @@
 #include <ImulIRBuilder.h>
 #include <Registers.h>
 #include <SMT2Lib.h>
-#include <SymbolicElement.h>
+#include <SymbolicExpression.h>
 
 
 ImulIRBuilder::ImulIRBuilder(uint64 address, const std::string &disassembly):
@@ -14,7 +14,7 @@ ImulIRBuilder::ImulIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1, op2;
   uint64            reg     = this->operands[0].getValue();
   uint64            imm     = this->operands[1].getValue();
@@ -32,13 +32,13 @@ void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
             )
           );
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegImm(se, reg);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::cfImul(inst, se, ap, regSize, op1);
   EflagsBuilder::ofImul(inst, se, ap, regSize, op1);
   EflagsBuilder::sf(inst, se, ap, regSize);
@@ -46,7 +46,7 @@ void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1, op2, op3;
   uint64            reg1     = this->operands[0].getValue();
   uint32            regSize1 = this->operands[0].getSize();
@@ -78,13 +78,13 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
               )
             );
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg1, regSize1);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, reg1, reg2);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::cfImul(inst, se, ap, regSize1, op1);
   EflagsBuilder::ofImul(inst, se, ap, regSize1, op1);
   EflagsBuilder::sf(inst, se, ap, regSize1);
@@ -92,7 +92,7 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicElement   *se;
+  SymbolicExpression  *se;
   std::stringstream expr, op1, op2, op3;
   uint64            reg     = this->operands[0].getValue();
   uint32            regSize = this->operands[0].getSize();
@@ -124,13 +124,13 @@ void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
               )
             );
 
-  /* Create the symbolic element */
+  /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegMem(se, reg, mem, memSize);
 
-  /* Add the symbolic flags element to the current inst */
+  /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::cfImul(inst, se, ap, regSize, op1);
   EflagsBuilder::ofImul(inst, se, ap, regSize, op1);
   EflagsBuilder::sf(inst, se, ap, regSize);
@@ -154,7 +154,7 @@ Inst *ImulIRBuilder::process(AnalysisProcessor &ap) const {
 
   try {
     this->templateMethod(ap, *inst, this->operands, "IMUL");
-    ap.incNumberOfExpressions(inst->numberOfElements()); /* Used for statistics */
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
     ControlFlow::rip(*inst, ap, this->nextAddress);
   }
   catch (std::exception &e) {

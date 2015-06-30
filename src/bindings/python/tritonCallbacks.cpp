@@ -8,6 +8,7 @@
 #include <CallbackDefine.h>
 #include <PINConverter.h>
 #include <PythonUtils.h>
+#include <Smodel.h>
 #include <TritonPyObject.h>
 #include <Utils.h>
 #include <pin.H>
@@ -24,10 +25,11 @@ namespace PyTritonOptions {
   std::set<uint64>  stopAnalysisFromAddr;
 
   /* Callback configurations */
+  PyObject *callbackAfter         = nullptr;                // After the instruction processing
   PyObject *callbackBefore        = nullptr;                // Before the instruction processing
   PyObject *callbackBeforeIRProc  = nullptr;                // Before the IR processing
-  PyObject *callbackAfter         = nullptr;                // After the instruction processing
   PyObject *callbackFini          = nullptr;                // At the end of the execution
+  PyObject *callbackSignals       = nullptr;                // When a signal occurs
   PyObject *callbackSyscallEntry  = nullptr;                // Before syscall processing
   PyObject *callbackSyscallExit   = nullptr;                // After syscall processing
   std::map<const char *, PyObject *> callbackRoutineEntry;  // Before routine processing
@@ -70,6 +72,9 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
 
   else if ((PyLong_AsLong(flag) == CB_FINI))
     PyTritonOptions::callbackFini = function;
+
+  else if ((PyLong_AsLong(flag) == CB_SIGNALS))
+    PyTritonOptions::callbackSignals = function;
 
   else if ((PyLong_AsLong(flag) == CB_SYSCALL_ENTRY))
     PyTritonOptions::callbackSyscallEntry = function;
@@ -185,7 +190,7 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
   if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
     return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
-  return Py_BuildValue("k", ap.convertExprToSymVar(ei, vs, vc));
+  return PySymbolicVariable(ap.convertExprToSymVar(ei, vs, vc));
 }
 
 
@@ -218,7 +223,7 @@ static PyObject *Triton_convertMemToSymVar(PyObject *self, PyObject *args)
   if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
     return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
-  return Py_BuildValue("k", ap.convertMemToSymVar(ma, vs, vc));
+  return PySymbolicVariable(ap.convertMemToSymVar(ma, vs, vc));
 }
 
 
@@ -251,7 +256,7 @@ static PyObject *Triton_convertRegToSymVar(PyObject *self, PyObject *args)
   if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
     return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
-  return Py_BuildValue("k", ap.convertRegToSymVar(ri, vs, vc));
+  return PySymbolicVariable(ap.convertRegToSymVar(ri, vs, vc));
 }
 
 
@@ -328,21 +333,64 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
 static char Triton_getModel_doc[] = "Returns a model of the symbolic expression";
 static PyObject *Triton_getModel(PyObject *self, PyObject *expr)
 {
-  std::list< std::pair<std::string, unsigned long long> >::iterator it;
-  std::list< std::pair<std::string, unsigned long long> > models;
+  std::list<Smodel>::iterator it;
+  std::list<Smodel> model;
 
   if (!PyString_Check(expr))
     return PyErr_Format(PyExc_TypeError, "getModel(): expected an expression (string) as argument");
 
-  /* Get models */
-  models = ap.getModel(PyString_AsString(expr));
+  /* Get model */
+  model = ap.getModel(PyString_AsString(expr));
 
   /* Craft the model dictionary */
-  PyObject *modelsDict = xPyDict_New();
-  for (it = models.begin() ; it != models.end(); it++)
-    PyDict_SetItemString(modelsDict, it->first.c_str(), Py_BuildValue("k", it->second));
+  PyObject *modelDict = xPyDict_New();
+  for (it = model.begin() ; it != model.end(); it++)
+    PyDict_SetItemString(modelDict, it->getName().c_str(), Py_BuildValue("k", it->getValue()));
 
-  return modelsDict;
+  return modelDict;
+}
+
+
+static char Triton_getModels_doc[] = "Returns all models of the symbolic expression";
+static PyObject *Triton_getModels(PyObject *self, PyObject *args)
+{
+  PyObject                        *expr;
+  PyObject                        *limit;
+  PyObject                        *modelsList;
+  std::vector<std::list<Smodel>>  models;
+  uint64                          limit_c = 0;
+  uint64                          modelsSize = 0;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &expr, &limit);
+
+  if (!PyString_Check(expr))
+    return PyErr_Format(PyExc_TypeError, "getModels(): expected an expression (string) as first argument");
+
+  if (!PyLong_Check(limit) && !PyInt_Check(limit))
+    return PyErr_Format(PyExc_TypeError, "getModels(): expected a limit (integer) as second argument");
+
+  limit_c = PyLong_AsLong(limit);
+  if (limit_c == 0)
+    return PyErr_Format(PyExc_TypeError, "getModels(): The limit must be greater than 0");
+
+  /* Get models */
+  models        = ap.getModels(PyString_AsString(expr), limit_c);
+  modelsSize    = models.size();
+  modelsList    = xPyList_New(modelsSize);
+
+  for (uint64 index = 0; index < modelsSize; index++){
+    std::list<Smodel> model = models[index];
+    std::list<Smodel>::iterator it;
+    /* Craft the model dictionary */
+    PyObject *modelDict = xPyDict_New();
+    for (it = model.begin() ; it != model.end(); it++)
+      PyDict_SetItemString(modelDict, it->getName().c_str(), Py_BuildValue("k", it->getValue()));
+
+    PyList_SetItem(modelsList, index, modelDict);
+  }
+
+  return modelsList;
 }
 
 
@@ -467,22 +515,39 @@ static PyObject *Triton_getStats(PyObject *self, PyObject *noargs)
 }
 
 
-static char Triton_getSymExpr_doc[] = "Returns a SymbolicElement class corresponding to the symbolic element ID.";
+static char Triton_getSymExpr_doc[] = "Returns a SymbolicExpression class corresponding to the symbolic expression ID.";
 static PyObject *Triton_getSymExpr(PyObject *self, PyObject *id)
 {
-  uint64          exprId;
-  SymbolicElement *expr;
+  uint64              exprId;
+  SymbolicExpression  *expr;
 
   if (!PyLong_Check(id) && !PyInt_Check(id))
     return PyErr_Format(PyExc_TypeError, "getSymExpr(): expected an id (integer) as argument");
 
   exprId = PyLong_AsLong(id);
-  expr = ap.getElementFromId(exprId);
+  expr = ap.getExpressionFromId(exprId);
 
   if (expr == nullptr)
     return PyErr_Format(PyExc_TypeError, "getSymExpr(): Invalid symbolic expression ID");
 
-  return PySymbolicElement(expr);
+  return PySymbolicExpression(expr);
+}
+
+
+static char Triton_getSymExprs_doc[] = "Returns all SymbolicExpression class.";
+static PyObject *Triton_getSymExprs(PyObject *self, PyObject *noargs)
+{
+  PyObject                          *ret;
+  std::vector<SymbolicExpression *> exprs;
+  uint64                            numberOfExprs = 0;
+
+  exprs = ap.getExpressions();
+  numberOfExprs = exprs.size();
+  ret = xPyList_New(numberOfExprs);
+  for (uint64 index = 0; index < numberOfExprs; index++)
+    PyList_SetItem(ret, index, PySymbolicExpression(exprs[index]));
+
+  return ret;
 }
 
 
@@ -1021,6 +1086,7 @@ PyMethodDef tritonCallbacks[] = {
   {"getMemSymbolicID",          Triton_getMemSymbolicID,          METH_O,       Triton_getMemSymbolicID_doc},
   {"getMemValue",               Triton_getMemValue,               METH_VARARGS, Triton_getMemValue_doc},
   {"getModel",                  Triton_getModel,                  METH_O,       Triton_getModel_doc},
+  {"getModels",                 Triton_getModels,                 METH_VARARGS, Triton_getModels_doc},
   {"getPathConstraints",        Triton_getPathConstraints,        METH_NOARGS,  Triton_getPathConstraints_doc},
   {"getRegName",                Triton_getRegName,                METH_O,       Triton_getRegName_doc},
   {"getRegSymbolicID",          Triton_getRegSymbolicID,          METH_O,       Triton_getRegSymbolicID_doc},
@@ -1028,6 +1094,7 @@ PyMethodDef tritonCallbacks[] = {
   {"getRegs",                   Triton_getRegs,                   METH_NOARGS,  Triton_getRegs_doc},
   {"getStats",                  Triton_getStats,                  METH_NOARGS,  Triton_getStats_doc},
   {"getSymExpr",                Triton_getSymExpr,                METH_O,       Triton_getSymExpr_doc},
+  {"getSymExprs",               Triton_getSymExprs,               METH_NOARGS,  Triton_getSymExprs_doc},
   {"getSymVar",                 Triton_getSymVar,                 METH_O,       Triton_getSymVar_doc},
   {"getSymVarSize",             Triton_getSymVarSize,             METH_O,       Triton_getSymVarSize_doc},
   {"getSymVars",                Triton_getSymVars,                METH_NOARGS,  Triton_getSymVars_doc},
