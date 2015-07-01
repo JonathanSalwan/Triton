@@ -44,7 +44,7 @@ void BaseIRBuilder::setNextAddress(uint64 nextAddress)
 }
 
 
-void BaseIRBuilder::setOpcodeCategory(int32_t category)
+void BaseIRBuilder::setOpcodeCategory(sint32 category)
 {
   this->opcodeCategory = category;
 }
@@ -56,7 +56,7 @@ void BaseIRBuilder::setThreadID(uint64 threadId)
 }
 
 
-int32_t BaseIRBuilder::getOpcodeCategory(void) const
+sint32 BaseIRBuilder::getOpcodeCategory(void) const
 {
   return this->opcodeCategory;
 }

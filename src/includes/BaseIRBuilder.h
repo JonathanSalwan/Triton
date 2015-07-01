@@ -23,7 +23,7 @@ class BaseIRBuilder: public IRBuilder {
     virtual const std::string   &getImageName(void) const;
     virtual const std::string   &getRoutineName(void) const;
     virtual const std::string   &getSectionName(void) const;
-    virtual int32_t             getOpcodeCategory(void) const;
+    virtual sint32              getOpcodeCategory(void) const;
     virtual uint32              getOpcode(void) const;
     virtual uint64              getAddress(void) const;
     virtual uint64              getThreadID(void) const;
@@ -31,7 +31,7 @@ class BaseIRBuilder: public IRBuilder {
     virtual uint64              getOffset(void) const;
     virtual void                setNextAddress(uint64 nextAddr);
     virtual void                setOpcode(uint32 op);
-    virtual void                setOpcodeCategory(int32_t category);
+    virtual void                setOpcodeCategory(sint32 category);
     virtual void                setThreadID(uint64 threadId);
 
 
@@ -51,7 +51,7 @@ class BaseIRBuilder: public IRBuilder {
 
   protected:
     bool                        needSetup;
-    int32_t                     opcodeCategory;
+    sint32                      opcodeCategory;
     std::string                 disas;
     std::string                 imageName;
     std::string                 routineName;

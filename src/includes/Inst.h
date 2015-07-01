@@ -14,7 +14,7 @@
 class Inst {
 
   private:
-    int32_t                               opcodeCategory;
+    sint32                                opcodeCategory;
     std::list<SymbolicExpression*>        symbolicExpressions;
     std::string                           disassembly;
     std::string                           imageName;
@@ -35,7 +35,7 @@ class Inst {
     const std::string                     &getRoutineName(void);
     const std::string                     &getSectionName(void);
     const std::vector<TritonOperand>      &getOperands(void);
-    int32_t                               getOpcodeCategory(void);
+    sint32                                getOpcodeCategory(void);
     size_t                                numberOfExpressions(void);
     uint32                                getOpcode(void);
     uint64                                getAddress(void);
@@ -44,7 +44,7 @@ class Inst {
     uint64                                getThreadID(void);
     void                                  addExpression(SymbolicExpression *se);
     void                                  setOpcode(uint32 op);
-    void                                  setOpcodeCategory(int32_t category);
+    void                                  setOpcodeCategory(sint32 category);
     void                                  setOperands(const std::vector<TritonOperand> &operands);
 
     Inst(uint64 threadId,uint64 address, const std::string &insDis);

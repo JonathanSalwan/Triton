@@ -342,7 +342,7 @@ static bool callbackSignals(THREADID threadId, sint32 sig, CONTEXT *ctx, bool ha
  * Usage function if Pin fail to start.
  * Display the help message.
  */
-static int32_t Usage()
+static sint32 Usage()
 {
   std::cerr << KNOB_BASE::StringKnobSummary() << std::endl;
   return -1;

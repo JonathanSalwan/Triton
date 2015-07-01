@@ -35,10 +35,10 @@ class IRBuilder {
     virtual void setThreadID(uint64 threadId) = 0;
 
     // Set the opcode category.
-    virtual void setOpcodeCategory(int32_t category) = 0;
+    virtual void setOpcodeCategory(sint32 category) = 0;
 
     // Get the opcode category.
-    virtual int32_t getOpcodeCategory(void) const = 0;
+    virtual sint32 getOpcodeCategory(void) const = 0;
 
     // Returns true or false if the instruction is branch.
     virtual bool isBranch(void) = 0;
