@@ -22,7 +22,9 @@ namespace PyTritonOptions {
   /* Execution configurations */
   char              *startAnalysisFromSymbol = nullptr;
   std::set<uint64>  startAnalysisFromAddr;
+  std::set<uint64>  startAnalysisFromOffset;
   std::set<uint64>  stopAnalysisFromAddr;
+  std::set<uint64>  stopAnalysisFromOffset;
 
   /* Callback configurations */
   PyObject *callbackAfter         = nullptr;                // After the instruction processing
@@ -828,9 +830,20 @@ static char Triton_startAnalysisFromAddr_doc[] = "Starts the symbolic execution 
 static PyObject *Triton_startAnalysisFromAddr(PyObject *self, PyObject *addr)
 {
   if (!PyLong_Check(addr) && !PyInt_Check(addr))
-    return PyErr_Format(PyExc_TypeError, "startAnalysisFromAddr(): expected an address as argument");
+    return PyErr_Format(PyExc_TypeError, "startAnalysisFromAddr(): expected an address (integer) as argument");
 
   PyTritonOptions::startAnalysisFromAddr.insert(PyLong_AsLong(addr));
+  return Py_None;
+}
+
+
+static char Triton_startAnalysisFromOffset_doc[] = "Starts the symbolic execution from a specific offset in the binary";
+static PyObject *Triton_startAnalysisFromOffset(PyObject *self, PyObject *offset)
+{
+  if (!PyLong_Check(offset) && !PyInt_Check(offset))
+    return PyErr_Format(PyExc_TypeError, "startAnalysisFromOffset(): expected an offset (integer) as argument");
+
+  PyTritonOptions::startAnalysisFromOffset.insert(PyLong_AsLong(offset));
   return Py_None;
 }
 
@@ -839,9 +852,20 @@ static char Triton_stopAnalysisFromAddr_doc[] = "Stops the symbolic execution fr
 static PyObject *Triton_stopAnalysisFromAddr(PyObject *self, PyObject *addr)
 {
   if (!PyLong_Check(addr) && !PyInt_Check(addr))
-    return PyErr_Format(PyExc_TypeError, "stopAnalysisFromAddr(): expected an address");
+    return PyErr_Format(PyExc_TypeError, "stopAnalysisFromAddr(): expected an address (integer) as argument");
 
   PyTritonOptions::stopAnalysisFromAddr.insert(PyLong_AsLong(addr));
+  return Py_None;
+}
+
+
+static char Triton_stopAnalysisFromOffset_doc[] = "Stops the symbolic execution from a specific offset in the binary";
+static PyObject *Triton_stopAnalysisFromOffset(PyObject *self, PyObject *offset)
+{
+  if (!PyLong_Check(offset) && !PyInt_Check(offset))
+    return PyErr_Format(PyExc_TypeError, "stopAnalysisFromOffset(): expected an offset (integer) as argument");
+
+  PyTritonOptions::stopAnalysisFromOffset.insert(PyLong_AsLong(offset));
   return Py_None;
 }
 
@@ -1111,8 +1135,10 @@ PyMethodDef tritonCallbacks[] = {
   {"setMemValue",               Triton_setMemValue,               METH_VARARGS, Triton_setMemValue_doc},
   {"setRegValue",               Triton_setRegValue,               METH_VARARGS, Triton_setRegValue_doc},
   {"startAnalysisFromAddr",     Triton_startAnalysisFromAddr,     METH_O,       Triton_startAnalysisFromAddr_doc},
+  {"startAnalysisFromOffset",   Triton_startAnalysisFromOffset,   METH_O,       Triton_startAnalysisFromOffset_doc},
   {"startAnalysisFromSymbol",   Triton_startAnalysisFromSymbol,   METH_O,       Triton_startAnalysisFromSymbol_doc},
   {"stopAnalysisFromAddr",      Triton_stopAnalysisFromAddr,      METH_O,       Triton_stopAnalysisFromAddr_doc},
+  {"stopAnalysisFromOffset",    Triton_stopAnalysisFromOffset,    METH_O,       Triton_stopAnalysisFromOffset_doc},
   {"syscallToString",           Triton_syscallToString,           METH_VARARGS, Triton_syscallToString_doc},
   {"taintMem",                  Triton_taintMem,                  METH_O,       Triton_taintMem_doc},
   {"taintMemFromAddr",          Triton_taintMemFromAddr,          METH_VARARGS, Triton_taintMemFromAddr_doc},

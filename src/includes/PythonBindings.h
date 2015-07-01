@@ -23,7 +23,9 @@ namespace PyTritonOptions {
   /* Execution configurations */
   extern char *startAnalysisFromSymbol;
   extern std::set<uint64> startAnalysisFromAddr;
+  extern std::set<uint64> startAnalysisFromOffset;
   extern std::set<uint64> stopAnalysisFromAddr;
+  extern std::set<uint64> stopAnalysisFromOffset;
 
   /* Callback configurations */
   extern PyObject *callbackAfter;                                 // After the instruction processing

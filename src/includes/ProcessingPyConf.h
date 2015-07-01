@@ -32,7 +32,9 @@ class ProcessingPyConf
     void callbackSyscallExit(uint64 threadId, uint64 std);
 
     void startAnalysisFromAddr(IRBuilder *irb);
+    void startAnalysisFromOffset(IRBuilder *irb);
     void stopAnalysisFromAddr(IRBuilder *irb);
+    void stopAnalysisFromOffset(IRBuilder *irb);
 
     void taintMemFromAddr(IRBuilder *irb);
     void taintRegFromAddr(IRBuilder *irb);

@@ -25,12 +25,29 @@ void ProcessingPyConf::startAnalysisFromAddr(IRBuilder *irb)
 }
 
 
+void ProcessingPyConf::startAnalysisFromOffset(IRBuilder *irb)
+{
+  // Check if the DSE must be start at this offset
+  if (PyTritonOptions::startAnalysisFromOffset.find(irb->getOffset()) != PyTritonOptions::startAnalysisFromOffset.end())
+    this->analysisTrigger->update(true);
+}
+
+
 void ProcessingPyConf::stopAnalysisFromAddr(IRBuilder *irb)
 {
   // Check if the DSE must be stop at this address
   if (PyTritonOptions::stopAnalysisFromAddr.find(irb->getAddress()) != PyTritonOptions::stopAnalysisFromAddr.end())
     this->analysisTrigger->update(false);
 }
+
+
+void ProcessingPyConf::stopAnalysisFromOffset(IRBuilder *irb)
+{
+  // Check if the DSE must be stop at this offset
+  if (PyTritonOptions::stopAnalysisFromOffset.find(irb->getOffset()) != PyTritonOptions::stopAnalysisFromOffset.end())
+    this->analysisTrigger->update(false);
+}
+
 
 void ProcessingPyConf::taintMemFromAddr(IRBuilder *irb)
 {
@@ -72,6 +89,7 @@ void ProcessingPyConf::untaintMemFromAddr(IRBuilder *irb)
   for ( ; it != memsUntainted.end(); it++)
     this->ap->untaintMem(*it);
 }
+
 
 void ProcessingPyConf::untaintRegFromAddr(IRBuilder *irb)
 {
@@ -241,7 +259,9 @@ void ProcessingPyConf::callbackSyscallExit(uint64 threadId, uint64 std)
 void ProcessingPyConf::applyConfBeforeProcessing(IRBuilder *irb)
 {
   this->startAnalysisFromAddr(irb);
+  this->startAnalysisFromOffset(irb);
   this->stopAnalysisFromAddr(irb);
+  this->stopAnalysisFromOffset(irb);
   this->taintMemFromAddr(irb);
   this->taintRegFromAddr(irb);
   this->untaintMemFromAddr(irb);
