@@ -5,14 +5,18 @@
 
 
 /* Thanks http://stackoverflow.com/questions/10819875 */
-static z3::expr mk_or(z3::expr_vector args)
-{
-  std::vector<Z3_ast> array;
+namespace TritonSolver {
 
-  for (uint32 i = 0; i < args.size(); i++)
-    array.push_back(args[i]);
+  z3::expr mk_or(z3::expr_vector args)
+  {
+    std::vector<Z3_ast> array;
 
-  return to_expr(args.ctx(), Z3_mk_or(args.ctx(), array.size(), &(array[0])));
+    for (uint32 i = 0; i < args.size(); i++)
+      array.push_back(args[i]);
+
+    return to_expr(args.ctx(), Z3_mk_or(args.ctx(), array.size(), &(array[0])));
+  }
+
 }
 
 
@@ -80,7 +84,7 @@ std::vector<std::list<Smodel>> SolverEngine::getModels(std::string expr, uint64 
     }
 
     /* Escape last models */
-    solver->add(mk_or(args));
+    solver->add(TritonSolver::mk_or(args));
 
     /* If there is model available */
     if (smodel.size() > 0)
