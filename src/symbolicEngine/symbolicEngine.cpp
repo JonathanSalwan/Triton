@@ -279,10 +279,11 @@ SymbolicVariable *SymbolicEngine::convertMemByteToSymVar(uint64 memAddr, std::st
     std::stringstream     expr("#0");
 
     expression = this->newSymbolicExpression(expr,symVarComment);
-    this->addMemoryReference(memAddr, expression->getID());
 
     if (expression == nullptr)
         return nullptr;
+
+    this->addMemoryReference(memAddr, expression->getID());
 
     symVar = this->addSymbolicVariable(SymVar::kind::MEM, memAddr, BYTE_SIZE, symVarComment);
     newExpr << symVar->getSymVarName();
@@ -351,6 +352,10 @@ SymbolicVariable *SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVar
   if (regSymId == UNSET){
     std::stringstream     expr("#0");
     expression = this->newSymbolicExpression(expr, symVarComment);
+
+    if (expression == nullptr)
+      return nullptr;
+
     this->symbolicReg[regId] = expression->getID();
 
   }else{
