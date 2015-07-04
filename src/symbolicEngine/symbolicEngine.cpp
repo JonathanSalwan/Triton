@@ -271,18 +271,55 @@ uint64 SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symVarSize, std
 }
 
 
+uint64 SymbolicEngine::convertMemByteToSymVar(uint64 memAddr, std::string symVarComment)
+{
+    SymbolicExpression    *expression = nullptr;
+    SymbolicVariable      *symVar  = nullptr;
+    std::stringstream     newExpr;
+    std::stringstream     expr("#0");
+
+    expression = this->newSymbolicExpression(expr,symVarComment);
+    this->addMemoryReference(memAddr, expression->getID());
+
+    if (expression == nullptr)
+        return UNSET;
+
+    symVar = this->addSymbolicVariable(SymVar::kind::MEM, memAddr, BYTE_SIZE, symVarComment);
+    newExpr << symVar->getSymVarName();
+    expression->setSrcExpr(newExpr);
+
+    return symVar->getSymVarId();
+
+}
+
 uint64 SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment)
 {
   SymbolicVariable   *symVar  = nullptr;
-  SymbolicExpression    *expression = nullptr;
+  SymbolicExpression *expression = nullptr;
   std::stringstream  newExpr;
   uint64             memSymId = UNSET;
+  uint64             writeSize = symVarSize;
+  uint64             lastSymVarId;
 
   memSymId = this->getMemSymbolicID(memAddr);
-  if (memSymId == UNSET)
-    throw std::runtime_error("SymbolicEngine::convertMemToSymVar() - This memory address is UNSET");
 
-  expression = this->getExpressionFromId(memSymId);
+
+  /*
+   * If the memory address is not set, we create 'symVarSize' symbolics variables and
+   * we return the last symbolic id. As the symoblic id is incremental we can easily compute the
+   * previous id
+   */
+  if(memSymId == UNSET){
+    while (writeSize){
+        lastSymVarId = convertMemByteToSymVar((memAddr + writeSize) - 1, symVarComment);
+        writeSize--;
+
+    }
+    return lastSymVarId;
+  }else{
+    expression = this->getExpressionFromId(memSymId);
+  }
+
 
   if (expression == nullptr)
     return UNSET;
@@ -302,7 +339,7 @@ uint64 SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std
 uint64 SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVarSize, std::string symVarComment)
 {
   SymbolicVariable   *symVar  = nullptr;
-  SymbolicExpression    *expression = nullptr;
+  SymbolicExpression *expression = nullptr;
   std::stringstream  newExpr;
   uint64             regSymId = UNSET;
 
@@ -310,10 +347,15 @@ uint64 SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVarSize, std::
     throw std::runtime_error("SymbolicEngine::convertRegToSymVar() - Invalid register ID");
 
   regSymId = this->getRegSymbolicID(regId);
-  if (regSymId == UNSET)
-    throw std::runtime_error("SymbolicEngine::convertRegToSymVar() - This register ID is UNSET");
 
-  expression = this->getExpressionFromId(regSymId);
+  if (regSymId == UNSET){
+    std::stringstream     expr("#0");
+    expression = this->newSymbolicExpression(expr, symVarComment);
+    this->symbolicReg[regId] = expression->getID();
+
+  }else{
+    expression = this->getExpressionFromId(regSymId);
+  }
 
   if (expression == nullptr)
     return UNSET;
