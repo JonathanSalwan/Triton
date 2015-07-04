@@ -2,6 +2,7 @@
 #include <SymbolicVariable.h>
 
 
+
 SymbolicVariable::SymbolicVariable(SymVar::kind kind,
                                    uint64 kindValue,
                                    uint64 id,
@@ -62,7 +63,9 @@ uint64 SymbolicVariable::getSymVarSize(void)
   return this->symVarSize;
 }
 
+
 std::string SymbolicVariable::getSymVarComment(void)
 {
   return this->symVarComment;
 }
+

@@ -309,11 +309,66 @@ static void callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDAR
 }
 
 
+/* Callback when a signals occurs */
+static bool callbackSignals(THREADID threadId, sint32 sig, CONTEXT *ctx, bool hasHandler, const EXCEPTION_INFO *pExceptInfo, void *v)
+{
+  if (!analysisTrigger.getState())
+  /* Analysis locked */
+    return false;
+
+  /* Mutex */
+  ap.lock();
+
+  /* Update the current context handler */
+  ap.updateCurrentCtxH(new PINContextHandler(ctx, threadId));
+
+  /* Python callback at the end of execution */
+  processingPyConf.callbackSignals(threadId, sig);
+
+  /* Mutex */
+  ap.unlock();
+
+  /*
+   * We must exit. If you don't want to exit,
+   * you must use the restoreSnapshot() function.
+   */
+  exit(0);
+
+  return true;
+}
+
+
+/* Callback when a thread is created */
+static void callbackThreadEntry(THREADID threadId, CONTEXT *ctx, sint32 flags, void *v)
+{
+  /* Mutex */
+  ap.lock();
+
+  // TODO #30: Create a map entry of (thread -> {taintEngine, symEngine}).
+
+  /* Mutex */
+  ap.unlock();
+}
+
+
+/* Callback when a thread is destroyed */
+static void callbackThreadExit(THREADID threadId, const CONTEXT *ctx, sint32 flags, void *v)
+{
+  /* Mutex */
+  ap.lock();
+
+  // TODO #30: Destroy the map entry corresponding to the threadId.
+
+  /* Mutex */
+  ap.unlock();
+}
+
+
 /*
  * Usage function if Pin fail to start.
  * Display the help message.
  */
-static int32_t Usage()
+static sint32 Usage()
 {
   std::cerr << KNOB_BASE::StringKnobSummary() << std::endl;
   return -1;
@@ -352,10 +407,21 @@ int main(int argc, char *argv[])
   PIN_AddFiniFunction(Fini, nullptr);
 
   /* Syscall entry callback */
-  PIN_AddSyscallEntryFunction(callbackSyscallEntry, 0);
+  PIN_AddSyscallEntryFunction(callbackSyscallEntry, nullptr);
 
   /* Syscall exit callback */
-  PIN_AddSyscallExitFunction(callbackSyscallExit, 0);
+  PIN_AddSyscallExitFunction(callbackSyscallExit, nullptr);
+
+  /* Signals callback */
+  PIN_InterceptSignal(SIGFPE,  callbackSignals, nullptr); /* Floating point exception */
+  PIN_InterceptSignal(SIGILL,  callbackSignals, nullptr); /* Illegal Instruction */
+  PIN_InterceptSignal(SIGKILL, callbackSignals, nullptr); /* Kill signal */
+  PIN_InterceptSignal(SIGPIPE, callbackSignals, nullptr); /* Broken pipe: write to pipe with no readers */
+  PIN_InterceptSignal(SIGSEGV, callbackSignals, nullptr); /* Invalid memory reference */
+
+  /* Threads callbacks */
+  PIN_AddThreadStartFunction(callbackThreadEntry, nullptr);
+  PIN_AddThreadFiniFunction(callbackThreadExit, nullptr);
 
   /* Exec the python bindings file */
   if (!execBindings(KnobPythonModule.Value().c_str())) {

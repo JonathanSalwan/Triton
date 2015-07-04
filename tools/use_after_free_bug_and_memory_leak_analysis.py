@@ -17,7 +17,7 @@
 ## Output:
 ## -------
 ##
-##  $ ../../../pin -t ./triton.so -script ./tools/use_after_free_bug_analysis.py -- ./samples/vulns/testSuite
+##  $ ./triton ./tools/use_after_free_bug_analysis.py ./samples/vulns/testSuite
 ##  [+] TA <- (0x1bec010, 0x20)
 ##  [+] TA <- (0x1bec040, 0x20)
 ##  [+] TA -> (0x1bec010, 0x20)

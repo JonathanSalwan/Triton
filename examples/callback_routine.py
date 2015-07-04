@@ -3,7 +3,7 @@ from triton import *
 
 # Output
 #
-# $ ../../../pin -t ./triton.so -script examples/callback_routine.py  -- ./samples/vulns/testSuite
+# $ ./triton examples/callback_routine.py  ./samples/vulns/testSuite
 # -> malloc(0x20)
 # <- 0x8fc010
 # -> malloc(0x20)

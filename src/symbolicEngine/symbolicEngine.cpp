@@ -250,14 +250,14 @@ std::string SymbolicEngine::getVariablesDeclaration(void)
  * convertExprToSymVar(43, 8)
  * #43 = SymVar_4
  */
-uint64 SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symVarSize, std::string symVarComment)
+SymbolicVariable *SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symVarSize, std::string symVarComment)
 {
-  SymbolicVariable   *symVar  = nullptr;
-  SymbolicExpression    *expression = this->getExpressionFromId(exprId);
-  std::stringstream  newExpr;
+  SymbolicVariable    *symVar = nullptr;
+  SymbolicExpression  *expression = this->getExpressionFromId(exprId);
+  std::stringstream   newExpr;
 
   if (expression == nullptr)
-    return UNSET;
+    return nullptr;
 
   if (symVarSize != BYTE_SIZE && symVarSize != WORD_SIZE && symVarSize != DWORD_SIZE && symVarSize != QWORD_SIZE && symVarSize != DQWORD_SIZE)
     throw std::runtime_error("SymbolicEngine::convertExprToSymVar() - Invalid symVarSize");
@@ -267,11 +267,11 @@ uint64 SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symVarSize, std
   newExpr << symVar->getSymVarName();
   expression->setSrcExpr(newExpr);
 
-  return symVar->getSymVarId();
+  return symVar;
 }
 
 
-uint64 SymbolicEngine::convertMemByteToSymVar(uint64 memAddr, std::string symVarComment)
+SymbolicVariable *SymbolicEngine::convertMemByteToSymVar(uint64 memAddr, std::string symVarComment)
 {
     SymbolicExpression    *expression = nullptr;
     SymbolicVariable      *symVar  = nullptr;
@@ -288,41 +288,41 @@ uint64 SymbolicEngine::convertMemByteToSymVar(uint64 memAddr, std::string symVar
     newExpr << symVar->getSymVarName();
     expression->setSrcExpr(newExpr);
 
-    return symVar->getSymVarId();
+    return symVar;
 
 }
 
-uint64 SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment)
+SymbolicVariable *SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment)
 {
   SymbolicVariable   *symVar  = nullptr;
   SymbolicExpression *expression = nullptr;
   std::stringstream  newExpr;
   uint64             memSymId = UNSET;
   uint64             writeSize = symVarSize;
-  uint64             lastSymVarId;
+  SymbolicVariable   lastSymVar;
 
   memSymId = this->getMemSymbolicID(memAddr);
 
 
   /*
    * If the memory address is not set, we create 'symVarSize' symbolics variables and
-   * we return the last symbolic id. As the symoblic id is incremental we can easily compute the
-   * previous id
+   * we return the last symbolic variable. As the symoblic id is incremental we can easily get the
+   * previous id and hence the previous symbolic variable
    */
   if(memSymId == UNSET){
     while (writeSize){
-        lastSymVarId = convertMemByteToSymVar((memAddr + writeSize) - 1, symVarComment);
+        lastSymVar = convertMemByteToSymVar((memAddr + writeSize) - 1, symVarComment);
         writeSize--;
 
     }
-    return lastSymVarId;
+    return lastSymVar;
   }else{
     expression = this->getExpressionFromId(memSymId);
   }
 
 
   if (expression == nullptr)
-    return UNSET;
+    return nullptr;
 
   if (symVarSize != BYTE_SIZE && symVarSize != WORD_SIZE && symVarSize != DWORD_SIZE && symVarSize != QWORD_SIZE && symVarSize != DQWORD_SIZE)
     throw std::runtime_error("SymbolicEngine::convertMemToSymVar() - Invalid symVarSize");
@@ -332,13 +332,13 @@ uint64 SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std
   newExpr << symVar->getSymVarName();
   expression->setSrcExpr(newExpr);
 
-  return symVar->getSymVarId();
+  return symVar;
 }
 
 
-uint64 SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVarSize, std::string symVarComment)
+SymbolicVariable *SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVarSize, std::string symVarComment)
 {
-  SymbolicVariable   *symVar  = nullptr;
+  SymbolicVariable   *symVar = nullptr;
   SymbolicExpression *expression = nullptr;
   std::stringstream  newExpr;
   uint64             regSymId = UNSET;
@@ -358,7 +358,7 @@ uint64 SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVarSize, std::
   }
 
   if (expression == nullptr)
-    return UNSET;
+    return nullptr;
 
   if (symVarSize != BYTE_SIZE && symVarSize != WORD_SIZE && symVarSize != DWORD_SIZE && symVarSize != QWORD_SIZE && symVarSize != DQWORD_SIZE)
     throw std::runtime_error("SymbolicEngine::convertRegToSymVar() - Invalid symVarSize");
@@ -368,7 +368,7 @@ uint64 SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVarSize, std::
   newExpr << symVar->getSymVarName();
   expression->setSrcExpr(newExpr);
 
-  return symVar->getSymVarId();
+  return symVar;
 }
 
 

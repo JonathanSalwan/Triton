@@ -25,12 +25,29 @@ void ProcessingPyConf::startAnalysisFromAddr(IRBuilder *irb)
 }
 
 
+void ProcessingPyConf::startAnalysisFromOffset(IRBuilder *irb)
+{
+  // Check if the DSE must be start at this offset
+  if (PyTritonOptions::startAnalysisFromOffset.find(irb->getOffset()) != PyTritonOptions::startAnalysisFromOffset.end())
+    this->analysisTrigger->update(true);
+}
+
+
 void ProcessingPyConf::stopAnalysisFromAddr(IRBuilder *irb)
 {
   // Check if the DSE must be stop at this address
   if (PyTritonOptions::stopAnalysisFromAddr.find(irb->getAddress()) != PyTritonOptions::stopAnalysisFromAddr.end())
     this->analysisTrigger->update(false);
 }
+
+
+void ProcessingPyConf::stopAnalysisFromOffset(IRBuilder *irb)
+{
+  // Check if the DSE must be stop at this offset
+  if (PyTritonOptions::stopAnalysisFromOffset.find(irb->getOffset()) != PyTritonOptions::stopAnalysisFromOffset.end())
+    this->analysisTrigger->update(false);
+}
+
 
 void ProcessingPyConf::taintMemFromAddr(IRBuilder *irb)
 {
@@ -72,6 +89,7 @@ void ProcessingPyConf::untaintMemFromAddr(IRBuilder *irb)
   for ( ; it != memsUntainted.end(); it++)
     this->ap->untaintMem(*it);
 }
+
 
 void ProcessingPyConf::untaintRegFromAddr(IRBuilder *irb)
 {
@@ -178,6 +196,26 @@ void ProcessingPyConf::callbackFini(void)
 }
 
 
+void ProcessingPyConf::callbackSignals(uint64 threadId, sint32 sig)
+{
+  // Check if there is a callback wich must be called when a signal occurs
+  if (PyTritonOptions::callbackSignals){
+
+    /* CallObject needs a tuple. The size of the tuple is the number of arguments.
+     * threadId and sig are sent to the callback. */
+    PyObject *args = xPyTuple_New(2);
+    PyTuple_SetItem(args, 0, PyLong_FromLong(threadId));
+    PyTuple_SetItem(args, 1, Py_BuildValue("i", sig));
+    if (PyObject_CallObject(PyTritonOptions::callbackSignals, args) == nullptr){
+      PyErr_Print();
+      exit(1);
+    }
+
+    Py_DECREF(args);
+  }
+}
+
+
 void ProcessingPyConf::callbackSyscallEntry(uint64 threadId, uint64 std)
 {
   // Check if there is a callback wich must be called before the syscall processing
@@ -221,7 +259,9 @@ void ProcessingPyConf::callbackSyscallExit(uint64 threadId, uint64 std)
 void ProcessingPyConf::applyConfBeforeProcessing(IRBuilder *irb)
 {
   this->startAnalysisFromAddr(irb);
+  this->startAnalysisFromOffset(irb);
   this->stopAnalysisFromAddr(irb);
+  this->stopAnalysisFromOffset(irb);
   this->taintMemFromAddr(irb);
   this->taintRegFromAddr(irb);
   this->untaintMemFromAddr(irb);

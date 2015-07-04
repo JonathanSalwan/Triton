@@ -6,8 +6,8 @@
 
 
 TritonOperand::TritonOperand(IRBuilderOperand::operand_t type,
-              uint64 value,
-              uint64 size)
+                             uint64 value,
+                             uint64 size)
 {
   this->type          = type;
   this->value         = value;
@@ -20,12 +20,12 @@ TritonOperand::TritonOperand(IRBuilderOperand::operand_t type,
 
 
 TritonOperand::TritonOperand(IRBuilderOperand::operand_t type,
-              uint64 value,
-              uint64 size,
-              uint64 displacement,
-              uint64 baseReg,
-              uint64 indexReg,
-              uint64 memoryScale)
+                             uint64 value,
+                             uint64 size,
+                             uint64 displacement,
+                             uint64 baseReg,
+                             uint64 indexReg,
+                             uint64 memoryScale)
 {
   this->type          = type;
   this->value         = value;
@@ -92,27 +92,11 @@ uint64 TritonOperand::getMemoryScale(void) const {
 }
 
 
-uint64 TritonOperand::operator[](const int index){
-  switch (index){
-    case 0: return this->type;
-    case 1: return this->value;
-    case 2: return this->size;
-    case 3: return this->displacement;
-    case 4: return this->baseReg;
-    case 5: return this->indexReg;
-    case 6: return this->memoryScale;
-    default:
-      throw std::out_of_range("Error: TritonOperand - Index out of range");
-  }
-  return 0;
-}
-
-
 void TritonOperand::operator=(const TritonOperand &other)
 {
   this->type          = other.type;
   this->value         = other.value;
-  this->size          = other.size; 
+  this->size          = other.size;
   this->displacement  = other.displacement;
   this->baseReg       = other.baseReg;
   this->indexReg      = other.indexReg;

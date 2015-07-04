@@ -1,11 +1,18 @@
 
+#include <pin.H>
 #include <Inst.h>
-#include <xed-category-enum.h>
 
 
-Inst::Inst(uint64 threadId, uint64 address, const std::string &insDis):
-  threadId(threadId), address(address), disassembly(insDis)
+Inst::Inst(uint64 threadId, uint64 address, const std::string &dis)
 {
+  this->address     = address;
+  this->baseAddress = IMG_LowAddress(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
+  this->disassembly = dis;
+  this->imageName   = IMG_Name(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
+  this->offset      = this->address - this->baseAddress;
+  this->routineName = RTN_FindNameByAddress(address);
+  this->sectionName = SEC_Name(RTN_Sec(RTN_FindByAddress(address)));
+  this->threadId    = threadId;
 }
 
 
@@ -102,5 +109,40 @@ const std::list<SymbolicExpression*> &Inst::getSymbolicExpressions(void)
 size_t Inst::numberOfExpressions(void)
 {
   return this->symbolicExpressions.size();
+}
+
+
+/* Returns the image name */
+const std::string &Inst::getImageName(void)
+{
+  return this->imageName;
+}
+
+
+/* Returns the section name */
+const std::string &Inst::getSectionName(void)
+{
+  return this->imageName;
+}
+
+
+/* Returns the routine name */
+const std::string &Inst::getRoutineName(void)
+{
+  return this->routineName;
+}
+
+
+/* Returns the base address */
+uint64 Inst::getBaseAddress(void)
+{
+  return this->baseAddress;
+}
+
+
+/* Returns the offset of the instruction in the file */
+uint64 Inst::getOffset(void)
+{
+  return this->offset;
 }
 
