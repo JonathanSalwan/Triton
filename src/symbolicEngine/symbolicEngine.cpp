@@ -282,7 +282,7 @@ SymbolicVariable *SymbolicEngine::convertMemByteToSymVar(uint64 memAddr, std::st
     this->addMemoryReference(memAddr, expression->getID());
 
     if (expression == nullptr)
-        return UNSET;
+        return nullptr;
 
     symVar = this->addSymbolicVariable(SymVar::kind::MEM, memAddr, BYTE_SIZE, symVarComment);
     newExpr << symVar->getSymVarName();
@@ -299,7 +299,7 @@ SymbolicVariable *SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symV
   std::stringstream  newExpr;
   uint64             memSymId = UNSET;
   uint64             writeSize = symVarSize;
-  SymbolicVariable   lastSymVar;
+  SymbolicVariable   *lastSymVar;
 
   memSymId = this->getMemSymbolicID(memAddr);
 
