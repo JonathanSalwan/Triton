@@ -72,6 +72,7 @@ class SymbolicEngine {
     std::vector<SymbolicExpression *> getExpressions(void);
     std::vector<SymbolicVariable *>   getSymVars(void);
     SymbolicVariable                  *convertExprToSymVar(uint64 exprId, uint64 symVarSize, std::string symVarComment);
+    SymbolicVariable                  *convertMemByteToSymVar(uint64 memAddr, std::string symVarComment);
     SymbolicVariable                  *convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment);
     SymbolicVariable                  *convertRegToSymVar(uint64 regId, uint64 symVarSize, std::string symVarComment);
     uint64                            getMemSymbolicID(uint64 addr);
