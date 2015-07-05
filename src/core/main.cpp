@@ -16,8 +16,6 @@
 #include <Trigger.h>
 #include <boost/filesystem.hpp>
 
-#include <signal.h>
-
 using boost::filesystem::absolute;
 using boost::filesystem::path;
 
