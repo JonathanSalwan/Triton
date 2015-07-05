@@ -1,3 +1,4 @@
+#include <csignal>
 #include <iostream>
 #include <memory>
 #include <sstream>
