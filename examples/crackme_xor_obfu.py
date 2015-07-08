@@ -13,15 +13,16 @@ def cafter(instruction):
     # [R:8]  0x400891: mov rax, qword ptr [rbp-0x50]    R:0x7fffb63d52b0: 41 00 00 00 00 00 00 00 (0x41)
     if instruction.address == 0x400891:
         raxId = getRegSymbolicID(IDREF.REG.RAX)
-        convertExprToSymVar(raxId, 8)
+        convertExprToSymVar(raxId, 64)
 
     if instruction.address == 0x400b69:
         zfId = getRegSymbolicID(IDREF.FLAG.ZF)
-        zfExpr = getBacktrackedSymExpr(zfId)
-        expr = str()
-        expr += smt2lib.smtAssert(smt2lib.bvugt('SymVar_0', smt2lib.bv(96, 64)))    # printable char
-        expr += smt2lib.smtAssert(smt2lib.bvult('SymVar_0', smt2lib.bv(123, 64)))   # printable char
-        expr += smt2lib.smtAssert(smt2lib.equal(zfExpr, smt2lib.bvtrue()))          # (assert (= zf true)
+        zfExpr = getFullExpression(getSymExpr(zfId).ast)
+        expr = smt2lib.compound([
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.string('SymVar_0'), smt2lib.bv(96, 64))),    # printable char
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.string('SymVar_0'), smt2lib.bv(123, 64))),   # printable char
+                 smt2lib.smtAssert(smt2lib.equal(zfExpr, smt2lib.bvtrue()))                           # (assert (= zf true)
+               ])
         print getModel(expr)
 
     return
