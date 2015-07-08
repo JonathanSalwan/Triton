@@ -14,6 +14,7 @@ void initOpcodeCategoryEnv(PyObject *);
 void initOpcodeEnv(PyObject *);
 void initOperandEnv(PyObject *);
 void initRegEnv(PyObject *);
+void initSmtAstNodeEnv(PyObject *);
 void initSymVarEnv(PyObject *);
 void initSyscallEnv(PyObject *);
 void initVersionEnv(PyObject *);
@@ -163,6 +164,22 @@ void initBindings(void)
 
   // REG ---------------------
 
+
+  // SmtAstNode ---------------------
+
+  /* Create the IDREF.SMT_AST_NODE class */
+  PyObject *idSmtAstNodeClassName = xPyString_FromString("SMT_AST_NODE");
+  PyObject *idSmtAstNodeClassDict = xPyDict_New();
+
+  /* Add registers ref into IDREF.SMT_AST_NODE class */
+  initSmtAstNodeEnv(idSmtAstNodeClassDict);
+
+  /* Create the SMT_AST_NODE class */
+  PyObject *idSmtAstNodeClass = xPyClass_New(nullptr, idSmtAstNodeClassDict, idSmtAstNodeClassName);
+
+  // SmtAstNode ---------------------
+
+
   // SYMVAR ---------------------
 
   /* Create the IDREF.SYMVAR class */
@@ -217,6 +234,7 @@ void initBindings(void)
   PyDict_SetItemString(idRefClassDict, "OPCODE_CATEGORY", idOpcodeCategoryClass);
   PyDict_SetItemString(idRefClassDict, "OPERAND", idOperandClass);
   PyDict_SetItemString(idRefClassDict, "REG", idRegClass);
+  PyDict_SetItemString(idRefClassDict, "SMT_AST_NODE", idSmtAstNodeClass);
   PyDict_SetItemString(idRefClassDict, "SYMVAR", idSymVarClass);
   PyDict_SetItemString(idRefClassDict, "SYSCALL", idSyscallClass);
   PyDict_SetItemString(idRefClassDict, "VERSION", idVersionClass);
