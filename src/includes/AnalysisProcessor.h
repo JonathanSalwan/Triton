@@ -3,6 +3,7 @@
 
 #include "ContextHandler.h"
 #include "Inst.h"
+#include "SMT2Lib.h"
 #include "SnapshotEngine.h"
 #include "SolverEngine.h"
 #include "Stats.h"
@@ -56,18 +57,18 @@ class AnalysisProcessor {
      */
 
     /* Returns a symbolic expression for the register (regID) */
-    SymbolicExpression *createRegSE(Inst &inst, std::stringstream &expr, uint64 regID);
-    SymbolicExpression *createRegSE(Inst &inst, std::stringstream &expr, uint64 regID, std::string comment);
-    SymbolicExpression *createRegSE(Inst &inst, std::stringstream &expr, uint64 regID, uint64 regSize);
-    SymbolicExpression *createRegSE(Inst &inst, std::stringstream &expr, uint64 regID, uint64 regSize, std::string comment);
+    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID);
+    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, std::string comment);
+    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, uint64 regSize);
+    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, uint64 regSize, std::string comment);
 
     /* Returns a symbolic expression for the memory address */
-    SymbolicExpression *createMemSE(Inst &inst, std::stringstream &expr, uint64 address, uint64 writeSize);
-    SymbolicExpression *createMemSE(Inst &inst, std::stringstream &expr, uint64 address, uint64 writeSize, std::string comment);
+    SymbolicExpression *createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize);
+    SymbolicExpression *createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize, std::string comment);
 
     /* Returns a symbolic expression. This methods is mainly used for temporary expression */
-    SymbolicExpression *createSE(Inst &inst, std::stringstream &expr);
-    SymbolicExpression *createSE(Inst &inst, std::stringstream &expr, std::string comment);
+    SymbolicExpression *createSE(Inst &inst, smt2lib::smtAstAbstractNode *expr);
+    SymbolicExpression *createSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, std::string comment);
 
     /*
      * Returns the ID of the symbolic expression currently present in the
@@ -87,8 +88,8 @@ class AnalysisProcessor {
     /* Returns all symbolic expressions */
     std::vector<SymbolicExpression *> getExpressions(void);
 
-    /* Returns the backtracked symbolic expression from an id */
-    std::string getBacktrackedExpressionFromId(uint64 id);
+    /* Returns the full symbolic expression backtracked */
+    smt2lib::smtAstAbstractNode *getFullExpression(smt2lib::smtAstAbstractNode *node);
 
     /* Returns the symbolic engine reference */
     SymbolicEngine &getSymbolicEngine(void);
@@ -110,11 +111,11 @@ class AnalysisProcessor {
     std::list<uint64> getPathConstraints(void);
 
     /* Build a symbolic register operand */
-    std::string buildSymbolicRegOperand(uint64 regID, uint64 regSize);
-    std::string buildSymbolicRegOperand(uint64 regID, uint64 regSize, uint64 highExtract, uint64 lowExtract);
-    std::string buildSymbolicMemOperand(uint64 mem, uint64 memSize);
-    std::string buildSymbolicFlagOperand(uint64 flagID, uint64 size);
-    std::string buildSymbolicFlagOperand(uint64 flagID);
+    smt2lib::smtAstAbstractNode *buildSymbolicRegOperand(uint64 regID, uint64 regSize);
+    smt2lib::smtAstAbstractNode *buildSymbolicRegOperand(uint64 regID, uint64 regSize, uint64 highExtract, uint64 lowExtract);
+    smt2lib::smtAstAbstractNode *buildSymbolicMemOperand(uint64 mem, uint64 memSize);
+    smt2lib::smtAstAbstractNode *buildSymbolicFlagOperand(uint64 flagID, uint64 size);
+    smt2lib::smtAstAbstractNode *buildSymbolicFlagOperand(uint64 flagID);
 
     /* Concretize register and memory */
     void concretizeReg(uint64 regID);
@@ -171,8 +172,8 @@ class AnalysisProcessor {
     /* Returns a reference to the solver engine. */
     SolverEngine                    &getSolverEngine();
     /* Returns models */
-    std::list<Smodel>               getModel(std::string expr);
-    std::vector<std::list<Smodel>>  getModels(std::string expr, uint64 limit);
+    std::list<Smodel>               getModel(smt2lib::smtAstAbstractNode *node);
+    std::vector<std::list<Smodel>>  getModels(smt2lib::smtAstAbstractNode *node, uint64 limit);
 
 
     /*
@@ -201,7 +202,6 @@ class AnalysisProcessor {
     Inst      *getLastInstruction(void);
     Trace     &getTrace(void);
     void      addInstructionToTrace(Inst *instruction);
-    void      saveTrace(std::stringstream &file);
 
 
     /*

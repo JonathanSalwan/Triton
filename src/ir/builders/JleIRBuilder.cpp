@@ -14,23 +14,23 @@ JleIRBuilder::JleIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void JleIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, sf, of, zf;
-  uint64            imm   = this->operands[0].getValue();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *sf, *of, *zf;
+  uint64 imm   = this->operands[0].getValue();
 
   /* Create the SMT semantic */
-  sf << ap.buildSymbolicFlagOperand(ID_SF);
-  of << ap.buildSymbolicFlagOperand(ID_OF);
-  zf << ap.buildSymbolicFlagOperand(ID_ZF);
+  sf = ap.buildSymbolicFlagOperand(ID_SF);
+  of = ap.buildSymbolicFlagOperand(ID_OF);
+  zf = ap.buildSymbolicFlagOperand(ID_ZF);
 
   /* 
    * Finale expr
    * JLE: Jump if less or equal ((SF^OF | ZF) == 1).
    * SMT: (= (bvor (bvxor sf of) zf) TRUE)
    */
-  expr << smt2lib::ite(
+  expr = smt2lib::ite(
             smt2lib::equal(
-                smt2lib::bvor(smt2lib::bvxor(sf.str(), of.str()), zf.str()),
+                smt2lib::bvor(smt2lib::bvxor(sf, of), zf),
                 smt2lib::bvtrue()
             ),
             smt2lib::bv(imm, REG_SIZE_BIT),

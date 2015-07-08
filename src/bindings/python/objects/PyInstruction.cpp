@@ -1,91 +1,9 @@
 
-#include <TritonOperand.h>
 #include <TritonPyObject.h>
 #include <xPyFunc.h>
 
-extern AnalysisProcessor ap;
-
-
 /*
- * Class SymbolicExpression:
- *
- * - comment (string)
- * - destination (string)
- * - expression (string)
- * - id (integer)
- * - isTainted (bool)
- * - source (string)
- */
-PyObject *PySymbolicExpression(SymbolicExpression *expression)
-{
-  if (expression == nullptr)
-    return Py_None;
-
-  PyObject *dictSEClass = xPyDict_New();
-  PyDict_SetItemString(dictSEClass, "source",       PyString_FromFormat("%s", expression->getSource()->str().c_str()));
-  PyDict_SetItemString(dictSEClass, "destination",  PyString_FromFormat("%s", expression->getDestination()->str().c_str()));
-  PyDict_SetItemString(dictSEClass, "expression",   PyString_FromFormat("%s", expression->getExpression()->str().c_str()));
-
-  PyObject *comment = Py_None;
-  if (expression->getComment()->empty() == false)
-    comment = PyString_FromFormat("%s", expression->getComment()->c_str());
-
-  PyDict_SetItemString(dictSEClass, "comment",      comment);
-  PyDict_SetItemString(dictSEClass, "id",           PyLong_FromLong(expression->getID()));
-  PyDict_SetItemString(dictSEClass, "isTainted",    PyBool_FromLong(expression->isTainted));
-
-  PyObject *SEClassName = xPyString_FromString("SymbolicExpression");
-  PyObject *SEClass = xPyClass_New(nullptr, dictSEClass, SEClassName);
-
-  Py_DECREF(dictSEClass);
-  Py_DECREF(SEClassName);
-  Py_INCREF(SEClass);
-
-  return SEClass;
-}
-
-
-/*
- * Class SymbolicVariable:
- *
- * - id (integer)
- * - kind (IDREF.SYMVAR)
- * - kindValue (IDREG.REG or integer, it depends of the kind)
- * - name (string)
- * - size (integer)
- * - comment(string)
- */
-PyObject *PySymbolicVariable(SymbolicVariable *symVar)
-{
-  if (symVar == nullptr)
-    return Py_None;
-
-  PyObject *dictSVClass = xPyDict_New();
-  PyDict_SetItemString(dictSVClass, "id",        PyLong_FromLong(symVar->getSymVarId()));
-  PyDict_SetItemString(dictSVClass, "kind",      PyLong_FromLong(symVar->getSymVarKind()));
-  PyDict_SetItemString(dictSVClass, "kindValue", PyLong_FromLong(symVar->getSymVarKindValue()));
-  PyDict_SetItemString(dictSVClass, "name",      PyString_FromFormat("%s", symVar->getSymVarName().c_str()));
-  PyDict_SetItemString(dictSVClass, "size",      PyLong_FromLong(symVar->getSymVarSize()));
-
-  PyObject *comment = Py_None;
-  if (symVar->getSymVarComment().empty() == false)
-    comment = PyString_FromFormat("%s", symVar->getSymVarComment().c_str());
-
-  PyDict_SetItemString(dictSVClass, "comment", comment);
-
-  PyObject *SVClassName = xPyString_FromString("SymbolicVariable");
-  PyObject *SVClass = xPyClass_New(nullptr, dictSVClass, SVClassName);
-
-  Py_DECREF(dictSVClass);
-  Py_DECREF(SVClassName);
-  Py_INCREF(SVClass);
-
-  return SVClass;
-}
-
-
-/*
- * Class Instruction:
+ * Class Instruction from Inst
  *
  * - address (integer)
  * - assembly (string)
@@ -101,6 +19,7 @@ PyObject *PySymbolicVariable(SymbolicVariable *symVar)
  * - symbolicExpressions (list of SymbolicExpression)
  * - threadId (integer)
  */
+
 PyObject *PyInstruction(Inst *inst)
 {
   if (inst == nullptr)
@@ -121,8 +40,8 @@ PyObject *PyInstruction(Inst *inst)
   PyDict_SetItemString(dictInstClass, "threadId",       PyLong_FromLong(inst->getThreadID()));
 
   /* Setup the symbolic expression list */
-  PyObject *SEList                          = xPyList_New(inst->numberOfExpressions());
-  std::list<SymbolicExpression*> symExpressions   = inst->getSymbolicExpressions();
+  PyObject *SEList = xPyList_New(inst->numberOfExpressions());
+  std::list<SymbolicExpression*> symExpressions = inst->getSymbolicExpressions();
   std::list<SymbolicExpression*>::iterator it1 = symExpressions.begin();
 
   Py_ssize_t index = 0;
@@ -162,7 +81,7 @@ PyObject *PyInstruction(Inst *inst)
 
 
 /*
- * Class Instruction:
+ * Class Instruction from Irb
  *
  * - address (integer)
  * - assembly (string)
@@ -178,6 +97,7 @@ PyObject *PyInstruction(Inst *inst)
  * - symbolicExpressions (list of SymbolicExpression)
  * - threadId (integer)
  */
+
 PyObject *PyInstruction(IRBuilder *irb)
 {
   if (irb == nullptr)
@@ -224,28 +144,5 @@ PyObject *PyInstruction(IRBuilder *irb)
   Py_DECREF(instClassName);
 
   return instClass;
-}
-
-
-PyObject *PyOperand(TritonOperand operand)
-{
-  PyObject *dictOperandClass = xPyDict_New();
-  PyDict_SetItemString(dictOperandClass, "baseReg",       PyLong_FromLong(operand.getBaseReg()));
-  PyDict_SetItemString(dictOperandClass, "displacement",  PyLong_FromLong(operand.getDisplacement()));
-  PyDict_SetItemString(dictOperandClass, "indexReg",      PyLong_FromLong(operand.getIndexReg()));
-  PyDict_SetItemString(dictOperandClass, "memoryScale",   PyLong_FromLong(operand.getMemoryScale()));
-  PyDict_SetItemString(dictOperandClass, "size",          PyLong_FromLong(operand.getSize()));
-  PyDict_SetItemString(dictOperandClass, "type",          PyLong_FromLong(operand.getType()));
-  PyDict_SetItemString(dictOperandClass, "value",         PyLong_FromLong(operand.getValue()));
-
-  /* Create the Operand class */
-  PyObject *operandClassName = xPyString_FromString("Operand");
-  PyObject *operandClass  = xPyClass_New(nullptr, dictOperandClass, operandClassName);
-
-  Py_DECREF(dictOperandClass);
-  Py_DECREF(operandClassName);
-  Py_INCREF(operandClass);
-
-  return operandClass;
 }
 

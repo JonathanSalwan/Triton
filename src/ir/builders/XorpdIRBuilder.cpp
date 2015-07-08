@@ -19,19 +19,19 @@ void XorpdIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void XorpdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint64            reg1     = this->operands[0].getValue();
-  uint64            reg2     = this->operands[1].getValue();
-  uint32            regSize1 = this->operands[0].getSize();
-  uint32            regSize2 = this->operands[1].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint64 reg1     = this->operands[0].getValue();
+  uint64 reg2     = this->operands[1].getValue();
+  uint32 regSize1 = this->operands[0].getSize();
+  uint32 regSize2 = this->operands[1].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg1, regSize1);
-  op2 << ap.buildSymbolicRegOperand(reg2, regSize2);
+  op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
+  op2 = ap.buildSymbolicRegOperand(reg2, regSize2);
 
   // Final expr
-  expr << smt2lib::bvxor(op1.str(), op2.str());
+  expr = smt2lib::bvxor(op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg1, regSize1);
@@ -43,19 +43,19 @@ void XorpdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void XorpdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint32            readSize = this->operands[1].getSize();
-  uint64            mem      = this->operands[1].getValue();
-  uint64            reg      = this->operands[0].getValue();
-  uint32            regSize  = this->operands[1].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint32 readSize = this->operands[1].getSize();
+  uint64 mem      = this->operands[1].getValue();
+  uint64 reg      = this->operands[0].getValue();
+  uint32 regSize  = this->operands[1].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg, regSize);
-  op2 << ap.buildSymbolicMemOperand(mem, readSize);
+  op1 = ap.buildSymbolicRegOperand(reg, regSize);
+  op2 = ap.buildSymbolicMemOperand(mem, readSize);
 
   // Final expr
-  expr << smt2lib::bvxor(op1.str(), op2.str());
+  expr = smt2lib::bvxor(op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);

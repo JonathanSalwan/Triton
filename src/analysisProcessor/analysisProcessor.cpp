@@ -48,7 +48,7 @@ SymbolicEngine &AnalysisProcessor::getSymbolicEngine(void)
 }
 
 
-SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, std::stringstream &expr, uint64 regID)
+SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID)
 {
   SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr);
   this->symEngine.symbolicReg[regID] = se->getID();
@@ -57,7 +57,7 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, std::stringstream
 }
 
 
-SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, std::stringstream &expr, uint64 regID, std::string comment)
+SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, std::string comment)
 {
   SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr, comment);
   this->symEngine.symbolicReg[regID] = se->getID();
@@ -66,28 +66,29 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, std::stringstream
 }
 
 
-SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, std::stringstream &expr, uint64 regID, uint64 regSize)
+SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, uint64 regSize)
 {
-  std::stringstream finalExpr, origReg;
+  smt2lib::smtAstAbstractNode *finalExpr = nullptr, *origReg = nullptr;
 
-  origReg << this->buildSymbolicRegOperand(regID, REG_SIZE);
+  origReg = this->buildSymbolicRegOperand(regID, REG_SIZE);
 
   switch (regSize) {
     case BYTE_SIZE:
-      finalExpr << smt2lib::concat(smt2lib::extract(63, 8, origReg.str()), expr.str());
+      finalExpr = smt2lib::concat(smt2lib::extract(63, 8, origReg), expr);
       break;
+
     case WORD_SIZE:
-      finalExpr << smt2lib::concat(smt2lib::extract(63, 16, origReg.str()), expr.str());
+      finalExpr = smt2lib::concat(smt2lib::extract(63, 16, origReg), expr);
       break;
+
     case DWORD_SIZE:
       /* In AMD64, if a reg32 is written, it clears the 32-bit MSB of the corresponding register (Thx Wisk!) */
-      finalExpr << smt2lib::zx(expr.str(), DWORD_SIZE_BIT);
+      finalExpr = smt2lib::zx(DWORD_SIZE_BIT, expr);
       break;
+
     case QWORD_SIZE:
-      finalExpr << expr.str();
-      break;
     case DQWORD_SIZE:
-      finalExpr << expr.str();
+      finalExpr = expr;
       break;
   }
 
@@ -99,28 +100,29 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, std::stringstream
 }
 
 
-SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, std::stringstream &expr, uint64 regID, uint64 regSize, std::string comment)
+SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, uint64 regSize, std::string comment)
 {
-  std::stringstream finalExpr, origReg;
+  smt2lib::smtAstAbstractNode *finalExpr = nullptr, *origReg = nullptr;
 
-  origReg << this->buildSymbolicRegOperand(regID, REG_SIZE);
+  origReg = this->buildSymbolicRegOperand(regID, REG_SIZE);
 
   switch (regSize) {
     case BYTE_SIZE:
-      finalExpr << smt2lib::concat(smt2lib::extract(63, 8, origReg.str()), expr.str());
+      finalExpr = smt2lib::concat(smt2lib::extract(63, 8, origReg), expr);
       break;
+
     case WORD_SIZE:
-      finalExpr << smt2lib::concat(smt2lib::extract(63, 16, origReg.str()), expr.str());
+      finalExpr = smt2lib::concat(smt2lib::extract(63, 16, origReg), expr);
       break;
+
     case DWORD_SIZE:
       /* In AMD64, if a reg32 is written, it clears the 32-bit MSB of the corresponding register (Thx Wisk!) */
-      finalExpr << smt2lib::zx(expr.str(), DWORD_SIZE_BIT);
+      finalExpr = smt2lib::zx(DWORD_SIZE_BIT, expr);
       break;
+
     case QWORD_SIZE:
-      finalExpr << expr.str();
-      break;
     case DQWORD_SIZE:
-      finalExpr << expr.str();
+      finalExpr = expr;
       break;
   }
 
@@ -132,10 +134,10 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, std::stringstream
 }
 
 
-SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, std::stringstream &expr, uint64 address, uint64 writeSize)
+SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize)
 {
-  SymbolicExpression   *ret = nullptr;
-  std::stringstream tmp;
+  SymbolicExpression *ret = nullptr;
+  smt2lib::smtAstAbstractNode *tmp;
 
   /*
    * As the x86's memory can be accessed without alignment, each byte of the
@@ -144,7 +146,7 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, std::stringstream
   while (writeSize){
     /* Extract each byte if the size > 1 byte (8 bits) */
     if (writeSize > BYTE_SIZE){
-      tmp.str(smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr.str()));
+      tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
       SymbolicExpression *se = symEngine.newSymbolicExpression(tmp, "byte reference");
       inst.addExpression(se);
       /* Assign memory with little endian */
@@ -164,10 +166,10 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, std::stringstream
 }
 
 
-SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, std::stringstream &expr, uint64 address, uint64 writeSize, std::string comment)
+SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize, std::string comment)
 {
-  SymbolicExpression   *ret = nullptr;
-  std::stringstream tmp;
+  SymbolicExpression *ret = nullptr;
+  smt2lib::smtAstAbstractNode *tmp;
 
   /*
    * As the x86's memory can be accessed without alignment, each byte of the
@@ -176,7 +178,7 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, std::stringstream
   while (writeSize){
     /* Extract each byte if the size > 1 byte (8 bits) */
     if (writeSize > BYTE_SIZE){
-      tmp.str(smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr.str()));
+      tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
       SymbolicExpression *se = symEngine.newSymbolicExpression(tmp, "byte reference");
       inst.addExpression(se);
       /* Assign memory with little endian */
@@ -196,7 +198,7 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, std::stringstream
 }
 
 
-SymbolicExpression *AnalysisProcessor::createSE(Inst &inst, std::stringstream &expr)
+SymbolicExpression *AnalysisProcessor::createSE(Inst &inst, smt2lib::smtAstAbstractNode *expr)
 {
   SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr);
   inst.addExpression(se);
@@ -204,7 +206,7 @@ SymbolicExpression *AnalysisProcessor::createSE(Inst &inst, std::stringstream &e
 }
 
 
-SymbolicExpression *AnalysisProcessor::createSE(Inst &inst, std::stringstream &expr, std::string comment)
+SymbolicExpression *AnalysisProcessor::createSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, std::string comment)
 {
   SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr, comment);
   inst.addExpression(se);
@@ -254,9 +256,9 @@ std::vector<SymbolicExpression *> AnalysisProcessor::getExpressions(void)
 }
 
 
-std::string AnalysisProcessor::getBacktrackedExpressionFromId(uint64 id)
+smt2lib::smtAstAbstractNode *AnalysisProcessor::getFullExpression(smt2lib::smtAstAbstractNode *node)
 {
-  return this->symEngine.getBacktrackedExpressionFromId(id);
+  return this->symEngine.getFullExpression(smt2lib::newInstance(node));
 }
 
 
@@ -290,103 +292,103 @@ std::list<uint64> AnalysisProcessor::getPathConstraints(void)
 }
 
 
-std::string AnalysisProcessor::buildSymbolicRegOperand(uint64 regID, uint64 regSize)
+smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(uint64 regID, uint64 regSize)
 {
-  std::stringstream   op;
-  uint64              symReg = this->getRegSymbolicID(regID);
+  smt2lib::smtAstAbstractNode *op = nullptr;
+  uint64 symReg = this->getRegSymbolicID(regID);
+  uint64 low    = 0;
+  uint64 high   = (regSize * REG_SIZE) - 1;
 
   if (symReg != UNSET)
-    op << smt2lib::extract(regSize, "#" + std::to_string(symReg));
+    op = smt2lib::extract(high, low, smt2lib::reference("#" + std::to_string(symReg)));
   else {
     if (regID >= ID_XMM0 && regID <= ID_XMM15)
-      op << smt2lib::extract(regSize, smt2lib::bv(this->getSSERegisterValue(regID), SSE_REG_SIZE_BIT));
+      op = smt2lib::extract(high, low, smt2lib::bv(this->getSSERegisterValue(regID), SSE_REG_SIZE_BIT));
     else
-      op << smt2lib::extract(regSize, smt2lib::bv(this->getRegisterValue(regID), REG_SIZE_BIT));
+      op = smt2lib::extract(high, low, smt2lib::bv(this->getRegisterValue(regID), REG_SIZE_BIT));
   }
 
-  return op.str();
+  return op;
 }
 
 
-std::string AnalysisProcessor::buildSymbolicRegOperand(uint64 regID, uint64 regSize, uint64 highExtract, uint64 lowExtract)
+smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(uint64 regID, uint64 regSize, uint64 highExtract, uint64 lowExtract)
 {
-  std::stringstream   op;
-  uint64              symReg = this->getRegSymbolicID(regID);
+  smt2lib::smtAstAbstractNode *op = nullptr;
+  uint64 symReg = this->getRegSymbolicID(regID);
 
   if (symReg != UNSET)
-    op << smt2lib::extract(highExtract, lowExtract, "#" + std::to_string(symReg));
+    op = smt2lib::extract(highExtract, lowExtract, smt2lib::reference("#" + std::to_string(symReg)));
   else {
     if (regID >= ID_XMM0 && regID <= ID_XMM15)
-      op << smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getSSERegisterValue(regID), SSE_REG_SIZE_BIT));
+      op = smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getSSERegisterValue(regID), SSE_REG_SIZE_BIT));
     else
-      op << smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getRegisterValue(regID), REG_SIZE_BIT));
+      op = smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getRegisterValue(regID), REG_SIZE_BIT));
   }
 
-  return op.str();
+  return op;
 }
 
 
-std::string AnalysisProcessor::buildSymbolicMemOperand(uint64 mem, uint64 memSize)
+smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicMemOperand(uint64 mem, uint64 memSize)
 {
-  std::vector<std::string>  opVec;
-  std::stringstream         tmp;
-  uint64                    symMem, offset;
+  std::vector<smt2lib::smtAstAbstractNode *> opVec;
+  smt2lib::smtAstAbstractNode *tmp = nullptr;
+  uint64 symMem, offset;
 
   offset = 0;
   while (memSize) {
     symMem = this->getMemSymbolicID(mem + memSize - 1);
-    tmp.str("");
     if (symMem != UNSET)
-      tmp << "#" << std::dec << symMem;
+      tmp = smt2lib::reference("#" + std::to_string(symMem));
     else
-      tmp << smt2lib::bv(this->getMemValue(mem + offset, 1), REG_SIZE);
-    opVec.push_back(smt2lib::extract(7, 0, tmp.str()));
+      tmp = smt2lib::bv(this->getMemValue(mem + offset, 1), REG_SIZE);
+    opVec.push_back(smt2lib::extract(7, 0, tmp));
     offset++;
     memSize--;
   }
 
-  tmp.str("");
   switch (opVec.size()) {
     case DQWORD_SIZE:
     case QWORD_SIZE:
     case DWORD_SIZE:
     case WORD_SIZE:
-      tmp.str(smt2lib::concat(opVec));
+      tmp = smt2lib::concat(opVec);
       break;
     case BYTE_SIZE:
-      tmp.str(opVec[0]);
+      tmp = opVec[0];
       break;
   }
 
-  return tmp.str();
+  return tmp;
 }
 
 
-std::string AnalysisProcessor::buildSymbolicFlagOperand(uint64 flagID, uint64 size)
+smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicFlagOperand(uint64 flagID, uint64 size)
 {
-  std::stringstream   op;
-  uint64              symFlag = this->getRegSymbolicID(flagID);
+  smt2lib::smtAstAbstractNode *op = nullptr;
+  uint64 symFlag = this->getRegSymbolicID(flagID);
 
   if (symFlag != UNSET)
-    op << smt2lib::zx("#" + std::to_string(symFlag), (size * REG_SIZE) - 1);
+    op = smt2lib::zx((size * REG_SIZE) - 1, smt2lib::reference("#" + std::to_string(symFlag)));
   else
-    op << smt2lib::bv(this->getFlagValue(flagID), size * REG_SIZE);
+    op = smt2lib::bv(this->getFlagValue(flagID), size * REG_SIZE);
 
-  return op.str();
+  return op;
 }
 
 
-std::string AnalysisProcessor::buildSymbolicFlagOperand(uint64 flagID)
+smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicFlagOperand(uint64 flagID)
 {
-  std::stringstream   op;
-  uint64              symFlag = this->getRegSymbolicID(flagID);
+  smt2lib::smtAstAbstractNode *op = nullptr;
+  uint64 symFlag = this->getRegSymbolicID(flagID);
 
   if (symFlag != UNSET)
-    op << "#" + std::to_string(symFlag);
+    op = smt2lib::reference("#" + std::to_string(symFlag));
   else
-    op << smt2lib::bv(this->getFlagValue(flagID), 1);
+    op = smt2lib::bv(this->getFlagValue(flagID), 1);
 
-  return op.str();
+  return op;
 }
 
 
@@ -566,15 +568,15 @@ SolverEngine &AnalysisProcessor::getSolverEngine(void)
 }
 
 
-std::list<Smodel> AnalysisProcessor::getModel(std::string expr)
+std::list<Smodel> AnalysisProcessor::getModel(smt2lib::smtAstAbstractNode *node)
 {
-  return this->solverEngine.getModel(expr);
+  return this->solverEngine.getModel(node);
 }
 
 
-std::vector<std::list<Smodel>> AnalysisProcessor::getModels(std::string expr, uint64 limit)
+std::vector<std::list<Smodel>> AnalysisProcessor::getModels(smt2lib::smtAstAbstractNode *node, uint64 limit)
 {
-  return this->solverEngine.getModels(expr, limit);
+  return this->solverEngine.getModels(node, limit);
 }
 
 
@@ -723,13 +725,6 @@ void AnalysisProcessor::addInstructionToTrace(Inst *instruction)
 Inst *AnalysisProcessor::getLastInstruction(void)
 {
   return this->trace.getLastInstruction();
-}
-
-
-void AnalysisProcessor::saveTrace(std::stringstream &file)
-{
-  if (file.str().empty() == false)
-    this->trace.save(file);
 }
 
 

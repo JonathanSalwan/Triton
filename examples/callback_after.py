@@ -152,7 +152,7 @@ def my_callback_after(instruction):
     print '%#x: %s' %(instruction.address, instruction.assembly)
 
     for se in instruction.symbolicExpressions:
-        print '\t -> %s %s' %(se.expression, (('; ' + se.comment) if se.comment is not None else ''))
+        print '\t -> #%d = %s %s' %(se.id, se.ast, (('; ' + se.comment) if se.comment is not None else ''))
 
     print
 

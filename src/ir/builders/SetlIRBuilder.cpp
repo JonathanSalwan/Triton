@@ -19,20 +19,19 @@ void SetlIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void SetlIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, reg1e, sf, of;
-  uint64            reg     = this->operands[0].getValue();
-  uint64            regSize = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *sf, *of;
+  uint64 reg     = this->operands[0].getValue();
+  uint64 regSize = this->operands[0].getSize();
 
   /* Create the flag SMT semantic */
-  sf << ap.buildSymbolicFlagOperand(ID_SF);
-  of << ap.buildSymbolicFlagOperand(ID_OF);
-  reg1e << ap.buildSymbolicRegOperand(reg, regSize);
+  sf = ap.buildSymbolicFlagOperand(ID_SF);
+  of = ap.buildSymbolicFlagOperand(ID_OF);
 
   /* Finale expr */
-  expr << smt2lib::ite(
+  expr = smt2lib::ite(
             smt2lib::equal(
-              smt2lib::bvxor(sf.str(), of.str()),
+              smt2lib::bvxor(sf, of),
               smt2lib::bvtrue()),
             smt2lib::bv(1, BYTE_SIZE_BIT),
             smt2lib::bv(0, BYTE_SIZE_BIT));
@@ -52,20 +51,19 @@ void SetlIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void SetlIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, mem1e, sf, of;
-  uint64            mem     = this->operands[0].getValue();
-  uint64            memSize = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *sf, *of;
+  uint64 mem     = this->operands[0].getValue();
+  uint64 memSize = this->operands[0].getSize();
 
   /* Create the flag SMT semantic */
-  sf << ap.buildSymbolicFlagOperand(ID_SF);
-  of << ap.buildSymbolicFlagOperand(ID_OF);
-  mem1e << ap.buildSymbolicMemOperand(mem, memSize);
+  sf = ap.buildSymbolicFlagOperand(ID_SF);
+  of = ap.buildSymbolicFlagOperand(ID_OF);
 
   /* Finale expr */
-  expr << smt2lib::ite(
+  expr = smt2lib::ite(
             smt2lib::equal(
-              smt2lib::bvxor(sf.str(), of.str()),
+              smt2lib::bvxor(sf, of),
               smt2lib::bvtrue()),
             smt2lib::bv(1, BYTE_SIZE_BIT),
             smt2lib::bv(0, BYTE_SIZE_BIT));

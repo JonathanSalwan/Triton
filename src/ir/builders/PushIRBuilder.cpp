@@ -17,13 +17,13 @@ PushIRBuilder::PushIRBuilder(uint64 address, const std::string &disassembly):
 static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 writeSize)
 {
   SymbolicExpression    *se;
-  std::stringstream   expr, op1, op2;
+  smt2lib::smtAstAbstractNode   *expr, *op1, *op2;
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(ID_RSP, writeSize);
-  op2 << smt2lib::bv(writeSize, writeSize * REG_SIZE);
+  op1 = ap.buildSymbolicRegOperand(ID_RSP, writeSize);
+  op2 = smt2lib::bv(writeSize, writeSize * REG_SIZE);
 
-  expr << smt2lib::bvsub(op1.str(), op2.str());
+  expr = smt2lib::bvsub(op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_RSP, REG_SIZE, "Aligns stack");
@@ -36,21 +36,21 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 
 
 
 void PushIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1;
-  uint64            reg       = this->operands[0].getValue(); // Reg pushed
-  uint64            mem       = this->operands[1].getValue(); // The dst memory writing
-  uint32            writeSize = this->operands[1].getSize();
-  uint32            regSize   = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1;
+  uint64 reg       = this->operands[0].getValue(); // Reg pushed
+  uint64 mem       = this->operands[1].getValue(); // The dst memory writing
+  uint32 writeSize = this->operands[1].getSize();
+  uint32 regSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic side effect */
   alignStack(inst, ap, writeSize);
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg, regSize);
+  op1 = ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Finale expr */
-  expr << op1.str();
+  expr = op1;
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, writeSize);
@@ -62,21 +62,21 @@ void PushIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void PushIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1;
-  uint64            imm       = this->operands[0].getValue(); // Imm pushed
-  uint64            mem       = this->operands[1].getValue(); // The dst memory writing
-  uint32            writeSize = this->operands[1].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1;
+  uint64 imm       = this->operands[0].getValue(); // Imm pushed
+  uint64 mem       = this->operands[1].getValue(); // The dst memory writing
+  uint32 writeSize = this->operands[1].getSize();
 
   /* Create the SMT semantic side effect */
   alignStack(inst, ap, writeSize);
 
   /* Create the SMT semantic */
   /* OP_1 */
-  op1 << smt2lib::bv(imm, writeSize * REG_SIZE);
+  op1 = smt2lib::bv(imm, writeSize * REG_SIZE);
 
   /* Finale expr */
-  expr << op1.str();
+  expr = op1;
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, writeSize);
@@ -88,21 +88,21 @@ void PushIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void PushIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1;
-  uint64            memOp     = this->operands[0].getValue(); // Mem pushed
-  uint32            readSize  = this->operands[0].getSize();
-  uint64            memDst    = this->operands[1].getValue(); // The dst memory writing
-  uint32            writeSize = this->operands[1].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1;
+  uint64 memOp     = this->operands[0].getValue(); // Mem pushed
+  uint32 readSize  = this->operands[0].getSize();
+  uint64 memDst    = this->operands[1].getValue(); // The dst memory writing
+  uint32 writeSize = this->operands[1].getSize();
 
   /* Create the SMT semantic side effect */
   alignStack(inst, ap, writeSize);
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicMemOperand(memOp, readSize);
+  op1 = ap.buildSymbolicMemOperand(memOp, readSize);
 
   /* Finale expr */
-  expr << op1.str();
+  expr = op1;
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, memDst, writeSize);

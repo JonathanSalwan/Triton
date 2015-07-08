@@ -15,14 +15,14 @@ RetIRBuilder::RetIRBuilder(uint64 address, const std::string &disassembly):
 
 static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr, op1, op2;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(ID_RSP, REG_SIZE);
-  op2 << smt2lib::bv(REG_SIZE, REG_SIZE_BIT);
+  op1 = ap.buildSymbolicRegOperand(ID_RSP, REG_SIZE);
+  op2 = smt2lib::bv(REG_SIZE, REG_SIZE_BIT);
 
-  expr << smt2lib::bvadd(op1.str(), op2.str());
+  expr = smt2lib::bvadd(op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_RSP, REG_SIZE, "Aligns stack");
@@ -36,14 +36,14 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap)
 
 static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint64 imm)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr, op1, op2;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(ID_RSP, REG_SIZE);
-  op2 << smt2lib::bv(imm, REG_SIZE_BIT);
+  op1 = ap.buildSymbolicRegOperand(ID_RSP, REG_SIZE);
+  op2 = smt2lib::bv(imm, REG_SIZE_BIT);
 
-  expr << smt2lib::bvadd(op1.str(), op2.str());
+  expr = smt2lib::bvadd(op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_RSP, REG_SIZE, "Aligns stack");
@@ -62,17 +62,17 @@ void RetIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void RetIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1;
-  uint64            imm       = this->operands[0].getValue();
-  uint64            memSrc    = this->operands[1].getValue(); // The dst memory read
-  uint32            readSize  = this->operands[1].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1;
+  uint64 imm       = this->operands[0].getValue();
+  uint64 memSrc    = this->operands[1].getValue(); // The dst memory read
+  uint32 readSize  = this->operands[1].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicMemOperand(memSrc, readSize);
+  op1 = ap.buildSymbolicMemOperand(memSrc, readSize);
 
   /* Finale expr */
-  expr << op1.str();
+  expr = op1;
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
@@ -87,16 +87,16 @@ void RetIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void RetIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1;
-  uint64            memSrc    = this->operands[0].getValue(); // The dst memory read
-  uint32            readSize  = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1;
+  uint64 memSrc    = this->operands[0].getValue(); // The dst memory read
+  uint32 readSize  = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicMemOperand(memSrc, readSize);
+  op1 = ap.buildSymbolicMemOperand(memSrc, readSize);
 
   /* Finale expr */
-  expr << op1.str();
+  expr = op1;
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");

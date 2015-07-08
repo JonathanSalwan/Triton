@@ -14,17 +14,17 @@ DecIRBuilder::DecIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void DecIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint64            reg       = this->operands[0].getValue();
-  uint32            regSize   = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint64 reg       = this->operands[0].getValue();
+  uint32 regSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg, regSize);
-  op2 << smt2lib::bv(1, regSize * REG_SIZE);
+  op1 = ap.buildSymbolicRegOperand(reg, regSize);
+  op2 = smt2lib::bv(1, regSize * REG_SIZE);
 
   /* Finale expr */
-  expr << smt2lib::bvsub(op1.str(), op2.str());
+  expr = smt2lib::bvsub(op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
@@ -35,24 +35,24 @@ void DecIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
   EflagsBuilder::ofSub(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::pf(inst, se, ap, regSize);
   EflagsBuilder::sf(inst, se, ap, regSize);
   EflagsBuilder::zf(inst, se, ap, regSize);
 }
 
 
 void DecIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint64            mem       = this->operands[0].getValue();
-  uint32            memSize   = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint64 mem       = this->operands[0].getValue();
+  uint32 memSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicMemOperand(mem, memSize);
-  op2 << smt2lib::bv(1, memSize * REG_SIZE);
+  op1 = ap.buildSymbolicMemOperand(mem, memSize);
+  op2 = smt2lib::bv(1, memSize * REG_SIZE);
 
   /* Finale expr */
-  expr << smt2lib::bvsub(op1.str(), op2.str());
+  expr = smt2lib::bvsub(op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, memSize);
@@ -63,7 +63,7 @@ void DecIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, memSize, op1, op2);
   EflagsBuilder::ofSub(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::pf(inst, se, ap, memSize);
   EflagsBuilder::sf(inst, se, ap, memSize);
   EflagsBuilder::zf(inst, se, ap, memSize);
 }

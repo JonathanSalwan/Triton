@@ -189,9 +189,6 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args)
   vs = PyLong_AsLong(symVarSize);
   vc = PyString_AsString(varComment);
 
-  if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
-    return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
-
   return PySymbolicVariable(ap.convertExprToSymVar(ei, vs, vc));
 }
 
@@ -221,9 +218,6 @@ static PyObject *Triton_convertMemToSymVar(PyObject *self, PyObject *args)
   ma = PyLong_AsLong(memAddr);
   vs = PyLong_AsLong(symVarSize);
   vc = PyString_AsString(varComment);
-
-  if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
-    return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
 
   return PySymbolicVariable(ap.convertMemToSymVar(ma, vs, vc));
 }
@@ -255,9 +249,6 @@ static PyObject *Triton_convertRegToSymVar(PyObject *self, PyObject *args)
   vs = PyLong_AsLong(symVarSize);
   vc = PyString_AsString(varComment);
 
-  if (vs != DQWORD_SIZE && vs != QWORD_SIZE && vs != DWORD_SIZE && vs != WORD_SIZE && vs != BYTE_SIZE)
-    return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): The symVarSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
-
   return PySymbolicVariable(ap.convertRegToSymVar(ri, vs, vc));
 }
 
@@ -270,19 +261,19 @@ static PyObject *Triton_disableSnapshot(PyObject *self, PyObject *noarg)
 }
 
 
-static char Triton_getBacktrackedSymExpr_doc[] = "Returns the backtracked symbolic expression from an expression id";
-static PyObject *Triton_getBacktrackedSymExpr(PyObject *self, PyObject *id)
+static char Triton_getFullExpression_doc[] = "Returns the full symbolic expression backtracked";
+static PyObject *Triton_getFullExpression(PyObject *self, PyObject *node)
 {
-  std::string backtrackedExpr;
+  smt2lib::smtAstAbstractNode *fullExpr;
 
-  if (!PyLong_Check(id) && !PyInt_Check(id))
-    return PyErr_Format(PyExc_TypeError, "getBacktrackedSymExpr(): expected an id (integer) as argument");
+  if (!PySmtAstNode_Check(node))
+    return PyErr_Format(PyExc_TypeError, "getFullSymExpr(): expected an SmtAstNode node as argument");
 
-  backtrackedExpr = ap.getBacktrackedExpressionFromId(PyLong_AsLong(id));
-  if (backtrackedExpr.empty())
+  fullExpr = ap.getFullExpression(PySmtAstNode_AsSmtAstNode(node));
+  if (fullExpr == nullptr)
     return Py_None;
 
-  return Py_BuildValue("s", backtrackedExpr.c_str());
+  return PySmtAstNode(fullExpr);
 }
 
 
@@ -333,16 +324,16 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
 
 
 static char Triton_getModel_doc[] = "Returns a model of the symbolic expression";
-static PyObject *Triton_getModel(PyObject *self, PyObject *expr)
+static PyObject *Triton_getModel(PyObject *self, PyObject *node)
 {
   std::list<Smodel>::iterator it;
   std::list<Smodel> model;
 
-  if (!PyString_Check(expr))
-    return PyErr_Format(PyExc_TypeError, "getModel(): expected an expression (string) as argument");
+  if (!PySmtAstNode_Check(node))
+    return PyErr_Format(PyExc_TypeError, "getModel(): expected a SmtAstNode as argument");
 
   /* Get model */
-  model = ap.getModel(PyString_AsString(expr));
+  model = ap.getModel(PySmtAstNode_AsSmtAstNode(node));
 
   /* Craft the model dictionary */
   PyObject *modelDict = xPyDict_New();
@@ -356,7 +347,7 @@ static PyObject *Triton_getModel(PyObject *self, PyObject *expr)
 static char Triton_getModels_doc[] = "Returns all models of the symbolic expression";
 static PyObject *Triton_getModels(PyObject *self, PyObject *args)
 {
-  PyObject                        *expr;
+  PyObject                        *node = nullptr;
   PyObject                        *limit;
   PyObject                        *modelsList;
   std::vector<std::list<Smodel>>  models;
@@ -364,10 +355,10 @@ static PyObject *Triton_getModels(PyObject *self, PyObject *args)
   uint64                          modelsSize = 0;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &expr, &limit);
+  PyArg_ParseTuple(args, "O|O", &node, &limit);
 
-  if (!PyString_Check(expr))
-    return PyErr_Format(PyExc_TypeError, "getModels(): expected an expression (string) as first argument");
+  if (node == nullptr || !PySmtAstNode_Check(node))
+    return PyErr_Format(PyExc_TypeError, "getModels(): expected a SmtAstNode as first argument");
 
   if (!PyLong_Check(limit) && !PyInt_Check(limit))
     return PyErr_Format(PyExc_TypeError, "getModels(): expected a limit (integer) as second argument");
@@ -377,7 +368,7 @@ static PyObject *Triton_getModels(PyObject *self, PyObject *args)
     return PyErr_Format(PyExc_TypeError, "getModels(): The limit must be greater than 0");
 
   /* Get models */
-  models        = ap.getModels(PyString_AsString(expr), limit_c);
+  models        = ap.getModels(PySmtAstNode_AsSmtAstNode(node), limit_c);
   modelsSize    = models.size();
   modelsList    = xPyList_New(modelsSize);
 
@@ -734,19 +725,6 @@ static PyObject *Triton_runProgram(PyObject *self, PyObject *noarg)
 }
 
 
-static char Triton_saveTrace_doc[] = "Saves the trace in a file";
-static PyObject *Triton_saveTrace(PyObject *self, PyObject *file)
-{
-  if (!PyString_Check(file))
-    return PyErr_Format(PyExc_TypeError, "saveTrace(): expected a string as argument");
-
-  std::stringstream f(PyString_AsString(file));
-  ap.saveTrace(f);
-
-  return Py_None;
-}
-
-
 static char Triton_setMemValue_doc[] = "Inserts value into the runtime memory";
 static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
 {
@@ -911,6 +889,7 @@ static PyObject *Triton_taintMem(PyObject *self, PyObject *mem)
   return Py_None;
 }
 
+
 static char Triton_taintMemFromAddr_doc[] = "Taints specific memory address from an address";
 static PyObject *Triton_taintMemFromAddr(PyObject *self, PyObject *args)
 {
@@ -943,7 +922,6 @@ static PyObject *Triton_taintMemFromAddr(PyObject *self, PyObject *args)
   PyTritonOptions::taintMemFromAddr.insert(std::pair<uint64, std::list<uint64>>(PyLong_AsLong(addr), memsList));
   return Py_None;
 }
-
 
 
 static char Triton_taintReg_doc[] = "Taints a register";
@@ -991,8 +969,6 @@ static PyObject *Triton_taintRegFromAddr(PyObject *self, PyObject *args)
 }
 
 
-
-
 static char Triton_takeSnapshot_doc[] = "Takes a snapshot of the registers states and memory";
 static PyObject *Triton_takeSnapshot(PyObject *self, PyObject *noarg)
 {
@@ -1010,6 +986,7 @@ static PyObject *Triton_untaintMem(PyObject *self, PyObject *mem)
   ap.untaintMem(PyInt_AsLong(mem));
   return Py_None;
 }
+
 
 static char Triton_untaintMemFromAddr_doc[] = "Untaints specific memory addresses from an address";
 static PyObject *Triton_untaintMemFromAddr(PyObject *self, PyObject *args)
@@ -1093,8 +1070,6 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
 }
 
 
-
-
 PyMethodDef tritonCallbacks[] = {
   {"addCallback",               Triton_addCallback,               METH_VARARGS, Triton_addCallback_doc},
   {"checkReadAccess",           Triton_checkReadAccess,           METH_O,       Triton_checkReadAccess_doc},
@@ -1105,7 +1080,7 @@ PyMethodDef tritonCallbacks[] = {
   {"convertMemToSymVar",        Triton_convertMemToSymVar,        METH_VARARGS, Triton_convertMemToSymVar_doc},
   {"convertRegToSymVar",        Triton_convertRegToSymVar,        METH_VARARGS, Triton_convertRegToSymVar_doc},
   {"disableSnapshot",           Triton_disableSnapshot,           METH_NOARGS,  Triton_disableSnapshot_doc},
-  {"getBacktrackedSymExpr",     Triton_getBacktrackedSymExpr,     METH_O,       Triton_getBacktrackedSymExpr_doc},
+  {"getFullExpression",         Triton_getFullExpression,         METH_O,       Triton_getFullExpression_doc},
   {"getFlagValue",              Triton_getFlagValue,              METH_O,       Triton_getFlagValue_doc},
   {"getMemSymbolicID",          Triton_getMemSymbolicID,          METH_O,       Triton_getMemSymbolicID_doc},
   {"getMemValue",               Triton_getMemValue,               METH_VARARGS, Triton_getMemValue_doc},
@@ -1131,7 +1106,6 @@ PyMethodDef tritonCallbacks[] = {
   {"opcodeToString",            Triton_opcodeToString,            METH_O,       Triton_opcodeToString_doc},
   {"restoreSnapshot",           Triton_restoreSnapshot,           METH_NOARGS,  Triton_restoreSnapshot_doc},
   {"runProgram",                Triton_runProgram,                METH_NOARGS,  Triton_runProgram_doc},
-  {"saveTrace",                 Triton_saveTrace,                 METH_O,       Triton_saveTrace_doc},
   {"setMemValue",               Triton_setMemValue,               METH_VARARGS, Triton_setMemValue_doc},
   {"setRegValue",               Triton_setRegValue,               METH_VARARGS, Triton_setRegValue_doc},
   {"startAnalysisFromAddr",     Triton_startAnalysisFromAddr,     METH_O,       Triton_startAnalysisFromAddr_doc},

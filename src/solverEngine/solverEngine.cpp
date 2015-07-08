@@ -31,22 +31,21 @@ SolverEngine::~SolverEngine()
 }
 
 
-std::vector<std::list<Smodel>> SolverEngine::getModels(std::string expr, uint64 limit)
+std::vector<std::list<Smodel>> SolverEngine::getModels(smt2lib::smtAstAbstractNode *node, uint64 limit)
 {
   std::vector<std::list<Smodel>>  ret;
   std::stringstream               formula;
   z3::context                     *ctx;
   z3::solver                      *solver;
 
-  /* First, set the QF_AUFBV flag and add global declarations */
-  formula << smt2lib::logic();
-  formula << smt2lib::global();
+  /* First, set the QF_AUFBV flag  */
+  formula << "(set-logic QF_AUFBV)";
 
   /* Then, delcare all symbolic variables */
   formula << this->symEngine->getVariablesDeclaration();
 
   /* And concat the user expression */
-  formula << expr;
+  formula << node;
 
   /* Create the context and AST */
   ctx = new z3::context();
@@ -99,12 +98,12 @@ std::vector<std::list<Smodel>> SolverEngine::getModels(std::string expr, uint64 
 }
 
 
-std::list<Smodel> SolverEngine::getModel(std::string expr)
+std::list<Smodel> SolverEngine::getModel(smt2lib::smtAstAbstractNode *node)
 {
   std::list<Smodel> ret;
   std::vector<std::list<Smodel>> allModels;
 
-  allModels = this->getModels(expr, 1);
+  allModels = this->getModels(node, 1);
   if (allModels.size() > 0)
     ret = allModels[0];
 

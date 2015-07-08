@@ -14,21 +14,21 @@ ImulIRBuilder::ImulIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint64            reg     = this->operands[0].getValue();
-  uint64            imm     = this->operands[1].getValue();
-  uint32            regSize = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint64 reg     = this->operands[0].getValue();
+  uint64 imm     = this->operands[1].getValue();
+  uint32 regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg, regSize);
-  op2 << smt2lib::bv(imm, regSize * REG_SIZE);
+  op1 = ap.buildSymbolicRegOperand(reg, regSize);
+  op2 = smt2lib::bv(imm, regSize * REG_SIZE);
 
   /* Finale expr */
-  expr << smt2lib::extract(regSize,
+  expr = smt2lib::extract((regSize * REG_SIZE) - 1, 0,
             smt2lib::bvmul(
-              smt2lib::sx(op1.str(), regSize * REG_SIZE),
-              smt2lib::sx(op2.str(), regSize * REG_SIZE)
+              smt2lib::sx(regSize * REG_SIZE, op1),
+              smt2lib::sx(regSize * REG_SIZE, op2)
             )
           );
 
@@ -46,35 +46,35 @@ void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2, op3;
-  uint64            reg1     = this->operands[0].getValue();
-  uint32            regSize1 = this->operands[0].getSize();
-  uint64            reg2     = this->operands[1].getValue();
-  uint32            regSize2 = this->operands[1].getSize();
-  uint64            imm      = 0;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
+  uint64 reg1     = this->operands[0].getValue();
+  uint32 regSize1 = this->operands[0].getSize();
+  uint64 reg2     = this->operands[1].getValue();
+  uint32 regSize2 = this->operands[1].getSize();
+  uint64 imm      = 0;
 
   if (this->operands[2].getType() == IRBuilderOperand::IMM)
     imm = this->operands[2].getValue();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg1, regSize1);
-  op2 << ap.buildSymbolicRegOperand(reg2, regSize2);
-  op3 << smt2lib::bv(imm, regSize2 * REG_SIZE);
+  op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
+  op2 = ap.buildSymbolicRegOperand(reg2, regSize2);
+  op3 = smt2lib::bv(imm, regSize2 * REG_SIZE);
 
   /* Finale expr */
   if (imm == 0)
-    expr << smt2lib::extract(regSize1,
+    expr = smt2lib::extract((regSize1 * REG_SIZE) - 1, 0,
               smt2lib::bvmul(
-                smt2lib::sx(op1.str(), regSize1 * REG_SIZE),
-                smt2lib::sx(op2.str(), regSize2 * REG_SIZE)
+                smt2lib::sx(regSize1 * REG_SIZE, op1),
+                smt2lib::sx(regSize2 * REG_SIZE, op2)
               )
             );
   else
-    expr << smt2lib::extract(regSize1,
+    expr = smt2lib::extract((regSize1 * REG_SIZE) - 1, 0,
               smt2lib::bvmul(
-                smt2lib::sx(op2.str(), regSize1 * REG_SIZE),
-                smt2lib::sx(op3.str(), regSize2 * REG_SIZE)
+                smt2lib::sx(regSize1 * REG_SIZE, op2),
+                smt2lib::sx(regSize2 * REG_SIZE, op3)
               )
             );
 
@@ -92,35 +92,35 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2, op3;
-  uint64            reg     = this->operands[0].getValue();
-  uint32            regSize = this->operands[0].getSize();
-  uint64            mem     = this->operands[1].getValue();
-  uint32            memSize = this->operands[1].getSize();
-  uint64            imm     = 0;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
+  uint64 reg     = this->operands[0].getValue();
+  uint32 regSize = this->operands[0].getSize();
+  uint64 mem     = this->operands[1].getValue();
+  uint32 memSize = this->operands[1].getSize();
+  uint64 imm     = 0;
 
   if (this->operands[2].getType() == IRBuilderOperand::IMM)
     imm = this->operands[2].getValue();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg, regSize);
-  op2 << ap.buildSymbolicMemOperand(mem, memSize);
-  op3 << smt2lib::bv(imm, memSize * REG_SIZE);
+  op1 = ap.buildSymbolicRegOperand(reg, regSize);
+  op2 = ap.buildSymbolicMemOperand(mem, memSize);
+  op3 = smt2lib::bv(imm, memSize * REG_SIZE);
 
   /* Finale expr */
   if (imm == 0)
-    expr << smt2lib::extract(regSize,
+    expr = smt2lib::extract((regSize * REG_SIZE) - 1, 0,
               smt2lib::bvmul(
-                smt2lib::sx(op1.str(), regSize * REG_SIZE),
-                smt2lib::sx(op2.str(), regSize * REG_SIZE)
+                smt2lib::sx(regSize * REG_SIZE, op1),
+                smt2lib::sx(regSize * REG_SIZE, op2)
               )
             );
   else
-    expr << smt2lib::extract(regSize,
+    expr = smt2lib::extract((regSize * REG_SIZE) - 1, 0,
               smt2lib::bvmul(
-                smt2lib::sx(op2.str(), regSize * REG_SIZE),
-                smt2lib::sx(op3.str(), memSize * REG_SIZE)
+                smt2lib::sx(regSize * REG_SIZE, op2),
+                smt2lib::sx(memSize * REG_SIZE, op3)
               )
             );
 

@@ -14,13 +14,13 @@ CmcIRBuilder::CmcIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void CmcIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
-  std::stringstream   expr, op1;
+  smt2lib::smtAstAbstractNode *expr, *op1;
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicFlagOperand(ID_CF);
+  op1 = ap.buildSymbolicFlagOperand(ID_CF);
 
   /* Finale expr */
-  expr << smt2lib::bvnot(op1.str());
+  expr = smt2lib::bvnot(op1);
 
   /* Create the symbolic expression */
   ap.createRegSE(inst, expr, ID_CF);

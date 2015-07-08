@@ -1,23 +1,22 @@
-#include <boost/format.hpp>
 #include <stdexcept>
 
 #include <EflagsBuilder.h>
 #include <Registers.h>
-
+#include <SMT2Lib.h>
 
 
 SymbolicExpression *EflagsBuilder::af(Inst &inst,
                                    SymbolicExpression *parent,
                                    AnalysisProcessor &ap,
                                    uint32 dstSize,
-                                   std::stringstream &op1,
-                                   std::stringstream &op2)
+                                   smt2lib::smtAstAbstractNode *op1,
+                                   smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::af(parent, bvSize, op1, op2);
+  expr = EflagsExpressions::af(parent, bvSize, op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_AF, "Adjust flag");
@@ -33,13 +32,13 @@ SymbolicExpression *EflagsBuilder::afNeg(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op1)
+                                      smt2lib::smtAstAbstractNode *op1)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::afNeg(parent, bvSize, op1);
+  expr = EflagsExpressions::afNeg(parent, bvSize, op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_AF, "Adjust flag");
@@ -54,12 +53,12 @@ SymbolicExpression *EflagsBuilder::afNeg(Inst &inst,
 SymbolicExpression *EflagsBuilder::cfAdd(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
-                                      std::stringstream &op1)
+                                      smt2lib::smtAstAbstractNode *op1)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
 
-  expr << EflagsExpressions::cfAdd(parent, op1);
+  expr = EflagsExpressions::cfAdd(parent, op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
@@ -75,12 +74,12 @@ SymbolicExpression *EflagsBuilder::cfImul(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op1)
+                                      smt2lib::smtAstAbstractNode *op1)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
 
-  expr << EflagsExpressions::cfImul(parent, op1);
+  expr = EflagsExpressions::cfImul(parent, op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
@@ -96,13 +95,13 @@ SymbolicExpression *EflagsBuilder::cfMul(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &up)
+                                      smt2lib::smtAstAbstractNode *up)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::cfMul(bvSize, up);
+  expr = EflagsExpressions::cfMul(bvSize, up);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
@@ -118,13 +117,13 @@ SymbolicExpression *EflagsBuilder::cfNeg(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op1)
+                                      smt2lib::smtAstAbstractNode *op1)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::cfNeg(bvSize, op1);
+  expr = EflagsExpressions::cfNeg(bvSize, op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
@@ -140,13 +139,13 @@ SymbolicExpression *EflagsBuilder::cfRcl(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::cfRcl(parent, ap, bvSize, op2);
+  expr = EflagsExpressions::cfRcl(parent, ap, bvSize, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
@@ -161,12 +160,12 @@ SymbolicExpression *EflagsBuilder::cfRcl(Inst &inst,
 SymbolicExpression *EflagsBuilder::cfRol(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
 
-  expr << EflagsExpressions::cfRol(parent, ap, op2);
+  expr = EflagsExpressions::cfRol(parent, ap, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
@@ -182,13 +181,13 @@ SymbolicExpression *EflagsBuilder::cfRor(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::cfRor(parent, ap, bvSize, op2);
+  expr = EflagsExpressions::cfRor(parent, ap, bvSize, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
@@ -204,14 +203,14 @@ SymbolicExpression *EflagsBuilder::cfSar(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op1,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op1,
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::cfSar(parent, ap, bvSize, op1, op2);
+  expr = EflagsExpressions::cfSar(parent, ap, bvSize, op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
@@ -227,14 +226,14 @@ SymbolicExpression *EflagsBuilder::cfShl(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op1,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op1,
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::cfShl(parent, ap, bvSize, op1, op2);
+  expr = EflagsExpressions::cfShl(parent, ap, bvSize, op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
@@ -250,14 +249,14 @@ SymbolicExpression *EflagsBuilder::cfShr(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op1,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op1,
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::cfShr(parent, ap, bvSize, op1, op2);
+  expr = EflagsExpressions::cfShr(parent, ap, bvSize, op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
@@ -272,13 +271,13 @@ SymbolicExpression *EflagsBuilder::cfShr(Inst &inst,
 SymbolicExpression *EflagsBuilder::cfSub(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
-                                      std::stringstream &op1,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op1,
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
 
-  expr << EflagsExpressions::cfSub(op1, op2);
+  expr = EflagsExpressions::cfSub(op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
@@ -294,10 +293,10 @@ SymbolicExpression *EflagsBuilder::clearFlag(Inst &inst,
                                           AnalysisProcessor &ap,
                                           regID_t flag)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
 
-  expr << EflagsExpressions::clearFlag();
+  expr = EflagsExpressions::clearFlag();
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, flag);
@@ -314,10 +313,10 @@ SymbolicExpression *EflagsBuilder::clearFlag(Inst &inst,
                                           regID_t flag,
                                           std::string comment)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
 
-  expr << EflagsExpressions::clearFlag();
+  expr = EflagsExpressions::clearFlag();
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, flag, comment);
@@ -333,14 +332,14 @@ SymbolicExpression *EflagsBuilder::ofAdd(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op1,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op1,
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              extractSize = (dstSize * REG_SIZE) - 1;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 extractSize = (dstSize * REG_SIZE) - 1;
 
-  expr << EflagsExpressions::ofAdd(parent, extractSize, op1, op2);
+  expr = EflagsExpressions::ofAdd(parent, extractSize, op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
@@ -356,12 +355,12 @@ SymbolicExpression *EflagsBuilder::ofImul(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op1)
+                                      smt2lib::smtAstAbstractNode *op1)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
 
-  expr << EflagsExpressions::ofImul(parent, op1);
+  expr = EflagsExpressions::ofImul(parent, op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
@@ -377,13 +376,13 @@ SymbolicExpression *EflagsBuilder::ofMul(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &up)
+                                      smt2lib::smtAstAbstractNode *up)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::ofMul(bvSize, up);
+  expr = EflagsExpressions::ofMul(bvSize, up);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
@@ -399,13 +398,13 @@ SymbolicExpression *EflagsBuilder::ofNeg(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op1)
+                                      smt2lib::smtAstAbstractNode *op1)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::ofNeg(parent, bvSize, op1);
+  expr = EflagsExpressions::ofNeg(parent, bvSize, op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
@@ -421,13 +420,13 @@ SymbolicExpression *EflagsBuilder::ofRol(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::ofRol(parent, ap, bvSize, op2);
+  expr = EflagsExpressions::ofRol(parent, ap, bvSize, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
@@ -443,13 +442,13 @@ SymbolicExpression *EflagsBuilder::ofRor(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::ofRor(parent, ap, bvSize, op2);
+  expr = EflagsExpressions::ofRor(parent, ap, bvSize, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
@@ -465,13 +464,13 @@ SymbolicExpression *EflagsBuilder::ofSar(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::ofSar(parent, ap, bvSize, op2);
+  expr = EflagsExpressions::ofSar(parent, ap, bvSize, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
@@ -487,14 +486,14 @@ SymbolicExpression *EflagsBuilder::ofShl(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op1,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op1,
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::ofShl(parent, ap, bvSize, op1, op2);
+  expr = EflagsExpressions::ofShl(parent, ap, bvSize, op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
@@ -510,14 +509,14 @@ SymbolicExpression *EflagsBuilder::ofShr(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op1,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op1,
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::ofShr(parent, ap, bvSize, op1, op2);
+  expr = EflagsExpressions::ofShr(parent, ap, bvSize, op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
@@ -533,14 +532,14 @@ SymbolicExpression *EflagsBuilder::ofSub(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op1,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op1,
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              extractSize = (dstSize * REG_SIZE) - 1;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 extractSize = (dstSize * REG_SIZE) - 1;
 
-  expr << EflagsExpressions::ofSub(parent, extractSize, op1, op2);
+  expr = EflagsExpressions::ofSub(parent, extractSize, op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
@@ -554,12 +553,14 @@ SymbolicExpression *EflagsBuilder::ofSub(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::pf(Inst &inst,
                                    SymbolicExpression *parent,
-                                   AnalysisProcessor &ap)
+                                   AnalysisProcessor &ap,
+                                   uint32 dstSize)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::pf(parent);
+  expr = EflagsExpressions::pf(parent, bvSize);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_PF, "Parity flag");
@@ -575,13 +576,13 @@ SymbolicExpression *EflagsBuilder::pfShl(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::pfShl(parent, ap, bvSize, op2);
+  expr = EflagsExpressions::pfShl(parent, ap, bvSize, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_PF, "Parity flag");
@@ -597,10 +598,10 @@ SymbolicExpression *EflagsBuilder::setFlag(Inst &inst,
                                         AnalysisProcessor &ap,
                                         regID_t flag)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
 
-  expr << EflagsExpressions::setFlag();
+  expr = EflagsExpressions::setFlag();
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, flag);
@@ -617,10 +618,10 @@ SymbolicExpression *EflagsBuilder::setFlag(Inst &inst,
                                         regID_t flag,
                                         std::string comment)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
 
-  expr << EflagsExpressions::setFlag();
+  expr = EflagsExpressions::setFlag();
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, flag, comment);
@@ -637,11 +638,11 @@ SymbolicExpression *EflagsBuilder::sf(Inst &inst,
                                    AnalysisProcessor &ap,
                                    uint32 dstSize)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              extractSize = (dstSize * REG_SIZE) - 1;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 extractSize = (dstSize * REG_SIZE) - 1;
 
-  expr << EflagsExpressions::sf(parent, extractSize);
+  expr = EflagsExpressions::sf(parent, extractSize);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_SF, "Sign flag");
@@ -657,14 +658,14 @@ SymbolicExpression *EflagsBuilder::sfShl(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
-  uint32              extractSize = (dstSize * REG_SIZE) - 1;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
+  uint32 extractSize = (dstSize * REG_SIZE) - 1;
 
-  expr << EflagsExpressions::sfShl(parent, ap, bvSize, extractSize, op2);
+  expr = EflagsExpressions::sfShl(parent, ap, bvSize, extractSize, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
@@ -682,11 +683,11 @@ SymbolicExpression *EflagsBuilder::zf(Inst &inst,
                                    AnalysisProcessor &ap,
                                    uint32 dstSize)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::zf(parent, bvSize);
+  expr = EflagsExpressions::zf(parent, bvSize);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_ZF, "Zero flag");
@@ -702,13 +703,13 @@ SymbolicExpression *EflagsBuilder::zfShl(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
                                       uint32 dstSize,
-                                      std::stringstream &op2)
+                                      smt2lib::smtAstAbstractNode *op2)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr;
-  uint32              bvSize = (dstSize * REG_SIZE);
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr << EflagsExpressions::zfShl(parent, ap, bvSize, op2);
+  expr = EflagsExpressions::zfShl(parent, ap, bvSize, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_ZF, "Zero flag");

@@ -1,10 +1,8 @@
-#include <boost/format.hpp>
 #include <stdexcept>
 
 #include <pin.H>
 #include <BaseIRBuilder.h>
 
-boost::format outputInstruction("%1% %|15t| %2% %|55t|");
 
 
 BaseIRBuilder::BaseIRBuilder(uint64 address, const std::string &dis)

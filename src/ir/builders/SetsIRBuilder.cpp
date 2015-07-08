@@ -19,19 +19,18 @@ void SetsIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void SetsIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, reg1e, sf;
-  uint64            reg     = this->operands[0].getValue();
-  uint64            regSize = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *sf;
+  uint64 reg     = this->operands[0].getValue();
+  uint64 regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  sf << ap.buildSymbolicFlagOperand(ID_SF);
-  reg1e << ap.buildSymbolicRegOperand(reg, regSize);
+  sf = ap.buildSymbolicFlagOperand(ID_SF);
 
   /* Finale expr */
-  expr << smt2lib::ite(
+  expr = smt2lib::ite(
             smt2lib::equal(
-              sf.str(),
+              sf,
               smt2lib::bvtrue()),
             smt2lib::bv(1, BYTE_SIZE_BIT),
             smt2lib::bv(0, BYTE_SIZE_BIT));
@@ -47,19 +46,18 @@ void SetsIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void SetsIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, mem1e, sf;
-  uint64            mem     = this->operands[0].getValue();
-  uint64            memSize = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *sf;
+  uint64 mem     = this->operands[0].getValue();
+  uint64 memSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  sf << ap.buildSymbolicFlagOperand(ID_SF);
-  mem1e << ap.buildSymbolicMemOperand(mem, memSize);
+  sf = ap.buildSymbolicFlagOperand(ID_SF);
 
   /* Finale expr */
-  expr << smt2lib::ite(
+  expr = smt2lib::ite(
             smt2lib::equal(
-              sf.str(),
+              sf,
               smt2lib::bvtrue()),
             smt2lib::bv(1, BYTE_SIZE_BIT),
             smt2lib::bv(0, BYTE_SIZE_BIT));

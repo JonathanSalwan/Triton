@@ -24,36 +24,36 @@ void LeaIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, reg1e, dis2e, base2e, index2e, scale2e;
-  uint64            reg           = this->operands[0].getValue();
-  uint64            regSize       = this->operands[0].getSize();
-  uint64            displacement  = this->operands[1].getDisplacement();
-  uint64            baseReg       = this->operands[1].getBaseReg();
-  uint64            indexReg      = this->operands[1].getIndexReg();
-  uint64            memoryScale   = this->operands[1].getMemoryScale();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *dis2e, *base2e, *index2e, *scale2e;
+  uint64 reg           = this->operands[0].getValue();
+  uint64 regSize       = this->operands[0].getSize();
+  uint64 displacement  = this->operands[1].getDisplacement();
+  uint64 baseReg       = this->operands[1].getBaseReg();
+  uint64 indexReg      = this->operands[1].getIndexReg();
+  uint64 memoryScale   = this->operands[1].getMemoryScale();
 
   /* Base register */
   if (baseReg)
-    base2e << ap.buildSymbolicRegOperand(baseReg, regSize);
+    base2e = ap.buildSymbolicRegOperand(baseReg, regSize);
   else
-    base2e << smt2lib::bv(0, regSize * REG_SIZE);
+    base2e = smt2lib::bv(0, regSize * REG_SIZE);
 
   /* Index register if it exists */
   if (indexReg)
-    index2e << ap.buildSymbolicRegOperand(indexReg, regSize);
+    index2e = ap.buildSymbolicRegOperand(indexReg, regSize);
   else
-    index2e << smt2lib::bv(0, regSize * REG_SIZE);
+    index2e = smt2lib::bv(0, regSize * REG_SIZE);
 
   /* Displacement */
-  dis2e << smt2lib::bv(displacement, regSize * REG_SIZE);
+  dis2e = smt2lib::bv(displacement, regSize * REG_SIZE);
 
   /* Scale */
-  scale2e << smt2lib::bv(memoryScale, regSize * REG_SIZE);
+  scale2e = smt2lib::bv(memoryScale, regSize * REG_SIZE);
 
   /* final SMT expression */
   /* Effective address = Displacement + BaseReg + IndexReg * Scale */
-  expr << smt2lib::bvadd(dis2e.str(), smt2lib::bvadd(base2e.str(), smt2lib::bvmul(index2e.str(), scale2e.str())));
+  expr = smt2lib::bvadd(dis2e, smt2lib::bvadd(base2e, smt2lib::bvmul(index2e, scale2e)));
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);

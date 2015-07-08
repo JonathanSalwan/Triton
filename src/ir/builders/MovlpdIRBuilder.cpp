@@ -24,20 +24,20 @@ void MovlpdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void MovlpdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint32            readSize = this->operands[1].getSize();
-  uint64            mem      = this->operands[1].getValue();
-  uint64            reg      = this->operands[0].getValue();
-  uint64            regSize  = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint32 readSize = this->operands[1].getSize();
+  uint64 mem      = this->operands[1].getValue();
+  uint64 reg      = this->operands[0].getValue();
+  uint64 regSize  = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg, regSize);
-  op2 << ap.buildSymbolicMemOperand(mem, readSize);
+  op1 = ap.buildSymbolicRegOperand(reg, regSize);
+  op2 = ap.buildSymbolicMemOperand(mem, readSize);
 
-  expr << smt2lib::concat(
-            smt2lib::extract(127, 64, op1.str()), /* Destination[64..127] unchanged */
-            smt2lib::extract(63, 0, op2.str())    /* Destination[0..63] = Source */
+  expr = smt2lib::concat(
+            smt2lib::extract(127, 64, op1), /* Destination[64..127] unchanged */
+            smt2lib::extract(63, 0, op2)    /* Destination[0..63] = Source */
           );
 
   /* Create the symbolic expression */
@@ -54,19 +54,18 @@ void MovlpdIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void MovlpdIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint32            writeSize = this->operands[0].getSize();
-  uint64            mem       = this->operands[0].getValue();
-  uint64            reg       = this->operands[1].getValue();
-  uint64            regSize   = this->operands[1].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op2;
+  uint32 writeSize = this->operands[0].getSize();
+  uint64 mem       = this->operands[0].getValue();
+  uint64 reg       = this->operands[1].getValue();
+  uint64 regSize   = this->operands[1].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicMemOperand(mem, writeSize);
-  op2 << ap.buildSymbolicRegOperand(reg, regSize);
+  op2 = ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Destination = Source[0..63] */
-  expr << smt2lib::extract(63, 0, op2.str());
+  expr = smt2lib::extract(63, 0, op2);
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, writeSize);

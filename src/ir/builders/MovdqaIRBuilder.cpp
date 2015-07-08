@@ -19,15 +19,15 @@ void MovdqaIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void MovdqaIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr;
-  uint64            reg1      = this->operands[0].getValue();
-  uint64            reg1Size  = this->operands[0].getSize();
-  uint64            reg2      = this->operands[1].getValue();
-  uint64            reg2Size  = this->operands[1].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint64 reg1      = this->operands[0].getValue();
+  uint64 reg1Size  = this->operands[0].getSize();
+  uint64 reg2      = this->operands[1].getValue();
+  uint64 reg2Size  = this->operands[1].getSize();
 
   /* Create the SMT semantic */
-  expr << ap.buildSymbolicRegOperand(reg2, reg2Size);
+  expr = ap.buildSymbolicRegOperand(reg2, reg2Size);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg1, reg1Size);
@@ -38,15 +38,15 @@ void MovdqaIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void MovdqaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr;
-  uint32            readSize = this->operands[1].getSize();
-  uint64            mem      = this->operands[1].getValue();
-  uint64            reg      = this->operands[0].getValue();
-  uint64            regSize  = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 readSize = this->operands[1].getSize();
+  uint64 mem      = this->operands[1].getValue();
+  uint64 reg      = this->operands[0].getValue();
+  uint64 regSize  = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  expr << ap.buildSymbolicMemOperand(mem, readSize);
+  expr = ap.buildSymbolicMemOperand(mem, readSize);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
@@ -62,15 +62,15 @@ void MovdqaIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void MovdqaIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr;
-  uint32            writeSize = this->operands[0].getSize();
-  uint64            mem       = this->operands[0].getValue();
-  uint64            reg       = this->operands[1].getValue();
-  uint64            regSize   = this->operands[1].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr;
+  uint32 writeSize = this->operands[0].getSize();
+  uint64 mem       = this->operands[0].getValue();
+  uint64 reg       = this->operands[1].getValue();
+  uint64 regSize   = this->operands[1].getSize();
 
   /* Create the SMT semantic */
-  expr << ap.buildSymbolicRegOperand(reg, regSize);
+  expr = ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, writeSize);

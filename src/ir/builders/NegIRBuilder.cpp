@@ -14,16 +14,16 @@ NegIRBuilder::NegIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void NegIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, cfExpr;
-  uint64            reg       = this->operands[0].getValue();
-  uint32            regSize   = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1;
+  uint64 reg       = this->operands[0].getValue();
+  uint32 regSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg, regSize);
+  op1 = ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Finale expr */
-  expr << smt2lib::bvneg(op1.str());
+  expr = smt2lib::bvneg(op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
@@ -35,23 +35,23 @@ void NegIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   EflagsBuilder::afNeg(inst, se, ap, regSize, op1);
   EflagsBuilder::cfNeg(inst, se, ap, regSize, op1);
   EflagsBuilder::ofNeg(inst, se, ap, regSize, op1);
-  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::pf(inst, se, ap, regSize);
   EflagsBuilder::sf(inst, se, ap, regSize);
   EflagsBuilder::zf(inst, se, ap, regSize);
 }
 
 
 void NegIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1;
-  uint64            mem       = this->operands[0].getValue();
-  uint32            memSize   = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1;
+  uint64 mem       = this->operands[0].getValue();
+  uint32 memSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicMemOperand(mem, memSize);
+  op1 = ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Finale expr */
-  expr << smt2lib::bvneg(op1.str());
+  expr = smt2lib::bvneg(op1);
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, memSize);
@@ -63,7 +63,7 @@ void NegIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   EflagsBuilder::afNeg(inst, se, ap, memSize, op1);
   EflagsBuilder::cfNeg(inst, se, ap, memSize, op1);
   EflagsBuilder::ofNeg(inst, se, ap, memSize, op1);
-  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::pf(inst, se, ap, memSize);
   EflagsBuilder::sf(inst, se, ap, memSize);
   EflagsBuilder::zf(inst, se, ap, memSize);
 }

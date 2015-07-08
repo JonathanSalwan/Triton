@@ -14,14 +14,14 @@ CbwIRBuilder::CbwIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void CbwIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1;
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(ID_RAX, REG_SIZE, 8, 0);
+  op1 = ap.buildSymbolicRegOperand(ID_RAX, REG_SIZE, 8, 0);
 
   /* Finale expr */
-  expr << smt2lib::sx(op1.str(), 8);
+  expr = smt2lib::sx(8, op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_RAX, WORD_SIZE);

@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 
+#include "SMT2Lib.h"
 #include "TritonTypes.h"
 
 
@@ -13,26 +14,20 @@
 class SymbolicExpression {
 
   private:
-    std::string         *comment;
-    std::stringstream   *destination;
-    std::stringstream   *expression;
-    std::stringstream   *source;
-    uint64              id;
-
+    smt2lib::smtAstAbstractNode *expression;
+    std::string                 *comment;
+    uint64                      id;
 
   public:
-    bool                isTainted;
+    bool                        isTainted;
+    smt2lib::smtAstAbstractNode *getExpression(void);
+    std::string                 *getComment(void);
+    std::string                 getID2Str(void);
+    uint64                      getID(void);
+    void                        setExpression(smt2lib::smtAstAbstractNode *expr);
 
-    std::string         getID2Str(void);
-    std::string         *getComment(void);
-    std::stringstream   *getDestination(void);
-    std::stringstream   *getExpression(void);
-    std::stringstream   *getSource(void);
-    uint64              getID(void);
-    void                setSrcExpr(std::stringstream &src);
-
-    SymbolicExpression(std::stringstream &dst, std::stringstream &src, uint64 id);
-    SymbolicExpression(std::stringstream &dst, std::stringstream &src, uint64 id, std::string &comment);
+    SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id);
+    SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id, std::string &comment);
     ~SymbolicExpression();
 };
 

@@ -19,22 +19,21 @@ void SetnbeIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void SetnbeIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, reg1e, cf, zf;
-  uint64            reg     = this->operands[0].getValue();
-  uint64            regSize = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *cf, *zf;
+  uint64 reg     = this->operands[0].getValue();
+  uint64 regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  cf << ap.buildSymbolicFlagOperand(ID_CF);
-  zf << ap.buildSymbolicFlagOperand(ID_ZF);
-  reg1e << ap.buildSymbolicRegOperand(reg, regSize);
+  cf = ap.buildSymbolicFlagOperand(ID_CF);
+  zf = ap.buildSymbolicFlagOperand(ID_ZF);
 
   /* Finale expr */
-  expr << smt2lib::ite(
+  expr = smt2lib::ite(
             smt2lib::equal(
               smt2lib::bvand(
-                smt2lib::bvnot(cf.str()),
-                smt2lib::bvnot(zf.str())
+                smt2lib::bvnot(cf),
+                smt2lib::bvnot(zf)
               ),
               smt2lib::bvtrue()),
             smt2lib::bv(1, BYTE_SIZE_BIT),
@@ -55,22 +54,21 @@ void SetnbeIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void SetnbeIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, mem1e, cf, zf;
-  uint64            mem     = this->operands[0].getValue();
-  uint64            memSize = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *cf, *zf;
+  uint64 mem     = this->operands[0].getValue();
+  uint64 memSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  cf << ap.buildSymbolicFlagOperand(ID_CF);
-  zf << ap.buildSymbolicFlagOperand(ID_ZF);
-  mem1e << ap.buildSymbolicMemOperand(mem, memSize);
+  cf = ap.buildSymbolicFlagOperand(ID_CF);
+  zf = ap.buildSymbolicFlagOperand(ID_ZF);
 
   /* Finale expr */
-  expr << smt2lib::ite(
+  expr = smt2lib::ite(
             smt2lib::equal(
               smt2lib::bvand(
-                smt2lib::bvnot(cf.str()),
-                smt2lib::bvnot(zf.str())
+                smt2lib::bvnot(cf),
+                smt2lib::bvnot(zf)
               ),
               smt2lib::bvtrue()),
             smt2lib::bv(1, BYTE_SIZE_BIT),

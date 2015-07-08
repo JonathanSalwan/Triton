@@ -14,24 +14,24 @@ JnbeIRBuilder::JnbeIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void JnbeIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, cf, zf;
-  uint64            imm   = this->operands[0].getValue();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *cf, *zf;
+  uint64 imm   = this->operands[0].getValue();
 
   /* Create the SMT semantic */
-  cf << ap.buildSymbolicFlagOperand(ID_CF);
-  zf << ap.buildSymbolicFlagOperand(ID_ZF);
+  cf = ap.buildSymbolicFlagOperand(ID_CF);
+  zf = ap.buildSymbolicFlagOperand(ID_ZF);
 
   /* 
    * Finale expr
    * JNBE: Jump if not below or equal (CF=0 and ZF=0).
    * SMT: (= (bvand (bvnot zf) (bvnot cf)) (_ bv1 1))
    */
-  expr << smt2lib::ite(
+  expr = smt2lib::ite(
             smt2lib::equal(
               smt2lib::bvand(
-                smt2lib::bvnot(cf.str()),
-                smt2lib::bvnot(zf.str())
+                smt2lib::bvnot(cf),
+                smt2lib::bvnot(zf)
               ),
               smt2lib::bvtrue()
             ),

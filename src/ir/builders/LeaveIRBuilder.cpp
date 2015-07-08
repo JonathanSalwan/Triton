@@ -15,14 +15,14 @@ LeaveIRBuilder::LeaveIRBuilder(uint64 address, const std::string &disassembly):
 
 static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 readSize)
 {
-  SymbolicExpression    *se;
-  std::stringstream   expr, op1, op2;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(ID_RSP, REG_SIZE);
-  op2 << smt2lib::bv(readSize, readSize * REG_SIZE);
+  op1 = ap.buildSymbolicRegOperand(ID_RSP, REG_SIZE);
+  op2 = smt2lib::bv(readSize, readSize * REG_SIZE);
 
-  expr << smt2lib::bvadd(op1.str(), op2.str());
+  expr = smt2lib::bvadd(op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_RSP, REG_SIZE, "Aligns stack");
@@ -34,13 +34,13 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 
 }
 
 void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression    *se1, *se2;
-  std::stringstream   expr1, expr2;
-  uint64              readMem   = this->operands[0].getValue(); // The src memory read
-  uint32              readSize  = this->operands[0].getSize();
+  SymbolicExpression *se1, *se2;
+  smt2lib::smtAstAbstractNode *expr1, *expr2;
+  uint64   readMem   = this->operands[0].getValue(); // The src memory read
+  uint32   readSize  = this->operands[0].getSize();
 
   // RSP = RBP; -----------------------------
-  expr1 << ap.buildSymbolicRegOperand(ID_RBP, REG_SIZE);
+  expr1 = ap.buildSymbolicRegOperand(ID_RBP, REG_SIZE);
 
   /* Create the symbolic expression */
   se1 = ap.createRegSE(inst, expr1, ID_RSP, REG_SIZE);
@@ -50,7 +50,7 @@ void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   // RSP = RBP; -----------------------------
 
   // RBP = Pop(); ---------------------------
-  expr2 << ap.buildSymbolicMemOperand(readMem, readSize);
+  expr2 = ap.buildSymbolicMemOperand(readMem, readSize);
 
   /* Create the symbolic expression */
   se2 = ap.createRegSE(inst, expr2, ID_RBP, REG_SIZE);
@@ -58,7 +58,7 @@ void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   /* Apply the taint */
   ap.assignmentSpreadTaintRegMem(se2, ID_RBP, readMem, readSize);
   // RBP = Pop(); ---------------------------
-  
+
   /* Add the symbolic expression to the current inst */
   alignStack(inst, ap, readSize);
 }

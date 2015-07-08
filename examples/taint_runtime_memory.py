@@ -19,9 +19,9 @@ def cafter(instruction):
     print '%#x: %s' %(instruction.address, instruction.assembly)
     for se in instruction.symbolicExpressions:
         if se.isTainted == True:
-            print '\t -> %s%s%s' %(GREEN, se.expression, ENDC)
+            print '\t -> %s%s%s' %(GREEN, se.ast, ENDC)
         else:
-            print '\t -> %s' %(se.expression)
+            print '\t -> %s' %(se.ast)
     print
 
 

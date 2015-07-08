@@ -14,30 +14,30 @@ MulIRBuilder::MulIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void MulIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2, rax, rdx;
-  uint64            reg       = this->operands[0].getValue();
-  uint32            regSize   = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2, *rax, *rdx;
+  uint64 reg       = this->operands[0].getValue();
+  uint32 regSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(ID_RAX, regSize);
-  op2 << ap.buildSymbolicRegOperand(reg, regSize);
+  op1 = ap.buildSymbolicRegOperand(ID_RAX, regSize);
+  op2 = ap.buildSymbolicRegOperand(reg, regSize);
 
   switch (regSize) {
 
     /* AX = AL * r/m8 */
     case BYTE_SIZE:
       /* Final expr */
-      expr << smt2lib::bvmul(
-                smt2lib::zx(op1.str(), BYTE_SIZE_BIT),
-                smt2lib::zx(op2.str(), BYTE_SIZE_BIT)
+      expr = smt2lib::bvmul(
+                smt2lib::zx(BYTE_SIZE_BIT, op1),
+                smt2lib::zx(BYTE_SIZE_BIT, op2)
               );
       /* Create the symbolic expression */
       se = ap.createRegSE(inst, expr, ID_RAX, WORD_SIZE);
       /* Apply the taint */
       ap.aluSpreadTaintRegReg(se, ID_RAX, reg);
       /* Add the symbolic flags expression to the current inst */
-      rax << smt2lib::extract(15, 8, expr.str());
+      rax = smt2lib::extract(15, 8, expr);
       EflagsBuilder::cfMul(inst, se, ap, regSize, rax);
       EflagsBuilder::ofMul(inst, se, ap, regSize, rax);
       break;
@@ -45,12 +45,12 @@ void MulIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
     /* DX:AX = AX * r/m16 */
     case WORD_SIZE:
       /* Final expr */
-      expr << smt2lib::bvmul(
-                smt2lib::zx(op1.str(), WORD_SIZE_BIT),
-                smt2lib::zx(op2.str(), WORD_SIZE_BIT)
+      expr = smt2lib::bvmul(
+                smt2lib::zx(WORD_SIZE_BIT, op1),
+                smt2lib::zx(WORD_SIZE_BIT, op2)
               );
-      rax << smt2lib::extract(15, 0, expr.str());
-      rdx << smt2lib::extract(31, 16, expr.str());
+      rax = smt2lib::extract(15, 0, expr);
+      rdx = smt2lib::extract(31, 16, expr);
       /* Create the symbolic expression for AX */
       se = ap.createRegSE(inst, rax, ID_RAX, WORD_SIZE);
       /* Apply the taint */
@@ -67,12 +67,12 @@ void MulIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
     /* EDX:EAX = EAX * r/m32 */
     case DWORD_SIZE:
       /* Final expr */
-      expr << smt2lib::bvmul(
-                smt2lib::zx(op1.str(), DWORD_SIZE_BIT),
-                smt2lib::zx(op2.str(), DWORD_SIZE_BIT)
+      expr = smt2lib::bvmul(
+                smt2lib::zx(DWORD_SIZE_BIT, op1),
+                smt2lib::zx(DWORD_SIZE_BIT, op2)
               );
-      rax << smt2lib::extract(31, 0, expr.str());
-      rdx << smt2lib::extract(63, 32, expr.str());
+      rax = smt2lib::extract(31, 0, expr);
+      rdx = smt2lib::extract(63, 32, expr);
       /* Create the symbolic expression for EAX */
       se = ap.createRegSE(inst, rax, ID_RAX, DWORD_SIZE);
       /* Apply the taint */
@@ -89,12 +89,12 @@ void MulIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
     /* RDX:RAX = RAX * r/m64 */
     case QWORD_SIZE:
       /* Final expr */
-      expr << smt2lib::bvmul(
-                smt2lib::zx(op1.str(), QWORD_SIZE_BIT),
-                smt2lib::zx(op2.str(), QWORD_SIZE_BIT)
+      expr = smt2lib::bvmul(
+                smt2lib::zx(QWORD_SIZE_BIT, op1),
+                smt2lib::zx(QWORD_SIZE_BIT, op2)
               );
-      rax << smt2lib::extract(63, 0, expr.str());
-      rdx << smt2lib::extract(127, 64, expr.str());
+      rax = smt2lib::extract(63, 0, expr);
+      rdx = smt2lib::extract(127, 64, expr);
       /* Create the symbolic expression for RAX */
       se = ap.createRegSE(inst, rax, ID_RAX, QWORD_SIZE);
       /* Apply the taint */
@@ -114,30 +114,30 @@ void MulIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void MulIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2, rax, rdx;
-  uint64            mem       = this->operands[0].getValue();
-  uint32            memSize   = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2, *rax, *rdx;
+  uint64 mem       = this->operands[0].getValue();
+  uint32 memSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(ID_RAX, memSize);
-  op2 << ap.buildSymbolicMemOperand(mem, memSize);
+  op1 = ap.buildSymbolicRegOperand(ID_RAX, memSize);
+  op2 = ap.buildSymbolicMemOperand(mem, memSize);
 
   switch (memSize) {
 
     /* AX = AL * r/m8 */
     case BYTE_SIZE:
       /* Final expr */
-      expr << smt2lib::bvmul(
-                smt2lib::zx(op1.str(), BYTE_SIZE_BIT),
-                smt2lib::zx(op2.str(), BYTE_SIZE_BIT)
+      expr = smt2lib::bvmul(
+                smt2lib::zx(BYTE_SIZE_BIT, op1),
+                smt2lib::zx(BYTE_SIZE_BIT, op2)
               );
       /* Create the symbolic expression */
       se = ap.createRegSE(inst, expr, ID_RAX, WORD_SIZE);
       /* Apply the taint */
       ap.aluSpreadTaintRegMem(se, ID_RAX, mem, memSize);
       /* Add the symbolic flags expression to the current inst */
-      rax << smt2lib::extract(15, 8, expr.str());
+      rax = smt2lib::extract(15, 8, expr);
       EflagsBuilder::cfMul(inst, se, ap, memSize, rax);
       EflagsBuilder::ofMul(inst, se, ap, memSize, rax);
       break;
@@ -145,12 +145,12 @@ void MulIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
     /* DX:AX = AX * r/m16 */
     case WORD_SIZE:
       /* Final expr */
-      expr << smt2lib::bvmul(
-                smt2lib::zx(op1.str(), WORD_SIZE_BIT),
-                smt2lib::zx(op2.str(), WORD_SIZE_BIT)
+      expr = smt2lib::bvmul(
+                smt2lib::zx(WORD_SIZE_BIT, op1),
+                smt2lib::zx(WORD_SIZE_BIT, op2)
               );
-      rax << smt2lib::extract(15, 0, expr.str());
-      rdx << smt2lib::extract(31, 16, expr.str());
+      rax = smt2lib::extract(15, 0, expr);
+      rdx = smt2lib::extract(31, 16, expr);
       /* Create the symbolic expression for AX */
       se = ap.createRegSE(inst, rax, ID_RAX, WORD_SIZE);
       /* Apply the taint */
@@ -167,12 +167,12 @@ void MulIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
     /* EDX:EAX = EAX * r/m32 */
     case DWORD_SIZE:
       /* Final expr */
-      expr << smt2lib::bvmul(
-                smt2lib::zx(op1.str(), DWORD_SIZE_BIT),
-                smt2lib::zx(op2.str(), DWORD_SIZE_BIT)
+      expr = smt2lib::bvmul(
+                smt2lib::zx(DWORD_SIZE_BIT, op1),
+                smt2lib::zx(DWORD_SIZE_BIT, op2)
               );
-      rax << smt2lib::extract(31, 0, expr.str());
-      rdx << smt2lib::extract(63, 32, expr.str());
+      rax = smt2lib::extract(31, 0, expr);
+      rdx = smt2lib::extract(63, 32, expr);
       /* Create the symbolic expression for EAX */
       se = ap.createRegSE(inst, rax, ID_RAX, DWORD_SIZE);
       /* Apply the taint */
@@ -189,12 +189,12 @@ void MulIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
     /* RDX:RAX = RAX * r/m64 */
     case QWORD_SIZE:
       /* Final expr */
-      expr << smt2lib::bvmul(
-                smt2lib::zx(op1.str(), QWORD_SIZE_BIT),
-                smt2lib::zx(op2.str(), QWORD_SIZE_BIT)
+      expr = smt2lib::bvmul(
+                smt2lib::zx(QWORD_SIZE_BIT, op1),
+                smt2lib::zx(QWORD_SIZE_BIT, op2)
               );
-      rax << smt2lib::extract(63, 0, expr.str());
-      rdx << smt2lib::extract(127, 64, expr.str());
+      rax = smt2lib::extract(63, 0, expr);
+      rdx = smt2lib::extract(127, 64, expr);
       /* Create the symbolic expression for RAX */
       se = ap.createRegSE(inst, rax, ID_RAX, QWORD_SIZE);
       /* Apply the taint */

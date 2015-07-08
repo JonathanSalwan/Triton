@@ -14,18 +14,18 @@ TestIRBuilder::TestIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void TestIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint64            reg     = this->operands[0].getValue();
-  uint64            imm     = this->operands[1].getValue();
-  uint32            regSize = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint64 reg     = this->operands[0].getValue();
+  uint64 imm     = this->operands[1].getValue();
+  uint32 regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg, regSize);
-  op2 << smt2lib::bv(imm, regSize * REG_SIZE);
+  op1 = ap.buildSymbolicRegOperand(reg, regSize);
+  op2 = smt2lib::bv(imm, regSize * REG_SIZE);
 
   /* Finale expr */
-  expr << smt2lib::bvand(op1.str(), op2.str());
+  expr = smt2lib::bvand(op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createSE(inst, expr);
@@ -36,26 +36,26 @@ void TestIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::clearFlag(inst, ap, ID_CF, "Clears carry flag");
   EflagsBuilder::clearFlag(inst, ap, ID_OF, "Clears overflow flag");
-  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::pf(inst, se, ap, regSize);
   EflagsBuilder::sf(inst, se, ap, regSize);
   EflagsBuilder::zf(inst, se, ap, regSize);
 }
 
 
 void TestIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint64            reg1     = this->operands[0].getValue();
-  uint64            reg2     = this->operands[1].getValue();
-  uint32            regSize1 = this->operands[0].getSize();
-  uint32            regSize2 = this->operands[1].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint64 reg1     = this->operands[0].getValue();
+  uint64 reg2     = this->operands[1].getValue();
+  uint32 regSize1 = this->operands[0].getSize();
+  uint32 regSize2 = this->operands[1].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg1, regSize1);
-  op2 << ap.buildSymbolicRegOperand(reg2, regSize2);
+  op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
+  op2 = ap.buildSymbolicRegOperand(reg2, regSize2);
 
   // Final expr
-  expr << smt2lib::bvand(op1.str(), op2.str());
+  expr = smt2lib::bvand(op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createSE(inst, expr);
@@ -66,7 +66,7 @@ void TestIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::clearFlag(inst, ap, ID_CF, "Clears carry flag");
   EflagsBuilder::clearFlag(inst, ap, ID_OF, "Clears overflow flag");
-  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::pf(inst, se, ap, regSize1);
   EflagsBuilder::sf(inst, se, ap, regSize1);
   EflagsBuilder::zf(inst, se, ap, regSize1);
 }
@@ -79,18 +79,18 @@ void TestIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void TestIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint32            readSize  = this->operands[0].getSize();
-  uint64            mem       = this->operands[0].getValue();
-  uint64            imm       = this->operands[1].getValue();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint32 readSize  = this->operands[0].getSize();
+  uint64 mem       = this->operands[0].getValue();
+  uint64 imm       = this->operands[1].getValue();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicMemOperand(mem, readSize);
-  op2 << smt2lib::bv(imm, readSize * REG_SIZE);
+  op1 = ap.buildSymbolicMemOperand(mem, readSize);
+  op2 = smt2lib::bv(imm, readSize * REG_SIZE);
 
   /* Final expr */
-  expr << smt2lib::bvand(op1.str(), op2.str());
+  expr = smt2lib::bvand(op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createSE(inst, expr);
@@ -101,26 +101,26 @@ void TestIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::clearFlag(inst, ap, ID_CF, "Clears carry flag");
   EflagsBuilder::clearFlag(inst, ap, ID_OF, "Clears overflow flag");
-  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::pf(inst, se, ap, readSize);
   EflagsBuilder::sf(inst, se, ap, readSize);
   EflagsBuilder::zf(inst, se, ap, readSize);
 }
 
 
 void TestIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint32            readSize  = this->operands[0].getSize();
-  uint64            mem       = this->operands[0].getValue();
-  uint64            reg       = this->operands[1].getValue();
-  uint32            regSize   = this->operands[1].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint32 readSize  = this->operands[0].getSize();
+  uint64 mem       = this->operands[0].getValue();
+  uint64 reg       = this->operands[1].getValue();
+  uint32 regSize   = this->operands[1].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicMemOperand(mem, readSize);
-  op2 << ap.buildSymbolicRegOperand(reg, regSize);
+  op1 = ap.buildSymbolicMemOperand(mem, readSize);
+  op2 = ap.buildSymbolicRegOperand(reg, regSize);
 
   // Final expr
-  expr << smt2lib::bvand(op1.str(), op2.str());
+  expr = smt2lib::bvand(op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createSE(inst, expr);
@@ -131,7 +131,7 @@ void TestIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::clearFlag(inst, ap, ID_CF, "Clears carry flag");
   EflagsBuilder::clearFlag(inst, ap, ID_OF, "Clears overflow flag");
-  EflagsBuilder::pf(inst, se, ap);
+  EflagsBuilder::pf(inst, se, ap, readSize);
   EflagsBuilder::sf(inst, se, ap, readSize);
   EflagsBuilder::zf(inst, se, ap, readSize);
 }

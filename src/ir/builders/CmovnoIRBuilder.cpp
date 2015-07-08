@@ -19,24 +19,24 @@ void CmovnoIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void CmovnoIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, reg1e, reg2e, of;
-  uint64            reg1    = this->operands[0].getValue();
-  uint64            reg2    = this->operands[1].getValue();
-  uint64            size1   = this->operands[0].getSize();
-  uint64            size2   = this->operands[1].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *reg1e, *reg2e, *of;
+  uint64 reg1    = this->operands[0].getValue();
+  uint64 reg2    = this->operands[1].getValue();
+  uint64 size1   = this->operands[0].getSize();
+  uint64 size2   = this->operands[1].getSize();
 
   /* Create the SMT semantic */
-  of << ap.buildSymbolicFlagOperand(ID_OF);
-  reg1e << ap.buildSymbolicRegOperand(reg1, size1);
-  reg2e << ap.buildSymbolicRegOperand(reg2, size2);
+  of = ap.buildSymbolicFlagOperand(ID_OF);
+  reg1e = ap.buildSymbolicRegOperand(reg1, size1);
+  reg2e = ap.buildSymbolicRegOperand(reg2, size2);
 
-  expr << smt2lib::ite(
+  expr = smt2lib::ite(
             smt2lib::equal(
-              of.str(),
+              of,
               smt2lib::bvfalse()),
-            reg2e.str(),
-            reg1e.str());
+            reg2e,
+            reg1e);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg1, size1);
@@ -49,24 +49,24 @@ void CmovnoIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void CmovnoIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, reg1e, mem1e, of;
-  uint32            readSize = this->operands[1].getSize();
-  uint64            mem      = this->operands[1].getValue();
-  uint64            reg      = this->operands[0].getValue();
-  uint64            regSize  = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *reg1e, *mem1e, *of;
+  uint32 readSize = this->operands[1].getSize();
+  uint64 mem      = this->operands[1].getValue();
+  uint64 reg      = this->operands[0].getValue();
+  uint64 regSize  = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  of << ap.buildSymbolicFlagOperand(ID_OF);
-  reg1e << ap.buildSymbolicRegOperand(reg, regSize);
-  mem1e << ap.buildSymbolicMemOperand(mem, readSize);
+  of = ap.buildSymbolicFlagOperand(ID_OF);
+  reg1e = ap.buildSymbolicRegOperand(reg, regSize);
+  mem1e = ap.buildSymbolicMemOperand(mem, readSize);
 
-  expr << smt2lib::ite(
+  expr = smt2lib::ite(
             smt2lib::equal(
-              of.str(),
+              of,
               smt2lib::bvfalse()),
-            mem1e.str(),
-            reg1e.str());
+            mem1e,
+            reg1e);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);

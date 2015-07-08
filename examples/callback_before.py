@@ -22,7 +22,7 @@ from triton import *
 # TID (0) 0x400597 mov ecx, eax
 # TID (0) 0x400599 mov rdx, qword ptr [rip+0x200aa0]
 # TID (0) 0x4005a0 mov eax, dword ptr [rbp-0x4]
-# TID (0) 0x4005a3 cdqe 
+# TID (0) 0x4005a3 cdqe
 # TID (0) 0x4005a5 add rax, rdx
 # TID (0) 0x4005a8 movzx eax, byte ptr [rax]
 # TID (0) 0x4005ab movsx eax, al

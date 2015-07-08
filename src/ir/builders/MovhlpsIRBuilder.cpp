@@ -19,21 +19,21 @@ void MovhlpsIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void MovhlpsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint64            reg1      = this->operands[0].getValue();
-  uint64            regSize1  = this->operands[0].getSize();
-  uint64            reg2      = this->operands[1].getValue();
-  uint64            regSize2  = this->operands[1].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint64 reg1      = this->operands[0].getValue();
+  uint64 regSize1  = this->operands[0].getSize();
+  uint64 reg2      = this->operands[1].getValue();
+  uint64 regSize2  = this->operands[1].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg1, regSize1);
-  op2 << ap.buildSymbolicRegOperand(reg2, regSize2);
+  op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
+  op2 = ap.buildSymbolicRegOperand(reg2, regSize2);
 
   /* Destination[0..63] = Source[64..127] */
-  expr << smt2lib::concat(
-            smt2lib::extract(127, 64, op1.str()), /* Destination[64..127] unchanged */
-            smt2lib::extract(127, 64, op2.str())  /* Destination[0..63] = Source[64..127]; */
+  expr = smt2lib::concat(
+            smt2lib::extract(127, 64, op1), /* Destination[64..127] unchanged */
+            smt2lib::extract(127, 64, op2)  /* Destination[0..63] = Source[64..127]; */
           );
 
   /* Create the symbolic expression */

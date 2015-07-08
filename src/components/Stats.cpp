@@ -1,6 +1,4 @@
 
-#include <boost/format.hpp>
-
 #include <Stats.h>
 #include <Colors.h>
 

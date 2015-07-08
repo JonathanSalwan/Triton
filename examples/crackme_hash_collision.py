@@ -51,45 +51,29 @@ def cafter(instruction):
     # RAX points on the user password
     if instruction.address == 0x400572:
         rsiId = getRegSymbolicID(IDREF.REG.RSI)
-        convertExprToSymVar(rsiId, 8)
+        convertExprToSymVar(rsiId, 64)
 
     # mov eax,DWORD PTR [rbp-0x4]
     # RAX must be equal to 0xad6d to win
     if instruction.address == 0x4005c5:
         print '[+] Please wait, computing in progress...'
         raxId = getRegSymbolicID(IDREF.REG.RAX)
-        raxExpr = getBacktrackedSymExpr(raxId)
-        expr = str()
+        raxExpr = getFullExpression(getSymExpr(raxId).ast)
 
         # We want printable characters
-        # (assert (bvsgt SymVar_0 96)
-        # (assert (bvslt SymVar_0 123)
-        expr += smt2lib.smtAssert(smt2lib.bvugt('SymVar_0', smt2lib.bv(96, 64)))
-        expr += smt2lib.smtAssert(smt2lib.bvult('SymVar_0', smt2lib.bv(123, 64)))
-
-        # (assert (bvsgt SymVar_1 96)
-        # (assert (bvslt SymVar_1 123)
-        expr += smt2lib.smtAssert(smt2lib.bvugt('SymVar_1', smt2lib.bv(96, 64)))
-        expr += smt2lib.smtAssert(smt2lib.bvult('SymVar_1', smt2lib.bv(123, 64)))
-
-        # (assert (bvsgt SymVar_2 96)
-        # (assert (bvslt SymVar_2 123)
-        expr += smt2lib.smtAssert(smt2lib.bvugt('SymVar_2', smt2lib.bv(96, 64)))
-        expr += smt2lib.smtAssert(smt2lib.bvult('SymVar_2', smt2lib.bv(123, 64)))
-
-        # (assert (bvsgt SymVar_3 96)
-        # (assert (bvslt SymVar_3 123)
-        expr += smt2lib.smtAssert(smt2lib.bvugt('SymVar_3', smt2lib.bv(96, 64)))
-        expr += smt2lib.smtAssert(smt2lib.bvult('SymVar_3', smt2lib.bv(123, 64)))
-
-        # (assert (bvsgt SymVar_4 96)
-        # (assert (bvslt SymVar_4 123)
-        expr += smt2lib.smtAssert(smt2lib.bvugt('SymVar_4', smt2lib.bv(96, 64)))
-        expr += smt2lib.smtAssert(smt2lib.bvult('SymVar_4', smt2lib.bv(123, 64)))
-
-        # We want the collision
-        # (assert (= rax 0xad6d)
-        expr += smt2lib.smtAssert(smt2lib.equal(raxExpr, smt2lib.bv(0xad6d, 64)))
+        expr = smt2lib.compound([
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.string('SymVar_0'), smt2lib.bv(96,  64))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.string('SymVar_0'), smt2lib.bv(123, 64))),
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.string('SymVar_1'), smt2lib.bv(96,  64))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.string('SymVar_1'), smt2lib.bv(123, 64))),
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.string('SymVar_2'), smt2lib.bv(96,  64))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.string('SymVar_2'), smt2lib.bv(123, 64))),
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.string('SymVar_3'), smt2lib.bv(96,  64))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.string('SymVar_3'), smt2lib.bv(123, 64))),
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.string('SymVar_4'), smt2lib.bv(96,  64))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.string('SymVar_4'), smt2lib.bv(123, 64))),
+                 smt2lib.smtAssert(smt2lib.equal(raxExpr, smt2lib.bv(0xad6d, 64)))  # collision: (assert (= rax 0xad6d)
+               ])
 
         # Get max 20 different models
         models = getModels(expr, 20)

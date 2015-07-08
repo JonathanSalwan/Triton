@@ -45,12 +45,12 @@ def cafter(instruction):
 
     # 0x40058b: movzx eax, byte ptr [rax]
     if instruction.address == 0x40058b:
-        convertRegToSymVar(IDREF.REG.RAX, 4)
+        convertRegToSymVar(IDREF.REG.RAX, 32)
 
     # 0x4005ae: cmp ecx, eax
     if instruction.address == 0x4005ae:
         zfId    = getRegSymbolicID(IDREF.FLAG.ZF)
-        zfExpr  = getBacktrackedSymExpr(zfId)
+        zfExpr  = getFullExpression(getSymExpr(zfId).ast)
         expr    = smt2lib.smtAssert(smt2lib.equal(zfExpr, smt2lib.bvtrue())) # (assert (= zf True))
         models  = getModel(expr)
         global password

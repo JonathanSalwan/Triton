@@ -14,17 +14,17 @@ JsIRBuilder::JsIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void JsIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, sf;
-  uint64            imm   = this->operands[0].getValue();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *sf;
+  uint64 imm   = this->operands[0].getValue();
 
   /* Create the SMT semantic */
-  sf << ap.buildSymbolicFlagOperand(ID_SF);
+  sf = ap.buildSymbolicFlagOperand(ID_SF);
 
   /* Finale expr */
-  expr << smt2lib::ite(
+  expr = smt2lib::ite(
             smt2lib::equal(
-              sf.str(),
+              sf,
               smt2lib::bvtrue()),
             smt2lib::bv(imm, REG_SIZE_BIT),
             smt2lib::bv(this->nextAddress, REG_SIZE_BIT));

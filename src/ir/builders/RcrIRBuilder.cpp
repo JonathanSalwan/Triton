@@ -14,25 +14,25 @@ RcrIRBuilder::RcrIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void RcrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se1, *se2;
-  std::stringstream expr, op1, op2, cf, res;
-  uint64            reg     = this->operands[0].getValue();
-  uint64            imm     = this->operands[1].getValue();
-  uint32            regSize = this->operands[0].getSize();
+  SymbolicExpression *se1, *se2;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2, *cf, *res;
+  uint64 reg     = this->operands[0].getValue();
+  uint64 imm     = this->operands[1].getValue();
+  uint32 regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  cf << ap.buildSymbolicFlagOperand(ID_CF);
-  op1 << ap.buildSymbolicRegOperand(reg, regSize);
+  cf = ap.buildSymbolicFlagOperand(ID_CF);
+  op1 = ap.buildSymbolicRegOperand(reg, regSize);
   /*
    * Note that SMT2-LIB doesn't support expression as rotate's value.
    * The op2 must be the concretization's value.
    */
-  op2 << imm;
+  op2 = smt2lib::decimal(imm);
 
   /* Rcl expression */
-  expr << smt2lib::bvror(
-            smt2lib::concat(cf.str(), op1.str()),
-            op2.str()
+  expr = smt2lib::bvror(
+            op2,
+            smt2lib::concat(cf, op1)
           );
 
   /* Temporary extended expression */
@@ -42,7 +42,7 @@ void RcrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintExprReg(se1, reg);
 
   /* Result expression */
-  res << smt2lib::extract(regSize, expr.str());
+  res = smt2lib::extract((regSize * REG_SIZE) - 1, 0, expr);
 
   /* Create the symbolic expression for the result */
   se2 = ap.createRegSE(inst, res, reg, regSize);
@@ -57,24 +57,24 @@ void RcrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void RcrIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se1, *se2;
-  std::stringstream expr, op1, op2, cf, res;
-  uint64            reg1     = this->operands[0].getValue();
-  uint32            regSize1 = this->operands[0].getSize();
+  SymbolicExpression *se1, *se2;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2, *cf, *res;
+  uint64 reg1     = this->operands[0].getValue();
+  uint32 regSize1 = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  cf << ap.buildSymbolicFlagOperand(ID_CF);
-  op1 << ap.buildSymbolicRegOperand(reg1, regSize1);
+  cf = ap.buildSymbolicFlagOperand(ID_CF);
+  op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
   /*
    * Note that SMT2-LIB doesn't support expression as rotate's value.
    * The op2 must be the concretization's value.
    */
-  op2 << (ap.getRegisterValue(ID_RCX) & 0xff); /* 0xff -> There is only CL available */
+  op2 = smt2lib::decimal(ap.getRegisterValue(ID_RCX) & 0xff); /* 0xff -> There is only CL available */
 
   /* Rcl expression */
-  expr << smt2lib::bvror(
-            smt2lib::concat(cf.str(), op1.str()),
-            op2.str()
+  expr = smt2lib::bvror(
+            op2,
+            smt2lib::concat(cf, op1)
           );
 
   /* Temporary extended expression */
@@ -84,7 +84,7 @@ void RcrIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintExprReg(se1, reg1);
 
   /* Result expression */
-  res << smt2lib::extract(regSize1, expr.str());
+  res = smt2lib::extract((regSize1 * REG_SIZE) - 1, 0, expr);
 
   /* Create the symbolic expression */
   se2 = ap.createRegSE(inst, res, reg1, regSize1);
@@ -104,25 +104,25 @@ void RcrIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void RcrIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se1, *se2;
-  std::stringstream expr, op1, op2, cf, res;
-  uint32            writeSize = this->operands[0].getSize();
-  uint64            mem       = this->operands[0].getValue();
-  uint64            imm       = this->operands[1].getValue();
+  SymbolicExpression *se1, *se2;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2, *cf, *res;
+  uint32 writeSize = this->operands[0].getSize();
+  uint64 mem       = this->operands[0].getValue();
+  uint64 imm       = this->operands[1].getValue();
 
   /* Create the SMT semantic */
-  cf << ap.buildSymbolicFlagOperand(ID_CF);
-  op1 << ap.buildSymbolicMemOperand(mem, writeSize);
+  cf = ap.buildSymbolicFlagOperand(ID_CF);
+  op1 = ap.buildSymbolicMemOperand(mem, writeSize);
   /*
    * Note that SMT2-LIB doesn't support expression as rotate's value.
    * The op2 must be the concretization's value.
    */
-  op2 << imm;
+  op2 = smt2lib::decimal(imm);
 
   /* Rcl expression */
-  expr << smt2lib::bvror(
-            smt2lib::concat(cf.str(), op1.str()),
-            op2.str()
+  expr = smt2lib::bvror(
+            op2,
+            smt2lib::concat(cf, op1)
           );
 
   /* Temporary extended expression */
@@ -132,7 +132,7 @@ void RcrIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintExprMem(se1, mem, writeSize);
 
   /* Result expression */
-  res << smt2lib::extract(writeSize, expr.str());
+  res = smt2lib::extract((writeSize * REG_SIZE) - 1, 0, expr);
 
   /* Create the symbolic expression */
   se2 = ap.createMemSE(inst, res, mem, writeSize);
@@ -147,24 +147,24 @@ void RcrIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void RcrIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se1, *se2;
-  std::stringstream expr, op1, op2, cf, res;
-  uint32            writeSize = this->operands[0].getSize();
-  uint64            mem       = this->operands[0].getValue();
+  SymbolicExpression *se1, *se2;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2, *cf, *res;
+  uint32 writeSize = this->operands[0].getSize();
+  uint64 mem       = this->operands[0].getValue();
 
   /* Create the SMT semantic */
-  cf << ap.buildSymbolicFlagOperand(ID_CF);
-  op1 << ap.buildSymbolicMemOperand(mem, writeSize);
+  cf = ap.buildSymbolicFlagOperand(ID_CF);
+  op1 = ap.buildSymbolicMemOperand(mem, writeSize);
   /*
    * Note that SMT2-LIB doesn't support expression as rotate's value.
    * The op2 must be the concretization's value.
    */
-  op2 << (ap.getRegisterValue(ID_RCX) & 0xff); /* 0xff -> There is only CL available */
+  op2 = smt2lib::decimal(ap.getRegisterValue(ID_RCX) & 0xff); /* 0xff -> There is only CL available */
 
   /* Rcl expression */
-  expr << smt2lib::bvror(
-            smt2lib::concat(cf.str(), op1.str()),
-            op2.str()
+  expr = smt2lib::bvror(
+            op2,
+            smt2lib::concat(cf, op1)
           );
 
   /* Temporary extended expression */
@@ -174,7 +174,7 @@ void RcrIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintExprMem(se1, mem, writeSize);
 
   /* Result expression */
-  res << smt2lib::extract(writeSize, expr.str());
+  res = smt2lib::extract((writeSize * REG_SIZE) - 1, 0, expr);
 
   /* Create the symbolic expression */
   se2 = ap.createMemSE(inst, res, mem, writeSize);

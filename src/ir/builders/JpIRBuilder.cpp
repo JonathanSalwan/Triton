@@ -14,17 +14,17 @@ JpIRBuilder::JpIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void JpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, pf;
-  uint64            imm   = this->operands[0].getValue();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *pf;
+  uint64 imm   = this->operands[0].getValue();
 
   /* Create the SMT semantic */
-  pf << ap.buildSymbolicFlagOperand(ID_PF);
+  pf = ap.buildSymbolicFlagOperand(ID_PF);
 
   /* Finale expr */
-  expr << smt2lib::ite(
+  expr = smt2lib::ite(
             smt2lib::equal(
-              pf.str(),
+              pf,
               smt2lib::bvtrue()),
             smt2lib::bv(imm, REG_SIZE_BIT),
             smt2lib::bv(this->nextAddress, REG_SIZE_BIT));

@@ -58,7 +58,7 @@ def signals(threadId, sig):
     for reg, data in regs.items():
         value = data['concreteValue']
         seid  = data['symbolicExpr']
-        print '%s:\t%#016x\t%s' %(getRegName(reg), value, (getSymExpr(seid).expression if seid != IDREF.MISC.UNSET else 'UNSET'))
+        print '%s:\t%#016x\t%s' %(getRegName(reg), value, (getSymExpr(seid).ast if seid != IDREF.MISC.UNSET else 'UNSET'))
     return
 
 

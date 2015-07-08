@@ -14,17 +14,17 @@ JnzIRBuilder::JnzIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void JnzIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, zf;
-  uint64            imm   = this->operands[0].getValue();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *zf;
+  uint64 imm   = this->operands[0].getValue();
 
   /* Create the SMT semantic */
-  zf << ap.buildSymbolicFlagOperand(ID_ZF);
+  zf = ap.buildSymbolicFlagOperand(ID_ZF);
 
   /* Finale expr */
-  expr << smt2lib::ite(
+  expr = smt2lib::ite(
             smt2lib::equal(
-              zf.str(),
+              zf,
               smt2lib::bvfalse()),
             smt2lib::bv(imm, REG_SIZE_BIT),
             smt2lib::bv(this->nextAddress, REG_SIZE_BIT));

@@ -48,26 +48,22 @@ class SymbolicEngine {
      */
     std::list<uint64> pathConstaints;
 
-    /* Private classes used by getBacktrackedExpressionFromId() */
-    std::string deepReplace(std::stringstream &formula);
-    std::string replaceEq(std::string str, const std::string from, const std::string to);
-
 
   public:
 
     /* Symbolic trace */
     /* sizeof(symbolicReg) = enum REG */
-    uint64                          symbolicReg[ID_LAST_ITEM];
+    uint64                            symbolicReg[ID_LAST_ITEM];
 
     /* public methods */
     SymbolicExpression                *getExpressionFromId(uint64 id);
-    SymbolicExpression                *newSymbolicExpression(std::stringstream &src);
-    SymbolicExpression                *newSymbolicExpression(std::stringstream &src, std::string comment);
+    SymbolicExpression                *newSymbolicExpression(smt2lib::smtAstAbstractNode *node);
+    SymbolicExpression                *newSymbolicExpression(smt2lib::smtAstAbstractNode *node, std::string comment);
     SymbolicVariable                  *addSymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 size, std::string comment);
     SymbolicVariable                  *getSymVar(std::string symVarName);
     SymbolicVariable                  *getSymVar(uint64 symVarId);
     std::list<uint64>                 getPathConstraints(void);
-    std::string                       getBacktrackedExpressionFromId(uint64 id);
+    smt2lib::smtAstAbstractNode       *getFullExpression(smt2lib::smtAstAbstractNode *node);
     std::string                       getVariablesDeclaration(void);
     std::vector<SymbolicExpression *> getExpressions(void);
     std::vector<SymbolicVariable *>   getSymVars(void);

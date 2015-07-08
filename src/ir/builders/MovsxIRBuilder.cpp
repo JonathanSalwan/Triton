@@ -20,18 +20,18 @@ void MovsxIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void MovsxIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1;
-  uint64            reg1  = this->operands[0].getValue();
-  uint64            reg2  = this->operands[1].getValue();
-  uint64            size1 = this->operands[0].getSize();
-  uint64            size2 = this->operands[1].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1;
+  uint64 reg1  = this->operands[0].getValue();
+  uint64 reg2  = this->operands[1].getValue();
+  uint64 size1 = this->operands[0].getSize();
+  uint64 size2 = this->operands[1].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg2, size2);
+  op1 = ap.buildSymbolicRegOperand(reg2, size2);
 
   /* Final expr */
-  expr << smt2lib::sx(op1.str(), (size1 * REG_SIZE) - (size2 * REG_SIZE));
+  expr = smt2lib::sx((size1 * REG_SIZE) - (size2 * REG_SIZE), op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg1, size1);
@@ -42,18 +42,18 @@ void MovsxIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void MovsxIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1;
-  uint32            readSize = this->operands[1].getSize();
-  uint64            mem      = this->operands[1].getValue();
-  uint64            reg      = this->operands[0].getValue();
-  uint64            regSize  = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1;
+  uint32 readSize = this->operands[1].getSize();
+  uint64 mem      = this->operands[1].getValue();
+  uint64 reg      = this->operands[0].getValue();
+  uint64 regSize  = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicMemOperand(mem, readSize);
+  op1 = ap.buildSymbolicMemOperand(mem, readSize);
 
   /* Final expr */
-  expr << smt2lib::sx(op1.str(), (regSize * REG_SIZE) - (readSize * REG_SIZE));
+  expr = smt2lib::sx((regSize * REG_SIZE) - (readSize * REG_SIZE), op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);

@@ -14,22 +14,22 @@ RolIRBuilder::RolIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void RolIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint64            reg     = this->operands[0].getValue();
-  uint64            imm     = this->operands[1].getValue();
-  uint32            regSize = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint64 reg     = this->operands[0].getValue();
+  uint64 imm     = this->operands[1].getValue();
+  uint32 regSize = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg, regSize);
+  op1 = ap.buildSymbolicRegOperand(reg, regSize);
   /*
    * Note that SMT2-LIB doesn't support expression as rotate's value.
    * The op2 must be the concretization's value.
    */
-  op2 << imm;
+  op2 = smt2lib::decimal(imm);
 
   /* Finale expr */
-  expr << smt2lib::bvrol(op1.str(), op2.str());
+  expr = smt2lib::bvrol(op2, op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
@@ -44,21 +44,21 @@ void RolIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void RolIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint64            reg1     = this->operands[0].getValue();
-  uint32            regSize1 = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint64 reg1     = this->operands[0].getValue();
+  uint32 regSize1 = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg1, regSize1);
+  op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
   /*
    * Note that SMT2-LIB doesn't support expression as rotate's value.
    * The op2 must be the concretization's value.
    */
-  op2 << (ap.getRegisterValue(ID_RCX) & 0xff); /* 0xff -> There is only CL available */
+  op2 = smt2lib::decimal(ap.getRegisterValue(ID_RCX) & 0xff); /* 0xff -> There is only CL available */
 
   // Final expr
-  expr << smt2lib::bvrol(op1.str(), op2.str());
+  expr = smt2lib::bvrol(op2, op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg1, regSize1);
@@ -78,22 +78,22 @@ void RolIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void RolIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint32            writeSize = this->operands[0].getSize();
-  uint64            mem       = this->operands[0].getValue();
-  uint64            imm       = this->operands[1].getValue();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint32 writeSize = this->operands[0].getSize();
+  uint64 mem       = this->operands[0].getValue();
+  uint64 imm       = this->operands[1].getValue();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicMemOperand(mem, writeSize);
+  op1 = ap.buildSymbolicMemOperand(mem, writeSize);
   /*
    * Note that SMT2-LIB doesn't support expression as rotate's value.
    * The op2 must be the concretization's value.
    */
-  op2 << imm;
+  op2 = smt2lib::decimal(imm);
 
   /* Final expr */
-  expr << smt2lib::bvrol(op1.str(), op2.str());
+  expr = smt2lib::bvrol(op2, op1);
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, writeSize);
@@ -108,21 +108,21 @@ void RolIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void RolIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1, op2;
-  uint32            writeSize = this->operands[0].getSize();
-  uint64            mem       = this->operands[0].getValue();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
+  uint32 writeSize = this->operands[0].getSize();
+  uint64 mem       = this->operands[0].getValue();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicMemOperand(mem, writeSize);
+  op1 = ap.buildSymbolicMemOperand(mem, writeSize);
   /*
    * Note that SMT2-LIB doesn't support expression as rotate's value.
    * The op2 must be the concretization's value.
    */
-  op2 << (ap.getRegisterValue(ID_RCX) & 0xff); /* 0xff -> There is only CL available */
+  op2 = smt2lib::decimal(ap.getRegisterValue(ID_RCX) & 0xff); /* 0xff -> There is only CL available */
 
   // Final expr
-  expr << smt2lib::bvrol(op1.str(), op2.str());
+  expr = smt2lib::bvrol(op2, op1);
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, writeSize);

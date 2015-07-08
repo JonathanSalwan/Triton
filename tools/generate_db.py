@@ -63,7 +63,7 @@ def before(instruction):
     seId = [se.id for se in instruction.symbolicExpressions]
     cursor.execute("INSERT INTO instructions VALUES (%d, '%s', '%s')" %(addr, asm, str(seId)[1:-1].replace(',','')))
     for se in instruction.symbolicExpressions:
-        cursor.execute("INSERT INTO expressions VALUES (%d, %d, '%s', %d)" %(se.id, addr, se.source, se.isTainted))
+        cursor.execute("INSERT INTO expressions VALUES (%d, %d, '%s', %d)" %(se.id, addr, se.ast, se.isTainted))
 
     # Dump registers value
     for operand in instruction.operands:

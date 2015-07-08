@@ -14,16 +14,16 @@ NotIRBuilder::NotIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void NotIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1;
-  uint64            reg       = this->operands[0].getValue();
-  uint32            regSize   = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1;
+  uint64 reg       = this->operands[0].getValue();
+  uint32 regSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicRegOperand(reg, regSize);
+  op1 = ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Finale expr */
-  expr << smt2lib::bvnot(op1.str());
+  expr = smt2lib::bvnot(op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
@@ -34,16 +34,16 @@ void NotIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
 
 void NotIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression  *se;
-  std::stringstream expr, op1;
-  uint64            mem       = this->operands[0].getValue();
-  uint32            memSize   = this->operands[0].getSize();
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1;
+  uint64 mem       = this->operands[0].getValue();
+  uint32 memSize   = this->operands[0].getSize();
 
   /* Create the SMT semantic */
-  op1 << ap.buildSymbolicMemOperand(mem, memSize);
+  op1 = ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Finale expr */
-  expr << smt2lib::bvnot(op1.str());
+  expr = smt2lib::bvnot(op1);
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, memSize);
