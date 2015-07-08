@@ -25,8 +25,8 @@ smtAstAbstractNode::smtAstAbstractNode(const smtAstAbstractNode &copy) {
 
 
 smtAstAbstractNode::~smtAstAbstractNode() {
-  // TODO
-  //freeAllNodes(this->childs);
+  freeAllNodes(this->childs);
+  this->childs.clear();
 }
 
 
