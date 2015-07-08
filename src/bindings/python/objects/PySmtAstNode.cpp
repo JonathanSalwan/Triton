@@ -57,6 +57,34 @@ static PyObject *SmtAstNode_getValue(PyObject *self, PyObject *noarg)
 }
 
 
+static char SmtAstNode_setChild_doc[] = "Set a new child node";
+static PyObject *SmtAstNode_setChild(PyObject *self, PyObject *args)
+{
+  PyObject *index;
+  PyObject *node;
+  uint64 i;
+  smt2lib::smtAstAbstractNode *dst, *src;
+
+  PyArg_ParseTuple(args, "O|O", &index, &node);
+
+  if (!PyLong_Check(index) && !PyInt_Check(index))
+    return PyErr_Format(PyExc_TypeError, "setChild(): expected an index (integer) as first argument");
+
+  if (!PySmtAstNode_Check(node))
+    return PyErr_Format(PyExc_TypeError, "setChild(): expected a SmtAstNode as second argument");
+
+  i = PyLong_AsLong(index);
+  src = PySmtAstNode_AsSmtAstNode(node);
+  dst = PySmtAstNode_AsSmtAstNode(self);
+  if (i >= dst->getChilds().size())
+    return PyErr_Format(PyExc_TypeError, "setChild(): index out-of-range");
+
+  dst->getChilds()[i] = src;
+
+  return Py_True;
+}
+
+
 static PyObject *SmtAstNode_str(SmtAstNode_Object *obj)
 {
   std::stringstream str;
@@ -69,6 +97,7 @@ PyMethodDef SmtAstNode_callbacks[] = {
   {"getChilds",   SmtAstNode_getChilds, METH_NOARGS,     SmtAstNode_getChilds_doc},
   {"getKind",     SmtAstNode_getKind,   METH_NOARGS,     SmtAstNode_getKind_doc},
   {"getValue",    SmtAstNode_getValue,  METH_NOARGS,     SmtAstNode_getValue_doc},
+  {"setChild",    SmtAstNode_setChild,  METH_VARARGS,    SmtAstNode_setChild_doc},
   {nullptr,       nullptr,              0,               nullptr}
 };
 
