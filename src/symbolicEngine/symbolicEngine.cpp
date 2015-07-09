@@ -182,7 +182,7 @@ smt2lib::smtAstAbstractNode *SymbolicEngine::getFullExpression(smt2lib::smtAstAb
 
   for ( ; index < childs.size(); index++) {
     if (childs[index]->getKind() == smt2lib::REFERENCE_NODE) {
-      uint64 id = std::atoi(reinterpret_cast<smt2lib::smtAstReferenceNode*>(childs[index])->getValue().c_str() + 1);
+      uint64 id = reinterpret_cast<smt2lib::smtAstReferenceNode*>(childs[index])->getValue();
       smt2lib::smtAstAbstractNode *ref = this->getExpressionFromId(id)->getExpression();
       childs[index] = smt2lib::newInstance(ref);
     }

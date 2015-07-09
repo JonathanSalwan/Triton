@@ -473,14 +473,14 @@ namespace smt2lib {
   class smtAstReferenceNode : public smtAstAbstractNode
   {
     protected:
-      std::string value;
+      uint64 value;
 
     public:
-      smtAstReferenceNode(std::string value);
+      smtAstReferenceNode(uint64 value);
       smtAstReferenceNode(const smtAstReferenceNode &copy);
       ~smtAstReferenceNode();
 
-      std::string getValue(void);
+      uint64 getValue(void);
   };
 
 
@@ -613,7 +613,7 @@ namespace smt2lib {
   smtAstAbstractNode *equal(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
   smtAstAbstractNode *extract(uint64 high, uint64 low, smtAstAbstractNode *expr);
   smtAstAbstractNode *ite(smtAstAbstractNode *ifExpr, smtAstAbstractNode *thenExpr, smtAstAbstractNode *elseExpr);
-  smtAstAbstractNode *reference(std::string value);
+  smtAstAbstractNode *reference(uint64 value);
   smtAstAbstractNode *smtAssert(smtAstAbstractNode *expr);
   smtAstAbstractNode *string(std::string value);
   smtAstAbstractNode *sx(uint64 sizeExt, smtAstAbstractNode *expr);

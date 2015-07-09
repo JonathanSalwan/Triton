@@ -300,7 +300,7 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(uint64 r
   uint64 high   = (regSize * REG_SIZE) - 1;
 
   if (symReg != UNSET)
-    op = smt2lib::extract(high, low, smt2lib::reference("#" + std::to_string(symReg)));
+    op = smt2lib::extract(high, low, smt2lib::reference(symReg));
   else {
     if (regID >= ID_XMM0 && regID <= ID_XMM15)
       op = smt2lib::extract(high, low, smt2lib::bv(this->getSSERegisterValue(regID), SSE_REG_SIZE_BIT));
@@ -318,7 +318,7 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(uint64 r
   uint64 symReg = this->getRegSymbolicID(regID);
 
   if (symReg != UNSET)
-    op = smt2lib::extract(highExtract, lowExtract, smt2lib::reference("#" + std::to_string(symReg)));
+    op = smt2lib::extract(highExtract, lowExtract, smt2lib::reference(symReg));
   else {
     if (regID >= ID_XMM0 && regID <= ID_XMM15)
       op = smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getSSERegisterValue(regID), SSE_REG_SIZE_BIT));
@@ -340,7 +340,7 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicMemOperand(uint64 m
   while (memSize) {
     symMem = this->getMemSymbolicID(mem + memSize - 1);
     if (symMem != UNSET)
-      tmp = smt2lib::reference("#" + std::to_string(symMem));
+      tmp = smt2lib::reference(symMem);
     else
       tmp = smt2lib::bv(this->getMemValue(mem + offset, 1), REG_SIZE);
     opVec.push_back(smt2lib::extract(7, 0, tmp));
@@ -370,7 +370,7 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicFlagOperand(uint64 
   uint64 symFlag = this->getRegSymbolicID(flagID);
 
   if (symFlag != UNSET)
-    op = smt2lib::zx((size * REG_SIZE) - 1, smt2lib::reference("#" + std::to_string(symFlag)));
+    op = smt2lib::zx((size * REG_SIZE) - 1, smt2lib::reference(symFlag));
   else
     op = smt2lib::bv(this->getFlagValue(flagID), size * REG_SIZE);
 
@@ -384,7 +384,7 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicFlagOperand(uint64 
   uint64 symFlag = this->getRegSymbolicID(flagID);
 
   if (symFlag != UNSET)
-    op = smt2lib::reference("#" + std::to_string(symFlag));
+    op = smt2lib::reference(symFlag);
   else
     op = smt2lib::bv(this->getFlagValue(flagID), 1);
 

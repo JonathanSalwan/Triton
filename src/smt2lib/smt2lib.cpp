@@ -930,7 +930,7 @@ smtAstIteNode::~smtAstIteNode(){
 // ====== Reference node
 
 
-smtAstReferenceNode::smtAstReferenceNode(std::string value) {
+smtAstReferenceNode::smtAstReferenceNode(uint64 value) {
   this->kind  = REFERENCE_NODE;
   this->value = value;
 }
@@ -947,7 +947,7 @@ smtAstReferenceNode::~smtAstReferenceNode() {
 }
 
 
-std::string smtAstReferenceNode::getValue(void) {
+uint64 smtAstReferenceNode::getValue(void) {
   return this->value;
 }
 
@@ -1359,7 +1359,7 @@ namespace smt2lib {
 
   /* reference syntax */
   std::ostream &operator<<(std::ostream &stream, smtAstReferenceNode *node){
-    stream << node->getValue();
+    stream << "#" << node->getValue();
     return stream;
   }
 
@@ -1760,7 +1760,7 @@ namespace smt2lib {
   }
 
 
-  smtAstAbstractNode *reference(std::string value) {
+  smtAstAbstractNode *reference(uint64 value) {
     smtAstAbstractNode *node = new smtAstReferenceNode(value);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");

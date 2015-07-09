@@ -21,7 +21,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::af(SymbolicExpression *parent,
               smt2lib::bvand(
                 smt2lib::bv(0x10, bvSize),
                 smt2lib::bvxor(
-                  smt2lib::reference(parent->getID2Str()),
+                  smt2lib::reference(parent->getID()),
                   smt2lib::bvxor(op1, op2)
                 )
               )
@@ -51,7 +51,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::afNeg(SymbolicExpression *parent
                 smt2lib::bv(0x10, bvSize),
                 smt2lib::bvxor(
                   op1,
-                  smt2lib::reference(parent->getID2Str())
+                  smt2lib::reference(parent->getID())
                 )
               )
             ),
@@ -74,7 +74,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfAdd(SymbolicExpression *parent
    */
   expr = smt2lib::ite(
             smt2lib::bvult(
-              smt2lib::reference(parent->getID2Str()),
+              smt2lib::reference(parent->getID()),
               op1
             ),
             smt2lib::bv(1, 1),
@@ -96,7 +96,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfImul(SymbolicExpression *paren
    */
   expr = smt2lib::ite(
             smt2lib::equal(
-              smt2lib::reference(parent->getID2Str()),
+              smt2lib::reference(parent->getID()),
               op1
             ),
             smt2lib::bv(0, 1),
@@ -166,7 +166,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfRcl(SymbolicExpression *parent
     throw std::runtime_error("EflagsExpressions::cfRcl() - op2 must be a smtAstDecimalNode node");
 
   if (reinterpret_cast<smt2lib::smtAstDecimalNode *>(op2)->getValue() != 0)
-    expr = smt2lib::extract(bvSize, bvSize, smt2lib::reference(parent->getID2Str()));
+    expr = smt2lib::extract(bvSize, bvSize, smt2lib::reference(parent->getID()));
   else
     expr = ap.buildSymbolicFlagOperand(ID_CF);
 
@@ -191,7 +191,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfRol(SymbolicExpression *parent
     throw std::runtime_error("EflagsExpressions::cfRol() - op2 must be a smtAstDecimalNode node");
 
   if (reinterpret_cast<smt2lib::smtAstDecimalNode *>(op2)->getValue() != 0)
-    expr = smt2lib::extract(0, 0, smt2lib::reference(parent->getID2Str()));
+    expr = smt2lib::extract(0, 0, smt2lib::reference(parent->getID()));
   else
     expr = ap.buildSymbolicFlagOperand(ID_CF);
 
@@ -219,7 +219,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfRor(SymbolicExpression *parent
   if (reinterpret_cast<smt2lib::smtAstDecimalNode *>(op2)->getValue() != 0) {
     expr = smt2lib::extract(0, 0,
       smt2lib::bvlshr(
-        smt2lib::reference(parent->getID2Str()),
+        smt2lib::reference(parent->getID()),
         smt2lib::bvsub(
           smt2lib::bv(bvSize, bvSize),
           smt2lib::bv(1, bvSize)
@@ -357,7 +357,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofAdd(SymbolicExpression *parent
               smt2lib::extract(extractSize, extractSize,
                 smt2lib::bvand(
                   smt2lib::bvxor(op1, smt2lib::bvnot(op2)),
-                  smt2lib::bvxor(op1, smt2lib::reference(parent->getID2Str()))
+                  smt2lib::bvxor(op1, smt2lib::reference(parent->getID()))
                 )
               ),
               smt2lib::bv(1, 1)
@@ -381,7 +381,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofImul(SymbolicExpression *paren
    */
   expr = smt2lib::ite(
             smt2lib::equal(
-              smt2lib::reference(parent->getID2Str()),
+              smt2lib::reference(parent->getID()),
               op1
             ),
             smt2lib::bv(0, 1),
@@ -426,7 +426,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofNeg(SymbolicExpression *parent
             smt2lib::equal(
               smt2lib::extract(0, 0,
                 smt2lib::bvshl(
-                  smt2lib::bvand(smt2lib::reference(parent->getID2Str()), op1),
+                  smt2lib::bvand(smt2lib::reference(parent->getID()), op1),
                   smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(1, bvSize))
                 )
               ),
@@ -462,7 +462,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofRol(SymbolicExpression *parent
               smt2lib::bvxor(
                 ap.buildSymbolicFlagOperand(ID_CF),
                 smt2lib::bvshl(
-                  smt2lib::reference(parent->getID2Str()),
+                  smt2lib::reference(parent->getID()),
                   smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(1, bvSize))
                 )
               )
@@ -497,11 +497,11 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofRor(SymbolicExpression *parent
     expr = smt2lib::extract(0, 0,
               smt2lib::bvxor(
                 smt2lib::bvshl(
-                  smt2lib::reference(parent->getID2Str()),
+                  smt2lib::reference(parent->getID()),
                   smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(1, bvSize))
                 ),
                 smt2lib::bvshl(
-                  smt2lib::reference(parent->getID2Str()),
+                  smt2lib::reference(parent->getID()),
                   smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(2, bvSize))
                 )
               )
@@ -603,7 +603,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofSub(SymbolicExpression *parent
               smt2lib::extract(extractSize, extractSize,
                 smt2lib::bvand(
                   smt2lib::bvxor(op1, op2),
-                  smt2lib::bvxor(op1, smt2lib::reference(parent->getID2Str()))
+                  smt2lib::bvxor(op1, smt2lib::reference(parent->getID()))
                 )
               ),
               smt2lib::bv(1, 1)
@@ -633,7 +633,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::pf(SymbolicExpression *parent, u
              expr,
              smt2lib::extract(0, 0,
                smt2lib::bvlshr(
-                 smt2lib::extract(bvSize, 0, smt2lib::reference(parent->getID2Str())),
+                 smt2lib::extract(bvSize, 0, smt2lib::reference(parent->getID())),
                  smt2lib::bv(bvSize, counter)
                )
             )
@@ -686,7 +686,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::sf(SymbolicExpression *parent,
    */
   expr = smt2lib::ite(
             smt2lib::equal(
-              smt2lib::extract(extractSize, extractSize, smt2lib::reference(parent->getID2Str())),
+              smt2lib::extract(extractSize, extractSize, smt2lib::reference(parent->getID())),
               smt2lib::bv(1, 1)
             ),
             smt2lib::bv(1, 1),
@@ -730,7 +730,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::zf(SymbolicExpression *parent,
    */
   expr = smt2lib::ite(
             smt2lib::equal(
-              smt2lib::reference(parent->getID2Str()),
+              smt2lib::reference(parent->getID()),
               smt2lib::bv(0, bvSize)
             ),
             smt2lib::bv(1, 1),

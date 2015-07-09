@@ -25,11 +25,11 @@ void CqoIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   se1 = ap.createSE(inst, expr1, "Temporary variable");
 
   /* Expression 2: RAX = TMP[63...0] */
-  expr2 = smt2lib::extract(63, 0, smt2lib::reference(se1->getID2Str()));
+  expr2 = smt2lib::extract(63, 0, smt2lib::reference(se1->getID()));
   ap.createRegSE(inst, expr2, ID_RAX, REG_SIZE, "RAX");
 
   /* Expression 3: RDX = TMP[127...64] */
-  expr3 = smt2lib::extract(127, 64, smt2lib::reference(se1->getID2Str()));
+  expr3 = smt2lib::extract(127, 64, smt2lib::reference(se1->getID()));
   se3 = ap.createRegSE(inst, expr3, ID_RDX, REG_SIZE, "RDX");
 
   /* Apply the taint */

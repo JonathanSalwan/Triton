@@ -51,7 +51,7 @@ static PyObject *SmtAstNode_getValue(PyObject *self, PyObject *noarg)
     return Py_BuildValue("s", reinterpret_cast<smt2lib::smtAstStringNode *>(node)->getValue().c_str());
 
   else if (node->getKind() == smt2lib::REFERENCE_NODE)
-    return Py_BuildValue("s", reinterpret_cast<smt2lib::smtAstReferenceNode *>(node)->getValue().c_str());
+    return Py_BuildValue("k", reinterpret_cast<smt2lib::smtAstReferenceNode *>(node)->getValue());
 
   return PyErr_Format(PyExc_TypeError, "SmtAstNode.getValue() - Cannot use getValue() on this kind of node");
 }
