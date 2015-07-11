@@ -339,10 +339,11 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicMemOperand(uint64 m
   offset = 0;
   while (memSize) {
     symMem = this->getMemSymbolicID(mem + memSize - 1);
-    if (symMem != UNSET){
+    if (symMem != UNSET) {
       tmp = smt2lib::reference(symMem);
       opVec.push_back(smt2lib::extract(7, 0, tmp));
-    }else{
+    }
+    else {
       tmp = smt2lib::bv(this->getMemValue(mem + offset, 1), REG_SIZE);
       opVec.push_front(smt2lib::extract(7, 0, tmp));
     }
