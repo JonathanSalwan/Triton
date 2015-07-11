@@ -4,16 +4,15 @@
 
 SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id)
 {
-  this->comment     = new std::string();
   this->expression  = expr;
   this->id          = id;
   this->isTainted   = false;
 }
 
 
-SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id, std::string &comment)
+SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id, std::string comment)
 {
-  this->comment     = new std::string(comment);
+  this->comment     = comment;
   this->expression  = expr;
   this->id          = id;
   this->isTainted   = false;
@@ -22,7 +21,6 @@ SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64
 
 SymbolicExpression::~SymbolicExpression()
 {
-  delete this->comment;
   delete this->expression;
 }
 
@@ -35,7 +33,7 @@ smt2lib::smtAstAbstractNode *SymbolicExpression::getExpression(void)
 
 
 /* Returns the comment of the expression */
-std::string *SymbolicExpression::getComment(void)
+std::string SymbolicExpression::getComment(void)
 {
   return this->comment;
 }

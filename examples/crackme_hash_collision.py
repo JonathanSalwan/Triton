@@ -58,7 +58,7 @@ def cafter(instruction):
     if instruction.address == 0x4005c5:
         print '[+] Please wait, computing in progress...'
         raxId = getRegSymbolicID(IDREF.REG.RAX)
-        raxExpr = getFullExpression(getSymExpr(raxId).ast)
+        raxExpr = getFullExpression(getSymExpr(raxId).getAst())
 
         # We want printable characters
         expr = smt2lib.compound([

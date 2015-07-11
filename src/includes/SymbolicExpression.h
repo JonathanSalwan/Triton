@@ -15,19 +15,19 @@ class SymbolicExpression {
 
   private:
     smt2lib::smtAstAbstractNode *expression;
-    std::string                 *comment;
+    std::string                 comment;
     uint64                      id;
 
   public:
     bool                        isTainted;
     smt2lib::smtAstAbstractNode *getExpression(void);
-    std::string                 *getComment(void);
+    std::string                 getComment(void);
     std::string                 getID2Str(void);
     uint64                      getID(void);
     void                        setExpression(smt2lib::smtAstAbstractNode *expr);
 
     SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id);
-    SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id, std::string &comment);
+    SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id, std::string comment);
     ~SymbolicExpression();
 };
 

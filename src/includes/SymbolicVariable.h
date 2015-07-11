@@ -26,11 +26,11 @@ class SymbolicVariable {
 
   private:
     SymVar::kind  symVarKind;
+    std::string   symVarComment;
     std::string   symVarName;
     uint64        symVarId;
     uint64        symVarKindValue;
     uint64        symVarSize;
-    std::string   symVarComment;
 
   public:
 
@@ -39,11 +39,11 @@ class SymbolicVariable {
     ~SymbolicVariable();
 
     SymVar::kind  getSymVarKind(void);
+    std::string   getSymVarComment(void);
     std::string   getSymVarName(void);
     uint64        getSymVarId(void);
     uint64        getSymVarKindValue(void);
     uint64        getSymVarSize(void);
-    std::string   getSymVarComment(void);
 
 };
 

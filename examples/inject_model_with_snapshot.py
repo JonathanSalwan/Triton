@@ -50,7 +50,7 @@ def cafter(instruction):
     # 0x4005ae: cmp ecx, eax
     if instruction.address == 0x4005ae:
         zfId    = getRegSymbolicID(IDREF.FLAG.ZF)
-        zfExpr  = getFullExpression(getSymExpr(zfId).ast)
+        zfExpr  = getFullExpression(getSymExpr(zfId).getAst())
         expr    = smt2lib.smtAssert(smt2lib.equal(zfExpr, smt2lib.bvtrue())) # (assert (= zf True))
         models  = getModel(expr)
         global password

@@ -5,9 +5,10 @@
 /*
  * Class SmtAstNode:
  *
- * - childs (lits of SmtAstNode class)
- * - kind (IDREF.SMT_AST_NODE)
- * - value (integer or string)
+ * - getChilds() : Returns the childs of the node
+ * - getKind() : Returns the kind of the node
+ * - getValue() : Returns the value of the node
+ * - setChild(index, node) : Set a child at a specific index
  */
 
 
