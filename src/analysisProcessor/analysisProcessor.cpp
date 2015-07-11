@@ -332,18 +332,20 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(uint64 r
 
 smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicMemOperand(uint64 mem, uint64 memSize)
 {
-  std::vector<smt2lib::smtAstAbstractNode *> opVec;
+  std::list<smt2lib::smtAstAbstractNode *> opVec;
   smt2lib::smtAstAbstractNode *tmp = nullptr;
   uint64 symMem, offset;
 
   offset = 0;
   while (memSize) {
     symMem = this->getMemSymbolicID(mem + memSize - 1);
-    if (symMem != UNSET)
+    if (symMem != UNSET){
       tmp = smt2lib::reference(symMem);
-    else
+      opVec.push_back(smt2lib::extract(7, 0, tmp));
+    }else{
       tmp = smt2lib::bv(this->getMemValue(mem + offset, 1), REG_SIZE);
-    opVec.push_back(smt2lib::extract(7, 0, tmp));
+      opVec.push_front(smt2lib::extract(7, 0, tmp));
+    }
     offset++;
     memSize--;
   }
@@ -356,7 +358,7 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicMemOperand(uint64 m
       tmp = smt2lib::concat(opVec);
       break;
     case BYTE_SIZE:
-      tmp = opVec[0];
+      tmp = opVec.front();
       break;
   }
 
