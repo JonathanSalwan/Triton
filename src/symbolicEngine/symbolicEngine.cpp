@@ -90,7 +90,7 @@ void SymbolicEngine::concretizeMem(uint64 mem)
 }
 
 
-/* Same as concretizeMem but with all memory */
+/* Same as concretizeMem but with all address memory */
 void SymbolicEngine::concretizeAllMem(void)
 {
   this->memoryReference.clear();

@@ -26,11 +26,7 @@ def cafter(instruction):
     if instruction.address == 0x400b69:
         zfId = getRegSymbolicID(IDREF.FLAG.ZF)
         zfExpr = getFullExpression(getSymExpr(zfId).getAst())
-        expr = smt2lib.compound([
-                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.string('SymVar_0'), smt2lib.bv(96, 64))),    # printable char
-                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.string('SymVar_0'), smt2lib.bv(123, 64))),   # printable char
-                 smt2lib.smtAssert(smt2lib.equal(zfExpr, smt2lib.bvtrue()))                           # (assert (= zf true)
-               ])
+        expr = smt2lib.smtAssert(smt2lib.equal(zfExpr, smt2lib.bvtrue()))
         print getModel(expr)
 
     return
