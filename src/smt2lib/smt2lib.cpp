@@ -65,6 +65,10 @@ smtAstAssertNode::~smtAstAssertNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstAssertNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== bvadd
 
@@ -85,6 +89,10 @@ smtAstBvaddNode::smtAstBvaddNode(const smtAstBvaddNode &copy) {
 
 smtAstBvaddNode::~smtAstBvaddNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvaddNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -109,6 +117,11 @@ smtAstBvandNode::~smtAstBvandNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvandNode::accept(Visitor& v){
+    v(*this);
+}
+
+
 
 // ====== bvashr
 
@@ -129,6 +142,10 @@ smtAstBvashrNode::smtAstBvashrNode(const smtAstBvashrNode &copy) {
 
 smtAstBvashrNode::~smtAstBvashrNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvashrNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -153,6 +170,10 @@ smtAstBvlshrNode::~smtAstBvlshrNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvlshrNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== bvmul
 
@@ -173,6 +194,10 @@ smtAstBvmulNode::smtAstBvmulNode(const smtAstBvmulNode &copy) {
 
 smtAstBvmulNode::~smtAstBvmulNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvmulNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -197,6 +222,10 @@ smtAstBvnandNode::~smtAstBvnandNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvnandNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== bvneg
 
@@ -216,6 +245,10 @@ smtAstBvnegNode::smtAstBvnegNode(const smtAstBvnegNode &copy) {
 
 smtAstBvnegNode::~smtAstBvnegNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvnegNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -240,6 +273,10 @@ smtAstBvnorNode::~smtAstBvnorNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvnorNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== bvnot
 
@@ -259,6 +296,10 @@ smtAstBvnotNode::smtAstBvnotNode(const smtAstBvnotNode &copy) {
 
 smtAstBvnotNode::~smtAstBvnotNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvnotNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -281,6 +322,10 @@ smtAstBvorNode::smtAstBvorNode(const smtAstBvorNode &copy) {
 
 smtAstBvorNode::~smtAstBvorNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvorNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -314,6 +359,10 @@ smtAstBvrolNode::~smtAstBvrolNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvrolNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== bvror
 
@@ -345,6 +394,10 @@ smtAstBvrorNode::~smtAstBvrorNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvrorNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== bvsdiv
 
@@ -365,6 +418,10 @@ smtAstBvsdivNode::smtAstBvsdivNode(const smtAstBvsdivNode &copy) {
 
 smtAstBvsdivNode::~smtAstBvsdivNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvsdivNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -389,6 +446,10 @@ smtAstBvsgeNode::~smtAstBvsgeNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvsgeNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== bvsgt
 
@@ -409,6 +470,10 @@ smtAstBvsgtNode::smtAstBvsgtNode(const smtAstBvsgtNode &copy) {
 
 smtAstBvsgtNode::~smtAstBvsgtNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvsgtNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -433,6 +498,10 @@ smtAstBvshlNode::~smtAstBvshlNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvshlNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== bvsle
 
@@ -453,6 +522,10 @@ smtAstBvsleNode::smtAstBvsleNode(const smtAstBvsleNode &copy) {
 
 smtAstBvsleNode::~smtAstBvsleNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvsleNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -477,6 +550,10 @@ smtAstBvsltNode::~smtAstBvsltNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvsltNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== bvsmod
 
@@ -497,6 +574,10 @@ smtAstBvsmodNode::smtAstBvsmodNode(const smtAstBvsmodNode &copy) {
 
 smtAstBvsmodNode::~smtAstBvsmodNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvsmodNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -521,6 +602,10 @@ smtAstBvsremNode::~smtAstBvsremNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvsremNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== bvsub
 
@@ -541,6 +626,10 @@ smtAstBvsubNode::smtAstBvsubNode(const smtAstBvsubNode &copy) {
 
 smtAstBvsubNode::~smtAstBvsubNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvsubNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -565,6 +654,10 @@ smtAstBvudivNode::~smtAstBvudivNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvudivNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== bvuge
 
@@ -585,6 +678,10 @@ smtAstBvugeNode::smtAstBvugeNode(const smtAstBvugeNode &copy) {
 
 smtAstBvugeNode::~smtAstBvugeNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvugeNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -609,6 +706,10 @@ smtAstBvugtNode::~smtAstBvugtNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvugtNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== bvule
 
@@ -629,6 +730,10 @@ smtAstBvuleNode::smtAstBvuleNode(const smtAstBvuleNode &copy) {
 
 smtAstBvuleNode::~smtAstBvuleNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvuleNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -653,6 +758,10 @@ smtAstBvultNode::~smtAstBvultNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvultNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== bvurem
 
@@ -673,6 +782,10 @@ smtAstBvuremNode::smtAstBvuremNode(const smtAstBvuremNode &copy) {
 
 smtAstBvuremNode::~smtAstBvuremNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvuremNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -697,6 +810,10 @@ smtAstBvxnorNode::~smtAstBvxnorNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvxnorNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== bvxor
 
@@ -717,6 +834,10 @@ smtAstBvxorNode::smtAstBvxorNode(const smtAstBvxorNode &copy) {
 
 smtAstBvxorNode::~smtAstBvxorNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstBvxorNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -741,6 +862,10 @@ smtAstBvNode::~smtAstBvNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstBvNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== compound
 
@@ -762,6 +887,10 @@ smtAstCompoundNode::smtAstCompoundNode(const smtAstCompoundNode &copy) {
 
 smtAstCompoundNode::~smtAstCompoundNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstCompoundNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -811,6 +940,10 @@ smtAstConcatNode::~smtAstConcatNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstConcatNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== Decimal node
 
@@ -836,6 +969,10 @@ uint64 smtAstDecimalNode::getValue(void) {
   return this->value;
 }
 
+void smtAstDecimalNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== Declare node
 
@@ -858,6 +995,10 @@ smtAstDeclareNode::~smtAstDeclareNode() {
   freeAllNodes(this->childs);
 }
 
+void smtAstDeclareNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== equal
 
@@ -878,6 +1019,10 @@ smtAstEqualNode::smtAstEqualNode(const smtAstEqualNode &copy) {
 
 smtAstEqualNode::~smtAstEqualNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstEqualNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -903,6 +1048,10 @@ smtAstExtractNode::~smtAstExtractNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstExtractNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== ite
 
@@ -924,6 +1073,10 @@ smtAstIteNode::smtAstIteNode(const smtAstIteNode &copy) {
 
 smtAstIteNode::~smtAstIteNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstIteNode::accept(Visitor& v){
+    v(*this);
 }
 
 
@@ -951,6 +1104,10 @@ uint64 smtAstReferenceNode::getValue(void) {
   return this->value;
 }
 
+void smtAstReferenceNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== String node
 
@@ -976,6 +1133,10 @@ std::string smtAstStringNode::getValue(void) {
   return this->value;
 }
 
+void smtAstStringNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== sx
 
@@ -998,6 +1159,10 @@ smtAstSxNode::~smtAstSxNode(){
   freeAllNodes(this->childs);
 }
 
+void smtAstSxNode::accept(Visitor& v){
+    v(*this);
+}
+
 
 // ====== zx
 
@@ -1018,6 +1183,10 @@ smtAstZxNode::smtAstZxNode(const smtAstZxNode &copy) {
 
 smtAstZxNode::~smtAstZxNode(){
   freeAllNodes(this->childs);
+}
+
+void smtAstZxNode::accept(Visitor& v){
+    v(*this);
 }
 
 
