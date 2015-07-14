@@ -14,8 +14,6 @@ def csym(instruction):
 
 def cafter(instruction):
 
-    print '%#x: %s' %(instruction.address, instruction.assembly)
-
     # [R:1]  0x400798: movsx eax, byte ptr [rcx+rax*1]  R:0x7fffb63d610a: 41 (0x41)
     # [W:8]  0x40079c: mov qword ptr [rbp-0x50], rax    W:0x7fffb63d52b0: 41 00 00 00 00 00 00 00 (0x41)
     # [R:8]  0x400891: mov rax, qword ptr [rbp-0x50]    R:0x7fffb63d52b0: 41 00 00 00 00 00 00 00 (0x41)
