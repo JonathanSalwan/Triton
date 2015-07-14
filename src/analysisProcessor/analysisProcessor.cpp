@@ -773,7 +773,7 @@ void AnalysisProcessor::disableSnapshot(void)
 }
 
 
-bool AnalysisProcessor::isSnapshotEnable(void)
+bool AnalysisProcessor::isSnapshotEnabled(void)
 {
   if (this->snapshotEngine.isLocked())
     return false;

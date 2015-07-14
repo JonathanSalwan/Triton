@@ -689,10 +689,10 @@ static PyObject *Triton_isRegTainted(PyObject *self, PyObject *reg)
 }
 
 
-static char Triton_isSnapshotEnable_doc[] = "Returns true if the snapshot is enable";
-static PyObject *Triton_isSnapshotEnable(PyObject *self, PyObject *noarg)
+static char Triton_isSnapshotEnabled_doc[] = "Returns true if the snapshot is enabled";
+static PyObject *Triton_isSnapshotEnabled(PyObject *self, PyObject *noarg)
 {
-  if (ap.isSnapshotEnable() == true)
+  if (ap.isSnapshotEnabled() == true)
     return Py_True;
   return Py_False;
 }
@@ -1102,7 +1102,7 @@ PyMethodDef tritonCallbacks[] = {
   {"getSyscallReturn",          Triton_getSyscallReturn,          METH_O,       Triton_getSyscallReturn_doc},
   {"isMemTainted",              Triton_isMemTainted,              METH_O,       Triton_isMemTainted_doc},
   {"isRegTainted",              Triton_isRegTainted,              METH_O,       Triton_isRegTainted_doc},
-  {"isSnapshotEnable",          Triton_isSnapshotEnable,          METH_NOARGS,  Triton_isSnapshotEnable_doc},
+  {"isSnapshotEnabled",          Triton_isSnapshotEnabled,          METH_NOARGS,  Triton_isSnapshotEnabled_doc},
   {"opcodeToString",            Triton_opcodeToString,            METH_O,       Triton_opcodeToString_doc},
   {"restoreSnapshot",           Triton_restoreSnapshot,           METH_NOARGS,  Triton_restoreSnapshot_doc},
   {"runProgram",                Triton_runProgram,                METH_NOARGS,  Triton_runProgram_doc},

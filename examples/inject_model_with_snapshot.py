@@ -64,7 +64,7 @@ def cbefore(instruction):
 
     # Prologue of the function
     global snapshot
-    if instruction.address == 0x40056d and isSnapshotEnable() == False:
+    if instruction.address == 0x40056d and isSnapshotEnabled() == False:
         takeSnapshot()
         print '[+] Take a snapshot at the prologue of the function'
         return

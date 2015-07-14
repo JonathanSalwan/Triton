@@ -215,7 +215,7 @@ class AnalysisProcessor {
     void            takeSnapshot(void);
     void            restoreSnapshot(void);
     void            disableSnapshot(void);
-    bool            isSnapshotEnable(void);
+    bool            isSnapshotEnabled(void);
 
 
   private:
