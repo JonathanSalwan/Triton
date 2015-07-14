@@ -93,12 +93,17 @@ void check(void)
   asm("idiv ecx");
   asm("idiv rcx");
 
+  asm("mov rax, 1");
   asm("mov rcx, 2");
   asm("mov rdx, 3");
+  asm("mov rsi, 4");
+
+  asm("imul sil");
   asm("imul cx");
-  asm("imul ecx, edx");
+  asm("imul ecx");
   asm("imul ecx, 1");
-  asm("imul rcx, rcx, 4");
+  asm("imul ecx, edx");
+  asm("imul rdx, rcx, 4");
 
   asm("mul cl");
   asm("mul cx");

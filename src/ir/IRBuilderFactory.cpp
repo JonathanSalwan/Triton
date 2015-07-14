@@ -550,8 +550,11 @@ IRBuilder *createIRBuilder(INS ins) {
       // std::cout << "[DEBUG] Unknown kind of operand: " << INS_Disassemble(ins) << std::endl;
       continue;
     }
-
-    ir->addOperand(TritonOperand(type, val, size, displacement, baseReg, indexReg, memoryScale));
+    TritonOperand op = TritonOperand(type, val, size, displacement, baseReg, indexReg, memoryScale);
+    op.setReadAndWrite(INS_OperandReadAndWritten(ins, i));
+    op.setReadOnly(INS_OperandReadOnly(ins, i));
+    op.setWriteOnly(INS_OperandWrittenOnly(ins, i));
+    ir->addOperand(op);
   }
 
   // Setup the opcode in the IRbuilder
