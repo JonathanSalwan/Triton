@@ -4,6 +4,14 @@ from triton import *
 
 # $ triton ./examples/crackme_xor_obfu.py ./samples/crackmes/crackme_xor_obfu A
 
+
+def csym(instruction):
+    if instruction.address == 0x400891:
+        concretizeAllReg()
+        concretizeAllMem()
+    return
+
+
 def cafter(instruction):
 
     print '%#x: %s' %(instruction.address, instruction.assembly)
@@ -31,6 +39,7 @@ def cafter(instruction):
 if __name__ == '__main__':
     startAnalysisFromAddr(0x0000000000400891)
     stopAnalysisFromAddr(0x0000000000400b76)
+    addCallback(csym,   IDREF.CALLBACK.BEFORE_SYMPROC)
     addCallback(cafter, IDREF.CALLBACK.AFTER)
     runProgram()
 

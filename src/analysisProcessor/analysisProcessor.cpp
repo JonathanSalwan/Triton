@@ -395,6 +395,17 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicFlagOperand(uint64 
 }
 
 
+void AnalysisProcessor::concretizeAllReg(void)
+{
+  this->symEngine.concretizeAllReg();
+}
+
+
+void AnalysisProcessor::concretizeAllMem(void)
+{
+  this->symEngine.concretizeAllMem();
+}
+
 
 void AnalysisProcessor::concretizeReg(uint64 regID)
 {

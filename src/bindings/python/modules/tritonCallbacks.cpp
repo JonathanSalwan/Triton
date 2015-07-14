@@ -135,6 +135,22 @@ static PyObject *Triton_checkWriteAccess(PyObject *self, PyObject *addr)
 }
 
 
+static char Triton_concretizeAllMem_doc[] = "Concretize all memory reference";
+static PyObject *Triton_concretizeAllMem(PyObject *self, PyObject *noarg)
+{
+  ap.concretizeAllMem();
+  return Py_True;
+}
+
+
+static char Triton_concretizeAllReg_doc[] = "Concretize all registers reference";
+static PyObject *Triton_concretizeAllReg(PyObject *self, PyObject *noarg)
+{
+  ap.concretizeAllReg();
+  return Py_True;
+}
+
+
 static char Triton_concretizeMem_doc[] = "Concretize a memory reference";
 static PyObject *Triton_concretizeMem(PyObject *self, PyObject *addr)
 {
@@ -1074,6 +1090,8 @@ PyMethodDef tritonCallbacks[] = {
   {"addCallback",               Triton_addCallback,               METH_VARARGS, Triton_addCallback_doc},
   {"checkReadAccess",           Triton_checkReadAccess,           METH_O,       Triton_checkReadAccess_doc},
   {"checkWriteAccess",          Triton_checkWriteAccess,          METH_O,       Triton_checkWriteAccess_doc},
+  {"concretizeAllMem",          Triton_concretizeAllMem,          METH_NOARGS,  Triton_concretizeAllMem_doc},
+  {"concretizeAllReg",          Triton_concretizeAllReg,          METH_NOARGS,  Triton_concretizeAllReg_doc},
   {"concretizeMem",             Triton_concretizeMem,             METH_O,       Triton_concretizeMem_doc},
   {"concretizeReg",             Triton_concretizeReg,             METH_O,       Triton_concretizeReg_doc},
   {"convertExprToSymVar",       Triton_convertExprToSymVar,       METH_VARARGS, Triton_convertExprToSymVar_doc},

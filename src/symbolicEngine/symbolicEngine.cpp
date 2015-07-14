@@ -72,6 +72,13 @@ void SymbolicEngine::concretizeReg(uint64 regID) {
 }
 
 
+/* Same as concretizeReg but with all registers */
+void SymbolicEngine::concretizeAllReg(void) {
+  for (uint64 i = 0; i < ID_LAST_ITEM; i++)
+    this->symbolicReg[i] = UNSET;
+}
+
+
 /*
  * Concretize a memory. If the memory is not found into the map, the next
  * assignment will be over the concretization. This method must be called
@@ -80,6 +87,13 @@ void SymbolicEngine::concretizeReg(uint64 regID) {
 void SymbolicEngine::concretizeMem(uint64 mem)
 {
   this->memoryReference.erase(mem);
+}
+
+
+/* Same as concretizeMem but with all memory */
+void SymbolicEngine::concretizeAllMem(void)
+{
+  this->memoryReference.clear();
 }
 
 

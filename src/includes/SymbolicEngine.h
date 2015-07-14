@@ -75,6 +75,8 @@ class SymbolicEngine {
     uint64                            getUniqueID();
     void                              addMemoryReference(uint64 mem, uint64 id);
     void                              addPathConstraint(uint64 exprId);
+    void                              concretizeAllMem(void);
+    void                              concretizeAllReg(void);
     void                              concretizeMem(uint64 mem);
     void                              concretizeReg(uint64 regID);
     void                              init(const SymbolicEngine &other);

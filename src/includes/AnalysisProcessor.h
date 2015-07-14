@@ -118,6 +118,8 @@ class AnalysisProcessor {
     smt2lib::smtAstAbstractNode *buildSymbolicFlagOperand(uint64 flagID);
 
     /* Concretize register and memory */
+    void concretizeAllReg(void);
+    void concretizeAllMem(void);
     void concretizeReg(uint64 regID);
     void concretizeMem(uint64 mem);
 
