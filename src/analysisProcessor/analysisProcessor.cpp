@@ -144,24 +144,17 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
    * memory must be assigned to an unique reference.
    */
   while (writeSize){
-    /* Extract each byte if the size > 1 byte (8 bits) */
-    if (writeSize > BYTE_SIZE){
-      tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
-      SymbolicExpression *se = symEngine.newSymbolicExpression(tmp, "byte reference");
-      inst.addExpression(se);
-      /* Assign memory with little endian */
-      this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
-    }
-    /* Otherwise keep the full formula */
-    else {
-      SymbolicExpression *se = symEngine.newSymbolicExpression(expr);
-      inst.addExpression(se);
-      this->symEngine.addMemoryReference(address, se->getID());
-      ret = se;
-    }
+    /* Extract each byte of the memory */
+    tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
+    SymbolicExpression *se = symEngine.newSymbolicExpression(tmp, "byte reference");
+    ret = se;
+    inst.addExpression(se);
+    /* Assign memory with little endian */
+    this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
     writeSize--;
   }
 
+  /* TODO: Must returns a list */
   return ret;
 }
 
@@ -176,24 +169,17 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
    * memory must be assigned to an unique reference.
    */
   while (writeSize){
-    /* Extract each byte if the size > 1 byte (8 bits) */
-    if (writeSize > BYTE_SIZE){
-      tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
-      SymbolicExpression *se = symEngine.newSymbolicExpression(tmp, "byte reference");
-      inst.addExpression(se);
-      /* Assign memory with little endian */
-      this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
-    }
-    /* Otherwise keep the full formula */
-    else {
-      SymbolicExpression *se = symEngine.newSymbolicExpression(expr, comment);
-      inst.addExpression(se);
-      this->symEngine.addMemoryReference(address, se->getID());
-      ret = se;
-    }
+    /* Extract each byte of the memory */
+    tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
+    SymbolicExpression *se = symEngine.newSymbolicExpression(tmp, "byte reference");
+    ret = se;
+    inst.addExpression(se);
+    /* Assign memory with little endian */
+    this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
     writeSize--;
   }
 
+  /* TODO: Must returns a list */
   return ret;
 }
 
