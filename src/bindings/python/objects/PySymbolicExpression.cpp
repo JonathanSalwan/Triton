@@ -71,7 +71,7 @@ PyMethodDef SymbolicExpression_callbacks[] = {
 
 
 PyTypeObject SymbolicExpression_Type = {
-    PyObject_HEAD_INIT(NULL)
+    PyObject_HEAD_INIT(&PyType_Type)
     0,                                          /* ob_size*/
     "SymbolicExpression",                       /* tp_name*/
     sizeof(SymbolicExpression_Object),          /* tp_basicsize*/
