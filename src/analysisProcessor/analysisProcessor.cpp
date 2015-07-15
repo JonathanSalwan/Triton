@@ -256,6 +256,12 @@ std::vector<SymbolicExpression *> AnalysisProcessor::getExpressions(void)
 }
 
 
+std::list<SymbolicExpression *> AnalysisProcessor::getTaintedExpressions(void)
+{
+  return this->symEngine.getTaintedExpressions();
+}
+
+
 smt2lib::smtAstAbstractNode *AnalysisProcessor::getFullExpression(smt2lib::smtAstAbstractNode *node)
 {
   return this->symEngine.getFullExpression(smt2lib::newInstance(node));

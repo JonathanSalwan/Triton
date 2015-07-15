@@ -679,6 +679,27 @@ static PyObject *Triton_getSyscallReturn(PyObject *self, PyObject *std)
 }
 
 
+static char Triton_getTaintedExpressions_doc[] = "Returns a list which contains all tainted symbolic expressions";
+static PyObject *Triton_getTaintedExpressions(PyObject *self, PyObject *noarg)
+{
+  PyObject                                  *ret;
+  std::list<SymbolicExpression *>           exprs;
+  std::list<SymbolicExpression *>::iterator it;
+  uint64                                    index = 0;
+  uint64                                    numberOfExprs = 0;
+
+  exprs = ap.getTaintedExpressions();
+  numberOfExprs = exprs.size();
+  ret = xPyList_New(numberOfExprs);
+  for (it = exprs.begin(); it != exprs.end(); it++) {
+    PyList_SetItem(ret, index, PySymbolicExpression(*it));
+    index++;
+  }
+
+  return ret;
+}
+
+
 static char Triton_isMemTainted_doc[] = "Checks if the memory is tainted";
 static PyObject *Triton_isMemTainted(PyObject *self, PyObject *mem)
 {
@@ -1098,8 +1119,8 @@ PyMethodDef tritonCallbacks[] = {
   {"convertMemToSymVar",        Triton_convertMemToSymVar,        METH_VARARGS, Triton_convertMemToSymVar_doc},
   {"convertRegToSymVar",        Triton_convertRegToSymVar,        METH_VARARGS, Triton_convertRegToSymVar_doc},
   {"disableSnapshot",           Triton_disableSnapshot,           METH_NOARGS,  Triton_disableSnapshot_doc},
-  {"getFullExpression",         Triton_getFullExpression,         METH_O,       Triton_getFullExpression_doc},
   {"getFlagValue",              Triton_getFlagValue,              METH_O,       Triton_getFlagValue_doc},
+  {"getFullExpression",         Triton_getFullExpression,         METH_O,       Triton_getFullExpression_doc},
   {"getMemSymbolicID",          Triton_getMemSymbolicID,          METH_O,       Triton_getMemSymbolicID_doc},
   {"getMemValue",               Triton_getMemValue,               METH_VARARGS, Triton_getMemValue_doc},
   {"getModel",                  Triton_getModel,                  METH_O,       Triton_getModel_doc},
@@ -1118,9 +1139,10 @@ PyMethodDef tritonCallbacks[] = {
   {"getSyscallArgument",        Triton_getSyscallArgument,        METH_VARARGS, Triton_getSyscallArgument_doc},
   {"getSyscallNumber",          Triton_getSyscallNumber,          METH_O,       Triton_getSyscallNumber_doc},
   {"getSyscallReturn",          Triton_getSyscallReturn,          METH_O,       Triton_getSyscallReturn_doc},
+  {"getTaintedExpressions",     Triton_getTaintedExpressions,     METH_NOARGS,  Triton_getTaintedExpressions_doc},
   {"isMemTainted",              Triton_isMemTainted,              METH_O,       Triton_isMemTainted_doc},
   {"isRegTainted",              Triton_isRegTainted,              METH_O,       Triton_isRegTainted_doc},
-  {"isSnapshotEnabled",          Triton_isSnapshotEnabled,          METH_NOARGS,  Triton_isSnapshotEnabled_doc},
+  {"isSnapshotEnabled",         Triton_isSnapshotEnabled,         METH_NOARGS,  Triton_isSnapshotEnabled_doc},
   {"opcodeToString",            Triton_opcodeToString,            METH_O,       Triton_opcodeToString_doc},
   {"restoreSnapshot",           Triton_restoreSnapshot,           METH_NOARGS,  Triton_restoreSnapshot_doc},
   {"runProgram",                Triton_runProgram,                METH_NOARGS,  Triton_runProgram_doc},

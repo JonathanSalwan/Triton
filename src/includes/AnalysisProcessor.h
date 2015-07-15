@@ -88,6 +88,9 @@ class AnalysisProcessor {
     /* Returns all symbolic expressions */
     std::vector<SymbolicExpression *> getExpressions(void);
 
+    /* Returns a list which contains all tainted expressions */
+    std::list<SymbolicExpression *> getTaintedExpressions(void);
+
     /* Returns the full symbolic expression backtracked */
     smt2lib::smtAstAbstractNode *getFullExpression(smt2lib::smtAstAbstractNode *node);
 
