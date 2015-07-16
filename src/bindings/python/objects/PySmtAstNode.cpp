@@ -82,7 +82,7 @@ static PyObject *SmtAstNode_setChild(PyObject *self, PyObject *args)
 
   dst->getChilds()[i] = src;
 
-  return Py_True;
+  Py_RETURN_TRUE;
 }
 
 

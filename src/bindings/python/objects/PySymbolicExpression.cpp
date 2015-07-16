@@ -43,13 +43,14 @@ static PyObject *SymbolicExpression_getId(PyObject *self, PyObject *noarg)
 }
 
 
+
 static char SymbolicExpression_isTainted_doc[] = "Returns true if the expression is tainted";
 static PyObject *SymbolicExpression_isTainted(PyObject *self, PyObject *noarg)
 {
   SymbolicExpression *expression = PySymbolicExpression_AsSymbolicExpression(self);
   if (expression->isTainted == true)
-    return Py_True;
-  return Py_False;
+    Py_RETURN_TRUE;
+  Py_RETURN_FALSE;
 }
 
 
