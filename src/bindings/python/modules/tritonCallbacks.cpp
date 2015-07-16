@@ -114,9 +114,9 @@ static PyObject *Triton_checkReadAccess(PyObject *self, PyObject *addr)
 
   ad = PyLong_AsLong(addr);
   if (PIN_CheckReadAccess(reinterpret_cast<void*>(ad)) == true)
-    return Py_True;
+    Py_RETURN_TRUE;
 
-  return Py_False;
+  Py_RETURN_FALSE;
 }
 
 
@@ -130,9 +130,9 @@ static PyObject *Triton_checkWriteAccess(PyObject *self, PyObject *addr)
 
   ad = PyLong_AsLong(addr);
   if (PIN_CheckWriteAccess(reinterpret_cast<void*>(ad)) == true)
-    return Py_True;
+    Py_RETURN_TRUE;
 
-  return Py_False;
+  Py_RETURN_FALSE;
 }
 
 
@@ -140,7 +140,7 @@ static char Triton_concretizeAllMem_doc[] = "Concretize all memory reference";
 static PyObject *Triton_concretizeAllMem(PyObject *self, PyObject *noarg)
 {
   ap.concretizeAllMem();
-  return Py_True;
+  Py_RETURN_TRUE;
 }
 
 
@@ -148,7 +148,7 @@ static char Triton_concretizeAllReg_doc[] = "Concretize all registers reference"
 static PyObject *Triton_concretizeAllReg(PyObject *self, PyObject *noarg)
 {
   ap.concretizeAllReg();
-  return Py_True;
+  Py_RETURN_TRUE;
 }
 
 
@@ -727,9 +727,9 @@ static PyObject *Triton_isMemTainted(PyObject *self, PyObject *mem)
     return PyErr_Format(PyExc_TypeError, "isMemTainted(): expected an address (integer) as argument");
 
   if (ap.isMemTainted(PyInt_AsLong(mem)) == true)
-    return Py_True;
+    Py_RETURN_TRUE;
 
-  return Py_False;
+  Py_RETURN_FALSE;
 }
 
 
@@ -740,9 +740,9 @@ static PyObject *Triton_isRegTainted(PyObject *self, PyObject *reg)
     return PyErr_Format(PyExc_TypeError, "isRegTainted(): expected a register id (integer) as argument");
 
   if (ap.isRegTainted(PyInt_AsLong(reg)) == true)
-    return Py_True;
+    Py_RETURN_TRUE;
 
-  return Py_False;
+  Py_RETURN_FALSE;
 }
 
 
@@ -750,8 +750,8 @@ static char Triton_isSnapshotEnabled_doc[] = "Returns true if the snapshot is en
 static PyObject *Triton_isSnapshotEnabled(PyObject *self, PyObject *noarg)
 {
   if (ap.isSnapshotEnabled() == true)
-    return Py_True;
-  return Py_False;
+    Py_RETURN_TRUE;
+  Py_RETURN_FALSE;
 }
 
 
