@@ -1,5 +1,5 @@
 /*
- * From https://sysexit.wordpress.com/2013/09/04/a-black-box-approach-against-obfuscated-regular-expressions-using-pin/
+ * From: http://doar-e.github.io/blog/2013/08/24/regular-expressions-obfuscation-under-the-microscope
  */
 
 #include <stdio.h>
