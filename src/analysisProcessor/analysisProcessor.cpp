@@ -790,7 +790,7 @@ uint512 AnalysisProcessor::evaluate(smt2lib::smtAstAbstractNode *node)
 {
   Z3ast z3ast{};
   Z3Result result = z3ast.eval(*node);
-  uint512 nbResult(result.getStringValue());
+  uint512 nbResult{result.getStringValue()};
   return nbResult;
 }
 
