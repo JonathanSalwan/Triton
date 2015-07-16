@@ -14,9 +14,9 @@ class Z3Result {
     void setExpr(z3::expr& expr);
     void printExpr(void) const;
 
-    z3::expr& getExpr();
+    z3::expr& getExpr(void);
     std::string getStringValue(void) const;
-    z3::context& getContext();
+    z3::context& getContext(void);
     uint64 getUint64Value(void) const;
 
 
