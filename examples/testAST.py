@@ -29,9 +29,9 @@ def cafter(instruction):
                         print "[%sOK%s] %#x: %s" %(GREEN, ENDC, instruction.address, instruction.assembly)
                     else:
                         print "[%sKO%s] %#x: %s" %(RED, ENDC, instruction.address, instruction.assembly)
-                        print "    AST Value      :", hex(valAST)
-                        print "    Expected Value :", hex(val)
-                        print "    Expression     :", getSymExpr(sid).getAst() # print short expression (with references)
+                        print "    AST Value      : %016x" %(valAST)
+                        print "    Expected Value : %016x" %(val)
+                        print "    Expression     : %s" %(getSymExpr(sid).getAst()) # print short expression (with references)
     return
 
 if __name__ == '__main__':

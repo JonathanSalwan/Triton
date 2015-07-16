@@ -11,7 +11,7 @@ if __name__ == '__main__':
     taintRegFromAddr(0x40058e, [IDREF.REG.RAX, IDREF.REG.RBX])
 
     # Untaint the RCX register when the address 0x40058e is executed
-    untaintRegFromAddr(0x40058e, [IDREF.REG.RCX])
+    untaintRegFromAddr(0x40755f, [IDREF.REG.RCX])
 
     # Run the instrumentation - Never returns
     runProgram()
