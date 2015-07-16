@@ -22,8 +22,10 @@
 
 PyObject *PyInstruction(Inst *inst)
 {
-  if (inst == nullptr)
+  if (inst == nullptr) {
+    Py_INCREF(Py_None);
     return Py_None;
+  }
 
   /* Create the class dictionary */
   PyObject *dictInstClass = xPyDict_New();
@@ -100,8 +102,10 @@ PyObject *PyInstruction(Inst *inst)
 
 PyObject *PyInstruction(IRBuilder *irb)
 {
-  if (irb == nullptr)
+  if (irb == nullptr) {
+    Py_INCREF(Py_None);
     return Py_None;
+  }
 
   PyObject *dictInstClass = xPyDict_New();
   PyDict_SetItemString(dictInstClass, "address",        PyLong_FromLong(irb->getAddress()));

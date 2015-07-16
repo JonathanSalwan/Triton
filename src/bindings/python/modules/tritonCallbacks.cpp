@@ -99,6 +99,7 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args)
   else
     return PyErr_Format(PyExc_TypeError, "addCallback(): expected an IDREF.CALLBACK as second argument");
 
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -161,6 +162,7 @@ static PyObject *Triton_concretizeMem(PyObject *self, PyObject *addr)
 
   ad = PyLong_AsLong(addr);
   ap.concretizeMem(ad);
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -175,6 +177,7 @@ static PyObject *Triton_concretizeReg(PyObject *self, PyObject *regId)
 
   reg = PyLong_AsLong(regId);
   ap.concretizeReg(reg);
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -273,6 +276,7 @@ static char Triton_disableSnapshot_doc[] = "Disables the snapshot engine";
 static PyObject *Triton_disableSnapshot(PyObject *self, PyObject *noarg)
 {
   ap.disableSnapshot();
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -300,8 +304,10 @@ static PyObject *Triton_getFullExpression(PyObject *self, PyObject *node)
     return PyErr_Format(PyExc_TypeError, "getFullSymExpr(): expected an SmtAstNode node as argument");
 
   fullExpr = ap.getFullExpression(PySmtAstNode_AsSmtAstNode(node));
-  if (fullExpr == nullptr)
+  if (fullExpr == nullptr) {
+    Py_INCREF(Py_None);
     return Py_None;
+  }
 
   return PySmtAstNode(fullExpr);
 }
@@ -763,6 +769,7 @@ static char Triton_restoreSnapshot_doc[] = "Restores the last snapshot";
 static PyObject *Triton_restoreSnapshot(PyObject *self, PyObject *noarg)
 {
   ap.restoreSnapshot();
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -772,6 +779,7 @@ static PyObject *Triton_runProgram(PyObject *self, PyObject *noarg)
 {
   // Never returns - Rock 'n roll baby \o/
   PIN_StartProgram();
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -810,6 +818,7 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args)
   va = PyLongObjectToUint128(value);
   ap.setMemValue(ad, ws, va);
 
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -839,6 +848,7 @@ static PyObject *Triton_setRegValue(PyObject *self, PyObject *args)
   else
     ap.setRegisterValue(tr, va);
 
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -851,6 +861,7 @@ static PyObject *Triton_startAnalysisFromSymbol(PyObject *self, PyObject *name)
     return PyErr_Format(PyExc_TypeError, "startAnalysisFromSymbol(): expected a string as argument");
 
   PyTritonOptions::startAnalysisFromSymbol = PyString_AsString(name);
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -862,6 +873,7 @@ static PyObject *Triton_startAnalysisFromAddr(PyObject *self, PyObject *addr)
     return PyErr_Format(PyExc_TypeError, "startAnalysisFromAddr(): expected an address (integer) as argument");
 
   PyTritonOptions::startAnalysisFromAddr.insert(PyLong_AsLong(addr));
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -873,6 +885,7 @@ static PyObject *Triton_startAnalysisFromOffset(PyObject *self, PyObject *offset
     return PyErr_Format(PyExc_TypeError, "startAnalysisFromOffset(): expected an offset (integer) as argument");
 
   PyTritonOptions::startAnalysisFromOffset.insert(PyLong_AsLong(offset));
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -884,6 +897,7 @@ static PyObject *Triton_stopAnalysisFromAddr(PyObject *self, PyObject *addr)
     return PyErr_Format(PyExc_TypeError, "stopAnalysisFromAddr(): expected an address (integer) as argument");
 
   PyTritonOptions::stopAnalysisFromAddr.insert(PyLong_AsLong(addr));
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -895,6 +909,7 @@ static PyObject *Triton_stopAnalysisFromOffset(PyObject *self, PyObject *offset)
     return PyErr_Format(PyExc_TypeError, "stopAnalysisFromOffset(): expected an offset (integer) as argument");
 
   PyTritonOptions::stopAnalysisFromOffset.insert(PyLong_AsLong(offset));
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -937,6 +952,7 @@ static PyObject *Triton_taintMem(PyObject *self, PyObject *mem)
     return PyErr_Format(PyExc_TypeError, "TaintMem(): expected a memory address (integer) as argument");
 
   ap.taintMem(PyInt_AsLong(mem));
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -971,6 +987,7 @@ static PyObject *Triton_taintMemFromAddr(PyObject *self, PyObject *args)
 
   /* Update taint configuration */
   PyTritonOptions::taintMemFromAddr.insert(std::pair<uint64, std::list<uint64>>(PyLong_AsLong(addr), memsList));
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -982,6 +999,7 @@ static PyObject *Triton_taintReg(PyObject *self, PyObject *reg)
     return PyErr_Format(PyExc_TypeError, "taintReg(): expected a register id (integer) as argument");
 
   ap.taintReg(PyInt_AsLong(reg));
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -1016,6 +1034,7 @@ static PyObject *Triton_taintRegFromAddr(PyObject *self, PyObject *args)
 
   /* Update taint configuration */
   PyTritonOptions::taintRegFromAddr.insert(std::pair<uint64, std::list<uint64>>(PyLong_AsLong(addr), regsList));
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -1024,6 +1043,7 @@ static char Triton_takeSnapshot_doc[] = "Takes a snapshot of the registers state
 static PyObject *Triton_takeSnapshot(PyObject *self, PyObject *noarg)
 {
   ap.takeSnapshot();
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -1035,6 +1055,7 @@ static PyObject *Triton_untaintMem(PyObject *self, PyObject *mem)
     return PyErr_Format(PyExc_TypeError, "untaintMem(): expected a memory address (integer) as argument");
 
   ap.untaintMem(PyInt_AsLong(mem));
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -1070,6 +1091,7 @@ static PyObject *Triton_untaintMemFromAddr(PyObject *self, PyObject *args)
   /* Update taint configuration */
   PyTritonOptions::untaintMemFromAddr.insert(std::pair<uint64, std::list<uint64>>(PyLong_AsLong(addr), memsList));
 
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -1082,6 +1104,7 @@ static PyObject *Triton_untaintReg(PyObject *self, PyObject *reg)
     return PyErr_Format(PyExc_TypeError, "untaintReg(): expected a register id (integer) as argument");
 
   ap.untaintReg(PyInt_AsLong(reg));
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -1117,6 +1140,7 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
   /* Update taint configuration */
   PyTritonOptions::untaintRegFromAddr.insert(std::pair<uint64, std::list<uint64>>(PyLong_AsLong(addr), regsList));
 
+  Py_INCREF(Py_None);
   return Py_None;
 }
 

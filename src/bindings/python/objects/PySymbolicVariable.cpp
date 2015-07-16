@@ -25,6 +25,7 @@ static PyObject *SymbolicVariable_getComment(PyObject *self, PyObject *noarg)
   SymbolicVariable *variable = PySymbolicVariable_AsSymbolicVariable(self);
   if (variable->getSymVarComment().empty() == false)
     return PyString_FromFormat("%s", variable->getSymVarComment().c_str());
+  Py_INCREF(Py_None);
   return Py_None;
 }
 

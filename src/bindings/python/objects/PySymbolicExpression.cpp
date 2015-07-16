@@ -31,6 +31,7 @@ static PyObject *SymbolicExpression_getComment(PyObject *self, PyObject *noarg)
   SymbolicExpression *expression = PySymbolicExpression_AsSymbolicExpression(self);
   if (expression->getComment().empty() == false)
     return PyString_FromFormat("%s", expression->getComment().c_str());
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
