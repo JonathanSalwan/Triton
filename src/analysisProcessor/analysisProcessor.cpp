@@ -786,7 +786,7 @@ bool AnalysisProcessor::isSnapshotEnabled(void)
 // Evaluator
 // ---------
 
-uint512 AnalysisProcessor::evaluate(smt2lib::smtAstAbstractNode *node)
+uint512 AnalysisProcessor::evaluateAST(smt2lib::smtAstAbstractNode *node)
 {
   Z3ast z3ast{};
   Z3Result result = z3ast.eval(*node);

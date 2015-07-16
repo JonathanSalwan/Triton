@@ -227,7 +227,7 @@ class AnalysisProcessor {
     * Convert the SMT AST to a Z3 ast and evaluate it
     * ------------------------------------------------
     */
-    uint512 evaluate(smt2lib::smtAstAbstractNode *node);
+    uint512 evaluateAST(smt2lib::smtAstAbstractNode *node);
 
 
   private:

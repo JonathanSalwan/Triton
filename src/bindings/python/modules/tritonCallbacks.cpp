@@ -285,7 +285,7 @@ static PyObject *Triton_evaluateAST(PyObject *self, PyObject *smtAST)
   if (!PySmtAstNode_Check(smtAST))
     return PyErr_Format(PyExc_TypeError, "evaluateAST(): expected an SmtAstNode as argument");
 
-  value = ap.evaluate(PySmtAstNode_AsSmtAstNode(smtAST));
+  value = ap.evaluateAST(PySmtAstNode_AsSmtAstNode(smtAST));
 
   return uint512ToPyLongObject(value);
 }
