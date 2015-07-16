@@ -8,8 +8,7 @@ AnalysisProcessor::AnalysisProcessor():
   taintEngine(),
   snapshotEngine(),
   stats(),
-  trace(),
-  z3ast()
+  trace()
 {
   this->currentCtxH = nullptr;
 }
@@ -789,8 +788,8 @@ bool AnalysisProcessor::isSnapshotEnabled(void)
 
 uint512 AnalysisProcessor::evaluate(smt2lib::smtAstAbstractNode *node)
 {
-  Z3Result result = this->z3ast.eval(*node);
-  //result.printExpr();
+  Z3ast z3ast{};
+  Z3Result result = z3ast.eval(*node);
   uint512 nbResult(result.getStringValue());
   return nbResult;
 }
