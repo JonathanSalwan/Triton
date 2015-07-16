@@ -26,7 +26,6 @@ smtAstAbstractNode::smtAstAbstractNode(const smtAstAbstractNode &copy) {
 
 smtAstAbstractNode::~smtAstAbstractNode() {
   freeAllNodes(this->childs);
-  this->childs.clear();
 }
 
 
@@ -1561,12 +1560,13 @@ namespace smt2lib {
 namespace smt2lib {
 
   /* Free all childs node */
-  void freeAllNodes(std::vector<smtAstAbstractNode *> childs) {
+  void freeAllNodes(std::vector<smtAstAbstractNode *> &childs) {
     uint64 index = 0;
-    while (index != childs.size()){
+    while (index != childs.size()) {
       delete childs[index];
       index++;
     }
+    childs.clear();
   }
 
 }

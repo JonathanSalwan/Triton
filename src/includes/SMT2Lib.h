@@ -74,7 +74,7 @@ namespace smt2lib {
       smtAstAbstractNode(enum kind_e kind);
       smtAstAbstractNode(const smtAstAbstractNode &copy);
       smtAstAbstractNode();
-      virtual ~smtAstAbstractNode();
+      virtual ~smtAstAbstractNode() = 0;
 
       enum kind_e                         getKind(void);
       std::vector<smtAstAbstractNode *>   &getChilds(void);
@@ -612,7 +612,7 @@ namespace smt2lib {
 
 
   /* Utils */
-  void freeAllNodes(std::vector<smtAstAbstractNode *> childs);
+  void freeAllNodes(std::vector<smtAstAbstractNode *> &childs);
 
 
   /* Node builders */
