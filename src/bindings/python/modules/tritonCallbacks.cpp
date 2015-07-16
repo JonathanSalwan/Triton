@@ -277,6 +277,20 @@ static PyObject *Triton_disableSnapshot(PyObject *self, PyObject *noarg)
 }
 
 
+static char Triton_evaluateAST_doc[] = "Evaluate an AST";
+static PyObject *Triton_evaluateAST(PyObject *self, PyObject *smtAST)
+{
+  uint512 value = 0;
+
+  if (!PySmtAstNode_Check(smtAST))
+    return PyErr_Format(PyExc_TypeError, "evaluateAST(): expected an SmtAstNode as argument");
+
+  value = ap.evaluate(PySmtAstNode_AsSmtAstNode(smtAST));
+
+  return uint512ToPyLongObject(value);
+}
+
+
 static char Triton_getFullExpression_doc[] = "Returns the full symbolic expression backtracked";
 static PyObject *Triton_getFullExpression(PyObject *self, PyObject *node)
 {
@@ -1106,18 +1120,6 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
   return Py_None;
 }
 
-static char Triton_evaluateAST_doc[] = "Evaluate an ast";
-static PyObject *Triton_evaluateAST(PyObject *self, PyObject *smtAST)
-{
-  uint512 value;
-
-  if (!PySmtAstNode_Check(smtAST))
-    return PyErr_Format(PyExc_TypeError, "evaluateAST(): expected an SmtAST as argument");
-
-  value = ap.evaluate(PySmtAstNode_AsSmtAstNode(smtAST));
-
-  return uint512ToPyLongObject(value);
-}
 
 PyMethodDef tritonCallbacks[] = {
   {"addCallback",               Triton_addCallback,               METH_VARARGS, Triton_addCallback_doc},

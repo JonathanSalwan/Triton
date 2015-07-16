@@ -144,7 +144,7 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
    * As the x86's memory can be accessed without alignment, each byte of the
    * memory must be assigned to an unique reference.
    */
-  while (writeSize){
+  while (writeSize) {
     /* Extract each byte of the memory */
     tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
     SymbolicExpression *se = symEngine.newSymbolicExpression(tmp, "byte reference");
@@ -169,7 +169,7 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
    * As the x86's memory can be accessed without alignment, each byte of the
    * memory must be assigned to an unique reference.
    */
-  while (writeSize){
+  while (writeSize) {
     /* Extract each byte of the memory */
     tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
     SymbolicExpression *se = symEngine.newSymbolicExpression(tmp, "byte reference");
