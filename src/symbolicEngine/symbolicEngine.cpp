@@ -207,6 +207,20 @@ smt2lib::smtAstAbstractNode *SymbolicEngine::getFullExpression(smt2lib::smtAstAb
 }
 
 
+/* Returns a list which contains all tainted expressions */
+std::list<SymbolicExpression *> SymbolicEngine::getTaintedExpressions(void)
+{
+  uint64 index = 0;
+  std::list<SymbolicExpression *> taintedExprs;
+
+  for ( ; index < this->symbolicExpressions.size(); index++) {
+    if (symbolicExpressions[index]->isTainted == true)
+      taintedExprs.push_back(symbolicExpressions[index]);
+  }
+  return taintedExprs;
+}
+
+
 /* Returns the list of the symbolic variables declared in the trace */
 std::string SymbolicEngine::getVariablesDeclaration(void)
 {

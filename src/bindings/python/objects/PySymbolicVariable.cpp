@@ -89,7 +89,7 @@ PyMethodDef SymbolicVariable_callbacks[] = {
 
 
 PyTypeObject SymbolicVariable_Type = {
-    PyObject_HEAD_INIT(NULL)
+    PyObject_HEAD_INIT(&PyType_Type)
     0,                                          /* ob_size*/
     "SymbolicVariable",                         /* tp_name*/
     sizeof(SymbolicVariable_Object),            /* tp_basicsize*/
