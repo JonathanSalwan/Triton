@@ -6,5 +6,6 @@
 
 uint128   PyLongObjectToUint128(PyObject *obj);
 PyObject      *uint128ToPyLongObject(uint128 value);
+PyObject      *uint512ToPyLongObject(uint512 value);
 
 #endif     /* !PYTHONUTILS_H */

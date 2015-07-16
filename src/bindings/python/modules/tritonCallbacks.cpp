@@ -1106,6 +1106,18 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args)
   return Py_None;
 }
 
+static char Triton_evaluateAST_doc[] = "Evaluate an ast";
+static PyObject *Triton_evaluateAST(PyObject *self, PyObject *smtAST)
+{
+  uint512 value;
+
+  if (!PySmtAstNode_Check(smtAST))
+    return PyErr_Format(PyExc_TypeError, "evaluateAST(): expected an SmtAST as argument");
+
+  value = ap.evaluate(PySmtAstNode_AsSmtAstNode(smtAST));
+
+  return uint512ToPyLongObject(value);
+}
 
 PyMethodDef tritonCallbacks[] = {
   {"addCallback",               Triton_addCallback,               METH_VARARGS, Triton_addCallback_doc},
@@ -1119,6 +1131,7 @@ PyMethodDef tritonCallbacks[] = {
   {"convertMemToSymVar",        Triton_convertMemToSymVar,        METH_VARARGS, Triton_convertMemToSymVar_doc},
   {"convertRegToSymVar",        Triton_convertRegToSymVar,        METH_VARARGS, Triton_convertRegToSymVar_doc},
   {"disableSnapshot",           Triton_disableSnapshot,           METH_NOARGS,  Triton_disableSnapshot_doc},
+  {"evaluateAST",               Triton_evaluateAST,               METH_O,       Triton_evaluateAST_doc},
   {"getFlagValue",              Triton_getFlagValue,              METH_O,       Triton_getFlagValue_doc},
   {"getFullExpression",         Triton_getFullExpression,         METH_O,       Triton_getFullExpression_doc},
   {"getMemSymbolicID",          Triton_getMemSymbolicID,          METH_O,       Triton_getMemSymbolicID_doc},

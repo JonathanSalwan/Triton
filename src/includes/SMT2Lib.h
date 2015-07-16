@@ -8,7 +8,9 @@
 #include <string>
 #include <vector>
 
+#include "Visitor.h"
 #include "TritonTypes.h"
+
 
 
 namespace smt2lib {
@@ -72,11 +74,13 @@ namespace smt2lib {
       smtAstAbstractNode(enum kind_e kind);
       smtAstAbstractNode(const smtAstAbstractNode &copy);
       smtAstAbstractNode();
-      ~smtAstAbstractNode();
+      virtual ~smtAstAbstractNode();
 
       enum kind_e                         getKind(void);
       std::vector<smtAstAbstractNode *>   &getChilds(void);
       void                                addChild(smtAstAbstractNode *child);
+
+      virtual void accept(Visitor& v) = 0;
   };
 
 
@@ -87,6 +91,7 @@ namespace smt2lib {
       smtAstAssertNode(smtAstAbstractNode *expr);
       smtAstAssertNode(const smtAstAssertNode &copy);
       ~smtAstAssertNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -97,6 +102,7 @@ namespace smt2lib {
       smtAstBvaddNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvaddNode(const smtAstBvaddNode &copy);
       ~smtAstBvaddNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -107,6 +113,7 @@ namespace smt2lib {
       smtAstBvandNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvandNode(const smtAstBvandNode &copy);
       ~smtAstBvandNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -117,6 +124,7 @@ namespace smt2lib {
       smtAstBvashrNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvashrNode(const smtAstBvashrNode &copy);
       ~smtAstBvashrNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -127,6 +135,7 @@ namespace smt2lib {
       smtAstBvlshrNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvlshrNode(const smtAstBvlshrNode &copy);
       ~smtAstBvlshrNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -137,6 +146,7 @@ namespace smt2lib {
       smtAstBvmulNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvmulNode(const smtAstBvmulNode &copy);
       ~smtAstBvmulNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -147,6 +157,7 @@ namespace smt2lib {
       smtAstBvnandNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvnandNode(const smtAstBvnandNode &copy);
       ~smtAstBvnandNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -157,6 +168,7 @@ namespace smt2lib {
       smtAstBvnegNode(smtAstAbstractNode *expr);
       smtAstBvnegNode(const smtAstBvnegNode &copy);
       ~smtAstBvnegNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -167,6 +179,7 @@ namespace smt2lib {
       smtAstBvnorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvnorNode(const smtAstBvnorNode &copy);
       ~smtAstBvnorNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -177,6 +190,7 @@ namespace smt2lib {
       smtAstBvnotNode(smtAstAbstractNode *expr1);
       smtAstBvnotNode(const smtAstBvnotNode &copy);
       ~smtAstBvnotNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -187,6 +201,7 @@ namespace smt2lib {
       smtAstBvorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvorNode(const smtAstBvorNode &copy);
       ~smtAstBvorNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -198,6 +213,7 @@ namespace smt2lib {
       smtAstBvrolNode(smtAstAbstractNode *rot, smtAstAbstractNode *expr);
       smtAstBvrolNode(const smtAstBvrolNode &copy);
       ~smtAstBvrolNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -209,6 +225,7 @@ namespace smt2lib {
       smtAstBvrorNode(smtAstAbstractNode *rot, smtAstAbstractNode *expr);
       smtAstBvrorNode(const smtAstBvrorNode &copy);
       ~smtAstBvrorNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -219,6 +236,7 @@ namespace smt2lib {
       smtAstBvsdivNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvsdivNode(const smtAstBvsdivNode &copy);
       ~smtAstBvsdivNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -229,6 +247,7 @@ namespace smt2lib {
       smtAstBvsgeNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvsgeNode(const smtAstBvsgeNode &copy);
       ~smtAstBvsgeNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -239,6 +258,7 @@ namespace smt2lib {
       smtAstBvsgtNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvsgtNode(const smtAstBvsgtNode &copy);
       ~smtAstBvsgtNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -249,6 +269,7 @@ namespace smt2lib {
       smtAstBvshlNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvshlNode(const smtAstBvshlNode &copy);
       ~smtAstBvshlNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -259,6 +280,7 @@ namespace smt2lib {
       smtAstBvsleNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvsleNode(const smtAstBvsleNode &copy);
       ~smtAstBvsleNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -269,6 +291,7 @@ namespace smt2lib {
       smtAstBvsltNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvsltNode(const smtAstBvsltNode &copy);
       ~smtAstBvsltNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -279,6 +302,7 @@ namespace smt2lib {
       smtAstBvsmodNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvsmodNode(const smtAstBvsmodNode &copy);
       ~smtAstBvsmodNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -289,6 +313,7 @@ namespace smt2lib {
       smtAstBvsremNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvsremNode(const smtAstBvsremNode &copy);
       ~smtAstBvsremNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -299,6 +324,7 @@ namespace smt2lib {
       smtAstBvsubNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvsubNode(const smtAstBvsubNode &copy);
       ~smtAstBvsubNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -309,6 +335,7 @@ namespace smt2lib {
       smtAstBvudivNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvudivNode(const smtAstBvudivNode &copy);
       ~smtAstBvudivNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -319,6 +346,7 @@ namespace smt2lib {
       smtAstBvugeNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvugeNode(const smtAstBvugeNode &copy);
       ~smtAstBvugeNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -329,6 +357,7 @@ namespace smt2lib {
       smtAstBvugtNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvugtNode(const smtAstBvugtNode &copy);
       ~smtAstBvugtNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -339,6 +368,7 @@ namespace smt2lib {
       smtAstBvuleNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvuleNode(const smtAstBvuleNode &copy);
       ~smtAstBvuleNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -349,6 +379,7 @@ namespace smt2lib {
       smtAstBvultNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvultNode(const smtAstBvultNode &copy);
       ~smtAstBvultNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -359,6 +390,7 @@ namespace smt2lib {
       smtAstBvuremNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvuremNode(const smtAstBvuremNode &copy);
       ~smtAstBvuremNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -369,6 +401,7 @@ namespace smt2lib {
       smtAstBvxnorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvxnorNode(const smtAstBvxnorNode &copy);
       ~smtAstBvxnorNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -379,6 +412,7 @@ namespace smt2lib {
       smtAstBvxorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstBvxorNode(const smtAstBvxorNode &copy);
       ~smtAstBvxorNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -389,6 +423,7 @@ namespace smt2lib {
       smtAstBvNode(uint64 value, uint64 size);
       smtAstBvNode(const smtAstBvNode &copy);
       ~smtAstBvNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -399,6 +434,7 @@ namespace smt2lib {
       smtAstCompoundNode(std::vector<smtAstAbstractNode*> exprs);
       smtAstCompoundNode(const smtAstCompoundNode &copy);
       ~smtAstCompoundNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -411,6 +447,7 @@ namespace smt2lib {
       smtAstConcatNode(std::list<smtAstAbstractNode *> exprs);
       smtAstConcatNode(const smtAstConcatNode &copy);
       ~smtAstConcatNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -426,6 +463,7 @@ namespace smt2lib {
       ~smtAstDecimalNode();
 
       uint64 getValue(void);
+      virtual void accept(Visitor& v);
   };
 
 
@@ -436,6 +474,7 @@ namespace smt2lib {
       smtAstDeclareNode(std::string symVarName, uint64 symVarSize);
       smtAstDeclareNode(const smtAstDeclareNode &copy);
       ~smtAstDeclareNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -446,6 +485,7 @@ namespace smt2lib {
       smtAstEqualNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
       smtAstEqualNode(const smtAstEqualNode &copy);
       ~smtAstEqualNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -456,6 +496,7 @@ namespace smt2lib {
       smtAstExtractNode(uint64 high, uint64 low, smtAstAbstractNode *expr);
       smtAstExtractNode(const smtAstExtractNode &copy);
       ~smtAstExtractNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -466,6 +507,7 @@ namespace smt2lib {
       smtAstIteNode(smtAstAbstractNode *ifExpr, smtAstAbstractNode *thenExpr, smtAstAbstractNode *elseExpr);
       smtAstIteNode(const smtAstIteNode &copy);
       ~smtAstIteNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -479,6 +521,7 @@ namespace smt2lib {
       smtAstReferenceNode(uint64 value);
       smtAstReferenceNode(const smtAstReferenceNode &copy);
       ~smtAstReferenceNode();
+      virtual void accept(Visitor& v);
 
       uint64 getValue(void);
   };
@@ -494,6 +537,7 @@ namespace smt2lib {
       smtAstStringNode(std::string value);
       smtAstStringNode(const smtAstStringNode &copy);
       ~smtAstStringNode();
+      virtual void accept(Visitor& v);
 
       std::string getValue(void);
   };
@@ -506,6 +550,7 @@ namespace smt2lib {
       smtAstSxNode(uint64 sizeExt, smtAstAbstractNode *expr);
       smtAstSxNode(const smtAstSxNode &copy);
       ~smtAstSxNode();
+      virtual void accept(Visitor& v);
   };
 
 
@@ -516,6 +561,7 @@ namespace smt2lib {
       smtAstZxNode(uint64 sizeExt, smtAstAbstractNode *expr);
       smtAstZxNode(const smtAstZxNode &copy);
       ~smtAstZxNode();
+      virtual void accept(Visitor& v);
   };
 
 

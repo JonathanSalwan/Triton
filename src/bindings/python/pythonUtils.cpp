@@ -67,3 +67,28 @@ PyObject *uint128ToPyLongObject(uint128 value)
   return (PyObject *)v;
 }
 
+PyObject *uint512ToPyLongObject(uint512 value)
+{
+  PyLongObject *v;
+  uint512 t = 0;
+  int ndigits = 0;
+
+  /* Count the number of Python digits. */
+  t = value;
+  while (t) {
+    ++ndigits;
+    t >>= PyLong_SHIFT;
+  }
+
+  v = _PyLong_New(ndigits);
+  digit *p = v->ob_digit;
+  Py_SIZE(v) = ndigits;
+  while (value) {
+    *p++ = static_cast<digit>(value & PyLong_MASK);
+    value >>= PyLong_SHIFT;
+  }
+
+  return (PyObject *)v;
+}
+
+
