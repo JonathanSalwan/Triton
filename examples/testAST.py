@@ -1,4 +1,9 @@
 from triton import *
+
+GREEN = "\033[92m"
+RED   = "\033[91m"
+ENDC  = "\033[0m"
+
 # Output
 #
 # $ ./triton ./examples/testAST.py ./samples/crackmes/crackme_xor a
@@ -8,8 +13,8 @@ from triton import *
 
 def cafter(instruction):
     if instruction.address < 0x600000: # To bypass external lib
-        print instruction.assembly
         for op in instruction.operands:
+            # TODO: should be a diff with all registers - getRegs()
             if op.type == IDREF.OPERAND.REG:
                 idrefreg = op.value
                 sid = getRegSymbolicID(idrefreg)
@@ -20,14 +25,13 @@ def cafter(instruction):
 
                     valAST =  evaluateAST(exp)
 
-                    if valAST != val:
-                        print "Error:"
-                        print "\tAST Value:\t", hex(valAST)
-                        print "\tRegister Value:\t", hex(val)
-                        print "\tAddress:\t", hex(instruction.address)
-                        print "\t", instruction.assembly
-                        print getSymExpr(sid).getAst() # print short expression (with references)
-                        #print exp # Print full expression
+                    if valAST == val:
+                        print "[%sOK%s] %#x: %s" %(GREEN, ENDC, instruction.address, instruction.assembly)
+                    else:
+                        print "[%sKO%s] %#x: %s" %(RED, ENDC, instruction.address, instruction.assembly)
+                        print "    AST Value      :", hex(valAST)
+                        print "    Expected Value :", hex(val)
+                        print "    Expression     :", getSymExpr(sid).getAst() # print short expression (with references)
     return
 
 if __name__ == '__main__':
