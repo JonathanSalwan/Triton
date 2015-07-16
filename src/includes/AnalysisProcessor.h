@@ -237,7 +237,6 @@ class AnalysisProcessor {
     SnapshotEngine    snapshotEngine;
     Stats             stats;
     Trace             trace;
-    Z3ast             z3ast;
     ContextHandler    *currentCtxH;
 };
 
