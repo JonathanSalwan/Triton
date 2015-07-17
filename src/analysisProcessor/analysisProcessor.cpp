@@ -326,9 +326,8 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicMemOperand(uint64 m
 {
   std::list<smt2lib::smtAstAbstractNode *> opVec;
   smt2lib::smtAstAbstractNode *tmp = nullptr;
-  uint64 symMem, offset;
+  uint64 symMem;
 
-  offset = 0;
   while (memSize) {
     symMem = this->getMemSymbolicID(mem + memSize - 1);
     if (symMem != UNSET) {
@@ -336,10 +335,9 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicMemOperand(uint64 m
       opVec.push_back(smt2lib::extract(7, 0, tmp));
     }
     else {
-      tmp = smt2lib::bv(this->getMemValue(mem + offset, 1), REG_SIZE);
+      tmp = smt2lib::bv(this->getMemValue(mem + memSize - 1, 1), REG_SIZE);
       opVec.push_front(smt2lib::extract(7, 0, tmp));
     }
-    offset++;
     memSize--;
   }
 
