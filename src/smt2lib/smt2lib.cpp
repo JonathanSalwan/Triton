@@ -1561,11 +1561,12 @@ namespace smt2lib {
 
   /* Free all childs node */
   void freeAllNodes(std::vector<smtAstAbstractNode *> &childs) {
-    uint64 index = 0;
-    while (index < childs.size()) {
-      delete childs[index];
-      index++;
-    }
+    //uint64 index = 0;
+    // TODO - FIXME: #141
+    //while (index < childs.size()) {
+    //  delete childs[index];
+    //  index++;
+    //}
     childs.clear();
   }
 

@@ -1,4 +1,5 @@
 from triton import *
+import sys
 
 GREEN = "\033[92m"
 RED   = "\033[91m"
@@ -11,27 +12,44 @@ ENDC  = "\033[0m"
 #
 # Berfore to start this script, check if all instructions are suported with unsuported_semantics.py
 
+
 def cafter(instruction):
+
     if instruction.address < 0x600000: # To bypass external lib
-        for op in instruction.operands:
-            # TODO: should be a diff with all registers - getRegs()
-            if op.type == IDREF.OPERAND.REG:
-                idrefreg = op.value
-                sid = getRegSymbolicID(idrefreg)
-                if sid != IDREF.MISC.UNSET:
 
-                    val = getRegValue(idrefreg)
-                    exp = getFullExpression(getSymExpr(sid).getAst())
+        bad  = list()
+        regs = getRegs()
 
-                    valAST =  evaluateAST(exp)
+        for reg, data in regs.items():
 
-                    if valAST == val:
-                        print "[%sOK%s] %#x: %s" %(GREEN, ENDC, instruction.address, instruction.assembly)
-                    else:
-                        print "[%sKO%s] %#x: %s" %(RED, ENDC, instruction.address, instruction.assembly)
-                        print "    AST Value      : %016x" %(valAST)
-                        print "    Expected Value : %016x" %(val)
-                        print "    Expression     : %s" %(getSymExpr(sid).getAst()) # print short expression (with references)
+            cvalue = data['concreteValue']
+            seid   = data['symbolicExpr']
+
+            if seid == IDREF.MISC.UNSET or (reg >= IDREF.FLAG.AF and reg <= IDREF.FLAG.ZF):
+                continue
+
+            expr   = getFullExpression(getSymExpr(seid).getAst())
+            svalue = evaluateAST(expr)
+
+            if cvalue != svalue:
+                bad.append({
+                    'reg': getRegName(reg),
+                    'svalue': svalue,
+                    'cvalue': cvalue,
+                    'expr': getSymExpr(seid).getAst()
+                })
+
+        if not bad:
+            print "[%sOK%s] %#x: %s" %(GREEN, ENDC, instruction.address, instruction.assembly)
+        else:
+            print "[%sKO%s] %#x: %s (%s%d error%s)" %(RED, ENDC, instruction.address, instruction.assembly, RED, len(bad), ENDC)
+            for w in bad:
+                print "     Register       : %s" %(w['reg'])
+                print "     Symbolic Value : %016x" %(w['svalue'])
+                print "     Concrete Value : %016x" %(w['cvalue'])
+                print "     Expression     : %s" %(w['expr'])
+                sys.exit(-1)
+
     return
 
 if __name__ == '__main__':

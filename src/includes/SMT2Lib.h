@@ -74,7 +74,7 @@ namespace smt2lib {
       smtAstAbstractNode(enum kind_e kind);
       smtAstAbstractNode(const smtAstAbstractNode &copy);
       smtAstAbstractNode();
-      virtual ~smtAstAbstractNode() = 0;
+      virtual ~smtAstAbstractNode();
 
       enum kind_e                         getKind(void);
       std::vector<smtAstAbstractNode *>   &getChilds(void);
