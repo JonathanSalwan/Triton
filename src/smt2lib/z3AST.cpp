@@ -330,8 +330,7 @@ void Z3ast::operator()(smt2lib::smtAstDeclareNode& e) {
 void Z3ast::operator()(smt2lib::smtAstEqualNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  //z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_eq(this->result.getContext(), op1.getExpr(), op2.getExpr()));
-  z3::expr newexpr = op1.getExpr() == op2.getExpr();
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_eq(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
