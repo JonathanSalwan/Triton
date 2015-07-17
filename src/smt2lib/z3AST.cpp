@@ -28,7 +28,7 @@ void Z3ast::operator()(smt2lib::smtAstAssertNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvaddNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = op1.getExpr() + op2.getExpr();
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvadd(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -37,7 +37,7 @@ void Z3ast::operator()(smt2lib::smtAstBvaddNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvandNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = op1.getExpr() & op2.getExpr();
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvand(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -64,7 +64,8 @@ void Z3ast::operator()(smt2lib::smtAstBvlshrNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvmulNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = op1.getExpr() * op2.getExpr();
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvmul(this->result.getContext(), op1.getExpr(), op2.getExpr()));
+
 
   this->result.setExpr(newexpr);
 }
@@ -82,7 +83,7 @@ void Z3ast::operator()(smt2lib::smtAstBvsmodNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvnandNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = ~(op1.getExpr() & op2.getExpr());
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvnand(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -90,7 +91,7 @@ void Z3ast::operator()(smt2lib::smtAstBvnandNode& e) {
 
 void Z3ast::operator()(smt2lib::smtAstBvnegNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
-  z3::expr newexpr = -op1.getExpr();
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvneg(this->result.getContext(), op1.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -99,7 +100,7 @@ void Z3ast::operator()(smt2lib::smtAstBvnegNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvnorNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = ~(op1.getExpr() | op2.getExpr());
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvnor(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -107,7 +108,7 @@ void Z3ast::operator()(smt2lib::smtAstBvnorNode& e) {
 
 void Z3ast::operator()(smt2lib::smtAstBvnotNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
-  z3::expr newexpr = ~op1.getExpr();
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvnot(this->result.getContext(), op1.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -116,7 +117,7 @@ void Z3ast::operator()(smt2lib::smtAstBvnotNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvorNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = op1.getExpr() | op2.getExpr();
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvor(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -143,7 +144,7 @@ void Z3ast::operator()(smt2lib::smtAstBvrorNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvsdivNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = op1.getExpr() / op2.getExpr();
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvsdiv(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -152,7 +153,7 @@ void Z3ast::operator()(smt2lib::smtAstBvsdivNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvsgeNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = op1.getExpr() >= op2.getExpr();
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvsge(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -161,7 +162,7 @@ void Z3ast::operator()(smt2lib::smtAstBvsgeNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvsgtNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = op1.getExpr() > op2.getExpr();
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvsgt(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -179,7 +180,7 @@ void Z3ast::operator()(smt2lib::smtAstBvshlNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvsleNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = op1.getExpr() <= op2.getExpr();
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvsle(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -188,7 +189,7 @@ void Z3ast::operator()(smt2lib::smtAstBvsleNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvsltNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = op1.getExpr() < op2.getExpr();
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvslt(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -206,7 +207,7 @@ void Z3ast::operator()(smt2lib::smtAstBvsremNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvsubNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = op1.getExpr() - op2.getExpr();
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvsub(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -215,7 +216,8 @@ void Z3ast::operator()(smt2lib::smtAstBvsubNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvudivNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = z3::udiv(op1.getExpr(), op2.getExpr());
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvudiv(this->result.getContext(), op1.getExpr(), op2.getExpr()));
+
 
   this->result.setExpr(newexpr);
 }
@@ -224,7 +226,7 @@ void Z3ast::operator()(smt2lib::smtAstBvudivNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvugeNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = z3::uge(op1.getExpr(), op2.getExpr());
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvuge(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -233,7 +235,7 @@ void Z3ast::operator()(smt2lib::smtAstBvugeNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvugtNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = z3::ugt(op1.getExpr(), op2.getExpr());
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvugt(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -242,7 +244,7 @@ void Z3ast::operator()(smt2lib::smtAstBvugtNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvuleNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = z3::ule(op1.getExpr(), op2.getExpr());
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvule(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -251,7 +253,7 @@ void Z3ast::operator()(smt2lib::smtAstBvuleNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvultNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = z3::ult(op1.getExpr(), op2.getExpr());
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvult(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -269,7 +271,7 @@ void Z3ast::operator()(smt2lib::smtAstBvuremNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvxnorNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = ~(op1.getExpr() ^ op2.getExpr());
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvxnor(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -278,7 +280,7 @@ void Z3ast::operator()(smt2lib::smtAstBvxnorNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvxorNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = op1.getExpr() ^ op2.getExpr();
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvxor(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -340,7 +342,7 @@ void Z3ast::operator()(smt2lib::smtAstExtractNode& e) {
   Z3Result high = this->eval(*e.getChilds()[0]);
   Z3Result low = this->eval(*e.getChilds()[1]);
   Z3Result value = this->eval(*e.getChilds()[2]);
-  z3::expr newexpr = value.getExpr().extract(high.getUint64Value(), low.getUint64Value());
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_extract(this->result.getContext(), high.getUint64Value(), low.getUint64Value(), value.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -350,7 +352,7 @@ void Z3ast::operator()(smt2lib::smtAstIteNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]); //condition
   Z3Result op2 = this->eval(*e.getChilds()[1]); //if true
   Z3Result op3 = this->eval(*e.getChilds()[2]); //if false
-  z3::expr newexpr = z3::ite(op1.getExpr(), op2.getExpr(), op3.getExpr());
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_ite(this->result.getContext(), op1.getExpr(), op2.getExpr(), op3.getExpr()));
 
   this->result.setExpr(newexpr);
 }
