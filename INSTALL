@@ -7,6 +7,7 @@ Triton's dependencies:
 * Z3 4.4.0
 * Python 2.7
 * libboost_filesystem
+* boost
 * cmake
 
 Compilation:
