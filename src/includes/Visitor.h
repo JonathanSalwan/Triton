@@ -38,6 +38,7 @@ namespace smt2lib{
     class smtAstConcatNode;
     class smtAstDecimalNode;
     class smtAstDeclareNode;
+    class smtAstDistinctNode;
     class smtAstEqualNode;
     class smtAstExtractNode;
     class smtAstIteNode;
@@ -89,6 +90,7 @@ class Visitor {
       virtual void operator()(smt2lib::smtAstConcatNode& e) = 0;
       virtual void operator()(smt2lib::smtAstDecimalNode& e) = 0;
       virtual void operator()(smt2lib::smtAstDeclareNode& e) = 0;
+      virtual void operator()(smt2lib::smtAstDistinctNode& e) = 0;
       virtual void operator()(smt2lib::smtAstEqualNode& e) = 0;
       virtual void operator()(smt2lib::smtAstExtractNode& e) = 0;
       virtual void operator()(smt2lib::smtAstIteNode& e) = 0;

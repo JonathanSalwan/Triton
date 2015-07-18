@@ -328,6 +328,16 @@ void Z3ast::operator()(smt2lib::smtAstDeclareNode& e) {
   throw std::runtime_error("smtAstDeclareNode not implemented");
 }
 
+void Z3ast::operator()(smt2lib::smtAstDistinctNode& e) {
+  Z3Result op1 = this->eval(*e.getChilds()[0]);
+  Z3Result op2 = this->eval(*e.getChilds()[1]);
+
+  Z3_ast ops[] = {op1.getExpr(), op2.getExpr()};
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_distinct(this->result.getContext(), 2, ops));
+
+  this->result.setExpr(newexpr);
+}
+
 
 void Z3ast::operator()(smt2lib::smtAstEqualNode& e) {
   Z3Result op1 = this->eval(*e.getChilds()[0]);
