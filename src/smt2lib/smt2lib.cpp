@@ -999,6 +999,32 @@ void smtAstDeclareNode::accept(Visitor& v) {
 }
 
 
+// ====== Distinct node
+
+
+smtAstDistinctNode::smtAstDistinctNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+  this->kind  = DISTINCT_NODE;
+  this->addChild(expr1);
+  this->addChild(expr2);
+}
+
+
+smtAstDistinctNode::smtAstDistinctNode(const smtAstDistinctNode &copy) {
+  this->kind = copy.kind;
+  for (uint64 index = 0; index < copy.childs.size(); index++)
+    this->childs.push_back(newInstance(copy.childs[index]));
+}
+
+
+smtAstDistinctNode::~smtAstDistinctNode() {
+  freeAllNodes(this->childs);
+}
+
+void smtAstDistinctNode::accept(Visitor& v) {
+  v(*this);
+}
+
+
 // ====== equal
 
 
@@ -1263,6 +1289,7 @@ namespace smt2lib {
       case CONCAT_NODE:     stream << reinterpret_cast<smtAstConcatNode *>(node); break;
       case DECIMAL_NODE:    stream << reinterpret_cast<smtAstDecimalNode *>(node); break;
       case DECLARE_NODE:    stream << reinterpret_cast<smtAstDeclareNode *>(node); break;
+      case DISTINCT_NODE:   stream << reinterpret_cast<smtAstDistinctNode *>(node); break;
       case EQUAL_NODE:      stream << reinterpret_cast<smtAstEqualNode *>(node); break;
       case EXTRACT_NODE:    stream << reinterpret_cast<smtAstExtractNode *>(node); break;
       case ITE_NODE:        stream << reinterpret_cast<smtAstIteNode *>(node); break;
@@ -1533,6 +1560,13 @@ namespace smt2lib {
   /* declare syntax */
   std::ostream &operator<<(std::ostream &stream, smtAstDeclareNode *node) {
     stream << "(declare-fun " << node->getChilds()[0] << " () (_ BitVec " << node->getChilds()[1] << "))";
+    return stream;
+  }
+
+
+  /* distinct syntax */
+  std::ostream &operator<<(std::ostream &stream, smtAstDistinctNode *node) {
+    stream << "(distinct " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
     return stream;
   }
 
@@ -1944,6 +1978,13 @@ namespace smt2lib {
     return node;
   }
 
+  smtAstAbstractNode *distinct(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstAbstractNode *node = new smtAstDistinctNode(expr1, expr2);
+    if (node == nullptr)
+      throw std::runtime_error("Node builders - Not enough memory");
+    return node;
+  }
+
 
   smtAstAbstractNode *equal(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
     smtAstAbstractNode *node = new smtAstEqualNode(expr1, expr2);
@@ -2046,6 +2087,7 @@ namespace smt2lib {
       case CONCAT_NODE:     newNode = new smtAstConcatNode(*reinterpret_cast<smtAstConcatNode *>(node)); break;
       case DECIMAL_NODE:    newNode = new smtAstDecimalNode(*reinterpret_cast<smtAstDecimalNode *>(node)); break;
       case DECLARE_NODE:    newNode = new smtAstDeclareNode(*reinterpret_cast<smtAstDeclareNode *>(node)); break;
+      case DISTINCT_NODE:   newNode = new smtAstDistinctNode(*reinterpret_cast<smtAstDistinctNode *>(node)); break;
       case EQUAL_NODE:      newNode = new smtAstEqualNode(*reinterpret_cast<smtAstEqualNode *>(node)); break;
       case EXTRACT_NODE:    newNode = new smtAstExtractNode(*reinterpret_cast<smtAstExtractNode *>(node)); break;
       case ITE_NODE:        newNode = new smtAstIteNode(*reinterpret_cast<smtAstIteNode *>(node)); break;

@@ -42,6 +42,7 @@ void initSmtAstNodeEnv(PyObject *idSmtAstNodeClassDict)
   PyDict_SetItemString(idSmtAstNodeClassDict, "CONCAT", PyInt_FromLong(smt2lib::CONCAT_NODE));
   PyDict_SetItemString(idSmtAstNodeClassDict, "DECIMAL", PyInt_FromLong(smt2lib::DECIMAL_NODE));
   PyDict_SetItemString(idSmtAstNodeClassDict, "DECLARE", PyInt_FromLong(smt2lib::DECLARE_NODE));
+  PyDict_SetItemString(idSmtAstNodeClassDict, "DISTINCT", PyInt_FromLong(smt2lib::DISTINCT_NODE));
   PyDict_SetItemString(idSmtAstNodeClassDict, "EQUAL", PyInt_FromLong(smt2lib::EQUAL_NODE));
   PyDict_SetItemString(idSmtAstNodeClassDict, "EXTRACT", PyInt_FromLong(smt2lib::EXTRACT_NODE));
   PyDict_SetItemString(idSmtAstNodeClassDict, "ITE", PyInt_FromLong(smt2lib::ITE_NODE));
