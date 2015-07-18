@@ -245,7 +245,7 @@ SymbolicVariable *SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symV
 
   symVar = this->addSymbolicVariable(SymVar::kind::UNDEF, 0, symVarSize, symVarComment);
 
-  expression->setExpression(smt2lib::string(symVar->getSymVarName()));
+  expression->setExpression(smt2lib::variable(symVar->getSymVarName()));
 
   return symVar;
 }
@@ -268,7 +268,7 @@ SymbolicVariable *SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symV
 
   symVar = this->addSymbolicVariable(SymVar::kind::MEM, memAddr, symVarSize, symVarComment);
 
-  expression->setExpression(smt2lib::string(symVar->getSymVarName()));
+  expression->setExpression(smt2lib::variable(symVar->getSymVarName()));
 
   return symVar;
 }
@@ -294,7 +294,7 @@ SymbolicVariable *SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVar
 
   symVar = this->addSymbolicVariable(SymVar::kind::REG, regId, symVarSize, symVarComment);
 
-  expression->setExpression(smt2lib::string(symVar->getSymVarName()));
+  expression->setExpression(smt2lib::variable(symVar->getSymVarName()));
 
   return symVar;
 }

@@ -44,6 +44,7 @@ namespace smt2lib{
     class smtAstReferenceNode;
     class smtAstStringNode;
     class smtAstSxNode;
+    class smtAstVariableNode;
     class smtAstZxNode;
 };
 
@@ -94,6 +95,7 @@ class Visitor {
       virtual void operator()(smt2lib::smtAstReferenceNode& e) = 0;
       virtual void operator()(smt2lib::smtAstStringNode& e) = 0;
       virtual void operator()(smt2lib::smtAstSxNode& e) = 0;
+      virtual void operator()(smt2lib::smtAstVariableNode& e) = 0;
       virtual void operator()(smt2lib::smtAstZxNode& e) = 0;
 
 

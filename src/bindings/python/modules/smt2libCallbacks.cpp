@@ -697,6 +697,16 @@ static PyObject *smt2lib_sx(PyObject *self, PyObject *args)
 }
 
 
+static char smt2lib_variable_doc[] = "Returns a 'variable' node";
+static PyObject *smt2lib_variable(PyObject *self, PyObject *expr)
+{
+  if (!PyString_Check(expr))
+    return PyErr_Format(PyExc_TypeError, "string(): expected a string as first argument");
+
+  return PySmtAstNode(smt2lib::variable(PyString_AsString(expr)));
+}
+
+
 static char smt2lib_zx_doc[] = "Returns an 'zx' expression";
 static PyObject *smt2lib_zx(PyObject *self, PyObject *args)
 {
@@ -756,6 +766,7 @@ PyMethodDef smt2libCallbacks[] = {
   {"smtAssert",   smt2lib_smtAssert,  METH_O,           smt2lib_smtAssert_doc},
   {"string",      smt2lib_string,     METH_O,           smt2lib_string_doc},
   {"sx",          smt2lib_sx,         METH_VARARGS,     smt2lib_sx_doc},
+  {"variable",    smt2lib_variable,   METH_O,           smt2lib_variable_doc},
   {"zx",          smt2lib_zx,         METH_VARARGS,     smt2lib_zx_doc},
   {nullptr,       nullptr,            0,                nullptr}
 };

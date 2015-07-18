@@ -1132,6 +1132,7 @@ std::string smtAstStringNode::getValue(void) {
   return this->value;
 }
 
+
 void smtAstStringNode::accept(Visitor& v) {
   v(*this);
 }
@@ -1159,6 +1160,36 @@ smtAstSxNode::~smtAstSxNode() {
 }
 
 void smtAstSxNode::accept(Visitor& v) {
+  v(*this);
+}
+
+
+// ====== Variable node
+
+
+smtAstVariableNode::smtAstVariableNode(std::string variable) {
+  this->kind  = VARIABLE_NODE;
+  this->value = variable;
+}
+
+
+smtAstVariableNode::smtAstVariableNode(const smtAstVariableNode &copy) {
+  this->kind  = copy.kind;
+  this->value = copy.value;
+}
+
+
+smtAstVariableNode::~smtAstVariableNode() {
+  freeAllNodes(this->childs);
+}
+
+
+std::string smtAstVariableNode::getValue(void) {
+  return this->value;
+}
+
+
+void smtAstVariableNode::accept(Visitor& v) {
   v(*this);
 }
 
@@ -1238,6 +1269,7 @@ namespace smt2lib {
       case REFERENCE_NODE:  stream << reinterpret_cast<smtAstReferenceNode *>(node); break;
       case STRING_NODE:     stream << reinterpret_cast<smtAstStringNode *>(node); break;
       case SX_NODE:         stream << reinterpret_cast<smtAstSxNode *>(node); break;
+      case VARIABLE_NODE:   stream << reinterpret_cast<smtAstVariableNode *>(node); break;
       case ZX_NODE:         stream << reinterpret_cast<smtAstZxNode *>(node); break;
       default:
         throw std::invalid_argument("smt2lib::operator<<(smtAstAbstractNode) - Invalid kind node");
@@ -1541,6 +1573,13 @@ namespace smt2lib {
   /* sx syntax */
   std::ostream &operator<<(std::ostream &stream, smtAstSxNode *node) {
     stream << "((_ sign_extend " << node->getChilds()[0] << ") " << node->getChilds()[1] << ")";
+    return stream;
+  }
+
+
+  /* variable syntax */
+  std::ostream &operator<<(std::ostream &stream, smtAstVariableNode *node) {
+    stream << node->getValue();
     return stream;
   }
 
@@ -1954,6 +1993,14 @@ namespace smt2lib {
   }
 
 
+  smtAstAbstractNode *variable(std::string value) {
+    smtAstAbstractNode *node = new smtAstVariableNode(value);
+    if (node == nullptr)
+      throw std::runtime_error("Node builders - Not enough memory");
+    return node;
+  }
+
+
   smtAstAbstractNode *zx(uint64 sizeExt, smtAstAbstractNode *expr) {
     smtAstAbstractNode *node = new smtAstZxNode(sizeExt, expr);
     if (node == nullptr)
@@ -2005,13 +2052,13 @@ namespace smt2lib {
       case REFERENCE_NODE:  newNode = new smtAstReferenceNode(*reinterpret_cast<smtAstReferenceNode *>(node)); break;
       case STRING_NODE:     newNode = new smtAstStringNode(*reinterpret_cast<smtAstStringNode *>(node)); break;
       case SX_NODE:         newNode = new smtAstSxNode(*reinterpret_cast<smtAstSxNode *>(node)); break;
+      case VARIABLE_NODE:   newNode = new smtAstVariableNode(*reinterpret_cast<smtAstVariableNode *>(node)); break;
       case ZX_NODE:         newNode = new smtAstZxNode(*reinterpret_cast<smtAstZxNode *>(node)); break;
       default:
         throw std::invalid_argument("smt2lib::newInstance() - Invalid kind node");
     }
     return newNode;
   }
-
 
 }
 

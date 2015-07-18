@@ -49,6 +49,7 @@ void initSmtAstNodeEnv(PyObject *idSmtAstNodeClassDict)
   PyDict_SetItemString(idSmtAstNodeClassDict, "STRING", PyInt_FromLong(smt2lib::STRING_NODE));
   PyDict_SetItemString(idSmtAstNodeClassDict, "SX", PyInt_FromLong(smt2lib::SX_NODE));
   PyDict_SetItemString(idSmtAstNodeClassDict, "UNDEFINED", PyInt_FromLong(smt2lib::UNDEFINED_NODE));
+  PyDict_SetItemString(idSmtAstNodeClassDict, "VARIABLE", PyInt_FromLong(smt2lib::VARIABLE_NODE));
   PyDict_SetItemString(idSmtAstNodeClassDict, "ZX", PyInt_FromLong(smt2lib::ZX_NODE));
 }
 

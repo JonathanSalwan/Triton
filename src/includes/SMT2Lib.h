@@ -59,6 +59,7 @@ namespace smt2lib {
     STRING_NODE,
     SX_NODE,
     UNDEFINED_NODE,
+    VARIABLE_NODE,
     ZX_NODE
   };
 
@@ -554,6 +555,22 @@ namespace smt2lib {
   };
 
 
+  /* Variable node */
+  class smtAstVariableNode : public smtAstAbstractNode
+  {
+    protected:
+      std::string value;
+
+    public:
+      smtAstVariableNode(std::string value);
+      smtAstVariableNode(const smtAstVariableNode &copy);
+      ~smtAstVariableNode();
+      virtual void accept(Visitor& v);
+
+      std::string getValue(void);
+  };
+
+
   /* ((_ zero_extend sizeExt) <expr>) node */
   class smtAstZxNode : public smtAstAbstractNode
   {
@@ -608,6 +625,7 @@ namespace smt2lib {
   std::ostream &operator<<(std::ostream &stream, smtAstReferenceNode *node);
   std::ostream &operator<<(std::ostream &stream, smtAstStringNode *node);
   std::ostream &operator<<(std::ostream &stream, smtAstSxNode *node);
+  std::ostream &operator<<(std::ostream &stream, smtAstVariableNode *node);
   std::ostream &operator<<(std::ostream &stream, smtAstZxNode *node);
 
 
@@ -663,6 +681,7 @@ namespace smt2lib {
   smtAstAbstractNode *smtAssert(smtAstAbstractNode *expr);
   smtAstAbstractNode *string(std::string value);
   smtAstAbstractNode *sx(uint64 sizeExt, smtAstAbstractNode *expr);
+  smtAstAbstractNode *variable(std::string variable);
   smtAstAbstractNode *zx(uint64 sizeExt, smtAstAbstractNode *expr);
   smtAstAbstractNode *newInstance(smtAstAbstractNode *node);
 

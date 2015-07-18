@@ -377,6 +377,11 @@ void Z3ast::operator()(smt2lib::smtAstSxNode& e) {
 }
 
 
+void Z3ast::operator()(smt2lib::smtAstVariableNode& e) {
+  throw std::runtime_error("smtAstVariableNode not implemented");
+}
+
+
 void Z3ast::operator()(smt2lib::smtAstZxNode& e) {
   Z3Result i = this->eval(*e.getChilds()[0]);
   Z3Result value = this->eval(*e.getChilds()[1]);

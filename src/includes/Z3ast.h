@@ -58,6 +58,7 @@ class Z3ast : public Visitor {
     virtual void operator()(smt2lib::smtAstReferenceNode& e);
     virtual void operator()(smt2lib::smtAstStringNode& e);
     virtual void operator()(smt2lib::smtAstSxNode& e);
+    virtual void operator()(smt2lib::smtAstVariableNode& e);
     virtual void operator()(smt2lib::smtAstZxNode& e);
 
   private:

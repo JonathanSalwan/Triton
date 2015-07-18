@@ -62,16 +62,16 @@ def cafter(instruction):
 
         # We want printable characters
         expr = smt2lib.compound([
-                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.string('SymVar_0'), smt2lib.bv(96,  64))),
-                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.string('SymVar_0'), smt2lib.bv(123, 64))),
-                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.string('SymVar_1'), smt2lib.bv(96,  64))),
-                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.string('SymVar_1'), smt2lib.bv(123, 64))),
-                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.string('SymVar_2'), smt2lib.bv(96,  64))),
-                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.string('SymVar_2'), smt2lib.bv(123, 64))),
-                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.string('SymVar_3'), smt2lib.bv(96,  64))),
-                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.string('SymVar_3'), smt2lib.bv(123, 64))),
-                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.string('SymVar_4'), smt2lib.bv(96,  64))),
-                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.string('SymVar_4'), smt2lib.bv(123, 64))),
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_0'), smt2lib.bv(96,  64))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_0'), smt2lib.bv(123, 64))),
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_1'), smt2lib.bv(96,  64))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_1'), smt2lib.bv(123, 64))),
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_2'), smt2lib.bv(96,  64))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_2'), smt2lib.bv(123, 64))),
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_3'), smt2lib.bv(96,  64))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_3'), smt2lib.bv(123, 64))),
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_4'), smt2lib.bv(96,  64))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_4'), smt2lib.bv(123, 64))),
                  smt2lib.smtAssert(smt2lib.equal(raxExpr, smt2lib.bv(0xad6d, 64)))  # collision: (assert (= rax 0xad6d)
                ])
 
