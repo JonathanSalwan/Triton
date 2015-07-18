@@ -13,7 +13,7 @@ namespace EflagsBuilder {
   SymbolicExpression *af(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
   SymbolicExpression *afNeg(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1);
 
-  SymbolicExpression *cfAdd(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, smt2lib::smtAstAbstractNode *op1);
+  SymbolicExpression *cfAdd(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1);
   SymbolicExpression *cfImul(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1);
   SymbolicExpression *cfMul(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *up);
   SymbolicExpression *cfNeg(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1);

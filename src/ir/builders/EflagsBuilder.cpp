@@ -53,12 +53,14 @@ SymbolicExpression *EflagsBuilder::afNeg(Inst &inst,
 SymbolicExpression *EflagsBuilder::cfAdd(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
+                                      uint32 dstSize,
                                       smt2lib::smtAstAbstractNode *op1)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr = EflagsExpressions::cfAdd(parent, op1);
+  expr = EflagsExpressions::cfAdd(parent, bvSize, op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
@@ -78,8 +80,9 @@ SymbolicExpression *EflagsBuilder::cfImul(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr = EflagsExpressions::cfImul(parent, op1);
+  expr = EflagsExpressions::cfImul(parent, bvSize, op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
@@ -359,8 +362,9 @@ SymbolicExpression *EflagsBuilder::ofImul(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr = EflagsExpressions::ofImul(parent, op1);
+  expr = EflagsExpressions::ofImul(parent, bvSize, op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");

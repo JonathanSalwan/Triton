@@ -35,7 +35,7 @@ void AddIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::cfAdd(inst, se, ap, op1);
+  EflagsBuilder::cfAdd(inst, se, ap, regSize, op1);
   EflagsBuilder::ofAdd(inst, se, ap, regSize, op1, op2);
   EflagsBuilder::pf(inst, se, ap, regSize);
   EflagsBuilder::sf(inst, se, ap, regSize);
@@ -66,7 +66,7 @@ void AddIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, regSize1, op1, op2);
-  EflagsBuilder::cfAdd(inst, se, ap, op1);
+  EflagsBuilder::cfAdd(inst, se, ap, regSize1, op1);
   EflagsBuilder::ofAdd(inst, se, ap, regSize1, op1, op2);
   EflagsBuilder::pf(inst, se, ap, regSize1);
   EflagsBuilder::sf(inst, se, ap, regSize1);
@@ -97,7 +97,7 @@ void AddIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::cfAdd(inst, se, ap, op1);
+  EflagsBuilder::cfAdd(inst, se, ap, regSize, op1);
   EflagsBuilder::ofAdd(inst, se, ap, regSize, op1, op2);
   EflagsBuilder::pf(inst, se, ap, regSize);
   EflagsBuilder::sf(inst, se, ap, regSize);
@@ -127,7 +127,7 @@ void AddIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, writeSize, op1, op2);
-  EflagsBuilder::cfAdd(inst, se, ap, op1);
+  EflagsBuilder::cfAdd(inst, se, ap, writeSize, op1);
   EflagsBuilder::ofAdd(inst, se, ap, writeSize, op1, op2);
   EflagsBuilder::pf(inst, se, ap, writeSize);
   EflagsBuilder::sf(inst, se, ap, writeSize);
@@ -158,7 +158,7 @@ void AddIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, writeSize, op1, op2);
-  EflagsBuilder::cfAdd(inst, se, ap, op1);
+  EflagsBuilder::cfAdd(inst, se, ap, writeSize, op1);
   EflagsBuilder::ofAdd(inst, se, ap, writeSize, op1, op2);
   EflagsBuilder::pf(inst, se, ap, writeSize);
   EflagsBuilder::sf(inst, se, ap, writeSize);

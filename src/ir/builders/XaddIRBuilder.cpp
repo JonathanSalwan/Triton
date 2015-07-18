@@ -46,7 +46,7 @@ void XaddIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se2, ap, regSize2, op1, op2);
-  EflagsBuilder::cfAdd(inst, se2, ap, op1);
+  EflagsBuilder::cfAdd(inst, se2, ap, regSize2, op1);
   EflagsBuilder::ofAdd(inst, se2, ap, regSize2, op1, op2);
   EflagsBuilder::pf(inst, se2, ap, regSize2);
   EflagsBuilder::sf(inst, se2, ap, regSize2);
@@ -92,7 +92,7 @@ void XaddIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se2, ap, memSize1, op1, op2);
-  EflagsBuilder::cfAdd(inst, se2, ap, op1);
+  EflagsBuilder::cfAdd(inst, se2, ap, memSize1, op1);
   EflagsBuilder::ofAdd(inst, se2, ap, memSize1, op1, op2);
   EflagsBuilder::pf(inst, se2, ap, memSize1);
   EflagsBuilder::sf(inst, se2, ap, memSize1);
