@@ -336,7 +336,7 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicMemOperand(uint64 m
     }
     else {
       tmp = smt2lib::bv(this->getMemValue(mem + memSize - 1, 1), REG_SIZE);
-      opVec.push_front(smt2lib::extract(7, 0, tmp));
+      opVec.push_back(smt2lib::extract(7, 0, tmp));
     }
     memSize--;
   }
@@ -780,6 +780,7 @@ bool AnalysisProcessor::isSnapshotEnabled(void)
     return false;
   return true;
 }
+
 
 // Evaluator
 // ---------
