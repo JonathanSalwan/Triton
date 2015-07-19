@@ -571,6 +571,25 @@ static PyObject *smt2lib_bvxor(PyObject *self, PyObject *args)
 }
 
 
+static char smt2lib_distinct_doc[] = "Returns an 'distinct' expression";
+static PyObject *smt2lib_distinct(PyObject *self, PyObject *args)
+{
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+
+  if (op1 == nullptr || !PySmtAstNode_Check(op1))
+    return PyErr_Format(PyExc_TypeError, "distinct(): expected a SmtAstNode as first argument");
+
+  if (op2 == nullptr || !PySmtAstNode_Check(op2))
+    return PyErr_Format(PyExc_TypeError, "distinct(): expected a SmtAstNode as second argument");
+
+  return PySmtAstNode(smt2lib::distinct(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+}
+
+
 static char smt2lib_compound_doc[] = "Returns a compound of expressions";
 static PyObject *smt2lib_compound(PyObject *self, PyObject *exprsList)
 {
@@ -759,6 +778,7 @@ PyMethodDef smt2libCallbacks[] = {
   {"bvurem",      smt2lib_bvurem,     METH_VARARGS,     smt2lib_bvurem_doc},
   {"bvxnor",      smt2lib_bvxnor,     METH_VARARGS,     smt2lib_bvxnor_doc},
   {"bvxor",       smt2lib_bvxor,      METH_VARARGS,     smt2lib_bvxor_doc},
+  {"distinct",    smt2lib_distinct,   METH_VARARGS,     smt2lib_distinct_doc},
   {"compound",    smt2lib_compound,   METH_O,           smt2lib_compound_doc},
   {"equal",       smt2lib_equal,      METH_VARARGS,     smt2lib_equal_doc},
   {"extract",     smt2lib_extract,    METH_VARARGS,     smt2lib_extract_doc},

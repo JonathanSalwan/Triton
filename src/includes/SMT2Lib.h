@@ -52,6 +52,7 @@ namespace smt2lib {
     CONCAT_NODE,
     DECIMAL_NODE,
     DECLARE_NODE,
+    DISTINCT_NODE,
     EQUAL_NODE,
     EXTRACT_NODE,
     ITE_NODE,
@@ -478,6 +479,16 @@ namespace smt2lib {
       virtual void accept(Visitor& v);
   };
 
+  /* (distinct <expr1> <expr2> ...) node */
+  class smtAstDistinctNode : public smtAstAbstractNode
+  {
+    public:
+      smtAstDistinctNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
+      smtAstDistinctNode(const smtAstDistinctNode &copy);
+      ~smtAstDistinctNode();
+      virtual void accept(Visitor& v);
+  };
+
 
   /* (= <expr1> <expr2> ...) node */
   class smtAstEqualNode : public smtAstAbstractNode
@@ -619,6 +630,7 @@ namespace smt2lib {
   std::ostream &operator<<(std::ostream &stream, smtAstConcatNode *node);
   std::ostream &operator<<(std::ostream &stream, smtAstDecimalNode *node);
   std::ostream &operator<<(std::ostream &stream, smtAstDeclareNode *node);
+  std::ostream &operator<<(std::ostream &stream, smtAstDistinctNode *node);
   std::ostream &operator<<(std::ostream &stream, smtAstEqualNode *node);
   std::ostream &operator<<(std::ostream &stream, smtAstExtractNode *node);
   std::ostream &operator<<(std::ostream &stream, smtAstIteNode *node);
@@ -674,6 +686,7 @@ namespace smt2lib {
   smtAstAbstractNode *concat(std::list<smtAstAbstractNode *> exprs);
   smtAstAbstractNode *decimal(uint64 value);
   smtAstAbstractNode *declare(std::string symVarName, uint64 symVarSize);
+  smtAstAbstractNode *distinct(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
   smtAstAbstractNode *equal(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
   smtAstAbstractNode *extract(uint64 high, uint64 low, smtAstAbstractNode *expr);
   smtAstAbstractNode *ite(smtAstAbstractNode *ifExpr, smtAstAbstractNode *thenExpr, smtAstAbstractNode *elseExpr);
