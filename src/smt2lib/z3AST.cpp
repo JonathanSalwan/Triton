@@ -124,18 +124,18 @@ void Z3ast::operator()(smt2lib::smtAstBvorNode& e) {
 
 
 void Z3ast::operator()(smt2lib::smtAstBvrolNode& e) {
-  Z3Result op1 = this->eval(*e.getChilds()[0]);
+  uint64   op1 = reinterpret_cast<smt2lib::smtAstDecimalNode*>(e.getChilds()[0])->getValue();
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_ext_rotate_left(this->result.getContext(), op1.getExpr(), op2.getExpr()));
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_rotate_left(this->result.getContext(), op1, op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }
 
 
 void Z3ast::operator()(smt2lib::smtAstBvrorNode& e) {
-  Z3Result op1 = this->eval(*e.getChilds()[0]);
+  uint64   op1 = reinterpret_cast<smt2lib::smtAstDecimalNode*>(e.getChilds()[0])->getValue();
   Z3Result op2 = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_ext_rotate_right(this->result.getContext(), op1.getExpr(), op2.getExpr()));
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_rotate_right(this->result.getContext(), op1, op2.getExpr()));
 
   this->result.setExpr(newexpr);
 }

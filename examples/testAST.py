@@ -13,6 +13,12 @@ ENDC  = "\033[0m"
 # Berfore to start this script, check if all instructions are suported with unsuported_semantics.py
 
 
+def sbefore(instruction):
+    concretizeAllMem()
+    concretizeAllReg()
+    return
+
+
 def cafter(instruction):
 
     if instruction.address < 0x600000: # To bypass external lib
@@ -49,8 +55,8 @@ def cafter(instruction):
                 print "     Concrete Value : %016x" %(w['cvalue'])
                 print "     Expression     : %s" %(w['expr'])
                 sys.exit(-1)
-
     return
+
 
 if __name__ == '__main__':
 
@@ -58,6 +64,7 @@ if __name__ == '__main__':
     startAnalysisFromSymbol('check')
 
     addCallback(cafter, IDREF.CALLBACK.AFTER)
+    addCallback(sbefore, IDREF.CALLBACK.BEFORE_SYMPROC)
 
     # Run the instrumentation - Never returns
     runProgram()
