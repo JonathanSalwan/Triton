@@ -633,11 +633,11 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::pf(SymbolicExpression *parent, u
   expr = smt2lib::bv(1, 1);
   for ( ; counter <= 7 ; counter++) {
     expr = smt2lib::bvxor(
-             expr,
+             smt2lib::newInstance(expr),
              smt2lib::extract(0, 0,
                smt2lib::bvlshr(
                  smt2lib::extract(bvSize-1, 0, smt2lib::reference(parent->getID())),
-                 smt2lib::bv(bvSize, counter)
+                 smt2lib::bv(counter, bvSize)
                )
             )
           );
@@ -733,7 +733,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::zf(SymbolicExpression *parent,
    */
   expr = smt2lib::ite(
             smt2lib::equal(
-              smt2lib::reference(parent->getID()),
+              smt2lib::extract(bvSize-1, 0, smt2lib::reference(parent->getID())),
               smt2lib::bv(0, bvSize)
             ),
             smt2lib::bv(1, 1),

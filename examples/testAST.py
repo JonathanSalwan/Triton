@@ -31,7 +31,7 @@ def cafter(instruction):
             cvalue = data['concreteValue']
             seid   = data['symbolicExpr']
 
-            if seid == IDREF.MISC.UNSET or (reg >= IDREF.FLAG.AF and reg <= IDREF.FLAG.ZF):
+            if seid == IDREF.MISC.UNSET:
                 continue
 
             expr   = getFullExpression(getSymExpr(seid).getAst())
