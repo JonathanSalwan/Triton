@@ -54,7 +54,6 @@ def cafter(instruction):
                 print "     Symbolic Value : %016x" %(w['svalue'])
                 print "     Concrete Value : %016x" %(w['cvalue'])
                 print "     Expression     : %s" %(w['expr'])
-                sys.exit(-1)
     return
 
 

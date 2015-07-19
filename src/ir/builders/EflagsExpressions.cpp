@@ -463,7 +463,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofRol(SymbolicExpression *parent
   if (reinterpret_cast<smt2lib::smtAstDecimalNode *>(op2)->getValue() == 1) {
     expr = smt2lib::extract(0, 0,
               smt2lib::bvxor(
-                ap.buildSymbolicFlagOperand(ID_CF),
+                smt2lib::zx(bvSize-1, ap.buildSymbolicFlagOperand(ID_CF)),
                 smt2lib::bvshl(
                   smt2lib::extract(bvSize-1, 0, smt2lib::reference(parent->getID())),
                   smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(1, bvSize))
