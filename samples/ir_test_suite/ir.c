@@ -68,6 +68,7 @@ void check(void)
   asm("mov rax, 8");
   asm("lea rsi, [rbx]");
   asm("lea rsi, [rbx+8]");
+  asm("lea rsi, [rip+8]");
   asm("lea rsi, [rbx+8*rax]");
   asm("lea rsi, [rbx+8*rax+4]");
   asm("lea rsi, [rbx+8+4*rax]");

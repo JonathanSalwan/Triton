@@ -34,8 +34,13 @@ void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   uint64 memoryScale   = this->operands[1].getMemoryScale();
 
   /* Base register */
-  if (baseReg)
-    base2e = ap.buildSymbolicRegOperand(baseReg, regSize);
+  if (baseReg) {
+    /* If the base register is RIP, we must use nextAddress */
+    if (baseReg == ID_RIP)
+      base2e = smt2lib::bv(this->nextAddress, regSize * REG_SIZE);
+    else
+      base2e = ap.buildSymbolicRegOperand(baseReg, regSize);
+  }
   else
     base2e = smt2lib::bv(0, regSize * REG_SIZE);
 
