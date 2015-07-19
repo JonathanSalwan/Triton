@@ -7,10 +7,23 @@ ENDC  = "\033[0m"
 
 # Output
 #
-# $ ./triton ./examples/testAST.py ./samples/crackmes/crackme_xor a
 # $ ./triton ./examples/testAST.py ./samples/ir_test_suite/ir
-#
-# Berfore to start this script, check if all instructions are suported with unsuported_semantics.py
+# [...]
+# [OK] 0x400645: idiv rcx
+# [OK] 0x400648: mov rax, 0x1
+# [OK] 0x40064f: mov rcx, 0x2
+# [OK] 0x400656: mov rdx, 0x3
+# [OK] 0x40065d: mov rsi, 0x4
+# [OK] 0x400664: imul sil
+# [KO] 0x400667: imul cx (2 error)
+#      Register       : cf
+#      Symbolic Value : 0000000000000001
+#      Concrete Value : 0000000000000000
+#      Expression     : (ite (= ((_ extract 15 0) #348) ((_ extract 15 0) (_ bv2 64))) (_ bv0 1) (_ bv1 1))
+#      Register       : of
+#      Symbolic Value : 0000000000000001
+#      Concrete Value : 0000000000000000
+#      Expression     : (ite (= ((_ extract 15 0) #348) ((_ extract 15 0) (_ bv2 64))) (_ bv0 1) (_ bv1 1))
 
 
 def sbefore(instruction):
