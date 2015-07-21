@@ -13,8 +13,6 @@
 #include "TritonTypes.h"
 #include "Z3ast.h"
 
-
-
 class AnalysisProcessor {
   public:
     AnalysisProcessor();
@@ -126,7 +124,6 @@ class AnalysisProcessor {
     void concretizeAllMem(void);
     void concretizeReg(uint64 regID);
     void concretizeMem(uint64 mem);
-
 
     /*
      * Taint Engine Facade

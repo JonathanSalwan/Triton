@@ -9,7 +9,6 @@
 #define SYMVAR_NAME       "SymVar_"
 #define SYMVAR_NAME_SIZE  (sizeof(SYMVAR_NAME) - 1)
 
-
 namespace SymVar
 {
   /* Defines the kind of the symbolic variable */
@@ -31,10 +30,11 @@ class SymbolicVariable {
     uint64        symVarId;
     uint64        symVarKindValue;
     uint64        symVarSize;
+    uint128       symVarConcreteValue;
 
   public:
 
-    SymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 id, uint64 size, std::string comment);
+    SymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 id, uint64 size, std::string comment, uint128 concreteValue = SymVar::kind::UNDEF);
     SymbolicVariable(const SymbolicVariable &copy);
     ~SymbolicVariable();
 
@@ -44,6 +44,8 @@ class SymbolicVariable {
     uint64        getSymVarId(void);
     uint64        getSymVarKindValue(void);
     uint64        getSymVarSize(void);
+    uint128       getConcreteValue(void);
+    void          setSymVarConcreteValue(uint128 value);
 
 };
 

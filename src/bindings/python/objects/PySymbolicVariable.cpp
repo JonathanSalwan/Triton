@@ -1,4 +1,5 @@
 
+#include <PythonUtils.h>
 #include <TritonPyObject.h>
 #include <xPyFunc.h>
 
@@ -6,6 +7,7 @@
  * Class SymbolicVariable:
  *
  * - getComment() : Returns the symbolic variable comment
+ * - getConcreteValue() : Returns the variable's symbolic value
  * - getId() : Returns the symbolic variable id
  * - getKind() : Returns the kind of the symbolic variable
  * - getKindValue() : Returns the kind value (IDREG.REG or integer, it depends of the kind)
@@ -27,6 +29,13 @@ static PyObject *SymbolicVariable_getComment(PyObject *self, PyObject *noarg)
     return PyString_FromFormat("%s", variable->getSymVarComment().c_str());
   Py_INCREF(Py_None);
   return Py_None;
+}
+
+static char SymbolicVariable_getConcreteValue_doc[] = "Returns the variable's concrete value";
+static PyObject *SymbolicVariable_getConcreteValue(PyObject *self, PyObject *noarg)
+{
+  SymbolicVariable *symVar = PySymbolicVariable_AsSymbolicVariable(self);
+  return uint128ToPyLongObject(symVar->getConcreteValue());
 }
 
 
@@ -79,13 +88,14 @@ static PyObject *SymbolicVariable_str(SymbolicVariable_Object *obj)
 
 
 PyMethodDef SymbolicVariable_callbacks[] = {
-  {"getComment",    SymbolicVariable_getComment,    METH_NOARGS,   SymbolicVariable_getComment_doc},
-  {"getId",         SymbolicVariable_getId,         METH_NOARGS,   SymbolicVariable_getId_doc},
-  {"getKind",       SymbolicVariable_getKind,       METH_NOARGS,   SymbolicVariable_getKind_doc},
-  {"getKindValue",  SymbolicVariable_getKindValue,  METH_NOARGS,   SymbolicVariable_getKindValue_doc},
-  {"getName",       SymbolicVariable_getName,       METH_NOARGS,   SymbolicVariable_getName_doc},
-  {"getSize",       SymbolicVariable_getSize,       METH_NOARGS,   SymbolicVariable_getSize_doc},
-  {nullptr,         nullptr,                        0,             nullptr}
+  {"getComment",          SymbolicVariable_getComment,          METH_NOARGS,   SymbolicVariable_getComment_doc},
+  {"getConcreteValue",    SymbolicVariable_getConcreteValue,    METH_NOARGS,   SymbolicVariable_getConcreteValue_doc},
+  {"getId",               SymbolicVariable_getId,               METH_NOARGS,   SymbolicVariable_getId_doc},
+  {"getKind",             SymbolicVariable_getKind,             METH_NOARGS,   SymbolicVariable_getKind_doc},
+  {"getKindValue",        SymbolicVariable_getKindValue,        METH_NOARGS,   SymbolicVariable_getKindValue_doc},
+  {"getName",             SymbolicVariable_getName,             METH_NOARGS,   SymbolicVariable_getName_doc},
+  {"getSize",             SymbolicVariable_getSize,             METH_NOARGS,   SymbolicVariable_getSize_doc},
+  {nullptr,               nullptr,                              0,             nullptr}
 };
 
 
