@@ -33,7 +33,6 @@ def sbefore(instruction):
 
 
 def cafter(instruction):
-
     if instruction.address < 0x600000: # To bypass external lib
 
         bad  = list()
@@ -44,11 +43,22 @@ def cafter(instruction):
             cvalue = data['concreteValue']
             seid   = data['symbolicExpr']
 
+
             if seid == IDREF.MISC.UNSET:
                 continue
+            #print "cvalue : %d"%cvalue
+            #print "seid : %d"%seid
+            #print "getSymExpr(seid)"
+            #print dir(getSymExpr(seid))
+            #print "getSymExpr(seid).getAst() : "
+            #print getSymExpr(seid).getAst()
 
             expr   = getFullExpression(getSymExpr(seid).getAst())
             svalue = evaluateAST(expr)
+            #print "expr : "
+            #print dir(expr)
+            #print "evaluateAST(expr) : "
+            #print evaluateAST(expr)
 
             if cvalue != svalue:
                 bad.append({
