@@ -60,7 +60,7 @@ def before(instruction):
     # Dump symbolic expression
     addr = instruction.address
     asm  = instruction.assembly
-    seId = [se.id for se in instruction.symbolicExpressions]
+    seId = [se.getId() for se in instruction.symbolicExpressions]
     cursor.execute("INSERT INTO instructions VALUES (%d, '%s', '%s')" %(addr, asm, str(seId)[1:-1].replace(',','')))
     for se in instruction.symbolicExpressions:
         cursor.execute("INSERT INTO expressions VALUES (%d, %d, '%s', %d)" %(se.getId(), addr, se.getAst(), se.isTainted()))
