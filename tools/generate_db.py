@@ -111,6 +111,7 @@ if __name__ == '__main__':
     buildDb()
 
     # Add a callback.
+    addCallback(after, IDREF.CALLBACK.AFTER)
     addCallback(before, IDREF.CALLBACK.BEFORE)
     addCallback(fini, IDREF.CALLBACK.FINI)
 
