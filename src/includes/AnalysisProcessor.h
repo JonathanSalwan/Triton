@@ -127,6 +127,7 @@ class AnalysisProcessor {
     void concretizeReg(uint64 regID);
     void concretizeMem(uint64 mem);
 
+
     /*
      * Taint Engine Facade
      * -------------------
