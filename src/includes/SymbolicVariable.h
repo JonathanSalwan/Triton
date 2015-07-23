@@ -9,6 +9,7 @@
 #define SYMVAR_NAME       "SymVar_"
 #define SYMVAR_NAME_SIZE  (sizeof(SYMVAR_NAME) - 1)
 
+
 namespace SymVar
 {
   /* Defines the kind of the symbolic variable */
