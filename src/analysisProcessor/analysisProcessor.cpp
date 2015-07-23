@@ -256,19 +256,25 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::getFullExpression(smt2lib::smtAs
 
 SymbolicVariable *AnalysisProcessor::convertExprToSymVar(uint64 exprId, uint64 symVarSize, std::string symVarComment)
 {
-  return this->symEngine.convertExprToSymVar(exprId, symVarSize, symVarComment);
+  SymbolicVariable *symVar = this->symEngine.convertExprToSymVar(exprId, symVarSize, symVarComment);
+  symVar->setSymVarConcreteValue(SymVar::kind::UNDEF);
+  return symVar;
 }
 
 
 SymbolicVariable *AnalysisProcessor::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment)
 {
-  return this->symEngine.convertMemToSymVar(memAddr, symVarSize, symVarComment);
+  SymbolicVariable *symVar = this->symEngine.convertMemToSymVar(memAddr, symVarSize, symVarComment);
+  symVar->setSymVarConcreteValue(this->getMemValue(memAddr,symVarSize));
+  return symVar;
 }
 
 
 SymbolicVariable *AnalysisProcessor::convertRegToSymVar(uint64 regId, uint64 symVarSize, std::string symVarComment)
 {
-  return this->symEngine.convertRegToSymVar(regId, symVarSize, symVarComment);
+  SymbolicVariable *symVar = this->symEngine.convertRegToSymVar(regId, symVarSize, symVarComment);
+  symVar->setSymVarConcreteValue(this->getRegisterValue(regId));
+  return symVar;
 }
 
 
