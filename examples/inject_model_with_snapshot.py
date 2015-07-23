@@ -46,7 +46,6 @@ def cafter(instruction):
     # 0x40058b: movzx eax, byte ptr [rax]
     if instruction.address == 0x40058b:
         v = convertRegToSymVar(IDREF.REG.RAX, 32)
-        print "Concrete Value = !!!!!!!!!!!! ",chr(v.getConcreteValue())
 
     # 0x4005ae: cmp ecx, eax
     if instruction.address == 0x4005ae:
