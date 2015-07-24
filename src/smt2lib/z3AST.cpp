@@ -1,3 +1,4 @@
+#include <CpuSize.h>
 #include <Z3ast.h>
 
 
@@ -394,23 +395,23 @@ void Z3ast::operator()(smt2lib::smtAstVariableNode& e) {
   if (symVar == nullptr)
     throw std::runtime_error("smtAstVariableNode: can't get the symbolic variable (nullptr)");
 
-  if (symVar->getSymVarSize() > 64)
+  if (symVar->getSymVarSize() > QWORD_SIZE_BIT)
     throw std::runtime_error("smtAstVariableNode: size above 64 bits is not supported yet");
 
   if (symVar->getSymVarKind() == SymVar::kind::MEM) {
     uint64 memSize   = symVar->getSymVarSize();
     uint64 memValue  = symVar->getConcreteValue();
     z3::expr newexpr = this->result.getContext().bv_val(memValue, memSize);
-
     this->result.setExpr(newexpr);
-  } else if (symVar->getSymVarKind() == SymVar::kind::REG) {
+  }
+  else if (symVar->getSymVarKind() == SymVar::kind::REG) {
     //TODO: handle SSE registers (128 bits)
     //bv_val(char const * n, unsigned sz)
     uint64 regValue   = symVar->getConcreteValue();
     z3::expr newexpr  = this->result.getContext().bv_val(regValue, 64);
-
     this->result.setExpr(newexpr);
-  } else {
+  }
+  else {
     throw std::runtime_error("smtAstVariableNode: UNSET");
   }
 }

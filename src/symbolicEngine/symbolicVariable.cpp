@@ -20,6 +20,7 @@ SymbolicVariable::SymbolicVariable(SymVar::kind kind,
   this->symVarHasConcreteValue = true;
 }
 
+
 SymbolicVariable::SymbolicVariable(SymVar::kind kind,
                                    uint64 kindValue,
                                    uint64 id,
@@ -93,10 +94,12 @@ uint128 SymbolicVariable::getConcreteValue(void)
     throw std::runtime_error("SymbolicVariable: The symbolic variable has not a concrete value");
 }
 
+
 bool SymbolicVariable::hasConcreteValue(void)
 {
   return this->symVarHasConcreteValue;
 }
+
 
 void SymbolicVariable::setSymVarConcreteValue(uint128 value)
 {
