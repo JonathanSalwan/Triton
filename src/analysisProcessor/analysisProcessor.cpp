@@ -271,8 +271,12 @@ SymbolicVariable *AnalysisProcessor::convertMemToSymVar(uint64 memAddr, uint64 s
 
 SymbolicVariable *AnalysisProcessor::convertRegToSymVar(uint64 regId, uint64 symVarSize, std::string symVarComment)
 {
+  uint128 mask     = 1;
+  mask             = (mask << symVarSize) - 1;
+  uint128 regValue = this->getRegisterValue(regId) & mask;
+  
   SymbolicVariable *symVar = this->symEngine.convertRegToSymVar(regId, symVarSize, symVarComment);
-  symVar->setSymVarConcreteValue(this->getRegisterValue(regId));
+  symVar->setSymVarConcreteValue(regValue);
   return symVar;
 }
 
