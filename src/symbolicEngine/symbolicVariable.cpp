@@ -10,25 +10,37 @@ SymbolicVariable::SymbolicVariable(SymVar::kind kind,
                                    std::string comment,
                                    uint128 concreteValue)
 {
-  this->symVarComment       = comment;
-  this->symVarId            = id;
-  this->symVarKind          = kind;
-  this->symVarKindValue     = kindValue;
-  this->symVarName          = SYMVAR_NAME + std::to_string(id);
-  this->symVarSize          = size;
-  this->symVarConcreteValue = concreteValue;
+  this->symVarComment          = comment;
+  this->symVarId               = id;
+  this->symVarKind             = kind;
+  this->symVarKindValue        = kindValue;
+  this->symVarName             = SYMVAR_NAME + std::to_string(id);
+  this->symVarSize             = size;
+  this->symVarConcreteValue    = concreteValue;
+  this->symVarHasConcreteValue = true;
+}
+
+SymbolicVariable::SymbolicVariable(SymVar::kind kind,
+                                   uint64 kindValue,
+                                   uint64 id,
+                                   uint64 size,
+                                   std::string comment
+                                   ) : SymbolicVariable(kind, kindValue, id, size, comment, 0)
+{
+  this->symVarHasConcreteValue = false;
 }
 
 
 SymbolicVariable::SymbolicVariable(const SymbolicVariable &copy)
 {
-  this->symVarComment       = copy.symVarComment;
-  this->symVarId            = copy.symVarId;
-  this->symVarKind          = copy.symVarKind;
-  this->symVarKindValue     = copy.symVarKindValue;
-  this->symVarName          = copy.symVarName;
-  this->symVarSize          = copy.symVarSize;
-  this->symVarConcreteValue = copy.symVarConcreteValue;
+  this->symVarComment          = copy.symVarComment;
+  this->symVarId               = copy.symVarId;
+  this->symVarKind             = copy.symVarKind;
+  this->symVarKindValue        = copy.symVarKindValue;
+  this->symVarName             = copy.symVarName;
+  this->symVarSize             = copy.symVarSize;
+  this->symVarConcreteValue    = copy.symVarConcreteValue;
+  this->symVarHasConcreteValue = copy.symVarHasConcreteValue;
 }
 
 
@@ -75,12 +87,20 @@ std::string SymbolicVariable::getSymVarComment(void)
 
 uint128 SymbolicVariable::getConcreteValue(void)
 {
-  return this->symVarConcreteValue;
+  if (this->symVarHasConcreteValue)
+    return this->symVarConcreteValue;
+  else
+    throw std::runtime_error("SymbolicVariable: The symbolic variable has not a concrete value");
 }
 
+bool SymbolicVariable::hasConcreteValue(void)
+{
+  return this->symVarHasConcreteValue;
+}
 
 void SymbolicVariable::setSymVarConcreteValue(uint128 value)
 {
-  this->symVarConcreteValue = value;
+  this->symVarConcreteValue    = value;
+  this->symVarHasConcreteValue = true;
 }
 

@@ -257,7 +257,6 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::getFullExpression(smt2lib::smtAs
 SymbolicVariable *AnalysisProcessor::convertExprToSymVar(uint64 exprId, uint64 symVarSize, std::string symVarComment)
 {
   SymbolicVariable *symVar = this->symEngine.convertExprToSymVar(exprId, symVarSize, symVarComment);
-  symVar->setSymVarConcreteValue(SymVar::kind::UNDEF);
   return symVar;
 }
 
