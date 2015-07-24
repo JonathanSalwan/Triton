@@ -408,7 +408,7 @@ void Z3ast::operator()(smt2lib::smtAstVariableNode& e) {
     //TODO: handle SSE registers (128 bits)
     //bv_val(char const * n, unsigned sz)
     uint64 regValue   = symVar->getConcreteValue();
-    z3::expr newexpr  = this->result.getContext().bv_val(regValue, 64);
+    z3::expr newexpr  = this->result.getContext().bv_val(regValue, symVar->getSymVarSize());
     this->result.setExpr(newexpr);
   }
   else {
