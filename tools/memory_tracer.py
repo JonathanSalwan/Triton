@@ -49,7 +49,7 @@ def dump(opType, instruction, operand):
     memoryAccessSize = operand.getSize()
 
     a = str()
-    d = '[%c:%d] 0x%016x: %s' %(opAccess, memoryAccessSize, instruction.address, instruction.assembly)
+    d = '[%c:%d] 0x%016x: %s' %(opAccess, memoryAccessSize, instruction.getAddress(), instruction.getDisassembly())
 
     if checkReadAccess(memoryAccess):
         a = '%c:0x%016x:' %(opAccess, memoryAccess)
@@ -61,7 +61,7 @@ def dump(opType, instruction, operand):
 
 
 def before(instruction):
-    for operand in instruction.operands:
+    for operand in instruction.getOperands():
         if operand.getType() == IDREF.OPERAND.MEM_R:
             dump(IDREF.OPERAND.MEM_R, instruction, operand)
             return
@@ -69,7 +69,7 @@ def before(instruction):
 
 
 def after(instruction):
-    for operand in instruction.operands:
+    for operand in instruction.getOperands():
         if operand.getType() == IDREF.OPERAND.MEM_W:
             dump(IDREF.OPERAND.MEM_W, instruction, operand)
             return

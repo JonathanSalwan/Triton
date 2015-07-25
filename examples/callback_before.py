@@ -35,7 +35,7 @@ from triton import *
 
 # A callback must be a function with one argument. This argument is always a dict and contains all information
 def my_callback_before(instruction):
-    print 'TID (%d) %#x %s' %(instruction.threadId, instruction.address, instruction.assembly)
+    print 'TID (%d) %#x %s' %(instruction.getThreadId(), instruction.getAddress(), instruction.getDisassembly())
 
 
 if __name__ == '__main__':

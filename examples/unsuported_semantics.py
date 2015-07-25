@@ -9,8 +9,8 @@ unsuportedSemantics = dict()
 
 
 def cbefore(instruction):
-    if len(instruction.symbolicExpressions) == 0:
-        mnemonic = opcodeToString(instruction.opcode)
+    if len(instruction.getSymbolicExpressions()) == 0:
+        mnemonic = opcodeToString(instruction.getOpcode())
         if mnemonic in unsuportedSemantics:
             unsuportedSemantics[mnemonic] += 1
         else:

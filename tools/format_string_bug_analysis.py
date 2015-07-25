@@ -89,14 +89,14 @@ def trace(instruction):
     global TRACE
 
     # Don't save instructions which are not in our target binary
-    if os.path.basename(instruction.imageName) != TARGET_BINARY:
+    if os.path.basename(instruction.getImageName()) != TARGET_BINARY:
         return
 
-    # Save 
+    # Save
     if len(TRACE) < TRACE_SIZE:
-        TRACE.append(tuple((instruction.address, instruction.assembly)))
+        TRACE.append(tuple((instruction.getAddress(), instruction.getDisassembly())))
     else:
-        TRACE[COUNT % TRACE_SIZE] = tuple((instruction.address, instruction.assembly))
+        TRACE[COUNT % TRACE_SIZE] = tuple((instruction.getAddress(), instruction.getDiassembly()))
 
     COUNT += 1
     return

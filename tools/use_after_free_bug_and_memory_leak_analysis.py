@@ -119,13 +119,13 @@ def freeEntry(threadId):
 
 def trace(instruction):
     global TF
-    for operand in instruction.operands:
+    for operand in instruction.getOperands():
         if operand.getType() == IDREF.OPERAND.MEM_W or operand.getType() == IDREF.OPERAND.MEM_R:
             memoryAccess     = operand.getValue()
             memoryAccessSize = operand.getSize()
             for (delta, size) in TF:
                 if memoryAccess > delta and memoryAccess < delta+size:
-                    print '[!] Use-after-free (%#x) at %#x: %s' %(memoryAccess, instruction.address, instruction.assembly)
+                    print '[!] Use-after-free (%#x) at %#x: %s' %(memoryAccess, instruction.getAddress(), instruction.getDiassembly())
                     return
     return
 

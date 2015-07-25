@@ -35,7 +35,7 @@ import triton
 
 
 def cafter(instruction):
-    print '%#x: %s' %(instruction.address, instruction.assembly)
+    print '%#x: %s' %(instruction.getAddress(), instruction.getDisassembly())
     return
 
 

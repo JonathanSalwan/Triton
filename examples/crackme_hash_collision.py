@@ -49,13 +49,13 @@ def cafter(instruction):
 
     # movzx esi,BYTE PTR [rax]
     # RAX points on the user password
-    if instruction.address == 0x400572:
+    if instruction.getAddress() == 0x400572:
         rsiId = getRegSymbolicID(IDREF.REG.RSI)
         convertExprToSymVar(rsiId, 64)
 
     # mov eax,DWORD PTR [rbp-0x4]
     # RAX must be equal to 0xad6d to win
-    if instruction.address == 0x4005c5:
+    if instruction.getAddress() == 0x4005c5:
         print '[+] Please wait, computing in progress...'
         raxId = getRegSymbolicID(IDREF.REG.RAX)
         raxExpr = getFullExpression(getSymExpr(raxId).getAst())

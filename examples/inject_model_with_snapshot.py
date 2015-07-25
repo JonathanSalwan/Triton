@@ -35,7 +35,7 @@ symVarMem = None
 
 def csym(instruction):
     # 0x40058b: movzx eax, byte ptr [rax]
-    if instruction.address == 0x40058b:
+    if instruction.getAddress() == 0x40058b:
         global symVarMem
         symVarMem = getRegValue(IDREF.REG.RAX)
     return
@@ -44,12 +44,12 @@ def csym(instruction):
 def cafter(instruction):
 
     # 0x40058b: movzx eax, byte ptr [rax]
-    if instruction.address == 0x40058b:
+    if instruction.getAddress() == 0x40058b:
         v = convertRegToSymVar(IDREF.REG.RAX, 32)
         #print "Concrete value:\t%s\t%c" % (v, v.getConcreteValue())
 
     # 0x4005ae: cmp ecx, eax
-    if instruction.address == 0x4005ae:
+    if instruction.getAddress() == 0x4005ae:
         zfId    = getRegSymbolicID(IDREF.FLAG.ZF)
         zfExpr  = getFullExpression(getSymExpr(zfId).getAst())
         expr    = smt2lib.smtAssert(smt2lib.equal(zfExpr, smt2lib.bvtrue())) # (assert (= zf True))
@@ -65,20 +65,20 @@ def cbefore(instruction):
 
     # Prologue of the function
     global snapshot
-    if instruction.address == 0x40056d and isSnapshotEnabled() == False:
+    if instruction.getAddress() == 0x40056d and isSnapshotEnabled() == False:
         takeSnapshot()
         print '[+] Take a snapshot at the prologue of the function'
         return
 
     # 0x40058b: movzx eax, byte ptr [rax]
-    if instruction.address == 0x40058b:
+    if instruction.getAddress() == 0x40058b:
         rax = getRegValue(IDREF.REG.RAX)
         if rax in password:
             setMemValue(rax, 1, password[rax])
             print '[+] Inject the character \'%c\' in memory' %(chr(password[rax]))
 
     # Epilogue of the function
-    if instruction.address == 0x4005c8:
+    if instruction.getAddress() == 0x4005c8:
         rax = getRegValue(IDREF.REG.RAX)
         # The function returns 0 if the password is valid
         # So, we restore the snapshot until this function

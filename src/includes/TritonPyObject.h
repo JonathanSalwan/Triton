@@ -67,5 +67,19 @@ extern PyTypeObject Operand_Type;
 #define PyOperand_Check(v) ((v)->ob_type == &Operand_Type)
 #define PyOperand_AsOperand(v) (&(((Operand_Object *)(v))->operand))
 
+// Instruction =============================
+
+typedef struct {
+  PyObject_HEAD
+  IRBuilder *irb;
+  Inst      *ins;
+} Instruction_Object;
+
+extern PyTypeObject Instruction_Type;
+
+#define PyInstruction_Check(v) ((v)->ob_type == &Instruction_Type)
+#define PyInstruction_AsIns(v) (((Instruction_Object *)(v))->ins)
+#define PyInstruction_AsIrb(v) (((Instruction_Object *)(v))->irb)
+
 #endif     /* !__TRITONPYOBJECT_H__ */
 

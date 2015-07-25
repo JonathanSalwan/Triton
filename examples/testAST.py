@@ -34,7 +34,7 @@ def sbefore(instruction):
 
 def cafter(instruction):
 
-    if instruction.address < 0x600000: # To bypass external lib
+    if instruction.getAddress() < 0x600000: # To bypass external lib
 
         bad  = list()
         regs = getRegs()
@@ -59,9 +59,9 @@ def cafter(instruction):
                 })
 
         if not bad:
-            print "[%sOK%s] %#x: %s" %(GREEN, ENDC, instruction.address, instruction.assembly)
+            print "[%sOK%s] %#x: %s" %(GREEN, ENDC, instruction.getAddress(), instruction.getDisassembly())
         else:
-            print "[%sKO%s] %#x: %s (%s%d error%s)" %(RED, ENDC, instruction.address, instruction.assembly, RED, len(bad), ENDC)
+            print "[%sKO%s] %#x: %s (%s%d error%s)" %(RED, ENDC, instruction.getAddress(), instruction.getDisassembly(), RED, len(bad), ENDC)
             for w in bad:
                 print "     Register       : %s" %(w['reg'])
                 print "     Symbolic Value : %016x" %(w['svalue'])

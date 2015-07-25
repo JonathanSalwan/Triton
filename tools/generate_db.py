@@ -27,7 +27,7 @@ def accessMemoryDump(opType, instruction, operand):
     # Checks if the source address can be read
     if checkReadAccess(operand.getValue()):
 
-        insAddr          = instruction.address
+        insAddr          = instruction.getAddress()
         accessType       = 'R'
         accessAddr       = operand.getValue()
         accessSize       = operand.getSize()
@@ -47,7 +47,7 @@ def accessMemoryDump(opType, instruction, operand):
 def after(instruction):
 
     # Dump memory access when a STORE occurs
-    for operand in instruction.operands:
+    for operand in instruction.getOperands():
         if operand.getType() == IDREF.OPERAND.MEM_W:
             accessMemoryDump(IDREF.OPERAND.MEM_W, instruction, operand)
             return
@@ -58,15 +58,15 @@ def after(instruction):
 def before(instruction):
 
     # Dump symbolic expression
-    addr = instruction.address
-    asm  = instruction.assembly
-    seId = [se.getId() for se in instruction.symbolicExpressions]
+    addr = instruction.getAddress()
+    asm  = instruction.getDisassembly()
+    seId = [se.getId() for se in instruction.getSymbolicExpressions()]
     cursor.execute("INSERT INTO instructions VALUES (%d, '%s', '%s')" %(addr, asm, str(seId)[1:-1].replace(',','')))
-    for se in instruction.symbolicExpressions:
+    for se in instruction.getSymbolicExpressions():
         cursor.execute("INSERT INTO expressions VALUES (%d, %d, '%s', %d)" %(se.getId(), addr, se.getAst(), se.isTainted()))
 
     # Dump registers value
-    for operand in instruction.operands:
+    for operand in instruction.getOperands():
         if operand.getType() == IDREF.OPERAND.REG:
             regId      = operand.getValue()
             regSize    = operand.getSize()
@@ -75,7 +75,7 @@ def before(instruction):
             cursor.execute("INSERT INTO registersValue VALUES (%d, %d, '%s', %d, %d)" %(addr, regId, regName, regSize, regContent))
 
     # Dump memory access when a LOAD occurs
-    for operand in instruction.operands:
+    for operand in instruction.getOperands():
         if operand.getType() == IDREF.OPERAND.MEM_R:
             accessMemoryDump(IDREF.OPERAND.MEM_R, instruction, operand)
             return

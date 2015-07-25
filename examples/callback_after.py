@@ -149,9 +149,9 @@ from triton import *
 # always the Instruction class and contains all information
 def my_callback_after(instruction):
 
-    print '%#x: %s' %(instruction.address, instruction.assembly)
+    print '%#x: %s' %(instruction.getAddress(), instruction.getDisassembly())
 
-    for se in instruction.symbolicExpressions:
+    for se in instruction.getSymbolicExpressions():
         print '\t -> #%d = %s %s' %(se.getId(), se.getAst(), (('; ' + se.getComment()) if se.getComment() is not None else ''))
 
     print
