@@ -13,6 +13,7 @@
  * - getKindValue() : Returns the kind value (IDREG.REG or integer, it depends of the kind)
  * - getName() : Returns the name of the symbolic variable
  * - getSize() : Returns the symbolic variable size
+ * - hasConcreteValue() : Returns true of false if the variable contains a concrete value
  */
 
 
@@ -79,6 +80,16 @@ static PyObject *SymbolicVariable_getSize(PyObject *self, PyObject *noarg)
 }
 
 
+static char SymbolicVariable_hasConcreteValue_doc[] = "Returns true of false if the variable contains a concrete value";
+static PyObject *SymbolicVariable_hasConcreteValue(PyObject *self, PyObject *noarg)
+{
+  SymbolicVariable *variable = PySymbolicVariable_AsSymbolicVariable(self);
+  if (variable->hasConcreteValue() == true)
+    Py_RETURN_TRUE;
+  Py_RETURN_FALSE;
+}
+
+
 static PyObject *SymbolicVariable_str(SymbolicVariable_Object *obj)
 {
   std::stringstream str;
@@ -95,6 +106,7 @@ PyMethodDef SymbolicVariable_callbacks[] = {
   {"getKindValue",        SymbolicVariable_getKindValue,        METH_NOARGS,   SymbolicVariable_getKindValue_doc},
   {"getName",             SymbolicVariable_getName,             METH_NOARGS,   SymbolicVariable_getName_doc},
   {"getSize",             SymbolicVariable_getSize,             METH_NOARGS,   SymbolicVariable_getSize_doc},
+  {"hasConcreteValue",    SymbolicVariable_hasConcreteValue,    METH_NOARGS,   SymbolicVariable_hasConcreteValue_doc},
   {nullptr,               nullptr,                              0,             nullptr}
 };
 
