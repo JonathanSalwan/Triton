@@ -55,5 +55,17 @@ extern PyTypeObject SymbolicVariable_Type;
 #define PySymbolicVariable_Check(v) ((v)->ob_type == &SymbolicVariable_Type)
 #define PySymbolicVariable_AsSymbolicVariable(v) (((SymbolicVariable_Object *)(v))->variable)
 
+// Operand =============================
+
+typedef struct {
+  PyObject_HEAD
+  TritonOperand operand;
+} Operand_Object;
+
+extern PyTypeObject Operand_Type;
+
+#define PyOperand_Check(v) ((v)->ob_type == &Operand_Type)
+#define PyOperand_AsOperand(v) (&(((Operand_Object *)(v))->operand))
+
 #endif     /* !__TRITONPYOBJECT_H__ */
 
