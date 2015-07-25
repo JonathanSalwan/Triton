@@ -45,8 +45,8 @@ from triton import *
 def dump(opType, instruction, operand):
 
     opAccess         = 'R' if opType == IDREF.OPERAND.MEM_R else 'W'
-    memoryAccess     = operand.value
-    memoryAccessSize = operand.size
+    memoryAccess     = operand.getValue()
+    memoryAccessSize = operand.getSize()
 
     a = str()
     d = '[%c:%d] 0x%016x: %s' %(opAccess, memoryAccessSize, instruction.address, instruction.assembly)
@@ -62,7 +62,7 @@ def dump(opType, instruction, operand):
 
 def before(instruction):
     for operand in instruction.operands:
-        if operand.type == IDREF.OPERAND.MEM_R:
+        if operand.getType() == IDREF.OPERAND.MEM_R:
             dump(IDREF.OPERAND.MEM_R, instruction, operand)
             return
     return
@@ -70,7 +70,7 @@ def before(instruction):
 
 def after(instruction):
     for operand in instruction.operands:
-        if operand.type == IDREF.OPERAND.MEM_W:
+        if operand.getType() == IDREF.OPERAND.MEM_W:
             dump(IDREF.OPERAND.MEM_W, instruction, operand)
             return
     return

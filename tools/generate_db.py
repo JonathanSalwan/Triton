@@ -25,12 +25,12 @@ cursor = conn.cursor()
 def accessMemoryDump(opType, instruction, operand):
 
     # Checks if the source address can be read
-    if checkReadAccess(operand.value):
+    if checkReadAccess(operand.getValue()):
 
         insAddr          = instruction.address
         accessType       = 'R'
-        accessAddr       = operand.value
-        accessSize       = operand.size
+        accessAddr       = operand.getValue()
+        accessSize       = operand.getSize()
         contentAsString  = str()
         contentAsInteger = getMemValue(accessAddr, accessSize)
 
@@ -48,7 +48,7 @@ def after(instruction):
 
     # Dump memory access when a STORE occurs
     for operand in instruction.operands:
-        if operand.type == IDREF.OPERAND.MEM_W:
+        if operand.getType() == IDREF.OPERAND.MEM_W:
             accessMemoryDump(IDREF.OPERAND.MEM_W, instruction, operand)
             return
 
@@ -67,16 +67,16 @@ def before(instruction):
 
     # Dump registers value
     for operand in instruction.operands:
-        if operand.type == IDREF.OPERAND.REG:
-            regId      = operand.value
-            regSize    = operand.size
+        if operand.getType() == IDREF.OPERAND.REG:
+            regId      = operand.getValue()
+            regSize    = operand.getSize()
             regContent = getRegValue(regId)
             regName    = getRegName(regId)
             cursor.execute("INSERT INTO registersValue VALUES (%d, %d, '%s', %d, %d)" %(addr, regId, regName, regSize, regContent))
 
     # Dump memory access when a LOAD occurs
     for operand in instruction.operands:
-        if operand.type == IDREF.OPERAND.MEM_R:
+        if operand.getType() == IDREF.OPERAND.MEM_R:
             accessMemoryDump(IDREF.OPERAND.MEM_R, instruction, operand)
             return
 
