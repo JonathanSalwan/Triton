@@ -73,7 +73,7 @@ def cafter(instruction):
 if __name__ == '__main__':
 
     # Start the symbolic analysis from the 'check' function
-    startAnalysisFromSymbol('check')
+    startAnalysisFromSymbol('main')
 
     addCallback(cafter, IDREF.CALLBACK.AFTER)
     addCallback(sbefore, IDREF.CALLBACK.BEFORE_SYMPROC)
