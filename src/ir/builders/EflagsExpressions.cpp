@@ -88,18 +88,18 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfAdd(SymbolicExpression *parent
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::cfImul(SymbolicExpression *parent,
                                                        uint32 bvSize,
-                                                       smt2lib::smtAstAbstractNode *op1)
+                                                       smt2lib::smtAstAbstractNode *mulRes)
 {
   smt2lib::smtAstAbstractNode *expr;
 
   /*
    * Create the SMT semantic.
-   * cf = 0 if res == op1 else 1
+   * cf = 0 if sx(parent) == mulRes else 1
    */
   expr = smt2lib::ite(
             smt2lib::equal(
-              smt2lib::extract(bvSize-1, 0, smt2lib::reference(parent->getID())),
-              op1
+              smt2lib::sx(bvSize, smt2lib::extract(bvSize-1, 0, smt2lib::reference(parent->getID()))),
+              mulRes
             ),
             smt2lib::bv(0, 1),
             smt2lib::bv(1, 1));
@@ -374,18 +374,18 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofAdd(SymbolicExpression *parent
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::ofImul(SymbolicExpression *parent,
                                                        uint32 bvSize,
-                                                       smt2lib::smtAstAbstractNode *op1)
+                                                       smt2lib::smtAstAbstractNode *mulRes)
 {
   smt2lib::smtAstAbstractNode *expr;
 
   /*
    * Create the SMT semantic.
-   * of = 0 if res == op1 else 1
+   * of = 0 if sx(parent) == mulRes else 1
    */
   expr = smt2lib::ite(
             smt2lib::equal(
-              smt2lib::extract(bvSize-1, 0, smt2lib::reference(parent->getID())),
-              op1
+              smt2lib::sx(bvSize, smt2lib::extract(bvSize-1, 0, smt2lib::reference(parent->getID()))),
+              mulRes
             ),
             smt2lib::bv(0, 1),
             smt2lib::bv(1, 1));

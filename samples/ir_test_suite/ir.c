@@ -101,7 +101,8 @@ void check(void)
 
   asm("imul sil");
   asm("imul cx");
-  asm("imul ecx");
+  asm("mov rcx, 0xffffffffffffffff");
+  asm("imul rcx");
   asm("imul ecx, 1");
   asm("imul ecx, edx");
   asm("imul rdx, rcx, 4");

@@ -13,7 +13,7 @@ namespace EflagsExpressions {
   smt2lib::smtAstAbstractNode *afNeg(SymbolicExpression *parent, uint32 bvSize, smt2lib::smtAstAbstractNode *op1);
 
   smt2lib::smtAstAbstractNode *cfAdd(SymbolicExpression *parent, uint32 bvSize, smt2lib::smtAstAbstractNode *op1);
-  smt2lib::smtAstAbstractNode *cfImul(SymbolicExpression *parent, uint32 bvSize, smt2lib::smtAstAbstractNode *op1);
+  smt2lib::smtAstAbstractNode *cfImul(SymbolicExpression *parent, uint32 bvSize, smt2lib::smtAstAbstractNode *mulRes);
   smt2lib::smtAstAbstractNode *cfMul(uint32 bvSize, smt2lib::smtAstAbstractNode *up);
   smt2lib::smtAstAbstractNode *cfNeg(uint32 bvSize, smt2lib::smtAstAbstractNode *op1);
   smt2lib::smtAstAbstractNode *cfRcl(SymbolicExpression *parent, AnalysisProcessor &ap, uint32 bvSize, smt2lib::smtAstAbstractNode *op2);
@@ -27,7 +27,7 @@ namespace EflagsExpressions {
   smt2lib::smtAstAbstractNode *clearFlag(void);
 
   smt2lib::smtAstAbstractNode *ofAdd(SymbolicExpression *parent, uint32 extractSize, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
-  smt2lib::smtAstAbstractNode *ofImul(SymbolicExpression *parent, uint32 bvSize, smt2lib::smtAstAbstractNode *op1);
+  smt2lib::smtAstAbstractNode *ofImul(SymbolicExpression *parent, uint32 bvSize, smt2lib::smtAstAbstractNode *mulRes);
   smt2lib::smtAstAbstractNode *ofMul(uint32 bvSize, smt2lib::smtAstAbstractNode *up);
   smt2lib::smtAstAbstractNode *ofNeg(SymbolicExpression *parent, uint32 bvSize, smt2lib::smtAstAbstractNode *op1);
   smt2lib::smtAstAbstractNode *ofRol(SymbolicExpression *parent, AnalysisProcessor &ap, uint32 bvSize, smt2lib::smtAstAbstractNode *op2);

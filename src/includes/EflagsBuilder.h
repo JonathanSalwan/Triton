@@ -14,7 +14,7 @@ namespace EflagsBuilder {
   SymbolicExpression *afNeg(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1);
 
   SymbolicExpression *cfAdd(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1);
-  SymbolicExpression *cfImul(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1);
+  SymbolicExpression *cfImul(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *mulRes);
   SymbolicExpression *cfMul(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *up);
   SymbolicExpression *cfNeg(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1);
   SymbolicExpression *cfRcl(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op2);
@@ -29,7 +29,7 @@ namespace EflagsBuilder {
   SymbolicExpression *clearFlag(Inst &inst, AnalysisProcessor &ap, regID_t flag, std::string comment);
 
   SymbolicExpression *ofAdd(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
-  SymbolicExpression *ofImul(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1);
+  SymbolicExpression *ofImul(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *mulRes);
   SymbolicExpression *ofMul(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *up);
   SymbolicExpression *ofNeg(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1);
   SymbolicExpression *ofRol(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op2);
