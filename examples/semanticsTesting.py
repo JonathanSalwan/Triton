@@ -34,39 +34,37 @@ def sbefore(instruction):
 
 def cafter(instruction):
 
-    if instruction.getAddress() < 0x600000: # To bypass external lib
+    bad  = list()
+    regs = getRegs()
 
-        bad  = list()
-        regs = getRegs()
+    for reg, data in regs.items():
 
-        for reg, data in regs.items():
+        cvalue = data['concreteValue']
+        seid   = data['symbolicExpr']
 
-            cvalue = data['concreteValue']
-            seid   = data['symbolicExpr']
+        if seid == IDREF.MISC.UNSET:
+            continue
 
-            if seid == IDREF.MISC.UNSET:
-                continue
+        expr   = getFullExpression(getSymExpr(seid).getAst())
+        svalue = evaluateAST(expr)
 
-            expr   = getFullExpression(getSymExpr(seid).getAst())
-            svalue = evaluateAST(expr)
+        if cvalue != svalue:
+            bad.append({
+                'reg': getRegName(reg),
+                'svalue': svalue,
+                'cvalue': cvalue,
+                'expr': getSymExpr(seid).getAst()
+            })
 
-            if cvalue != svalue:
-                bad.append({
-                    'reg': getRegName(reg),
-                    'svalue': svalue,
-                    'cvalue': cvalue,
-                    'expr': getSymExpr(seid).getAst()
-                })
-
-        if not bad:
-            print "[%sOK%s] %#x: %s" %(GREEN, ENDC, instruction.getAddress(), instruction.getDisassembly())
-        else:
-            print "[%sKO%s] %#x: %s (%s%d error%s)" %(RED, ENDC, instruction.getAddress(), instruction.getDisassembly(), RED, len(bad), ENDC)
-            for w in bad:
-                print "     Register       : %s" %(w['reg'])
-                print "     Symbolic Value : %016x" %(w['svalue'])
-                print "     Concrete Value : %016x" %(w['cvalue'])
-                print "     Expression     : %s" %(w['expr'])
+    if not bad:
+        print "[%sOK%s] %#x: %s" %(GREEN, ENDC, instruction.getAddress(), instruction.getDisassembly())
+    else:
+        print "[%sKO%s] %#x: %s (%s%d error%s)" %(RED, ENDC, instruction.getAddress(), instruction.getDisassembly(), RED, len(bad), ENDC)
+        for w in bad:
+            print "     Register       : %s" %(w['reg'])
+            print "     Symbolic Value : %016x" %(w['svalue'])
+            print "     Concrete Value : %016x" %(w['cvalue'])
+            print "     Expression     : %s" %(w['expr'])
     return
 
 
