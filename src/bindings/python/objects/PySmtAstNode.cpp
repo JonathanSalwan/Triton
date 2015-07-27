@@ -1,6 +1,7 @@
 
 #include <TritonPyObject.h>
 #include <xPyFunc.h>
+#include <PythonUtils.h>
 
 /*
  * Class SmtAstNode:
@@ -46,7 +47,7 @@ static PyObject *SmtAstNode_getValue(PyObject *self, PyObject *noarg)
   smt2lib::smtAstAbstractNode *node = PySmtAstNode_AsSmtAstNode(self);
 
   if (node->getKind() == smt2lib::DECIMAL_NODE)
-    return Py_BuildValue("k", reinterpret_cast<smt2lib::smtAstDecimalNode *>(node)->getValue());
+    return uint128ToPyLongObject(reinterpret_cast<smt2lib::smtAstDecimalNode *>(node)->getValue());
 
   else if (node->getKind() == smt2lib::STRING_NODE)
     return Py_BuildValue("s", reinterpret_cast<smt2lib::smtAstStringNode *>(node)->getValue().c_str());

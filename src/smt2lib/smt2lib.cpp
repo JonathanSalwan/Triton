@@ -843,7 +843,7 @@ void smtAstBvxorNode::accept(Visitor& v) {
 // ====== bv
 
 
-smtAstBvNode::smtAstBvNode(uint64 value, uint64 size) {
+smtAstBvNode::smtAstBvNode(uint128 value, uint64 size) {
   this->kind = BV_NODE;
   this->addChild(new smtAstDecimalNode(value));
   this->addChild(new smtAstDecimalNode(size));
@@ -947,7 +947,7 @@ void smtAstConcatNode::accept(Visitor& v) {
 // ====== Decimal node
 
 
-smtAstDecimalNode::smtAstDecimalNode(uint64 value) {
+smtAstDecimalNode::smtAstDecimalNode(uint128 value) {
   this->kind  = DECIMAL_NODE;
   this->value = value;
 }
@@ -964,7 +964,7 @@ smtAstDecimalNode::~smtAstDecimalNode() {
 }
 
 
-uint64 smtAstDecimalNode::getValue(void) {
+uint128 smtAstDecimalNode::getValue(void) {
   return this->value;
 }
 
@@ -1659,7 +1659,7 @@ namespace smt2lib {
   }
 
 
-  smtAstAbstractNode *bv(uint64 value, uint64 size) {
+  smtAstAbstractNode *bv(uint128 value, uint64 size) {
     smtAstAbstractNode *node = new smtAstBvNode(value, size);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
@@ -1963,7 +1963,7 @@ namespace smt2lib {
   }
 
 
-  smtAstAbstractNode *decimal(uint64 value) {
+  smtAstAbstractNode *decimal(uint128 value) {
     smtAstAbstractNode *node = new smtAstDecimalNode(value);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");

@@ -11,14 +11,13 @@ class Z3Result {
     ~Z3Result();
     Z3Result(const Z3Result& copy);
 
-    void setExpr(z3::expr& expr);
     void printExpr(void) const;
+    void setExpr(z3::expr& expr);
 
-    z3::expr& getExpr(void);
-    std::string getStringValue(void) const;
-    z3::context& getContext(void);
-    uint64 getUint64Value(void) const;
-
+    z3::context&  getContext(void);
+    z3::expr&     getExpr(void);
+    std::string   getStringValue(void) const;
+    uint64        getUint64Value(void) const;
 
   private:
     z3::context context;
