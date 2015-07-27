@@ -401,15 +401,15 @@ void Z3ast::operator()(smt2lib::smtAstVariableNode& e) {
 
   if (symVar->getSymVarKind() == SymVar::kind::MEM) {
     uint64 memSize   = symVar->getSymVarSize();
-    uint128 memValue  = symVar->getConcreteValue();
+    uint128 memValue = symVar->getConcreteValue();
     std::string memStrValue(memValue);
     z3::expr newexpr = this->result.getContext().bv_val(memStrValue.c_str(), memSize);
     this->result.setExpr(newexpr);
   }
   else if (symVar->getSymVarKind() == SymVar::kind::REG) {
-    uint128 regValue   = symVar->getConcreteValue();
+    uint128 regValue = symVar->getConcreteValue();
     std::string regStrValue(regValue);
-    z3::expr newexpr  = this->result.getContext().bv_val(regStrValue.c_str(), symVar->getSymVarSize());
+    z3::expr newexpr = this->result.getContext().bv_val(regStrValue.c_str(), symVar->getSymVarSize());
     this->result.setExpr(newexpr);
   }
   else {
