@@ -136,6 +136,7 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAb
 
 SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize)
 {
+  SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *tmp;
   std::list<smt2lib::smtAstAbstractNode *> ret;
 
@@ -146,7 +147,7 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
   while (writeSize) {
     /* Extract each byte of the memory */
     tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
-    SymbolicExpression *se = symEngine.newSymbolicExpression(tmp, "byte reference");
+    se = symEngine.newSymbolicExpression(tmp, "byte reference");
     ret.push_back(tmp);
     inst.addExpression(se);
     /* Assign memory with little endian */
@@ -154,12 +155,18 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
     writeSize--;
   }
 
+  /* If there is only one reference, we return the symbolic expression */
+  if (ret.size() == 1)
+    return se;
+
+  /* Otherwise, we return the concatenation of all expressions */
   return symEngine.newSymbolicExpression(smt2lib::concat(ret), "concat reference");
 }
 
 
 SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize, std::string comment)
 {
+  SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *tmp;
   std::list<smt2lib::smtAstAbstractNode *> ret;
 
@@ -170,7 +177,7 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
   while (writeSize) {
     /* Extract each byte of the memory */
     tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
-    SymbolicExpression *se = symEngine.newSymbolicExpression(tmp, "byte reference");
+    se  = symEngine.newSymbolicExpression(tmp, "byte reference");
     ret.push_back(tmp);
     inst.addExpression(se);
     /* Assign memory with little endian */
@@ -178,6 +185,11 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
     writeSize--;
   }
 
+  /* If there is only one reference, we return the symbolic expression */
+  if (ret.size() == 1)
+    return se;
+
+  /* Otherwise, we return the concatenation of all symbolic expressions */
   return symEngine.newSymbolicExpression(smt2lib::concat(ret), "concat reference");
 }
 
