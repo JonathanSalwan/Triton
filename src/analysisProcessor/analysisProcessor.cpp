@@ -136,8 +136,8 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAb
 
 SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize)
 {
-  SymbolicExpression *ret = nullptr;
   smt2lib::smtAstAbstractNode *tmp;
+  std::list<smt2lib::smtAstAbstractNode *> ret;
 
   /*
    * As the x86's memory can be accessed without alignment, each byte of the
@@ -147,22 +147,21 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
     /* Extract each byte of the memory */
     tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
     SymbolicExpression *se = symEngine.newSymbolicExpression(tmp, "byte reference");
-    ret = se;
+    ret.push_back(tmp);
     inst.addExpression(se);
     /* Assign memory with little endian */
     this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
     writeSize--;
   }
 
-  /* TODO: Should return a list */
-  return ret;
+  return symEngine.newSymbolicExpression(smt2lib::concat(ret), "concat reference");
 }
 
 
 SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize, std::string comment)
 {
-  SymbolicExpression *ret = nullptr;
   smt2lib::smtAstAbstractNode *tmp;
+  std::list<smt2lib::smtAstAbstractNode *> ret;
 
   /*
    * As the x86's memory can be accessed without alignment, each byte of the
@@ -172,15 +171,14 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
     /* Extract each byte of the memory */
     tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
     SymbolicExpression *se = symEngine.newSymbolicExpression(tmp, "byte reference");
-    ret = se;
+    ret.push_back(tmp);
     inst.addExpression(se);
     /* Assign memory with little endian */
     this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
     writeSize--;
   }
 
-  /* TODO: Should return a list */
-  return ret;
+  return symEngine.newSymbolicExpression(smt2lib::concat(ret), "concat reference");
 }
 
 
