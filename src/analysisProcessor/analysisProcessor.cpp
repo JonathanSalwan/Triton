@@ -154,7 +154,7 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
     writeSize--;
   }
 
-  /* TODO: Must returns a list */
+  /* TODO: Should return a list */
   return ret;
 }
 
@@ -179,7 +179,7 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
     writeSize--;
   }
 
-  /* TODO: Must returns a list */
+  /* TODO: Should return a list */
   return ret;
 }
 
