@@ -7,7 +7,7 @@ ENDC  = "\033[0m"
 
 # Output
 #
-# $ ./triton ./examples/testAST.py ./samples/ir_test_suite/ir
+# $ ./triton ./examples/semanticsTesting.py ./samples/ir_test_suite/ir
 # [...]
 # [OK] 0x400645: idiv rcx
 # [OK] 0x400648: mov rax, 0x1
