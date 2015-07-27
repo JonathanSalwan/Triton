@@ -125,7 +125,7 @@ void Z3ast::operator()(smt2lib::smtAstBvorNode& e) {
 
 
 void Z3ast::operator()(smt2lib::smtAstBvrolNode& e) {
-  uint64   op1 = reinterpret_cast<smt2lib::smtAstDecimalNode*>(e.getChilds()[0])->getValue();
+  uint64   op1 = boost::numeric_cast<uint64>(reinterpret_cast<smt2lib::smtAstDecimalNode*>(e.getChilds()[0])->getValue());
   Z3Result op2 = this->eval(*e.getChilds()[1]);
   z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_rotate_left(this->result.getContext(), op1, op2.getExpr()));
 
@@ -134,7 +134,7 @@ void Z3ast::operator()(smt2lib::smtAstBvrolNode& e) {
 
 
 void Z3ast::operator()(smt2lib::smtAstBvrorNode& e) {
-  uint64   op1 = reinterpret_cast<smt2lib::smtAstDecimalNode*>(e.getChilds()[0])->getValue();
+  uint64  op1 = boost::numeric_cast<uint64>(reinterpret_cast<smt2lib::smtAstDecimalNode*>(e.getChilds()[0])->getValue());
   Z3Result op2 = this->eval(*e.getChilds()[1]);
   z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_rotate_right(this->result.getContext(), op1, op2.getExpr()));
 
@@ -290,7 +290,7 @@ void Z3ast::operator()(smt2lib::smtAstBvxorNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvNode& e) {
   Z3Result value = this->eval(*e.getChilds()[0]);
   Z3Result size = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = this->result.getContext().bv_val(value.getUint64Value(), size.getUint64Value());
+  z3::expr newexpr = this->result.getContext().bv_val(value.getStringValue().c_str(), size.getUint64Value());
 
   this->result.setExpr(newexpr);
 }
@@ -320,7 +320,8 @@ void Z3ast::operator()(smt2lib::smtAstConcatNode& e) {
 
 
 void Z3ast::operator()(smt2lib::smtAstDecimalNode& e) {
-  z3::expr newexpr = this->result.getContext().int_val(e.getValue());
+  std::string value(e.getValue());
+  z3::expr newexpr = this->result.getContext().int_val(value.c_str());
   this->result.setExpr(newexpr);
 }
 
@@ -400,15 +401,17 @@ void Z3ast::operator()(smt2lib::smtAstVariableNode& e) {
 
   if (symVar->getSymVarKind() == SymVar::kind::MEM) {
     uint64 memSize   = symVar->getSymVarSize();
-    uint64 memValue  = symVar->getConcreteValue();
-    z3::expr newexpr = this->result.getContext().bv_val(memValue, memSize);
+    uint128 memValue  = symVar->getConcreteValue();
+    std::string memStrValue(memValue);
+    z3::expr newexpr = this->result.getContext().bv_val(memStrValue.c_str(), memSize);
     this->result.setExpr(newexpr);
   }
   else if (symVar->getSymVarKind() == SymVar::kind::REG) {
     //TODO: handle SSE registers (128 bits)
     //bv_val(char const * n, unsigned sz)
-    uint64 regValue   = symVar->getConcreteValue();
-    z3::expr newexpr  = this->result.getContext().bv_val(regValue, symVar->getSymVarSize());
+    uint128 regValue   = symVar->getConcreteValue();
+    std::string regStrValue(regValue);
+    z3::expr newexpr  = this->result.getContext().bv_val(regStrValue.c_str(), symVar->getSymVarSize());
     this->result.setExpr(newexpr);
   }
   else {

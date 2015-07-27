@@ -422,7 +422,7 @@ namespace smt2lib {
   class smtAstBvNode : public smtAstAbstractNode
   {
     public:
-      smtAstBvNode(uint64 value, uint64 size);
+      smtAstBvNode(uint128 value, uint64 size);
       smtAstBvNode(const smtAstBvNode &copy);
       ~smtAstBvNode();
       virtual void accept(Visitor& v);
@@ -457,14 +457,14 @@ namespace smt2lib {
   class smtAstDecimalNode : public smtAstAbstractNode
   {
     protected:
-      uint64 value;
+      uint128 value;
 
     public:
-      smtAstDecimalNode(uint64 value);
+      smtAstDecimalNode(uint128 value);
       smtAstDecimalNode(const smtAstDecimalNode &copy);
       ~smtAstDecimalNode();
 
-      uint64 getValue(void);
+      uint128 getValue(void);
       virtual void accept(Visitor& v);
   };
 
@@ -646,7 +646,7 @@ namespace smt2lib {
 
 
   /* Node builders */
-  smtAstAbstractNode *bv(uint64 value, uint64 size);
+  smtAstAbstractNode *bv(uint128 value, uint64 size);
   smtAstAbstractNode *bvadd(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
   smtAstAbstractNode *bvand(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
   smtAstAbstractNode *bvashr(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
@@ -684,7 +684,7 @@ namespace smt2lib {
   smtAstAbstractNode *concat(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
   smtAstAbstractNode *concat(std::vector<smtAstAbstractNode *> exprs);
   smtAstAbstractNode *concat(std::list<smtAstAbstractNode *> exprs);
-  smtAstAbstractNode *decimal(uint64 value);
+  smtAstAbstractNode *decimal(uint128 value);
   smtAstAbstractNode *declare(std::string symVarName, uint64 symVarSize);
   smtAstAbstractNode *distinct(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
   smtAstAbstractNode *equal(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);

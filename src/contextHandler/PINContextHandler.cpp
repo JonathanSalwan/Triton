@@ -151,16 +151,16 @@ void PINContextHandler::setMemValue(uint64 mem, uint32 writeSize, uint128 value)
 
   switch(writeSize){
     case BYTE_SIZE:
-      *((char *)mem) = value;
+      *((char *)mem) = boost::numeric_cast<char>(value);
       break;
     case WORD_SIZE:
-      *((short *)mem) = value;
+      *((short *)mem) = boost::numeric_cast<short>(value);
       break;
     case DWORD_SIZE:
-      *((uint32 *)mem) = value;
+      *((uint32 *)mem) = boost::numeric_cast<uint32>(value);
       break;
     case QWORD_SIZE:
-      *((uint64 *)mem) = value;
+      *((uint64 *)mem) = boost::numeric_cast<uint64>(value);
       break;
     case DQWORD_SIZE:
       *((uint128 *)mem) = value;

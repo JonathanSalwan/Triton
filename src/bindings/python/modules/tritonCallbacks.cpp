@@ -350,12 +350,8 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args)
     return PyErr_Format(PyExc_TypeError, "getMemValue(): The targeted address memory can not be read");
 
   /* If this is a 128-bits read size, we must use uint128ToPyLongObject() */
-  if (rs == DQWORD_SIZE){
-    uint128 value = ap.getMemValue(ad, rs);
-    return uint128ToPyLongObject(value);
-  }
-
-  return Py_BuildValue("k", ap.getMemValue(ad, rs));
+  uint128 value = ap.getMemValue(ad, rs);
+  return uint128ToPyLongObject(value);
 }
 
 
@@ -846,7 +842,7 @@ static PyObject *Triton_setRegValue(PyObject *self, PyObject *args)
   if (tr >= ID_XMM0 && tr <= ID_XMM15)
     ap.setSSERegisterValue(tr, va);
   else
-    ap.setRegisterValue(tr, va);
+    ap.setRegisterValue(tr, boost::numeric_cast<uint64>(va));
 
   Py_INCREF(Py_None);
   return Py_None;
