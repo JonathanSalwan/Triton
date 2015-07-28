@@ -1,3 +1,9 @@
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the LGPLv3 License.
+*/
+
 #ifndef ROLIRBUILDER_H
 #define ROLIRBUILDER_H
 

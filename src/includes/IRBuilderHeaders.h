@@ -1,3 +1,9 @@
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the LGPLv3 License.
+*/
+
 #ifndef   IRBUILDERHEADERS_H
 #define   IRBUILDERHEADERS_H
 

@@ -1,3 +1,9 @@
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the LGPLv3 License.
+*/
+
 
 #ifndef   TAINTENGINE_H
 #define   TAINTENGINE_H

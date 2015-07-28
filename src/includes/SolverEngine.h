@@ -1,3 +1,9 @@
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the LGPLv3 License.
+*/
+
 
 #ifndef   SOLVERENGINE_H
 #define   SOLVERENGINE_H

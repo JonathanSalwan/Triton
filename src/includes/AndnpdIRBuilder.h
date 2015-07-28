@@ -1,3 +1,9 @@
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the LGPLv3 License.
+*/
+
 #ifndef ANDNPDIRBUILDER_H
 #define ANDNPDIRBUILDER_H
 

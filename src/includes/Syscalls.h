@@ -1,3 +1,9 @@
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the LGPLv3 License.
+*/
+
 #ifndef TRITON_SYSCALLS_H
 #define TRITON_SYSCALLS_H
 

@@ -1,3 +1,9 @@
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the LGPLv3 License.
+*/
+
 
 #ifndef   TRITONPYOBJECT_H
 #define   TRITONPYOBJECT_H

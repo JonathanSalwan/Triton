@@ -1,3 +1,9 @@
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the LGPLv3 License.
+*/
+
 #ifndef CMOVZIRBUILDER_H
 #define CMOVZIRBUILDER_H
 

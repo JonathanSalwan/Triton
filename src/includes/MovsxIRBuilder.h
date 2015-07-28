@@ -1,3 +1,9 @@
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the LGPLv3 License.
+*/
+
 #ifndef MOVSXIRBUILDER_H
 #define MOVSXIRBUILDER_H
 
