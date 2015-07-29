@@ -50,7 +50,7 @@ void CmpIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::cfSub(inst, se, ap, op1, op2);
+  EflagsBuilder::cfSub(inst, se, ap, regSize, op1, op2);
   EflagsBuilder::ofSub(inst, se, ap, regSize, op1, op2);
   EflagsBuilder::pf(inst, se, ap, regSize);
   EflagsBuilder::sf(inst, se, ap, regSize);
@@ -81,7 +81,7 @@ void CmpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, regSize1, op1, op2);
-  EflagsBuilder::cfSub(inst, se, ap, op1, op2);
+  EflagsBuilder::cfSub(inst, se, ap, regSize1, op1, op2);
   EflagsBuilder::ofSub(inst, se, ap, regSize1, op1, op2);
   EflagsBuilder::pf(inst, se, ap, regSize1);
   EflagsBuilder::sf(inst, se, ap, regSize1);
@@ -112,7 +112,7 @@ void CmpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::cfSub(inst, se, ap, op1, op2);
+  EflagsBuilder::cfSub(inst, se, ap, regSize, op1, op2);
   EflagsBuilder::ofSub(inst, se, ap, regSize, op1, op2);
   EflagsBuilder::pf(inst, se, ap, regSize);
   EflagsBuilder::sf(inst, se, ap, regSize);
@@ -142,7 +142,7 @@ void CmpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, readSize, op1, op2);
-  EflagsBuilder::cfSub(inst, se, ap, op1, op2);
+  EflagsBuilder::cfSub(inst, se, ap, readSize, op1, op2);
   EflagsBuilder::ofSub(inst, se, ap, readSize, op1, op2);
   EflagsBuilder::pf(inst, se, ap, readSize);
   EflagsBuilder::sf(inst, se, ap, readSize);
@@ -173,7 +173,7 @@ void CmpIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, readSize, op1, op2);
-  EflagsBuilder::cfSub(inst, se, ap, op1, op2);
+  EflagsBuilder::cfSub(inst, se, ap, readSize, op1, op2);
   EflagsBuilder::ofSub(inst, se, ap, readSize, op1, op2);
   EflagsBuilder::pf(inst, se, ap, readSize);
   EflagsBuilder::sf(inst, se, ap, readSize);

@@ -25,6 +25,13 @@ void check(void)
   asm("xor ax, 0x99");
   asm("xor eax, 0x99");
 
+  //asm("mov rax, -1");
+  //asm("or ah, 0x8");
+  //asm("mov rax, 12345");
+  //asm("or ah, 0x8");
+  //asm("mov rax, 4222427780");
+  //asm("or ah, 0x8");
+
   asm("clc");
   asm("cld");
   asm("cmc");
@@ -41,6 +48,9 @@ void check(void)
   asm("inc eax");
   asm("test eax, eax");
   asm("sbb eax, ecx");
+  asm("stc");
+  asm("mov rax, 27577336");
+  asm("sbb eax, eax");
   asm("cmp ecx, eax");
   asm("mov ecx, 3");
   asm("mov ebx, 5");
@@ -97,6 +107,11 @@ void check(void)
   asm("idiv cx");
   asm("idiv ecx");
   asm("idiv rcx");
+  asm("idiv rcx");
+
+  asm("xor rdx, rdx");
+  asm("mov rcx, 1024");
+  asm("div rcx");
 
   asm("mov rax, 1");
   asm("mov rcx, 2");

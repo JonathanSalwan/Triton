@@ -317,23 +317,26 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfShr(SymbolicExpression *parent
 }
 
 
-smt2lib::smtAstAbstractNode *EflagsExpressions::cfSub(smt2lib::smtAstAbstractNode *op1,
+smt2lib::smtAstAbstractNode *EflagsExpressions::cfSub(SymbolicExpression *parent,
+                                                      uint32 bvSize,
+                                                      smt2lib::smtAstAbstractNode *op1,
                                                       smt2lib::smtAstAbstractNode *op2)
 {
   smt2lib::smtAstAbstractNode *expr;
 
   /*
    * Create the SMT semantic.
-   * cf = op1 < op2
+   * cf = extract(bvSize, bvSize (((op1 ^ op2 ^ res) ^ ((op1 ^ res) & (op1 ^ op2)))))
    */
-  expr = smt2lib::ite(
-            smt2lib::bvult(
-              op1,
-              op2
-            ),
-            smt2lib::bv(1, 1),
-            smt2lib::bv(0, 1)
-          );
+  expr = smt2lib::extract(bvSize-1, bvSize-1,
+              smt2lib::bvxor(
+                smt2lib::bvxor(op1, smt2lib::bvxor(op2, smt2lib::extract(bvSize-1, 0, smt2lib::reference(parent->getID())))),
+                smt2lib::bvand(
+                  smt2lib::bvxor(op1, smt2lib::extract(bvSize-1, 0, smt2lib::reference(parent->getID()))),
+                  smt2lib::bvxor(op1, op2)
+                )
+              )
+            );
 
   return expr;
 }

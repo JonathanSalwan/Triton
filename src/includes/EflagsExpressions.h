@@ -28,7 +28,7 @@ namespace EflagsExpressions {
   smt2lib::smtAstAbstractNode *cfSar(SymbolicExpression *parent, AnalysisProcessor &ap, uint32 bvSize, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
   smt2lib::smtAstAbstractNode *cfShl(SymbolicExpression *parent, AnalysisProcessor &ap, uint32 bvSize, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
   smt2lib::smtAstAbstractNode *cfShr(SymbolicExpression *parent, AnalysisProcessor &ap, uint32 bvSize, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
-  smt2lib::smtAstAbstractNode *cfSub(smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
+  smt2lib::smtAstAbstractNode *cfSub(SymbolicExpression *parent, uint32 bvSize, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
 
   smt2lib::smtAstAbstractNode *clearFlag(void);
 

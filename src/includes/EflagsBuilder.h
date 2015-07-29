@@ -29,7 +29,7 @@ namespace EflagsBuilder {
   SymbolicExpression *cfSar(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
   SymbolicExpression *cfShl(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
   SymbolicExpression *cfShr(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
-  SymbolicExpression *cfSub(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
+  SymbolicExpression *cfSub(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
 
   SymbolicExpression *clearFlag(Inst &inst, AnalysisProcessor &ap, regID_t flag);
   SymbolicExpression *clearFlag(Inst &inst, AnalysisProcessor &ap, regID_t flag, std::string comment);

@@ -280,13 +280,15 @@ SymbolicExpression *EflagsBuilder::cfShr(Inst &inst,
 SymbolicExpression *EflagsBuilder::cfSub(Inst &inst,
                                       SymbolicExpression *parent,
                                       AnalysisProcessor &ap,
+                                      uint32 dstSize,
                                       smt2lib::smtAstAbstractNode *op1,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
+  uint32 bvSize = (dstSize * REG_SIZE);
 
-  expr = EflagsExpressions::cfSub(op1, op2);
+  expr = EflagsExpressions::cfSub(parent, bvSize, op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
