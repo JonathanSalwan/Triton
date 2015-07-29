@@ -305,12 +305,12 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfShr(SymbolicExpression *parent
 
   /*
    * Create the SMT semantic.
-   * cf = ((op1 >> (op2 - 1)) & 1) if op2 != 0
+   * cf = ((op1 >> (bvSize - 1)) & 1) if op2 != 0
    */
   expr = smt2lib::ite(
             smt2lib::equal(op2, smt2lib::bv(0, bvSize)),
             ap.buildSymbolicFlagOperand(ID_CF),
-            smt2lib::extract(0, 0, smt2lib::bvlshr(op1, smt2lib::bvsub(op2, smt2lib::bv(1, bvSize))))
+            smt2lib::extract(0, 0, smt2lib::bvlshr(op1, smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(1, bvSize))))
           );
 
   return expr;
@@ -589,9 +589,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofShr(SymbolicExpression *parent
    */
   expr = smt2lib::ite(
             smt2lib::equal(op2, smt2lib::bv(1, bvSize)),
-            smt2lib::extract(0, 0,
-                smt2lib::bvlshr(op1, smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(1, bvSize)))
-            ),
+            smt2lib::extract(bvSize-1, bvSize-1, op1),
             ap.buildSymbolicFlagOperand(ID_OF)
           );
 

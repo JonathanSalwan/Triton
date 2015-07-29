@@ -25,6 +25,9 @@ void check(void)
   asm("xor ax, 0x99");
   asm("xor eax, 0x99");
 
+  asm("mov rdx, 18446744073709551615");
+  asm("shr rdx, 0x1");
+
   //asm("mov rax, -1");
   //asm("or ah, 0x8");
   //asm("mov rax, 12345");
@@ -114,6 +117,8 @@ void check(void)
   asm("xor rdx, rdx");
   asm("mov rcx, 1024");
   asm("div rcx");
+  asm("mov rbx, 16");
+  asm("div rbx");
 
   asm("mov rax, 1");
   asm("mov rcx, 2");

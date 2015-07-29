@@ -680,7 +680,7 @@ SymbolicExpression *EflagsBuilder::sfShl(Inst &inst,
   expr = EflagsExpressions::sfShl(parent, ap, bvSize, extractSize, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_SF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
   se->isTainted = parent->isTainted;
