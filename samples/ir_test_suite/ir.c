@@ -43,12 +43,14 @@ void check(void)
   asm("mov rax, 2");
   asm("mov rcx, qword ptr [rsp+rax*1]");
   asm("mov qword ptr [rsp+rax*1], rcx");
+  asm("clc");
+  asm("add ecx, ebx");
+  asm("stc");
   asm("add ecx, ebx");
   asm("adc eax, ecx");
   asm("inc eax");
   asm("test eax, eax");
   asm("sbb eax, ecx");
-  asm("stc");
   asm("mov rax, 27577336");
   asm("sbb eax, eax");
   asm("cmp ecx, eax");
