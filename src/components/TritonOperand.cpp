@@ -4,47 +4,24 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
-
 #include <cstdint>
 #include <stdexcept>
+#include <Registers.h>
 #include <TritonOperand.h>
 
 
 
-TritonOperand::TritonOperand(IRBuilderOperand::operand_t type,
-                             uint64 value,
-                             uint64 size)
+TritonOperand::TritonOperand()
 {
-  this->baseReg       = 0;
+  this->baseReg       = ID_INVALID;
   this->displacement  = 0;
-  this->indexReg      = 0;
+  this->indexReg      = ID_INVALID;
   this->memoryScale   = 0;
-  this->size          = size;
-  this->type          = type;
-  this->value         = value;
   this->readAndWrite  = false;
   this->readOnly      = false;
-  this->writeOnly     = false;
-}
-
-
-TritonOperand::TritonOperand(IRBuilderOperand::operand_t type,
-                             uint64 value,
-                             uint64 size,
-                             uint64 displacement,
-                             uint64 baseReg,
-                             uint64 indexReg,
-                             uint64 memoryScale)
-{
-  this->baseReg       = baseReg;
-  this->displacement  = displacement;
-  this->indexReg      = indexReg;
-  this->memoryScale   = memoryScale;
-  this->size          = size;
-  this->type          = type;
+  this->size          = 0;
+  this->type          = IRBuilderOperand::UNDEF;
   this->value         = value;
-  this->readAndWrite  = false;
-  this->readOnly      = false;
   this->writeOnly     = false;
 }
 
@@ -55,11 +32,11 @@ TritonOperand::TritonOperand(const TritonOperand &copy)
   this->displacement  = copy.displacement;
   this->indexReg      = copy.indexReg;
   this->memoryScale   = copy.memoryScale;
+  this->readAndWrite  = copy.readAndWrite;
+  this->readOnly      = copy.readOnly;
   this->size          = copy.size;
   this->type          = copy.type;
   this->value         = copy.value;
-  this->readAndWrite  = copy.readAndWrite;
-  this->readOnly      = copy.readOnly;
   this->writeOnly     = copy.writeOnly;
 }
 
@@ -135,6 +112,36 @@ void TritonOperand::setValue(uint64 value) {
 
 void TritonOperand::setWriteOnly(bool flag) {
   this->writeOnly = flag;
+}
+
+
+void TritonOperand::setBaseReg(uint64 reg) {
+  this->baseReg = reg;
+}
+
+
+void TritonOperand::setDisplacement(uint64 displacement) {
+  this->displacement = displacement;
+}
+
+
+void TritonOperand::setIndexReg(uint64 reg) {
+  this->indexReg = reg;
+}
+
+
+void TritonOperand::setMemoryScale(uint64 memoryScale) {
+  this->memoryScale = memoryScale;
+}
+
+
+void TritonOperand::setSize(uint64 size) {
+  this->size = size;
+}
+
+
+void TritonOperand::setType(IRBuilderOperand::operand_t type) {
+  this->type = type;
 }
 
 
