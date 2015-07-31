@@ -28,6 +28,10 @@ void check(void)
   asm("mov rdx, 18446744073709551615");
   asm("shr rdx, 0x1");
 
+  asm("xor rdx, rdx");
+  asm("mov rcx, 1024");
+  asm("div rcx");
+
   //asm("mov rax, -1");
   //asm("or ah, 0x8");
   //asm("mov rax, 12345");

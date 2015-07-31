@@ -85,7 +85,7 @@ void DivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
     case QWORD_SIZE:
       /* RDX:RAX */
-      dividend = smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE), ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE));
+      dividend = smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE), ap.buildSymbolicRegOperand(ID_RAX, QWORD_SIZE));
       /* res = RDX:RAX / Source */
       result = smt2lib::extract(63, 0, smt2lib::bvudiv(dividend, smt2lib::zx(QWORD_SIZE_BIT, divisor)));
       /* mod = RDX:RAX % Source */
@@ -169,7 +169,7 @@ void DivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
     case QWORD_SIZE:
       /* RDX:RAX */
-      dividend = smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE), ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE));
+      dividend = smt2lib::concat(ap.buildSymbolicRegOperand(ID_RDX, QWORD_SIZE), ap.buildSymbolicRegOperand(ID_RAX, QWORD_SIZE));
       /* res = RDX:RAX / Source */
       result = smt2lib::extract(63, 0, smt2lib::bvudiv(dividend, smt2lib::zx(QWORD_SIZE_BIT, divisor)));
       /* mod = RDX:RAX % Source */
