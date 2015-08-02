@@ -19,14 +19,14 @@ PopIRBuilder::PopIRBuilder(uint64 address, const std::string &disassembly):
 }
 
 
-static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 readSize)
+static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 memSize)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
 
   /* Create the SMT semantic. */
   op1 = ap.buildSymbolicRegOperand(ID_RSP, REG_SIZE);
-  op2 = smt2lib::bv(readSize, readSize * REG_SIZE);
+  op2 = smt2lib::bv(memSize, memSize * REG_SIZE);
 
   expr = smt2lib::bvadd(op1, op2);
 
@@ -68,25 +68,25 @@ void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void PopIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
-  auto memOp = this->operands[0].getMem().getAddress(); // Mem poped
-  auto writeSize = this->operands[0].getMem().getSize();
-  auto memSrc = this->operands[1].getMem().getAddress(); // The dst memory read
-  auto readSize = this->operands[1].getMem().getSize();
+  auto mem1 = this->operands[0].getMem().getAddress(); // Mem poped
+  auto memSize1 = this->operands[0].getMem().getSize();
+  auto mem2 = this->operands[1].getMem().getAddress(); // The dst memory read
+  auto memSize2 = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic */
-  op1 = ap.buildSymbolicMemOperand(memSrc, readSize);
+  op1 = ap.buildSymbolicMemOperand(mem2, memSize2);
 
   /* Finale expr */
   expr = op1;
 
   /* Create the symbolic expression */
-  se = ap.createMemSE(inst, expr, memOp, writeSize);
+  se = ap.createMemSE(inst, expr, mem1, memSize1);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintMemMem(se, memOp, memSrc, readSize);
+  ap.assignmentSpreadTaintMemMem(se, mem1, mem2, memSize2);
 
   /* Create the SMT semantic side effect */
-  alignStack(inst, ap, writeSize);
+  alignStack(inst, ap, memSize1);
 }
 
 

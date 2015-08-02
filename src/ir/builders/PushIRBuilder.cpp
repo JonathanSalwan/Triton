@@ -20,14 +20,14 @@ PushIRBuilder::PushIRBuilder(uint64 address, const std::string &disassembly):
 
 
 
-static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 writeSize)
+static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 memSize)
 {
   SymbolicExpression    *se;
   smt2lib::smtAstAbstractNode   *expr, *op1, *op2;
 
   /* Create the SMT semantic */
-  op1 = ap.buildSymbolicRegOperand(ID_RSP, writeSize);
-  op2 = smt2lib::bv(writeSize, writeSize * REG_SIZE);
+  op1 = ap.buildSymbolicRegOperand(ID_RSP, memSize);
+  op2 = smt2lib::bv(memSize, memSize * REG_SIZE);
 
   expr = smt2lib::bvsub(op1, op2);
 
@@ -96,25 +96,25 @@ void PushIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 void PushIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
-  auto memOp = this->operands[0].getMem().getAddress(); // Mem pushed
-  auto readSize = this->operands[0].getMem().getSize();
-  auto memDst = this->operands[1].getMem().getAddress(); // The dst memory writing
-  auto writeSize = this->operands[1].getMem().getSize();
+  auto mem1 = this->operands[0].getMem().getAddress(); // Mem pushed
+  auto memSize1 = this->operands[0].getMem().getSize();
+  auto mem2 = this->operands[1].getMem().getAddress(); // The dst memory writing
+  auto memSize2 = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic side effect */
-  alignStack(inst, ap, writeSize);
+  alignStack(inst, ap, memSize2);
 
   /* Create the SMT semantic */
-  op1 = ap.buildSymbolicMemOperand(memOp, readSize);
+  op1 = ap.buildSymbolicMemOperand(mem1, memSize1);
 
   /* Finale expr */
   expr = op1;
 
   /* Create the symbolic expression */
-  se = ap.createMemSE(inst, expr, memDst, writeSize);
+  se = ap.createMemSE(inst, expr, mem2, memSize2);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintMemMem(se, memDst, memOp, readSize);
+  ap.assignmentSpreadTaintMemMem(se, mem2, mem1, memSize1);
 
 }
 

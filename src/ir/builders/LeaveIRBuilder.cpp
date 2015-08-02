@@ -19,14 +19,14 @@ LeaveIRBuilder::LeaveIRBuilder(uint64 address, const std::string &disassembly):
 }
 
 
-static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 readSize)
+static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 memSize)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(ID_RSP, REG_SIZE);
-  op2 = smt2lib::bv(readSize, readSize * REG_SIZE);
+  op2 = smt2lib::bv(memSize, memSize * REG_SIZE);
 
   expr = smt2lib::bvadd(op1, op2);
 
