@@ -7,8 +7,8 @@
 #include <PINConverter.h>
 
 
-uint64 PINConverter::convertDBIReg2TritonReg(uint64 regID){
-  switch(regID){
+uint64 PINConverter::convertDBIReg2TritonReg(uint64 pinRegID){
+  switch(pinRegID){
     case REG_RAX:
     case REG_EAX:
     case REG_AX:
@@ -174,8 +174,8 @@ uint64 PINConverter::convertDBIReg2TritonReg(uint64 regID){
 /* Convert a Triton register to a Pin register.
  * Besides, it can return only 64 bits wised registers.
  */
-uint64 PINConverter::convertTritonReg2DBIReg(uint64 regID) {
-  switch(regID){
+uint64 PINConverter::convertTritonReg2DBIReg(uint64 tritonRegId) {
+  switch(tritonRegId){
     case ID_RAX:    return REG_RAX;
     case ID_RBX:    return REG_RBX;
     case ID_RCX:    return REG_RCX;
@@ -218,8 +218,8 @@ uint64 PINConverter::convertTritonReg2DBIReg(uint64 regID) {
 /* Convert a Triton register to a string.
  * Besides, it can return only 64 bits wised registers.
  */
-std::string PINConverter::getRegisterName(uint64 regID) {
-  switch(regID){
+std::string PINConverter::getRegisterName(uint64 tritonRegId) {
+  switch(tritonRegId){
     case ID_RAX:    return "rax";
     case ID_RBX:    return "rbx";
     case ID_RCX:    return "rcx";
@@ -268,3 +268,111 @@ std::string PINConverter::getRegisterName(uint64 regID) {
   }
 }
 
+
+std::pair<uint64, uint64> PINConverter::convertDBIReg2BitsVector(uint64 pinRegID){
+  switch(pinRegID){
+
+    case REG_XMM0:
+    case REG_XMM1:
+    case REG_XMM2:
+    case REG_XMM3:
+    case REG_XMM4:
+    case REG_XMM5:
+    case REG_XMM6:
+    case REG_XMM7:
+    case REG_XMM8:
+    case REG_XMM9:
+    case REG_XMM10:
+    case REG_XMM11:
+    case REG_XMM12:
+    case REG_XMM13:
+    case REG_XMM14:
+    case REG_XMM15:
+      return std::make_pair(127, 0);
+
+    case REG_RFLAGS:
+    case REG_RAX:
+    case REG_RBX:
+    case REG_RCX:
+    case REG_RDX:
+    case REG_RDI:
+    case REG_RSI:
+    case REG_RBP:
+    case REG_RSP:
+    case REG_RIP:
+    case REG_R8:
+    case REG_R9:
+    case REG_R10:
+    case REG_R11:
+    case REG_R12:
+    case REG_R13:
+    case REG_R14:
+    case REG_R15:
+      return std::make_pair(63, 0);
+
+    case REG_EAX:
+    case REG_EBX:
+    case REG_ECX:
+    case REG_EDX:
+    case REG_EDI:
+    case REG_ESI:
+    case REG_EBP:
+    case REG_ESP:
+    case REG_EIP:
+    case REG_R8D:
+    case REG_R9D:
+    case REG_R10D:
+    case REG_R11D:
+    case REG_R12D:
+    case REG_R13D:
+    case REG_R14D:
+    case REG_R15D:
+      return std::make_pair(31, 0);
+
+    case REG_AX:
+    case REG_BX:
+    case REG_CX:
+    case REG_DX:
+    case REG_DI:
+    case REG_SI:
+    case REG_BP:
+    case REG_SP:
+    case REG_IP:
+    case REG_R8W:
+    case REG_R9W:
+    case REG_R10W:
+    case REG_R11W:
+    case REG_R12W:
+    case REG_R13W:
+    case REG_R14W:
+    case REG_R15W:
+      return std::make_pair(15, 0);
+
+    case REG_AH:
+    case REG_BH:
+    case REG_CH:
+    case REG_DH:
+      return std::make_pair(15, 8);
+
+    case REG_AL:
+    case REG_BL:
+    case REG_CL:
+    case REG_DL:
+    case REG_DIL:
+    case REG_SIL:
+    case REG_BPL:
+    case REG_SPL:
+    case REG_R8B:
+    case REG_R9B:
+    case REG_R10B:
+    case REG_R11B:
+    case REG_R12B:
+    case REG_R13B:
+    case REG_R14B:
+    case REG_R15B:
+      return std::make_pair(7, 0);
+
+    default:
+      return std::make_pair(0, 0);
+  }
+}

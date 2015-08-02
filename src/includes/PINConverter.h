@@ -13,6 +13,7 @@
 #include "TritonTypes.h"
 
 #include <string>
+#include <utility>
 
 namespace PINConverter {
   /* Utilities functions which help to make the transition between the ids of registers
@@ -31,6 +32,9 @@ namespace PINConverter {
    * Besides, it can return only 64 bits wised registers.
    */
   std::string getRegisterName(uint64 regID);
+
+  /* Returns the bits vector of the register */
+  std::pair<uint64, uint64> convertDBIReg2BitsVector(uint64 pinRegID);
 }
 
 #endif //_PINCONVERTER_H_

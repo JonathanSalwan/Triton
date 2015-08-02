@@ -47,9 +47,9 @@ ImulIRBuilder::ImulIRBuilder(uint64 address, const std::string &disassembly):
 void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint64 reg     = this->operands[0].getValue();
-  uint64 imm     = this->operands[1].getValue();
-  uint32 regSize = this->operands[0].getSize();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto imm = this->operands[1].getImm().getValue();
+  auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
@@ -77,14 +77,14 @@ void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
-  uint64 reg1     = this->operands[0].getValue();
-  uint32 regSize1 = this->operands[0].getSize();
-  uint64 reg2     = this->operands[1].getValue();
-  uint32 regSize2 = this->operands[1].getSize();
-  uint64 imm      = 0;
+  uint64 imm = 0;
+  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto regSize1 = this->operands[0].getReg().getSize();
+  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto regSize2 = this->operands[1].getReg().getSize();
 
   if (this->operands[2].getType() == IRBuilderOperand::IMM)
-    imm = this->operands[2].getValue();
+    imm = this->operands[2].getImm().getValue();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
@@ -185,14 +185,14 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
-  uint64 reg1     = this->operands[0].getValue();
-  uint32 regSize1 = this->operands[0].getSize();
-  uint64 mem2     = this->operands[1].getValue();
-  uint32 memSize2 = this->operands[1].getSize();
-  uint64 imm     = 0;
+  uint64 imm = 0;
+  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto regSize1 = this->operands[0].getReg().getSize();
+  auto mem2 = this->operands[1].getMem().getAddress();
+  auto memSize2 = this->operands[1].getMem().getSize();
 
   if (this->operands[2].getType() == IRBuilderOperand::IMM)
-    imm = this->operands[2].getValue();
+    imm = this->operands[2].getImm().getValue();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg1, regSize1);

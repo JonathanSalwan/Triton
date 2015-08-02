@@ -22,8 +22,8 @@ MulIRBuilder::MulIRBuilder(uint64 address, const std::string &disassembly):
 void MulIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *rax, *rdx;
-  uint64 reg       = this->operands[0].getValue();
-  uint32 regSize   = this->operands[0].getSize();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(ID_RAX, regSize);
@@ -122,8 +122,8 @@ void MulIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void MulIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *rax, *rdx;
-  uint64 mem       = this->operands[0].getValue();
-  uint32 memSize   = this->operands[0].getSize();
+  auto mem = this->operands[0].getMem().getAddress();
+  auto memSize = this->operands[0].getMem().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(ID_RAX, memSize);

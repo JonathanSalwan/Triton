@@ -27,10 +27,10 @@ void OrpdIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void OrpdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint64 reg1     = this->operands[0].getValue();
-  uint64 reg2     = this->operands[1].getValue();
-  uint32 regSize1 = this->operands[0].getSize();
-  uint32 regSize2 = this->operands[1].getSize();
+  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto regSize1 = this->operands[0].getReg().getSize();
+  auto regSize2 = this->operands[1].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
@@ -50,14 +50,14 @@ void OrpdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void OrpdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint32 readSize = this->operands[1].getSize();
-  uint64 mem      = this->operands[1].getValue();
-  uint64 reg      = this->operands[0].getValue();
-  uint32 regSize  = this->operands[1].getSize();
+  auto memSize = this->operands[1].getMem().getSize();
+  auto mem = this->operands[1].getMem().getAddress();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto regSize = this->operands[1].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
-  op2 = ap.buildSymbolicMemOperand(mem, readSize);
+  op2 = ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Final expr */
   expr = smt2lib::bvor(op1, op2);
@@ -66,7 +66,7 @@ void OrpdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
-  ap.aluSpreadTaintRegMem(se, reg, mem, readSize);
+  ap.aluSpreadTaintRegMem(se, reg, mem, memSize);
 }
 
 

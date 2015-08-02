@@ -27,16 +27,16 @@ void MovdquIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void MovdquIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint64 reg1      = this->operands[0].getValue();
-  uint64 reg1Size  = this->operands[0].getSize();
-  uint64 reg2      = this->operands[1].getValue();
-  uint64 reg2Size  = this->operands[1].getSize();
+  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto regSize1 = this->operands[0].getReg().getSize();
+  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto regSize2 = this->operands[1].getReg().getSize();
 
   /* Create the SMT semantic */
-  expr = ap.buildSymbolicRegOperand(reg2, reg2Size);
+  expr = ap.buildSymbolicRegOperand(reg2, regSize2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, reg1, reg1Size);
+  se = ap.createRegSE(inst, expr, reg1, regSize1);
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegReg(se, reg1, reg2);
@@ -47,19 +47,19 @@ void MovdquIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void MovdquIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 readSize = this->operands[1].getSize();
-  uint64 mem      = this->operands[1].getValue();
-  uint64 reg      = this->operands[0].getValue();
-  uint64 regSize  = this->operands[0].getSize();
+  auto mem = this->operands[1].getMem().getAddress();
+  auto memSize = this->operands[1].getMem().getSize();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
-  expr = ap.buildSymbolicMemOperand(mem, readSize);
+  expr = ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintRegMem(se, reg, mem, readSize);
+  ap.assignmentSpreadTaintRegMem(se, reg, mem, memSize);
 
 }
 
@@ -72,19 +72,19 @@ void MovdquIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 void MovdquIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 writeSize = this->operands[0].getSize();
-  uint64 mem       = this->operands[0].getValue();
-  uint64 reg       = this->operands[1].getValue();
-  uint64 regSize   = this->operands[1].getSize();
+  auto mem = this->operands[0].getMem().getAddress();
+  auto memSize = this->operands[0].getMem().getSize();
+  auto reg = this->operands[1].getReg().getTritonRegId();
+  auto regSize = this->operands[1].getReg().getSize();
 
   /* Create the SMT semantic */
   expr = ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Create the symbolic expression */
-  se = ap.createMemSE(inst, expr, mem, writeSize);
+  se = ap.createMemSE(inst, expr, mem, memSize);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintMemReg(se, mem, reg, writeSize);
+  ap.assignmentSpreadTaintMemReg(se, mem, reg, memSize);
 
 }
 

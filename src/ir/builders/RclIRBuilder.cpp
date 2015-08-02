@@ -22,9 +22,9 @@ RclIRBuilder::RclIRBuilder(uint64 address, const std::string &disassembly):
 void RclIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *cf, *res;
-  uint64 reg     = this->operands[0].getValue();
-  uint64 imm     = this->operands[1].getValue();
-  uint32 regSize = this->operands[0].getSize();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto imm = this->operands[1].getImm().getValue();
+  auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   cf = ap.buildSymbolicFlagOperand(ID_CF);
@@ -65,8 +65,8 @@ void RclIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void RclIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *cf, *res;
-  uint64 reg1     = this->operands[0].getValue();
-  uint32 regSize1 = this->operands[0].getSize();
+  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto regSize1 = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   cf = ap.buildSymbolicFlagOperand(ID_CF);
@@ -112,13 +112,13 @@ void RclIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 void RclIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *cf, *res;
-  uint32 writeSize = this->operands[0].getSize();
-  uint64 mem       = this->operands[0].getValue();
-  uint64 imm       = this->operands[1].getValue();
+  auto memSize = this->operands[0].getMem().getSize();
+  auto mem = this->operands[0].getMem().getAddress();
+  auto imm = this->operands[1].getImm().getValue();
 
   /* Create the SMT semantic */
   cf = ap.buildSymbolicFlagOperand(ID_CF);
-  op1 = ap.buildSymbolicMemOperand(mem, writeSize);
+  op1 = ap.buildSymbolicMemOperand(mem, memSize);
   /*
    * Note that SMT2-LIB doesn't support expression as rotate's value.
    * The op2 must be the concretization's value.
@@ -135,32 +135,32 @@ void RclIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   se1 = ap.createSE(inst, expr, "Temporary Extended Expression");
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintExprMem(se1, mem, writeSize);
+  ap.assignmentSpreadTaintExprMem(se1, mem, memSize);
 
   /* Result expression */
-  res = smt2lib::extract((writeSize * REG_SIZE) - 1, 0, expr);
+  res = smt2lib::extract((memSize * REG_SIZE) - 1, 0, expr);
 
   /* Create the symbolic expression */
-  se2 = ap.createMemSE(inst, res, mem, writeSize);
+  se2 = ap.createMemSE(inst, res, mem, memSize);
 
   /* Apply the taint */
-  ap.aluSpreadTaintMemMem(se2, mem, mem, writeSize);
+  ap.aluSpreadTaintMemMem(se2, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRcl(inst, se1, ap, writeSize, op2);
-  EflagsBuilder::ofRol(inst, se2, ap, writeSize, op2); /* Same as ROL */
+  EflagsBuilder::cfRcl(inst, se1, ap, memSize, op2);
+  EflagsBuilder::ofRol(inst, se2, ap, memSize, op2); /* Same as ROL */
 }
 
 
 void RclIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *cf, *res;
-  uint32 writeSize = this->operands[0].getSize();
-  uint64 mem       = this->operands[0].getValue();
+  auto memSize = this->operands[0].getMem().getSize();
+  auto mem = this->operands[0].getMem().getAddress();
 
   /* Create the SMT semantic */
   cf = ap.buildSymbolicFlagOperand(ID_CF);
-  op1 = ap.buildSymbolicMemOperand(mem, writeSize);
+  op1 = ap.buildSymbolicMemOperand(mem, memSize);
   /*
    * Note that SMT2-LIB doesn't support expression as rotate's value.
    * The op2 must be the concretization's value.
@@ -177,20 +177,20 @@ void RclIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   se1 = ap.createSE(inst, expr, "Temporary Extended Expression");
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintExprMem(se1, mem, writeSize);
+  ap.assignmentSpreadTaintExprMem(se1, mem, memSize);
 
   /* Result expression */
-  res = smt2lib::extract((writeSize * REG_SIZE) - 1, 0, expr);
+  res = smt2lib::extract((memSize * REG_SIZE) - 1, 0, expr);
 
   /* Create the symbolic expression */
-  se2 = ap.createMemSE(inst, res, mem, writeSize);
+  se2 = ap.createMemSE(inst, res, mem, memSize);
 
   /* Apply the taint */
-  ap.aluSpreadTaintMemMem(se2, mem, mem, writeSize);
+  ap.aluSpreadTaintMemMem(se2, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRcl(inst, se1, ap, writeSize, op2);
-  EflagsBuilder::ofRol(inst, se2, ap, writeSize, op2); /* Same as ROL */
+  EflagsBuilder::cfRcl(inst, se1, ap, memSize, op2);
+  EflagsBuilder::ofRol(inst, se2, ap, memSize, op2); /* Same as ROL */
 }
 
 

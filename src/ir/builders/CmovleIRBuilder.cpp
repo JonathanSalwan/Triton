@@ -27,17 +27,17 @@ void CmovleIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void CmovleIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *reg1e, *reg2e, *sf, *of, *zf;
-  uint64 reg1    = this->operands[0].getValue();
-  uint64 reg2    = this->operands[1].getValue();
-  uint64 size1   = this->operands[0].getSize();
-  uint64 size2   = this->operands[1].getSize();
+  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto regSize1 = this->operands[0].getReg().getSize();
+  auto regSize2 = this->operands[1].getReg().getSize();
 
   /* Create the flag SMT semantic */
   sf = ap.buildSymbolicFlagOperand(ID_SF);
   of = ap.buildSymbolicFlagOperand(ID_OF);
   zf = ap.buildSymbolicFlagOperand(ID_ZF);
-  reg1e = ap.buildSymbolicRegOperand(reg1, size1);
-  reg2e = ap.buildSymbolicRegOperand(reg2, size2);
+  reg1e = ap.buildSymbolicRegOperand(reg1, regSize1);
+  reg2e = ap.buildSymbolicRegOperand(reg2, regSize2);
 
   expr = smt2lib::ite(
             smt2lib::equal(
@@ -48,7 +48,7 @@ void CmovleIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
             reg1e);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, reg1, size1);
+  se = ap.createRegSE(inst, expr, reg1, regSize1);
 
   /* Apply the taint via the concretization */
   if (((ap.getFlagValue(ID_SF) ^ ap.getFlagValue(ID_OF)) | ap.getFlagValue(ID_ZF)) == 1)
@@ -60,17 +60,17 @@ void CmovleIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void CmovleIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *reg1e, *mem1e, *sf, *of, *zf;
-  uint32 readSize = this->operands[1].getSize();
-  uint64 mem      = this->operands[1].getValue();
-  uint64 reg      = this->operands[0].getValue();
-  uint64 regSize  = this->operands[0].getSize();
+  auto memSize = this->operands[1].getMem().getSize();
+  auto mem = this->operands[1].getMem().getAddress();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the flag SMT semantic */
   sf = ap.buildSymbolicFlagOperand(ID_SF);
   of = ap.buildSymbolicFlagOperand(ID_OF);
   zf = ap.buildSymbolicFlagOperand(ID_ZF);
   reg1e = ap.buildSymbolicRegOperand(reg, regSize);
-  mem1e = ap.buildSymbolicMemOperand(mem, readSize);
+  mem1e = ap.buildSymbolicMemOperand(mem, memSize);
 
   expr = smt2lib::ite(
             smt2lib::equal(
@@ -85,7 +85,7 @@ void CmovleIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Apply the taint via the concretization */
   if (((ap.getFlagValue(ID_SF) ^ ap.getFlagValue(ID_OF)) | ap.getFlagValue(ID_ZF)) == 1)
-    ap.assignmentSpreadTaintRegMem(se, reg, mem, readSize);
+    ap.assignmentSpreadTaintRegMem(se, reg, mem, memSize);
 
 }
 

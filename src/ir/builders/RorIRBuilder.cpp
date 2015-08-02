@@ -22,9 +22,9 @@ RorIRBuilder::RorIRBuilder(uint64 address, const std::string &disassembly):
 void RorIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint64 reg     = this->operands[0].getValue();
-  uint64 imm     = this->operands[1].getValue();
-  uint32 regSize = this->operands[0].getSize();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto imm = this->operands[1].getImm().getValue();
+  auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
@@ -52,8 +52,8 @@ void RorIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void RorIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint64 reg1     = this->operands[0].getValue();
-  uint32 regSize1 = this->operands[0].getSize();
+  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto regSize1 = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
@@ -86,12 +86,12 @@ void RorIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 void RorIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint32 writeSize = this->operands[0].getSize();
-  uint64 mem       = this->operands[0].getValue();
-  uint64 imm       = this->operands[1].getValue();
+  auto memSize = this->operands[0].getMem().getSize();
+  auto mem = this->operands[0].getMem().getAddress();
+  auto imm = this->operands[1].getImm().getValue();
 
   /* Create the SMT semantic */
-  op1 = ap.buildSymbolicMemOperand(mem, writeSize);
+  op1 = ap.buildSymbolicMemOperand(mem, memSize);
   /*
    * Note that SMT2-LIB doesn't support expression as rotate's value.
    * The op2 must be the concretization's value.
@@ -102,25 +102,25 @@ void RorIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   expr = smt2lib::bvror(op2, op1);
 
   /* Create the symbolic expression */
-  se = ap.createMemSE(inst, expr, mem, writeSize);
+  se = ap.createMemSE(inst, expr, mem, memSize);
 
   /* Apply the taint */
-  ap.aluSpreadTaintMemMem(se, mem, mem, writeSize);
+  ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRor(inst, se, ap, writeSize, op2);
-  EflagsBuilder::ofRor(inst, se, ap, writeSize, op2);
+  EflagsBuilder::cfRor(inst, se, ap, memSize, op2);
+  EflagsBuilder::ofRor(inst, se, ap, memSize, op2);
 }
 
 
 void RorIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint32 writeSize = this->operands[0].getSize();
-  uint64 mem       = this->operands[0].getValue();
+  auto memSize = this->operands[0].getMem().getSize();
+  auto mem = this->operands[0].getMem().getAddress();
 
   /* Create the SMT semantic */
-  op1 = ap.buildSymbolicMemOperand(mem, writeSize);
+  op1 = ap.buildSymbolicMemOperand(mem, memSize);
   /*
    * Note that SMT2-LIB doesn't support expression as rotate's value.
    * The op2 must be the concretization's value.
@@ -131,14 +131,14 @@ void RorIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   expr = smt2lib::bvror(op2, op1);
 
   /* Create the symbolic expression */
-  se = ap.createMemSE(inst, expr, mem, writeSize);
+  se = ap.createMemSE(inst, expr, mem, memSize);
 
   /* Apply the taint */
-  ap.aluSpreadTaintMemMem(se, mem, mem, writeSize);
+  ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRor(inst, se, ap, writeSize, op2);
-  EflagsBuilder::ofRor(inst, se, ap, writeSize, op2);
+  EflagsBuilder::cfRor(inst, se, ap, memSize, op2);
+  EflagsBuilder::ofRor(inst, se, ap, memSize, op2);
 }
 
 

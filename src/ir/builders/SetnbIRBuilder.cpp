@@ -27,8 +27,8 @@ void SetnbIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 void SetnbIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *cf;
-  uint64 reg     = this->operands[0].getValue();
-  uint64 regSize = this->operands[0].getSize();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   cf = ap.buildSymbolicFlagOperand(ID_CF);
@@ -54,8 +54,8 @@ void SetnbIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void SetnbIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *cf;
-  uint64 mem     = this->operands[0].getValue();
-  uint64 memSize = this->operands[0].getSize();
+  auto mem = this->operands[0].getMem().getAddress();
+  auto memSize = this->operands[0].getMem().getSize();
 
   /* Create the SMT semantic */
   cf = ap.buildSymbolicFlagOperand(ID_CF);

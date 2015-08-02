@@ -22,7 +22,7 @@ JlIRBuilder::JlIRBuilder(uint64 address, const std::string &disassembly):
 void JlIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *sf, *of;
-  uint64 imm   = this->operands[0].getValue();
+  auto imm = this->operands[0].getImm().getValue();
 
   /* Create the SMT semantic */
   sf = ap.buildSymbolicFlagOperand(ID_SF);
@@ -31,7 +31,7 @@ void JlIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   /* 
    * Finale expr
    * JL: Jump if less (SF^OF).
-   * SMT: (= (bvxor sf of) True)
+   * SMT: ( = (bvxor sf of) True)
    */
   expr = smt2lib::ite(
             smt2lib::equal(

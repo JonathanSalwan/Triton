@@ -31,9 +31,9 @@ CmpIRBuilder::CmpIRBuilder(uint64 address, const std::string &disassembly):
 void CmpIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint64 reg     = this->operands[0].getValue();
-  uint64 imm     = this->operands[1].getValue();
-  uint32 regSize = this->operands[0].getSize();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto imm = this->operands[1].getImm().getValue();
+  auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
@@ -61,10 +61,10 @@ void CmpIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void CmpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint64 reg1     = this->operands[0].getValue();
-  uint64 reg2     = this->operands[1].getValue();
-  uint32 regSize1 = this->operands[0].getSize();
-  uint32 regSize2 = this->operands[1].getSize();
+  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto regSize1 = this->operands[0].getReg().getSize();
+  auto regSize2 = this->operands[1].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
@@ -92,14 +92,14 @@ void CmpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void CmpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint32 readSize = this->operands[1].getSize();
-  uint64 mem      = this->operands[1].getValue();
-  uint64 reg      = this->operands[0].getValue();
-  uint32 regSize  = this->operands[0].getSize();
+  auto memSize = this->operands[1].getMem().getSize();
+  auto mem = this->operands[1].getMem().getAddress();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
-  op2 = ap.buildSymbolicMemOperand(mem, readSize);
+  op2 = ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Final expr */
   expr = smt2lib::bvsub(op1, op2);
@@ -108,7 +108,7 @@ void CmpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createSE(inst, expr);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintExprRegMem(se, reg, mem, readSize);
+  ap.assignmentSpreadTaintExprRegMem(se, reg, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
@@ -123,13 +123,13 @@ void CmpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 void CmpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint32 readSize  = this->operands[0].getSize();
-  uint64 mem       = this->operands[0].getValue();
-  uint64 imm       = this->operands[1].getValue();
+  auto memSize = this->operands[0].getMem().getSize();
+  auto mem = this->operands[0].getMem().getAddress();
+  auto imm = this->operands[1].getImm().getValue();
 
   /* Create the SMT semantic */
-  op1 = ap.buildSymbolicMemOperand(mem, readSize);
-  op2 = smt2lib::bv(imm, readSize * REG_SIZE);
+  op1 = ap.buildSymbolicMemOperand(mem, memSize);
+  op2 = smt2lib::bv(imm, memSize * REG_SIZE);
 
   /* Final expr */
   expr = smt2lib::bvsub(op1, op2);
@@ -138,28 +138,28 @@ void CmpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createSE(inst, expr);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintExprMem(se, mem, readSize);
+  ap.assignmentSpreadTaintExprMem(se, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, ap, readSize, op1, op2);
-  EflagsBuilder::cfSub(inst, se, ap, readSize, op1, op2);
-  EflagsBuilder::ofSub(inst, se, ap, readSize, op1, op2);
-  EflagsBuilder::pf(inst, se, ap, readSize);
-  EflagsBuilder::sf(inst, se, ap, readSize);
-  EflagsBuilder::zf(inst, se, ap, readSize);
+  EflagsBuilder::af(inst, se, ap, memSize, op1, op2);
+  EflagsBuilder::cfSub(inst, se, ap, memSize, op1, op2);
+  EflagsBuilder::ofSub(inst, se, ap, memSize, op1, op2);
+  EflagsBuilder::pf(inst, se, ap, memSize);
+  EflagsBuilder::sf(inst, se, ap, memSize);
+  EflagsBuilder::zf(inst, se, ap, memSize);
 }
 
 
 void CmpIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint32 readSize  = this->operands[0].getSize();
-  uint64 mem       = this->operands[0].getValue();
-  uint64 reg       = this->operands[1].getValue();
-  uint32 regSize   = this->operands[1].getSize();
+  auto memSize = this->operands[0].getMem().getSize();
+  auto mem = this->operands[0].getMem().getAddress();
+  auto reg = this->operands[1].getReg().getTritonRegId();
+  auto regSize = this->operands[1].getReg().getSize();
 
   /* Create the SMT semantic */
-  op1 = ap.buildSymbolicMemOperand(mem, readSize);
+  op1 = ap.buildSymbolicMemOperand(mem, memSize);
   op2 = ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Final expr */
@@ -169,15 +169,15 @@ void CmpIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createSE(inst, expr);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintExprRegMem(se, reg, mem, readSize);
+  ap.assignmentSpreadTaintExprRegMem(se, reg, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, ap, readSize, op1, op2);
-  EflagsBuilder::cfSub(inst, se, ap, readSize, op1, op2);
-  EflagsBuilder::ofSub(inst, se, ap, readSize, op1, op2);
-  EflagsBuilder::pf(inst, se, ap, readSize);
-  EflagsBuilder::sf(inst, se, ap, readSize);
-  EflagsBuilder::zf(inst, se, ap, readSize);
+  EflagsBuilder::af(inst, se, ap, memSize, op1, op2);
+  EflagsBuilder::cfSub(inst, se, ap, memSize, op1, op2);
+  EflagsBuilder::ofSub(inst, se, ap, memSize, op1, op2);
+  EflagsBuilder::pf(inst, se, ap, memSize);
+  EflagsBuilder::sf(inst, se, ap, memSize);
+  EflagsBuilder::zf(inst, se, ap, memSize);
 }
 
 

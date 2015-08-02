@@ -22,8 +22,8 @@ DivIRBuilder::DivIRBuilder(uint64 address, const std::string &disassembly):
 void DivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *result, *dividend, *divisor, *mod;
-  uint64 reg       = this->operands[0].getValue();
-  uint32 regSize   = this->operands[0].getSize();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   divisor = ap.buildSymbolicRegOperand(reg, regSize);
@@ -106,8 +106,8 @@ void DivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void DivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *result, *dividend, *divisor, *mod;
-  uint64 mem       = this->operands[0].getValue();
-  uint32 memSize   = this->operands[0].getSize();
+  auto mem = this->operands[0].getMem().getAddress();
+  auto memSize = this->operands[0].getMem().getSize();
 
   /* Create the SMT semantic */
   divisor = ap.buildSymbolicMemOperand(mem, memSize);

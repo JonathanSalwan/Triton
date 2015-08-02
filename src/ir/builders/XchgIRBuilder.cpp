@@ -27,12 +27,12 @@ void XchgIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void XchgIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr1, *expr2, *op1, *op2;
-  uint64 reg1          = this->operands[0].getValue();
-  uint64 reg2          = this->operands[1].getValue();
-  uint32 regSize1      = this->operands[0].getSize();
-  uint32 regSize2      = this->operands[1].getSize();
-  uint64 tmpReg1Taint  = ap.isRegTainted(reg1);
-  uint64 tmpReg2Taint  = ap.isRegTainted(reg2);
+  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto regSize1 = this->operands[0].getReg().getSize();
+  auto regSize2 = this->operands[1].getReg().getSize();
+  auto tmpReg1Taint = ap.isRegTainted(reg1);
+  auto tmpReg2Taint = ap.isRegTainted(reg2);
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
@@ -55,12 +55,12 @@ void XchgIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void XchgIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr1, *expr2, *op1, *op2;
-  uint64 reg1          = this->operands[0].getValue();
-  uint64 mem2          = this->operands[1].getValue();
-  uint32 regSize1      = this->operands[0].getSize();
-  uint32 memSize2      = this->operands[1].getSize();
-  uint64 tmpReg1Taint  = ap.isRegTainted(reg1);
-  uint64 tmpMem2Taint  = ap.isMemTainted(mem2);
+  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto mem2 = this->operands[1].getMem().getAddress();
+  auto regSize1 = this->operands[0].getReg().getSize();
+  auto memSize2 = this->operands[1].getMem().getSize();
+  auto tmpReg1Taint = ap.isRegTainted(reg1);
+  auto tmpMem2Taint = ap.isMemTainted(mem2);
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
@@ -88,12 +88,12 @@ void XchgIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 void XchgIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr1, *expr2, *op1, *op2;
-  uint64 mem1          = this->operands[0].getValue();
-  uint64 reg2          = this->operands[1].getValue();
-  uint32 memSize1      = this->operands[0].getSize();
-  uint32 regSize2      = this->operands[1].getSize();
-  uint64 tmpMem1Taint  = ap.isMemTainted(mem1);
-  uint64 tmpReg2Taint  = ap.isRegTainted(reg2);
+  auto mem1 = this->operands[0].getMem().getAddress();
+  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto memSize1 = this->operands[0].getMem().getSize();
+  auto regSize2 = this->operands[1].getReg().getSize();
+  auto tmpMem1Taint = ap.isMemTainted(mem1);
+  auto tmpReg2Taint = ap.isRegTainted(reg2);
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicMemOperand(mem1, memSize1);

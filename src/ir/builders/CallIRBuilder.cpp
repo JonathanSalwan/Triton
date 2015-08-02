@@ -21,8 +21,8 @@ CallIRBuilder::CallIRBuilder(uint64 address, const std::string &disassembly):
 
 static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint64 writeSize)
 {
-  SymbolicExpression    *se;
-  smt2lib::smtAstAbstractNode   *expr, *op1, *op2;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(ID_RSP, writeSize);
@@ -43,10 +43,10 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint64 
 void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr1, *expr2;
-  uint64 reg       = this->operands[0].getValue();
-  uint32 regSize   = this->operands[0].getSize();
-  uint64 memDst    = this->operands[1].getValue(); // The dst memory write
-  uint32 writeSize = this->operands[1].getSize();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto regSize = this->operands[0].getReg().getSize();
+  auto memDst = this->operands[1].getMem().getAddress(); // The dst memory write
+  auto writeSize = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic side effect */
   alignStack(inst, ap, writeSize);
@@ -76,9 +76,9 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr1, *expr2;
-  uint64 imm       = this->operands[0].getValue();
-  uint64 memDst    = this->operands[1].getValue(); // The dst memory write
-  uint32 writeSize = this->operands[1].getSize();
+  auto imm = this->operands[0].getImm().getValue();
+  auto memDst = this->operands[1].getMem().getAddress(); // The dst memory write
+  auto writeSize = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic side effect */
   alignStack(inst, ap, writeSize);
@@ -108,10 +108,10 @@ void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr1, *expr2;
-  uint64 mem       = this->operands[0].getValue();
-  uint64 memSize   = this->operands[0].getSize();
-  uint64 memDst    = this->operands[1].getValue(); // The dst memory write
-  uint32 writeSize = this->operands[1].getSize();
+  auto mem = this->operands[0].getMem().getAddress();
+  auto memSize = this->operands[0].getMem().getSize();
+  auto memDst = this->operands[1].getMem().getAddress(); // The dst memory write
+  auto writeSize = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic side effect */
   alignStack(inst, ap, writeSize);
