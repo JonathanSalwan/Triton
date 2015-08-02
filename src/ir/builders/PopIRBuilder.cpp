@@ -21,8 +21,8 @@ PopIRBuilder::PopIRBuilder(uint64 address, const std::string &disassembly):
 
 static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 readSize)
 {
-  SymbolicExpression    *se;
-  smt2lib::smtAstAbstractNode   *expr, *op1, *op2;
+  SymbolicExpression *se;
+  smt2lib::smtAstAbstractNode *expr, *op1, *op2;
 
   /* Create the SMT semantic. */
   op1 = ap.buildSymbolicRegOperand(ID_RSP, REG_SIZE);
@@ -43,13 +43,13 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 
 void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
-  uint64 reg       = this->operands[0].getValue(); // Reg poped
-  uint64 regSize   = this->operands[0].getSize();  // Reg size poped
-  uint64 mem       = this->operands[1].getValue(); // The src memory read
-  uint32 readSize  = this->operands[1].getSize();
+  auto reg = this->operands[0].getReg().getTritonRegId(); // Reg poped
+  auto regSize = this->operands[0].getReg().getSize();  // Reg size poped
+  auto mem = this->operands[1].getMem().getAddress(); // The src memory read
+  auto memSize = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic */
-  op1 = ap.buildSymbolicMemOperand(mem, readSize);
+  op1 = ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Finale expr */
   expr = op1;
@@ -58,20 +58,20 @@ void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintMemReg(se, mem, reg, readSize);
+  ap.assignmentSpreadTaintMemReg(se, mem, reg, memSize);
 
   /* Create the SMT semantic side effect */
-  alignStack(inst, ap, readSize);
+  alignStack(inst, ap, memSize);
 }
 
 
 void PopIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
-  uint64 memOp     = this->operands[0].getValue(); // Mem poped
-  uint32 writeSize = this->operands[0].getSize();
-  uint64 memSrc    = this->operands[1].getValue(); // The dst memory read
-  uint32 readSize  = this->operands[1].getSize();
+  auto memOp = this->operands[0].getMem().getAddress(); // Mem poped
+  auto writeSize = this->operands[0].getMem().getSize();
+  auto memSrc = this->operands[1].getMem().getAddress(); // The dst memory read
+  auto readSize = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicMemOperand(memSrc, readSize);

@@ -1,9 +1,10 @@
 from triton import *
 import sys
 
+BLUE  = "\033[94m"
+ENDC  = "\033[0m"
 GREEN = "\033[92m"
 RED   = "\033[91m"
-ENDC  = "\033[0m"
 
 # Output
 #
@@ -56,6 +57,9 @@ def cafter(instruction):
                 'expr': getSymExpr(seid).getAst()
             })
 
+    if len(instruction.getSymbolicExpressions()) == 0:
+        print "[%s??%s] %#x: %s" %(BLUE, ENDC, instruction.getAddress(), instruction.getDisassembly())
+        return
     if not bad:
         print "[%sOK%s] %#x: %s" %(GREEN, ENDC, instruction.getAddress(), instruction.getDisassembly())
     else:

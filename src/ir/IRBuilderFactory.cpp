@@ -493,13 +493,13 @@ IRBuilder *createIRBuilder(INS ins) {
 
       TritonOperand op1;
       op1.setType(IRBuilderOperand::IMM);
-      op1.setValue(INS_DirectBranchOrCallTargetAddress(ins));
+      op1.setImm(ImmediateOperand(INS_DirectBranchOrCallTargetAddress(ins)));
       ir->addOperand(op1);
 
       if (INS_MemoryOperandIsWritten(ins, 0)) {
         TritonOperand op2;
         op2.setType(IRBuilderOperand::MEM_W);
-        op2.setSize(INS_MemoryWriteSize(ins));
+        op2.setMemSize(INS_MemoryWriteSize(ins));
         ir->addOperand(op2);
       }
 
@@ -509,19 +509,13 @@ IRBuilder *createIRBuilder(INS ins) {
     /* Immediate */
     if (INS_OperandIsImmediate(ins, i)) {
       op.setType(IRBuilderOperand::IMM);
-      op.setValue(INS_OperandImmediate(ins, i));
+      op.setImm(ImmediateOperand(INS_OperandImmediate(ins, i)));
     }
 
     /* Register */
     else if (INS_OperandIsReg(ins, i)) {
-      REG reg = INS_OperandReg(ins, i);
       op.setType(IRBuilderOperand::REG);
-      op.setValue(PINConverter::convertDBIReg2TritonReg(reg));
-      if (REG_valid(reg)) {
-        // check needed because instructions like "xgetbv 0" make
-        // REG_Size crash.
-        op.setSize(REG_Size(reg));
-      }
+      op.setReg(RegisterOperand(INS_OperandReg(ins, i)));
     }
 
     /* Memory */
@@ -529,12 +523,12 @@ IRBuilder *createIRBuilder(INS ins) {
       /* Memory read */
       if (INS_MemoryOperandIsRead(ins, 0)) {
         op.setType(IRBuilderOperand::MEM_R);
-        op.setSize(INS_MemoryReadSize(ins));
+        op.setMemSize(INS_MemoryReadSize(ins));
       }
       /* Memory write */
       else {
         op.setType(IRBuilderOperand::MEM_W);
-        op.setSize(INS_MemoryWriteSize(ins));
+        op.setMemSize(INS_MemoryWriteSize(ins));
       }
     }
 
@@ -542,16 +536,16 @@ IRBuilder *createIRBuilder(INS ins) {
     else if (INS_OperandIsAddressGenerator(ins, i)) {
       REG reg;
       op.setType(IRBuilderOperand::LEA);
-      op.setDisplacement(INS_OperandMemoryDisplacement(ins, i));
-      op.setMemoryScale(INS_OperandMemoryScale(ins, i));
+      op.setDisplacement(ImmediateOperand(INS_OperandMemoryDisplacement(ins, i)));
+      op.setMemoryScale(ImmediateOperand(INS_OperandMemoryScale(ins, i)));
 
       reg = INS_OperandMemoryBaseReg(ins, i);
       if (REG_valid(reg))
-        op.setBaseReg(PINConverter::convertDBIReg2TritonReg(reg));
+        op.setBaseReg(RegisterOperand(reg));
 
       reg = INS_OperandMemoryIndexReg(ins, i);
       if (REG_valid(reg))
-        op.setIndexReg(PINConverter::convertDBIReg2TritonReg(reg));
+        op.setIndexReg(RegisterOperand(reg));
     }
 
     /* Undefined */
@@ -574,3 +568,4 @@ IRBuilder *createIRBuilder(INS ins) {
 
   return ir;
 }
+

@@ -32,12 +32,12 @@ void LeaIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *dis2e, *base2e, *index2e, *scale2e;
-  uint64 reg           = this->operands[0].getValue();
-  uint64 regSize       = this->operands[0].getSize();
-  uint64 displacement  = this->operands[1].getDisplacement();
-  uint64 baseReg       = this->operands[1].getBaseReg();
-  uint64 indexReg      = this->operands[1].getIndexReg();
-  uint64 memoryScale   = this->operands[1].getMemoryScale();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto regSize = this->operands[0].getReg().getSize();
+  auto displacement = this->operands[1].getDisplacement().getValue();
+  auto baseReg = this->operands[1].getBaseReg().getTritonRegId();
+  auto indexReg = this->operands[1].getIndexReg().getTritonRegId();
+  auto memoryScale = this->operands[1].getMemoryScale().getValue();
 
   /* Base register */
   if (baseReg) {

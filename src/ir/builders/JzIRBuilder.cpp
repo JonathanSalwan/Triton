@@ -22,7 +22,7 @@ JzIRBuilder::JzIRBuilder(uint64 address, const std::string &disassembly):
 void JzIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *zf;
-  uint64 imm   = this->operands[0].getValue();
+  auto imm = this->operands[0].getImm().getValue();
 
   /* Create the SMT semantic */
   zf = ap.buildSymbolicFlagOperand(ID_ZF);

@@ -42,8 +42,8 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 
 void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr1, *expr2;
-  uint64   readMem   = this->operands[0].getValue(); // The src memory read
-  uint32   readSize  = this->operands[0].getSize();
+  auto mem = this->operands[0].getMem().getAddress(); // The src memory read
+  auto memSize = this->operands[0].getMem().getSize();
 
   // RSP = RBP; -----------------------------
   expr1 = ap.buildSymbolicRegOperand(ID_RBP, REG_SIZE);
@@ -56,17 +56,17 @@ void LeaveIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   // RSP = RBP; -----------------------------
 
   // RBP = Pop(); ---------------------------
-  expr2 = ap.buildSymbolicMemOperand(readMem, readSize);
+  expr2 = ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Create the symbolic expression */
   se2 = ap.createRegSE(inst, expr2, ID_RBP, REG_SIZE);
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintRegMem(se2, ID_RBP, readMem, readSize);
+  ap.assignmentSpreadTaintRegMem(se2, ID_RBP, mem, memSize);
   // RBP = Pop(); ---------------------------
 
   /* Add the symbolic expression to the current inst */
-  alignStack(inst, ap, readSize);
+  alignStack(inst, ap, memSize);
 }
 
 

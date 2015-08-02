@@ -4,8 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
-#ifndef   EXTRACTBITS_H
-#define   EXTRACTBITS_H
+#ifndef   BITSVECTOR_H
+#define   BITSVECTOR_H
 
 #include <utility>
 #include "TritonTypes.h"
@@ -15,9 +15,9 @@
  * This class is used to deal with registers as bits vector.
  */
 
-class ExtractBits
+class BitsVector
 {
-  private:
+  protected:
     uint64 high;
     uint64 low;
 
@@ -28,12 +28,13 @@ class ExtractBits
     uint64                      getVectorSize(void);
     void                        setHigh(uint64 v);
     void                        setLow(uint64 v);
+    void                        setPair(std::pair<uint64, uint64> p);
 
-    ExtractBits();
-    ExtractBits(uint64 high, uint64 low);
-    ExtractBits(const ExtractBits &copy);
-    ~ExtractBits();
+    BitsVector();
+    BitsVector(uint64 high, uint64 low);
+    BitsVector(const BitsVector &copy);
+    ~BitsVector();
 };
 
 
-#endif     /* !EXTRACTBITS_H */
+#endif     /* !BITSVECTOR_H */

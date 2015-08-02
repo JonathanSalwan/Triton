@@ -9,24 +9,29 @@
 
 #include <string>
 
-#include "ExtractBits.h"
+#include "BitsVector.h"
 #include "TritonTypes.h"
 
 
-class RegisterOperand
+class RegisterOperand : public BitsVector
 {
   private:
-    ExtractBits   bitsVector;
     std::string   name;
-    uint64        id;
+    uint64        tritonRegId;
+    uint64        pinRegId;
+    uint64        size;
 
   public:
-    RegisterOperand(uint64 regId);
+    RegisterOperand();
+    RegisterOperand(uint64 pinRegId);
     ~RegisterOperand();
 
-    const ExtractBits&  getBitsVector(void);
-    const std::string&  getName(void);
-    uint64              getId(void);
+    const std::string&  getName(void) const;
+    uint64              getTritonRegId(void) const;
+    uint64              getPinRegId(void) const;
+    uint64              getSize(void) const;
+    void                setSize(uint64 size);
+    void                operator=(const RegisterOperand &other);
 };
 
 #endif     /* !REGISTEROPERAND_H */

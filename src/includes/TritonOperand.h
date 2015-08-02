@@ -8,23 +8,33 @@
 #ifndef   TRITONOPERAND_H
 #define   TRITONOPERAND_H
 
-#include "TritonTypes.h"
 #include "IRBuilderOperand.h"
+#include "ImmediateOperand.h"
+#include "MemoryOperand.h"
+#include "RegisterOperand.h"
+#include "TritonTypes.h"
 
 
 class TritonOperand {
 
   private:
+
+    /* Info */
     IRBuilderOperand::operand_t   type;
     bool                          readAndWrite;
     bool                          readOnly;
     bool                          writeOnly;
-    uint64                        baseReg;
-    uint64                        displacement;
-    uint64                        indexReg;
-    uint64                        memoryScale;
-    uint64                        size;
-    uint64                        value;
+
+    /* Default */
+    ImmediateOperand              imm;
+    MemoryOperand                 mem;
+    RegisterOperand               reg;
+
+    /* LEA */
+    ImmediateOperand              displacement;
+    ImmediateOperand              memoryScale;
+    RegisterOperand               baseReg;
+    RegisterOperand               indexReg;
 
 
   public:
@@ -36,21 +46,26 @@ class TritonOperand {
     bool                        isReadAndWrite(void) const;
     bool                        isReadOnly(void) const;
     bool                        isWriteOnly(void) const;
-    uint64                      getBaseReg(void) const;
-    uint64                      getDisplacement(void) const;
-    uint64                      getIndexReg(void) const;
-    uint64                      getMemoryScale(void) const;
-    uint64                      getSize(void) const;
-    uint64                      getValue(void) const;
-    void                        setBaseReg(uint64 reg);
-    void                        setDisplacement(uint64 displacement);
-    void                        setIndexReg(uint64 reg);
-    void                        setMemoryScale(uint64 memoryScale);
+    const ImmediateOperand&     getDisplacement(void) const;
+    const ImmediateOperand&     getImm(void) const;
+    const ImmediateOperand&     getMemoryScale(void) const;
+    const MemoryOperand&        getMem(void) const;
+    const RegisterOperand&      getBaseReg(void) const;
+    const RegisterOperand&      getIndexReg(void) const;
+    const RegisterOperand&      getReg(void) const;
+    void                        setBaseReg(RegisterOperand reg);
+    void                        setDisplacement(ImmediateOperand displacement);
+    void                        setImm(ImmediateOperand imm);
+    void                        setIndexReg(RegisterOperand reg);
+    void                        setMem(MemoryOperand mem);
+    void                        setMemAddress(uint64 addr);
+    void                        setMemSize(uint64 size);
+    void                        setMemoryScale(ImmediateOperand memoryScale);
     void                        setReadAndWrite(bool flag);
     void                        setReadOnly(bool flag);
-    void                        setSize(uint64 size);
+    void                        setReg(RegisterOperand reg);
+    void                        setRegSize(uint64 size);
     void                        setType(IRBuilderOperand::operand_t type);
-    void                        setValue(uint64 value);
     void                        setWriteOnly(bool flag);
 
     void                        operator=(const TritonOperand &other);

@@ -22,7 +22,7 @@ JoIRBuilder::JoIRBuilder(uint64 address, const std::string &disassembly):
 void JoIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *of;
-  uint64 imm   = this->operands[0].getValue();
+  auto imm = this->operands[0].getImm().getValue();
 
   /* Create the SMT semantic */
   of = ap.buildSymbolicFlagOperand(ID_OF);

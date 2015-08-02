@@ -22,9 +22,9 @@ SarIRBuilder::SarIRBuilder(uint64 address, const std::string &disassembly):
 void SarIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint64 reg     = this->operands[0].getValue();
-  uint64 imm     = this->operands[1].getValue();
-  uint32 regSize = this->operands[0].getSize();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto imm = this->operands[1].getImm().getValue();
+  auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
@@ -51,8 +51,8 @@ void SarIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void SarIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint64 reg     = this->operands[0].getValue();
-  uint32 regSize = this->operands[0].getSize();
+  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
@@ -85,29 +85,29 @@ void SarIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 void SarIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  uint32 writeSize = this->operands[0].getSize();
-  uint64 mem       = this->operands[0].getValue();
-  uint64 imm       = this->operands[1].getValue();
+  auto memSize = this->operands[0].getMem().getSize();
+  auto mem = this->operands[0].getMem().getAddress();
+  auto imm = this->operands[1].getImm().getValue();
 
   /* Create the SMT semantic */
-  op1 = ap.buildSymbolicMemOperand(mem, writeSize);
-  op2 = smt2lib::bv(imm, writeSize * REG_SIZE);
+  op1 = ap.buildSymbolicMemOperand(mem, memSize);
+  op2 = smt2lib::bv(imm, memSize * REG_SIZE);
 
   /* Final expr */
   expr = smt2lib::bvashr(op1, op2);
 
   /* Create the symbolic expression */
-  se = ap.createMemSE(inst, expr, mem, writeSize);
+  se = ap.createMemSE(inst, expr, mem, memSize);
 
   /* Apply the taint */
-  ap.aluSpreadTaintMemMem(se, mem, mem, writeSize);
+  ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfSar(inst, se, ap, writeSize, op1, op2);
-  EflagsBuilder::ofSar(inst, se, ap, writeSize, op2);
-  EflagsBuilder::pfShl(inst, se, ap, writeSize, op2); /* Same that shl */
-  EflagsBuilder::sfShl(inst, se, ap, writeSize, op2); /* Same that shl */
-  EflagsBuilder::zfShl(inst, se, ap, writeSize, op2); /* Same that shl */
+  EflagsBuilder::cfSar(inst, se, ap, memSize, op1, op2);
+  EflagsBuilder::ofSar(inst, se, ap, memSize, op2);
+  EflagsBuilder::pfShl(inst, se, ap, memSize, op2); /* Same that shl */
+  EflagsBuilder::sfShl(inst, se, ap, memSize, op2); /* Same that shl */
+  EflagsBuilder::zfShl(inst, se, ap, memSize, op2); /* Same that shl */
 }
 
 

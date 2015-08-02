@@ -133,7 +133,7 @@ void BaseIRBuilder::setup(uint64 mem_value)
 {
   for (auto it = this->operands.begin(); it != this->operands.end(); ++it)
     if (IRBuilder::isMemOperand(it->getType())) {
-      it->setValue(mem_value);
+      it->setMemAddress(mem_value);
       this->needSetup = false;
       break;
     }

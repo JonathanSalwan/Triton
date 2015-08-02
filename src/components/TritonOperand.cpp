@@ -19,9 +19,7 @@ TritonOperand::TritonOperand()
   this->memoryScale   = 0;
   this->readAndWrite  = false;
   this->readOnly      = false;
-  this->size          = 0;
   this->type          = IRBuilderOperand::UNDEF;
-  this->value         = value;
   this->writeOnly     = false;
 }
 
@@ -30,13 +28,14 @@ TritonOperand::TritonOperand(const TritonOperand &copy)
 {
   this->baseReg       = copy.baseReg;
   this->displacement  = copy.displacement;
+  this->imm           = copy.imm;
   this->indexReg      = copy.indexReg;
+  this->mem           = copy.mem;
   this->memoryScale   = copy.memoryScale;
   this->readAndWrite  = copy.readAndWrite;
   this->readOnly      = copy.readOnly;
-  this->size          = copy.size;
+  this->reg           = copy.reg;
   this->type          = copy.type;
-  this->value         = copy.value;
   this->writeOnly     = copy.writeOnly;
 }
 
@@ -65,33 +64,38 @@ bool TritonOperand::isWriteOnly(void) const {
 }
 
 
-uint64 TritonOperand::getValue(void) const {
-  return this->value;
-}
-
-
-uint64 TritonOperand::getSize(void) const {
-  return this->size;
-}
-
-
-uint64 TritonOperand::getDisplacement(void) const {
+const ImmediateOperand& TritonOperand::getDisplacement(void) const {
   return this->displacement;
 }
 
 
-uint64 TritonOperand::getBaseReg(void) const {
+const RegisterOperand& TritonOperand::getBaseReg(void) const {
   return this->baseReg;
 }
 
 
-uint64 TritonOperand::getIndexReg(void) const {
+const RegisterOperand& TritonOperand::getIndexReg(void) const {
   return this->indexReg;
 }
 
 
-uint64 TritonOperand::getMemoryScale(void) const {
+const ImmediateOperand& TritonOperand::getMemoryScale(void) const {
   return this->memoryScale;
+}
+
+
+const ImmediateOperand& TritonOperand::getImm(void) const {
+  return this->imm;
+}
+
+
+const MemoryOperand& TritonOperand::getMem(void) const {
+  return this->mem;
+}
+
+
+const RegisterOperand& TritonOperand::getReg(void) const {
+  return this->reg;
 }
 
 
@@ -105,38 +109,28 @@ void TritonOperand::setReadOnly(bool flag) {
 }
 
 
-void TritonOperand::setValue(uint64 value) {
-  this->value = value;
-}
-
-
 void TritonOperand::setWriteOnly(bool flag) {
   this->writeOnly = flag;
 }
 
 
-void TritonOperand::setBaseReg(uint64 reg) {
+void TritonOperand::setBaseReg(RegisterOperand reg) {
   this->baseReg = reg;
 }
 
 
-void TritonOperand::setDisplacement(uint64 displacement) {
+void TritonOperand::setDisplacement(ImmediateOperand displacement) {
   this->displacement = displacement;
 }
 
 
-void TritonOperand::setIndexReg(uint64 reg) {
+void TritonOperand::setIndexReg(RegisterOperand reg) {
   this->indexReg = reg;
 }
 
 
-void TritonOperand::setMemoryScale(uint64 memoryScale) {
+void TritonOperand::setMemoryScale(ImmediateOperand memoryScale) {
   this->memoryScale = memoryScale;
-}
-
-
-void TritonOperand::setSize(uint64 size) {
-  this->size = size;
 }
 
 
@@ -145,17 +139,48 @@ void TritonOperand::setType(IRBuilderOperand::operand_t type) {
 }
 
 
+void TritonOperand::setImm(ImmediateOperand imm) {
+  this->imm = imm;
+}
+
+
+void TritonOperand::setMem(MemoryOperand mem) {
+  this->mem = mem;
+}
+
+
+void TritonOperand::setMemAddress(uint64 addr) {
+  this->mem.setAddress(addr);
+}
+
+
+void TritonOperand::setMemSize(uint64 size) {
+  this->mem.setSize(size);
+}
+
+
+void TritonOperand::setReg(RegisterOperand reg) {
+  this->reg = reg;
+}
+
+
+void TritonOperand::setRegSize(uint64 size) {
+  this->reg.setSize(size);
+}
+
+
 void TritonOperand::operator=(const TritonOperand &other)
 {
   this->baseReg       = other.baseReg;
   this->displacement  = other.displacement;
+  this->imm           = other.imm;
   this->indexReg      = other.indexReg;
+  this->mem           = other.mem;
   this->memoryScale   = other.memoryScale;
   this->readAndWrite  = other.readAndWrite;
   this->readOnly      = other.readOnly;
-  this->size          = other.size;
+  this->reg           = other.reg;
   this->type          = other.type;
-  this->value         = other.value;
   this->writeOnly     = other.writeOnly;
 }
 

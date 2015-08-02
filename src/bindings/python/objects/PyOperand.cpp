@@ -17,7 +17,6 @@
  * - memoryScale (integer)
  * - size (integer)
  * - type (IDREF.OPERAND)
- * - value (intger or IDREF.REG)
  */
 
 
@@ -29,35 +28,28 @@ void Operand_dealloc(PyObject *self) {
 static char Operand_getBaseReg_doc[] = "Returns the base register";
 static PyObject *Operand_getBaseReg(PyObject *self, PyObject *noarg)
 {
-  return Py_BuildValue("k", PyOperand_AsOperand(self)->getBaseReg());
+  return Py_BuildValue("k", PyOperand_AsOperand(self)->getBaseReg().getTritonRegId());
 }
 
 
 static char Operand_getDisplacement_doc[] = "Returns the displacement";
 static PyObject *Operand_getDisplacement(PyObject *self, PyObject *noarg)
 {
-  return Py_BuildValue("k", PyOperand_AsOperand(self)->getDisplacement());
+  return Py_BuildValue("k", PyOperand_AsOperand(self)->getDisplacement().getValue());
 }
 
 
 static char Operand_getIndexReg_doc[] = "Returns the index register";
 static PyObject *Operand_getIndexReg(PyObject *self, PyObject *noarg)
 {
-  return Py_BuildValue("k", PyOperand_AsOperand(self)->getIndexReg());
+  return Py_BuildValue("k", PyOperand_AsOperand(self)->getIndexReg().getTritonRegId());
 }
 
 
 static char Operand_getMemoryScale_doc[] = "Returns the memory scale";
 static PyObject *Operand_getMemoryScale(PyObject *self, PyObject *noarg)
 {
-  return Py_BuildValue("k", PyOperand_AsOperand(self)->getMemoryScale());
-}
-
-
-static char Operand_getSize_doc[] = "Returns the size";
-static PyObject *Operand_getSize(PyObject *self, PyObject *noarg)
-{
-  return Py_BuildValue("k", PyOperand_AsOperand(self)->getSize());
+  return Py_BuildValue("k", PyOperand_AsOperand(self)->getMemoryScale().getValue());
 }
 
 
@@ -68,21 +60,12 @@ static PyObject *Operand_getType(PyObject *self, PyObject *noarg)
 }
 
 
-static char Operand_getValue_doc[] = "Returns the value";
-static PyObject *Operand_getValue(PyObject *self, PyObject *noarg)
-{
-  return Py_BuildValue("k", PyOperand_AsOperand(self)->getValue());
-}
-
-
 PyMethodDef Operand_callbacks[] = {
   {"getBaseReg",        Operand_getBaseReg,       METH_NOARGS,     Operand_getBaseReg_doc},
   {"getDisplacement",   Operand_getDisplacement,  METH_NOARGS,     Operand_getDisplacement_doc},
   {"getIndexReg",       Operand_getIndexReg,      METH_NOARGS,     Operand_getIndexReg_doc},
   {"getMemoryScale",    Operand_getMemoryScale,   METH_NOARGS,     Operand_getMemoryScale_doc},
-  {"getSize",           Operand_getSize,          METH_NOARGS,     Operand_getSize_doc},
   {"getType",           Operand_getType,          METH_NOARGS,     Operand_getType_doc},
-  {"getValue",          Operand_getValue,         METH_NOARGS,     Operand_getValue_doc},
   {nullptr,             nullptr,                  0,               nullptr}
 };
 
