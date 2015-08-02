@@ -11,11 +11,13 @@
 /*
  * Class Operand
  *
- * - baseReg (IDREF.REG)
- * - displacement (integer)
- * - indexReg (IDREF.REG)
- * - memoryScale (integer)
- * - size (integer)
+ * - baseReg (RegisterOperand)
+ * - displacement (ImmedaiteOperand)
+ * - imm (ImmedaiteOperand)
+ * - indexReg (RegisterOperand)
+ * - mem (MemoryOperand)
+ * - memoryScale (ImmedaiteOperand)
+ * - reg (RegisterOperand)
  * - type (IDREF.OPERAND)
  */
 
@@ -28,28 +30,49 @@ void Operand_dealloc(PyObject *self) {
 static char Operand_getBaseReg_doc[] = "Returns the base register";
 static PyObject *Operand_getBaseReg(PyObject *self, PyObject *noarg)
 {
-  return Py_BuildValue("k", PyOperand_AsOperand(self)->getBaseReg().getTritonRegId());
+  return PyRegisterOperand(PyOperand_AsOperand(self)->getBaseReg());
 }
 
 
 static char Operand_getDisplacement_doc[] = "Returns the displacement";
 static PyObject *Operand_getDisplacement(PyObject *self, PyObject *noarg)
 {
-  return Py_BuildValue("k", PyOperand_AsOperand(self)->getDisplacement().getValue());
+  return PyImmediateOperand(PyOperand_AsOperand(self)->getDisplacement());
+}
+
+
+static char Operand_getImm_doc[] = "Returns the immediate value";
+static PyObject *Operand_getImm(PyObject *self, PyObject *noarg)
+{
+  return PyImmediateOperand(PyOperand_AsOperand(self)->getImm());
 }
 
 
 static char Operand_getIndexReg_doc[] = "Returns the index register";
 static PyObject *Operand_getIndexReg(PyObject *self, PyObject *noarg)
 {
-  return Py_BuildValue("k", PyOperand_AsOperand(self)->getIndexReg().getTritonRegId());
+  return PyRegisterOperand(PyOperand_AsOperand(self)->getIndexReg());
+}
+
+
+static char Operand_getMem_doc[] = "Returns the memory address";
+static PyObject *Operand_getMem(PyObject *self, PyObject *noarg)
+{
+  return PyMemoryOperand(PyOperand_AsOperand(self)->getMem());
 }
 
 
 static char Operand_getMemoryScale_doc[] = "Returns the memory scale";
 static PyObject *Operand_getMemoryScale(PyObject *self, PyObject *noarg)
 {
-  return Py_BuildValue("k", PyOperand_AsOperand(self)->getMemoryScale().getValue());
+  return PyImmediateOperand(PyOperand_AsOperand(self)->getMemoryScale());
+}
+
+
+static char Operand_getReg_doc[] = "Returns the register id";
+static PyObject *Operand_getReg(PyObject *self, PyObject *noarg)
+{
+  return PyRegisterOperand(PyOperand_AsOperand(self)->getReg());
 }
 
 
@@ -63,8 +86,11 @@ static PyObject *Operand_getType(PyObject *self, PyObject *noarg)
 PyMethodDef Operand_callbacks[] = {
   {"getBaseReg",        Operand_getBaseReg,       METH_NOARGS,     Operand_getBaseReg_doc},
   {"getDisplacement",   Operand_getDisplacement,  METH_NOARGS,     Operand_getDisplacement_doc},
+  {"getImm",            Operand_getImm,           METH_NOARGS,     Operand_getImm_doc},
   {"getIndexReg",       Operand_getIndexReg,      METH_NOARGS,     Operand_getIndexReg_doc},
+  {"getMem",            Operand_getMem,           METH_NOARGS,     Operand_getMem_doc},
   {"getMemoryScale",    Operand_getMemoryScale,   METH_NOARGS,     Operand_getMemoryScale_doc},
+  {"getReg",            Operand_getReg,           METH_NOARGS,     Operand_getReg_doc},
   {"getType",           Operand_getType,          METH_NOARGS,     Operand_getType_doc},
   {nullptr,             nullptr,                  0,               nullptr}
 };

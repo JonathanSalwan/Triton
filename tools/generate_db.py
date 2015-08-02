@@ -25,12 +25,12 @@ cursor = conn.cursor()
 def accessMemoryDump(opType, instruction, operand):
 
     # Checks if the source address can be read
-    if checkReadAccess(operand.getValue()):
+    if checkReadAccess(operand.getMem().getAddress()):
 
         insAddr          = instruction.getAddress()
         accessType       = 'R'
-        accessAddr       = operand.getValue()
-        accessSize       = operand.getSize()
+        accessAddr       = operand.getMem().getAddress()
+        accessSize       = operand.getMem().getSize()
         contentAsString  = str()
         contentAsInteger = getMemValue(accessAddr, accessSize)
 
@@ -68,8 +68,8 @@ def before(instruction):
     # Dump registers value
     for operand in instruction.getOperands():
         if operand.getType() == IDREF.OPERAND.REG:
-            regId      = operand.getValue()
-            regSize    = operand.getSize()
+            regId      = operand.getReg().getId()
+            regSize    = operand.getReg().getSize()
             regContent = getRegValue(regId)
             regName    = getRegName(regId)
             cursor.execute("INSERT INTO registersValue VALUES (%d, %d, '%s', %d, %d)" %(addr, regId, regName, regSize, regContent))

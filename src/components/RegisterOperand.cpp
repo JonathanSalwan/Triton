@@ -19,7 +19,6 @@ RegisterOperand::RegisterOperand() {
 RegisterOperand::RegisterOperand(uint64 pinRegId) {
   this->tritonRegId = PINConverter::convertDBIReg2TritonReg(pinRegId);
   this->pinRegId    = PINConverter::convertTritonReg2DBIReg(this->tritonRegId);
-  this->name        = REG_StringShort(static_cast<REG>(pinRegId));
 
   if (REG_valid(static_cast<REG>(pinRegId))) {
     // check needed because instructions like "xgetbv 0" make
@@ -50,11 +49,6 @@ uint64 RegisterOperand::getSize(void) const {
 }
 
 
-const std::string& RegisterOperand::getName(void) const {
-  return this->name;
-}
-
-
 void RegisterOperand::setSize(uint64 size) {
   this->size = size;
 }
@@ -63,7 +57,6 @@ void RegisterOperand::setSize(uint64 size) {
 void RegisterOperand::operator=(const RegisterOperand &other) {
   this->high        = other.high;
   this->low         = other.low;
-  this->name        = other.name;
   this->pinRegId    = other.pinRegId;
   this->size        = other.size;
   this->tritonRegId = other.tritonRegId;

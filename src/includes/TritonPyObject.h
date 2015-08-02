@@ -21,6 +21,9 @@
 PyObject *PyInstruction(IRBuilder *irb);
 PyObject *PyInstruction(Inst *inst);
 PyObject *PyOperand(TritonOperand operand);
+PyObject *PyRegisterOperand(RegisterOperand reg);
+PyObject *PyMemoryOperand(MemoryOperand mem);
+PyObject *PyImmediateOperand(ImmediateOperand imm);
 PyObject *PySmtAstNode(smt2lib::smtAstAbstractNode *node);
 PyObject *PySymbolicExpression(SymbolicExpression *expression);
 PyObject *PySymbolicVariable(SymbolicVariable *symVar);
@@ -86,6 +89,42 @@ extern PyTypeObject Instruction_Type;
 #define PyInstruction_Check(v) ((v)->ob_type == &Instruction_Type)
 #define PyInstruction_AsIns(v) (((Instruction_Object *)(v))->ins)
 #define PyInstruction_AsIrb(v) (((Instruction_Object *)(v))->irb)
+
+// RegisterOperand =============================
+
+typedef struct {
+  PyObject_HEAD
+  RegisterOperand reg;
+} RegisterOperand_Object;
+
+extern PyTypeObject RegisterOperand_Type;
+
+#define PyRegisterOperand_Check(v) ((v)->ob_type == &RegisterOperand_Type)
+#define PyRegisterOperand_AsRegisterOperand(v) (&(((RegisterOperand_Object *)(v))->reg))
+
+// MemoryOperand =============================
+
+typedef struct {
+  PyObject_HEAD
+  MemoryOperand mem;
+} MemoryOperand_Object;
+
+extern PyTypeObject MemoryOperand_Type;
+
+#define PyMemoryOperand_Check(v) ((v)->ob_type == &MemoryOperand_Type)
+#define PyMemoryOperand_AsMemoryOperand(v) (&(((MemoryOperand_Object *)(v))->mem))
+
+// ImmediateOperand =============================
+
+typedef struct {
+  PyObject_HEAD
+  ImmediateOperand imm;
+} ImmediateOperand_Object;
+
+extern PyTypeObject ImmediateOperand_Type;
+
+#define PyImmediateOperand_Check(v) ((v)->ob_type == &ImmediateOperand_Type)
+#define PyImmediateOperand_AsImmediateOperand(v) (&(((ImmediateOperand_Object *)(v))->imm))
 
 #endif     /* !__TRITONPYOBJECT_H__ */
 
