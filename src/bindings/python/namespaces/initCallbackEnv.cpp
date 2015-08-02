@@ -12,8 +12,7 @@
 #include <PythonBindings.h>
 
 
-void initCallbackEnv(PyObject *idCallbackClassDict)
-{
+void initCallbackEnv(PyObject *idCallbackClassDict) {
   PyDict_SetItemString(idCallbackClassDict, "AFTER", PyInt_FromLong(CB_AFTER));
   PyDict_SetItemString(idCallbackClassDict, "BEFORE", PyInt_FromLong(CB_BEFORE));
   PyDict_SetItemString(idCallbackClassDict, "BEFORE_SYMPROC", PyInt_FromLong(CB_BEFORE_SYMPROC));

@@ -11,8 +11,7 @@
 #include <Registers.h>
 
 
-void initFlagEnv(PyObject *idFlagClassDict)
-{
+void initFlagEnv(PyObject *idFlagClassDict) {
   PyDict_SetItemString(idFlagClassDict, "AF", PyInt_FromLong(ID_AF));
   PyDict_SetItemString(idFlagClassDict, "CF", PyInt_FromLong(ID_CF));
   PyDict_SetItemString(idFlagClassDict, "DF", PyInt_FromLong(ID_DF));

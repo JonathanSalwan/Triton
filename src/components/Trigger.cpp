@@ -6,34 +6,31 @@
 
 #include <Trigger.h>
 
-Trigger::Trigger(): state(false) { }
+Trigger::Trigger()
+  : state(false) {
+}
 
 
-void Trigger::toggle()
-{
+void Trigger::toggle() {
   this->state = !this->state;
 }
 
 
-bool Trigger::getState()
-{
+bool Trigger::getState() {
   return this->state;
 }
 
 
-void Trigger::enable(void)
-{
+void Trigger::enable(void) {
   this->state = true;
 }
 
 
-void Trigger::disable(void)
-{
+void Trigger::disable(void) {
   this->state = false;
 }
 
 
-void Trigger::update(bool flag)
-{
+void Trigger::update(bool flag) {
   this->state = flag;
 }

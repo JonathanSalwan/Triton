@@ -7,7 +7,7 @@
 #include <PINConverter.h>
 
 
-uint64 PINConverter::convertDBIReg2TritonReg(uint64 pinRegID){
+uint64 PINConverter::convertDBIReg2TritonReg(uint64 pinRegID) {
   switch(pinRegID){
     case REG_RAX:
     case REG_EAX:
@@ -269,8 +269,8 @@ std::string PINConverter::getRegisterName(uint64 tritonRegId) {
 }
 
 
-std::pair<uint64, uint64> PINConverter::convertDBIReg2BitsVector(uint64 pinRegID){
-  switch(pinRegID){
+std::pair<uint64, uint64> PINConverter::convertDBIReg2BitsVector(uint64 pinRegID) {
+  switch(pinRegID) {
 
     case REG_XMM0:
     case REG_XMM1:

@@ -11,8 +11,7 @@
 
 
 
-SymbolicEngine::SymbolicEngine()
-{
+SymbolicEngine::SymbolicEngine() {
   /* Init all symbolic registers/flags to UNSET (init state) */
   for (uint64 i = 0; i < ID_LAST_ITEM; i++)
     this->symbolicReg[i] = UNSET;
@@ -20,8 +19,7 @@ SymbolicEngine::SymbolicEngine()
 }
 
 
-void SymbolicEngine::init(const SymbolicEngine &other)
-{
+void SymbolicEngine::init(const SymbolicEngine &other) {
   for (uint64 i = 0; i < ID_LAST_ITEM; i++)
     this->symbolicReg[i] = other.symbolicReg[i];
 
@@ -33,20 +31,17 @@ void SymbolicEngine::init(const SymbolicEngine &other)
 }
 
 
-SymbolicEngine::SymbolicEngine(const SymbolicEngine &copy)
-{
+SymbolicEngine::SymbolicEngine(const SymbolicEngine &copy) {
   this->init(copy);
 }
 
 
-void SymbolicEngine::operator=(const SymbolicEngine &other)
-{
+void SymbolicEngine::operator=(const SymbolicEngine &other) {
   this->init(other);
 }
 
 
-SymbolicEngine::~SymbolicEngine()
-{
+SymbolicEngine::~SymbolicEngine() {
   std::vector<SymbolicExpression *>::iterator it1 = this->symbolicExpressions.begin();
   std::vector<SymbolicVariable *>::iterator it2 = this->symbolicVariables.begin();
 
@@ -84,22 +79,19 @@ void SymbolicEngine::concretizeAllReg(void) {
  * assignment will be over the concretization. This method must be called
  * before symbolic processing.
  */
-void SymbolicEngine::concretizeMem(uint64 mem)
-{
+void SymbolicEngine::concretizeMem(uint64 mem) {
   this->memoryReference.erase(mem);
 }
 
 
 /* Same as concretizeMem but with all address memory */
-void SymbolicEngine::concretizeAllMem(void)
-{
+void SymbolicEngine::concretizeAllMem(void) {
   this->memoryReference.clear();
 }
 
 
 /* Returns the reference memory if it's referenced otherwise returns UNSET */
-uint64 SymbolicEngine::getMemSymbolicID(uint64 addr)
-{
+uint64 SymbolicEngine::getMemSymbolicID(uint64 addr) {
   std::map<uint64, uint64>::iterator it;
   if ((it = this->memoryReference.find(addr)) != this->memoryReference.end())
     return it->second;
@@ -108,8 +100,7 @@ uint64 SymbolicEngine::getMemSymbolicID(uint64 addr)
 
 
 /* Returns the symbolic variable otherwise returns nullptr */
-SymbolicVariable *SymbolicEngine::getSymVar(uint64 symVarId)
-{
+SymbolicVariable *SymbolicEngine::getSymVar(uint64 symVarId) {
   if (symVarId >= this->symbolicVariables.size())
     return nullptr;
   return this->symbolicVariables[symVarId];
@@ -117,8 +108,7 @@ SymbolicVariable *SymbolicEngine::getSymVar(uint64 symVarId)
 
 
 /* Returns the symbolic variable otherwise returns nullptr */
-SymbolicVariable *SymbolicEngine::getSymVar(std::string symVarName)
-{
+SymbolicVariable *SymbolicEngine::getSymVar(std::string symVarName) {
   std::vector<SymbolicVariable *>::iterator it;
 
   for (it = this->symbolicVariables.begin(); it != this->symbolicVariables.end(); it++){
@@ -130,8 +120,7 @@ SymbolicVariable *SymbolicEngine::getSymVar(std::string symVarName)
 
 
 /* Returns all symbolic variables */
-std::vector<SymbolicVariable *> SymbolicEngine::getSymVars(void)
-{
+std::vector<SymbolicVariable *> SymbolicEngine::getSymVars(void) {
   return this->symbolicVariables;
 }
 
@@ -147,14 +136,12 @@ uint64 SymbolicEngine::getRegSymbolicID(uint64 regID) {
 /* Create a new symbolic expression */
 /* Get an unique ID.
  * Mainly used when a new symbolic expression is created */
-uint64 SymbolicEngine::getUniqueID()
-{
+uint64 SymbolicEngine::getUniqueID() {
   return this->uniqueID++;
 }
 
 
-SymbolicExpression *SymbolicEngine::newSymbolicExpression(smt2lib::smtAstAbstractNode *node)
-{
+SymbolicExpression *SymbolicEngine::newSymbolicExpression(smt2lib::smtAstAbstractNode *node) {
   uint64 id = this->getUniqueID();
   SymbolicExpression *expr = new SymbolicExpression(node, id);
   this->symbolicExpressions.push_back(expr);
@@ -163,8 +150,7 @@ SymbolicExpression *SymbolicEngine::newSymbolicExpression(smt2lib::smtAstAbstrac
 
 
 /* Create a new symbolic expression with comment */
-SymbolicExpression *SymbolicEngine::newSymbolicExpression(smt2lib::smtAstAbstractNode *node, std::string comment)
-{
+SymbolicExpression *SymbolicEngine::newSymbolicExpression(smt2lib::smtAstAbstractNode *node, std::string comment) {
   uint64 id = this->getUniqueID();
   SymbolicExpression *expr = new SymbolicExpression(node, id, comment);
   this->symbolicExpressions.push_back(expr);
@@ -173,8 +159,7 @@ SymbolicExpression *SymbolicEngine::newSymbolicExpression(smt2lib::smtAstAbstrac
 
 
 /* Get the symbolic expression pointer from a symbolic ID */
-SymbolicExpression *SymbolicEngine::getExpressionFromId(uint64 id)
-{
+SymbolicExpression *SymbolicEngine::getExpressionFromId(uint64 id) {
   if (id >= this->symbolicExpressions.size())
     return nullptr;
   return this->symbolicExpressions[id];
@@ -182,15 +167,13 @@ SymbolicExpression *SymbolicEngine::getExpressionFromId(uint64 id)
 
 
 /* Returns all symbolic expressions */
-std::vector<SymbolicExpression *> SymbolicEngine::getExpressions(void)
-{
+std::vector<SymbolicExpression *> SymbolicEngine::getExpressions(void) {
   return this->symbolicExpressions;
 }
 
 
 /* Returns the full symbolic expression backtracked. */
-smt2lib::smtAstAbstractNode *SymbolicEngine::getFullExpression(smt2lib::smtAstAbstractNode *node)
-{
+smt2lib::smtAstAbstractNode *SymbolicEngine::getFullExpression(smt2lib::smtAstAbstractNode *node) {
   uint64 index = 0;
   std::vector<smt2lib::smtAstAbstractNode *> &childs = node->getChilds();
 
@@ -208,8 +191,7 @@ smt2lib::smtAstAbstractNode *SymbolicEngine::getFullExpression(smt2lib::smtAstAb
 
 
 /* Returns a list which contains all tainted expressions */
-std::list<SymbolicExpression *> SymbolicEngine::getTaintedExpressions(void)
-{
+std::list<SymbolicExpression *> SymbolicEngine::getTaintedExpressions(void) {
   uint64 index = 0;
   std::list<SymbolicExpression *> taintedExprs;
 
@@ -222,8 +204,7 @@ std::list<SymbolicExpression *> SymbolicEngine::getTaintedExpressions(void)
 
 
 /* Returns the list of the symbolic variables declared in the trace */
-std::string SymbolicEngine::getVariablesDeclaration(void)
-{
+std::string SymbolicEngine::getVariablesDeclaration(void) {
   std::vector<SymbolicVariable*>::iterator it;
   std::stringstream stream;
 
@@ -241,8 +222,7 @@ std::string SymbolicEngine::getVariablesDeclaration(void)
  * convertExprToSymVar(43, 8)
  * #43 = SymVar_4
  */
-SymbolicVariable *SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symVarSize, std::string symVarComment)
-{
+SymbolicVariable *SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symVarSize, std::string symVarComment) {
   SymbolicVariable    *symVar = nullptr;
   SymbolicExpression  *expression = this->getExpressionFromId(exprId);
 
@@ -257,8 +237,7 @@ SymbolicVariable *SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symV
 }
 
 
-SymbolicVariable *SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment)
-{
+SymbolicVariable *SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment) {
   SymbolicVariable   *symVar = nullptr;
   SymbolicExpression *expression = nullptr;
   uint64             memSymId = UNSET;
@@ -280,8 +259,7 @@ SymbolicVariable *SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symV
 }
 
 
-SymbolicVariable *SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVarSize, std::string symVarComment)
-{
+SymbolicVariable *SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVarSize, std::string symVarComment) {
   SymbolicVariable   *symVar = nullptr;
   SymbolicExpression *expression = nullptr;
   uint64             regSymId = UNSET;
@@ -307,8 +285,7 @@ SymbolicVariable *SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVar
 
 
 /* Add a new symbolic variable */
-SymbolicVariable *SymbolicEngine::addSymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 size, std::string comment)
-{
+SymbolicVariable *SymbolicEngine::addSymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 size, std::string comment) {
   uint64 uniqueID = this->symbolicVariables.size();
   SymbolicVariable *symVar = new SymbolicVariable(kind, kindValue, uniqueID, size, comment);
 
@@ -321,22 +298,19 @@ SymbolicVariable *SymbolicEngine::addSymbolicVariable(SymVar::kind kind, uint64 
 
 
 /* Add and assign a new memory reference */
-void SymbolicEngine::addMemoryReference(uint64 mem, uint64 id)
-{
+void SymbolicEngine::addMemoryReference(uint64 mem, uint64 id) {
   this->memoryReference[mem] = id;
 }
 
 
 /* The a path constraint in the PC list */
-void SymbolicEngine::addPathConstraint(uint64 exprId)
-{
+void SymbolicEngine::addPathConstraint(uint64 exprId) {
   this->pathConstaints.push_back(exprId);
 }
 
 
 /* Returns the path constrains list */
-std::list<uint64> SymbolicEngine::getPathConstraints(void)
-{
+std::list<uint64> SymbolicEngine::getPathConstraints(void) {
   return this->pathConstaints;
 }
 

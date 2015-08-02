@@ -22,15 +22,13 @@ void RegisterOperand_dealloc(PyObject *self) {
 
 
 static char RegisterOperand_getId_doc[] = "Returns the register id";
-static PyObject *RegisterOperand_getId(PyObject *self, PyObject *noarg)
-{
+static PyObject *RegisterOperand_getId(PyObject *self, PyObject *noarg) {
   return Py_BuildValue("k", PyRegisterOperand_AsRegisterOperand(self)->getTritonRegId());
 }
 
 
 static char RegisterOperand_getSize_doc[] = "Returns the register size";
-static PyObject *RegisterOperand_getSize(PyObject *self, PyObject *noarg)
-{
+static PyObject *RegisterOperand_getSize(PyObject *self, PyObject *noarg) {
   return Py_BuildValue("k", PyRegisterOperand_AsRegisterOperand(self)->getSize());
 }
 
@@ -85,8 +83,7 @@ PyTypeObject RegisterOperand_Type = {
 };
 
 
-PyObject *PyRegisterOperand(RegisterOperand reg)
-{
+PyObject *PyRegisterOperand(RegisterOperand reg) {
   RegisterOperand_Object *object;
 
   PyType_Ready(&RegisterOperand_Type);

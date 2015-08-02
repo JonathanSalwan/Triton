@@ -29,8 +29,7 @@ void SymbolicVariable_dealloc(PyObject *self) {
 
 
 static char SymbolicVariable_getComment_doc[] = "Returns the comment of the symbolic variable";
-static PyObject *SymbolicVariable_getComment(PyObject *self, PyObject *noarg)
-{
+static PyObject *SymbolicVariable_getComment(PyObject *self, PyObject *noarg) {
   SymbolicVariable *variable = PySymbolicVariable_AsSymbolicVariable(self);
   if (variable->getSymVarComment().empty() == false)
     return PyString_FromFormat("%s", variable->getSymVarComment().c_str());
@@ -39,56 +38,49 @@ static PyObject *SymbolicVariable_getComment(PyObject *self, PyObject *noarg)
 }
 
 static char SymbolicVariable_getConcreteValue_doc[] = "Returns the variable's concrete value";
-static PyObject *SymbolicVariable_getConcreteValue(PyObject *self, PyObject *noarg)
-{
+static PyObject *SymbolicVariable_getConcreteValue(PyObject *self, PyObject *noarg) {
   SymbolicVariable *symVar = PySymbolicVariable_AsSymbolicVariable(self);
   return uint128ToPyLongObject(symVar->getConcreteValue());
 }
 
 
 static char SymbolicVariable_getId_doc[] = "Returns the id of the symbolic variable";
-static PyObject *SymbolicVariable_getId(PyObject *self, PyObject *noarg)
-{
+static PyObject *SymbolicVariable_getId(PyObject *self, PyObject *noarg) {
   SymbolicVariable *variable = PySymbolicVariable_AsSymbolicVariable(self);
   return Py_BuildValue("k", variable->getSymVarId());
 }
 
 
 static char SymbolicVariable_getKind_doc[] = "Returns the kind of the symbolic variable";
-static PyObject *SymbolicVariable_getKind(PyObject *self, PyObject *noarg)
-{
+static PyObject *SymbolicVariable_getKind(PyObject *self, PyObject *noarg) {
   SymbolicVariable *variable = PySymbolicVariable_AsSymbolicVariable(self);
   return Py_BuildValue("k", variable->getSymVarKind());
 }
 
 
 static char SymbolicVariable_getKindValue_doc[] = "Returns the kind value of the symbolic variable";
-static PyObject *SymbolicVariable_getKindValue(PyObject *self, PyObject *noarg)
-{
+static PyObject *SymbolicVariable_getKindValue(PyObject *self, PyObject *noarg) {
   SymbolicVariable *variable = PySymbolicVariable_AsSymbolicVariable(self);
   return Py_BuildValue("k", variable->getSymVarKindValue());
 }
 
 
 static char SymbolicVariable_getName_doc[] = "Returns the name of the symbolic variable";
-static PyObject *SymbolicVariable_getName(PyObject *self, PyObject *noarg)
-{
+static PyObject *SymbolicVariable_getName(PyObject *self, PyObject *noarg) {
   SymbolicVariable *variable = PySymbolicVariable_AsSymbolicVariable(self);
   return PyString_FromFormat("%s", variable->getSymVarName().c_str());
 }
 
 
 static char SymbolicVariable_getSize_doc[] = "Returns the size of the symbolic variable";
-static PyObject *SymbolicVariable_getSize(PyObject *self, PyObject *noarg)
-{
+static PyObject *SymbolicVariable_getSize(PyObject *self, PyObject *noarg) {
   SymbolicVariable *variable = PySymbolicVariable_AsSymbolicVariable(self);
   return Py_BuildValue("k", variable->getSymVarSize());
 }
 
 
 static char SymbolicVariable_hasConcreteValue_doc[] = "Returns true of false if the variable contains a concrete value";
-static PyObject *SymbolicVariable_hasConcreteValue(PyObject *self, PyObject *noarg)
-{
+static PyObject *SymbolicVariable_hasConcreteValue(PyObject *self, PyObject *noarg) {
   SymbolicVariable *variable = PySymbolicVariable_AsSymbolicVariable(self);
   if (variable->hasConcreteValue() == true)
     Py_RETURN_TRUE;
@@ -96,8 +88,7 @@ static PyObject *SymbolicVariable_hasConcreteValue(PyObject *self, PyObject *noa
 }
 
 
-static PyObject *SymbolicVariable_str(SymbolicVariable_Object *obj)
-{
+static PyObject *SymbolicVariable_str(SymbolicVariable_Object *obj) {
   std::stringstream str;
   str << obj->variable->getSymVarName();
   return PyString_FromFormat("%s", str.str().c_str());
@@ -160,8 +151,7 @@ PyTypeObject SymbolicVariable_Type = {
 };
 
 
-PyObject *PySymbolicVariable(SymbolicVariable *variable)
-{
+PyObject *PySymbolicVariable(SymbolicVariable *variable) {
   SymbolicVariable_Object *object;
 
   PyType_Ready(&SymbolicVariable_Type);

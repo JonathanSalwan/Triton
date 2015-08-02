@@ -26,8 +26,7 @@ void initSyscallEnv(PyObject *);
 void initVersionEnv(PyObject *);
 
 
-void initBindings(void)
-{
+void initBindings(void) {
   Py_Initialize();
 
   PyObject *tritonModule = Py_InitModule("triton", tritonCallbacks);
@@ -253,8 +252,7 @@ void initBindings(void)
 }
 
 
-bool execBindings(const char *fileName)
-{
+bool execBindings(const char *fileName) {
   FILE *fd = fopen(fileName, "r");
   if (fd == nullptr) {
     perror("fopen");

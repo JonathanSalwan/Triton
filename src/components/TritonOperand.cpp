@@ -11,8 +11,7 @@
 
 
 
-TritonOperand::TritonOperand()
-{
+TritonOperand::TritonOperand() {
   this->baseReg       = ID_INVALID;
   this->displacement  = 0;
   this->indexReg      = ID_INVALID;
@@ -24,8 +23,7 @@ TritonOperand::TritonOperand()
 }
 
 
-TritonOperand::TritonOperand(const TritonOperand &copy)
-{
+TritonOperand::TritonOperand(const TritonOperand &copy) {
   this->baseReg       = copy.baseReg;
   this->displacement  = copy.displacement;
   this->imm           = copy.imm;
@@ -40,7 +38,7 @@ TritonOperand::TritonOperand(const TritonOperand &copy)
 }
 
 
-TritonOperand::~TritonOperand(){
+TritonOperand::~TritonOperand() {
 }
 
 
@@ -169,8 +167,7 @@ void TritonOperand::setRegSize(uint64 size) {
 }
 
 
-void TritonOperand::operator=(const TritonOperand &other)
-{
+void TritonOperand::operator=(const TritonOperand &other) {
   this->baseReg       = other.baseReg;
   this->displacement  = other.displacement;
   this->imm           = other.imm;

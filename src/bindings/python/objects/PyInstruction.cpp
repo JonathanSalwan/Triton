@@ -32,8 +32,7 @@ void Instruction_dealloc(PyObject *self) {
 }
 
 
-static PyObject *Instruction_str(Instruction_Object *obj)
-{
+static PyObject *Instruction_str(Instruction_Object *obj) {
   if (PyInstruction_AsIns(obj) != nullptr)
     return PyString_FromFormat("%s", PyInstruction_AsIns(obj)->getDisassembly().c_str());
   return PyString_FromFormat("%s", PyInstruction_AsIrb(obj)->getDisassembly().c_str());
@@ -41,8 +40,7 @@ static PyObject *Instruction_str(Instruction_Object *obj)
 
 
 static char Instruction_getAddress_doc[] = "Returns the address";
-static PyObject *Instruction_getAddress(PyObject *self, PyObject *noarg)
-{
+static PyObject *Instruction_getAddress(PyObject *self, PyObject *noarg) {
   if (PyInstruction_AsIns(self) != nullptr)
     return Py_BuildValue("k", PyInstruction_AsIns(self)->getAddress());
   return Py_BuildValue("k", PyInstruction_AsIrb(self)->getAddress());
@@ -50,8 +48,7 @@ static PyObject *Instruction_getAddress(PyObject *self, PyObject *noarg)
 
 
 static char Instruction_getDisassembly_doc[] = "Returns the disassembly";
-static PyObject *Instruction_getDisassembly(PyObject *self, PyObject *noarg)
-{
+static PyObject *Instruction_getDisassembly(PyObject *self, PyObject *noarg) {
   if (PyInstruction_AsIns(self) != nullptr)
     return PyString_FromFormat("%s", PyInstruction_AsIns(self)->getDisassembly().c_str());
   return PyString_FromFormat("%s", PyInstruction_AsIrb(self)->getDisassembly().c_str());
@@ -59,8 +56,7 @@ static PyObject *Instruction_getDisassembly(PyObject *self, PyObject *noarg)
 
 
 static char Instruction_getBaseAddress_doc[] = "Returns the base address";
-static PyObject *Instruction_getBaseAddress(PyObject *self, PyObject *noarg)
-{
+static PyObject *Instruction_getBaseAddress(PyObject *self, PyObject *noarg) {
   if (PyInstruction_AsIns(self) != nullptr)
     return Py_BuildValue("k", PyInstruction_AsIns(self)->getBaseAddress());
   return Py_BuildValue("k", PyInstruction_AsIrb(self)->getBaseAddress());
@@ -68,8 +64,7 @@ static PyObject *Instruction_getBaseAddress(PyObject *self, PyObject *noarg)
 
 
 static char Instruction_getImageName_doc[] = "Returns the current image name";
-static PyObject *Instruction_getImageName(PyObject *self, PyObject *noarg)
-{
+static PyObject *Instruction_getImageName(PyObject *self, PyObject *noarg) {
   if (PyInstruction_AsIns(self) != nullptr)
     return PyString_FromFormat("%s", PyInstruction_AsIns(self)->getImageName().c_str());
   return PyString_FromFormat("%s", PyInstruction_AsIrb(self)->getImageName().c_str());
@@ -77,8 +72,7 @@ static PyObject *Instruction_getImageName(PyObject *self, PyObject *noarg)
 
 
 static char Instruction_getOffset_doc[] = "Returns the offset";
-static PyObject *Instruction_getOffset(PyObject *self, PyObject *noarg)
-{
+static PyObject *Instruction_getOffset(PyObject *self, PyObject *noarg) {
   if (PyInstruction_AsIns(self) != nullptr)
     return Py_BuildValue("k", PyInstruction_AsIns(self)->getOffset());
   return Py_BuildValue("k", PyInstruction_AsIrb(self)->getOffset());
@@ -86,8 +80,7 @@ static PyObject *Instruction_getOffset(PyObject *self, PyObject *noarg)
 
 
 static char Instruction_getOpcode_doc[] = "Returns the base opcode";
-static PyObject *Instruction_getOpcode(PyObject *self, PyObject *noarg)
-{
+static PyObject *Instruction_getOpcode(PyObject *self, PyObject *noarg) {
   if (PyInstruction_AsIns(self) != nullptr)
     return Py_BuildValue("k", PyInstruction_AsIns(self)->getOpcode());
   return Py_BuildValue("k", PyInstruction_AsIrb(self)->getOpcode());
@@ -95,8 +88,7 @@ static PyObject *Instruction_getOpcode(PyObject *self, PyObject *noarg)
 
 
 static char Instruction_getOpcodeCategory_doc[] = "Returns the base address";
-static PyObject *Instruction_getOpcodeCategory(PyObject *self, PyObject *noarg)
-{
+static PyObject *Instruction_getOpcodeCategory(PyObject *self, PyObject *noarg) {
   if (PyInstruction_AsIns(self) != nullptr)
     return Py_BuildValue("k", PyInstruction_AsIns(self)->getOpcodeCategory());
   return Py_BuildValue("k", PyInstruction_AsIrb(self)->getOpcodeCategory());
@@ -104,8 +96,7 @@ static PyObject *Instruction_getOpcodeCategory(PyObject *self, PyObject *noarg)
 
 
 static char Instruction_getOperands_doc[] = "Returns the operands";
-static PyObject *Instruction_getOperands(PyObject *self, PyObject *noarg)
-{
+static PyObject *Instruction_getOperands(PyObject *self, PyObject *noarg) {
   std::vector<TritonOperand> operands;
   std::vector<TritonOperand>::iterator it;
 
@@ -128,8 +119,7 @@ static PyObject *Instruction_getOperands(PyObject *self, PyObject *noarg)
 
 
 static char Instruction_getRoutineName_doc[] = "Returns the current routine name";
-static PyObject *Instruction_getRoutineName(PyObject *self, PyObject *noarg)
-{
+static PyObject *Instruction_getRoutineName(PyObject *self, PyObject *noarg) {
   if (PyInstruction_AsIns(self) != nullptr)
     return PyString_FromFormat("%s", PyInstruction_AsIns(self)->getRoutineName().c_str());
   return PyString_FromFormat("%s", PyInstruction_AsIrb(self)->getRoutineName().c_str());
@@ -137,8 +127,7 @@ static PyObject *Instruction_getRoutineName(PyObject *self, PyObject *noarg)
 
 
 static char Instruction_getSectionName_doc[] = "Returns the current section name";
-static PyObject *Instruction_getSectionName(PyObject *self, PyObject *noarg)
-{
+static PyObject *Instruction_getSectionName(PyObject *self, PyObject *noarg) {
   if (PyInstruction_AsIns(self) != nullptr)
     return PyString_FromFormat("%s", PyInstruction_AsIns(self)->getSectionName().c_str());
   return PyString_FromFormat("%s", PyInstruction_AsIrb(self)->getSectionName().c_str());
@@ -146,8 +135,7 @@ static PyObject *Instruction_getSectionName(PyObject *self, PyObject *noarg)
 
 
 static char Instruction_getSymbolicExpressions_doc[] = "Returns the symbolic expressions";
-static PyObject *Instruction_getSymbolicExpressions(PyObject *self, PyObject *noarg)
-{
+static PyObject *Instruction_getSymbolicExpressions(PyObject *self, PyObject *noarg) {
   std::list<SymbolicExpression*> symExpressions;
   std::list<SymbolicExpression*>::iterator it;
 
@@ -169,8 +157,7 @@ static PyObject *Instruction_getSymbolicExpressions(PyObject *self, PyObject *no
 
 
 static char Instruction_getThreadId_doc[] = "Returns the thread id";
-static PyObject *Instruction_getThreadId(PyObject *self, PyObject *noarg)
-{
+static PyObject *Instruction_getThreadId(PyObject *self, PyObject *noarg) {
   if (PyInstruction_AsIns(self) != nullptr)
     return Py_BuildValue("k", PyInstruction_AsIns(self)->getThreadID());
   return Py_BuildValue("k", PyInstruction_AsIrb(self)->getThreadID());
@@ -178,8 +165,7 @@ static PyObject *Instruction_getThreadId(PyObject *self, PyObject *noarg)
 
 
 static char Instruction_isBranch_doc[] = "Returns true or false if it is a branch instruction";
-static PyObject *Instruction_isBranch(PyObject *self, PyObject *noarg)
-{
+static PyObject *Instruction_isBranch(PyObject *self, PyObject *noarg) {
   if (PyInstruction_AsIns(self) != nullptr)
     return PyBool_FromLong(PyInstruction_AsIns(self)->isBranch());
   return PyBool_FromLong(PyInstruction_AsIrb(self)->isBranch());
@@ -247,8 +233,7 @@ PyTypeObject Instruction_Type = {
 };
 
 
-PyObject *PyInstruction(Inst *inst)
-{
+PyObject *PyInstruction(Inst *inst) {
   Instruction_Object *object;
 
   PyType_Ready(&Instruction_Type);
@@ -262,8 +247,7 @@ PyObject *PyInstruction(Inst *inst)
 }
 
 
-PyObject *PyInstruction(IRBuilder *irb)
-{
+PyObject *PyInstruction(IRBuilder *irb) {
   Instruction_Object *object;
 
   PyType_Ready(&Instruction_Type);

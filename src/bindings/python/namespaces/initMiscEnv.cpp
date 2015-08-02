@@ -11,8 +11,7 @@
 #include <Misc.h>
 
 
-void initMiscEnv(PyObject *idMiscClassDict)
-{
+void initMiscEnv(PyObject *idMiscClassDict) {
   PyDict_SetItemString(idMiscClassDict, "UNSET", Py_BuildValue("k", UNSET));
 }
 

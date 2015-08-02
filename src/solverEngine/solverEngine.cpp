@@ -13,8 +13,7 @@
 /* Thanks http://stackoverflow.com/questions/10819875 */
 namespace TritonSolver {
 
-  z3::expr mk_or(z3::expr_vector args)
-  {
+  z3::expr mk_or(z3::expr_vector args) {
     std::vector<Z3_ast> array;
 
     for (uint32 i = 0; i < args.size(); i++)
@@ -26,19 +25,16 @@ namespace TritonSolver {
 }
 
 
-SolverEngine::SolverEngine(SymbolicEngine *symEngine)
-{
+SolverEngine::SolverEngine(SymbolicEngine *symEngine) {
   this->symEngine = symEngine;
 }
 
 
-SolverEngine::~SolverEngine()
-{
+SolverEngine::~SolverEngine() {
 }
 
 
-std::vector<std::list<Smodel>> SolverEngine::getModels(smt2lib::smtAstAbstractNode *node, uint64 limit)
-{
+std::vector<std::list<Smodel>> SolverEngine::getModels(smt2lib::smtAstAbstractNode *node, uint64 limit) {
   std::vector<std::list<Smodel>>  ret;
   std::stringstream               formula;
   z3::context                     *ctx;
@@ -63,7 +59,7 @@ std::vector<std::list<Smodel>> SolverEngine::getModels(smt2lib::smtAstAbstractNo
   solver->add(eq);
 
   /* Check if it is sat */
-  while (solver->check() == z3::sat && limit >= 1){
+  while (solver->check() == z3::sat && limit >= 1) {
 
     /* Get model */
     z3::model m = solver->get_model();
@@ -104,8 +100,7 @@ std::vector<std::list<Smodel>> SolverEngine::getModels(smt2lib::smtAstAbstractNo
 }
 
 
-std::list<Smodel> SolverEngine::getModel(smt2lib::smtAstAbstractNode *node)
-{
+std::list<Smodel> SolverEngine::getModel(smt2lib::smtAstAbstractNode *node) {
   std::list<Smodel> ret;
   std::vector<std::list<Smodel>> allModels;
 

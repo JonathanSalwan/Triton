@@ -28,57 +28,49 @@ void Operand_dealloc(PyObject *self) {
 
 
 static char Operand_getBaseReg_doc[] = "Returns the base register";
-static PyObject *Operand_getBaseReg(PyObject *self, PyObject *noarg)
-{
+static PyObject *Operand_getBaseReg(PyObject *self, PyObject *noarg) {
   return PyRegisterOperand(PyOperand_AsOperand(self)->getBaseReg());
 }
 
 
 static char Operand_getDisplacement_doc[] = "Returns the displacement";
-static PyObject *Operand_getDisplacement(PyObject *self, PyObject *noarg)
-{
+static PyObject *Operand_getDisplacement(PyObject *self, PyObject *noarg) {
   return PyImmediateOperand(PyOperand_AsOperand(self)->getDisplacement());
 }
 
 
 static char Operand_getImm_doc[] = "Returns the immediate value";
-static PyObject *Operand_getImm(PyObject *self, PyObject *noarg)
-{
+static PyObject *Operand_getImm(PyObject *self, PyObject *noarg) {
   return PyImmediateOperand(PyOperand_AsOperand(self)->getImm());
 }
 
 
 static char Operand_getIndexReg_doc[] = "Returns the index register";
-static PyObject *Operand_getIndexReg(PyObject *self, PyObject *noarg)
-{
+static PyObject *Operand_getIndexReg(PyObject *self, PyObject *noarg) {
   return PyRegisterOperand(PyOperand_AsOperand(self)->getIndexReg());
 }
 
 
 static char Operand_getMem_doc[] = "Returns the memory address";
-static PyObject *Operand_getMem(PyObject *self, PyObject *noarg)
-{
+static PyObject *Operand_getMem(PyObject *self, PyObject *noarg) {
   return PyMemoryOperand(PyOperand_AsOperand(self)->getMem());
 }
 
 
 static char Operand_getMemoryScale_doc[] = "Returns the memory scale";
-static PyObject *Operand_getMemoryScale(PyObject *self, PyObject *noarg)
-{
+static PyObject *Operand_getMemoryScale(PyObject *self, PyObject *noarg) {
   return PyImmediateOperand(PyOperand_AsOperand(self)->getMemoryScale());
 }
 
 
 static char Operand_getReg_doc[] = "Returns the register id";
-static PyObject *Operand_getReg(PyObject *self, PyObject *noarg)
-{
+static PyObject *Operand_getReg(PyObject *self, PyObject *noarg) {
   return PyRegisterOperand(PyOperand_AsOperand(self)->getReg());
 }
 
 
 static char Operand_getType_doc[] = "Returns the type";
-static PyObject *Operand_getType(PyObject *self, PyObject *noarg)
-{
+static PyObject *Operand_getType(PyObject *self, PyObject *noarg) {
   return Py_BuildValue("k", PyOperand_AsOperand(self)->getType());
 }
 
@@ -139,8 +131,7 @@ PyTypeObject Operand_Type = {
 };
 
 
-PyObject *PyOperand(TritonOperand operand)
-{
+PyObject *PyOperand(TritonOperand operand) {
   Operand_Object *object;
 
   PyType_Ready(&Operand_Type);

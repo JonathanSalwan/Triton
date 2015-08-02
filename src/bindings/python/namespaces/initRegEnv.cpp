@@ -11,8 +11,7 @@
 #include <Registers.h>
 
 
-void initRegEnv(PyObject *idRegClassDict)
-{
+void initRegEnv(PyObject *idRegClassDict) {
   PyDict_SetItemString(idRegClassDict, "INVALID", PyInt_FromLong(ID_INVALID));
   PyDict_SetItemString(idRegClassDict, "RAX", PyInt_FromLong(ID_RAX));
   PyDict_SetItemString(idRegClassDict, "RBX", PyInt_FromLong(ID_RBX));

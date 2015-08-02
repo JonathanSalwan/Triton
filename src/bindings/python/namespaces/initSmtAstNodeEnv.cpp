@@ -11,8 +11,7 @@
 #include <SMT2Lib.h>
 
 
-void initSmtAstNodeEnv(PyObject *idSmtAstNodeClassDict)
-{
+void initSmtAstNodeEnv(PyObject *idSmtAstNodeClassDict) {
   PyDict_SetItemString(idSmtAstNodeClassDict, "ASSERT", PyInt_FromLong(smt2lib::ASSERT_NODE));
   PyDict_SetItemString(idSmtAstNodeClassDict, "BVADD", PyInt_FromLong(smt2lib::BVADD_NODE));
   PyDict_SetItemString(idSmtAstNodeClassDict, "BVAND", PyInt_FromLong(smt2lib::BVAND_NODE));

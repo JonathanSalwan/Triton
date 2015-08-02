@@ -34,8 +34,7 @@ ProcessingPyConf    processingPyConf(&ap, &analysisTrigger);
 
 
 
-static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId)
-{
+static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId) {
   /* Some configurations must be applied before processing */
   processingPyConf.applyConfBeforeProcessing(irb);
 
@@ -74,8 +73,7 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
 }
 
 
-static void callbackAfter(CONTEXT *ctx, THREADID threadId)
-{
+static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
   Inst *inst;
 
   if (!analysisTrigger.getState())
@@ -102,8 +100,7 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId)
 }
 
 
-static void callbackSnapshot(uint64 mem, uint32 writeSize)
-{
+static void callbackSnapshot(uint64 mem, uint32 writeSize) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return;
@@ -124,8 +121,7 @@ static void callbackSnapshot(uint64 mem, uint32 writeSize)
 }
 
 
-static void TRACE_Instrumentation(TRACE trace, VOID *programName)
-{
+static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
   boost::filesystem::path pname(reinterpret_cast<char*>(programName));
 
   for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)){
@@ -183,16 +179,14 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName)
 }
 
 
-static void toggleWrapper(bool flag)
-{
+static void toggleWrapper(bool flag) {
   ap.lock();
   analysisTrigger.update(flag);
   ap.unlock();
 }
 
 
-static void callbackRoutineEntry(THREADID threadId, PyObject *callback)
-{
+static void callbackRoutineEntry(THREADID threadId, PyObject *callback) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return;
@@ -203,8 +197,7 @@ static void callbackRoutineEntry(THREADID threadId, PyObject *callback)
 }
 
 
-static void callbackRoutineExit(THREADID threadId, PyObject *callback)
-{
+static void callbackRoutineExit(THREADID threadId, PyObject *callback) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return;
@@ -215,8 +208,7 @@ static void callbackRoutineExit(THREADID threadId, PyObject *callback)
 }
 
 
-static void IMG_Instrumentation(IMG img, VOID *)
-{
+static void IMG_Instrumentation(IMG img, VOID *) {
   /* Lock / Unlock the Analysis */
   if (PyTritonOptions::startAnalysisFromSymbol != nullptr){
 
@@ -264,8 +256,7 @@ static void IMG_Instrumentation(IMG img, VOID *)
 
 
 /* Callback at the end of the execution */
-static void Fini(INT32, VOID *)
-{
+static void Fini(INT32, VOID *) {
   /* Python callback at the end of execution */
   processingPyConf.callbackFini();
 
@@ -275,8 +266,7 @@ static void Fini(INT32, VOID *)
 
 
 /* Callback at the syscall entry */
-static void callbackSyscallEntry(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, VOID *v)
-{
+static void callbackSyscallEntry(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, VOID *v) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return;
@@ -296,8 +286,7 @@ static void callbackSyscallEntry(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDA
 
 
 /* Callback at the syscall exit */
-static void callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, VOID *v)
-{
+static void callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, VOID *v) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return;
@@ -317,8 +306,7 @@ static void callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDAR
 
 
 /* Callback when a signals occurs */
-static bool callbackSignals(THREADID threadId, sint32 sig, CONTEXT *ctx, bool hasHandler, const EXCEPTION_INFO *pExceptInfo, void *v)
-{
+static bool callbackSignals(THREADID threadId, sint32 sig, CONTEXT *ctx, bool hasHandler, const EXCEPTION_INFO *pExceptInfo, void *v) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return false;
@@ -346,8 +334,7 @@ static bool callbackSignals(THREADID threadId, sint32 sig, CONTEXT *ctx, bool ha
 
 
 /* Callback when a thread is created */
-static void callbackThreadEntry(THREADID threadId, CONTEXT *ctx, sint32 flags, void *v)
-{
+static void callbackThreadEntry(THREADID threadId, CONTEXT *ctx, sint32 flags, void *v) {
   /* Mutex */
   ap.lock();
 
@@ -359,8 +346,7 @@ static void callbackThreadEntry(THREADID threadId, CONTEXT *ctx, sint32 flags, v
 
 
 /* Callback when a thread is destroyed */
-static void callbackThreadExit(THREADID threadId, const CONTEXT *ctx, sint32 flags, void *v)
-{
+static void callbackThreadExit(THREADID threadId, const CONTEXT *ctx, sint32 flags, void *v) {
   /* Mutex */
   ap.lock();
 
@@ -375,16 +361,14 @@ static void callbackThreadExit(THREADID threadId, const CONTEXT *ctx, sint32 fla
  * Usage function if Pin fail to start.
  * Display the help message.
  */
-static sint32 Usage()
-{
+static sint32 Usage() {
   std::cerr << KNOB_BASE::StringKnobSummary() << std::endl;
   return -1;
 }
 
 
 /* Get the name of the target binary */
-static char *getProgramName(char *argv[])
-{
+static char *getProgramName(char *argv[]) {
   uint64 offset;
   for (offset = 0; argv[offset]; offset++){
     if (!strcmp(argv[offset], "--") && argv[offset+1])
@@ -394,8 +378,7 @@ static char *getProgramName(char *argv[])
 }
 
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   PIN_InitSymbols();
   PIN_SetSyntaxIntel();
   if(PIN_Init(argc, argv))

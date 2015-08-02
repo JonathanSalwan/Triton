@@ -22,15 +22,13 @@ void MemoryOperand_dealloc(PyObject *self) {
 
 
 static char MemoryOperand_getAddress_doc[] = "Returns the memory address";
-static PyObject *MemoryOperand_getAddress(PyObject *self, PyObject *noarg)
-{
+static PyObject *MemoryOperand_getAddress(PyObject *self, PyObject *noarg) {
   return Py_BuildValue("k", PyMemoryOperand_AsMemoryOperand(self)->getAddress());
 }
 
 
 static char MemoryOperand_getSize_doc[] = "Returns the memory size";
-static PyObject *MemoryOperand_getSize(PyObject *self, PyObject *noarg)
-{
+static PyObject *MemoryOperand_getSize(PyObject *self, PyObject *noarg) {
   return Py_BuildValue("k", PyMemoryOperand_AsMemoryOperand(self)->getSize());
 }
 
@@ -85,8 +83,7 @@ PyTypeObject MemoryOperand_Type = {
 };
 
 
-PyObject *PyMemoryOperand(MemoryOperand mem)
-{
+PyObject *PyMemoryOperand(MemoryOperand mem) {
   MemoryOperand_Object *object;
 
   PyType_Ready(&MemoryOperand_Type);

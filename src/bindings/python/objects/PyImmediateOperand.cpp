@@ -21,8 +21,7 @@ void ImmediateOperand_dealloc(PyObject *self) {
 
 
 static char ImmediateOperand_getValue_doc[] = "Returns the immediate value";
-static PyObject *ImmediateOperand_getValue(PyObject *self, PyObject *noarg)
-{
+static PyObject *ImmediateOperand_getValue(PyObject *self, PyObject *noarg) {
   return Py_BuildValue("k", PyImmediateOperand_AsImmediateOperand(self)->getValue());
 }
 
@@ -76,8 +75,7 @@ PyTypeObject ImmediateOperand_Type = {
 };
 
 
-PyObject *PyImmediateOperand(ImmediateOperand imm)
-{
+PyObject *PyImmediateOperand(ImmediateOperand imm) {
   ImmediateOperand_Object *object;
 
   PyType_Ready(&ImmediateOperand_Type);

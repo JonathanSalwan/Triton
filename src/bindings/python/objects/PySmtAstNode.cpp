@@ -25,8 +25,7 @@ void SmtAstNode_dealloc(PyObject *self) {
 
 
 static char SmtAstNode_getChilds_doc[] = "Returns the childs of the AST node";
-static PyObject *SmtAstNode_getChilds(PyObject *self, PyObject *noarg)
-{
+static PyObject *SmtAstNode_getChilds(PyObject *self, PyObject *noarg) {
   PyObject *childs;
   smt2lib::smtAstAbstractNode *node = PySmtAstNode_AsSmtAstNode(self);
 
@@ -41,15 +40,13 @@ static PyObject *SmtAstNode_getChilds(PyObject *self, PyObject *noarg)
 
 
 static char SmtAstNode_getKind_doc[] = "Returns the kind of the AST node";
-static PyObject *SmtAstNode_getKind(PyObject *self, PyObject *noarg)
-{
+static PyObject *SmtAstNode_getKind(PyObject *self, PyObject *noarg) {
   return Py_BuildValue("k", PySmtAstNode_AsSmtAstNode(self)->getKind());
 }
 
 
 static char SmtAstNode_getValue_doc[] = "Returns the value of the AST node";
-static PyObject *SmtAstNode_getValue(PyObject *self, PyObject *noarg)
-{
+static PyObject *SmtAstNode_getValue(PyObject *self, PyObject *noarg) {
   smt2lib::smtAstAbstractNode *node = PySmtAstNode_AsSmtAstNode(self);
 
   if (node->getKind() == smt2lib::DECIMAL_NODE)
@@ -66,8 +63,7 @@ static PyObject *SmtAstNode_getValue(PyObject *self, PyObject *noarg)
 
 
 static char SmtAstNode_setChild_doc[] = "Set a new child node";
-static PyObject *SmtAstNode_setChild(PyObject *self, PyObject *args)
-{
+static PyObject *SmtAstNode_setChild(PyObject *self, PyObject *args) {
   PyObject *index;
   PyObject *node;
   uint64 i;
@@ -93,8 +89,7 @@ static PyObject *SmtAstNode_setChild(PyObject *self, PyObject *args)
 }
 
 
-static PyObject *SmtAstNode_str(SmtAstNode_Object *obj)
-{
+static PyObject *SmtAstNode_str(SmtAstNode_Object *obj) {
   std::stringstream str;
   str << obj->node;
   return PyString_FromFormat("%s", str.str().c_str());
@@ -153,8 +148,7 @@ PyTypeObject SmtAstNode_Type = {
 };
 
 
-PyObject *PySmtAstNode(smt2lib::smtAstAbstractNode *node)
-{
+PyObject *PySmtAstNode(smt2lib::smtAstAbstractNode *node) {
   SmtAstNode_Object *object;
 
   PyType_Ready(&SmtAstNode_Type);

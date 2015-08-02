@@ -14,8 +14,10 @@
 #include "TritonTypes.h"
 #include "Z3Result.h"
 #include "AnalysisProcessor.h"
+
 class AnalysisProcessor;
 extern AnalysisProcessor ap;
+
 
 class Z3ast : public Visitor {
   public:

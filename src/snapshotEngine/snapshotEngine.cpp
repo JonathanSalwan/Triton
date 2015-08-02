@@ -11,30 +11,26 @@
 
 
 
-SnapshotEngine::SnapshotEngine()
-{
+SnapshotEngine::SnapshotEngine() {
   this->locked              = LOCKED;
   this->snapshotTaintEngine = nullptr;
   this->snapshotSymEngine   = nullptr;
 }
 
 
-SnapshotEngine::~SnapshotEngine()
-{
+SnapshotEngine::~SnapshotEngine() {
 }
 
 
 /* Add the modification byte. */
-void SnapshotEngine::addModification(uint64 mem, char byte)
-{
+void SnapshotEngine::addModification(uint64 mem, char byte) {
   if (this->locked == UNLOCKED)
     this->memory.push_front(make_pair(mem, byte));
 }
 
 
 /* Enable the snapshot engine. */
-void SnapshotEngine::takeSnapshot(const SymbolicEngine &currentSymEngine, const TaintEngine &currentTaintEngine, CONTEXT *ctx)
-{
+void SnapshotEngine::takeSnapshot(const SymbolicEngine &currentSymEngine, const TaintEngine &currentTaintEngine, CONTEXT *ctx) {
   /* 1 - Unlock the engine */
   this->locked = UNLOCKED;
 
@@ -50,8 +46,7 @@ void SnapshotEngine::takeSnapshot(const SymbolicEngine &currentSymEngine, const 
 
 
 /* Restore the snapshot. */
-void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngine *currentTaintEngine, CONTEXT *ctx)
-{
+void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngine *currentTaintEngine, CONTEXT *ctx) {
   /* 1 - Restore all memory modification. */
   list< std::pair<uint64, char> >::iterator i;
   for(i = this->memory.begin(); i != this->memory.end(); ++i){
@@ -74,16 +69,14 @@ void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngi
 
 
 /* Disable the snapshot engine. */
-void SnapshotEngine::disableSnapshot()
-{
+void SnapshotEngine::disableSnapshot() {
   this->locked = LOCKED;
 }
 
 
 /* Reset the snapshot engine.
  * Clear all backups for a new snapshot. */
-void SnapshotEngine::resetEngine()
-{
+void SnapshotEngine::resetEngine() {
   this->memory.clear();
 
   delete this->snapshotSymEngine;
@@ -95,14 +88,12 @@ void SnapshotEngine::resetEngine()
 
 
 /* Check if the snapshot engine is locked. */
-BOOL SnapshotEngine::isLocked()
-{
+BOOL SnapshotEngine::isLocked() {
   return this->locked;
 }
 
 
-CONTEXT *SnapshotEngine::getCtx(void)
-{
+CONTEXT *SnapshotEngine::getCtx(void) {
   return &this->pinCtx;
 }
 

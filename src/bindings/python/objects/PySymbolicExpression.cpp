@@ -24,16 +24,14 @@ void SymbolicExpression_dealloc(PyObject *self) {
 
 
 static char SymbolicExpression_getAst_doc[] = "Returns the AST of the expression";
-static PyObject *SymbolicExpression_getAst(PyObject *self, PyObject *noarg)
-{
+static PyObject *SymbolicExpression_getAst(PyObject *self, PyObject *noarg) {
   SymbolicExpression *expression = PySymbolicExpression_AsSymbolicExpression(self);
   return PySmtAstNode(expression->getExpression());
 }
 
 
 static char SymbolicExpression_getComment_doc[] = "Returns the comment of the expression";
-static PyObject *SymbolicExpression_getComment(PyObject *self, PyObject *noarg)
-{
+static PyObject *SymbolicExpression_getComment(PyObject *self, PyObject *noarg) {
   SymbolicExpression *expression = PySymbolicExpression_AsSymbolicExpression(self);
   if (expression->getComment().empty() == false)
     return PyString_FromFormat("%s", expression->getComment().c_str());
@@ -43,8 +41,7 @@ static PyObject *SymbolicExpression_getComment(PyObject *self, PyObject *noarg)
 
 
 static char SymbolicExpression_getId_doc[] = "Returns the id of the expression";
-static PyObject *SymbolicExpression_getId(PyObject *self, PyObject *noarg)
-{
+static PyObject *SymbolicExpression_getId(PyObject *self, PyObject *noarg) {
   SymbolicExpression *expression = PySymbolicExpression_AsSymbolicExpression(self);
   return Py_BuildValue("k", expression->getID());
 }
@@ -52,8 +49,7 @@ static PyObject *SymbolicExpression_getId(PyObject *self, PyObject *noarg)
 
 
 static char SymbolicExpression_isTainted_doc[] = "Returns true if the expression is tainted";
-static PyObject *SymbolicExpression_isTainted(PyObject *self, PyObject *noarg)
-{
+static PyObject *SymbolicExpression_isTainted(PyObject *self, PyObject *noarg) {
   SymbolicExpression *expression = PySymbolicExpression_AsSymbolicExpression(self);
   if (expression->isTainted == true)
     Py_RETURN_TRUE;
@@ -61,8 +57,7 @@ static PyObject *SymbolicExpression_isTainted(PyObject *self, PyObject *noarg)
 }
 
 
-static PyObject *SymbolicExpression_str(SymbolicExpression_Object *obj)
-{
+static PyObject *SymbolicExpression_str(SymbolicExpression_Object *obj) {
   std::stringstream str;
   str << "#" << obj->expression->getID() << " = " << obj->expression->getExpression();
   return PyString_FromFormat("%s", str.str().c_str());
@@ -121,8 +116,7 @@ PyTypeObject SymbolicExpression_Type = {
 };
 
 
-PyObject *PySymbolicExpression(SymbolicExpression *expr)
-{
+PyObject *PySymbolicExpression(SymbolicExpression *expr) {
   SymbolicExpression_Object *object;
 
   PyType_Ready(&SymbolicExpression_Type);

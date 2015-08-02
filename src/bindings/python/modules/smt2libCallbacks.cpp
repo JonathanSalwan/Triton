@@ -12,8 +12,7 @@
 
 
 static char smt2lib_bv_doc[] = "Returns a 'bv' expression";
-static PyObject *smt2lib_bv(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bv(PyObject *self, PyObject *args) {
   PyObject *op1;
   PyObject *op2;
 
@@ -31,8 +30,7 @@ static PyObject *smt2lib_bv(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvadd_doc[] = "Returns a 'bvadd' expression";
-static PyObject *smt2lib_bvadd(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvadd(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -50,8 +48,7 @@ static PyObject *smt2lib_bvadd(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvand_doc[] = "Returns a 'bvand' expression";
-static PyObject *smt2lib_bvand(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvand(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -69,8 +66,7 @@ static PyObject *smt2lib_bvand(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvashr_doc[] = "Returns a 'bvashr' expression";
-static PyObject *smt2lib_bvashr(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvashr(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -88,15 +84,13 @@ static PyObject *smt2lib_bvashr(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvfalse_doc[] = "Returns an alias on '(_ bv0 1)' expression";
-static PyObject *smt2lib_bvfalse(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvfalse(PyObject *self, PyObject *args) {
   return PySmtAstNode(smt2lib::bvfalse());
 }
 
 
 static char smt2lib_bvlshr_doc[] = "Returns a 'bvlshr' expression";
-static PyObject *smt2lib_bvlshr(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvlshr(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -114,8 +108,7 @@ static PyObject *smt2lib_bvlshr(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvmul_doc[] = "Returns a 'bvmul' expression";
-static PyObject *smt2lib_bvmul(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvmul(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -133,8 +126,7 @@ static PyObject *smt2lib_bvmul(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvnand_doc[] = "Returns a 'bvnand' expression";
-static PyObject *smt2lib_bvnand(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvnand(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -152,8 +144,7 @@ static PyObject *smt2lib_bvnand(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvneg_doc[] = "Returns a 'bvneg' expression";
-static PyObject *smt2lib_bvneg(PyObject *self, PyObject *op1)
-{
+static PyObject *smt2lib_bvneg(PyObject *self, PyObject *op1) {
   if (!PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvneg(): expected a SmtAstNode as first argument");
 
@@ -162,8 +153,7 @@ static PyObject *smt2lib_bvneg(PyObject *self, PyObject *op1)
 
 
 static char smt2lib_bvnor_doc[] = "Returns a 'bvnor' expression";
-static PyObject *smt2lib_bvnor(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvnor(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -181,8 +171,7 @@ static PyObject *smt2lib_bvnor(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvnot_doc[] = "Returns a 'bvnot' expression";
-static PyObject *smt2lib_bvnot(PyObject *self, PyObject *op1)
-{
+static PyObject *smt2lib_bvnot(PyObject *self, PyObject *op1) {
   if (!PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvnot(): expected a SmtAstNode as first argument");
 
@@ -191,8 +180,7 @@ static PyObject *smt2lib_bvnot(PyObject *self, PyObject *op1)
 
 
 static char smt2lib_bvor_doc[] = "Returns a 'bvor' expression";
-static PyObject *smt2lib_bvor(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvor(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -210,8 +198,7 @@ static PyObject *smt2lib_bvor(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvror_doc[] = "Returns a 'bvror' expression";
-static PyObject *smt2lib_bvror(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvror(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -229,8 +216,7 @@ static PyObject *smt2lib_bvror(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvrol_doc[] = "Returns a 'bvrol' expression";
-static PyObject *smt2lib_bvrol(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvrol(PyObject *self, PyObject *args) {
   PyObject *op1;
   PyObject *op2 = nullptr;
 
@@ -248,8 +234,7 @@ static PyObject *smt2lib_bvrol(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvsdiv_doc[] = "Returns a 'bvsdiv' expression";
-static PyObject *smt2lib_bvsdiv(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvsdiv(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -267,8 +252,7 @@ static PyObject *smt2lib_bvsdiv(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvsge_doc[] = "Returns a 'bvsge' expression";
-static PyObject *smt2lib_bvsge(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvsge(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -286,8 +270,7 @@ static PyObject *smt2lib_bvsge(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvsgt_doc[] = "Returns a 'bvsgt' expression";
-static PyObject *smt2lib_bvsgt(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvsgt(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -305,8 +288,7 @@ static PyObject *smt2lib_bvsgt(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvshl_doc[] = "Returns a 'bvshl' expression";
-static PyObject *smt2lib_bvshl(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvshl(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -324,8 +306,7 @@ static PyObject *smt2lib_bvshl(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvsle_doc[] = "Returns a 'bvsle' expression";
-static PyObject *smt2lib_bvsle(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvsle(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -343,8 +324,7 @@ static PyObject *smt2lib_bvsle(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvslt_doc[] = "Returns a 'bvslt' expression";
-static PyObject *smt2lib_bvslt(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvslt(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -362,8 +342,7 @@ static PyObject *smt2lib_bvslt(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvsmod_doc[] = "Returns a 'bvsmod' expression";
-static PyObject *smt2lib_bvsmod(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvsmod(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -381,8 +360,7 @@ static PyObject *smt2lib_bvsmod(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvsrem_doc[] = "Returns a 'bvsrem' expression";
-static PyObject *smt2lib_bvsrem(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvsrem(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -400,8 +378,7 @@ static PyObject *smt2lib_bvsrem(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvsub_doc[] = "Returns a 'bvsub' expression";
-static PyObject *smt2lib_bvsub(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvsub(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -419,15 +396,13 @@ static PyObject *smt2lib_bvsub(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvtrue_doc[] = "Returns an alias on '(_ bv1 1)' expression";
-static PyObject *smt2lib_bvtrue(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvtrue(PyObject *self, PyObject *args) {
   return PySmtAstNode(smt2lib::bvtrue());
 }
 
 
 static char smt2lib_bvudiv_doc[] = "Returns a 'bvudiv' expression";
-static PyObject *smt2lib_bvudiv(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvudiv(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -445,8 +420,7 @@ static PyObject *smt2lib_bvudiv(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvuge_doc[] = "Returns a 'bvuge' expression";
-static PyObject *smt2lib_bvuge(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvuge(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -464,8 +438,7 @@ static PyObject *smt2lib_bvuge(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvugt_doc[] = "Returns a 'bvugt' expression";
-static PyObject *smt2lib_bvugt(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvugt(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -483,8 +456,7 @@ static PyObject *smt2lib_bvugt(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvule_doc[] = "Returns a 'bvule' expression";
-static PyObject *smt2lib_bvule(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvule(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -502,8 +474,7 @@ static PyObject *smt2lib_bvule(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvult_doc[] = "Returns a 'bvult' expression";
-static PyObject *smt2lib_bvult(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvult(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -521,8 +492,7 @@ static PyObject *smt2lib_bvult(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvurem_doc[] = "Returns a 'bvurem' expression";
-static PyObject *smt2lib_bvurem(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvurem(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -540,8 +510,7 @@ static PyObject *smt2lib_bvurem(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvxnor_doc[] = "Returns a 'bvxnor' expression";
-static PyObject *smt2lib_bvxnor(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvxnor(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -559,8 +528,7 @@ static PyObject *smt2lib_bvxnor(PyObject *self, PyObject *args)
 
 
 static char smt2lib_bvxor_doc[] = "Returns a 'bvxor' expression";
-static PyObject *smt2lib_bvxor(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_bvxor(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -578,8 +546,7 @@ static PyObject *smt2lib_bvxor(PyObject *self, PyObject *args)
 
 
 static char smt2lib_distinct_doc[] = "Returns an 'distinct' expression";
-static PyObject *smt2lib_distinct(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_distinct(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -597,8 +564,7 @@ static PyObject *smt2lib_distinct(PyObject *self, PyObject *args)
 
 
 static char smt2lib_compound_doc[] = "Returns a compound of expressions";
-static PyObject *smt2lib_compound(PyObject *self, PyObject *exprsList)
-{
+static PyObject *smt2lib_compound(PyObject *self, PyObject *exprsList) {
   std::vector<smt2lib::smtAstAbstractNode *> exprs;
 
   if (exprsList == nullptr || !PyList_Check(exprsList))
@@ -619,8 +585,7 @@ static PyObject *smt2lib_compound(PyObject *self, PyObject *exprsList)
 
 
 static char smt2lib_equal_doc[] = "Returns an 'equal' expression";
-static PyObject *smt2lib_equal(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_equal(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
@@ -638,8 +603,7 @@ static PyObject *smt2lib_equal(PyObject *self, PyObject *args)
 
 
 static char smt2lib_extract_doc[] = "Returns an 'extract' expression";
-static PyObject *smt2lib_extract(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_extract(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
   PyObject *op3 = nullptr;
@@ -661,8 +625,7 @@ static PyObject *smt2lib_extract(PyObject *self, PyObject *args)
 
 
 static char smt2lib_ite_doc[] = "Returns an 'ite' expression";
-static PyObject *smt2lib_ite(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_ite(PyObject *self, PyObject *args) {
   PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
   PyObject *op3 = nullptr;
@@ -684,8 +647,7 @@ static PyObject *smt2lib_ite(PyObject *self, PyObject *args)
 
 
 static char smt2lib_smtAssert_doc[] = "Returns an 'assert' expression";
-static PyObject *smt2lib_smtAssert(PyObject *self, PyObject *expr)
-{
+static PyObject *smt2lib_smtAssert(PyObject *self, PyObject *expr) {
   if (!PySmtAstNode_Check(expr))
     return PyErr_Format(PyExc_TypeError, "smtAssert(): expected a SmtAstNode as first argument");
 
@@ -694,8 +656,7 @@ static PyObject *smt2lib_smtAssert(PyObject *self, PyObject *expr)
 
 
 static char smt2lib_string_doc[] = "Returns a 'string' node";
-static PyObject *smt2lib_string(PyObject *self, PyObject *expr)
-{
+static PyObject *smt2lib_string(PyObject *self, PyObject *expr) {
   if (!PyString_Check(expr))
     return PyErr_Format(PyExc_TypeError, "string(): expected a string as first argument");
 
@@ -704,8 +665,7 @@ static PyObject *smt2lib_string(PyObject *self, PyObject *expr)
 
 
 static char smt2lib_sx_doc[] = "Returns an 'sx' expression";
-static PyObject *smt2lib_sx(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_sx(PyObject *self, PyObject *args) {
   PyObject *op1;
   PyObject *op2 = nullptr;
 
@@ -723,8 +683,7 @@ static PyObject *smt2lib_sx(PyObject *self, PyObject *args)
 
 
 static char smt2lib_variable_doc[] = "Returns a 'variable' node";
-static PyObject *smt2lib_variable(PyObject *self, PyObject *expr)
-{
+static PyObject *smt2lib_variable(PyObject *self, PyObject *expr) {
   if (!PyString_Check(expr))
     return PyErr_Format(PyExc_TypeError, "string(): expected a string as first argument");
 
@@ -733,8 +692,7 @@ static PyObject *smt2lib_variable(PyObject *self, PyObject *expr)
 
 
 static char smt2lib_zx_doc[] = "Returns an 'zx' expression";
-static PyObject *smt2lib_zx(PyObject *self, PyObject *args)
-{
+static PyObject *smt2lib_zx(PyObject *self, PyObject *args) {
   PyObject *op1;
   PyObject *op2 = nullptr;
 

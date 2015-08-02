@@ -17,8 +17,7 @@
 void initLinux64Env(PyObject *);
 
 
-void initSyscallEnv(PyObject *idSyscallClassDict)
-{
+void initSyscallEnv(PyObject *idSyscallClassDict) {
   PyDict_SetItemString(idSyscallClassDict, "STANDARD_INVALID", PyInt_FromLong(SYSCALL_STANDARD_INVALID));
   PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32_LINUX", PyInt_FromLong(SYSCALL_STANDARD_IA32_LINUX));
   PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32E_LINUX", PyInt_FromLong(SYSCALL_STANDARD_IA32E_LINUX));
