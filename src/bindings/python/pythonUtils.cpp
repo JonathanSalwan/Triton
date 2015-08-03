@@ -17,7 +17,7 @@
 
 
 uint128 PyLongObjectToUint128(PyObject *vv) {
-  register PyLongObject *v;
+  PyLongObject *v;
   uint128 x, prev;
   Py_ssize_t i;
 
