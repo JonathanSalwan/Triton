@@ -141,14 +141,6 @@ uint64 SymbolicEngine::getUniqueID() {
 }
 
 
-SymbolicExpression *SymbolicEngine::newSymbolicExpression(smt2lib::smtAstAbstractNode *node) {
-  uint64 id = this->getUniqueID();
-  SymbolicExpression *expr = new SymbolicExpression(node, id);
-  this->symbolicExpressions.push_back(expr);
-  return expr;
-}
-
-
 /* Create a new symbolic expression with comment */
 SymbolicExpression *SymbolicEngine::newSymbolicExpression(smt2lib::smtAstAbstractNode *node, std::string comment) {
   uint64 id = this->getUniqueID();

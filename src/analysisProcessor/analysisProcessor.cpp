@@ -48,50 +48,10 @@ SymbolicEngine &AnalysisProcessor::getSymbolicEngine(void) {
 }
 
 
-SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID) {
-  SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr);
-  this->symEngine.symbolicReg[regID] = se->getID();
-  inst.addExpression(se);
-  return se;
-}
-
-
 SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, std::string comment) {
   SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr, comment);
   this->symEngine.symbolicReg[regID] = se->getID();
   inst.addExpression(se);
-  return se;
-}
-
-
-SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, uint64 regSize) {
-  smt2lib::smtAstAbstractNode *finalExpr = nullptr, *origReg = nullptr;
-  origReg = this->buildSymbolicRegOperand(regID, REG_SIZE);
-
-  switch (regSize) {
-    case BYTE_SIZE:
-      finalExpr = smt2lib::concat(smt2lib::extract(63, 8, origReg), expr);
-      break;
-
-    case WORD_SIZE:
-      finalExpr = smt2lib::concat(smt2lib::extract(63, 16, origReg), expr);
-      break;
-
-    case DWORD_SIZE:
-      /* In AMD64, if a reg32 is written, it clears the 32-bit MSB of the corresponding register (Thx Wisk!) */
-      finalExpr = smt2lib::zx(DWORD_SIZE_BIT, expr);
-      break;
-
-    case QWORD_SIZE:
-    case DQWORD_SIZE:
-      finalExpr = expr;
-      break;
-  }
-
-  SymbolicExpression *se = this->symEngine.newSymbolicExpression(finalExpr);
-  this->symEngine.symbolicReg[regID] = se->getID();
-  inst.addExpression(se);
-
   return se;
 }
 
@@ -129,35 +89,6 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAb
 }
 
 
-SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize) {
-  SymbolicExpression *se;
-  smt2lib::smtAstAbstractNode *tmp;
-  std::list<smt2lib::smtAstAbstractNode *> ret;
-
-  /*
-   * As the x86's memory can be accessed without alignment, each byte of the
-   * memory must be assigned to an unique reference.
-   */
-  while (writeSize) {
-    /* Extract each byte of the memory */
-    tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
-    se = symEngine.newSymbolicExpression(tmp, "byte reference");
-    ret.push_back(tmp);
-    inst.addExpression(se);
-    /* Assign memory with little endian */
-    this->symEngine.addMemoryReference((address + writeSize) - 1, se->getID());
-    writeSize--;
-  }
-
-  /* If there is only one reference, we return the symbolic expression */
-  if (ret.size() == 1)
-    return se;
-
-  /* Otherwise, we return the concatenation of all expressions */
-  return symEngine.newSymbolicExpression(smt2lib::concat(ret), "concat reference");
-}
-
-
 SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize, std::string comment) {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *tmp;
@@ -184,13 +115,6 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
 
   /* Otherwise, we return the concatenation of all symbolic expressions */
   return symEngine.newSymbolicExpression(smt2lib::concat(ret), "concat reference");
-}
-
-
-SymbolicExpression *AnalysisProcessor::createSE(Inst &inst, smt2lib::smtAstAbstractNode *expr) {
-  SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr);
-  inst.addExpression(se);
-  return se;
 }
 
 

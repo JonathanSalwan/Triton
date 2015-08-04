@@ -63,8 +63,7 @@ class SymbolicEngine {
 
     /* public methods */
     SymbolicExpression                *getExpressionFromId(uint64 id);
-    SymbolicExpression                *newSymbolicExpression(smt2lib::smtAstAbstractNode *node);
-    SymbolicExpression                *newSymbolicExpression(smt2lib::smtAstAbstractNode *node, std::string comment);
+    SymbolicExpression                *newSymbolicExpression(smt2lib::smtAstAbstractNode *node, std::string comment="");
     SymbolicVariable                  *addSymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 size, std::string comment);
     SymbolicVariable                  *convertExprToSymVar(uint64 exprId, uint64 symVarSize, std::string symVarComment);
     SymbolicVariable                  *convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment);

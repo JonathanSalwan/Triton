@@ -64,18 +64,14 @@ class AnalysisProcessor {
      */
 
     /* Returns a symbolic expression for the register (regID) */
-    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID);
-    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, std::string comment);
-    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, uint64 regSize);
-    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, uint64 regSize, std::string comment);
+    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, std::string comment="");
+    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, uint64 regSize, std::string comment="");
 
     /* Returns a symbolic expression for the memory address */
-    SymbolicExpression *createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize);
-    SymbolicExpression *createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize, std::string comment);
+    SymbolicExpression *createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize, std::string comment="");
 
     /* Returns a symbolic expression. This methods is mainly used for temporary expression */
-    SymbolicExpression *createSE(Inst &inst, smt2lib::smtAstAbstractNode *expr);
-    SymbolicExpression *createSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, std::string comment);
+    SymbolicExpression *createSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, std::string comment="");
 
     /*
      * Returns the ID of the symbolic expression currently present in the
