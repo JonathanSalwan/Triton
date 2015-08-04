@@ -17,6 +17,11 @@ ImmediateOperand::ImmediateOperand(uint64 value) {
 }
 
 
+ImmediateOperand::ImmediateOperand(const ImmediateOperand& other) {
+  this->copy(other);
+}
+
+
 ImmediateOperand::~ImmediateOperand() {
 }
 
@@ -31,7 +36,12 @@ void ImmediateOperand::setValue(uint64 v) {
 }
 
 
-void ImmediateOperand::operator=(const ImmediateOperand &other) {
+void ImmediateOperand::operator=(const ImmediateOperand& other) {
+  this->copy(other);
+}
+
+
+void ImmediateOperand::copy(const ImmediateOperand& other) {
   this->value = other.value;
 }
 

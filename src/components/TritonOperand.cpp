@@ -23,18 +23,8 @@ TritonOperand::TritonOperand() {
 }
 
 
-TritonOperand::TritonOperand(const TritonOperand &copy) {
-  this->baseReg       = copy.baseReg;
-  this->displacement  = copy.displacement;
-  this->imm           = copy.imm;
-  this->indexReg      = copy.indexReg;
-  this->mem           = copy.mem;
-  this->memoryScale   = copy.memoryScale;
-  this->readAndWrite  = copy.readAndWrite;
-  this->readOnly      = copy.readOnly;
-  this->reg           = copy.reg;
-  this->type          = copy.type;
-  this->writeOnly     = copy.writeOnly;
+TritonOperand::TritonOperand(const TritonOperand& other) {
+  this->copy(other);
 }
 
 
@@ -167,7 +157,12 @@ void TritonOperand::setRegSize(uint64 size) {
 }
 
 
-void TritonOperand::operator=(const TritonOperand &other) {
+void TritonOperand::operator=(const TritonOperand& other) {
+  copy(other);
+}
+
+
+void TritonOperand::copy(const TritonOperand& other) {
   this->baseReg       = other.baseReg;
   this->displacement  = other.displacement;
   this->imm           = other.imm;

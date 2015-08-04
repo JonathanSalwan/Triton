@@ -36,10 +36,11 @@ class TritonOperand {
     RegisterOperand               baseReg;
     RegisterOperand               indexReg;
 
+    void copy(const TritonOperand& other);
 
   public:
     TritonOperand();
-    TritonOperand(const TritonOperand &copy);
+    TritonOperand(const TritonOperand& copy);
     ~TritonOperand();
 
     IRBuilderOperand::operand_t getType(void) const;
@@ -68,7 +69,7 @@ class TritonOperand {
     void                        setType(IRBuilderOperand::operand_t type);
     void                        setWriteOnly(bool flag);
 
-    void                        operator=(const TritonOperand &other);
+    void                        operator=(const TritonOperand& other);
 };
 
 #endif     /* !__TRITONOPERAND_H__ */

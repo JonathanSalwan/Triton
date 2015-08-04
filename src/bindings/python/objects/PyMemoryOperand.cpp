@@ -17,6 +17,7 @@
 
 
 void MemoryOperand_dealloc(PyObject *self) {
+  delete PyMemoryOperand_AsMemoryOperand(self);
   Py_DECREF(self);
 }
 
@@ -89,7 +90,7 @@ PyObject *PyMemoryOperand(MemoryOperand mem) {
   PyType_Ready(&MemoryOperand_Type);
   object = PyObject_NEW(MemoryOperand_Object, &MemoryOperand_Type);
   if (object != NULL)
-    object->mem = mem;
+    object->mem = new MemoryOperand(mem);
 
   return (PyObject *)object;
 }

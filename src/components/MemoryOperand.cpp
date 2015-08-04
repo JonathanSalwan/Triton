@@ -9,13 +9,18 @@
 
 MemoryOperand::MemoryOperand(void) {
   this->address = 0;
-  this->size = 0;
+  this->size    = 0;
 }
 
 
 MemoryOperand::MemoryOperand(uint64 address, uint64 size) {
   this->address = address;
-  this->size = size;
+  this->size    = size;
+}
+
+
+MemoryOperand::MemoryOperand(const MemoryOperand& other) {
+  this->copy(other);
 }
 
 
@@ -44,6 +49,11 @@ void MemoryOperand::setSize(uint64 size) {
 
 
 void MemoryOperand::operator=(const MemoryOperand &other) {
+  this->copy(other);
+}
+
+
+void MemoryOperand::copy(const MemoryOperand& other) {
   this->address = other.address;
   this->size    = other.size;
 }

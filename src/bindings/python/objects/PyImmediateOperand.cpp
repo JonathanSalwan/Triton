@@ -16,6 +16,7 @@
 
 
 void ImmediateOperand_dealloc(PyObject *self) {
+  delete PyImmediateOperand_AsImmediateOperand(self);
   Py_DECREF(self);
 }
 
@@ -81,7 +82,7 @@ PyObject *PyImmediateOperand(ImmediateOperand imm) {
   PyType_Ready(&ImmediateOperand_Type);
   object = PyObject_NEW(ImmediateOperand_Object, &ImmediateOperand_Type);
   if (object != NULL)
-    object->imm = imm;
+    object->imm = new ImmediateOperand(imm);
 
   return (PyObject *)object;
 }

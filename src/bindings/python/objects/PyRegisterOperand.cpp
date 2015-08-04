@@ -17,6 +17,7 @@
 
 
 void RegisterOperand_dealloc(PyObject *self) {
+  delete PyRegisterOperand_AsRegisterOperand(self);
   Py_DECREF(self);
 }
 
@@ -24,6 +25,12 @@ void RegisterOperand_dealloc(PyObject *self) {
 static char RegisterOperand_getId_doc[] = "Returns the register id";
 static PyObject *RegisterOperand_getId(PyObject *self, PyObject *noarg) {
   return Py_BuildValue("k", PyRegisterOperand_AsRegisterOperand(self)->getTritonRegId());
+}
+
+
+static char RegisterOperand_getName_doc[] = "Returns the register name";
+static PyObject *RegisterOperand_getName(PyObject *self, PyObject *noarg) {
+  return Py_BuildValue("s", PyRegisterOperand_AsRegisterOperand(self)->getName().c_str());
 }
 
 
@@ -35,6 +42,7 @@ static PyObject *RegisterOperand_getSize(PyObject *self, PyObject *noarg) {
 
 PyMethodDef RegisterOperand_callbacks[] = {
   {"getId",         RegisterOperand_getId,    METH_NOARGS,     RegisterOperand_getId_doc},
+  {"getName",       RegisterOperand_getName,  METH_NOARGS,     RegisterOperand_getName_doc},
   {"getSize",       RegisterOperand_getSize,  METH_NOARGS,     RegisterOperand_getSize_doc},
   {nullptr,         nullptr,                  0,               nullptr}
 };
@@ -89,7 +97,7 @@ PyObject *PyRegisterOperand(RegisterOperand reg) {
   PyType_Ready(&RegisterOperand_Type);
   object = PyObject_NEW(RegisterOperand_Object, &RegisterOperand_Type);
   if (object != NULL)
-    object->reg = reg;
+    object->reg = new RegisterOperand(reg);
 
   return (PyObject *)object;
 }

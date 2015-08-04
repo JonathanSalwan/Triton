@@ -111,7 +111,6 @@ static PyObject *Instruction_getOperands(PyObject *self, PyObject *noarg) {
   for (it = operands.begin() ; it != operands.end(); it++) {
     PyObject *operand = PyOperand(*it);
     PyList_SetItem(OperandList, index, operand);
-    Py_DECREF(operand);
     index++;
   }
   return OperandList;
@@ -148,7 +147,6 @@ static PyObject *Instruction_getSymbolicExpressions(PyObject *self, PyObject *no
   for (it = symExpressions.begin() ; it != symExpressions.end(); it++) {
     PyObject *PySE = PySymbolicExpression(*it);
     PyList_SetItem(SEList, index, PySE);
-    Py_DECREF(PySE);
     index++;
   }
 

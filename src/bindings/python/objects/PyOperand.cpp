@@ -23,6 +23,7 @@
 
 
 void Operand_dealloc(PyObject *self) {
+  delete PyOperand_AsOperand(self);
   Py_DECREF(self);
 }
 
@@ -137,7 +138,7 @@ PyObject *PyOperand(TritonOperand operand) {
   PyType_Ready(&Operand_Type);
   object = PyObject_NEW(Operand_Object, &Operand_Type);
   if (object != NULL)
-    object->operand = operand;
+    object->operand = new TritonOperand(operand);
 
   return (PyObject *)object;
 }
