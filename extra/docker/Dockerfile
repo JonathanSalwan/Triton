@@ -4,19 +4,19 @@
 # Depending on your host's kernel, you will have to allow this by configuring it.
 # If your operating system forbid parent injection you will see the following
 # error:
-#       E: Attach to pid XX failed. 
+#       E: Attach to pid XX failed.
 #       E:   The Operating System configuration prevents Pin from using the default (parent) injection mode.
 #       E:   To resolve this, either execute the following (as root):
 #       E:   $ echo 0 > /proc/sys/kernel/yama/ptrace_scope
 #       E:   Or use the "-injection child" option.
 #       E:   For more information, regarding child injection, see Injection section in the Pin User Manual.
-#       E: 
+#       E:
 #
 # "Echoing" 0 into /proc/sys/kernel/yama/ptrace_scope won't be enough and you will have to run the
 # container into privileged mode (--privileged). However, using it isn't really secure.
 # Here is the best way to run the container I have found so far:
 #
-# 
+#
 #       $ docker run -i -t --cap-add=SYS_PTRACE --security-opt apparmor:unconfined triton
 #
 #
@@ -52,4 +52,4 @@ WORKDIR /Triton/pin-2.14-71313-gcc.4.4.7-linux/source/tools/Triton
 
 RUN mkdir build && cd build && cmake .. && make
 
-CMD ["./triton", "examples/callback_after.py","samples/ir_test_suite/ir"]
+CMD ["./triton", "./examples/semanticsTesting.py", "./samples/ir_test_suite/ir"]
