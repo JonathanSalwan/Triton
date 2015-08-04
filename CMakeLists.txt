@@ -34,6 +34,12 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DTARGET_IA32E -DHOST_IA32E -DTARGET_MAC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fomit-frame-pointer -fno-strict-aliasing")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
+    if(POLICY CMP0025)
+        cmake_policy(SET CMP0025 OLD) # report Apple's Clang as just Clang
+    endif()
+    if(POLICY CMP0042)
+        cmake_policy(SET CMP0042 NEW) # MACOSX_RPATH
+    endif()
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 # Conventions
