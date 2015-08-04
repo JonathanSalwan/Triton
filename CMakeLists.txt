@@ -44,6 +44,10 @@ add_definitions(-std=c++11)
 find_package(Boost 1.53.0 COMPONENTS filesystem REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
+# Find Python 2.7
+FIND_PACKAGE(PythonLibs 2.7 REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
+
 # Includes directories (Pin and Triton)
 include_directories("${PIN_ROOT}/source/include/pin")
 include_directories("${PIN_ROOT}/source/include/pin/gen")
@@ -121,7 +125,7 @@ target_link_libraries(
     pindwarf
     dl
     z3
-    python2.7
+    ${PYTHON_LIBRARIES}
     ${Boost_LIBRARIES}
 )
 
