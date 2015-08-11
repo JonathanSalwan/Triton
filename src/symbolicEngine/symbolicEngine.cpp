@@ -236,6 +236,7 @@ SymbolicVariable *SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symV
 
   memSymId = this->getMemSymbolicID(memAddr);
   if (memSymId == UNSET)
+    /* TODO #109: Create it if UNSET */
     throw std::runtime_error("SymbolicEngine::convertMemToSymVar() - This memory address is UNSET");
 
   expression = this->getExpressionFromId(memSymId);
@@ -260,17 +261,27 @@ SymbolicVariable *SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVar
     throw std::runtime_error("SymbolicEngine::convertRegToSymVar() - Invalid register ID");
 
   regSymId = this->getRegSymbolicID(regId);
-  if (regSymId == UNSET)
-    throw std::runtime_error("SymbolicEngine::convertRegToSymVar() - This register ID is UNSET");
+  if (regSymId == UNSET) {
+    symVar = this->addSymbolicVariable(SymVar::kind::REG, regId, symVarSize, symVarComment);
 
-  expression = this->getExpressionFromId(regSymId);
+    smt2lib::smtAstAbstractNode *tmp = smt2lib::variable(symVar->getSymVarName());
+    if (tmp == nullptr)
+      throw std::runtime_error("convertRegToSymVar can't create smtAstAbstractNode (nullptr)");
 
-  if (expression == nullptr)
-    return nullptr;
+    SymbolicExpression *se = this->newSymbolicExpression(tmp);
+    if (se == nullptr)
+      throw std::runtime_error("convertRegToSymVar can't create symbolic expression (nullptr)");
 
-  symVar = this->addSymbolicVariable(SymVar::kind::REG, regId, symVarSize, symVarComment);
+    this->symbolicReg[regId] = se->getID();
+  }
 
-  expression->setExpression(smt2lib::variable(symVar->getSymVarName()));
+  else {
+    expression = this->getExpressionFromId(regSymId);
+    if (expression == nullptr)
+      return nullptr;
+    symVar = this->addSymbolicVariable(SymVar::kind::REG, regId, symVarSize, symVarComment);
+    expression->setExpression(smt2lib::variable(symVar->getSymVarName()));
+  }
 
   return symVar;
 }
