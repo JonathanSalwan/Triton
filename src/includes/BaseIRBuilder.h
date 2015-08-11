@@ -32,9 +32,10 @@ class BaseIRBuilder: public IRBuilder {
     virtual sint32              getOpcodeCategory(void) const;
     virtual uint32              getOpcode(void) const;
     virtual uint64              getAddress(void) const;
-    virtual uint64              getThreadID(void) const;
     virtual uint64              getBaseAddress(void) const;
+    virtual uint64              getNextAddress(void) const;
     virtual uint64              getOffset(void) const;
+    virtual uint64              getThreadID(void) const;
     virtual void                setNextAddress(uint64 nextAddr);
     virtual void                setOpcode(uint32 op);
     virtual void                setOpcodeCategory(sint32 category);

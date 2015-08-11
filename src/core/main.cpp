@@ -61,6 +61,7 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
   ap.addInstructionToTrace(inst);
 
   /* Export some information from Irb to Inst */
+  inst->setNextAddress(irb->getNextAddress());
   inst->setOpcode(irb->getOpcode());
   inst->setOpcodeCategory(irb->getOpcodeCategory());
   inst->setOperands(irb->getOperands());

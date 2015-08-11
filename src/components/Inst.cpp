@@ -11,6 +11,7 @@
 
 Inst::Inst(uint64 threadId, uint64 address, const std::string &dis) {
   this->address     = address;
+  this->nextAddress = 0;
   this->baseAddress = IMG_LowAddress(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
   this->disassembly = dis;
   this->imageName   = IMG_Name(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
@@ -34,6 +35,12 @@ const std::string &Inst::getDisassembly(void) {
 /* Returns the instruction address */
 uint64 Inst::getAddress(void) {
   return this->address;
+}
+
+
+/* Returns the next instruction address */
+uint64 Inst::getNextAddress(void) {
+  return this->nextAddress;
 }
 
 
@@ -64,6 +71,12 @@ void Inst::setOpcode(uint32 op) {
 /* Set the opcode category of the instruction */
 void Inst::setOpcodeCategory(int32_t category) {
   this->opcodeCategory = category;
+}
+
+
+/* Set the next instruction address */
+void Inst::setNextAddress(uint64 addr) {
+  this->nextAddress = addr;
 }
 
 

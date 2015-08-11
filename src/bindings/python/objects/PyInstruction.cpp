@@ -12,6 +12,7 @@
  * Class Instruction
  *
  * - address (integer)
+ * - nextAddress (integer)
  * - assembly (string)
  * - baseAddress (integer)
  * - imageName (string)
@@ -39,7 +40,7 @@ static PyObject *Instruction_str(Instruction_Object *obj) {
 }
 
 
-static char Instruction_getAddress_doc[] = "Returns the address";
+static char Instruction_getAddress_doc[] = "Returns the instruction address";
 static PyObject *Instruction_getAddress(PyObject *self, PyObject *noarg) {
   if (PyInstruction_AsIns(self) != nullptr)
     return Py_BuildValue("k", PyInstruction_AsIns(self)->getAddress());
@@ -68,6 +69,14 @@ static PyObject *Instruction_getImageName(PyObject *self, PyObject *noarg) {
   if (PyInstruction_AsIns(self) != nullptr)
     return PyString_FromFormat("%s", PyInstruction_AsIns(self)->getImageName().c_str());
   return PyString_FromFormat("%s", PyInstruction_AsIrb(self)->getImageName().c_str());
+}
+
+
+static char Instruction_getNextAddress_doc[] = "Returns the next instruction address";
+static PyObject *Instruction_getNextAddress(PyObject *self, PyObject *noarg) {
+  if (PyInstruction_AsIns(self) != nullptr)
+    return Py_BuildValue("k", PyInstruction_AsIns(self)->getNextAddress());
+  return Py_BuildValue("k", PyInstruction_AsIrb(self)->getNextAddress());
 }
 
 
@@ -172,9 +181,10 @@ static PyObject *Instruction_isBranch(PyObject *self, PyObject *noarg) {
 
 PyMethodDef Instruction_callbacks[] = {
   {"getAddress",                Instruction_getAddress,             METH_NOARGS,   Instruction_getAddress_doc},
-  {"getDisassembly",            Instruction_getDisassembly,         METH_NOARGS,   Instruction_getDisassembly_doc},
   {"getBaseAddress",            Instruction_getBaseAddress,         METH_NOARGS,   Instruction_getBaseAddress_doc},
+  {"getDisassembly",            Instruction_getDisassembly,         METH_NOARGS,   Instruction_getDisassembly_doc},
   {"getImageName",              Instruction_getImageName,           METH_NOARGS,   Instruction_getImageName_doc},
+  {"getNextAddress",            Instruction_getNextAddress,         METH_NOARGS,   Instruction_getNextAddress_doc},
   {"getOffset",                 Instruction_getOffset,              METH_NOARGS,   Instruction_getOffset_doc},
   {"getOpcode",                 Instruction_getOpcode,              METH_NOARGS,   Instruction_getOpcode_doc},
   {"getOpcodeCategory",         Instruction_getOpcodeCategory,      METH_NOARGS,   Instruction_getOpcodeCategory_doc},

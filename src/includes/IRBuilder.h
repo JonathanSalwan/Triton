@@ -55,6 +55,9 @@ class IRBuilder {
     // Returns the base address.
     virtual uint64 getBaseAddress(void) const = 0;
 
+    // Returns the next instruction address.
+    virtual uint64 getNextAddress(void) const = 0;
+
     // Returns the offset of the instruction in the file.
     virtual uint64 getOffset(void) const = 0;
 

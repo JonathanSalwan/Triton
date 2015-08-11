@@ -30,6 +30,7 @@ class Inst {
     uint32                                opcode;
     uint64                                address;
     uint64                                baseAddress;
+    uint64                                nextAddress;
     uint64                                offset;
     uint64                                threadId;
 
@@ -46,9 +47,11 @@ class Inst {
     uint32                                getOpcode(void);
     uint64                                getAddress(void);
     uint64                                getBaseAddress(void);
+    uint64                                getNextAddress(void);
     uint64                                getOffset(void);
     uint64                                getThreadID(void);
     void                                  addExpression(SymbolicExpression *se);
+    void                                  setNextAddress(uint64 addr);
     void                                  setOpcode(uint32 op);
     void                                  setOpcodeCategory(sint32 category);
     void                                  setOperands(const std::vector<TritonOperand> &operands);
