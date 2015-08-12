@@ -37,6 +37,12 @@ class IRBuilder {
     // Set the next instruction address
     virtual void setNextAddress(uint64 nextAddr) = 0;
 
+    // Set the branch taken flag.
+    virtual void setBranchTaken(bool flag) = 0;
+
+    // Set the target branch address.
+    virtual void setBranchTargetAddress(uint64 addr) = 0;
+
     // Set the opcode of the instruction.
     virtual void setThreadID(uint64 threadId) = 0;
 
@@ -49,6 +55,9 @@ class IRBuilder {
     // Returns true or false if the instruction is branch.
     virtual bool isBranch(void) = 0;
 
+    // Returns true or false if the branch is taken.
+    virtual bool isBranchTaken(void) = 0;
+
     // Returns the address of the instruction.
     virtual uint64 getAddress(void) const = 0;
 
@@ -57,6 +66,9 @@ class IRBuilder {
 
     // Returns the next instruction address.
     virtual uint64 getNextAddress(void) const = 0;
+
+    // Returns the target address if the instruction is a brancho.
+    virtual uint64 getBranchTargetAddress(void) const = 0;
 
     // Returns the offset of the instruction in the file.
     virtual uint64 getOffset(void) const = 0;

@@ -34,7 +34,7 @@ ProcessingPyConf    processingPyConf(&ap, &analysisTrigger);
 
 
 
-static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, THREADID threadId) {
+static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, BOOL isBranchTaken, ADDRINT branchTargetAddress, THREADID threadId) {
   /* Some configurations must be applied before processing */
   processingPyConf.applyConfBeforeProcessing(irb);
 
@@ -53,6 +53,8 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
 
   /* Setup Information into Irb */
   irb->setThreadID(ap.getThreadID());
+  irb->setBranchTaken(isBranchTaken);
+  irb->setBranchTargetAddress(branchTargetAddress);
 
   /* Python callback before IR processing */
   processingPyConf.callbackBeforeIRProc(irb, &ap);
@@ -65,6 +67,8 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
   inst->setOpcode(irb->getOpcode());
   inst->setOpcodeCategory(irb->getOpcodeCategory());
   inst->setOperands(irb->getOperands());
+  inst->setBranchTaken(irb->isBranchTaken());
+  inst->setBranchTargetAddress(irb->getBranchTargetAddress());
 
   /* Python callback before instruction processing */
   processingPyConf.callbackBefore(inst, &ap);
@@ -147,6 +151,8 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
             IARG_CONTEXT,
             IARG_BOOL, true,
             IARG_MEMORYOP_EA, 0,
+            IARG_BRANCH_TAKEN,
+            IARG_BRANCH_TARGET_ADDR,
             IARG_THREAD_ID,
             IARG_END);
       else
@@ -155,6 +161,8 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
             IARG_CONTEXT,
             IARG_BOOL, false,
             IARG_ADDRINT, 0,
+            IARG_BRANCH_TAKEN,
+            IARG_BRANCH_TARGET_ADDR,
             IARG_THREAD_ID,
             IARG_END);
 

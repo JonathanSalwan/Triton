@@ -10,15 +10,17 @@
 
 
 Inst::Inst(uint64 threadId, uint64 address, const std::string &dis) {
-  this->address     = address;
-  this->nextAddress = 0;
-  this->baseAddress = IMG_LowAddress(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
-  this->disassembly = dis;
-  this->imageName   = IMG_Name(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
-  this->offset      = this->address - this->baseAddress;
-  this->routineName = RTN_FindNameByAddress(address);
-  this->sectionName = SEC_Name(RTN_Sec(RTN_FindByAddress(address)));
-  this->threadId    = threadId;
+  this->address             = address;
+  this->nextAddress         = 0;
+  this->branchTaken         = false;
+  this->branchTargetAddress = 0;
+  this->baseAddress         = IMG_LowAddress(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
+  this->disassembly         = dis;
+  this->imageName           = IMG_Name(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
+  this->offset              = this->address - this->baseAddress;
+  this->routineName         = RTN_FindNameByAddress(address);
+  this->sectionName         = SEC_Name(RTN_Sec(RTN_FindByAddress(address)));
+  this->threadId            = threadId;
 }
 
 
@@ -41,6 +43,12 @@ uint64 Inst::getAddress(void) {
 /* Returns the next instruction address */
 uint64 Inst::getNextAddress(void) {
   return this->nextAddress;
+}
+
+
+/* If the instruction is a branch, this method returns the target address */
+uint64 Inst::getBranchTargetAddress(void) {
+  return this->branchTargetAddress;
 }
 
 
@@ -80,9 +88,27 @@ void Inst::setNextAddress(uint64 addr) {
 }
 
 
-/* Returns true of false if it's a branch instruction */
+/* Set the branch taken flag */
+void Inst::setBranchTaken(bool flag) {
+  this->branchTaken = flag;
+}
+
+
+/* Set the branch target address */
+void Inst::setBranchTargetAddress(uint64 addr) {
+  this->branchTargetAddress = addr;
+}
+
+
+/* Returns true or false if it's a branch instruction */
 bool Inst::isBranch(void) {
   return (this->opcodeCategory == XED_CATEGORY_COND_BR);
+}
+
+
+/* Returns true or false if the branch is taken */
+bool Inst::isBranchTaken(void) {
+  return this->branchTaken;
 }
 
 

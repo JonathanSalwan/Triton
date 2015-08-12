@@ -12,15 +12,17 @@
 
 
 BaseIRBuilder::BaseIRBuilder(uint64 address, const std::string &dis) {
-  this->address     = address;
-  this->baseAddress = IMG_LowAddress(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
-  this->nextAddress = 0;
-  this->disas       = dis;
-  this->imageName   = IMG_Name(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
-  this->needSetup   = false;
-  this->offset      = this->address - this->baseAddress;
-  this->routineName = RTN_FindNameByAddress(address);
-  this->sectionName = SEC_Name(RTN_Sec(RTN_FindByAddress(address)));
+  this->branchTaken         = false;
+  this->branchTargetAddress = 0;
+  this->address             = address;
+  this->baseAddress         = IMG_LowAddress(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
+  this->nextAddress         = 0;
+  this->disas               = dis;
+  this->imageName           = IMG_Name(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
+  this->needSetup           = false;
+  this->offset              = this->address - this->baseAddress;
+  this->routineName         = RTN_FindNameByAddress(address);
+  this->sectionName         = SEC_Name(RTN_Sec(RTN_FindByAddress(address)));
 }
 
 
@@ -44,6 +46,16 @@ void BaseIRBuilder::setNextAddress(uint64 nextAddress) {
 }
 
 
+void BaseIRBuilder::setBranchTaken(bool flag) {
+  this->branchTaken = flag;
+}
+
+
+void BaseIRBuilder::setBranchTargetAddress(uint64 addr) {
+  this->branchTargetAddress = addr;
+}
+
+
 void BaseIRBuilder::setOpcodeCategory(sint32 category) {
   this->opcodeCategory = category;
 }
@@ -64,6 +76,11 @@ bool BaseIRBuilder::isBranch(void) {
 }
 
 
+bool BaseIRBuilder::isBranchTaken(void) {
+  return this->branchTaken;
+}
+
+
 uint64 BaseIRBuilder::getAddress(void) const {
   return this->address;
 }
@@ -71,6 +88,11 @@ uint64 BaseIRBuilder::getAddress(void) const {
 
 uint64 BaseIRBuilder::getBaseAddress(void) const {
   return this->baseAddress;
+}
+
+
+uint64 BaseIRBuilder::getBranchTargetAddress(void) const {
+  return this->branchTargetAddress;
 }
 
 

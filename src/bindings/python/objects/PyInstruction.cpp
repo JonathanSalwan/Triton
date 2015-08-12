@@ -12,11 +12,13 @@
  * Class Instruction
  *
  * - address (integer)
- * - nextAddress (integer)
  * - assembly (string)
  * - baseAddress (integer)
+ * - branchTargetAddress (integer)
  * - imageName (string)
  * - isBranch (bool)
+ * - isBranchTaken (bool)
+ * - nextAddress (integer)
  * - offset (integer)
  * - opcode (integer)
  * - opcodeCategory (IDREF.OPCODE_CATEGORY)
@@ -61,6 +63,14 @@ static PyObject *Instruction_getBaseAddress(PyObject *self, PyObject *noarg) {
   if (PyInstruction_AsIns(self) != nullptr)
     return Py_BuildValue("k", PyInstruction_AsIns(self)->getBaseAddress());
   return Py_BuildValue("k", PyInstruction_AsIrb(self)->getBaseAddress());
+}
+
+
+static char Instruction_getBranchTargetAddress_doc[] = "Returns the target address if the instruction is a branch";
+static PyObject *Instruction_getBranchTargetAddress(PyObject *self, PyObject *noarg) {
+  if (PyInstruction_AsIns(self) != nullptr)
+    return Py_BuildValue("k", PyInstruction_AsIns(self)->getBranchTargetAddress());
+  return Py_BuildValue("k", PyInstruction_AsIrb(self)->getBranchTargetAddress());
 }
 
 
@@ -179,9 +189,18 @@ static PyObject *Instruction_isBranch(PyObject *self, PyObject *noarg) {
 }
 
 
+static char Instruction_isBranchTaken_doc[] = "Returns true or false if the branch is taken";
+static PyObject *Instruction_isBranchTaken(PyObject *self, PyObject *noarg) {
+  if (PyInstruction_AsIns(self) != nullptr)
+    return PyBool_FromLong(PyInstruction_AsIns(self)->isBranchTaken());
+  return PyBool_FromLong(PyInstruction_AsIrb(self)->isBranchTaken());
+}
+
+
 PyMethodDef Instruction_callbacks[] = {
   {"getAddress",                Instruction_getAddress,             METH_NOARGS,   Instruction_getAddress_doc},
   {"getBaseAddress",            Instruction_getBaseAddress,         METH_NOARGS,   Instruction_getBaseAddress_doc},
+  {"getBranchTargetAddress",    Instruction_getBranchTargetAddress, METH_NOARGS,   Instruction_getBranchTargetAddress_doc},
   {"getDisassembly",            Instruction_getDisassembly,         METH_NOARGS,   Instruction_getDisassembly_doc},
   {"getImageName",              Instruction_getImageName,           METH_NOARGS,   Instruction_getImageName_doc},
   {"getNextAddress",            Instruction_getNextAddress,         METH_NOARGS,   Instruction_getNextAddress_doc},
@@ -194,6 +213,7 @@ PyMethodDef Instruction_callbacks[] = {
   {"getSymbolicExpressions",    Instruction_getSymbolicExpressions, METH_NOARGS,   Instruction_getSymbolicExpressions_doc},
   {"getThreadId",               Instruction_getThreadId,            METH_NOARGS,   Instruction_getThreadId_doc},
   {"isBranch",                  Instruction_isBranch,               METH_NOARGS,   Instruction_isBranch_doc},
+  {"isBranchTaken",             Instruction_isBranchTaken,          METH_NOARGS,   Instruction_isBranchTaken_doc},
   {nullptr,                     nullptr,                            0,             nullptr}
 };
 
