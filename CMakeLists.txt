@@ -25,14 +25,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FLAG_CXX}")
 # Specific Linux CXX Flags
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DUSING_XED -DTARGET_IA32E -DHOST_IA32E -DTARGET_LINUX")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-stack-protector -fomit-frame-pointer -fno-strict-aliasing")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-stack-protector -fomit-frame-pointer -fno-strict-aliasing -fabi-version=2")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--hash-style=sysv -Wl,-Bsymbolic")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 # Specific OSX CXX Flags
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DTARGET_IA32E -DHOST_IA32E -DTARGET_MAC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fomit-frame-pointer -fno-strict-aliasing")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fomit-frame-pointer -fno-strict-aliasing -fabi-version=2")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
     if(POLICY CMP0025)
         cmake_policy(SET CMP0025 OLD) # report Apple's Clang as just Clang
