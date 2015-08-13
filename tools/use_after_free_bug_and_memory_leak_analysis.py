@@ -125,7 +125,7 @@ def trace(instruction):
             memoryAccessSize = operand.getMem().getSize()
             for (delta, size) in TF:
                 if memoryAccess > delta and memoryAccess < delta+size:
-                    print '[!] Use-after-free (%#x) at %#x: %s' %(memoryAccess, instruction.getAddress(), instruction.getDiassembly())
+                    print '[!] Use-after-free (%#x) at %#x: %s' %(memoryAccess, instruction.getAddress(), instruction.getDisassembly())
                     return
     return
 

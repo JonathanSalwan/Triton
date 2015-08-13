@@ -96,7 +96,7 @@ def trace(instruction):
     if len(TRACE) < TRACE_SIZE:
         TRACE.append(tuple((instruction.getAddress(), instruction.getDisassembly())))
     else:
-        TRACE[COUNT % TRACE_SIZE] = tuple((instruction.getAddress(), instruction.getDiassembly()))
+        TRACE[COUNT % TRACE_SIZE] = tuple((instruction.getAddress(), instruction.getDisassembly()))
 
     COUNT += 1
     return
