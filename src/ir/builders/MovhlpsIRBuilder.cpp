@@ -27,9 +27,9 @@ void MovhlpsIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void MovhlpsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto reg1 = this->operands[0].getReg();
   auto regSize1 = this->operands[0].getReg().getSize();
-  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto reg2 = this->operands[1].getReg();
   auto regSize2 = this->operands[1].getReg().getSize();
 
   /* Create the SMT semantic */

@@ -27,14 +27,14 @@ void CmovbeIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void CmovbeIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *reg1e, *reg2e, *cf, *zf;
-  auto reg1 = this->operands[0].getReg().getTritonRegId();
-  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto reg1 = this->operands[0].getReg();
+  auto reg2 = this->operands[1].getReg();
   auto regSize1 = this->operands[0].getReg().getSize();
   auto regSize2 = this->operands[1].getReg().getSize();
 
   /* Create the SMT semantic */
-  cf = ap.buildSymbolicFlagOperand(ID_CF);
-  zf = ap.buildSymbolicFlagOperand(ID_ZF);
+  cf = ap.buildSymbolicFlagOperand(ID_TMP_CF);
+  zf = ap.buildSymbolicFlagOperand(ID_TMP_ZF);
   reg1e = ap.buildSymbolicRegOperand(reg1, regSize1);
   reg2e = ap.buildSymbolicRegOperand(reg2, regSize2);
 
@@ -53,7 +53,7 @@ void CmovbeIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(inst, expr, reg1, regSize1);
 
   /* Apply the taint via the concretization */
-  if (ap.getFlagValue(ID_CF) | ap.getFlagValue(ID_ZF))
+  if (ap.getFlagValue(ID_TMP_CF) | ap.getFlagValue(ID_TMP_ZF))
     ap.assignmentSpreadTaintRegReg(se, reg1, reg2);
 
 }
@@ -63,13 +63,13 @@ void CmovbeIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *reg1e, *mem1e, *cf, *zf;
   auto memSize = this->operands[1].getMem().getSize();
-  auto mem = this->operands[1].getMem().getAddress();
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto mem = this->operands[1].getMem();
+  auto reg = this->operands[0].getReg();
   auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
-  cf = ap.buildSymbolicFlagOperand(ID_CF);
-  zf = ap.buildSymbolicFlagOperand(ID_ZF);
+  cf = ap.buildSymbolicFlagOperand(ID_TMP_CF);
+  zf = ap.buildSymbolicFlagOperand(ID_TMP_ZF);
   reg1e = ap.buildSymbolicRegOperand(reg, regSize);
   mem1e = ap.buildSymbolicMemOperand(mem, memSize);
 
@@ -88,7 +88,7 @@ void CmovbeIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint via the concretization */
-  if (ap.getFlagValue(ID_CF) | ap.getFlagValue(ID_ZF))
+  if (ap.getFlagValue(ID_TMP_CF) | ap.getFlagValue(ID_TMP_ZF))
     ap.assignmentSpreadTaintRegMem(se, reg, mem, memSize);
 
 }

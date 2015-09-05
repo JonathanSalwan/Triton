@@ -22,7 +22,7 @@ ShrIRBuilder::ShrIRBuilder(uint64 address, const std::string &disassembly):
 void ShrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto reg = this->operands[0].getReg();
   auto imm = this->operands[1].getImm().getValue();
   auto regSize = this->operands[0].getReg().getSize();
 
@@ -51,13 +51,13 @@ void ShrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void ShrIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto reg = this->operands[0].getReg();
   auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
   /* op2 = 8 bits register (CL) */
-  op2 = smt2lib::zx((regSize - BYTE_SIZE) * REG_SIZE, ap.buildSymbolicRegOperand(ID_RCX, 1));
+  op2 = smt2lib::zx((regSize - BYTE_SIZE) * REG_SIZE, ap.buildSymbolicRegOperand(ID_TMP_RCX, 1));
 
   /* Finale expr */
   expr = smt2lib::bvlshr(op1, op2);
@@ -85,7 +85,7 @@ void ShrIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 void ShrIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  auto mem = this->operands[0].getMem().getAddress();
+  auto mem = this->operands[0].getMem();
   auto memSize = this->operands[0].getMem().getSize();
   auto imm = this->operands[1].getImm().getValue();
 

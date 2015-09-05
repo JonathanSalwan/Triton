@@ -8,7 +8,10 @@
 #define ANALYSISPROCESSOR_H
 
 #include "ContextHandler.h"
+#include "ImmediateOperand.h"
 #include "Inst.h"
+#include "MemoryOperand.h"
+#include "RegisterOperand.h"
 #include "SMT2Lib.h"
 #include "SnapshotEngine.h"
 #include "SolverEngine.h"
@@ -46,17 +49,18 @@ class AnalysisProcessor {
     uint32      getThreadID(void);
 
     /* Returns the value of the register */
-    uint64      getRegisterValue(uint64 regID);
-    uint64      getFlagValue(uint64 flagID);
-    uint128     getSSERegisterValue(uint64 regID);
+    uint64      getRegisterValue(RegisterOperand &reg);
+    uint64      getFlagValue(RegisterOperand &flag);
+    uint128     getSSERegisterValue(RegisterOperand &reg);
 
     /* Set the value into the register */
-    void        setRegisterValue(uint64 regID, uint64 value);
-    void        setSSERegisterValue(uint64 regID, uint128 value);
+    void        setRegisterValue(RegisterOperand &reg, uint64 value);
+    void        setSSERegisterValue(RegisterOperand &reg, uint128 value);
 
     /* Returns the value of the memory */
+    uint128     getMemValue(MemoryOperand &mem, uint32 readSize);
     uint128     getMemValue(uint64 mem, uint32 readSize);
-    void        setMemValue(uint64 mem, uint32 writeSize, uint128 value);
+    void        setMemValue(MemoryOperand &mem, uint32 writeSize, uint128 value);
 
     /*
      * Symbolic Engine Facade
@@ -64,11 +68,11 @@ class AnalysisProcessor {
      */
 
     /* Returns a symbolic expression for the register (regID) */
-    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, std::string comment="");
-    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, uint64 regSize, std::string comment="");
+    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &reg, std::string comment="");
+    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &reg, uint64 regSize, std::string comment="");
 
     /* Returns a symbolic expression for the memory address */
-    SymbolicExpression *createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize, std::string comment="");
+    SymbolicExpression *createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, MemoryOperand &mem, uint64 writeSize, std::string comment="");
 
     /* Returns a symbolic expression. This methods is mainly used for temporary expression */
     SymbolicExpression *createSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, std::string comment="");
@@ -77,12 +81,13 @@ class AnalysisProcessor {
      * Returns the ID of the symbolic expression currently present in the
      * symbolic register. If there is no symbolic expression, it returns UNSET
      */
-    uint64 getRegSymbolicID(uint64 regID);
+    uint64 getRegSymbolicID(RegisterOperand &reg);
 
     /*
      * Returns the ID of the symbolic expression currently present in the
      * symbolic memory. If there is no symbolic expression, it returns UNSET
      */
+    uint64 getMemSymbolicID(MemoryOperand &mem);
     uint64 getMemSymbolicID(uint64 address);
 
     /* Returns the symbolic expression from its id */
@@ -102,8 +107,8 @@ class AnalysisProcessor {
 
     /* Converts an expression, register or memory to a symbolic variable */
     SymbolicVariable *convertExprToSymVar(uint64 exprId, uint64 symVarSize, std::string symVarComment);
-    SymbolicVariable *convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment);
-    SymbolicVariable *convertRegToSymVar(uint64 regId, uint64 symVarSize, std::string symVarComment);
+    SymbolicVariable *convertMemToSymVar(MemoryOperand &mem, uint64 symVarSize, std::string symVarComment);
+    SymbolicVariable *convertRegToSymVar(RegisterOperand &reg, uint64 symVarSize, std::string symVarComment);
 
     /* Returns the symbolic variable from ID or std::string */
     SymbolicVariable *getSymVar(uint64 symVarId);
@@ -117,17 +122,17 @@ class AnalysisProcessor {
     std::list<uint64> getPathConstraints(void);
 
     /* Build a symbolic register operand */
-    smt2lib::smtAstAbstractNode *buildSymbolicRegOperand(uint64 regID, uint64 regSize);
-    smt2lib::smtAstAbstractNode *buildSymbolicRegOperand(uint64 regID, uint64 regSize, uint64 highExtract, uint64 lowExtract);
-    smt2lib::smtAstAbstractNode *buildSymbolicMemOperand(uint64 mem, uint64 memSize);
-    smt2lib::smtAstAbstractNode *buildSymbolicFlagOperand(uint64 flagID, uint64 size);
-    smt2lib::smtAstAbstractNode *buildSymbolicFlagOperand(uint64 flagID);
+    smt2lib::smtAstAbstractNode *buildSymbolicRegOperand(RegisterOperand &reg, uint64 regSize);
+    smt2lib::smtAstAbstractNode *buildSymbolicRegOperand(RegisterOperand &reg, uint64 regSize, uint64 highExtract, uint64 lowExtract);
+    smt2lib::smtAstAbstractNode *buildSymbolicMemOperand(MemoryOperand &mem, uint64 memSize);
+    smt2lib::smtAstAbstractNode *buildSymbolicFlagOperand(RegisterOperand &flag, uint64 size);
+    smt2lib::smtAstAbstractNode *buildSymbolicFlagOperand(RegisterOperand &flag);
 
     /* Concretize register and memory */
     void concretizeAllReg(void);
     void concretizeAllMem(void);
-    void concretizeReg(uint64 regID);
-    void concretizeMem(uint64 mem);
+    void concretizeReg(RegisterOperand &reg);
+    void concretizeMem(MemoryOperand &mem);
 
 
     /*
@@ -142,34 +147,34 @@ class AnalysisProcessor {
      * Taint interface.
      * Taint the symbolic expression if the taint occurs.
      */
-    bool isMemTainted(uint64 addr);
-    bool isRegTainted(uint64 reg);
-    void setTaintMem(SymbolicExpression *se, uint64 mem, uint64 flag);
-    void setTaintReg(SymbolicExpression *se, uint64 reg, uint64 flag);
-    void taintMem(uint64 addr);
-    void taintReg(uint64 reg);
-    void untaintMem(uint64 addr);
-    void untaintReg(uint64 reg);
+    bool isMemTainted(MemoryOperand &mem);
+    bool isRegTainted(RegisterOperand &reg);
+    void setTaintMem(SymbolicExpression *se, MemoryOperand &mem, uint64 flag);
+    void setTaintReg(SymbolicExpression *se, RegisterOperand &reg, uint64 flag);
+    void taintMem(MemoryOperand &mem);
+    void taintReg(RegisterOperand &reg);
+    void untaintMem(MemoryOperand &mem);
+    void untaintReg(RegisterOperand &reg);
 
     /* ALU Spreading */
-    void aluSpreadTaintMemImm(SymbolicExpression *se, uint64 memDst, uint32 writeSize);
-    void aluSpreadTaintMemReg(SymbolicExpression *se, uint64 memDst, uint64 regSrc, uint32 writeSize);
-    void aluSpreadTaintRegImm(SymbolicExpression *se, uint64 regDst);
-    void aluSpreadTaintRegMem(SymbolicExpression *se, uint64 regDst, uint64 memSrc, uint32 readSize);
-    void aluSpreadTaintRegReg(SymbolicExpression *se, uint64 regDst, uint64 regSrc);
-    void aluSpreadTaintMemMem(SymbolicExpression *se, uint64 memDst, uint64 memSrc, uint32 writeSize);
+    void aluSpreadTaintMemImm(SymbolicExpression *se, MemoryOperand &memDst, uint32 writeSize);
+    void aluSpreadTaintMemReg(SymbolicExpression *se, MemoryOperand &memDst, RegisterOperand &regSrc, uint32 writeSize);
+    void aluSpreadTaintRegImm(SymbolicExpression *se, RegisterOperand &regDst);
+    void aluSpreadTaintRegMem(SymbolicExpression *se, RegisterOperand &regDst, MemoryOperand &memSrc, uint32 readSize);
+    void aluSpreadTaintRegReg(SymbolicExpression *se, RegisterOperand &regDst, RegisterOperand &regSrc);
+    void aluSpreadTaintMemMem(SymbolicExpression *se, MemoryOperand &memDst, MemoryOperand &memSrc, uint32 writeSize);
 
     /* Assignment Spreading */
-    void assignmentSpreadTaintExprMem(SymbolicExpression *se, uint64 memSrc, uint32 readSize);
-    void assignmentSpreadTaintExprReg(SymbolicExpression *se, uint64 regSrc);
-    void assignmentSpreadTaintExprRegMem(SymbolicExpression *se, uint64 regSrc, uint64 memSrc, uint32 readSize);
-    void assignmentSpreadTaintExprRegReg(SymbolicExpression *se, uint64 regSrc1, uint64 regSrc2);
-    void assignmentSpreadTaintMemImm(SymbolicExpression *se, uint64 memDst, uint64 writeSize);
-    void assignmentSpreadTaintMemMem(SymbolicExpression *se, uint64 memDst, uint64 memSrc, uint32 readSize);
-    void assignmentSpreadTaintMemReg(SymbolicExpression *se, uint64 memDst, uint64 regSrc, uint64 writeSize);
-    void assignmentSpreadTaintRegImm(SymbolicExpression *se, uint64 regDst);
-    void assignmentSpreadTaintRegMem(SymbolicExpression *se, uint64 regDst, uint64 memSrc, uint32 readSize);
-    void assignmentSpreadTaintRegReg(SymbolicExpression *se, uint64 regDst, uint64 regSrc);
+    void assignmentSpreadTaintExprMem(SymbolicExpression *se, MemoryOperand &memSrc, uint32 readSize);
+    void assignmentSpreadTaintExprReg(SymbolicExpression *se, RegisterOperand &regSrc);
+    void assignmentSpreadTaintExprRegMem(SymbolicExpression *se, RegisterOperand &regSrc, MemoryOperand &memSrc, uint32 readSize);
+    void assignmentSpreadTaintExprRegReg(SymbolicExpression *se, RegisterOperand &regSrc1, RegisterOperand &regSrc2);
+    void assignmentSpreadTaintMemImm(SymbolicExpression *se, MemoryOperand &memDst, uint64 writeSize);
+    void assignmentSpreadTaintMemMem(SymbolicExpression *se, MemoryOperand &memDst, MemoryOperand &memSrc, uint32 readSize);
+    void assignmentSpreadTaintMemReg(SymbolicExpression *se, MemoryOperand &memDst, RegisterOperand &regSrc, uint64 writeSize);
+    void assignmentSpreadTaintRegImm(SymbolicExpression *se, RegisterOperand &regDst);
+    void assignmentSpreadTaintRegMem(SymbolicExpression *se, RegisterOperand &regDst, MemoryOperand &memSrc, uint32 readSize);
+    void assignmentSpreadTaintRegReg(SymbolicExpression *se, RegisterOperand &regDst, RegisterOperand &regSrc);
 
 
     /*

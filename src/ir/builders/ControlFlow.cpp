@@ -23,7 +23,7 @@ SymbolicExpression *ControlFlow::rip(Inst &inst, AnalysisProcessor &ap, uint64 n
   expr = smt2lib::bv(nextAddr, 64);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
 
   return se;
 }

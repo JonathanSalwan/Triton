@@ -22,7 +22,7 @@ DecIRBuilder::DecIRBuilder(uint64 address, const std::string &disassembly):
 void DecIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto reg = this->operands[0].getReg();
   auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
@@ -50,7 +50,7 @@ void DecIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void DecIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  auto mem = this->operands[0].getMem().getAddress();
+  auto mem = this->operands[0].getMem();
   auto memSize = this->operands[0].getMem().getSize();
 
   /* Create the SMT semantic */

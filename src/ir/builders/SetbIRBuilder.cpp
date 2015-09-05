@@ -27,11 +27,11 @@ void SetbIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 void SetbIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *cf;
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto reg = this->operands[0].getReg();
   auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
-  cf = ap.buildSymbolicFlagOperand(ID_CF);
+  cf = ap.buildSymbolicFlagOperand(ID_TMP_CF);
 
   /* Finale expr */
   expr = smt2lib::ite(
@@ -45,8 +45,8 @@ void SetbIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint via the concretization */
-  if (ap.getFlagValue(ID_CF) == 1)
-    ap.assignmentSpreadTaintRegReg(se, reg, ID_CF);
+  if (ap.getFlagValue(ID_TMP_CF) == 1)
+    ap.assignmentSpreadTaintRegReg(se, reg, ID_TMP_CF);
 
 }
 
@@ -54,11 +54,11 @@ void SetbIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void SetbIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *cf;
-  auto mem = this->operands[0].getMem().getAddress();
+  auto mem = this->operands[0].getMem();
   auto memSize = this->operands[0].getMem().getSize();
 
   /* Create the SMT semantic */
-  cf = ap.buildSymbolicFlagOperand(ID_CF);
+  cf = ap.buildSymbolicFlagOperand(ID_TMP_CF);
 
   /* Finale expr */
   expr = smt2lib::ite(
@@ -72,8 +72,8 @@ void SetbIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createMemSE(inst, expr, mem, memSize);
 
   /* Apply the taint via the concretization */
-  if (ap.getFlagValue(ID_CF) == 1)
-    ap.assignmentSpreadTaintMemReg(se, mem, ID_CF, memSize);
+  if (ap.getFlagValue(ID_TMP_CF) == 1)
+    ap.assignmentSpreadTaintMemReg(se, mem, ID_TMP_CF, memSize);
 
 }
 

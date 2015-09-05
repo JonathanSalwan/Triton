@@ -22,7 +22,7 @@ SubIRBuilder::SubIRBuilder(uint64 address, const std::string &disassembly):
 void SubIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto reg = this->operands[0].getReg();
   auto imm = this->operands[1].getImm().getValue();
   auto regSize = this->operands[0].getReg().getSize();
 
@@ -52,8 +52,8 @@ void SubIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void SubIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  auto reg1 = this->operands[0].getReg().getTritonRegId();
-  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto reg1 = this->operands[0].getReg();
+  auto reg2 = this->operands[1].getReg();
   auto regSize1 = this->operands[0].getReg().getSize();
   auto regSize2 = this->operands[1].getReg().getSize();
 
@@ -83,9 +83,9 @@ void SubIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void SubIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  auto mem = this->operands[1].getMem().getAddress();
+  auto mem = this->operands[1].getMem();
   auto memSize = this->operands[1].getMem().getSize();
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto reg = this->operands[0].getReg();
   auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
@@ -114,7 +114,7 @@ void SubIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 void SubIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  auto mem = this->operands[0].getMem().getAddress();
+  auto mem = this->operands[0].getMem();
   auto memSize = this->operands[0].getMem().getSize();
   auto imm = this->operands[1].getImm().getValue();
 
@@ -144,9 +144,9 @@ void SubIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 void SubIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  auto mem = this->operands[0].getMem().getAddress();
+  auto mem = this->operands[0].getMem();
   auto memSize = this->operands[0].getMem().getSize();
-  auto reg = this->operands[1].getReg().getTritonRegId();
+  auto reg = this->operands[1].getReg();
   auto regSize = this->operands[1].getReg().getSize();
 
   /* Create the SMT semantic */

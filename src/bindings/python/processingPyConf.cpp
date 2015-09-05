@@ -6,6 +6,7 @@
 
 
 #include <ProcessingPyConf.h>
+#include <Registers.h>
 #include <TritonPyObject.h>
 #include <xPyFunc.h>
 
@@ -57,8 +58,10 @@ void ProcessingPyConf::taintMemFromAddr(IRBuilder *irb) {
   // Check if there is memory tainted via the python bindings
   std::list<uint64> memsTainted = PyTritonOptions::taintMemFromAddr[irb->getAddress()];
   std::list<uint64>::iterator it = memsTainted.begin();
-  for ( ; it != memsTainted.end(); it++)
-    this->ap->taintMem(*it);
+  for ( ; it != memsTainted.end(); it++) {
+    MemoryOperand mem(*it, 1);
+    this->ap->taintMem(mem);
+  }
 }
 
 
@@ -70,8 +73,10 @@ void ProcessingPyConf::taintRegFromAddr(IRBuilder *irb) {
   // Check if there is registers tainted via the python bindings
   std::list<uint64> regsTainted = PyTritonOptions::taintRegFromAddr[irb->getAddress()];
   std::list<uint64>::iterator it = regsTainted.begin();
-  for ( ; it != regsTainted.end(); it++)
-    this->ap->taintReg(*it);
+  for ( ; it != regsTainted.end(); it++) {
+    RegisterOperand reg = createTmpReg(*it);
+    this->ap->taintReg(reg);
+  }
 }
 
 
@@ -83,8 +88,10 @@ void ProcessingPyConf::untaintMemFromAddr(IRBuilder *irb) {
   // Check if there is memories untainted via the python bindings
   std::list<uint64> memsUntainted = PyTritonOptions::untaintMemFromAddr[irb->getAddress()];
   std::list<uint64>::iterator it = memsUntainted.begin();
-  for ( ; it != memsUntainted.end(); it++)
-    this->ap->untaintMem(*it);
+  for ( ; it != memsUntainted.end(); it++) {
+    MemoryOperand mem(*it, 1);
+    this->ap->untaintMem(mem);
+  }
 }
 
 
@@ -96,8 +103,10 @@ void ProcessingPyConf::untaintRegFromAddr(IRBuilder *irb) {
   // Check if there is registers untainted via the python bindings
   std::list<uint64> regsUntainted = PyTritonOptions::untaintRegFromAddr[irb->getAddress()];
   std::list<uint64>::iterator it = regsUntainted.begin();
-  for ( ; it != regsUntainted.end(); it++)
-    this->ap->untaintReg(*it);
+  for ( ; it != regsUntainted.end(); it++) {
+    RegisterOperand reg = createTmpReg(*it);
+    this->ap->untaintReg(reg);
+  }
 }
 
 

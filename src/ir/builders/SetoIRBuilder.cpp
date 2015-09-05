@@ -27,11 +27,11 @@ void SetoIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 void SetoIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *of;
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto reg = this->operands[0].getReg();
   auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
-  of = ap.buildSymbolicFlagOperand(ID_OF);
+  of = ap.buildSymbolicFlagOperand(ID_TMP_OF);
 
   /* Finale expr */
   expr = smt2lib::ite(
@@ -45,8 +45,8 @@ void SetoIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint via the concretization */
-  if (ap.getFlagValue(ID_OF) == 1)
-    ap.assignmentSpreadTaintRegReg(se, reg, ID_OF);
+  if (ap.getFlagValue(ID_TMP_OF) == 1)
+    ap.assignmentSpreadTaintRegReg(se, reg, ID_TMP_OF);
 
 }
 
@@ -54,11 +54,11 @@ void SetoIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void SetoIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *of;
-  auto mem = this->operands[0].getMem().getAddress();
+  auto mem = this->operands[0].getMem();
   auto memSize = this->operands[0].getMem().getSize();
 
   /* Create the SMT semantic */
-  of = ap.buildSymbolicFlagOperand(ID_OF);
+  of = ap.buildSymbolicFlagOperand(ID_TMP_OF);
 
   /* Finale expr */
   expr = smt2lib::ite(
@@ -72,8 +72,8 @@ void SetoIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createMemSE(inst, expr, mem, memSize);
 
   /* Apply the taint via the concretization */
-  if (ap.getFlagValue(ID_OF) == 1)
-    ap.assignmentSpreadTaintMemReg(se, mem, ID_OF, memSize);
+  if (ap.getFlagValue(ID_TMP_OF) == 1)
+    ap.assignmentSpreadTaintMemReg(se, mem, ID_TMP_OF, memSize);
 
 }
 

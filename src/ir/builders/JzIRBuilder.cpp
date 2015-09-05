@@ -25,7 +25,7 @@ void JzIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   auto imm = this->operands[0].getImm().getValue();
 
   /* Create the SMT semantic */
-  zf = ap.buildSymbolicFlagOperand(ID_ZF);
+  zf = ap.buildSymbolicFlagOperand(ID_TMP_ZF);
 
   /* Finale expr */
   expr = smt2lib::ite(
@@ -36,7 +36,7 @@ void JzIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
             smt2lib::bv(this->nextAddress, REG_SIZE_BIT));
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
 
   /* Add the constraint in the PathConstraints list */
   ap.addPathConstraint(se->getID());

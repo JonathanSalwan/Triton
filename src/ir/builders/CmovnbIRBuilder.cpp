@@ -27,13 +27,13 @@ void CmovnbIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void CmovnbIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *reg1e, *reg2e, *cf;
-  auto reg1 = this->operands[0].getReg().getTritonRegId();
-  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto reg1 = this->operands[0].getReg();
+  auto reg2 = this->operands[1].getReg();
   auto regSize1 = this->operands[0].getReg().getSize();
   auto regSize2 = this->operands[1].getReg().getSize();
 
   /* Create the SMT semantic */
-  cf = ap.buildSymbolicFlagOperand(ID_CF);
+  cf = ap.buildSymbolicFlagOperand(ID_TMP_CF);
   reg1e = ap.buildSymbolicRegOperand(reg1, regSize1);
   reg2e = ap.buildSymbolicRegOperand(reg2, regSize2);
 
@@ -48,7 +48,7 @@ void CmovnbIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(inst, expr, reg1, regSize1);
 
   /* Apply the taint via the concretization */
-  if (ap.getFlagValue(ID_CF) == 0)
+  if (ap.getFlagValue(ID_TMP_CF) == 0)
     ap.assignmentSpreadTaintRegReg(se, reg1, reg2);
 
 }
@@ -58,12 +58,12 @@ void CmovnbIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *reg1e, *mem1e, *cf;
   auto memSize = this->operands[1].getMem().getSize();
-  auto mem = this->operands[1].getMem().getAddress();
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto mem = this->operands[1].getMem();
+  auto reg = this->operands[0].getReg();
   auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
-  cf = ap.buildSymbolicFlagOperand(ID_CF);
+  cf = ap.buildSymbolicFlagOperand(ID_TMP_CF);
   reg1e = ap.buildSymbolicRegOperand(reg, regSize);
   mem1e = ap.buildSymbolicMemOperand(mem, memSize);
 
@@ -78,7 +78,7 @@ void CmovnbIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint via the concretization */
-  if (ap.getFlagValue(ID_CF) == 0)
+  if (ap.getFlagValue(ID_TMP_CF) == 0)
     ap.assignmentSpreadTaintRegMem(se, reg, mem, memSize);
 
 }

@@ -47,7 +47,7 @@ ImulIRBuilder::ImulIRBuilder(uint64 address, const std::string &disassembly):
 void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto reg = this->operands[0].getReg();
   auto imm = this->operands[1].getImm().getValue();
   auto regSize = this->operands[0].getReg().getSize();
 
@@ -78,9 +78,9 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
   uint64 imm = 0;
-  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto reg1 = this->operands[0].getReg();
   auto regSize1 = this->operands[0].getReg().getSize();
-  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto reg2 = this->operands[1].getReg();
   auto regSize2 = this->operands[1].getReg().getSize();
 
   if (this->operands[2].getType() == IRBuilderOperand::IMM)
@@ -104,35 +104,35 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 
       case BYTE_SIZE:
         /* RAX */
-        se = ap.createRegSE(inst, smt2lib::extract(WORD_SIZE_BIT - 1, 0, expr), ID_RAX, WORD_SIZE);
-        ap.aluSpreadTaintRegReg(se, ID_RAX, reg2);
+        se = ap.createRegSE(inst, smt2lib::extract(WORD_SIZE_BIT - 1, 0, expr), ID_TMP_RAX, WORD_SIZE);
+        ap.aluSpreadTaintRegReg(se, ID_TMP_RAX, reg2);
         break;
 
       case WORD_SIZE:
         /* RDX */
-        se = ap.createRegSE(inst, smt2lib::extract(DWORD_SIZE_BIT - 1, WORD_SIZE_BIT, expr), ID_RDX, WORD_SIZE);
-        ap.aluSpreadTaintRegReg(se, ID_RDX, reg2);
+        se = ap.createRegSE(inst, smt2lib::extract(DWORD_SIZE_BIT - 1, WORD_SIZE_BIT, expr), ID_TMP_RDX, WORD_SIZE);
+        ap.aluSpreadTaintRegReg(se, ID_TMP_RDX, reg2);
         /* RAX */
-        se = ap.createRegSE(inst, smt2lib::extract(WORD_SIZE_BIT - 1, 0, expr), ID_RAX, WORD_SIZE);
-        ap.aluSpreadTaintRegReg(se, ID_RAX, reg2);
+        se = ap.createRegSE(inst, smt2lib::extract(WORD_SIZE_BIT - 1, 0, expr), ID_TMP_RAX, WORD_SIZE);
+        ap.aluSpreadTaintRegReg(se, ID_TMP_RAX, reg2);
         break;
 
       case DWORD_SIZE:
         /* RDX */
-        se = ap.createRegSE(inst, smt2lib::extract(QWORD_SIZE_BIT - 1, DWORD_SIZE_BIT, expr), ID_RDX, DWORD_SIZE);
-        ap.aluSpreadTaintRegReg(se, ID_RDX, reg2);
+        se = ap.createRegSE(inst, smt2lib::extract(QWORD_SIZE_BIT - 1, DWORD_SIZE_BIT, expr), ID_TMP_RDX, DWORD_SIZE);
+        ap.aluSpreadTaintRegReg(se, ID_TMP_RDX, reg2);
         /* RAX */
-        se = ap.createRegSE(inst, smt2lib::extract(DWORD_SIZE_BIT - 1, 0, expr), ID_RAX, DWORD_SIZE);
-        ap.aluSpreadTaintRegReg(se, ID_RAX, reg2);
+        se = ap.createRegSE(inst, smt2lib::extract(DWORD_SIZE_BIT - 1, 0, expr), ID_TMP_RAX, DWORD_SIZE);
+        ap.aluSpreadTaintRegReg(se, ID_TMP_RAX, reg2);
         break;
 
       case QWORD_SIZE:
         /* RDX */
-        se = ap.createRegSE(inst, smt2lib::extract(DQWORD_SIZE_BIT - 1, QWORD_SIZE_BIT, expr), ID_RDX, QWORD_SIZE);
-        ap.aluSpreadTaintRegReg(se, ID_RDX, reg2);
+        se = ap.createRegSE(inst, smt2lib::extract(DQWORD_SIZE_BIT - 1, QWORD_SIZE_BIT, expr), ID_TMP_RDX, QWORD_SIZE);
+        ap.aluSpreadTaintRegReg(se, ID_TMP_RDX, reg2);
         /* RAX */
-        se = ap.createRegSE(inst, smt2lib::extract(QWORD_SIZE_BIT - 1, 0, expr), ID_RAX, QWORD_SIZE);
-        ap.aluSpreadTaintRegReg(se, ID_RAX, reg2);
+        se = ap.createRegSE(inst, smt2lib::extract(QWORD_SIZE_BIT - 1, 0, expr), ID_TMP_RAX, QWORD_SIZE);
+        ap.aluSpreadTaintRegReg(se, ID_TMP_RAX, reg2);
         break;
 
       default:
@@ -186,9 +186,9 @@ void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
   uint64 imm = 0;
-  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto reg1 = this->operands[0].getReg();
   auto regSize1 = this->operands[0].getReg().getSize();
-  auto mem2 = this->operands[1].getMem().getAddress();
+  auto mem2 = this->operands[1].getMem();
   auto memSize2 = this->operands[1].getMem().getSize();
 
   if (this->operands[2].getType() == IRBuilderOperand::IMM)
@@ -212,35 +212,35 @@ void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 
       case BYTE_SIZE:
         /* RAX */
-        se = ap.createRegSE(inst, smt2lib::extract(WORD_SIZE_BIT - 1, 0, expr), ID_RAX, WORD_SIZE);
-        ap.aluSpreadTaintRegMem(se, ID_RAX, mem2, memSize2);
+        se = ap.createRegSE(inst, smt2lib::extract(WORD_SIZE_BIT - 1, 0, expr), ID_TMP_RAX, WORD_SIZE);
+        ap.aluSpreadTaintRegMem(se, ID_TMP_RAX, mem2, memSize2);
         break;
 
       case WORD_SIZE:
         /* RDX */
-        se = ap.createRegSE(inst, smt2lib::extract(DWORD_SIZE_BIT - 1, WORD_SIZE_BIT, expr), ID_RDX, WORD_SIZE);
-        ap.aluSpreadTaintRegMem(se, ID_RDX, mem2, memSize2);
+        se = ap.createRegSE(inst, smt2lib::extract(DWORD_SIZE_BIT - 1, WORD_SIZE_BIT, expr), ID_TMP_RDX, WORD_SIZE);
+        ap.aluSpreadTaintRegMem(se, ID_TMP_RDX, mem2, memSize2);
         /* RAX */
-        se = ap.createRegSE(inst, smt2lib::extract(WORD_SIZE_BIT - 1, 0, expr), ID_RAX, WORD_SIZE);
-        ap.aluSpreadTaintRegMem(se, ID_RAX, mem2, memSize2);
+        se = ap.createRegSE(inst, smt2lib::extract(WORD_SIZE_BIT - 1, 0, expr), ID_TMP_RAX, WORD_SIZE);
+        ap.aluSpreadTaintRegMem(se, ID_TMP_RAX, mem2, memSize2);
         break;
 
       case DWORD_SIZE:
         /* RDX */
-        se = ap.createRegSE(inst, smt2lib::extract(QWORD_SIZE_BIT - 1, DWORD_SIZE_BIT, expr), ID_RDX, DWORD_SIZE);
-        ap.aluSpreadTaintRegMem(se, ID_RDX, mem2, memSize2);
+        se = ap.createRegSE(inst, smt2lib::extract(QWORD_SIZE_BIT - 1, DWORD_SIZE_BIT, expr), ID_TMP_RDX, DWORD_SIZE);
+        ap.aluSpreadTaintRegMem(se, ID_TMP_RDX, mem2, memSize2);
         /* RAX */
-        se = ap.createRegSE(inst, smt2lib::extract(DWORD_SIZE_BIT - 1, 0, expr), ID_RAX, DWORD_SIZE);
-        ap.aluSpreadTaintRegMem(se, ID_RAX, mem2, memSize2);
+        se = ap.createRegSE(inst, smt2lib::extract(DWORD_SIZE_BIT - 1, 0, expr), ID_TMP_RAX, DWORD_SIZE);
+        ap.aluSpreadTaintRegMem(se, ID_TMP_RAX, mem2, memSize2);
         break;
 
       case QWORD_SIZE:
         /* RDX */
-        se = ap.createRegSE(inst, smt2lib::extract(DQWORD_SIZE_BIT - 1, QWORD_SIZE_BIT, expr), ID_RDX, QWORD_SIZE);
-        ap.aluSpreadTaintRegMem(se, ID_RDX, mem2, memSize2);
+        se = ap.createRegSE(inst, smt2lib::extract(DQWORD_SIZE_BIT - 1, QWORD_SIZE_BIT, expr), ID_TMP_RDX, QWORD_SIZE);
+        ap.aluSpreadTaintRegMem(se, ID_TMP_RDX, mem2, memSize2);
         /* RAX */
-        se = ap.createRegSE(inst, smt2lib::extract(QWORD_SIZE_BIT - 1, 0, expr), ID_RAX, QWORD_SIZE);
-        ap.aluSpreadTaintRegMem(se, ID_RAX, mem2, memSize2);
+        se = ap.createRegSE(inst, smt2lib::extract(QWORD_SIZE_BIT - 1, 0, expr), ID_TMP_RAX, QWORD_SIZE);
+        ap.aluSpreadTaintRegMem(se, ID_TMP_RAX, mem2, memSize2);
         break;
 
       default:

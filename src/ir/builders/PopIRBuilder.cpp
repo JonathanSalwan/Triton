@@ -25,16 +25,16 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
 
   /* Create the SMT semantic. */
-  op1 = ap.buildSymbolicRegOperand(ID_RSP, REG_SIZE);
+  op1 = ap.buildSymbolicRegOperand(ID_TMP_RSP, REG_SIZE);
   op2 = smt2lib::bv(memSize, memSize * REG_SIZE);
 
   expr = smt2lib::bvadd(op1, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_RSP, REG_SIZE, "Aligns stack");
+  se = ap.createRegSE(inst, expr, ID_TMP_RSP, REG_SIZE, "Aligns stack");
 
   /* Apply the taint */
-  se->isTainted = ap.isRegTainted(ID_RSP);
+  se->isTainted = ap.isRegTainted(ID_TMP_RSP);
 
   return se;
 }
@@ -43,9 +43,9 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 
 void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
-  auto reg = this->operands[0].getReg().getTritonRegId(); // Reg poped
+  auto reg = this->operands[0].getReg(); // Reg poped
   auto regSize = this->operands[0].getReg().getSize();  // Reg size poped
-  auto mem = this->operands[1].getMem().getAddress(); // The src memory read
+  auto mem = this->operands[1].getMem(); // The src memory read
   auto memSize = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic */
@@ -68,9 +68,9 @@ void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void PopIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
-  auto mem1 = this->operands[0].getMem().getAddress(); // Mem poped
+  auto mem1 = this->operands[0].getMem(); // Mem poped
   auto memSize1 = this->operands[0].getMem().getSize();
-  auto mem2 = this->operands[1].getMem().getAddress(); // The dst memory read
+  auto mem2 = this->operands[1].getMem(); // The dst memory read
   auto memSize2 = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic */

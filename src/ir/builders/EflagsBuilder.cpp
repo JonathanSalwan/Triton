@@ -25,10 +25,10 @@ SymbolicExpression *EflagsBuilder::af(Inst &inst,
   expr = EflagsExpressions::af(parent, bvSize, op1, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_AF, "Adjust flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_AF, "Adjust flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_AF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_AF, parent->isTainted);
 
   return se;
 }
@@ -47,10 +47,10 @@ SymbolicExpression *EflagsBuilder::afNeg(Inst &inst,
   expr = EflagsExpressions::afNeg(parent, bvSize, op1);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_AF, "Adjust flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_AF, "Adjust flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_AF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_AF, parent->isTainted);
 
   return se;
 }
@@ -69,10 +69,10 @@ SymbolicExpression *EflagsBuilder::cfAdd(Inst &inst,
   expr = EflagsExpressions::cfAdd(parent, bvSize, op1);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_CF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_CF, parent->isTainted);
 
   return se;
 }
@@ -91,10 +91,10 @@ SymbolicExpression *EflagsBuilder::cfImul(Inst &inst,
   expr = EflagsExpressions::cfImul(parent, bvSize, mulRes);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_CF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_CF, parent->isTainted);
 
   return se;
 }
@@ -113,10 +113,10 @@ SymbolicExpression *EflagsBuilder::cfMul(Inst &inst,
   expr = EflagsExpressions::cfMul(bvSize, up);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_CF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_CF, parent->isTainted);
 
   return se;
 }
@@ -135,10 +135,10 @@ SymbolicExpression *EflagsBuilder::cfNeg(Inst &inst,
   expr = EflagsExpressions::cfNeg(bvSize, op1);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_CF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_CF, parent->isTainted);
 
   return se;
 }
@@ -157,10 +157,10 @@ SymbolicExpression *EflagsBuilder::cfRcl(Inst &inst,
   expr = EflagsExpressions::cfRcl(parent, ap, bvSize, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_CF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_CF, parent->isTainted);
 
   return se;
 }
@@ -177,10 +177,10 @@ SymbolicExpression *EflagsBuilder::cfRol(Inst &inst,
   expr = EflagsExpressions::cfRol(parent, ap, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_CF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_CF, parent->isTainted);
 
   return se;
 }
@@ -199,10 +199,10 @@ SymbolicExpression *EflagsBuilder::cfRor(Inst &inst,
   expr = EflagsExpressions::cfRor(parent, ap, bvSize, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_CF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_CF, parent->isTainted);
 
   return se;
 }
@@ -222,10 +222,10 @@ SymbolicExpression *EflagsBuilder::cfSar(Inst &inst,
   expr = EflagsExpressions::cfSar(parent, ap, bvSize, op1, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_CF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_CF, parent->isTainted);
 
   return se;
 }
@@ -245,10 +245,10 @@ SymbolicExpression *EflagsBuilder::cfShl(Inst &inst,
   expr = EflagsExpressions::cfShl(parent, ap, bvSize, op1, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_CF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_CF, parent->isTainted);
 
   return se;
 }
@@ -268,10 +268,10 @@ SymbolicExpression *EflagsBuilder::cfShr(Inst &inst,
   expr = EflagsExpressions::cfShr(parent, ap, bvSize, op1, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_CF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_CF, parent->isTainted);
 
   return se;
 }
@@ -291,10 +291,10 @@ SymbolicExpression *EflagsBuilder::cfSub(Inst &inst,
   expr = EflagsExpressions::cfSub(parent, bvSize, op1, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_CF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_CF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_CF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_CF, parent->isTainted);
 
   return se;
 }
@@ -302,7 +302,7 @@ SymbolicExpression *EflagsBuilder::cfSub(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::clearFlag(Inst &inst,
                                           AnalysisProcessor &ap,
-                                          regID_t flag)
+                                          RegisterOperand &flag)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
@@ -321,7 +321,7 @@ SymbolicExpression *EflagsBuilder::clearFlag(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::clearFlag(Inst &inst,
                                           AnalysisProcessor &ap,
-                                          regID_t flag,
+                                          RegisterOperand &flag,
                                           std::string comment)
 {
   SymbolicExpression *se;
@@ -353,10 +353,10 @@ SymbolicExpression *EflagsBuilder::ofAdd(Inst &inst,
   expr = EflagsExpressions::ofAdd(parent, extractSize, op1, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_OF, "Overflow flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_OF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_OF, parent->isTainted);
 
   return se;
 }
@@ -375,10 +375,10 @@ SymbolicExpression *EflagsBuilder::ofImul(Inst &inst,
   expr = EflagsExpressions::ofImul(parent, bvSize, mulRes);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_OF, "Overflow flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_OF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_OF, parent->isTainted);
 
   return se;
 }
@@ -397,10 +397,10 @@ SymbolicExpression *EflagsBuilder::ofMul(Inst &inst,
   expr = EflagsExpressions::ofMul(bvSize, up);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_OF, "Overflow flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_OF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_OF, parent->isTainted);
 
   return se;
 }
@@ -419,10 +419,10 @@ SymbolicExpression *EflagsBuilder::ofNeg(Inst &inst,
   expr = EflagsExpressions::ofNeg(parent, bvSize, op1);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_OF, "Overflow flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_OF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_OF, parent->isTainted);
 
   return se;
 }
@@ -441,10 +441,10 @@ SymbolicExpression *EflagsBuilder::ofRol(Inst &inst,
   expr = EflagsExpressions::ofRol(parent, ap, bvSize, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_OF, "Overflow flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_OF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_OF, parent->isTainted);
 
   return se;
 }
@@ -463,10 +463,10 @@ SymbolicExpression *EflagsBuilder::ofRor(Inst &inst,
   expr = EflagsExpressions::ofRor(parent, ap, bvSize, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_OF, "Overflow flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_OF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_OF, parent->isTainted);
 
   return se;
 }
@@ -485,10 +485,10 @@ SymbolicExpression *EflagsBuilder::ofSar(Inst &inst,
   expr = EflagsExpressions::ofSar(parent, ap, bvSize, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_OF, "Overflow flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_OF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_OF, parent->isTainted);
 
   return se;
 }
@@ -508,10 +508,10 @@ SymbolicExpression *EflagsBuilder::ofShl(Inst &inst,
   expr = EflagsExpressions::ofShl(parent, ap, bvSize, op1, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_OF, "Overflow flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_OF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_OF, parent->isTainted);
 
   return se;
 }
@@ -531,10 +531,10 @@ SymbolicExpression *EflagsBuilder::ofShr(Inst &inst,
   expr = EflagsExpressions::ofShr(parent, ap, bvSize, op1, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_OF, "Overflow flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_OF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_OF, parent->isTainted);
 
   return se;
 }
@@ -554,10 +554,10 @@ SymbolicExpression *EflagsBuilder::ofSub(Inst &inst,
   expr = EflagsExpressions::ofSub(parent, extractSize, op1, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_OF, "Overflow flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_OF, "Overflow flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_OF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_OF, parent->isTainted);
 
   return se;
 }
@@ -575,10 +575,10 @@ SymbolicExpression *EflagsBuilder::pf(Inst &inst,
   expr = EflagsExpressions::pf(parent, bvSize);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_PF, "Parity flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_PF, "Parity flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_PF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_PF, parent->isTainted);
 
   return se;
 }
@@ -597,10 +597,10 @@ SymbolicExpression *EflagsBuilder::pfShl(Inst &inst,
   expr = EflagsExpressions::pfShl(parent, ap, bvSize, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_PF, "Parity flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_PF, "Parity flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_PF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_PF, parent->isTainted);
 
   return se;
 }
@@ -608,7 +608,7 @@ SymbolicExpression *EflagsBuilder::pfShl(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::setFlag(Inst &inst,
                                         AnalysisProcessor &ap,
-                                        regID_t flag)
+                                        RegisterOperand &flag)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
@@ -627,7 +627,7 @@ SymbolicExpression *EflagsBuilder::setFlag(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::setFlag(Inst &inst,
                                         AnalysisProcessor &ap,
-                                        regID_t flag,
+                                        RegisterOperand &flag,
                                         std::string comment)
 {
   SymbolicExpression *se;
@@ -657,10 +657,10 @@ SymbolicExpression *EflagsBuilder::sf(Inst &inst,
   expr = EflagsExpressions::sf(parent, extractSize);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_SF, "Sign flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_SF, "Sign flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_SF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_SF, parent->isTainted);
 
   return se;
 }
@@ -680,11 +680,11 @@ SymbolicExpression *EflagsBuilder::sfShl(Inst &inst,
   expr = EflagsExpressions::sfShl(parent, ap, bvSize, extractSize, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_SF, "Carry flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_SF, "Carry flag");
 
   /* Spread the taint from the parent to the child */
   se->isTainted = parent->isTainted;
-  ap.setTaintReg(se, ID_SF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_SF, parent->isTainted);
 
   return se;
 }
@@ -702,10 +702,10 @@ SymbolicExpression *EflagsBuilder::zf(Inst &inst,
   expr = EflagsExpressions::zf(parent, bvSize);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_ZF, "Zero flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_ZF, "Zero flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_ZF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_ZF, parent->isTainted);
 
   return se;
 }
@@ -724,10 +724,10 @@ SymbolicExpression *EflagsBuilder::zfShl(Inst &inst,
   expr = EflagsExpressions::zfShl(parent, ap, bvSize, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_ZF, "Zero flag");
+  se = ap.createRegSE(inst, expr, ID_TMP_ZF, "Zero flag");
 
   /* Spread the taint from the parent to the child */
-  ap.setTaintReg(se, ID_ZF, parent->isTainted);
+  ap.setTaintReg(se, ID_TMP_ZF, parent->isTainted);
 
   return se;
 }

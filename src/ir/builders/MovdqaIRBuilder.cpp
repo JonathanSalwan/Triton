@@ -27,9 +27,9 @@ void MovdqaIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void MovdqaIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto reg1 = this->operands[0].getReg();
   auto regSize1 = this->operands[0].getReg().getSize();
-  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto reg2 = this->operands[1].getReg();
   auto regSize2 = this->operands[1].getReg().getSize();
 
   /* Create the SMT semantic */
@@ -47,8 +47,8 @@ void MovdqaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
   auto memSize = this->operands[1].getMem().getSize();
-  auto mem = this->operands[1].getMem().getAddress();
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto mem = this->operands[1].getMem();
+  auto reg = this->operands[0].getReg();
   auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
@@ -71,8 +71,8 @@ void MovdqaIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
   auto memSize = this->operands[0].getMem().getSize();
-  auto mem = this->operands[0].getMem().getAddress();
-  auto reg = this->operands[1].getReg().getTritonRegId();
+  auto mem = this->operands[0].getMem();
+  auto reg = this->operands[1].getReg();
   auto regSize = this->operands[1].getReg().getSize();
 
   /* Create the SMT semantic */

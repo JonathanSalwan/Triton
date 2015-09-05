@@ -26,16 +26,16 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 
   smt2lib::smtAstAbstractNode   *expr, *op1, *op2;
 
   /* Create the SMT semantic */
-  op1 = ap.buildSymbolicRegOperand(ID_RSP, memSize);
+  op1 = ap.buildSymbolicRegOperand(ID_TMP_RSP, memSize);
   op2 = smt2lib::bv(memSize, memSize * REG_SIZE);
 
   expr = smt2lib::bvsub(op1, op2);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_RSP, REG_SIZE, "Aligns stack");
+  se = ap.createRegSE(inst, expr, ID_TMP_RSP, REG_SIZE, "Aligns stack");
 
   /* Apply the taint */
-  se->isTainted = ap.isRegTainted(ID_RSP);
+  se->isTainted = ap.isRegTainted(ID_TMP_RSP);
 
   return se;
 }
@@ -44,8 +44,8 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 
 void PushIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
-  auto reg = this->operands[0].getReg().getTritonRegId(); // Reg pushed
-  auto mem = this->operands[1].getMem().getAddress(); // The dst memory writing
+  auto reg = this->operands[0].getReg(); // Reg pushed
+  auto mem = this->operands[1].getMem(); // The dst memory writing
   auto regSize = this->operands[0].getReg().getSize();
   auto memSize = this->operands[1].getMem().getSize();
 
@@ -71,7 +71,7 @@ void PushIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto imm = this->operands[0].getImm().getValue(); // Imm pushed
-  auto mem = this->operands[1].getMem().getAddress(); // The dst memory writing
+  auto mem = this->operands[1].getMem(); // The dst memory writing
   auto memSize = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic side effect */
@@ -96,9 +96,9 @@ void PushIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 void PushIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
-  auto mem1 = this->operands[0].getMem().getAddress(); // Mem pushed
+  auto mem1 = this->operands[0].getMem(); // Mem pushed
   auto memSize1 = this->operands[0].getMem().getSize();
-  auto mem2 = this->operands[1].getMem().getAddress(); // The dst memory writing
+  auto mem2 = this->operands[1].getMem(); // The dst memory writing
   auto memSize2 = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic side effect */

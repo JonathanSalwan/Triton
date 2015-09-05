@@ -27,12 +27,12 @@ void SetnlIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 void SetnlIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *sf, *of;
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto reg = this->operands[0].getReg();
   auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the flag SMT semantic */
-  sf = ap.buildSymbolicFlagOperand(ID_SF);
-  of = ap.buildSymbolicFlagOperand(ID_OF);
+  sf = ap.buildSymbolicFlagOperand(ID_TMP_SF);
+  of = ap.buildSymbolicFlagOperand(ID_TMP_OF);
 
   /* Finale expr */
   expr = smt2lib::ite(
@@ -47,11 +47,11 @@ void SetnlIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(inst, expr, reg, regSize);
 
   /* Apply the taint via the concretization */
-  if (ap.getFlagValue(ID_SF) == ap.getFlagValue(ID_OF)) {
-    if (ap.isRegTainted(ID_SF) == TAINTED)
-      ap.assignmentSpreadTaintRegReg(se, reg, ID_SF);
+  if (ap.getFlagValue(ID_TMP_SF) == ap.getFlagValue(ID_TMP_OF)) {
+    if (ap.isRegTainted(ID_TMP_SF) == TAINTED)
+      ap.assignmentSpreadTaintRegReg(se, reg, ID_TMP_SF);
     else
-      ap.assignmentSpreadTaintRegReg(se, reg, ID_OF);
+      ap.assignmentSpreadTaintRegReg(se, reg, ID_TMP_OF);
   }
 
 }
@@ -60,12 +60,12 @@ void SetnlIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 void SetnlIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *sf, *of;
-  auto mem = this->operands[0].getMem().getAddress();
+  auto mem = this->operands[0].getMem();
   auto memSize = this->operands[0].getMem().getSize();
 
   /* Create the flag SMT semantic */
-  sf = ap.buildSymbolicFlagOperand(ID_SF);
-  of = ap.buildSymbolicFlagOperand(ID_OF);
+  sf = ap.buildSymbolicFlagOperand(ID_TMP_SF);
+  of = ap.buildSymbolicFlagOperand(ID_TMP_OF);
 
   /* Finale expr */
   expr = smt2lib::ite(
@@ -80,11 +80,11 @@ void SetnlIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createMemSE(inst, expr, mem, memSize);
 
   /* Apply the taint via the concretization */
-  if (ap.getFlagValue(ID_SF) == ap.getFlagValue(ID_OF)) {
-    if (ap.isRegTainted(ID_SF) == TAINTED)
-      ap.assignmentSpreadTaintMemReg(se, mem, ID_SF, memSize);
+  if (ap.getFlagValue(ID_TMP_SF) == ap.getFlagValue(ID_TMP_OF)) {
+    if (ap.isRegTainted(ID_TMP_SF) == TAINTED)
+      ap.assignmentSpreadTaintMemReg(se, mem, ID_TMP_SF, memSize);
     else
-      ap.assignmentSpreadTaintMemReg(se, mem, ID_OF, memSize);
+      ap.assignmentSpreadTaintMemReg(se, mem, ID_TMP_OF, memSize);
   }
 
 }

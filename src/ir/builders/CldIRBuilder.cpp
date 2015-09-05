@@ -20,7 +20,7 @@ CldIRBuilder::CldIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void CldIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
-  EflagsBuilder::clearFlag(inst, ap, ID_DF, "Clears direction flag");
+  EflagsBuilder::clearFlag(inst, ap, ID_TMP_DF, "Clears direction flag");
 }
 
 

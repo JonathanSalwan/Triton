@@ -27,13 +27,13 @@ void JmpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   expr = smt2lib::bv(imm, REG_SIZE_BIT);
 
   /* Create the symbolic expression */
-  ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
+  ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
 }
 
 
 void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   smt2lib::smtAstAbstractNode *expr, *op1;
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto reg = this->operands[0].getReg();
   auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
@@ -43,13 +43,13 @@ void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr = op1;
 
   /* Create the symbolic expression */
-  ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
+  ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
 }
 
 
 void JmpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   smt2lib::smtAstAbstractNode *expr, *op1;
-  auto mem = this->operands[0].getMem().getAddress();
+  auto mem = this->operands[0].getMem();
   auto memSize = this->operands[0].getMem().getSize();
 
   /* Create the SMT semantic */
@@ -59,7 +59,7 @@ void JmpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr = op1;
 
   /* Create the symbolic expression */
-  ap.createRegSE(inst, expr, ID_RIP, REG_SIZE, "RIP");
+  ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
 }
 
 

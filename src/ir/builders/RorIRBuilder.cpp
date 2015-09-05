@@ -22,7 +22,7 @@ RorIRBuilder::RorIRBuilder(uint64 address, const std::string &disassembly):
 void RorIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto reg = this->operands[0].getReg();
   auto imm = this->operands[1].getImm().getValue();
   auto regSize = this->operands[0].getReg().getSize();
 
@@ -52,7 +52,7 @@ void RorIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void RorIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
-  auto reg1 = this->operands[0].getReg().getTritonRegId();
+  auto reg1 = this->operands[0].getReg();
   auto regSize1 = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
@@ -61,7 +61,7 @@ void RorIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
    * Note that SMT2-LIB doesn't support expression as rotate's value.
    * The op2 must be the concretization's value.
    */
-  op2 = smt2lib::decimal(ap.getRegisterValue(ID_RCX) & 0xff); /* 0xff -> There is only CL available */
+  op2 = smt2lib::decimal(ap.getRegisterValue(ID_TMP_RCX) & 0xff); /* 0xff -> There is only CL available */
 
   // Final expr
   expr = smt2lib::bvror(op2, op1);
@@ -87,7 +87,7 @@ void RorIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto memSize = this->operands[0].getMem().getSize();
-  auto mem = this->operands[0].getMem().getAddress();
+  auto mem = this->operands[0].getMem();
   auto imm = this->operands[1].getImm().getValue();
 
   /* Create the SMT semantic */
@@ -117,7 +117,7 @@ void RorIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto memSize = this->operands[0].getMem().getSize();
-  auto mem = this->operands[0].getMem().getAddress();
+  auto mem = this->operands[0].getMem();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicMemOperand(mem, memSize);
@@ -125,7 +125,7 @@ void RorIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
    * Note that SMT2-LIB doesn't support expression as rotate's value.
    * The op2 must be the concretization's value.
    */
-  op2 = smt2lib::decimal(ap.getRegisterValue(ID_RCX) & 0xff); /* 0xff -> There is only CL available */
+  op2 = smt2lib::decimal(ap.getRegisterValue(ID_TMP_RCX) & 0xff); /* 0xff -> There is only CL available */
 
   // Final expr
   expr = smt2lib::bvror(op2, op1);

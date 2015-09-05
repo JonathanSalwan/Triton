@@ -176,7 +176,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfRcl(SymbolicExpression *parent
   if (reinterpret_cast<smt2lib::smtAstDecimalNode *>(op2)->getValue() != 0)
     expr = smt2lib::extract(bvSize, bvSize, smt2lib::reference(parent->getID()));
   else
-    expr = ap.buildSymbolicFlagOperand(ID_CF);
+    expr = ap.buildSymbolicFlagOperand(ID_TMP_CF);
 
   return expr;
 }
@@ -201,7 +201,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfRol(SymbolicExpression *parent
   if (reinterpret_cast<smt2lib::smtAstDecimalNode *>(op2)->getValue() != 0)
     expr = smt2lib::extract(0, 0, smt2lib::reference(parent->getID()));
   else
-    expr = ap.buildSymbolicFlagOperand(ID_CF);
+    expr = ap.buildSymbolicFlagOperand(ID_TMP_CF);
 
   return expr;
 }
@@ -236,7 +236,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfRor(SymbolicExpression *parent
     );
   }
   else {
-    expr = ap.buildSymbolicFlagOperand(ID_CF);
+    expr = ap.buildSymbolicFlagOperand(ID_TMP_CF);
   }
 
   return expr;
@@ -261,7 +261,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfSar(SymbolicExpression *parent
    */
   expr = smt2lib::ite(
             smt2lib::equal(op2, smt2lib::bv(0, bvSize)),
-            ap.buildSymbolicFlagOperand(ID_CF),
+            ap.buildSymbolicFlagOperand(ID_TMP_CF),
             smt2lib::ite(
               smt2lib::bvugt(op2, smt2lib::bv(bvSize, bvSize)),
               smt2lib::extract(0, 0, smt2lib::bvlshr(op1, smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(1, bvSize)))),
@@ -287,7 +287,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfShl(SymbolicExpression *parent
    */
   expr = smt2lib::ite(
             smt2lib::equal(op2, smt2lib::bv(0, bvSize)),
-            ap.buildSymbolicFlagOperand(ID_CF),
+            ap.buildSymbolicFlagOperand(ID_TMP_CF),
             smt2lib::extract(0, 0, smt2lib::bvlshr(op1, smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), op2)))
           );
 
@@ -309,7 +309,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfShr(SymbolicExpression *parent
    */
   expr = smt2lib::ite(
             smt2lib::equal(op2, smt2lib::bv(0, bvSize)),
-            ap.buildSymbolicFlagOperand(ID_CF),
+            ap.buildSymbolicFlagOperand(ID_TMP_CF),
             smt2lib::extract(0, 0, smt2lib::bvlshr(op1, smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(1, bvSize))))
           );
 
@@ -472,7 +472,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofRol(SymbolicExpression *parent
   if (reinterpret_cast<smt2lib::smtAstDecimalNode *>(op2)->getValue() == 1) {
     expr = smt2lib::extract(0, 0,
               smt2lib::bvxor(
-                smt2lib::zx(bvSize-1, ap.buildSymbolicFlagOperand(ID_CF)),
+                smt2lib::zx(bvSize-1, ap.buildSymbolicFlagOperand(ID_TMP_CF)),
                 smt2lib::bvshl(
                   smt2lib::extract(bvSize-1, 0, smt2lib::reference(parent->getID())),
                   smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(1, bvSize))
@@ -481,7 +481,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofRol(SymbolicExpression *parent
             );
   }
   else {
-    expr = ap.buildSymbolicFlagOperand(ID_OF);
+    expr = ap.buildSymbolicFlagOperand(ID_TMP_OF);
   }
 
   return expr;
@@ -520,7 +520,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofRor(SymbolicExpression *parent
             );
   }
   else {
-    expr = ap.buildSymbolicFlagOperand(ID_OF);
+    expr = ap.buildSymbolicFlagOperand(ID_TMP_OF);
   }
 
   return expr;
@@ -541,7 +541,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofSar(SymbolicExpression *parent
   expr = smt2lib::ite(
             smt2lib::equal(op2, smt2lib::bv(1, bvSize)),
             smt2lib::bv(0, 1),
-            ap.buildSymbolicFlagOperand(ID_OF)
+            ap.buildSymbolicFlagOperand(ID_TMP_OF)
           );
 
   return expr;
@@ -568,7 +568,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofShl(SymbolicExpression *parent
                 smt2lib::bvlshr(op1, smt2lib::bvsub(smt2lib::bv(bvSize, bvSize), smt2lib::bv(2, bvSize)))
               )
             ),
-            ap.buildSymbolicFlagOperand(ID_OF)
+            ap.buildSymbolicFlagOperand(ID_TMP_OF)
           );
 
   return expr;
@@ -590,7 +590,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofShr(SymbolicExpression *parent
   expr = smt2lib::ite(
             smt2lib::equal(op2, smt2lib::bv(1, bvSize)),
             smt2lib::extract(bvSize-1, bvSize-1, op1),
-            ap.buildSymbolicFlagOperand(ID_OF)
+            ap.buildSymbolicFlagOperand(ID_TMP_OF)
           );
 
   return expr;
@@ -667,7 +667,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::pfShl(SymbolicExpression *parent
    */
   expr = smt2lib::ite(
             smt2lib::equal(op2, smt2lib::bv(0, bvSize)),
-            ap.buildSymbolicFlagOperand(ID_PF),
+            ap.buildSymbolicFlagOperand(ID_TMP_PF),
             EflagsExpressions::pf(parent, bvSize)
           );
 
@@ -721,7 +721,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::sfShl(SymbolicExpression *parent
    */
   expr = smt2lib::ite(
             smt2lib::equal(op2, smt2lib::bv(0, bvSize)),
-            ap.buildSymbolicFlagOperand(ID_SF),
+            ap.buildSymbolicFlagOperand(ID_TMP_SF),
             EflagsExpressions::sf(parent, extractSize)
           );
 
@@ -764,7 +764,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::zfShl(SymbolicExpression *parent
    */
   expr = smt2lib::ite(
             smt2lib::equal(op2, smt2lib::bv(0, bvSize)),
-            ap.buildSymbolicFlagOperand(ID_ZF),
+            ap.buildSymbolicFlagOperand(ID_TMP_ZF),
             EflagsExpressions::zf(parent, bvSize)
           );
 

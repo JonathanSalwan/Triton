@@ -20,7 +20,7 @@ StdIRBuilder::StdIRBuilder(uint64 address, const std::string &disassembly):
 
 
 void StdIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
-  EflagsBuilder::setFlag(inst, ap, ID_DF);
+  EflagsBuilder::setFlag(inst, ap, ID_TMP_DF);
 }
 
 

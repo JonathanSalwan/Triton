@@ -31,8 +31,8 @@ namespace EflagsBuilder {
   SymbolicExpression *cfShr(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
   SymbolicExpression *cfSub(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
 
-  SymbolicExpression *clearFlag(Inst &inst, AnalysisProcessor &ap, regID_t flag);
-  SymbolicExpression *clearFlag(Inst &inst, AnalysisProcessor &ap, regID_t flag, std::string comment);
+  SymbolicExpression *clearFlag(Inst &inst, AnalysisProcessor &ap, RegisterOperand &flag);
+  SymbolicExpression *clearFlag(Inst &inst, AnalysisProcessor &ap, RegisterOperand &flag, std::string comment);
 
   SymbolicExpression *ofAdd(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op1, smt2lib::smtAstAbstractNode *op2);
   SymbolicExpression *ofImul(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *mulRes);
@@ -48,8 +48,8 @@ namespace EflagsBuilder {
   SymbolicExpression *pf(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize);
   SymbolicExpression *pfShl(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op2);
 
-  SymbolicExpression *setFlag(Inst &inst, AnalysisProcessor &ap, regID_t flag);
-  SymbolicExpression *setFlag(Inst &inst, AnalysisProcessor &ap, regID_t flag, std::string comment);
+  SymbolicExpression *setFlag(Inst &inst, AnalysisProcessor &ap, RegisterOperand &flag);
+  SymbolicExpression *setFlag(Inst &inst, AnalysisProcessor &ap, RegisterOperand &flag, std::string comment);
 
   SymbolicExpression *sf(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize);
   SymbolicExpression *sfShl(Inst &inst, SymbolicExpression *parent, AnalysisProcessor &ap, uint32 dstSize, smt2lib::smtAstAbstractNode *op2);

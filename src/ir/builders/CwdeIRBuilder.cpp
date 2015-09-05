@@ -24,16 +24,16 @@ void CwdeIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   smt2lib::smtAstAbstractNode *expr, *op1;
 
   /* Create the SMT semantic */
-  op1 = ap.buildSymbolicRegOperand(ID_RAX, REG_SIZE, 16, 0);
+  op1 = ap.buildSymbolicRegOperand(ID_TMP_RAX, REG_SIZE, 16, 0);
 
   /* Finale expr */
   expr = smt2lib::sx(16, op1);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_RAX, DWORD_SIZE);
+  se = ap.createRegSE(inst, expr, ID_TMP_RAX, DWORD_SIZE);
 
   /* Apply the taint */
-  ap.aluSpreadTaintRegReg(se, ID_RAX, ID_RAX);
+  ap.aluSpreadTaintRegReg(se, ID_TMP_RAX, ID_TMP_RAX);
 }
 
 

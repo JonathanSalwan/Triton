@@ -22,14 +22,14 @@ SbbIRBuilder::SbbIRBuilder(uint64 address, const std::string &disassembly):
 void SbbIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto reg = this->operands[0].getReg();
   auto imm = this->operands[1].getImm().getValue();
   auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
   op2 = smt2lib::bv(imm, regSize * REG_SIZE);
-  op3 = ap.buildSymbolicFlagOperand(ID_CF, regSize);
+  op3 = ap.buildSymbolicFlagOperand(ID_TMP_CF, regSize);
 
   /* Finale expr */
   expr = smt2lib::bvsub(op1, smt2lib::bvadd(op2, op3));
@@ -53,15 +53,15 @@ void SbbIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void SbbIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
-  auto reg1 = this->operands[0].getReg().getTritonRegId();
-  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto reg1 = this->operands[0].getReg();
+  auto reg2 = this->operands[1].getReg();
   auto regSize1 = this->operands[0].getReg().getSize();
   auto regSize2 = this->operands[1].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
   op2 = ap.buildSymbolicRegOperand(reg2, regSize2);
-  op3 = ap.buildSymbolicFlagOperand(ID_CF, regSize1);
+  op3 = ap.buildSymbolicFlagOperand(ID_TMP_CF, regSize1);
 
   /* Final expr */
   expr = smt2lib::bvsub(op1, smt2lib::bvadd(op2, op3));
@@ -86,14 +86,14 @@ void SbbIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
   auto memSize = this->operands[1].getMem().getSize();
-  auto mem = this->operands[1].getMem().getAddress();
-  auto reg = this->operands[0].getReg().getTritonRegId();
+  auto mem = this->operands[1].getMem();
+  auto reg = this->operands[0].getReg();
   auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
   op2 = ap.buildSymbolicMemOperand(mem, memSize);
-  op3 = ap.buildSymbolicFlagOperand(ID_CF, regSize);
+  op3 = ap.buildSymbolicFlagOperand(ID_TMP_CF, regSize);
 
   /* Final expr */
   expr = smt2lib::bvsub(op1, smt2lib::bvadd(op2, op3));
@@ -118,13 +118,13 @@ void SbbIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
   auto memSize = this->operands[0].getMem().getSize();
-  auto mem = this->operands[0].getMem().getAddress();
+  auto mem = this->operands[0].getMem();
   auto imm = this->operands[1].getImm().getValue();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicMemOperand(mem, memSize);
   op2 = smt2lib::bv(imm, memSize * REG_SIZE);
-  op3 = ap.buildSymbolicFlagOperand(ID_CF, memSize);
+  op3 = ap.buildSymbolicFlagOperand(ID_TMP_CF, memSize);
 
   /* Final expr */
   expr = smt2lib::bvsub(op1, smt2lib::bvadd(op2, op3));
@@ -149,14 +149,14 @@ void SbbIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
   auto memSize = this->operands[0].getMem().getSize();
-  auto mem = this->operands[0].getMem().getAddress();
-  auto reg = this->operands[1].getReg().getTritonRegId();
+  auto mem = this->operands[0].getMem();
+  auto reg = this->operands[1].getReg();
   auto regSize = this->operands[1].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicMemOperand(mem, memSize);
   op2 = ap.buildSymbolicRegOperand(reg, regSize);
-  op3 = ap.buildSymbolicFlagOperand(ID_CF, regSize);
+  op3 = ap.buildSymbolicFlagOperand(ID_TMP_CF, regSize);
 
   /* Final expr */
   expr = smt2lib::bvsub(op1, smt2lib::bvadd(op2, op3));

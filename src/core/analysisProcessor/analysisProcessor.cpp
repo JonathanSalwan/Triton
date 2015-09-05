@@ -48,18 +48,20 @@ SymbolicEngine &AnalysisProcessor::getSymbolicEngine(void) {
 }
 
 
-SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, std::string comment) {
+SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &reg, std::string comment) {
+  uint64 regId = reg.getTritonRegId();
   SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr, comment);
-  this->symEngine.symbolicReg[regID] = se->getID();
+  this->symEngine.symbolicReg[regId] = se->getID();
   inst.addExpression(se);
   return se;
 }
 
 
-SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 regID, uint64 regSize, std::string comment) {
+SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &reg, uint64 regSize, std::string comment) {
+  uint64 regId = reg.getTritonRegId();
   smt2lib::smtAstAbstractNode *finalExpr = nullptr, *origReg = nullptr;
 
-  origReg = this->buildSymbolicRegOperand(regID, REG_SIZE);
+  origReg = this->buildSymbolicRegOperand(reg, REG_SIZE);
 
   switch (regSize) {
     case BYTE_SIZE:
@@ -82,17 +84,18 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAb
   }
 
   SymbolicExpression *se = this->symEngine.newSymbolicExpression(finalExpr, comment);
-  this->symEngine.symbolicReg[regID] = se->getID();
+  this->symEngine.symbolicReg[regId] = se->getID();
   inst.addExpression(se);
 
   return se;
 }
 
 
-SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, uint64 address, uint64 writeSize, std::string comment) {
-  SymbolicExpression *se;
+SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, MemoryOperand &mem, uint64 writeSize, std::string comment) {
+  SymbolicExpression *se = nullptr;
   smt2lib::smtAstAbstractNode *tmp;
   std::list<smt2lib::smtAstAbstractNode *> ret;
+  uint64 address = mem.getAddress();
 
   /*
    * As the x86's memory can be accessed without alignment, each byte of the
@@ -125,8 +128,13 @@ SymbolicExpression *AnalysisProcessor::createSE(Inst &inst, smt2lib::smtAstAbstr
 }
 
 
-uint64 AnalysisProcessor::getRegSymbolicID(uint64 regID) {
-  return this->symEngine.getRegSymbolicID(regID);
+uint64 AnalysisProcessor::getRegSymbolicID(RegisterOperand &reg) {
+  return this->symEngine.getRegSymbolicID(reg.getTritonRegId());
+}
+
+
+uint64 AnalysisProcessor::getMemSymbolicID(MemoryOperand &mem) {
+  return this->symEngine.getMemSymbolicID(mem.getAddress());
 }
 
 
@@ -176,17 +184,19 @@ SymbolicVariable *AnalysisProcessor::convertExprToSymVar(uint64 exprId, uint64 s
 }
 
 
-SymbolicVariable *AnalysisProcessor::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment) {
-  SymbolicVariable *symVar = this->symEngine.convertMemToSymVar(memAddr, symVarSize, symVarComment);
-  symVar->setSymVarConcreteValue(this->getMemValue(memAddr,symVarSize));
+SymbolicVariable *AnalysisProcessor::convertMemToSymVar(MemoryOperand &mem, uint64 symVarSize, std::string symVarComment) {
+  uint64 address = mem.getAddress();
+  SymbolicVariable *symVar = this->symEngine.convertMemToSymVar(address, symVarSize, symVarComment);
+  symVar->setSymVarConcreteValue(this->getMemValue(address, symVarSize));
   return symVar;
 }
 
 
-SymbolicVariable *AnalysisProcessor::convertRegToSymVar(uint64 regId, uint64 symVarSize, std::string symVarComment) {
+SymbolicVariable *AnalysisProcessor::convertRegToSymVar(RegisterOperand &reg, uint64 symVarSize, std::string symVarComment) {
+  uint64 regId     = reg.getTritonRegId();
   uint128 mask     = 1;
   mask             = (mask << symVarSize) - 1;
-  uint128 regValue = this->getRegisterValue(regId) & mask;
+  uint128 regValue = this->getRegisterValue(reg) & mask;
 
   SymbolicVariable *symVar = this->symEngine.convertRegToSymVar(regId, symVarSize, symVarComment);
   symVar->setSymVarConcreteValue(regValue);
@@ -204,55 +214,58 @@ std::list<uint64> AnalysisProcessor::getPathConstraints(void) {
 }
 
 
-smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(uint64 regID, uint64 regSize) {
+smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(RegisterOperand &reg, uint64 regSize) {
   smt2lib::smtAstAbstractNode *op = nullptr;
-  uint64 symReg = this->getRegSymbolicID(regID);
+  uint64 regId  = reg.getTritonRegId();
+  uint64 symReg = this->getRegSymbolicID(reg);
   uint64 low    = 0;
   uint64 high   = (regSize * REG_SIZE) - 1;
 
   if (symReg != UNSET)
     op = smt2lib::extract(high, low, smt2lib::reference(symReg));
   else {
-    if (regID >= ID_XMM0 && regID <= ID_XMM15)
-      op = smt2lib::extract(high, low, smt2lib::bv(this->getSSERegisterValue(regID), SSE_REG_SIZE_BIT));
+    if (regId >= ID_XMM0 && regId <= ID_XMM15)
+      op = smt2lib::extract(high, low, smt2lib::bv(this->getSSERegisterValue(reg), SSE_REG_SIZE_BIT));
     else
-      op = smt2lib::extract(high, low, smt2lib::bv(this->getRegisterValue(regID), REG_SIZE_BIT));
+      op = smt2lib::extract(high, low, smt2lib::bv(this->getRegisterValue(reg), REG_SIZE_BIT));
   }
 
   return op;
 }
 
 
-smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(uint64 regID, uint64 regSize, uint64 highExtract, uint64 lowExtract) {
+smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(RegisterOperand &reg, uint64 regSize, uint64 highExtract, uint64 lowExtract) {
   smt2lib::smtAstAbstractNode *op = nullptr;
-  uint64 symReg = this->getRegSymbolicID(regID);
+  uint64 regId  = reg.getTritonRegId();
+  uint64 symReg = this->getRegSymbolicID(reg);
 
   if (symReg != UNSET)
     op = smt2lib::extract(highExtract, lowExtract, smt2lib::reference(symReg));
   else {
-    if (regID >= ID_XMM0 && regID <= ID_XMM15)
-      op = smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getSSERegisterValue(regID), SSE_REG_SIZE_BIT));
+    if (regId >= ID_XMM0 && regId <= ID_XMM15)
+      op = smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getSSERegisterValue(reg), SSE_REG_SIZE_BIT));
     else
-      op = smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getRegisterValue(regID), REG_SIZE_BIT));
+      op = smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getRegisterValue(reg), REG_SIZE_BIT));
   }
 
   return op;
 }
 
 
-smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicMemOperand(uint64 mem, uint64 memSize) {
+smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicMemOperand(MemoryOperand &mem, uint64 memSize) {
   std::list<smt2lib::smtAstAbstractNode *> opVec;
   smt2lib::smtAstAbstractNode *tmp = nullptr;
+  uint64 address = mem.getAddress();
   uint64 symMem;
 
   while (memSize) {
-    symMem = this->getMemSymbolicID(mem + memSize - 1);
+    symMem = this->getMemSymbolicID(address + memSize - 1);
     if (symMem != UNSET) {
       tmp = smt2lib::reference(symMem);
       opVec.push_back(smt2lib::extract(7, 0, tmp));
     }
     else {
-      tmp = smt2lib::bv(this->getMemValue(mem + memSize - 1, 1), REG_SIZE);
+      tmp = smt2lib::bv(this->getMemValue(address + memSize - 1, 1), REG_SIZE);
       opVec.push_back(smt2lib::extract(7, 0, tmp));
     }
     memSize--;
@@ -274,27 +287,27 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicMemOperand(uint64 m
 }
 
 
-smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicFlagOperand(uint64 flagID, uint64 size) {
+smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicFlagOperand(RegisterOperand &flag, uint64 size) {
   smt2lib::smtAstAbstractNode *op = nullptr;
-  uint64 symFlag = this->getRegSymbolicID(flagID);
+  uint64 symFlag = this->getRegSymbolicID(flag);
 
   if (symFlag != UNSET)
     op = smt2lib::zx((size * REG_SIZE) - 1, smt2lib::reference(symFlag));
   else
-    op = smt2lib::bv(this->getFlagValue(flagID), size * REG_SIZE);
+    op = smt2lib::bv(this->getFlagValue(flag), size * REG_SIZE);
 
   return op;
 }
 
 
-smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicFlagOperand(uint64 flagID) {
+smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicFlagOperand(RegisterOperand &flag) {
   smt2lib::smtAstAbstractNode *op = nullptr;
-  uint64 symFlag = this->getRegSymbolicID(flagID);
+  uint64 symFlag = this->getRegSymbolicID(flag);
 
   if (symFlag != UNSET)
     op = smt2lib::reference(symFlag);
   else
-    op = smt2lib::bv(this->getFlagValue(flagID), 1);
+    op = smt2lib::bv(this->getFlagValue(flag), 1);
 
   return op;
 }
@@ -310,13 +323,13 @@ void AnalysisProcessor::concretizeAllMem(void) {
 }
 
 
-void AnalysisProcessor::concretizeReg(uint64 regID) {
-  this->symEngine.concretizeReg(regID);
+void AnalysisProcessor::concretizeReg(RegisterOperand &reg) {
+  this->symEngine.concretizeReg(reg.getTritonRegId());
 }
 
 
-void AnalysisProcessor::concretizeMem(uint64 mem) {
-  this->symEngine.concretizeMem(mem);
+void AnalysisProcessor::concretizeMem(MemoryOperand &mem) {
+  this->symEngine.concretizeMem(mem.getAddress());
 }
 
 
@@ -328,125 +341,151 @@ TaintEngine &AnalysisProcessor::getTaintEngine(void) {
 }
 
 
-void AnalysisProcessor::assignmentSpreadTaintExprMem(SymbolicExpression *se, uint64 memSrc, uint32 readSize) {
-  se->isTainted = this->taintEngine.assignmentSpreadTaintExprMem(memSrc, readSize);
+void AnalysisProcessor::assignmentSpreadTaintExprMem(SymbolicExpression *se, MemoryOperand &mem, uint32 readSize) {
+  uint64 memAddrSrc = mem.getAddress();
+  se->isTainted = this->taintEngine.assignmentSpreadTaintExprMem(memAddrSrc, readSize);
 }
 
 
-void AnalysisProcessor::assignmentSpreadTaintExprReg(SymbolicExpression *se, uint64 regSrc) {
-  se->isTainted = this->taintEngine.assignmentSpreadTaintExprReg(regSrc);
+void AnalysisProcessor::assignmentSpreadTaintExprReg(SymbolicExpression *se, RegisterOperand &reg) {
+  uint64 regIdSrc = reg.getTritonRegId();
+  se->isTainted = this->taintEngine.assignmentSpreadTaintExprReg(regIdSrc);
 }
 
 
-void AnalysisProcessor::assignmentSpreadTaintExprRegMem(SymbolicExpression *se, uint64 regSrc, uint64 memSrc, uint32 readSize) {
-  se->isTainted = this->taintEngine.assignmentSpreadTaintExprRegMem(regSrc, memSrc, readSize);
+void AnalysisProcessor::assignmentSpreadTaintExprRegMem(SymbolicExpression *se, RegisterOperand &regSrc, MemoryOperand &memSrc, uint32 readSize) {
+  uint64 regIdSrc = regSrc.getTritonRegId();
+  uint64 memAddrSrc = memSrc.getAddress();
+  se->isTainted = this->taintEngine.assignmentSpreadTaintExprRegMem(regIdSrc, memAddrSrc, readSize);
 }
 
 
-void AnalysisProcessor::assignmentSpreadTaintExprRegReg(SymbolicExpression *se, uint64 regSrc1, uint64 regSrc2) {
-  se->isTainted = this->taintEngine.assignmentSpreadTaintExprRegReg(regSrc1, regSrc2);
+void AnalysisProcessor::assignmentSpreadTaintExprRegReg(SymbolicExpression *se, RegisterOperand &regSrc1, RegisterOperand &regSrc2) {
+  uint64 regIdSrc1 = regSrc1.getTritonRegId();
+  uint64 regIdSrc2 = regSrc2.getTritonRegId();
+  se->isTainted = this->taintEngine.assignmentSpreadTaintExprRegReg(regIdSrc1, regIdSrc2);
 }
 
 
-void AnalysisProcessor::assignmentSpreadTaintRegReg(SymbolicExpression *se, uint64 regDst, uint64 regSrc) {
-  se->isTainted = this->taintEngine.assignmentSpreadTaintRegReg(regDst, regSrc);
+void AnalysisProcessor::assignmentSpreadTaintRegReg(SymbolicExpression *se, RegisterOperand &regDst, RegisterOperand &regSrc) {
+  uint64 regIdDst = regDst.getTritonRegId();
+  uint64 regIdSrc = regSrc.getTritonRegId();
+  se->isTainted = this->taintEngine.assignmentSpreadTaintRegReg(regIdDst, regIdSrc);
 }
 
 
-void AnalysisProcessor::assignmentSpreadTaintRegImm(SymbolicExpression *se, uint64 regDst) {
-  se->isTainted = this->taintEngine.assignmentSpreadTaintRegImm(regDst);
+void AnalysisProcessor::assignmentSpreadTaintRegImm(SymbolicExpression *se, RegisterOperand &regDst) {
+  uint64 regIdDst = regDst.getTritonRegId();
+  se->isTainted = this->taintEngine.assignmentSpreadTaintRegImm(regIdDst);
 }
 
 
-void AnalysisProcessor::assignmentSpreadTaintRegMem(SymbolicExpression *se, uint64 regDst, uint64 memSrc, uint32 readSize) {
-  se->isTainted = this->taintEngine.assignmentSpreadTaintRegMem(regDst, memSrc, readSize);
+void AnalysisProcessor::assignmentSpreadTaintRegMem(SymbolicExpression *se, RegisterOperand &regDst, MemoryOperand &memSrc, uint32 readSize) {
+  uint64 regIdDst = regDst.getTritonRegId();
+  uint64 memAddrSrc = memSrc.getAddress();
+  se->isTainted = this->taintEngine.assignmentSpreadTaintRegMem(regIdDst, memAddrSrc, readSize);
 }
 
 
-void AnalysisProcessor::assignmentSpreadTaintMemMem(SymbolicExpression *se, uint64 memDst, uint64 memSrc, uint32 readSize) {
-  se->isTainted = this->taintEngine.assignmentSpreadTaintMemMem(memDst, memSrc, readSize);
+void AnalysisProcessor::assignmentSpreadTaintMemMem(SymbolicExpression *se, MemoryOperand &memDst, MemoryOperand &memSrc, uint32 readSize) {
+  uint64 memAddrDst = memDst.getAddress();
+  uint64 memAddrSrc = memSrc.getAddress();
+  se->isTainted = this->taintEngine.assignmentSpreadTaintMemMem(memAddrDst, memAddrSrc, readSize);
 }
 
 
-void AnalysisProcessor::assignmentSpreadTaintMemImm(SymbolicExpression *se, uint64 memDst, uint64 writeSize) {
-  se->isTainted = this->taintEngine.assignmentSpreadTaintMemImm(memDst, writeSize);
+void AnalysisProcessor::assignmentSpreadTaintMemImm(SymbolicExpression *se, MemoryOperand &memDst, uint64 writeSize) {
+  uint64 memAddrDst = memDst.getAddress();
+  se->isTainted = this->taintEngine.assignmentSpreadTaintMemImm(memAddrDst, writeSize);
 }
 
 
-void AnalysisProcessor::assignmentSpreadTaintMemReg(SymbolicExpression *se, uint64 memDst, uint64 regSrc, uint64 writeSize) {
-  se->isTainted = this->taintEngine.assignmentSpreadTaintMemReg(memDst, regSrc, writeSize);
+void AnalysisProcessor::assignmentSpreadTaintMemReg(SymbolicExpression *se, MemoryOperand &memDst, RegisterOperand &regSrc, uint64 writeSize) {
+  uint64 memAddrDst = memDst.getAddress();
+  uint64 regIdSrc = regSrc.getTritonRegId();
+  se->isTainted = this->taintEngine.assignmentSpreadTaintMemReg(memAddrDst, regIdSrc, writeSize);
 }
 
 
-bool AnalysisProcessor::isRegTainted(uint64 reg) {
-  return this->taintEngine.isRegTainted(reg);
+bool AnalysisProcessor::isRegTainted(RegisterOperand &reg) {
+  return this->taintEngine.isRegTainted(reg.getTritonRegId());
 }
 
 
-bool AnalysisProcessor::isMemTainted(uint64 addr) {
-  return this->taintEngine.isMemTainted(addr);
+bool AnalysisProcessor::isMemTainted(MemoryOperand &addr) {
+  return this->taintEngine.isMemTainted(addr.getAddress());
 }
 
 
-void AnalysisProcessor::taintReg(uint64 reg) {
-  this->taintEngine.taintReg(reg);
+void AnalysisProcessor::taintReg(RegisterOperand &reg) {
+  this->taintEngine.taintReg(reg.getTritonRegId());
 }
 
 
-void AnalysisProcessor::setTaintMem(SymbolicExpression *se, uint64 mem, uint64 flag) {
-  this->taintEngine.setTaintMem(mem, flag);
+void AnalysisProcessor::setTaintMem(SymbolicExpression *se, MemoryOperand &mem, uint64 flag) {
+  this->taintEngine.setTaintMem(mem.getAddress(), flag);
   se->isTainted = flag;
 }
 
 
-void AnalysisProcessor::setTaintReg(SymbolicExpression *se, uint64 reg, uint64 flag) {
-  this->taintEngine.setTaintReg(reg, flag);
+void AnalysisProcessor::setTaintReg(SymbolicExpression *se, RegisterOperand &reg, uint64 flag) {
+  this->taintEngine.setTaintReg(reg.getTritonRegId(), flag);
   se->isTainted = flag;
 }
 
 
-void AnalysisProcessor::untaintReg(uint64 reg) {
-  this->taintEngine.untaintReg(reg);
+void AnalysisProcessor::untaintReg(RegisterOperand &reg) {
+  this->taintEngine.untaintReg(reg.getTritonRegId());
 }
 
 
-void AnalysisProcessor::taintMem(uint64 addr) {
-  this->taintEngine.taintMem(addr);
+void AnalysisProcessor::taintMem(MemoryOperand &mem) {
+  this->taintEngine.taintMem(mem.getAddress());
 }
 
 
-void AnalysisProcessor::untaintMem(uint64 addr) {
-  this->taintEngine.untaintMem(addr);
+void AnalysisProcessor::untaintMem(MemoryOperand &mem) {
+  this->taintEngine.untaintMem(mem.getAddress());
 }
 
 
-void AnalysisProcessor::aluSpreadTaintRegImm(SymbolicExpression *se, uint64 regDst) {
-  se->isTainted = this->taintEngine.aluSpreadTaintRegImm(regDst);
+void AnalysisProcessor::aluSpreadTaintRegImm(SymbolicExpression *se, RegisterOperand &regDst) {
+  uint64 regIdDst = regDst.getTritonRegId();
+  se->isTainted = this->taintEngine.aluSpreadTaintRegImm(regIdDst);
 }
 
 
-void AnalysisProcessor::aluSpreadTaintRegReg(SymbolicExpression *se, uint64 regDst, uint64 regSrc) {
-  se->isTainted = this->taintEngine.aluSpreadTaintRegReg(regDst, regSrc);
+void AnalysisProcessor::aluSpreadTaintRegReg(SymbolicExpression *se, RegisterOperand &regDst, RegisterOperand &regSrc) {
+  uint64 regIdDst = regDst.getTritonRegId();
+  uint64 regIdSrc = regSrc.getTritonRegId();
+  se->isTainted = this->taintEngine.aluSpreadTaintRegReg(regIdDst, regIdSrc);
 }
 
 
-void AnalysisProcessor::aluSpreadTaintMemMem(SymbolicExpression *se, uint64 memDst, uint64 memSrc, uint32 writeSize) {
-  se->isTainted = this->taintEngine.aluSpreadTaintMemMem(memDst, memSrc, writeSize);
+void AnalysisProcessor::aluSpreadTaintMemMem(SymbolicExpression *se, MemoryOperand &memDst, MemoryOperand &memSrc, uint32 writeSize) {
+  uint64 memAddrDst = memDst.getAddress();
+  uint64 memAddrSrc = memSrc.getAddress();
+  se->isTainted = this->taintEngine.aluSpreadTaintMemMem(memAddrDst, memAddrSrc, writeSize);
 }
 
 
-void AnalysisProcessor::aluSpreadTaintRegMem(SymbolicExpression *se, uint64 regDst, uint64 memSrc, uint32 readSize) {
-  se->isTainted = this->taintEngine.aluSpreadTaintRegMem(regDst, memSrc, readSize);
+void AnalysisProcessor::aluSpreadTaintRegMem(SymbolicExpression *se, RegisterOperand &regDst, MemoryOperand &memSrc, uint32 readSize) {
+  uint64 regIdDst = regDst.getTritonRegId();
+  uint64 memAddrSrc = memSrc.getAddress();
+  se->isTainted = this->taintEngine.aluSpreadTaintRegMem(regIdDst, memAddrSrc, readSize);
 }
 
 
-void AnalysisProcessor::aluSpreadTaintMemImm(SymbolicExpression *se, uint64 memDst, uint32 writeSize) {
-  se->isTainted = this->taintEngine.aluSpreadTaintMemImm(memDst, writeSize);
+void AnalysisProcessor::aluSpreadTaintMemImm(SymbolicExpression *se, MemoryOperand &memDst, uint32 writeSize) {
+  uint64 memAddrDst = memDst.getAddress();
+  se->isTainted = this->taintEngine.aluSpreadTaintMemImm(memAddrDst, writeSize);
 }
 
 
-void AnalysisProcessor::aluSpreadTaintMemReg(SymbolicExpression *se, uint64 memDst, uint64 regSrc, uint32 writeSize) {
-  se->isTainted = this->taintEngine.aluSpreadTaintMemReg(memDst, regSrc, writeSize);
+void AnalysisProcessor::aluSpreadTaintMemReg(SymbolicExpression *se, MemoryOperand &memDst, RegisterOperand &regSrc, uint32 writeSize) {
+  uint64 memAddrDst = memDst.getAddress();
+  uint64 regIdSrc = regSrc.getTritonRegId();
+  se->isTainted = this->taintEngine.aluSpreadTaintMemReg(memAddrDst, regIdSrc, writeSize);
 }
 
 
@@ -531,39 +570,44 @@ uint32 AnalysisProcessor::getThreadID(void) {
 
 
 // There is no verification on the validity of the ID.
-uint64 AnalysisProcessor::getRegisterValue(uint64 regID) {
+uint64 AnalysisProcessor::getRegisterValue(RegisterOperand &reg) {
   if (!this->currentCtxH)
     return 0;
-  return this->currentCtxH->getRegisterValue(regID);
+  return this->currentCtxH->getRegisterValue(reg.getTritonRegId());
 }
 
 
-uint64 AnalysisProcessor::getFlagValue(uint64 flagID) {
+uint64 AnalysisProcessor::getFlagValue(RegisterOperand &flag) {
   if (!this->currentCtxH)
     return 0;
-  return this->currentCtxH->getFlagValue(flagID);
+  return this->currentCtxH->getFlagValue(flag.getTritonRegId());
 }
 
 
-uint128 AnalysisProcessor::getSSERegisterValue(uint64 regID) {
+uint128 AnalysisProcessor::getSSERegisterValue(RegisterOperand &reg) {
   if (!this->currentCtxH)
     return 0;
-  return this->currentCtxH->getSSERegisterValue(regID);
+  return this->currentCtxH->getSSERegisterValue(reg.getTritonRegId());
 }
 
 
 // There is no verification on the validity of the ID.
-void AnalysisProcessor::setRegisterValue(uint64 regID, uint64 value) {
+void AnalysisProcessor::setRegisterValue(RegisterOperand &reg, uint64 value) {
   if (!this->currentCtxH)
     return ;
-  this->currentCtxH->setRegisterValue(regID, value);
+  this->currentCtxH->setRegisterValue(reg.getTritonRegId(), value);
 }
 
 
-void AnalysisProcessor::setSSERegisterValue(uint64 regID, uint128 value) {
+void AnalysisProcessor::setSSERegisterValue(RegisterOperand &reg, uint128 value) {
   if (!this->currentCtxH)
     return ;
-  this->currentCtxH->setSSERegisterValue(regID, value);
+  this->currentCtxH->setSSERegisterValue(reg.getTritonRegId(), value);
+}
+
+
+uint128 AnalysisProcessor::getMemValue(MemoryOperand &mem, uint32 readSize) {
+  return this->currentCtxH->getMemValue(mem.getAddress(), readSize);
 }
 
 
@@ -572,8 +616,8 @@ uint128 AnalysisProcessor::getMemValue(uint64 mem, uint32 readSize) {
 }
 
 
-void AnalysisProcessor::setMemValue(uint64 mem, uint32 writeSize, uint128 value) {
-  this->currentCtxH->setMemValue(mem, writeSize, value);
+void AnalysisProcessor::setMemValue(MemoryOperand &mem, uint32 writeSize, uint128 value) {
+  this->currentCtxH->setMemValue(mem.getAddress(), writeSize, value);
 }
 
 

@@ -27,8 +27,8 @@ void XaddIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void XaddIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se, *se1, *se2;
   smt2lib::smtAstAbstractNode *expr, *expr1, *expr2, *op1, *op2;
-  auto reg1 = this->operands[0].getReg().getTritonRegId();
-  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto reg1 = this->operands[0].getReg();
+  auto reg2 = this->operands[1].getReg();
   auto regSize1 = this->operands[0].getReg().getSize();
   auto regSize2 = this->operands[1].getReg().getSize();
   auto tmpReg1Taint = ap.isRegTainted(reg1);
@@ -86,8 +86,8 @@ void XaddIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 void XaddIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se, *se1, *se2;
   smt2lib::smtAstAbstractNode *expr, *expr1, *expr2, *op1, *op2;
-  auto mem1 = this->operands[0].getMem().getAddress();
-  auto reg2 = this->operands[1].getReg().getTritonRegId();
+  auto mem1 = this->operands[0].getMem();
+  auto reg2 = this->operands[1].getReg();
   auto memSize1 = this->operands[0].getMem().getSize();
   auto regSize2 = this->operands[1].getReg().getSize();
   auto tmpMem1Taint = ap.isMemTainted(mem1);
