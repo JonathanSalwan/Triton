@@ -66,5 +66,7 @@ enum regID_t
   ID_LAST_ITEM
 };
 
+#include "TmpReg.h"
+
 #endif //__REGISTERS_H__
 

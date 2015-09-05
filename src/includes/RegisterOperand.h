@@ -37,8 +37,5 @@ class RegisterOperand : public BitsVector
     void        operator=(const RegisterOperand& other);
 };
 
-RegisterOperand createTmpReg(uint64 tritonRegId);
-RegisterOperand createTmpFlag(uint64 tritonFlagId);
-
 #endif     /* !REGISTEROPERAND_H */
 

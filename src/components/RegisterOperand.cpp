@@ -9,6 +9,7 @@
 #include <pin.H>
 
 
+
 RegisterOperand::RegisterOperand()
   : name("") {
   this->tritonRegId = 0;
@@ -85,17 +86,5 @@ void RegisterOperand::copy(const RegisterOperand& other) {
   this->size        = other.size;
   this->tritonRegId = other.tritonRegId;
   this->name        = other.name;
-}
-
-
-RegisterOperand createTmpReg(uint64 tritonRegId) {
-  return RegisterOperand(PINConverter::convertTritonReg2DBIReg(tritonRegId));
-}
-
-
-RegisterOperand createTmpFlag(uint64 flagId) {
-  RegisterOperand reg;
-  reg.setTritonRegId(flagId);
-  return reg;
 }
 
