@@ -6,6 +6,11 @@
 
 #include <TmpReg.h>
 
+/*
+ * Inside semantics, sometime we have to use references to registers.
+ * ID_TMP_RAX, ID_TMP_RBX, ..., ID_TMP_AF, ... are now available for
+ * an access to RegisterOperand temporary class.
+ */
 
 RegisterOperand tmp_reg_rax    = createTmpReg(ID_RAX);
 RegisterOperand tmp_reg_rbx    = createTmpReg(ID_RBX);
