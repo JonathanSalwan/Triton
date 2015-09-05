@@ -68,6 +68,11 @@ void RegisterOperand::setSize(uint64 size) {
 }
 
 
+void RegisterOperand::setTritonRegId(uint64 tritonRegId) {
+  this->tritonRegId = tritonRegId;
+}
+
+
 void RegisterOperand::operator=(const RegisterOperand& other) {
   this->copy(other);
 }
@@ -80,5 +85,17 @@ void RegisterOperand::copy(const RegisterOperand& other) {
   this->size        = other.size;
   this->tritonRegId = other.tritonRegId;
   this->name        = other.name;
+}
+
+
+RegisterOperand createTmpReg(uint64 tritonRegId) {
+  return RegisterOperand(PINConverter::convertTritonReg2DBIReg(tritonRegId));
+}
+
+
+RegisterOperand createTmpFlag(uint64 flagId) {
+  RegisterOperand reg;
+  reg.setTritonRegId(flagId);
+  return reg;
 }
 

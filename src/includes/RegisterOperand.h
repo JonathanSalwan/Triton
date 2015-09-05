@@ -29,12 +29,16 @@ class RegisterOperand : public BitsVector
     ~RegisterOperand();
 
     std::string getName(void) const;
-    uint64      getTritonRegId(void) const;
     uint64      getPinRegId(void) const;
     uint64      getSize(void) const;
+    uint64      getTritonRegId(void) const;
     void        setSize(uint64 size);
+    void        setTritonRegId(uint64 tritonRegId);
     void        operator=(const RegisterOperand& other);
 };
+
+RegisterOperand createTmpReg(uint64 tritonRegId);
+RegisterOperand createTmpFlag(uint64 tritonFlagId);
 
 #endif     /* !REGISTEROPERAND_H */
 
