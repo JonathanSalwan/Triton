@@ -29,7 +29,7 @@ void CmcIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
   expr = smt2lib::bvnot(op1);
 
   /* Create the symbolic expression */
-  ap.createRegSE(inst, expr, ID_TMP_CF);
+  ap.createFlagSE(inst, expr, ID_TMP_CF);
 }
 
 

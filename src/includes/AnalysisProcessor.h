@@ -67,8 +67,10 @@ class AnalysisProcessor {
      * ----------------------
      */
 
-    /* Returns a symbolic expression for the register (regID) */
-    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &reg, std::string comment="");
+    /* Returns a symbolic expression for the flag register */
+    SymbolicExpression *createFlagSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &flag, std::string comment="");
+
+    /* Returns a symbolic expression for the register */
     SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &reg, uint64 regSize, std::string comment="");
 
     /* Returns a symbolic expression for the memory address */

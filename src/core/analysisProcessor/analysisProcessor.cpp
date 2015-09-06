@@ -48,10 +48,10 @@ SymbolicEngine &AnalysisProcessor::getSymbolicEngine(void) {
 }
 
 
-SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &reg, std::string comment) {
-  uint64 regId = reg.getTritonRegId();
+SymbolicExpression *AnalysisProcessor::createFlagSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &flag, std::string comment) {
+  uint64 flagId = flag.getTritonRegId();
   SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr, comment);
-  this->symEngine.symbolicReg[regId] = se->getID();
+  this->symEngine.symbolicReg[flagId] = se->getID();
   inst.addExpression(se);
   return se;
 }
