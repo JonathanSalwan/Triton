@@ -65,7 +65,10 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAb
 
   switch (regSize) {
     case BYTE_SIZE:
-      finalExpr = smt2lib::concat(smt2lib::extract(63, 8, origReg), expr);
+      if (reg.getLow() == 0)
+        finalExpr = smt2lib::concat(smt2lib::extract(63, 8, origReg), expr);
+      else
+        finalExpr = smt2lib::concat(smt2lib::extract(63, 16, origReg), smt2lib::concat(expr, smt2lib::extract(7, 0, origReg)));
       break;
 
     case WORD_SIZE:

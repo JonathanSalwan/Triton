@@ -32,12 +32,12 @@ void check(void)
   asm("mov rcx, 1024");
   asm("div rcx");
 
-  //asm("mov rax, -1");
-  //asm("or ah, 0x8");
-  //asm("mov rax, 12345");
-  //asm("or ah, 0x8");
-  //asm("mov rax, 4222427780");
-  //asm("or ah, 0x8");
+  asm("mov rax, -1");
+  asm("or ah, 0x8");
+  asm("mov rax, 12345");
+  asm("or ah, 0x8");
+  asm("mov rax, 4222427780");
+  asm("or ah, 0x8");
 
   asm("clc");
   asm("cld");
