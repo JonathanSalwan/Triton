@@ -52,4 +52,4 @@ WORKDIR /Triton/pin-2.14-71313-gcc.4.4.7-linux/source/tools/Triton
 
 RUN mkdir build && cd build && cmake .. && make
 
-CMD ["./triton", "./examples/semanticsTesting.py", "./samples/ir_test_suite/ir"]
+CMD ["./triton", "./tests/test_semantics.py", "./samples/ir_test_suite/ir"]

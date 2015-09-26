@@ -8,7 +8,7 @@ RED   = "\033[91m"
 
 # Output
 #
-# $ ./triton ./examples/semanticsTesting.py ./samples/ir_test_suite/ir
+# $ ./triton ./tests/test_semantics.py ./samples/ir_test_suite/ir
 # [...]
 # [OK] 0x400645: idiv rcx
 # [OK] 0x400648: mov rax, 0x1
