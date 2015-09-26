@@ -8,7 +8,7 @@
 ## ------------
 ##
 ## This tool is used to trace all memory access. With this tool, you know
-## which instruction read and write in memory, where it read/write,
+## which instruction read or write in memory, where it reads/writes,
 ## the access' size and the value. May be useful to track quickly some
 ## specific data.
 ##

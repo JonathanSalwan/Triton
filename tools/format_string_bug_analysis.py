@@ -9,7 +9,7 @@
 ## 
 ## This tool taints all arguments (*argv[]) and checks when a printf occurs if
 ## there is some tainted bytes in its first argument (RDI). If RDI points on a
-## memory area which contains tainted bytes, that means there is a possible
+## memory area which contains tainted bytes, that means there is a potential
 ## vulnerability.
 ##
 ##

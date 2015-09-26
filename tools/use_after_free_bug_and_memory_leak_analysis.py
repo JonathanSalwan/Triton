@@ -8,8 +8,8 @@
 ## ------------
 ## 
 ## This tool maintains a free table (TF) and an allocation table (TA) which
-## represents the states of pointers allocated/freed during the execution.
-## When a LOAD and STORE instruction occurs, the tool checks if the memory
+## represent the states of pointers allocated/freed during the execution.
+## When a LOAD or STORE instruction occurs, the tool checks if the memory
 ## access is referenced into TA or TF. 
 ##
 ## If the memory access is in TF -> use-after-free.
