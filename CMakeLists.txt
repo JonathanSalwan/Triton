@@ -138,6 +138,12 @@ target_link_libraries(
 # Generate the triton's shortcut script
 set(PIN_BIN_PATH ${PIN_ROOT}/pin.sh)
 set(TRITON_LIB_PATH ${CMAKE_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+set(FLAG_IFEELLUCKY "")
+
+if(${KERNEL4} MATCHES "yes")
+  set(FLAG_IFEELLUCKY "-ifeellucky")
+endif()
+
 configure_file(
     ${CMAKE_SOURCE_DIR}/scripts/triton.in
     ${CMAKE_SOURCE_DIR}/triton

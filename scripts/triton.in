@@ -17,5 +17,5 @@ if [ -z "$2" ]
     exit
 fi
 
-$PIN_BIN_PATH -t $TRITON_LIB_PATH -script $1 -- ${@:2}
+$PIN_BIN_PATH @FLAG_IFEELLUCKY@ -t $TRITON_LIB_PATH -script $1 -- ${@:2}
 
