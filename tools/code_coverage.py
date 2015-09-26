@@ -61,7 +61,7 @@ class TritonExecution(object):
 
         if instruction.isBranch() and instruction.getRoutineName() in TritonExecution.whitelist:
 
-            addr1 = instruction.getNextAddress();                         # Address next to this one
+            addr1 = instruction.getNextAddress()                         # Address next to this one
             addr2 = instruction.getOperands()[0].getImm().getValue()     # Address in the instruction condition (Branch taken)
 
             ripId = getRegSymbolicID(IDREF.REG.RIP)                      # Get the reference to the RIP symbolic register
