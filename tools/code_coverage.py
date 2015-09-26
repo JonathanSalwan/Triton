@@ -7,7 +7,7 @@
 ## Description:
 ## ------------
 ##
-## This tool aims to reach all basics blocks in a program using dynamic symbolic
+## This tool aims to reach all basic blocks in a program using dynamic symbolic
 ## resolution and the snapshot engine. The algorithm is based on Miscrosoft SAGE's
 ## fuzzer.
 ##
@@ -119,10 +119,10 @@ class TritonExecution(object):
 
         if instruction.isBranch() and instruction.getRoutineName() in TritonExecution.whitelist:
 
-            addr1 = instruction.getNextAddress()                         # Address next to this one
-            addr2 = instruction.getOperands()[0].getImm().getValue()     # Address in the instruction condition (Branch taken)
+            addr1 = instruction.getNextAddress()                         # next address next from the current one
+            addr2 = instruction.getOperands()[0].getImm().getValue()     # Address in the instruction condition (branch taken)
 
-            ripId = getRegSymbolicID(IDREF.REG.RIP)                      # Get the reference to the RIP symbolic register
+            ripId = getRegSymbolicID(IDREF.REG.RIP)                      # Get the reference of the RIP symbolic register
 
             # [PC id, address taken, address not taken]
             if instruction.isBranchTaken():
