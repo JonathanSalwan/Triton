@@ -7,9 +7,58 @@
 ## Description:
 ## ------------
 ##
-## This tools aims to reach all basics blocks in a programm. The algorithm is based on Miscrosoft SAGE's fuzzer. 
-## Documentation is available at http://triton.quarkslab.com/documentation/tools/#5 
+## This tools aims to reach all basics blocks in a program using dynamic symbolic
+## resolution and the snapshot engine. The algorithm is based on Miscrosoft SAGE's
+## fuzzer.
 ##
+##
+## Output:
+## -------
+##
+## $ ./triton ./tools/code_coverage.py ./samples/code_coverage/test_atoi a
+## [+] Take Snapshot
+## [+] In main
+## [+] In main() we set :
+##         [0x7ffc92bdc54a] = 61 a
+##         [0x7ffc92bdc54b] = 61 a
+##         [0x7ffc92bdc54c] = 61 a
+## [+] Exit point
+## {140722770396490: 0}
+## {140722770396490: 32}
+## {140722770396490: 57}
+## [+] Restore snapshot
+## [+] In main
+## [+] In main() we set :
+##         [0x7ffc92bdc54a] = 39 9
+##         [0x7ffc92bdc54b] = 61 a
+##         [0x7ffc92bdc54c] = 61 a
+## [+] Exit point
+## {140722770396490: 57, 140722770396491: 0}
+## {140722770396490: 57, 140722770396491: 8}
+## {140722770396490: 56, 140722770396491: 56}
+## [+] Restore snapshot
+## [+] In main
+## [+] In main() we set :
+##         [0x7ffc92bdc54a] = 38 8
+##         [0x7ffc92bdc54b] = 38 8
+##         [0x7ffc92bdc54c] = 61 a
+## [+] Exit point
+## {140722770396490: 56, 140722770396491: 56, 140722770396492: 0}
+## {140722770396490: 57, 140722770396491: 57, 140722770396492: 8}
+## {140722770396490: 57, 140722770396491: 57, 140722770396492: 56}
+## {140722770396490: 51, 140722770396491: 51, 140722770396492: 63}
+## [+] Restore snapshot
+## [+] In main
+## [+] In main() we set :
+##         [0x7ffc92bdc54a] = 33 3
+##         [0x7ffc92bdc54b] = 33 3
+##         [0x7ffc92bdc54c] = 3f ?
+## ok
+## [+] Exit point
+## [+] Done !
+## $
+##
+
 import  smt2lib
 from    triton      import *
 from    collections import OrderedDict
@@ -176,6 +225,7 @@ class TritonExecution(object):
         addCallback(TritonExecution.cbefore,        IDREF.CALLBACK.BEFORE)
         addCallback(TritonExecution.fini,           IDREF.CALLBACK.FINI)
         runProgram()
+
 
 
 if __name__=='__main__':
