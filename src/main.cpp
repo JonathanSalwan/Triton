@@ -195,24 +195,38 @@ static void toggleWrapper(bool flag) {
 }
 
 
-static void callbackRoutineEntry(THREADID threadId, PyObject *callback) {
+static void callbackRoutineEntry(CONTEXT *ctx, THREADID threadId, PyObject *callback) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return;
 
+  /* Mutex lock */
   ap.lock();
+
+  /* Update the current context handler */
+  ap.updateCurrentCtxH(new PINContextHandler(ctx, threadId));
+
   processingPyConf.callbackRoutine(threadId, callback);
+
+  /* Mutex unlock */
   ap.unlock();
 }
 
 
-static void callbackRoutineExit(THREADID threadId, PyObject *callback) {
+static void callbackRoutineExit(CONTEXT *ctx, THREADID threadId, PyObject *callback) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return;
 
+  /* Mutex lock */
   ap.lock();
+
+  /* Update the current context handler */
+  ap.updateCurrentCtxH(new PINContextHandler(ctx, threadId));
+
   processingPyConf.callbackRoutine(threadId, callback);
+
+  /* Mutex unlock */
   ap.unlock();
 }
 
@@ -247,7 +261,7 @@ static void IMG_Instrumentation(IMG img, VOID *) {
     RTN targetRTN = RTN_FindByName(img, it->first);
     if (RTN_Valid(targetRTN)){
       RTN_Open(targetRTN);
-      RTN_InsertCall(targetRTN, IPOINT_BEFORE, (AFUNPTR)callbackRoutineEntry, IARG_THREAD_ID, IARG_PTR, it->second, IARG_END);
+      RTN_InsertCall(targetRTN, IPOINT_BEFORE, (AFUNPTR)callbackRoutineEntry, IARG_CONTEXT, IARG_THREAD_ID, IARG_PTR, it->second, IARG_END);
       RTN_Close(targetRTN);
     }
   }
@@ -257,7 +271,7 @@ static void IMG_Instrumentation(IMG img, VOID *) {
     RTN targetRTN = RTN_FindByName(img, it->first);
     if (RTN_Valid(targetRTN)){
       RTN_Open(targetRTN);
-      RTN_InsertCall(targetRTN, IPOINT_AFTER, (AFUNPTR)callbackRoutineExit, IARG_THREAD_ID, IARG_PTR, it->second, IARG_END);
+      RTN_InsertCall(targetRTN, IPOINT_AFTER, (AFUNPTR)callbackRoutineExit, IARG_CONTEXT, IARG_THREAD_ID, IARG_PTR, it->second, IARG_END);
       RTN_Close(targetRTN);
     }
   }

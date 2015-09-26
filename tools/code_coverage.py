@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-from triton import *
-import smt2lib
-from collections import OrderedDict
+import  smt2lib
+from    triton      import *
+from    collections import OrderedDict
+
+
 
 class Input(object):
 
@@ -32,18 +34,14 @@ class Input(object):
 
 class TritonExecution(object):
 
-    program = None
-
-    input = None
-    worklist = None
+    program     = None
+    input       = None
+    worklist    = None
     inputTested = None
-
-    entryPoint = 0
-    exitPoint = 0
-
-    whitelist = None
-
-    myPC = None
+    entryPoint  = 0
+    exitPoint   = 0
+    whitelist   = None
+    myPC        = None
 
     @staticmethod
     def cbefore(instruction):
@@ -152,15 +150,14 @@ class TritonExecution(object):
                 convertMemToSymVar(argv1_addr + idx, IDREF.CPUSIZE.BYTE, "addr_%d" % idx)
 
 
-
     @staticmethod
     def run(inputSeed, entryPoint, exitPoint, whitelist = []):
 
-        TritonExecution.exitPoint = exitPoint
-        TritonExecution.entryPoint = entryPoint
-        TritonExecution.worklist = [Input(inputSeed)]
+        TritonExecution.exitPoint   = exitPoint
+        TritonExecution.entryPoint  = entryPoint
+        TritonExecution.worklist    = [Input(inputSeed)]
         TritonExecution.inputTested = []
-        TritonExecution.whitelist = whitelist
+        TritonExecution.whitelist   = whitelist
 
         startAnalysisFromAddr(entryPoint)
 
@@ -169,8 +166,8 @@ class TritonExecution(object):
         addCallback(TritonExecution.fini,           IDREF.CALLBACK.FINI)
         runProgram()
 
+
 if __name__=='__main__':
     TritonExecution.run("aaa", 0x4004a0, 0x40065D, ["main", "myatoi"])  # ./triton ./tools/code_coverage.py ./samples/code_coverage/test_atoi a
     #TritonExecution.run("bad !", 0x400480, 0x40061B, ["main", "check"]) # ./triton ./tools/code_coverage.py ./samples/crackmes/crackme_xor abc
-
 
