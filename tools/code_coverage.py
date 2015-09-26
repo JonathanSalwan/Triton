@@ -1,4 +1,15 @@
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
+##
+##  Triton tool to perform code coverage
+##  Romain Thomas - 2015-09-26
+##
+## Description:
+## ------------
+##
+## This tools aims to reach all basics blocks in a programm. The algorithm is based on Miscrosoft SAGE's fuzzer. 
+## Documentation is available at http://triton.quarkslab.com/documentation/tools/#5 
+##
 import  smt2lib
 from    triton      import *
 from    collections import OrderedDict
