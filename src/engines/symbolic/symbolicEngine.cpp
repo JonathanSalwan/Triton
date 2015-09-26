@@ -1,3 +1,4 @@
+
 /*
 **  Copyright (C) - Triton
 **
@@ -228,25 +229,51 @@ SymbolicVariable *SymbolicEngine::convertExprToSymVar(uint64 exprId, uint64 symV
   return symVar;
 }
 
+// Note: symVarSize is in BYTE.
+SymbolicVariable *SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment)
+{
+  SymbolicVariable   *symVar       = nullptr;
+  SymbolicExpression *expression   = nullptr;
+  smt2lib::smtAstAbstractNode *tmp = nullptr;
+  uint64 memSymId                  = UNSET;
 
-SymbolicVariable *SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symVarSize, std::string symVarComment) {
-  SymbolicVariable   *symVar = nullptr;
-  SymbolicExpression *expression = nullptr;
-  uint64             memSymId = UNSET;
-
+  uint64 size_quotient   = symVarSize;
   memSymId = this->getMemSymbolicID(memAddr);
-  if (memSymId == UNSET)
-    /* TODO #109: Create it if UNSET */
-    throw std::runtime_error("SymbolicEngine::convertMemToSymVar() - This memory address is UNSET");
 
-  expression = this->getExpressionFromId(memSymId);
+  // First we create a symbolic variable
+  symVar = this->addSymbolicVariable(SymVar::kind::MEM, memAddr, symVarSize * 8, symVarComment);
+  smt2lib::smtAstAbstractNode *symVarNode = smt2lib::variable(symVar->getSymVarName());
 
-  if (expression == nullptr)
-    return nullptr;
+  if (symVarNode == nullptr)
+    throw std::runtime_error("convertMemToSymVar can't create smtAstAbstractNode (nullptr)");
 
-  symVar = this->addSymbolicVariable(SymVar::kind::MEM, memAddr, symVarSize, symVarComment);
+  std::list<smt2lib::smtAstAbstractNode *> symMemChunk;
+  while (size_quotient) {
+      tmp = smt2lib::extract((REG_SIZE * size_quotient - 1), (REG_SIZE * size_quotient - REG_SIZE), symVarNode);
+      symMemChunk.push_back(tmp);
 
-  expression->setExpression(smt2lib::variable(symVar->getSymVarName()));
+      if (tmp == nullptr)
+        throw std::runtime_error("convertMemToSymVar can't create extract (nullptr)");
+
+      if (memSymId == UNSET) {
+        if (size_quotient > 1 or symVarSize == 1) {
+          expression = this->newSymbolicExpression(tmp, "byte reference");
+        } else {
+          smt2lib::smtAstAbstractNode *concat = smt2lib::concat(symMemChunk);
+          expression = this->newSymbolicExpression(concat);
+        }
+      } else {
+        expression = this->getExpressionFromId(memSymId);
+        expression->setExpression(tmp);
+      }
+
+      if (expression == nullptr)
+        throw std::runtime_error("convertMemToSymVar can't create symbolic expression (nullptr)");
+
+      this->addMemoryReference((memAddr + size_quotient) - 1, expression->getID());
+
+      size_quotient--;
+  }
 
   return symVar;
 }
@@ -286,7 +313,6 @@ SymbolicVariable *SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVar
   return symVar;
 }
 
-
 /* Add a new symbolic variable */
 SymbolicVariable *SymbolicEngine::addSymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 size, std::string comment) {
   uint64 uniqueID = this->symbolicVariables.size();
@@ -316,4 +342,3 @@ void SymbolicEngine::addPathConstraint(uint64 exprId) {
 std::list<uint64> SymbolicEngine::getPathConstraints(void) {
   return this->pathConstaints;
 }
-
