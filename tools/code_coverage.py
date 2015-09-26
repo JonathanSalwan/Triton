@@ -7,7 +7,7 @@
 ## Description:
 ## ------------
 ##
-## This tools aims to reach all basics blocks in a program using dynamic symbolic
+## This tool aims to reach all basics blocks in a program using dynamic symbolic
 ## resolution and the snapshot engine. The algorithm is based on Miscrosoft SAGE's
 ## fuzzer.
 ##
