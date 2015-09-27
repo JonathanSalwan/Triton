@@ -61,7 +61,7 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 find_package(Z3 REQUIRED)
 include_directories(${Z3_INCLUDE_DIRS})
 if (NOT Z3_FOUND)
-  message(FATAL_ERROR "No Z3 found")
+  message(FATAL_ERROR "Z3 not found")
 endif()
 
 # Includes directories (Pin and Triton)
