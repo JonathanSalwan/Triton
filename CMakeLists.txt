@@ -14,6 +14,9 @@ set(VERSION_BUILD ${BUILD_NUMBER})
 set(CMAKE_BUILD_TYPE Release)
 set(PROJECT_NAME "triton")
 
+# Custom cmake search
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/")
+
 # Root directory of the Pin toolkit
 set(PIN_ROOT "${CMAKE_SOURCE_DIR}/../../..")
 
@@ -51,8 +54,15 @@ find_package(Boost 1.53.0 COMPONENTS filesystem REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Find Python 2.7
-FIND_PACKAGE(PythonLibs 2.7 REQUIRED)
+find_package(PythonLibs 2.7 REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
+
+# Find Z3
+find_package(Z3 REQUIRED)
+include_directories(${Z3_INCLUDE_DIRS})
+if (NOT Z3_FOUND)
+  message(FATAL_ERROR "No Z3 found")
+endif()
 
 # Includes directories (Pin and Triton)
 include_directories("${PIN_ROOT}/source/include/pin")
@@ -130,7 +140,7 @@ target_link_libraries(
     xed
     pindwarf
     dl
-    z3
+    ${Z3_LIBRARIES}
     ${PYTHON_LIBRARIES}
     ${Boost_LIBRARIES}
 )
