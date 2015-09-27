@@ -8,7 +8,7 @@
 ## ------------
 ##
 ## This tool aims to reach all basic blocks in a program using dynamic symbolic
-## resolution and the snapshot engine. The algorithm is based on Miscrosoft SAGE's
+## resolution and the snapshot engine. The algorithm is based on Microsoft SAGE's
 ## fuzzer.
 ##
 ##
