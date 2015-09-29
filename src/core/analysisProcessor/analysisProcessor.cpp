@@ -61,7 +61,7 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAb
   uint64 regId = reg.getTritonRegId();
   smt2lib::smtAstAbstractNode *finalExpr = nullptr, *origReg = nullptr;
 
-  origReg = this->buildSymbolicRegOperand(reg, REG_SIZE);
+  origReg = this->buildSymbolicRegOperand(reg, REG_SIZE, 63, 0);
 
   switch (regSize) {
     case BYTE_SIZE:
@@ -221,8 +221,21 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(Register
   smt2lib::smtAstAbstractNode *op = nullptr;
   uint64 regId  = reg.getTritonRegId();
   uint64 symReg = this->getRegSymbolicID(reg);
-  uint64 low    = 0;
-  uint64 high   = (regSize * REG_SIZE) - 1;
+  uint64 low    = reg.getLow();
+  uint64 high   = !low ? (regSize * REG_SIZE) - 1 : reg.getHigh(); // TMP fix for #170
+  /*
+   * TODO
+   * ----
+   * We should use reg.getHigh() for every cases and remove regSize (#179).
+   * Then, replace all:
+   *
+   *   - buildSymbolicRegOperand(ID_TMP_X, X_SIZE);
+   *
+   * To:
+   *
+   *   - buildSymbolicRegOperand(ID_TMP_X, HIGH, LOW);
+   *
+   */
 
   if (symReg != UNSET)
     op = smt2lib::extract(high, low, smt2lib::reference(symReg));

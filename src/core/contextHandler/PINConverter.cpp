@@ -259,7 +259,7 @@ std::string PINConverter::getRegisterName(uint64 tritonRegId) {
     case ID_DF:     return "df";
     case ID_IF:     return "if";
     case ID_OF:     return "of";
-    case ID_PF:     return "pd";
+    case ID_PF:     return "pf";
     case ID_SF:     return "sf";
     case ID_TF:     return "tf";
     case ID_ZF:     return "zf";

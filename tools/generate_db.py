@@ -70,8 +70,8 @@ def before(instruction):
         if operand.getType() == IDREF.OPERAND.REG:
             regId      = operand.getReg().getId()
             regSize    = operand.getReg().getSize()
+            regName    = operand.getReg().getName()
             regContent = getRegValue(regId)
-            regName    = getRegName(regId)
             cursor.execute("INSERT INTO registersValue VALUES (%d, %d, '%s', %d, %d)" %(addr, regId, regName, regSize, regContent))
 
     # Dump memory access when a LOAD occurs
