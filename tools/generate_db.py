@@ -105,7 +105,7 @@ def fini():
 
 if __name__ == '__main__':
 
-    # Start the symbolic analysis from the entry point
+    # Start the dump from the function main
     startAnalysisFromSymbol('main')
 
     buildDb()
