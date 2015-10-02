@@ -4,9 +4,10 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
-#ifndef   SYMBOLICENGINE_H
-#define   SYMBOLICENGINE_H
+#ifndef SYMBOLICENGINE_H
+#define SYMBOLICENGINE_H
 
 #include <map>
 #include <list>
@@ -94,5 +95,6 @@ class SymbolicEngine {
 
 };
 
-#endif     /* !__SYMBOLICENGINE_H__ */
+#endif /* !__SYMBOLICENGINE_H__ */
+#endif /* LIGHT_VERSION */
 

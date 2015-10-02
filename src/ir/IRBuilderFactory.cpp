@@ -24,6 +24,8 @@ IRBuilder *createIRBuilder(INS ins) {
 
   switch (opcode) {
 
+    #ifndef LIGHT_VERSION
+
     case XED_ICLASS_ADC:
       ir = new AdcIRBuilder(address, disas);
       break;
@@ -475,6 +477,8 @@ IRBuilder *createIRBuilder(INS ins) {
     case XED_ICLASS_XORPS:
       ir = new XorpsIRBuilder(address, disas);
       break;
+
+    #endif /* LIGHT_VERSION */
 
     default:
       ir = new NullIRBuilder(address, disas);

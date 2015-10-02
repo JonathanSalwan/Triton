@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef IMULIRBUILDER_H
 #define IMULIRBUILDER_H
 
@@ -34,3 +36,5 @@ class ImulIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 };
 
 #endif // IMULIRBUILDER_H
+#endif // LIGHT_VERSION
+

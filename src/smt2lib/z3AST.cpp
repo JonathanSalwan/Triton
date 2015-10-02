@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #include <CpuSize.h>
 #include <Z3ast.h>
 
@@ -432,4 +434,6 @@ void Z3ast::operator()(smt2lib::smtAstZxNode& e) {
 
   this->result.setExpr(newexpr);
 }
+
+#endif /* LIGHT_VERSION */
 

@@ -5,6 +5,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
 #include <SymbolicEngine.h>
 #include <Registers.h>
@@ -342,3 +343,6 @@ void SymbolicEngine::addPathConstraint(uint64 exprId) {
 std::list<uint64> SymbolicEngine::getPathConstraints(void) {
   return this->pathConstaints;
 }
+
+#endif /* LIGHT_VERSION */
+

@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef ORIRBUILDER_H
 #define ORIRBUILDER_H
 
@@ -34,3 +36,5 @@ class OrIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 };
 
 #endif // ORIRBUILDER_H
+#endif // LIGHT_VERSION
+

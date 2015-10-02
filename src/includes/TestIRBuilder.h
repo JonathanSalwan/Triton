@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef TESTIRBUILDER_H
 #define TESTIRBUILDER_H
 
@@ -34,3 +36,5 @@ class TestIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 };
 
 #endif // TESTIRBUILDER_H
+#endif // LIGHT_VERSION
+

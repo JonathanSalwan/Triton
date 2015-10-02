@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 
 #include <EflagsExpressions.h>
 #include <Registers.h>
@@ -770,4 +772,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::zfShl(SymbolicExpression *parent
 
   return expr;
 }
+
+#endif /* LIGHT_VERSION */
 

@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #include <stdexcept>
 
 #include <ControlFlow.h>
@@ -27,4 +29,6 @@ SymbolicExpression *ControlFlow::rip(Inst &inst, AnalysisProcessor &ap, uint64 n
 
   return se;
 }
+
+#endif /* LIGHT_VERSION */
 

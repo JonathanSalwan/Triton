@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef CMOVNSIRBUILDER_H
 #define CMOVNSIRBUILDER_H
 
@@ -32,3 +34,5 @@ class CmovnsIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate  {
 };
 
 #endif // CMOVNSIRBUILDER_H
+#endif // LIGHT_VERSION
+

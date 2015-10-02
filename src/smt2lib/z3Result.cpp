@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #include <Z3Result.h>
 
 
@@ -57,3 +59,6 @@ z3::context& Z3Result::getContext(void) {
 void Z3Result::printExpr(void) const {
   std::cout << this->expr << std::endl;
 }
+
+#endif /* LIGHT_VERSION */
+

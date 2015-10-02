@@ -4,6 +4,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
 #include <stdexcept>
 
@@ -311,4 +312,6 @@ bool TaintEngine::aluSpreadTaintMemReg(uint64 memDst, uint64 regSrc, uint32 writ
 
   return !TAINTED;
 }
+
+#endif /* LIGHT_VERSION */
 

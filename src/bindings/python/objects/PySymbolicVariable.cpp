@@ -4,6 +4,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
 #include <PythonUtils.h>
 #include <TritonPyObject.h>
@@ -161,4 +162,6 @@ PyObject *PySymbolicVariable(SymbolicVariable *variable) {
 
   return (PyObject *)object;
 }
+
+#endif /* LIGHT_VERSION */
 

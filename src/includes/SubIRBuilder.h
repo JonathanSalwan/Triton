@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef SUBIRBUILDER_H
 #define SUBIRBUILDER_H
 
@@ -34,3 +36,5 @@ class SubIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 };
 
 #endif // ADDIRBUILDER_H
+#endif // LIGHT_VERSION
+

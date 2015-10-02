@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef CWDEIRBUILDER_H
 #define CWDEIRBUILDER_H
 
@@ -26,3 +28,5 @@ class CwdeIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
 };
 
 #endif // CWDEIRBUILDER_H
+#endif // LIGHT_VERSION
+

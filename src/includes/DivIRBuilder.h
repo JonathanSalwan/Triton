@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef DIVIRBUILDER_H
 #define DIVIRBUILDER_H
 
@@ -32,3 +34,5 @@ class DivIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 };
 
 #endif // DIVIRBUILDER_H
+#endif // LIGHT_VERSION
+

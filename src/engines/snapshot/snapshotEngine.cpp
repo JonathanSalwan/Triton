@@ -4,6 +4,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
 #include <iostream>
 
@@ -96,4 +97,6 @@ BOOL SnapshotEngine::isLocked() {
 CONTEXT *SnapshotEngine::getCtx(void) {
   return &this->pinCtx;
 }
+
+#endif /* LIGHT_VERSION */
 

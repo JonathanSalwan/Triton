@@ -4,8 +4,10 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
-#ifndef   SMODEL_H
-#define   SMODEL_H
+#ifndef LIGHT_VERSION
+
+#ifndef SMODEL_H
+#define SMODEL_H
 
 #include <string>
 
@@ -28,4 +30,6 @@ class Smodel
     ~Smodel();
 };
 
-#endif     /* !SMODEL_H */
+#endif /* !SMODEL_H */
+#endif /* LIGHT_VERSION */
+

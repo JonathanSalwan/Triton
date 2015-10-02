@@ -50,6 +50,8 @@ void ProcessingPyConf::stopAnalysisFromOffset(IRBuilder *irb) {
 }
 
 
+#ifndef LIGHT_VERSION
+
 void ProcessingPyConf::taintMemFromAddr(IRBuilder *irb) {
   // Apply this bindings only if the analysis is enable
   if (!this->analysisTrigger->getState())
@@ -109,6 +111,7 @@ void ProcessingPyConf::untaintRegFromAddr(IRBuilder *irb) {
   }
 }
 
+#endif /* LIGHT_VERSION */
 
 /*
  * When a callback is setup (triton.addCallback()), a class (Instruction) is
@@ -259,10 +262,12 @@ void ProcessingPyConf::applyConfBeforeProcessing(IRBuilder *irb) {
   this->startAnalysisFromOffset(irb);
   this->stopAnalysisFromAddr(irb);
   this->stopAnalysisFromOffset(irb);
+  #ifndef LIGHT_VERSION
   this->taintMemFromAddr(irb);
   this->taintRegFromAddr(irb);
   this->untaintMemFromAddr(irb);
   this->untaintRegFromAddr(irb);
+  #endif
 }
 
 

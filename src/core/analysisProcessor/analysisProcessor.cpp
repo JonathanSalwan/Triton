@@ -9,15 +9,20 @@
 
 
 AnalysisProcessor::AnalysisProcessor():
+  #ifndef LIGHT_VERSION
   symEngine(),
   solverEngine(&this->symEngine),
   taintEngine(),
   snapshotEngine(),
   stats(),
+  #endif
   trace() {
   this->currentCtxH = nullptr;
 }
 
+
+// Context Facade
+// --------------
 
 void AnalysisProcessor::updateCurrentCtxH(ContextHandler *ctxtHandler) {
   delete this->currentCtxH;
@@ -39,6 +44,86 @@ void AnalysisProcessor::unlock(void) {
   PIN_UnlockClient();
 }
 
+
+/* Returns the thread id  */
+uint32 AnalysisProcessor::getThreadID(void) {
+  if (!this->currentCtxH)
+    return -1;
+  return this->currentCtxH->getThreadID();
+}
+
+
+/* There is no verification on the validity of the ID. */
+uint64 AnalysisProcessor::getRegisterValue(RegisterOperand &reg) {
+  if (!this->currentCtxH)
+    return 0;
+  return this->currentCtxH->getRegisterValue(reg.getTritonRegId());
+}
+
+
+uint64 AnalysisProcessor::getFlagValue(RegisterOperand &flag) {
+  if (!this->currentCtxH)
+    return 0;
+  return this->currentCtxH->getFlagValue(flag.getTritonRegId());
+}
+
+
+uint128 AnalysisProcessor::getSSERegisterValue(RegisterOperand &reg) {
+  if (!this->currentCtxH)
+    return 0;
+  return this->currentCtxH->getSSERegisterValue(reg.getTritonRegId());
+}
+
+
+/* There is no verification on the validity of the ID. */
+void AnalysisProcessor::setRegisterValue(RegisterOperand &reg, uint64 value) {
+  if (!this->currentCtxH)
+    return ;
+  this->currentCtxH->setRegisterValue(reg.getTritonRegId(), value);
+}
+
+
+void AnalysisProcessor::setSSERegisterValue(RegisterOperand &reg, uint128 value) {
+  if (!this->currentCtxH)
+    return ;
+  this->currentCtxH->setSSERegisterValue(reg.getTritonRegId(), value);
+}
+
+
+uint128 AnalysisProcessor::getMemValue(MemoryOperand &mem, uint32 readSize) {
+  return this->currentCtxH->getMemValue(mem.getAddress(), readSize);
+}
+
+
+uint128 AnalysisProcessor::getMemValue(uint64 mem, uint32 readSize) {
+  return this->currentCtxH->getMemValue(mem, readSize);
+}
+
+
+void AnalysisProcessor::setMemValue(MemoryOperand &mem, uint32 writeSize, uint128 value) {
+  this->currentCtxH->setMemValue(mem.getAddress(), writeSize, value);
+}
+
+
+// Trace Facade
+// ------------
+
+Trace &AnalysisProcessor::getTrace(void) {
+  return this->trace;
+}
+
+
+void AnalysisProcessor::addInstructionToTrace(Inst *instruction) {
+  this->trace.addInstruction(instruction);
+}
+
+
+Inst *AnalysisProcessor::getLastInstruction(void) {
+  return this->trace.getLastInstruction();
+}
+
+
+#ifndef LIGHT_VERSION
 
 // Symbolic Engine Facade
 // ----------------------
@@ -506,6 +591,7 @@ void AnalysisProcessor::aluSpreadTaintMemReg(SymbolicExpression *se, MemoryOpera
 
 
 // SolverEngine Facade
+// -------------------
 
 SolverEngine &AnalysisProcessor::getSolverEngine(void) {
   return this->solverEngine;
@@ -523,6 +609,7 @@ std::vector<std::list<Smodel>> AnalysisProcessor::getModels(smt2lib::smtAstAbstr
 
 
 // Statistics Facade
+// -----------------
 
 Stats &AnalysisProcessor::getStats(void) {
   return this->stats;
@@ -575,87 +662,8 @@ uint64 AnalysisProcessor::getTimeOfExecution(void) {
 }
 
 
-// ContextHandler Facade
-
-/* Returns the thread id  */
-uint32 AnalysisProcessor::getThreadID(void) {
-  if (!this->currentCtxH)
-    return -1;
-  return this->currentCtxH->getThreadID();
-}
-
-
-// There is no verification on the validity of the ID.
-uint64 AnalysisProcessor::getRegisterValue(RegisterOperand &reg) {
-  if (!this->currentCtxH)
-    return 0;
-  return this->currentCtxH->getRegisterValue(reg.getTritonRegId());
-}
-
-
-uint64 AnalysisProcessor::getFlagValue(RegisterOperand &flag) {
-  if (!this->currentCtxH)
-    return 0;
-  return this->currentCtxH->getFlagValue(flag.getTritonRegId());
-}
-
-
-uint128 AnalysisProcessor::getSSERegisterValue(RegisterOperand &reg) {
-  if (!this->currentCtxH)
-    return 0;
-  return this->currentCtxH->getSSERegisterValue(reg.getTritonRegId());
-}
-
-
-// There is no verification on the validity of the ID.
-void AnalysisProcessor::setRegisterValue(RegisterOperand &reg, uint64 value) {
-  if (!this->currentCtxH)
-    return ;
-  this->currentCtxH->setRegisterValue(reg.getTritonRegId(), value);
-}
-
-
-void AnalysisProcessor::setSSERegisterValue(RegisterOperand &reg, uint128 value) {
-  if (!this->currentCtxH)
-    return ;
-  this->currentCtxH->setSSERegisterValue(reg.getTritonRegId(), value);
-}
-
-
-uint128 AnalysisProcessor::getMemValue(MemoryOperand &mem, uint32 readSize) {
-  return this->currentCtxH->getMemValue(mem.getAddress(), readSize);
-}
-
-
-uint128 AnalysisProcessor::getMemValue(uint64 mem, uint32 readSize) {
-  return this->currentCtxH->getMemValue(mem, readSize);
-}
-
-
-void AnalysisProcessor::setMemValue(MemoryOperand &mem, uint32 writeSize, uint128 value) {
-  this->currentCtxH->setMemValue(mem.getAddress(), writeSize, value);
-}
-
-
-// Trace Facade
-
-Trace &AnalysisProcessor::getTrace(void) {
-  return this->trace;
-}
-
-
-void AnalysisProcessor::addInstructionToTrace(Inst *instruction) {
-  this->trace.addInstruction(instruction);
-}
-
-
-Inst *AnalysisProcessor::getLastInstruction(void) {
-  return this->trace.getLastInstruction();
-}
-
-
 // Snapshot Engine Facade
-// -------------------
+// ----------------------
 
 SnapshotEngine &AnalysisProcessor::getSnapshotEngine(void) {
   return this->snapshotEngine;
@@ -697,8 +705,8 @@ bool AnalysisProcessor::isSnapshotEnabled(void) {
 }
 
 
-// Evaluator
-// ---------
+// Evaluator Facade
+// ----------------
 
 uint512 AnalysisProcessor::evaluateAST(smt2lib::smtAstAbstractNode *node) {
   Z3ast z3ast{};
@@ -706,5 +714,7 @@ uint512 AnalysisProcessor::evaluateAST(smt2lib::smtAstAbstractNode *node) {
   uint512 nbResult{result.getStringValue()};
   return nbResult;
 }
+
+#endif /* LIGHT_VERSION */
 
 

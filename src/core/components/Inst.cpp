@@ -123,6 +123,7 @@ void Inst::setOperands(const std::vector<TritonOperand> &operands) {
   this->operands = operands;
 }
 
+#ifndef LIGHT_VERSION
 
 /* Adds a new symbolic expression */
 void Inst::addExpression(SymbolicExpression *se) {
@@ -141,6 +142,7 @@ size_t Inst::numberOfExpressions(void) {
   return this->symbolicExpressions.size();
 }
 
+#endif
 
 /* Returns the image name */
 const std::string &Inst::getImageName(void) {

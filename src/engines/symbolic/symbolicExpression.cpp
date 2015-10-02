@@ -4,6 +4,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
 #include <SymbolicEngine.h>
 
@@ -57,4 +58,6 @@ void SymbolicExpression::setExpression(smt2lib::smtAstAbstractNode *expr) {
   delete this->expression;
   this->expression = expr;
 }
+
+#endif /* LIGHT_VERSION */
 

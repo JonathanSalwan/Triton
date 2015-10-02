@@ -8,13 +8,12 @@
 #define TRITON_TRACE_H
 
 #include "TritonTypes.h"
+#include "Inst.h"
 
 #include <iostream>
 #include <ostream>
 #include <list>
 
-#include "SymbolicEngine.h"
-#include "Inst.h"
 
 /* Trace of a run */
 class Trace {

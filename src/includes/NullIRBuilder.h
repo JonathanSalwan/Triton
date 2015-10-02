@@ -31,9 +31,12 @@ class NullIRBuilder: public BaseIRBuilder {
     }
 
     Inst *process(AnalysisProcessor &ap) const {
+      #ifndef LIGHT_VERSION
       ap.incNumberOfUnknownInstruction(); /* Used for statistics */
+      #endif
       return new Inst(ap.getCurrentCtxH()->getThreadID(), this->address, this->disas);
     }
 };
 
 #endif // NULLIRBUILDER_H
+

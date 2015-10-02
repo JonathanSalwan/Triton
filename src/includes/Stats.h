@@ -4,8 +4,10 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
-#ifndef   STATISTICS_H
-#define   STATISTICS_H
+#ifndef LIGHT_VERSION
+
+#ifndef STATISTICS_H
+#define STATISTICS_H
 
 #include <chrono>
 #include "TritonTypes.h"
@@ -37,4 +39,6 @@ class Stats {
     uint64  getNumberOfUnknownInstruction(void);
 };
 
-#endif     /* !__STATISTICS_H__ */
+#endif /* !__STATISTICS_H__ */
+#endif /* LIGHT_VERSION */
+

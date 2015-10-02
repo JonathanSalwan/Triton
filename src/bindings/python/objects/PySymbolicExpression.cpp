@@ -4,6 +4,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
 #include <TritonPyObject.h>
 #include <xPyFunc.h>
@@ -126,4 +127,6 @@ PyObject *PySymbolicExpression(SymbolicExpression *expr) {
 
   return (PyObject *)object;
 }
+
+#endif /* LIGHT_VERSION */
 

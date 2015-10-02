@@ -4,6 +4,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
 #ifndef   SMT2LIB_H
 #define   SMT2LIB_H
@@ -707,4 +708,6 @@ namespace smt2lib {
 
 } // smt2lib namespace
 
-#endif     /* !SMT2LIB_H */
+#endif /* !SMT2LIB_H */
+#endif /* LIGHT_VERSION */
+

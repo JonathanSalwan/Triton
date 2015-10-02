@@ -6,7 +6,7 @@
 
 #ifndef VISITOR_H
 #define VISITOR_H
-#include <z3++.h>
+
 
 namespace smt2lib{
     class smtAstAssertNode;

@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef Z3RESULT_H
 #define Z3RESULT_H
 
@@ -31,3 +33,5 @@ class Z3Result {
 };
 
 #endif /* Z3RESULT_H */
+#endif /* LIGHT_VERSION */
+

@@ -12,10 +12,13 @@
 #include "IRBuilder.h"
 #include "IRBuilderOperand.h"
 #include "Inst.h"
-#include "SMT2Lib.h"
-#include "SymbolicEngine.h"
-#include "SymbolicVariable.h"
-#include "TritonOperand.h"
+
+#ifndef LIGHT_VERSION
+  #include "SMT2Lib.h"
+  #include "SymbolicEngine.h"
+  #include "SymbolicVariable.h"
+  #include "TritonOperand.h"
+#endif
 
 
 PyObject *PyInstruction(IRBuilder *irb);
@@ -24,6 +27,8 @@ PyObject *PyOperand(TritonOperand operand);
 PyObject *PyRegisterOperand(RegisterOperand reg);
 PyObject *PyMemoryOperand(MemoryOperand mem);
 PyObject *PyImmediateOperand(ImmediateOperand imm);
+
+#ifndef LIGHT_VERSION
 PyObject *PySmtAstNode(smt2lib::smtAstAbstractNode *node);
 PyObject *PySymbolicExpression(SymbolicExpression *expression);
 PyObject *PySymbolicVariable(SymbolicVariable *symVar);
@@ -63,6 +68,8 @@ extern PyTypeObject SymbolicVariable_Type;
 
 #define PySymbolicVariable_Check(v) ((v)->ob_type == &SymbolicVariable_Type)
 #define PySymbolicVariable_AsSymbolicVariable(v) (((SymbolicVariable_Object *)(v))->variable)
+
+#endif /* LIGHT_VERSION */
 
 // Operand =============================
 

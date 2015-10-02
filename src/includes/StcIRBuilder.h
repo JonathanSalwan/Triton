@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef STCIRBUILDER_H
 #define STCIRBUILDER_H
 
@@ -26,3 +28,5 @@ class StcIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
 };
 
 #endif // STCIRBUILDER_H
+#endif // LIGHT_VERSION
+

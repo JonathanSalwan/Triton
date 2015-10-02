@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef CBWIRBUILDER_H
 #define CBWIRBUILDER_H
 
@@ -26,3 +28,5 @@ class CbwIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
 };
 
 #endif // CBWIRBUILDER_H
+#endif // LIGHT_VERSION
+

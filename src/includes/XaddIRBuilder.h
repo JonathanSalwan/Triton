@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef XADDIRBUILDER_H
 #define XADDIRBUILDER_H
 
@@ -34,3 +36,5 @@ class XaddIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 };
 
 #endif // XADDIRBUILDER_H
+#endif // LIGHT_VERSION
+

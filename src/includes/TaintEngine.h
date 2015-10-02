@@ -4,9 +4,10 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
-#ifndef   TAINTENGINE_H
-#define   TAINTENGINE_H
+#ifndef TAINTENGINE_H
+#define TAINTENGINE_H
 
 #include <list>
 #include <sstream>
@@ -74,5 +75,6 @@ class TaintEngine {
     ~TaintEngine();
 };
 
-#endif     /* !__TAINTENGINE_H__ */
+#endif /* !__TAINTENGINE_H__ */
+#endif /* LIGHT_VERSION */
 

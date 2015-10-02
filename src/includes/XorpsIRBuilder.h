@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef XORPSIRBUILDER_H
 #define XORPSIRBUILDER_H
 
@@ -34,3 +36,5 @@ class XorpsIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 };
 
 #endif // XORPSIRBUILDER_H
+#endif // LIGHT_VERSION
+

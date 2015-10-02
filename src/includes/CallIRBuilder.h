@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef CALLIRBUILDER_H
 #define CALLIRBUILDER_H
 
@@ -32,3 +34,5 @@ class CallIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 };
 
 #endif // CALLIRBUILDER_H
+#endif // LIGHT_VERSION
+

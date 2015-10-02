@@ -13,9 +13,13 @@
 #include <vector>
 
 #include "ContextHandler.h"
-#include "ControlFlow.h"
 #include "IRBuilder.h"
 #include "TritonOperand.h"
+
+#ifndef LIGHT_VERSION
+  #include "ControlFlow.h"
+#endif
+
 
 // Abstract class which is main purpose is too implement common methods
 // shared by its children classes.
@@ -79,3 +83,4 @@ class BaseIRBuilder: public IRBuilder {
 };
 
 #endif // BASEIRBUILDER_H
+

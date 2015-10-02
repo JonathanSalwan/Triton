@@ -12,19 +12,23 @@
 #include "Inst.h"
 #include "MemoryOperand.h"
 #include "RegisterOperand.h"
-#include "SMT2Lib.h"
-#include "SnapshotEngine.h"
-#include "SolverEngine.h"
-#include "Stats.h"
-#include "SymbolicEngine.h"
-#include "TaintEngine.h"
 #include "Trace.h"
 #include "TritonTypes.h"
-#include "Z3ast.h"
+
+#ifndef LIGHT_VERSION
+  #include "SMT2Lib.h"
+  #include "SnapshotEngine.h"
+  #include "SolverEngine.h"
+  #include "Stats.h"
+  #include "SymbolicEngine.h"
+  #include "TaintEngine.h"
+  #include "Z3ast.h"
+#endif
 
 
 
 class AnalysisProcessor {
+
   public:
     AnalysisProcessor();
 
@@ -62,6 +66,18 @@ class AnalysisProcessor {
     uint128     getMemValue(uint64 mem, uint32 readSize);
     void        setMemValue(MemoryOperand &mem, uint32 writeSize, uint128 value);
 
+
+    /*
+     * Trace Facade
+     * ------------
+     */
+
+    Inst      *getLastInstruction(void);
+    Trace     &getTrace(void);
+    void      addInstructionToTrace(Inst *instruction);
+
+
+    #ifndef LIGHT_VERSION
     /*
      * Symbolic Engine Facade
      * ----------------------
@@ -145,10 +161,6 @@ class AnalysisProcessor {
     /* Returns the taint engine reference */
     TaintEngine &getTaintEngine(void);
 
-    /*
-     * Taint interface.
-     * Taint the symbolic expression if the taint occurs.
-     */
     bool isMemTainted(MemoryOperand &mem);
     bool isRegTainted(RegisterOperand &reg);
     void setTaintMem(SymbolicExpression *se, MemoryOperand &mem, uint64 flag);
@@ -210,16 +222,6 @@ class AnalysisProcessor {
 
 
     /*
-     * Trace Facade
-     * ------------
-     */
-
-    Inst      *getLastInstruction(void);
-    Trace     &getTrace(void);
-    void      addInstructionToTrace(Inst *instruction);
-
-
-    /*
      * Snapshot Facade
      * ---------------
      */
@@ -238,15 +240,20 @@ class AnalysisProcessor {
     */
     uint512 evaluateAST(smt2lib::smtAstAbstractNode *node);
 
+    #endif /* LIGHT_VERSION */
+
 
   private:
+    #ifndef LIGHT_VERSION
     SymbolicEngine    symEngine;
     SolverEngine      solverEngine;
     TaintEngine       taintEngine;
     SnapshotEngine    snapshotEngine;
     Stats             stats;
+    #endif
     Trace             trace;
     ContextHandler    *currentCtxH;
 };
 
 #endif //_ANALYSISPROCESSOR_H_
+

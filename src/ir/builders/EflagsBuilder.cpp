@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #include <stdexcept>
 
 #include <EflagsBuilder.h>
@@ -731,4 +733,6 @@ SymbolicExpression *EflagsBuilder::zfShl(Inst &inst,
 
   return se;
 }
+
+#endif /* LIGHT_VERSION */
 

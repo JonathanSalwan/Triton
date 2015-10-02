@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef POPIRBUILDER_H
 #define POPIRBUILDER_H
 
@@ -32,3 +34,5 @@ class PopIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 };
 
 #endif // POPIRBUILDER_H
+#endif // LIGHT_VERSION
+

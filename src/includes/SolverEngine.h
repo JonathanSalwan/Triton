@@ -4,9 +4,10 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
-#ifndef   SOLVERENGINE_H
-#define   SOLVERENGINE_H
+#ifndef SOLVERENGINE_H
+#define SOLVERENGINE_H
 
 #include <cstdlib>
 #include <list>
@@ -36,5 +37,6 @@ class SolverEngine
 };
 
 
-#endif     /* !__SOLVERENGINE_H__ */
+#endif /* !__SOLVERENGINE_H__ */
+#endif /* LIGHT_VERSION */
 

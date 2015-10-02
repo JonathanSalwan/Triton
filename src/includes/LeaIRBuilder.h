@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef LEAIRBUILDER_H
 #define LEAIRBUILDER_H
 
@@ -34,3 +36,5 @@ class LeaIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 };
 
 #endif // LEAIRBUILDER_H
+#endif // LIGHT_VERSION
+

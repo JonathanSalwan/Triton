@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef DECIRBUILDER_H
 #define DECIRBUILDER_H
 
@@ -32,3 +34,5 @@ class DecIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 };
 
 #endif // DECIRBUILDER_H
+#endif // LIGHT_VERSION
+

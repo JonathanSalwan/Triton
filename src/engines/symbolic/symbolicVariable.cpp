@@ -4,6 +4,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
 #include <SymbolicVariable.h>
 
@@ -99,4 +100,6 @@ void SymbolicVariable::setSymVarConcreteValue(uint128 value) {
   this->symVarConcreteValue    = value;
   this->symVarHasConcreteValue = true;
 }
+
+#endif /* LIGHT_VERSION */
 

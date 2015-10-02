@@ -4,6 +4,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
 #include <python2.7/Python.h>
 
@@ -754,4 +755,6 @@ PyMethodDef smt2libCallbacks[] = {
   {"zx",          smt2lib_zx,         METH_VARARGS,     smt2lib_zx_doc},
   {nullptr,       nullptr,            0,                nullptr}
 };
+
+#endif /* LIGHT_VERSION */
 

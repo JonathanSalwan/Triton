@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef PUSHIRBUILDER_H
 #define PUSHIRBUILDER_H
 
@@ -32,3 +34,5 @@ class PushIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 };
 
 #endif // PUSHIRBUILDER_H
+#endif // LIGHT_VERSION
+

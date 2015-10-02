@@ -4,9 +4,10 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
-#ifndef   SNAPSHOTENGINE_H
-#define   SNAPSHOTENGINE_H
+#ifndef SNAPSHOTENGINE_H
+#define SNAPSHOTENGINE_H
 
 #include <list>
 
@@ -49,5 +50,6 @@ class SnapshotEngine{
 
 };
 
-#endif     /* !__SNAPSHOTENGINE_H__ */
+#endif /* !__SNAPSHOTENGINE_H__ */
+#endif /* LIGHT_VERSION */
 

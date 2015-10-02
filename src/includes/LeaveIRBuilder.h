@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef LEAVEIRBUILDER_H
 #define LEAVEIRBUILDER_H
 
@@ -26,3 +28,5 @@ class LeaveIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
 };
 
 #endif // LEAVEIRBUILDER_H
+#endif // LIGHT_VERSION
+

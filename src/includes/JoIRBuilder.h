@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef JOIRBUILDER_H
 #define JOIRBUILDER_H
 
@@ -32,3 +34,5 @@ class JoIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 };
 
 #endif // JOIRBUILDER_H
+#endif // LIGHT_VERSION
+

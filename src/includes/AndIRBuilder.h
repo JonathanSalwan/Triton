@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef ANDIRBUILDER_H
 #define ANDIRBUILDER_H
 
@@ -34,3 +36,5 @@ class AndIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 };
 
 #endif // ANDIRBUILDER_H
+#endif // LIGHT_VERSION
+

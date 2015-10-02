@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef SYMBOLICEXPRESSION_H
 #define SYMBOLICEXPRESSION_H
 
@@ -38,3 +40,5 @@ class SymbolicExpression {
 };
 
 #endif /* !_SYMBOLICEXPRESSION_H_ */
+#endif /* LIGHT_VERSION */
+

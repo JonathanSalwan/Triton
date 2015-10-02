@@ -95,7 +95,9 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
   inst = ap.getLastInstruction();
 
   /* Update statistics */
+  #ifndef LIGHT_VERSION
   ap.incNumberOfBranchesTaken(inst->isBranch());
+  #endif
 
   /* Python callback after instruction processing */
   processingPyConf.callbackAfter(inst, &ap);
@@ -104,7 +106,7 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
   ap.unlock();
 }
 
-
+#ifndef LIGHT_VERSION
 static void callbackSnapshot(uint64 mem, uint32 writeSize) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
@@ -124,12 +126,13 @@ static void callbackSnapshot(uint64 mem, uint32 writeSize) {
   /* Mutex */
   ap.unlock();
 }
+#endif /* LIGHT_VERSION */
 
 
 static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
   boost::filesystem::path pname(reinterpret_cast<char*>(programName));
 
-  for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)){
+  for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)) {
     for (INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins)) {
 
       /* ---- Speed up process ---- */
@@ -168,20 +171,23 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
 
       /* Callback after */
       /* Syscall after context must be catcher with IDREF.CALLBACK.SYSCALL_EXIT */
-      if (INS_IsSyscall(ins) == false){
+      if (INS_IsSyscall(ins) == false) {
         IPOINT where = IPOINT_AFTER;
         if (INS_HasFallThrough(ins) == false)
           where = IPOINT_TAKEN_BRANCH;
         INS_InsertCall(ins, where, (AFUNPTR)callbackAfter, IARG_CONTEXT, IARG_THREAD_ID, IARG_END);
       }
 
+      #ifndef LIGHT_VERSION
       /* I/O memory monitoring for snapshot */
-      if (INS_OperandCount(ins) > 1 && INS_MemoryOperandIsWritten(ins, 0))
+      if (INS_OperandCount(ins) > 1 && INS_MemoryOperandIsWritten(ins, 0)) {
         INS_InsertCall(
           ins, IPOINT_BEFORE, (AFUNPTR)callbackSnapshot,
           IARG_MEMORYOP_EA, 0,
           IARG_UINT32, INS_MemoryWriteSize(ins),
           IARG_END);
+      }
+      #endif /* LIGHT_VERSION */
 
     }
   }

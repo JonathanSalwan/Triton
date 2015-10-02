@@ -4,6 +4,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
 #include <Stats.h>
 #include <Colors.h>
@@ -63,4 +64,6 @@ uint64  Stats::getTimeOfExecution(void) {
   uint64 timeOfExecution = std::chrono::duration_cast<std::chrono::seconds>(this->end - this->start).count();
   return timeOfExecution;
 }
+
+#endif /* LIGHT_VERSION */
 

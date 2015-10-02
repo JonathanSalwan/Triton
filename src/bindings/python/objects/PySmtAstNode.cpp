@@ -4,6 +4,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
 #include <TritonPyObject.h>
 #include <xPyFunc.h>
@@ -158,4 +159,6 @@ PyObject *PySmtAstNode(smt2lib::smtAstAbstractNode *node) {
 
   return (PyObject *)object;
 }
+
+#endif /* LIGHT_VERSION */
 

@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef SETBEIRBUILDER_H
 #define SETBEIRBUILDER_H
 
@@ -32,3 +34,5 @@ class SetbeIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 };
 
 #endif // SETBEIRBUILDER_H
+#endif // LIGHT_VERSION
+

@@ -4,6 +4,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
 #include <SMT2Lib.h>
 #include <SolverEngine.h>
@@ -110,4 +111,6 @@ std::list<Smodel> SolverEngine::getModel(smt2lib::smtAstAbstractNode *node) {
 
   return ret;
 }
+
+#endif /* LIGHT_VERSION */
 

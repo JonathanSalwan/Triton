@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef RETIRBUILDER_H
 #define RETIRBUILDER_H
 
@@ -32,3 +34,5 @@ class RetIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 };
 
 #endif // RETIRBUILDER_H
+#endif // LIGHT_VERSION
+

@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef CQOIRBUILDER_H
 #define CQOIRBUILDER_H
 
@@ -26,3 +28,5 @@ class CqoIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
 };
 
 #endif // CQOIRBUILDER_H
+#endif // LIGHT_VERSION
+

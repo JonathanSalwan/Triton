@@ -4,9 +4,10 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
-#ifndef   SYMBOLICVARIABLE_H
-#define   SYMBOLICVARIABLE_H
+#ifndef SYMBOLICVARIABLE_H
+#define SYMBOLICVARIABLE_H
 
 #include <string>
 #include "TritonTypes.h"
@@ -60,5 +61,6 @@ class SymbolicVariable {
 
 };
 
-#endif
+#endif /* SYMBOLICVARIABLE_H */
+#endif /* LIGHT_VERSION */
 

@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef SHLIRBUILDER_H
 #define SHLIRBUILDER_H
 
@@ -34,3 +36,5 @@ class ShlIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 };
 
 #endif // SHLIRBUILDER_H
+#endif // LIGHT_VERSION
+

@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef NEGIRBUILDER_H
 #define NEGIRBUILDER_H
 
@@ -32,3 +34,5 @@ class NegIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 };
 
 #endif // NEGIRBUILDER_H
+#endif // LIGHT_VERSION
+

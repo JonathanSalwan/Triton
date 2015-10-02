@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef MOVZXIRBUILDER_H
 #define MOVZXIRBUILDER_H
 
@@ -32,3 +34,5 @@ class MovzxIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate  {
 };
 
 #endif // MOVZXIRBUILDER_H
+#endif // LIGHT_VERSION
+

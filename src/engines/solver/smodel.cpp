@@ -4,6 +4,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
 #include <Smodel.h>
 
@@ -26,4 +27,6 @@ std::string Smodel::getName(void) {
 uint64 Smodel::getValue(void) {
   return this->value;
 }
+
+#endif /* LIGHT_VERSION */
 

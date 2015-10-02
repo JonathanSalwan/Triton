@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef JNBEIRBUILDER_H
 #define JNBEIRBUILDER_H
 
@@ -32,3 +34,5 @@ class JnbeIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 };
 
 #endif // JNBEIRBUILDER_H
+#endif // LIGHT_VERSION
+

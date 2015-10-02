@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef IDIVIRBUILDER_H
 #define IDIVIRBUILDER_H
 
@@ -32,3 +34,5 @@ class IdivIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 };
 
 #endif // IDIVIRBUILDER_H
+#endif // LIGHT_VERSION
+

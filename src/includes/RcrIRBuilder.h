@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef RCRIRBUILDER_H
 #define RCRIRBUILDER_H
 
@@ -34,3 +36,5 @@ class RcrIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 };
 
 #endif // RCRIRBUILDER_H
+#endif // LIGHT_VERSION
+

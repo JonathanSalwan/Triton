@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef XCHGIRBUILDER_H
 #define XCHGIRBUILDER_H
 
@@ -34,3 +36,5 @@ class XchgIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 };
 
 #endif // XCHGIRBUILDER_H
+#endif // LIGHT_VERSION
+

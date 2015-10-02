@@ -151,6 +151,7 @@ static PyObject *Instruction_getSectionName(PyObject *self, PyObject *noarg) {
   return PyString_FromFormat("%s", PyInstruction_AsIrb(self)->getSectionName().c_str());
 }
 
+#ifndef LIGHT_VERSION
 
 static char Instruction_getSymbolicExpressions_doc[] = "Returns the symbolic expressions";
 static PyObject *Instruction_getSymbolicExpressions(PyObject *self, PyObject *noarg) {
@@ -172,6 +173,7 @@ static PyObject *Instruction_getSymbolicExpressions(PyObject *self, PyObject *no
   return SEList;
 }
 
+#endif
 
 static char Instruction_getThreadId_doc[] = "Returns the thread id";
 static PyObject *Instruction_getThreadId(PyObject *self, PyObject *noarg) {
@@ -210,7 +212,9 @@ PyMethodDef Instruction_callbacks[] = {
   {"getOperands",               Instruction_getOperands,            METH_NOARGS,   Instruction_getOperands_doc},
   {"getRoutineName",            Instruction_getRoutineName,         METH_NOARGS,   Instruction_getRoutineName_doc},
   {"getSectionName",            Instruction_getSectionName,         METH_NOARGS,   Instruction_getSectionName_doc},
+  #ifndef LIGHT_VERSION
   {"getSymbolicExpressions",    Instruction_getSymbolicExpressions, METH_NOARGS,   Instruction_getSymbolicExpressions_doc},
+  #endif
   {"getThreadId",               Instruction_getThreadId,            METH_NOARGS,   Instruction_getThreadId_doc},
   {"isBranch",                  Instruction_isBranch,               METH_NOARGS,   Instruction_isBranch_doc},
   {"isBranchTaken",             Instruction_isBranchTaken,          METH_NOARGS,   Instruction_isBranchTaken_doc},

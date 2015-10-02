@@ -4,6 +4,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
+
 #ifndef NOTIRBUILDER_H
 #define NOTIRBUILDER_H
 
@@ -32,3 +34,5 @@ class NotIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 };
 
 #endif // NOTIRBUILDER_H
+#endif // LIGHT_VERSION
+

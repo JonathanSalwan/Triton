@@ -4,6 +4,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#ifndef LIGHT_VERSION
 
 #include <python2.7/Python.h>
 
@@ -58,4 +59,6 @@ void initSmtAstNodeEnv(PyObject *idSmtAstNodeClassDict) {
   PyDict_SetItemString(idSmtAstNodeClassDict, "VARIABLE", PyInt_FromLong(smt2lib::VARIABLE_NODE));
   PyDict_SetItemString(idSmtAstNodeClassDict, "ZX", PyInt_FromLong(smt2lib::ZX_NODE));
 }
+
+#endif
 

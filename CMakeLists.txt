@@ -49,19 +49,25 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 add_definitions(-fPIC)
 add_definitions(-std=c++11)
 
-# Find boost
-find_package(Boost 1.53.0 COMPONENTS filesystem REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
-
 # Find Python 2.7
 find_package(PythonLibs 2.7 REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
 
-# Find Z3
-find_package(Z3 REQUIRED)
-include_directories(${Z3_INCLUDE_DIRS})
-if (NOT Z3_FOUND)
-  message(FATAL_ERROR "Z3 not found")
+# Find boost
+find_package(Boost 1.53.0 COMPONENTS filesystem REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+
+# Check if the user want a light version of Triton
+if(${LIGHT_VERSION} MATCHES "yes")
+    # define LIGHT_VERSION
+    add_definitions(-DLIGHT_VERSION)
+else()
+    # Find Z3
+    find_package(Z3 REQUIRED)
+    include_directories(${Z3_INCLUDE_DIRS})
+    if (NOT Z3_FOUND)
+        message(FATAL_ERROR "Z3 not found")
+    endif()
 endif()
 
 # Includes directories (Pin and Triton)
@@ -140,10 +146,17 @@ target_link_libraries(
     xed
     pindwarf
     dl
-    ${Z3_LIBRARIES}
     ${PYTHON_LIBRARIES}
     ${Boost_LIBRARIES}
 )
+
+# Link Triton's dependencies and Pin lib if it's not the light version
+if(NOT LIGHT_VERSION)
+    target_link_libraries(
+        ${PROJECT_NAME}
+        ${Z3_LIBRARIES}
+    )
+endif()
 
 # Generate the triton's shortcut script
 set(PIN_BIN_PATH ${PIN_ROOT}/pin.sh)
@@ -151,7 +164,7 @@ set(TRITON_LIB_PATH ${CMAKE_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PROJECT_
 set(FLAG_IFEELLUCKY "")
 
 if(${KERNEL4} MATCHES "yes")
-  set(FLAG_IFEELLUCKY "-ifeellucky")
+    set(FLAG_IFEELLUCKY "-ifeellucky")
 endif()
 
 configure_file(
