@@ -17,5 +17,6 @@
 #define CB_SIGNALS          6
 #define CB_SYSCALL_ENTRY    7
 #define CB_SYSCALL_EXIT     8
+#define CB_IMAGE_LOAD       9
 
 #endif     /* !__CALLBACKDEFINE_H__ */

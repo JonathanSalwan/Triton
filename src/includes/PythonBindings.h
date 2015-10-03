@@ -41,6 +41,7 @@ namespace PyTritonOptions {
   extern PyObject *callbackSignals;                               // When a signal occurs
   extern PyObject *callbackSyscallEntry;                          // Before syscall processing
   extern PyObject *callbackSyscallExit;                           // After syscall processing
+  extern PyObject *callbackImageLoad;                             // When an image is loaded
   extern std::map<const char *, PyObject *> callbackRoutineEntry; // Before routine processing
   extern std::map<const char *, PyObject *> callbackRoutineExit;  // After routine processing
 

@@ -256,6 +256,24 @@ void ProcessingPyConf::callbackSyscallExit(uint64 threadId, uint64 std) {
   }
 }
 
+void ProcessingPyConf::callbackImageLoad(string imagePath, uint64 imageBase, uint64 imageSize) {
+  // Check if there is a callback wich must be called when an image is loaded
+  if (PyTritonOptions::callbackImageLoad){
+
+    /* CallObject needs a tuple. The size of the tuple is the number of arguments.
+     * threadId and sig are sent to the callback. */
+    PyObject *args = xPyTuple_New(3);
+    PyTuple_SetItem(args, 0, PyString_FromString(imagePath.c_str()));
+    PyTuple_SetItem(args, 1, PyLong_FromLong(imageBase));
+    PyTuple_SetItem(args, 2, PyLong_FromLong(imageSize));
+    if (PyObject_CallObject(PyTritonOptions::callbackImageLoad, args) == nullptr){
+      PyErr_Print();
+      exit(1);
+    }
+
+    Py_DECREF(args);
+  }
+}
 
 void ProcessingPyConf::applyConfBeforeProcessing(IRBuilder *irb) {
   this->startAnalysisFromAddr(irb);
