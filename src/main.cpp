@@ -128,6 +128,8 @@ static void callbackSnapshot(uint64 mem, uint32 writeSize) {
 }
 #endif /* LIGHT_VERSION */
 
+/* Used to fix Pin's bug: "assertion failed: EDG_IsFallthrough" */
+static void callbackNULL(void) { ap.lock(); ap.unlock(); }
 
 static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
   boost::filesystem::path pname(reinterpret_cast<char*>(programName));
@@ -177,6 +179,11 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
           where = IPOINT_TAKEN_BRANCH;
         INS_InsertCall(ins, where, (AFUNPTR)callbackAfter, IARG_CONTEXT, IARG_THREAD_ID, IARG_END);
       }
+
+      /* Fix Pin's bug: "assertion failed: EDG_IsFallthrough" */
+      #ifdef LIGHT_VERSION
+      INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)callbackNULL, IARG_END);
+      #endif /* LIGHT_VERSION */
 
       #ifndef LIGHT_VERSION
       /* I/O memory monitoring for snapshot */
@@ -333,6 +340,20 @@ static void callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDAR
   ap.unlock();
 }
 
+/* Callback when an image is loaded */
+static void callbackImageLoad(IMG img, VOID *v) {
+  if (!IMG_Valid(img))
+  /* Invalid image */
+    return;
+
+  /* Collect image's informations */
+  string imagePath = IMG_Name(img);
+  uint64 imageBase = IMG_LowAddress(img);
+  uint64 imageSize = (IMG_HighAddress(img) + 1) - imageBase;
+
+  /* Python callback for image loading */
+  processingPyConf.callbackImageLoad(imagePath, imageBase, imageSize);
+}
 
 /* Callback when a signals occurs */
 static bool callbackSignals(THREADID threadId, sint32 sig, CONTEXT *ctx, bool hasHandler, const EXCEPTION_INFO *pExceptInfo, void *v) {
@@ -430,6 +451,9 @@ int main(int argc, char *argv[]) {
 
   /* Syscall exit callback */
   PIN_AddSyscallExitFunction(callbackSyscallExit, nullptr);
+
+  /* Image load callback */
+  IMG_AddInstrumentFunction(callbackImageLoad, nullptr);
 
   /* Signals callback */
   PIN_InterceptSignal(SIGFPE,  callbackSignals, nullptr); /* Floating point exception */
