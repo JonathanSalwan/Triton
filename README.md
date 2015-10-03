@@ -4,7 +4,7 @@
 [taint engine](http://triton.quarkslab.com/documentation/taintEngine/), a
 [dynamic symbolic execution engine](http://triton.quarkslab.com/documentation/symbolicEngine/), a
 [snapshot engine](http://triton.quarkslab.com/documentation/snapshotEngine/), translation of x64
-instruction into the [SMT2-LIB representation](http://triton.quarkslab.com/documentation/smt2lib-representation/),
+instructions into the [SMT2-LIB representation](http://triton.quarkslab.com/documentation/smt2lib-representation/),
 a [Z3 interface](http://triton.quarkslab.com/documentation/solverEngine/) to solve constraints 
 and [Python bindings](http://triton.quarkslab.com/documentation/api/triton-methods/).
 
