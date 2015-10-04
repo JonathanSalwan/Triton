@@ -117,11 +117,12 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
 
 
 /* Callback to save bytes for the snapshot engine */
-#ifndef LIGHT_VERSION
 static void callbackSnapshot(uint64 mem, uint32 writeSize) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return;
+
+  #ifndef LIGHT_VERSION
 
   /* If the snapshot is not enable we don't save the memory */
   if (ap.isSnapshotLocked())
@@ -136,8 +137,9 @@ static void callbackSnapshot(uint64 mem, uint32 writeSize) {
 
   /* Mutex */
   ap.unlock();
+
+  #endif /* LIGHT_VERSION */
 }
-#endif /* LIGHT_VERSION */
 
 
 /* Callback at a routine entry */
@@ -406,7 +408,6 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
         INS_InsertCall(ins, where, (AFUNPTR)callbackAfter, IARG_CONTEXT, IARG_THREAD_ID, IARG_END);
       }
 
-      #ifndef LIGHT_VERSION
       /* I/O memory monitoring for snapshot */
       if (INS_OperandCount(ins) > 1 && INS_MemoryOperandIsWritten(ins, 0)) {
         INS_InsertCall(
@@ -415,7 +416,6 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
           IARG_UINT32, INS_MemoryWriteSize(ins),
           IARG_END);
       }
-      #endif /* LIGHT_VERSION */
 
     }
   }
