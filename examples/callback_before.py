@@ -40,8 +40,8 @@ def my_callback_before(instruction):
 
 if __name__ == '__main__':
 
-    # Start the symbolic analysis from the 'check' function
-    startAnalysisFromSymbol('check')
+    # Start the symbolic analysis from the 'main' function
+    startAnalysisFromSymbol('main')
 
     # Add a callback.
     # BEFORE: Add the callback before the instruction processing
