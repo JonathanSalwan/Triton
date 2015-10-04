@@ -34,6 +34,14 @@ ProcessingPyConf    processingPyConf(&ap, &analysisTrigger);
 
 
 
+static void toggleWrapper(bool flag) {
+  ap.lock();
+  analysisTrigger.update(flag);
+  ap.unlock();
+}
+
+
+/* Callback before instruction processing */
 static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, BOOL isBranchTaken, ADDRINT branchTargetAddress, THREADID threadId) {
   /* Some configurations must be applied before processing */
   processingPyConf.applyConfBeforeProcessing(irb);
@@ -78,6 +86,7 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
 }
 
 
+/* Callback after instruction processing */
 static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
   Inst *inst;
 
@@ -106,6 +115,8 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
   ap.unlock();
 }
 
+
+/* Callback to save bytes for the snapshot engine */
 #ifndef LIGHT_VERSION
 static void callbackSnapshot(uint64 mem, uint32 writeSize) {
   if (!analysisTrigger.getState())
@@ -129,78 +140,7 @@ static void callbackSnapshot(uint64 mem, uint32 writeSize) {
 #endif /* LIGHT_VERSION */
 
 
-static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
-  boost::filesystem::path pname(reinterpret_cast<char*>(programName));
-
-  for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)) {
-    for (INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins)) {
-
-      /* ---- Speed up process ---- */
-      IMG currentImgName = IMG_FindByAddress(INS_Address(ins));
-      if (!IMG_Valid(currentImgName))
-        continue;
-
-      boost::filesystem::path pcurrent(IMG_Name(currentImgName));
-      if (!analysisTrigger.getState() && strcmp(pname.leaf().c_str(), pcurrent.leaf().c_str()))
-        continue;
-      /* ---- End of speed up process ---- */
-
-      IRBuilder *irb = createIRBuilder(ins);
-
-      /* Callback before */
-      if (INS_MemoryOperandCount(ins) > 0)
-        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR) callbackBefore,
-            IARG_PTR, irb,
-            IARG_CONTEXT,
-            IARG_BOOL, true,
-            IARG_MEMORYOP_EA, 0,
-            IARG_BRANCH_TAKEN,
-            IARG_BRANCH_TARGET_ADDR,
-            IARG_THREAD_ID,
-            IARG_END);
-      else
-        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR) callbackBefore,
-            IARG_PTR, irb,
-            IARG_CONTEXT,
-            IARG_BOOL, false,
-            IARG_ADDRINT, 0,
-            IARG_BRANCH_TAKEN,
-            IARG_BRANCH_TARGET_ADDR,
-            IARG_THREAD_ID,
-            IARG_END);
-
-      /* Callback after */
-      /* Syscall after context must be catcher with IDREF.CALLBACK.SYSCALL_EXIT */
-      if (INS_IsSyscall(ins) == false) {
-        IPOINT where = IPOINT_AFTER;
-        if (INS_HasFallThrough(ins) == false)
-          where = IPOINT_TAKEN_BRANCH;
-        INS_InsertCall(ins, where, (AFUNPTR)callbackAfter, IARG_CONTEXT, IARG_THREAD_ID, IARG_END);
-      }
-
-      #ifndef LIGHT_VERSION
-      /* I/O memory monitoring for snapshot */
-      if (INS_OperandCount(ins) > 1 && INS_MemoryOperandIsWritten(ins, 0)) {
-        INS_InsertCall(
-          ins, IPOINT_BEFORE, (AFUNPTR)callbackSnapshot,
-          IARG_MEMORYOP_EA, 0,
-          IARG_UINT32, INS_MemoryWriteSize(ins),
-          IARG_END);
-      }
-      #endif /* LIGHT_VERSION */
-
-    }
-  }
-}
-
-
-static void toggleWrapper(bool flag) {
-  ap.lock();
-  analysisTrigger.update(flag);
-  ap.unlock();
-}
-
-
+/* Callback at a routine entry */
 static void callbackRoutineEntry(CONTEXT *ctx, THREADID threadId, PyObject *callback) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
@@ -219,6 +159,7 @@ static void callbackRoutineEntry(CONTEXT *ctx, THREADID threadId, PyObject *call
 }
 
 
+/* Callback at a routine exit */
 static void callbackRoutineExit(CONTEXT *ctx, THREADID threadId, PyObject *callback) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
@@ -237,55 +178,8 @@ static void callbackRoutineExit(CONTEXT *ctx, THREADID threadId, PyObject *callb
 }
 
 
-static void IMG_Instrumentation(IMG img, VOID *) {
-  /* Lock / Unlock the Analysis */
-  if (PyTritonOptions::startAnalysisFromSymbol != nullptr){
-
-    RTN targetRTN = RTN_FindByName(img, PyTritonOptions::startAnalysisFromSymbol);
-    if (RTN_Valid(targetRTN)){
-      RTN_Open(targetRTN);
-
-      RTN_InsertCall(targetRTN,
-          IPOINT_BEFORE,
-          (AFUNPTR) toggleWrapper,
-          IARG_BOOL, true,
-          IARG_END);
-
-      RTN_InsertCall(targetRTN,
-          IPOINT_AFTER,
-          (AFUNPTR) toggleWrapper,
-          IARG_BOOL, false,
-          IARG_END);
-
-      RTN_Close(targetRTN);
-    }
-  }
-
-  /* Callback on routine entry */
-  std::map<const char *, PyObject *>::iterator it;
-  for (it = PyTritonOptions::callbackRoutineEntry.begin(); it != PyTritonOptions::callbackRoutineEntry.end(); it++){
-    RTN targetRTN = RTN_FindByName(img, it->first);
-    if (RTN_Valid(targetRTN)){
-      RTN_Open(targetRTN);
-      RTN_InsertCall(targetRTN, IPOINT_BEFORE, (AFUNPTR)callbackRoutineEntry, IARG_CONTEXT, IARG_THREAD_ID, IARG_PTR, it->second, IARG_END);
-      RTN_Close(targetRTN);
-    }
-  }
-
-  /* Callback on routine exit */
-  for (it = PyTritonOptions::callbackRoutineExit.begin(); it != PyTritonOptions::callbackRoutineExit.end(); it++){
-    RTN targetRTN = RTN_FindByName(img, it->first);
-    if (RTN_Valid(targetRTN)){
-      RTN_Open(targetRTN);
-      RTN_InsertCall(targetRTN, IPOINT_AFTER, (AFUNPTR)callbackRoutineExit, IARG_CONTEXT, IARG_THREAD_ID, IARG_PTR, it->second, IARG_END);
-      RTN_Close(targetRTN);
-    }
-  }
-}
-
-
 /* Callback at the end of the execution */
-static void Fini(INT32, VOID *) {
+static void callbackFini(INT32, VOID *) {
   /* Python callback at the end of execution */
   processingPyConf.callbackFini();
 
@@ -294,7 +188,7 @@ static void Fini(INT32, VOID *) {
 }
 
 
-/* Callback at the syscall entry */
+/* Callback at a syscall entry */
 static void callbackSyscallEntry(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDARD std, VOID *v) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
@@ -333,12 +227,9 @@ static void callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDAR
   ap.unlock();
 }
 
-/* Callback when an image is loaded */
-static void callbackImageLoad(IMG img, VOID *v) {
-  if (!IMG_Valid(img))
-  /* Invalid image */
-    return;
 
+/* Callback when an image is loaded */
+static void callbackImageLoad(IMG img) {
   /* Mutex */
   ap.lock();
 
@@ -407,6 +298,127 @@ static void callbackThreadExit(THREADID threadId, const CONTEXT *ctx, sint32 fla
 }
 
 
+/* Image instrumentation */
+static void IMG_Instrumentation(IMG img, VOID *v) {
+  /* Lock / Unlock the Analysis */
+  if (PyTritonOptions::startAnalysisFromSymbol != nullptr){
+
+    RTN targetRTN = RTN_FindByName(img, PyTritonOptions::startAnalysisFromSymbol);
+    if (RTN_Valid(targetRTN)){
+      RTN_Open(targetRTN);
+
+      RTN_InsertCall(targetRTN,
+          IPOINT_BEFORE,
+          (AFUNPTR) toggleWrapper,
+          IARG_BOOL, true,
+          IARG_END);
+
+      RTN_InsertCall(targetRTN,
+          IPOINT_AFTER,
+          (AFUNPTR) toggleWrapper,
+          IARG_BOOL, false,
+          IARG_END);
+
+      RTN_Close(targetRTN);
+    }
+  }
+
+  /* Callback on routine entry */
+  std::map<const char *, PyObject *>::iterator it;
+  for (it = PyTritonOptions::callbackRoutineEntry.begin(); it != PyTritonOptions::callbackRoutineEntry.end(); it++) {
+    RTN targetRTN = RTN_FindByName(img, it->first);
+    if (RTN_Valid(targetRTN)){
+      RTN_Open(targetRTN);
+      RTN_InsertCall(targetRTN, IPOINT_BEFORE, (AFUNPTR)callbackRoutineEntry, IARG_CONTEXT, IARG_THREAD_ID, IARG_PTR, it->second, IARG_END);
+      RTN_Close(targetRTN);
+    }
+  }
+
+  /* Callback on routine exit */
+  for (it = PyTritonOptions::callbackRoutineExit.begin(); it != PyTritonOptions::callbackRoutineExit.end(); it++) {
+    RTN targetRTN = RTN_FindByName(img, it->first);
+    if (RTN_Valid(targetRTN)){
+      RTN_Open(targetRTN);
+      RTN_InsertCall(targetRTN, IPOINT_AFTER, (AFUNPTR)callbackRoutineExit, IARG_CONTEXT, IARG_THREAD_ID, IARG_PTR, it->second, IARG_END);
+      RTN_Close(targetRTN);
+    }
+  }
+
+  /*
+   * Callback when a new image is loaded.
+   * This callback must be called even outside the range analysis.
+   */
+  if (IMG_Valid(img))
+    callbackImageLoad(img);
+}
+
+
+/* Trace instrumentation */
+static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
+  boost::filesystem::path pname(reinterpret_cast<char*>(programName));
+
+  for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)) {
+    for (INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins)) {
+
+      /* ---- Speed up process ---- */
+      IMG currentImgName = IMG_FindByAddress(INS_Address(ins));
+      if (!IMG_Valid(currentImgName))
+        continue;
+
+      boost::filesystem::path pcurrent(IMG_Name(currentImgName));
+      if (!analysisTrigger.getState() && strcmp(pname.leaf().c_str(), pcurrent.leaf().c_str()))
+        continue;
+      /* ---- End of speed up process ---- */
+
+      IRBuilder *irb = createIRBuilder(ins);
+
+      /* Callback before */
+      if (INS_MemoryOperandCount(ins) > 0)
+        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR) callbackBefore,
+            IARG_PTR, irb,
+            IARG_CONTEXT,
+            IARG_BOOL, true,
+            IARG_MEMORYOP_EA, 0,
+            IARG_BRANCH_TAKEN,
+            IARG_BRANCH_TARGET_ADDR,
+            IARG_THREAD_ID,
+            IARG_END);
+      else
+        INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR) callbackBefore,
+            IARG_PTR, irb,
+            IARG_CONTEXT,
+            IARG_BOOL, false,
+            IARG_ADDRINT, 0,
+            IARG_BRANCH_TAKEN,
+            IARG_BRANCH_TARGET_ADDR,
+            IARG_THREAD_ID,
+            IARG_END);
+
+      /* Callback after */
+      /* Syscall after context must be catcher with IDREF.CALLBACK.SYSCALL_EXIT */
+      if (INS_IsSyscall(ins) == false) {
+        IPOINT where = IPOINT_AFTER;
+        if (INS_HasFallThrough(ins) == false)
+          where = IPOINT_TAKEN_BRANCH;
+        INS_InsertCall(ins, where, (AFUNPTR)callbackAfter, IARG_CONTEXT, IARG_THREAD_ID, IARG_END);
+      }
+
+      #ifndef LIGHT_VERSION
+      /* I/O memory monitoring for snapshot */
+      if (INS_OperandCount(ins) > 1 && INS_MemoryOperandIsWritten(ins, 0)) {
+        INS_InsertCall(
+          ins, IPOINT_BEFORE, (AFUNPTR)callbackSnapshot,
+          IARG_MEMORYOP_EA, 0,
+          IARG_UINT32, INS_MemoryWriteSize(ins),
+          IARG_END);
+      }
+      #endif /* LIGHT_VERSION */
+
+    }
+  }
+}
+
+
 /*
  * Usage function if Pin fail to start.
  * Display the help message.
@@ -444,16 +456,13 @@ int main(int argc, char *argv[]) {
   TRACE_AddInstrumentFunction(TRACE_Instrumentation, getProgramName(argv));
 
   /* End instrumentation callback */
-  PIN_AddFiniFunction(Fini, nullptr);
+  PIN_AddFiniFunction(callbackFini, nullptr);
 
   /* Syscall entry callback */
   PIN_AddSyscallEntryFunction(callbackSyscallEntry, nullptr);
 
   /* Syscall exit callback */
   PIN_AddSyscallExitFunction(callbackSyscallExit, nullptr);
-
-  /* Image load callback */
-  IMG_AddInstrumentFunction(callbackImageLoad, nullptr);
 
   /* Signals callback */
   PIN_InterceptSignal(SIGFPE,  callbackSignals, nullptr); /* Floating point exception */
