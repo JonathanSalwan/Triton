@@ -228,7 +228,10 @@ static void callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDAR
 }
 
 
-/* Callback when an image is loaded */
+/*
+ * Callback when an image is loaded.
+ * This callback must be called even outside the range analysis.
+ */
 static void callbackImageLoad(IMG img) {
   /* Mutex */
   ap.lock();
