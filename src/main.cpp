@@ -335,12 +335,12 @@ static void callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDAR
 
 /* Callback when an image is loaded */
 static void callbackImageLoad(IMG img, VOID *v) {
-  /* Mutex */
-  ap.lock();
-
   if (!IMG_Valid(img))
   /* Invalid image */
     return;
+
+  /* Mutex */
+  ap.lock();
 
   /* Collect image's informations */
   string imagePath = IMG_Name(img);
