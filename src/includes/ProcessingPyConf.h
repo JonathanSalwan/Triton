@@ -36,6 +36,7 @@ class ProcessingPyConf
     void callbackSignals(uint64 threadId, sint32 sig);
     void callbackSyscallEntry(uint64 threadId, uint64 std);
     void callbackSyscallExit(uint64 threadId, uint64 std);
+    void callbackImageLoad(string imagePath, uint64 imageBase, uint64 imageSize);
 
     void startAnalysisFromAddr(IRBuilder *irb);
     void startAnalysisFromOffset(IRBuilder *irb);

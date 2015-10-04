@@ -333,6 +333,26 @@ static void callbackSyscallExit(THREADID threadId, CONTEXT *ctx, SYSCALL_STANDAR
   ap.unlock();
 }
 
+/* Callback when an image is loaded */
+static void callbackImageLoad(IMG img, VOID *v) {
+  /* Mutex */
+  ap.lock();
+
+  if (!IMG_Valid(img))
+  /* Invalid image */
+    return;
+
+  /* Collect image's informations */
+  string imagePath = IMG_Name(img);
+  uint64 imageBase = IMG_LowAddress(img);
+  uint64 imageSize = (IMG_HighAddress(img) + 1) - imageBase;
+
+  /* Python callback for image loading */
+  processingPyConf.callbackImageLoad(imagePath, imageBase, imageSize);
+
+  /* Mutex */
+  ap.unlock();
+}
 
 /* Callback when a signals occurs */
 static bool callbackSignals(THREADID threadId, sint32 sig, CONTEXT *ctx, bool hasHandler, const EXCEPTION_INFO *pExceptInfo, void *v) {
@@ -430,6 +450,9 @@ int main(int argc, char *argv[]) {
 
   /* Syscall exit callback */
   PIN_AddSyscallExitFunction(callbackSyscallExit, nullptr);
+
+  /* Image load callback */
+  IMG_AddInstrumentFunction(callbackImageLoad, nullptr);
 
   /* Signals callback */
   PIN_InterceptSignal(SIGFPE,  callbackSignals, nullptr); /* Floating point exception */

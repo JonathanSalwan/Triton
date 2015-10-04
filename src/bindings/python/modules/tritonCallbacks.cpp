@@ -42,6 +42,7 @@ namespace PyTritonOptions {
   PyObject *callbackSignals       = nullptr;                // When a signal occurs
   PyObject *callbackSyscallEntry  = nullptr;                // Before syscall processing
   PyObject *callbackSyscallExit   = nullptr;                // After syscall processing
+  PyObject *callbackImageLoad     = nullptr;                // When an image is loaded
   std::map<const char *, PyObject *> callbackRoutineEntry;  // Before routine processing
   std::map<const char *, PyObject *> callbackRoutineExit;   // After routine processing
 
@@ -90,6 +91,9 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args) {
 
   else if ((PyLong_AsLong(flag) == CB_SYSCALL_EXIT))
     PyTritonOptions::callbackSyscallExit = function;
+
+  else if (PyLong_AsLong(flag) == CB_IMAGE_LOAD)
+    PyTritonOptions::callbackImageLoad = function;
 
   else if ((PyLong_AsLong(flag) == CB_ROUTINE_ENTRY)){
     if (routine == nullptr || !PyString_Check(routine))

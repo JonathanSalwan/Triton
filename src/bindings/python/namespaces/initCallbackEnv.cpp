@@ -22,5 +22,6 @@ void initCallbackEnv(PyObject *idCallbackClassDict) {
   PyDict_SetItemString(idCallbackClassDict, "SIGNALS", PyInt_FromLong(CB_SIGNALS));
   PyDict_SetItemString(idCallbackClassDict, "SYSCALL_ENTRY", PyInt_FromLong(CB_SYSCALL_ENTRY));
   PyDict_SetItemString(idCallbackClassDict, "SYSCALL_EXIT", PyInt_FromLong(CB_SYSCALL_EXIT));
+  PyDict_SetItemString(idCallbackClassDict, "IMAGE_LOAD", PyInt_FromLong(CB_IMAGE_LOAD));
 }
 
