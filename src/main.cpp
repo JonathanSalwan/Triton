@@ -354,6 +354,7 @@ static void callbackImageLoad(IMG img, VOID *v) {
   ap.unlock();
 }
 
+
 /* Callback when a signals occurs */
 static bool callbackSignals(THREADID threadId, sint32 sig, CONTEXT *ctx, bool hasHandler, const EXCEPTION_INFO *pExceptInfo, void *v) {
   if (!analysisTrigger.getState())
