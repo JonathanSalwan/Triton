@@ -35,6 +35,7 @@ please, **don't blame us** if it is not yet reliable. [Open issues](https://gith
 
 ### Blog post
 
+* [Code coverage using dynamic symbolic execution](http://triton.quarkslab.com/blog/Code-coverage-using-dynamic-symbolic-execution/)
 * [Triton under the hood - First approach with the framework](http://triton.quarkslab.com/blog/first-approach-with-the-framework/)
 
 ### Extra information
