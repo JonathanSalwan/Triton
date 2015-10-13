@@ -9,10 +9,11 @@
 
 #include <string>
 
+#include "BitsVector.h"
 #include "TritonTypes.h"
 
 
-class MemoryOperand
+class MemoryOperand : public BitsVector
 {
   private:
     uint64  address;
