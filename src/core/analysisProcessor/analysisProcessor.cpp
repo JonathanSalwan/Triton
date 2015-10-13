@@ -146,18 +146,23 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAb
   uint64 regId = reg.getTritonRegId();
   smt2lib::smtAstAbstractNode *finalExpr = nullptr, *origReg = nullptr;
 
-  origReg = this->buildSymbolicRegOperand(reg, REG_SIZE, 63, 0);
+  origReg = this->buildSymbolicRegOperand(reg, REG_SIZE, (REG_SIZE_BIT - 1), 0);
 
   switch (regSize) {
     case BYTE_SIZE:
-      if (reg.getLow() == 0)
-        finalExpr = smt2lib::concat(smt2lib::extract(63, 8, origReg), expr);
-      else
-        finalExpr = smt2lib::concat(smt2lib::extract(63, 16, origReg), smt2lib::concat(expr, smt2lib::extract(7, 0, origReg)));
+      if (reg.getLow() == 0) {
+        finalExpr = smt2lib::concat(smt2lib::extract((REG_SIZE_BIT - 1), BYTE_SIZE_BIT, origReg), expr);
+      }
+      else {
+        finalExpr = smt2lib::concat(
+                      smt2lib::extract((REG_SIZE_BIT - 1), WORD_SIZE_BIT, origReg),
+                      smt2lib::concat(expr, smt2lib::extract((BYTE_SIZE_BIT - 1), 0, origReg))
+                    );
+      }
       break;
 
     case WORD_SIZE:
-      finalExpr = smt2lib::concat(smt2lib::extract(63, 16, origReg), expr);
+      finalExpr = smt2lib::concat(smt2lib::extract((REG_SIZE_BIT - 1), WORD_SIZE_BIT, origReg), expr);
       break;
 
     case DWORD_SIZE:
@@ -363,11 +368,11 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicMemOperand(MemoryOp
     symMem = this->getMemSymbolicID(address + memSize - 1);
     if (symMem != UNSET) {
       tmp = smt2lib::reference(symMem);
-      opVec.push_back(smt2lib::extract(7, 0, tmp));
+      opVec.push_back(smt2lib::extract((BYTE_SIZE_BIT - 1), 0, tmp));
     }
     else {
       tmp = smt2lib::bv(this->getMemValue(address + memSize - 1, 1), REG_SIZE);
-      opVec.push_back(smt2lib::extract(7, 0, tmp));
+      opVec.push_back(smt2lib::extract((BYTE_SIZE_BIT - 1), 0, tmp));
     }
     memSize--;
   }
@@ -716,5 +721,4 @@ uint512 AnalysisProcessor::evaluateAST(smt2lib::smtAstAbstractNode *node) {
 }
 
 #endif /* LIGHT_VERSION */
-
 

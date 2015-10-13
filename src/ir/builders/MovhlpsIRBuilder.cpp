@@ -38,10 +38,10 @@ void MovhlpsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
   op2 = ap.buildSymbolicRegOperand(reg2, regSize2);
 
-  /* Destination[0..63] = Source[64..127] */
+  /* Destination[63..0] = Source[127..64] */
   expr = smt2lib::concat(
-            smt2lib::extract(127, 64, op1), /* Destination[64..127] unchanged */
-            smt2lib::extract(127, 64, op2)  /* Destination[0..63] = Source[64..127]; */
+            smt2lib::extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op1), /* Destination[127..64] unchanged */
+            smt2lib::extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op2)  /* Destination[63..0] = Source[127..64]; */
           );
 
   /* Create the symbolic expression */

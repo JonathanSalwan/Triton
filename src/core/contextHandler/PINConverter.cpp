@@ -288,7 +288,7 @@ std::pair<uint64, uint64> PINConverter::convertDBIReg2BitsVector(uint64 pinRegID
     case REG_XMM13:
     case REG_XMM14:
     case REG_XMM15:
-      return std::make_pair(127, 0);
+      return std::make_pair((DQWORD_SIZE_BIT - 1), 0);
 
     case REG_RFLAGS:
     case REG_RAX:
@@ -308,7 +308,7 @@ std::pair<uint64, uint64> PINConverter::convertDBIReg2BitsVector(uint64 pinRegID
     case REG_R13:
     case REG_R14:
     case REG_R15:
-      return std::make_pair(63, 0);
+      return std::make_pair((QWORD_SIZE_BIT - 1), 0);
 
     case REG_EAX:
     case REG_EBX:
@@ -327,7 +327,7 @@ std::pair<uint64, uint64> PINConverter::convertDBIReg2BitsVector(uint64 pinRegID
     case REG_R13D:
     case REG_R14D:
     case REG_R15D:
-      return std::make_pair(31, 0);
+      return std::make_pair((DWORD_SIZE_BIT - 1), 0);
 
     case REG_AX:
     case REG_BX:
@@ -346,13 +346,13 @@ std::pair<uint64, uint64> PINConverter::convertDBIReg2BitsVector(uint64 pinRegID
     case REG_R13W:
     case REG_R14W:
     case REG_R15W:
-      return std::make_pair(15, 0);
+      return std::make_pair((WORD_SIZE_BIT - 1), 0);
 
     case REG_AH:
     case REG_BH:
     case REG_CH:
     case REG_DH:
-      return std::make_pair(15, 8);
+      return std::make_pair((WORD_SIZE_BIT - 1), BYTE_SIZE_BIT);
 
     case REG_AL:
     case REG_BL:
@@ -370,9 +370,10 @@ std::pair<uint64, uint64> PINConverter::convertDBIReg2BitsVector(uint64 pinRegID
     case REG_R13B:
     case REG_R14B:
     case REG_R15B:
-      return std::make_pair(7, 0);
+      return std::make_pair((BYTE_SIZE_BIT - 1), 0);
 
     default:
       return std::make_pair(0, 0);
   }
 }
+

@@ -640,7 +640,7 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::pf(SymbolicExpression *parent, u
    * significant byte of the result.
    */
   expr = smt2lib::bv(1, 1);
-  for ( ; counter <= 7 ; counter++) {
+  for ( ; counter <= (BYTE_SIZE_BIT - 1) ; counter++) {
     expr = smt2lib::bvxor(
              smt2lib::newInstance(expr),
              smt2lib::extract(0, 0,

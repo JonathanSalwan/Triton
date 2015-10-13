@@ -242,7 +242,7 @@ SymbolicVariable *SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symV
   memSymId = this->getMemSymbolicID(memAddr);
 
   // First we create a symbolic variable
-  symVar = this->addSymbolicVariable(SymVar::kind::MEM, memAddr, symVarSize * 8, symVarComment);
+  symVar = this->addSymbolicVariable(SymVar::kind::MEM, memAddr, symVarSize * REG_SIZE, symVarComment);
   smt2lib::smtAstAbstractNode *symVarNode = smt2lib::variable(symVar->getSymVarName());
 
   if (symVarNode == nullptr)

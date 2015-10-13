@@ -44,8 +44,8 @@ void MovhpdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   op2 = ap.buildSymbolicMemOperand(mem, memSize);
 
   expr = smt2lib::concat(
-            smt2lib::extract(63, 0, op2), /* Destination[64..127] = Source */
-            smt2lib::extract(63, 0, op1)  /* Destination[0..63] unchanged */
+            smt2lib::extract((QWORD_SIZE_BIT - 1), 0, op2), /* Destination[127..64] = Source */
+            smt2lib::extract((QWORD_SIZE_BIT - 1), 0, op1)  /* Destination[63..0] unchanged */
           );
 
   /* Create the symbolic expression */
@@ -72,7 +72,7 @@ void MovhpdIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the SMT semantic */
   op2 = ap.buildSymbolicRegOperand(reg, regSize);
 
-  expr = smt2lib::extract(127, 64, op2);
+  expr = smt2lib::extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op2);
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, memSize);
