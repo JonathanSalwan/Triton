@@ -207,7 +207,7 @@ void ProcessingPyConf::callbackSignals(uint64 threadId, sint32 sig) {
     /* CallObject needs a tuple. The size of the tuple is the number of arguments.
      * threadId and sig are sent to the callback. */
     PyObject *args = xPyTuple_New(2);
-    PyTuple_SetItem(args, 0, PyLong_FromLong(threadId));
+    PyTuple_SetItem(args, 0, PyLong_FromLongLong(threadId));
     PyTuple_SetItem(args, 1, Py_BuildValue("i", sig));
     if (PyObject_CallObject(PyTritonOptions::callbackSignals, args) == nullptr){
       PyErr_Print();
@@ -226,8 +226,8 @@ void ProcessingPyConf::callbackSyscallEntry(uint64 threadId, uint64 std) {
     /* CallObject needs a tuple. The size of the tuple is the number of arguments.
      * threadId and Std are sent to the callback. */
     PyObject *args = xPyTuple_New(2);
-    PyTuple_SetItem(args, 0, PyLong_FromLong(threadId));
-    PyTuple_SetItem(args, 1, PyLong_FromLong(std));
+    PyTuple_SetItem(args, 0, PyLong_FromLongLong(threadId));
+    PyTuple_SetItem(args, 1, PyLong_FromLongLong(std));
     if (PyObject_CallObject(PyTritonOptions::callbackSyscallEntry, args) == nullptr){
       PyErr_Print();
       exit(1);
@@ -245,8 +245,8 @@ void ProcessingPyConf::callbackSyscallExit(uint64 threadId, uint64 std) {
     /* CallObject needs a tuple. The size of the tuple is the number of arguments.
      * threadId and Std are sent to the callback. */
     PyObject *args = xPyTuple_New(2);
-    PyTuple_SetItem(args, 0, PyLong_FromLong(threadId));
-    PyTuple_SetItem(args, 1, PyLong_FromLong(std));
+    PyTuple_SetItem(args, 0, PyLong_FromLongLong(threadId));
+    PyTuple_SetItem(args, 1, PyLong_FromLongLong(std));
     if (PyObject_CallObject(PyTritonOptions::callbackSyscallExit, args) == nullptr){
       PyErr_Print();
       exit(1);
@@ -265,8 +265,8 @@ void ProcessingPyConf::callbackImageLoad(string imagePath, uint64 imageBase, uin
      * imagePath, imageBase and imageSize are sent to the callback. */
     PyObject *args = xPyTuple_New(3);
     PyTuple_SetItem(args, 0, PyString_FromString(imagePath.c_str()));
-    PyTuple_SetItem(args, 1, PyLong_FromLong(imageBase));
-    PyTuple_SetItem(args, 2, PyLong_FromLong(imageSize));
+    PyTuple_SetItem(args, 1, PyLong_FromLongLong(imageBase));
+    PyTuple_SetItem(args, 2, PyLong_FromLongLong(imageSize));
     if (PyObject_CallObject(PyTritonOptions::callbackImageLoad, args) == nullptr){
       PyErr_Print();
       exit(1);
@@ -293,7 +293,7 @@ void ProcessingPyConf::applyConfBeforeProcessing(IRBuilder *irb) {
 
 void ProcessingPyConf::callbackRoutine(uint64 threadId, PyObject *callback) {
   PyObject *args = xPyTuple_New(1);
-  PyTuple_SetItem(args, 0, PyLong_FromLong(threadId));
+  PyTuple_SetItem(args, 0, PyLong_FromLongLong(threadId));
   if (PyObject_CallObject(callback, args) == nullptr){
     PyErr_Print();
     exit(1);

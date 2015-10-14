@@ -8,6 +8,7 @@
 
 #include <python2.7/Python.h>
 
+#include <PythonUtils.h>
 #include <SMT2Lib.h>
 #include <TritonPyObject.h>
 
@@ -26,7 +27,7 @@ static PyObject *smt2lib_bv(PyObject *self, PyObject *args) {
   if (!PyLong_Check(op2) && !PyInt_Check(op2))
     return PyErr_Format(PyExc_TypeError, "bv(): expected an integer as second argument");
 
-  return PySmtAstNode(smt2lib::bv(PyLong_AsLong(op1), PyLong_AsLong(op2)));
+  return PySmtAstNode(smt2lib::bv(PyLongObjectToUint128(op1), PyLong_AsLongLong(op2)));
 }
 
 
@@ -212,7 +213,7 @@ static PyObject *smt2lib_bvror(PyObject *self, PyObject *args) {
   if (op2 == nullptr || !PySmtAstNode_Check(op2))
     return PyErr_Format(PyExc_TypeError, "bvror(): expected a SmtAstNode as second argument");
 
-  return PySmtAstNode(smt2lib::bvror(PyLong_AsLong(op1), PySmtAstNode_AsSmtAstNode(op2)));
+  return PySmtAstNode(smt2lib::bvror(PyLong_AsLongLong(op1), PySmtAstNode_AsSmtAstNode(op2)));
 }
 
 
@@ -230,7 +231,7 @@ static PyObject *smt2lib_bvrol(PyObject *self, PyObject *args) {
   if (op2 == nullptr || !PySmtAstNode_Check(op2))
     return PyErr_Format(PyExc_TypeError, "bvrol(): expected a SmtAstNode as second argument");
 
-  return PySmtAstNode(smt2lib::bvrol(PyLong_AsLong(op1), PySmtAstNode_AsSmtAstNode(op2)));
+  return PySmtAstNode(smt2lib::bvrol(PyLong_AsLongLong(op1), PySmtAstNode_AsSmtAstNode(op2)));
 }
 
 
@@ -621,7 +622,7 @@ static PyObject *smt2lib_extract(PyObject *self, PyObject *args) {
   if (op3 == nullptr || !PySmtAstNode_Check(op3))
     return PyErr_Format(PyExc_TypeError, "extract(): expected a SmtAstNode as third argument");
 
-  return PySmtAstNode(smt2lib::extract(PyLong_AsLong(op1), PyLong_AsLong(op2), PySmtAstNode_AsSmtAstNode(op3)));
+  return PySmtAstNode(smt2lib::extract(PyLong_AsLongLong(op1), PyLong_AsLongLong(op2), PySmtAstNode_AsSmtAstNode(op3)));
 }
 
 
@@ -679,7 +680,7 @@ static PyObject *smt2lib_sx(PyObject *self, PyObject *args) {
   if (op2 == nullptr || !PySmtAstNode_Check(op2))
     return PyErr_Format(PyExc_TypeError, "sx(): expected a SmtAstNode as second argument");
 
-  return PySmtAstNode(smt2lib::sx(PyLong_AsLong(op1), PySmtAstNode_AsSmtAstNode(op2)));
+  return PySmtAstNode(smt2lib::sx(PyLong_AsLongLong(op1), PySmtAstNode_AsSmtAstNode(op2)));
 }
 
 
@@ -706,7 +707,7 @@ static PyObject *smt2lib_zx(PyObject *self, PyObject *args) {
   if (op2 == nullptr || !PySmtAstNode_Check(op2))
     return PyErr_Format(PyExc_TypeError, "zx(): expected a SmtAstNode as second argument");
 
-  return PySmtAstNode(smt2lib::zx(PyLong_AsLong(op2), PySmtAstNode_AsSmtAstNode(op2)));
+  return PySmtAstNode(smt2lib::zx(PyLong_AsLongLong(op2), PySmtAstNode_AsSmtAstNode(op2)));
 }
 
 

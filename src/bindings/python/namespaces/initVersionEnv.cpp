@@ -12,8 +12,8 @@
 
 
 void initVersionEnv(PyObject *idVersionClassDict) {
-  PyDict_SetItemString(idVersionClassDict, "MAJOR", PyInt_FromLong(TritonVersion::MAJOR));
-  PyDict_SetItemString(idVersionClassDict, "MINOR", PyInt_FromLong(TritonVersion::MINOR));
-  PyDict_SetItemString(idVersionClassDict, "BUILD", PyInt_FromLong(TritonVersion::BUILD));
+  PyDict_SetItemString(idVersionClassDict, "MAJOR", PyLong_FromLongLong(TritonVersion::MAJOR));
+  PyDict_SetItemString(idVersionClassDict, "MINOR", PyLong_FromLongLong(TritonVersion::MINOR));
+  PyDict_SetItemString(idVersionClassDict, "BUILD", PyLong_FromLongLong(TritonVersion::BUILD));
 }
 

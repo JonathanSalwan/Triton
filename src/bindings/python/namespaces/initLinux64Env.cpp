@@ -15,5 +15,5 @@ extern const char*syscallmap[];
 
 void initLinux64Env(PyObject *idLinux64ClassDict) {
   for (unsigned int i = 0; i < NB_SYSCALL; ++i)
-    PyDict_SetItemString(idLinux64ClassDict, syscallmap[i], PyInt_FromLong(i));
+    PyDict_SetItemString(idLinux64ClassDict, syscallmap[i], PyLong_FromLongLong(i));
 }
