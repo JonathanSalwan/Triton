@@ -62,6 +62,7 @@
 import  smt2lib
 from    triton      import *
 from    collections import OrderedDict
+from    copy        import deepcopy
 
 
 
@@ -154,7 +155,7 @@ class TritonExecution(object):
                 model = getModel(expr)
 
                 if len(model) > 0:
-                    newInput = TritonExecution.input
+                    newInput = deepcopy(TritonExecution.input)
                     newInput.setBound(j + 1)
 
                     for k,v in model.items():
@@ -229,6 +230,7 @@ class TritonExecution(object):
 
 
 if __name__=='__main__':
-    TritonExecution.run("aaa", 0x4004a0, 0x40065D, ["main", "myatoi"])  # ./triton ./tools/code_coverage.py ./samples/code_coverage/test_atoi a
+    #TritonExecution.run("aaa", 0x4004a0, 0x40065D, ["main", "myatoi"])  # ./triton ./tools/code_coverage.py ./samples/code_coverage/test_atoi a
     #TritonExecution.run("bad !", 0x400480, 0x40061B, ["main", "check"]) # ./triton ./tools/code_coverage.py ./samples/crackmes/crackme_xor abc
+    TritonExecution.run("aaaaaaaa", 0x400460, 0x400666, ["main", "check"]) # ./triton ./tools/code_coverage.py ./samples/crackmes/crackme_regex_fsm a
 
