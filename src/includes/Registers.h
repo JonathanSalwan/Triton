@@ -67,7 +67,7 @@ enum regID_t
 };
 
 #define isFlagId(x)   ((x >= ID_AF && x <= ID_ZF) ? true : false)
-#define isRegId(x)    ((x >= ID_RAX && x <= ID_XMM15) ? true : false)
+#define isRegId(x)    ((x >= ID_RAX && x <= ID_RFLAGS) ? true : false)
 #define isSSERegId(x) ((x >= ID_XMM0 && x <= ID_XMM15) ? true : false)
 
 #include "TmpReg.h"
