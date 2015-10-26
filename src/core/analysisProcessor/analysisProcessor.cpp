@@ -330,7 +330,7 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(Register
   if (symReg != UNSET)
     op = smt2lib::extract(high, low, smt2lib::reference(symReg));
   else {
-    if (regId >= ID_XMM0 && regId <= ID_XMM15)
+    if (isSSERegId(regId))
       op = smt2lib::extract(high, low, smt2lib::bv(this->getSSERegisterValue(reg), SSE_REG_SIZE_BIT));
     else
       op = smt2lib::extract(high, low, smt2lib::bv(this->getRegisterValue(reg), REG_SIZE_BIT));
@@ -348,7 +348,7 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(Register
   if (symReg != UNSET)
     op = smt2lib::extract(highExtract, lowExtract, smt2lib::reference(symReg));
   else {
-    if (regId >= ID_XMM0 && regId <= ID_XMM15)
+    if (isSSERegId(regId))
       op = smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getSSERegisterValue(reg), SSE_REG_SIZE_BIT));
     else
       op = smt2lib::extract(highExtract, lowExtract, smt2lib::bv(this->getRegisterValue(reg), REG_SIZE_BIT));

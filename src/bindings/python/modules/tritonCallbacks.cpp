@@ -201,7 +201,7 @@ static PyObject *Triton_getRegValue(PyObject *self, PyObject *regId) {
   tritonReg = PyLong_AsLongLong(regId);
   reg = createTmpReg(tritonReg);
 
-  if (tritonReg >= ID_XMM0 && tritonReg <= ID_XMM15){
+  if (isSSERegId(tritonReg)){
     uint128 value = ap.getSSERegisterValue(reg);
     return uint128ToPyLongObject(value);
   }
@@ -359,7 +359,7 @@ static PyObject *Triton_setRegValue(PyObject *self, PyObject *args) {
   tr = PyLong_AsLongLong(reg);
   RegisterOperand ro = createTmpReg(tr);
 
-  if (tr >= ID_XMM0 && tr <= ID_XMM15)
+  if (isSSERegId(tr))
     ap.setSSERegisterValue(ro, va);
   else
     ap.setRegisterValue(ro, boost::numeric_cast<uint64>(va));
@@ -721,10 +721,7 @@ static PyObject *Triton_getRegSymbolicID(PyObject *self, PyObject *reg) {
     return PyErr_Format(PyExc_TypeError, "getRegSymbolicID(): expected a register id (integer) as argument");
 
   regId = PyLong_AsLongLong(reg);
-  if (regId >= ID_AF && regId <= ID_ZF)
-    ro = createTmpFlag(regId);
-  else
-    ro = createTmpReg(regId);
+  ro = createTmpReg(regId);
 
   return Py_BuildValue("k", ap.getRegSymbolicID(ro));
 }
@@ -738,7 +735,7 @@ static PyObject *Triton_getRegs(PyObject *self, PyObject *noargs) {
   for (uint64 regId = ID_RAX; regId < ID_RFLAGS; regId++){
     PyObject *reg = xPyDict_New();
     RegisterOperand ro = createTmpReg(regId);
-    if (regId >= ID_XMM0 && regId <= ID_XMM15)
+    if (isSSERegId(regId))
       PyDict_SetItemString(reg, "concreteValue", uint128ToPyLongObject(ap.getSSERegisterValue(ro)));
     else
       PyDict_SetItemString(reg, "concreteValue", Py_BuildValue("k", ap.getRegisterValue(ro)));
@@ -886,7 +883,7 @@ static PyObject *Triton_isMemTainted(PyObject *self, PyObject *mem) {
   if (!PyLong_Check(mem) && !PyInt_Check(mem))
     return PyErr_Format(PyExc_TypeError, "isMemTainted(): expected an address (integer) as argument");
 
-  MemoryOperand mo(PyInt_AsLong(mem), 1);
+  MemoryOperand mo(PyLong_AsLongLong(mem), 1);
   if (ap.isMemTainted(mo) == true)
     Py_RETURN_TRUE;
 
@@ -899,7 +896,7 @@ static PyObject *Triton_isRegTainted(PyObject *self, PyObject *reg) {
   if (!PyLong_Check(reg) && !PyInt_Check(reg))
     return PyErr_Format(PyExc_TypeError, "isRegTainted(): expected a register id (integer) as argument");
 
-  RegisterOperand ro = createTmpReg(PyInt_AsLong(reg));
+  RegisterOperand ro = createTmpReg(PyLong_AsLongLong(reg));
   if (ap.isRegTainted(ro) == true)
     Py_RETURN_TRUE;
 
