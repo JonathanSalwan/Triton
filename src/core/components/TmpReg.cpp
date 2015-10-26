@@ -58,6 +58,8 @@ RegisterOperand tmp_flag_zf    = createTmpFlag(ID_ZF);
 
 
 RegisterOperand createTmpReg(uint64 tritonRegId) {
+  if (isFlagId(tritonRegId))
+    return createTmpFlag(tritonRegId);
   return RegisterOperand(PINConverter::convertTritonReg2DBIReg(tritonRegId));
 }
 
