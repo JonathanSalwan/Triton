@@ -287,7 +287,7 @@ static PyObject *Triton_opcodeToString(PyObject *self, PyObject *opcode) {
   if (!PyLong_Check(opcode) && !PyInt_Check(opcode))
     return PyErr_Format(PyExc_TypeError, "opcodeToString(): expected an opcode (integer) as argument");
 
-  return Py_BuildValue("s", OPCODE_StringShort(PyInt_AsLong(opcode)).c_str());
+  return Py_BuildValue("s", OPCODE_StringShort(PyLong_AsLongLong(opcode)).c_str());
 }
 
 
@@ -928,7 +928,7 @@ static PyObject *Triton_taintMem(PyObject *self, PyObject *mem) {
   if (!PyLong_Check(mem) && !PyInt_Check(mem))
     return PyErr_Format(PyExc_TypeError, "TaintMem(): expected a memory address (integer) as argument");
 
-  MemoryOperand mo(PyInt_AsLong(mem), 1);
+  MemoryOperand mo(PyLong_AsLongLong(mem), 1);
   ap.taintMem(mo);
   Py_INCREF(Py_None);
   return Py_None;
@@ -974,7 +974,7 @@ static PyObject *Triton_taintReg(PyObject *self, PyObject *reg) {
   if (!PyLong_Check(reg) && !PyInt_Check(reg))
     return PyErr_Format(PyExc_TypeError, "taintReg(): expected a register id (integer) as argument");
 
-  RegisterOperand ro = createTmpReg(PyInt_AsLong(reg));
+  RegisterOperand ro = createTmpReg(PyLong_AsLongLong(reg));
   ap.taintReg(ro);
   Py_INCREF(Py_None);
   return Py_None;
@@ -1028,7 +1028,7 @@ static PyObject *Triton_untaintMem(PyObject *self, PyObject *mem) {
   if (!PyLong_Check(mem) && !PyInt_Check(mem))
     return PyErr_Format(PyExc_TypeError, "untaintMem(): expected a memory address (integer) as argument");
 
-  MemoryOperand mo(PyInt_AsLong(mem), 1);
+  MemoryOperand mo(PyLong_AsLongLong(mem), 1);
   ap.untaintMem(mo);
   Py_INCREF(Py_None);
   return Py_None;
@@ -1076,7 +1076,7 @@ static PyObject *Triton_untaintReg(PyObject *self, PyObject *reg) {
   if (!PyLong_Check(reg) && !PyInt_Check(reg))
     return PyErr_Format(PyExc_TypeError, "untaintReg(): expected a register id (integer) as argument");
 
-  RegisterOperand ro = createTmpReg(PyInt_AsLong(reg));
+  RegisterOperand ro = createTmpReg(PyLong_AsLongLong(reg));
   ap.untaintReg(ro);
   Py_INCREF(Py_None);
   return Py_None;
