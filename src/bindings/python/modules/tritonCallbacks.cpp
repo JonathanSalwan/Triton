@@ -145,6 +145,14 @@ static PyObject *Triton_checkWriteAccess(PyObject *self, PyObject *addr) {
 }
 
 
+static char Triton_detachProcess_doc[] = "Detach from the targeted process";
+static PyObject *Triton_detachProcess(PyObject *self, PyObject *noarg) {
+  PIN_Detach();
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+
 static char Triton_getMemValue_doc[] = "Gets the current value of the memory";
 static PyObject *Triton_getMemValue(PyObject *self, PyObject *args) {
   PyObject *addr;
@@ -1121,6 +1129,7 @@ PyMethodDef tritonCallbacks[] = {
   {"addCallback",               Triton_addCallback,               METH_VARARGS, Triton_addCallback_doc},
   {"checkReadAccess",           Triton_checkReadAccess,           METH_O,       Triton_checkReadAccess_doc},
   {"checkWriteAccess",          Triton_checkWriteAccess,          METH_O,       Triton_checkWriteAccess_doc},
+  {"detachProcess",             Triton_detachProcess,             METH_NOARGS,  Triton_detachProcess_doc},
   {"getFlagValue",              Triton_getFlagValue,              METH_O,       Triton_getFlagValue_doc},
   {"getMemValue",               Triton_getMemValue,               METH_VARARGS, Triton_getMemValue_doc},
   {"getRegName",                Triton_getRegName,                METH_O,       Triton_getRegName_doc},

@@ -360,19 +360,21 @@ static void IMG_Instrumentation(IMG img, VOID *v) {
 
 /* Trace instrumentation */
 static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
-  boost::filesystem::path pname(reinterpret_cast<char*>(programName));
-
   for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)) {
     for (INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins)) {
 
       /* ---- Speed up process ---- */
-      IMG currentImgName = IMG_FindByAddress(INS_Address(ins));
-      if (!IMG_Valid(currentImgName))
-        continue;
+      if (programName != nullptr) {
+        boost::filesystem::path pname(reinterpret_cast<char*>(programName));
 
-      boost::filesystem::path pcurrent(IMG_Name(currentImgName));
-      if (!analysisTrigger.getState() && strcmp(pname.leaf().c_str(), pcurrent.leaf().c_str()))
-        continue;
+        IMG currentImgName = IMG_FindByAddress(INS_Address(ins));
+        if (!IMG_Valid(currentImgName))
+          continue;
+
+        boost::filesystem::path pcurrent(IMG_Name(currentImgName));
+        if (!analysisTrigger.getState() && strcmp(pname.leaf().c_str(), pcurrent.leaf().c_str()))
+          continue;
+      }
       /* ---- End of speed up process ---- */
 
       IRBuilder *irb = createIRBuilder(ins);
