@@ -12,7 +12,7 @@ fi
 
 if [ -z "$2" ]
   then
-    echo "You need to specify a target binary"
+    echo "You need to specify a target pid"
     echo "Syntax: ./triton <your_script.py> <target pid>"
     exit
 fi

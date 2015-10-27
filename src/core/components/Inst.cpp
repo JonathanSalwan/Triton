@@ -4,23 +4,46 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
-
 #include <pin.H>
 #include <Inst.h>
 
 
+
 Inst::Inst(uint64 threadId, uint64 address, const std::string &dis) {
+  RTN rtn;
+  SEC sec;
+  IMG img;
+
   this->address             = address;
-  this->nextAddress         = 0;
   this->branchTaken         = false;
   this->branchTargetAddress = 0;
-  this->baseAddress         = IMG_LowAddress(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
   this->disassembly         = dis;
-  this->imageName           = IMG_Name(SEC_Img(RTN_Sec(RTN_FindByAddress(address))));
-  this->offset              = this->address - this->baseAddress;
-  this->routineName         = RTN_FindNameByAddress(address);
-  this->sectionName         = SEC_Name(RTN_Sec(RTN_FindByAddress(address)));
+  this->nextAddress         = 0;
   this->threadId            = threadId;
+  this->baseAddress         = 0;
+  this->imageName           = "unknown";
+  this->sectionName         = "unknown";
+
+  rtn = RTN_FindByAddress(address);
+  if (RTN_Valid(rtn)) {
+
+    sec = RTN_Sec(rtn);
+    if (SEC_Valid(sec)) {
+
+      this->sectionName = SEC_Name(sec);
+
+      img = SEC_Img(sec);
+      if (IMG_Valid(img)) {
+        this->baseAddress = IMG_LowAddress(img);
+        this->imageName   = IMG_Name(img);
+      }
+    }
+  }
+
+  this->offset        = this->address - this->baseAddress;
+  this->routineName   = RTN_FindNameByAddress(address);
+  if (this->routineName.empty())
+    this->routineName = "unknown";
 }
 
 
