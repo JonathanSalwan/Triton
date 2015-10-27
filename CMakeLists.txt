@@ -173,3 +173,9 @@ configure_file(
     IMMEDIATE @ONLY
 )
 
+configure_file(
+    ${CMAKE_SOURCE_DIR}/scripts/tritonAttach.in
+    ${CMAKE_SOURCE_DIR}/tritonAttach
+    IMMEDIATE @ONLY
+)
+

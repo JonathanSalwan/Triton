@@ -1,7 +1,7 @@
 #!/bin/bash
 
-PIN_BIN_PATH=/home/jonathan/Works/Tools/pin-2.14-71313-gcc.4.4.7-linux/source/tools/Triton/../../../pin.sh
-TRITON_LIB_PATH=/home/jonathan/Works/Tools/pin-2.14-71313-gcc.4.4.7-linux/source/tools/Triton/build/libtriton.so
+PIN_BIN_PATH=@PIN_BIN_PATH@
+TRITON_LIB_PATH=@TRITON_LIB_PATH@
 
 if [ -z "$1" ]
   then
@@ -17,5 +17,5 @@ if [ -z "$2" ]
     exit
 fi
 
-$PIN_BIN_PATH -pid $2 -t $TRITON_LIB_PATH -script $1
+$PIN_BIN_PATH -pid $2 @FLAG_IFEELLUCKY@ -t $TRITON_LIB_PATH -script $1
 
