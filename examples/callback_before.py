@@ -3,7 +3,7 @@ from triton import *
 
 # Output
 #
-# $ ./triton ./examples/get_expressions.py ./samples/crackmes/crackme_xor a
+# $ ./triton ./examples/callback_before.py ./samples/crackmes/crackme_xor a
 # TID (0) 0x40056d push rbp
 # TID (0) 0x40056e mov rbp, rsp
 # TID (0) 0x400571 mov qword ptr [rbp-0x18], rdi
@@ -40,8 +40,8 @@ def my_callback_before(instruction):
 
 if __name__ == '__main__':
 
-    # Start the symbolic analysis from the 'main' function
-    startAnalysisFromSymbol('main')
+    # Start the symbolic analysis from the 'check' function
+    startAnalysisFromSymbol('check')
 
     # Add a callback.
     # BEFORE: Add the callback before the instruction processing

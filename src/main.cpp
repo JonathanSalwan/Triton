@@ -364,26 +364,69 @@ static void IMG_Instrumentation(IMG img, VOID *v) {
 }
 
 
+/* Returns the base address of the instruction */
+static uint64 getBaseAddress(uint64 address) {
+  RTN rtn;
+  SEC sec;
+  IMG img;
+  rtn = RTN_FindByAddress(address);
+  if (RTN_Valid(rtn)) {
+    sec = RTN_Sec(rtn);
+    if (SEC_Valid(sec)) {
+      img = SEC_Img(sec);
+      if (IMG_Valid(img)) {
+        return IMG_LowAddress(img);
+      }
+    }
+  }
+  return 0;
+}
+
+
+/* Returns the offset of the instruction */
+static uint64 getInsOffset(uint64 address) {
+  uint64 base = getBaseAddress(address);
+  if (base == 0)
+    return 0;
+  return address - base;
+}
+
+
+/* Check if the analysis must be unlocked */
+static bool checkUnlockAnalysis(uint64 address) {
+  /* Unlock the analysis at the entry point from symbol */
+  if (PyTritonOptions::startAnalysisFromSymbol != nullptr) {
+    if ((RTN_FindNameByAddress(address) == PyTritonOptions::startAnalysisFromSymbol)) {
+      toggleWrapper(true);
+      return true;
+    }
+  }
+
+  /* Unlock the analysis at the entry point from address */
+  else if (PyTritonOptions::startAnalysisFromAddr.find(address) != PyTritonOptions::startAnalysisFromAddr.end()) {
+      toggleWrapper(true);
+      return true;
+  }
+
+  /* Unlock the analysis at the entry point from offset */
+  else if (PyTritonOptions::startAnalysisFromOffset.find(getInsOffset(address)) != PyTritonOptions::startAnalysisFromOffset.end()) {
+      toggleWrapper(true);
+      return true;
+  }
+  return false;
+}
+
+
 /* Trace instrumentation */
 static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
   for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)) {
     for (INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins)) {
 
-      /* ---- Speed up process ---- */
-      if (programName != nullptr) {
-        /* We do not attach to a process. */
-        /* So, let's skip all ld stuffs.  */
-        boost::filesystem::path pname(reinterpret_cast<char*>(programName));
+      checkUnlockAnalysis(INS_Address(ins));
 
-        IMG currentImgName = IMG_FindByAddress(INS_Address(ins));
-        if (!IMG_Valid(currentImgName))
-          continue;
-
-        boost::filesystem::path pcurrent(IMG_Name(currentImgName));
-        if (!analysisTrigger.getState() && strcmp(pname.leaf().c_str(), pcurrent.leaf().c_str()))
-          continue;
-      }
-      /* ---- End of speed up process ---- */
+      if (!analysisTrigger.getState())
+      /* Analysis locked */
+        continue;
 
       IRBuilder *irb = createIRBuilder(ins);
 
