@@ -17,12 +17,14 @@
 #include <PythonUtils.h>
 #include <Registers.h>
 #include <Smodel.h>
+#include <Trigger.h>
 #include <TritonPyObject.h>
 #include <Utils.h>
 #include <pin.H>
 #include <xPyFunc.h>
 
-extern AnalysisProcessor ap;
+extern AnalysisProcessor  ap;
+extern Trigger            analysisTrigger;
 
 
 /* NameSpace for all Python Bindings variables */
@@ -148,6 +150,7 @@ static PyObject *Triton_checkWriteAccess(PyObject *self, PyObject *addr) {
 static char Triton_detachProcess_doc[] = "Detach from the targeted process";
 static PyObject *Triton_detachProcess(PyObject *self, PyObject *noarg) {
   PIN_Detach();
+  analysisTrigger.update(false);
   Py_INCREF(Py_None);
   return Py_None;
 }

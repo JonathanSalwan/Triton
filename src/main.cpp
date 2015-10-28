@@ -76,7 +76,7 @@ static void checkLockAnalysis(uint64 address) {
       toggleWrapper(false);
 
   /* Lock the analysis at the exit point from offset */
-  else if (PyTritonOptions::stopAnalysisFromOffset.find(getInsOffset(address)) != PyTritonOptions::stopAnalysisFromOffset.end())
+  if (PyTritonOptions::stopAnalysisFromOffset.find(getInsOffset(address)) != PyTritonOptions::stopAnalysisFromOffset.end())
       toggleWrapper(false);
 }
 
@@ -91,11 +91,11 @@ static void checkUnlockAnalysis(uint64 address) {
   }
 
   /* Unlock the analysis at the entry point from address */
-  else if (PyTritonOptions::startAnalysisFromAddr.find(address) != PyTritonOptions::startAnalysisFromAddr.end())
+  if (PyTritonOptions::startAnalysisFromAddr.find(address) != PyTritonOptions::startAnalysisFromAddr.end())
       toggleWrapper(true);
 
   /* Unlock the analysis at the entry point from offset */
-  else if (PyTritonOptions::startAnalysisFromOffset.find(getInsOffset(address)) != PyTritonOptions::startAnalysisFromOffset.end())
+  if (PyTritonOptions::startAnalysisFromOffset.find(getInsOffset(address)) != PyTritonOptions::startAnalysisFromOffset.end())
       toggleWrapper(true);
 }
 
@@ -425,7 +425,7 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
 
       if (!analysisTrigger.getState())
       /* Analysis locked */
-        return ;
+        continue ;
 
       IRBuilder *irb = createIRBuilder(ins);
 
