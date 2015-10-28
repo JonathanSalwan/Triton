@@ -21,35 +21,6 @@ ProcessingPyConf::ProcessingPyConf(AnalysisProcessor *ap, Trigger *analysisTrigg
 ProcessingPyConf::~ProcessingPyConf() {
 }
 
-
-void ProcessingPyConf::startAnalysisFromAddr(IRBuilder *irb) {
-  // Check if the DSE must be start at this address
-  if (PyTritonOptions::startAnalysisFromAddr.find(irb->getAddress()) != PyTritonOptions::startAnalysisFromAddr.end())
-    this->analysisTrigger->update(true);
-}
-
-
-void ProcessingPyConf::startAnalysisFromOffset(IRBuilder *irb) {
-  // Check if the DSE must be start at this offset
-  if (PyTritonOptions::startAnalysisFromOffset.find(irb->getOffset()) != PyTritonOptions::startAnalysisFromOffset.end())
-    this->analysisTrigger->update(true);
-}
-
-
-void ProcessingPyConf::stopAnalysisFromAddr(IRBuilder *irb) {
-  // Check if the DSE must be stop at this address
-  if (PyTritonOptions::stopAnalysisFromAddr.find(irb->getAddress()) != PyTritonOptions::stopAnalysisFromAddr.end())
-    this->analysisTrigger->update(false);
-}
-
-
-void ProcessingPyConf::stopAnalysisFromOffset(IRBuilder *irb) {
-  // Check if the DSE must be stop at this offset
-  if (PyTritonOptions::stopAnalysisFromOffset.find(irb->getOffset()) != PyTritonOptions::stopAnalysisFromOffset.end())
-    this->analysisTrigger->update(false);
-}
-
-
 #ifndef LIGHT_VERSION
 
 void ProcessingPyConf::taintMemFromAddr(IRBuilder *irb) {
@@ -278,10 +249,6 @@ void ProcessingPyConf::callbackImageLoad(string imagePath, uint64 imageBase, uin
 
 
 void ProcessingPyConf::applyConfBeforeProcessing(IRBuilder *irb) {
-  this->startAnalysisFromAddr(irb);
-  this->startAnalysisFromOffset(irb);
-  this->stopAnalysisFromAddr(irb);
-  this->stopAnalysisFromOffset(irb);
   #ifndef LIGHT_VERSION
   this->taintMemFromAddr(irb);
   this->taintRegFromAddr(irb);
