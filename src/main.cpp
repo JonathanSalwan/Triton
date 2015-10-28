@@ -20,6 +20,10 @@
 #include <PINContextHandler.h>
 #include <ProcessingPyConf.h>
 #include <Trigger.h>
+#include <boost/filesystem.hpp>
+
+using boost::filesystem::absolute;
+using boost::filesystem::path;
 
 /* Pin options: -script */
 KNOB<std::string>   KnobPythonModule(KNOB_MODE_WRITEONCE, "pintool", "script", "", "Python script");
@@ -30,7 +34,6 @@ ProcessingPyConf    processingPyConf(&ap, &analysisTrigger);
 
 
 
-/* Lock/Unlock analysis flag */
 static void toggleWrapper(bool flag) {
   ap.lock();
   analysisTrigger.update(flag);
@@ -38,79 +41,17 @@ static void toggleWrapper(bool flag) {
 }
 
 
-/* Returns the base address of the instruction */
-static uint64 getBaseAddress(uint64 address) {
-  ap.lock();
-  RTN rtn;
-  SEC sec;
-  IMG img;
-  rtn = RTN_FindByAddress(address);
-  if (RTN_Valid(rtn)) {
-    sec = RTN_Sec(rtn);
-    if (SEC_Valid(sec)) {
-      img = SEC_Img(sec);
-      if (IMG_Valid(img)) {
-        ap.unlock();
-        return IMG_LowAddress(img);
-      }
-    }
-  }
-  ap.unlock();
-  return 0;
-}
-
-
-/* Returns the offset of the instruction */
-static uint64 getInsOffset(uint64 address) {
-  uint64 base = getBaseAddress(address);
-  if (base == 0)
-    return 0;
-  return address - base;
-}
-
-
-/* Check if the analysis must be locked */
-static void checkLockAnalysis(uint64 address) {
-  /* Lock the analysis at the exit point from address */
-  if (PyTritonOptions::stopAnalysisFromAddr.find(address) != PyTritonOptions::stopAnalysisFromAddr.end())
-      toggleWrapper(false);
-
-  /* Lock the analysis at the exit point from offset */
-  if (PyTritonOptions::stopAnalysisFromOffset.find(getInsOffset(address)) != PyTritonOptions::stopAnalysisFromOffset.end())
-      toggleWrapper(false);
-}
-
-
-/* Check if the analysis must be unlocked */
-static void checkUnlockAnalysis(uint64 address) {
-  /* Unlock the analysis at the entry point from symbol */
-  if (PyTritonOptions::startAnalysisFromSymbol != nullptr) {
-    if ((RTN_FindNameByAddress(address) == PyTritonOptions::startAnalysisFromSymbol)) {
-      toggleWrapper(true);
-    }
-  }
-
-  /* Unlock the analysis at the entry point from address */
-  if (PyTritonOptions::startAnalysisFromAddr.find(address) != PyTritonOptions::startAnalysisFromAddr.end())
-      toggleWrapper(true);
-
-  /* Unlock the analysis at the entry point from offset */
-  if (PyTritonOptions::startAnalysisFromOffset.find(getInsOffset(address)) != PyTritonOptions::startAnalysisFromOffset.end())
-      toggleWrapper(true);
-}
-
-
 /* Callback before instruction processing */
 static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea, BOOL isBranchTaken, ADDRINT branchTargetAddress, THREADID threadId) {
+  /* Some configurations must be applied before processing */
+  processingPyConf.applyConfBeforeProcessing(irb);
+
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return;
 
   /* Mutex */
   ap.lock();
-
-  /* Some configurations must be applied before processing */
-  processingPyConf.applyConfBeforeProcessing(irb);
 
   if (hasEA)
     irb->setup(ea);
@@ -362,25 +303,27 @@ static void callbackThreadExit(THREADID threadId, const CONTEXT *ctx, sint32 fla
 }
 
 
-/* Callback which checks if the analysis must be locked */
-static void callbackLockCheck(uint64 address) {
-  /* Check if the analysis must be locked */
-  checkLockAnalysis(address);
-}
-
-
 /* Image instrumentation */
 static void IMG_Instrumentation(IMG img, VOID *v) {
-  /* Lock the analysis at the exit point */
+  /* Lock / Unlock the Analysis */
   if (PyTritonOptions::startAnalysisFromSymbol != nullptr){
+
     RTN targetRTN = RTN_FindByName(img, PyTritonOptions::startAnalysisFromSymbol);
     if (RTN_Valid(targetRTN)){
       RTN_Open(targetRTN);
+
+      RTN_InsertCall(targetRTN,
+          IPOINT_BEFORE,
+          (AFUNPTR) toggleWrapper,
+          IARG_BOOL, true,
+          IARG_END);
+
       RTN_InsertCall(targetRTN,
           IPOINT_AFTER,
           (AFUNPTR) toggleWrapper,
           IARG_BOOL, false,
           IARG_END);
+
       RTN_Close(targetRTN);
     }
   }
@@ -420,12 +363,19 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
   for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)) {
     for (INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins)) {
 
-      /* Check if the analysis must be unlocked */
-      checkUnlockAnalysis(INS_Address(ins));
+      /* ---- Speed up process ---- */
+      if (programName != nullptr) {
+        boost::filesystem::path pname(reinterpret_cast<char*>(programName));
 
-      if (!analysisTrigger.getState())
-      /* Analysis locked */
-        continue ;
+        IMG currentImgName = IMG_FindByAddress(INS_Address(ins));
+        if (!IMG_Valid(currentImgName))
+          continue;
+
+        boost::filesystem::path pcurrent(IMG_Name(currentImgName));
+        if (!analysisTrigger.getState() && strcmp(pname.leaf().c_str(), pcurrent.leaf().c_str()))
+          continue;
+      }
+      /* ---- End of speed up process ---- */
 
       IRBuilder *irb = createIRBuilder(ins);
 
@@ -457,10 +407,7 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
         IPOINT where = IPOINT_AFTER;
         if (INS_HasFallThrough(ins) == false)
           where = IPOINT_TAKEN_BRANCH;
-        /* Insert callback after */
         INS_InsertCall(ins, where, (AFUNPTR)callbackAfter, IARG_CONTEXT, IARG_THREAD_ID, IARG_END);
-        /* Insert callback which checks if the analysis must be locked */
-        INS_InsertCall(ins, where, (AFUNPTR)callbackLockCheck, IARG_INST_PTR, IARG_END);
       }
 
       /* I/O memory monitoring for snapshot */
@@ -472,9 +419,8 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
           IARG_END);
       }
 
-    } // INS iteration
-  } // BBL iteration
-
+    }
+  }
 }
 
 
@@ -485,6 +431,17 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
 static sint32 Usage() {
   std::cerr << KNOB_BASE::StringKnobSummary() << std::endl;
   return -1;
+}
+
+
+/* Get the name of the target binary */
+static char *getProgramName(char *argv[]) {
+  uint64 offset;
+  for (offset = 0; argv[offset]; offset++){
+    if (!strcmp(argv[offset], "--") && argv[offset+1])
+      return argv[offset+1];
+  }
+  return nullptr;
 }
 
 
@@ -501,7 +458,7 @@ int main(int argc, char *argv[]) {
   IMG_AddInstrumentFunction(IMG_Instrumentation, nullptr);
 
   /* Instruction callback */
-  TRACE_AddInstrumentFunction(TRACE_Instrumentation, nullptr);
+  TRACE_AddInstrumentFunction(TRACE_Instrumentation, getProgramName(argv));
 
   /* End instrumentation callback */
   PIN_AddFiniFunction(callbackFini, nullptr);
