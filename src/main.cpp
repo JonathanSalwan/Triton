@@ -81,6 +81,9 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
   /* Python callback before instruction processing */
   processingPyConf.callbackBefore(inst, &ap);
 
+  /* Some configurations must be applied after processing */
+  processingPyConf.applyConfAfterProcessing(irb);
+
   /* Mutex */
   ap.unlock();
 }
@@ -110,6 +113,9 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
 
   /* Python callback after instruction processing */
   processingPyConf.callbackAfter(inst, &ap);
+
+  /* Some configurations must be applied after processing */
+  processingPyConf.applyConfAfterProcessing(inst);
 
   /* Mutex */
   ap.unlock();
@@ -365,6 +371,8 @@ static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
 
       /* ---- Speed up process ---- */
       if (programName != nullptr) {
+        /* We do not attach to a process. */
+        /* So, let's skip all ld stuffs.  */
         boost::filesystem::path pname(reinterpret_cast<char*>(programName));
 
         IMG currentImgName = IMG_FindByAddress(INS_Address(ins));

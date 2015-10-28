@@ -27,6 +27,8 @@ class ProcessingPyConf
     ~ProcessingPyConf();
 
     void applyConfBeforeProcessing(IRBuilder *irb);
+    void applyConfAfterProcessing(IRBuilder *irb);
+    void applyConfAfterProcessing(Inst *inst);
 
     void callbackAfter(Inst *inst, AnalysisProcessor *ap);
     void callbackBefore(Inst *inst, AnalysisProcessor *ap);
@@ -38,10 +40,10 @@ class ProcessingPyConf
     void callbackSyscallExit(uint64 threadId, uint64 std);
     void callbackImageLoad(string imagePath, uint64 imageBase, uint64 imageSize);
 
-    void startAnalysisFromAddr(IRBuilder *irb);
-    void startAnalysisFromOffset(IRBuilder *irb);
-    void stopAnalysisFromAddr(IRBuilder *irb);
-    void stopAnalysisFromOffset(IRBuilder *irb);
+    void startAnalysisFromAddr(uint64 addr);
+    void startAnalysisFromOffset(uint64 offset);
+    void stopAnalysisFromAddr(uint64 addr);
+    void stopAnalysisFromOffset(uint64 offset);
 
     void taintMemFromAddr(IRBuilder *irb);
     void taintRegFromAddr(IRBuilder *irb);
