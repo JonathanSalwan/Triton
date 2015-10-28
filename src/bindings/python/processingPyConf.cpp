@@ -52,13 +52,13 @@ void ProcessingPyConf::stopAnalysisFromOffset(uint64 offset) {
 
 #ifndef LIGHT_VERSION
 
-void ProcessingPyConf::taintMemFromAddr(IRBuilder *irb) {
+void ProcessingPyConf::taintMemFromAddr(uint64 addr) {
   // Apply this bindings only if the analysis is enable
   if (!this->analysisTrigger->getState())
     return;
 
   // Check if there is memory tainted via the python bindings
-  std::list<uint64> memsTainted = PyTritonOptions::taintMemFromAddr[irb->getAddress()];
+  std::list<uint64> memsTainted = PyTritonOptions::taintMemFromAddr[addr];
   std::list<uint64>::iterator it = memsTainted.begin();
   for ( ; it != memsTainted.end(); it++) {
     MemoryOperand mem(*it, 1);
@@ -67,13 +67,13 @@ void ProcessingPyConf::taintMemFromAddr(IRBuilder *irb) {
 }
 
 
-void ProcessingPyConf::taintRegFromAddr(IRBuilder *irb) {
+void ProcessingPyConf::taintRegFromAddr(uint64 addr) {
   // Apply this bindings only if the analysis is enable
   if (!this->analysisTrigger->getState())
     return;
 
   // Check if there is registers tainted via the python bindings
-  std::list<uint64> regsTainted = PyTritonOptions::taintRegFromAddr[irb->getAddress()];
+  std::list<uint64> regsTainted = PyTritonOptions::taintRegFromAddr[addr];
   std::list<uint64>::iterator it = regsTainted.begin();
   for ( ; it != regsTainted.end(); it++) {
     RegisterOperand reg = createTmpReg(*it);
@@ -82,13 +82,13 @@ void ProcessingPyConf::taintRegFromAddr(IRBuilder *irb) {
 }
 
 
-void ProcessingPyConf::untaintMemFromAddr(IRBuilder *irb) {
+void ProcessingPyConf::untaintMemFromAddr(uint64 addr) {
   // Apply this bindings only if the analysis is enable
   if (!this->analysisTrigger->getState())
     return;
 
   // Check if there is memories untainted via the python bindings
-  std::list<uint64> memsUntainted = PyTritonOptions::untaintMemFromAddr[irb->getAddress()];
+  std::list<uint64> memsUntainted = PyTritonOptions::untaintMemFromAddr[addr];
   std::list<uint64>::iterator it = memsUntainted.begin();
   for ( ; it != memsUntainted.end(); it++) {
     MemoryOperand mem(*it, 1);
@@ -97,13 +97,13 @@ void ProcessingPyConf::untaintMemFromAddr(IRBuilder *irb) {
 }
 
 
-void ProcessingPyConf::untaintRegFromAddr(IRBuilder *irb) {
+void ProcessingPyConf::untaintRegFromAddr(uint64 addr) {
   // Apply this bindings only if the analysis is enable
   if (!this->analysisTrigger->getState())
     return;
 
   // Check if there is registers untainted via the python bindings
-  std::list<uint64> regsUntainted = PyTritonOptions::untaintRegFromAddr[irb->getAddress()];
+  std::list<uint64> regsUntainted = PyTritonOptions::untaintRegFromAddr[addr];
   std::list<uint64>::iterator it = regsUntainted.begin();
   for ( ; it != regsUntainted.end(); it++) {
     RegisterOperand reg = createTmpReg(*it);
@@ -278,13 +278,15 @@ void ProcessingPyConf::callbackImageLoad(string imagePath, uint64 imageBase, uin
 
 
 void ProcessingPyConf::applyConfBeforeProcessing(IRBuilder *irb) {
-  this->startAnalysisFromAddr(irb->getAddress());
-  this->startAnalysisFromOffset(irb->getOffset());
+  uint64 addr = irb->getAddress();
+
+  this->startAnalysisFromAddr(addr);
+  this->startAnalysisFromOffset(addr);
   #ifndef LIGHT_VERSION
-  this->taintMemFromAddr(irb);
-  this->taintRegFromAddr(irb);
-  this->untaintMemFromAddr(irb);
-  this->untaintRegFromAddr(irb);
+  this->taintMemFromAddr(addr);
+  this->taintRegFromAddr(addr);
+  this->untaintMemFromAddr(addr);
+  this->untaintRegFromAddr(addr);
   #endif
 }
 

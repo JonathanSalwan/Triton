@@ -45,10 +45,10 @@ class ProcessingPyConf
     void stopAnalysisFromAddr(uint64 addr);
     void stopAnalysisFromOffset(uint64 offset);
 
-    void taintMemFromAddr(IRBuilder *irb);
-    void taintRegFromAddr(IRBuilder *irb);
-    void untaintMemFromAddr(IRBuilder *irb);
-    void untaintRegFromAddr(IRBuilder *irb);
+    void taintMemFromAddr(uint64 addr);
+    void taintRegFromAddr(uint64 addr);
+    void untaintMemFromAddr(uint64 addr);
+    void untaintRegFromAddr(uint64 addr);
 };
 
 #endif     /* !__PROCESSINGPYCONF_H__ */
