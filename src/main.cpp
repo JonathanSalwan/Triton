@@ -307,7 +307,7 @@ static void callbackThreadExit(THREADID threadId, const CONTEXT *ctx, sint32 fla
 
 /* Image instrumentation */
 static void IMG_Instrumentation(IMG img, VOID *v) {
-  /* Lock / Unlock the Analysis */
+  /* Lock / Unlock the Analysis from a symbol */
   if (PyTritonOptions::startAnalysisFromSymbol != nullptr){
 
     RTN targetRTN = RTN_FindByName(img, PyTritonOptions::startAnalysisFromSymbol);
@@ -414,16 +414,18 @@ static bool checkUnlockAnalysis(uint64 address) {
 
 
 /* Trace instrumentation */
-static void TRACE_Instrumentation(TRACE trace, VOID *programName) {
+static void TRACE_Instrumentation(TRACE trace, VOID *v) {
   for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)) {
     for (INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins)) {
 
+      /* Check if the analysis me be unlocked */
       checkUnlockAnalysis(INS_Address(ins));
 
       if (!analysisTrigger.getState())
       /* Analysis locked */
         continue;
 
+      /* Prepare the IR builder */
       IRBuilder *irb = createIRBuilder(ins);
 
       /* Callback before */
@@ -481,17 +483,6 @@ static sint32 Usage() {
 }
 
 
-/* Get the name of the target binary */
-static char *getProgramName(char *argv[]) {
-  uint64 offset;
-  for (offset = 0; argv[offset]; offset++){
-    if (!strcmp(argv[offset], "--") && argv[offset+1])
-      return argv[offset+1];
-  }
-  return nullptr;
-}
-
-
 int main(int argc, char *argv[]) {
   PIN_InitSymbols();
   PIN_SetSyntaxIntel();
@@ -505,7 +496,7 @@ int main(int argc, char *argv[]) {
   IMG_AddInstrumentFunction(IMG_Instrumentation, nullptr);
 
   /* Instruction callback */
-  TRACE_AddInstrumentFunction(TRACE_Instrumentation, getProgramName(argv));
+  TRACE_AddInstrumentFunction(TRACE_Instrumentation, nullptr);
 
   /* End instrumentation callback */
   PIN_AddFiniFunction(callbackFini, nullptr);
