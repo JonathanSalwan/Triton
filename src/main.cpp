@@ -20,10 +20,6 @@
 #include <PINContextHandler.h>
 #include <ProcessingPyConf.h>
 #include <Trigger.h>
-#include <boost/filesystem.hpp>
-
-using boost::filesystem::absolute;
-using boost::filesystem::path;
 
 /* Pin options: -script */
 KNOB<std::string>   KnobPythonModule(KNOB_MODE_WRITEONCE, "pintool", "script", "", "Python script");
