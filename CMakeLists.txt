@@ -54,7 +54,7 @@ find_package(PythonLibs 2.7 REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
 
 # Find boost
-find_package(Boost 1.53.0 COMPONENTS filesystem REQUIRED)
+find_package(Boost 1.53.0 REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Check if the user want a light version of Triton
