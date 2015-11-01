@@ -15,16 +15,16 @@
 
 static char smt2lib_bv_doc[] = "Returns a 'bv' expression";
 static PyObject *smt2lib_bv(PyObject *self, PyObject *args) {
-  PyObject *op1;
-  PyObject *op2;
+  PyObject *op1 = nullptr;
+  PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-  if (!PyLong_Check(op1) && !PyInt_Check(op1))
+  if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
     return PyErr_Format(PyExc_TypeError, "bv(): expected an integer as first argument");
 
-  if (!PyLong_Check(op2) && !PyInt_Check(op2))
+  if (op2 == nullptr || (!PyLong_Check(op2) && !PyInt_Check(op2)))
     return PyErr_Format(PyExc_TypeError, "bv(): expected an integer as second argument");
 
   return PySmtAstNode(smt2lib::bv(PyLongObjectToUint128(op1), PyLong_AsLongLong(op2)));
@@ -37,7 +37,7 @@ static PyObject *smt2lib_bvadd(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvadd(): expected a SmtAstNode as first argument");
@@ -55,7 +55,7 @@ static PyObject *smt2lib_bvand(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvand(): expected a SmtAstNode as first argument");
@@ -73,7 +73,7 @@ static PyObject *smt2lib_bvashr(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvashr(): expected a SmtAstNode as first argument");
@@ -97,7 +97,7 @@ static PyObject *smt2lib_bvlshr(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvlshr(): expected a SmtAstNode as first argument");
@@ -115,7 +115,7 @@ static PyObject *smt2lib_bvmul(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvmul(): expected a SmtAstNode as first argument");
@@ -133,7 +133,7 @@ static PyObject *smt2lib_bvnand(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvnand(): expected a SmtAstNode as first argument");
@@ -160,7 +160,7 @@ static PyObject *smt2lib_bvnor(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvnor(): expected a SmtAstNode as first argument");
@@ -187,7 +187,7 @@ static PyObject *smt2lib_bvor(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvor(): expected a SmtAstNode as first argument");
@@ -205,9 +205,9 @@ static PyObject *smt2lib_bvror(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-  if (!PyLong_Check(op1) && !PyInt_Check(op1))
+  if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
     return PyErr_Format(PyExc_TypeError, "bvror(): expected an integer as first argument");
 
   if (op2 == nullptr || !PySmtAstNode_Check(op2))
@@ -219,13 +219,13 @@ static PyObject *smt2lib_bvror(PyObject *self, PyObject *args) {
 
 static char smt2lib_bvrol_doc[] = "Returns a 'bvrol' expression";
 static PyObject *smt2lib_bvrol(PyObject *self, PyObject *args) {
-  PyObject *op1;
+  PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-  if (!PyLong_Check(op1) && !PyInt_Check(op1))
+  if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
     return PyErr_Format(PyExc_TypeError, "bvrol(): expected a integer as first argument");
 
   if (op2 == nullptr || !PySmtAstNode_Check(op2))
@@ -241,7 +241,7 @@ static PyObject *smt2lib_bvsdiv(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvsdiv(): expected a SmtAstNode as first argument");
@@ -259,7 +259,7 @@ static PyObject *smt2lib_bvsge(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvsge(): expected a SmtAstNode as first argument");
@@ -277,7 +277,7 @@ static PyObject *smt2lib_bvsgt(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvsgt(): expected a SmtAstNode as first argument");
@@ -295,7 +295,7 @@ static PyObject *smt2lib_bvshl(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvshl(): expected a SmtAstNode as first argument");
@@ -313,7 +313,7 @@ static PyObject *smt2lib_bvsle(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvsle(): expected a SmtAstNode as first argument");
@@ -331,7 +331,7 @@ static PyObject *smt2lib_bvslt(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvslt(): expected a SmtAstNode as first argument");
@@ -349,7 +349,7 @@ static PyObject *smt2lib_bvsmod(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvsmod(): expected a SmtAstNode as first argument");
@@ -367,7 +367,7 @@ static PyObject *smt2lib_bvsrem(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvsrem(): expected a SmtAstNode as first argument");
@@ -385,7 +385,7 @@ static PyObject *smt2lib_bvsub(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvsub(): expected a SmtAstNode as first argument");
@@ -409,7 +409,7 @@ static PyObject *smt2lib_bvudiv(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvudiv(): expected a SmtAstNode as first argument");
@@ -427,7 +427,7 @@ static PyObject *smt2lib_bvuge(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvuge(): expected a SmtAstNode as first argument");
@@ -445,7 +445,7 @@ static PyObject *smt2lib_bvugt(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvugt(): expected a SmtAstNode as first argument");
@@ -463,7 +463,7 @@ static PyObject *smt2lib_bvule(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvule(): expected a SmtAstNode as first argument");
@@ -481,7 +481,7 @@ static PyObject *smt2lib_bvult(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvult(): expected a SmtAstNode as first argument");
@@ -499,7 +499,7 @@ static PyObject *smt2lib_bvurem(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvurem(): expected a SmtAstNode as first argument");
@@ -517,7 +517,7 @@ static PyObject *smt2lib_bvxnor(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvxnor(): expected a SmtAstNode as first argument");
@@ -535,7 +535,7 @@ static PyObject *smt2lib_bvxor(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "bvxor(): expected a SmtAstNode as first argument");
@@ -553,7 +553,7 @@ static PyObject *smt2lib_distinct(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "distinct(): expected a SmtAstNode as first argument");
@@ -592,7 +592,7 @@ static PyObject *smt2lib_equal(PyObject *self, PyObject *args) {
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "equal(): expected a SmtAstNode as first argument");
@@ -611,12 +611,12 @@ static PyObject *smt2lib_extract(PyObject *self, PyObject *args) {
   PyObject *op3 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O|O", &op1, &op2, &op3);
+  PyArg_ParseTuple(args, "|OOO", &op1, &op2, &op3);
 
-  if (!PyLong_Check(op1) && !PyInt_Check(op1))
+  if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
     return PyErr_Format(PyExc_TypeError, "extract(): expected an integer as first argument");
 
-  if (!PyLong_Check(op2) && !PyInt_Check(op2))
+  if (op2 == nullptr || (!PyLong_Check(op2) && !PyInt_Check(op2)))
     return PyErr_Format(PyExc_TypeError, "extract(): expected an integer as second argument");
 
   if (op3 == nullptr || !PySmtAstNode_Check(op3))
@@ -633,7 +633,7 @@ static PyObject *smt2lib_ite(PyObject *self, PyObject *args) {
   PyObject *op3 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O|O", &op1, &op2, &op3);
+  PyArg_ParseTuple(args, "|OOO", &op1, &op2, &op3);
 
   if (op1 == nullptr || !PySmtAstNode_Check(op1))
     return PyErr_Format(PyExc_TypeError, "ite(): expected a SmtAstNode as first argument");
@@ -668,13 +668,13 @@ static PyObject *smt2lib_string(PyObject *self, PyObject *expr) {
 
 static char smt2lib_sx_doc[] = "Returns an 'sx' expression";
 static PyObject *smt2lib_sx(PyObject *self, PyObject *args) {
-  PyObject *op1;
+  PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-  if (!PyLong_Check(op1) && !PyInt_Check(op1))
+  if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
     return PyErr_Format(PyExc_TypeError, "sx(): expected an integer as first argument");
 
   if (op2 == nullptr || !PySmtAstNode_Check(op2))
@@ -695,13 +695,13 @@ static PyObject *smt2lib_variable(PyObject *self, PyObject *expr) {
 
 static char smt2lib_zx_doc[] = "Returns an 'zx' expression";
 static PyObject *smt2lib_zx(PyObject *self, PyObject *args) {
-  PyObject *op1;
+  PyObject *op1 = nullptr;
   PyObject *op2 = nullptr;
 
   /* Extract arguments */
-  PyArg_ParseTuple(args, "O|O", &op1, &op2);
+  PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-  if (!PyLong_Check(op1) && !PyInt_Check(op1))
+  if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
     return PyErr_Format(PyExc_TypeError, "zx(): expected an integer as first argument");
 
   if (op2 == nullptr || !PySmtAstNode_Check(op2))
