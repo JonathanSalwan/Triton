@@ -113,6 +113,9 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
   /* Some configurations must be applied after processing */
   processingPyConf.applyConfAfterProcessing(inst);
 
+  /* Free unused instructions */
+  ap.clearTrace();
+
   /* Mutex */
   ap.unlock();
 }
@@ -415,6 +418,9 @@ static bool checkUnlockAnalysis(uint64 address) {
 
 /* Trace instrumentation */
 static void TRACE_Instrumentation(TRACE trace, VOID *v) {
+
+  std::list<IRBuilder *> irbList;
+
   for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)) {
     for (INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins)) {
 
@@ -427,6 +433,9 @@ static void TRACE_Instrumentation(TRACE trace, VOID *v) {
 
       /* Prepare the IR builder */
       IRBuilder *irb = createIRBuilder(ins);
+
+      /* Save irb from Pin cache */
+      irbList.push_back(irb);
 
       /* Callback before */
       if (INS_MemoryOperandCount(ins) > 0)
@@ -470,6 +479,8 @@ static void TRACE_Instrumentation(TRACE trace, VOID *v) {
 
     }
   }
+  /* Free unused irb */
+  irbList.clear();
 }
 
 

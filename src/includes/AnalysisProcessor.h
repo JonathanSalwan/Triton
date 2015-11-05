@@ -75,6 +75,7 @@ class AnalysisProcessor {
     Inst      *getLastInstruction(void);
     Trace     &getTrace(void);
     void      addInstructionToTrace(Inst *instruction);
+    void      clearTrace(void);
 
 
     #ifndef LIGHT_VERSION

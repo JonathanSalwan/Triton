@@ -123,6 +123,11 @@ Inst *AnalysisProcessor::getLastInstruction(void) {
 }
 
 
+void AnalysisProcessor::clearTrace(void) {
+  this->getTrace().getInstructions().clear();
+}
+
+
 #ifndef LIGHT_VERSION
 
 // Symbolic Engine Facade
