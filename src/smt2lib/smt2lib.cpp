@@ -32,7 +32,7 @@ smtAstAbstractNode::smtAstAbstractNode(const smtAstAbstractNode &copy) {
 
 
 smtAstAbstractNode::~smtAstAbstractNode() {
-  freeAllNodes(this->childs);
+  // virtual
 }
 
 
