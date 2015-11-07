@@ -55,7 +55,16 @@ void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngi
   }
   this->memory.clear();
 
-  /* 2 - Restore current symbolic engine state */
+  /* 2.1 - Delete expressions which will be lost */
+  std::vector<SymbolicExpression *> currentExpressions = currentSymEngine->getExpressions();
+
+  uint64 currentSize  = currentExpressions.size();
+  uint64 snapshotSize = this->snapshotSymEngine->getExpressions().size();
+  for (uint64 index = snapshotSize; index < currentSize; index++) {
+    delete currentExpressions[index];
+  }
+
+  /* 2.2 - Restore current symbolic engine state */
   *currentSymEngine = *this->snapshotSymEngine;
 
   /* 3 - Restore current taint engine state */
