@@ -6,6 +6,7 @@
 
 #ifndef LIGHT_VERSION
 
+#include <SMT2Lib.h>
 #include <TritonPyObject.h>
 #include <xPyFunc.h>
 
@@ -15,7 +16,11 @@
  * - getAst() : Returns the AST node of the expression
  * - getComment() : Returns the comment of the expression
  * - getId() : Returns the id of the expression
- * - isTainted (): Returns true of false if the expression is tainted
+ * - getKind() : Returns the kind of the expression
+ * - getNewAst() : Returns a duplicated AST node of the expression
+ * - isMem() : Returns true if the expression is assigned to a memory
+ * - isReg() : Returns true if the expression is assigned to a register
+ * - isTainted() : Returns true if the expression is tainted
  */
 
 
@@ -52,6 +57,13 @@ static char SymbolicExpression_getKind_doc[] = "Returns the kind of the expressi
 static PyObject *SymbolicExpression_getKind(PyObject *self, PyObject *noarg) {
   SymbolicExpression *expression = PySymbolicExpression_AsSymbolicExpression(self);
   return Py_BuildValue("k", expression->getKind());
+}
+
+
+static char SymbolicExpression_getNewAst_doc[] = "Returns a duplicated AST node of the expression";
+static PyObject *SymbolicExpression_getNewAst(PyObject *self, PyObject *noarg) {
+  SymbolicExpression *expression = PySymbolicExpression_AsSymbolicExpression(self);
+  return PySmtAstNode(smt2lib::newInstance(expression->getExpression()));
 }
 
 
@@ -94,6 +106,7 @@ PyMethodDef SymbolicExpression_callbacks[] = {
   {"getComment",  SymbolicExpression_getComment,  METH_NOARGS,   SymbolicExpression_getComment_doc},
   {"getId",       SymbolicExpression_getId,       METH_NOARGS,   SymbolicExpression_getId_doc},
   {"getKind",     SymbolicExpression_getKind,     METH_NOARGS,   SymbolicExpression_getKind_doc},
+  {"getNewAst",   SymbolicExpression_getNewAst,   METH_NOARGS,   SymbolicExpression_getNewAst_doc},
   {"isMem",       SymbolicExpression_isMem,       METH_NOARGS,   SymbolicExpression_isMem_doc},
   {"isReg",       SymbolicExpression_isReg,       METH_NOARGS,   SymbolicExpression_isReg_doc},
   {"isTainted",   SymbolicExpression_isTainted,   METH_NOARGS,   SymbolicExpression_isTainted_doc},
