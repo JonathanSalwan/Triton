@@ -140,7 +140,7 @@ SymbolicEngine &AnalysisProcessor::getSymbolicEngine(void) {
 
 SymbolicExpression *AnalysisProcessor::createFlagSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &flag, std::string comment) {
   uint64 flagId = flag.getTritonRegId();
-  SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr, comment);
+  SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr, SymExpr::REG, comment);
   this->symEngine.symbolicReg[flagId] = se->getID();
   inst.addExpression(se);
   return se;
@@ -181,7 +181,7 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAb
       break;
   }
 
-  SymbolicExpression *se = this->symEngine.newSymbolicExpression(finalExpr, comment);
+  SymbolicExpression *se = this->symEngine.newSymbolicExpression(finalExpr, SymExpr::REG, comment);
   this->symEngine.symbolicReg[regId] = se->getID();
   inst.addExpression(se);
 
@@ -202,7 +202,7 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
   while (writeSize) {
     /* Extract each byte of the memory */
     tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
-    se  = symEngine.newSymbolicExpression(tmp, "byte reference");
+    se  = symEngine.newSymbolicExpression(tmp, SymExpr::MEM, "byte reference");
     ret.push_back(tmp);
     inst.addExpression(se);
     /* Assign memory with little endian */
@@ -215,12 +215,12 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
     return se;
 
   /* Otherwise, we return the concatenation of all symbolic expressions */
-  return symEngine.newSymbolicExpression(smt2lib::concat(ret), "concat reference");
+  return symEngine.newSymbolicExpression(smt2lib::concat(ret), SymExpr::MEM, "concat reference");
 }
 
 
 SymbolicExpression *AnalysisProcessor::createSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, std::string comment) {
-  SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr, comment);
+  SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr, SymExpr::UNDEF, comment);
   inst.addExpression(se);
   return se;
 }

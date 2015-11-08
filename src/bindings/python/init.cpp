@@ -23,6 +23,7 @@ void initSyscallEnv(PyObject *);
 void initVersionEnv(PyObject *);
 #ifndef LIGHT_VERSION
 void initSmtAstNodeEnv(PyObject *);
+void initSymExprEnv(PyObject *);
 void initSymVarEnv(PyObject *);
 #endif
 
@@ -188,6 +189,19 @@ void initBindings(void) {
 
   // SmtAstNode ---------------------
 
+  // SYMEXPR ---------------------
+
+  /* Create the IDREF.SYMEXPR class */
+  PyObject *idSymExprClassName = xPyString_FromString("SYMEXPR");
+  PyObject *idSymExprClassDict = xPyDict_New();
+
+  /* Add registers ref into IDREF.SYMVAR class */
+  initSymExprEnv(idSymExprClassDict);
+
+  /* Create the SYMVAR class */
+  PyObject *idSymExprClass = xPyClass_New(nullptr, idSymExprClassDict, idSymExprClassName);
+
+  // SYMEXPR ---------------------
 
   // SYMVAR ---------------------
 
@@ -244,12 +258,13 @@ void initBindings(void) {
   PyDict_SetItemString(idRefClassDict, "OPCODE_CATEGORY", idOpcodeCategoryClass);
   PyDict_SetItemString(idRefClassDict, "OPERAND", idOperandClass);
   PyDict_SetItemString(idRefClassDict, "REG", idRegClass);
-  #ifndef LIGHT_VERSION
-  PyDict_SetItemString(idRefClassDict, "SMT_AST_NODE", idSmtAstNodeClass);
-  PyDict_SetItemString(idRefClassDict, "SYMVAR", idSymVarClass);
-  #endif
   PyDict_SetItemString(idRefClassDict, "SYSCALL", idSyscallClass);
   PyDict_SetItemString(idRefClassDict, "VERSION", idVersionClass);
+  #ifndef LIGHT_VERSION
+  PyDict_SetItemString(idRefClassDict, "SMT_AST_NODE", idSmtAstNodeClass);
+  PyDict_SetItemString(idRefClassDict, "SYMEXPR", idSymExprClass);
+  PyDict_SetItemString(idRefClassDict, "SYMVAR", idSymVarClass);
+  #endif
 
   /* Create the IDREF class */
   PyObject *idRefClass = xPyClass_New(nullptr, idRefClassDict, idRefClassName);

@@ -9,18 +9,21 @@
 #include <SymbolicEngine.h>
 
 
-SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id) {
+
+SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id, enum SymExpr::kind kind) {
   this->expression  = expr;
   this->id          = id;
   this->isTainted   = false;
+  this->kind        = kind;
 }
 
 
-SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id, std::string comment) {
+SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id, enum SymExpr::kind kind, std::string comment) {
   this->comment     = comment;
   this->expression  = expr;
   this->id          = id;
   this->isTainted   = false;
+  this->kind        = kind;
 }
 
 
@@ -58,6 +61,22 @@ void SymbolicExpression::setExpression(smt2lib::smtAstAbstractNode *expr) {
   delete this->expression;
   this->expression = expr;
 }
+
+
+enum SymExpr::kind SymbolicExpression::getKind(void) {
+  return this->kind;
+}
+
+
+bool SymbolicExpression::isReg(void) {
+  return (this->kind == SymExpr::REG);
+}
+
+
+bool SymbolicExpression::isMem(void) {
+  return (this->kind == SymExpr::MEM);
+}
+
 
 #endif /* LIGHT_VERSION */
 

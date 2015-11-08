@@ -144,9 +144,9 @@ uint64 SymbolicEngine::getUniqueID() {
 
 
 /* Create a new symbolic expression with comment */
-SymbolicExpression *SymbolicEngine::newSymbolicExpression(smt2lib::smtAstAbstractNode *node, std::string comment) {
+SymbolicExpression *SymbolicEngine::newSymbolicExpression(smt2lib::smtAstAbstractNode *node, enum SymExpr::kind kind, std::string comment) {
   uint64 id = this->getUniqueID();
-  SymbolicExpression *expr = new SymbolicExpression(node, id, comment);
+  SymbolicExpression *expr = new SymbolicExpression(node, id, kind, comment);
   this->symbolicExpressions.push_back(expr);
   return expr;
 }
@@ -258,10 +258,10 @@ SymbolicVariable *SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symV
 
       if (memSymId == UNSET) {
         if (size_quotient > 1 or symVarSize == 1) {
-          expression = this->newSymbolicExpression(tmp, "byte reference");
+          expression = this->newSymbolicExpression(tmp, SymExpr::MEM, "byte reference");
         } else {
           smt2lib::smtAstAbstractNode *concat = smt2lib::concat(symMemChunk);
-          expression = this->newSymbolicExpression(concat);
+          expression = this->newSymbolicExpression(concat, SymExpr::MEM);
         }
       } else {
         expression = this->getExpressionFromId(memSymId);
@@ -296,7 +296,7 @@ SymbolicVariable *SymbolicEngine::convertRegToSymVar(uint64 regId, uint64 symVar
     if (tmp == nullptr)
       throw std::runtime_error("convertRegToSymVar can't create smtAstAbstractNode (nullptr)");
 
-    SymbolicExpression *se = this->newSymbolicExpression(tmp);
+    SymbolicExpression *se = this->newSymbolicExpression(tmp, SymExpr::REG);
     if (se == nullptr)
       throw std::runtime_error("convertRegToSymVar can't create symbolic expression (nullptr)");
 
@@ -343,6 +343,7 @@ void SymbolicEngine::addPathConstraint(uint64 exprId) {
 std::list<uint64> SymbolicEngine::getPathConstraints(void) {
   return this->pathConstaints;
 }
+
 
 #endif /* LIGHT_VERSION */
 
