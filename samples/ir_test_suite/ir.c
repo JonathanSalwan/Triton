@@ -38,6 +38,8 @@ void check(void)
   asm("or ah, 0x8");
   asm("mov rax, 4222427780");
   asm("or ah, 0x8");
+  asm("or al, byte ptr [rsp+0xf]");
+
 
   asm("clc");
   asm("cld");
