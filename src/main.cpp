@@ -519,11 +519,17 @@ int main(int argc, char *argv[]) {
   PIN_AddSyscallExitFunction(callbackSyscallExit, nullptr);
 
   /* Signals callback */
-  PIN_InterceptSignal(SIGFPE,  callbackSignals, nullptr); /* Floating point exception */
-  PIN_InterceptSignal(SIGILL,  callbackSignals, nullptr); /* Illegal Instruction */
-  PIN_InterceptSignal(SIGKILL, callbackSignals, nullptr); /* Kill signal */
-  PIN_InterceptSignal(SIGPIPE, callbackSignals, nullptr); /* Broken pipe: write to pipe with no readers */
-  PIN_InterceptSignal(SIGSEGV, callbackSignals, nullptr); /* Invalid memory reference */
+  PIN_InterceptSignal(SIGHUP,  callbackSignals, nullptr);
+  PIN_InterceptSignal(SIGINT,  callbackSignals, nullptr);
+  PIN_InterceptSignal(SIGQUIT, callbackSignals, nullptr);
+  PIN_InterceptSignal(SIGILL,  callbackSignals, nullptr);
+  PIN_InterceptSignal(SIGABRT, callbackSignals, nullptr);
+  PIN_InterceptSignal(SIGFPE,  callbackSignals, nullptr);
+  PIN_InterceptSignal(SIGKILL, callbackSignals, nullptr);
+  PIN_InterceptSignal(SIGSEGV, callbackSignals, nullptr);
+  PIN_InterceptSignal(SIGPIPE, callbackSignals, nullptr);
+  PIN_InterceptSignal(SIGALRM, callbackSignals, nullptr);
+  PIN_InterceptSignal(SIGTERM, callbackSignals, nullptr);
 
   /* Threads callbacks */
   PIN_AddThreadStartFunction(callbackThreadEntry, nullptr);

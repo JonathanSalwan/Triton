@@ -19,6 +19,7 @@ void initOpcodeCategoryEnv(PyObject *);
 void initOpcodeEnv(PyObject *);
 void initOperandEnv(PyObject *);
 void initRegEnv(PyObject *);
+void initSignalEnv(PyObject *);
 void initSyscallEnv(PyObject *);
 void initVersionEnv(PyObject *);
 #ifndef LIGHT_VERSION
@@ -195,10 +196,10 @@ void initBindings(void) {
   PyObject *idSymExprClassName = xPyString_FromString("SYMEXPR");
   PyObject *idSymExprClassDict = xPyDict_New();
 
-  /* Add registers ref into IDREF.SYMVAR class */
+  /* Add registers ref into IDREF.SYMEXPR class */
   initSymExprEnv(idSymExprClassDict);
 
-  /* Create the SYMVAR class */
+  /* Create the SYMEXPR class */
   PyObject *idSymExprClass = xPyClass_New(nullptr, idSymExprClassDict, idSymExprClassName);
 
   // SYMEXPR ---------------------
@@ -218,6 +219,19 @@ void initBindings(void) {
   // SYMVAR ---------------------
   #endif /* LIGHT_VERSION */
 
+  // SIGNAL ---------------------
+
+  /* Create the IDREF.SIGNAL class */
+  PyObject *idSignalClassName = xPyString_FromString("SIGNAL");
+  PyObject *idSignalClassDict = xPyDict_New();
+
+  /* Add registers ref into IDREF.SIGNAL class */
+  initSignalEnv(idSignalClassDict);
+
+  /* Create the SIGNAL class */
+  PyObject *idSignalClass = xPyClass_New(nullptr, idSignalClassDict, idSignalClassName);
+
+  // SIGNAL ---------------------
 
   // SYSCALL ---------------------
 
@@ -258,6 +272,7 @@ void initBindings(void) {
   PyDict_SetItemString(idRefClassDict, "OPCODE_CATEGORY", idOpcodeCategoryClass);
   PyDict_SetItemString(idRefClassDict, "OPERAND", idOperandClass);
   PyDict_SetItemString(idRefClassDict, "REG", idRegClass);
+  PyDict_SetItemString(idRefClassDict, "SIGNAL", idSignalClass);
   PyDict_SetItemString(idRefClassDict, "SYSCALL", idSyscallClass);
   PyDict_SetItemString(idRefClassDict, "VERSION", idVersionClass);
   #ifndef LIGHT_VERSION
