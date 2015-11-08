@@ -2106,6 +2106,8 @@ namespace smt2lib {
       default:
         throw std::invalid_argument("smt2lib::newInstance() - Invalid kind node");
     }
+    if (newNode == nullptr)
+      throw std::invalid_argument("smt2lib::newInstance() - No enough memory");
     return newNode;
   }
 
