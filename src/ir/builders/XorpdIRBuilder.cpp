@@ -56,7 +56,7 @@ void XorpdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   auto mem = this->operands[1].getMem();
   auto memSize = this->operands[1].getMem().getSize();
   auto reg = this->operands[0].getReg();
-  auto regSize = this->operands[1].getReg().getSize();
+  auto regSize = this->operands[0].getReg().getSize();
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
