@@ -272,7 +272,7 @@ std::list<SymbolicExpression *> AnalysisProcessor::getTaintedExpressions(void) {
 
 
 smt2lib::smtAstAbstractNode *AnalysisProcessor::getFullExpression(smt2lib::smtAstAbstractNode *node) {
-  return this->symEngine.getFullExpression(smt2lib::newInstance(node));
+  return this->symEngine.getFullExpression(node);
 }
 
 

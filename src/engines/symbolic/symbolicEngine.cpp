@@ -175,7 +175,7 @@ smt2lib::smtAstAbstractNode *SymbolicEngine::getFullExpression(smt2lib::smtAstAb
     if (childs[index]->getKind() == smt2lib::REFERENCE_NODE) {
       uint64 id = reinterpret_cast<smt2lib::smtAstReferenceNode*>(childs[index])->getValue();
       smt2lib::smtAstAbstractNode *ref = this->getExpressionFromId(id)->getExpression();
-      childs[index] = smt2lib::newInstance(ref);
+      childs[index] = ref;
     }
     this->getFullExpression(childs[index]);
   }
