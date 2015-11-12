@@ -228,12 +228,14 @@ class AnalysisProcessor {
      */
 
     SnapshotEngine  &getSnapshotEngine(void);
-    bool            isSnapshotLocked(void);
-    void            addSnapshotModification(uint64 addr, char byte);
-    void            takeSnapshot(void);
-    void            restoreSnapshot(void);
-    void            disableSnapshot(void);
     bool            isSnapshotEnabled(void);
+    bool            isSnapshotLocked(void);
+    bool            isSnapshotMustBeRestored(void);
+    void            addSnapshotModification(uint64 addr, char byte);
+    void            disableSnapshot(void);
+    void            restoreSnapshot(void);
+    void            setSnapshotRestoreFlag(bool flag);
+    void            takeSnapshot(void);
 
    /*
     * Convert the SMT AST to a Z3 ast and evaluate it

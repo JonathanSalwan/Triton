@@ -11,6 +11,7 @@
 using namespace smt2lib;
 
 
+
 // ====== Abstract node
 
 
@@ -68,8 +69,8 @@ smtAstAssertNode::smtAstAssertNode(const smtAstAssertNode &copy) {
 
 
 smtAstAssertNode::~smtAstAssertNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstAssertNode::accept(Visitor& v) {
   v(*this);
@@ -94,8 +95,8 @@ smtAstBvaddNode::smtAstBvaddNode(const smtAstBvaddNode &copy) {
 
 
 smtAstBvaddNode::~smtAstBvaddNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvaddNode::accept(Visitor& v) {
   v(*this);
@@ -120,8 +121,8 @@ smtAstBvandNode::smtAstBvandNode(const smtAstBvandNode &copy) {
 
 
 smtAstBvandNode::~smtAstBvandNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvandNode::accept(Visitor& v) {
   v(*this);
@@ -147,8 +148,8 @@ smtAstBvashrNode::smtAstBvashrNode(const smtAstBvashrNode &copy) {
 
 
 smtAstBvashrNode::~smtAstBvashrNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvashrNode::accept(Visitor& v) {
   v(*this);
@@ -173,8 +174,8 @@ smtAstBvlshrNode::smtAstBvlshrNode(const smtAstBvlshrNode &copy) {
 
 
 smtAstBvlshrNode::~smtAstBvlshrNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvlshrNode::accept(Visitor& v) {
   v(*this);
@@ -199,8 +200,8 @@ smtAstBvmulNode::smtAstBvmulNode(const smtAstBvmulNode &copy) {
 
 
 smtAstBvmulNode::~smtAstBvmulNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvmulNode::accept(Visitor& v) {
   v(*this);
@@ -225,8 +226,8 @@ smtAstBvnandNode::smtAstBvnandNode(const smtAstBvnandNode &copy) {
 
 
 smtAstBvnandNode::~smtAstBvnandNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvnandNode::accept(Visitor& v) {
   v(*this);
@@ -250,8 +251,8 @@ smtAstBvnegNode::smtAstBvnegNode(const smtAstBvnegNode &copy) {
 
 
 smtAstBvnegNode::~smtAstBvnegNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvnegNode::accept(Visitor& v) {
   v(*this);
@@ -276,8 +277,8 @@ smtAstBvnorNode::smtAstBvnorNode(const smtAstBvnorNode &copy) {
 
 
 smtAstBvnorNode::~smtAstBvnorNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvnorNode::accept(Visitor& v) {
   v(*this);
@@ -301,8 +302,8 @@ smtAstBvnotNode::smtAstBvnotNode(const smtAstBvnotNode &copy) {
 
 
 smtAstBvnotNode::~smtAstBvnotNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvnotNode::accept(Visitor& v) {
   v(*this);
@@ -327,8 +328,8 @@ smtAstBvorNode::smtAstBvorNode(const smtAstBvorNode &copy) {
 
 
 smtAstBvorNode::~smtAstBvorNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvorNode::accept(Visitor& v) {
   v(*this);
@@ -340,7 +341,7 @@ void smtAstBvorNode::accept(Visitor& v) {
 
 smtAstBvrolNode::smtAstBvrolNode(uint64 rot, smtAstAbstractNode *expr) {
   this->kind = BVROL_NODE;
-  this->addChild(new smtAstDecimalNode(rot));
+  this->addChild(decimal(rot));
   this->addChild(expr);
 }
 
@@ -362,8 +363,8 @@ smtAstBvrolNode::smtAstBvrolNode(smtAstAbstractNode *rot, smtAstAbstractNode *ex
 
 
 smtAstBvrolNode::~smtAstBvrolNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvrolNode::accept(Visitor& v) {
   v(*this);
@@ -375,7 +376,7 @@ void smtAstBvrolNode::accept(Visitor& v) {
 
 smtAstBvrorNode::smtAstBvrorNode(uint64 rot, smtAstAbstractNode *expr) {
   this->kind = BVROR_NODE;
-  this->addChild(new smtAstDecimalNode(rot));
+  this->addChild(decimal(rot));
   this->addChild(expr);
 }
 
@@ -397,8 +398,8 @@ smtAstBvrorNode::smtAstBvrorNode(smtAstAbstractNode *rot, smtAstAbstractNode *ex
 
 
 smtAstBvrorNode::~smtAstBvrorNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvrorNode::accept(Visitor& v) {
   v(*this);
@@ -423,8 +424,8 @@ smtAstBvsdivNode::smtAstBvsdivNode(const smtAstBvsdivNode &copy) {
 
 
 smtAstBvsdivNode::~smtAstBvsdivNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvsdivNode::accept(Visitor& v) {
   v(*this);
@@ -449,8 +450,8 @@ smtAstBvsgeNode::smtAstBvsgeNode(const smtAstBvsgeNode &copy) {
 
 
 smtAstBvsgeNode::~smtAstBvsgeNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvsgeNode::accept(Visitor& v) {
   v(*this);
@@ -475,8 +476,8 @@ smtAstBvsgtNode::smtAstBvsgtNode(const smtAstBvsgtNode &copy) {
 
 
 smtAstBvsgtNode::~smtAstBvsgtNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvsgtNode::accept(Visitor& v) {
   v(*this);
@@ -501,8 +502,8 @@ smtAstBvshlNode::smtAstBvshlNode(const smtAstBvshlNode &copy) {
 
 
 smtAstBvshlNode::~smtAstBvshlNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvshlNode::accept(Visitor& v) {
   v(*this);
@@ -527,8 +528,8 @@ smtAstBvsleNode::smtAstBvsleNode(const smtAstBvsleNode &copy) {
 
 
 smtAstBvsleNode::~smtAstBvsleNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvsleNode::accept(Visitor& v) {
   v(*this);
@@ -553,8 +554,8 @@ smtAstBvsltNode::smtAstBvsltNode(const smtAstBvsltNode &copy) {
 
 
 smtAstBvsltNode::~smtAstBvsltNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvsltNode::accept(Visitor& v) {
   v(*this);
@@ -579,8 +580,8 @@ smtAstBvsmodNode::smtAstBvsmodNode(const smtAstBvsmodNode &copy) {
 
 
 smtAstBvsmodNode::~smtAstBvsmodNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvsmodNode::accept(Visitor& v) {
   v(*this);
@@ -605,8 +606,8 @@ smtAstBvsremNode::smtAstBvsremNode(const smtAstBvsremNode &copy) {
 
 
 smtAstBvsremNode::~smtAstBvsremNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvsremNode::accept(Visitor& v) {
   v(*this);
@@ -631,8 +632,8 @@ smtAstBvsubNode::smtAstBvsubNode(const smtAstBvsubNode &copy) {
 
 
 smtAstBvsubNode::~smtAstBvsubNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvsubNode::accept(Visitor& v) {
   v(*this);
@@ -657,8 +658,8 @@ smtAstBvudivNode::smtAstBvudivNode(const smtAstBvudivNode &copy) {
 
 
 smtAstBvudivNode::~smtAstBvudivNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvudivNode::accept(Visitor& v) {
   v(*this);
@@ -683,8 +684,8 @@ smtAstBvugeNode::smtAstBvugeNode(const smtAstBvugeNode &copy) {
 
 
 smtAstBvugeNode::~smtAstBvugeNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvugeNode::accept(Visitor& v) {
   v(*this);
@@ -709,8 +710,8 @@ smtAstBvugtNode::smtAstBvugtNode(const smtAstBvugtNode &copy) {
 
 
 smtAstBvugtNode::~smtAstBvugtNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvugtNode::accept(Visitor& v) {
   v(*this);
@@ -735,8 +736,8 @@ smtAstBvuleNode::smtAstBvuleNode(const smtAstBvuleNode &copy) {
 
 
 smtAstBvuleNode::~smtAstBvuleNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvuleNode::accept(Visitor& v) {
   v(*this);
@@ -761,8 +762,8 @@ smtAstBvultNode::smtAstBvultNode(const smtAstBvultNode &copy) {
 
 
 smtAstBvultNode::~smtAstBvultNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvultNode::accept(Visitor& v) {
   v(*this);
@@ -787,8 +788,8 @@ smtAstBvuremNode::smtAstBvuremNode(const smtAstBvuremNode &copy) {
 
 
 smtAstBvuremNode::~smtAstBvuremNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvuremNode::accept(Visitor& v) {
   v(*this);
@@ -813,8 +814,8 @@ smtAstBvxnorNode::smtAstBvxnorNode(const smtAstBvxnorNode &copy) {
 
 
 smtAstBvxnorNode::~smtAstBvxnorNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvxnorNode::accept(Visitor& v) {
   v(*this);
@@ -839,8 +840,8 @@ smtAstBvxorNode::smtAstBvxorNode(const smtAstBvxorNode &copy) {
 
 
 smtAstBvxorNode::~smtAstBvxorNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvxorNode::accept(Visitor& v) {
   v(*this);
@@ -852,8 +853,8 @@ void smtAstBvxorNode::accept(Visitor& v) {
 
 smtAstBvNode::smtAstBvNode(uint128 value, uint64 size) {
   this->kind = BV_NODE;
-  this->addChild(new smtAstDecimalNode(value));
-  this->addChild(new smtAstDecimalNode(size));
+  this->addChild(decimal(value));
+  this->addChild(decimal(size));
 }
 
 
@@ -865,8 +866,8 @@ smtAstBvNode::smtAstBvNode(const smtAstBvNode &copy) {
 
 
 smtAstBvNode::~smtAstBvNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstBvNode::accept(Visitor& v) {
   v(*this);
@@ -892,8 +893,8 @@ smtAstCompoundNode::smtAstCompoundNode(const smtAstCompoundNode &copy) {
 
 
 smtAstCompoundNode::~smtAstCompoundNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstCompoundNode::accept(Visitor& v) {
   v(*this);
@@ -943,8 +944,8 @@ smtAstConcatNode::smtAstConcatNode(std::list<smtAstAbstractNode *> exprs) {
 
 
 smtAstConcatNode::~smtAstConcatNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstConcatNode::accept(Visitor& v) {
   v(*this);
@@ -967,13 +968,13 @@ smtAstDecimalNode::smtAstDecimalNode(const smtAstDecimalNode &copy) {
 
 
 smtAstDecimalNode::~smtAstDecimalNode() {
-  freeAllNodes(this->childs);
 }
 
 
 uint128 smtAstDecimalNode::getValue(void) {
   return this->value;
 }
+
 
 void smtAstDecimalNode::accept(Visitor& v) {
   v(*this);
@@ -985,8 +986,8 @@ void smtAstDecimalNode::accept(Visitor& v) {
 
 smtAstDeclareNode::smtAstDeclareNode(std::string symVarName, uint64 symVarSize) {
   this->kind = DECLARE_NODE;
-  this->addChild(new smtAstStringNode(symVarName));
-  this->addChild(new smtAstDecimalNode(symVarSize));
+  this->addChild(string(symVarName));
+  this->addChild(decimal(symVarSize));
 }
 
 
@@ -998,8 +999,8 @@ smtAstDeclareNode::smtAstDeclareNode(const smtAstDeclareNode &copy) {
 
 
 smtAstDeclareNode::~smtAstDeclareNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstDeclareNode::accept(Visitor& v) {
   v(*this);
@@ -1024,8 +1025,8 @@ smtAstDistinctNode::smtAstDistinctNode(const smtAstDistinctNode &copy) {
 
 
 smtAstDistinctNode::~smtAstDistinctNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstDistinctNode::accept(Visitor& v) {
   v(*this);
@@ -1050,8 +1051,8 @@ smtAstEqualNode::smtAstEqualNode(const smtAstEqualNode &copy) {
 
 
 smtAstEqualNode::~smtAstEqualNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstEqualNode::accept(Visitor& v) {
   v(*this);
@@ -1063,8 +1064,8 @@ void smtAstEqualNode::accept(Visitor& v) {
 
 smtAstExtractNode::smtAstExtractNode(uint64 high, uint64 low, smtAstAbstractNode *expr) {
   this->kind = EXTRACT_NODE;
-  this->addChild(new smtAstDecimalNode(high));
-  this->addChild(new smtAstDecimalNode(low));
+  this->addChild(decimal(high));
+  this->addChild(decimal(low));
   this->addChild(expr);
 }
 
@@ -1077,8 +1078,8 @@ smtAstExtractNode::smtAstExtractNode(const smtAstExtractNode &copy) {
 
 
 smtAstExtractNode::~smtAstExtractNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstExtractNode::accept(Visitor& v) {
   v(*this);
@@ -1104,8 +1105,8 @@ smtAstIteNode::smtAstIteNode(const smtAstIteNode &copy) {
 
 
 smtAstIteNode::~smtAstIteNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstIteNode::accept(Visitor& v) {
   v(*this);
@@ -1128,13 +1129,13 @@ smtAstReferenceNode::smtAstReferenceNode(const smtAstReferenceNode &copy) {
 
 
 smtAstReferenceNode::~smtAstReferenceNode() {
-  freeAllNodes(this->childs);
 }
 
 
 uint64 smtAstReferenceNode::getValue(void) {
   return this->value;
 }
+
 
 void smtAstReferenceNode::accept(Visitor& v) {
   v(*this);
@@ -1157,7 +1158,6 @@ smtAstStringNode::smtAstStringNode(const smtAstStringNode &copy) {
 
 
 smtAstStringNode::~smtAstStringNode() {
-  freeAllNodes(this->childs);
 }
 
 
@@ -1176,7 +1176,7 @@ void smtAstStringNode::accept(Visitor& v) {
 
 smtAstSxNode::smtAstSxNode(uint64 sizeExt, smtAstAbstractNode *expr) {
   this->kind = SX_NODE;
-  this->addChild(new smtAstDecimalNode(sizeExt));
+  this->addChild(decimal(sizeExt));
   this->addChild(expr);
 }
 
@@ -1189,8 +1189,8 @@ smtAstSxNode::smtAstSxNode(const smtAstSxNode &copy) {
 
 
 smtAstSxNode::~smtAstSxNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstSxNode::accept(Visitor& v) {
   v(*this);
@@ -1213,7 +1213,6 @@ smtAstVariableNode::smtAstVariableNode(const smtAstVariableNode &copy) {
 
 
 smtAstVariableNode::~smtAstVariableNode() {
-  freeAllNodes(this->childs);
 }
 
 
@@ -1232,7 +1231,7 @@ void smtAstVariableNode::accept(Visitor& v) {
 
 smtAstZxNode::smtAstZxNode(uint64 sizeExt, smtAstAbstractNode *expr) {
   this->kind = ZX_NODE;
-  this->addChild(new smtAstDecimalNode(sizeExt));
+  this->addChild(decimal(sizeExt));
   this->addChild(expr);
 }
 
@@ -1245,8 +1244,8 @@ smtAstZxNode::smtAstZxNode(const smtAstZxNode &copy) {
 
 
 smtAstZxNode::~smtAstZxNode() {
-  freeAllNodes(this->childs);
 }
+
 
 void smtAstZxNode::accept(Visitor& v) {
   v(*this);
@@ -1639,18 +1638,37 @@ namespace smt2lib {
 
 namespace smt2lib {
 
-  /* Free all childs node */
-  // Check issue #141
-  void freeAllNodes(std::vector<smtAstAbstractNode *> &childs) {
-    //uint64 index = 0;
-    //while (index < childs.size()) {
-    //  delete childs[index];
-    //  index++;
-    //}
-    childs.clear();
+
+  std::map<smtAstAbstractNode *, bool> nodesList;
+  std::map<smtAstAbstractNode *, bool> mustBeFreed;
+
+  void freeUnusedNodes(const std::map<smtAstAbstractNode *, bool> &usedNodes) {
+
+    std::map<smtAstAbstractNode *, bool>::iterator       it;
+    std::map<smtAstAbstractNode *, bool>::const_iterator found;
+
+    mustBeFreed.clear();
+
+    /* Go through every allocated nodes */
+    for (it = nodesList.begin(); it != nodesList.end(); it++) {
+      found = usedNodes.find(it->first);
+      if (found == usedNodes.end()) {
+        /* The node is unused */
+        mustBeFreed[it->first] = true;
+      }
+    }
+
+    /* Free unused node */
+    for (it = mustBeFreed.begin(); it != mustBeFreed.end(); it++) {
+      nodesList.erase(it->first);
+      delete it->first;
+    }
+
+    mustBeFreed.clear();
   }
 
-}
+
+} // smt2lib namespace
 
 
 // ====== Node builders
@@ -1662,6 +1680,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstAssertNode(expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1670,6 +1689,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvNode(value, size);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1678,6 +1698,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvaddNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1686,6 +1707,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvandNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1694,6 +1716,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvashrNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1702,6 +1725,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvNode(0, 1);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1710,6 +1734,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvlshrNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1718,6 +1743,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvmulNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1726,6 +1752,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvnandNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1734,6 +1761,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvnegNode(expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1742,6 +1770,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvnorNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1750,6 +1779,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvnotNode(expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1758,6 +1788,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvorNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1766,6 +1797,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvrolNode(rot, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1774,6 +1806,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvrolNode(rot, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1782,6 +1815,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvrorNode(rot, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1790,6 +1824,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvrorNode(rot, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1798,6 +1833,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsdivNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1806,6 +1842,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsgeNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1814,6 +1851,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsgtNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1822,6 +1860,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvshlNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1830,6 +1869,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsleNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1838,6 +1878,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsltNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1846,6 +1887,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsmodNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1854,6 +1896,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsremNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1862,6 +1905,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsubNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1870,6 +1914,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvNode(1, 1);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1878,6 +1923,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvudivNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1886,6 +1932,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvugeNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1894,6 +1941,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvugtNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1902,6 +1950,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvuleNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1910,6 +1959,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvultNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1918,6 +1968,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvuremNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1926,6 +1977,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvxnorNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1934,6 +1986,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvxorNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1942,6 +1995,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstCompoundNode(exprs);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1950,6 +2004,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstConcatNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1958,6 +2013,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstConcatNode(exprs);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1966,6 +2022,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstConcatNode(exprs);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1974,6 +2031,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstDecimalNode(value);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1982,6 +2040,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstDeclareNode(symVarName, symVarSize);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1989,6 +2048,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstDistinctNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -1997,6 +2057,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstEqualNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -2005,6 +2066,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstExtractNode(high, low, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -2013,6 +2075,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstIteNode(ifExpr, thenExpr, elseExpr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -2021,6 +2084,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstReferenceNode(value);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -2029,6 +2093,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstStringNode(value);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -2037,6 +2102,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstSxNode(sizeExt, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -2045,6 +2111,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstVariableNode(value);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -2053,6 +2120,7 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstZxNode(sizeExt, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
+    nodesList[node] = true;
     return node;
   }
 
@@ -2108,6 +2176,7 @@ namespace smt2lib {
     }
     if (newNode == nullptr)
       throw std::invalid_argument("smt2lib::newInstance() - No enough memory");
+    nodesList[newNode] = true;
     return newNode;
   }
 

@@ -28,7 +28,6 @@ SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64
 
 
 SymbolicExpression::~SymbolicExpression() {
-  delete this->expression;
 }
 
 
@@ -58,7 +57,6 @@ std::string SymbolicExpression::getID2Str(void) {
 
 /* Set the destination expression */
 void SymbolicExpression::setExpression(smt2lib::smtAstAbstractNode *expr) {
-  delete this->expression;
   this->expression = expr;
 }
 

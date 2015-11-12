@@ -27,6 +27,7 @@ extern AnalysisProcessor  ap;
 extern Trigger            analysisTrigger;
 
 
+
 /* NameSpace for all Python Bindings variables */
 namespace PyTritonOptions {
   /* Execution configurations */
@@ -934,7 +935,7 @@ static PyObject *Triton_isSnapshotEnabled(PyObject *self, PyObject *noarg) {
 
 static char Triton_restoreSnapshot_doc[] = "Restores the last snapshot";
 static PyObject *Triton_restoreSnapshot(PyObject *self, PyObject *noarg) {
-  ap.restoreSnapshot();
+  ap.setSnapshotRestoreFlag(true);
   Py_INCREF(Py_None);
   return Py_None;
 }

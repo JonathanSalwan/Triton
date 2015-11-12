@@ -7,8 +7,8 @@
 #ifndef TRITON_TRACE_H
 #define TRITON_TRACE_H
 
-#include "TritonTypes.h"
 #include "Inst.h"
+#include "TritonTypes.h"
 
 #include <iostream>
 #include <ostream>

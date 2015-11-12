@@ -4,13 +4,24 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
-#ifndef DIRECTOR_H
-#define DIRECTOR_H
+#ifndef IRBUILDERFACTORY_H
+#define IRBUILDERFACTORY_H
 
+#include <list>
 #include "IRBuilder.h"
 
 
-// Return an IR object corresponding to the given instruction.
-IRBuilder *createIRBuilder(INS ins);
+namespace IRBuilderFactory {
 
-#endif // DIRECTOR_H
+  /* Keep a list of irbuilders */
+  extern std::list<IRBuilder *> irbuilders;
+
+  /* Flush Pin's cache and remove all irbuilders */
+  void        flushCache(void);
+
+  /* Return an IR object corresponding to the given instruction. */
+  IRBuilder   *createIRBuilder(INS ins);
+
+}
+
+#endif // IRBUILDERFACTORY_H

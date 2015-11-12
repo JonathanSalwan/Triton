@@ -7,7 +7,6 @@
 #ifndef LIGHT_VERSION
 
 #include <iostream>
-
 #include <SnapshotEngine.h>
 
 
@@ -16,6 +15,7 @@ SnapshotEngine::SnapshotEngine() {
   this->locked              = LOCKED;
   this->snapshotTaintEngine = nullptr;
   this->snapshotSymEngine   = nullptr;
+  this->mustBeRestore       = false;
 }
 
 
@@ -41,13 +41,20 @@ void SnapshotEngine::takeSnapshot(const SymbolicEngine &currentSymEngine, const 
   /* 3 - Save current taint engine state */
   this->snapshotTaintEngine = new TaintEngine(currentTaintEngine);
 
-  /* 4 - Save Pin registers context */
+  /* 4 - Save current taint engine state */
+  this->nodesList = smt2lib::nodesList;
+
+  /* 5 - Save Pin registers context */
   PIN_SaveContext(ctx, &this->pinCtx);
 }
 
 
 /* Restore the snapshot. */
 void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngine *currentTaintEngine, CONTEXT *ctx) {
+
+  if (this->mustBeRestore == false)
+    return;
+
   /* 1 - Restore all memory modification. */
   list< std::pair<uint64, char> >::iterator i;
   for(i = this->memory.begin(); i != this->memory.end(); ++i){
@@ -55,7 +62,7 @@ void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngi
   }
   this->memory.clear();
 
-  /* 2.1 - Delete expressions which will be lost */
+  /* 2.1 - Delete unused expressions */
   std::vector<SymbolicExpression *> currentExpressions = currentSymEngine->getExpressions();
 
   uint64 currentSize  = currentExpressions.size();
@@ -64,7 +71,7 @@ void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngi
     delete currentExpressions[index];
   }
 
-  /* 2.2 - Delete variables which will be lost */
+  /* 2.2 - Delete unused variables */
   std::vector<SymbolicVariable *> currentSymbolicVars = currentSymEngine->getSymVars();
 
   currentSize  = currentSymbolicVars.size();
@@ -79,9 +86,13 @@ void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngi
   /* 3 - Restore current taint engine state */
   *currentTaintEngine = *this->snapshotTaintEngine;
 
-  /* 4 - Restore Pin registers context */
+  /* 4 - Delete unused AST nodes */
+  smt2lib::freeUnusedNodes(this->nodesList);
+
+  /* 5 - Restore Pin registers context */
   PIN_SaveContext(&this->pinCtx, ctx);
 
+  this->mustBeRestore = false;
   PIN_UnlockClient();
   PIN_ExecuteAt(ctx);
 }
@@ -107,13 +118,25 @@ void SnapshotEngine::resetEngine() {
 
 
 /* Check if the snapshot engine is locked. */
-BOOL SnapshotEngine::isLocked() {
+bool SnapshotEngine::isLocked() {
   return this->locked;
 }
 
 
 CONTEXT *SnapshotEngine::getCtx(void) {
   return &this->pinCtx;
+}
+
+
+/* Check if we must restore the snapshot */
+bool SnapshotEngine::isMustBeRestored() {
+  return this->mustBeRestore;
+}
+
+
+/* Check if we must restore the snapshot */
+void SnapshotEngine::setRestore(bool flag) {
+  this->mustBeRestore = flag;
 }
 
 #endif /* LIGHT_VERSION */

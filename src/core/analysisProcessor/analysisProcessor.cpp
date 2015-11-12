@@ -124,7 +124,8 @@ Inst *AnalysisProcessor::getLastInstruction(void) {
 
 
 void AnalysisProcessor::clearTrace(void) {
-  this->getTrace().getInstructions().clear();
+  std::list<Inst *> instructions = this->getTrace().getInstructions();
+  while(!instructions.empty()) delete instructions.front(), instructions.pop_front();
 }
 
 
@@ -712,6 +713,16 @@ bool AnalysisProcessor::isSnapshotEnabled(void) {
   if (this->snapshotEngine.isLocked())
     return false;
   return true;
+}
+
+
+bool AnalysisProcessor::isSnapshotMustBeRestored(void) {
+  return this->snapshotEngine.isMustBeRestored();
+}
+
+
+void AnalysisProcessor::setSnapshotRestoreFlag(bool flag) {
+  this->snapshotEngine.setRestore(flag);
 }
 
 

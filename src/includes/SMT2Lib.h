@@ -10,6 +10,7 @@
 #define   SMT2LIB_H
 
 #include <list>
+#include <map>
 #include <ostream>
 #include <stdexcept>
 #include <string>
@@ -648,10 +649,6 @@ namespace smt2lib {
   std::ostream &operator<<(std::ostream &stream, smtAstZxNode *node);
 
 
-  /* Utils */
-  void freeAllNodes(std::vector<smtAstAbstractNode *> &childs);
-
-
   /* Node builders */
   smtAstAbstractNode *bv(uint128 value, uint64 size);
   smtAstAbstractNode *bvadd(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
@@ -705,8 +702,14 @@ namespace smt2lib {
   smtAstAbstractNode *zx(uint64 sizeExt, smtAstAbstractNode *expr);
   smtAstAbstractNode *newInstance(smtAstAbstractNode *node);
 
+  /* Garbage Collector Utils */
+  extern std::map<smtAstAbstractNode *, bool> nodesList;
+  extern std::map<smtAstAbstractNode *, bool> mustBeFreed;
+  void freeUnusedNodes(const std::map<smtAstAbstractNode *, bool> &usedNodes);
+
 
 } // smt2lib namespace
+
 
 #endif /* !SMT2LIB_H */
 #endif /* LIGHT_VERSION */
