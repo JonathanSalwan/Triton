@@ -223,12 +223,18 @@ bool TaintEngine::assignmentSpreadTaintMemImm(uint64 memDst, uint32 writeSize) {
  * Returns true if a spreading occurs otherwise returns false.
  */
 bool TaintEngine::assignmentSpreadTaintMemReg(uint64 memDst, uint64 regSrc, uint32 writeSize) {
+
+  /* Check source */
   if (this->isRegTainted(regSrc)){
     for (uint64 offset = 0; offset != writeSize; offset++)
       this->taintMem(memDst+offset);
     return TAINTED;
   }
-  this->untaintMem(memDst);
+
+  /* Spread destination */
+  for (uint64 offset = 0; offset != writeSize; offset++)
+    this->untaintMem(memDst+offset);
+
   return !TAINTED;
 }
 
@@ -261,12 +267,21 @@ bool TaintEngine::aluSpreadTaintRegReg(uint64 regDst, uint64 regSrc) {
 bool TaintEngine::aluSpreadTaintMemMem(uint64 memDst, uint64 memSrc, uint32 writeSize) {
   bool tainted = !TAINTED;
 
-  for (uint64 offset = 0; offset < writeSize; offset++){
+  /* Check source */
+  for (uint64 offset = 0; offset != writeSize; offset++){
     if (this->isMemTainted(memSrc+offset)){
       this->taintMem(memDst+offset);
       tainted = TAINTED;
     }
   }
+
+  /* Check destination */
+  for (uint64 offset = 0; offset != writeSize; offset++) {
+    if (this->isMemTainted(memDst+offset)){
+      return TAINTED;
+    }
+  }
+
   return tainted;
 }
 
@@ -276,7 +291,7 @@ bool TaintEngine::aluSpreadTaintMemMem(uint64 memDst, uint64 memSrc, uint32 writ
  * we check if regDst is tainted and returns the status.
  */
 bool TaintEngine::aluSpreadTaintRegMem(uint64 regDst, uint64 memSrc, uint32 readSize) {
-  for (uint64 offset = 0; offset < readSize; offset++){
+  for (uint64 offset = 0; offset != readSize; offset++){
     if (this->isMemTainted(memSrc+offset)){
       this->taintReg(regDst);
       return TAINTED;
@@ -287,7 +302,7 @@ bool TaintEngine::aluSpreadTaintRegMem(uint64 regDst, uint64 memSrc, uint32 read
 
 
 bool TaintEngine::aluSpreadTaintMemImm(uint64 memDst, uint32 writeSize) {
-  for (uint64 offset = 0; offset < writeSize; offset++){
+  for (uint64 offset = 0; offset != writeSize; offset++){
     if (this->isMemTainted(memDst+offset)){
       return TAINTED;
     }

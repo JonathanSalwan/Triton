@@ -500,15 +500,41 @@ void AnalysisProcessor::assignmentSpreadTaintRegMem(SymbolicExpression *se, Regi
 
 
 void AnalysisProcessor::assignmentSpreadTaintMemMem(SymbolicExpression *se, MemoryOperand &memDst, MemoryOperand &memSrc, uint32 readSize) {
+  SymbolicExpression  *byte;
+  uint64              byteId;
   uint64 memAddrDst = memDst.getAddress();
   uint64 memAddrSrc = memSrc.getAddress();
+
+  /* Taint parent se */
   se->isTainted = this->taintEngine.assignmentSpreadTaintMemMem(memAddrDst, memAddrSrc, readSize);
+
+  /* Taint each byte of reference expression */
+  for (uint64 i = 0; i != readSize; i++) {
+    byteId = this->symEngine.getMemSymbolicID(memAddrDst + i);
+    if (byteId == UNSET)
+      continue;
+    byte = this->symEngine.getExpressionFromId(byteId);
+    byte->isTainted = this->taintEngine.isMemTainted(memAddrSrc + i);
+  }
 }
 
 
 void AnalysisProcessor::assignmentSpreadTaintMemImm(SymbolicExpression *se, MemoryOperand &memDst, uint64 writeSize) {
+  SymbolicExpression  *byte;
+  uint64              byteId;
   uint64 memAddrDst = memDst.getAddress();
+
+  /* Taint parent se */
   se->isTainted = this->taintEngine.assignmentSpreadTaintMemImm(memAddrDst, writeSize);
+
+  /* Taint each byte of reference expression */
+  for (uint64 i = 0; i != writeSize; i++) {
+    byteId = this->symEngine.getMemSymbolicID(memAddrDst + i);
+    if (byteId == UNSET)
+      continue;
+    byte = this->symEngine.getExpressionFromId(byteId);
+    byte->isTainted = se->isTainted;
+  }
 }
 
 
@@ -588,9 +614,22 @@ void AnalysisProcessor::aluSpreadTaintRegReg(SymbolicExpression *se, RegisterOpe
 
 
 void AnalysisProcessor::aluSpreadTaintMemMem(SymbolicExpression *se, MemoryOperand &memDst, MemoryOperand &memSrc, uint32 writeSize) {
+  SymbolicExpression  *byte;
+  uint64              byteId;
   uint64 memAddrDst = memDst.getAddress();
   uint64 memAddrSrc = memSrc.getAddress();
+
+  /* Taint parent se */
   se->isTainted = this->taintEngine.aluSpreadTaintMemMem(memAddrDst, memAddrSrc, writeSize);
+
+  /* Taint each byte of reference expression */
+  for (uint64 i = 0; i != writeSize; i++) {
+    byteId = this->symEngine.getMemSymbolicID(memAddrDst + i);
+    if (byteId == UNSET)
+      continue;
+    byte = this->symEngine.getExpressionFromId(byteId);
+    byte->isTainted = this->taintEngine.isMemTainted(memAddrDst + i) | this->taintEngine.isMemTainted(memAddrSrc + i);
+  }
 }
 
 
@@ -602,15 +641,41 @@ void AnalysisProcessor::aluSpreadTaintRegMem(SymbolicExpression *se, RegisterOpe
 
 
 void AnalysisProcessor::aluSpreadTaintMemImm(SymbolicExpression *se, MemoryOperand &memDst, uint32 writeSize) {
+  SymbolicExpression  *byte;
+  uint64              byteId;
   uint64 memAddrDst = memDst.getAddress();
+
+  /* Taint parent se */
   se->isTainted = this->taintEngine.aluSpreadTaintMemImm(memAddrDst, writeSize);
+
+  /* Taint each byte of reference expression */
+  for (uint64 i = 0; i != writeSize; i++) {
+    byteId = this->symEngine.getMemSymbolicID(memAddrDst + i);
+    if (byteId == UNSET)
+      continue;
+    byte = this->symEngine.getExpressionFromId(byteId);
+    byte->isTainted = se->isTainted;
+  }
 }
 
 
 void AnalysisProcessor::aluSpreadTaintMemReg(SymbolicExpression *se, MemoryOperand &memDst, RegisterOperand &regSrc, uint32 writeSize) {
+  SymbolicExpression  *byte;
+  uint64              byteId;
   uint64 memAddrDst = memDst.getAddress();
   uint64 regIdSrc = regSrc.getTritonRegId();
+
+  /* Taint parent se */
   se->isTainted = this->taintEngine.aluSpreadTaintMemReg(memAddrDst, regIdSrc, writeSize);
+
+  /* Taint each byte of reference expression */
+  for (uint64 i = 0; i != writeSize; i++) {
+    byteId = this->symEngine.getMemSymbolicID(memAddrDst + i);
+    if (byteId == UNSET)
+      continue;
+    byte = this->symEngine.getExpressionFromId(byteId);
+    byte->isTainted = se->isTainted;
+  }
 }
 
 
