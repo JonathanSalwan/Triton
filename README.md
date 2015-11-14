@@ -1,19 +1,20 @@
 <p align="center"><img src="http://shell-storm.org/files/triton_logo_1.png"/></p>
 
-**Triton** is a concolic execution framework based on Pin. It provides components like a
+**Triton** is a Pin-based dynamic symbolic execution (DSE) aexecution framework. Although Triton is a DSE framework, it also
+provides internal components like a
 [taint engine](http://triton.quarkslab.com/documentation/taintEngine/), a
 [dynamic symbolic execution engine](http://triton.quarkslab.com/documentation/symbolicEngine/), a
 [snapshot engine](http://triton.quarkslab.com/documentation/snapshotEngine/), translation of x64
 instructions into the [SMT2-LIB representation](http://triton.quarkslab.com/documentation/smt2lib-representation/),
 a [Z3 interface](http://triton.quarkslab.com/documentation/solverEngine/) to solve constraints 
-and [Python bindings](http://triton.quarkslab.com/documentation/api/triton-methods/).
+and, the last but not least, [Python bindings](http://triton.quarkslab.com/documentation/api/triton-methods/).
 
 <p align="center"><img src="http://shell-storm.org/files/triton_archi_3.svg"/></p>
 
-Based on these components, **Triton** offers the possibility to build tools for vulnerabilities 
-research and can provide some reverse engineering assistance.
+Based on these components, you are able to build program analysis tools, automate reverse engineering
+or perform software verification.
 
-The [wiki](http://triton.quarkslab.com/documentation/) describes **Triton** under the hood. As **Triton** is a young project,
+The [wiki](http://triton.quarkslab.com/documentation/) describes **Triton** and its components under the hood. As **Triton** is a young project,
 please, **don't blame us** if it is not yet reliable. [Open issues](https://github.com/JonathanSalwan/Triton/issues) or
 [pull requests](https://github.com/JonathanSalwan/Triton/pulls) are always better than troll =).
 
