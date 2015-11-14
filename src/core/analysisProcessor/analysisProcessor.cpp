@@ -513,9 +513,22 @@ void AnalysisProcessor::assignmentSpreadTaintMemImm(SymbolicExpression *se, Memo
 
 
 void AnalysisProcessor::assignmentSpreadTaintMemReg(SymbolicExpression *se, MemoryOperand &memDst, RegisterOperand &regSrc, uint64 writeSize) {
-  uint64 memAddrDst = memDst.getAddress();
-  uint64 regIdSrc = regSrc.getTritonRegId();
+  SymbolicExpression  *byte;
+  uint64              byteId;
+  uint64              memAddrDst = memDst.getAddress();
+  uint64              regIdSrc = regSrc.getTritonRegId();
+
+  /* Taint parent se */
   se->isTainted = this->taintEngine.assignmentSpreadTaintMemReg(memAddrDst, regIdSrc, writeSize);
+
+  /* Taint each byte of reference expression */
+  for (uint64 i = 0; i != writeSize; i++) {
+    byteId = this->symEngine.getMemSymbolicID(memAddrDst + i);
+    if (byteId == UNSET)
+      continue;
+    byte = this->symEngine.getExpressionFromId(byteId);
+    byte->isTainted = se->isTainted;
+  }
 }
 
 
