@@ -99,14 +99,14 @@ void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngi
 
 
 /* Disable the snapshot engine. */
-void SnapshotEngine::disableSnapshot() {
+void SnapshotEngine::disableSnapshot(void) {
   this->locked = LOCKED;
 }
 
 
 /* Reset the snapshot engine.
  * Clear all backups for a new snapshot. */
-void SnapshotEngine::resetEngine() {
+void SnapshotEngine::resetEngine(void) {
   this->memory.clear();
 
   delete this->snapshotSymEngine;
@@ -118,7 +118,7 @@ void SnapshotEngine::resetEngine() {
 
 
 /* Check if the snapshot engine is locked. */
-bool SnapshotEngine::isLocked() {
+bool SnapshotEngine::isLocked(void) {
   return this->locked;
 }
 
@@ -129,7 +129,7 @@ CONTEXT *SnapshotEngine::getCtx(void) {
 
 
 /* Check if we must restore the snapshot */
-bool SnapshotEngine::isMustBeRestored() {
+bool SnapshotEngine::isMustBeRestored(void) {
   return this->mustBeRestore;
 }
 

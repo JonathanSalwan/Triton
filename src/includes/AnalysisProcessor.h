@@ -66,6 +66,10 @@ class AnalysisProcessor {
     uint128     getMemValue(uint64 mem, uint32 readSize);
     void        setMemValue(MemoryOperand &mem, uint32 writeSize, uint128 value);
 
+    /* Deal with the context */
+    bool isContextMustBeExecuted(void);
+    void executeContext(void);
+
 
     /*
      * Trace Facade

@@ -105,6 +105,16 @@ void AnalysisProcessor::setMemValue(MemoryOperand &mem, uint32 writeSize, uint12
 }
 
 
+bool AnalysisProcessor::isContextMustBeExecuted(void) {
+  return this->currentCtxH->isMustBeExecuted();
+}
+
+
+void AnalysisProcessor::executeContext(void) {
+  this->currentCtxH->executeContext();
+}
+
+
 // Trace Facade
 // ------------
 

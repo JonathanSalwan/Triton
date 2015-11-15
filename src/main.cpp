@@ -80,6 +80,10 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
   /* Some configurations must be applied after processing */
   processingPyConf.applyConfAfterProcessing(irb);
 
+  /* Check if we must execute a new context */
+  if (ap.isContextMustBeExecuted())
+    ap.executeContext();
+
   /* Check if we must restore the snapshot */
   if (ap.isSnapshotMustBeRestored())
     ap.restoreSnapshot();
@@ -116,6 +120,10 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
 
   /* Some configurations must be applied after processing */
   processingPyConf.applyConfAfterProcessing(inst);
+
+  /* Check if we must execute a new context */
+  if (ap.isContextMustBeExecuted())
+    ap.executeContext();
 
   /* Check if we must restore the snapshot */
   if (ap.isSnapshotMustBeRestored())

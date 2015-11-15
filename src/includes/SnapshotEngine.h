@@ -50,11 +50,11 @@ class SnapshotEngine{
     ~SnapshotEngine();
 
     CONTEXT   *getCtx(void);
-    bool      isLocked();
-    bool      isMustBeRestored();
+    bool      isLocked(void);
+    bool      isMustBeRestored(void);
     void      addModification(uint64 address, char byte);
-    void      disableSnapshot();
-    void      resetEngine();
+    void      disableSnapshot(void);
+    void      resetEngine(void);
     void      restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngine *currentTaintEngine, CONTEXT *ctx);
     void      setRestore(bool flag);
     void      takeSnapshot(const SymbolicEngine &currentSymEngine, const TaintEngine &currentTaintEngine, CONTEXT *ctx);
