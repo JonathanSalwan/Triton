@@ -84,9 +84,11 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
   if (ap.isContextMustBeExecuted())
     ap.executeContext();
 
+  #ifndef LIGHT_VERSION
   /* Check if we must restore the snapshot */
   if (ap.isSnapshotMustBeRestored())
     ap.restoreSnapshot();
+  #endif
 
   /* Mutex */
   ap.unlock();
@@ -125,9 +127,11 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
   if (ap.isContextMustBeExecuted())
     ap.executeContext();
 
+  #ifndef LIGHT_VERSION
   /* Check if we must restore the snapshot */
   if (ap.isSnapshotMustBeRestored())
     ap.restoreSnapshot();
+  #endif
 
   /* Mutex */
   ap.unlock();
