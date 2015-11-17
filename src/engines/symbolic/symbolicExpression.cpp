@@ -10,7 +10,7 @@
 
 
 
-SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id, enum SymExpr::kind kind) {
+SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, reg_size id, enum SymExpr::kind kind) {
   this->expression  = expr;
   this->id          = id;
   this->isTainted   = false;
@@ -18,7 +18,7 @@ SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64
 }
 
 
-SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id, enum SymExpr::kind kind, std::string comment) {
+SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, reg_size id, enum SymExpr::kind kind, std::string comment) {
   this->comment     = comment;
   this->expression  = expr;
   this->id          = id;
@@ -28,6 +28,7 @@ SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64
 
 
 SymbolicExpression::~SymbolicExpression() {
+  delete this->expression;
 }
 
 
@@ -44,7 +45,7 @@ std::string SymbolicExpression::getComment(void) {
 
 
 /* Returns the ID of the symbolic expression */
-uint64 SymbolicExpression::getID(void) {
+reg_size SymbolicExpression::getID(void) {
   return this->id;
 }
 
@@ -57,6 +58,7 @@ std::string SymbolicExpression::getID2Str(void) {
 
 /* Set the destination expression */
 void SymbolicExpression::setExpression(smt2lib::smtAstAbstractNode *expr) {
+  delete this->expression;
   this->expression = expr;
 }
 

@@ -19,7 +19,7 @@ Trace::~Trace() {
 }
 
 
-/* Add an instruction into the trace */
+/* Add an instruction in the trace */
 void Trace::addInstruction(Inst *instruction) {
   this->instructions.push_back(instruction);
 }

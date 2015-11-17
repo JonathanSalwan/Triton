@@ -18,7 +18,7 @@
 class LeaveIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
 
   public:
-    LeaveIRBuilder(uint64 address, const std::string &disassembly);
+    LeaveIRBuilder(reg_size address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-JnsIRBuilder::JnsIRBuilder(uint64 address, const std::string &disassembly):
+JnsIRBuilder::JnsIRBuilder(reg_size address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -39,9 +39,6 @@ void JnsIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
-
-  /* Apply the taint */
-  ap.aluSpreadTaintRegReg(se, ID_TMP_RIP, ID_TMP_SF);
 
   /* Add the constraint in the PathConstraints list */
   ap.addPathConstraint(se->getID());

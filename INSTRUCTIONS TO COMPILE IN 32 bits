@@ -1,0 +1,44 @@
+INSTRUCTIONS TO COMPILE IN 32 bits
+-------------------------------------
+export BOOST_INCLUDEDIR=/home/default/Triton/boost_1_58_0/boost
+export BOOST_ROOT=/home/default/Triton/boost_1_58_0
+
+
+cd /home/default/Triton/pin-2.14-71313-gcc.4.4.7-linux/source/tools/Triton/build
+
+find . -type f -print0 | xargs -0 sed -i 's/IA32E/IA32/g'
+
+find . -type f -print0 | xargs -0 sed -i 's/intel64/ia32/g'
+
+find . -type f -print0 | xargs -0 sed -i 's/TARGET_IA32E/TARGET_IA32/g'
+
+
+Files that need to be modified: 
+
+Triton/src/core/components/TmpReg.cpp
+Triton/src/bindings/python/namespaces/initRegEnv.cpp
+Triton/src/bindings/python/modules/tritonCallbacks.cpp
+Triton/src/includes/CpuSize.cpp
+Triton/src/includes/Registers.cpp
+Triton/src/includes/TmpReg.h
+Triton/src/core/contextHandler/PINContextHandler.cpp
+Triton/src/core/contextHandler/PINConverter.cpp
+Triton/src/includes/Tritontypes.h ---> Change te type for uint64 and uint32 introducing reg_size
+Replace uint64 for reg_size in every file
+
+Triton/smt2lib/z3Result.cpp ---> Z3_get_numeral_uint64(this->context, this->expr, &result);
+Triton/src/engines/solver/solverEngine.cpp ---> Z3_get_numeral_uint64(ctx, exp, &value);
+
+Triton/src/ir/builders/LeaIRBuilder.cpp
+Triton/src/includes/Syscalls.h  
+
+
+
+
+
+TODO:
+
+Files that needs to be fixed since they refere to 64 bits instructions or registers:
+- Triton/src/bindings/python/modules/tritonCallbacks.cpp line 458
+- Triton/src/bindings/python/namespaces/initLinux64Env.cpp line 16
+- Triton/src/bindings/python/namespaces/initSyscallEnv.cpp severeal references in the file

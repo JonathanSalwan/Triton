@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-LeaIRBuilder::LeaIRBuilder(uint64 address, const std::string &disassembly):
+LeaIRBuilder::LeaIRBuilder(reg_size address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -44,13 +44,23 @@ void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   /* Base register */
   if (baseReg.getTritonRegId()) {
     /* If the base register is RIP, we must use nextAddress */
-    if (baseReg.getTritonRegId() == ID_RIP)
+
+      // x64 or x32
+    #if defined(__x86_64__) || defined(_M_X64)
+    if (baseReg.getTritonRegId() == ID_RIP){
+    #endif
+    #if defined(__i386) || defined(_M_IX86)
+    if (baseReg.getTritonRegId() == ID_EIP){
+    #endif   
       base2e = smt2lib::bv(this->nextAddress, regSize * REG_SIZE);
-    else
+    }
+    else{
       base2e = ap.buildSymbolicRegOperand(baseReg, regSize);
+    }
   }
-  else
+  else{
     base2e = smt2lib::bv(0, regSize * REG_SIZE);
+  }
 
   /* Index register if it exists */
   if (indexReg.getTritonRegId())

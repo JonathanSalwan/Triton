@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-RorIRBuilder::RorIRBuilder(uint64 address, const std::string &disassembly):
+RorIRBuilder::RorIRBuilder(reg_size address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

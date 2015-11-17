@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-MovapdIRBuilder::MovapdIRBuilder(uint64 address, const std::string &disassembly):
+MovapdIRBuilder::MovapdIRBuilder(reg_size address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

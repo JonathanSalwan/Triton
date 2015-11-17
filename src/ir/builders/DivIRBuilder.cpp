@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-DivIRBuilder::DivIRBuilder(uint64 address, const std::string &disassembly):
+DivIRBuilder::DivIRBuilder(reg_size address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

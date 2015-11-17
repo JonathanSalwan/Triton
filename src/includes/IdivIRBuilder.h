@@ -18,7 +18,7 @@
 class IdivIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    IdivIRBuilder(uint64 address, const std::string &disassembly);
+    IdivIRBuilder(reg_size address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

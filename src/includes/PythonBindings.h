@@ -28,10 +28,10 @@ namespace PyTritonOptions {
 
   /* Execution configurations */
   extern char *startAnalysisFromSymbol;
-  extern std::set<uint64> startAnalysisFromAddr;
-  extern std::set<uint64> startAnalysisFromOffset;
-  extern std::set<uint64> stopAnalysisFromAddr;
-  extern std::set<uint64> stopAnalysisFromOffset;
+  extern std::set<reg_size> startAnalysisFromAddr;
+  extern std::set<reg_size> startAnalysisFromOffset;
+  extern std::set<reg_size> stopAnalysisFromAddr;
+  extern std::set<reg_size> stopAnalysisFromOffset;
 
   /* Callback configurations */
   extern PyObject *callbackAfter;                                 // After the instruction processing
@@ -46,10 +46,10 @@ namespace PyTritonOptions {
   extern std::map<const char *, PyObject *> callbackRoutineExit;  // After routine processing
 
   /* Taint configurations */
-  extern std::map<uint64, std::list<uint64>> taintRegFromAddr;
-  extern std::map<uint64, std::list<uint64>> untaintRegFromAddr;
-  extern std::map<uint64, std::list<uint64>> taintMemFromAddr;
-  extern std::map<uint64, std::list<uint64>> untaintMemFromAddr;
+  extern std::map<reg_size, std::list<reg_size>> taintRegFromAddr;
+  extern std::map<reg_size, std::list<reg_size>> untaintRegFromAddr;
+  extern std::map<reg_size, std::list<reg_size>> taintMemFromAddr;
+  extern std::map<reg_size, std::list<reg_size>> untaintMemFromAddr;
 };
 
 void initBindings(void);

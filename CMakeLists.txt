@@ -6,6 +6,14 @@ file(READ ${CMAKE_SOURCE_DIR}/.build_number BUILD_NUMBER)
 math(EXPR NEW_BUILD_NUMBER "${BUILD_NUMBER} + 1")
 file(WRITE ${CMAKE_SOURCE_DIR}/.build_number ${NEW_BUILD_NUMBER})
 
+# Get architecture
+if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+    set( ARCHITECTURE amd64 )
+else( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+    set( ARCHITECTURE i386 )
+endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+
+
 # Triton version
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 1)
@@ -27,14 +35,28 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FLAG_CXX}")
 
 # Specific Linux CXX Flags
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DUSING_XED -DTARGET_IA32E -DHOST_IA32E -DTARGET_LINUX")
+    if(${ARCHITECTURE} STREQUAL "i386")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DUSING_XED -DTARGET_IA32 -DHOST_IA32 -DTARGET_LINUX")
+    endif(${ARCHITECTURE} STREQUAL "i386")
+    if(${ARCHITECTURE} STREQUAL "amd64")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DUSING_XED -DTARGET_IA32E -DHOST_IA32E -DTARGET_LINUX")
+    endif(${ARCHITECTURE} STREQUAL "amd64")
+
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-stack-protector -fomit-frame-pointer -fno-strict-aliasing -fabi-version=2")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--hash-style=sysv -Wl,-Bsymbolic")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 # Specific OSX CXX Flags
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DTARGET_IA32E -DHOST_IA32E -DTARGET_MAC")
+    if(${ARCHITECTURE} STREQUAL "i386")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DTARGET_IA32 -DHOST_IA32E -DTARGET_MAC")
+    endif(${ARCHITECTURE} STREQUAL "i386")
+
+    if(${ARCHITECTURE} STREQUAL "amd64")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DTARGET_IA32E -DHOST_IA32E -DTARGET_MAC")
+    endif(${ARCHITECTURE} STREQUAL "amd64")
+
+    
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fomit-frame-pointer -fno-strict-aliasing")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
     if(POLICY CMP0025)
@@ -71,29 +93,55 @@ else()
 endif()
 
 # Includes directories (Pin and Triton)
+if(${ARCHITECTURE} STREQUAL "i386")
+    include_directories("${PIN_ROOT}/extras/xed-ia32/include")
+endif(${ARCHITECTURE} STREQUAL "i386")
+if(${ARCHITECTURE} STREQUAL "amd64")
+    include_directories("${PIN_ROOT}/extras/xed-intel64/include")
+endif(${ARCHITECTURE} STREQUAL "amd64")
 include_directories("${PIN_ROOT}/source/include/pin")
 include_directories("${PIN_ROOT}/source/include/pin/gen")
 include_directories("${PIN_ROOT}/extras/components/include")
-include_directories("${PIN_ROOT}/extras/xed-intel64/include")
 include_directories("${PIN_ROOT}/source/tools/InstLib")
 include_directories("./src/includes")
 
 # Libs directories (Pin)
-link_directories("${PIN_ROOT}/intel64/lib")
-link_directories("${PIN_ROOT}/intel64/lib-ext")
-link_directories("${PIN_ROOT}/extras/xed-intel64/lib")
+if(${ARCHITECTURE} STREQUAL "i386")
+    link_directories("${PIN_ROOT}/ia32/lib")
+    link_directories("${PIN_ROOT}/ia32/lib-ext")
+    link_directories("${PIN_ROOT}/extras/xed-ia32/lib")
+endif(${ARCHITECTURE} STREQUAL "i386")
+if(${ARCHITECTURE} STREQUAL "amd64")
+    link_directories("${PIN_ROOT}/intel64/lib")
+    link_directories("${PIN_ROOT}/intel64/lib-ext")
+    link_directories("${PIN_ROOT}/extras/xed-intel64/lib")
+endif(${ARCHITECTURE} STREQUAL "amd64")
+
+
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    link_directories("${PIN_ROOT}/intel64/runtime/glibc")
+    if(${ARCHITECTURE} STREQUAL "i386")
+        link_directories("${PIN_ROOT}/ia32/runtime/glibc")
+    endif(${ARCHITECTURE} STREQUAL "i386")
+    if(${ARCHITECTURE} STREQUAL "amd64")
+        link_directories("${PIN_ROOT}/intel64/runtime/glibc")
+    endif(${ARCHITECTURE} STREQUAL "amd64")
+    
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 # Triton have to generate a syscalls table from the kernel source
-# This following code tries to find the unistd_64.h header.
+# This following code tries to find the unistd_64.h or unistd_32.h header depending on the architecture.
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     FILE(
         GLOB_RECURSE
         syscalls_table_files
-        /usr/include/*unistd_64.h
+        if(${ARCHITECTURE} STREQUAL "i386")
+            /usr/include/*unistd_32.h
+        endif(${ARCHITECTURE} STREQUAL "i386")
+        if(${ARCHITECTURE} STREQUAL "amd64")
+            /usr/include/*unistd_64.h
+        endif(${ARCHITECTURE} STREQUAL "amd64")
+        
     )
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
@@ -112,9 +160,10 @@ if (NOT EXISTS ${syscalls_table_file})
     message(FATAL_ERROR "unistd_64.h or syscall.h is missing, please check the INSTALL file")
 endif()
 
-# We generate the syscalls.cpp from the unistd_64.h
+# We generate the syscalls.cpp from the unistd_64.h or unistd_64.h. 
+# Added python after COMMAND since to be sure that if ${CMAKE_SOURCE_DIR}/scripts/extract_syscall.py doesn't have X rights it gets executed
 execute_process(
-    COMMAND ${CMAKE_SOURCE_DIR}/scripts/extract_syscall.py ${syscalls_table_file}
+    COMMAND python ${CMAKE_SOURCE_DIR}/scripts/extract_syscall.py ${syscalls_table_file}
     OUTPUT_FILE ${CMAKE_SOURCE_DIR}/src/utils/syscalls.cpp
 )
 

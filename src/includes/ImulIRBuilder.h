@@ -18,7 +18,7 @@
 class ImulIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 
   public:
-    ImulIRBuilder(uint64 address, const std::string &disassembly);
+    ImulIRBuilder(reg_size address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

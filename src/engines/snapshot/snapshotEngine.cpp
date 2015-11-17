@@ -7,6 +7,7 @@
 #ifndef LIGHT_VERSION
 
 #include <iostream>
+
 #include <SnapshotEngine.h>
 
 
@@ -15,7 +16,6 @@ SnapshotEngine::SnapshotEngine() {
   this->locked              = LOCKED;
   this->snapshotTaintEngine = nullptr;
   this->snapshotSymEngine   = nullptr;
-  this->mustBeRestore       = false;
 }
 
 
@@ -24,7 +24,7 @@ SnapshotEngine::~SnapshotEngine() {
 
 
 /* Add the modification byte. */
-void SnapshotEngine::addModification(uint64 mem, char byte) {
+void SnapshotEngine::addModification(reg_size mem, char byte) {
   if (this->locked == UNLOCKED)
     this->memory.push_front(make_pair(mem, byte));
 }
@@ -41,42 +41,35 @@ void SnapshotEngine::takeSnapshot(const SymbolicEngine &currentSymEngine, const 
   /* 3 - Save current taint engine state */
   this->snapshotTaintEngine = new TaintEngine(currentTaintEngine);
 
-  /* 4 - Save current taint engine state */
-  this->nodesList = smt2lib::nodesList;
-
-  /* 5 - Save Pin registers context */
+  /* 4 - Save Pin registers context */
   PIN_SaveContext(ctx, &this->pinCtx);
 }
 
 
 /* Restore the snapshot. */
 void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngine *currentTaintEngine, CONTEXT *ctx) {
-
-  if (this->mustBeRestore == false)
-    return;
-
   /* 1 - Restore all memory modification. */
-  list< std::pair<uint64, char> >::iterator i;
+  list< std::pair<reg_size, char> >::iterator i;
   for(i = this->memory.begin(); i != this->memory.end(); ++i){
     *(reinterpret_cast<char*>(i->first)) = i->second;
   }
   this->memory.clear();
 
-  /* 2.1 - Delete unused expressions */
+  /* 2.1 - Delete expressions which will be lost */
   std::vector<SymbolicExpression *> currentExpressions = currentSymEngine->getExpressions();
 
-  uint64 currentSize  = currentExpressions.size();
-  uint64 snapshotSize = this->snapshotSymEngine->getExpressions().size();
-  for (uint64 index = snapshotSize; index < currentSize; index++) {
+  reg_size currentSize  = currentExpressions.size();
+  reg_size snapshotSize = this->snapshotSymEngine->getExpressions().size();
+  for (reg_size index = snapshotSize; index < currentSize; index++) {
     delete currentExpressions[index];
   }
 
-  /* 2.2 - Delete unused variables */
+  /* 2.2 - Delete variables which will be lost */
   std::vector<SymbolicVariable *> currentSymbolicVars = currentSymEngine->getSymVars();
 
   currentSize  = currentSymbolicVars.size();
   snapshotSize = this->snapshotSymEngine->getSymVars().size();
-  for (uint64 index = snapshotSize; index < currentSize; index++) {
+  for (reg_size index = snapshotSize; index < currentSize; index++) {
     delete currentSymbolicVars[index];
   }
 
@@ -86,27 +79,23 @@ void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngi
   /* 3 - Restore current taint engine state */
   *currentTaintEngine = *this->snapshotTaintEngine;
 
-  /* 4 - Delete unused AST nodes */
-  smt2lib::freeUnusedNodes(this->nodesList);
-
-  /* 5 - Restore Pin registers context */
+  /* 4 - Restore Pin registers context */
   PIN_SaveContext(&this->pinCtx, ctx);
 
-  this->mustBeRestore = false;
   PIN_UnlockClient();
   PIN_ExecuteAt(ctx);
 }
 
 
 /* Disable the snapshot engine. */
-void SnapshotEngine::disableSnapshot(void) {
+void SnapshotEngine::disableSnapshot() {
   this->locked = LOCKED;
 }
 
 
 /* Reset the snapshot engine.
  * Clear all backups for a new snapshot. */
-void SnapshotEngine::resetEngine(void) {
+void SnapshotEngine::resetEngine() {
   this->memory.clear();
 
   delete this->snapshotSymEngine;
@@ -118,25 +107,13 @@ void SnapshotEngine::resetEngine(void) {
 
 
 /* Check if the snapshot engine is locked. */
-bool SnapshotEngine::isLocked(void) {
+BOOL SnapshotEngine::isLocked() {
   return this->locked;
 }
 
 
 CONTEXT *SnapshotEngine::getCtx(void) {
   return &this->pinCtx;
-}
-
-
-/* Check if we must restore the snapshot */
-bool SnapshotEngine::isMustBeRestored(void) {
-  return this->mustBeRestore;
-}
-
-
-/* Check if we must restore the snapshot */
-void SnapshotEngine::setRestore(bool flag) {
-  this->mustBeRestore = flag;
 }
 
 #endif /* LIGHT_VERSION */

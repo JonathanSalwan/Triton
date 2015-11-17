@@ -13,7 +13,7 @@
 #include <SMT2Lib.h>
 
 
-SymbolicExpression *ControlFlow::rip(Inst &inst, AnalysisProcessor &ap, uint64 nextAddr)
+SymbolicExpression *ControlFlow::rip(Inst &inst, AnalysisProcessor &ap, reg_size nextAddr)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
@@ -26,7 +26,6 @@ SymbolicExpression *ControlFlow::rip(Inst &inst, AnalysisProcessor &ap, uint64 n
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
-  ap.assignmentSpreadTaintRegImm(se, ID_TMP_RIP);
 
   return se;
 }

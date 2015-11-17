@@ -31,12 +31,12 @@ class Inst {
     std::string                           sectionName;
     std::vector<TritonOperand>            operands;
     uint32                                opcode;
-    uint64                                address;
-    uint64                                baseAddress;
-    uint64                                branchTargetAddress;
-    uint64                                nextAddress;
-    uint64                                offset;
-    uint64                                threadId;
+    reg_size                                address;
+    reg_size                                baseAddress;
+    reg_size                                branchTargetAddress;
+    reg_size                                nextAddress;
+    reg_size                                offset;
+    reg_size                                threadId;
     #ifndef LIGHT_VERSION
     std::list<SymbolicExpression*>        symbolicExpressions;
     #endif
@@ -51,15 +51,15 @@ class Inst {
     const std::vector<TritonOperand>      &getOperands(void);
     sint32                                getOpcodeCategory(void);
     uint32                                getOpcode(void);
-    uint64                                getAddress(void);
-    uint64                                getBaseAddress(void);
-    uint64                                getBranchTargetAddress(void);
-    uint64                                getNextAddress(void);
-    uint64                                getOffset(void);
-    uint64                                getThreadID(void);
+    reg_size                                getAddress(void);
+    reg_size                                getBaseAddress(void);
+    reg_size                                getBranchTargetAddress(void);
+    reg_size                                getNextAddress(void);
+    reg_size                                getOffset(void);
+    reg_size                                getThreadID(void);
     void                                  setBranchTaken(bool flag);
-    void                                  setBranchTargetAddress(uint64 addr);
-    void                                  setNextAddress(uint64 addr);
+    void                                  setBranchTargetAddress(reg_size addr);
+    void                                  setNextAddress(reg_size addr);
     void                                  setOpcode(uint32 op);
     void                                  setOpcodeCategory(sint32 category);
     void                                  setOperands(const std::vector<TritonOperand> &operands);
@@ -69,7 +69,7 @@ class Inst {
     void                                  addExpression(SymbolicExpression *se);
     #endif
 
-    Inst(uint64 threadId,uint64 address, const std::string &insDis);
+    Inst(reg_size threadId,reg_size address, const std::string &insDis);
     ~Inst();
 };
 

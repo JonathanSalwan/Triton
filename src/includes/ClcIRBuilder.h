@@ -18,7 +18,7 @@
 class ClcIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
 
   public:
-    ClcIRBuilder(uint64 address, const std::string &disassembly);
+    ClcIRBuilder(reg_size address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

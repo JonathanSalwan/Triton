@@ -6,8 +6,10 @@
 
 #include <PINConverter.h>
 
+#if defined(__x86_64__) || defined(_M_X64)
+  /*Only for 64bits architectures*/
 
-uint64 PINConverter::convertDBIReg2TritonReg(uint64 pinRegID) {
+reg_size PINConverter::convertDBIReg2TritonReg(reg_size pinRegID) {
   switch(pinRegID){
     case REG_RAX:
     case REG_EAX:
@@ -174,7 +176,7 @@ uint64 PINConverter::convertDBIReg2TritonReg(uint64 pinRegID) {
 /* Convert a Triton register to a Pin register.
  * Besides, it can return only 64 bits wised registers.
  */
-uint64 PINConverter::convertTritonReg2DBIReg(uint64 tritonRegId) {
+reg_size PINConverter::convertTritonReg2DBIReg(reg_size tritonRegId) {
   switch(tritonRegId){
     case ID_RAX:    return REG_RAX;
     case ID_RBX:    return REG_RBX;
@@ -218,7 +220,7 @@ uint64 PINConverter::convertTritonReg2DBIReg(uint64 tritonRegId) {
 /* Convert a Triton register to a string.
  * Besides, it can return only 64 bits wised registers.
  */
-std::string PINConverter::getRegisterName(uint64 tritonRegId) {
+std::string PINConverter::getRegisterName(reg_size tritonRegId) {
   switch(tritonRegId){
     case ID_RAX:    return "rax";
     case ID_RBX:    return "rbx";
@@ -269,7 +271,7 @@ std::string PINConverter::getRegisterName(uint64 tritonRegId) {
 }
 
 
-std::pair<uint64, uint64> PINConverter::convertDBIReg2BitsVector(uint64 pinRegID) {
+std::pair<reg_size, reg_size> PINConverter::convertDBIReg2BitsVector(reg_size pinRegID) {
   switch(pinRegID) {
 
     case REG_XMM0:
@@ -377,3 +379,207 @@ std::pair<uint64, uint64> PINConverter::convertDBIReg2BitsVector(uint64 pinRegID
   }
 }
 
+#endif
+
+#if defined(__i386) || defined(_M_IX86)
+
+reg_size PINConverter::convertDBIReg2TritonReg(reg_size pinRegID) {
+  switch(pinRegID){
+    case REG_EAX:
+    case REG_AX:
+    case REG_AH:
+    case REG_AL:
+      return ID_EAX;
+
+    case REG_EBX:
+    case REG_BX:
+    case REG_BH:
+    case REG_BL:
+      return ID_EBX;
+
+    case REG_ECX:
+    case REG_CX:
+    case REG_CH:
+    case REG_CL:
+      return ID_ECX;
+
+    case REG_EDX:
+    case REG_DX:
+    case REG_DH:
+    case REG_DL:
+      return ID_EDX;
+
+    case REG_EDI:
+    case REG_DI:
+      return ID_EDI;
+
+    case REG_ESI:
+    case REG_SI:
+      return ID_ESI;
+
+    case REG_EBP:
+    case REG_BP:
+      return ID_EBP;
+
+    case REG_ESP:
+    case REG_SP:
+      return ID_ESP;
+
+    case REG_EIP:
+    case REG_IP:
+      return ID_EIP;
+
+    case REG_EFLAGS:
+      return ID_EFLAGS;
+
+    case REG_XMM0:
+      return ID_XMM0;
+
+    case REG_XMM1:
+      return ID_XMM1;
+
+    case REG_XMM2:
+      return ID_XMM2;
+
+    case REG_XMM3:
+      return ID_XMM3;
+
+    case REG_XMM4:
+      return ID_XMM4;
+
+    case REG_XMM5:
+      return ID_XMM5;
+
+    case REG_XMM6:
+      return ID_XMM6;
+
+    case REG_XMM7:
+      return ID_XMM7;
+
+    default:
+      return ID_INVALID;
+  }
+}
+
+
+/* Convert a Triton register to a Pin register.
+ * Besides, it can return only 64 bits wised registers.
+ */
+reg_size PINConverter::convertTritonReg2DBIReg(reg_size tritonRegId) {
+  switch(tritonRegId){
+    case ID_EAX:    return REG_EAX;
+    case ID_EBX:    return REG_EBX;
+    case ID_ECX:    return REG_ECX;
+    case ID_EDX:    return REG_EDX;
+    case ID_EDI:    return REG_EDI;
+    case ID_ESI:    return REG_ESI;
+    case ID_EBP:    return REG_EBP;
+    case ID_ESP:    return REG_ESP;
+    case ID_EIP:    return REG_EIP;
+    case ID_EFLAGS: return REG_EFLAGS;
+    case ID_XMM0:   return REG_XMM0;
+    case ID_XMM1:   return REG_XMM1;
+    case ID_XMM2:   return REG_XMM2;
+    case ID_XMM3:   return REG_XMM3;
+    case ID_XMM4:   return REG_XMM4;
+    case ID_XMM5:   return REG_XMM5;
+    case ID_XMM6:   return REG_XMM6;
+    case ID_XMM7:   return REG_XMM7;
+    default:
+      return REG_INVALID_;
+  }
+}
+
+/* Convert a Triton register to a string.
+ * Besides, it can return only 64 bits wised registers.
+ */
+std::string PINConverter::getRegisterName(reg_size tritonRegId) {
+  switch(tritonRegId){
+    case ID_EAX:    return "eax";
+    case ID_EBX:    return "ebx";
+    case ID_ECX:    return "ecx";
+    case ID_EDX:    return "edx";
+    case ID_EDI:    return "edi";
+    case ID_ESI:    return "esi";
+    case ID_EBP:    return "ebp";
+    case ID_ESP:    return "esp";
+    case ID_EIP:    return "eip";
+    case ID_EFLAGS: return "eflags";
+    case ID_XMM0:   return "xmm0";
+    case ID_XMM1:   return "xmm1";
+    case ID_XMM2:   return "xmm2";
+    case ID_XMM3:   return "xmm3";
+    case ID_XMM4:   return "xmm4";
+    case ID_XMM5:   return "xmm5";
+    case ID_XMM6:   return "xmm6";
+    case ID_XMM7:   return "xmm7";
+    case ID_AF:     return "af";
+    case ID_CF:     return "cf";
+    case ID_DF:     return "df";
+    case ID_IF:     return "if";
+    case ID_OF:     return "of";
+    case ID_PF:     return "pf";
+    case ID_SF:     return "sf";
+    case ID_TF:     return "tf";
+    case ID_ZF:     return "zf";
+    default:
+      return "invalid";
+  }
+}
+
+
+std::pair<reg_size, reg_size> PINConverter::convertDBIReg2BitsVector(reg_size pinRegID) {
+  switch(pinRegID) {
+    case REG_XMM0:
+    case REG_XMM1:
+    case REG_XMM2:
+    case REG_XMM3:
+    case REG_XMM4:
+    case REG_XMM5:
+    case REG_XMM6:
+    case REG_XMM7:
+      return std::make_pair((DQWORD_SIZE_BIT - 1), 0);
+
+    case REG_EFLAGS:
+      return std::make_pair((DWORD_SIZE_BIT - 1), 0);
+
+    case REG_EAX:
+    case REG_EBX:
+    case REG_ECX:
+    case REG_EDX:
+    case REG_EDI:
+    case REG_ESI:
+    case REG_EBP:
+    case REG_ESP:
+    case REG_EIP:
+      return std::make_pair((DWORD_SIZE_BIT - 1), 0);
+
+    case REG_AX:
+    case REG_BX:
+    case REG_CX:
+    case REG_DX:
+    case REG_DI:
+    case REG_SI:
+    case REG_BP:
+    case REG_SP:
+    case REG_IP:
+      return std::make_pair((WORD_SIZE_BIT - 1), 0);
+
+    case REG_AH:
+    case REG_BH:
+    case REG_CH:
+    case REG_DH:
+      return std::make_pair((WORD_SIZE_BIT - 1), BYTE_SIZE_BIT);
+
+    case REG_AL:
+    case REG_BL:
+    case REG_CL:
+    case REG_DL:
+      return std::make_pair((BYTE_SIZE_BIT - 1), 0);
+
+    default:
+      return std::make_pair(0, 0);
+  }
+}
+
+#endif

@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-OrpsIRBuilder::OrpsIRBuilder(uint64 address, const std::string &disassembly):
+OrpsIRBuilder::OrpsIRBuilder(reg_size address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

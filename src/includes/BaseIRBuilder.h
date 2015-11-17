@@ -26,7 +26,7 @@
 class BaseIRBuilder: public IRBuilder {
   public:
     // Constructor take the two main informations of an instruction.
-    BaseIRBuilder(uint64 address, const std::string &disassembly);
+    BaseIRBuilder(reg_size address, const std::string &disassembly);
 
     virtual bool                isBranch(void);
     virtual bool                isBranchTaken(void);
@@ -36,18 +36,18 @@ class BaseIRBuilder: public IRBuilder {
     virtual const std::string   &getSectionName(void) const;
     virtual sint32              getOpcodeCategory(void) const;
     virtual uint32              getOpcode(void) const;
-    virtual uint64              getAddress(void) const;
-    virtual uint64              getBaseAddress(void) const;
-    virtual uint64              getBranchTargetAddress(void) const;
-    virtual uint64              getNextAddress(void) const;
-    virtual uint64              getOffset(void) const;
-    virtual uint64              getThreadID(void) const;
+    virtual reg_size              getAddress(void) const;
+    virtual reg_size              getBaseAddress(void) const;
+    virtual reg_size              getBranchTargetAddress(void) const;
+    virtual reg_size              getNextAddress(void) const;
+    virtual reg_size              getOffset(void) const;
+    virtual reg_size              getThreadID(void) const;
     virtual void                setBranchTaken(bool flag);
-    virtual void                setBranchTargetAddress(uint64 addr);
-    virtual void                setNextAddress(uint64 nextAddr);
+    virtual void                setBranchTargetAddress(reg_size addr);
+    virtual void                setNextAddress(reg_size nextAddr);
     virtual void                setOpcode(uint32 op);
     virtual void                setOpcodeCategory(sint32 category);
-    virtual void                setThreadID(uint64 threadId);
+    virtual void                setThreadID(reg_size threadId);
 
 
     virtual const std::vector<TritonOperand> &getOperands(void) const;
@@ -60,7 +60,7 @@ class BaseIRBuilder: public IRBuilder {
     //    The object will need a setup before any processing.
     virtual void addOperand(const TritonOperand &operand);
 
-    virtual void setup(uint64 mem_value);
+    virtual void setup(reg_size mem_value);
 
     virtual void checkSetup() const;
 
@@ -74,12 +74,12 @@ class BaseIRBuilder: public IRBuilder {
     std::string                 sectionName;
     std::vector<TritonOperand>  operands;
     uint32                      opcode;
-    uint64                      address;
-    uint64                      baseAddress;
-    uint64                      branchTargetAddress;
-    uint64                      nextAddress;
-    uint64                      offset;
-    uint64                      threadId;
+    reg_size                      address;
+    reg_size                      baseAddress;
+    reg_size                      branchTargetAddress;
+    reg_size                      nextAddress;
+    reg_size                      offset;
+    reg_size                      threadId;
 };
 
 #endif // BASEIRBUILDER_H

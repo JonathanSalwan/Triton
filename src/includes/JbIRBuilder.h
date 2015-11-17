@@ -18,7 +18,7 @@
 class JbIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    JbIRBuilder(uint64 address, const std::string &disassembly);
+    JbIRBuilder(reg_size address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

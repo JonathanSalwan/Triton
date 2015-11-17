@@ -41,7 +41,7 @@
 */
 
 
-ImulIRBuilder::ImulIRBuilder(uint64 address, const std::string &disassembly):
+ImulIRBuilder::ImulIRBuilder(reg_size address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -79,7 +79,7 @@ void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
-  uint64 imm = 0;
+  reg_size imm = 0;
   auto reg1 = this->operands[0].getReg();
   auto regSize1 = this->operands[0].getReg().getSize();
   auto reg2 = this->operands[1].getReg();
@@ -187,7 +187,7 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
-  uint64 imm = 0;
+  reg_size imm = 0;
   auto reg1 = this->operands[0].getReg();
   auto regSize1 = this->operands[0].getReg().getSize();
   auto mem2 = this->operands[1].getMem();

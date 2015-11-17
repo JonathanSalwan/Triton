@@ -18,7 +18,7 @@
 class CwdeIRBuilder: public BaseIRBuilder, public NoneOperandTemplate {
 
   public:
-    CwdeIRBuilder(uint64 address, const std::string &disassembly);
+    CwdeIRBuilder(reg_size address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

@@ -14,7 +14,7 @@
 #include "SymbolicExpression.h"
 
 namespace ControlFlow {
-  SymbolicExpression *rip(Inst &inst, AnalysisProcessor &ap, uint64 nextAddr);
+  SymbolicExpression *rip(Inst &inst, AnalysisProcessor &ap, reg_size nextAddr);
 };
 
 #endif /* !__CONTROLFLOW_H__ */

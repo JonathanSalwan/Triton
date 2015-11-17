@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-CmovoIRBuilder::CmovoIRBuilder(uint64 address, const std::string &disassembly):
+CmovoIRBuilder::CmovoIRBuilder(reg_size address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly){
 }
 

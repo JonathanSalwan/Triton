@@ -11,7 +11,7 @@
 
 
 
-BaseIRBuilder::BaseIRBuilder(uint64 address, const std::string &dis) {
+BaseIRBuilder::BaseIRBuilder(reg_size address, const std::string &dis) {
   RTN rtn;
   SEC sec;
   IMG img;
@@ -53,7 +53,7 @@ uint32 BaseIRBuilder::getOpcode(void) const {
 }
 
 
-uint64 BaseIRBuilder::getThreadID(void) const {
+reg_size BaseIRBuilder::getThreadID(void) const {
   return this->threadId;
 }
 
@@ -63,7 +63,7 @@ void BaseIRBuilder::setOpcode(uint32 op) {
 }
 
 
-void BaseIRBuilder::setNextAddress(uint64 nextAddress) {
+void BaseIRBuilder::setNextAddress(reg_size nextAddress) {
   this->nextAddress = nextAddress;
 }
 
@@ -73,7 +73,7 @@ void BaseIRBuilder::setBranchTaken(bool flag) {
 }
 
 
-void BaseIRBuilder::setBranchTargetAddress(uint64 addr) {
+void BaseIRBuilder::setBranchTargetAddress(reg_size addr) {
   this->branchTargetAddress = addr;
 }
 
@@ -83,7 +83,7 @@ void BaseIRBuilder::setOpcodeCategory(sint32 category) {
 }
 
 
-void BaseIRBuilder::setThreadID(uint64 threadId) {
+void BaseIRBuilder::setThreadID(reg_size threadId) {
   this->threadId = threadId;
 }
 
@@ -103,27 +103,27 @@ bool BaseIRBuilder::isBranchTaken(void) {
 }
 
 
-uint64 BaseIRBuilder::getAddress(void) const {
+reg_size BaseIRBuilder::getAddress(void) const {
   return this->address;
 }
 
 
-uint64 BaseIRBuilder::getBaseAddress(void) const {
+reg_size BaseIRBuilder::getBaseAddress(void) const {
   return this->baseAddress;
 }
 
 
-uint64 BaseIRBuilder::getBranchTargetAddress(void) const {
+reg_size BaseIRBuilder::getBranchTargetAddress(void) const {
   return this->branchTargetAddress;
 }
 
 
-uint64 BaseIRBuilder::getNextAddress(void) const {
+reg_size BaseIRBuilder::getNextAddress(void) const {
   return this->nextAddress;
 }
 
 
-uint64 BaseIRBuilder::getOffset(void) const {
+reg_size BaseIRBuilder::getOffset(void) const {
   return this->offset;
 }
 
@@ -161,7 +161,7 @@ void BaseIRBuilder::addOperand(const TritonOperand &operand) {
 }
 
 
-void BaseIRBuilder::setup(uint64 mem_value) {
+void BaseIRBuilder::setup(reg_size mem_value) {
   for (auto it = this->operands.begin(); it != this->operands.end(); ++it)
     if (IRBuilder::isMemOperand(it->getType())) {
       it->setMemAddress(mem_value);

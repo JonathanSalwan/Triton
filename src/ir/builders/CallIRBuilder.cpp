@@ -16,12 +16,12 @@
 #include <SymbolicExpression.h>
 
 
-CallIRBuilder::CallIRBuilder(uint64 address, const std::string &disassembly):
+CallIRBuilder::CallIRBuilder(reg_size address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
 
-static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint64 memSize)
+static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, reg_size memSize)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
@@ -71,7 +71,7 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(inst, expr2, ID_TMP_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintRegReg(se, ID_TMP_RIP, reg);
+  ap.assignmentSpreadTaintRegImm(se, ID_TMP_RIP);
 }
 
 
@@ -129,14 +129,14 @@ void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintMemImm(se, mem2, memSize2);
 
   /* Create the SMT semantic */
-  /* RIP = mem */
+  /* RIP = imm */
   expr2 = ap.buildSymbolicMemOperand(mem1, memSize1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr2, ID_TMP_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintRegMem(se, ID_TMP_RIP, mem1, memSize1);
+  ap.assignmentSpreadTaintRegImm(se, ID_TMP_RIP);
 }
 
 
