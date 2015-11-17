@@ -21,20 +21,20 @@ namespace PINConverter {
    * Used by several classes and modules dedicated to Pin. */
 
   /* Converts a Pin register to a Triton register */
-  uint64 convertDBIReg2TritonReg(uint64 regID);
+  reg_size convertDBIReg2TritonReg(reg_size regID);
 
   /* Converts a Triton register to a Pin register.
    * Besides, it can return only 64 bits wised registers.
    */
-  uint64 convertTritonReg2DBIReg(uint64 regID);
+  reg_size convertTritonReg2DBIReg(reg_size regID);
 
   /* Converts a Triton register to string.
    * Besides, it can return only 64 bits wised registers.
    */
-  std::string getRegisterName(uint64 regID);
+  std::string getRegisterName(reg_size regID);
 
   /* Returns the bits vector of the register */
-  std::pair<uint64, uint64> convertDBIReg2BitsVector(uint64 pinRegID);
+  std::pair<reg_size, reg_size> convertDBIReg2BitsVector(reg_size pinRegID);
 }
 
 #endif //_PINCONVERTER_H_

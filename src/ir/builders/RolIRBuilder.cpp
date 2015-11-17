@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-RolIRBuilder::RolIRBuilder(uint64 address, const std::string &disassembly):
+RolIRBuilder::RolIRBuilder(reg_size address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

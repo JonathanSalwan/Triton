@@ -18,7 +18,7 @@
 class BswapIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    BswapIRBuilder(uint64 address, const std::string &disassembly);
+    BswapIRBuilder(reg_size address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

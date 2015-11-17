@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-RetIRBuilder::RetIRBuilder(uint64 address, const std::string &disassembly):
+RetIRBuilder::RetIRBuilder(reg_size address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
@@ -42,7 +42,7 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap)
 }
 
 
-static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint64 imm)
+static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, reg_size imm)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;

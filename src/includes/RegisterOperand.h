@@ -17,23 +17,23 @@ class RegisterOperand : public BitsVector
 {
   private:
     std::string name;
-    uint64      pinRegId;
-    uint64      size;
-    uint64      tritonRegId;
+    reg_size      pinRegId;
+    reg_size      size;
+    reg_size      tritonRegId;
     void        copy(const RegisterOperand& other);
 
   public:
     RegisterOperand();
-    RegisterOperand(uint64 pinRegId);
+    RegisterOperand(reg_size pinRegId);
     RegisterOperand(const RegisterOperand& other);
     ~RegisterOperand();
 
     std::string getName(void) const;
-    uint64      getPinRegId(void) const;
-    uint64      getSize(void) const;
-    uint64      getTritonRegId(void) const;
-    void        setSize(uint64 size);
-    void        setTritonRegId(uint64 tritonRegId);
+    reg_size      getPinRegId(void) const;
+    reg_size      getSize(void) const;
+    reg_size      getTritonRegId(void) const;
+    void        setSize(reg_size size);
+    void        setTritonRegId(reg_size tritonRegId);
     void        operator=(const RegisterOperand& other);
 };
 

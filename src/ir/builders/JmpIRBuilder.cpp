@@ -16,13 +16,12 @@
 #include <SymbolicExpression.h>
 
 
-JmpIRBuilder::JmpIRBuilder(uint64 address, const std::string &disassembly):
+JmpIRBuilder::JmpIRBuilder(reg_size address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 
 
 void JmpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
   auto imm = this->operands[0].getImm().getValue();
 
@@ -30,15 +29,11 @@ void JmpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   expr = smt2lib::bv(imm, REG_SIZE_BIT);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
-
-  /* Apply the taint */
-  ap.assignmentSpreadTaintRegImm(se, ID_TMP_RIP);
+  ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
 }
 
 
 void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto reg = this->operands[0].getReg();
   auto regSize = this->operands[0].getReg().getSize();
@@ -50,15 +45,11 @@ void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr = op1;
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
-
-  /* Apply the taint */
-  ap.assignmentSpreadTaintRegReg(se, ID_TMP_RIP, reg);
+  ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
 }
 
 
 void JmpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
-  SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto mem = this->operands[0].getMem();
   auto memSize = this->operands[0].getMem().getSize();
@@ -70,10 +61,7 @@ void JmpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr = op1;
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
-
-  /* Apply the taint */
-  ap.assignmentSpreadTaintRegMem(se, ID_TMP_RIP, mem, memSize);
+  ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
 }
 
 

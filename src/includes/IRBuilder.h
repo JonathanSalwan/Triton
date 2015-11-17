@@ -29,22 +29,22 @@ class IRBuilder {
     virtual uint32 getOpcode(void) const = 0;
 
     // Returns the thread ID of the Irb.
-    virtual uint64 getThreadID(void) const = 0;
+    virtual reg_size getThreadID(void) const = 0;
 
     // Set the opcode of the instruction.
     virtual void setOpcode(uint32 op) = 0;
 
     // Set the next instruction address
-    virtual void setNextAddress(uint64 nextAddr) = 0;
+    virtual void setNextAddress(reg_size nextAddr) = 0;
 
     // Set the branch taken flag.
     virtual void setBranchTaken(bool flag) = 0;
 
     // Set the target branch address.
-    virtual void setBranchTargetAddress(uint64 addr) = 0;
+    virtual void setBranchTargetAddress(reg_size addr) = 0;
 
     // Set the opcode of the instruction.
-    virtual void setThreadID(uint64 threadId) = 0;
+    virtual void setThreadID(reg_size threadId) = 0;
 
     // Set the opcode category.
     virtual void setOpcodeCategory(sint32 category) = 0;
@@ -59,19 +59,19 @@ class IRBuilder {
     virtual bool isBranchTaken(void) = 0;
 
     // Returns the address of the instruction.
-    virtual uint64 getAddress(void) const = 0;
+    virtual reg_size getAddress(void) const = 0;
 
     // Returns the base address.
-    virtual uint64 getBaseAddress(void) const = 0;
+    virtual reg_size getBaseAddress(void) const = 0;
 
     // Returns the next instruction address.
-    virtual uint64 getNextAddress(void) const = 0;
+    virtual reg_size getNextAddress(void) const = 0;
 
     // Returns the target address if the instruction is a brancho.
-    virtual uint64 getBranchTargetAddress(void) const = 0;
+    virtual reg_size getBranchTargetAddress(void) const = 0;
 
     // Returns the offset of the instruction in the file.
-    virtual uint64 getOffset(void) const = 0;
+    virtual reg_size getOffset(void) const = 0;
 
     // Returns the assembler instruction.
     virtual const std::string &getDisassembly(void) const = 0;
@@ -98,7 +98,7 @@ class IRBuilder {
 
     // Set the value for the MEM_* operand, if there is no such kind of operand
     // it does nothing.
-    virtual void setup(uint64 mem_value) = 0;
+    virtual void setup(reg_size mem_value) = 0;
 
     // Check if the setup is done (when needed: i.e get the value for
     // MEM_* operands). If it is not, throws a runtime_error.

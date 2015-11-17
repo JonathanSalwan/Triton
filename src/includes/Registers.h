@@ -12,8 +12,12 @@
 
 enum regID_t
 {
+
   /* Register ID used in the Taint and Symbolic Engines */
   /* 0  */ ID_INVALID = 0,
+
+    #if defined(__x86_64__) || defined(_M_X64)
+  /*Only for 64bits architectures*/
   /* 1  */ ID_RAX,
   /* 2  */ ID_RBX,
   /* 3  */ ID_RCX,
@@ -31,7 +35,22 @@ enum regID_t
   /* 15 */ ID_R13,
   /* 16 */ ID_R14,
   /* 17 */ ID_R15,
+  /* 34 */ ID_RFLAGS,
+  #endif
 
+  #if defined(__i386) || defined(_M_IX86)
+  /* 1  */ ID_EAX,
+  /* 2  */ ID_EBX,
+  /* 3  */ ID_ECX,
+  /* 4  */ ID_EDX,
+  /* 5  */ ID_EDI,
+  /* 6  */ ID_ESI,
+  /* 7  */ ID_EBP,
+  /* 8  */ ID_ESP,
+  /* 9  */ ID_EIP,
+  /* 34 */ ID_EFLAGS,
+  #endif
+  
   /* SSE */
   /* 18 */ ID_XMM0,
   /* 19 */ ID_XMM1,
@@ -41,6 +60,8 @@ enum regID_t
   /* 23 */ ID_XMM5,
   /* 24 */ ID_XMM6,
   /* 25 */ ID_XMM7,
+
+  #if defined(__x86_64__) || defined(_M_X64)
   /* 26 */ ID_XMM8,
   /* 27 */ ID_XMM9,
   /* 28 */ ID_XMM10,
@@ -49,9 +70,10 @@ enum regID_t
   /* 31 */ ID_XMM13,
   /* 32 */ ID_XMM14,
   /* 33 */ ID_XMM15,
+  #endif
 
   /* Flags ID used in the Taint and Symbolic Engines */
-  /* 34 */ ID_RFLAGS,
+  
   /* 35 */ ID_AF,
   /* 36 */ ID_CF,
   /* 37 */ ID_DF,
@@ -67,8 +89,16 @@ enum regID_t
 };
 
 #define isFlagId(x)   ((x >= ID_AF && x <= ID_ZF) ? true : false)
+
+#if defined(__x86_64__) || defined(_M_X64)
 #define isRegId(x)    ((x >= ID_RAX && x <= ID_RFLAGS) ? true : false)
 #define isSSERegId(x) ((x >= ID_XMM0 && x <= ID_XMM15) ? true : false)
+#endif
+
+#if defined(__i386) || defined(_M_IX86)
+#define isRegId(x)    ((x >= ID_EAX && x <= ID_EFLAGS) ? true : false)
+#define isSSERegId(x) ((x >= ID_XMM0 && x <= ID_XMM7) ? true : false)
+#endif
 
 #include "TmpReg.h"
 

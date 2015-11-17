@@ -80,16 +80,6 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
   /* Some configurations must be applied after processing */
   processingPyConf.applyConfAfterProcessing(irb);
 
-  /* Check if we must execute a new context */
-  if (ap.isContextMustBeExecuted())
-    ap.executeContext();
-
-  #ifndef LIGHT_VERSION
-  /* Check if we must restore the snapshot */
-  if (ap.isSnapshotMustBeRestored())
-    ap.restoreSnapshot();
-  #endif
-
   /* Mutex */
   ap.unlock();
 }
@@ -123,15 +113,8 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
   /* Some configurations must be applied after processing */
   processingPyConf.applyConfAfterProcessing(inst);
 
-  /* Check if we must execute a new context */
-  if (ap.isContextMustBeExecuted())
-    ap.executeContext();
-
-  #ifndef LIGHT_VERSION
-  /* Check if we must restore the snapshot */
-  if (ap.isSnapshotMustBeRestored())
-    ap.restoreSnapshot();
-  #endif
+  /* Free unused instructions */
+  ap.clearTrace();
 
   /* Mutex */
   ap.unlock();
@@ -139,7 +122,7 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
 
 
 /* Callback to save bytes for the snapshot engine */
-static void callbackSnapshot(uint64 mem, uint32 writeSize) {
+static void callbackSnapshot(reg_size mem, uint32 writeSize) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return;
@@ -262,8 +245,8 @@ static void callbackImageLoad(IMG img) {
 
   /* Collect image's informations */
   string imagePath = IMG_Name(img);
-  uint64 imageBase = IMG_LowAddress(img);
-  uint64 imageSize = (IMG_HighAddress(img) + 1) - imageBase;
+  reg_size imageBase = IMG_LowAddress(img);
+  reg_size imageSize = (IMG_HighAddress(img) + 1) - imageBase;
 
   /* Python callback for image loading */
   processingPyConf.callbackImageLoad(imagePath, imageBase, imageSize);
@@ -381,7 +364,7 @@ static void IMG_Instrumentation(IMG img, VOID *v) {
 
 
 /* Returns the base address of the instruction */
-static uint64 getBaseAddress(uint64 address) {
+static reg_size getBaseAddress(reg_size address) {
   RTN rtn;
   SEC sec;
   IMG img;
@@ -400,8 +383,8 @@ static uint64 getBaseAddress(uint64 address) {
 
 
 /* Returns the offset of the instruction */
-static uint64 getInsOffset(uint64 address) {
-  uint64 base = getBaseAddress(address);
+static reg_size getInsOffset(reg_size address) {
+  reg_size base = getBaseAddress(address);
   if (base == 0)
     return 0;
   return address - base;
@@ -409,7 +392,7 @@ static uint64 getInsOffset(uint64 address) {
 
 
 /* Check if the analysis must be unlocked */
-static bool checkUnlockAnalysis(uint64 address) {
+static bool checkUnlockAnalysis(reg_size address) {
   /* Unlock the analysis at the entry point from symbol */
   if (PyTritonOptions::startAnalysisFromSymbol != nullptr) {
     if ((RTN_FindNameByAddress(address) == PyTritonOptions::startAnalysisFromSymbol)) {
@@ -436,6 +419,8 @@ static bool checkUnlockAnalysis(uint64 address) {
 /* Trace instrumentation */
 static void TRACE_Instrumentation(TRACE trace, VOID *v) {
 
+  std::list<IRBuilder *> irbList;
+
   for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)) {
     for (INS ins = BBL_InsHead(bbl); INS_Valid(ins); ins = INS_Next(ins)) {
 
@@ -447,7 +432,10 @@ static void TRACE_Instrumentation(TRACE trace, VOID *v) {
         continue;
 
       /* Prepare the IR builder */
-      IRBuilder *irb = IRBuilderFactory::createIRBuilder(ins);
+      IRBuilder *irb = createIRBuilder(ins);
+
+      /* Save irb from Pin cache */
+      irbList.push_back(irb);
 
       /* Callback before */
       if (INS_MemoryOperandCount(ins) > 0)
@@ -491,6 +479,8 @@ static void TRACE_Instrumentation(TRACE trace, VOID *v) {
 
     }
   }
+  /* Free unused irb */
+  irbList.clear();
 }
 
 

@@ -18,24 +18,19 @@ class PINContextHandler: public ContextHandler {
   public:
     PINContextHandler(CONTEXT *ctx, THREADID threadId);
 
-    bool      isMustBeExecuted(void) const;
-    uint128   getMemValue(uint64 mem, uint32 readSize) const;
-    uint128   getSSERegisterValue(uint64 regID) const;
+    uint128   getMemValue(reg_size mem, uint32 readSize) const;
+    uint128   getSSERegisterValue(reg_size regID) const;
     uint32    getThreadID(void) const;
-    uint64    getFlagValue(uint64 TritFlagID) const;
-    uint64    getRegisterValue(uint64 regID) const;
+    reg_size    getFlagValue(reg_size TritFlagID) const;
+    reg_size    getRegisterValue(reg_size regID) const;
     void      *getCtx(void) const;
-    void      executeContext(void);
-    void      setExecutedFlag(bool flag);
-    void      setMemValue(uint64 mem, uint32 readSize, uint128 value) const;
-    void      setRegisterValue(uint64 TritRegID, uint64 value);
-    void      setSSERegisterValue(uint64 TritRegID, uint128 value);
+    void      setMemValue(reg_size mem, uint32 readSize, uint128 value) const;
+    void      setRegisterValue(reg_size TritRegID, reg_size value) const;
+    void      setSSERegisterValue(reg_size TritRegID, uint128 value) const;
 
   private:
     CONTEXT   *_ctx;
     THREADID  _threadId;
-    bool      mustBeExecuted;
 };
 
 #endif // PINCONTEXTHANDLER_H
-

@@ -18,7 +18,7 @@ RegisterOperand::RegisterOperand()
 }
 
 
-RegisterOperand::RegisterOperand(uint64 pinRegId)
+RegisterOperand::RegisterOperand(reg_size pinRegId)
   : name("") {
   this->tritonRegId = PINConverter::convertDBIReg2TritonReg(pinRegId);
   this->pinRegId    = PINConverter::convertTritonReg2DBIReg(this->tritonRegId);
@@ -44,17 +44,17 @@ RegisterOperand::~RegisterOperand() {
 }
 
 
-uint64 RegisterOperand::getTritonRegId(void) const {
+reg_size RegisterOperand::getTritonRegId(void) const {
   return this->tritonRegId;
 }
 
 
-uint64 RegisterOperand::getPinRegId(void) const {
+reg_size RegisterOperand::getPinRegId(void) const {
   return this->pinRegId;
 }
 
 
-uint64 RegisterOperand::getSize(void) const {
+reg_size RegisterOperand::getSize(void) const {
   return this->size;
 }
 
@@ -64,12 +64,12 @@ std::string RegisterOperand::getName(void) const {
 }
 
 
-void RegisterOperand::setSize(uint64 size) {
+void RegisterOperand::setSize(reg_size size) {
   this->size = size;
 }
 
 
-void RegisterOperand::setTritonRegId(uint64 tritonRegId) {
+void RegisterOperand::setTritonRegId(reg_size tritonRegId) {
   this->tritonRegId = tritonRegId;
 }
 

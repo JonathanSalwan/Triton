@@ -30,9 +30,9 @@ static PyObject *SmtAstNode_getChilds(PyObject *self, PyObject *noarg) {
   PyObject *childs;
   smt2lib::smtAstAbstractNode *node = PySmtAstNode_AsSmtAstNode(self);
 
-  uint64 size = node->getChilds().size();
+  reg_size size = node->getChilds().size();
   childs = xPyList_New(size);
-  uint64 index = 0;
+  reg_size index = 0;
   for ( ; index < size; index++)
     PyList_SetItem(childs, index, PySmtAstNode(node->getChilds()[index]));
 
@@ -67,7 +67,7 @@ static char SmtAstNode_setChild_doc[] = "Set a new child node";
 static PyObject *SmtAstNode_setChild(PyObject *self, PyObject *args) {
   PyObject *index;
   PyObject *node;
-  uint64 i;
+  reg_size i;
   smt2lib::smtAstAbstractNode *dst, *src;
 
   PyArg_ParseTuple(args, "O|O", &index, &node);

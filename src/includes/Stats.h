@@ -17,9 +17,9 @@ using namespace std::chrono;
 class Stats {
 
   private:
-    uint64 numberOfBranchesTaken;
-    uint64 numberOfExpressions;
-    uint64 numberOfUnknownInstruction;
+    reg_size numberOfBranchesTaken;
+    reg_size numberOfExpressions;
+    reg_size numberOfUnknownInstruction;
 
     high_resolution_clock::time_point start;
     high_resolution_clock::time_point end;
@@ -29,14 +29,14 @@ class Stats {
     ~Stats();
 
     void    incNumberOfBranchesTaken(void);
-    void    incNumberOfExpressions(uint64 val);
+    void    incNumberOfExpressions(reg_size val);
     void    incNumberOfExpressions(void);
     void    incNumberOfUnknownInstruction(void);
 
-    uint64  getNumberOfBranchesTaken(void);
-    uint64  getNumberOfExpressions(void);
-    uint64  getTimeOfExecution(void);
-    uint64  getNumberOfUnknownInstruction(void);
+    reg_size  getNumberOfBranchesTaken(void);
+    reg_size  getNumberOfExpressions(void);
+    reg_size  getTimeOfExecution(void);
+    reg_size  getNumberOfUnknownInstruction(void);
 };
 
 #endif /* !__STATISTICS_H__ */

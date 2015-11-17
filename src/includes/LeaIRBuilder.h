@@ -18,7 +18,7 @@
 class LeaIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 
   public:
-    LeaIRBuilder(uint64 address, const std::string &disassembly);
+    LeaIRBuilder(reg_size address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

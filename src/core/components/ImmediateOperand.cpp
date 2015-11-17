@@ -12,7 +12,7 @@ ImmediateOperand::ImmediateOperand() {
 }
 
 
-ImmediateOperand::ImmediateOperand(uint64 value) {
+ImmediateOperand::ImmediateOperand(reg_size value) {
   this->value = value;
 }
 
@@ -26,12 +26,12 @@ ImmediateOperand::~ImmediateOperand() {
 }
 
 
-uint64 ImmediateOperand::getValue(void) const {
+reg_size ImmediateOperand::getValue(void) const {
   return this->value;
 }
 
 
-void ImmediateOperand::setValue(uint64 v) {
+void ImmediateOperand::setValue(reg_size v) {
   this->value = v;
 }
 

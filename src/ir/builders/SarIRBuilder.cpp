@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-SarIRBuilder::SarIRBuilder(uint64 address, const std::string &disassembly):
+SarIRBuilder::SarIRBuilder(reg_size address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

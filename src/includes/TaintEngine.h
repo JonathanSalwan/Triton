@@ -25,50 +25,50 @@ class TaintEngine {
   private:
 
     /* Tainted addresses */
-    std::list<uint64> taintedAddresses;
+    std::list<reg_size> taintedAddresses;
 
     /*
      *Tainted registers.
      * Currently this is an over approximation of the taint.
      * sizeof(taintedReg) = enum REG
      */
-    uint64 taintedReg[ID_LAST_ITEM];
+    reg_size taintedReg[ID_LAST_ITEM];
 
     /* Initialization of an object */
     void init(const TaintEngine &other);
 
 
   public:
-    bool        isMemTainted(uint64 addr);
-    bool        isRegTainted(uint64 regID);
-    void        setTaintMem(uint64 mem, uint64 flag);
-    void        setTaintReg(uint64 regID, uint64 flag);
-    void        taintMem(uint64 addr);
-    void        taintReg(uint64 regID);
-    void        untaintMem(uint64 addr);
-    void        untaintReg(uint64 regID);
+    bool        isMemTainted(reg_size addr);
+    bool        isRegTainted(reg_size regID);
+    void        setTaintMem(reg_size mem, reg_size flag);
+    void        setTaintReg(reg_size regID, reg_size flag);
+    void        taintMem(reg_size addr);
+    void        taintReg(reg_size regID);
+    void        untaintMem(reg_size addr);
+    void        untaintReg(reg_size regID);
 
     void        operator=(const TaintEngine &other);
 
     /* ALU Spreading */
-    bool        aluSpreadTaintMemImm(uint64 memDst, uint32 writeSize);
-    bool        aluSpreadTaintMemReg(uint64 memDst, uint64 regSrc, uint32 writeSize);
-    bool        aluSpreadTaintRegImm(uint64 regDst);
-    bool        aluSpreadTaintRegMem(uint64 regDst, uint64 memSrc, uint32 readSize);
-    bool        aluSpreadTaintRegReg(uint64 regDst, uint64 regSrc);
-    bool        aluSpreadTaintMemMem(uint64 memDst, uint64 memSrc, uint32 writeSize);
+    bool        aluSpreadTaintMemImm(reg_size memDst, uint32 writeSize);
+    bool        aluSpreadTaintMemReg(reg_size memDst, reg_size regSrc, uint32 writeSize);
+    bool        aluSpreadTaintRegImm(reg_size regDst);
+    bool        aluSpreadTaintRegMem(reg_size regDst, reg_size memSrc, uint32 readSize);
+    bool        aluSpreadTaintRegReg(reg_size regDst, reg_size regSrc);
+    bool        aluSpreadTaintMemMem(reg_size memDst, reg_size memSrc, uint32 writeSize);
 
     /* Assignment Spreading */
-    bool        assignmentSpreadTaintExprMem(uint64 memSrc, uint32 readSize);
-    bool        assignmentSpreadTaintExprReg(uint64 regSrc);
-    bool        assignmentSpreadTaintExprRegMem(uint64 regSrc, uint64 memSrc, uint32 readSize);
-    bool        assignmentSpreadTaintExprRegReg(uint64 regSrc1, uint64 regSrc2);
-    bool        assignmentSpreadTaintMemImm(uint64 memDst, uint32 writeSize);
-    bool        assignmentSpreadTaintMemMem(uint64 memDst, uint64 memSrc, uint32 readSize);
-    bool        assignmentSpreadTaintMemReg(uint64 memDst, uint64 regSrc, uint32 writeSize);
-    bool        assignmentSpreadTaintRegImm(uint64 regDst);
-    bool        assignmentSpreadTaintRegMem(uint64 regDst, uint64 memSrc, uint32 readSize);
-    bool        assignmentSpreadTaintRegReg(uint64 regDst, uint64 regSrc);
+    bool        assignmentSpreadTaintExprMem(reg_size memSrc, uint32 readSize);
+    bool        assignmentSpreadTaintExprReg(reg_size regSrc);
+    bool        assignmentSpreadTaintExprRegMem(reg_size regSrc, reg_size memSrc, uint32 readSize);
+    bool        assignmentSpreadTaintExprRegReg(reg_size regSrc1, reg_size regSrc2);
+    bool        assignmentSpreadTaintMemImm(reg_size memDst, uint32 writeSize);
+    bool        assignmentSpreadTaintMemMem(reg_size memDst, reg_size memSrc, uint32 readSize);
+    bool        assignmentSpreadTaintMemReg(reg_size memDst, reg_size regSrc, uint32 writeSize);
+    bool        assignmentSpreadTaintRegImm(reg_size regDst);
+    bool        assignmentSpreadTaintRegMem(reg_size regDst, reg_size memSrc, uint32 readSize);
+    bool        assignmentSpreadTaintRegReg(reg_size regDst, reg_size regSrc);
 
     TaintEngine();
     TaintEngine(const TaintEngine &copy);

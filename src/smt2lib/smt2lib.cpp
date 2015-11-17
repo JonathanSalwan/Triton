@@ -11,7 +11,6 @@
 using namespace smt2lib;
 
 
-
 // ====== Abstract node
 
 
@@ -27,7 +26,7 @@ smtAstAbstractNode::smtAstAbstractNode() {
 
 smtAstAbstractNode::smtAstAbstractNode(const smtAstAbstractNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -63,14 +62,14 @@ smtAstAssertNode::smtAstAssertNode(smtAstAbstractNode *expr) {
 
 smtAstAssertNode::smtAstAssertNode(const smtAstAssertNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstAssertNode::~smtAstAssertNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstAssertNode::accept(Visitor& v) {
   v(*this);
@@ -89,14 +88,14 @@ smtAstBvaddNode::smtAstBvaddNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvaddNode::smtAstBvaddNode(const smtAstBvaddNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvaddNode::~smtAstBvaddNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvaddNode::accept(Visitor& v) {
   v(*this);
@@ -115,14 +114,14 @@ smtAstBvandNode::smtAstBvandNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvandNode::smtAstBvandNode(const smtAstBvandNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvandNode::~smtAstBvandNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvandNode::accept(Visitor& v) {
   v(*this);
@@ -142,14 +141,14 @@ smtAstBvashrNode::smtAstBvashrNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvashrNode::smtAstBvashrNode(const smtAstBvashrNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvashrNode::~smtAstBvashrNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvashrNode::accept(Visitor& v) {
   v(*this);
@@ -168,14 +167,14 @@ smtAstBvlshrNode::smtAstBvlshrNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvlshrNode::smtAstBvlshrNode(const smtAstBvlshrNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvlshrNode::~smtAstBvlshrNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvlshrNode::accept(Visitor& v) {
   v(*this);
@@ -194,14 +193,14 @@ smtAstBvmulNode::smtAstBvmulNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvmulNode::smtAstBvmulNode(const smtAstBvmulNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvmulNode::~smtAstBvmulNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvmulNode::accept(Visitor& v) {
   v(*this);
@@ -220,14 +219,14 @@ smtAstBvnandNode::smtAstBvnandNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvnandNode::smtAstBvnandNode(const smtAstBvnandNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvnandNode::~smtAstBvnandNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvnandNode::accept(Visitor& v) {
   v(*this);
@@ -245,14 +244,14 @@ smtAstBvnegNode::smtAstBvnegNode(smtAstAbstractNode *expr) {
 
 smtAstBvnegNode::smtAstBvnegNode(const smtAstBvnegNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvnegNode::~smtAstBvnegNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvnegNode::accept(Visitor& v) {
   v(*this);
@@ -271,14 +270,14 @@ smtAstBvnorNode::smtAstBvnorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvnorNode::smtAstBvnorNode(const smtAstBvnorNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvnorNode::~smtAstBvnorNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvnorNode::accept(Visitor& v) {
   v(*this);
@@ -296,14 +295,14 @@ smtAstBvnotNode::smtAstBvnotNode(smtAstAbstractNode *expr) {
 
 smtAstBvnotNode::smtAstBvnotNode(const smtAstBvnotNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvnotNode::~smtAstBvnotNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvnotNode::accept(Visitor& v) {
   v(*this);
@@ -322,14 +321,14 @@ smtAstBvorNode::smtAstBvorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *ex
 
 smtAstBvorNode::smtAstBvorNode(const smtAstBvorNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvorNode::~smtAstBvorNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvorNode::accept(Visitor& v) {
   v(*this);
@@ -339,16 +338,16 @@ void smtAstBvorNode::accept(Visitor& v) {
 // ====== bvrol
 
 
-smtAstBvrolNode::smtAstBvrolNode(uint64 rot, smtAstAbstractNode *expr) {
+smtAstBvrolNode::smtAstBvrolNode(reg_size rot, smtAstAbstractNode *expr) {
   this->kind = BVROL_NODE;
-  this->addChild(decimal(rot));
+  this->addChild(new smtAstDecimalNode(rot));
   this->addChild(expr);
 }
 
 
 smtAstBvrolNode::smtAstBvrolNode(const smtAstBvrolNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -363,8 +362,8 @@ smtAstBvrolNode::smtAstBvrolNode(smtAstAbstractNode *rot, smtAstAbstractNode *ex
 
 
 smtAstBvrolNode::~smtAstBvrolNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvrolNode::accept(Visitor& v) {
   v(*this);
@@ -374,16 +373,16 @@ void smtAstBvrolNode::accept(Visitor& v) {
 // ====== bvror
 
 
-smtAstBvrorNode::smtAstBvrorNode(uint64 rot, smtAstAbstractNode *expr) {
+smtAstBvrorNode::smtAstBvrorNode(reg_size rot, smtAstAbstractNode *expr) {
   this->kind = BVROR_NODE;
-  this->addChild(decimal(rot));
+  this->addChild(new smtAstDecimalNode(rot));
   this->addChild(expr);
 }
 
 
 smtAstBvrorNode::smtAstBvrorNode(const smtAstBvrorNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -398,8 +397,8 @@ smtAstBvrorNode::smtAstBvrorNode(smtAstAbstractNode *rot, smtAstAbstractNode *ex
 
 
 smtAstBvrorNode::~smtAstBvrorNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvrorNode::accept(Visitor& v) {
   v(*this);
@@ -418,14 +417,14 @@ smtAstBvsdivNode::smtAstBvsdivNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvsdivNode::smtAstBvsdivNode(const smtAstBvsdivNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvsdivNode::~smtAstBvsdivNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvsdivNode::accept(Visitor& v) {
   v(*this);
@@ -444,14 +443,14 @@ smtAstBvsgeNode::smtAstBvsgeNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvsgeNode::smtAstBvsgeNode(const smtAstBvsgeNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvsgeNode::~smtAstBvsgeNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvsgeNode::accept(Visitor& v) {
   v(*this);
@@ -470,14 +469,14 @@ smtAstBvsgtNode::smtAstBvsgtNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvsgtNode::smtAstBvsgtNode(const smtAstBvsgtNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvsgtNode::~smtAstBvsgtNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvsgtNode::accept(Visitor& v) {
   v(*this);
@@ -496,14 +495,14 @@ smtAstBvshlNode::smtAstBvshlNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvshlNode::smtAstBvshlNode(const smtAstBvshlNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvshlNode::~smtAstBvshlNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvshlNode::accept(Visitor& v) {
   v(*this);
@@ -522,14 +521,14 @@ smtAstBvsleNode::smtAstBvsleNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvsleNode::smtAstBvsleNode(const smtAstBvsleNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvsleNode::~smtAstBvsleNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvsleNode::accept(Visitor& v) {
   v(*this);
@@ -548,14 +547,14 @@ smtAstBvsltNode::smtAstBvsltNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvsltNode::smtAstBvsltNode(const smtAstBvsltNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvsltNode::~smtAstBvsltNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvsltNode::accept(Visitor& v) {
   v(*this);
@@ -574,14 +573,14 @@ smtAstBvsmodNode::smtAstBvsmodNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvsmodNode::smtAstBvsmodNode(const smtAstBvsmodNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvsmodNode::~smtAstBvsmodNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvsmodNode::accept(Visitor& v) {
   v(*this);
@@ -600,14 +599,14 @@ smtAstBvsremNode::smtAstBvsremNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvsremNode::smtAstBvsremNode(const smtAstBvsremNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvsremNode::~smtAstBvsremNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvsremNode::accept(Visitor& v) {
   v(*this);
@@ -626,14 +625,14 @@ smtAstBvsubNode::smtAstBvsubNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvsubNode::smtAstBvsubNode(const smtAstBvsubNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvsubNode::~smtAstBvsubNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvsubNode::accept(Visitor& v) {
   v(*this);
@@ -652,14 +651,14 @@ smtAstBvudivNode::smtAstBvudivNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvudivNode::smtAstBvudivNode(const smtAstBvudivNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvudivNode::~smtAstBvudivNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvudivNode::accept(Visitor& v) {
   v(*this);
@@ -678,14 +677,14 @@ smtAstBvugeNode::smtAstBvugeNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvugeNode::smtAstBvugeNode(const smtAstBvugeNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvugeNode::~smtAstBvugeNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvugeNode::accept(Visitor& v) {
   v(*this);
@@ -704,14 +703,14 @@ smtAstBvugtNode::smtAstBvugtNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvugtNode::smtAstBvugtNode(const smtAstBvugtNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvugtNode::~smtAstBvugtNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvugtNode::accept(Visitor& v) {
   v(*this);
@@ -730,14 +729,14 @@ smtAstBvuleNode::smtAstBvuleNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvuleNode::smtAstBvuleNode(const smtAstBvuleNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvuleNode::~smtAstBvuleNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvuleNode::accept(Visitor& v) {
   v(*this);
@@ -756,14 +755,14 @@ smtAstBvultNode::smtAstBvultNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvultNode::smtAstBvultNode(const smtAstBvultNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvultNode::~smtAstBvultNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvultNode::accept(Visitor& v) {
   v(*this);
@@ -782,14 +781,14 @@ smtAstBvuremNode::smtAstBvuremNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvuremNode::smtAstBvuremNode(const smtAstBvuremNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvuremNode::~smtAstBvuremNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvuremNode::accept(Visitor& v) {
   v(*this);
@@ -808,14 +807,14 @@ smtAstBvxnorNode::smtAstBvxnorNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvxnorNode::smtAstBvxnorNode(const smtAstBvxnorNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvxnorNode::~smtAstBvxnorNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvxnorNode::accept(Visitor& v) {
   v(*this);
@@ -834,14 +833,14 @@ smtAstBvxorNode::smtAstBvxorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvxorNode::smtAstBvxorNode(const smtAstBvxorNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvxorNode::~smtAstBvxorNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvxorNode::accept(Visitor& v) {
   v(*this);
@@ -851,23 +850,23 @@ void smtAstBvxorNode::accept(Visitor& v) {
 // ====== bv
 
 
-smtAstBvNode::smtAstBvNode(uint128 value, uint64 size) {
+smtAstBvNode::smtAstBvNode(uint128 value, reg_size size) {
   this->kind = BV_NODE;
-  this->addChild(decimal(value));
-  this->addChild(decimal(size));
+  this->addChild(new smtAstDecimalNode(value));
+  this->addChild(new smtAstDecimalNode(size));
 }
 
 
 smtAstBvNode::smtAstBvNode(const smtAstBvNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstBvNode::~smtAstBvNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstBvNode::accept(Visitor& v) {
   v(*this);
@@ -878,7 +877,7 @@ void smtAstBvNode::accept(Visitor& v) {
 
 
 smtAstCompoundNode::smtAstCompoundNode(std::vector<smtAstAbstractNode *> exprs) {
-  uint64 index = 0;
+  reg_size index = 0;
   this->kind = COMPOUND_NODE;
   for ( ; index < exprs.size(); index++)
     this->addChild(exprs[index]);
@@ -887,14 +886,14 @@ smtAstCompoundNode::smtAstCompoundNode(std::vector<smtAstAbstractNode *> exprs) 
 
 smtAstCompoundNode::smtAstCompoundNode(const smtAstCompoundNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstCompoundNode::~smtAstCompoundNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstCompoundNode::accept(Visitor& v) {
   v(*this);
@@ -913,7 +912,7 @@ smtAstConcatNode::smtAstConcatNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstConcatNode::smtAstConcatNode(const smtAstConcatNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -921,8 +920,8 @@ smtAstConcatNode::smtAstConcatNode(const smtAstConcatNode &copy) {
 smtAstConcatNode::smtAstConcatNode(std::vector<smtAstAbstractNode *> exprs) {
   this->kind = CONCAT_NODE;
 
-  uint64 index;
-  uint64 size = exprs.size();
+  reg_size index;
+  reg_size size = exprs.size();
   if (size < 2)
     throw std::length_error("smtAstConcatNode - exprs must contain at less two expressions");
 
@@ -944,8 +943,8 @@ smtAstConcatNode::smtAstConcatNode(std::list<smtAstAbstractNode *> exprs) {
 
 
 smtAstConcatNode::~smtAstConcatNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstConcatNode::accept(Visitor& v) {
   v(*this);
@@ -968,13 +967,13 @@ smtAstDecimalNode::smtAstDecimalNode(const smtAstDecimalNode &copy) {
 
 
 smtAstDecimalNode::~smtAstDecimalNode() {
+  freeAllNodes(this->childs);
 }
 
 
 uint128 smtAstDecimalNode::getValue(void) {
   return this->value;
 }
-
 
 void smtAstDecimalNode::accept(Visitor& v) {
   v(*this);
@@ -984,23 +983,23 @@ void smtAstDecimalNode::accept(Visitor& v) {
 // ====== Declare node
 
 
-smtAstDeclareNode::smtAstDeclareNode(std::string symVarName, uint64 symVarSize) {
+smtAstDeclareNode::smtAstDeclareNode(std::string symVarName, reg_size symVarSize) {
   this->kind = DECLARE_NODE;
-  this->addChild(string(symVarName));
-  this->addChild(decimal(symVarSize));
+  this->addChild(new smtAstStringNode(symVarName));
+  this->addChild(new smtAstDecimalNode(symVarSize));
 }
 
 
 smtAstDeclareNode::smtAstDeclareNode(const smtAstDeclareNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstDeclareNode::~smtAstDeclareNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstDeclareNode::accept(Visitor& v) {
   v(*this);
@@ -1019,14 +1018,14 @@ smtAstDistinctNode::smtAstDistinctNode(smtAstAbstractNode *expr1, smtAstAbstract
 
 smtAstDistinctNode::smtAstDistinctNode(const smtAstDistinctNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstDistinctNode::~smtAstDistinctNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstDistinctNode::accept(Visitor& v) {
   v(*this);
@@ -1045,14 +1044,14 @@ smtAstEqualNode::smtAstEqualNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstEqualNode::smtAstEqualNode(const smtAstEqualNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstEqualNode::~smtAstEqualNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstEqualNode::accept(Visitor& v) {
   v(*this);
@@ -1062,24 +1061,24 @@ void smtAstEqualNode::accept(Visitor& v) {
 // ====== extract
 
 
-smtAstExtractNode::smtAstExtractNode(uint64 high, uint64 low, smtAstAbstractNode *expr) {
+smtAstExtractNode::smtAstExtractNode(reg_size high, reg_size low, smtAstAbstractNode *expr) {
   this->kind = EXTRACT_NODE;
-  this->addChild(decimal(high));
-  this->addChild(decimal(low));
+  this->addChild(new smtAstDecimalNode(high));
+  this->addChild(new smtAstDecimalNode(low));
   this->addChild(expr);
 }
 
 
 smtAstExtractNode::smtAstExtractNode(const smtAstExtractNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstExtractNode::~smtAstExtractNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstExtractNode::accept(Visitor& v) {
   v(*this);
@@ -1099,14 +1098,14 @@ smtAstIteNode::smtAstIteNode(smtAstAbstractNode *ifExpr, smtAstAbstractNode *the
 
 smtAstIteNode::smtAstIteNode(const smtAstIteNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstIteNode::~smtAstIteNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstIteNode::accept(Visitor& v) {
   v(*this);
@@ -1116,7 +1115,7 @@ void smtAstIteNode::accept(Visitor& v) {
 // ====== Reference node
 
 
-smtAstReferenceNode::smtAstReferenceNode(uint64 value) {
+smtAstReferenceNode::smtAstReferenceNode(reg_size value) {
   this->kind  = REFERENCE_NODE;
   this->value = value;
 }
@@ -1129,13 +1128,13 @@ smtAstReferenceNode::smtAstReferenceNode(const smtAstReferenceNode &copy) {
 
 
 smtAstReferenceNode::~smtAstReferenceNode() {
+  freeAllNodes(this->childs);
 }
 
 
-uint64 smtAstReferenceNode::getValue(void) {
+reg_size smtAstReferenceNode::getValue(void) {
   return this->value;
 }
-
 
 void smtAstReferenceNode::accept(Visitor& v) {
   v(*this);
@@ -1158,6 +1157,7 @@ smtAstStringNode::smtAstStringNode(const smtAstStringNode &copy) {
 
 
 smtAstStringNode::~smtAstStringNode() {
+  freeAllNodes(this->childs);
 }
 
 
@@ -1174,23 +1174,23 @@ void smtAstStringNode::accept(Visitor& v) {
 // ====== sx
 
 
-smtAstSxNode::smtAstSxNode(uint64 sizeExt, smtAstAbstractNode *expr) {
+smtAstSxNode::smtAstSxNode(reg_size sizeExt, smtAstAbstractNode *expr) {
   this->kind = SX_NODE;
-  this->addChild(decimal(sizeExt));
+  this->addChild(new smtAstDecimalNode(sizeExt));
   this->addChild(expr);
 }
 
 
 smtAstSxNode::smtAstSxNode(const smtAstSxNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstSxNode::~smtAstSxNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstSxNode::accept(Visitor& v) {
   v(*this);
@@ -1213,6 +1213,7 @@ smtAstVariableNode::smtAstVariableNode(const smtAstVariableNode &copy) {
 
 
 smtAstVariableNode::~smtAstVariableNode() {
+  freeAllNodes(this->childs);
 }
 
 
@@ -1229,23 +1230,23 @@ void smtAstVariableNode::accept(Visitor& v) {
 // ====== zx
 
 
-smtAstZxNode::smtAstZxNode(uint64 sizeExt, smtAstAbstractNode *expr) {
+smtAstZxNode::smtAstZxNode(reg_size sizeExt, smtAstAbstractNode *expr) {
   this->kind = ZX_NODE;
-  this->addChild(decimal(sizeExt));
+  this->addChild(new smtAstDecimalNode(sizeExt));
   this->addChild(expr);
 }
 
 
 smtAstZxNode::smtAstZxNode(const smtAstZxNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (reg_size index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
 
 smtAstZxNode::~smtAstZxNode() {
+  freeAllNodes(this->childs);
 }
-
 
 void smtAstZxNode::accept(Visitor& v) {
   v(*this);
@@ -1530,7 +1531,7 @@ namespace smt2lib {
 
   /* compound syntax */
   std::ostream &operator<<(std::ostream &stream, smtAstCompoundNode *node) {
-    uint64 index = 0;
+    reg_size index = 0;
     for ( ; index < node->getChilds().size(); index++)
       stream << node->getChilds()[index];
     return stream;
@@ -1540,9 +1541,9 @@ namespace smt2lib {
   /* concat syntax */
   std::ostream &operator<<(std::ostream &stream, smtAstConcatNode *node) {
 
-    uint64 index;
+    reg_size index;
     std::vector<smtAstAbstractNode *> childs = node->getChilds();
-    uint64 size = childs.size();
+    reg_size size = childs.size();
 
     if (size < 2)
       throw std::length_error("smtAstConcatNode - exprs must contain at less two expressions");
@@ -1638,37 +1639,18 @@ namespace smt2lib {
 
 namespace smt2lib {
 
-
-  std::map<smtAstAbstractNode *, bool> nodesList;
-  std::map<smtAstAbstractNode *, bool> mustBeFreed;
-
-  void freeUnusedNodes(const std::map<smtAstAbstractNode *, bool> &usedNodes) {
-
-    std::map<smtAstAbstractNode *, bool>::iterator       it;
-    std::map<smtAstAbstractNode *, bool>::const_iterator found;
-
-    mustBeFreed.clear();
-
-    /* Go through every allocated nodes */
-    for (it = nodesList.begin(); it != nodesList.end(); it++) {
-      found = usedNodes.find(it->first);
-      if (found == usedNodes.end()) {
-        /* The node is unused */
-        mustBeFreed[it->first] = true;
-      }
-    }
-
-    /* Free unused node */
-    for (it = mustBeFreed.begin(); it != mustBeFreed.end(); it++) {
-      nodesList.erase(it->first);
-      delete it->first;
-    }
-
-    mustBeFreed.clear();
+  /* Free all childs node */
+  // Check issue #141
+  void freeAllNodes(std::vector<smtAstAbstractNode *> &childs) {
+    //reg_size index = 0;
+    //while (index < childs.size()) {
+    //  delete childs[index];
+    //  index++;
+    //}
+    childs.clear();
   }
 
-
-} // smt2lib namespace
+}
 
 
 // ====== Node builders
@@ -1680,16 +1662,14 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstAssertNode(expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
 
-  smtAstAbstractNode *bv(uint128 value, uint64 size) {
+  smtAstAbstractNode *bv(uint128 value, reg_size size) {
     smtAstAbstractNode *node = new smtAstBvNode(value, size);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1698,7 +1678,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvaddNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1707,7 +1686,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvandNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1716,7 +1694,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvashrNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1725,7 +1702,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvNode(0, 1);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1734,7 +1710,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvlshrNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1743,7 +1718,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvmulNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1752,7 +1726,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvnandNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1761,7 +1734,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvnegNode(expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1770,7 +1742,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvnorNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1779,7 +1750,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvnotNode(expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1788,16 +1758,14 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvorNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
 
-  smtAstAbstractNode *bvrol(uint64 rot, smtAstAbstractNode *expr) {
+  smtAstAbstractNode *bvrol(reg_size rot, smtAstAbstractNode *expr) {
     smtAstAbstractNode *node = new smtAstBvrolNode(rot, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1806,16 +1774,14 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvrolNode(rot, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
 
-  smtAstAbstractNode *bvror(uint64 rot, smtAstAbstractNode *expr) {
+  smtAstAbstractNode *bvror(reg_size rot, smtAstAbstractNode *expr) {
     smtAstAbstractNode *node = new smtAstBvrorNode(rot, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1824,7 +1790,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvrorNode(rot, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1833,7 +1798,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsdivNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1842,7 +1806,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsgeNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1851,7 +1814,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsgtNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1860,7 +1822,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvshlNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1869,7 +1830,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsleNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1878,7 +1838,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsltNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1887,7 +1846,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsmodNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1896,7 +1854,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsremNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1905,7 +1862,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvsubNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1914,7 +1870,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvNode(1, 1);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1923,7 +1878,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvudivNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1932,7 +1886,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvugeNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1941,7 +1894,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvugtNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1950,7 +1902,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvuleNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1959,7 +1910,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvultNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1968,7 +1918,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvuremNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1977,7 +1926,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvxnorNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1986,7 +1934,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstBvxorNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -1995,7 +1942,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstCompoundNode(exprs);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -2004,7 +1950,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstConcatNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -2013,7 +1958,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstConcatNode(exprs);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -2022,7 +1966,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstConcatNode(exprs);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -2031,16 +1974,14 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstDecimalNode(value);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
 
-  smtAstAbstractNode *declare(std::string symVarName, uint64 symVarSize) {
+  smtAstAbstractNode *declare(std::string symVarName, reg_size symVarSize) {
     smtAstAbstractNode *node = new smtAstDeclareNode(symVarName, symVarSize);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -2048,7 +1989,6 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstDistinctNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -2057,16 +1997,14 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstEqualNode(expr1, expr2);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
 
-  smtAstAbstractNode *extract(uint64 high, uint64 low, smtAstAbstractNode *expr) {
+  smtAstAbstractNode *extract(reg_size high, reg_size low, smtAstAbstractNode *expr) {
     smtAstAbstractNode *node = new smtAstExtractNode(high, low, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -2075,16 +2013,14 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstIteNode(ifExpr, thenExpr, elseExpr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
 
-  smtAstAbstractNode *reference(uint64 value) {
+  smtAstAbstractNode *reference(reg_size value) {
     smtAstAbstractNode *node = new smtAstReferenceNode(value);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -2093,16 +2029,14 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstStringNode(value);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
 
-  smtAstAbstractNode *sx(uint64 sizeExt, smtAstAbstractNode *expr) {
+  smtAstAbstractNode *sx(reg_size sizeExt, smtAstAbstractNode *expr) {
     smtAstAbstractNode *node = new smtAstSxNode(sizeExt, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -2111,16 +2045,14 @@ namespace smt2lib {
     smtAstAbstractNode *node = new smtAstVariableNode(value);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
 
-  smtAstAbstractNode *zx(uint64 sizeExt, smtAstAbstractNode *expr) {
+  smtAstAbstractNode *zx(reg_size sizeExt, smtAstAbstractNode *expr) {
     smtAstAbstractNode *node = new smtAstZxNode(sizeExt, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
-    nodesList[node] = true;
     return node;
   }
 
@@ -2176,7 +2108,6 @@ namespace smt2lib {
     }
     if (newNode == nullptr)
       throw std::invalid_argument("smt2lib::newInstance() - No enough memory");
-    nodesList[newNode] = true;
     return newNode;
   }
 

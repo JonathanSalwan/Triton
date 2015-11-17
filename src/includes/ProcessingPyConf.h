@@ -34,21 +34,21 @@ class ProcessingPyConf
     void callbackBefore(Inst *inst, AnalysisProcessor *ap);
     void callbackBeforeIRProc(IRBuilder *irb, AnalysisProcessor *ap);
     void callbackFini(void);
-    void callbackRoutine(uint64 threadId, PyObject *callback);
-    void callbackSignals(uint64 threadId, sint32 sig);
-    void callbackSyscallEntry(uint64 threadId, uint64 std);
-    void callbackSyscallExit(uint64 threadId, uint64 std);
-    void callbackImageLoad(string imagePath, uint64 imageBase, uint64 imageSize);
+    void callbackRoutine(reg_size threadId, PyObject *callback);
+    void callbackSignals(reg_size threadId, sint32 sig);
+    void callbackSyscallEntry(reg_size threadId, reg_size std);
+    void callbackSyscallExit(reg_size threadId, reg_size std);
+    void callbackImageLoad(string imagePath, reg_size imageBase, reg_size imageSize);
 
-    void startAnalysisFromAddr(uint64 addr);
-    void startAnalysisFromOffset(uint64 offset);
-    void stopAnalysisFromAddr(uint64 addr);
-    void stopAnalysisFromOffset(uint64 offset);
+    void startAnalysisFromAddr(reg_size addr);
+    void startAnalysisFromOffset(reg_size offset);
+    void stopAnalysisFromAddr(reg_size addr);
+    void stopAnalysisFromOffset(reg_size offset);
 
-    void taintMemFromAddr(uint64 addr);
-    void taintRegFromAddr(uint64 addr);
-    void untaintMemFromAddr(uint64 addr);
-    void untaintRegFromAddr(uint64 addr);
+    void taintMemFromAddr(reg_size addr);
+    void taintRegFromAddr(reg_size addr);
+    void untaintMemFromAddr(reg_size addr);
+    void untaintRegFromAddr(reg_size addr);
 };
 
 #endif     /* !__PROCESSINGPYCONF_H__ */

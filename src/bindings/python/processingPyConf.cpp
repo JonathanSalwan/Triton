@@ -22,28 +22,28 @@ ProcessingPyConf::~ProcessingPyConf() {
 }
 
 
-void ProcessingPyConf::startAnalysisFromAddr(uint64 addr) {
+void ProcessingPyConf::startAnalysisFromAddr(reg_size addr) {
   // Check if the DSE must be start at this address
   if (PyTritonOptions::startAnalysisFromAddr.find(addr) != PyTritonOptions::startAnalysisFromAddr.end())
     this->analysisTrigger->update(true);
 }
 
 
-void ProcessingPyConf::startAnalysisFromOffset(uint64 offset) {
+void ProcessingPyConf::startAnalysisFromOffset(reg_size offset) {
   // Check if the DSE must be start at this offset
   if (PyTritonOptions::startAnalysisFromOffset.find(offset) != PyTritonOptions::startAnalysisFromOffset.end())
     this->analysisTrigger->update(true);
 }
 
 
-void ProcessingPyConf::stopAnalysisFromAddr(uint64 addr) {
+void ProcessingPyConf::stopAnalysisFromAddr(reg_size addr) {
   // Check if the DSE must be stop at this address
   if (PyTritonOptions::stopAnalysisFromAddr.find(addr) != PyTritonOptions::stopAnalysisFromAddr.end())
     this->analysisTrigger->update(false);
 }
 
 
-void ProcessingPyConf::stopAnalysisFromOffset(uint64 offset) {
+void ProcessingPyConf::stopAnalysisFromOffset(reg_size offset) {
   // Check if the DSE must be stop at this offset
   if (PyTritonOptions::stopAnalysisFromOffset.find(offset) != PyTritonOptions::stopAnalysisFromOffset.end())
     this->analysisTrigger->update(false);
@@ -52,14 +52,14 @@ void ProcessingPyConf::stopAnalysisFromOffset(uint64 offset) {
 
 #ifndef LIGHT_VERSION
 
-void ProcessingPyConf::taintMemFromAddr(uint64 addr) {
+void ProcessingPyConf::taintMemFromAddr(reg_size addr) {
   // Apply this bindings only if the analysis is enable
   if (!this->analysisTrigger->getState())
     return;
 
   // Check if there is memory tainted via the python bindings
-  std::list<uint64> memsTainted = PyTritonOptions::taintMemFromAddr[addr];
-  std::list<uint64>::iterator it = memsTainted.begin();
+  std::list<reg_size> memsTainted = PyTritonOptions::taintMemFromAddr[addr];
+  std::list<reg_size>::iterator it = memsTainted.begin();
   for ( ; it != memsTainted.end(); it++) {
     MemoryOperand mem(*it, 1);
     this->ap->taintMem(mem);
@@ -67,14 +67,14 @@ void ProcessingPyConf::taintMemFromAddr(uint64 addr) {
 }
 
 
-void ProcessingPyConf::taintRegFromAddr(uint64 addr) {
+void ProcessingPyConf::taintRegFromAddr(reg_size addr) {
   // Apply this bindings only if the analysis is enable
   if (!this->analysisTrigger->getState())
     return;
 
   // Check if there is registers tainted via the python bindings
-  std::list<uint64> regsTainted = PyTritonOptions::taintRegFromAddr[addr];
-  std::list<uint64>::iterator it = regsTainted.begin();
+  std::list<reg_size> regsTainted = PyTritonOptions::taintRegFromAddr[addr];
+  std::list<reg_size>::iterator it = regsTainted.begin();
   for ( ; it != regsTainted.end(); it++) {
     RegisterOperand reg = createTmpReg(*it);
     this->ap->taintReg(reg);
@@ -82,14 +82,14 @@ void ProcessingPyConf::taintRegFromAddr(uint64 addr) {
 }
 
 
-void ProcessingPyConf::untaintMemFromAddr(uint64 addr) {
+void ProcessingPyConf::untaintMemFromAddr(reg_size addr) {
   // Apply this bindings only if the analysis is enable
   if (!this->analysisTrigger->getState())
     return;
 
   // Check if there is memories untainted via the python bindings
-  std::list<uint64> memsUntainted = PyTritonOptions::untaintMemFromAddr[addr];
-  std::list<uint64>::iterator it = memsUntainted.begin();
+  std::list<reg_size> memsUntainted = PyTritonOptions::untaintMemFromAddr[addr];
+  std::list<reg_size>::iterator it = memsUntainted.begin();
   for ( ; it != memsUntainted.end(); it++) {
     MemoryOperand mem(*it, 1);
     this->ap->untaintMem(mem);
@@ -97,14 +97,14 @@ void ProcessingPyConf::untaintMemFromAddr(uint64 addr) {
 }
 
 
-void ProcessingPyConf::untaintRegFromAddr(uint64 addr) {
+void ProcessingPyConf::untaintRegFromAddr(reg_size addr) {
   // Apply this bindings only if the analysis is enable
   if (!this->analysisTrigger->getState())
     return;
 
   // Check if there is registers untainted via the python bindings
-  std::list<uint64> regsUntainted = PyTritonOptions::untaintRegFromAddr[addr];
-  std::list<uint64>::iterator it = regsUntainted.begin();
+  std::list<reg_size> regsUntainted = PyTritonOptions::untaintRegFromAddr[addr];
+  std::list<reg_size>::iterator it = regsUntainted.begin();
   for ( ; it != regsUntainted.end(); it++) {
     RegisterOperand reg = createTmpReg(*it);
     this->ap->untaintReg(reg);
@@ -200,7 +200,7 @@ void ProcessingPyConf::callbackFini(void) {
 }
 
 
-void ProcessingPyConf::callbackSignals(uint64 threadId, sint32 sig) {
+void ProcessingPyConf::callbackSignals(reg_size threadId, sint32 sig) {
   // Check if there is a callback wich must be called when a signal occurs
   if (PyTritonOptions::callbackSignals){
 
@@ -219,7 +219,7 @@ void ProcessingPyConf::callbackSignals(uint64 threadId, sint32 sig) {
 }
 
 
-void ProcessingPyConf::callbackSyscallEntry(uint64 threadId, uint64 std) {
+void ProcessingPyConf::callbackSyscallEntry(reg_size threadId, reg_size std) {
   // Check if there is a callback wich must be called before the syscall processing
   if (PyTritonOptions::callbackSyscallEntry){
 
@@ -238,7 +238,7 @@ void ProcessingPyConf::callbackSyscallEntry(uint64 threadId, uint64 std) {
 }
 
 
-void ProcessingPyConf::callbackSyscallExit(uint64 threadId, uint64 std) {
+void ProcessingPyConf::callbackSyscallExit(reg_size threadId, reg_size std) {
   // Check if there is a callback wich must be called after the syscall processing
   if (PyTritonOptions::callbackSyscallExit){
 
@@ -257,7 +257,7 @@ void ProcessingPyConf::callbackSyscallExit(uint64 threadId, uint64 std) {
 }
 
 
-void ProcessingPyConf::callbackImageLoad(string imagePath, uint64 imageBase, uint64 imageSize) {
+void ProcessingPyConf::callbackImageLoad(string imagePath, reg_size imageBase, reg_size imageSize) {
   // Check if there is a callback wich must be called when an image is loaded
   if (PyTritonOptions::callbackImageLoad){
 
@@ -278,7 +278,7 @@ void ProcessingPyConf::callbackImageLoad(string imagePath, uint64 imageBase, uin
 
 
 void ProcessingPyConf::applyConfBeforeProcessing(IRBuilder *irb) {
-  uint64 addr = irb->getAddress();
+  reg_size addr = irb->getAddress();
 
   this->startAnalysisFromAddr(addr);
   this->startAnalysisFromOffset(addr);
@@ -303,7 +303,7 @@ void ProcessingPyConf::applyConfAfterProcessing(Inst *inst) {
 }
 
 
-void ProcessingPyConf::callbackRoutine(uint64 threadId, PyObject *callback) {
+void ProcessingPyConf::callbackRoutine(reg_size threadId, PyObject *callback) {
   PyObject *args = xPyTuple_New(1);
   PyTuple_SetItem(args, 0, PyLong_FromLongLong(threadId));
   if (PyObject_CallObject(callback, args) == nullptr){

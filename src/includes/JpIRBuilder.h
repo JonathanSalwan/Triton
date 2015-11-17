@@ -18,7 +18,7 @@
 class JpIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    JpIRBuilder(uint64 address, const std::string &disassembly);
+    JpIRBuilder(reg_size address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

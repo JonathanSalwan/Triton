@@ -18,20 +18,20 @@
 class BitsVector
 {
   protected:
-    uint64 high;
-    uint64 low;
+    reg_size high;
+    reg_size low;
 
   public:
-    std::pair<uint64, uint64>   getPair(void);
-    uint64                      getHigh(void);
-    uint64                      getLow(void);
-    uint64                      getVectorSize(void);
-    void                        setHigh(uint64 v);
-    void                        setLow(uint64 v);
-    void                        setPair(std::pair<uint64, uint64> p);
+    std::pair<reg_size, reg_size>   getPair(void);
+    reg_size                      getHigh(void);
+    reg_size                      getLow(void);
+    reg_size                      getVectorSize(void);
+    void                        setHigh(reg_size v);
+    void                        setLow(reg_size v);
+    void                        setPair(std::pair<reg_size, reg_size> p);
 
     BitsVector();
-    BitsVector(uint64 high, uint64 low);
+    BitsVector(reg_size high, reg_size low);
     BitsVector(const BitsVector &copy);
     ~BitsVector();
 };

@@ -9,7 +9,7 @@
 
 
 
-Inst::Inst(uint64 threadId, uint64 address, const std::string &dis) {
+Inst::Inst(reg_size threadId, reg_size address, const std::string &dis) {
   RTN rtn;
   SEC sec;
   IMG img;
@@ -58,25 +58,25 @@ const std::string &Inst::getDisassembly(void) {
 
 
 /* Returns the instruction address */
-uint64 Inst::getAddress(void) {
+reg_size Inst::getAddress(void) {
   return this->address;
 }
 
 
 /* Returns the next instruction address */
-uint64 Inst::getNextAddress(void) {
+reg_size Inst::getNextAddress(void) {
   return this->nextAddress;
 }
 
 
 /* If the instruction is a branch, this method returns the target address */
-uint64 Inst::getBranchTargetAddress(void) {
+reg_size Inst::getBranchTargetAddress(void) {
   return this->branchTargetAddress;
 }
 
 
 /* Returns the thread ID of the instruction */
-uint64 Inst::getThreadID(void) {
+reg_size Inst::getThreadID(void) {
   return this->threadId;
 }
 
@@ -106,7 +106,7 @@ void Inst::setOpcodeCategory(int32_t category) {
 
 
 /* Set the next instruction address */
-void Inst::setNextAddress(uint64 addr) {
+void Inst::setNextAddress(reg_size addr) {
   this->nextAddress = addr;
 }
 
@@ -118,7 +118,7 @@ void Inst::setBranchTaken(bool flag) {
 
 
 /* Set the branch target address */
-void Inst::setBranchTargetAddress(uint64 addr) {
+void Inst::setBranchTargetAddress(reg_size addr) {
   this->branchTargetAddress = addr;
 }
 
@@ -186,13 +186,13 @@ const std::string &Inst::getRoutineName(void) {
 
 
 /* Returns the base address */
-uint64 Inst::getBaseAddress(void) {
+reg_size Inst::getBaseAddress(void) {
   return this->baseAddress;
 }
 
 
 /* Returns the offset of the instruction in the file */
-uint64 Inst::getOffset(void) {
+reg_size Inst::getOffset(void) {
   return this->offset;
 }
 

@@ -18,7 +18,7 @@
 class JlIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    JlIRBuilder(uint64 address, const std::string &disassembly);
+    JlIRBuilder(reg_size address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

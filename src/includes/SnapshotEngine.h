@@ -10,12 +10,10 @@
 #define SNAPSHOTENGINE_H
 
 #include <list>
-#include <map>
 
 #include "pin.H"
 #include "SymbolicEngine.h"
 #include "TaintEngine.h"
-#include "SMT2Lib.h"
 
 #define LOCKED    1
 #define UNLOCKED  !LOCKED
@@ -28,18 +26,11 @@ class SnapshotEngine{
     /* I/O memory monitoring for snapshot */
     /* item1: memory address              */
     /* item2: byte                        */
-    std::list< std::pair<uint64, char> > memory;
+    std::list< std::pair<reg_size, char> > memory;
 
     /* Status of the snapshot engine */
     bool locked;
 
-    /* Flag which defines if we must restore the snapshot */
-    bool mustBeRestore;
-
-    /* AST node state */
-    std::map<smt2lib::smtAstAbstractNode *, bool> nodesList;
-
-    /* Engines context */
     SymbolicEngine  *snapshotSymEngine;
     TaintEngine     *snapshotTaintEngine;
     CONTEXT         pinCtx;
@@ -50,13 +41,11 @@ class SnapshotEngine{
     ~SnapshotEngine();
 
     CONTEXT   *getCtx(void);
-    bool      isLocked(void);
-    bool      isMustBeRestored(void);
-    void      addModification(uint64 address, char byte);
-    void      disableSnapshot(void);
-    void      resetEngine(void);
+    bool      isLocked();
+    void      addModification(reg_size address, char byte);
+    void      disableSnapshot();
+    void      resetEngine();
     void      restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngine *currentTaintEngine, CONTEXT *ctx);
-    void      setRestore(bool flag);
     void      takeSnapshot(const SymbolicEngine &currentSymEngine, const TaintEngine &currentTaintEngine, CONTEXT *ctx);
 
 };

@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-XchgIRBuilder::XchgIRBuilder(uint64 address, const std::string &disassembly):
+XchgIRBuilder::XchgIRBuilder(reg_size address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

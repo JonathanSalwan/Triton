@@ -20,13 +20,13 @@ class Smodel
     /* Variable name */
     std::string name;
     /* Variable value */
-    uint64      value;
+    reg_size      value;
 
   public:
     std::string getName(void);
-    uint64      getValue(void);
+    reg_size      getValue(void);
 
-    Smodel(std::string name, uint64 value);
+    Smodel(std::string name, reg_size value);
     ~Smodel();
 };
 

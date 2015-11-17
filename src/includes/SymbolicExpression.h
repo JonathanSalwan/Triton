@@ -36,7 +36,7 @@ class SymbolicExpression {
     enum SymExpr::kind          kind;
     smt2lib::smtAstAbstractNode *expression;
     std::string                 comment;
-    uint64                      id;
+    reg_size                      id;
 
   public:
     bool                        isTainted;
@@ -47,11 +47,11 @@ class SymbolicExpression {
     smt2lib::smtAstAbstractNode *getExpression(void);
     std::string                 getComment(void);
     std::string                 getID2Str(void);
-    uint64                      getID(void);
+    reg_size                      getID(void);
     void                        setExpression(smt2lib::smtAstAbstractNode *expr);
 
-    SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id, enum SymExpr::kind);
-    SymbolicExpression(smt2lib::smtAstAbstractNode *expr, uint64 id, enum SymExpr::kind, std::string comment);
+    SymbolicExpression(smt2lib::smtAstAbstractNode *expr, reg_size id, enum SymExpr::kind);
+    SymbolicExpression(smt2lib::smtAstAbstractNode *expr, reg_size id, enum SymExpr::kind, std::string comment);
     ~SymbolicExpression();
 };
 

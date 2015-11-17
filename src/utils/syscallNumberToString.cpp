@@ -13,8 +13,8 @@
 
 extern const char *syscallmap[];
 
-const char *syscallNumberLinux64ToString(uint64 syscallNumber) {
-  if (syscallNumber >= 0 && syscallNumber < (uint64) NB_SYSCALL)
+const char *syscallNumberLinux64ToString(reg_size syscallNumber) {
+  if (syscallNumber >= 0 && syscallNumber < (reg_size) NB_SYSCALL)
     return syscallmap[syscallNumber];
   else
     return nullptr;

@@ -35,11 +35,11 @@ SolverEngine::~SolverEngine() {
 }
 
 
-std::vector<std::list<Smodel>> SolverEngine::getModels(smt2lib::smtAstAbstractNode *node, uint64 limit) {
+std::vector<std::list<Smodel>> SolverEngine::getModels(smt2lib::smtAstAbstractNode *node, reg_size limit) {
   std::vector<std::list<Smodel>>  ret;
   std::stringstream               formula;
-  z3::context                     ctx;
-  z3::solver                      solver(ctx);
+  z3::context                     *ctx;
+  z3::solver                      *solver;
 
   /* First, set the QF_AUFBV flag  */
   formula << "(set-logic QF_AUFBV)";
@@ -51,40 +51,48 @@ std::vector<std::list<Smodel>> SolverEngine::getModels(smt2lib::smtAstAbstractNo
   formula << node;
 
   /* Create the context and AST */
-  Z3_ast ast = Z3_parse_smtlib2_string(ctx, formula.str().c_str(), 0, 0, 0, 0, 0, 0);
-  z3::expr eq(ctx, ast);
+  ctx = new z3::context();
+  Z3_ast ast = Z3_parse_smtlib2_string(*ctx, formula.str().c_str(), 0, 0, 0, 0, 0, 0);
+  z3::expr eq(*ctx, ast);
 
   /* Create a solver and add the expression */
-  solver.add(eq);
+  solver = new z3::solver(*ctx);
+  solver->add(eq);
 
   /* Check if it is sat */
-  while (solver.check() == z3::sat && limit >= 1) {
+  while (solver->check() == z3::sat && limit >= 1) {
 
     /* Get model */
-    z3::model m = solver.get_model();
+    z3::model m = solver->get_model();
 
     /* Traversing the model */
     std::list<Smodel> smodel;
-    z3::expr_vector args(ctx);
+    z3::expr_vector args(*ctx);
     for (uint32 i = 0; i < m.size(); i++) {
 
-      uint64        value     = 0;
+      reg_size        value     = 0;
       z3::func_decl variable  = m[i];
       std::string   varName   = variable.name().str();
       z3::expr      exp       = m.get_const_interp(variable);
-      uint64        bvSize    = exp.get_sort().bv_size();
+      reg_size        bvSize    = exp.get_sort().bv_size();
 
       /* Create a Triton Model */
-      Z3_get_numeral_uint64(ctx, exp, &value);
+      #if defined(__x86_64__) || defined(_M_X64)
+      Z3_get_numeral_uint64(*ctx, exp, &value);
+      #endif
+      #if defined(__i386) || defined(_M_IX86)
+      Z3_get_numeral_uint(*ctx, exp, &value);
+      #endif
+      
       smodel.push_back(Smodel(varName, value));
 
       if (exp.get_sort().is_bv())
-        args.push_back(ctx.bv_const(varName.c_str(), bvSize) != ctx.bv_val(value, bvSize));
+        args.push_back(ctx->bv_const(varName.c_str(), bvSize) != ctx->bv_val(value, bvSize));
 
     }
 
     /* Escape last models */
-    solver.add(TritonSolver::mk_or(args));
+    solver->add(TritonSolver::mk_or(args));
 
     /* If there is model available */
     if (smodel.size() > 0)
@@ -94,6 +102,7 @@ std::vector<std::list<Smodel>> SolverEngine::getModels(smt2lib::smtAstAbstractNo
     limit--;
   }
 
+  delete solver;
   return ret;
 }
 
