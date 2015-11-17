@@ -53,7 +53,7 @@ void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintRegImm(se, ID_TMP_RIP);
+  ap.assignmentSpreadTaintRegReg(se, ID_TMP_RIP, reg);
 }
 
 
@@ -73,7 +73,7 @@ void JmpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
 
   /* Apply the taint */
-  ap.assignmentSpreadTaintRegImm(se, ID_TMP_RIP);
+  ap.assignmentSpreadTaintRegMem(se, ID_TMP_RIP, mem, memSize);
 }
 
 
