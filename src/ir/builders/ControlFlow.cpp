@@ -26,6 +26,7 @@ SymbolicExpression *ControlFlow::rip(Inst &inst, AnalysisProcessor &ap, uint64 n
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
+  ap.assignmentSpreadTaintRegImm(se, ID_TMP_RIP);
 
   return se;
 }

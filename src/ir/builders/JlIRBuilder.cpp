@@ -46,6 +46,10 @@ void JlIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
 
+  /* Apply the taint */
+  ap.aluSpreadTaintRegReg(se, ID_TMP_RIP, ID_TMP_SF);
+  ap.aluSpreadTaintRegReg(se, ID_TMP_RIP, ID_TMP_OF);
+
   /* Add the constraint in the PathConstraints list */
   ap.addPathConstraint(se->getID());
 }
