@@ -44,7 +44,7 @@ void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   /* Base register */
   if (baseReg.getTritonRegId()) {
     /* If the base register is RIP, we must use nextAddress */
-    if (baseReg.getTritonRegId() == ID_RIP)
+    if (baseReg.getTritonRegId() == ID_IP)
       base2e = smt2lib::bv(this->nextAddress, regSize * REG_SIZE);
     else
       base2e = ap.buildSymbolicRegOperand(baseReg, regSize);
