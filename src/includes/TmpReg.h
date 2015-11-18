@@ -11,6 +11,7 @@
 #include "RegisterOperand.h"
 #include "Registers.h"
 
+#if defined(__x86_64__) || defined(_M_X64)
 extern RegisterOperand tmp_reg_rax;
 extern RegisterOperand tmp_reg_rbx;
 extern RegisterOperand tmp_reg_rcx;
@@ -28,14 +29,6 @@ extern RegisterOperand tmp_reg_r12;
 extern RegisterOperand tmp_reg_r13;
 extern RegisterOperand tmp_reg_r14;
 extern RegisterOperand tmp_reg_r15;
-extern RegisterOperand tmp_reg_xmm0;
-extern RegisterOperand tmp_reg_xmm1;
-extern RegisterOperand tmp_reg_xmm2;
-extern RegisterOperand tmp_reg_xmm3;
-extern RegisterOperand tmp_reg_xmm4;
-extern RegisterOperand tmp_reg_xmm5;
-extern RegisterOperand tmp_reg_xmm6;
-extern RegisterOperand tmp_reg_xmm7;
 extern RegisterOperand tmp_reg_xmm8;
 extern RegisterOperand tmp_reg_xmm9;
 extern RegisterOperand tmp_reg_xmm10;
@@ -45,6 +38,30 @@ extern RegisterOperand tmp_reg_xmm13;
 extern RegisterOperand tmp_reg_xmm14;
 extern RegisterOperand tmp_reg_xmm15;
 extern RegisterOperand tmp_reg_rflags;
+#endif
+
+#if defined(__i386) || defined(_M_IX86)
+extern RegisterOperand tmp_reg_eax;
+extern RegisterOperand tmp_reg_ebx;
+extern RegisterOperand tmp_reg_ecx;
+extern RegisterOperand tmp_reg_edx;
+extern RegisterOperand tmp_reg_edi;
+extern RegisterOperand tmp_reg_esi;
+extern RegisterOperand tmp_reg_esp;
+extern RegisterOperand tmp_reg_ebp;
+extern RegisterOperand tmp_reg_eip;
+extern RegisterOperand tmp_reg_eflags;
+#endif
+
+extern RegisterOperand tmp_reg_xmm0;
+extern RegisterOperand tmp_reg_xmm1;
+extern RegisterOperand tmp_reg_xmm2;
+extern RegisterOperand tmp_reg_xmm3;
+extern RegisterOperand tmp_reg_xmm4;
+extern RegisterOperand tmp_reg_xmm5;
+extern RegisterOperand tmp_reg_xmm6;
+extern RegisterOperand tmp_reg_xmm7;
+
 extern RegisterOperand tmp_flag_af;
 extern RegisterOperand tmp_flag_cf;
 extern RegisterOperand tmp_flag_df;
@@ -55,9 +72,12 @@ extern RegisterOperand tmp_flag_sf;
 extern RegisterOperand tmp_flag_tf;
 extern RegisterOperand tmp_flag_zf;
 
+
 RegisterOperand createTmpReg(uint64 tritonRegId);
 RegisterOperand createTmpFlag(uint64 tritonFlagId);
 
+
+#if defined(__x86_64__) || defined(_M_X64)
 #define ID_TMP_RAX    tmp_reg_rax
 #define ID_TMP_RBX    tmp_reg_rbx
 #define ID_TMP_RCX    tmp_reg_rcx
@@ -75,14 +95,6 @@ RegisterOperand createTmpFlag(uint64 tritonFlagId);
 #define ID_TMP_R13    tmp_reg_r13
 #define ID_TMP_R14    tmp_reg_r14
 #define ID_TMP_R15    tmp_reg_r15
-#define ID_TMP_XMM0   tmp_reg_xmm0
-#define ID_TMP_XMM1   tmp_reg_xmm1
-#define ID_TMP_XMM2   tmp_reg_xmm2
-#define ID_TMP_XMM3   tmp_reg_xmm3
-#define ID_TMP_XMM4   tmp_reg_xmm4
-#define ID_TMP_XMM5   tmp_reg_xmm5
-#define ID_TMP_XMM6   tmp_reg_xmm6
-#define ID_TMP_XMM7   tmp_reg_xmm7
 #define ID_TMP_XMM8   tmp_reg_xmm8
 #define ID_TMP_XMM9   tmp_reg_xmm9
 #define ID_TMP_XMM10  tmp_reg_xmm10
@@ -92,6 +104,30 @@ RegisterOperand createTmpFlag(uint64 tritonFlagId);
 #define ID_TMP_XMM14  tmp_reg_xmm14
 #define ID_TMP_XMM15  tmp_reg_xmm15
 #define ID_TMP_RFLAGS tmp_reg_rflags
+#endif
+
+#if defined(__i386) || defined(_M_IX86)
+#define ID_TMP_RAX    tmp_reg_eax
+#define ID_TMP_RBX    tmp_reg_ebx
+#define ID_TMP_RCX    tmp_reg_ecx
+#define ID_TMP_RDX    tmp_reg_edx
+#define ID_TMP_RDI    tmp_reg_edi
+#define ID_TMP_RSI    tmp_reg_esi
+#define ID_TMP_RSP    tmp_reg_esp
+#define ID_TMP_RBP    tmp_reg_ebp
+#define ID_TMP_RIP    tmp_reg_eip
+#define ID_TMP_RFLAGS tmp_reg_eflags
+#endif
+
+#define ID_TMP_XMM0   tmp_reg_xmm0
+#define ID_TMP_XMM1   tmp_reg_xmm1
+#define ID_TMP_XMM2   tmp_reg_xmm2
+#define ID_TMP_XMM3   tmp_reg_xmm3
+#define ID_TMP_XMM4   tmp_reg_xmm4
+#define ID_TMP_XMM5   tmp_reg_xmm5
+#define ID_TMP_XMM6   tmp_reg_xmm6
+#define ID_TMP_XMM7   tmp_reg_xmm7
+
 #define ID_TMP_AF     tmp_flag_af
 #define ID_TMP_CF     tmp_flag_cf
 #define ID_TMP_DF     tmp_flag_df

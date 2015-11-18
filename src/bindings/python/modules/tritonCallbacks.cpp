@@ -753,7 +753,13 @@ static PyObject *Triton_getRegs(PyObject *self, PyObject *noargs) {
   PyObject *regs = xPyDict_New();
 
   /* Build all Registers */
+  /* TODO_32Bits: something more sexy */
+  #if defined(__x86_64__) || defined(_M_X64)
   for (uint64 regId = ID_RAX; regId < ID_RFLAGS; regId++){
+  #endif
+  #if defined(__i386) || defined(_M_IX86)
+  for (uint64 regId = ID_EAX; regId < ID_EFLAGS; regId++){
+  #endif
     PyObject *reg = xPyDict_New();
     RegisterOperand ro = createTmpReg(regId);
     if (isSSERegId(regId))
