@@ -44,11 +44,8 @@ void TaintEngine::operator=(const TaintEngine &other) {
 
 /* Returns true of false if the memory address is currently tainted */
 bool TaintEngine::isMemTainted(uint64 addr) {
-  std::list<uint64>::iterator i;
-  for(i = this->taintedAddresses.begin(); i != this->taintedAddresses.end(); i++){
-    if (addr == *i)
+  if (this->taintedAddresses.find(addr) != this->taintedAddresses.end())
       return TAINTED;
-  }
   return !TAINTED;
 }
 
@@ -98,14 +95,13 @@ void TaintEngine::untaintReg(uint64 regID) {
 
 /* Taint the address */
 void TaintEngine::taintMem(uint64 addr) {
-  if (!this->isMemTainted(addr))
-    this->taintedAddresses.push_front(addr);
+  this->taintedAddresses[addr] = true;
 }
 
 
 /* Untaint the address */
 void TaintEngine::untaintMem(uint64 addr) {
-  this->taintedAddresses.remove(addr);
+  this->taintedAddresses.erase(addr);
 }
 
 

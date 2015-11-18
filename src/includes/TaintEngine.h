@@ -9,7 +9,7 @@
 #ifndef TAINTENGINE_H
 #define TAINTENGINE_H
 
-#include <list>
+#include <map>
 #include <sstream>
 #include <stdint.h>
 
@@ -25,7 +25,7 @@ class TaintEngine {
   private:
 
     /* Tainted addresses */
-    std::list<uint64> taintedAddresses;
+    std::map<uint64, bool> taintedAddresses;
 
     /*
      *Tainted registers.
