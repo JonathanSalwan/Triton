@@ -182,9 +182,11 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAb
       break;
 
     case DWORD_SIZE:
+      #if defined(__x86_64__) || defined(_M_X64)
       /* In AMD64, if a reg32 is written, it clears the 32-bit MSB of the corresponding register (Thx Wisk!) */
       finalExpr = smt2lib::zx(DWORD_SIZE_BIT, expr);
       break;
+      #endif
 
     case QWORD_SIZE:
     case DQWORD_SIZE:
