@@ -14,6 +14,7 @@
 #include <string>
 
 #include "CallbackDefine.h"
+#include "PythonUtils.h"
 #include "TritonTypes.h"
 
 extern PyMethodDef tritonCallbacks[];

@@ -78,7 +78,7 @@ static PyObject *SmtAstNode_setChild(PyObject *self, PyObject *args) {
   if (!PySmtAstNode_Check(node))
     return PyErr_Format(PyExc_TypeError, "setChild(): expected a SmtAstNode as second argument");
 
-  i = PyLong_AsLongLong(index);
+  i = PyLong_AsUint(index);
   src = PySmtAstNode_AsSmtAstNode(node);
   dst = PySmtAstNode_AsSmtAstNode(self);
   if (i >= dst->getChilds().size())

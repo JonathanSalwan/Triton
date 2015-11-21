@@ -23,13 +23,13 @@
 #define DQWORD_SIZE_BIT   128  // In byte
 
 #if defined(__x86_64__) || defined(_M_X64)
-#define REG_SIZE          QWORD_SIZE      // In byte
-#define REG_SIZE_BIT      QWORD_SIZE_BIT  // In bits
+  #define REG_SIZE        QWORD_SIZE      // In byte
+  #define REG_SIZE_BIT    QWORD_SIZE_BIT  // In bits
 #endif
 
 #if defined(__i386) || defined(_M_IX86)
-#define REG_SIZE          DWORD_SIZE      // In byte
-#define REG_SIZE_BIT      DWORD_SIZE_BIT  // In bits
+  #define REG_SIZE        DWORD_SIZE      // In byte
+  #define REG_SIZE_BIT    DWORD_SIZE_BIT  // In bits
 #endif
 
 #define FLAG_SIZE_BIT     1               // In bits

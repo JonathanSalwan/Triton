@@ -13,9 +13,9 @@
 
 
 void initSymExprEnv(PyObject *idSymExprClassDict) {
-  PyDict_SetItemString(idSymExprClassDict, "MEM", PyLong_FromLongLong(SymExpr::MEM));
-  PyDict_SetItemString(idSymExprClassDict, "REG", PyLong_FromLongLong(SymExpr::REG));
-  PyDict_SetItemString(idSymExprClassDict, "UNDEF", PyLong_FromLongLong(SymExpr::UNDEF));
+  PyDict_SetItemString(idSymExprClassDict, "MEM", PyLong_FromUint(SymExpr::MEM));
+  PyDict_SetItemString(idSymExprClassDict, "REG", PyLong_FromUint(SymExpr::REG));
+  PyDict_SetItemString(idSymExprClassDict, "UNDEF", PyLong_FromUint(SymExpr::UNDEF));
 }
 
 #endif

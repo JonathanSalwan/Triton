@@ -18,16 +18,16 @@ void initLinuxEnv(PyObject *);
 
 
 void initSyscallEnv(PyObject *idSyscallClassDict) {
-  PyDict_SetItemString(idSyscallClassDict, "STANDARD_INVALID", PyLong_FromLongLong(SYSCALL_STANDARD_INVALID));
-  PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32_LINUX", PyLong_FromLongLong(SYSCALL_STANDARD_IA32_LINUX));
-  PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32E_LINUX", PyLong_FromLongLong(SYSCALL_STANDARD_IA32E_LINUX));
-  PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32_MAC", PyLong_FromLongLong(SYSCALL_STANDARD_IA32_MAC));
-  PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32E_MAC", PyLong_FromLongLong(SYSCALL_STANDARD_IA32E_MAC));
-  PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32_WINDOWS_FAST", PyLong_FromLongLong(SYSCALL_STANDARD_IA32_WINDOWS_FAST));
-  PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32E_WINDOWS_FAST", PyLong_FromLongLong(SYSCALL_STANDARD_IA32E_WINDOWS_FAST));
-  PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32_WINDOWS_ALT", PyLong_FromLongLong(SYSCALL_STANDARD_IA32_WINDOWS_ALT));
-  PyDict_SetItemString(idSyscallClassDict, "STANDARD_WOW64", PyLong_FromLongLong(SYSCALL_STANDARD_WOW64));
-  PyDict_SetItemString(idSyscallClassDict, "STANDARD_WINDOWS_INT", PyLong_FromLongLong(SYSCALL_STANDARD_WINDOWS_INT));
+  PyDict_SetItemString(idSyscallClassDict, "STANDARD_INVALID", PyLong_FromUint(SYSCALL_STANDARD_INVALID));
+  PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32_LINUX", PyLong_FromUint(SYSCALL_STANDARD_IA32_LINUX));
+  PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32E_LINUX", PyLong_FromUint(SYSCALL_STANDARD_IA32E_LINUX));
+  PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32_MAC", PyLong_FromUint(SYSCALL_STANDARD_IA32_MAC));
+  PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32E_MAC", PyLong_FromUint(SYSCALL_STANDARD_IA32E_MAC));
+  PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32_WINDOWS_FAST", PyLong_FromUint(SYSCALL_STANDARD_IA32_WINDOWS_FAST));
+  PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32E_WINDOWS_FAST", PyLong_FromUint(SYSCALL_STANDARD_IA32E_WINDOWS_FAST));
+  PyDict_SetItemString(idSyscallClassDict, "STANDARD_IA32_WINDOWS_ALT", PyLong_FromUint(SYSCALL_STANDARD_IA32_WINDOWS_ALT));
+  PyDict_SetItemString(idSyscallClassDict, "STANDARD_WOW64", PyLong_FromUint(SYSCALL_STANDARD_WOW64));
+  PyDict_SetItemString(idSyscallClassDict, "STANDARD_WINDOWS_INT", PyLong_FromUint(SYSCALL_STANDARD_WINDOWS_INT));
 
   // LINUX{32|64} ---------------------
 
