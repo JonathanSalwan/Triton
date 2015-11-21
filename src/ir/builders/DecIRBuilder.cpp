@@ -29,7 +29,7 @@ void DecIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
-  op2 = smt2lib::bv(1, regSize * REG_SIZE);
+  op2 = smt2lib::bv(1, regSize * BYTE_SIZE_BIT);
 
   /* Finale expr */
   expr = smt2lib::bvsub(op1, op2);
@@ -57,7 +57,7 @@ void DecIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicMemOperand(mem, memSize);
-  op2 = smt2lib::bv(1, memSize * REG_SIZE);
+  op2 = smt2lib::bv(1, memSize * BYTE_SIZE_BIT);
 
   /* Finale expr */
   expr = smt2lib::bvsub(op1, op2);

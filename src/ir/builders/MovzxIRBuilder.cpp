@@ -39,7 +39,7 @@ void MovzxIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   op1 = ap.buildSymbolicRegOperand(reg2, regSize2);
 
   /* Final expr */
-  expr = smt2lib::zx((regSize1 * REG_SIZE) - (regSize2 * REG_SIZE), op1);
+  expr = smt2lib::zx((regSize1 * BYTE_SIZE_BIT) - (regSize2 * BYTE_SIZE_BIT), op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg1, regSize1);
@@ -61,7 +61,7 @@ void MovzxIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   op1 = ap.buildSymbolicMemOperand(mem, memSize);
 
   /* Final expr */
-  expr = smt2lib::zx((regSize * REG_SIZE) - (memSize * REG_SIZE), op1);
+  expr = smt2lib::zx((regSize * BYTE_SIZE_BIT) - (memSize * BYTE_SIZE_BIT), op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);

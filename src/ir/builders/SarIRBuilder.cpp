@@ -30,7 +30,7 @@ void SarIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
-  op2 = smt2lib::bv(imm, regSize * REG_SIZE);
+  op2 = smt2lib::bv(imm, regSize * BYTE_SIZE_BIT);
 
   /* Finale expr */
   expr = smt2lib::bvashr(op1, op2);
@@ -59,7 +59,7 @@ void SarIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
   /* op2 = 8 bits register (CL) */
-  op2 = smt2lib::zx((regSize - BYTE_SIZE) * REG_SIZE, ap.buildSymbolicRegOperand(ID_TMP_RCX, 1));
+  op2 = smt2lib::zx((regSize - BYTE_SIZE) * BYTE_SIZE_BIT, ap.buildSymbolicRegOperand(ID_TMP_RCX, 1));
 
   /* Finale expr */
   expr = smt2lib::bvashr(op1, op2);
@@ -93,7 +93,7 @@ void SarIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicMemOperand(mem, memSize);
-  op2 = smt2lib::bv(imm, memSize * REG_SIZE);
+  op2 = smt2lib::bv(imm, memSize * BYTE_SIZE_BIT);
 
   /* Final expr */
   expr = smt2lib::bvashr(op1, op2);

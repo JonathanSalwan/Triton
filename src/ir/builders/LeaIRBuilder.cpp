@@ -45,24 +45,24 @@ void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   if (baseReg.getTritonRegId()) {
     /* If the base register is RIP, we must use nextAddress */
     if (baseReg.getTritonRegId() == ID_IP)
-      base2e = smt2lib::bv(this->nextAddress, regSize * REG_SIZE);
+      base2e = smt2lib::bv(this->nextAddress, regSize * BYTE_SIZE_BIT);
     else
       base2e = ap.buildSymbolicRegOperand(baseReg, regSize);
   }
   else
-    base2e = smt2lib::bv(0, regSize * REG_SIZE);
+    base2e = smt2lib::bv(0, regSize * BYTE_SIZE_BIT);
 
   /* Index register if it exists */
   if (indexReg.getTritonRegId())
     index2e = ap.buildSymbolicRegOperand(indexReg, regSize);
   else
-    index2e = smt2lib::bv(0, regSize * REG_SIZE);
+    index2e = smt2lib::bv(0, regSize * BYTE_SIZE_BIT);
 
   /* Displacement */
-  dis2e = smt2lib::bv(displacement, regSize * REG_SIZE);
+  dis2e = smt2lib::bv(displacement, regSize * BYTE_SIZE_BIT);
 
   /* Scale */
-  scale2e = smt2lib::bv(memoryScale, regSize * REG_SIZE);
+  scale2e = smt2lib::bv(memoryScale, regSize * BYTE_SIZE_BIT);
 
   /* final SMT expression */
   /* Effective address = Displacement + BaseReg + IndexReg * Scale */

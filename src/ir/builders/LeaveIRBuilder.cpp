@@ -28,7 +28,7 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(ID_TMP_RSP, REG_SIZE);
-  op2 = smt2lib::bv(memSize, memSize * REG_SIZE);
+  op2 = smt2lib::bv(memSize, memSize * BYTE_SIZE_BIT);
 
   expr = smt2lib::bvadd(op1, op2);
 

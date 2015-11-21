@@ -29,7 +29,7 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(ID_TMP_RSP, memSize);
-  op2 = smt2lib::bv(memSize, memSize * REG_SIZE);
+  op2 = smt2lib::bv(memSize, memSize * BYTE_SIZE_BIT);
 
   expr = smt2lib::bvsub(op1, op2);
 
@@ -81,7 +81,7 @@ void PushIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   /* OP_1 */
-  op1 = smt2lib::bv(imm, memSize * REG_SIZE);
+  op1 = smt2lib::bv(imm, memSize * BYTE_SIZE_BIT);
 
   /* Finale expr */
   expr = op1;

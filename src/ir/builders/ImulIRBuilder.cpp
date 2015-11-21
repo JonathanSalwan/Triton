@@ -55,16 +55,16 @@ void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
-  op2 = smt2lib::bv(imm, regSize * REG_SIZE);
+  op2 = smt2lib::bv(imm, regSize * BYTE_SIZE_BIT);
 
   /* Finale expr */
   expr = smt2lib::bvmul(
-          smt2lib::sx(regSize * REG_SIZE, op1),
-          smt2lib::sx(regSize * REG_SIZE, op2)
+          smt2lib::sx(regSize * BYTE_SIZE_BIT, op1),
+          smt2lib::sx(regSize * BYTE_SIZE_BIT, op2)
          );
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, smt2lib::extract((regSize * REG_SIZE) - 1, 0, expr), reg, regSize);
+  se = ap.createRegSE(inst, smt2lib::extract((regSize * BYTE_SIZE_BIT) - 1, 0, expr), reg, regSize);
 
   /* Apply the taint */
   ap.aluSpreadTaintRegImm(se, reg);
@@ -91,15 +91,15 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
   op2 = ap.buildSymbolicRegOperand(reg2, regSize2);
-  op3 = smt2lib::bv(imm, regSize2 * REG_SIZE);
+  op3 = smt2lib::bv(imm, regSize2 * BYTE_SIZE_BIT);
 
   /* Case 1 */
   if (this->operands[0].isReadOnly()) {
 
     /* Expr */
     expr = smt2lib::bvmul(
-             smt2lib::sx(regSize2 * REG_SIZE, op2),
-             smt2lib::sx(regSize1 * REG_SIZE, op1)
+             smt2lib::sx(regSize2 * BYTE_SIZE_BIT, op2),
+             smt2lib::sx(regSize1 * BYTE_SIZE_BIT, op1)
            );
 
     switch (regSize1) {
@@ -147,12 +147,12 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   else if (this->operands[0].isReadAndWrite()) {
     /* Expr */
     expr = smt2lib::bvmul(
-             smt2lib::sx(regSize1 * REG_SIZE, op1),
-             smt2lib::sx(regSize2 * REG_SIZE, op2)
+             smt2lib::sx(regSize1 * BYTE_SIZE_BIT, op1),
+             smt2lib::sx(regSize2 * BYTE_SIZE_BIT, op2)
            );
 
     /* Create the symbolic expression */
-    se = ap.createRegSE(inst, smt2lib::extract((regSize1 * REG_SIZE) - 1, 0, expr), reg1, regSize1);
+    se = ap.createRegSE(inst, smt2lib::extract((regSize1 * BYTE_SIZE_BIT) - 1, 0, expr), reg1, regSize1);
 
     /* Apply the taint */
     ap.aluSpreadTaintRegReg(se, reg1, reg2);
@@ -162,12 +162,12 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   else if (this->operands[0].isWriteOnly()) {
     /* Expr */
     expr = smt2lib::bvmul(
-             smt2lib::sx(regSize2 * REG_SIZE, op2),
-             smt2lib::sx(regSize2 * REG_SIZE, op3)
+             smt2lib::sx(regSize2 * BYTE_SIZE_BIT, op2),
+             smt2lib::sx(regSize2 * BYTE_SIZE_BIT, op3)
            );
 
     /* Create the symbolic expression */
-    se = ap.createRegSE(inst, smt2lib::extract((regSize1 * REG_SIZE) - 1, 0, expr), reg1, regSize1);
+    se = ap.createRegSE(inst, smt2lib::extract((regSize1 * BYTE_SIZE_BIT) - 1, 0, expr), reg1, regSize1);
 
     /* Apply the taint */
     ap.aluSpreadTaintRegReg(se, reg1, reg2);
@@ -199,15 +199,15 @@ void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg1, regSize1);
   op2 = ap.buildSymbolicMemOperand(mem2, memSize2);
-  op3 = smt2lib::bv(imm, memSize2 * REG_SIZE);
+  op3 = smt2lib::bv(imm, memSize2 * BYTE_SIZE_BIT);
 
   /* Case 1 */
   if (this->operands[0].isReadOnly()) {
 
     /* Expr */
     expr = smt2lib::bvmul(
-             smt2lib::sx(memSize2 * REG_SIZE, op2),
-             smt2lib::sx(regSize1 * REG_SIZE, op1)
+             smt2lib::sx(memSize2 * BYTE_SIZE_BIT, op2),
+             smt2lib::sx(regSize1 * BYTE_SIZE_BIT, op1)
            );
 
     switch (regSize1) {
@@ -255,12 +255,12 @@ void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   else if (this->operands[0].isReadAndWrite()) {
     /* Expr */
     expr = smt2lib::bvmul(
-             smt2lib::sx(regSize1 * REG_SIZE, op1),
-             smt2lib::sx(memSize2 * REG_SIZE, op2)
+             smt2lib::sx(regSize1 * BYTE_SIZE_BIT, op1),
+             smt2lib::sx(memSize2 * BYTE_SIZE_BIT, op2)
            );
 
     /* Create the symbolic expression */
-    se = ap.createRegSE(inst, smt2lib::extract((regSize1 * REG_SIZE) - 1, 0, expr), reg1, regSize1);
+    se = ap.createRegSE(inst, smt2lib::extract((regSize1 * BYTE_SIZE_BIT) - 1, 0, expr), reg1, regSize1);
 
     /* Apply the taint */
     ap.aluSpreadTaintRegMem(se, reg1, mem2, memSize2);
@@ -270,12 +270,12 @@ void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   else if (this->operands[0].isWriteOnly()) {
     /* Expr */
     expr = smt2lib::bvmul(
-             smt2lib::sx(memSize2 * REG_SIZE, op2),
-             smt2lib::sx(memSize2 * REG_SIZE, op3)
+             smt2lib::sx(memSize2 * BYTE_SIZE_BIT, op2),
+             smt2lib::sx(memSize2 * BYTE_SIZE_BIT, op3)
            );
 
     /* Create the symbolic expression */
-    se = ap.createRegSE(inst, smt2lib::extract((regSize1 * REG_SIZE) - 1, 0, expr), reg1, regSize1);
+    se = ap.createRegSE(inst, smt2lib::extract((regSize1 * BYTE_SIZE_BIT) - 1, 0, expr), reg1, regSize1);
 
     /* Apply the taint */
     ap.aluSpreadTaintRegMem(se, reg1, mem2, memSize2);

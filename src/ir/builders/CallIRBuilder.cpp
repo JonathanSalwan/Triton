@@ -28,7 +28,7 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint64 
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(ID_TMP_RSP, memSize);
-  op2 = smt2lib::bv(REG_SIZE, memSize * REG_SIZE);
+  op2 = smt2lib::bv(REG_SIZE, memSize * BYTE_SIZE_BIT);
 
   expr = smt2lib::bvsub(op1, op2);
 
@@ -55,7 +55,7 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   /* *RSP =  Next_RIP */
-  expr1 = smt2lib::bv(this->nextAddress, memSize * REG_SIZE);
+  expr1 = smt2lib::bv(this->nextAddress, memSize * BYTE_SIZE_BIT);
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr1, mem, memSize, "Saved RIP");
@@ -87,7 +87,7 @@ void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   /* *RSP =  Next_RIP */
-  expr1 = smt2lib::bv(this->nextAddress, memSize * REG_SIZE);
+  expr1 = smt2lib::bv(this->nextAddress, memSize * BYTE_SIZE_BIT);
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr1, mem, memSize, "Saved RIP");
@@ -97,7 +97,7 @@ void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   /* RIP = imm */
-  expr2 = smt2lib::bv(imm, memSize * REG_SIZE);
+  expr2 = smt2lib::bv(imm, memSize * BYTE_SIZE_BIT);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr2, ID_TMP_RIP, REG_SIZE, "RIP");
@@ -120,7 +120,7 @@ void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   /* *RSP =  Next_RIP */
-  expr1 = smt2lib::bv(this->nextAddress, memSize2 * REG_SIZE);
+  expr1 = smt2lib::bv(this->nextAddress, memSize2 * BYTE_SIZE_BIT);
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr1, mem2, memSize2, "Saved RIP");

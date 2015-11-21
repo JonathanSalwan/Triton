@@ -30,7 +30,7 @@ void MovIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   auto imm = this->operands[1].getImm().getValue();
 
   /* Create the SMT semantic */
-  expr = smt2lib::bv(imm, regSize * REG_SIZE);
+  expr = smt2lib::bv(imm, regSize * BYTE_SIZE_BIT);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, reg, regSize);
@@ -86,7 +86,7 @@ void MovIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   auto imm = this->operands[1].getImm().getValue();
 
   /* Create the SMT semantic */
-  expr = smt2lib::bv(imm, memSize * REG_SIZE);
+  expr = smt2lib::bv(imm, memSize * BYTE_SIZE_BIT);
 
   /* Create the symbolic expression */
   se = ap.createMemSE(inst, expr, mem, memSize);

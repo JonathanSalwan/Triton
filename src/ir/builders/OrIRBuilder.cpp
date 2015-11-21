@@ -30,7 +30,7 @@ void OrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
-  op2 = smt2lib::bv(imm, regSize * REG_SIZE);
+  op2 = smt2lib::bv(imm, regSize * BYTE_SIZE_BIT);
 
   /* Finale expr */
   expr = smt2lib::bvor(op1, op2);
@@ -119,7 +119,7 @@ void OrIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicMemOperand(mem, memSize);
-  op2 = smt2lib::bv(imm, memSize * REG_SIZE);
+  op2 = smt2lib::bv(imm, memSize * BYTE_SIZE_BIT);
 
   /* Final expr */
   expr = smt2lib::bvor(op1, op2);

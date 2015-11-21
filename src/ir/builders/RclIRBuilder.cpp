@@ -50,7 +50,7 @@ void RclIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintExprReg(se1, reg);
 
   /* Result expression */
-  res = smt2lib::extract((regSize * REG_SIZE) - 1, 0, expr);
+  res = smt2lib::extract((regSize * BYTE_SIZE_BIT) - 1, 0, expr);
 
   /* Create the symbolic expression for the result */
   se2 = ap.createRegSE(inst, res, reg, regSize);
@@ -92,7 +92,7 @@ void RclIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintExprReg(se1, reg1);
 
   /* Result expression */
-  res = smt2lib::extract((regSize1 * REG_SIZE) - 1, 0, expr);
+  res = smt2lib::extract((regSize1 * BYTE_SIZE_BIT) - 1, 0, expr);
 
   /* Create the symbolic expression */
   se2 = ap.createRegSE(inst, res, reg1, regSize1);
@@ -140,7 +140,7 @@ void RclIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintExprMem(se1, mem, memSize);
 
   /* Result expression */
-  res = smt2lib::extract((memSize * REG_SIZE) - 1, 0, expr);
+  res = smt2lib::extract((memSize * BYTE_SIZE_BIT) - 1, 0, expr);
 
   /* Create the symbolic expression */
   se2 = ap.createMemSE(inst, res, mem, memSize);
@@ -182,7 +182,7 @@ void RclIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintExprMem(se1, mem, memSize);
 
   /* Result expression */
-  res = smt2lib::extract((memSize * REG_SIZE) - 1, 0, expr);
+  res = smt2lib::extract((memSize * BYTE_SIZE_BIT) - 1, 0, expr);
 
   /* Create the symbolic expression */
   se2 = ap.createMemSE(inst, res, mem, memSize);
