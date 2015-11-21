@@ -214,7 +214,7 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
    */
   while (writeSize) {
     /* Extract each byte of the memory */
-    tmp = smt2lib::extract(((writeSize * REG_SIZE) - 1), ((writeSize * REG_SIZE) - REG_SIZE), expr);
+    tmp = smt2lib::extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), expr);
     se  = symEngine.newSymbolicExpression(tmp, SymExpr::MEM, "byte reference");
     ret.push_back(tmp);
     inst.addExpression(se);
@@ -330,7 +330,7 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(Register
   uint64 regId  = reg.getTritonRegId();
   uint64 symReg = this->getRegSymbolicID(reg);
   uint64 low    = reg.getLow();
-  uint64 high   = !low ? (regSize * REG_SIZE) - 1 : reg.getHigh(); // TMP fix for #170
+  uint64 high   = !low ? (regSize * BYTE_SIZE_BIT) - 1 : reg.getHigh(); // TMP fix for #170
   /*
    * TODO
    * ----
@@ -389,7 +389,7 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicMemOperand(MemoryOp
       opVec.push_back(smt2lib::extract((BYTE_SIZE_BIT - 1), 0, tmp));
     }
     else {
-      tmp = smt2lib::bv(this->getMemValue(address + memSize - 1, 1), REG_SIZE);
+      tmp = smt2lib::bv(this->getMemValue(address + memSize - 1, 1), BYTE_SIZE_BIT);
       opVec.push_back(smt2lib::extract((BYTE_SIZE_BIT - 1), 0, tmp));
     }
     memSize--;
@@ -416,9 +416,9 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicFlagOperand(Registe
   uint64 symFlag = this->getRegSymbolicID(flag);
 
   if (symFlag != UNSET)
-    op = smt2lib::zx((size * REG_SIZE) - 1, smt2lib::reference(symFlag));
+    op = smt2lib::zx((size * BYTE_SIZE_BIT) - 1, smt2lib::reference(symFlag));
   else
-    op = smt2lib::bv(this->getFlagValue(flag), size * REG_SIZE);
+    op = smt2lib::bv(this->getFlagValue(flag), size * BYTE_SIZE_BIT);
 
   return op;
 }
