@@ -456,8 +456,9 @@ static PyObject *Triton_syscallToString(PyObject *self, PyObject *args) {
 
   const char *syscall = nullptr;
   switch (PyLong_AsLongLong(std)){
+    case SYSCALL_STANDARD_IA32_LINUX:
     case SYSCALL_STANDARD_IA32E_LINUX:
-      syscall = syscallNumberLinux64ToString(PyLong_AsLongLong(num));
+      syscall = syscallNumberLinuxToString(PyLong_AsLongLong(num));
       break;
     default:
       return PyErr_Format(PyExc_TypeError, "syscallToString(): IDREF.SYSCALL standard unsupported");
