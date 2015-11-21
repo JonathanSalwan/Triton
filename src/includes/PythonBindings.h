@@ -45,6 +45,8 @@ namespace PyTritonOptions {
   extern PyObject *callbackImageLoad;                             // When an image is loaded
   extern std::map<const char *, PyObject *> callbackRoutineEntry; // Before routine processing
   extern std::map<const char *, PyObject *> callbackRoutineExit;  // After routine processing
+  extern std::list<const char *>            imageWhitelist;       // An image white list
+  extern std::list<const char *>            imageBlacklist;       // An image black list
 
   /* Taint configurations */
   extern std::map<__uint, std::list<__uint>> taintRegFromAddr;

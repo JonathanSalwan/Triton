@@ -48,6 +48,8 @@ namespace PyTritonOptions {
   PyObject *callbackImageLoad     = nullptr;                // When an image is loaded
   std::map<const char *, PyObject *> callbackRoutineEntry;  // Before routine processing
   std::map<const char *, PyObject *> callbackRoutineExit;   // After routine processing
+  std::list<const char *>            imageWhitelist;        // An image white list
+  std::list<const char *>            imageBlacklist;        // An image black list
 
   /* Taint configurations */
   std::map<__uint, std::list<__uint>> taintRegFromAddr;   // <addr, [reg1, reg2]>
@@ -378,6 +380,50 @@ static PyObject *Triton_setRegValue(PyObject *self, PyObject *args) {
     ap.setSSERegisterValue(ro, va);
   else
     ap.setRegisterValue(ro, boost::numeric_cast<__uint>(va));
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+
+static char Triton_setupImageBlacklist_doc[] = "Setup an image blacklist";
+static PyObject *Triton_setupImageBlacklist(PyObject *self, PyObject *arg) {
+
+  /* Check if the arg is a list */
+  if (!PyList_Check(arg))
+    return PyErr_Format(PyExc_TypeError, "setupImageBlacklist(): expected a list as first argument");
+
+  /* Check if the arg list contains only string item and insert them in the internal list */
+  for (Py_ssize_t i = 0; i < PyList_Size(arg); i++){
+    PyObject *item = PyList_GetItem(arg, i);
+
+    if (!PyString_Check(item))
+      return PyErr_Format(PyExc_TypeError, "setupImageBlacklist(): The first argument must be a list of image name (string)");
+
+    PyTritonOptions::imageBlacklist.push_back(PyString_AsString(item));
+  }
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+
+static char Triton_setupImageWhitelist_doc[] = "Setup an image whitelist";
+static PyObject *Triton_setupImageWhitelist(PyObject *self, PyObject *arg) {
+
+  /* Check if the arg is a list */
+  if (!PyList_Check(arg))
+    return PyErr_Format(PyExc_TypeError, "setupImageWhitelist(): expected a list as first argument");
+
+  /* Check if the arg list contains only string item and insert them in the internal list */
+  for (Py_ssize_t i = 0; i < PyList_Size(arg); i++){
+    PyObject *item = PyList_GetItem(arg, i);
+
+    if (!PyString_Check(item))
+      return PyErr_Format(PyExc_TypeError, "setupImageWhitelist(): The first argument must be a list of image name (string)");
+
+    PyTritonOptions::imageWhitelist.push_back(PyString_AsString(item));
+  }
 
   Py_INCREF(Py_None);
   return Py_None;
@@ -1161,6 +1207,8 @@ PyMethodDef tritonCallbacks[] = {
   {"runProgram",                Triton_runProgram,                METH_NOARGS,  Triton_runProgram_doc},
   {"setMemValue",               Triton_setMemValue,               METH_VARARGS, Triton_setMemValue_doc},
   {"setRegValue",               Triton_setRegValue,               METH_VARARGS, Triton_setRegValue_doc},
+  {"setupImageBlacklist",       Triton_setupImageBlacklist,       METH_O,       Triton_setupImageBlacklist_doc},
+  {"setupImageWhitelist",       Triton_setupImageWhitelist,       METH_O,       Triton_setupImageWhitelist_doc},
   {"startAnalysisFromAddr",     Triton_startAnalysisFromAddr,     METH_O,       Triton_startAnalysisFromAddr_doc},
   {"startAnalysisFromOffset",   Triton_startAnalysisFromOffset,   METH_O,       Triton_startAnalysisFromOffset_doc},
   {"startAnalysisFromSymbol",   Triton_startAnalysisFromSymbol,   METH_O,       Triton_startAnalysisFromSymbol_doc},

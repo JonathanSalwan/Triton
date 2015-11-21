@@ -18,6 +18,7 @@
 #include <IRBuilderFactory.h>
 #include <Inst.h>
 #include <PINContextHandler.h>
+#include <PinUtils.h>
 #include <ProcessingPyConf.h>
 #include <Trigger.h>
 
@@ -261,9 +262,9 @@ static void callbackImageLoad(IMG img) {
   ap.lock();
 
   /* Collect image's informations */
-  string imagePath = IMG_Name(img);
-  __uint imageBase = IMG_LowAddress(img);
-  __uint imageSize = (IMG_HighAddress(img) + 1) - imageBase;
+  std::string imagePath = IMG_Name(img);
+  __uint imageBase      = IMG_LowAddress(img);
+  __uint imageSize      = (IMG_HighAddress(img) + 1) - imageBase;
 
   /* Python callback for image loading */
   processingPyConf.callbackImageLoad(imagePath, imageBase, imageSize);
@@ -380,32 +381,6 @@ static void IMG_Instrumentation(IMG img, VOID *v) {
 }
 
 
-/* Returns the base address of the instruction */
-static __uint getBaseAddress(__uint address) {
-  RTN rtn;
-  SEC sec;
-  IMG img;
-  rtn = RTN_FindByAddress(address);
-  if (RTN_Valid(rtn)) {
-    sec = RTN_Sec(rtn);
-    if (SEC_Valid(sec)) {
-      img = SEC_Img(sec);
-      if (IMG_Valid(img)) {
-        return IMG_LowAddress(img);
-      }
-    }
-  }
-  return 0;
-}
-
-
-/* Returns the offset of the instruction */
-static __uint getInsOffset(__uint address) {
-  __uint base = getBaseAddress(address);
-  if (base == 0)
-    return 0;
-  return address - base;
-}
 
 
 /* Check if the analysis must be unlocked */
@@ -433,6 +408,34 @@ static bool checkUnlockAnalysis(__uint address) {
 }
 
 
+/* Check if the instruction is blacklisted */
+static bool instructionBlacklisted(__uint address) {
+  std::list<const char *>::iterator it;
+  for (it = PyTritonOptions::imageBlacklist.begin(); it != PyTritonOptions::imageBlacklist.end(); it++) {
+    if (strstr(getImageName(address).c_str(), *it))
+      return true;
+  }
+  return false;
+}
+
+
+/* Check if the instruction is whitelisted */
+static bool instructionWhitelisted(__uint address) {
+  std::list<const char *>::iterator it;
+
+  /* If there is no whitelist -> jit everything */
+  if (PyTritonOptions::imageWhitelist.empty())
+    return true;
+
+  for (it = PyTritonOptions::imageWhitelist.begin(); it != PyTritonOptions::imageWhitelist.end(); it++) {
+    if (strstr(getImageName(address).c_str(), *it))
+      return true;
+  }
+
+  return false;
+}
+
+
 /* Trace instrumentation */
 static void TRACE_Instrumentation(TRACE trace, VOID *v) {
 
@@ -444,6 +447,10 @@ static void TRACE_Instrumentation(TRACE trace, VOID *v) {
 
       if (!analysisTrigger.getState())
       /* Analysis locked */
+        continue;
+
+      if (instructionBlacklisted(INS_Address(ins)) == true || instructionWhitelisted(INS_Address(ins)) == false)
+      /* Insruction blacklisted */
         continue;
 
       /* Prepare the IR builder */
