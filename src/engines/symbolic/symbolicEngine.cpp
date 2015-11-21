@@ -242,7 +242,7 @@ SymbolicVariable *SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symV
   memSymId = this->getMemSymbolicID(memAddr);
 
   // First we create a symbolic variable
-  symVar = this->addSymbolicVariable(SymVar::kind::MEM, memAddr, symVarSize * REG_SIZE, symVarComment);
+  symVar = this->addSymbolicVariable(SymVar::kind::MEM, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
   smt2lib::smtAstAbstractNode *symVarNode = smt2lib::variable(symVar->getSymVarName());
 
   if (symVarNode == nullptr)
@@ -250,7 +250,7 @@ SymbolicVariable *SymbolicEngine::convertMemToSymVar(uint64 memAddr, uint64 symV
 
   std::list<smt2lib::smtAstAbstractNode *> symMemChunk;
   while (size_quotient) {
-      tmp = smt2lib::extract((REG_SIZE * size_quotient - 1), (REG_SIZE * size_quotient - REG_SIZE), symVarNode);
+      tmp = smt2lib::extract(((BYTE_SIZE_BIT * size_quotient) - 1), ((BYTE_SIZE_BIT * size_quotient) - BYTE_SIZE_BIT), symVarNode);
       symMemChunk.push_back(tmp);
 
       if (tmp == nullptr)

@@ -19,7 +19,7 @@ MemoryOperand::MemoryOperand(uint64 address, uint64 size) {
   this->size    = size;
   if (size == 0)
     throw std::runtime_error("MemoryOperand::MemoryOperand() - size cannot be zero");
-  this->setPair(std::make_pair(((size * REG_SIZE) - 1 ), 0));
+  this->setPair(std::make_pair(((size * BYTE_SIZE_BIT) - 1), 0));
 }
 
 
