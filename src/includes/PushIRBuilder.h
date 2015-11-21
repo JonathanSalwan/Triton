@@ -18,7 +18,7 @@
 class PushIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    PushIRBuilder(uint64 address, const std::string &disassembly);
+    PushIRBuilder(__uint address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

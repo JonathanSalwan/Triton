@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-MovdqaIRBuilder::MovdqaIRBuilder(uint64 address, const std::string &disassembly):
+MovdqaIRBuilder::MovdqaIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

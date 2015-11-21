@@ -139,7 +139,7 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
 
 
 /* Callback to save bytes for the snapshot engine */
-static void callbackSnapshot(uint64 mem, uint32 writeSize) {
+static void callbackSnapshot(__uint mem, uint32 writeSize) {
   if (!analysisTrigger.getState())
   /* Analysis locked */
     return;
@@ -262,8 +262,8 @@ static void callbackImageLoad(IMG img) {
 
   /* Collect image's informations */
   string imagePath = IMG_Name(img);
-  uint64 imageBase = IMG_LowAddress(img);
-  uint64 imageSize = (IMG_HighAddress(img) + 1) - imageBase;
+  __uint imageBase = IMG_LowAddress(img);
+  __uint imageSize = (IMG_HighAddress(img) + 1) - imageBase;
 
   /* Python callback for image loading */
   processingPyConf.callbackImageLoad(imagePath, imageBase, imageSize);
@@ -381,7 +381,7 @@ static void IMG_Instrumentation(IMG img, VOID *v) {
 
 
 /* Returns the base address of the instruction */
-static uint64 getBaseAddress(uint64 address) {
+static __uint getBaseAddress(__uint address) {
   RTN rtn;
   SEC sec;
   IMG img;
@@ -400,8 +400,8 @@ static uint64 getBaseAddress(uint64 address) {
 
 
 /* Returns the offset of the instruction */
-static uint64 getInsOffset(uint64 address) {
-  uint64 base = getBaseAddress(address);
+static __uint getInsOffset(__uint address) {
+  __uint base = getBaseAddress(address);
   if (base == 0)
     return 0;
   return address - base;
@@ -409,7 +409,7 @@ static uint64 getInsOffset(uint64 address) {
 
 
 /* Check if the analysis must be unlocked */
-static bool checkUnlockAnalysis(uint64 address) {
+static bool checkUnlockAnalysis(__uint address) {
   /* Unlock the analysis at the entry point from symbol */
   if (PyTritonOptions::startAnalysisFromSymbol != nullptr) {
     if ((RTN_FindNameByAddress(address) == PyTritonOptions::startAnalysisFromSymbol)) {

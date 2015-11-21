@@ -16,7 +16,7 @@
 
 class MovIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate  {
   public:
-    MovIRBuilder(uint64 address, const std::string &disassembly);
+    MovIRBuilder(__uint address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-JnlIRBuilder::JnlIRBuilder(uint64 address, const std::string &disassembly):
+JnlIRBuilder::JnlIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

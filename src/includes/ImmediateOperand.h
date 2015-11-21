@@ -15,17 +15,17 @@
 class ImmediateOperand
 {
   private:
-    uint64  value;
+    __uint  value;
     void    copy(const ImmediateOperand& other);
 
   public:
     ImmediateOperand();
-    ImmediateOperand(uint64 value);
+    ImmediateOperand(__uint value);
     ImmediateOperand(const ImmediateOperand& other);
     ~ImmediateOperand();
 
-    uint64  getValue(void) const;
-    void    setValue(uint64 v);
+    __uint  getValue(void) const;
+    void    setValue(__uint v);
     void    operator=(const ImmediateOperand& other);
 };
 

@@ -21,7 +21,7 @@ PINContextHandler::PINContextHandler(CONTEXT *ctx, THREADID id):
 
 
 /* REG is a enum, so the cast is from a bigger type. */
-static inline REG safecast(uint64 regID) {
+static inline REG safecast(__uint regID) {
   return static_cast<REG>(regID);
 }
 
@@ -33,8 +33,8 @@ void *PINContextHandler::getCtx(void) const {
 
 
 /* There is no verification on the validity of the ID. */
-uint64 PINContextHandler::getFlagValue(uint64 TritFlagID) const {
-  uint64 rflags;
+__uint PINContextHandler::getFlagValue(__uint TritFlagID) const {
+  __uint rflags;
   REG reg = safecast(PINConverter::convertTritonReg2DBIReg(ID_FLAGS));
 
   if (!REG_valid(reg))
@@ -60,7 +60,7 @@ uint64 PINContextHandler::getFlagValue(uint64 TritFlagID) const {
 
 
 /* There is no verification on the validity of the ID. */
-uint64 PINContextHandler::getRegisterValue(uint64 TritRegID) const {
+__uint PINContextHandler::getRegisterValue(__uint TritRegID) const {
   REG reg = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
 
   if (!REG_valid(reg) || isSSERegId(TritRegID))
@@ -71,7 +71,7 @@ uint64 PINContextHandler::getRegisterValue(uint64 TritRegID) const {
 
 
 /* There is no verification on the validity of the ID. */
-uint128 PINContextHandler::getSSERegisterValue(uint64 TritRegID) const {
+uint128 PINContextHandler::getSSERegisterValue(__uint TritRegID) const {
   REG reg                 = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
   uint128 value       = 0;
   PIN_REGISTER tmp;
@@ -88,7 +88,7 @@ uint128 PINContextHandler::getSSERegisterValue(uint64 TritRegID) const {
 
 
 /* There is no verification on the validity of the ID. */
-void PINContextHandler::setRegisterValue(uint64 TritRegID, uint64 value) {
+void PINContextHandler::setRegisterValue(__uint TritRegID, __uint value) {
   REG reg = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
 
   if (!REG_valid(reg) || isSSERegId(TritRegID))
@@ -100,7 +100,7 @@ void PINContextHandler::setRegisterValue(uint64 TritRegID, uint64 value) {
 
 
 /* There is no verification on the validity of the ID. */
-void PINContextHandler::setSSERegisterValue(uint64 TritRegID, uint128 value) {
+void PINContextHandler::setSSERegisterValue(__uint TritRegID, uint128 value) {
   REG reg = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
   unsigned char *tmp      = (unsigned char*)malloc(16);
 
@@ -119,7 +119,7 @@ void PINContextHandler::setSSERegisterValue(uint64 TritRegID, uint128 value) {
 
 
 /* Used to deref a pointer address and returns the targeted byte by size of read */
-uint128 PINContextHandler::getMemValue(uint64 mem, uint32 readSize) const {
+uint128 PINContextHandler::getMemValue(__uint mem, uint32 readSize) const {
 
   if (PIN_CheckReadAccess(reinterpret_cast<void*>(mem)) == false) {
     std::cout << "[Bugs] Invalid read at " << std::hex << mem << std::endl;
@@ -130,7 +130,7 @@ uint128 PINContextHandler::getMemValue(uint64 mem, uint32 readSize) const {
     case BYTE_SIZE:   return static_cast<uint128>(*(reinterpret_cast<uint8 *>(mem)));
     case WORD_SIZE:   return static_cast<uint128>(*(reinterpret_cast<UINT16 *>(mem)));
     case DWORD_SIZE:  return static_cast<uint128>(*(reinterpret_cast<uint32 *>(mem)));
-    case QWORD_SIZE:  return static_cast<uint128>(*(reinterpret_cast<uint64 *>(mem)));
+    case QWORD_SIZE:  return static_cast<uint128>(*(reinterpret_cast<__uint *>(mem)));
     case DQWORD_SIZE: return static_cast<uint128>(*(reinterpret_cast<uint128 *>(mem)));
   }
   throw std::runtime_error("Error: PINContextHandler::getMemValue() - Invalid read size");
@@ -139,7 +139,7 @@ uint128 PINContextHandler::getMemValue(uint64 mem, uint32 readSize) const {
 
 
 /* Used to inject value into memory */
-void PINContextHandler::setMemValue(uint64 mem, uint32 writeSize, uint128 value) const {
+void PINContextHandler::setMemValue(__uint mem, uint32 writeSize, uint128 value) const {
 
   if (PIN_CheckWriteAccess(reinterpret_cast<void*>(mem)) == false) {
     std::cout << "[Bugs] Invalid write at " << std::hex << mem << std::endl;
@@ -157,7 +157,7 @@ void PINContextHandler::setMemValue(uint64 mem, uint32 writeSize, uint128 value)
       *((uint32 *)mem) = boost::numeric_cast<uint32>(value);
       break;
     case QWORD_SIZE:
-      *((uint64 *)mem) = boost::numeric_cast<uint64>(value);
+      *((__uint *)mem) = boost::numeric_cast<__uint>(value);
       break;
     case DQWORD_SIZE:
       *((uint128 *)mem) = value;

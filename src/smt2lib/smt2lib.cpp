@@ -27,7 +27,7 @@ smtAstAbstractNode::smtAstAbstractNode() {
 
 smtAstAbstractNode::smtAstAbstractNode(const smtAstAbstractNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -63,7 +63,7 @@ smtAstAssertNode::smtAstAssertNode(smtAstAbstractNode *expr) {
 
 smtAstAssertNode::smtAstAssertNode(const smtAstAssertNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -89,7 +89,7 @@ smtAstBvaddNode::smtAstBvaddNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvaddNode::smtAstBvaddNode(const smtAstBvaddNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -115,7 +115,7 @@ smtAstBvandNode::smtAstBvandNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvandNode::smtAstBvandNode(const smtAstBvandNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -142,7 +142,7 @@ smtAstBvashrNode::smtAstBvashrNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvashrNode::smtAstBvashrNode(const smtAstBvashrNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -168,7 +168,7 @@ smtAstBvlshrNode::smtAstBvlshrNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvlshrNode::smtAstBvlshrNode(const smtAstBvlshrNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -194,7 +194,7 @@ smtAstBvmulNode::smtAstBvmulNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvmulNode::smtAstBvmulNode(const smtAstBvmulNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -220,7 +220,7 @@ smtAstBvnandNode::smtAstBvnandNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvnandNode::smtAstBvnandNode(const smtAstBvnandNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -245,7 +245,7 @@ smtAstBvnegNode::smtAstBvnegNode(smtAstAbstractNode *expr) {
 
 smtAstBvnegNode::smtAstBvnegNode(const smtAstBvnegNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -271,7 +271,7 @@ smtAstBvnorNode::smtAstBvnorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvnorNode::smtAstBvnorNode(const smtAstBvnorNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -296,7 +296,7 @@ smtAstBvnotNode::smtAstBvnotNode(smtAstAbstractNode *expr) {
 
 smtAstBvnotNode::smtAstBvnotNode(const smtAstBvnotNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -322,7 +322,7 @@ smtAstBvorNode::smtAstBvorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *ex
 
 smtAstBvorNode::smtAstBvorNode(const smtAstBvorNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -339,7 +339,7 @@ void smtAstBvorNode::accept(Visitor& v) {
 // ====== bvrol
 
 
-smtAstBvrolNode::smtAstBvrolNode(uint64 rot, smtAstAbstractNode *expr) {
+smtAstBvrolNode::smtAstBvrolNode(__uint rot, smtAstAbstractNode *expr) {
   this->kind = BVROL_NODE;
   this->addChild(decimal(rot));
   this->addChild(expr);
@@ -348,7 +348,7 @@ smtAstBvrolNode::smtAstBvrolNode(uint64 rot, smtAstAbstractNode *expr) {
 
 smtAstBvrolNode::smtAstBvrolNode(const smtAstBvrolNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -374,7 +374,7 @@ void smtAstBvrolNode::accept(Visitor& v) {
 // ====== bvror
 
 
-smtAstBvrorNode::smtAstBvrorNode(uint64 rot, smtAstAbstractNode *expr) {
+smtAstBvrorNode::smtAstBvrorNode(__uint rot, smtAstAbstractNode *expr) {
   this->kind = BVROR_NODE;
   this->addChild(decimal(rot));
   this->addChild(expr);
@@ -383,7 +383,7 @@ smtAstBvrorNode::smtAstBvrorNode(uint64 rot, smtAstAbstractNode *expr) {
 
 smtAstBvrorNode::smtAstBvrorNode(const smtAstBvrorNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -418,7 +418,7 @@ smtAstBvsdivNode::smtAstBvsdivNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvsdivNode::smtAstBvsdivNode(const smtAstBvsdivNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -444,7 +444,7 @@ smtAstBvsgeNode::smtAstBvsgeNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvsgeNode::smtAstBvsgeNode(const smtAstBvsgeNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -470,7 +470,7 @@ smtAstBvsgtNode::smtAstBvsgtNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvsgtNode::smtAstBvsgtNode(const smtAstBvsgtNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -496,7 +496,7 @@ smtAstBvshlNode::smtAstBvshlNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvshlNode::smtAstBvshlNode(const smtAstBvshlNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -522,7 +522,7 @@ smtAstBvsleNode::smtAstBvsleNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvsleNode::smtAstBvsleNode(const smtAstBvsleNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -548,7 +548,7 @@ smtAstBvsltNode::smtAstBvsltNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvsltNode::smtAstBvsltNode(const smtAstBvsltNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -574,7 +574,7 @@ smtAstBvsmodNode::smtAstBvsmodNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvsmodNode::smtAstBvsmodNode(const smtAstBvsmodNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -600,7 +600,7 @@ smtAstBvsremNode::smtAstBvsremNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvsremNode::smtAstBvsremNode(const smtAstBvsremNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -626,7 +626,7 @@ smtAstBvsubNode::smtAstBvsubNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvsubNode::smtAstBvsubNode(const smtAstBvsubNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -652,7 +652,7 @@ smtAstBvudivNode::smtAstBvudivNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvudivNode::smtAstBvudivNode(const smtAstBvudivNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -678,7 +678,7 @@ smtAstBvugeNode::smtAstBvugeNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvugeNode::smtAstBvugeNode(const smtAstBvugeNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -704,7 +704,7 @@ smtAstBvugtNode::smtAstBvugtNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvugtNode::smtAstBvugtNode(const smtAstBvugtNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -730,7 +730,7 @@ smtAstBvuleNode::smtAstBvuleNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvuleNode::smtAstBvuleNode(const smtAstBvuleNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -756,7 +756,7 @@ smtAstBvultNode::smtAstBvultNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvultNode::smtAstBvultNode(const smtAstBvultNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -782,7 +782,7 @@ smtAstBvuremNode::smtAstBvuremNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvuremNode::smtAstBvuremNode(const smtAstBvuremNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -808,7 +808,7 @@ smtAstBvxnorNode::smtAstBvxnorNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstBvxnorNode::smtAstBvxnorNode(const smtAstBvxnorNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -834,7 +834,7 @@ smtAstBvxorNode::smtAstBvxorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstBvxorNode::smtAstBvxorNode(const smtAstBvxorNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -851,7 +851,7 @@ void smtAstBvxorNode::accept(Visitor& v) {
 // ====== bv
 
 
-smtAstBvNode::smtAstBvNode(uint128 value, uint64 size) {
+smtAstBvNode::smtAstBvNode(uint128 value, __uint size) {
   this->kind = BV_NODE;
   this->addChild(decimal(value));
   this->addChild(decimal(size));
@@ -860,7 +860,7 @@ smtAstBvNode::smtAstBvNode(uint128 value, uint64 size) {
 
 smtAstBvNode::smtAstBvNode(const smtAstBvNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -878,7 +878,7 @@ void smtAstBvNode::accept(Visitor& v) {
 
 
 smtAstCompoundNode::smtAstCompoundNode(std::vector<smtAstAbstractNode *> exprs) {
-  uint64 index = 0;
+  __uint index = 0;
   this->kind = COMPOUND_NODE;
   for ( ; index < exprs.size(); index++)
     this->addChild(exprs[index]);
@@ -887,7 +887,7 @@ smtAstCompoundNode::smtAstCompoundNode(std::vector<smtAstAbstractNode *> exprs) 
 
 smtAstCompoundNode::smtAstCompoundNode(const smtAstCompoundNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -913,7 +913,7 @@ smtAstConcatNode::smtAstConcatNode(smtAstAbstractNode *expr1, smtAstAbstractNode
 
 smtAstConcatNode::smtAstConcatNode(const smtAstConcatNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -921,8 +921,8 @@ smtAstConcatNode::smtAstConcatNode(const smtAstConcatNode &copy) {
 smtAstConcatNode::smtAstConcatNode(std::vector<smtAstAbstractNode *> exprs) {
   this->kind = CONCAT_NODE;
 
-  uint64 index;
-  uint64 size = exprs.size();
+  __uint index;
+  __uint size = exprs.size();
   if (size < 2)
     throw std::length_error("smtAstConcatNode - exprs must contain at less two expressions");
 
@@ -984,7 +984,7 @@ void smtAstDecimalNode::accept(Visitor& v) {
 // ====== Declare node
 
 
-smtAstDeclareNode::smtAstDeclareNode(std::string symVarName, uint64 symVarSize) {
+smtAstDeclareNode::smtAstDeclareNode(std::string symVarName, __uint symVarSize) {
   this->kind = DECLARE_NODE;
   this->addChild(string(symVarName));
   this->addChild(decimal(symVarSize));
@@ -993,7 +993,7 @@ smtAstDeclareNode::smtAstDeclareNode(std::string symVarName, uint64 symVarSize) 
 
 smtAstDeclareNode::smtAstDeclareNode(const smtAstDeclareNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -1019,7 +1019,7 @@ smtAstDistinctNode::smtAstDistinctNode(smtAstAbstractNode *expr1, smtAstAbstract
 
 smtAstDistinctNode::smtAstDistinctNode(const smtAstDistinctNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -1045,7 +1045,7 @@ smtAstEqualNode::smtAstEqualNode(smtAstAbstractNode *expr1, smtAstAbstractNode *
 
 smtAstEqualNode::smtAstEqualNode(const smtAstEqualNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -1062,7 +1062,7 @@ void smtAstEqualNode::accept(Visitor& v) {
 // ====== extract
 
 
-smtAstExtractNode::smtAstExtractNode(uint64 high, uint64 low, smtAstAbstractNode *expr) {
+smtAstExtractNode::smtAstExtractNode(__uint high, __uint low, smtAstAbstractNode *expr) {
   this->kind = EXTRACT_NODE;
   this->addChild(decimal(high));
   this->addChild(decimal(low));
@@ -1072,7 +1072,7 @@ smtAstExtractNode::smtAstExtractNode(uint64 high, uint64 low, smtAstAbstractNode
 
 smtAstExtractNode::smtAstExtractNode(const smtAstExtractNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -1099,7 +1099,7 @@ smtAstIteNode::smtAstIteNode(smtAstAbstractNode *ifExpr, smtAstAbstractNode *the
 
 smtAstIteNode::smtAstIteNode(const smtAstIteNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -1116,7 +1116,7 @@ void smtAstIteNode::accept(Visitor& v) {
 // ====== Reference node
 
 
-smtAstReferenceNode::smtAstReferenceNode(uint64 value) {
+smtAstReferenceNode::smtAstReferenceNode(__uint value) {
   this->kind  = REFERENCE_NODE;
   this->value = value;
 }
@@ -1132,7 +1132,7 @@ smtAstReferenceNode::~smtAstReferenceNode() {
 }
 
 
-uint64 smtAstReferenceNode::getValue(void) {
+__uint smtAstReferenceNode::getValue(void) {
   return this->value;
 }
 
@@ -1174,7 +1174,7 @@ void smtAstStringNode::accept(Visitor& v) {
 // ====== sx
 
 
-smtAstSxNode::smtAstSxNode(uint64 sizeExt, smtAstAbstractNode *expr) {
+smtAstSxNode::smtAstSxNode(__uint sizeExt, smtAstAbstractNode *expr) {
   this->kind = SX_NODE;
   this->addChild(decimal(sizeExt));
   this->addChild(expr);
@@ -1183,7 +1183,7 @@ smtAstSxNode::smtAstSxNode(uint64 sizeExt, smtAstAbstractNode *expr) {
 
 smtAstSxNode::smtAstSxNode(const smtAstSxNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -1229,7 +1229,7 @@ void smtAstVariableNode::accept(Visitor& v) {
 // ====== zx
 
 
-smtAstZxNode::smtAstZxNode(uint64 sizeExt, smtAstAbstractNode *expr) {
+smtAstZxNode::smtAstZxNode(__uint sizeExt, smtAstAbstractNode *expr) {
   this->kind = ZX_NODE;
   this->addChild(decimal(sizeExt));
   this->addChild(expr);
@@ -1238,7 +1238,7 @@ smtAstZxNode::smtAstZxNode(uint64 sizeExt, smtAstAbstractNode *expr) {
 
 smtAstZxNode::smtAstZxNode(const smtAstZxNode &copy) {
   this->kind = copy.kind;
-  for (uint64 index = 0; index < copy.childs.size(); index++)
+  for (__uint index = 0; index < copy.childs.size(); index++)
     this->childs.push_back(copy.childs[index]);
 }
 
@@ -1530,7 +1530,7 @@ namespace smt2lib {
 
   /* compound syntax */
   std::ostream &operator<<(std::ostream &stream, smtAstCompoundNode *node) {
-    uint64 index = 0;
+    __uint index = 0;
     for ( ; index < node->getChilds().size(); index++)
       stream << node->getChilds()[index];
     return stream;
@@ -1540,9 +1540,9 @@ namespace smt2lib {
   /* concat syntax */
   std::ostream &operator<<(std::ostream &stream, smtAstConcatNode *node) {
 
-    uint64 index;
+    __uint index;
     std::vector<smtAstAbstractNode *> childs = node->getChilds();
-    uint64 size = childs.size();
+    __uint size = childs.size();
 
     if (size < 2)
       throw std::length_error("smtAstConcatNode - exprs must contain at less two expressions");
@@ -1685,7 +1685,7 @@ namespace smt2lib {
   }
 
 
-  smtAstAbstractNode *bv(uint128 value, uint64 size) {
+  smtAstAbstractNode *bv(uint128 value, __uint size) {
     smtAstAbstractNode *node = new smtAstBvNode(value, size);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
@@ -1793,7 +1793,7 @@ namespace smt2lib {
   }
 
 
-  smtAstAbstractNode *bvrol(uint64 rot, smtAstAbstractNode *expr) {
+  smtAstAbstractNode *bvrol(__uint rot, smtAstAbstractNode *expr) {
     smtAstAbstractNode *node = new smtAstBvrolNode(rot, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
@@ -1811,7 +1811,7 @@ namespace smt2lib {
   }
 
 
-  smtAstAbstractNode *bvror(uint64 rot, smtAstAbstractNode *expr) {
+  smtAstAbstractNode *bvror(__uint rot, smtAstAbstractNode *expr) {
     smtAstAbstractNode *node = new smtAstBvrorNode(rot, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
@@ -2036,7 +2036,7 @@ namespace smt2lib {
   }
 
 
-  smtAstAbstractNode *declare(std::string symVarName, uint64 symVarSize) {
+  smtAstAbstractNode *declare(std::string symVarName, __uint symVarSize) {
     smtAstAbstractNode *node = new smtAstDeclareNode(symVarName, symVarSize);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
@@ -2062,7 +2062,7 @@ namespace smt2lib {
   }
 
 
-  smtAstAbstractNode *extract(uint64 high, uint64 low, smtAstAbstractNode *expr) {
+  smtAstAbstractNode *extract(__uint high, __uint low, smtAstAbstractNode *expr) {
     smtAstAbstractNode *node = new smtAstExtractNode(high, low, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
@@ -2080,7 +2080,7 @@ namespace smt2lib {
   }
 
 
-  smtAstAbstractNode *reference(uint64 value) {
+  smtAstAbstractNode *reference(__uint value) {
     smtAstAbstractNode *node = new smtAstReferenceNode(value);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
@@ -2098,7 +2098,7 @@ namespace smt2lib {
   }
 
 
-  smtAstAbstractNode *sx(uint64 sizeExt, smtAstAbstractNode *expr) {
+  smtAstAbstractNode *sx(__uint sizeExt, smtAstAbstractNode *expr) {
     smtAstAbstractNode *node = new smtAstSxNode(sizeExt, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");
@@ -2116,7 +2116,7 @@ namespace smt2lib {
   }
 
 
-  smtAstAbstractNode *zx(uint64 sizeExt, smtAstAbstractNode *expr) {
+  smtAstAbstractNode *zx(__uint sizeExt, smtAstAbstractNode *expr) {
     smtAstAbstractNode *node = new smtAstZxNode(sizeExt, expr);
     if (node == nullptr)
       throw std::runtime_error("Node builders - Not enough memory");

@@ -17,7 +17,7 @@
 
 
 
-MovsxIRBuilder::MovsxIRBuilder(uint64 address, const std::string &disassembly):
+MovsxIRBuilder::MovsxIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

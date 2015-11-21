@@ -18,7 +18,7 @@
 class RcrIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 
   public:
-    RcrIRBuilder(uint64 address, const std::string &disassembly);
+    RcrIRBuilder(__uint address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

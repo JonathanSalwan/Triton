@@ -17,7 +17,7 @@
 
 
 
-MovIRBuilder::MovIRBuilder(uint64 address, const std::string &disassembly):
+MovIRBuilder::MovIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

@@ -18,7 +18,7 @@
 class MulIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    MulIRBuilder(uint64 address, const std::string &disassembly);
+    MulIRBuilder(__uint address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

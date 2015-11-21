@@ -18,7 +18,7 @@
 class XaddIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 
   public:
-    XaddIRBuilder(uint64 address, const std::string &disassembly);
+    XaddIRBuilder(__uint address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

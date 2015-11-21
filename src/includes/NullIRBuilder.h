@@ -18,7 +18,7 @@
 // Null object, it's purpose is to handle "nicely" not implemented instructions.
 class NullIRBuilder: public BaseIRBuilder {
   public:
-    NullIRBuilder(uint64 address, const std::string &disas) :
+    NullIRBuilder(__uint address, const std::string &disas) :
       BaseIRBuilder(address, disas) {
     }
 

@@ -133,7 +133,7 @@ void Z3ast::operator()(smt2lib::smtAstBvorNode& e) {
 
 
 void Z3ast::operator()(smt2lib::smtAstBvrolNode& e) {
-  uint64   op1 = boost::numeric_cast<uint64>(reinterpret_cast<smt2lib::smtAstDecimalNode*>(e.getChilds()[0])->getValue());
+  __uint   op1 = boost::numeric_cast<__uint>(reinterpret_cast<smt2lib::smtAstDecimalNode*>(e.getChilds()[0])->getValue());
   Z3Result op2 = this->eval(*e.getChilds()[1]);
   z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_rotate_left(this->result.getContext(), op1, op2.getExpr()));
 
@@ -142,7 +142,7 @@ void Z3ast::operator()(smt2lib::smtAstBvrolNode& e) {
 
 
 void Z3ast::operator()(smt2lib::smtAstBvrorNode& e) {
-  uint64  op1 = boost::numeric_cast<uint64>(reinterpret_cast<smt2lib::smtAstDecimalNode*>(e.getChilds()[0])->getValue());
+  __uint   op1 = boost::numeric_cast<__uint>(reinterpret_cast<smt2lib::smtAstDecimalNode*>(e.getChilds()[0])->getValue());
   Z3Result op2 = this->eval(*e.getChilds()[1]);
   z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_rotate_right(this->result.getContext(), op1, op2.getExpr()));
 
@@ -298,7 +298,7 @@ void Z3ast::operator()(smt2lib::smtAstBvxorNode& e) {
 void Z3ast::operator()(smt2lib::smtAstBvNode& e) {
   Z3Result value = this->eval(*e.getChilds()[0]);
   Z3Result size = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = this->result.getContext().bv_val(value.getStringValue().c_str(), size.getUint64Value());
+  z3::expr newexpr = this->result.getContext().bv_val(value.getStringValue().c_str(), size.getUintValue());
 
   this->result.setExpr(newexpr);
 }
@@ -312,7 +312,7 @@ void Z3ast::operator()(smt2lib::smtAstCompoundNode& e) {
 void Z3ast::operator()(smt2lib::smtAstConcatNode& e) {
   std::vector<smt2lib::smtAstAbstractNode*> childs = e.getChilds();
 
-  uint64 idx;
+  __uint idx;
 
   z3::expr nextValue(this->result.getContext());
   z3::expr currentValue = eval(*childs[0]).getExpr();
@@ -363,7 +363,7 @@ void Z3ast::operator()(smt2lib::smtAstExtractNode& e) {
   Z3Result high = this->eval(*e.getChilds()[0]);
   Z3Result low = this->eval(*e.getChilds()[1]);
   Z3Result value = this->eval(*e.getChilds()[2]);
-  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_extract(this->result.getContext(), high.getUint64Value(), low.getUint64Value(), value.getExpr()));
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_extract(this->result.getContext(), high.getUintValue(), low.getUintValue(), value.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -392,7 +392,7 @@ void Z3ast::operator()(smt2lib::smtAstStringNode& e) {
 void Z3ast::operator()(smt2lib::smtAstSxNode& e) {
   Z3Result i = this->eval(*e.getChilds()[0]);
   Z3Result value = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_sign_ext(this->result.getContext(), i.getUint64Value(), value.getExpr()));
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_sign_ext(this->result.getContext(), i.getUintValue(), value.getExpr()));
 
   this->result.setExpr(newexpr);
 }
@@ -409,7 +409,7 @@ void Z3ast::operator()(smt2lib::smtAstVariableNode& e) {
     throw std::runtime_error("smtAstVariableNode: size above 64 bits is not supported yet");
 
   if (symVar->getSymVarKind() == SymVar::kind::MEM) {
-    uint64 memSize   = symVar->getSymVarSize();
+    __uint memSize   = symVar->getSymVarSize();
     uint128 memValue = symVar->getConcreteValue();
     std::string memStrValue(memValue);
     z3::expr newexpr = this->result.getContext().bv_val(memStrValue.c_str(), memSize);
@@ -430,7 +430,7 @@ void Z3ast::operator()(smt2lib::smtAstVariableNode& e) {
 void Z3ast::operator()(smt2lib::smtAstZxNode& e) {
   Z3Result i = this->eval(*e.getChilds()[0]);
   Z3Result value = this->eval(*e.getChilds()[1]);
-  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_zero_ext(this->result.getContext(), i.getUint64Value(), value.getExpr()));
+  z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_zero_ext(this->result.getContext(), i.getUintValue(), value.getExpr()));
 
   this->result.setExpr(newexpr);
 }

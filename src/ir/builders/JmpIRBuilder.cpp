@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-JmpIRBuilder::JmpIRBuilder(uint64 address, const std::string &disassembly):
+JmpIRBuilder::JmpIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

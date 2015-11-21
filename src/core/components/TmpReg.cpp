@@ -77,14 +77,14 @@ RegisterOperand tmp_flag_tf    = createTmpFlag(ID_TF);
 RegisterOperand tmp_flag_zf    = createTmpFlag(ID_ZF);
 
 
-RegisterOperand createTmpReg(uint64 tritonRegId) {
+RegisterOperand createTmpReg(__uint tritonRegId) {
   if (isFlagId(tritonRegId))
     return createTmpFlag(tritonRegId);
   return RegisterOperand(PINConverter::convertTritonReg2DBIReg(tritonRegId));
 }
 
 
-RegisterOperand createTmpFlag(uint64 flagId) {
+RegisterOperand createTmpFlag(__uint flagId) {
   RegisterOperand reg;
   reg.setTritonRegId(flagId);
   return reg;

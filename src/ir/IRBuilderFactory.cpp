@@ -31,7 +31,7 @@ namespace IRBuilderFactory {
   // It is up to the user to delete it when times come.
   IRBuilder *createIRBuilder(INS ins) {
 
-    uint64 address         = INS_Address(ins);
+    __uint address         = INS_Address(ins);
     std::string disas      = INS_Disassemble(ins);
     INT32 opcode           = INS_Opcode(ins);
 

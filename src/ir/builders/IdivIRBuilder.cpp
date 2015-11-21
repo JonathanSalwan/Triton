@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-IdivIRBuilder::IdivIRBuilder(uint64 address, const std::string &disassembly):
+IdivIRBuilder::IdivIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

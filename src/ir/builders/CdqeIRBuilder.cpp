@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-CdqeIRBuilder::CdqeIRBuilder(uint64 address, const std::string &disassembly):
+CdqeIRBuilder::CdqeIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

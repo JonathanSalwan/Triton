@@ -137,12 +137,12 @@ void TritonOperand::setMem(MemoryOperand mem) {
 }
 
 
-void TritonOperand::setMemAddress(uint64 addr) {
+void TritonOperand::setMemAddress(__uint addr) {
   this->mem.setAddress(addr);
 }
 
 
-void TritonOperand::setMemSize(uint64 size) {
+void TritonOperand::setMemSize(__uint size) {
   this->mem.setSize(size);
 }
 
@@ -152,7 +152,7 @@ void TritonOperand::setReg(RegisterOperand reg) {
 }
 
 
-void TritonOperand::setRegSize(uint64 size) {
+void TritonOperand::setRegSize(__uint size) {
   this->reg.setSize(size);
 }
 

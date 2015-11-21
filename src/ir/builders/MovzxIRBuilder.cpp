@@ -17,7 +17,7 @@
 
 
 
-MovzxIRBuilder::MovzxIRBuilder(uint64 address, const std::string &disassembly):
+MovzxIRBuilder::MovzxIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

@@ -25,7 +25,7 @@
 // first operand.
 
 
-CmpIRBuilder::CmpIRBuilder(uint64 address, const std::string &disassembly):
+CmpIRBuilder::CmpIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

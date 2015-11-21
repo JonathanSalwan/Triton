@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-LeaIRBuilder::LeaIRBuilder(uint64 address, const std::string &disassembly):
+LeaIRBuilder::LeaIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

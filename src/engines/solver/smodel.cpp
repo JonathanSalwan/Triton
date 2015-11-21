@@ -9,7 +9,7 @@
 #include <Smodel.h>
 
 
-Smodel::Smodel(std::string name, uint64 value) {
+Smodel::Smodel(std::string name, __uint value) {
   this->name = name;
   this->value = value;
 }
@@ -24,7 +24,7 @@ std::string Smodel::getName(void) {
 }
 
 
-uint64 Smodel::getValue(void) {
+__uint Smodel::getValue(void) {
   return this->value;
 }
 

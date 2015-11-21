@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-PopIRBuilder::PopIRBuilder(uint64 address, const std::string &disassembly):
+PopIRBuilder::PopIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-MulIRBuilder::MulIRBuilder(uint64 address, const std::string &disassembly):
+MulIRBuilder::MulIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

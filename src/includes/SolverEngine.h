@@ -30,7 +30,7 @@ class SolverEngine
 
   public:
     std::list<Smodel>               getModel(smt2lib::smtAstAbstractNode *node);
-    std::vector<std::list<Smodel>>  getModels(smt2lib::smtAstAbstractNode *node, uint64 limit);
+    std::vector<std::list<Smodel>>  getModels(smt2lib::smtAstAbstractNode *node, __uint limit);
 
     SolverEngine(SymbolicEngine *sym);
     ~SolverEngine();

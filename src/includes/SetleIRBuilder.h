@@ -18,7 +18,7 @@
 class SetleIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    SetleIRBuilder(uint64 address, const std::string &disassembly);
+    SetleIRBuilder(__uint address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

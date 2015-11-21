@@ -219,7 +219,7 @@ namespace smt2lib {
   class smtAstBvrolNode : public smtAstAbstractNode
   {
     public:
-      smtAstBvrolNode(uint64 rot, smtAstAbstractNode *expr);
+      smtAstBvrolNode(__uint rot, smtAstAbstractNode *expr);
       smtAstBvrolNode(smtAstAbstractNode *rot, smtAstAbstractNode *expr);
       smtAstBvrolNode(const smtAstBvrolNode &copy);
       ~smtAstBvrolNode();
@@ -231,7 +231,7 @@ namespace smt2lib {
   class smtAstBvrorNode : public smtAstAbstractNode
   {
     public:
-      smtAstBvrorNode(uint64 rot, smtAstAbstractNode *expr);
+      smtAstBvrorNode(__uint rot, smtAstAbstractNode *expr);
       smtAstBvrorNode(smtAstAbstractNode *rot, smtAstAbstractNode *expr);
       smtAstBvrorNode(const smtAstBvrorNode &copy);
       ~smtAstBvrorNode();
@@ -430,7 +430,7 @@ namespace smt2lib {
   class smtAstBvNode : public smtAstAbstractNode
   {
     public:
-      smtAstBvNode(uint128 value, uint64 size);
+      smtAstBvNode(uint128 value, __uint size);
       smtAstBvNode(const smtAstBvNode &copy);
       ~smtAstBvNode();
       virtual void accept(Visitor& v);
@@ -481,7 +481,7 @@ namespace smt2lib {
   class smtAstDeclareNode : public smtAstAbstractNode
   {
     public:
-      smtAstDeclareNode(std::string symVarName, uint64 symVarSize);
+      smtAstDeclareNode(std::string symVarName, __uint symVarSize);
       smtAstDeclareNode(const smtAstDeclareNode &copy);
       ~smtAstDeclareNode();
       virtual void accept(Visitor& v);
@@ -513,7 +513,7 @@ namespace smt2lib {
   class smtAstExtractNode : public smtAstAbstractNode
   {
     public:
-      smtAstExtractNode(uint64 high, uint64 low, smtAstAbstractNode *expr);
+      smtAstExtractNode(__uint high, __uint low, smtAstAbstractNode *expr);
       smtAstExtractNode(const smtAstExtractNode &copy);
       ~smtAstExtractNode();
       virtual void accept(Visitor& v);
@@ -535,15 +535,15 @@ namespace smt2lib {
   class smtAstReferenceNode : public smtAstAbstractNode
   {
     protected:
-      uint64 value;
+      __uint value;
 
     public:
-      smtAstReferenceNode(uint64 value);
+      smtAstReferenceNode(__uint value);
       smtAstReferenceNode(const smtAstReferenceNode &copy);
       ~smtAstReferenceNode();
       virtual void accept(Visitor& v);
 
-      uint64 getValue(void);
+      __uint getValue(void);
   };
 
 
@@ -567,7 +567,7 @@ namespace smt2lib {
   class smtAstSxNode : public smtAstAbstractNode
   {
     public:
-      smtAstSxNode(uint64 sizeExt, smtAstAbstractNode *expr);
+      smtAstSxNode(__uint sizeExt, smtAstAbstractNode *expr);
       smtAstSxNode(const smtAstSxNode &copy);
       ~smtAstSxNode();
       virtual void accept(Visitor& v);
@@ -594,7 +594,7 @@ namespace smt2lib {
   class smtAstZxNode : public smtAstAbstractNode
   {
     public:
-      smtAstZxNode(uint64 sizeExt, smtAstAbstractNode *expr);
+      smtAstZxNode(__uint sizeExt, smtAstAbstractNode *expr);
       smtAstZxNode(const smtAstZxNode &copy);
       ~smtAstZxNode();
       virtual void accept(Visitor& v);
@@ -650,7 +650,7 @@ namespace smt2lib {
 
 
   /* Node builders */
-  smtAstAbstractNode *bv(uint128 value, uint64 size);
+  smtAstAbstractNode *bv(uint128 value, __uint size);
   smtAstAbstractNode *bvadd(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
   smtAstAbstractNode *bvand(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
   smtAstAbstractNode *bvashr(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
@@ -662,9 +662,9 @@ namespace smt2lib {
   smtAstAbstractNode *bvnor(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
   smtAstAbstractNode *bvnot(smtAstAbstractNode *expr);
   smtAstAbstractNode *bvor(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
-  smtAstAbstractNode *bvrol(uint64 rot, smtAstAbstractNode *expr);
+  smtAstAbstractNode *bvrol(__uint rot, smtAstAbstractNode *expr);
   smtAstAbstractNode *bvrol(smtAstAbstractNode *rot, smtAstAbstractNode *expr);
-  smtAstAbstractNode *bvror(uint64 rot, smtAstAbstractNode *expr);
+  smtAstAbstractNode *bvror(__uint rot, smtAstAbstractNode *expr);
   smtAstAbstractNode *bvror(smtAstAbstractNode *rot, smtAstAbstractNode *expr);
   smtAstAbstractNode *bvsdiv(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
   smtAstAbstractNode *bvsge(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
@@ -689,17 +689,17 @@ namespace smt2lib {
   smtAstAbstractNode *concat(std::vector<smtAstAbstractNode *> exprs);
   smtAstAbstractNode *concat(std::list<smtAstAbstractNode *> exprs);
   smtAstAbstractNode *decimal(uint128 value);
-  smtAstAbstractNode *declare(std::string symVarName, uint64 symVarSize);
+  smtAstAbstractNode *declare(std::string symVarName, __uint symVarSize);
   smtAstAbstractNode *distinct(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
   smtAstAbstractNode *equal(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2);
-  smtAstAbstractNode *extract(uint64 high, uint64 low, smtAstAbstractNode *expr);
+  smtAstAbstractNode *extract(__uint high, __uint low, smtAstAbstractNode *expr);
   smtAstAbstractNode *ite(smtAstAbstractNode *ifExpr, smtAstAbstractNode *thenExpr, smtAstAbstractNode *elseExpr);
-  smtAstAbstractNode *reference(uint64 value);
+  smtAstAbstractNode *reference(__uint value);
   smtAstAbstractNode *smtAssert(smtAstAbstractNode *expr);
   smtAstAbstractNode *string(std::string value);
-  smtAstAbstractNode *sx(uint64 sizeExt, smtAstAbstractNode *expr);
+  smtAstAbstractNode *sx(__uint sizeExt, smtAstAbstractNode *expr);
   smtAstAbstractNode *variable(std::string variable);
-  smtAstAbstractNode *zx(uint64 sizeExt, smtAstAbstractNode *expr);
+  smtAstAbstractNode *zx(__uint sizeExt, smtAstAbstractNode *expr);
   smtAstAbstractNode *newInstance(smtAstAbstractNode *node);
 
   /* Garbage Collector Utils */

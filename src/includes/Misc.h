@@ -10,7 +10,7 @@
 
 #include "TritonTypes.h"
 
-const uint64 UNSET = -1;
+const __uint UNSET = -1;
 
 #endif     /* !__TRITON_MISC_H__ */
 

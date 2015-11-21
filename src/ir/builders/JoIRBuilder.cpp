@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-JoIRBuilder::JoIRBuilder(uint64 address, const std::string &disassembly):
+JoIRBuilder::JoIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

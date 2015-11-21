@@ -18,7 +18,7 @@
 class OrpdIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 
   public:
-    OrpdIRBuilder(uint64 address, const std::string &disassembly);
+    OrpdIRBuilder(__uint address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

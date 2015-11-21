@@ -14,7 +14,7 @@ MemoryOperand::MemoryOperand(void) {
 }
 
 
-MemoryOperand::MemoryOperand(uint64 address, uint64 size) {
+MemoryOperand::MemoryOperand(__uint address, __uint size) {
   this->address = address;
   this->size    = size;
   if (size == 0)
@@ -32,22 +32,22 @@ MemoryOperand::~MemoryOperand() {
 }
 
 
-uint64 MemoryOperand::getAddress(void) const {
+__uint MemoryOperand::getAddress(void) const {
   return this->address;
 }
 
 
-uint64 MemoryOperand::getSize(void) const {
+__uint MemoryOperand::getSize(void) const {
   return this->size;
 }
 
 
-void MemoryOperand::setAddress(uint64 addr) {
+void MemoryOperand::setAddress(__uint addr) {
   this->address = addr;
 }
 
 
-void MemoryOperand::setSize(uint64 size) {
+void MemoryOperand::setSize(__uint size) {
   this->size = size;
 }
 

@@ -24,7 +24,7 @@ SnapshotEngine::~SnapshotEngine() {
 
 
 /* Add the modification byte. */
-void SnapshotEngine::addModification(uint64 mem, char byte) {
+void SnapshotEngine::addModification(__uint mem, char byte) {
   if (this->locked == UNLOCKED)
     this->memory.push_front(make_pair(mem, byte));
 }
@@ -56,7 +56,7 @@ void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngi
     return;
 
   /* 1 - Restore all memory modification. */
-  list< std::pair<uint64, char> >::iterator i;
+  list< std::pair<__uint, char> >::iterator i;
   for(i = this->memory.begin(); i != this->memory.end(); ++i){
     *(reinterpret_cast<char*>(i->first)) = i->second;
   }
@@ -65,9 +65,9 @@ void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngi
   /* 2.1 - Delete unused expressions */
   std::vector<SymbolicExpression *> currentExpressions = currentSymEngine->getExpressions();
 
-  uint64 currentSize  = currentExpressions.size();
-  uint64 snapshotSize = this->snapshotSymEngine->getExpressions().size();
-  for (uint64 index = snapshotSize; index < currentSize; index++) {
+  __uint currentSize  = currentExpressions.size();
+  __uint snapshotSize = this->snapshotSymEngine->getExpressions().size();
+  for (__uint index = snapshotSize; index < currentSize; index++) {
     delete currentExpressions[index];
   }
 
@@ -76,7 +76,7 @@ void SnapshotEngine::restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngi
 
   currentSize  = currentSymbolicVars.size();
   snapshotSize = this->snapshotSymEngine->getSymVars().size();
-  for (uint64 index = snapshotSize; index < currentSize; index++) {
+  for (__uint index = snapshotSize; index < currentSize; index++) {
     delete currentSymbolicVars[index];
   }
 

@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-NotIRBuilder::NotIRBuilder(uint64 address, const std::string &disassembly):
+NotIRBuilder::NotIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

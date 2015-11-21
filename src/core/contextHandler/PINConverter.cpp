@@ -8,7 +8,7 @@
 
 #if defined(__x86_64__) || defined(_M_X64)
 
-uint64 PINConverter::convertDBIReg2TritonReg(uint64 pinRegID) {
+__uint PINConverter::convertDBIReg2TritonReg(__uint pinRegID) {
   switch(pinRegID){
     case REG_RAX:
     case REG_EAX:
@@ -175,7 +175,7 @@ uint64 PINConverter::convertDBIReg2TritonReg(uint64 pinRegID) {
 /* Convert a Triton register to a Pin register.
  * Besides, it can return only 64 bits wised registers.
  */
-uint64 PINConverter::convertTritonReg2DBIReg(uint64 tritonRegId) {
+__uint PINConverter::convertTritonReg2DBIReg(__uint tritonRegId) {
   switch(tritonRegId){
     case ID_RAX:    return REG_RAX;
     case ID_RBX:    return REG_RBX;
@@ -220,7 +220,7 @@ uint64 PINConverter::convertTritonReg2DBIReg(uint64 tritonRegId) {
 /* Convert a Triton register to a string.
  * Besides, it can return only 64 bits wised registers.
  */
-std::string PINConverter::getRegisterName(uint64 tritonRegId) {
+std::string PINConverter::getRegisterName(__uint tritonRegId) {
   switch(tritonRegId){
     case ID_RAX:    return "rax";
     case ID_RBX:    return "rbx";
@@ -271,7 +271,7 @@ std::string PINConverter::getRegisterName(uint64 tritonRegId) {
 }
 
 
-std::pair<uint64, uint64> PINConverter::convertDBIReg2BitsVector(uint64 pinRegID) {
+std::pair<__uint, __uint> PINConverter::convertDBIReg2BitsVector(__uint pinRegID) {
   switch(pinRegID) {
 
     case REG_XMM0:
@@ -384,7 +384,7 @@ std::pair<uint64, uint64> PINConverter::convertDBIReg2BitsVector(uint64 pinRegID
 
 #if defined(__i386) || defined(_M_IX86)
 
-uint64 PINConverter::convertDBIReg2TritonReg(uint64 pinRegID) {
+__uint PINConverter::convertDBIReg2TritonReg(__uint pinRegID) {
   switch(pinRegID){
     case REG_EAX:
     case REG_AX:
@@ -466,7 +466,7 @@ uint64 PINConverter::convertDBIReg2TritonReg(uint64 pinRegID) {
 /* Convert a Triton register to a Pin register.
  * Besides, it can return only 64 bits wised registers.
  */
-uint64 PINConverter::convertTritonReg2DBIReg(uint64 tritonRegId) {
+__uint PINConverter::convertTritonReg2DBIReg(__uint tritonRegId) {
   switch(tritonRegId){
     case ID_EAX:    return REG_EAX;
     case ID_EBX:    return REG_EBX;
@@ -495,7 +495,7 @@ uint64 PINConverter::convertTritonReg2DBIReg(uint64 tritonRegId) {
 /* Convert a Triton register to a string.
  * Besides, it can return only 64 bits wised registers.
  */
-std::string PINConverter::getRegisterName(uint64 tritonRegId) {
+std::string PINConverter::getRegisterName(__uint tritonRegId) {
   switch(tritonRegId){
     case ID_EAX:    return "eax";
     case ID_EBX:    return "ebx";
@@ -530,7 +530,7 @@ std::string PINConverter::getRegisterName(uint64 tritonRegId) {
 }
 
 
-std::pair<uint64, uint64> PINConverter::convertDBIReg2BitsVector(uint64 pinRegID) {
+std::pair<__uint, __uint> PINConverter::convertDBIReg2BitsVector(__uint pinRegID) {
   switch(pinRegID) {
     case REG_XMM0:
     case REG_XMM1:

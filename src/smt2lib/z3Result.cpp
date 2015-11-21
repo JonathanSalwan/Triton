@@ -39,13 +39,18 @@ std::string Z3Result::getStringValue() const {
 }
 
 
-uint64 Z3Result::getUint64Value(void) const {
-  uint64 result = 0;
+__uint Z3Result::getUintValue(void) const {
+  __uint result = 0;
 
   if (!this->expr.is_int())
-    throw std::runtime_error("getUint64Value: The ast is not a numerical value");
+    throw std::runtime_error("getUintValue: The ast is not a numerical value");
 
+  #if defined(__x86_64__) || defined(_M_X64)
   Z3_get_numeral_uint64(this->context, this->expr, &result);
+  #endif
+  #if defined(__i386) || defined(_M_IX86)
+  Z3_get_numeral_uint(this->context, this->expr, &result);
+  #endif
 
   return result;
 }

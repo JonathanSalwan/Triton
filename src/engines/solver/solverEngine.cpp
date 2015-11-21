@@ -35,7 +35,7 @@ SolverEngine::~SolverEngine() {
 }
 
 
-std::vector<std::list<Smodel>> SolverEngine::getModels(smt2lib::smtAstAbstractNode *node, uint64 limit) {
+std::vector<std::list<Smodel>> SolverEngine::getModels(smt2lib::smtAstAbstractNode *node, __uint limit) {
   std::vector<std::list<Smodel>>  ret;
   std::stringstream               formula;
   z3::context                     ctx;
@@ -68,14 +68,19 @@ std::vector<std::list<Smodel>> SolverEngine::getModels(smt2lib::smtAstAbstractNo
     z3::expr_vector args(ctx);
     for (uint32 i = 0; i < m.size(); i++) {
 
-      uint64        value     = 0;
+      __uint        value     = 0;
       z3::func_decl variable  = m[i];
       std::string   varName   = variable.name().str();
       z3::expr      exp       = m.get_const_interp(variable);
-      uint64        bvSize    = exp.get_sort().bv_size();
+      __uint        bvSize    = exp.get_sort().bv_size();
 
       /* Create a Triton Model */
+      #if defined(__x86_64__) || defined(_M_X64)
       Z3_get_numeral_uint64(ctx, exp, &value);
+      #endif
+      #if defined(__i386) || defined(_M_IX86)
+      Z3_get_numeral_uint(ctx, exp, &value);
+      #endif
       smodel.push_back(Smodel(varName, value));
 
       if (exp.get_sort().is_bv())

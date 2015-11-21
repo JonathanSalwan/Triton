@@ -16,20 +16,20 @@
 class MemoryOperand : public BitsVector
 {
   private:
-    uint64  address;
-    uint64  size;
+    __uint  address;
+    __uint  size;
     void    copy(const MemoryOperand& other);
 
   public:
     MemoryOperand();
-    MemoryOperand(uint64 address, uint64 size);
+    MemoryOperand(__uint address, __uint size);
     MemoryOperand(const MemoryOperand& other);
     ~MemoryOperand();
 
-    uint64  getAddress(void) const;
-    uint64  getSize(void) const;
-    void    setAddress(uint64 addr);
-    void    setSize(uint64 size);
+    __uint  getAddress(void) const;
+    __uint  getSize(void) const;
+    void    setAddress(__uint addr);
+    void    setSize(__uint size);
     void    operator=(const MemoryOperand& other);
 };
 

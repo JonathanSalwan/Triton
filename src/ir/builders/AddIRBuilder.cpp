@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-AddIRBuilder::AddIRBuilder(uint64 address, const std::string &disassembly):
+AddIRBuilder::AddIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

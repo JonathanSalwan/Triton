@@ -35,25 +35,25 @@ class SymbolicVariable {
     SymVar::kind  symVarKind;
     std::string   symVarComment;
     std::string   symVarName;
-    uint64        symVarId;
-    uint64        symVarKindValue;
-    uint64        symVarSize;
+    __uint        symVarId;
+    __uint        symVarKindValue;
+    __uint        symVarSize;
     uint128       symVarConcreteValue;
     bool          symVarHasConcreteValue;
 
   public:
 
-    SymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 id, uint64 size, std::string comment, uint128 concreteValue);
-    SymbolicVariable(SymVar::kind kind, uint64 kindValue, uint64 id, uint64 size, std::string comment);
+    SymbolicVariable(SymVar::kind kind, __uint kindValue, __uint id, __uint size, std::string comment, uint128 concreteValue);
+    SymbolicVariable(SymVar::kind kind, __uint kindValue, __uint id, __uint size, std::string comment);
     SymbolicVariable(const SymbolicVariable &copy);
     ~SymbolicVariable();
 
     SymVar::kind  getSymVarKind(void);
     std::string   getSymVarComment(void);
     std::string   getSymVarName(void);
-    uint64        getSymVarId(void);
-    uint64        getSymVarKindValue(void);
-    uint64        getSymVarSize(void);
+    __uint        getSymVarId(void);
+    __uint        getSymVarKindValue(void);
+    __uint        getSymVarSize(void);
     uint128       getConcreteValue(void);
     bool          hasConcreteValue(void);
     void          setSymVarConcreteValue(uint128 value);

@@ -11,9 +11,9 @@
 
 
 SymbolicVariable::SymbolicVariable(SymVar::kind kind,
-                                   uint64 kindValue,
-                                   uint64 id,
-                                   uint64 size,
+                                   __uint kindValue,
+                                   __uint id,
+                                   __uint size,
                                    std::string comment,
                                    uint128 concreteValue) {
   this->symVarComment          = comment;
@@ -28,9 +28,9 @@ SymbolicVariable::SymbolicVariable(SymVar::kind kind,
 
 
 SymbolicVariable::SymbolicVariable(SymVar::kind kind,
-                                   uint64 kindValue,
-                                   uint64 id,
-                                   uint64 size,
+                                   __uint kindValue,
+                                   __uint id,
+                                   __uint size,
                                    std::string comment
                                    ) : SymbolicVariable(kind, kindValue, id, size, comment, 0) {
   this->symVarHasConcreteValue = false;
@@ -63,17 +63,17 @@ std::string SymbolicVariable::getSymVarName(void) {
 }
 
 
-uint64 SymbolicVariable::getSymVarId(void) {
+__uint SymbolicVariable::getSymVarId(void) {
   return this->symVarId;
 }
 
 
-uint64 SymbolicVariable::getSymVarKindValue(void) {
+__uint SymbolicVariable::getSymVarKindValue(void) {
   return this->symVarKindValue;
 }
 
 
-uint64 SymbolicVariable::getSymVarSize(void) {
+__uint SymbolicVariable::getSymVarSize(void) {
   return this->symVarSize;
 }
 

@@ -18,7 +18,7 @@
 class SarIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 
   public:
-    SarIRBuilder(uint64 address, const std::string &disassembly);
+    SarIRBuilder(__uint address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

@@ -16,7 +16,7 @@
 
 class CmovleIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate  {
   public:
-    CmovleIRBuilder(uint64 address, const std::string &disassembly);
+    CmovleIRBuilder(__uint address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

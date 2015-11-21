@@ -73,8 +73,8 @@ extern RegisterOperand tmp_flag_tf;
 extern RegisterOperand tmp_flag_zf;
 
 
-RegisterOperand createTmpReg(uint64 tritonRegId);
-RegisterOperand createTmpFlag(uint64 tritonFlagId);
+RegisterOperand createTmpReg(__uint tritonRegId);
+RegisterOperand createTmpFlag(__uint tritonFlagId);
 
 
 #if defined(__x86_64__) || defined(_M_X64)

@@ -25,7 +25,7 @@ class Z3Result {
     z3::context&  getContext(void);
     z3::expr&     getExpr(void);
     std::string   getStringValue(void) const;
-    uint64        getUint64Value(void) const;
+    __uint        getUintValue(void) const;
 
   private:
     z3::context context;

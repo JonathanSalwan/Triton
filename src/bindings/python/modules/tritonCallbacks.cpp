@@ -32,10 +32,10 @@ extern Trigger            analysisTrigger;
 namespace PyTritonOptions {
   /* Execution configurations */
   char              *startAnalysisFromSymbol = nullptr;
-  std::set<uint64>  startAnalysisFromAddr;
-  std::set<uint64>  startAnalysisFromOffset;
-  std::set<uint64>  stopAnalysisFromAddr;
-  std::set<uint64>  stopAnalysisFromOffset;
+  std::set<__uint>  startAnalysisFromAddr;
+  std::set<__uint>  startAnalysisFromOffset;
+  std::set<__uint>  stopAnalysisFromAddr;
+  std::set<__uint>  stopAnalysisFromOffset;
 
   /* Callback configurations */
   PyObject *callbackAfter         = nullptr;                // After the instruction processing
@@ -50,10 +50,10 @@ namespace PyTritonOptions {
   std::map<const char *, PyObject *> callbackRoutineExit;   // After routine processing
 
   /* Taint configurations */
-  std::map<uint64, std::list<uint64>> taintRegFromAddr;   // <addr, [reg1, reg2]>
-  std::map<uint64, std::list<uint64>> untaintRegFromAddr; // <addr, [reg1, reg2]>
-  std::map<uint64, std::list<uint64>> taintMemFromAddr;   // <addr, [mem1, mem2]>
-  std::map<uint64, std::list<uint64>> untaintMemFromAddr; // <addr, [mem1, mem2]>
+  std::map<__uint, std::list<__uint>> taintRegFromAddr;   // <addr, [reg1, reg2]>
+  std::map<__uint, std::list<__uint>> untaintRegFromAddr; // <addr, [reg1, reg2]>
+  std::map<__uint, std::list<__uint>> taintMemFromAddr;   // <addr, [mem1, mem2]>
+  std::map<__uint, std::list<__uint>> untaintMemFromAddr; // <addr, [mem1, mem2]>
 };
 
 
@@ -120,7 +120,7 @@ static PyObject *Triton_addCallback(PyObject *self, PyObject *args) {
 
 static char Triton_checkReadAccess_doc[] = "Checks whether the memory page which contains this address has a read access protection";
 static PyObject *Triton_checkReadAccess(PyObject *self, PyObject *addr) {
-  uint64 ad;
+  __uint ad;
 
   if (!PyLong_Check(addr) && !PyInt_Check(addr))
     return PyErr_Format(PyExc_TypeError, "checkReadAccess(): expected an address (integer) as argument");
@@ -135,7 +135,7 @@ static PyObject *Triton_checkReadAccess(PyObject *self, PyObject *addr) {
 
 static char Triton_checkWriteAccess_doc[] = "Checks whether the memory page which contains this address has a write access protection";
 static PyObject *Triton_checkWriteAccess(PyObject *self, PyObject *addr) {
-  uint64 ad;
+  __uint ad;
 
   if (!PyLong_Check(addr) && !PyInt_Check(addr))
     return PyErr_Format(PyExc_TypeError, "checkWriteAccess(): expected an address (integer) as argument");
@@ -161,8 +161,8 @@ static char Triton_getMemValue_doc[] = "Gets the current value of the memory";
 static PyObject *Triton_getMemValue(PyObject *self, PyObject *args) {
   PyObject *addr = nullptr;
   PyObject *readSize = nullptr;
-  uint64 ad;
-  uint64 rs;
+  __uint ad;
+  __uint rs;
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "|OO", &addr, &readSize);
@@ -205,7 +205,7 @@ static PyObject *Triton_getRegName(PyObject *self, PyObject *reg) {
 static char Triton_getRegValue_doc[] = "Gets the current value of the register";
 static PyObject *Triton_getRegValue(PyObject *self, PyObject *regId) {
   RegisterOperand reg;
-  uint64 tritonReg;
+  __uint tritonReg;
 
   if (!PyLong_Check(regId) && !PyInt_Check(regId))
     return PyErr_Format(PyExc_TypeError, "getRegValue(): expected a register id (IDREF.REG) as argument");
@@ -245,7 +245,7 @@ static char Triton_getSyscallArgument_doc[] = "Returns the syscall argument.";
 static PyObject *Triton_getSyscallArgument(PyObject *self, PyObject *args) {
   PyObject *num = nullptr;
   PyObject *std = nullptr;
-  uint64 ret;
+  __uint ret;
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "|OO", &std, &num);
@@ -267,7 +267,7 @@ static PyObject *Triton_getSyscallArgument(PyObject *self, PyObject *args) {
 
 static char Triton_getSyscallNumber_doc[] = "Returns the syscall number. This function must be called inside the syscall entry callback. Otherwise returns results in undefined behavior.";
 static PyObject *Triton_getSyscallNumber(PyObject *self, PyObject *std) {
-  uint64 syscallNumber;
+  __uint syscallNumber;
 
   if (!PyLong_Check(std) && !PyInt_Check(std))
     return PyErr_Format(PyExc_TypeError, "getSyscallNumber(): expected an id (integer) as argument");
@@ -283,7 +283,7 @@ static PyObject *Triton_getSyscallNumber(PyObject *self, PyObject *std) {
 
 static char Triton_getSyscallReturn_doc[] = "Returns the syscall return value.";
 static PyObject *Triton_getSyscallReturn(PyObject *self, PyObject *std) {
-  uint64 ret;
+  __uint ret;
 
   if (!PyLong_Check(std) && !PyInt_Check(std))
     return PyErr_Format(PyExc_TypeError, "getSyscallReturn(): expected an id (integer) as argument");
@@ -321,8 +321,8 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args) {
   PyObject  *value = nullptr;
   PyObject  *writeSize = nullptr;
   uint128   va; // value
-  uint64    ad; // address
-  uint64    ws; // write size
+  __uint    ad; // address
+  __uint    ws; // write size
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "|OOO", &addr, &writeSize, &value);
@@ -359,7 +359,7 @@ static PyObject *Triton_setRegValue(PyObject *self, PyObject *args) {
   PyObject *reg = nullptr;
   PyObject *value = nullptr;
   uint128  va;
-  uint64   tr;
+  __uint   tr;
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "|OO", &reg, &value);
@@ -377,7 +377,7 @@ static PyObject *Triton_setRegValue(PyObject *self, PyObject *args) {
   if (isSSERegId(tr))
     ap.setSSERegisterValue(ro, va);
   else
-    ap.setRegisterValue(ro, boost::numeric_cast<uint64>(va));
+    ap.setRegisterValue(ro, boost::numeric_cast<__uint>(va));
 
   Py_INCREF(Py_None);
   return Py_None;
@@ -514,7 +514,7 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args) {
   PyObject *exprId = nullptr;
   PyObject *symVarSize = nullptr;
   PyObject *varComment = nullptr;
-  uint64 vs, ei;
+  __uint vs, ei;
   std::string vc;
 
   /* Extract arguments */
@@ -545,7 +545,7 @@ static PyObject *Triton_convertMemToSymVar(PyObject *self, PyObject *args) {
   PyObject *memAddr = nullptr;
   PyObject *symVarSize = nullptr;
   PyObject *varComment = nullptr;
-  uint64 vs;
+  __uint vs;
   std::string vc;
 
   /* Extract arguments */
@@ -576,7 +576,7 @@ static PyObject *Triton_convertRegToSymVar(PyObject *self, PyObject *args) {
   PyObject *regId = nullptr;
   PyObject *symVarSize = nullptr;
   PyObject *varComment = nullptr;
-  uint64 vs;
+  __uint vs;
   std::string vc;
 
   /* Extract arguments */
@@ -676,8 +676,8 @@ static PyObject *Triton_getModels(PyObject *self, PyObject *args) {
   PyObject                        *modelsList;
   PyObject                        *node = nullptr;
   std::vector<std::list<Smodel>>  models;
-  uint64                          limit_c = 0;
-  uint64                          modelsSize = 0;
+  __uint                          limit_c = 0;
+  __uint                          modelsSize = 0;
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "|OO", &node, &limit);
@@ -697,7 +697,7 @@ static PyObject *Triton_getModels(PyObject *self, PyObject *args) {
   modelsSize    = models.size();
   modelsList    = xPyList_New(modelsSize);
 
-  for (uint64 index = 0; index < modelsSize; index++){
+  for (__uint index = 0; index < modelsSize; index++){
     std::list<Smodel> model = models[index];
     std::list<Smodel>::iterator it;
     /* Craft the model dictionary */
@@ -715,8 +715,8 @@ static PyObject *Triton_getModels(PyObject *self, PyObject *args) {
 static char Triton_getPathConstraints_doc[] = "Returns the list of path constraints";
 static PyObject *Triton_getPathConstraints(PyObject *self, PyObject *noargs) {
   PyObject                        *ppc;
-  std::list<uint64>               pc;
-  std::list<uint64>::iterator     it;
+  std::list<__uint>               pc;
+  std::list<__uint>::iterator     it;
   Py_ssize_t                      size = 0;
 
   pc    = ap.getPathConstraints();
@@ -736,7 +736,7 @@ static PyObject *Triton_getPathConstraints(PyObject *self, PyObject *noargs) {
 static char Triton_getRegSymbolicID_doc[] = "Gets the symbolic register reference";
 static PyObject *Triton_getRegSymbolicID(PyObject *self, PyObject *reg) {
   RegisterOperand ro;
-  uint64 regId = 0;
+  __uint regId = 0;
 
   if (!PyLong_Check(reg) && !PyInt_Check(reg))
     return PyErr_Format(PyExc_TypeError, "getRegSymbolicID(): expected a register id (integer) as argument");
@@ -755,10 +755,10 @@ static PyObject *Triton_getRegs(PyObject *self, PyObject *noargs) {
   /* Build all Registers */
   /* TODO_32Bits: something more sexy */
   #if defined(__x86_64__) || defined(_M_X64)
-  for (uint64 regId = ID_RAX; regId < ID_RFLAGS; regId++){
+  for (__uint regId = ID_RAX; regId < ID_RFLAGS; regId++){
   #endif
   #if defined(__i386) || defined(_M_IX86)
-  for (uint64 regId = ID_EAX; regId < ID_EFLAGS; regId++){
+  for (__uint regId = ID_EAX; regId < ID_EFLAGS; regId++){
   #endif
     PyObject *reg = xPyDict_New();
     RegisterOperand ro = createTmpReg(regId);
@@ -771,7 +771,7 @@ static PyObject *Triton_getRegs(PyObject *self, PyObject *noargs) {
   }
 
   /* Build all Flags */
-  for (uint64 flagId = ID_AF; flagId <= ID_ZF; flagId++){
+  for (__uint flagId = ID_AF; flagId <= ID_ZF; flagId++){
     PyObject *flag = xPyDict_New();
     RegisterOperand fo = createTmpFlag(flagId);
     PyDict_SetItemString(flag, "concreteValue", Py_BuildValue("k", ap.getFlagValue(fo)));
@@ -796,7 +796,7 @@ static PyObject *Triton_getStats(PyObject *self, PyObject *noargs) {
 
 static char Triton_getSymExpr_doc[] = "Returns a SymbolicExpression class corresponding to the symbolic expression ID.";
 static PyObject *Triton_getSymExpr(PyObject *self, PyObject *id) {
-  uint64              exprId;
+  __uint              exprId;
   SymbolicExpression  *expr;
 
   if (!PyLong_Check(id) && !PyInt_Check(id))
@@ -816,12 +816,12 @@ static char Triton_getSymExprs_doc[] = "Returns all SymbolicExpression class.";
 static PyObject *Triton_getSymExprs(PyObject *self, PyObject *noargs) {
   PyObject                          *ret;
   std::vector<SymbolicExpression *> exprs;
-  uint64                            numberOfExprs = 0;
+  __uint                            numberOfExprs = 0;
 
   exprs = ap.getExpressions();
   numberOfExprs = exprs.size();
   ret = xPyList_New(numberOfExprs);
-  for (uint64 index = 0; index < numberOfExprs; index++)
+  for (__uint index = 0; index < numberOfExprs; index++)
     PyList_SetItem(ret, index, PySymbolicExpression(exprs[index]));
 
   return ret;
@@ -890,8 +890,8 @@ static PyObject *Triton_getTaintedExpressions(PyObject *self, PyObject *noarg) {
   PyObject                                  *ret;
   std::list<SymbolicExpression *>           exprs;
   std::list<SymbolicExpression *>::iterator it;
-  uint64                                    index = 0;
-  uint64                                    numberOfExprs = 0;
+  __uint                                    index = 0;
+  __uint                                    numberOfExprs = 0;
 
   exprs = ap.getTaintedExpressions();
   numberOfExprs = exprs.size();
@@ -963,7 +963,7 @@ static char Triton_taintMemFromAddr_doc[] = "Taints specific memory address from
 static PyObject *Triton_taintMemFromAddr(PyObject *self, PyObject *args) {
   PyObject *addr = nullptr;
   PyObject *mems = nullptr;
-  std::list<uint64> memsList;
+  std::list<__uint> memsList;
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "|OO", &addr, &mems);
@@ -987,7 +987,7 @@ static PyObject *Triton_taintMemFromAddr(PyObject *self, PyObject *args) {
   }
 
   /* Update taint configuration */
-  PyTritonOptions::taintMemFromAddr.insert(std::pair<uint64, std::list<uint64>>(PyLong_AsLongLong(addr), memsList));
+  PyTritonOptions::taintMemFromAddr.insert(std::pair<__uint, std::list<__uint>>(PyLong_AsLongLong(addr), memsList));
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -1009,7 +1009,7 @@ static char Triton_taintRegFromAddr_doc[] = "Taints specific registers from an a
 static PyObject *Triton_taintRegFromAddr(PyObject *self, PyObject *args) {
   PyObject *addr = nullptr;
   PyObject *regs = nullptr;
-  std::list<uint64> regsList;
+  std::list<__uint> regsList;
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "|OO", &addr, &regs);
@@ -1033,7 +1033,7 @@ static PyObject *Triton_taintRegFromAddr(PyObject *self, PyObject *args) {
   }
 
   /* Update taint configuration */
-  PyTritonOptions::taintRegFromAddr.insert(std::pair<uint64, std::list<uint64>>(PyLong_AsLongLong(addr), regsList));
+  PyTritonOptions::taintRegFromAddr.insert(std::pair<__uint, std::list<__uint>>(PyLong_AsLongLong(addr), regsList));
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -1063,7 +1063,7 @@ static char Triton_untaintMemFromAddr_doc[] = "Untaints specific memory addresse
 static PyObject *Triton_untaintMemFromAddr(PyObject *self, PyObject *args) {
   PyObject *addr = nullptr;
   PyObject *mems = nullptr;
-  std::list<uint64> memsList;
+  std::list<__uint> memsList;
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "|OO", &addr, &mems);
@@ -1087,7 +1087,7 @@ static PyObject *Triton_untaintMemFromAddr(PyObject *self, PyObject *args) {
   }
 
   /* Update taint configuration */
-  PyTritonOptions::untaintMemFromAddr.insert(std::pair<uint64, std::list<uint64>>(PyLong_AsLongLong(addr), memsList));
+  PyTritonOptions::untaintMemFromAddr.insert(std::pair<__uint, std::list<__uint>>(PyLong_AsLongLong(addr), memsList));
 
   Py_INCREF(Py_None);
   return Py_None;
@@ -1111,7 +1111,7 @@ static char Triton_untaintRegFromAddr_doc[] = "Untaints specific registers from 
 static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args) {
   PyObject *addr = nullptr;
   PyObject *regs = nullptr;
-  std::list<uint64> regsList;
+  std::list<__uint> regsList;
 
   /* Extract arguments */
   PyArg_ParseTuple(args, "|OO", &addr, &regs);
@@ -1135,7 +1135,7 @@ static PyObject *Triton_untaintRegFromAddr(PyObject *self, PyObject *args) {
   }
 
   /* Update taint configuration */
-  PyTritonOptions::untaintRegFromAddr.insert(std::pair<uint64, std::list<uint64>>(PyLong_AsLongLong(addr), regsList));
+  PyTritonOptions::untaintRegFromAddr.insert(std::pair<__uint, std::list<__uint>>(PyLong_AsLongLong(addr), regsList));
 
   Py_INCREF(Py_None);
   return Py_None;

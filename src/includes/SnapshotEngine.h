@@ -28,7 +28,7 @@ class SnapshotEngine{
     /* I/O memory monitoring for snapshot */
     /* item1: memory address              */
     /* item2: byte                        */
-    std::list< std::pair<uint64, char> > memory;
+    std::list< std::pair<__uint, char> > memory;
 
     /* Status of the snapshot engine */
     bool locked;
@@ -52,7 +52,7 @@ class SnapshotEngine{
     CONTEXT   *getCtx(void);
     bool      isLocked(void);
     bool      isMustBeRestored(void);
-    void      addModification(uint64 address, char byte);
+    void      addModification(__uint address, char byte);
     void      disableSnapshot(void);
     void      resetEngine(void);
     void      restoreSnapshot(SymbolicEngine *currentSymEngine, TaintEngine *currentTaintEngine, CONTEXT *ctx);

@@ -16,7 +16,7 @@
 #include <SymbolicExpression.h>
 
 
-XorpsIRBuilder::XorpsIRBuilder(uint64 address, const std::string &disassembly):
+XorpsIRBuilder::XorpsIRBuilder(__uint address, const std::string &disassembly):
   BaseIRBuilder(address, disassembly) {
 }
 

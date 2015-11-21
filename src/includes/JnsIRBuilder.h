@@ -18,7 +18,7 @@
 class JnsIRBuilder: public BaseIRBuilder, public OneOperandTemplate {
 
   public:
-    JnsIRBuilder(uint64 address, const std::string &disassembly);
+    JnsIRBuilder(__uint address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(AnalysisProcessor &ap) const;

@@ -59,13 +59,13 @@ class TritonOperand {
     void                        setImm(ImmediateOperand imm);
     void                        setIndexReg(RegisterOperand reg);
     void                        setMem(MemoryOperand mem);
-    void                        setMemAddress(uint64 addr);
-    void                        setMemSize(uint64 size);
+    void                        setMemAddress(__uint addr);
+    void                        setMemSize(__uint size);
     void                        setMemoryScale(ImmediateOperand memoryScale);
     void                        setReadAndWrite(bool flag);
     void                        setReadOnly(bool flag);
     void                        setReg(RegisterOperand reg);
-    void                        setRegSize(uint64 size);
+    void                        setRegSize(__uint size);
     void                        setType(IRBuilderOperand::operand_t type);
     void                        setWriteOnly(bool flag);
 
