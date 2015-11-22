@@ -42,6 +42,12 @@ class Inst {
     #endif
 
   public:
+    __uint                                getAddress(void);
+    __uint                                getBaseAddress(void);
+    __uint                                getBranchTargetAddress(void);
+    __uint                                getNextAddress(void);
+    __uint                                getOffset(void);
+    __uint                                getThreadID(void);
     bool                                  isBranch(void);
     bool                                  isBranchTaken(void);
     const std::string                     &getDisassembly(void);
@@ -51,12 +57,7 @@ class Inst {
     const std::vector<TritonOperand>      &getOperands(void);
     sint32                                getOpcodeCategory(void);
     uint32                                getOpcode(void);
-    __uint                                getAddress(void);
-    __uint                                getBaseAddress(void);
-    __uint                                getBranchTargetAddress(void);
-    __uint                                getNextAddress(void);
-    __uint                                getOffset(void);
-    __uint                                getThreadID(void);
+    void                                  importIrbInformation(void *irbv);
     void                                  setBranchTaken(bool flag);
     void                                  setBranchTargetAddress(__uint addr);
     void                                  setNextAddress(__uint addr);

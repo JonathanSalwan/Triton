@@ -6,6 +6,7 @@
 
 #include <pin.H>
 #include <Inst.h>
+#include <IRBuilder.h>
 
 
 
@@ -194,5 +195,17 @@ __uint Inst::getBaseAddress(void) {
 /* Returns the offset of the instruction in the file */
 __uint Inst::getOffset(void) {
   return this->offset;
+}
+
+
+/* Import Irb information to Inst */
+void Inst::importIrbInformation(void *irbv) {
+  IRBuilder *irb = reinterpret_cast<IRBuilder *>(irbv);
+  this->setNextAddress(irb->getNextAddress());
+  this->setOpcode(irb->getOpcode());
+  this->setOpcodeCategory(irb->getOpcodeCategory());
+  this->setOperands(irb->getOperands());
+  this->setBranchTaken(irb->isBranchTaken());
+  this->setBranchTargetAddress(irb->getBranchTargetAddress());
 }
 

@@ -56,7 +56,7 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
   /* Update the current context handler */
   ap.updateCurrentCtxH(new PINContextHandler(ctx, threadId));
 
-  /* Setup Information into Irb */
+  /* Setup runtime information into Irb */
   irb->setThreadID(ap.getThreadID());
   irb->setBranchTaken(isBranchTaken);
   irb->setBranchTargetAddress(branchTargetAddress);
@@ -64,16 +64,12 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
   /* Python callback before IR processing */
   processingPyConf.callbackBeforeIRProc(irb, &ap);
 
+  /* Build the IR */
   Inst *inst = irb->process(ap);
   ap.addInstructionToTrace(inst);
 
-  /* Export some information from Irb to Inst */
-  inst->setNextAddress(irb->getNextAddress());
-  inst->setOpcode(irb->getOpcode());
-  inst->setOpcodeCategory(irb->getOpcodeCategory());
-  inst->setOperands(irb->getOperands());
-  inst->setBranchTaken(irb->isBranchTaken());
-  inst->setBranchTargetAddress(irb->getBranchTargetAddress());
+  /* Import Irb information to Inst */
+  inst->importIrbInformation(irb);
 
   /* Python callback before instruction processing */
   processingPyConf.callbackBefore(inst, &ap);
@@ -97,8 +93,7 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
 
 
 /* Callback after instruction processing */
-static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
-  Inst *inst;
+static void callbackAfter(IRBuilder *irb, CONTEXT *ctx, THREADID threadId) {
 
   if (!analysisTrigger.getState())
   /* Analysis locked */
@@ -111,7 +106,7 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
   ap.updateCurrentCtxH(new PINContextHandler(ctx, threadId));
 
   /* Get the last instruction */
-  inst = ap.getLastInstruction();
+  Inst *inst = ap.getLastInstruction();
 
   /* Update statistics */
   #ifndef LIGHT_VERSION
@@ -122,7 +117,7 @@ static void callbackAfter(CONTEXT *ctx, THREADID threadId) {
   processingPyConf.callbackAfter(inst, &ap);
 
   /* Some configurations must be applied after processing */
-  processingPyConf.applyConfAfterProcessing(inst);
+  processingPyConf.applyConfAfterProcessing(irb);
 
   /* Check if we must execute a new context */
   if (ap.isContextMustBeExecuted())
@@ -484,7 +479,7 @@ static void TRACE_Instrumentation(TRACE trace, VOID *v) {
         IPOINT where = IPOINT_AFTER;
         if (INS_HasFallThrough(ins) == false)
           where = IPOINT_TAKEN_BRANCH;
-        INS_InsertCall(ins, where, (AFUNPTR)callbackAfter, IARG_CONTEXT, IARG_THREAD_ID, IARG_END);
+        INS_InsertCall(ins, where, (AFUNPTR)callbackAfter, IARG_PTR, irb, IARG_CONTEXT, IARG_THREAD_ID, IARG_END);
       }
 
       /* I/O memory monitoring for snapshot */
