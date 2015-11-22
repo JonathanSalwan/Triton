@@ -297,12 +297,6 @@ void ProcessingPyConf::applyConfAfterProcessing(IRBuilder *irb) {
 }
 
 
-void ProcessingPyConf::applyConfAfterProcessing(Inst *inst) {
-  this->stopAnalysisFromAddr(inst->getAddress());
-  this->stopAnalysisFromOffset(inst->getOffset());
-}
-
-
 void ProcessingPyConf::callbackRoutine(__uint threadId, PyObject *callback) {
   PyObject *args = xPyTuple_New(1);
   PyTuple_SetItem(args, 0, PyLong_FromUint(threadId));

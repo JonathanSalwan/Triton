@@ -28,7 +28,6 @@ class ProcessingPyConf
 
     void applyConfBeforeProcessing(IRBuilder *irb);
     void applyConfAfterProcessing(IRBuilder *irb);
-    void applyConfAfterProcessing(Inst *inst);
 
     void callbackAfter(Inst *inst, AnalysisProcessor *ap);
     void callbackBefore(Inst *inst, AnalysisProcessor *ap);
