@@ -12,6 +12,7 @@
  * Class MemoryOperand
  *
  * - address (integer)
+ * - bitvector (PyBitVector)
  * - size (integer)
  */
 
@@ -19,6 +20,12 @@
 void MemoryOperand_dealloc(PyObject *self) {
   delete PyMemoryOperand_AsMemoryOperand(self);
   Py_DECREF(self);
+}
+
+
+static char MemoryOperand_getBitvector_doc[] = "Returns the bitvector";
+static PyObject *MemoryOperand_getBitvector(PyObject *self, PyObject *noarg) {
+  return PyBitvector(PyMemoryOperand_AsMemoryOperand(self));
 }
 
 
@@ -35,9 +42,10 @@ static PyObject *MemoryOperand_getSize(PyObject *self, PyObject *noarg) {
 
 
 PyMethodDef MemoryOperand_callbacks[] = {
-  {"getAddress",    MemoryOperand_getAddress,   METH_NOARGS,     MemoryOperand_getAddress_doc},
-  {"getSize",       MemoryOperand_getSize,      METH_NOARGS,     MemoryOperand_getSize_doc},
-  {nullptr,         nullptr,                    0,               nullptr}
+  {"getBitvector",  MemoryOperand_getBitvector,   METH_NOARGS,     MemoryOperand_getBitvector_doc},
+  {"getAddress",    MemoryOperand_getAddress,     METH_NOARGS,     MemoryOperand_getAddress_doc},
+  {"getSize",       MemoryOperand_getSize,        METH_NOARGS,     MemoryOperand_getSize_doc},
+  {nullptr,         nullptr,                      0,               nullptr}
 };
 
 

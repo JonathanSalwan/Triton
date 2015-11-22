@@ -21,12 +21,14 @@
 #endif
 
 
+PyObject *PyBitvector(MemoryOperand *mem);
+PyObject *PyBitvector(RegisterOperand *reg);
+PyObject *PyImmediateOperand(ImmediateOperand imm);
 PyObject *PyInstruction(IRBuilder *irb);
 PyObject *PyInstruction(Inst *inst);
+PyObject *PyMemoryOperand(MemoryOperand mem);
 PyObject *PyOperand(TritonOperand operand);
 PyObject *PyRegisterOperand(RegisterOperand reg);
-PyObject *PyMemoryOperand(MemoryOperand mem);
-PyObject *PyImmediateOperand(ImmediateOperand imm);
 
 #ifndef LIGHT_VERSION
 PyObject *PySmtAstNode(smt2lib::smtAstAbstractNode *node);
@@ -132,6 +134,20 @@ extern PyTypeObject ImmediateOperand_Type;
 
 #define PyImmediateOperand_Check(v) ((v)->ob_type == &ImmediateOperand_Type)
 #define PyImmediateOperand_AsImmediateOperand(v) (((ImmediateOperand_Object *)(v))->imm)
+
+// Bitvector =============================
+
+typedef struct {
+  PyObject_HEAD
+  uint32 low;
+  uint32 high;
+} Bitvector_Object;
+
+extern PyTypeObject Bitvector_Type;
+
+#define PyBitvector_Check(v)  ((v)->ob_type == &Bitvector_Type)
+#define PyBitvector_AsHigh(v) (((Bitvector_Object *)(v))->high)
+#define PyBitvector_AsLow(v)  (((Bitvector_Object *)(v))->low)
 
 #endif     /* !__TRITONPYOBJECT_H__ */
 
