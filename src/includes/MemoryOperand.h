@@ -10,6 +10,7 @@
 #include <string>
 
 #include "BitsVector.h"
+#include "CpuSize.h"
 #include "TritonTypes.h"
 
 
@@ -27,6 +28,7 @@ class MemoryOperand : public BitsVector
     ~MemoryOperand();
 
     __uint  getAddress(void) const;
+    __uint  getBitSize(void) const;
     __uint  getSize(void) const;
     void    setAddress(__uint addr);
     void    setSize(__uint size);

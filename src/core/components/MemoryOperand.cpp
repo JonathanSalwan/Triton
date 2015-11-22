@@ -37,6 +37,11 @@ __uint MemoryOperand::getAddress(void) const {
 }
 
 
+__uint MemoryOperand::getBitSize(void) const {
+  return (this->size * BYTE_SIZE_BIT);
+}
+
+
 __uint MemoryOperand::getSize(void) const {
   return this->size;
 }

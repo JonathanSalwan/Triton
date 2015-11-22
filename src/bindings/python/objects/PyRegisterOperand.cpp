@@ -12,6 +12,7 @@
  * Class RegisterOperand
  *
  * - bitvector (PyBitVector)
+ * - bitSize (integer)
  * - id (IDREF.REG)
  * - name (string)
  * - size (integer)
@@ -21,6 +22,12 @@
 void RegisterOperand_dealloc(PyObject *self) {
   delete PyRegisterOperand_AsRegisterOperand(self);
   Py_DECREF(self);
+}
+
+
+static char RegisterOperand_getBitSize_doc[] = "Returns the register size in bits";
+static PyObject *RegisterOperand_getBitSize(PyObject *self, PyObject *noarg) {
+  return Py_BuildValue("k", PyRegisterOperand_AsRegisterOperand(self)->getBitSize());
 }
 
 
@@ -42,13 +49,14 @@ static PyObject *RegisterOperand_getName(PyObject *self, PyObject *noarg) {
 }
 
 
-static char RegisterOperand_getSize_doc[] = "Returns the register size";
+static char RegisterOperand_getSize_doc[] = "Returns the register size in bytes";
 static PyObject *RegisterOperand_getSize(PyObject *self, PyObject *noarg) {
   return Py_BuildValue("k", PyRegisterOperand_AsRegisterOperand(self)->getSize());
 }
 
 
 PyMethodDef RegisterOperand_callbacks[] = {
+  {"getBitSize",    RegisterOperand_getBitSize,   METH_NOARGS,     RegisterOperand_getBitSize_doc},
   {"getBitvector",  RegisterOperand_getBitvector, METH_NOARGS,     RegisterOperand_getBitvector_doc},
   {"getId",         RegisterOperand_getId,        METH_NOARGS,     RegisterOperand_getId_doc},
   {"getName",       RegisterOperand_getName,      METH_NOARGS,     RegisterOperand_getName_doc},

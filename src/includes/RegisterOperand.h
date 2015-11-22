@@ -10,6 +10,7 @@
 #include <string>
 
 #include "BitsVector.h"
+#include "CpuSize.h"
 #include "TritonTypes.h"
 
 
@@ -30,6 +31,7 @@ class RegisterOperand : public BitsVector
 
     std::string getName(void) const;
     __uint      getPinRegId(void) const;
+    __uint      getBitSize(void) const;
     __uint      getSize(void) const;
     __uint      getTritonRegId(void) const;
     void        setSize(__uint size);

@@ -54,6 +54,11 @@ __uint RegisterOperand::getPinRegId(void) const {
 }
 
 
+__uint RegisterOperand::getBitSize(void) const {
+  return (this->size * BYTE_SIZE_BIT);
+}
+
+
 __uint RegisterOperand::getSize(void) const {
   return this->size;
 }

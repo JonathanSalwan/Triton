@@ -13,6 +13,7 @@
  *
  * - high (integer)
  * - low (integer)
+ * - vectorSize (integer)
  */
 
 
@@ -33,10 +34,18 @@ static PyObject *Bitvector_getLow(PyObject *self, PyObject *noarg) {
 }
 
 
+static char Bitvector_getVectorSize_doc[] = "Returns the size of the bitvector";
+static PyObject *Bitvector_getVectorSize(PyObject *self, PyObject *noarg) {
+  uint32 vectorSize = ((PyBitvector_AsHigh(self) - PyBitvector_AsLow(self)) + 1);
+  return Py_BuildValue("k", vectorSize);
+}
+
+
 PyMethodDef Bitvector_callbacks[] = {
-  {"getHigh",       Bitvector_getHigh,  METH_NOARGS,     Bitvector_getHigh_doc},
-  {"getLow",        Bitvector_getLow,   METH_NOARGS,     Bitvector_getLow_doc},
-  {nullptr,         nullptr,            0,               nullptr}
+  {"getHigh",       Bitvector_getHigh,        METH_NOARGS,     Bitvector_getHigh_doc},
+  {"getLow",        Bitvector_getLow,         METH_NOARGS,     Bitvector_getLow_doc},
+  {"getVectorSize", Bitvector_getVectorSize,  METH_NOARGS,     Bitvector_getVectorSize_doc},
+  {nullptr,         nullptr,                  0,               nullptr}
 };
 
 
