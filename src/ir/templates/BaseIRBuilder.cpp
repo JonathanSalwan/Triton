@@ -162,12 +162,12 @@ void BaseIRBuilder::addOperand(const TritonOperand &operand) {
 
 
 void BaseIRBuilder::setup(__uint mem_value) {
-  for (auto it = this->operands.begin(); it != this->operands.end(); ++it)
+  for (auto it = this->operands.begin(); it != this->operands.end(); ++it) {
     if (IRBuilder::isMemOperand(it->getType())) {
       it->setMemAddress(mem_value);
       this->needSetup = false;
-      break;
     }
+  }
 }
 
 
