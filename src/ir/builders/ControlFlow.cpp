@@ -22,7 +22,7 @@ SymbolicExpression *ControlFlow::rip(Inst &inst, AnalysisProcessor &ap, __uint n
    * Create the SMT semantic.
    * RIP = nextAddress
    */
-  expr = smt2lib::bv(nextAddr, 64);
+  expr = smt2lib::bv(nextAddr, REG_SIZE_BIT);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
