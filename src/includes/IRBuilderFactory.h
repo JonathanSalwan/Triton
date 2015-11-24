@@ -21,6 +21,7 @@ namespace IRBuilderFactory {
 
   /* Return an IR object corresponding to the given instruction. */
   IRBuilder   *createIRBuilder(INS ins);
+  IRBuilder   *buildIR(sint32 opcode, __uint address, std::string disas);
 
 }
 

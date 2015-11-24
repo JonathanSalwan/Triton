@@ -27,14 +27,112 @@ namespace IRBuilderFactory {
   }
 
 
-  // Returns a pointer to an IRBuilder object.
-  // It is up to the user to delete it when times come.
+  /*
+   * Returns a pointer to an IRBuilder object.
+   * It is up to the user to delete it when times come.
+   */
   IRBuilder *createIRBuilder(INS ins) {
 
-    __uint address         = INS_Address(ins);
-    std::string disas      = INS_Disassemble(ins);
-    INT32 opcode           = INS_Opcode(ins);
+    INT32 opcode      = INS_Opcode(ins);
+    IRBuilder *ir     = nullptr;
+    __uint address    = INS_Address(ins);
+    std::string disas = INS_Disassemble(ins);
 
+    /* Build the IR's template */
+    ir = buildIR(opcode, address, disas);
+    irbuilders.push_back(ir);
+
+    /* Populate the operands */
+    const uint32 n = INS_OperandCount(ins);
+
+    for (uint32 i = 0; i < n; ++i) {
+
+      TritonOperand op;
+
+      /* Special case */
+      if (INS_IsDirectBranchOrCall(ins)){
+
+        TritonOperand op1;
+        op1.setType(IRBuilderOperand::IMM);
+        op1.setImm(ImmediateOperand(INS_DirectBranchOrCallTargetAddress(ins)));
+        ir->addOperand(op1);
+
+        if (INS_MemoryOperandIsWritten(ins, 0)) {
+          TritonOperand op2;
+          op2.setType(IRBuilderOperand::MEM_W);
+          op2.setMemSize(INS_MemoryWriteSize(ins));
+          ir->addOperand(op2);
+        }
+
+        break;
+      }
+
+      /* Immediate */
+      if (INS_OperandIsImmediate(ins, i)) {
+        op.setType(IRBuilderOperand::IMM);
+        op.setImm(ImmediateOperand(INS_OperandImmediate(ins, i)));
+      }
+
+      /* Register */
+      else if (INS_OperandIsReg(ins, i)) {
+        op.setType(IRBuilderOperand::REG);
+        op.setReg(RegisterOperand(INS_OperandReg(ins, i)));
+      }
+
+      /* Memory */
+      else if (INS_MemoryOperandCount(ins) > 0) {
+        /* Memory read */
+        if (INS_MemoryOperandIsRead(ins, 0)) {
+          op.setType(IRBuilderOperand::MEM_R);
+          op.setMemSize(INS_MemoryReadSize(ins));
+        }
+        /* Memory write */
+        else {
+          op.setType(IRBuilderOperand::MEM_W);
+          op.setMemSize(INS_MemoryWriteSize(ins));
+        }
+      }
+
+      /* load effective address instruction */
+      else if (INS_OperandIsAddressGenerator(ins, i)) {
+        REG reg;
+        op.setType(IRBuilderOperand::LEA);
+        op.setDisplacement(ImmediateOperand(INS_OperandMemoryDisplacement(ins, i)));
+        op.setMemoryScale(ImmediateOperand(INS_OperandMemoryScale(ins, i)));
+
+        reg = INS_OperandMemoryBaseReg(ins, i);
+        if (REG_valid(reg))
+          op.setBaseReg(RegisterOperand(reg));
+
+        reg = INS_OperandMemoryIndexReg(ins, i);
+        if (REG_valid(reg))
+          op.setIndexReg(RegisterOperand(reg));
+      }
+
+      /* Undefined */
+      else {
+        // std::cout << "[DEBUG] Unknown kind of operand: " << INS_Disassemble(ins) << std::endl;
+        continue;
+      }
+
+      op.setReadAndWrite(INS_OperandReadAndWritten(ins, i));
+      op.setReadOnly(INS_OperandReadOnly(ins, i));
+      op.setWriteOnly(INS_OperandWrittenOnly(ins, i));
+      ir->addOperand(op);
+
+    }
+
+    // Setup the opcode in the IRbuilder
+    ir->setOpcode(opcode);
+    ir->setOpcodeCategory(INS_Category(ins));
+    ir->setNextAddress(INS_NextAddress(ins));
+
+    return ir;
+  }
+
+
+  /* Create the IR's template from its opcode */
+  IRBuilder *buildIR(sint32 opcode, __uint address, std::string disas) {
     IRBuilder *ir = nullptr;
 
     switch (opcode) {
@@ -503,92 +601,6 @@ namespace IRBuilderFactory {
     /* Check if everything is ok */
     if (ir == nullptr)
       throw std::runtime_error("IRBuilder - Not enough memory");
-    irbuilders.push_back(ir);
-
-    /* Populate the operands */
-    const uint32 n = INS_OperandCount(ins);
-
-    for (uint32 i = 0; i < n; ++i) {
-
-      TritonOperand op;
-
-      /* Special case */
-      if (INS_IsDirectBranchOrCall(ins)){
-
-        TritonOperand op1;
-        op1.setType(IRBuilderOperand::IMM);
-        op1.setImm(ImmediateOperand(INS_DirectBranchOrCallTargetAddress(ins)));
-        ir->addOperand(op1);
-
-        if (INS_MemoryOperandIsWritten(ins, 0)) {
-          TritonOperand op2;
-          op2.setType(IRBuilderOperand::MEM_W);
-          op2.setMemSize(INS_MemoryWriteSize(ins));
-          ir->addOperand(op2);
-        }
-
-        break;
-      }
-
-      /* Immediate */
-      if (INS_OperandIsImmediate(ins, i)) {
-        op.setType(IRBuilderOperand::IMM);
-        op.setImm(ImmediateOperand(INS_OperandImmediate(ins, i)));
-      }
-
-      /* Register */
-      else if (INS_OperandIsReg(ins, i)) {
-        op.setType(IRBuilderOperand::REG);
-        op.setReg(RegisterOperand(INS_OperandReg(ins, i)));
-      }
-
-      /* Memory */
-      else if (INS_MemoryOperandCount(ins) > 0) {
-        /* Memory read */
-        if (INS_MemoryOperandIsRead(ins, 0)) {
-          op.setType(IRBuilderOperand::MEM_R);
-          op.setMemSize(INS_MemoryReadSize(ins));
-        }
-        /* Memory write */
-        else {
-          op.setType(IRBuilderOperand::MEM_W);
-          op.setMemSize(INS_MemoryWriteSize(ins));
-        }
-      }
-
-      /* load effective address instruction */
-      else if (INS_OperandIsAddressGenerator(ins, i)) {
-        REG reg;
-        op.setType(IRBuilderOperand::LEA);
-        op.setDisplacement(ImmediateOperand(INS_OperandMemoryDisplacement(ins, i)));
-        op.setMemoryScale(ImmediateOperand(INS_OperandMemoryScale(ins, i)));
-
-        reg = INS_OperandMemoryBaseReg(ins, i);
-        if (REG_valid(reg))
-          op.setBaseReg(RegisterOperand(reg));
-
-        reg = INS_OperandMemoryIndexReg(ins, i);
-        if (REG_valid(reg))
-          op.setIndexReg(RegisterOperand(reg));
-      }
-
-      /* Undefined */
-      else {
-        // std::cout << "[DEBUG] Unknown kind of operand: " << INS_Disassemble(ins) << std::endl;
-        continue;
-      }
-
-      op.setReadAndWrite(INS_OperandReadAndWritten(ins, i));
-      op.setReadOnly(INS_OperandReadOnly(ins, i));
-      op.setWriteOnly(INS_OperandWrittenOnly(ins, i));
-      ir->addOperand(op);
-
-    }
-
-    // Setup the opcode in the IRbuilder
-    ir->setOpcode(opcode);
-    ir->setOpcodeCategory(INS_Category(ins));
-    ir->setNextAddress(INS_NextAddress(ins));
 
     return ir;
   }
