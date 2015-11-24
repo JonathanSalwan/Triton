@@ -1,4 +1,4 @@
-<p align="center"><img src="http://shell-storm.org/files/triton_logo_1.png"/></p>
+<p align="center"><img width="50%" src="http://triton.quarkslab.com/files/triton2.png"/></p>
 
 **Triton** is a Pin-based dynamic symbolic execution (DSE) execution framework. Although Triton is a DSE framework, it also
 provides internal components like a
