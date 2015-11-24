@@ -25,7 +25,7 @@ SymbolicExpression *ControlFlow::rip(Inst &inst, AnalysisProcessor &ap, __uint n
   expr = smt2lib::bv(nextAddr, REG_SIZE_BIT);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "Program Counter");
   ap.assignmentSpreadTaintRegImm(se, ID_TMP_RIP);
 
   return se;

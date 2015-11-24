@@ -45,7 +45,7 @@ void JnleIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
             smt2lib::bv(this->nextAddress, REG_SIZE_BIT));
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "Program Counter");
 
   /* Apply the taint */
   ap.aluSpreadTaintRegReg(se, ID_TMP_RIP, ID_TMP_SF);

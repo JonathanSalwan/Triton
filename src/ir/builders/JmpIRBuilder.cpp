@@ -30,7 +30,7 @@ void JmpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   expr = smt2lib::bv(imm, REG_SIZE_BIT);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "Program Counter");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegImm(se, ID_TMP_RIP);
@@ -50,7 +50,7 @@ void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr = op1;
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "Program Counter");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegReg(se, ID_TMP_RIP, reg);
@@ -70,7 +70,7 @@ void JmpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr = op1;
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr, ID_TMP_RIP, REG_SIZE, "Program Counter");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegMem(se, ID_TMP_RIP, mem, memSize);

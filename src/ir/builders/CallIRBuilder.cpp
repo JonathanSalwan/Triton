@@ -68,7 +68,7 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   expr2 = ap.buildSymbolicRegOperand(reg, regSize);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr2, ID_TMP_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr2, ID_TMP_RIP, REG_SIZE, "Program Counter");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegReg(se, ID_TMP_RIP, reg);
@@ -100,7 +100,7 @@ void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   expr2 = smt2lib::bv(imm, memSize * BYTE_SIZE_BIT);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr2, ID_TMP_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr2, ID_TMP_RIP, REG_SIZE, "Program Counter");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegImm(se, ID_TMP_RIP);
@@ -133,7 +133,7 @@ void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   expr2 = ap.buildSymbolicMemOperand(mem1, memSize1);
 
   /* Create the symbolic expression */
-  se = ap.createRegSE(inst, expr2, ID_TMP_RIP, REG_SIZE, "RIP");
+  se = ap.createRegSE(inst, expr2, ID_TMP_RIP, REG_SIZE, "Program Counter");
 
   /* Apply the taint */
   ap.assignmentSpreadTaintRegMem(se, ID_TMP_RIP, mem1, memSize1);
