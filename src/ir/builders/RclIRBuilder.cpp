@@ -21,7 +21,7 @@ RclIRBuilder::RclIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void RclIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void RclIRBuilder::regImm(Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *cf, *res;
   auto reg = this->operands[0].getReg();
@@ -59,12 +59,12 @@ void RclIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se2, reg, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRcl(inst, se1, ap, regSize, op2);
-  EflagsBuilder::ofRol(inst, se2, ap, regSize, op2); /* Same as ROL */
+  EflagsBuilder::cfRcl(inst, se1, regSize, op2);
+  EflagsBuilder::ofRol(inst, se2, regSize, op2); /* Same as ROL */
 }
 
 
-void RclIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void RclIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *cf, *res;
   auto reg1 = this->operands[0].getReg();
@@ -101,17 +101,17 @@ void RclIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se2, reg1, reg1);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRcl(inst, se1, ap, regSize1, op2);
-  EflagsBuilder::ofRol(inst, se2, ap, regSize1, op2); /* Same as ROL */
+  EflagsBuilder::cfRcl(inst, se1, regSize1, op2);
+  EflagsBuilder::ofRol(inst, se2, regSize1, op2); /* Same as ROL */
 }
 
 
-void RclIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void RclIRBuilder::regMem(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void RclIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void RclIRBuilder::memImm(Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *cf, *res;
   auto memSize = this->operands[0].getMem().getSize();
@@ -149,12 +149,12 @@ void RclIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintMemMem(se2, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRcl(inst, se1, ap, memSize, op2);
-  EflagsBuilder::ofRol(inst, se2, ap, memSize, op2); /* Same as ROL */
+  EflagsBuilder::cfRcl(inst, se1, memSize, op2);
+  EflagsBuilder::ofRol(inst, se2, memSize, op2); /* Same as ROL */
 }
 
 
-void RclIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void RclIRBuilder::memReg(Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *cf, *res;
   auto memSize = this->operands[0].getMem().getSize();
@@ -191,20 +191,20 @@ void RclIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintMemMem(se2, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRcl(inst, se1, ap, memSize, op2);
-  EflagsBuilder::ofRol(inst, se2, ap, memSize, op2); /* Same as ROL */
+  EflagsBuilder::cfRcl(inst, se1, memSize, op2);
+  EflagsBuilder::ofRol(inst, se2, memSize, op2); /* Same as ROL */
 }
 
 
-Inst *RclIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *RclIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "RCL");
+    this->templateMethod(*inst, this->operands, "RCL");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

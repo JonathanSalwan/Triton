@@ -21,12 +21,12 @@ CmovpIRBuilder::CmovpIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void CmovpIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void CmovpIRBuilder::regImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void CmovpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void CmovpIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *reg1e, *reg2e, *pf;
   auto reg1 = this->operands[0].getReg();
@@ -56,7 +56,7 @@ void CmovpIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void CmovpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void CmovpIRBuilder::regMem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *reg1e, *mem1e, *pf;
   auto memSize = this->operands[1].getMem().getSize();
@@ -86,25 +86,25 @@ void CmovpIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void CmovpIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void CmovpIRBuilder::memImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void CmovpIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void CmovpIRBuilder::memReg(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-Inst *CmovpIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *CmovpIRBuilder::process(void) const {
   checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "CMOVP");
+    this->templateMethod(*inst, this->operands, "CMOVP");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

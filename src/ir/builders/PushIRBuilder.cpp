@@ -22,7 +22,7 @@ PushIRBuilder::PushIRBuilder(__uint address, const std::string &disassembly):
 
 
 
-static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 memSize)
+static SymbolicExpression *alignStack(Inst &inst, uint32 memSize)
 {
   SymbolicExpression    *se;
   smt2lib::smtAstAbstractNode   *expr, *op1, *op2;
@@ -43,7 +43,7 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 
 }
 
 
-void PushIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void PushIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto reg = this->operands[0].getReg(); // Reg pushed
@@ -52,7 +52,7 @@ void PushIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   auto memSize = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic side effect */
-  alignStack(inst, ap, memSize);
+  alignStack(inst, memSize);
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicRegOperand(reg, regSize);
@@ -69,7 +69,7 @@ void PushIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void PushIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void PushIRBuilder::imm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto imm = this->operands[0].getImm().getValue(); // Imm pushed
@@ -77,7 +77,7 @@ void PushIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   auto memSize = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic side effect */
-  alignStack(inst, ap, memSize);
+  alignStack(inst, memSize);
 
   /* Create the SMT semantic */
   /* OP_1 */
@@ -95,7 +95,7 @@ void PushIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void PushIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void PushIRBuilder::mem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto mem1 = this->operands[0].getMem(); // Mem pushed
@@ -104,7 +104,7 @@ void PushIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   auto memSize2 = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic side effect */
-  alignStack(inst, ap, memSize2);
+  alignStack(inst, memSize2);
 
   /* Create the SMT semantic */
   op1 = ap.buildSymbolicMemOperand(mem1, memSize1);
@@ -121,21 +121,21 @@ void PushIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void PushIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void PushIRBuilder::none(Inst &inst) const {
   /* There is no <push none> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *PushIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *PushIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "PUSH");
+    this->templateMethod(*inst, this->operands, "PUSH");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

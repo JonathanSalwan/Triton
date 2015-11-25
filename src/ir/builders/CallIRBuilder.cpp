@@ -21,7 +21,7 @@ CallIRBuilder::CallIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, __uint memSize)
+static SymbolicExpression *alignStack(Inst &inst, uint32 memSize)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
@@ -42,7 +42,7 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, __uint 
 }
 
 
-void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void CallIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr1, *expr2;
   auto reg = this->operands[0].getReg();
@@ -51,7 +51,7 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   auto memSize = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic side effect */
-  alignStack(inst, ap, memSize);
+  alignStack(inst, memSize);
 
   /* Create the SMT semantic */
   /* *RSP =  Next_RIP */
@@ -75,7 +75,7 @@ void CallIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void CallIRBuilder::imm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr1, *expr2;
   auto imm = this->operands[0].getImm().getValue();
@@ -83,7 +83,7 @@ void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
   auto memSize = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic side effect */
-  alignStack(inst, ap, memSize);
+  alignStack(inst, memSize);
 
   /* Create the SMT semantic */
   /* *RSP =  Next_RIP */
@@ -107,7 +107,7 @@ void CallIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void CallIRBuilder::mem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr1, *expr2;
   auto mem1 = this->operands[0].getMem();
@@ -116,7 +116,7 @@ void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   auto memSize2 = this->operands[1].getMem().getSize();
 
   /* Create the SMT semantic side effect */
-  alignStack(inst, ap, memSize2);
+  alignStack(inst, memSize2);
 
   /* Create the SMT semantic */
   /* *RSP =  Next_RIP */
@@ -140,18 +140,18 @@ void CallIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void CallIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void CallIRBuilder::none(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *CallIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *CallIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "CALL");
+    this->templateMethod(*inst, this->operands, "CALL");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
   }
   catch (std::exception &e) {

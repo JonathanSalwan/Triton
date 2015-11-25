@@ -21,12 +21,12 @@ AndnpsIRBuilder::AndnpsIRBuilder(__uint address, const std::string &disassembly)
 }
 
 
-void AndnpsIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void AndnpsIRBuilder::regImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void AndnpsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void AndnpsIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto reg1 = this->operands[0].getReg();
@@ -49,7 +49,7 @@ void AndnpsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void AndnpsIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void AndnpsIRBuilder::regMem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto reg = this->operands[0].getReg();
@@ -72,25 +72,25 @@ void AndnpsIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void AndnpsIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void AndnpsIRBuilder::memImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void AndnpsIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void AndnpsIRBuilder::memReg(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-Inst *AndnpsIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *AndnpsIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "ANDNPS");
+    this->templateMethod(*inst, this->operands, "ANDNPS");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

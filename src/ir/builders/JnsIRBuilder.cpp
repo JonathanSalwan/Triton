@@ -21,7 +21,7 @@ JnsIRBuilder::JnsIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void JnsIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void JnsIRBuilder::imm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *sf;
   auto imm = this->operands[0].getImm().getValue();
@@ -48,28 +48,28 @@ void JnsIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void JnsIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void JnsIRBuilder::reg(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void JnsIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void JnsIRBuilder::mem(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void JnsIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void JnsIRBuilder::none(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *JnsIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *JnsIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "JNS");
+    this->templateMethod(*inst, this->operands, "JNS");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
   }
   catch (std::exception &e) {

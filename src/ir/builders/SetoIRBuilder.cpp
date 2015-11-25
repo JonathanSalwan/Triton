@@ -21,12 +21,12 @@ SetoIRBuilder::SetoIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void SetoIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void SetoIRBuilder::imm(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void SetoIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void SetoIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *of;
   auto reg = this->operands[0].getReg();
@@ -53,7 +53,7 @@ void SetoIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void SetoIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void SetoIRBuilder::mem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *of;
   auto mem = this->operands[0].getMem();
@@ -80,20 +80,20 @@ void SetoIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void SetoIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void SetoIRBuilder::none(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *SetoIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *SetoIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "SETO");
+    this->templateMethod(*inst, this->operands, "SETO");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

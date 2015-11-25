@@ -22,12 +22,12 @@ MovsxIRBuilder::MovsxIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void MovsxIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void MovsxIRBuilder::regImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void MovsxIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void MovsxIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto reg1 = this->operands[0].getReg();
@@ -49,7 +49,7 @@ void MovsxIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void MovsxIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void MovsxIRBuilder::regMem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto mem = this->operands[1].getMem();
@@ -71,25 +71,25 @@ void MovsxIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void MovsxIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void MovsxIRBuilder::memImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void MovsxIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void MovsxIRBuilder::memReg(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-Inst *MovsxIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *MovsxIRBuilder::process(void) const {
   checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "MOVSX");
+    this->templateMethod(*inst, this->operands, "MOVSX");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

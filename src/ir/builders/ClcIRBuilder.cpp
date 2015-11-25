@@ -21,20 +21,20 @@ ClcIRBuilder::ClcIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void ClcIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
-  EflagsBuilder::clearFlag(inst, ap, ID_TMP_CF, "Clears carry flag");
+void ClcIRBuilder::none(Inst &inst) const {
+  EflagsBuilder::clearFlag(inst, ID_TMP_CF, "Clears carry flag");
 }
 
 
-Inst *ClcIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *ClcIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "CLC");
+    this->templateMethod(*inst, this->operands, "CLC");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

@@ -21,7 +21,7 @@ NotIRBuilder::NotIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void NotIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void NotIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto reg = this->operands[0].getReg();
@@ -41,7 +41,7 @@ void NotIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void NotIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void NotIRBuilder::mem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto mem = this->operands[0].getMem();
@@ -61,27 +61,27 @@ void NotIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void NotIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void NotIRBuilder::imm(Inst &inst) const {
   /* There is no <not imm> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void NotIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void NotIRBuilder::none(Inst &inst) const {
   /* There is no <not none> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *NotIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *NotIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "NOT");
+    this->templateMethod(*inst, this->operands, "NOT");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

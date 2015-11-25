@@ -62,17 +62,17 @@ static void callbackBefore(IRBuilder *irb, CONTEXT *ctx, BOOL hasEA, ADDRINT ea,
   irb->setBranchTargetAddress(branchTargetAddress);
 
   /* Python callback before IR processing */
-  processingPyConf.callbackBeforeIRProc(irb, &ap);
+  processingPyConf.callbackBeforeIRProc(irb);
 
   /* Build the IR */
-  Inst *inst = irb->process(ap);
+  Inst *inst = irb->process();
   ap.addInstructionToTrace(inst);
 
   /* Import Irb information to Inst */
   inst->importIrbInformation(irb);
 
   /* Python callback before instruction processing */
-  processingPyConf.callbackBefore(inst, &ap);
+  processingPyConf.callbackBefore(inst);
 
   /* Some configurations must be applied after processing */
   processingPyConf.applyConfAfterProcessing(irb);
@@ -114,7 +114,7 @@ static void callbackAfter(IRBuilder *irb, CONTEXT *ctx, THREADID threadId) {
   #endif
 
   /* Python callback after instruction processing */
-  processingPyConf.callbackAfter(inst, &ap);
+  processingPyConf.callbackAfter(inst);
 
   /* Some configurations must be applied after processing */
   processingPyConf.applyConfAfterProcessing(irb);

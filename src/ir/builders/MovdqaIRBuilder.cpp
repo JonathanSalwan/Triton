@@ -21,12 +21,12 @@ MovdqaIRBuilder::MovdqaIRBuilder(__uint address, const std::string &disassembly)
 }
 
 
-void MovdqaIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void MovdqaIRBuilder::regImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void MovdqaIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void MovdqaIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
   auto reg1 = this->operands[0].getReg();
@@ -45,7 +45,7 @@ void MovdqaIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void MovdqaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void MovdqaIRBuilder::regMem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
   auto memSize = this->operands[1].getMem().getSize();
@@ -64,12 +64,12 @@ void MovdqaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void MovdqaIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void MovdqaIRBuilder::memImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void MovdqaIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void MovdqaIRBuilder::memReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
   auto memSize = this->operands[0].getMem().getSize();
@@ -88,15 +88,15 @@ void MovdqaIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-Inst *MovdqaIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *MovdqaIRBuilder::process(void) const {
   checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "MOVDQA");
+    this->templateMethod(*inst, this->operands, "MOVDQA");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

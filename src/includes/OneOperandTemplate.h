@@ -15,7 +15,8 @@
 #include "IRBuilder.h"
 #include "OperandTemplate.h"
 #include "TritonOperand.h"
-#include "TritonOperand.h"
+
+extern AnalysisProcessor ap;
 
 
 class OneOperandTemplate: public OperandTemplate {
@@ -23,21 +24,16 @@ class OneOperandTemplate: public OperandTemplate {
     virtual ~OneOperandTemplate() { }
 
     virtual void templateMethod(
-        AnalysisProcessor &ap,
         Inst &inst,
         const std::vector<TritonOperand> &operands,
         std::string instructionName) const;
 
   protected:
     // Primitives uses in the templateMethod, must be implemented by subclasses.
-
-    virtual void none(AnalysisProcessor &ap, Inst &inst) const = 0;
-
-    virtual void reg(AnalysisProcessor &ap, Inst &inst) const = 0;
-
-    virtual void imm(AnalysisProcessor &ap, Inst &inst) const = 0;
-
-    virtual void mem(AnalysisProcessor &ap, Inst &inst) const = 0;
+    virtual void none(Inst &inst) const = 0;
+    virtual void reg(Inst &inst) const = 0;
+    virtual void imm(Inst &inst) const = 0;
+    virtual void mem(Inst &inst) const = 0;
 };
 
 #endif // ONEOPERANDTEMPLATE_H

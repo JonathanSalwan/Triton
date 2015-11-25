@@ -30,7 +30,7 @@ class NullIRBuilder: public BaseIRBuilder {
       return this->operands;
     }
 
-    Inst *process(AnalysisProcessor &ap) const {
+    Inst *process(void) const {
       #ifndef LIGHT_VERSION
       ap.incNumberOfUnknownInstruction(); /* Used for statistics */
       #endif

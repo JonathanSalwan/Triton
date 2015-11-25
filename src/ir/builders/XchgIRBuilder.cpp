@@ -21,12 +21,12 @@ XchgIRBuilder::XchgIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void XchgIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void XchgIRBuilder::regImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void XchgIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void XchgIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr1, *expr2, *op1, *op2;
   auto reg1 = this->operands[0].getReg();
@@ -54,7 +54,7 @@ void XchgIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void XchgIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void XchgIRBuilder::regMem(Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr1, *expr2, *op1, *op2;
   auto reg1 = this->operands[0].getReg();
@@ -82,12 +82,12 @@ void XchgIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void XchgIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void XchgIRBuilder::memImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void XchgIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void XchgIRBuilder::memReg(Inst &inst) const {
   SymbolicExpression *se1, *se2;
   smt2lib::smtAstAbstractNode *expr1, *expr2, *op1, *op2;
   auto mem1 = this->operands[0].getMem();
@@ -115,15 +115,15 @@ void XchgIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-Inst *XchgIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *XchgIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "XCHG");
+    this->templateMethod(*inst, this->operands, "XCHG");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

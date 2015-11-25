@@ -21,12 +21,12 @@ XaddIRBuilder::XaddIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void XaddIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void XaddIRBuilder::regImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void XaddIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void XaddIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se, *se1, *se2;
   smt2lib::smtAstAbstractNode *expr, *expr1, *expr2, *op1, *op2;
   auto reg1 = this->operands[0].getReg();
@@ -66,26 +66,26 @@ void XaddIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegImm(se, reg1);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, ap, regSize2, op1, op2);
-  EflagsBuilder::cfAdd(inst, se, ap, regSize2, op1);
-  EflagsBuilder::ofAdd(inst, se, ap, regSize2, op1, op2);
-  EflagsBuilder::pf(inst, se, ap, regSize2);
-  EflagsBuilder::sf(inst, se, ap, regSize2);
-  EflagsBuilder::zf(inst, se, ap, regSize2);
+  EflagsBuilder::af(inst, se, regSize2, op1, op2);
+  EflagsBuilder::cfAdd(inst, se, regSize2, op1);
+  EflagsBuilder::ofAdd(inst, se, regSize2, op1, op2);
+  EflagsBuilder::pf(inst, se, regSize2);
+  EflagsBuilder::sf(inst, se, regSize2);
+  EflagsBuilder::zf(inst, se, regSize2);
 }
 
 
-void XaddIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void XaddIRBuilder::regMem(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void XaddIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void XaddIRBuilder::memImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void XaddIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void XaddIRBuilder::memReg(Inst &inst) const {
   SymbolicExpression *se, *se1, *se2;
   smt2lib::smtAstAbstractNode *expr, *expr1, *expr2, *op1, *op2;
   auto mem1 = this->operands[0].getMem();
@@ -125,24 +125,24 @@ void XaddIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegMem(se, reg2, mem1, memSize1);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, ap, memSize1, op1, op2);
-  EflagsBuilder::cfAdd(inst, se, ap, memSize1, op1);
-  EflagsBuilder::ofAdd(inst, se, ap, memSize1, op1, op2);
-  EflagsBuilder::pf(inst, se, ap, memSize1);
-  EflagsBuilder::sf(inst, se, ap, memSize1);
-  EflagsBuilder::zf(inst, se, ap, memSize1);
+  EflagsBuilder::af(inst, se, memSize1, op1, op2);
+  EflagsBuilder::cfAdd(inst, se, memSize1, op1);
+  EflagsBuilder::ofAdd(inst, se, memSize1, op1, op2);
+  EflagsBuilder::pf(inst, se, memSize1);
+  EflagsBuilder::sf(inst, se, memSize1);
+  EflagsBuilder::zf(inst, se, memSize1);
 }
 
 
-Inst *XaddIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *XaddIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "XADD");
+    this->templateMethod(*inst, this->operands, "XADD");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

@@ -21,20 +21,20 @@ CldIRBuilder::CldIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void CldIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
-  EflagsBuilder::clearFlag(inst, ap, ID_TMP_DF, "Clears direction flag");
+void CldIRBuilder::none(Inst &inst) const {
+  EflagsBuilder::clearFlag(inst, ID_TMP_DF, "Clears direction flag");
 }
 
 
-Inst *CldIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *CldIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "CLD");
+    this->templateMethod(*inst, this->operands, "CLD");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

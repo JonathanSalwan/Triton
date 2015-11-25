@@ -21,12 +21,12 @@ SetnoIRBuilder::SetnoIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void SetnoIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void SetnoIRBuilder::imm(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void SetnoIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void SetnoIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *of;
   auto reg = this->operands[0].getReg();
@@ -53,7 +53,7 @@ void SetnoIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void SetnoIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void SetnoIRBuilder::mem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *of;
   auto mem = this->operands[0].getMem();
@@ -80,20 +80,20 @@ void SetnoIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void SetnoIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void SetnoIRBuilder::none(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *SetnoIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *SetnoIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "SETNO");
+    this->templateMethod(*inst, this->operands, "SETNO");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

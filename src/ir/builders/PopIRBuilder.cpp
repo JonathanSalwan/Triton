@@ -21,7 +21,7 @@ PopIRBuilder::PopIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 memSize)
+static SymbolicExpression *alignStack(Inst &inst, uint32 memSize)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
@@ -42,7 +42,7 @@ static SymbolicExpression *alignStack(Inst &inst, AnalysisProcessor &ap, uint32 
 }
 
 
-void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void PopIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto reg = this->operands[0].getReg(); // Reg poped
@@ -63,11 +63,11 @@ void PopIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintMemReg(se, mem, reg, memSize);
 
   /* Create the SMT semantic side effect */
-  alignStack(inst, ap, memSize);
+  alignStack(inst, memSize);
 }
 
 
-void PopIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void PopIRBuilder::mem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto mem1 = this->operands[0].getMem(); // Mem poped
@@ -88,31 +88,31 @@ void PopIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintMemMem(se, mem1, mem2, memSize2);
 
   /* Create the SMT semantic side effect */
-  alignStack(inst, ap, memSize1);
+  alignStack(inst, memSize1);
 }
 
 
-void PopIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void PopIRBuilder::imm(Inst &inst) const {
   /* There is no <pop imm> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void PopIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void PopIRBuilder::none(Inst &inst) const {
   /* There is no <pop none> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *PopIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *PopIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "POP");
+    this->templateMethod(*inst, this->operands, "POP");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

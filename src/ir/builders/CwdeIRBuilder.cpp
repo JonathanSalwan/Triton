@@ -21,7 +21,7 @@ CwdeIRBuilder::CwdeIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void CwdeIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void CwdeIRBuilder::none(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
 
@@ -39,15 +39,15 @@ void CwdeIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-Inst *CwdeIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *CwdeIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "CWDE");
+    this->templateMethod(*inst, this->operands, "CWDE");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

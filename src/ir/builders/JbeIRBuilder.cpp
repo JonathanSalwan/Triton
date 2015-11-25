@@ -21,7 +21,7 @@ JbeIRBuilder::JbeIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void JbeIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void JbeIRBuilder::imm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *cf, *zf;
   auto imm = this->operands[0].getImm().getValue();
@@ -58,28 +58,28 @@ void JbeIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void JbeIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void JbeIRBuilder::reg(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void JbeIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void JbeIRBuilder::mem(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void JbeIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void JbeIRBuilder::none(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *JbeIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *JbeIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "JBE");
+    this->templateMethod(*inst, this->operands, "JBE");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
   }
   catch (std::exception &e) {

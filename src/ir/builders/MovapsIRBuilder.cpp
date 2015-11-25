@@ -21,12 +21,12 @@ MovapsIRBuilder::MovapsIRBuilder(__uint address, const std::string &disassembly)
 }
 
 
-void MovapsIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void MovapsIRBuilder::regImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void MovapsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void MovapsIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
   auto reg1 = this->operands[0].getReg();
@@ -46,7 +46,7 @@ void MovapsIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void MovapsIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void MovapsIRBuilder::regMem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
   auto mem = this->operands[1].getMem();
@@ -66,12 +66,12 @@ void MovapsIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void MovapsIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void MovapsIRBuilder::memImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void MovapsIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void MovapsIRBuilder::memReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
   auto mem = this->operands[0].getMem();
@@ -91,15 +91,15 @@ void MovapsIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-Inst *MovapsIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *MovapsIRBuilder::process(void) const {
   checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "MOVAPS");
+    this->templateMethod(*inst, this->operands, "MOVAPS");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

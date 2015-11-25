@@ -12,7 +12,6 @@
 #include <ostream>
 #include <string>
 
-#include "AnalysisProcessor.h"
 #include "ContextHandler.h"
 #include "IRBuilderOperand.h"
 #include "Inst.h"
@@ -103,10 +102,10 @@ class IRBuilder {
     // Check if the setup is done (when needed: i.e get the value for
     // MEM_* operands). If it is not, throws a runtime_error.
     // Should be use in process.
-    virtual void checkSetup() const = 0;
+    virtual void checkSetup(void) const = 0;
 
     // Process the symbolic execution and the taint analysis.
-    virtual Inst *process(AnalysisProcessor &ap) const = 0;
+    virtual Inst *process(void) const = 0;
 
     // Check if the operand is of type MEM_*
     static bool isMemOperand(IRBuilderOperand::operand_t type) {

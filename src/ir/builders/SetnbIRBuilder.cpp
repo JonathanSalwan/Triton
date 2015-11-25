@@ -21,12 +21,12 @@ SetnbIRBuilder::SetnbIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void SetnbIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void SetnbIRBuilder::imm(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void SetnbIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void SetnbIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *cf;
   auto reg = this->operands[0].getReg();
@@ -53,7 +53,7 @@ void SetnbIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void SetnbIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void SetnbIRBuilder::mem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *cf;
   auto mem = this->operands[0].getMem();
@@ -80,20 +80,20 @@ void SetnbIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void SetnbIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void SetnbIRBuilder::none(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *SetnbIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *SetnbIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "SETNB");
+    this->templateMethod(*inst, this->operands, "SETNB");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

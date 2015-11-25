@@ -21,17 +21,17 @@ MovhpdIRBuilder::MovhpdIRBuilder(__uint address, const std::string &disassembly)
 }
 
 
-void MovhpdIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void MovhpdIRBuilder::regImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void MovhpdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void MovhpdIRBuilder::regReg(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void MovhpdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void MovhpdIRBuilder::regMem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto memSize = this->operands[1].getMem().getSize();
@@ -56,12 +56,12 @@ void MovhpdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void MovhpdIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void MovhpdIRBuilder::memImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void MovhpdIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void MovhpdIRBuilder::memReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op2;
   auto memSize = this->operands[0].getMem().getSize();
@@ -82,15 +82,15 @@ void MovhpdIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-Inst *MovhpdIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *MovhpdIRBuilder::process(void) const {
   checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "MOVHPD");
+    this->templateMethod(*inst, this->operands, "MOVHPD");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

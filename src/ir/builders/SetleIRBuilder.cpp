@@ -21,12 +21,12 @@ SetleIRBuilder::SetleIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void SetleIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void SetleIRBuilder::imm(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void SetleIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void SetleIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *sf, *of, *zf;
   auto reg = this->operands[0].getReg();
@@ -61,7 +61,7 @@ void SetleIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void SetleIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void SetleIRBuilder::mem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *sf, *of, *zf;
   auto mem = this->operands[0].getMem();
@@ -96,20 +96,20 @@ void SetleIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void SetleIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void SetleIRBuilder::none(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *SetleIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *SetleIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "SETLE");
+    this->templateMethod(*inst, this->operands, "SETLE");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

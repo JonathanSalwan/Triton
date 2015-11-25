@@ -171,7 +171,7 @@ void BaseIRBuilder::setup(__uint mem_value) {
 }
 
 
-void BaseIRBuilder::checkSetup() const {
+void BaseIRBuilder::checkSetup(void) const {
   if (this->needSetup)
     throw std::runtime_error("Error: IRBuilder.setup must be call before "
                              "IRBuilder.process, when there are MEM_* operands.");

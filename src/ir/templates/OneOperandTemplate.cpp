@@ -13,7 +13,6 @@
 
 
 void OneOperandTemplate::templateMethod(
-    AnalysisProcessor &ap,
     Inst &inst,
     const std::vector<TritonOperand> &operands,
     std::string insName) const
@@ -21,18 +20,18 @@ void OneOperandTemplate::templateMethod(
   // If there is no operand
   // Sometime instructions can have 0 or 1 operand. Like RET and RET imm16
   if (operands.size() == 0)
-    this->none(ap, inst);
+    this->none(inst);
 
   // reg
   if (operands[0].getType() == IRBuilderOperand::REG)
-    this->reg(ap, inst);
+    this->reg(inst);
 
   // imm
   if (operands[0].getType() == IRBuilderOperand::IMM)
-    this->imm(ap, inst);
+    this->imm(inst);
 
   // mem
   if (IRBuilder::isMemOperand(operands[0].getType()))
-    this->mem(ap, inst);
+    this->mem(inst);
 }
 

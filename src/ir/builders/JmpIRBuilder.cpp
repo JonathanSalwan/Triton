@@ -21,7 +21,7 @@ JmpIRBuilder::JmpIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void JmpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void JmpIRBuilder::imm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
   auto imm = this->operands[0].getImm().getValue();
@@ -37,7 +37,7 @@ void JmpIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void JmpIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto reg = this->operands[0].getReg();
@@ -57,7 +57,7 @@ void JmpIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void JmpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void JmpIRBuilder::mem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto mem = this->operands[0].getMem();
@@ -77,18 +77,18 @@ void JmpIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void JmpIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void JmpIRBuilder::none(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *JmpIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *JmpIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "JMP");
+    this->templateMethod(*inst, this->operands, "JMP");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
   }
   catch (std::exception &e) {

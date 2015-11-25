@@ -21,7 +21,7 @@ DivIRBuilder::DivIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void DivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void DivIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *result, *dividend, *divisor, *mod;
   auto reg = this->operands[0].getReg();
@@ -105,7 +105,7 @@ void DivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void DivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void DivIRBuilder::mem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *result, *dividend, *divisor, *mod;
   auto mem = this->operands[0].getMem();
@@ -189,27 +189,27 @@ void DivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void DivIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void DivIRBuilder::imm(Inst &inst) const {
   /* There is no <inc imm> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void DivIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void DivIRBuilder::none(Inst &inst) const {
   /* There is no <inc none> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *DivIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *DivIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "DIV");
+    this->templateMethod(*inst, this->operands, "DIV");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

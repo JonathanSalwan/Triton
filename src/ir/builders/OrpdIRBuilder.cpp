@@ -21,12 +21,12 @@ OrpdIRBuilder::OrpdIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void OrpdIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void OrpdIRBuilder::regImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void OrpdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void OrpdIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto reg1 = this->operands[0].getReg();
@@ -49,7 +49,7 @@ void OrpdIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void OrpdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void OrpdIRBuilder::regMem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto mem = this->operands[1].getMem();
@@ -72,25 +72,25 @@ void OrpdIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void OrpdIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void OrpdIRBuilder::memImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void OrpdIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void OrpdIRBuilder::memReg(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-Inst *OrpdIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *OrpdIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "ORPD");
+    this->templateMethod(*inst, this->operands, "ORPD");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

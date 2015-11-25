@@ -21,7 +21,7 @@ CbwIRBuilder::CbwIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void CbwIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void CbwIRBuilder::none(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
 
@@ -40,15 +40,15 @@ void CbwIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-Inst *CbwIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *CbwIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "CBW");
+    this->templateMethod(*inst, this->operands, "CBW");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

@@ -21,7 +21,7 @@ JoIRBuilder::JoIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void JoIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void JoIRBuilder::imm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *of;
   auto imm = this->operands[0].getImm().getValue();
@@ -49,28 +49,28 @@ void JoIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void JoIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void JoIRBuilder::reg(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void JoIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void JoIRBuilder::mem(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void JoIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void JoIRBuilder::none(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *JoIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *JoIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "JO");
+    this->templateMethod(*inst, this->operands, "JO");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
   }
   catch (std::exception &e) {

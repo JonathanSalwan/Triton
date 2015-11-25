@@ -21,7 +21,7 @@ NegIRBuilder::NegIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void NegIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void NegIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto reg = this->operands[0].getReg();
@@ -40,16 +40,16 @@ void NegIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::afNeg(inst, se, ap, regSize, op1);
-  EflagsBuilder::cfNeg(inst, se, ap, regSize, op1);
-  EflagsBuilder::ofNeg(inst, se, ap, regSize, op1);
-  EflagsBuilder::pf(inst, se, ap, regSize);
-  EflagsBuilder::sf(inst, se, ap, regSize);
-  EflagsBuilder::zf(inst, se, ap, regSize);
+  EflagsBuilder::afNeg(inst, se, regSize, op1);
+  EflagsBuilder::cfNeg(inst, se, regSize, op1);
+  EflagsBuilder::ofNeg(inst, se, regSize, op1);
+  EflagsBuilder::pf(inst, se, regSize);
+  EflagsBuilder::sf(inst, se, regSize);
+  EflagsBuilder::zf(inst, se, regSize);
 }
 
 
-void NegIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void NegIRBuilder::mem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto mem = this->operands[0].getMem();
@@ -68,36 +68,36 @@ void NegIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::afNeg(inst, se, ap, memSize, op1);
-  EflagsBuilder::cfNeg(inst, se, ap, memSize, op1);
-  EflagsBuilder::ofNeg(inst, se, ap, memSize, op1);
-  EflagsBuilder::pf(inst, se, ap, memSize);
-  EflagsBuilder::sf(inst, se, ap, memSize);
-  EflagsBuilder::zf(inst, se, ap, memSize);
+  EflagsBuilder::afNeg(inst, se, memSize, op1);
+  EflagsBuilder::cfNeg(inst, se, memSize, op1);
+  EflagsBuilder::ofNeg(inst, se, memSize, op1);
+  EflagsBuilder::pf(inst, se, memSize);
+  EflagsBuilder::sf(inst, se, memSize);
+  EflagsBuilder::zf(inst, se, memSize);
 }
 
 
-void NegIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void NegIRBuilder::imm(Inst &inst) const {
   /* There is no <inc imm> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void NegIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void NegIRBuilder::none(Inst &inst) const {
   /* There is no <inc none> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *NegIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *NegIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "NEG");
+    this->templateMethod(*inst, this->operands, "NEG");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

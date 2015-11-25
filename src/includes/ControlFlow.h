@@ -13,8 +13,11 @@
 #include "Inst.h"
 #include "SymbolicExpression.h"
 
+extern AnalysisProcessor ap;
+
+
 namespace ControlFlow {
-  SymbolicExpression *rip(Inst &inst, AnalysisProcessor &ap, __uint nextAddr);
+  SymbolicExpression *rip(Inst &inst, __uint nextAddr);
 };
 
 #endif /* !__CONTROLFLOW_H__ */

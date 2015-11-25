@@ -21,7 +21,7 @@ CqoIRBuilder::CqoIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void CqoIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void CqoIRBuilder::none(Inst &inst) const {
   SymbolicExpression *se1, *se3;
   smt2lib::smtAstAbstractNode *expr1, *expr2, *expr3, *op1;
 
@@ -45,15 +45,15 @@ void CqoIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-Inst *CqoIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *CqoIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "CQO");
+    this->templateMethod(*inst, this->operands, "CQO");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

@@ -16,21 +16,21 @@
 #include "OperandTemplate.h"
 #include "TritonOperand.h"
 
+extern AnalysisProcessor ap;
+
 
 class NoneOperandTemplate: public OperandTemplate {
   public:
     virtual ~NoneOperandTemplate() { }
 
     virtual void templateMethod(
-        AnalysisProcessor &ap,
         Inst &inst,
         const std::vector<TritonOperand> &operands,
         std::string instructionName) const;
 
   protected:
     // Primitives uses in the templateMethod, must be implemented by subclasses.
-
-    virtual void none(AnalysisProcessor &ap, Inst &inst) const = 0;
+    virtual void none(Inst &inst) const = 0;
 };
 
 #endif // NONEOPERANDTEMPLATE_H

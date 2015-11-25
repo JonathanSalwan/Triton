@@ -21,7 +21,7 @@ JnlIRBuilder::JnlIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void JnlIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void JnlIRBuilder::imm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *sf, *of;
   auto imm = this->operands[0].getImm().getValue();
@@ -56,28 +56,28 @@ void JnlIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void JnlIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void JnlIRBuilder::reg(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void JnlIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void JnlIRBuilder::mem(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void JnlIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void JnlIRBuilder::none(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *JnlIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *JnlIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "JNL");
+    this->templateMethod(*inst, this->operands, "JNL");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
   }
   catch (std::exception &e) {

@@ -21,7 +21,7 @@ CmcIRBuilder::CmcIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void CmcIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void CmcIRBuilder::none(Inst &inst) const {
   smt2lib::smtAstAbstractNode *expr, *op1;
 
   /* Create the SMT semantic */
@@ -35,15 +35,15 @@ void CmcIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-Inst *CmcIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *CmcIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "CMC");
+    this->templateMethod(*inst, this->operands, "CMC");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

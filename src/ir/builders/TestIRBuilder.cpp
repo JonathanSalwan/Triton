@@ -21,7 +21,7 @@ TestIRBuilder::TestIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void TestIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void TestIRBuilder::regImm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto reg = this->operands[0].getReg();
@@ -42,15 +42,15 @@ void TestIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintExprReg(se, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::clearFlag(inst, ap, ID_TMP_CF, "Clears carry flag");
-  EflagsBuilder::clearFlag(inst, ap, ID_TMP_OF, "Clears overflow flag");
-  EflagsBuilder::pf(inst, se, ap, regSize);
-  EflagsBuilder::sf(inst, se, ap, regSize);
-  EflagsBuilder::zf(inst, se, ap, regSize);
+  EflagsBuilder::clearFlag(inst, ID_TMP_CF, "Clears carry flag");
+  EflagsBuilder::clearFlag(inst, ID_TMP_OF, "Clears overflow flag");
+  EflagsBuilder::pf(inst, se, regSize);
+  EflagsBuilder::sf(inst, se, regSize);
+  EflagsBuilder::zf(inst, se, regSize);
 }
 
 
-void TestIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void TestIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto reg1 = this->operands[0].getReg();
@@ -72,21 +72,21 @@ void TestIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintExprRegReg(se, reg1, reg2);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::clearFlag(inst, ap, ID_TMP_CF, "Clears carry flag");
-  EflagsBuilder::clearFlag(inst, ap, ID_TMP_OF, "Clears overflow flag");
-  EflagsBuilder::pf(inst, se, ap, regSize1);
-  EflagsBuilder::sf(inst, se, ap, regSize1);
-  EflagsBuilder::zf(inst, se, ap, regSize1);
+  EflagsBuilder::clearFlag(inst, ID_TMP_CF, "Clears carry flag");
+  EflagsBuilder::clearFlag(inst, ID_TMP_OF, "Clears overflow flag");
+  EflagsBuilder::pf(inst, se, regSize1);
+  EflagsBuilder::sf(inst, se, regSize1);
+  EflagsBuilder::zf(inst, se, regSize1);
 }
 
 
-void TestIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void TestIRBuilder::regMem(Inst &inst) const {
   /* There is no test reg, mem available in x86 */
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void TestIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void TestIRBuilder::memImm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto memSize = this->operands[0].getMem().getSize();
@@ -107,15 +107,15 @@ void TestIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintExprMem(se, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::clearFlag(inst, ap, ID_TMP_CF, "Clears carry flag");
-  EflagsBuilder::clearFlag(inst, ap, ID_TMP_OF, "Clears overflow flag");
-  EflagsBuilder::pf(inst, se, ap, memSize);
-  EflagsBuilder::sf(inst, se, ap, memSize);
-  EflagsBuilder::zf(inst, se, ap, memSize);
+  EflagsBuilder::clearFlag(inst, ID_TMP_CF, "Clears carry flag");
+  EflagsBuilder::clearFlag(inst, ID_TMP_OF, "Clears overflow flag");
+  EflagsBuilder::pf(inst, se, memSize);
+  EflagsBuilder::sf(inst, se, memSize);
+  EflagsBuilder::zf(inst, se, memSize);
 }
 
 
-void TestIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void TestIRBuilder::memReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto memSize = this->operands[0].getMem().getSize();
@@ -137,23 +137,23 @@ void TestIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.assignmentSpreadTaintExprRegMem(se, reg, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::clearFlag(inst, ap, ID_TMP_CF, "Clears carry flag");
-  EflagsBuilder::clearFlag(inst, ap, ID_TMP_OF, "Clears overflow flag");
-  EflagsBuilder::pf(inst, se, ap, memSize);
-  EflagsBuilder::sf(inst, se, ap, memSize);
-  EflagsBuilder::zf(inst, se, ap, memSize);
+  EflagsBuilder::clearFlag(inst, ID_TMP_CF, "Clears carry flag");
+  EflagsBuilder::clearFlag(inst, ID_TMP_OF, "Clears overflow flag");
+  EflagsBuilder::pf(inst, se, memSize);
+  EflagsBuilder::sf(inst, se, memSize);
+  EflagsBuilder::zf(inst, se, memSize);
 }
 
 
-Inst *TestIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *TestIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "TEST");
+    this->templateMethod(*inst, this->operands, "TEST");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

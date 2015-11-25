@@ -21,7 +21,7 @@ ShlIRBuilder::ShlIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void ShlIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void ShlIRBuilder::regImm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto reg = this->operands[0].getReg();
@@ -42,15 +42,15 @@ void ShlIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfShl(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::ofShl(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::pfShl(inst, se, ap, regSize, op2);
-  EflagsBuilder::sfShl(inst, se, ap, regSize, op2);
-  EflagsBuilder::zfShl(inst, se, ap, regSize, op2);
+  EflagsBuilder::cfShl(inst, se, regSize, op1, op2);
+  EflagsBuilder::ofShl(inst, se, regSize, op1, op2);
+  EflagsBuilder::pfShl(inst, se, regSize, op2);
+  EflagsBuilder::sfShl(inst, se, regSize, op2);
+  EflagsBuilder::zfShl(inst, se, regSize, op2);
 }
 
 
-void ShlIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void ShlIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto reg = this->operands[0].getReg();
@@ -71,20 +71,20 @@ void ShlIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfShl(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::ofShl(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::pfShl(inst, se, ap, regSize, op2);
-  EflagsBuilder::sfShl(inst, se, ap, regSize, op2);
-  EflagsBuilder::zfShl(inst, se, ap, regSize, op2);
+  EflagsBuilder::cfShl(inst, se, regSize, op1, op2);
+  EflagsBuilder::ofShl(inst, se, regSize, op1, op2);
+  EflagsBuilder::pfShl(inst, se, regSize, op2);
+  EflagsBuilder::sfShl(inst, se, regSize, op2);
+  EflagsBuilder::zfShl(inst, se, regSize, op2);
 }
 
 
-void ShlIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void ShlIRBuilder::regMem(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void ShlIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void ShlIRBuilder::memImm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto memSize = this->operands[0].getMem().getSize();
@@ -105,28 +105,28 @@ void ShlIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfShl(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::ofShl(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::pfShl(inst, se, ap, memSize, op2);
-  EflagsBuilder::sfShl(inst, se, ap, memSize, op2);
-  EflagsBuilder::zfShl(inst, se, ap, memSize, op2);
+  EflagsBuilder::cfShl(inst, se, memSize, op1, op2);
+  EflagsBuilder::ofShl(inst, se, memSize, op1, op2);
+  EflagsBuilder::pfShl(inst, se, memSize, op2);
+  EflagsBuilder::sfShl(inst, se, memSize, op2);
+  EflagsBuilder::zfShl(inst, se, memSize, op2);
 }
 
 
-void ShlIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void ShlIRBuilder::memReg(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-Inst *ShlIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *ShlIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "SHL");
+    this->templateMethod(*inst, this->operands, "SHL");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

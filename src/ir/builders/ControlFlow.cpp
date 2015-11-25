@@ -13,7 +13,7 @@
 #include <SMT2Lib.h>
 
 
-SymbolicExpression *ControlFlow::rip(Inst &inst, AnalysisProcessor &ap, __uint nextAddr)
+SymbolicExpression *ControlFlow::rip(Inst &inst, __uint nextAddr)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;

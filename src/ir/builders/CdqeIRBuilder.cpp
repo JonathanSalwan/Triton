@@ -21,7 +21,7 @@ CdqeIRBuilder::CdqeIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void CdqeIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void CdqeIRBuilder::none(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
 
@@ -39,15 +39,15 @@ void CdqeIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-Inst *CdqeIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *CdqeIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "CDQE");
+    this->templateMethod(*inst, this->operands, "CDQE");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

@@ -21,18 +21,18 @@ class AndpdIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     AndpdIRBuilder(__uint address, const std::string &disassembly);
 
     // From BaseIRBuilder
-    virtual Inst *process(AnalysisProcessor &ap) const;
+    virtual Inst *process(void) const;
 
     // From TwoOperandsTemplate
-    virtual void regImm(AnalysisProcessor &ap, Inst &inst) const;
+    virtual void regImm(Inst &inst) const;
 
-    virtual void regReg(AnalysisProcessor &ap, Inst &inst) const;
+    virtual void regReg(Inst &inst) const;
 
-    virtual void regMem(AnalysisProcessor &ap, Inst &inst) const;
+    virtual void regMem(Inst &inst) const;
 
-    virtual void memImm(AnalysisProcessor &ap, Inst &inst) const;
+    virtual void memImm(Inst &inst) const;
 
-    virtual void memReg(AnalysisProcessor &ap, Inst &inst) const;
+    virtual void memReg(Inst &inst) const;
 };
 
 #endif // ANDPDIRBUILDER_H

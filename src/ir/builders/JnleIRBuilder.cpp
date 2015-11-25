@@ -21,7 +21,7 @@ JnleIRBuilder::JnleIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void JnleIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void JnleIRBuilder::imm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *sf, *of, *zf;
   auto imm = this->operands[0].getImm().getValue();
@@ -58,28 +58,28 @@ void JnleIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void JnleIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void JnleIRBuilder::reg(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void JnleIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void JnleIRBuilder::mem(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void JnleIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void JnleIRBuilder::none(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *JnleIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *JnleIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "JNLE");
+    this->templateMethod(*inst, this->operands, "JNLE");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
   }
   catch (std::exception &e) {

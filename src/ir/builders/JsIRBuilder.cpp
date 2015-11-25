@@ -21,7 +21,7 @@ JsIRBuilder::JsIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void JsIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void JsIRBuilder::imm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *sf;
   auto imm = this->operands[0].getImm().getValue();
@@ -48,28 +48,28 @@ void JsIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void JsIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void JsIRBuilder::reg(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void JsIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void JsIRBuilder::mem(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void JsIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void JsIRBuilder::none(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *JsIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *JsIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "JS");
+    this->templateMethod(*inst, this->operands, "JS");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
   }
   catch (std::exception &e) {

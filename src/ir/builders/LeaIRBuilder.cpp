@@ -21,17 +21,17 @@ LeaIRBuilder::LeaIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void LeaIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void LeaIRBuilder::regImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void LeaIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void LeaIRBuilder::regReg(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void LeaIRBuilder::regMem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *dis2e, *base2e, *index2e, *scale2e;
   auto reg = this->operands[0].getReg();
@@ -80,25 +80,25 @@ void LeaIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void LeaIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void LeaIRBuilder::memImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void LeaIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void LeaIRBuilder::memReg(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-Inst *LeaIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *LeaIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "LEA");
+    this->templateMethod(*inst, this->operands, "LEA");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

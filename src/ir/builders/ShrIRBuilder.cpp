@@ -21,7 +21,7 @@ ShrIRBuilder::ShrIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void ShrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void ShrIRBuilder::regImm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto reg = this->operands[0].getReg();
@@ -42,15 +42,15 @@ void ShrIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfShr(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::ofShr(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::pfShl(inst, se, ap, regSize, op2); /* Same that shl */
-  EflagsBuilder::sfShl(inst, se, ap, regSize, op2); /* Same that shl */
-  EflagsBuilder::zfShl(inst, se, ap, regSize, op2); /* Same that shl */
+  EflagsBuilder::cfShr(inst, se, regSize, op1, op2);
+  EflagsBuilder::ofShr(inst, se, regSize, op1, op2);
+  EflagsBuilder::pfShl(inst, se, regSize, op2); /* Same that shl */
+  EflagsBuilder::sfShl(inst, se, regSize, op2); /* Same that shl */
+  EflagsBuilder::zfShl(inst, se, regSize, op2); /* Same that shl */
 }
 
 
-void ShrIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void ShrIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto reg = this->operands[0].getReg();
@@ -71,20 +71,20 @@ void ShrIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfShr(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::ofShr(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::pfShl(inst, se, ap, regSize, op2); /* Same that shl */
-  EflagsBuilder::sfShl(inst, se, ap, regSize, op2); /* Same that shl */
-  EflagsBuilder::zfShl(inst, se, ap, regSize, op2); /* Same that shl */
+  EflagsBuilder::cfShr(inst, se, regSize, op1, op2);
+  EflagsBuilder::ofShr(inst, se, regSize, op1, op2);
+  EflagsBuilder::pfShl(inst, se, regSize, op2); /* Same that shl */
+  EflagsBuilder::sfShl(inst, se, regSize, op2); /* Same that shl */
+  EflagsBuilder::zfShl(inst, se, regSize, op2); /* Same that shl */
 }
 
 
-void ShrIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void ShrIRBuilder::regMem(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void ShrIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void ShrIRBuilder::memImm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto mem = this->operands[0].getMem();
@@ -105,28 +105,28 @@ void ShrIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfShr(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::ofShr(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::pfShl(inst, se, ap, memSize, op2) /* Same that shl */;
-  EflagsBuilder::sfShl(inst, se, ap, memSize, op2) /* Same that shl */;
-  EflagsBuilder::zfShl(inst, se, ap, memSize, op2) /* Same that shl */;
+  EflagsBuilder::cfShr(inst, se, memSize, op1, op2);
+  EflagsBuilder::ofShr(inst, se, memSize, op1, op2);
+  EflagsBuilder::pfShl(inst, se, memSize, op2) /* Same that shl */;
+  EflagsBuilder::sfShl(inst, se, memSize, op2) /* Same that shl */;
+  EflagsBuilder::zfShl(inst, se, memSize, op2) /* Same that shl */;
 }
 
 
-void ShrIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void ShrIRBuilder::memReg(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-Inst *ShrIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *ShrIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "SHR");
+    this->templateMethod(*inst, this->operands, "SHR");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

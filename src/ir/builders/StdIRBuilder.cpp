@@ -21,20 +21,20 @@ StdIRBuilder::StdIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void StdIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
-  EflagsBuilder::setFlag(inst, ap, ID_TMP_DF);
+void StdIRBuilder::none(Inst &inst) const {
+  EflagsBuilder::setFlag(inst, ID_TMP_DF);
 }
 
 
-Inst *StdIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *StdIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "STD");
+    this->templateMethod(*inst, this->operands, "STD");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

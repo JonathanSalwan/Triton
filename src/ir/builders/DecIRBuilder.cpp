@@ -21,7 +21,7 @@ DecIRBuilder::DecIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void DecIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void DecIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto reg = this->operands[0].getReg();
@@ -41,15 +41,15 @@ void DecIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::ofSub(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::pf(inst, se, ap, regSize);
-  EflagsBuilder::sf(inst, se, ap, regSize);
-  EflagsBuilder::zf(inst, se, ap, regSize);
+  EflagsBuilder::af(inst, se, regSize, op1, op2);
+  EflagsBuilder::ofSub(inst, se, regSize, op1, op2);
+  EflagsBuilder::pf(inst, se, regSize);
+  EflagsBuilder::sf(inst, se, regSize);
+  EflagsBuilder::zf(inst, se, regSize);
 }
 
 
-void DecIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void DecIRBuilder::mem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto mem = this->operands[0].getMem();
@@ -69,35 +69,35 @@ void DecIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::ofSub(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::pf(inst, se, ap, memSize);
-  EflagsBuilder::sf(inst, se, ap, memSize);
-  EflagsBuilder::zf(inst, se, ap, memSize);
+  EflagsBuilder::af(inst, se, memSize, op1, op2);
+  EflagsBuilder::ofSub(inst, se, memSize, op1, op2);
+  EflagsBuilder::pf(inst, se, memSize);
+  EflagsBuilder::sf(inst, se, memSize);
+  EflagsBuilder::zf(inst, se, memSize);
 }
 
 
-void DecIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void DecIRBuilder::imm(Inst &inst) const {
   /* There is no <dec imm> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void DecIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void DecIRBuilder::none(Inst &inst) const {
   /* There is no <dec none> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *DecIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *DecIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "DEC");
+    this->templateMethod(*inst, this->operands, "DEC");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

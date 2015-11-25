@@ -21,7 +21,7 @@ SbbIRBuilder::SbbIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void SbbIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void SbbIRBuilder::regImm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
   auto reg = this->operands[0].getReg();
@@ -43,16 +43,16 @@ void SbbIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegImm(se, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::cfSub(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::ofSub(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::pf(inst, se, ap, regSize);
-  EflagsBuilder::sf(inst, se, ap, regSize);
-  EflagsBuilder::zf(inst, se, ap, regSize);
+  EflagsBuilder::af(inst, se, regSize, op1, op2);
+  EflagsBuilder::cfSub(inst, se, regSize, op1, op2);
+  EflagsBuilder::ofSub(inst, se, regSize, op1, op2);
+  EflagsBuilder::pf(inst, se, regSize);
+  EflagsBuilder::sf(inst, se, regSize);
+  EflagsBuilder::zf(inst, se, regSize);
 }
 
 
-void SbbIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void SbbIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
   auto reg1 = this->operands[0].getReg();
@@ -75,16 +75,16 @@ void SbbIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg1, reg2);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, ap, regSize1, op1, op2);
-  EflagsBuilder::cfSub(inst, se, ap, regSize1, op1, op2);
-  EflagsBuilder::ofSub(inst, se, ap, regSize1, op1, op2);
-  EflagsBuilder::pf(inst, se, ap, regSize1);
-  EflagsBuilder::sf(inst, se, ap, regSize1);
-  EflagsBuilder::zf(inst, se, ap, regSize1);
+  EflagsBuilder::af(inst, se, regSize1, op1, op2);
+  EflagsBuilder::cfSub(inst, se, regSize1, op1, op2);
+  EflagsBuilder::ofSub(inst, se, regSize1, op1, op2);
+  EflagsBuilder::pf(inst, se, regSize1);
+  EflagsBuilder::sf(inst, se, regSize1);
+  EflagsBuilder::zf(inst, se, regSize1);
 }
 
 
-void SbbIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void SbbIRBuilder::regMem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
   auto memSize = this->operands[1].getMem().getSize();
@@ -107,16 +107,16 @@ void SbbIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegMem(se, reg, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::cfSub(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::ofSub(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::pf(inst, se, ap, regSize);
-  EflagsBuilder::sf(inst, se, ap, regSize);
-  EflagsBuilder::zf(inst, se, ap, regSize);
+  EflagsBuilder::af(inst, se, regSize, op1, op2);
+  EflagsBuilder::cfSub(inst, se, regSize, op1, op2);
+  EflagsBuilder::ofSub(inst, se, regSize, op1, op2);
+  EflagsBuilder::pf(inst, se, regSize);
+  EflagsBuilder::sf(inst, se, regSize);
+  EflagsBuilder::zf(inst, se, regSize);
 }
 
 
-void SbbIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void SbbIRBuilder::memImm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
   auto memSize = this->operands[0].getMem().getSize();
@@ -138,16 +138,16 @@ void SbbIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintMemImm(se, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::cfSub(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::ofSub(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::pf(inst, se, ap, memSize);
-  EflagsBuilder::sf(inst, se, ap, memSize);
-  EflagsBuilder::zf(inst, se, ap, memSize);
+  EflagsBuilder::af(inst, se, memSize, op1, op2);
+  EflagsBuilder::cfSub(inst, se, memSize, op1, op2);
+  EflagsBuilder::ofSub(inst, se, memSize, op1, op2);
+  EflagsBuilder::pf(inst, se, memSize);
+  EflagsBuilder::sf(inst, se, memSize);
+  EflagsBuilder::zf(inst, se, memSize);
 }
 
 
-void SbbIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void SbbIRBuilder::memReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
   auto memSize = this->operands[0].getMem().getSize();
@@ -170,24 +170,24 @@ void SbbIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintMemReg(se, mem, reg, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::cfSub(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::ofSub(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::pf(inst, se, ap, memSize);
-  EflagsBuilder::sf(inst, se, ap, memSize);
-  EflagsBuilder::zf(inst, se, ap, memSize);
+  EflagsBuilder::af(inst, se, memSize, op1, op2);
+  EflagsBuilder::cfSub(inst, se, memSize, op1, op2);
+  EflagsBuilder::ofSub(inst, se, memSize, op1, op2);
+  EflagsBuilder::pf(inst, se, memSize);
+  EflagsBuilder::sf(inst, se, memSize);
+  EflagsBuilder::zf(inst, se, memSize);
 }
 
 
-Inst *SbbIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *SbbIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "SBB");
+    this->templateMethod(*inst, this->operands, "SBB");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

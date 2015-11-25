@@ -21,7 +21,7 @@ IncIRBuilder::IncIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void IncIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void IncIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto reg = this->operands[0].getReg();
@@ -41,15 +41,15 @@ void IncIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::ofAdd(inst, se, ap, regSize, op1, op2);
-  EflagsBuilder::pf(inst, se, ap, regSize);
-  EflagsBuilder::sf(inst, se, ap, regSize);
-  EflagsBuilder::zf(inst, se, ap, regSize);
+  EflagsBuilder::af(inst, se, regSize, op1, op2);
+  EflagsBuilder::ofAdd(inst, se, regSize, op1, op2);
+  EflagsBuilder::pf(inst, se, regSize);
+  EflagsBuilder::sf(inst, se, regSize);
+  EflagsBuilder::zf(inst, se, regSize);
 }
 
 
-void IncIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void IncIRBuilder::mem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto mem = this->operands[0].getMem();
@@ -69,35 +69,35 @@ void IncIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::ofAdd(inst, se, ap, memSize, op1, op2);
-  EflagsBuilder::pf(inst, se, ap, memSize);
-  EflagsBuilder::sf(inst, se, ap, memSize);
-  EflagsBuilder::zf(inst, se, ap, memSize);
+  EflagsBuilder::af(inst, se, memSize, op1, op2);
+  EflagsBuilder::ofAdd(inst, se, memSize, op1, op2);
+  EflagsBuilder::pf(inst, se, memSize);
+  EflagsBuilder::sf(inst, se, memSize);
+  EflagsBuilder::zf(inst, se, memSize);
 }
 
 
-void IncIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void IncIRBuilder::imm(Inst &inst) const {
   /* There is no <inc imm> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void IncIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void IncIRBuilder::none(Inst &inst) const {
   /* There is no <inc none> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *IncIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *IncIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "INC");
+    this->templateMethod(*inst, this->operands, "INC");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

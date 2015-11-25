@@ -21,7 +21,7 @@ IdivIRBuilder::IdivIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void IdivIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *result, *dividend, *divisor, *mod;
   auto reg = this->operands[0].getReg();
@@ -105,7 +105,7 @@ void IdivIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void IdivIRBuilder::mem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *result, *dividend, *divisor, *mod;
   auto mem = this->operands[0].getMem();
@@ -189,27 +189,27 @@ void IdivIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void IdivIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void IdivIRBuilder::imm(Inst &inst) const {
   /* There is no <inc imm> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void IdivIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void IdivIRBuilder::none(Inst &inst) const {
   /* There is no <inc none> available in x86 */
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *IdivIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *IdivIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "IDIV");
+    this->templateMethod(*inst, this->operands, "IDIV");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

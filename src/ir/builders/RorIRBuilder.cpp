@@ -21,7 +21,7 @@ RorIRBuilder::RorIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void RorIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void RorIRBuilder::regImm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto reg = this->operands[0].getReg();
@@ -46,12 +46,12 @@ void RorIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRor(inst, se, ap, regSize, op2);
-  EflagsBuilder::ofRor(inst, se, ap, regSize, op2);
+  EflagsBuilder::cfRor(inst, se, regSize, op2);
+  EflagsBuilder::ofRor(inst, se, regSize, op2);
 }
 
 
-void RorIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void RorIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto reg1 = this->operands[0].getReg();
@@ -75,17 +75,17 @@ void RorIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg1, reg1);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRor(inst, se, ap, regSize1, op2);
-  EflagsBuilder::ofRor(inst, se, ap, regSize1, op2);
+  EflagsBuilder::cfRor(inst, se, regSize1, op2);
+  EflagsBuilder::ofRor(inst, se, regSize1, op2);
 }
 
 
-void RorIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void RorIRBuilder::regMem(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void RorIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void RorIRBuilder::memImm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto memSize = this->operands[0].getMem().getSize();
@@ -110,12 +110,12 @@ void RorIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRor(inst, se, ap, memSize, op2);
-  EflagsBuilder::ofRor(inst, se, ap, memSize, op2);
+  EflagsBuilder::cfRor(inst, se, memSize, op2);
+  EflagsBuilder::ofRor(inst, se, memSize, op2);
 }
 
 
-void RorIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void RorIRBuilder::memReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto memSize = this->operands[0].getMem().getSize();
@@ -139,20 +139,20 @@ void RorIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRor(inst, se, ap, memSize, op2);
-  EflagsBuilder::ofRor(inst, se, ap, memSize, op2);
+  EflagsBuilder::cfRor(inst, se, memSize, op2);
+  EflagsBuilder::ofRor(inst, se, memSize, op2);
 }
 
 
-Inst *RorIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *RorIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "ROR");
+    this->templateMethod(*inst, this->operands, "ROR");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

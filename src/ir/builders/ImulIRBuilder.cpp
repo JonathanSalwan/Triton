@@ -46,7 +46,7 @@ ImulIRBuilder::ImulIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
+void ImulIRBuilder::regImm(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2;
   auto reg = this->operands[0].getReg();
@@ -70,13 +70,13 @@ void ImulIRBuilder::regImm(AnalysisProcessor &ap, Inst &inst) const {
   ap.aluSpreadTaintRegImm(se, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfImul(inst, se, ap, regSize, expr);
-  EflagsBuilder::ofImul(inst, se, ap, regSize, expr);
-  EflagsBuilder::sf(inst, se, ap, regSize);
+  EflagsBuilder::cfImul(inst, se, regSize, expr);
+  EflagsBuilder::ofImul(inst, se, regSize, expr);
+  EflagsBuilder::sf(inst, se, regSize);
 }
 
 
-void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
+void ImulIRBuilder::regReg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
   __uint imm = 0;
@@ -178,13 +178,13 @@ void ImulIRBuilder::regReg(AnalysisProcessor &ap, Inst &inst) const {
   }
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfImul(inst, se, ap, regSize1, expr);
-  EflagsBuilder::ofImul(inst, se, ap, regSize1, expr);
-  EflagsBuilder::sf(inst, se, ap, regSize1);
+  EflagsBuilder::cfImul(inst, se, regSize1, expr);
+  EflagsBuilder::ofImul(inst, se, regSize1, expr);
+  EflagsBuilder::sf(inst, se, regSize1);
 }
 
 
-void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
+void ImulIRBuilder::regMem(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1, *op2, *op3;
   __uint imm = 0;
@@ -286,31 +286,31 @@ void ImulIRBuilder::regMem(AnalysisProcessor &ap, Inst &inst) const {
   }
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfImul(inst, se, ap, regSize1, expr);
-  EflagsBuilder::ofImul(inst, se, ap, regSize1, expr);
-  EflagsBuilder::sf(inst, se, ap, regSize1);
+  EflagsBuilder::cfImul(inst, se, regSize1, expr);
+  EflagsBuilder::ofImul(inst, se, regSize1, expr);
+  EflagsBuilder::sf(inst, se, regSize1);
 }
 
 
-void ImulIRBuilder::memImm(AnalysisProcessor &ap, Inst &inst) const {
+void ImulIRBuilder::memImm(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-void ImulIRBuilder::memReg(AnalysisProcessor &ap, Inst &inst) const {
+void ImulIRBuilder::memReg(Inst &inst) const {
   TwoOperandsTemplate::stop(this->disas);
 }
 
 
-Inst *ImulIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *ImulIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "IMUL");
+    this->templateMethod(*inst, this->operands, "IMUL");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

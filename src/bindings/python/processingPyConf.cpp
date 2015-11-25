@@ -117,7 +117,7 @@ void ProcessingPyConf::untaintRegFromAddr(__uint addr) {
  * When a callback is setup (triton.addCallback()), a class (Instruction) is
  * sent to the callback function as unique argument.
  */
-void ProcessingPyConf::callbackAfter(Inst *inst, AnalysisProcessor *ap) {
+void ProcessingPyConf::callbackAfter(Inst *inst) {
   // Check if there is a callback wich must be called at each instruction instrumented
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackAfter){
 
@@ -139,7 +139,7 @@ void ProcessingPyConf::callbackAfter(Inst *inst, AnalysisProcessor *ap) {
 }
 
 
-void ProcessingPyConf::callbackBefore(Inst *inst, AnalysisProcessor *ap) {
+void ProcessingPyConf::callbackBefore(Inst *inst) {
   // Check if there is a callback wich must be called at each instruction instrumented
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackBefore){
 
@@ -161,7 +161,7 @@ void ProcessingPyConf::callbackBefore(Inst *inst, AnalysisProcessor *ap) {
 }
 
 
-void ProcessingPyConf::callbackBeforeIRProc(IRBuilder *irb, AnalysisProcessor *ap) {
+void ProcessingPyConf::callbackBeforeIRProc(IRBuilder *irb) {
   // Check if there is a callback wich must be called at each instruction instrumented
   if (this->analysisTrigger->getState() && PyTritonOptions::callbackBeforeIRProc){
 

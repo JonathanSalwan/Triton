@@ -22,7 +22,7 @@ BswapIRBuilder::BswapIRBuilder(__uint address, const std::string &disassembly):
 }
 
 
-void BswapIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
+void BswapIRBuilder::reg(Inst &inst) const {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr, *op1;
   auto reg = this->operands[0].getReg();
@@ -59,30 +59,30 @@ void BswapIRBuilder::reg(AnalysisProcessor &ap, Inst &inst) const {
 }
 
 
-void BswapIRBuilder::mem(AnalysisProcessor &ap, Inst &inst) const {
+void BswapIRBuilder::mem(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void BswapIRBuilder::imm(AnalysisProcessor &ap, Inst &inst) const {
+void BswapIRBuilder::imm(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-void BswapIRBuilder::none(AnalysisProcessor &ap, Inst &inst) const {
+void BswapIRBuilder::none(Inst &inst) const {
   OneOperandTemplate::stop(this->disas);
 }
 
 
-Inst *BswapIRBuilder::process(AnalysisProcessor &ap) const {
+Inst *BswapIRBuilder::process(void) const {
   this->checkSetup();
 
   Inst *inst = new Inst(ap.getThreadID(), this->address, this->disas);
 
   try {
-    this->templateMethod(ap, *inst, this->operands, "BSWAP");
+    this->templateMethod(*inst, this->operands, "BSWAP");
     ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
-    ControlFlow::rip(*inst, ap, this->nextAddress);
+    ControlFlow::rip(*inst, this->nextAddress);
   }
   catch (std::exception &e) {
     delete inst;

@@ -13,12 +13,11 @@
 
 
 void NoneOperandTemplate::templateMethod(
-    AnalysisProcessor &ap,
     Inst &inst,
     const std::vector<TritonOperand> &operands,
     std::string insName) const
 {
   // none but we must apply the semantic
-  this->none(ap, inst);
+  this->none(inst);
 }
 

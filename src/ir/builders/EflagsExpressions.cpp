@@ -159,7 +159,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfNeg(uint32 bvSize,
 
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::cfRcl(SymbolicExpression *parent,
-                                                      AnalysisProcessor &ap,
                                                       uint32 bvSize,
                                                       smt2lib::smtAstAbstractNode *op2)
 {
@@ -185,7 +184,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfRcl(SymbolicExpression *parent
 
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::cfRol(SymbolicExpression *parent,
-                                                      AnalysisProcessor &ap,
                                                       smt2lib::smtAstAbstractNode *op2)
 {
   smt2lib::smtAstAbstractNode *expr;
@@ -210,7 +208,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfRol(SymbolicExpression *parent
 
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::cfRor(SymbolicExpression *parent,
-                                                      AnalysisProcessor &ap,
                                                       uint32 bvSize,
                                                       smt2lib::smtAstAbstractNode *op2)
 {
@@ -246,7 +243,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfRor(SymbolicExpression *parent
 
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::cfSar(SymbolicExpression *parent,
-                                                      AnalysisProcessor &ap,
                                                       uint32 bvSize,
                                                       smt2lib::smtAstAbstractNode *op1,
                                                       smt2lib::smtAstAbstractNode *op2)
@@ -276,7 +272,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfSar(SymbolicExpression *parent
 
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::cfShl(SymbolicExpression *parent,
-                                                      AnalysisProcessor &ap,
                                                       uint32 bvSize,
                                                       smt2lib::smtAstAbstractNode *op1,
                                                       smt2lib::smtAstAbstractNode *op2)
@@ -298,7 +293,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::cfShl(SymbolicExpression *parent
 
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::cfShr(SymbolicExpression *parent,
-                                                      AnalysisProcessor &ap,
                                                       uint32 bvSize,
                                                       smt2lib::smtAstAbstractNode *op1,
                                                       smt2lib::smtAstAbstractNode *op2)
@@ -455,7 +449,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofNeg(SymbolicExpression *parent
 
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::ofRol(SymbolicExpression *parent,
-                                                      AnalysisProcessor &ap,
                                                       uint32 bvSize,
                                                       smt2lib::smtAstAbstractNode *op2)
 {
@@ -491,7 +484,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofRol(SymbolicExpression *parent
 
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::ofRor(SymbolicExpression *parent,
-                                                      AnalysisProcessor &ap,
                                                       uint32 bvSize,
                                                       smt2lib::smtAstAbstractNode *op2)
 {
@@ -530,7 +522,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofRor(SymbolicExpression *parent
 
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::ofSar(SymbolicExpression *parent,
-                                                      AnalysisProcessor &ap,
                                                       uint32 bvSize,
                                                       smt2lib::smtAstAbstractNode *op2)
 {
@@ -551,7 +542,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofSar(SymbolicExpression *parent
 
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::ofShl(SymbolicExpression *parent,
-                                                      AnalysisProcessor &ap,
                                                       uint32 bvSize,
                                                       smt2lib::smtAstAbstractNode *op1,
                                                       smt2lib::smtAstAbstractNode *op2)
@@ -578,7 +568,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::ofShl(SymbolicExpression *parent
 
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::ofShr(SymbolicExpression *parent,
-                                                      AnalysisProcessor &ap,
                                                       uint32 bvSize,
                                                       smt2lib::smtAstAbstractNode *op1,
                                                       smt2lib::smtAstAbstractNode *op2)
@@ -657,7 +646,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::pf(SymbolicExpression *parent, u
 
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::pfShl(SymbolicExpression *parent,
-                                                      AnalysisProcessor &ap,
                                                       uint32 bvSize,
                                                       smt2lib::smtAstAbstractNode *op2)
 {
@@ -710,7 +698,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::sf(SymbolicExpression *parent,
 
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::sfShl(SymbolicExpression *parent,
-                                                      AnalysisProcessor &ap,
                                                       uint32 bvSize,
                                                       uint32 extractSize,
                                                       smt2lib::smtAstAbstractNode *op2)
@@ -754,7 +741,6 @@ smt2lib::smtAstAbstractNode *EflagsExpressions::zf(SymbolicExpression *parent,
 
 
 smt2lib::smtAstAbstractNode *EflagsExpressions::zfShl(SymbolicExpression *parent,
-                                                      AnalysisProcessor &ap,
                                                       uint32 bvSize,
                                                       smt2lib::smtAstAbstractNode *op2)
 {
