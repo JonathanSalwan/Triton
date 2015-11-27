@@ -52,8 +52,8 @@ Inst *CqoIRBuilder::process(void) const {
 
   try {
     this->templateMethod(*inst, this->operands, "CQO");
-    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
     ControlFlow::rip(*inst, this->nextAddress);
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
   }
   catch (std::exception &e) {
     delete inst;

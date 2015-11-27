@@ -42,7 +42,7 @@ void CmovnlIRBuilder::regReg(Inst &inst) const {
 
   expr = smt2lib::ite(
             smt2lib::equal(
-              sf, 
+              sf,
               of
             ),
             reg2e,
@@ -107,8 +107,8 @@ Inst *CmovnlIRBuilder::process(void) const {
 
   try {
     this->templateMethod(*inst, this->operands, "CMOVNL");
-    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
     ControlFlow::rip(*inst, this->nextAddress);
+    ap.incNumberOfExpressions(inst->numberOfExpressions()); /* Used for statistics */
   }
   catch (std::exception &e) {
     delete inst;
