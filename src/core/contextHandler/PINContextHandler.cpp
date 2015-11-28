@@ -72,16 +72,13 @@ __uint PINContextHandler::getRegisterValue(__uint TritRegID) const {
 
 /* There is no verification on the validity of the ID. */
 uint128 PINContextHandler::getSSERegisterValue(__uint TritRegID) const {
-  REG reg                 = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
-  uint128 value       = 0;
-  PIN_REGISTER tmp;
+  REG reg       = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
+  uint128 value = 0;
 
   if (!REG_valid(reg) || !isSSERegId(TritRegID))
     throw std::runtime_error("Error: getSSERegisterValue() - Invalid PIN register id.");
 
-  PIN_GetContextRegval(this->_ctx, reg, reinterpret_cast<uint8 *>(&tmp));
-
-  value = *reinterpret_cast<uint128*>(&tmp);
+  PIN_GetContextRegval(this->_ctx, reg, reinterpret_cast<uint8 *>(&value));
 
   return value;
 }
@@ -102,7 +99,7 @@ void PINContextHandler::setRegisterValue(__uint TritRegID, __uint value) {
 /* There is no verification on the validity of the ID. */
 void PINContextHandler::setSSERegisterValue(__uint TritRegID, uint128 value) {
   REG reg = safecast(PINConverter::convertTritonReg2DBIReg(TritRegID));
-  unsigned char *tmp      = (unsigned char*)malloc(16);
+  unsigned char *tmp = (unsigned char*)malloc(16);
 
   if (tmp == nullptr)
     throw std::runtime_error("Error: setSSERegisterValue() - Not enough memory.");
