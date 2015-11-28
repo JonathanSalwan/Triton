@@ -310,8 +310,32 @@ static PyObject *Triton_opcodeToString(PyObject *self, PyObject *opcode) {
 
 static char Triton_runProgram_doc[] = "Starts the Pin instrumentation";
 static PyObject *Triton_runProgram(PyObject *self, PyObject *noarg) {
-  // Never returns - Rock 'n roll baby \o/
+  /* Never returns - Rock 'n roll baby \o/ */
   PIN_StartProgram();
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+
+static char Triton_setATTSyntax_doc[] = "Sets the AT&T syntax";
+static PyObject *Triton_setATTSyntax(PyObject *self, PyObject *noarg) {
+  PIN_SetSyntaxATT();
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+
+static char Triton_setIntelSyntax_doc[] = "Sets the Intel syntax";
+static PyObject *Triton_setIntelSyntax(PyObject *self, PyObject *noarg) {
+  PIN_SetSyntaxIntel();
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+
+static char Triton_setXEDSyntax_doc[] = "Sets the XED syntax";
+static PyObject *Triton_setXEDSyntax(PyObject *self, PyObject *noarg) {
+  PIN_SetSyntaxXED();
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -1205,6 +1229,9 @@ PyMethodDef tritonCallbacks[] = {
   {"getSyscallReturn",          Triton_getSyscallReturn,          METH_O,       Triton_getSyscallReturn_doc},
   {"opcodeToString",            Triton_opcodeToString,            METH_O,       Triton_opcodeToString_doc},
   {"runProgram",                Triton_runProgram,                METH_NOARGS,  Triton_runProgram_doc},
+  {"setATTSyntax",              Triton_setATTSyntax,              METH_NOARGS,  Triton_setATTSyntax_doc},
+  {"setIntelSyntax",            Triton_setIntelSyntax,            METH_NOARGS,  Triton_setIntelSyntax_doc},
+  {"setXEDSyntax",              Triton_setXEDSyntax,              METH_NOARGS,  Triton_setXEDSyntax_doc},
   {"setMemValue",               Triton_setMemValue,               METH_VARARGS, Triton_setMemValue_doc},
   {"setRegValue",               Triton_setRegValue,               METH_VARARGS, Triton_setRegValue_doc},
   {"setupImageBlacklist",       Triton_setupImageBlacklist,       METH_O,       Triton_setupImageBlacklist_doc},
