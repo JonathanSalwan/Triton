@@ -44,6 +44,16 @@ RegisterOperand::~RegisterOperand() {
 }
 
 
+__uint RegisterOperand::getAbstractLow(void) const {
+  return this->getLow();
+}
+
+
+__uint RegisterOperand::getAbstractHigh(void) const {
+  return this->getHigh();
+}
+
+
 __uint RegisterOperand::getTritonRegId(void) const {
   return this->tritonRegId;
 }

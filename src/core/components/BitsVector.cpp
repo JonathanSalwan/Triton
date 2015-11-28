@@ -30,22 +30,22 @@ BitsVector::~BitsVector() {
 }
 
 
-std::pair<__uint, __uint> BitsVector::getPair(void) {
+std::pair<__uint, __uint> BitsVector::getPair(void) const {
   return std::make_pair(this->high, this->low);
 }
 
 
-__uint BitsVector::getHigh(void) {
+__uint BitsVector::getHigh(void) const {
   return this->high;
 }
 
 
-__uint BitsVector::getLow(void) {
+__uint BitsVector::getLow(void) const {
   return this->low;
 }
 
 
-__uint BitsVector::getVectorSize(void) {
+__uint BitsVector::getVectorSize(void) const {
   return (this->high - this->low) + 1;
 }
 
@@ -63,5 +63,11 @@ void BitsVector::setLow(__uint v) {
 void BitsVector::setPair(std::pair<__uint, __uint> p) {
   this->high = std::get<0>(p);
   this->low  = std::get<1>(p);
+}
+
+
+void BitsVector::operator=(const BitsVector& other) {
+  this->high = other.high;
+  this->low  = other.low;
 }
 

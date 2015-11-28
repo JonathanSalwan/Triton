@@ -11,10 +11,11 @@
 
 #include "BitsVector.h"
 #include "CpuSize.h"
+#include "MemRegInterface.h"
 #include "TritonTypes.h"
 
 
-class RegisterOperand : public BitsVector
+class RegisterOperand : public BitsVector, public MemRegInterface
 {
   private:
     std::string name;
@@ -29,14 +30,17 @@ class RegisterOperand : public BitsVector
     RegisterOperand(const RegisterOperand& other);
     ~RegisterOperand();
 
-    std::string getName(void) const;
-    __uint      getPinRegId(void) const;
-    __uint      getBitSize(void) const;
-    __uint      getSize(void) const;
-    __uint      getTritonRegId(void) const;
-    void        setSize(__uint size);
-    void        setTritonRegId(__uint tritonRegId);
-    void        operator=(const RegisterOperand& other);
+    std::string     getName(void) const;
+    __uint          getAbstractHigh(void) const;
+    __uint          getAbstractLow(void) const;
+    __uint          getBitSize(void) const;
+    __uint          getPinRegId(void) const;
+    __uint          getSize(void) const;
+    __uint          getTritonRegId(void) const;
+    void            setSize(__uint size);
+    void            setTritonRegId(__uint tritonRegId);
+    void            operator=(const RegisterOperand& other);
+
 };
 
 #endif     /* !REGISTEROPERAND_H */

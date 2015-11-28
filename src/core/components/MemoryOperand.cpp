@@ -32,6 +32,16 @@ MemoryOperand::~MemoryOperand() {
 }
 
 
+__uint MemoryOperand::getAbstractLow(void) const {
+  return this->getLow();
+}
+
+
+__uint MemoryOperand::getAbstractHigh(void) const {
+  return this->getHigh();
+}
+
+
 __uint MemoryOperand::getAddress(void) const {
   return this->address;
 }

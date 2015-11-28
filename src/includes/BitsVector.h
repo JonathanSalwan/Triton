@@ -22,13 +22,14 @@ class BitsVector
     __uint low;
 
   public:
-    std::pair<__uint, __uint>   getPair(void);
-    __uint                      getHigh(void);
-    __uint                      getLow(void);
-    __uint                      getVectorSize(void);
+    std::pair<__uint, __uint>   getPair(void) const;
+    __uint                      getHigh(void) const;
+    __uint                      getLow(void) const;
+    __uint                      getVectorSize(void) const;
     void                        setHigh(__uint v);
     void                        setLow(__uint v);
     void                        setPair(std::pair<__uint, __uint> p);
+    void                        operator=(const BitsVector& other);
 
     BitsVector();
     BitsVector(__uint high, __uint low);
