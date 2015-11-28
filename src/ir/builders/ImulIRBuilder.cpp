@@ -70,9 +70,9 @@ void ImulIRBuilder::regImm(Inst &inst) const {
   ap.aluSpreadTaintRegImm(se, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfImul(inst, se, regSize, expr);
-  EflagsBuilder::ofImul(inst, se, regSize, expr);
-  EflagsBuilder::sf(inst, se, regSize);
+  EflagsBuilder::cfImul(inst, se, reg, expr);
+  EflagsBuilder::ofImul(inst, se, reg, expr);
+  EflagsBuilder::sf(inst, se, reg);
 }
 
 
@@ -178,9 +178,9 @@ void ImulIRBuilder::regReg(Inst &inst) const {
   }
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfImul(inst, se, regSize1, expr);
-  EflagsBuilder::ofImul(inst, se, regSize1, expr);
-  EflagsBuilder::sf(inst, se, regSize1);
+  EflagsBuilder::cfImul(inst, se, reg1, expr);
+  EflagsBuilder::ofImul(inst, se, reg1, expr);
+  EflagsBuilder::sf(inst, se, reg1);
 }
 
 
@@ -286,9 +286,9 @@ void ImulIRBuilder::regMem(Inst &inst) const {
   }
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfImul(inst, se, regSize1, expr);
-  EflagsBuilder::ofImul(inst, se, regSize1, expr);
-  EflagsBuilder::sf(inst, se, regSize1);
+  EflagsBuilder::cfImul(inst, se, reg1, expr);
+  EflagsBuilder::ofImul(inst, se, reg1, expr);
+  EflagsBuilder::sf(inst, se, reg1);
 }
 
 

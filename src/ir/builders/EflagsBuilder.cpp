@@ -15,13 +15,13 @@
 
 SymbolicExpression *EflagsBuilder::af(Inst &inst,
                                    SymbolicExpression *parent,
-                                   uint32 dstSize,
+                                   MemRegInterface &dstOp,
                                    smt2lib::smtAstAbstractNode *op1,
                                    smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::af(parent, bvSize, op1, op2);
 
@@ -37,12 +37,12 @@ SymbolicExpression *EflagsBuilder::af(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::afNeg(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op1)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::afNeg(parent, bvSize, op1);
 
@@ -58,12 +58,12 @@ SymbolicExpression *EflagsBuilder::afNeg(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::cfAdd(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op1)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::cfAdd(parent, bvSize, op1);
 
@@ -79,12 +79,12 @@ SymbolicExpression *EflagsBuilder::cfAdd(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::cfImul(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *mulRes)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::cfImul(parent, bvSize, mulRes);
 
@@ -100,12 +100,12 @@ SymbolicExpression *EflagsBuilder::cfImul(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::cfMul(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *up)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::cfMul(bvSize, up);
 
@@ -121,12 +121,12 @@ SymbolicExpression *EflagsBuilder::cfMul(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::cfNeg(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op1)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::cfNeg(bvSize, op1);
 
@@ -142,12 +142,12 @@ SymbolicExpression *EflagsBuilder::cfNeg(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::cfRcl(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::cfRcl(parent, bvSize, op2);
 
@@ -182,12 +182,12 @@ SymbolicExpression *EflagsBuilder::cfRol(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::cfRor(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::cfRor(parent, bvSize, op2);
 
@@ -203,13 +203,13 @@ SymbolicExpression *EflagsBuilder::cfRor(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::cfSar(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op1,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::cfSar(parent, bvSize, op1, op2);
 
@@ -225,13 +225,13 @@ SymbolicExpression *EflagsBuilder::cfSar(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::cfShl(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op1,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::cfShl(parent, bvSize, op1, op2);
 
@@ -247,13 +247,13 @@ SymbolicExpression *EflagsBuilder::cfShl(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::cfShr(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op1,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::cfShr(parent, bvSize, op1, op2);
 
@@ -269,13 +269,13 @@ SymbolicExpression *EflagsBuilder::cfShr(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::cfSub(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op1,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::cfSub(parent, bvSize, op1, op2);
 
@@ -328,13 +328,13 @@ SymbolicExpression *EflagsBuilder::clearFlag(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::ofAdd(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op1,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 extractSize = (dstSize * BYTE_SIZE_BIT) - 1;
+  uint32 extractSize = (dstOp.getSize() * BYTE_SIZE_BIT) - 1;
 
   expr = EflagsExpressions::ofAdd(parent, extractSize, op1, op2);
 
@@ -350,12 +350,12 @@ SymbolicExpression *EflagsBuilder::ofAdd(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::ofImul(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *mulRes)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::ofImul(parent, bvSize, mulRes);
 
@@ -371,12 +371,12 @@ SymbolicExpression *EflagsBuilder::ofImul(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::ofMul(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *up)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::ofMul(bvSize, up);
 
@@ -392,12 +392,12 @@ SymbolicExpression *EflagsBuilder::ofMul(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::ofNeg(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op1)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::ofNeg(parent, bvSize, op1);
 
@@ -413,12 +413,12 @@ SymbolicExpression *EflagsBuilder::ofNeg(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::ofRol(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::ofRol(parent, bvSize, op2);
 
@@ -434,12 +434,12 @@ SymbolicExpression *EflagsBuilder::ofRol(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::ofRor(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::ofRor(parent, bvSize, op2);
 
@@ -455,12 +455,12 @@ SymbolicExpression *EflagsBuilder::ofRor(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::ofSar(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::ofSar(parent, bvSize, op2);
 
@@ -476,13 +476,13 @@ SymbolicExpression *EflagsBuilder::ofSar(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::ofShl(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op1,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::ofShl(parent, bvSize, op1, op2);
 
@@ -498,13 +498,13 @@ SymbolicExpression *EflagsBuilder::ofShl(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::ofShr(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op1,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::ofShr(parent, bvSize, op1, op2);
 
@@ -520,13 +520,13 @@ SymbolicExpression *EflagsBuilder::ofShr(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::ofSub(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op1,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 extractSize = (dstSize * BYTE_SIZE_BIT) - 1;
+  uint32 extractSize = (dstOp.getSize() * BYTE_SIZE_BIT) - 1;
 
   expr = EflagsExpressions::ofSub(parent, extractSize, op1, op2);
 
@@ -542,11 +542,11 @@ SymbolicExpression *EflagsBuilder::ofSub(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::pf(Inst &inst,
                                    SymbolicExpression *parent,
-                                   uint32 dstSize)
+                                   MemRegInterface &dstOp)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::pf(parent, bvSize);
 
@@ -562,12 +562,12 @@ SymbolicExpression *EflagsBuilder::pf(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::pfShl(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::pfShl(parent, bvSize, op2);
 
@@ -620,11 +620,11 @@ SymbolicExpression *EflagsBuilder::setFlag(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::sf(Inst &inst,
                                    SymbolicExpression *parent,
-                                   uint32 dstSize)
+                                   MemRegInterface &dstOp)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 extractSize = (dstSize * BYTE_SIZE_BIT) - 1;
+  uint32 extractSize = (dstOp.getSize() * BYTE_SIZE_BIT) - 1;
 
   expr = EflagsExpressions::sf(parent, extractSize);
 
@@ -640,13 +640,13 @@ SymbolicExpression *EflagsBuilder::sf(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::sfShl(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
-  uint32 extractSize = (dstSize * BYTE_SIZE_BIT) - 1;
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 extractSize = (dstOp.getSize() * BYTE_SIZE_BIT) - 1;
 
   expr = EflagsExpressions::sfShl(parent, bvSize, extractSize, op2);
 
@@ -663,11 +663,11 @@ SymbolicExpression *EflagsBuilder::sfShl(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::zf(Inst &inst,
                                    SymbolicExpression *parent,
-                                   uint32 dstSize)
+                                   MemRegInterface &dstOp)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::zf(parent, bvSize);
 
@@ -683,12 +683,12 @@ SymbolicExpression *EflagsBuilder::zf(Inst &inst,
 
 SymbolicExpression *EflagsBuilder::zfShl(Inst &inst,
                                       SymbolicExpression *parent,
-                                      uint32 dstSize,
+                                      MemRegInterface &dstOp,
                                       smt2lib::smtAstAbstractNode *op2)
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstSize * BYTE_SIZE_BIT);
+  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
 
   expr = EflagsExpressions::zfShl(parent, bvSize, op2);
 

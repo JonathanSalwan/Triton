@@ -40,12 +40,12 @@ void NegIRBuilder::reg(Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::afNeg(inst, se, regSize, op1);
-  EflagsBuilder::cfNeg(inst, se, regSize, op1);
-  EflagsBuilder::ofNeg(inst, se, regSize, op1);
-  EflagsBuilder::pf(inst, se, regSize);
-  EflagsBuilder::sf(inst, se, regSize);
-  EflagsBuilder::zf(inst, se, regSize);
+  EflagsBuilder::afNeg(inst, se, reg, op1);
+  EflagsBuilder::cfNeg(inst, se, reg, op1);
+  EflagsBuilder::ofNeg(inst, se, reg, op1);
+  EflagsBuilder::pf(inst, se, reg);
+  EflagsBuilder::sf(inst, se, reg);
+  EflagsBuilder::zf(inst, se, reg);
 }
 
 
@@ -68,12 +68,12 @@ void NegIRBuilder::mem(Inst &inst) const {
   ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::afNeg(inst, se, memSize, op1);
-  EflagsBuilder::cfNeg(inst, se, memSize, op1);
-  EflagsBuilder::ofNeg(inst, se, memSize, op1);
-  EflagsBuilder::pf(inst, se, memSize);
-  EflagsBuilder::sf(inst, se, memSize);
-  EflagsBuilder::zf(inst, se, memSize);
+  EflagsBuilder::afNeg(inst, se, mem, op1);
+  EflagsBuilder::cfNeg(inst, se, mem, op1);
+  EflagsBuilder::ofNeg(inst, se, mem, op1);
+  EflagsBuilder::pf(inst, se, mem);
+  EflagsBuilder::sf(inst, se, mem);
+  EflagsBuilder::zf(inst, se, mem);
 }
 
 

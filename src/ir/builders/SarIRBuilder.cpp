@@ -42,11 +42,11 @@ void SarIRBuilder::regImm(Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfSar(inst, se, regSize, op1, op2);
-  EflagsBuilder::ofSar(inst, se, regSize, op2);
-  EflagsBuilder::pfShl(inst, se, regSize, op2); /* Same that shl */
-  EflagsBuilder::sfShl(inst, se, regSize, op2); /* Same that shl */
-  EflagsBuilder::zfShl(inst, se, regSize, op2); /* Same that shl */
+  EflagsBuilder::cfSar(inst, se, reg, op1, op2);
+  EflagsBuilder::ofSar(inst, se, reg, op2);
+  EflagsBuilder::pfShl(inst, se, reg, op2); /* Same that shl */
+  EflagsBuilder::sfShl(inst, se, reg, op2); /* Same that shl */
+  EflagsBuilder::zfShl(inst, se, reg, op2); /* Same that shl */
 }
 
 
@@ -71,11 +71,11 @@ void SarIRBuilder::regReg(Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfSar(inst, se, regSize, op1, op2);
-  EflagsBuilder::ofSar(inst, se, regSize, op2);
-  EflagsBuilder::pfShl(inst, se, regSize, op2); /* Same that shl */
-  EflagsBuilder::sfShl(inst, se, regSize, op2); /* Same that shl */
-  EflagsBuilder::zfShl(inst, se, regSize, op2); /* Same that shl */
+  EflagsBuilder::cfSar(inst, se, reg, op1, op2);
+  EflagsBuilder::ofSar(inst, se, reg, op2);
+  EflagsBuilder::pfShl(inst, se, reg, op2); /* Same that shl */
+  EflagsBuilder::sfShl(inst, se, reg, op2); /* Same that shl */
+  EflagsBuilder::zfShl(inst, se, reg, op2); /* Same that shl */
 }
 
 
@@ -105,11 +105,11 @@ void SarIRBuilder::memImm(Inst &inst) const {
   ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfSar(inst, se, memSize, op1, op2);
-  EflagsBuilder::ofSar(inst, se, memSize, op2);
-  EflagsBuilder::pfShl(inst, se, memSize, op2); /* Same that shl */
-  EflagsBuilder::sfShl(inst, se, memSize, op2); /* Same that shl */
-  EflagsBuilder::zfShl(inst, se, memSize, op2); /* Same that shl */
+  EflagsBuilder::cfSar(inst, se, mem, op1, op2);
+  EflagsBuilder::ofSar(inst, se, mem, op2);
+  EflagsBuilder::pfShl(inst, se, mem, op2); /* Same that shl */
+  EflagsBuilder::sfShl(inst, se, mem, op2); /* Same that shl */
+  EflagsBuilder::zfShl(inst, se, mem, op2); /* Same that shl */
 }
 
 

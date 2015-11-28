@@ -59,8 +59,8 @@ void RclIRBuilder::regImm(Inst &inst) const {
   ap.aluSpreadTaintRegReg(se2, reg, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRcl(inst, se1, regSize, op2);
-  EflagsBuilder::ofRol(inst, se2, regSize, op2); /* Same as ROL */
+  EflagsBuilder::cfRcl(inst, se1, reg, op2);
+  EflagsBuilder::ofRol(inst, se2, reg, op2); /* Same as ROL */
 }
 
 
@@ -101,8 +101,8 @@ void RclIRBuilder::regReg(Inst &inst) const {
   ap.aluSpreadTaintRegReg(se2, reg1, reg1);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRcl(inst, se1, regSize1, op2);
-  EflagsBuilder::ofRol(inst, se2, regSize1, op2); /* Same as ROL */
+  EflagsBuilder::cfRcl(inst, se1, reg1, op2);
+  EflagsBuilder::ofRol(inst, se2, reg1, op2); /* Same as ROL */
 }
 
 
@@ -149,8 +149,8 @@ void RclIRBuilder::memImm(Inst &inst) const {
   ap.aluSpreadTaintMemMem(se2, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRcl(inst, se1, memSize, op2);
-  EflagsBuilder::ofRol(inst, se2, memSize, op2); /* Same as ROL */
+  EflagsBuilder::cfRcl(inst, se1, mem, op2);
+  EflagsBuilder::ofRol(inst, se2, mem, op2); /* Same as ROL */
 }
 
 
@@ -191,8 +191,8 @@ void RclIRBuilder::memReg(Inst &inst) const {
   ap.aluSpreadTaintMemMem(se2, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::cfRcl(inst, se1, memSize, op2);
-  EflagsBuilder::ofRol(inst, se2, memSize, op2); /* Same as ROL */
+  EflagsBuilder::cfRcl(inst, se1, mem, op2);
+  EflagsBuilder::ofRol(inst, se2, mem, op2); /* Same as ROL */
 }
 
 

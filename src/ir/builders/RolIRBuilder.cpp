@@ -47,7 +47,7 @@ void RolIRBuilder::regImm(Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::cfRol(inst, se, op2);
-  EflagsBuilder::ofRol(inst, se, regSize, op2);
+  EflagsBuilder::ofRol(inst, se, reg, op2);
 }
 
 
@@ -76,7 +76,7 @@ void RolIRBuilder::regReg(Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::cfRol(inst, se, op2);
-  EflagsBuilder::ofRol(inst, se, regSize1, op2);
+  EflagsBuilder::ofRol(inst, se, reg1, op2);
 }
 
 
@@ -111,7 +111,7 @@ void RolIRBuilder::memImm(Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::cfRol(inst, se, op2);
-  EflagsBuilder::ofRol(inst, se, memSize, op2);
+  EflagsBuilder::ofRol(inst, se, mem, op2);
 }
 
 
@@ -140,7 +140,7 @@ void RolIRBuilder::memReg(Inst &inst) const {
 
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::cfRol(inst, se, op2);
-  EflagsBuilder::ofRol(inst, se, memSize, op2);
+  EflagsBuilder::ofRol(inst, se, mem, op2);
 }
 
 

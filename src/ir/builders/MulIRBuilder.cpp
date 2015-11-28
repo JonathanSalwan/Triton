@@ -46,8 +46,8 @@ void MulIRBuilder::reg(Inst &inst) const {
       ap.aluSpreadTaintRegReg(se, ID_TMP_RAX, reg);
       /* Add the symbolic flags expression to the current inst */
       rax = smt2lib::extract((WORD_SIZE_BIT - 1), BYTE_SIZE_BIT, expr);
-      EflagsBuilder::cfMul(inst, se, regSize, rax);
-      EflagsBuilder::ofMul(inst, se, regSize, rax);
+      EflagsBuilder::cfMul(inst, se, reg, rax);
+      EflagsBuilder::ofMul(inst, se, reg, rax);
       break;
 
     /* DX:AX = AX * r/m16 */
@@ -68,8 +68,8 @@ void MulIRBuilder::reg(Inst &inst) const {
       /* Apply the taint */
       ap.aluSpreadTaintRegReg(se, ID_TMP_RDX, reg);
       /* Add the symbolic flags expression to the current inst */
-      EflagsBuilder::cfMul(inst, se, regSize, rdx);
-      EflagsBuilder::ofMul(inst, se, regSize, rdx);
+      EflagsBuilder::cfMul(inst, se, reg, rdx);
+      EflagsBuilder::ofMul(inst, se, reg, rdx);
       break;
 
     /* EDX:EAX = EAX * r/m32 */
@@ -90,8 +90,8 @@ void MulIRBuilder::reg(Inst &inst) const {
       /* Apply the taint */
       ap.aluSpreadTaintRegReg(se, ID_TMP_RDX, reg);
       /* Add the symbolic flags expression to the current inst */
-      EflagsBuilder::cfMul(inst, se, regSize, rdx);
-      EflagsBuilder::ofMul(inst, se, regSize, rdx);
+      EflagsBuilder::cfMul(inst, se, reg, rdx);
+      EflagsBuilder::ofMul(inst, se, reg, rdx);
       break;
 
     /* RDX:RAX = RAX * r/m64 */
@@ -112,8 +112,8 @@ void MulIRBuilder::reg(Inst &inst) const {
       /* Apply the taint */
       ap.aluSpreadTaintRegReg(se, ID_TMP_RDX, reg);
       /* Add the symbolic flags expression to the current inst */
-      EflagsBuilder::cfMul(inst, se, regSize, rdx);
-      EflagsBuilder::ofMul(inst, se, regSize, rdx);
+      EflagsBuilder::cfMul(inst, se, reg, rdx);
+      EflagsBuilder::ofMul(inst, se, reg, rdx);
       break;
 
   }
@@ -146,8 +146,8 @@ void MulIRBuilder::mem(Inst &inst) const {
       ap.aluSpreadTaintRegMem(se, ID_TMP_RAX, mem, memSize);
       /* Add the symbolic flags expression to the current inst */
       rax = smt2lib::extract((WORD_SIZE_BIT - 1), BYTE_SIZE_BIT, expr);
-      EflagsBuilder::cfMul(inst, se, memSize, rax);
-      EflagsBuilder::ofMul(inst, se, memSize, rax);
+      EflagsBuilder::cfMul(inst, se, mem, rax);
+      EflagsBuilder::ofMul(inst, se, mem, rax);
       break;
 
     /* DX:AX = AX * r/m16 */
@@ -168,8 +168,8 @@ void MulIRBuilder::mem(Inst &inst) const {
       /* Apply the taint */
       ap.aluSpreadTaintRegMem(se, ID_TMP_RDX, mem, memSize);
       /* Add the symbolic flags expression to the current inst */
-      EflagsBuilder::cfMul(inst, se, memSize, rdx);
-      EflagsBuilder::ofMul(inst, se, memSize, rdx);
+      EflagsBuilder::cfMul(inst, se, mem, rdx);
+      EflagsBuilder::ofMul(inst, se, mem, rdx);
       break;
 
     /* EDX:EAX = EAX * r/m32 */
@@ -190,8 +190,8 @@ void MulIRBuilder::mem(Inst &inst) const {
       /* Apply the taint */
       ap.aluSpreadTaintRegMem(se, ID_TMP_RDX, mem, memSize);
       /* Add the symbolic flags expression to the current inst */
-      EflagsBuilder::cfMul(inst, se, memSize, rdx);
-      EflagsBuilder::ofMul(inst, se, memSize, rdx);
+      EflagsBuilder::cfMul(inst, se, mem, rdx);
+      EflagsBuilder::ofMul(inst, se, mem, rdx);
       break;
 
     /* RDX:RAX = RAX * r/m64 */
@@ -212,8 +212,8 @@ void MulIRBuilder::mem(Inst &inst) const {
       /* Apply the taint */
       ap.aluSpreadTaintRegMem(se, ID_TMP_RDX, mem, memSize);
       /* Add the symbolic flags expression to the current inst */
-      EflagsBuilder::cfMul(inst, se, memSize, rdx);
-      EflagsBuilder::ofMul(inst, se, memSize, rdx);
+      EflagsBuilder::cfMul(inst, se, mem, rdx);
+      EflagsBuilder::ofMul(inst, se, mem, rdx);
       break;
 
   }

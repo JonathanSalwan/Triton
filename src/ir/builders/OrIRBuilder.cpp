@@ -44,9 +44,9 @@ void OrIRBuilder::regImm(Inst &inst) const {
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::clearFlag(inst, ID_TMP_CF, "Clears carry flag");
   EflagsBuilder::clearFlag(inst, ID_TMP_OF, "Clears overflow flag");
-  EflagsBuilder::pf(inst, se, regSize);
-  EflagsBuilder::sf(inst, se, regSize);
-  EflagsBuilder::zf(inst, se, regSize);
+  EflagsBuilder::pf(inst, se, reg);
+  EflagsBuilder::sf(inst, se, reg);
+  EflagsBuilder::zf(inst, se, reg);
 }
 
 
@@ -74,9 +74,9 @@ void OrIRBuilder::regReg(Inst &inst) const {
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::clearFlag(inst, ID_TMP_CF, "Clears carry flag");
   EflagsBuilder::clearFlag(inst, ID_TMP_OF, "Clears overflow flag");
-  EflagsBuilder::pf(inst, se, regSize1);
-  EflagsBuilder::sf(inst, se, regSize1);
-  EflagsBuilder::zf(inst, se, regSize1);
+  EflagsBuilder::pf(inst, se, reg1);
+  EflagsBuilder::sf(inst, se, reg1);
+  EflagsBuilder::zf(inst, se, reg1);
 }
 
 
@@ -104,9 +104,9 @@ void OrIRBuilder::regMem(Inst &inst) const {
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::clearFlag(inst, ID_TMP_CF, "Clears carry flag");
   EflagsBuilder::clearFlag(inst, ID_TMP_OF, "Clears overflow flag");
-  EflagsBuilder::pf(inst, se, regSize);
-  EflagsBuilder::sf(inst, se, regSize);
-  EflagsBuilder::zf(inst, se, regSize);
+  EflagsBuilder::pf(inst, se, reg);
+  EflagsBuilder::sf(inst, se, reg);
+  EflagsBuilder::zf(inst, se, reg);
 }
 
 
@@ -133,9 +133,9 @@ void OrIRBuilder::memImm(Inst &inst) const {
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::clearFlag(inst, ID_TMP_CF, "Clears carry flag");
   EflagsBuilder::clearFlag(inst, ID_TMP_OF, "Clears overflow flag");
-  EflagsBuilder::pf(inst, se, memSize);
-  EflagsBuilder::sf(inst, se, memSize);
-  EflagsBuilder::zf(inst, se, memSize);
+  EflagsBuilder::pf(inst, se, mem);
+  EflagsBuilder::sf(inst, se, mem);
+  EflagsBuilder::zf(inst, se, mem);
 }
 
 
@@ -163,9 +163,9 @@ void OrIRBuilder::memReg(Inst &inst) const {
   /* Add the symbolic flags expression to the current inst */
   EflagsBuilder::clearFlag(inst, ID_TMP_CF, "Clears carry flag");
   EflagsBuilder::clearFlag(inst, ID_TMP_OF, "Clears overflow flag");
-  EflagsBuilder::pf(inst, se, memSize);
-  EflagsBuilder::sf(inst, se, memSize);
-  EflagsBuilder::zf(inst, se, memSize);
+  EflagsBuilder::pf(inst, se, mem);
+  EflagsBuilder::sf(inst, se, mem);
+  EflagsBuilder::zf(inst, se, mem);
 }
 
 

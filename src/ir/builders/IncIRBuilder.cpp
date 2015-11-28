@@ -41,11 +41,11 @@ void IncIRBuilder::reg(Inst &inst) const {
   ap.aluSpreadTaintRegReg(se, reg, reg);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, regSize, op1, op2);
-  EflagsBuilder::ofAdd(inst, se, regSize, op1, op2);
-  EflagsBuilder::pf(inst, se, regSize);
-  EflagsBuilder::sf(inst, se, regSize);
-  EflagsBuilder::zf(inst, se, regSize);
+  EflagsBuilder::af(inst, se, reg, op1, op2);
+  EflagsBuilder::ofAdd(inst, se, reg, op1, op2);
+  EflagsBuilder::pf(inst, se, reg);
+  EflagsBuilder::sf(inst, se, reg);
+  EflagsBuilder::zf(inst, se, reg);
 }
 
 
@@ -69,11 +69,11 @@ void IncIRBuilder::mem(Inst &inst) const {
   ap.aluSpreadTaintMemMem(se, mem, mem, memSize);
 
   /* Add the symbolic flags expression to the current inst */
-  EflagsBuilder::af(inst, se, memSize, op1, op2);
-  EflagsBuilder::ofAdd(inst, se, memSize, op1, op2);
-  EflagsBuilder::pf(inst, se, memSize);
-  EflagsBuilder::sf(inst, se, memSize);
-  EflagsBuilder::zf(inst, se, memSize);
+  EflagsBuilder::af(inst, se, mem, op1, op2);
+  EflagsBuilder::ofAdd(inst, se, mem, op1, op2);
+  EflagsBuilder::pf(inst, se, mem);
+  EflagsBuilder::sf(inst, se, mem);
+  EflagsBuilder::zf(inst, se, mem);
 }
 
 
