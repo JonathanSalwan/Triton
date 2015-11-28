@@ -144,6 +144,7 @@ class AnalysisProcessor {
     std::list<__uint> getPathConstraints(void);
 
     /* Build a symbolic register operand */
+    smt2lib::smtAstAbstractNode *buildSymbolicRegOperand(RegisterOperand &reg);
     smt2lib::smtAstAbstractNode *buildSymbolicRegOperand(RegisterOperand &reg, __uint regSize);
     smt2lib::smtAstAbstractNode *buildSymbolicRegOperand(RegisterOperand &reg, __uint highExtract, __uint lowExtract);
     smt2lib::smtAstAbstractNode *buildSymbolicMemOperand(MemoryOperand &mem, __uint memSize);

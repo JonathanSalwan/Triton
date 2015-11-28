@@ -325,36 +325,15 @@ std::list<__uint> AnalysisProcessor::getPathConstraints(void) {
 }
 
 
+smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(RegisterOperand &reg) {
+  return this->buildSymbolicRegOperand(reg, reg.getHigh(), reg.getLow());
+}
+
+
 smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(RegisterOperand &reg, __uint regSize) {
-  smt2lib::smtAstAbstractNode *op = nullptr;
-  __uint regId  = reg.getTritonRegId();
-  __uint symReg = this->getRegSymbolicID(reg);
-  __uint low    = reg.getLow();
-  __uint high   = !low ? (regSize * BYTE_SIZE_BIT) - 1 : reg.getHigh(); // TMP fix for #170
-  /*
-   * TODO
-   * ----
-   * We should use reg.getHigh() for every cases and remove regSize (#179).
-   * Then, replace all:
-   *
-   *   - buildSymbolicRegOperand(ID_TMP_X, X_SIZE);
-   *
-   * To:
-   *
-   *   - buildSymbolicRegOperand(ID_TMP_X, HIGH, LOW);
-   *
-   */
-
-  if (symReg != UNSET)
-    op = smt2lib::extract(high, low, smt2lib::reference(symReg));
-  else {
-    if (isSSERegId(regId))
-      op = smt2lib::extract(high, low, smt2lib::bv(this->getSSERegisterValue(reg), SSE_REG_SIZE_BIT));
-    else
-      op = smt2lib::extract(high, low, smt2lib::bv(this->getRegisterValue(reg), REG_SIZE_BIT));
-  }
-
-  return op;
+  __uint low  = reg.getLow();
+  __uint high = !low ? (regSize * BYTE_SIZE_BIT) - 1 : reg.getHigh(); // TMP fix for #170
+  return this->buildSymbolicRegOperand(reg, high, low);
 }
 
 
