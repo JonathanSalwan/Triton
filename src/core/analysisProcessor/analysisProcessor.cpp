@@ -162,7 +162,7 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAb
   __uint regId = reg.getTritonRegId();
   smt2lib::smtAstAbstractNode *finalExpr = nullptr, *origReg = nullptr;
 
-  origReg = this->buildSymbolicRegOperand(reg, REG_SIZE, (REG_SIZE_BIT - 1), 0);
+  origReg = this->buildSymbolicRegOperand(reg, (REG_SIZE_BIT - 1), 0);
 
   switch (regSize) {
     case BYTE_SIZE:
@@ -358,7 +358,7 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(Register
 }
 
 
-smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(RegisterOperand &reg, __uint regSize, __uint highExtract, __uint lowExtract) {
+smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicRegOperand(RegisterOperand &reg, __uint highExtract, __uint lowExtract) {
   smt2lib::smtAstAbstractNode *op = nullptr;
   __uint regId  = reg.getTritonRegId();
   __uint symReg = this->getRegSymbolicID(reg);

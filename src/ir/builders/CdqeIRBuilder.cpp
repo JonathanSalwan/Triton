@@ -26,7 +26,7 @@ void CdqeIRBuilder::none(Inst &inst) const {
   smt2lib::smtAstAbstractNode *expr, *op1;
 
   /* Create the SMT semantic */
-  op1 = ap.buildSymbolicRegOperand(ID_TMP_RAX, REG_SIZE, (DWORD_SIZE_BIT - 1), 0);
+  op1 = ap.buildSymbolicRegOperand(ID_TMP_RAX, (DWORD_SIZE_BIT - 1), 0);
 
   /* Finale expr */
   expr = smt2lib::sx(DWORD_SIZE_BIT, op1);

@@ -26,10 +26,10 @@ void CwdeIRBuilder::none(Inst &inst) const {
   smt2lib::smtAstAbstractNode *expr, *op1;
 
   /* Create the SMT semantic */
-  op1 = ap.buildSymbolicRegOperand(ID_TMP_RAX, REG_SIZE, 16, 0);
+  op1 = ap.buildSymbolicRegOperand(ID_TMP_RAX, (WORD_SIZE_BIT - 1), 0);
 
   /* Finale expr */
-  expr = smt2lib::sx(16, op1);
+  expr = smt2lib::sx(WORD_SIZE_BIT, op1);
 
   /* Create the symbolic expression */
   se = ap.createRegSE(inst, expr, ID_TMP_RAX, DWORD_SIZE);

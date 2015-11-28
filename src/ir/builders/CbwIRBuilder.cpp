@@ -26,7 +26,7 @@ void CbwIRBuilder::none(Inst &inst) const {
   smt2lib::smtAstAbstractNode *expr, *op1;
 
   /* Create the SMT semantic */
-  op1 = ap.buildSymbolicRegOperand(ID_TMP_RAX, REG_SIZE, 8, 0);
+  op1 = ap.buildSymbolicRegOperand(ID_TMP_RAX, (BYTE_SIZE_BIT - 1), 0);
 
   /* Finale expr */
   expr = smt2lib::sx(8, op1);
