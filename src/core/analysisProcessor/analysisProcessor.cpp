@@ -408,7 +408,7 @@ smt2lib::smtAstAbstractNode *AnalysisProcessor::buildSymbolicFlagOperand(Registe
   __uint symFlag = this->getRegSymbolicID(flag);
 
   if (symFlag != UNSET)
-    op = smt2lib::reference(symFlag);
+    op = smt2lib::extract(0, 0, smt2lib::reference(symFlag));
   else
     op = smt2lib::bv(this->getFlagValue(flag), 1);
 

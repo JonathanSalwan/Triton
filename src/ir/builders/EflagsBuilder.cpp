@@ -21,9 +21,11 @@ SymbolicExpression *EflagsBuilder::af(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
+  uint32 low    = dstOp.getAbstractLow();
+  uint32 high   = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::af(parent, bvSize, op1, op2);
+  expr = EflagsExpressions::af(parent, bvSize, high, low, op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_AF, "Adjust flag");
@@ -42,9 +44,11 @@ SymbolicExpression *EflagsBuilder::afNeg(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
+  uint32 low    = dstOp.getAbstractLow();
+  uint32 high   = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::afNeg(parent, bvSize, op1);
+  expr = EflagsExpressions::afNeg(parent, bvSize, high, low, op1);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_AF, "Adjust flag");
@@ -63,9 +67,10 @@ SymbolicExpression *EflagsBuilder::cfAdd(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 low  = dstOp.getAbstractLow();
+  uint32 high = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::cfAdd(parent, bvSize, op1);
+  expr = EflagsExpressions::cfAdd(parent, high, low, op1);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_CF, "Carry flag");
@@ -84,9 +89,11 @@ SymbolicExpression *EflagsBuilder::cfImul(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
+  uint32 low    = dstOp.getAbstractLow();
+  uint32 high   = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::cfImul(parent, bvSize, mulRes);
+  expr = EflagsExpressions::cfImul(parent, bvSize, high, low, mulRes);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_CF, "Carry flag");
@@ -105,7 +112,7 @@ SymbolicExpression *EflagsBuilder::cfMul(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
 
   expr = EflagsExpressions::cfMul(bvSize, up);
 
@@ -126,7 +133,7 @@ SymbolicExpression *EflagsBuilder::cfNeg(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
 
   expr = EflagsExpressions::cfNeg(bvSize, op1);
 
@@ -147,9 +154,9 @@ SymbolicExpression *EflagsBuilder::cfRcl(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 high = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::cfRcl(parent, bvSize, op2);
+  expr = EflagsExpressions::cfRcl(parent, high, op2);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_CF, "Carry flag");
@@ -187,9 +194,11 @@ SymbolicExpression *EflagsBuilder::cfRor(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
+  uint32 low    = dstOp.getAbstractLow();
+  uint32 high   = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::cfRor(parent, bvSize, op2);
+  expr = EflagsExpressions::cfRor(parent, bvSize, high, low, op2);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_CF, "Carry flag");
@@ -209,7 +218,7 @@ SymbolicExpression *EflagsBuilder::cfSar(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
 
   expr = EflagsExpressions::cfSar(parent, bvSize, op1, op2);
 
@@ -231,7 +240,7 @@ SymbolicExpression *EflagsBuilder::cfShl(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
 
   expr = EflagsExpressions::cfShl(parent, bvSize, op1, op2);
 
@@ -253,7 +262,7 @@ SymbolicExpression *EflagsBuilder::cfShr(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
 
   expr = EflagsExpressions::cfShr(parent, bvSize, op1, op2);
 
@@ -275,9 +284,10 @@ SymbolicExpression *EflagsBuilder::cfSub(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 low  = dstOp.getAbstractLow();
+  uint32 high = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::cfSub(parent, bvSize, op1, op2);
+  expr = EflagsExpressions::cfSub(parent, high, low, op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_CF, "Carry flag");
@@ -334,9 +344,10 @@ SymbolicExpression *EflagsBuilder::ofAdd(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 extractSize = (dstOp.getSize() * BYTE_SIZE_BIT) - 1;
+  uint32 low  = dstOp.getAbstractLow();
+  uint32 high = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::ofAdd(parent, extractSize, op1, op2);
+  expr = EflagsExpressions::ofAdd(parent, high, low, op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_OF, "Overflow flag");
@@ -355,9 +366,11 @@ SymbolicExpression *EflagsBuilder::ofImul(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
+  uint32 low    = dstOp.getAbstractLow();
+  uint32 high   = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::ofImul(parent, bvSize, mulRes);
+  expr = EflagsExpressions::ofImul(parent, bvSize, high, low, mulRes);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_OF, "Overflow flag");
@@ -376,7 +389,7 @@ SymbolicExpression *EflagsBuilder::ofMul(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
 
   expr = EflagsExpressions::ofMul(bvSize, up);
 
@@ -397,9 +410,11 @@ SymbolicExpression *EflagsBuilder::ofNeg(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
+  uint32 low    = dstOp.getAbstractLow();
+  uint32 high   = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::ofNeg(parent, bvSize, op1);
+  expr = EflagsExpressions::ofNeg(parent, bvSize, high, low, op1);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_OF, "Overflow flag");
@@ -418,9 +433,11 @@ SymbolicExpression *EflagsBuilder::ofRol(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
+  uint32 low    = dstOp.getAbstractLow();
+  uint32 high   = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::ofRol(parent, bvSize, op2);
+  expr = EflagsExpressions::ofRol(parent, bvSize, high, low, op2);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_OF, "Overflow flag");
@@ -439,9 +456,12 @@ SymbolicExpression *EflagsBuilder::ofRor(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
+  uint32 low    = dstOp.getAbstractLow();
+  uint32 high   = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::ofRor(parent, bvSize, op2);
+
+  expr = EflagsExpressions::ofRor(parent, bvSize, high, low, op2);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_OF, "Overflow flag");
@@ -460,7 +480,7 @@ SymbolicExpression *EflagsBuilder::ofSar(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
 
   expr = EflagsExpressions::ofSar(parent, bvSize, op2);
 
@@ -482,7 +502,7 @@ SymbolicExpression *EflagsBuilder::ofShl(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
 
   expr = EflagsExpressions::ofShl(parent, bvSize, op1, op2);
 
@@ -504,9 +524,10 @@ SymbolicExpression *EflagsBuilder::ofShr(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
+  uint32 high   = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::ofShr(parent, bvSize, op1, op2);
+  expr = EflagsExpressions::ofShr(parent, bvSize, high, op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_OF, "Overflow flag");
@@ -526,9 +547,10 @@ SymbolicExpression *EflagsBuilder::ofSub(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 extractSize = (dstOp.getSize() * BYTE_SIZE_BIT) - 1;
+  uint32 low  = dstOp.getAbstractLow();
+  uint32 high = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::ofSub(parent, extractSize, op1, op2);
+  expr = EflagsExpressions::ofSub(parent, high, low, op1, op2);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_OF, "Overflow flag");
@@ -546,9 +568,11 @@ SymbolicExpression *EflagsBuilder::pf(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
+  uint32 low    = dstOp.getAbstractLow();
+  uint32 high   = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::pf(parent, bvSize);
+  expr = EflagsExpressions::pf(parent, bvSize, high, low);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_PF, "Parity flag");
@@ -567,9 +591,11 @@ SymbolicExpression *EflagsBuilder::pfShl(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
+  uint32 low    = dstOp.getAbstractLow();
+  uint32 high   = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::pfShl(parent, bvSize, op2);
+  expr = EflagsExpressions::pfShl(parent, bvSize, high, low, op2);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_PF, "Parity flag");
@@ -624,9 +650,9 @@ SymbolicExpression *EflagsBuilder::sf(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 extractSize = (dstOp.getSize() * BYTE_SIZE_BIT) - 1;
+  uint32 high = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::sf(parent, extractSize);
+  expr = EflagsExpressions::sf(parent, high);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_SF, "Sign flag");
@@ -645,10 +671,10 @@ SymbolicExpression *EflagsBuilder::sfShl(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
-  uint32 extractSize = (dstOp.getSize() * BYTE_SIZE_BIT) - 1;
+  uint32 bvSize = dstOp.getBitSize();
+  uint32 high   = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::sfShl(parent, bvSize, extractSize, op2);
+  expr = EflagsExpressions::sfShl(parent, bvSize, high, op2);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_SF, "Carry flag");
@@ -667,9 +693,11 @@ SymbolicExpression *EflagsBuilder::zf(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
+  uint32 low    = dstOp.getAbstractLow();
+  uint32 high   = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::zf(parent, bvSize);
+  expr = EflagsExpressions::zf(parent, bvSize, high, low);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_ZF, "Zero flag");
@@ -688,9 +716,11 @@ SymbolicExpression *EflagsBuilder::zfShl(Inst &inst,
 {
   SymbolicExpression *se;
   smt2lib::smtAstAbstractNode *expr;
-  uint32 bvSize = (dstOp.getSize() * BYTE_SIZE_BIT);
+  uint32 bvSize = dstOp.getBitSize();
+  uint32 low    = dstOp.getAbstractLow();
+  uint32 high   = dstOp.getAbstractHigh();
 
-  expr = EflagsExpressions::zfShl(parent, bvSize, op2);
+  expr = EflagsExpressions::zfShl(parent, bvSize, high, low, op2);
 
   /* Create the symbolic expression */
   se = ap.createFlagSE(inst, expr, ID_TMP_ZF, "Zero flag");
