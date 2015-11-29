@@ -30,6 +30,9 @@ class SymbolicEngine {
 
   private:
 
+    /* Enable / Disable flag */
+    bool enableFlag;
+
     /* Symbolic expressions ID */
     __uint uniqueID;
 
@@ -69,23 +72,26 @@ class SymbolicEngine {
     SymbolicVariable                  *convertExprToSymVar(__uint exprId, __uint symVarSize, std::string symVarComment);
     SymbolicVariable                  *convertMemToSymVar(__uint memAddr, __uint symVarSize, std::string symVarComment);
     SymbolicVariable                  *convertRegToSymVar(__uint regId, __uint symVarSize, std::string symVarComment);
-    SymbolicVariable                  *getSymVar(std::string symVarName);
     SymbolicVariable                  *getSymVar(__uint symVarId);
+    SymbolicVariable                  *getSymVar(std::string symVarName);
+    __uint                            getMemSymbolicID(__uint addr);
+    __uint                            getRegSymbolicID(__uint regID);
+    __uint                            getUniqueID();
+    bool                              isEnabled(void);
     smt2lib::smtAstAbstractNode       *getFullExpression(smt2lib::smtAstAbstractNode *node);
     std::list<SymbolicExpression *>   getTaintedExpressions(void);
     std::list<__uint>                 getPathConstraints(void);
     std::string                       getVariablesDeclaration(void);
     std::vector<SymbolicExpression *> getExpressions(void);
     std::vector<SymbolicVariable *>   getSymVars(void);
-    __uint                            getMemSymbolicID(__uint addr);
-    __uint                            getRegSymbolicID(__uint regID);
-    __uint                            getUniqueID();
     void                              addMemoryReference(__uint mem, __uint id);
     void                              addPathConstraint(__uint exprId);
     void                              concretizeAllMem(void);
     void                              concretizeAllReg(void);
     void                              concretizeMem(__uint mem);
     void                              concretizeReg(__uint regID);
+    void                              disable(void);
+    void                              enable(void);
     void                              init(const SymbolicEngine &other);
     void                              operator=(const SymbolicEngine &other);
 

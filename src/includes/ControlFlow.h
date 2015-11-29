@@ -17,7 +17,7 @@ extern AnalysisProcessor ap;
 
 
 namespace ControlFlow {
-  SymbolicExpression *rip(Inst &inst, __uint nextAddr);
+ void rip(Inst &inst, __uint nextAddr);
 };
 
 #endif /* !__CONTROLFLOW_H__ */

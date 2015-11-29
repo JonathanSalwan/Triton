@@ -158,6 +158,11 @@ class AnalysisProcessor {
     void concretizeReg(RegisterOperand &reg);
     void concretizeMem(MemoryOperand &mem);
 
+    /* Lock / Unlock flag */
+    bool isSymEngineEnabled(void);
+    void enableSymEngine(void);
+    void disableSymEngine(void);
+
 
     /*
      * Taint Engine Facade

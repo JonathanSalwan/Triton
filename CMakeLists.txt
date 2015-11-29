@@ -19,7 +19,7 @@ endif()
 
 # Triton version
 set(VERSION_MAJOR 0)
-set(VERSION_MINOR 1)
+set(VERSION_MINOR 2)
 set(VERSION_BUILD ${BUILD_NUMBER})
 
 set(CMAKE_BUILD_TYPE Release)

@@ -17,20 +17,26 @@ void OneOperandTemplate::templateMethod(
     const std::vector<TritonOperand> &operands,
     std::string insName) const
 {
-  // If there is no operand
-  // Sometime instructions can have 0 or 1 operand. Like RET and RET imm16
+  /* Don't perform the symbolic execution if the engine is disabled. */
+  if (!ap.isSymEngineEnabled())
+    return;
+
+  /*
+   *  If there is no operand. Sometime instructions can have 0 or 1
+   *  operand. Like RET and RET imm16.
+   */
   if (operands.size() == 0)
     this->none(inst);
 
-  // reg
+  /* Register operand */
   if (operands[0].getType() == IRBuilderOperand::REG)
     this->reg(inst);
 
-  // imm
+  /* Immediate operand */
   if (operands[0].getType() == IRBuilderOperand::IMM)
     this->imm(inst);
 
-  // mem
+  /* Memory operand */
   if (IRBuilder::isMemOperand(operands[0].getType()))
     this->mem(inst);
 }

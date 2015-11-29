@@ -18,6 +18,7 @@ SymbolicEngine::SymbolicEngine() {
   for (__uint i = 0; i < ID_LAST_ITEM; i++)
     this->symbolicReg[i] = UNSET;
   this->uniqueID = 0;
+  this->enableFlag = true;
 }
 
 
@@ -25,11 +26,12 @@ void SymbolicEngine::init(const SymbolicEngine &other) {
   for (__uint i = 0; i < ID_LAST_ITEM; i++)
     this->symbolicReg[i] = other.symbolicReg[i];
 
-  this->uniqueID                      = other.uniqueID;
+  this->enableFlag                    = other.enableFlag;
   this->memoryReference               = other.memoryReference;
   this->pathConstaints                = other.pathConstaints;
   this->symbolicExpressions           = other.symbolicExpressions;
   this->symbolicVariables             = other.symbolicVariables;
+  this->uniqueID                      = other.uniqueID;
 }
 
 
@@ -230,7 +232,8 @@ SymbolicVariable *SymbolicEngine::convertExprToSymVar(__uint exprId, __uint symV
   return symVar;
 }
 
-// Note: symVarSize is in BYTE.
+
+/* Note: symVarSize is in BYTE. */
 SymbolicVariable *SymbolicEngine::convertMemToSymVar(__uint memAddr, __uint symVarSize, std::string symVarComment)
 {
   SymbolicVariable   *symVar       = nullptr;
@@ -314,6 +317,7 @@ SymbolicVariable *SymbolicEngine::convertRegToSymVar(__uint regId, __uint symVar
   return symVar;
 }
 
+
 /* Add a new symbolic variable */
 SymbolicVariable *SymbolicEngine::addSymbolicVariable(SymVar::kind kind, __uint kindValue, __uint size, std::string comment) {
   __uint uniqueID = this->symbolicVariables.size();
@@ -342,6 +346,24 @@ void SymbolicEngine::addPathConstraint(__uint exprId) {
 /* Returns the path constrains list */
 std::list<__uint> SymbolicEngine::getPathConstraints(void) {
   return this->pathConstaints;
+}
+
+
+/* Returns true if the symbolic engine is enable. Otherwise returns false. */
+bool SymbolicEngine::isEnabled(void) {
+  return this->enableFlag;
+}
+
+
+/* Locks the symbolic engine */
+void SymbolicEngine::disable(void) {
+  this->enableFlag = false;
+}
+
+
+/* Unlocks the symbolic engine */
+void SymbolicEngine::enable(void) {
+  this->enableFlag = true;
 }
 
 

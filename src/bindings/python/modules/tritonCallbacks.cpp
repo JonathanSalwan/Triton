@@ -722,6 +722,22 @@ static PyObject *Triton_disableSnapshot(PyObject *self, PyObject *noarg) {
 }
 
 
+static char Triton_disableSymEngine_doc[] = "Disables the symbolic engine";
+static PyObject *Triton_disableSymEngine(PyObject *self, PyObject *noarg) {
+  ap.disableSymEngine();
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+
+static char Triton_enableSymEngine_doc[] = "Enables the symbolic engine";
+static PyObject *Triton_enableSymEngine(PyObject *self, PyObject *noarg) {
+  ap.enableSymEngine();
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+
 static char Triton_evaluateAST_doc[] = "Evaluate an AST";
 static PyObject *Triton_evaluateAST(PyObject *self, PyObject *smtAST) {
   uint512 value = 0;
@@ -1051,6 +1067,14 @@ static PyObject *Triton_isSnapshotEnabled(PyObject *self, PyObject *noarg) {
 }
 
 
+static char Triton_isSymEngineEnabled_doc[] = "Returns true if the symbolic engine is enabled";
+static PyObject *Triton_isSymEngineEnabled(PyObject *self, PyObject *noarg) {
+  if (ap.isSymEngineEnabled() == true)
+    Py_RETURN_TRUE;
+  Py_RETURN_FALSE;
+}
+
+
 static char Triton_restoreSnapshot_doc[] = "Restores the last snapshot";
 static PyObject *Triton_restoreSnapshot(PyObject *self, PyObject *noarg) {
   ap.setSnapshotRestoreFlag(true);
@@ -1292,6 +1316,8 @@ PyMethodDef tritonCallbacks[] = {
   {"convertMemToSymVar",        Triton_convertMemToSymVar,        METH_VARARGS, Triton_convertMemToSymVar_doc},
   {"convertRegToSymVar",        Triton_convertRegToSymVar,        METH_VARARGS, Triton_convertRegToSymVar_doc},
   {"disableSnapshot",           Triton_disableSnapshot,           METH_NOARGS,  Triton_disableSnapshot_doc},
+  {"disableSymEngine",          Triton_disableSymEngine,          METH_NOARGS,  Triton_disableSymEngine_doc},
+  {"enableSymEngine",           Triton_enableSymEngine,           METH_NOARGS,  Triton_enableSymEngine_doc},
   {"evaluateAST",               Triton_evaluateAST,               METH_O,       Triton_evaluateAST_doc},
   {"getFullExpression",         Triton_getFullExpression,         METH_O,       Triton_getFullExpression_doc},
   {"getMemSymbolicID",          Triton_getMemSymbolicID,          METH_O,       Triton_getMemSymbolicID_doc},
@@ -1310,6 +1336,7 @@ PyMethodDef tritonCallbacks[] = {
   {"isMemTainted",              Triton_isMemTainted,              METH_O,       Triton_isMemTainted_doc},
   {"isRegTainted",              Triton_isRegTainted,              METH_O,       Triton_isRegTainted_doc},
   {"isSnapshotEnabled",         Triton_isSnapshotEnabled,         METH_NOARGS,  Triton_isSnapshotEnabled_doc},
+  {"isSymEngineEnabled",        Triton_isSymEngineEnabled,        METH_NOARGS,  Triton_isSymEngineEnabled_doc},
   {"restoreSnapshot",           Triton_restoreSnapshot,           METH_NOARGS,  Triton_restoreSnapshot_doc},
   {"taintMem",                  Triton_taintMem,                  METH_O,       Triton_taintMem_doc},
   {"taintMemFromAddr",          Triton_taintMemFromAddr,          METH_VARARGS, Triton_taintMemFromAddr_doc},

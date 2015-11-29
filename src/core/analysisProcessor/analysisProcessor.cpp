@@ -441,6 +441,21 @@ void AnalysisProcessor::concretizeMem(MemoryOperand &mem) {
 }
 
 
+bool AnalysisProcessor::isSymEngineEnabled(void) {
+  return this->symEngine.isEnabled();
+}
+
+
+void AnalysisProcessor::enableSymEngine(void) {
+  this->symEngine.enable();
+}
+
+
+void AnalysisProcessor::disableSymEngine(void) {
+  this->symEngine.disable();
+}
+
+
 // Taint Engine Facade
 // -------------------
 

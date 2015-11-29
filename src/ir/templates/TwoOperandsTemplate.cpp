@@ -22,27 +22,31 @@ void TwoOperandsTemplate::templateMethod(
                            + insName
                            + " instruction must have two operands.");
 
-  // reg, imm
+  /* Don't perform the symbolic execution if the engine is disabled. */
+  if (!ap.isSymEngineEnabled())
+    return;
+
+  /* Register, Immediate operand */
   if (operands[0].getType() == IRBuilderOperand::REG &&
       operands[1].getType() == IRBuilderOperand::IMM)
     this->regImm(inst);
 
-  // reg, reg
+  /* Register, Register operand */
   if (operands[0].getType() == IRBuilderOperand::REG &&
       operands[1].getType() == IRBuilderOperand::REG)
     this->regReg(inst);
 
-  // reg, mem
+  /* Register, Memory operand */
   if (operands[0].getType() == IRBuilderOperand::REG &&
       (IRBuilder::isMemOperand(operands[1].getType()) || operands[1].getType() == IRBuilderOperand::LEA))
     this->regMem(inst);
 
-  // mem, imm
+  /* Memory, Immediate operand */
   if (IRBuilder::isMemOperand(operands[0].getType()) &&
       operands[1].getType() == IRBuilderOperand::IMM)
     this->memImm(inst);
 
-  // mem, reg
+  /* Memory, Register operand */
   if (IRBuilder::isMemOperand(operands[0].getType()) &&
       operands[1].getType() == IRBuilderOperand::REG)
     this->memReg(inst);
