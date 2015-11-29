@@ -7,13 +7,14 @@
 #ifndef PINCONVERTER_H
 #define PINCONVERTER_H
 
+#include <string>
+#include <utility>
+
 #include "pin.H"
 
 #include "Registers.h"
 #include "TritonTypes.h"
 
-#include <string>
-#include <utility>
 
 namespace PINConverter {
   /* Utilities functions which help to make the transition between the ids of registers

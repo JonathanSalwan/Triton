@@ -18,17 +18,18 @@ RegisterOperand::RegisterOperand()
 }
 
 
-RegisterOperand::RegisterOperand(__uint pinRegId)
+RegisterOperand::RegisterOperand(__uint pinRegId, __uint size)
   : name("") {
   this->tritonRegId = PINConverter::convertDBIReg2TritonReg(pinRegId);
   this->pinRegId    = PINConverter::convertTritonReg2DBIReg(this->tritonRegId);
-  this->size        = 0;
+  this->size        = size;
 
   if (REG_valid(static_cast<REG>(pinRegId))) {
     // check needed because instructions like "xgetbv 0" make
     // REG_Size crash.
-    this->size    = REG_Size(static_cast<REG>(pinRegId));
-    this->name    = REG_StringShort(static_cast<REG>(pinRegId));
+    if (!this->size)
+      this->size = REG_Size(static_cast<REG>(pinRegId));
+    this->name = REG_StringShort(static_cast<REG>(pinRegId));
   }
 
   this->setPair(PINConverter::convertDBIReg2BitsVector(pinRegId));

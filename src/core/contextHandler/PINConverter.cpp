@@ -464,7 +464,7 @@ __uint PINConverter::convertDBIReg2TritonReg(__uint pinRegID) {
 
 
 /* Convert a Triton register to a Pin register.
- * Besides, it can return only 64 bits wised registers.
+ * Besides, it can return only 32 bits wised registers.
  */
 __uint PINConverter::convertTritonReg2DBIReg(__uint tritonRegId) {
   switch(tritonRegId){

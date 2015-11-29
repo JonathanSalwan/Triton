@@ -26,7 +26,7 @@ class RegisterOperand : public BitsVector, public MemRegInterface
 
   public:
     RegisterOperand();
-    RegisterOperand(__uint pinRegId);
+    RegisterOperand(__uint pinRegId, __uint size=0);
     RegisterOperand(const RegisterOperand& other);
     ~RegisterOperand();
 
