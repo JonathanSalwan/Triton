@@ -158,6 +158,11 @@ SymbolicExpression *AnalysisProcessor::createFlagSE(Inst &inst, smt2lib::smtAstA
 }
 
 
+SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &reg, std::string comment) {
+  return this->createRegSE(inst, expr, reg, reg.getSize(), comment);
+}
+
+
 SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &reg, __uint regSize, std::string comment) {
   __uint regId = reg.getTritonRegId();
   smt2lib::smtAstAbstractNode *finalExpr = nullptr, *origReg = nullptr;
@@ -203,9 +208,9 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAb
 
 
 SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, MemoryOperand &mem, __uint writeSize, std::string comment) {
-  SymbolicExpression *se = nullptr;
   smt2lib::smtAstAbstractNode *tmp;
   std::list<smt2lib::smtAstAbstractNode *> ret;
+  SymbolicExpression *se = nullptr;
   __uint address = mem.getAddress();
 
   /*

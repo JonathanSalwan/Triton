@@ -91,6 +91,7 @@ class AnalysisProcessor {
     SymbolicExpression *createFlagSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &flag, std::string comment="");
 
     /* Returns a symbolic expression for the register */
+    SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &reg, std::string comment="");
     SymbolicExpression *createRegSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &reg, __uint regSize, std::string comment="");
 
     /* Returns a symbolic expression for the memory address */
