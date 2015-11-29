@@ -181,12 +181,19 @@ static PyObject *Triton_getMemValue(PyObject *self, PyObject *args) {
   ad = PyLong_AsUint(addr);
   rs = PyLong_AsUint(readSize);
 
-  if (rs != DQWORD_SIZE && rs != QWORD_SIZE && rs != DWORD_SIZE && rs != WORD_SIZE && rs != BYTE_SIZE)
-    return PyErr_Format(PyExc_TypeError, "getMemValue(): The readSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
+  if (rs == 0)
+    return PyErr_Format(PyExc_TypeError, "getMemValue(): The readSize cannot be 0");
+
+  if (rs > DQWORD_SIZE_BIT)
+    return PyErr_Format(PyExc_TypeError, "getMemValue(): The readSize must be less than 128");
+
+  if (rs % BYTE_SIZE_BIT)
+    return PyErr_Format(PyExc_TypeError, "getMemValue(): The readSize must be a multiple of 8");
 
   if (PIN_CheckReadAccess(reinterpret_cast<void*>(ad)) == false)
     return PyErr_Format(PyExc_TypeError, "getMemValue(): The targeted address memory can not be read");
 
+  rs = rs / BYTE_SIZE_BIT;
   MemoryOperand mem(ad, rs);
 
   /* If this is a 128-bits read size, we must use uint128ToPyLongObject() */
@@ -365,13 +372,20 @@ static PyObject *Triton_setMemValue(PyObject *self, PyObject *args) {
   ad = PyLong_AsUint(addr);
   ws = PyLong_AsUint(writeSize);
 
-  if (ws != DQWORD_SIZE && ws != QWORD_SIZE && ws != DWORD_SIZE && ws != WORD_SIZE && ws != BYTE_SIZE)
-    return PyErr_Format(PyExc_TypeError, "setMemValue(): The writeSize argument must be: DQWORD, QWORD, DWORD, WORD or BYTE");
+  if (ws == 0)
+    return PyErr_Format(PyExc_TypeError, "setMemValue(): The writeSize cannot be 0");
+
+  if (ws > DQWORD_SIZE_BIT)
+    return PyErr_Format(PyExc_TypeError, "setMemValue(): The writeSize must be less than 128");
+
+  if (ws % BYTE_SIZE_BIT)
+    return PyErr_Format(PyExc_TypeError, "setMemValue(): The writeSize must be a multiple of 8");
 
   if (PIN_CheckWriteAccess(reinterpret_cast<void*>(ad)) == false)
     return PyErr_Format(PyExc_TypeError, "setMemValue(): Can not write into the targeted address memory");
 
   va = PyLongObjectToUint128(value);
+  ws = ws / BYTE_SIZE_BIT;
   MemoryOperand mo(ad, ws);
   ap.setMemValue(mo, ws, va);
 
@@ -600,6 +614,15 @@ static PyObject *Triton_convertExprToSymVar(PyObject *self, PyObject *args) {
   if (symVarSize == nullptr || (!PyLong_Check(symVarSize) && !PyInt_Check(symVarSize)))
     return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): expected an integer as second argument");
 
+  if (PyLong_AsUint(symVarSize) == 0)
+    return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): The size must cannot be 0");
+
+  if (PyLong_AsUint(symVarSize) % BYTE_SIZE_BIT)
+    return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): The size must be a multiple of 8");
+
+  if (PyLong_AsUint(symVarSize) > DQWORD_SIZE_BIT)
+    return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): The size must be less than 128");
+
   if (!PyString_Check(varComment))
       return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): expected a comment (string) as third argument");
 
@@ -631,10 +654,19 @@ static PyObject *Triton_convertMemToSymVar(PyObject *self, PyObject *args) {
   if (symVarSize == nullptr || (!PyLong_Check(symVarSize) && !PyInt_Check(symVarSize)))
     return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): expected a size as second argument");
 
+  if (PyLong_AsUint(symVarSize) == 0)
+    return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): The size must cannot be 0");
+
+  if (PyLong_AsUint(symVarSize) % BYTE_SIZE_BIT)
+    return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): The size must be a multiple of 8");
+
+  if (PyLong_AsUint(symVarSize) > DQWORD_SIZE_BIT)
+    return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): The size must be less than 128");
+
   if (!PyString_Check(varComment))
       return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): expected a comment (string) as third argument");
 
-  vs = PyLong_AsUint(symVarSize);
+  vs = PyLong_AsUint(symVarSize) / BYTE_SIZE_BIT;
   vc = PyString_AsString(varComment);
   MemoryOperand mo(PyLong_AsUint(memAddr), vs);
 
@@ -661,6 +693,15 @@ static PyObject *Triton_convertRegToSymVar(PyObject *self, PyObject *args) {
 
   if (symVarSize == nullptr || (!PyLong_Check(symVarSize) && !PyInt_Check(symVarSize)))
     return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): expected a size as second argument");
+
+  if (PyLong_AsUint(symVarSize) == 0)
+    return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): The size must cannot be 0");
+
+  if (PyLong_AsUint(symVarSize) % BYTE_SIZE_BIT)
+    return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): The size must be a multiple of 8");
+
+  if (PyLong_AsUint(symVarSize) > DQWORD_SIZE_BIT)
+    return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): The size must be less than 128");
 
   if (!PyString_Check(varComment))
       return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): expected a comment (string) as third argument");

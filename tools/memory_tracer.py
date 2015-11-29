@@ -54,9 +54,9 @@ def dump(opType, instruction, operand):
     if checkReadAccess(memoryAccess):
         a = '%c:0x%016x:' %(opAccess, memoryAccess)
         for i in range(memoryAccessSize):
-            a += ' %02x' %(getMemValue(memoryAccess+i, 1))
+            a += ' %02x' %(getMemValue(memoryAccess+i, 8))
 
-    print '%s%s%s (%#x)' %(d, ' '*(70-len(d)), a, getMemValue(memoryAccess, memoryAccessSize))
+    print '%s%s%s (%#x)' %(d, ' '*(70-len(d)), a, getMemValue(memoryAccess, memoryAccessSize * 8))
     return
 
 

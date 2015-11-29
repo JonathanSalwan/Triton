@@ -53,7 +53,7 @@ def printfAnalysis(threadId):
     print '[+] Analyzing the printf prologue argument.'
     arg = getRegValue(IDREF.REG.RDI)
     index = 0
-    while getMemValue(arg + index, 1) != 0x00:
+    while getMemValue(arg + index, 8) != 0x00:
         if isMemTainted(arg + index) == True:
             print '[+] Possible format string bug found. The first argument contains some tainted bytes.' 
             global TRACE
@@ -71,9 +71,9 @@ def mainAnalysis(threadId):
     rsi = getRegValue(IDREF.REG.RSI) # argv
 
     while rdi != 0:
-        argv = getMemValue(rsi + ((rdi-1) * 8), 8)
+        argv = getMemValue(rsi + ((rdi-1) * 8), 64)
         offset = 0
-        while getMemValue(argv + offset, 1) != 0x00:
+        while getMemValue(argv + offset, 8) != 0x00:
             taintMem(argv + offset)
             offset += 1
         print '[+] %03d bytes tainted from the argv[%d] (%#x) pointer' %(offset, rdi-1, argv)

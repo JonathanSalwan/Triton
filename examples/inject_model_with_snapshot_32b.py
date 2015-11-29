@@ -74,7 +74,7 @@ def cbefore(instruction):
     if instruction.getAddress() == 0x8048412:
         rax = getRegValue(IDREF.REG.EAX)
         if rax in password:
-            setMemValue(rax, 1, password[rax])
+            setMemValue(rax, 8, password[rax])
             print '[+] Inject the character \'%c\' in memory' %(chr(password[rax]))
 
     # Epilogue of the function

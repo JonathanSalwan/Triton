@@ -21,7 +21,7 @@ def sbefore(instruction):
                 if addr != 0: # Check valid address
                     print instruction.getDisassembly(), "at", hex(addr)
                     print "Operand mem size:", op.getMem().getSize()
-                    s = convertMemToSymVar(addr, op.getMem().getSize(), "test") # convertMemToSymVar
+                    s = convertMemToSymVar(addr, op.getMem().getBitSize(), "test") # convertMemToSymVar
                     print "New symbolic variable:"
                     print "[+] Comment:", s.getComment()
                     print "[+] Size: %d" % (s.getSize())

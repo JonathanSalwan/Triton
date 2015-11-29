@@ -32,11 +32,11 @@ def accessMemoryDump(opType, instruction, operand):
         accessAddr       = operand.getMem().getAddress()
         accessSize       = operand.getMem().getSize()
         contentAsString  = str()
-        contentAsInteger = getMemValue(accessAddr, accessSize)
+        contentAsInteger = getMemValue(accessAddr, accessSize * 8)
 
         # fills the contentAsString
         for i in range(accessSize):
-            contentAsString += '%02x ' %(getMemValue(accessAddr+i, 1))
+            contentAsString += '%02x ' %(getMemValue(accessAddr+i, 8))
 
         cursor.execute("INSERT INTO memoryAccess VALUES (%d, '%s', %d, %d, '%s', %d)" %(insAddr, accessType, accessSize, accessAddr, contentAsString[:-1], contentAsInteger))
 

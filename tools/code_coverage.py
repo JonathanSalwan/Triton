@@ -193,22 +193,22 @@ class TritonExecution(object):
         rdi = getRegValue(IDREF.REG.RDI) # argc
         rsi = getRegValue(IDREF.REG.RSI) # argv
 
-        argv0_addr = getMemValue(rsi, IDREF.CPUSIZE.QWORD)      # argv[0] pointer
-        argv1_addr = getMemValue(rsi + 8, IDREF.CPUSIZE.QWORD)  # argv[1] pointer
+        argv0_addr = getMemValue(rsi, IDREF.CPUSIZE.QWORD_BIT)      # argv[0] pointer
+        argv1_addr = getMemValue(rsi + 8, IDREF.CPUSIZE.QWORD_BIT)  # argv[1] pointer
 
         print "[+] In main() we set :"
         od = OrderedDict(sorted(TritonExecution.input.dataAddr.items()))
 
         for k,v in od.iteritems():
             print "\t[0x%x] = %x %c" % (k, v, v)
-            setMemValue(k, IDREF.CPUSIZE.BYTE, v)
-            convertMemToSymVar(k, IDREF.CPUSIZE.BYTE, "addr_%d" % k)
+            setMemValue(k, 8, v)
+            convertMemToSymVar(k, IDREF.CPUSIZE.BYTE_BIT, "addr_%d" % k)
 
         for idx, byte in enumerate(TritonExecution.input.data):
             if argv1_addr + idx not in TritonExecution.input.dataAddr: # Not overwrite the previous setting
                 print "\t[0x%x] = %x %c" % (argv1_addr + idx, ord(byte), ord(byte))
-                setMemValue(argv1_addr + idx, IDREF.CPUSIZE.BYTE, ord(byte))
-                convertMemToSymVar(argv1_addr + idx, IDREF.CPUSIZE.BYTE, "addr_%d" % idx)
+                setMemValue(argv1_addr + idx, IDREF.CPUSIZE.BYTE_BIT, ord(byte))
+                convertMemToSymVar(argv1_addr + idx, IDREF.CPUSIZE.BYTE_BIT, "addr_%d" % idx)
 
 
     @staticmethod
