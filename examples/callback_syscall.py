@@ -30,7 +30,7 @@ def my_callback_syscall_exit(threadId, std):
 
 if __name__ == '__main__':
 
-    # Start the symbolic analysis from the 'check' function
+    # Start the symbolic analysis from the 'main' function
     startAnalysisFromSymbol('main')
 
     addCallback(my_callback_syscall_entry,  IDREF.CALLBACK.SYSCALL_ENTRY)
