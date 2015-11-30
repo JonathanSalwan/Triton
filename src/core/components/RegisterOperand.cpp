@@ -90,6 +90,13 @@ void RegisterOperand::setTritonRegId(__uint tritonRegId) {
 }
 
 
+bool RegisterOperand::isValid(void) {
+  if (this->tritonRegId == ID_INVALID)
+    return false;
+  return true;
+}
+
+
 void RegisterOperand::operator=(const RegisterOperand& other) {
   this->copy(other);
 }

@@ -187,6 +187,10 @@ void check(void)
   asm("andps xmm1, xmm3");
   asm("andnpd xmm1, xmm3");
   asm("andnps xmm1, xmm3");
+
+  asm("pxor xmm1, xmm2");
+  asm("pxor xmm2, xmm3");
+  asm("pxor mm0, mm2");
 }
 
 int main(){

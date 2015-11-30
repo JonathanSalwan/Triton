@@ -30,6 +30,7 @@ class RegisterOperand : public BitsVector, public MemRegInterface
     RegisterOperand(const RegisterOperand& other);
     ~RegisterOperand();
 
+    bool            isValid(void);
     std::string     getName(void) const;
     __uint          getAbstractHigh(void) const;
     __uint          getAbstractLow(void) const;

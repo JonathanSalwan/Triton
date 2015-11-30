@@ -159,13 +159,10 @@ def my_callback_after(instruction):
 
 if __name__ == '__main__':
 
-    # Start the symbolic analysis from the 'check' function
+    # Start the symbolic analysis from the 'main' function
     startAnalysisFromSymbol('main')
 
     # Add a callback.
-    # BEFORE: Add the callback before the instruction processing
-    # AFTER:  Add the callback after the instruction processing
-    # FINI:   Add the callback at the end of the execution
     addCallback(my_callback_after, IDREF.CALLBACK.AFTER)
 
     # Run the instrumentation - Never returns

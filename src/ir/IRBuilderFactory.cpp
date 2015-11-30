@@ -453,6 +453,10 @@ namespace IRBuilderFactory {
         ir = new PushIRBuilder(address, disas);
         break;
 
+      case XED_ICLASS_PXOR:
+        ir = new PxorIRBuilder(address, disas);
+        break;
+
       case XED_ICLASS_RET_FAR:
       case XED_ICLASS_RET_NEAR:
         ir = new RetIRBuilder(address, disas);

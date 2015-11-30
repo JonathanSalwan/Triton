@@ -33,20 +33,15 @@ from triton import *
 # TID (0) 0x4005c8 pop rbp
 
 
-# A callback must be a function with one argument. This argument is always a dict and contains all information
 def my_callback_before(instruction):
     print 'TID (%d) %#x %s' %(instruction.getThreadId(), instruction.getAddress(), instruction.getDisassembly())
 
 
 if __name__ == '__main__':
-
-    # Start the symbolic analysis from the 'check' function
-    startAnalysisFromSymbol('check')
+    # Start the symbolic analysis from the 'main' function
+    startAnalysisFromSymbol('main')
 
     # Add a callback.
-    # BEFORE: Add the callback before the instruction processing
-    # AFTER:  Add the callback after the instruction processing
-    # FINI:   Add the callback at the end of the execution
     addCallback(my_callback_before, IDREF.CALLBACK.BEFORE)
 
     # Run the instrumentation - Never returns
