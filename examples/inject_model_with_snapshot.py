@@ -45,7 +45,7 @@ def cafter(instruction):
 
     # 0x40058b: movzx eax, byte ptr [rax]
     if instruction.getAddress() == 0x40058b:
-        v = convertRegToSymVar(IDREF.REG.RAX, 32)
+        v = convertRegToSymVar(IDREF.REG.RAX, IDREF.CPUSIZE.DWORD_BIT)
         #print "Concrete value:\t%s\t%c" % (v, v.getConcreteValue())
 
     # 0x4005ae: cmp ecx, eax
@@ -74,7 +74,7 @@ def cbefore(instruction):
     if instruction.getAddress() == 0x40058b:
         rax = getRegValue(IDREF.REG.RAX)
         if rax in password:
-            setMemValue(rax, 8, password[rax])
+            setMemValue(rax, IDREF.CPUSIZE.BYTE_BIT, password[rax])
             print '[+] Inject the character \'%c\' in memory' %(chr(password[rax]))
 
     # Epilogue of the function

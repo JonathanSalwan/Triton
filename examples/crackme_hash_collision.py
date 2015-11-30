@@ -50,7 +50,7 @@ def cafter(instruction):
     # movzx esi,BYTE PTR [rax]
     # RAX points on the user password
     if instruction.getAddress() == 0x400572:
-        convertRegToSymVar(IDREF.REG.RSI, 64)
+        convertRegToSymVar(IDREF.REG.RSI, IDREF.CPUSIZE.QWORD_BIT)
 
     # mov eax,DWORD PTR [rbp-0x4]
     # RAX must be equal to 0xad6d to win
@@ -61,17 +61,17 @@ def cafter(instruction):
 
         # We want printable characters
         expr = smt2lib.compound([
-                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_0'), smt2lib.bv(96,  64))),
-                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_0'), smt2lib.bv(123, 64))),
-                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_1'), smt2lib.bv(96,  64))),
-                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_1'), smt2lib.bv(123, 64))),
-                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_2'), smt2lib.bv(96,  64))),
-                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_2'), smt2lib.bv(123, 64))),
-                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_3'), smt2lib.bv(96,  64))),
-                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_3'), smt2lib.bv(123, 64))),
-                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_4'), smt2lib.bv(96,  64))),
-                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_4'), smt2lib.bv(123, 64))),
-                 smt2lib.smtAssert(smt2lib.equal(raxExpr, smt2lib.bv(0xad6d, 64)))  # collision: (assert (= rax 0xad6d)
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_0'), smt2lib.bv(96,  IDREF.CPUSIZE.QWORD_BIT))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_0'), smt2lib.bv(123, IDREF.CPUSIZE.QWORD_BIT))),
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_1'), smt2lib.bv(96,  IDREF.CPUSIZE.QWORD_BIT))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_1'), smt2lib.bv(123, IDREF.CPUSIZE.QWORD_BIT))),
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_2'), smt2lib.bv(96,  IDREF.CPUSIZE.QWORD_BIT))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_2'), smt2lib.bv(123, IDREF.CPUSIZE.QWORD_BIT))),
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_3'), smt2lib.bv(96,  IDREF.CPUSIZE.QWORD_BIT))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_3'), smt2lib.bv(123, IDREF.CPUSIZE.QWORD_BIT))),
+                 smt2lib.smtAssert(smt2lib.bvugt(smt2lib.variable('SymVar_4'), smt2lib.bv(96,  IDREF.CPUSIZE.QWORD_BIT))),
+                 smt2lib.smtAssert(smt2lib.bvult(smt2lib.variable('SymVar_4'), smt2lib.bv(123, IDREF.CPUSIZE.QWORD_BIT))),
+                 smt2lib.smtAssert(smt2lib.equal(raxExpr, smt2lib.bv(0xad6d, IDREF.CPUSIZE.QWORD_BIT)))  # collision: (assert (= rax 0xad6d)
                ])
 
         # Get max 20 different models

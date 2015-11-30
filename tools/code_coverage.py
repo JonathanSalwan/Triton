@@ -144,12 +144,12 @@ class TritonExecution(object):
                     ripId = TritonExecution.myPC[i][0]
                     symExp = getFullExpression(getSymExpr(ripId).getAst())
                     addr = TritonExecution.myPC[i][1]
-                    expr.append(smt2lib.smtAssert(smt2lib.equal(symExp, smt2lib.bv(addr,  64))))
+                    expr.append(smt2lib.smtAssert(smt2lib.equal(symExp, smt2lib.bv(addr,  IDREF.CPUSIZE.QWORD_BIT))))
 
                 ripId = TritonExecution.myPC[j][0]
                 symExp = getFullExpression(getSymExpr(ripId).getAst())
                 addr = TritonExecution.myPC[j][2]
-                expr.append(smt2lib.smtAssert(smt2lib.equal(symExp, smt2lib.bv(addr,  64))))
+                expr.append(smt2lib.smtAssert(smt2lib.equal(symExp, smt2lib.bv(addr,  IDREF.CPUSIZE.QWORD_BIT))))
 
                 expr = smt2lib.compound(expr)
                 model = getModel(expr)
@@ -193,15 +193,15 @@ class TritonExecution(object):
         rdi = getRegValue(IDREF.REG.RDI) # argc
         rsi = getRegValue(IDREF.REG.RSI) # argv
 
-        argv0_addr = getMemValue(rsi, IDREF.CPUSIZE.QWORD_BIT)      # argv[0] pointer
-        argv1_addr = getMemValue(rsi + 8, IDREF.CPUSIZE.QWORD_BIT)  # argv[1] pointer
+        argv0_addr = getMemValue(rsi, IDREF.CPUSIZE.REG_BIT)      # argv[0] pointer
+        argv1_addr = getMemValue(rsi + IDREF.CPUSIZE.REG, IDREF.CPUSIZE.REG_BIT)  # argv[1] pointer
 
         print "[+] In main() we set :"
         od = OrderedDict(sorted(TritonExecution.input.dataAddr.items()))
 
         for k,v in od.iteritems():
             print "\t[0x%x] = %x %c" % (k, v, v)
-            setMemValue(k, 8, v)
+            setMemValue(k, IDREF.CPUSIZE.BYTE_BIT, v)
             convertMemToSymVar(k, IDREF.CPUSIZE.BYTE_BIT, "addr_%d" % k)
 
         for idx, byte in enumerate(TritonExecution.input.data):
