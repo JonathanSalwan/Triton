@@ -103,11 +103,14 @@ class TritonExecution(object):
     exitPoint   = 0
     whitelist   = None
     myPC        = None
+    AddrAfterEP = 0
 
     @staticmethod
     def cbefore(instruction):
+        if instruction.getAddress() == TritonExecution.entryPoint:
+            TritonExecution.AddrAfterEP = instruction.getNextAddress()
 
-        if instruction.getAddress() == TritonExecution.entryPoint + 2:
+        if instruction.getAddress() == TritonExecution.AddrAfterEP:
             TritonExecution.myPC = []                                  # Reset the path constraint
             TritonExecution.input = TritonExecution.worklist.pop()     # Take the first input
             TritonExecution.inputTested.append(TritonExecution.input)  # Add this input to the tested input
