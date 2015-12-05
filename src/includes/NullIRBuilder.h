@@ -11,8 +11,11 @@
 
 #include <string>
 
+#include "AnalysisProcessor.h"
 #include "BaseIRBuilder.h"
 #include "TritonOperand.h"
+
+extern AnalysisProcessor ap;
 
 
 // Null object, it's purpose is to handle "nicely" not implemented instructions.

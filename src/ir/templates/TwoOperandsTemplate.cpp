@@ -22,9 +22,11 @@ void TwoOperandsTemplate::templateMethod(
                            + insName
                            + " instruction must have two operands.");
 
+  #ifndef LIGHT_VERSION
   /* Don't perform the symbolic execution if the engine is disabled. */
   if (!ap.isSymEngineEnabled())
     return;
+  #endif
 
   /* Register, Immediate operand */
   if (operands[0].getType() == IRBuilderOperand::REG &&

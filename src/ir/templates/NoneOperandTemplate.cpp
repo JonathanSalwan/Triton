@@ -17,9 +17,11 @@ void NoneOperandTemplate::templateMethod(
     const std::vector<TritonOperand> &operands,
     std::string insName) const
 {
+  #ifndef LIGHT_VERSION
   /* Don't perform the symbolic execution if the engine is disabled. */
   if (!ap.isSymEngineEnabled())
     return;
+  #endif
 
   /* none but we must apply the semantic */
   this->none(inst);

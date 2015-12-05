@@ -17,9 +17,11 @@ void OneOperandTemplate::templateMethod(
     const std::vector<TritonOperand> &operands,
     std::string insName) const
 {
+  #ifndef LIGHT_VERSION
   /* Don't perform the symbolic execution if the engine is disabled. */
   if (!ap.isSymEngineEnabled())
     return;
+  #endif
 
   /*
    *  If there is no operand. Sometime instructions can have 0 or 1
