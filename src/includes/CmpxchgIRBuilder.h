@@ -6,8 +6,8 @@
 
 #ifndef LIGHT_VERSION
 
-#ifndef CMPIRBUILDER_H
-#define CMPIRBUILDER_H
+#ifndef CMPXCHGIRBUILDER_H
+#define CMPXCHGIRBUILDER_H
 
 #include "BaseIRBuilder.h"
 #include "EflagsBuilder.h"
@@ -15,10 +15,10 @@
 #include "TwoOperandsTemplate.h"
 
 
-class CmpIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
+class CmpxchgIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
 
   public:
-    CmpIRBuilder(__uint address, const std::string &disassembly);
+    CmpxchgIRBuilder(__uint address, const std::string &disassembly);
 
     // From BaseIRBuilder
     virtual Inst *process(void) const;
@@ -35,6 +35,6 @@ class CmpIRBuilder: public BaseIRBuilder, public TwoOperandsTemplate {
     virtual void memReg(Inst &inst) const;
 };
 
-#endif // CMPIRBUILDER_H
+#endif // CMPXCHGIRBUILDER_H
 #endif // LIGHT_VERSION
 

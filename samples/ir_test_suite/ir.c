@@ -40,6 +40,35 @@ void check(void)
   asm("or ah, 0x8");
   asm("or al, byte ptr [rsp+0xf]");
 
+  asm("mov rax, 0x99");
+  asm("mov rbx, 0xaa");
+  asm("mov rcx, 0xdd");
+  asm("cmpxchg rbx, rcx");
+  asm("mov rbx, 0x99");
+  asm("cmpxchg rbx, rcx");
+  asm("mov rax, 0x1111111111111111");
+  asm("mov rbx, 0xffffffffffffffff");
+  asm("mov rcx, 0x9090909090909090");
+  asm("cmpxchg rbx, rcx");
+  asm("cmpxchg qword ptr [%0], rbx" :: "r"(tab));
+  asm("mov rax, 0x1111111122222222");
+  asm("cmpxchg qword ptr [%0], rcx" :: "r"(tab));
+  asm("mov rax, 0x2222222211111111");
+  asm("cmpxchg qword ptr [%0], rbx" :: "r"(tab));
+  asm("mov eax, 0x99");
+  asm("mov ebx, 0xaa");
+  asm("mov ecx, 0xdd");
+  asm("cmpxchg ebx, ebx");
+  asm("mov eax, 0xffffffff");
+  asm("mov ebx, 0xaa");
+  asm("mov ecx, 0x12345678");
+  asm("cmpxchg ecx, ebx");
+  asm("mov eax, 0x99");
+  asm("mov ebx, 0x99");
+  asm("mov ecx, 0xdd");
+  asm("cmpxchg ebx, ecx");
+  asm("mov rbx, 0x99");
+  asm("cmpxchg ebx, ecx");
 
   asm("clc");
   asm("cld");

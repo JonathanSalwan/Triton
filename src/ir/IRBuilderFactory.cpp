@@ -264,6 +264,10 @@ namespace IRBuilderFactory {
         ir = new CmpIRBuilder(address, disas);
         break;
 
+      case XED_ICLASS_CMPXCHG:
+        ir = new CmpxchgIRBuilder(address, disas);
+        break;
+
       case XED_ICLASS_CQO:
         ir = new CqoIRBuilder(address, disas);
         break;

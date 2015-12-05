@@ -42,6 +42,7 @@
   #include "CmovsIRBuilder.h"
   #include "CmovzIRBuilder.h"
   #include "CmpIRBuilder.h"
+  #include "CmpxchgIRBuilder.h"
   #include "CqoIRBuilder.h"
   #include "CwdeIRBuilder.h"
   #include "DecIRBuilder.h"
