@@ -449,6 +449,10 @@ namespace IRBuilderFactory {
         ir = new OrpsIRBuilder(address, disas);
         break;
 
+      case XED_ICLASS_PMOVMSKB:
+        ir = new PmovmskbIRBuilder(address, disas);
+        break;
+
       case XED_ICLASS_POP:
         ir = new PopIRBuilder(address, disas);
         break;

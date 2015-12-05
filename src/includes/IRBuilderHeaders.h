@@ -88,6 +88,7 @@
   #include "OrIRBuilder.h"
   #include "OrpdIRBuilder.h"
   #include "OrpsIRBuilder.h"
+  #include "PmovmskbIRBuilder.h"
   #include "PopIRBuilder.h"
   #include "PushIRBuilder.h"
   #include "PxorIRBuilder.h"

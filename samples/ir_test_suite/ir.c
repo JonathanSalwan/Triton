@@ -3,7 +3,8 @@
 
 void check(void)
 {
-  int tab[4] = {0x11111111, 0x22222222, 0x33333333, 0x44444444};
+  int tab1[4] = {0x11111111, 0x22222222, 0x33333333, 0x44444444};
+  int tab2[4] = {0xd1d1d1d1, 0xffffffff, 0x55555555, 0x44444444};
 
   // Check concat symbolic expression
   asm("mov sil, 0x99");
@@ -50,11 +51,11 @@ void check(void)
   asm("mov rbx, 0xffffffffffffffff");
   asm("mov rcx, 0x9090909090909090");
   asm("cmpxchg rbx, rcx");
-  asm("cmpxchg qword ptr [%0], rbx" :: "r"(tab));
+  asm("cmpxchg qword ptr [%0], rbx" :: "r"(tab1));
   asm("mov rax, 0x1111111122222222");
-  asm("cmpxchg qword ptr [%0], rcx" :: "r"(tab));
+  asm("cmpxchg qword ptr [%0], rcx" :: "r"(tab1));
   asm("mov rax, 0x2222222211111111");
-  asm("cmpxchg qword ptr [%0], rbx" :: "r"(tab));
+  asm("cmpxchg qword ptr [%0], rbx" :: "r"(tab1));
   asm("mov eax, 0x99");
   asm("mov ebx, 0xaa");
   asm("mov ecx, 0xdd");
@@ -198,10 +199,10 @@ void check(void)
   asm("rcr rdx, 1");
 
   // SSE
-  asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab));
+  asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab1));
   asm("movapd xmm1, xmm2");
   asm("movapd xmm3, xmm0");
-  asm("movaps xmm0, xmmword ptr [%0]" :: "r"(tab));
+  asm("movaps xmm0, xmmword ptr [%0]" :: "r"(tab2));
   asm("movaps xmm1, xmm2");
   asm("movaps xmm3, xmm0");
   asm("movdqa xmm4, xmm2");
@@ -216,10 +217,16 @@ void check(void)
   asm("andps xmm1, xmm3");
   asm("andnpd xmm1, xmm3");
   asm("andnps xmm1, xmm3");
-
   asm("pxor xmm1, xmm2");
   asm("pxor xmm2, xmm3");
-  asm("pxor mm0, mm2");
+  asm("movaps xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("movaps xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("movaps xmm3, xmmword ptr [%0]" :: "r"(tab1));
+  asm("movaps xmm4, xmmword ptr [%0]" :: "r"(tab2));
+  asm("pmovmskb edx, xmm1");
+  asm("pmovmskb eax, xmm2");
+  asm("pmovmskb esi, xmm3");
+  asm("pmovmskb r9d, xmm4");
 }
 
 int main(){
