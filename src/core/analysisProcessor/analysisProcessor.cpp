@@ -575,7 +575,7 @@ bool AnalysisProcessor::isRegTainted(RegisterOperand &reg) {
 
 
 bool AnalysisProcessor::isMemTainted(MemoryOperand &addr) {
-  return this->taintEngine.isMemTainted(addr.getAddress());
+  return this->taintEngine.isMemTainted(addr.getAddress(), addr.getSize());
 }
 
 
