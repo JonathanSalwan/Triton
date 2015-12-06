@@ -449,6 +449,18 @@ namespace IRBuilderFactory {
         ir = new OrpsIRBuilder(address, disas);
         break;
 
+      case XED_ICLASS_PCMPEQB:
+        ir = new PcmpeqbIRBuilder(address, disas);
+        break;
+
+      case XED_ICLASS_PCMPEQD:
+        ir = new PcmpeqdIRBuilder(address, disas);
+        break;
+
+      case XED_ICLASS_PCMPEQW:
+        ir = new PcmpeqwIRBuilder(address, disas);
+        break;
+
       case XED_ICLASS_PMOVMSKB:
         ir = new PmovmskbIRBuilder(address, disas);
         break;
