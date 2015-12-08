@@ -94,6 +94,20 @@ static PyObject *SymbolicExpression_isTainted(PyObject *self, PyObject *noarg) {
 }
 
 
+static char SymbolicExpression_setAst_doc[] = "Set a new AST of the expression";
+static PyObject *SymbolicExpression_setAst(PyObject *self, PyObject *node) {
+  smt2lib::smtAstAbstractNode *src;
+
+  if (!PySmtAstNode_Check(node))
+    return PyErr_Format(PyExc_TypeError, "setAst(): expected a SmtAstNode as argument");
+
+  src = PySmtAstNode_AsSmtAstNode(node);
+  PySymbolicExpression_AsSymbolicExpression(self)->setExpression(src);
+  Py_RETURN_TRUE;
+}
+
+
+
 static PyObject *SymbolicExpression_str(SymbolicExpression_Object *obj) {
   std::stringstream str;
   str << "#" << obj->expression->getID() << " = " << obj->expression->getExpression();
@@ -110,6 +124,7 @@ PyMethodDef SymbolicExpression_callbacks[] = {
   {"isMem",       SymbolicExpression_isMem,       METH_NOARGS,   SymbolicExpression_isMem_doc},
   {"isReg",       SymbolicExpression_isReg,       METH_NOARGS,   SymbolicExpression_isReg_doc},
   {"isTainted",   SymbolicExpression_isTainted,   METH_NOARGS,   SymbolicExpression_isTainted_doc},
+  {"setAst",      SymbolicExpression_setAst,      METH_O,        SymbolicExpression_setAst_doc},
   {nullptr,       nullptr,                        0,             nullptr}
 };
 
