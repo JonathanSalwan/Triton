@@ -44,7 +44,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     if(${ARCHITECTURE} STREQUAL "amd64")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DUSING_XED -DTARGET_IA32E -DHOST_IA32E -DTARGET_LINUX")
     endif(${ARCHITECTURE} STREQUAL "amd64")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-stack-protector -fomit-frame-pointer -fno-strict-aliasing -fabi-version=2")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-stack-protector -fomit-frame-pointer -fno-strict-aliasing -fabi-version=2 -D_GLIBCXX_USE_CXX11_ABI=0")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--hash-style=sysv -Wl,-Bsymbolic")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
@@ -158,7 +158,7 @@ if (NOT EXISTS ${syscalls_table_file})
     message(FATAL_ERROR "unistd_64.h or syscall.h is missing, please check the INSTALL file")
 endif()
 
-# We generate the syscalls.cpp from the unistd_64.h or unistd_64.h. 
+# We generate the syscalls.cpp from the unistd_64.h or unistd_64.h.
 # Added python after COMMAND since to be sure that if ${CMAKE_SOURCE_DIR}/scripts/extract_syscall.py doesn't have X rights it gets executed
 execute_process(
     COMMAND python ${CMAKE_SOURCE_DIR}/scripts/extract_syscall.py ${syscalls_table_file}
