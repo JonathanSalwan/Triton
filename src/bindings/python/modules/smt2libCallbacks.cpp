@@ -572,7 +572,7 @@ static PyObject *smt2lib_compound(PyObject *self, PyObject *exprsList) {
   if (exprsList == nullptr || !PyList_Check(exprsList))
     return PyErr_Format(PyExc_TypeError, "compound(): expected a list of SmtAstNodes as first argument");
 
-  /* Check if the mems list contains only integer item and craft a std::list */
+  /* Check if the list contains only PySmtAstNode */
   for (Py_ssize_t i = 0; i < PyList_Size(exprsList); i++){
     PyObject *item = PyList_GetItem(exprsList, i);
 
@@ -583,6 +583,27 @@ static PyObject *smt2lib_compound(PyObject *self, PyObject *exprsList) {
   }
 
   return PySmtAstNode(smt2lib::compound(exprs));
+}
+
+
+static char smt2lib_concat_doc[] = "Returns a concatenated expression";
+static PyObject *smt2lib_concat(PyObject *self, PyObject *exprsList) {
+  std::vector<smt2lib::smtAstAbstractNode *> exprs;
+
+  if (exprsList == nullptr || !PyList_Check(exprsList))
+    return PyErr_Format(PyExc_TypeError, "concat(): expected a list of SmtAstNodes as first argument");
+
+  /* Check if the list contains only PySmtAstNode */
+  for (Py_ssize_t i = 0; i < PyList_Size(exprsList); i++){
+    PyObject *item = PyList_GetItem(exprsList, i);
+
+    if (!PySmtAstNode_Check(item))
+      return PyErr_Format(PyExc_TypeError, "concat(): Each element from the list must be a SmtAstNode");
+
+    exprs.push_back(PySmtAstNode_AsSmtAstNode(item));
+  }
+
+  return PySmtAstNode(smt2lib::concat(exprs));
 }
 
 
@@ -746,6 +767,7 @@ PyMethodDef smt2libCallbacks[] = {
   {"bvxor",       smt2lib_bvxor,      METH_VARARGS,     smt2lib_bvxor_doc},
   {"distinct",    smt2lib_distinct,   METH_VARARGS,     smt2lib_distinct_doc},
   {"compound",    smt2lib_compound,   METH_O,           smt2lib_compound_doc},
+  {"concat",      smt2lib_concat,     METH_O,           smt2lib_concat_doc},
   {"equal",       smt2lib_equal,      METH_VARARGS,     smt2lib_equal_doc},
   {"extract",     smt2lib_extract,    METH_VARARGS,     smt2lib_extract_doc},
   {"ite",         smt2lib_ite,        METH_VARARGS,     smt2lib_ite_doc},
