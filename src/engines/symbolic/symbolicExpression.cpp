@@ -66,6 +66,11 @@ enum SymExpr::kind SymbolicExpression::getKind(void) {
 }
 
 
+void SymbolicExpression::setKind(enum SymExpr::kind k) {
+  this->kind = k;
+}
+
+
 bool SymbolicExpression::isReg(void) {
   return (this->kind == SymExpr::REG);
 }

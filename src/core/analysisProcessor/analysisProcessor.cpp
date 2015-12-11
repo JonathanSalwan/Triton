@@ -149,10 +149,24 @@ SymbolicEngine &AnalysisProcessor::getSymbolicEngine(void) {
 }
 
 
+SymbolicExpression *AnalysisProcessor::createSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, std::string comment) {
+  SymbolicExpression *se = this->createSE(expr, comment);
+  inst.addExpression(se);
+  return se;
+}
+
+
+SymbolicExpression *AnalysisProcessor::createSE(smt2lib::smtAstAbstractNode *expr, std::string comment) {
+  SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr, SymExpr::UNDEF, comment);
+  return se;
+}
+
+
+
 SymbolicExpression *AnalysisProcessor::createFlagSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &flag, std::string comment) {
   __uint flagId = flag.getTritonRegId();
   SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr, SymExpr::REG, comment);
-  this->symEngine.symbolicReg[flagId] = se->getID();
+  this->assignSEToReg(se, flagId);
   inst.addExpression(se);
   return se;
 }
@@ -200,7 +214,7 @@ SymbolicExpression *AnalysisProcessor::createRegSE(Inst &inst, smt2lib::smtAstAb
   }
 
   SymbolicExpression *se = this->symEngine.newSymbolicExpression(finalExpr, SymExpr::REG, comment);
-  this->symEngine.symbolicReg[regId] = se->getID();
+  this->assignSEToReg(se, regId);
   inst.addExpression(se);
 
   return se;
@@ -237,10 +251,14 @@ SymbolicExpression *AnalysisProcessor::createMemSE(Inst &inst, smt2lib::smtAstAb
 }
 
 
-SymbolicExpression *AnalysisProcessor::createSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, std::string comment) {
-  SymbolicExpression *se = this->symEngine.newSymbolicExpression(expr, SymExpr::UNDEF, comment);
-  inst.addExpression(se);
-  return se;
+/* Assign a symbolic expression to a register */
+bool AnalysisProcessor::assignSEToReg(SymbolicExpression *se, __uint regId) {
+  if (regId > ID_INVALID && regId < ID_LAST_ITEM) {
+    se->setKind(SymExpr::REG);
+    this->symEngine.symbolicReg[regId] = se->getID();
+    return true;
+  }
+  return false;
 }
 
 

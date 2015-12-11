@@ -563,6 +563,28 @@ static PyObject *Triton_concretizeAllMem(PyObject *self, PyObject *noarg) {
 }
 
 
+static char Triton_assignSymExprToReg_doc[] = "Assign a symbolic expression to a register";
+static PyObject *Triton_assignSymExprToReg(PyObject *self, PyObject *args) {
+  PyObject *expr  = nullptr;
+  PyObject *regId = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "|OO", &expr, &regId);
+
+  if (expr == nullptr || !PySymbolicExpression_Check(expr))
+    return PyErr_Format(PyExc_TypeError, "assignSymExprToReg(): expected a SymbolicExpression as first argument");
+
+  if (regId == nullptr || (!PyLong_Check(regId) && !PyInt_Check(regId)))
+    return PyErr_Format(PyExc_TypeError, "assignSymExprToReg(): expected a register id (IDREF.REG) as second argument");
+
+  if (ap.assignSEToReg(PySymbolicExpression_AsSymbolicExpression(expr), PyLong_AsUint(regId)) == false)
+    return PyErr_Format(PyExc_TypeError, "assignSymExprToReg(): Invalid register id");
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+
 static char Triton_concretizeAllReg_doc[] = "Concretize all registers reference";
 static PyObject *Triton_concretizeAllReg(PyObject *self, PyObject *noarg) {
   ap.concretizeAllReg();
@@ -711,6 +733,32 @@ static PyObject *Triton_convertRegToSymVar(PyObject *self, PyObject *args) {
   RegisterOperand ro = createTmpReg(PyLong_AsUint(regId));
 
   return PySymbolicVariable(ap.convertRegToSymVar(ro, vs, vc));
+}
+
+
+static char Triton_createSymExpr_doc[] = "Create a new symbolic expression";
+static PyObject *Triton_createSymExpr(PyObject *self, PyObject *args) {
+  SymbolicExpression *se = nullptr;
+  PyObject *symExpr = nullptr;
+  PyObject *symComment = nullptr;
+
+  /* Extract arguments */
+  PyArg_ParseTuple(args, "|OO", &symExpr, &symComment);
+
+  if (symComment == nullptr)
+    symComment = PyString_FromString("");
+
+  if (symExpr == nullptr || !PySmtAstNode_Check(symExpr))
+    return PyErr_Format(PyExc_TypeError, "createSymExpr(): expected a SmtAstNode as first argument");
+
+  if (!PyString_Check(symComment))
+      return PyErr_Format(PyExc_TypeError, "createSymExpr(): expected a comment (string) as second argument");
+
+  se = ap.createSE(PySmtAstNode_AsSmtAstNode(symExpr), PyString_AsString(symComment));
+  if (se == nullptr)
+    return PyErr_Format(PyExc_TypeError, "createSymExpr(): Cannot create the symbolic expression");
+
+  return PySymbolicExpression(se);
 }
 
 
@@ -1308,6 +1356,7 @@ PyMethodDef tritonCallbacks[] = {
   {"stopAnalysisFromOffset",    Triton_stopAnalysisFromOffset,    METH_O,       Triton_stopAnalysisFromOffset_doc},
   {"syscallToString",           Triton_syscallToString,           METH_VARARGS, Triton_syscallToString_doc},
   #ifndef LIGHT_VERSION
+  {"assignSymExprToReg",        Triton_assignSymExprToReg,        METH_VARARGS, Triton_assignSymExprToReg_doc},
   {"concretizeAllMem",          Triton_concretizeAllMem,          METH_NOARGS,  Triton_concretizeAllMem_doc},
   {"concretizeAllReg",          Triton_concretizeAllReg,          METH_NOARGS,  Triton_concretizeAllReg_doc},
   {"concretizeMem",             Triton_concretizeMem,             METH_O,       Triton_concretizeMem_doc},
@@ -1315,6 +1364,7 @@ PyMethodDef tritonCallbacks[] = {
   {"convertExprToSymVar",       Triton_convertExprToSymVar,       METH_VARARGS, Triton_convertExprToSymVar_doc},
   {"convertMemToSymVar",        Triton_convertMemToSymVar,        METH_VARARGS, Triton_convertMemToSymVar_doc},
   {"convertRegToSymVar",        Triton_convertRegToSymVar,        METH_VARARGS, Triton_convertRegToSymVar_doc},
+  {"createSymExpr",             Triton_createSymExpr,             METH_VARARGS, Triton_createSymExpr_doc},
   {"disableSnapshot",           Triton_disableSnapshot,           METH_NOARGS,  Triton_disableSnapshot_doc},
   {"disableSymEngine",          Triton_disableSymEngine,          METH_NOARGS,  Triton_disableSymEngine_doc},
   {"enableSymEngine",           Triton_enableSymEngine,           METH_NOARGS,  Triton_enableSymEngine_doc},
@@ -1350,5 +1400,4 @@ PyMethodDef tritonCallbacks[] = {
   #endif
   {nullptr,                     nullptr,                          0,            nullptr}
 };
-
 

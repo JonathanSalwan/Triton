@@ -41,14 +41,15 @@ class SymbolicExpression {
   public:
     bool                        isTainted;
 
+    __uint                      getID(void);
     bool                        isMem(void);
     bool                        isReg(void);
     enum SymExpr::kind          getKind(void);
     smt2lib::smtAstAbstractNode *getExpression(void);
     std::string                 getComment(void);
     std::string                 getID2Str(void);
-    __uint                      getID(void);
     void                        setExpression(smt2lib::smtAstAbstractNode *expr);
+    void                        setKind(enum SymExpr::kind k);
 
     SymbolicExpression(smt2lib::smtAstAbstractNode *expr, __uint id, enum SymExpr::kind);
     SymbolicExpression(smt2lib::smtAstAbstractNode *expr, __uint id, enum SymExpr::kind, std::string comment);

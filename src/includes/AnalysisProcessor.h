@@ -87,6 +87,10 @@ class AnalysisProcessor {
      * ----------------------
      */
 
+    /* Returns a symbolic expression. This methods is mainly used for temporary expression */
+    SymbolicExpression *createSE(smt2lib::smtAstAbstractNode *expr, std::string comment="");
+    SymbolicExpression *createSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, std::string comment="");
+
     /* Returns a symbolic expression for the flag register */
     SymbolicExpression *createFlagSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, RegisterOperand &flag, std::string comment="");
 
@@ -97,8 +101,8 @@ class AnalysisProcessor {
     /* Returns a symbolic expression for the memory address */
     SymbolicExpression *createMemSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, MemoryOperand &mem, __uint writeSize, std::string comment="");
 
-    /* Returns a symbolic expression. This methods is mainly used for temporary expression */
-    SymbolicExpression *createSE(Inst &inst, smt2lib::smtAstAbstractNode *expr, std::string comment="");
+    /* Assign a symbolic expression to a register */
+    bool assignSEToReg(SymbolicExpression *se, __uint regId);
 
     /*
      * Returns the ID of the symbolic expression currently present in the
