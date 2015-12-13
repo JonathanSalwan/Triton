@@ -131,16 +131,12 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 # Triton have to generate a syscalls table from the kernel source
 # This following code tries to find the unistd_64.h or unistd_32.h header depending on the architecture.
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    FILE(
-        GLOB_RECURSE
-        syscalls_table_files
-        if(${ARCHITECTURE} STREQUAL "i386")
-            /usr/include/*unistd_32.h
-        endif(${ARCHITECTURE} STREQUAL "i386")
-        if(${ARCHITECTURE} STREQUAL "amd64")
-            /usr/include/*unistd_64.h
-        endif(${ARCHITECTURE} STREQUAL "amd64")
-    )
+    if(ARCHITECTURE STREQUAL "i386")
+        FILE(GLOB_RECURSE syscalls_table_files /usr/include/*unistd_32.h)
+    endif(ARCHITECTURE STREQUAL "i386")
+    if(ARCHITECTURE STREQUAL "amd64")
+        FILE(GLOB_RECURSE syscalls_table_files /usr/include/*unistd_64.h)
+    endif(ARCHITECTURE STREQUAL "amd64")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
