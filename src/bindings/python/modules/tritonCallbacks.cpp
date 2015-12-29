@@ -1136,7 +1136,7 @@ static PyObject *Triton_taintMem(PyObject *self, PyObject *mem) {
   if (!PyLong_Check(mem) && !PyInt_Check(mem))
     return PyErr_Format(PyExc_TypeError, "TaintMem(): expected a memory address (integer) as argument");
 
-  MemoryOperand mo(PyLong_AsUint(mem), 1);
+  MemoryOperand mo(PyLong_AsUnsignedLong(mem), 1);
   ap.taintMem(mo);
   Py_INCREF(Py_None);
   return Py_None;
