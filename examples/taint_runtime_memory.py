@@ -1,4 +1,6 @@
 
+# Using: $ ./triton ./examples/taint_runtime_memory.py ./samples/crackmes/crackme_xor a
+
 from triton import *
 
 GREEN = "\033[92m"
@@ -9,7 +11,6 @@ ENDC  = "\033[0m"
 # When the instruction located in 0x40058b is executed,
 # we taint the memory that RAX holds.
 def cbeforeSymProc(instruction):
-
     if instruction.getAddress() == 0x40058b:
         rax = getRegValue(IDREF.REG.RAX)
         taintMem(rax)
