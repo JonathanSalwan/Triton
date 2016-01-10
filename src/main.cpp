@@ -323,6 +323,12 @@ static void callbackThreadExit(THREADID threadId, const CONTEXT *ctx, sint32 fla
 
 /* Image instrumentation */
 static void IMG_Instrumentation(IMG img, VOID *v) {
+  /* Lock / Unlock the Analysis from a Entry point */
+  if (PyTritonOptions::startAnalysisFromEntry){
+    PyTritonOptions::startAnalysisFromEntry = false;
+    PyTritonOptions::startAnalysisFromAddr.insert(IMG_Entry(img));
+  }
+
   /* Lock / Unlock the Analysis from a symbol */
   if (PyTritonOptions::startAnalysisFromSymbol != nullptr){
 

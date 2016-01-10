@@ -29,6 +29,7 @@ namespace PyTritonOptions {
 
   /* Execution configurations */
   extern char *startAnalysisFromSymbol;
+  extern char startAnalysisFromEntry;
   extern std::set<__uint> startAnalysisFromAddr;
   extern std::set<__uint> startAnalysisFromOffset;
   extern std::set<__uint> stopAnalysisFromAddr;
