@@ -32,6 +32,7 @@ extern Trigger            analysisTrigger;
 namespace PyTritonOptions {
   /* Execution configurations */
   char              *startAnalysisFromSymbol = nullptr;
+  char              startAnalysisFromEntry = false;
   std::set<__uint>  startAnalysisFromAddr;
   std::set<__uint>  startAnalysisFromOffset;
   std::set<__uint>  stopAnalysisFromAddr;
@@ -475,6 +476,15 @@ static PyObject *Triton_startAnalysisFromSymbol(PyObject *self, PyObject *name) 
     return PyErr_Format(PyExc_TypeError, "startAnalysisFromSymbol(): expected a string as argument");
 
   PyTritonOptions::startAnalysisFromSymbol = PyString_AsString(name);
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+
+static char Triton_startAnalysisFromEntry_doc[] = "Starts the symbolic execution from a Entry point";
+static PyObject *Triton_startAnalysisFromEntry(PyObject *self, PyObject *noarg) {
+
+  PyTritonOptions::startAnalysisFromEntry = true;
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -1352,6 +1362,7 @@ PyMethodDef tritonCallbacks[] = {
   {"startAnalysisFromAddr",     Triton_startAnalysisFromAddr,     METH_O,       Triton_startAnalysisFromAddr_doc},
   {"startAnalysisFromOffset",   Triton_startAnalysisFromOffset,   METH_O,       Triton_startAnalysisFromOffset_doc},
   {"startAnalysisFromSymbol",   Triton_startAnalysisFromSymbol,   METH_O,       Triton_startAnalysisFromSymbol_doc},
+  {"startAnalysisFromEntry",    Triton_startAnalysisFromEntry,    METH_NOARGS,  Triton_startAnalysisFromEntry_doc},
   {"stopAnalysisFromAddr",      Triton_stopAnalysisFromAddr,      METH_O,       Triton_stopAnalysisFromAddr_doc},
   {"stopAnalysisFromOffset",    Triton_stopAnalysisFromOffset,    METH_O,       Triton_stopAnalysisFromOffset_doc},
   {"syscallToString",           Triton_syscallToString,           METH_VARARGS, Triton_syscallToString_doc},

@@ -65,7 +65,10 @@ def signals(threadId, sig):
 if __name__ == '__main__':
 
     # Start the symbolic analysis from the 'main' function
-    startAnalysisFromSymbol('main')
+    # startAnalysisFromSymbol('main')
+
+    # Start the symbolic analysis from the Entry point
+    startAnalysisFromEntry()
 
     # Add a callback.
     addCallback(signals, IDREF.CALLBACK.SIGNALS)

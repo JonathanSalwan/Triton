@@ -20,7 +20,8 @@ def fini():
 if __name__ == '__main__':
 
     # Start the symbolic analysis from the 'main' function
-    startAnalysisFromSymbol('main')
+    # startAnalysisFromSymbol('main')
+    startAnalysisFromEntry()
 
     # Dump stats at the end of the execution
     addCallback(fini, IDREF.CALLBACK.FINI)
