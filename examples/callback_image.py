@@ -28,7 +28,10 @@ def image(imagePath, imageBase, imageSize):
 if __name__ == '__main__':
 
     # Start the symbolic analysis from the 'main' function
-    startAnalysisFromSymbol('main')
+    # startAnalysisFromSymbol('main')
+
+    # Start the symbolic analysis from the Entry point
+    startAnalysisFromEntry()
 
     # Add a callback.
     addCallback(image, IDREF.CALLBACK.IMAGE_LOAD)
