@@ -67,7 +67,7 @@ operations, ...)
 
 Applying a symbolic execution and asking a model at each program point to know
 if a register is controllable or not is pretty expensive. Therefore, we use an
-**over-approximation** to fix the loss of time and if a register is tainted,
+<b>over-approximation</b> to fix the loss of time and if a register is tainted,
 we ask a model for the precision.
 
 `e.g`: Imagine this 16-bits register `[x-x-x---x-xx-x-x]` where `x` are bits

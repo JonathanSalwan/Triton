@@ -26,7 +26,7 @@ endif()
 # Triton version
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 3)
-set(VERSION_BUILD ${BUILD_NUMBER})
+set(VERSION_BUILD ${NEW_BUILD_NUMBER})
 
 # Update the PROJECT_NUMBER variable inside the Doxyfile
 file(READ ${CMAKE_SOURCE_DIR}/Doxyfile DOXYFILE)
