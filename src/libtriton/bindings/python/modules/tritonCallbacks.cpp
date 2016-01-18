@@ -317,7 +317,7 @@ Untaints a register.
 \section pintool_py_api Python API - Methods and namespaces of the pintool
 <hr>
 
-This project is shipped with a Pin tracer which can be compile with the `cmake` flag `-DPINTOOL=yes`. Then, the pintool must be used like this:
+This project is shipped with a Pin \ref Tracer_page which can be compile with the `cmake` flag `-DPINTOOL=yes`. Then, the pintool must be used like this:
 
 
 ~~~~~~~~~~~~~{.sh}

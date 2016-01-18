@@ -25,6 +25,133 @@
 
 
 
+/*! \page Tracer_page Tracer
+    \brief [**internal**] All information about how to plug a tracer.
+\tableofcontents
+\section Tracer_description Description
+<hr>
+
+The new design of the Triton library (since the `v0.3`), allows you to plug any kind of tracers. E.g: Pin,
+Valgrind and even a database.
+
+<p align="center"><img src="http://triton.quarkslab.com/files/triton_v03_architecture.png"/></p>
+
+To use the `libTriton`, your tracer must provide two kinds of information at each program point:
+
+- The current opcode executed.
+- A state context (register and memory).
+
+Based on these two information, Triton will translate the control flow into the \ref py_smt2lib_page representation. As an example, let assume that you have dumped
+a trace into a database with all registers state and memory access - these information may come from Valgrind, Pin, Qemu or whatever. The following Python code
+uses the Triton's API to build the semantics of each instruction stored in the database.
+
+~~~~~~~~~~~~~{.py}
+#!/usr/bin/env python2
+## -*- coding: utf-8 -*-
+
+import  sys
+import  struct
+
+from triton  import *
+from datbase import import Manager
+
+unpack_size = {1: 'B', 2: 'H', 4: 'I', 8: 'Q', 16: 'QQ'}
+
+if __name__ == '__main__':
+
+    # Set the arch
+    setArchitecture(ARCH.X86_64)
+
+    # Connect to the database
+    db = Manager().connect()
+
+    # inst_id is the instruction id into the database.
+    inst_id = 1
+
+    while True:
+
+        # Get opcode (from database)
+        opcode = db.get_opcode_from_inst_id(inst_id)
+        if opcode is None:
+            break
+
+        # Get concrete register value (from database)
+        regs = db.get_registers_from_inst_id(inst_id)
+
+        # Build the Triton instruction
+        inst = Instruction()
+
+        # Setup opcodes
+        inst.setOpcodes(opcode)
+
+        # Setup Address
+        inst.setAddress(regs['rip'])
+
+        # Update concrete register state
+        inst.updateContext(Register(REG.RAX,    regs['rax']))
+        inst.updateContext(Register(REG.RBX,    regs['rbx']))
+        inst.updateContext(Register(REG.RCX,    regs['rcx']))
+        inst.updateContext(Register(REG.RDX,    regs['rdx']))
+        inst.updateContext(Register(REG.RDI,    regs['rdi']))
+        inst.updateContext(Register(REG.RSI,    regs['rsi']))
+        inst.updateContext(Register(REG.RBP,    regs['rbp']))
+        inst.updateContext(Register(REG.RSP,    regs['rsp']))
+        inst.updateContext(Register(REG.RIP,    regs['rip']))
+        inst.updateContext(Register(REG.R8,     regs['r8']))
+        inst.updateContext(Register(REG.R9,     regs['r9']))
+        inst.updateContext(Register(REG.R10,    regs['r10']))
+        inst.updateContext(Register(REG.R11,    regs['r11']))
+        inst.updateContext(Register(REG.R12,    regs['r12']))
+        inst.updateContext(Register(REG.R13,    regs['r13']))
+        inst.updateContext(Register(REG.R14,    regs['r14']))
+        inst.updateContext(Register(REG.R15,    regs['r15']))
+        inst.updateContext(Register(REG.RFLAGS, regs['rflags']))
+
+        # Update concrete memory access
+        accesses = db.get_memory_access_from_inst_id(inst_id)
+
+        # Read before write
+        for access in accesses:
+            if access['kind'] == 'R':
+                address = access['addr']
+                data    = access['data']
+                value   = struct.unpack(unpack_size[len(data)], data)[0]
+                inst.updateContext(Memory(address, len(data), value))
+
+        # Write after read
+        for access in accesses:
+            if access['kind'] == 'W':
+                address = access['addr']
+                data    = access['data']
+                value   = struct.unpack(unpack_size[len(data)], data)[0]
+                inst.updateContext(Memory(address, len(data), value))
+
+        # Process everything (build IR, spread taint, perform simplification, ...)
+        processing(inst)
+
+        # At this point, all engines inside the Triton library were been synchronized with the concrete state.
+        # Display instruction
+        print inst
+
+        # Display symbolic expressions
+        for expr in inst.getSymbolicExpressions():
+            print '\t', expr
+
+        # Next instruction (from the database)
+        inst_id += 1
+
+    sys.exit(0)
+~~~~~~~~~~~~~
+
+The database connection is a pure example to show you how to interact with the Triton API. As Triton is written in `C++`, you can directly
+create your Triton instruction inside a DBI engine (like Pin or Valgrind). According to your tracer, you can refer to the [Python](http://triton.quarkslab.com/documentation/doxygen/py_triton_page.html)
+or the [C++](http://triton.quarkslab.com/documentation/doxygen/classtriton_1_1API.html) API.
+
+*/
+
+
+
+
 namespace tracer {
   namespace pintool {
 

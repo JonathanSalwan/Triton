@@ -107,7 +107,7 @@ $ cd ..
 $ sudo python ./setup.py install
 ~~~~~~~~~~~~~
 
-This project is also shipped with a Pin tracer and may be compiled with these following commands:
+This project is also shipped with a Pin \ref Tracer_page and may be compiled with these following commands:
 
 ~~~~~~~~~~~~~{.sh}
 $ cd pin-2.14-71313-gcc.4.4.7-linux/source/tools/
