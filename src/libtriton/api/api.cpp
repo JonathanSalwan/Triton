@@ -34,7 +34,7 @@ automate reverse engineering and perform software verification.
 
 <ul>
   <li><b>How Triton may help to analyse obfuscated binaries</b><br>
-  MISC magazine 82.
+  MISC magazine 82, 2015.
   [<a href="http://triton.quarkslab.com/files/misc82-triton.pdf">french article</a>]<br>
   Abstract: <i>Binary obfuscation is used to protect software's intellectual property.
   There exist different kinds of obfucation but roughly, it transforms a binary structure
@@ -96,7 +96,7 @@ To be able to compile Triton, you must install these libraries before:
 Once libraries installed, you can use `cmake` to build the `libTriton`.
 
 ~~~~~~~~~~~~~{.sh}
-$ git clone https://github.com/JonathanSalwan/Triton.git
+$ git clone -b v0.3 https://github.com/JonathanSalwan/Triton.git
 $ cd Triton
 $ mkdir build
 $ cd build
@@ -111,7 +111,7 @@ This project is also shipped with a Pin \ref Tracer_page and may be compiled wit
 
 ~~~~~~~~~~~~~{.sh}
 $ cd pin-2.14-71313-gcc.4.4.7-linux/source/tools/
-$ git clone https://github.com/JonathanSalwan/Triton.git
+$ git clone -b v0.3 https://github.com/JonathanSalwan/Triton.git
 $ cd Triton
 $ mkdir build
 $ cd build
