@@ -145,7 +145,8 @@ if __name__ == '__main__':
 
 The database connection is a pure example to show you how to interact with the Triton API. As Triton is written in `C++`, you can directly
 create your Triton instruction inside a DBI engine (like Pin or Valgrind). According to your tracer, you can refer to the [Python](http://triton.quarkslab.com/documentation/doxygen/py_triton_page.html)
-or the [C++](http://triton.quarkslab.com/documentation/doxygen/classtriton_1_1API.html) API.
+or the [C++](http://triton.quarkslab.com/documentation/doxygen/classtriton_1_1API.html) API. Note that this project is shippied with a pintool as tracer - Checkout the following page for more information
+\ref pintool_py_api.
 
 */
 
