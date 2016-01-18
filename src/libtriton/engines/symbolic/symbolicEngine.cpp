@@ -12,7 +12,7 @@
 
 
 
-/*! \page engine_DSE_page Dynamic Symbolic Exuction
+/*! \page engine_DSE_page Dynamic Symbolic Execution
     \brief [**internal**] All information about the dynamic symbolic execution engine.
 
 \tableofcontents
