@@ -223,8 +223,16 @@ namespace tracer {
 
 
     static PyObject* pintool_runProgram(PyObject* self, PyObject* noarg) {
+      /* Check if the architecture is definied */
+      if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+        return PyErr_Format(PyExc_TypeError, "tracer::pintool::runProgram(): Architecture is not defined.");
       /* Never returns - Rock 'n roll baby \o/ */
-      PIN_StartProgram();
+      try {
+        PIN_StartProgram();
+      }
+      catch (const std::exception& e) {
+        return PyErr_Format(PyExc_TypeError, "%s", e.what());
+      }
       Py_INCREF(Py_None);
       return Py_None;
     }
