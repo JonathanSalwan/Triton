@@ -8,14 +8,6 @@
 #ifndef TRITON_API_H
 #define TRITON_API_H
 
-#ifdef TRITON_PYTHON_BINDINGS
-  #ifdef __unix__
-	#include <python2.7/Python.h>
-#elif _WIN32
-	#include <Python.h>
-#endif
-#endif
-
 #include "architecture.hpp"
 #include "immediateOperand.hpp"
 #include "instruction.hpp"
@@ -27,6 +19,14 @@
 #include "symbolicEngine.hpp"
 #include "taintEngine.hpp"
 #include "tritonTypes.hpp"
+
+#ifdef TRITON_PYTHON_BINDINGS
+  #ifdef __unix__
+    #include <python2.7/Python.h>
+  #elif _WIN32
+    #include <Python.h>
+  #endif
+#endif
 
 
 

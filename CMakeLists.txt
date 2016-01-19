@@ -58,25 +58,29 @@ set(PROJECT_PINTOOL "pintool")
 
 set(LIBTRITON_CXX_FLAGS " ")
 
+
 # Global UNIX CXX Flags
 if(CMAKE_COMPILER_IS_GNUCXX)
-	# Flags
-	set(LIBTRITON_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FLAG_CXX}")
-	set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -Wall -Werror -Wno-unknown-pragmas")
-	set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -O3 -g3 -ggdb3")
-	set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -fno-stack-protector -fomit-frame-pointer -fno-strict-aliasing")
-	set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -fPIC -std=c++11")
+    # Flags
+    set(LIBTRITON_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FLAG_CXX}")
+    set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -Wall -Werror -Wno-unknown-pragmas")
+    set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -O3 -g3 -ggdb3")
+    set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -fno-stack-protector -fomit-frame-pointer -fno-strict-aliasing")
+    set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -fPIC -std=c++11")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
+
+# Linux CXX Flags
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -fabi-version=2")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-if(${ARCHITECTURE} STREQUAL "i386")
-    set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -m32")
-endif(${ARCHITECTURE} STREQUAL "i386")
+    if(${ARCHITECTURE} STREQUAL "i386")
+        set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -m32")
+    endif(${ARCHITECTURE} STREQUAL "i386")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
 
 # Specific OSX POLICY
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -132,19 +136,18 @@ if(${PINTOOL} MATCHES "yes")
     endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
     # Specific Windows CXX Flags
-    if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")	
-		if(${ARCHITECTURE} STREQUAL "i386")
-			set(PINTOOL_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DUSING_XED -DTARGET_IA32 -DHOST_IA32 -DTARGET_WINDOWS -D_SECURE_SCL=0 -DHAVE_ROUND")
-		endif(${ARCHITECTURE} STREQUAL "i386")
-		
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        if(${ARCHITECTURE} STREQUAL "i386")
+            set(PINTOOL_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DUSING_XED -DTARGET_IA32 -DHOST_IA32 -DTARGET_WINDOWS -D_SECURE_SCL=0 -DHAVE_ROUND")
+        endif(${ARCHITECTURE} STREQUAL "i386")
+
         if(${ARCHITECTURE} STREQUAL "amd64")
-			set(PINTOOL_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DUSING_XED -DTARGET_IA32E -DHOST_IA32E -DTARGET_WINDOWS -D_SECURE_SCL=0 -DHAVE_ROUND")
-		endif(${ARCHITECTURE} STREQUAL "amd64")
-		
+            set(PINTOOL_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBIGARRAY_MULTIPLIER=1 -DUSING_XED -DTARGET_IA32E -DHOST_IA32E -DTARGET_WINDOWS -D_SECURE_SCL=0 -DHAVE_ROUND")
+        endif(${ARCHITECTURE} STREQUAL "amd64")
+
         set(PINTOOL_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--hash-style=sysv -Wl,-Bsymbolic -fPIC")
     endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	
-	
+
     # Specific OSX CXX Flags
     if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
         if(${ARCHITECTURE} STREQUAL "i386")
@@ -157,9 +160,9 @@ if(${PINTOOL} MATCHES "yes")
     endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
     # Global UNIX CXX Flags
-	if(CMAKE_COMPILER_IS_GNUCXX)
-    set(PINTOOL_CXX_FLAGS "${PINTOOL_CXX_FLAGS} -std=c++11")
-	endif(CMAKE_COMPILER_IS_GNUCXX)
+    if(CMAKE_COMPILER_IS_GNUCXX)
+        set(PINTOOL_CXX_FLAGS "${PINTOOL_CXX_FLAGS} -std=c++11")
+    endif(CMAKE_COMPILER_IS_GNUCXX)
 
     # Includes directories (Pin)
     if(${ARCHITECTURE} STREQUAL "i386")
@@ -204,42 +207,43 @@ endif(${PINTOOL} MATCHES "yes")
 # Add Triton includes
 include_directories("${CMAKE_SOURCE_DIR}/src/libtriton/includes")
 
-#TODO: WIndows!??!?!?!?
+
+#Note: Windows ?!
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	# Triton have to generate a syscalls table from the kernel source 
-	# This following code tries to find the unistd_64.h or unistd_32.h header depending on the architecture.
-	if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-		FILE(GLOB_RECURSE syscalls32_table_files /usr/include/*unistd_32.h)
-		FILE(GLOB_RECURSE syscalls64_table_files /usr/include/*unistd_64.h)
-	endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    # Triton have to generate a syscalls table from the kernel source
+    # This following code tries to find the unistd_64.h or unistd_32.h header depending on the architecture.
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+        FILE(GLOB_RECURSE syscalls32_table_files /usr/include/*unistd_32.h)
+        FILE(GLOB_RECURSE syscalls64_table_files /usr/include/*unistd_64.h)
+    endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
-	if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-		FILE(
-			GLOB_RECURSE
-			syscalls64_table_files
-			/usr/include/sys/syscall.h
-		)
-	endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        FILE(
+            GLOB_RECURSE
+            syscalls64_table_files
+            /usr/include/sys/syscall.h
+        )
+    endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
-	LIST(GET syscalls64_table_files 0 syscalls64_table_file)
-	# If the unistd_64.h or syscall.h is not found, we exit
-	if (NOT EXISTS ${syscalls64_table_file})
-		message(FATAL_ERROR "unistd_64.h or syscall.h is missing, please check the INSTALL file")
-	endif()
+    LIST(GET syscalls64_table_files 0 syscalls64_table_file)
+    # If the unistd_64.h or syscall.h is not found, we exit
+    if (NOT EXISTS ${syscalls64_table_file})
+        message(FATAL_ERROR "unistd_64.h or syscall.h is missing, please check the INSTALL file")
+    endif()
 
-	# We generate the syscalls64.cpp from the unistd_64.h or syscall.h.
-	# Added python after COMMAND since to be sure that if ${CMAKE_SOURCE_DIR}/src/scripts/extract_syscall.py doesn't have X rights it gets executed
-	execute_process(
-		COMMAND python ${CMAKE_SOURCE_DIR}/src/scripts/extract_syscall.py ${syscalls64_table_file} 64
-		OUTPUT_FILE ${CMAKE_SOURCE_DIR}/src/libtriton/os/unix/syscalls64.cpp
-	)
+    # We generate the syscalls64.cpp from the unistd_64.h or syscall.h.
+    # Added python after COMMAND since to be sure that if ${CMAKE_SOURCE_DIR}/src/scripts/extract_syscall.py doesn't have X rights it gets executed
+    execute_process(
+        COMMAND python ${CMAKE_SOURCE_DIR}/src/scripts/extract_syscall.py ${syscalls64_table_file} 64
+        OUTPUT_FILE ${CMAKE_SOURCE_DIR}/src/libtriton/os/unix/syscalls64.cpp
+    )
 
-	# If the syscalls64.cpp has not been created, we exit
-	if (NOT EXISTS "${CMAKE_SOURCE_DIR}/src/libtriton/os/unix/syscalls64.cpp")
-		message(FATAL_ERROR "./src/libtriton/os/unix/syscalls64.cpp is missing, please check the INSTALL file")
-	endif()
-
+    # If the syscalls64.cpp has not been created, we exit
+    if (NOT EXISTS "${CMAKE_SOURCE_DIR}/src/libtriton/os/unix/syscalls64.cpp")
+        message(FATAL_ERROR "./src/libtriton/os/unix/syscalls64.cpp is missing, please check the INSTALL file")
+    endif()
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
 
 # Syscall 32 is only available for linux users
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -277,6 +281,7 @@ file(
     ${CMAKE_SOURCE_DIR}/src/libtriton/*
 )
 
+
 # Define all headers files
 file(
     GLOB_RECURSE
@@ -288,6 +293,7 @@ file(
 # Build the shared library
 add_library(${PROJECT_LIBTRITON} SHARED ${LIBTRITON_SOURCE_FILES})
 set_target_properties(${PROJECT_LIBTRITON} PROPERTIES COMPILE_FLAGS ${LIBTRITON_CXX_FLAGS})
+
 
 # Link Triton's dependencies
 target_link_libraries(

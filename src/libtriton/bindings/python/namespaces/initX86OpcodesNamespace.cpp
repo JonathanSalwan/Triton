@@ -7,16 +7,16 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#ifdef __unix__
-	#include <python2.7/Python.h>
-#elif _WIN32
-	#include <Python.h>
-#endif
-
 #include <api.hpp>
 #include <pythonBindings.hpp>
 #include <pythonUtils.hpp>
 #include <x86Specifications.hpp>
+
+#ifdef __unix__
+  #include <python2.7/Python.h>
+#elif _WIN32
+  #include <Python.h>
+#endif
 
 
 

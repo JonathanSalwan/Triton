@@ -6,15 +6,16 @@
 */
 
 #include <architecture.hpp>
-#ifdef __unix__
-	#include <capstone/capstone.h>
-#elif _WIN32
-	#include <capstone.h>
-#endif
 #include <cpuSize.hpp>
 #include <immediateOperand.hpp>
 #include <x8664Cpu.hpp>
 #include <x86Specifications.hpp>
+
+#ifdef __unix__
+  #include <capstone/capstone.h>
+#elif _WIN32
+  #include <capstone.h>
+#endif
 
 #ifdef TRITON_PYTHON_BINDINGS
   #include <pythonBindings.hpp>

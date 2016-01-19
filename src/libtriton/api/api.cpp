@@ -128,14 +128,6 @@ $ cmake -DPINTOOL=yes -DKERNEL4=yes ..
 $ make
 ~~~~~~~~~~~~~
 
-### Windows compilation instructions
-
-* Need to install VS14 to fix https://connect.microsoft.com/VisualStudio/feedback/details/792161/constructor-initializer-list-does-not-support-braced-init-list-form
-* http://stackoverflow.com/questions/30760889/unknown-compiler-version-while-compiling-boost-with-msvc-14-0-vs-2015
-* python27_d.lib is not shipped with the default python installer so we need to build it if we want a debug version. If we just want the release version it should work fine (python27.lib does exist)
-* We need to build capstone with VS2015 to get the .lib file that we will use. get the source code from the oficial website and follow: https://github.com/aquynh/capstone/blob/master/COMPILE_MSVC.TXT
-* Capstone library for x64 and x86 for VS14 are in the capstone_libs folder
-
 */
 
 

@@ -7,12 +7,6 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#ifdef __unix__
-	#include <python2.7/Python.h>
-#elif _WIN32
-	#include <Python.h>
-#endif
-
 #include <api.hpp>
 #include <bitsVector.hpp>
 #include <cpuSize.hpp>
@@ -22,6 +16,12 @@
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
 #include <registerOperand.hpp>
+
+#ifdef __unix__
+  #include <python2.7/Python.h>
+#elif _WIN32
+  #include <Python.h>
+#endif
 
 
 

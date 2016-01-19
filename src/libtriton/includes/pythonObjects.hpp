@@ -11,12 +11,6 @@
 #ifndef PYOBJECT_H
 #define PYOBJECT_H
 
-#ifdef __unix__
-	#include <python2.7/Python.h>
-#elif _WIN32
-	#include <Python.h>
-#endif
-
 #include "bitsVector.hpp"
 #include "immediateOperand.hpp"
 #include "instruction.hpp"
@@ -26,6 +20,12 @@
 #include "solverModel.hpp"
 #include "symbolicExpression.hpp"
 #include "symbolicVariable.hpp"
+
+#ifdef __unix__
+  #include <python2.7/Python.h>
+#elif _WIN32
+  #include <Python.h>
+#endif
 
 
 

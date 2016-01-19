@@ -8,17 +8,16 @@
 #ifdef TRITON_PYTHON_BINDINGS
 
 #include <stdexcept>
-
-#ifdef __unix__
-	#include <python2.7/Python.h>
-#elif _WIN32
-	#include <Python.h>
-#endif
-#include <python2.7/longintrepr.h>
-
 #include <tritonTypes.hpp>
 #include <pythonBindings.hpp>
 #include <pythonUtils.hpp>
+
+#ifdef __unix__
+  #include <python2.7/Python.h>
+  #include <python2.7/longintrepr.h>
+#elif _WIN32
+  #include <Python.h>
+#endif
 
 
 
