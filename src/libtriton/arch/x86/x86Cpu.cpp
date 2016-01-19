@@ -392,7 +392,7 @@ namespace triton {
       if (size == 0 || size > DQWORD_SIZE)
         throw std::invalid_argument("x86Cpu::setLastMemoryValue(): Invalid size memory");
 
-      for (triton::uint32 i = 0; i <= size; i++) {
+      for (triton::uint32 i = 0; i < size; i++) {
         this->memory[addr+i] = static_cast<triton::uint8>(cv & 0xff);
         cv >>= 8;
       }
