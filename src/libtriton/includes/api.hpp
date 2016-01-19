@@ -9,7 +9,11 @@
 #define TRITON_API_H
 
 #ifdef TRITON_PYTHON_BINDINGS
-  #include <python2.7/Python.h>
+  #ifdef __linux__
+	#include <python2.7/Python.h>
+#elif _WIN32
+	#include <Python.h>
+#endif
 #endif
 
 #include "architecture.hpp"

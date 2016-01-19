@@ -10,7 +10,11 @@
 #ifndef TRITONXPYFUNCTION_H
 #define TRITONXPYFUNCTION_H
 
-#include <python2.7/Python.h>
+#ifdef __linux__
+	#include <python2.7/Python.h>
+#elif _WIN32
+	#include <Python.h>
+#endif
 
 
 
