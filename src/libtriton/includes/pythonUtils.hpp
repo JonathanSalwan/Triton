@@ -10,7 +10,7 @@
 #ifndef TRITON_PYTHONUTILS_H
 #define TRITON PYTHONUTILS_H
 
-#ifdef __linux__
+#ifdef __unix__
 	#include <python2.7/Python.h>
 #elif _WIN32
 	#include <Python.h>

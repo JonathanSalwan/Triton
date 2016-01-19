@@ -6,7 +6,7 @@
 */
 
 #include <architecture.hpp>
-#ifdef __linux__
+#ifdef __unix__
 	#include <capstone/capstone.h>
 #elif _WIN32
 	#include <capstone.h>

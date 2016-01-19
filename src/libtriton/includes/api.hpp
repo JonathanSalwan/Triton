@@ -9,7 +9,7 @@
 #define TRITON_API_H
 
 #ifdef TRITON_PYTHON_BINDINGS
-  #ifdef __linux__
+  #ifdef __unix__
 	#include <python2.7/Python.h>
 #elif _WIN32
 	#include <Python.h>
