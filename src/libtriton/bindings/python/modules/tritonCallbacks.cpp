@@ -165,6 +165,9 @@ Computes and returns a model as a dictionary of {integer symVarId : \ref py_Solv
 - **getModels(\ref py_SmtAstNode_page node)**<br>
 Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
 
+- **getParentRegisters(void)**<br>
+Returns the of parent registers. Each item of this list is a \ref py_REG_page.
+
 - **getSymbolicExpressionFromId(intger symExprId)**<br>
 Returns the symbolic expression as \ref py_SymbolicExpression_page corresponding to the id.
 
