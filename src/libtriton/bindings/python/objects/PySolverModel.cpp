@@ -51,18 +51,13 @@ SymVar_0:64
 >>>
 >>> model = getModel(constraint)
 >>> print model
-{'SymVar_0': <SolverModel object at 0x7f30ac870b70>, 0L: <SolverModel object at 0x7f30ac870b58>}
->>>
->>> symvarModel = model['SymVar_0'] # Model from the symvar's name
->>> print symvarModel
-SymVar_0 = 287454020
->>>
->>> hex(symvarModel.getValue())
-'0x11223344L'
+{0L: <SolverModel object at 0x7f30ac870b58>}
 >>>
 >>> symvarModel =  model[symvar.getId()] # Model from the symvar's id
 >>> print symvarModel
 SymVar_0 = 287454020
+>>> hex(symvarModel.getValue())
+'0x11223344L'
 ~~~~~~~~~~~~~
 
 \section SolverModel_py_api Python API - Methods of the SolverModel class
