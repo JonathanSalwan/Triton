@@ -21,6 +21,7 @@
 
 /* pintool */
 #include "trigger.hpp"
+#include "snapshot.hpp"
 
 
 
@@ -41,6 +42,9 @@ namespace tracer {
 
     //! Lock / Unlock InsertCall
     extern Trigger analysisTrigger;
+
+    //! Snapshot engine
+    extern Snapshot snapshot;
 
     //! Python callbacks of the pintool module.
     extern PyMethodDef pintoolCallbacks[];

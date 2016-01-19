@@ -15,6 +15,7 @@
 /* pintool */
 #include "bindings.hpp"
 #include "context.hpp"
+#include "snapshot.hpp"
 
 
 
@@ -110,6 +111,13 @@ namespace tracer {
     }
 
 
+    static PyObject* pintool_disableSnapshot(PyObject* self, PyObject* noarg) {
+      tracer::pintool::snapshot.disableSnapshot();
+      Py_INCREF(Py_None);
+      return Py_None;
+    }
+
+
     static PyObject* pintool_getCurrentMemoryValue(PyObject* self, PyObject* args) {
       PyObject* mem = nullptr;
       PyObject* size = nullptr;
@@ -197,6 +205,20 @@ namespace tracer {
       ret = PIN_GetSyscallReturn(tracer::pintool::context::lastContext, standard);
 
       return triton::bindings::python::PyLong_FromUint(ret);
+    }
+
+
+    static PyObject* pintool_isSnapshotEnabled(PyObject* self, PyObject* noarg) {
+      if (tracer::pintool::snapshot.isLocked() == false)
+        Py_RETURN_TRUE;
+      Py_RETURN_FALSE;
+    }
+
+
+    static PyObject* pintool_restoreSnapshot(PyObject* self, PyObject* noarg) {
+      tracer::pintool::snapshot.setRestore(true);
+      Py_INCREF(Py_None);
+      return Py_None;
     }
 
 
@@ -370,16 +392,26 @@ namespace tracer {
     }
 
 
+    static PyObject* pintool_takeSnapshot(PyObject* self, PyObject* noarg) {
+      tracer::pintool::snapshot.takeSnapshot(tracer::pintool::context::lastContext);
+      Py_INCREF(Py_None);
+      return Py_None;
+    }
+
+
     PyMethodDef pintoolCallbacks[] = {
       {"addCallback",               pintool_addCallback,                METH_VARARGS,   ""},
       {"checkReadAccess",           pintool_checkReadAccess,            METH_O,         ""},
       {"checkWriteAccess",          pintool_checkWriteAccess,           METH_O,         ""},
       {"detachProcess",             pintool_detachProcess,              METH_NOARGS,    ""},
+      {"disableSnapshot",           pintool_disableSnapshot,            METH_NOARGS,    ""},
       {"getCurrentMemoryValue",     pintool_getCurrentMemoryValue,      METH_VARARGS,   ""},
       {"getCurrentRegisterValue",   pintool_getCurrentRegisterValue,    METH_O,         ""},
       {"getSyscallArgument",        pintool_getSyscallArgument,         METH_VARARGS,   ""},
       {"getSyscallNumber",          pintool_getSyscallNumber,           METH_O,         ""},
       {"getSyscallReturn",          pintool_getSyscallReturn,           METH_O,         ""},
+      {"isSnapshotEnabled",         pintool_isSnapshotEnabled,          METH_NOARGS,    ""},
+      {"restoreSnapshot",           pintool_restoreSnapshot,            METH_NOARGS,    ""},
       {"runProgram",                pintool_runProgram,                 METH_NOARGS,    ""},
       {"setCurrentMemoryValue",     pintool_setCurrentMemoryValue,      METH_VARARGS,   ""},
       {"setCurrentRegisterValue",   pintool_setCurrentRegisterValue,    METH_VARARGS,   ""},
@@ -391,6 +423,7 @@ namespace tracer {
       {"startAnalysisFromSymbol",   pintool_startAnalysisFromSymbol,    METH_O,         ""},
       {"stopAnalysisFromAddr",      pintool_stopAnalysisFromAddr,       METH_O,         ""},
       {"stopAnalysisFromOffset",    pintool_stopAnalysisFromOffset,     METH_O,         ""},
+      {"takeSnapshot",              pintool_takeSnapshot,               METH_NOARGS,    ""},
       {nullptr,                     nullptr,                            0,              nullptr}
     };
 

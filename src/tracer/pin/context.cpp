@@ -142,7 +142,7 @@ namespace tracer {
 
 
       triton::uint128 getCurrentMemoryValue(triton::__uint addr, triton::uint32 size) {
-        if (PIN_CheckReadAccess(reinterpret_cast<void*>(addr)) == false || PIN_CheckReadAccess(reinterpret_cast<void*>(addr+size)) == false)
+        if (PIN_CheckReadAccess(reinterpret_cast<void*>(addr)) == false || PIN_CheckReadAccess(reinterpret_cast<void*>(addr+size-1)) == false)
           throw std::runtime_error("tracer::pintool::getCurrentMemoryValue(): Page not readable.");
 
         switch(size) {
@@ -238,6 +238,9 @@ namespace tracer {
         syncReg.setConcreteValue(value);
         triton::api.setLastRegisterValue(syncReg);
 
+        /* We must concretize the register because the last symbolic value is now false */
+        triton::api.concretizeReg(reg);
+
         /* Define that the context must be executed as soon as possible */
         tracer::pintool::context::mustBeExecuted = true;
 
@@ -255,13 +258,17 @@ namespace tracer {
         triton::uint32  size  = mem.getSize();
 
         /* Sync with the libTriton */
+        mem.setConcreteValue(value);
         triton::api.setLastMemoryValue(mem);
 
+        /* We must concretize the memory because the last symbolic value is now false */
+        triton::api.concretizeMem(mem);
+
         /* Inject memory value */
-        for (triton::uint32 i = 0; i < size; i++) {
-          if (PIN_CheckWriteAccess(reinterpret_cast<void*>((addr+(size-i)))) == false)
+        for (triton::uint32 i = 0; i <= size; i++) {
+          if (PIN_CheckWriteAccess(reinterpret_cast<void*>((addr+i))) == false)
             throw std::runtime_error("tracer::pintool::setCurrentMemoryValue(): Page not writable.");
-          *((triton::uint8 *)(addr+(size-i))) = static_cast<triton::uint8>(value & 0xff);
+          *((triton::uint8 *)(addr+i)) = static_cast<triton::uint8>(value & 0xff);
           value >>= 8;
         }
       }
@@ -274,8 +281,11 @@ namespace tracer {
         /* Sync with the libTriton */
         triton::api.setLastMemoryValue(addr, value);
 
+        /* We must concretize the memory because the last symbolic value is now false */
+        triton::api.concretizeMem(addr);
+
         /* Inject memory value */
-        *((triton::uint8 *)(addr)) = static_cast<triton::uint8>(value & 0xff);
+        *((triton::uint8*)(addr)) = static_cast<triton::uint8>(value & 0xff);
       }
 
 

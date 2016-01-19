@@ -172,6 +172,13 @@ namespace triton {
   }
 
 
+  triton::arch::AbstractCpu* API::getCpu(void) {
+    if (!this->isArchitectureValid())
+      throw std::runtime_error("API::checkArchitecture(): You must define an architecture.");
+    return this->arch.getCpu();
+  }
+
+
   void API::setArchitecture(uint32 arch) {
     /* Setup and init the targetd architecture */
     this->arch.setArchitecture(arch);
@@ -304,6 +311,12 @@ namespace triton {
   void API::checkSymbolic(void) {
     if (!this->sym)
       throw std::runtime_error("API::checkSymbolic(): Symbolic engine is undefined.");
+  }
+
+
+  triton::engines::symbolic::SymbolicEngine* API::getSymbolicEngine(void) {
+    this->checkSymbolic();
+    return this->sym;
   }
 
 
@@ -616,6 +629,12 @@ namespace triton {
   void API::checkTaint(void) {
     if (!this->taint)
       throw std::runtime_error("API::checkTaint(): Taint engine is undefined.");
+  }
+
+
+  triton::engines::taint::TaintEngine* API::getTaintEngine(void) {
+    this->checkTaint();
+    return this->taint;
   }
 
 

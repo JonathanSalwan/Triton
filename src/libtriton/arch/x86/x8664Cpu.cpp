@@ -26,7 +26,51 @@ namespace triton {
     }
 
 
+    x8664Cpu::x8664Cpu(const x8664Cpu& other) {
+      this->copy(other);
+    }
+
+
     x8664Cpu::~x8664Cpu() {
+    }
+
+
+    void x8664Cpu::copy(const x8664Cpu& other) {
+      this->memory = other.memory;
+      (*((triton::uint64*)(this->rax)))    = (*((triton::uint64*)(other.rax)));
+      (*((triton::uint64*)(this->rbx)))    = (*((triton::uint64*)(other.rbx)));
+      (*((triton::uint64*)(this->rcx)))    = (*((triton::uint64*)(other.rcx)));
+      (*((triton::uint64*)(this->rdx)))    = (*((triton::uint64*)(other.rdx)));
+      (*((triton::uint64*)(this->rdi)))    = (*((triton::uint64*)(other.rdi)));
+      (*((triton::uint64*)(this->rsi)))    = (*((triton::uint64*)(other.rsi)));
+      (*((triton::uint64*)(this->rsp)))    = (*((triton::uint64*)(other.rsp)));
+      (*((triton::uint64*)(this->rbp)))    = (*((triton::uint64*)(other.rbp)));
+      (*((triton::uint64*)(this->rip)))    = (*((triton::uint64*)(other.rip)));
+      (*((triton::uint64*)(this->rflags))) = (*((triton::uint64*)(other.rflags)));
+      (*((triton::uint64*)(this->r8)))     = (*((triton::uint64*)(other.r8)));
+      (*((triton::uint64*)(this->r9)))     = (*((triton::uint64*)(other.r9)));
+      (*((triton::uint64*)(this->r10)))    = (*((triton::uint64*)(other.r10)));
+      (*((triton::uint64*)(this->r11)))    = (*((triton::uint64*)(other.r11)));
+      (*((triton::uint64*)(this->r12)))    = (*((triton::uint64*)(other.r12)));
+      (*((triton::uint64*)(this->r13)))    = (*((triton::uint64*)(other.r13)));
+      (*((triton::uint64*)(this->r14)))    = (*((triton::uint64*)(other.r14)));
+      (*((triton::uint64*)(this->r15)))    = (*((triton::uint64*)(other.r15)));
+      (*((triton::uint128*)(this->xmm0)))  = (*((triton::uint128*)(other.xmm0)));
+      (*((triton::uint128*)(this->xmm1)))  = (*((triton::uint128*)(other.xmm1)));
+      (*((triton::uint128*)(this->xmm2)))  = (*((triton::uint128*)(other.xmm2)));
+      (*((triton::uint128*)(this->xmm3)))  = (*((triton::uint128*)(other.xmm3)));
+      (*((triton::uint128*)(this->xmm4)))  = (*((triton::uint128*)(other.xmm4)));
+      (*((triton::uint128*)(this->xmm5)))  = (*((triton::uint128*)(other.xmm5)));
+      (*((triton::uint128*)(this->xmm6)))  = (*((triton::uint128*)(other.xmm6)));
+      (*((triton::uint128*)(this->xmm7)))  = (*((triton::uint128*)(other.xmm7)));
+      (*((triton::uint128*)(this->xmm8)))  = (*((triton::uint128*)(other.xmm8)));
+      (*((triton::uint128*)(this->xmm9)))  = (*((triton::uint128*)(other.xmm9)));
+      (*((triton::uint128*)(this->xmm10))) = (*((triton::uint128*)(other.xmm10)));
+      (*((triton::uint128*)(this->xmm11))) = (*((triton::uint128*)(other.xmm11)));
+      (*((triton::uint128*)(this->xmm12))) = (*((triton::uint128*)(other.xmm12)));
+      (*((triton::uint128*)(this->xmm13))) = (*((triton::uint128*)(other.xmm13)));
+      (*((triton::uint128*)(this->xmm14))) = (*((triton::uint128*)(other.xmm14)));
+      (*((triton::uint128*)(this->xmm15))) = (*((triton::uint128*)(other.xmm15)));
     }
 
 
@@ -161,6 +205,11 @@ namespace triton {
       triton::bindings::python::initSyscallNamespace();
       #endif
       #endif
+    }
+
+
+    void x8664Cpu::operator=(const x8664Cpu& other) {
+      this->copy(other);
     }
 
 
@@ -325,9 +374,9 @@ namespace triton {
         throw std::invalid_argument("x8664Cpu::getLastMemoryValue(): Invalid size memory");
 
       for (triton::uint32 i = 0; i < size; i++) {
-        if (this->memory.find(addr+(size-i)) == this->memory.end())
-          ret |= this->memory[addr+(size-i)] & 0xff;
         ret <<= 8;
+        if (this->memory.find(addr+(size-i-1)) != this->memory.end())
+          ret |= this->memory[addr+(size-i-1)] & 0xff;
       }
 
       return ret;
@@ -475,7 +524,7 @@ namespace triton {
         throw std::invalid_argument("x8664Cpu::setLastMemoryValue(): Invalid size memory");
 
       for (triton::uint32 i = 0; i < size; i++) {
-        this->memory[addr+(size-i)] = static_cast<triton::uint8>(cv & 0xff);
+        this->memory[addr+i] = static_cast<triton::uint8>(cv & 0xff);
         cv >>= 8;
       }
     }

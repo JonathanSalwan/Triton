@@ -32,6 +32,13 @@ namespace triton {
     }
 
 
+    triton::arch::AbstractCpu* Architecture::getCpu(void) {
+      if (!this->cpu)
+        throw std::runtime_error("Architecture::getCpu(): CPU undefined");
+      return this->cpu;
+    }
+
+
     void Architecture::setArchitecture(triton::uint32 arch) {
 
       /* Check if the architecture is already definied */

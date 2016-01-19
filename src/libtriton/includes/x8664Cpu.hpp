@@ -129,7 +129,12 @@ namespace triton {
 
         public:
           x8664Cpu();
+          //! Constructor by copy.
+          x8664Cpu(const x8664Cpu& other);
           ~x8664Cpu();
+
+          //! Copies a x8664Cpu class.
+          void copy(const x8664Cpu& other);
 
           void init(void);
           bool isFlag(triton::uint32 regId);
@@ -155,6 +160,9 @@ namespace triton {
           void setLastMemoryValue(triton::__uint addr, triton::uint8 value);
           void setLastMemoryValue(triton::arch::MemoryOperand& mem);
           void setLastRegisterValue(triton::arch::RegisterOperand& reg);
+
+          //! Copies a x8664Cpu class.
+          void operator=(const x8664Cpu& other);
       };
 
     /*! @} End of x86 namespace */

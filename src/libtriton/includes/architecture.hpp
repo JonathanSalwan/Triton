@@ -76,6 +76,9 @@ namespace triton {
         //! Returns the architecture as triton::arch::architecture_e.
         triton::uint32 getArchitecture(void) const;
 
+        //! Returns the CPU
+        triton::arch::AbstractCpu* getCpu(void);
+
         //! Returns the invalid CPU register id.
         triton::uint32 invalidReg(void);
 

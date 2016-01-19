@@ -72,6 +72,9 @@ namespace triton {
         //! [**architecture api**] - Raises an exception if the architecture is not initialized.
         void checkArchitecture(void);
 
+        //! [**architecture api**] - Returns the CPU instance.
+        triton::arch::AbstractCpu* getCpu(void);
+
         //! [**architecture api**] - Setup an architecture.
         /*!
           \param arch the architecture.
@@ -152,6 +155,9 @@ namespace triton {
 
         //! [**symbolic api**] - Raises an exception if the symbolic engine is not initialized.
         void checkSymbolic(void);
+
+        //! [**symbolic api**] - Returns the symbolic engine's instance.
+        triton::engines::symbolic::SymbolicEngine* getSymbolicEngine(void);
 
         //! [**symbolic api**] - Returns the symbolic expression id corresponding to the memory address.
         triton::__uint getSymbolicMemoryId(triton::__uint addr);
@@ -320,6 +326,9 @@ namespace triton {
 
         //! [**taint api**] - Raises an exception if the taint engine is not initialized.
         void checkTaint(void);
+
+        //! [**taint api**] - Returns the taint engine's instance.
+        triton::engines::taint::TaintEngine* getTaintEngine(void);
 
         //! [**taint api**] - Enables or disables the taint engine.
         void enableTaintEngine(bool flag);

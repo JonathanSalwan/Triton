@@ -346,6 +346,10 @@ Checks whether the memory page which contains this address has a write access pr
 - **detachProcess(void)**<br>
 Detachs the pintool from the targeted process. The control flow is returned to the original uninstrumented code and the application is natively executed.
 
+- **disableSnapshot(void)**<br>
+Disables the snapshot engine. When you have done with the `tracer::pintool::Snapshot::restoreSnapshot()` function, you may use this function to improve performance. Then, the
+snapshot engine will be enable at the next `tracer::pintool::Snapshot::takeSnapshot()` call.
+
 - **getCurrentMemoryValue(\ref py_Memory_page mem)**<br>
 Returns the memory value from a \ref py_Memory_page.
 
@@ -369,6 +373,12 @@ current instruction is a syscall. This function is mainly used in a `SYSCALL_ENT
 - **getSyscallReturn(\ref py_STANDARD_page std)**<br>
 Returns the syscall's result. It is a user's responsibility to make sure that the current context represents the state of a system call after its execution.
 This function is mainly used in a `SYSCALL_EXIT` \ref py_CALLBACK_page.
+
+- **isSnapshotEnabled(void)**<br>
+Returns true if the snapshot engine is enabled.
+
+- **restoreSnapshot(void)**<br>
+Restores the last snpahost taken. Check the `tracer::pintool::Snapshot::takeSnapshot()` function. Note that this function have to execute a new context registers, so `RIP` will be modified and your callback stopped (checkout the [Pin API](https://software.intel.com/sites/landingpage/pintool/docs/71313/Pin/html/group__CONTEXT__API.html#g4e6408c641479c22918a888d95ca1930)).
 
 - **runProgram(void)**<br>
 Starts the binary instrumentation over Pin.
@@ -411,6 +421,9 @@ Stops the instrumentation at a specific address.
 
 - **stopAnalysisFromOffset(integer offset)**<br>
 Stops the instrumentation at a specific offset.
+
+- **takeSnapshot(void)**<br>
+Creates a snaphost at this program point.
 
 \subsection pintool_py_api_namespaces Namespaces
 

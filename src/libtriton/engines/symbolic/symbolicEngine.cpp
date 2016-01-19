@@ -7,6 +7,10 @@
 
 #include <stdexcept>
 
+#ifdef TRITON_PYTHON_BINDINGS
+  #include <python2.7/Python.h>
+#endif
+
 #include <api.hpp>
 #include <symbolicEngine.hpp>
 
@@ -93,12 +97,17 @@ namespace triton {
         for (triton::uint32 i = 0; i < this->numberOfReg; i++)
           this->symbolicReg[i] = other.symbolicReg[i];
 
-        this->enableFlag           = other.enableFlag;
-        this->memoryReference      = other.memoryReference;
-        this->symbolicExpressions  = other.symbolicExpressions;
-        this->symbolicVariables    = other.symbolicVariables;
-        this->uniqueSymExprId      = other.uniqueSymExprId;
-        this->uniqueSymVarId       = other.uniqueSymVarId;
+        this->enableFlag                  = other.enableFlag;
+        this->memoryReference             = other.memoryReference;
+        this->symbolicExpressions         = other.symbolicExpressions;
+        this->symbolicVariables           = other.symbolicVariables;
+        this->uniqueSymExprId             = other.uniqueSymExprId;
+        this->uniqueSymVarId              = other.uniqueSymVarId;
+        this->enabledOptimizations        = other.enabledOptimizations;
+        this->simplificationCallbacks     = other.simplificationCallbacks;
+        #ifdef TRITON_PYTHON_BINDINGS
+        this->pySimplificationCallbacks   = other.pySimplificationCallbacks;
+        #endif
       }
 
 
@@ -467,7 +476,7 @@ namespace triton {
         triton::__uint size                      = mem.getSize();
         triton::__uint symMem                    = triton::engines::symbolic::UNSET;
         triton::uint8 concreteValue[DQWORD_SIZE] = {0};
-        (*((triton::uint128*)(concreteValue)))   = mem.getConcreteValue();
+        (*((triton::uint128*)(concreteValue)))   = triton::api.getLastMemoryValue(mem);
 
         while (size) {
           symMem = this->getSymbolicMemoryId(address + size - 1);

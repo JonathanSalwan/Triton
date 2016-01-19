@@ -20,6 +20,7 @@
 /* Pintool */
 #include "bindings.hpp"
 #include "context.hpp"
+#include "snapshot.hpp"
 #include "trigger.hpp"
 #include "utils.hpp"
 
@@ -162,12 +163,24 @@ namespace tracer {
     //! Lock / Unlock InsertCall
     Trigger analysisTrigger = Trigger();
 
+    //! Snapshot engine
+    Snapshot snapshot = Snapshot();
+
+
 
     /* Switch lock */
     static void toggleWrapper(bool flag) {
       PIN_LockClient();
       tracer::pintool::analysisTrigger.update(flag);
       PIN_UnlockClient();
+    }
+
+
+    /* Clear the instruction information because of the Pin's cache */
+    static void clearInstruction(triton::arch::Instruction* tritonInst) {
+      tritonInst->memoryAccess.clear();
+      tritonInst->registerState.clear();
+      tritonInst->operands.clear();
     }
 
 
@@ -218,8 +231,16 @@ namespace tracer {
       tracer::pintool::callbacks::postProcessing(tritonInst, threadId);
 
       /* Check if we must execute a new context */
-      if (tracer::pintool::context::mustBeExecuted == true)
+      if (tracer::pintool::context::mustBeExecuted == true) {
+        clearInstruction(tritonInst);
         tracer::pintool::context::executeContext();
+      }
+
+      /* Check if we must restore the snapshot */
+      if (tracer::pintool::snapshot.mustBeRestored() == true) {
+        clearInstruction(tritonInst);
+        tracer::pintool::snapshot.restoreSnapshot(ctx);
+      }
 
       /* Untrust operands */
       for (auto op = tritonInst->operands.begin(); op != tritonInst->operands.end(); op++)
@@ -249,9 +270,16 @@ namespace tracer {
       /* Some configurations must be applied after processing */
       tracer::pintool::callbacks::postProcessing(tritonInst, threadId);
 
+      /* Clear Instruction information because of the Pin's cache */
+      clearInstruction(tritonInst);
+
       /* Check if we must execute a new context */
       if (tracer::pintool::context::mustBeExecuted == true)
         tracer::pintool::context::executeContext();
+
+      /* Check if we must restore the snapshot */
+      if (tracer::pintool::snapshot.mustBeRestored() == true)
+        tracer::pintool::snapshot.restoreSnapshot(ctx);
 
       /* Mutex */
       PIN_UnlockClient();
@@ -261,11 +289,11 @@ namespace tracer {
     /* Save the memory access into the Triton instruction */
     static void saveMemoryAccess(triton::arch::Instruction* tritonInst, triton::__uint addr, triton::uint32 size) {
       switch (size) {
-        case 1:  tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint8 *)addr))); break;
-        case 2:  tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint16 *)addr))); break;
-        case 4:  tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint32 *)addr))); break;
-        case 8:  tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint64 *)addr))); break;
-        case 16: tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint128 *)addr))); break;
+        case 1:  tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint8*)addr)));   break;
+        case 2:  tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint16*)addr)));  break;
+        case 4:  tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint32*)addr)));  break;
+        case 8:  tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint64*)addr)));  break;
+        case 16: tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint128*)addr))); break;
       }
     }
 
@@ -277,15 +305,14 @@ namespace tracer {
         return;
 
       /* If the snapshot is not enable we don't save the memory */
-      //if (ap.isSnapshotLocked())
-      //  return;
+      if (tracer::pintool::snapshot.isLocked())
+        return;
 
       /* Mutex */
       PIN_LockClient();
 
-      //triton::uint32 i = 0;
-      //for (; i < writeSize ; i++)
-      //  ap.addSnapshotModification(mem+i, *(reinterpret_cast<uint8*>(mem+i)));
+      for (triton::uint32 i = 0; i < writeSize ; i++)
+        tracer::pintool::snapshot.addModification(mem+i, *(reinterpret_cast<triton::uint8*>(mem+i)));
 
       /* Mutex */
       PIN_UnlockClient();
@@ -609,14 +636,14 @@ namespace tracer {
             INS_InsertCall(ins, where, (AFUNPTR)callbackAfter, IARG_PTR, tritonInst, IARG_CONTEXT, IARG_THREAD_ID, IARG_END);
           }
 
-          ///* I/O memory monitoring for snapshot */
-          //if (INS_OperandCount(ins) > 1 && INS_MemoryOperandIsWritten(ins, 0)) {
-          //  INS_InsertCall(
-          //    ins, IPOINT_BEFORE, (AFUNPTR)callbackSnapshot,
-          //    IARG_MEMORYOP_EA, 0,
-          //    IARG_UINT32, INS_MemoryWriteSize(ins),
-          //    IARG_END);
-          //}
+          /* I/O memory monitoring for snapshot */
+          if (INS_OperandCount(ins) > 1 && INS_MemoryOperandIsWritten(ins, 0)) {
+            INS_InsertCall(
+              ins, IPOINT_BEFORE, (AFUNPTR)callbackSnapshot,
+              IARG_MEMORYOP_EA, 0,
+              IARG_UINT32, INS_MemoryWriteSize(ins),
+              IARG_END);
+          }
 
         }
       }

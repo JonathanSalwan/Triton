@@ -7,6 +7,7 @@
 
 #include <architecture.hpp>
 #include <capstone/capstone.h>
+#include <cpuSize.hpp>
 #include <immediateOperand.hpp>
 #include <x86Cpu.hpp>
 #include <x86Specifications.hpp>
@@ -25,7 +26,35 @@ namespace triton {
     }
 
 
+    x86Cpu::x86Cpu(const x86Cpu& other) {
+      this->copy(other);
+    }
+
+
     x86Cpu::~x86Cpu() {
+    }
+
+
+    void x86Cpu::copy(const x86Cpu& other) {
+      this->memory = other.memory;
+      (*((triton::uint32*)(this->eax)))    = (*((triton::uint32*)(other.eax)));
+      (*((triton::uint32*)(this->ebx)))    = (*((triton::uint32*)(other.ebx)));
+      (*((triton::uint32*)(this->ecx)))    = (*((triton::uint32*)(other.ecx)));
+      (*((triton::uint32*)(this->edx)))    = (*((triton::uint32*)(other.edx)));
+      (*((triton::uint32*)(this->edi)))    = (*((triton::uint32*)(other.edi)));
+      (*((triton::uint32*)(this->esi)))    = (*((triton::uint32*)(other.esi)));
+      (*((triton::uint32*)(this->esp)))    = (*((triton::uint32*)(other.esp)));
+      (*((triton::uint32*)(this->ebp)))    = (*((triton::uint32*)(other.ebp)));
+      (*((triton::uint32*)(this->eip)))    = (*((triton::uint32*)(other.eip)));
+      (*((triton::uint32*)(this->eflags))) = (*((triton::uint32*)(other.eflags)));
+      (*((triton::uint128*)(this->xmm0)))  = (*((triton::uint128*)(other.xmm0)));
+      (*((triton::uint128*)(this->xmm1)))  = (*((triton::uint128*)(other.xmm1)));
+      (*((triton::uint128*)(this->xmm2)))  = (*((triton::uint128*)(other.xmm2)));
+      (*((triton::uint128*)(this->xmm3)))  = (*((triton::uint128*)(other.xmm3)));
+      (*((triton::uint128*)(this->xmm4)))  = (*((triton::uint128*)(other.xmm4)));
+      (*((triton::uint128*)(this->xmm5)))  = (*((triton::uint128*)(other.xmm5)));
+      (*((triton::uint128*)(this->xmm6)))  = (*((triton::uint128*)(other.xmm6)));
+      (*((triton::uint128*)(this->xmm7)))  = (*((triton::uint128*)(other.xmm7)));
     }
 
 
@@ -103,6 +132,11 @@ namespace triton {
       triton::bindings::python::initSyscallNamespace();
       #endif
       #endif
+    }
+
+
+    void x86Cpu::operator=(const x86Cpu& other) {
+      this->copy(other);
     }
 
 
@@ -266,9 +300,9 @@ namespace triton {
         throw std::invalid_argument("x86Cpu::getLastMemoryValue(): Invalid size memory");
 
       for (triton::uint32 i = 0; i < size; i++) {
-        if (this->memory.find(addr+(size-i)) == this->memory.end())
-          ret |= this->memory[addr+(size-i)] & 0xff;
         ret <<= 8;
+        if (this->memory.find(addr+(size-i-1)) != this->memory.end())
+          ret |= this->memory[addr+(size-i-1)] & 0xff;
       }
 
       return ret;
@@ -358,8 +392,8 @@ namespace triton {
       if (size == 0 || size > DQWORD_SIZE)
         throw std::invalid_argument("x86Cpu::setLastMemoryValue(): Invalid size memory");
 
-      for (triton::uint32 i = 0; i < size; i++) {
-        this->memory[addr+(size-i)] = static_cast<triton::uint8>(cv & 0xff);
+      for (triton::uint32 i = 0; i <= size; i++) {
+        this->memory[addr+i] = static_cast<triton::uint8>(cv & 0xff);
         cv >>= 8;
       }
     }
