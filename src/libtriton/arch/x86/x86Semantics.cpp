@@ -2946,7 +2946,7 @@ namespace triton {
           else if (srcIndex.isValid())
             leaSize = srcIndex.getBitSize();
           else
-            throw std::runtime_error("triton::arch::x86::semantics::lea_s() - Something wrong");
+            leaSize = srcDisp.getBitSize();
 
           /* Create symbolic operands */
 
