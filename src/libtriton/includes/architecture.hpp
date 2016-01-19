@@ -8,6 +8,8 @@
 #ifndef TRITON_ARCHITECTURE_H
 #define TRITON_ARCHITECTURE_H
 
+#include <set>
+
 #include "abstractCpu.hpp"
 #include "instruction.hpp"
 #include "memoryOperand.hpp"
@@ -103,6 +105,9 @@ namespace triton {
           \return std::tuple<name, b-high, b-low, parentId>
         */
         std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegInfo(triton::uint32 reg);
+
+        //! Returns all parent registers.
+        std::set<triton::arch::RegisterOperand*> getParentRegisters(void);
 
         //! Disassembles the instruction according to the architecture.
         void disassembly(triton::arch::Instruction &inst);

@@ -238,6 +238,12 @@ namespace triton {
   }
 
 
+  std::set<triton::arch::RegisterOperand*> API::getParentRegisters(void) {
+    this->checkArchitecture();
+    return this->arch.getParentRegisters();
+  }
+
+
   triton::uint8 API::getLastMemoryValue(triton::__uint addr) {
     return this->arch.getLastMemoryValue(addr);
   }

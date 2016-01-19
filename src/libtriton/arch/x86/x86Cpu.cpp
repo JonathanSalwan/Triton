@@ -190,6 +190,39 @@ namespace triton {
     }
 
 
+    std::set<triton::arch::RegisterOperand*> x86Cpu::getParentRegisters(void) {
+      std::set<triton::arch::RegisterOperand*> ret;
+      ret.insert(&TRITON_X86_REG_EAX);
+      ret.insert(&TRITON_X86_REG_EBX);
+      ret.insert(&TRITON_X86_REG_ECX);
+      ret.insert(&TRITON_X86_REG_EDX);
+      ret.insert(&TRITON_X86_REG_EDI);
+      ret.insert(&TRITON_X86_REG_ESI);
+      ret.insert(&TRITON_X86_REG_EBP);
+      ret.insert(&TRITON_X86_REG_ESP);
+      ret.insert(&TRITON_X86_REG_EIP);
+      ret.insert(&TRITON_X86_REG_EFLAGS);
+      ret.insert(&TRITON_X86_REG_AF);
+      ret.insert(&TRITON_X86_REG_CF);
+      ret.insert(&TRITON_X86_REG_DF);
+      ret.insert(&TRITON_X86_REG_IF);
+      ret.insert(&TRITON_X86_REG_OF);
+      ret.insert(&TRITON_X86_REG_PF);
+      ret.insert(&TRITON_X86_REG_SF);
+      ret.insert(&TRITON_X86_REG_TF);
+      ret.insert(&TRITON_X86_REG_ZF);
+      ret.insert(&TRITON_X86_REG_XMM0);
+      ret.insert(&TRITON_X86_REG_XMM1);
+      ret.insert(&TRITON_X86_REG_XMM2);
+      ret.insert(&TRITON_X86_REG_XMM3);
+      ret.insert(&TRITON_X86_REG_XMM4);
+      ret.insert(&TRITON_X86_REG_XMM5);
+      ret.insert(&TRITON_X86_REG_XMM6);
+      ret.insert(&TRITON_X86_REG_XMM7);
+      return ret;
+    }
+
+
     void x86Cpu::disassembly(triton::arch::Instruction &inst) {
       csh       handle;
       cs_insn*  insn;

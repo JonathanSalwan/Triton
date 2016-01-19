@@ -1256,6 +1256,30 @@ namespace triton {
       }
 
 
+      static PyObject* triton_getParentRegisters(PyObject* self, PyObject* noarg) {
+        PyObject* ret = nullptr;
+        std::set<triton::arch::RegisterOperand*> reg;
+        std::set<triton::arch::RegisterOperand*>::iterator it;
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getParentRegisters(): Architecture is not defined.");
+
+        try {
+          reg = triton::api.getParentRegisters();
+          ret = xPyList_New(reg.size());
+          triton::uint32 index = 0;
+          for (it = reg.begin(); it != reg.end(); it++)
+            PyList_SetItem(ret, index++, PyRegisterOperand(**it));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return ret;
+      }
+
+
       static PyObject* triton_getSymbolicExpressionFromId(PyObject* self, PyObject* symExprId) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -2204,6 +2228,7 @@ namespace triton {
         {"getLastRegisterValue",                (PyCFunction)triton_getLastRegisterValue,                   METH_O,             ""},
         {"getModel",                            (PyCFunction)triton_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)triton_getModels,                              METH_VARARGS,       ""},
+        {"getParentRegisters",                  (PyCFunction)triton_getParentRegisters,                     METH_NOARGS,        ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)triton_getSymbolicExpressionFromId,            METH_O,             ""},
         {"getSymbolicExpressions",              (PyCFunction)triton_getSymbolicExpressions,                 METH_NOARGS,        ""},
         {"getSymbolicMemoryId",                 (PyCFunction)triton_getSymbolicMemoryId,                    METH_O,             ""},
