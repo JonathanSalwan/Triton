@@ -56,11 +56,7 @@ set(CMAKE_BUILD_TYPE Release)
 set(PROJECT_LIBTRITON "triton")
 set(PROJECT_PINTOOL "pintool")
 
-
-#Windows Visual Studio flags
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -W3")
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+set(LIBTRITON_CXX_FLAGS " ")
 
 # Global UNIX CXX Flags
 if(CMAKE_COMPILER_IS_GNUCXX)
