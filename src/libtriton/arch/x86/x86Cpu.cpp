@@ -6,7 +6,11 @@
 */
 
 #include <architecture.hpp>
-#include <capstone/capstone.h>
+#ifdef __unix__
+	#include <capstone/capstone.h>
+#elif _WIN32
+	#include <capstone.h>
+#endif
 #include <cpuSize.hpp>
 #include <immediateOperand.hpp>
 #include <x86Cpu.hpp>

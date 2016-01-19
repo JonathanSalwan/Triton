@@ -27,4 +27,3 @@ A full documentation is available on our [doxygen page](http://triton.quarkslab.
 * [SMT simplification passes](http://triton.quarkslab.com/documentation/doxygen/SMT_simplification_page.html)
 * [Taint Engine](http://triton.quarkslab.com/documentation/doxygen/engine_Taint_page.html)
 * [Python bindings](http://triton.quarkslab.com/documentation/doxygen/py_triton_page.html)
-
