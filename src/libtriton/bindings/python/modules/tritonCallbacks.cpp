@@ -1205,7 +1205,6 @@ namespace triton {
           model = triton::api.getModel(PySmtAstNode_AsSmtAstNode(node));
           for (it = model.begin(); it != model.end(); it++) {
             PyDict_SetItem(ret, PyLong_FromUint(it->first), PySolverModel(it->second));
-            PyDict_SetItem(ret, PyString_FromString(it->second.getName().c_str()), PySolverModel(it->second));
           }
         }
         catch (const std::exception& e) {
@@ -1245,7 +1244,6 @@ namespace triton {
             std::map<triton::uint32, triton::engines::solver::SolverModel> model = *it;
             for (auto it2 = model.begin(); it2 != model.end(); it2++) {
               PyDict_SetItem(mdict, PyLong_FromUint(it2->first), PySolverModel(it2->second));
-              PyDict_SetItem(mdict, PyString_FromString(it2->second.getName().c_str()), PySolverModel(it2->second));
             }
             if (model.size() > 0)
               PyList_SetItem(ret, index++, mdict);
