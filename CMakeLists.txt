@@ -56,6 +56,8 @@ set(CMAKE_BUILD_TYPE Release)
 set(PROJECT_LIBTRITON "triton")
 set(PROJECT_PINTOOL "pintool")
 
+
+# Default flags
 set(LIBTRITON_CXX_FLAGS " ")
 
 
@@ -71,9 +73,9 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 
 
 # Linux CXX Flags
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -fabi-version=2")
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+#if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+#    set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS}")
+#endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     if(${ARCHITECTURE} STREQUAL "i386")

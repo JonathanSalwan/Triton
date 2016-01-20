@@ -296,7 +296,7 @@ namespace triton {
           auto op2 = smt2lib::bv(delta, dst.getBitSize());
 
           /* Create the SMT semantics */
-          auto node = smt2lib::bvadd(op1, op2);;
+          auto node = smt2lib::bvadd(op1, op2);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "Stack alignment");
@@ -314,7 +314,7 @@ namespace triton {
           auto op2 = smt2lib::bv(delta, dst.getBitSize());
 
           /* Create the SMT semantics */
-          auto node = smt2lib::bvsub(op1, op2);;
+          auto node = smt2lib::bvsub(op1, op2);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "Stack alignment");

@@ -66,7 +66,7 @@ namespace tracer {
 
 
     void setupContextRegister(triton::arch::Instruction* inst, CONTEXT* ctx) {
-      triton::uint64 value = 0;
+      triton::uint128 value = 0;
 
       #if defined(__x86_64__) || defined(_M_X64)
         PIN_GetContextRegval(ctx, LEVEL_BASE::REG_RAX, reinterpret_cast<triton::uint8 *>(&value));
