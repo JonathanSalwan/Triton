@@ -104,6 +104,7 @@ MOVSX                        | Move with Sign-Extension
 MOVZX                        | Move with Zero-Extend
 MUL                          | Unsigned Multiply
 NEG                          | Two's Complement Negation
+NOP                          | No Operation
 NOT                          | One's Complement Negation
 OR                           | Logical Inclusive OR
 ORPD                         | Bitwise Logical OR of Double-Precision Floating-Point Values
@@ -238,6 +239,7 @@ namespace triton {
             case ID_INS_MOVZX:          triton::arch::x86::semantics::movzx_s(inst);      break;
             case ID_INS_MUL:            triton::arch::x86::semantics::mul_s(inst);        break;
             case ID_INS_NEG:            triton::arch::x86::semantics::neg_s(inst);        break;
+            case ID_INS_NOP:            triton::arch::x86::semantics::nop_s(inst);        break;
             case ID_INS_NOT:            triton::arch::x86::semantics::not_s(inst);        break;
             case ID_INS_OR:             triton::arch::x86::semantics::or_s(inst);         break;
             case ID_INS_ORPD:           triton::arch::x86::semantics::orpd_s(inst);       break;
@@ -3494,6 +3496,12 @@ namespace triton {
           triton::arch::x86::semantics::sf_s(inst, expr, src);
           triton::arch::x86::semantics::zf_s(inst, expr, src);
 
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void nop_s(triton::arch::Instruction& inst) {
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
         }

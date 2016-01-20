@@ -378,6 +378,9 @@ namespace triton {
       //! The NEG semantics.
       void neg_s(triton::arch::Instruction& inst);
 
+      //! The NOP semantics.
+      void nop_s(triton::arch::Instruction& inst);
+
       //! The NOT semantics.
       void not_s(triton::arch::Instruction& inst);
 
