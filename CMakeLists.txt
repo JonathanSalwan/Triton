@@ -161,7 +161,7 @@ if(${PINTOOL} MATCHES "yes")
 
     # Global UNIX CXX Flags
     if(CMAKE_COMPILER_IS_GNUCXX)
-        set(PINTOOL_CXX_FLAGS "${PINTOOL_CXX_FLAGS} -std=c++11")
+        set(PINTOOL_CXX_FLAGS "${PINTOOL_CXX_FLAGS} -std=c++11 -fabi-version=2")
     endif(CMAKE_COMPILER_IS_GNUCXX)
 
     # Includes directories (Pin)
