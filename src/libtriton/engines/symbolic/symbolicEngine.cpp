@@ -266,10 +266,30 @@ namespace triton {
 
       /* Removes the symbolic expression corresponding to the id */
       void SymbolicEngine::removeSymbolicExpression(triton::__uint symExprId) {
+        std::map<triton::__uint, triton::__uint>::iterator it;
+
         if (this->symbolicExpressions.find(symExprId) != this->symbolicExpressions.end()) {
+          /* Delete and remove the pointer */
           delete this->symbolicExpressions[symExprId];
           this->symbolicExpressions.erase(symExprId);
+
+          /* Concretize the register if it exists */
+          for (triton::uint32 i = 0; i < this->numberOfReg; i++) {
+            if (this->symbolicReg[i] == symExprId) {
+              this->symbolicReg[i] = triton::engines::symbolic::UNSET;
+              return;
+            }
+          }
+
+          /* Concretize the memory if it exists */
+          for (it = this->memoryReference.begin(); it != memoryReference.end(); it++) {
+            if (it->second == symExprId) {
+              this->memoryReference.erase(it->first);
+              return;
+            }
+          }
         }
+
       }
 
 

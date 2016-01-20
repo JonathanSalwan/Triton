@@ -51,6 +51,9 @@ namespace triton {
         //! The symbolic engine.
         triton::engines::symbolic::SymbolicEngine* sym;
 
+        //! The backuped symbolic engine. Some optimizations need to perform an undo. This instance is used for that.
+        triton::engines::symbolic::SymbolicEngine* symBackup;
+
         //! The solver engine.
         triton::engines::solver::SolverEngine* solver;
 
@@ -165,6 +168,12 @@ namespace triton {
 
         //! [**symbolic api**] - Returns the symbolic engine's instance.
         triton::engines::symbolic::SymbolicEngine* getSymbolicEngine(void);
+
+        //! [**symbolic api**] - Applies a backup of the symbolic engine.
+        void backupSymbolicEngine(void);
+
+        //! [**symbolic api**] - Restores the last taken backup of the symbolic engine.
+        void restoreSymbolicEngine(void);
 
         //! [**symbolic api**] - Returns the symbolic expression id corresponding to the memory address.
         triton::__uint getSymbolicMemoryId(triton::__uint addr);

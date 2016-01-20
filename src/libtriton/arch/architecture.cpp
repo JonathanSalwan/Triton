@@ -173,6 +173,10 @@ namespace triton {
       if (!triton::api.isSymbolicEngineEnabled() && !triton::api.isTaintEngineEnabled())
         return;
 
+      /* Backup the symbolic engine in the case where only taint is available. */
+      if (!triton::api.isSymbolicEngineEnabled())
+        triton::api.backupSymbolicEngine();
+
       /* Processing */
       this->cpu->buildSemantics(inst);
 
@@ -190,6 +194,7 @@ namespace triton {
           triton::api.removeSymbolicExpression((*it)->getId());
         }
         inst.symbolicExpressions.clear();
+        triton::api.restoreSymbolicEngine();
       }
 
       /*

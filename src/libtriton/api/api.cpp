@@ -139,16 +139,18 @@ namespace triton {
 
 
   API::API() {
-    this->arch   = arch::Architecture();
-    this->taint  = nullptr;
-    this->sym    = nullptr;
-    this->solver = nullptr;
+    this->arch      = arch::Architecture();
+    this->taint     = nullptr;
+    this->sym       = nullptr;
+    this->symBackup = nullptr;
+    this->solver    = nullptr;
   }
 
 
   API::~API() {
     delete this->taint;
     delete this->sym;
+    delete this->symBackup;
     delete this->solver;
   }
 
@@ -190,6 +192,10 @@ namespace triton {
 
     this->sym = new triton::engines::symbolic::SymbolicEngine();
     if (!this->sym)
+      throw std::invalid_argument("API::setArchitecture(): No enough memory.");
+
+    this->symBackup = new triton::engines::symbolic::SymbolicEngine();
+    if (!this->symBackup)
       throw std::invalid_argument("API::setArchitecture(): No enough memory.");
 
     this->solver = new triton::engines::solver::SolverEngine();
@@ -315,8 +321,18 @@ namespace triton {
   /* Symbolic Engine API ============================================================================ */
 
   void API::checkSymbolic(void) {
-    if (!this->sym)
+    if (!this->sym || !this->symBackup)
       throw std::runtime_error("API::checkSymbolic(): Symbolic engine is undefined.");
+  }
+
+
+  void API::backupSymbolicEngine(void) {
+    *this->symBackup = *this->sym;
+  }
+
+
+  void API::restoreSymbolicEngine(void) {
+    *this->sym = *this->symBackup;
   }
 
 
