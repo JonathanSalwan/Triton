@@ -161,6 +161,11 @@ namespace triton {
         //! Sets flag to define if the condition is taken or not.
         void setConditionTaken(bool flag);
 
+        //! Resets all instruction's information.
+        void reset(void);
+
+        //! Resets partially instruction's information. All except memory and register states.
+        void partialReset(void);
     };
 
     //! Displays an Instruction.

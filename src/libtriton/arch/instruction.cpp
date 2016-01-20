@@ -185,6 +185,29 @@ namespace triton {
     }
 
 
+    void Instruction::reset(void) {
+      this->partialReset();
+      this->memoryAccess.clear();
+      this->registerState.clear();
+    }
+
+
+    void Instruction::partialReset(void) {
+      this->address         = 0;
+      this->opcodesSize     = 0;
+      this->type            = 0;
+      this->tid             = 0;
+      this->branch          = false;
+      this->conditionTaken  = false;
+
+      this->operands.clear();
+      this->symbolicExpressions.clear();
+      this->disassembly.clear();
+
+      std::memset(this->opcodes, 0x00, sizeof(this->opcodes));
+    }
+
+
     std::ostream &operator<<(std::ostream &stream, Instruction inst) {
       stream << std::hex << inst.getAddress() << ": " << inst.getDisassembly() << std::dec;
       return stream;

@@ -176,14 +176,6 @@ namespace tracer {
     }
 
 
-    /* Clear the instruction information because of the Pin's cache */
-    static void clearInstruction(triton::arch::Instruction* tritonInst) {
-      tritonInst->memoryAccess.clear();
-      tritonInst->registerState.clear();
-      tritonInst->operands.clear();
-    }
-
-
     /* Callback before instruction processing */
     static void callbackBefore(triton::arch::Instruction* tritonInst, triton::uint8* addr, triton::uint32 size, CONTEXT* ctx, THREADID threadId) {
 
@@ -201,6 +193,7 @@ namespace tracer {
       tracer::pintool::context::lastContext = ctx;
 
       /* Setup Triton information */
+      tritonInst->partialReset();
       tritonInst->setOpcodes(addr, size);
       tritonInst->setAddress(reinterpret_cast<triton::__uint>(addr));
       tritonInst->setThreadId(reinterpret_cast<triton::uint32>(threadId));
@@ -232,13 +225,13 @@ namespace tracer {
 
       /* Check if we must execute a new context */
       if (tracer::pintool::context::mustBeExecuted == true) {
-        clearInstruction(tritonInst);
+        tritonInst->reset();
         tracer::pintool::context::executeContext();
       }
 
       /* Check if we must restore the snapshot */
       if (tracer::pintool::snapshot.mustBeRestored() == true) {
-        clearInstruction(tritonInst);
+        tritonInst->reset();
         tracer::pintool::snapshot.restoreSnapshot(ctx);
       }
 
@@ -271,7 +264,7 @@ namespace tracer {
       tracer::pintool::callbacks::postProcessing(tritonInst, threadId);
 
       /* Clear Instruction information because of the Pin's cache */
-      clearInstruction(tritonInst);
+      tritonInst->reset();
 
       /* Check if we must execute a new context */
       if (tracer::pintool::context::mustBeExecuted == true)
