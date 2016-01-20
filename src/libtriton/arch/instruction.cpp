@@ -19,11 +19,12 @@ namespace triton {
 
     Instruction::Instruction() {
       this->address         = 0;
-      this->opcodesSize     = 0;
-      this->type            = 0;
-      this->tid             = 0;
       this->branch          = false;
       this->conditionTaken  = false;
+      this->controlFlow     = false;
+      this->opcodesSize     = 0;
+      this->tid             = 0;
+      this->type            = 0;
       std::memset(this->opcodes, 0x00, sizeof(this->opcodes));
     }
 
@@ -46,6 +47,7 @@ namespace triton {
       this->address             = other.address;
       this->branch              = other.branch;
       this->conditionTaken      = other.conditionTaken;
+      this->controlFlow         = other.controlFlow;
       this->memoryAccess        = other.memoryAccess;
       this->opcodesSize         = other.opcodesSize;
       this->operands            = other.operands;
@@ -170,6 +172,11 @@ namespace triton {
     }
 
 
+    bool Instruction::isControlFlow(void) {
+      return this->controlFlow;
+    }
+
+
     bool Instruction::isConditionTaken(void) {
       return this->conditionTaken;
     }
@@ -177,6 +184,11 @@ namespace triton {
 
     void Instruction::setBranch(bool flag) {
       this->branch = flag;
+    }
+
+
+    void Instruction::setControlFlow(bool flag) {
+      this->controlFlow = flag;
     }
 
 
@@ -194,11 +206,12 @@ namespace triton {
 
     void Instruction::partialReset(void) {
       this->address         = 0;
-      this->opcodesSize     = 0;
-      this->type            = 0;
-      this->tid             = 0;
       this->branch          = false;
       this->conditionTaken  = false;
+      this->controlFlow     = false;
+      this->opcodesSize     = 0;
+      this->tid             = 0;
+      this->type            = 0;
 
       this->operands.clear();
       this->symbolicExpressions.clear();

@@ -64,6 +64,9 @@ namespace triton {
         //! True if this instruction is a branch.
         bool branch;
 
+        //! True if this instruction changes the control flow.
+        bool controlFlow;
+
         //! True if the condition is taken (i.g x86: jcc, cmocc, setcc, ...).
         bool conditionTaken;
 
@@ -152,11 +155,17 @@ namespace triton {
         //! Returns true if this instruction is a branch
         bool isBranch(void);
 
+        //! Returns true if this instruction changes the control flow (e.g x86: JMP, JCC, CALL, RET, ...)
+        bool isControlFlow(void);
+
         //! Returns true if the condition is taken (e.g x86: jcc, cmovcc, setcc, ...).
         bool isConditionTaken(void);
 
         //! Sets flag to define this instruction as branch or not.
         void setBranch(bool flag);
+
+        //! Sets flag to define this instruction changes the control flow or not.
+        void setControlFlow(bool flag);
 
         //! Sets flag to define if the condition is taken or not.
         void setConditionTaken(bool flag);

@@ -109,10 +109,13 @@ Returns the instruction's thread id as integer.
 Returns the instruction's type as \ref py_OPCODE_page.
 
 - **isBranch()**<br>
-Returns true if the instruction modifies the control flow (i.e x86: JUMP, JCC, CALL, RET).
+Returns true if the instruction modifies is a branch (i.e x86: JUMP, JCC).
 
 - **isConditionTaken()**<br>
 Returns true if the condition is taken (i.e x86: JCC, CMOVCC, SETCC, ...).
+
+- **isControlFlow()**<br>
+Returns true if the instruction modifies the control flow (i.e x86: JUMP, JCC, CALL, RET).
 
 - **setAddress(integer addr)**<br>
 Sets the instruction's address.
@@ -252,6 +255,13 @@ namespace triton {
       }
 
 
+      static PyObject* Instruction_isControlFlow(PyObject* self, PyObject* noarg) {
+        if (PyInstruction_AsInstruction(self)->isControlFlow() == true)
+          Py_RETURN_TRUE;
+        Py_RETURN_FALSE;
+      }
+
+
       static PyObject* Instruction_setAddress(PyObject* self, PyObject* addr) {
         if (!PyLong_Check(addr) && !PyInt_Check(addr))
           return PyErr_Format(PyExc_TypeError, "setAddress(): expected an integer as argument");
@@ -333,6 +343,7 @@ namespace triton {
         {"getType",                   Instruction_getType,                  METH_NOARGS,     ""},
         {"isBranch",                  Instruction_isBranch,                 METH_NOARGS,     ""},
         {"isConditionTaken",          Instruction_isConditionTaken,         METH_NOARGS,     ""},
+        {"isControlFlow",             Instruction_isControlFlow,            METH_NOARGS,     ""},
         {"setAddress",                Instruction_setAddress,               METH_O,          ""},
         {"setOpcodes",                Instruction_setOpcodes,               METH_O,          ""},
         {"setThreadId",               Instruction_setThreadId,              METH_O,          ""},

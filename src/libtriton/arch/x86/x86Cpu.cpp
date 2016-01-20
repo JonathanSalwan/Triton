@@ -299,10 +299,10 @@ namespace triton {
         /* Set branch */
         if (detail->groups_count > 0) {
           for (triton::uint32 n = 0; n < detail->groups_count; n++) {
-            if (detail->groups[n] == X86_GRP_JUMP || detail->groups[n] == X86_GRP_CALL || detail->groups[n] == X86_GRP_RET) {
+            if (detail->groups[n] == X86_GRP_JUMP)
               inst.setBranch(true);
-              break;
-            }
+            if (detail->groups[n] == X86_GRP_JUMP || detail->groups[n] == X86_GRP_CALL || detail->groups[n] == X86_GRP_RET)
+              inst.setControlFlow(true);
           }
         }
         cs_free(insn, count);
