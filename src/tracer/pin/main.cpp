@@ -214,29 +214,27 @@ namespace tracer {
       else
         tracer::pintool::context::mustBeExecuted = false;
 
-      /* Process the IR and taint */
-      triton::api.buildSemantics(*tritonInst);
-
-      /* Execute the Python callback */
-      if (tracer::pintool::context::mustBeExecuted == false)
-        tracer::pintool::callbacks::before(tritonInst);
-      else
-        tracer::pintool::context::mustBeExecuted = false;
-
-      /* Some configurations must be applied after processing */
-      tracer::pintool::callbacks::postProcessing(tritonInst, threadId);
-
       /* Check if we must execute a new context */
       if (tracer::pintool::context::mustBeExecuted == true) {
         tritonInst->reset();
         tracer::pintool::context::executeContext();
       }
 
+      /* Process the IR and taint */
+      triton::api.buildSemantics(*tritonInst);
+
+      /* Execute the Python callback */
+      if (tracer::pintool::context::mustBeExecuted == false)
+        tracer::pintool::callbacks::before(tritonInst);
+
       /* Check if we must restore the snapshot */
       if (tracer::pintool::snapshot.mustBeRestored() == true) {
         tritonInst->reset();
         tracer::pintool::snapshot.restoreSnapshot(ctx);
       }
+
+      /* Some configurations must be applied after processing */
+      tracer::pintool::callbacks::postProcessing(tritonInst, threadId);
 
       /* Untrust operands */
       for (auto op = tritonInst->operands.begin(); op != tritonInst->operands.end(); op++)

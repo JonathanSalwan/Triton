@@ -400,10 +400,10 @@ Sets the current memory value from a \ref py_Memory_page.
 Sets the current memory value from an address.
 
 - **setCurrentRegisterValue(\ref py_Register_page reg)**<br>
-Sets the current register value from a \ref py_Register_page. `triton::arch::RegisterOperand::getConcreteValue()` is used to define the value.
+Sets the current register value from a \ref py_Register_page. `triton::arch::RegisterOperand::getConcreteValue()` is used to define the value. This method can only be called into a `BEFORE_SYMPROC` and `AFTER` callback. This method also synchronizes the Triton's register.
 
 - **setCurrentRegisterValue(\ref py_Register_page reg, integer value)**<br>
-Sets the current register value from a \ref py_Register_page.
+Sets the current register value from a \ref py_Register_page. This method can only be called into a `BEFORE_SYMPROC` and `AFTER` callback. This method also synchronizes the Triton's register.
 
 - **setupImageBlacklist([""])**<br>
 Setups a blacklist of image names, it means that these images will not be instrumented and executed natively.
