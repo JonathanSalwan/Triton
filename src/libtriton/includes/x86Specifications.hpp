@@ -1617,105 +1617,205 @@ namespace triton {
 };
 
 
+//! Temporary RAX register.
 #define TRITON_X86_REG_RAX      triton::arch::x86::x86_reg_rax
+//! Temporary EAX register.
 #define TRITON_X86_REG_EAX      triton::arch::x86::x86_reg_eax
+//! Temporary AX register.
 #define TRITON_X86_REG_AX       triton::arch::x86::x86_reg_ax
+//! Temporary AH register.
 #define TRITON_X86_REG_AH       triton::arch::x86::x86_reg_ah
+//! Temporary AL register.
 #define TRITON_X86_REG_AL       triton::arch::x86::x86_reg_al
+//! Temporary RBX register.
 #define TRITON_X86_REG_RBX      triton::arch::x86::x86_reg_rbx
+//! Temporary EBX register.
 #define TRITON_X86_REG_EBX      triton::arch::x86::x86_reg_ebx
+//! Temporary BX register.
 #define TRITON_X86_REG_BX       triton::arch::x86::x86_reg_bx
+//! Temporary BH register.
 #define TRITON_X86_REG_BH       triton::arch::x86::x86_reg_bh
+//! Temporary BL register.
 #define TRITON_X86_REG_BL       triton::arch::x86::x86_reg_bl
+//! Temporary RCX register.
 #define TRITON_X86_REG_RCX      triton::arch::x86::x86_reg_rcx
+//! Temporary ECX register.
 #define TRITON_X86_REG_ECX      triton::arch::x86::x86_reg_ecx
+//! Temporary CX register.
 #define TRITON_X86_REG_CX       triton::arch::x86::x86_reg_cx
+//! Temporary CH register.
 #define TRITON_X86_REG_CH       triton::arch::x86::x86_reg_ch
+//! Temporary CL register.
 #define TRITON_X86_REG_CL       triton::arch::x86::x86_reg_cl
+//! Temporary RDX register.
 #define TRITON_X86_REG_RDX      triton::arch::x86::x86_reg_rdx
+//! Temporary EDX register.
 #define TRITON_X86_REG_EDX      triton::arch::x86::x86_reg_edx
+//! Temporary DX register.
 #define TRITON_X86_REG_DX       triton::arch::x86::x86_reg_dx
+//! Temporary DH register.
 #define TRITON_X86_REG_DH       triton::arch::x86::x86_reg_dh
+//! Temporary DL register.
 #define TRITON_X86_REG_DL       triton::arch::x86::x86_reg_dl
+//! Temporary RDI register.
 #define TRITON_X86_REG_RDI      triton::arch::x86::x86_reg_rdi
+//! Temporary EDI register.
 #define TRITON_X86_REG_EDI      triton::arch::x86::x86_reg_edi
+//! Temporary DI register.
 #define TRITON_X86_REG_DI       triton::arch::x86::x86_reg_di
+//! Temporary DIL register.
 #define TRITON_X86_REG_DIL      triton::arch::x86::x86_reg_dil
+//! Temporary RSI register.
 #define TRITON_X86_REG_RSI      triton::arch::x86::x86_reg_rsi
+//! Temporary ESI register.
 #define TRITON_X86_REG_ESI      triton::arch::x86::x86_reg_esi
+//! Temporary SI register.
 #define TRITON_X86_REG_SI       triton::arch::x86::x86_reg_si
+//! Temporary SIL register.
 #define TRITON_X86_REG_SIL      triton::arch::x86::x86_reg_sil
+//! Temporary RSP register.
 #define TRITON_X86_REG_RSP      triton::arch::x86::x86_reg_rsp
+//! Temporary ESP register.
 #define TRITON_X86_REG_ESP      triton::arch::x86::x86_reg_esp
+//! Temporary SP register.
 #define TRITON_X86_REG_SP       triton::arch::x86::x86_reg_sp
+//! Temporary SPL register.
 #define TRITON_X86_REG_SPL      triton::arch::x86::x86_reg_spl
+//! Temporary STACK register.
 #define TRITON_X86_REG_STACK    triton::arch::x86::x86_reg_stack
+//! Temporary RBP register.
 #define TRITON_X86_REG_RBP      triton::arch::x86::x86_reg_rbp
+//! Temporary EBP register.
 #define TRITON_X86_REG_EBP      triton::arch::x86::x86_reg_ebp
+//! Temporary BP register.
 #define TRITON_X86_REG_BP       triton::arch::x86::x86_reg_bp
+//! Temporary BPL register.
 #define TRITON_X86_REG_BPL      triton::arch::x86::x86_reg_bpl
+//! Temporary RIP register.
 #define TRITON_X86_REG_RIP      triton::arch::x86::x86_reg_rip
+//! Temporary EIP register.
 #define TRITON_X86_REG_EIP      triton::arch::x86::x86_reg_eip
+//! Temporary IP register.
 #define TRITON_X86_REG_IP       triton::arch::x86::x86_reg_ip
+//! Temporary PC register.
 #define TRITON_X86_REG_PC       triton::arch::x86::x86_reg_pc
+//! Temporary RFLAGS register.
 #define TRITON_X86_REG_RFLAGS   triton::arch::x86::x86_reg_rflags
+//! Temporary EFLAGS register.
 #define TRITON_X86_REG_EFLAGS   triton::arch::x86::x86_reg_eflags
+//! Temporary R8 register.
 #define TRITON_X86_REG_R8       triton::arch::x86::x86_reg_r8
+//! Temporary R8D register.
 #define TRITON_X86_REG_R8D      triton::arch::x86::x86_reg_r8d
+//! Temporary R8W register.
 #define TRITON_X86_REG_R8W      triton::arch::x86::x86_reg_r8w
+//! Temporary R8B register.
 #define TRITON_X86_REG_R8B      triton::arch::x86::x86_reg_r8b
+//! Temporary R9 register.
 #define TRITON_X86_REG_R9       triton::arch::x86::x86_reg_r9
+//! Temporary R9D register.
 #define TRITON_X86_REG_R9D      triton::arch::x86::x86_reg_r9d
+//! Temporary R9W register.
 #define TRITON_X86_REG_R9W      triton::arch::x86::x86_reg_r9w
+//! Temporary R9B register.
 #define TRITON_X86_REG_R9B      triton::arch::x86::x86_reg_r9b
+//! Temporary R10 register.
 #define TRITON_X86_REG_R10      triton::arch::x86::x86_reg_r10
+//! Temporary R10D register.
 #define TRITON_X86_REG_R10D     triton::arch::x86::x86_reg_r10d
+//! Temporary R10W register.
 #define TRITON_X86_REG_R10W     triton::arch::x86::x86_reg_r10w
+//! Temporary R10B register.
 #define TRITON_X86_REG_R10B     triton::arch::x86::x86_reg_r10b
+//! Temporary R11 register.
 #define TRITON_X86_REG_R11      triton::arch::x86::x86_reg_r11
+//! Temporary R11D register.
 #define TRITON_X86_REG_R11D     triton::arch::x86::x86_reg_r11d
+//! Temporary R11W register.
 #define TRITON_X86_REG_R11W     triton::arch::x86::x86_reg_r11w
+//! Temporary R11B register.
 #define TRITON_X86_REG_R11B     triton::arch::x86::x86_reg_r11b
+//! Temporary R12 register.
 #define TRITON_X86_REG_R12      triton::arch::x86::x86_reg_r12
+//! Temporary R12D register.
 #define TRITON_X86_REG_R12D     triton::arch::x86::x86_reg_r12d
+//! Temporary R12W register.
 #define TRITON_X86_REG_R12W     triton::arch::x86::x86_reg_r12w
+//! Temporary R12B register.
 #define TRITON_X86_REG_R12B     triton::arch::x86::x86_reg_r12b
+//! Temporary R13 register.
 #define TRITON_X86_REG_R13      triton::arch::x86::x86_reg_r13
+//! Temporary R13D register.
 #define TRITON_X86_REG_R13D     triton::arch::x86::x86_reg_r13d
+//! Temporary R13W register.
 #define TRITON_X86_REG_R13W     triton::arch::x86::x86_reg_r13w
+//! Temporary R13B register.
 #define TRITON_X86_REG_R13B     triton::arch::x86::x86_reg_r13b
+//! Temporary R14 register.
 #define TRITON_X86_REG_R14      triton::arch::x86::x86_reg_r14
+//! Temporary R14D register.
 #define TRITON_X86_REG_R14D     triton::arch::x86::x86_reg_r14d
+//! Temporary R14W register.
 #define TRITON_X86_REG_R14W     triton::arch::x86::x86_reg_r14w
+//! Temporary R14B register.
 #define TRITON_X86_REG_R14B     triton::arch::x86::x86_reg_r14b
+//! Temporary R15 register.
 #define TRITON_X86_REG_R15      triton::arch::x86::x86_reg_r15
+//! Temporary R15D register.
 #define TRITON_X86_REG_R15D     triton::arch::x86::x86_reg_r15d
+//! Temporary R15W register.
 #define TRITON_X86_REG_R15W     triton::arch::x86::x86_reg_r15w
+//! Temporary R15B register.
 #define TRITON_X86_REG_R15B     triton::arch::x86::x86_reg_r15b
+//! Temporary XMM0 register.
 #define TRITON_X86_REG_XMM0     triton::arch::x86::x86_reg_xmm0
+//! Temporary XMM1 register.
 #define TRITON_X86_REG_XMM1     triton::arch::x86::x86_reg_xmm1
+//! Temporary XMM2 register.
 #define TRITON_X86_REG_XMM2     triton::arch::x86::x86_reg_xmm2
+//! Temporary XMM3 register.
 #define TRITON_X86_REG_XMM3     triton::arch::x86::x86_reg_xmm3
+//! Temporary XMM4 register.
 #define TRITON_X86_REG_XMM4     triton::arch::x86::x86_reg_xmm4
+//! Temporary XMM5 register.
 #define TRITON_X86_REG_XMM5     triton::arch::x86::x86_reg_xmm5
+//! Temporary XMM6 register.
 #define TRITON_X86_REG_XMM6     triton::arch::x86::x86_reg_xmm6
+//! Temporary XMM7 register.
 #define TRITON_X86_REG_XMM7     triton::arch::x86::x86_reg_xmm7
+//! Temporary XMM8 register.
 #define TRITON_X86_REG_XMM8     triton::arch::x86::x86_reg_xmm8
+//! Temporary XMM9 register.
 #define TRITON_X86_REG_XMM9     triton::arch::x86::x86_reg_xmm9
+//! Temporary XMM10 register.
 #define TRITON_X86_REG_XMM10    triton::arch::x86::x86_reg_xmm10
+//! Temporary XMM11 register.
 #define TRITON_X86_REG_XMM11    triton::arch::x86::x86_reg_xmm11
+//! Temporary XMM12 register.
 #define TRITON_X86_REG_XMM12    triton::arch::x86::x86_reg_xmm12
+//! Temporary XMM13 register.
 #define TRITON_X86_REG_XMM13    triton::arch::x86::x86_reg_xmm13
+//! Temporary XMM14 register.
 #define TRITON_X86_REG_XMM14    triton::arch::x86::x86_reg_xmm14
+//! Temporary XMM15 register.
 #define TRITON_X86_REG_XMM15    triton::arch::x86::x86_reg_xmm15
+//! Temporary AF register.
 #define TRITON_X86_REG_AF       triton::arch::x86::x86_reg_af
+//! Temporary CF register.
 #define TRITON_X86_REG_CF       triton::arch::x86::x86_reg_cf
+//! Temporary DF register.
 #define TRITON_X86_REG_DF       triton::arch::x86::x86_reg_df
+//! Temporary IF register.
 #define TRITON_X86_REG_IF       triton::arch::x86::x86_reg_if
+//! Temporary OF register.
 #define TRITON_X86_REG_OF       triton::arch::x86::x86_reg_of
+//! Temporary PF register.
 #define TRITON_X86_REG_PF       triton::arch::x86::x86_reg_pf
+//! Temporary SF register.
 #define TRITON_X86_REG_SF       triton::arch::x86::x86_reg_sf
+//! Temporary TF register.
 #define TRITON_X86_REG_TF       triton::arch::x86::x86_reg_tf
+//! Temporary ZF register.
 #define TRITON_X86_REG_ZF       triton::arch::x86::x86_reg_zf
 
 
