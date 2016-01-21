@@ -190,9 +190,9 @@ namespace triton {
         std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
         for (it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
           smt2lib::extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
-          smt2lib::freeAstNodes(uniqueNodes);
           triton::api.removeSymbolicExpression((*it)->getId());
         }
+        smt2lib::freeAstNodes(uniqueNodes);
         inst.symbolicExpressions.clear();
         triton::api.restoreSymbolicEngine();
       }
