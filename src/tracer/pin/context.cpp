@@ -153,7 +153,7 @@ namespace tracer {
               value = *(reinterpret_cast<triton::uint128*>(addr));
             #endif
             #if defined(__i386) || defined(_M_IX86)
-              memcpy(&value, reinterpret_cast<triton::uint8*>(addr), sizeof(value));
+              memcpy(&value, reinterpret_cast<triton::uint8*>(addr), DQWORD_SIZE);
             #endif
             break;
         }

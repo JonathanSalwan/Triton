@@ -507,7 +507,7 @@ namespace triton {
           (*((triton::uint128*)(concreteValue))) = value;
         #endif
         #if defined(__i386) || defined(_M_IX86)
-          memcpy(concreteValue, &value, sizeof(concreteValue));
+          memcpy(concreteValue, &value, DQWORD_SIZE);
         #endif
 
         while (size) {

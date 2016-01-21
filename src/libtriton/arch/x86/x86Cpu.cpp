@@ -416,14 +416,14 @@ namespace triton {
           case triton::arch::x86::ID_REG_XMM7: return (*((triton::uint128*)(this->xmm7)));
         #endif
         #if defined(__i386) || defined(_M_IX86)
-          case triton::arch::x86::ID_REG_XMM0: memcpy(&value, this->xmm0, sizeof(value)); return value;
-          case triton::arch::x86::ID_REG_XMM1: memcpy(&value, this->xmm1, sizeof(value)); return value;
-          case triton::arch::x86::ID_REG_XMM2: memcpy(&value, this->xmm2, sizeof(value)); return value;
-          case triton::arch::x86::ID_REG_XMM3: memcpy(&value, this->xmm3, sizeof(value)); return value;
-          case triton::arch::x86::ID_REG_XMM4: memcpy(&value, this->xmm4, sizeof(value)); return value;
-          case triton::arch::x86::ID_REG_XMM5: memcpy(&value, this->xmm5, sizeof(value)); return value;
-          case triton::arch::x86::ID_REG_XMM6: memcpy(&value, this->xmm6, sizeof(value)); return value;
-          case triton::arch::x86::ID_REG_XMM7: memcpy(&value, this->xmm7, sizeof(value)); return value;
+          case triton::arch::x86::ID_REG_XMM0: memcpy(&value, this->xmm0, DQWORD_SIZE); return value;
+          case triton::arch::x86::ID_REG_XMM1: memcpy(&value, this->xmm1, DQWORD_SIZE); return value;
+          case triton::arch::x86::ID_REG_XMM2: memcpy(&value, this->xmm2, DQWORD_SIZE); return value;
+          case triton::arch::x86::ID_REG_XMM3: memcpy(&value, this->xmm3, DQWORD_SIZE); return value;
+          case triton::arch::x86::ID_REG_XMM4: memcpy(&value, this->xmm4, DQWORD_SIZE); return value;
+          case triton::arch::x86::ID_REG_XMM5: memcpy(&value, this->xmm5, DQWORD_SIZE); return value;
+          case triton::arch::x86::ID_REG_XMM6: memcpy(&value, this->xmm6, DQWORD_SIZE); return value;
+          case triton::arch::x86::ID_REG_XMM7: memcpy(&value, this->xmm7, DQWORD_SIZE); return value;
         #endif
 
         case triton::arch::x86::ID_REG_AF: return (((*((triton::uint32*)(this->eflags))) >> 4) & 1);
