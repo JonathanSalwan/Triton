@@ -5,6 +5,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#include <cstring>
 #include <stdexcept>
 
 #include <api.hpp>
@@ -500,7 +501,14 @@ namespace triton {
         triton::__uint size                      = mem.getSize();
         triton::__uint symMem                    = triton::engines::symbolic::UNSET;
         triton::uint8 concreteValue[DQWORD_SIZE] = {0};
-        (*((triton::uint128*)(concreteValue)))   = triton::api.getLastMemoryValue(mem);
+        triton::uint128 value                    = triton::api.getLastMemoryValue(mem);
+
+        #if defined(__x86_64__) || defined(_M_X64)
+          (*((triton::uint128*)(concreteValue))) = value;
+        #endif
+        #if defined(__i386) || defined(_M_IX86)
+          memcpy(concreteValue, &value, sizeof(concreteValue));
+        #endif
 
         while (size) {
           symMem = this->getSymbolicMemoryId(address + size - 1);

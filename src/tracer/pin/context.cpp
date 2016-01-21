@@ -5,6 +5,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
+#include <cstring>
 #include <stdexcept>
 
 /* libTriton */
@@ -152,8 +153,7 @@ namespace tracer {
               value = *(reinterpret_cast<triton::uint128*>(addr));
             #endif
             #if defined(__i386) || defined(_M_IX86)
-              value = *(reinterpret_cast<triton::uint64*>(addr+4));
-              value = ((value << 64) | *(reinterpret_cast<triton::uint64*>(addr)));
+              memcpy(&value, reinterpret_cast<triton::uint8*>(addr), sizeof(value));
             #endif
             break;
         }
