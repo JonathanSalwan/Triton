@@ -282,13 +282,8 @@ namespace tracer {
 
     /* Save the memory access into the Triton instruction */
     static void saveMemoryAccess(triton::arch::Instruction* tritonInst, triton::__uint addr, triton::uint32 size) {
-      switch (size) {
-        case 1:  tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint8*)addr)));   break;
-        case 2:  tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint16*)addr)));  break;
-        case 4:  tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint32*)addr)));  break;
-        case 8:  tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint64*)addr)));  break;
-        case 16: tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, *((triton::uint128*)addr))); break;
-      }
+      triton::uint128 value = tracer::pintool::context::getCurrentMemoryValue(addr, size);
+      tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, value));
     }
 
 
