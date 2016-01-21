@@ -8,6 +8,7 @@
 #include <architecture.hpp>
 #include <cpuSize.hpp>
 #include <immediateOperand.hpp>
+#include <utils.hpp>
 #include <x8664Cpu.hpp>
 #include <x86Specifications.hpp>
 
@@ -203,12 +204,12 @@ namespace triton {
 
       /* Update python env ======================================================== */
       #ifdef TRITON_PYTHON_BINDINGS
-      triton::bindings::python::initRegNamespace();
-      triton::bindings::python::initCpuSizeNamespace();
-      triton::bindings::python::initX86OpcodesNamespace();
-      #ifdef __unix__
-      triton::bindings::python::initSyscallNamespace();
-      #endif
+        triton::bindings::python::initRegNamespace();
+        triton::bindings::python::initCpuSizeNamespace();
+        triton::bindings::python::initX86OpcodesNamespace();
+        #ifdef __unix__
+          triton::bindings::python::initSyscallNamespace();
+        #endif
       #endif
     }
 

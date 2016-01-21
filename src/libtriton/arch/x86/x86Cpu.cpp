@@ -10,6 +10,7 @@
 #include <architecture.hpp>
 #include <cpuSize.hpp>
 #include <immediateOperand.hpp>
+#include <utils.hpp>
 #include <x86Cpu.hpp>
 #include <x86Specifications.hpp>
 
@@ -54,26 +55,14 @@ namespace triton {
       (*((triton::uint32*)(this->ebp)))     = (*((triton::uint32*)(other.ebp)));
       (*((triton::uint32*)(this->eip)))     = (*((triton::uint32*)(other.eip)));
       (*((triton::uint32*)(this->eflags)))  = (*((triton::uint32*)(other.eflags)));
-      #if defined(__x86_64__) || defined(_M_X64)
-        (*((triton::uint128*)(this->xmm0))) = (*((triton::uint128*)(other.xmm0)));
-        (*((triton::uint128*)(this->xmm1))) = (*((triton::uint128*)(other.xmm1)));
-        (*((triton::uint128*)(this->xmm2))) = (*((triton::uint128*)(other.xmm2)));
-        (*((triton::uint128*)(this->xmm3))) = (*((triton::uint128*)(other.xmm3)));
-        (*((triton::uint128*)(this->xmm4))) = (*((triton::uint128*)(other.xmm4)));
-        (*((triton::uint128*)(this->xmm5))) = (*((triton::uint128*)(other.xmm5)));
-        (*((triton::uint128*)(this->xmm6))) = (*((triton::uint128*)(other.xmm6)));
-        (*((triton::uint128*)(this->xmm7))) = (*((triton::uint128*)(other.xmm7)));
-      #endif
-      #if defined(__i386) || defined(_M_IX86)
-        memcpy(this->xmm0, other.xmm0, sizeof(this->xmm0));
-        memcpy(this->xmm1, other.xmm1, sizeof(this->xmm1));
-        memcpy(this->xmm2, other.xmm2, sizeof(this->xmm2));
-        memcpy(this->xmm3, other.xmm3, sizeof(this->xmm3));
-        memcpy(this->xmm4, other.xmm4, sizeof(this->xmm4));
-        memcpy(this->xmm5, other.xmm5, sizeof(this->xmm5));
-        memcpy(this->xmm6, other.xmm6, sizeof(this->xmm6));
-        memcpy(this->xmm7, other.xmm7, sizeof(this->xmm7));
-      #endif
+      memcpy(this->xmm0, other.xmm0, sizeof(this->xmm0));
+      memcpy(this->xmm1, other.xmm1, sizeof(this->xmm1));
+      memcpy(this->xmm2, other.xmm2, sizeof(this->xmm2));
+      memcpy(this->xmm3, other.xmm3, sizeof(this->xmm3));
+      memcpy(this->xmm4, other.xmm4, sizeof(this->xmm4));
+      memcpy(this->xmm5, other.xmm5, sizeof(this->xmm5));
+      memcpy(this->xmm6, other.xmm6, sizeof(this->xmm6));
+      memcpy(this->xmm7, other.xmm7, sizeof(this->xmm7));
     }
 
 
@@ -144,12 +133,12 @@ namespace triton {
 
       /* Update python env ======================================================== */
       #ifdef TRITON_PYTHON_BINDINGS
-      triton::bindings::python::initRegNamespace();
-      triton::bindings::python::initCpuSizeNamespace();
-      triton::bindings::python::initX86OpcodesNamespace();
-      #ifdef __unix__
-      triton::bindings::python::initSyscallNamespace();
-      #endif
+        triton::bindings::python::initRegNamespace();
+        triton::bindings::python::initCpuSizeNamespace();
+        triton::bindings::python::initX86OpcodesNamespace();
+        #ifdef __unix__
+          triton::bindings::python::initSyscallNamespace();
+        #endif
       #endif
     }
 
@@ -405,26 +394,14 @@ namespace triton {
 
         case triton::arch::x86::ID_REG_EFLAGS: return (*((triton::uint32*)(this->eflags)));
 
-        #if defined(__x86_64__) || defined(_M_X64)
-          case triton::arch::x86::ID_REG_XMM0: return (*((triton::uint128*)(this->xmm0)));
-          case triton::arch::x86::ID_REG_XMM1: return (*((triton::uint128*)(this->xmm1)));
-          case triton::arch::x86::ID_REG_XMM2: return (*((triton::uint128*)(this->xmm2)));
-          case triton::arch::x86::ID_REG_XMM3: return (*((triton::uint128*)(this->xmm3)));
-          case triton::arch::x86::ID_REG_XMM4: return (*((triton::uint128*)(this->xmm4)));
-          case triton::arch::x86::ID_REG_XMM5: return (*((triton::uint128*)(this->xmm5)));
-          case triton::arch::x86::ID_REG_XMM6: return (*((triton::uint128*)(this->xmm6)));
-          case triton::arch::x86::ID_REG_XMM7: return (*((triton::uint128*)(this->xmm7)));
-        #endif
-        #if defined(__i386) || defined(_M_IX86)
-          case triton::arch::x86::ID_REG_XMM0: memcpy(&value, this->xmm0, DQWORD_SIZE); return value;
-          case triton::arch::x86::ID_REG_XMM1: memcpy(&value, this->xmm1, DQWORD_SIZE); return value;
-          case triton::arch::x86::ID_REG_XMM2: memcpy(&value, this->xmm2, DQWORD_SIZE); return value;
-          case triton::arch::x86::ID_REG_XMM3: memcpy(&value, this->xmm3, DQWORD_SIZE); return value;
-          case triton::arch::x86::ID_REG_XMM4: memcpy(&value, this->xmm4, DQWORD_SIZE); return value;
-          case triton::arch::x86::ID_REG_XMM5: memcpy(&value, this->xmm5, DQWORD_SIZE); return value;
-          case triton::arch::x86::ID_REG_XMM6: memcpy(&value, this->xmm6, DQWORD_SIZE); return value;
-          case triton::arch::x86::ID_REG_XMM7: memcpy(&value, this->xmm7, DQWORD_SIZE); return value;
-        #endif
+        case triton::arch::x86::ID_REG_XMM0: value = triton::fromBufferToUint128(this->xmm0); return value;
+        case triton::arch::x86::ID_REG_XMM1: value = triton::fromBufferToUint128(this->xmm1); return value;
+        case triton::arch::x86::ID_REG_XMM2: value = triton::fromBufferToUint128(this->xmm2); return value;
+        case triton::arch::x86::ID_REG_XMM3: value = triton::fromBufferToUint128(this->xmm3); return value;
+        case triton::arch::x86::ID_REG_XMM4: value = triton::fromBufferToUint128(this->xmm4); return value;
+        case triton::arch::x86::ID_REG_XMM5: value = triton::fromBufferToUint128(this->xmm5); return value;
+        case triton::arch::x86::ID_REG_XMM6: value = triton::fromBufferToUint128(this->xmm6); return value;
+        case triton::arch::x86::ID_REG_XMM7: value = triton::fromBufferToUint128(this->xmm7); return value;
 
         case triton::arch::x86::ID_REG_AF: return (((*((triton::uint32*)(this->eflags))) >> 4) & 1);
         case triton::arch::x86::ID_REG_CF: return ((*((triton::uint32*)(this->eflags))) & 1);
@@ -512,26 +489,14 @@ namespace triton {
 
         case triton::arch::x86::ID_REG_EFLAGS: (*((triton::uint32*)(this->eflags))) = static_cast<triton::uint32>(value); break;
 
-        #if defined(__x86_64__) || defined(_M_X64)
-          case triton::arch::x86::ID_REG_XMM0: (*((triton::uint128*)(this->xmm0))) = value; break;
-          case triton::arch::x86::ID_REG_XMM1: (*((triton::uint128*)(this->xmm1))) = value; break;
-          case triton::arch::x86::ID_REG_XMM2: (*((triton::uint128*)(this->xmm2))) = value; break;
-          case triton::arch::x86::ID_REG_XMM3: (*((triton::uint128*)(this->xmm3))) = value; break;
-          case triton::arch::x86::ID_REG_XMM4: (*((triton::uint128*)(this->xmm4))) = value; break;
-          case triton::arch::x86::ID_REG_XMM5: (*((triton::uint128*)(this->xmm5))) = value; break;
-          case triton::arch::x86::ID_REG_XMM6: (*((triton::uint128*)(this->xmm6))) = value; break;
-          case triton::arch::x86::ID_REG_XMM7: (*((triton::uint128*)(this->xmm7))) = value; break;
-        #endif
-        #if defined(__i386) || defined(_M_IX86)
-          case triton::arch::x86::ID_REG_XMM0: memcpy(this->xmm0, &value, sizeof(this->xmm0)); break;
-          case triton::arch::x86::ID_REG_XMM1: memcpy(this->xmm1, &value, sizeof(this->xmm1)); break;
-          case triton::arch::x86::ID_REG_XMM2: memcpy(this->xmm2, &value, sizeof(this->xmm2)); break;
-          case triton::arch::x86::ID_REG_XMM3: memcpy(this->xmm3, &value, sizeof(this->xmm3)); break;
-          case triton::arch::x86::ID_REG_XMM4: memcpy(this->xmm4, &value, sizeof(this->xmm4)); break;
-          case triton::arch::x86::ID_REG_XMM5: memcpy(this->xmm5, &value, sizeof(this->xmm5)); break;
-          case triton::arch::x86::ID_REG_XMM6: memcpy(this->xmm6, &value, sizeof(this->xmm6)); break;
-          case triton::arch::x86::ID_REG_XMM7: memcpy(this->xmm7, &value, sizeof(this->xmm7)); break;
-        #endif
+        case triton::arch::x86::ID_REG_XMM0: triton::fromUint128ToBuffer(value, this->xmm0); break;
+        case triton::arch::x86::ID_REG_XMM1: triton::fromUint128ToBuffer(value, this->xmm1); break;
+        case triton::arch::x86::ID_REG_XMM2: triton::fromUint128ToBuffer(value, this->xmm2); break;
+        case triton::arch::x86::ID_REG_XMM3: triton::fromUint128ToBuffer(value, this->xmm3); break;
+        case triton::arch::x86::ID_REG_XMM4: triton::fromUint128ToBuffer(value, this->xmm4); break;
+        case triton::arch::x86::ID_REG_XMM5: triton::fromUint128ToBuffer(value, this->xmm5); break;
+        case triton::arch::x86::ID_REG_XMM6: triton::fromUint128ToBuffer(value, this->xmm6); break;
+        case triton::arch::x86::ID_REG_XMM7: triton::fromUint128ToBuffer(value, this->xmm7); break;
 
         default:
           throw std::invalid_argument("x86Cpu:setLastRegisterValue() - Invalid register");

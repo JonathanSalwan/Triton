@@ -10,6 +10,7 @@
 
 #include <api.hpp>
 #include <symbolicEngine.hpp>
+#include <utils.hpp>
 
 #ifdef TRITON_PYTHON_BINDINGS
   #ifdef __unix__
@@ -503,12 +504,7 @@ namespace triton {
         triton::uint8 concreteValue[DQWORD_SIZE] = {0};
         triton::uint128 value                    = triton::api.getLastMemoryValue(mem);
 
-        #if defined(__x86_64__) || defined(_M_X64)
-          (*((triton::uint128*)(concreteValue))) = value;
-        #endif
-        #if defined(__i386) || defined(_M_IX86)
-          memcpy(concreteValue, &value, DQWORD_SIZE);
-        #endif
+        triton::fromUint128ToBuffer(value, concreteValue);
 
         while (size) {
           symMem = this->getSymbolicMemoryId(address + size - 1);
