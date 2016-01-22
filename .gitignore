@@ -11,8 +11,14 @@ peda-session*
 pin.log
 pintool.log
 private/*
-src/includes/Version.h
-src/utils/syscalls.cpp
 triton
 tritonAttach
 www/*
+doc/*
+src/examples/cpp/*.bin
+src/libtriton/includes/version.hpp
+src/libtriton/os/unix/syscalls.cpp
+src/libtriton/os/unix/syscalls32.cpp
+src/libtriton/os/unix/syscalls64.cpp
+triton.egg-info/*
+dist/*

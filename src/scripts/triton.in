@@ -1,0 +1,21 @@
+#!/bin/bash
+
+PIN_BIN_PATH=@PIN_BIN_PATH@
+PINTOOL_PATH=@PINTOOL_PATH@
+
+if [ -z "$1" ]
+  then
+    echo "You need to specify a script"
+    echo "Syntax: ./triton <your_script.py> <target binary> [target binary args]"
+    exit
+fi
+
+if [ -z "$2" ]
+  then
+    echo "You need to specify a target binary"
+    echo "Syntax: ./triton <your_script.py> <target binary> [target binary args]"
+    exit
+fi
+
+$PIN_BIN_PATH @FLAG_IFEELLUCKY@ -t $PINTOOL_PATH -script $1 -- ${@:2}
+
