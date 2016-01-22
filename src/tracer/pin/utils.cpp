@@ -64,6 +64,21 @@ namespace tracer {
       return address - base;
     }
 
+
+    std::string getRoutineName(triton::__uint address) {
+      RTN rtn;
+      PIN_LockClient();
+      rtn = RTN_FindByAddress(address);
+      PIN_UnlockClient();
+      if (RTN_Valid(rtn)) {
+        return RTN_Name(rtn);
+      }
+
+      return "";
+
+    }
+
+
   };
 };
 

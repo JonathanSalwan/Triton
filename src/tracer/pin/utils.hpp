@@ -38,6 +38,9 @@ namespace tracer {
     //! Returns the image name from a given address.
     std::string getImageName(triton::__uint address);
 
+    //! Return routine's name from a given address.
+    std::string getRoutineName(triton::__uint address);
+
   /*! @} End of pintool namespace */
   };
 /*! @} End of tracer namespace */

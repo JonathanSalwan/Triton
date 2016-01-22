@@ -58,6 +58,9 @@ namespace tracer {
     //! Image name from address
     extern std::string getImageName(triton::__uint address);
 
+    //! Routine name from address
+    extern std::string getRoutineName(triton::__uint address);
+
     //! \module The options namespace
     namespace options {
     /*!
