@@ -133,6 +133,8 @@ namespace triton {
         //! Evaluate operator.
         virtual void operator()(smt2lib::smtAstLandNode& e);
         //! Evaluate operator.
+        virtual void operator()(smt2lib::smtAstLnotNode& e);
+        //! Evaluate operator.
         virtual void operator()(smt2lib::smtAstLorNode& e);
         //! Evaluate operator.
         virtual void operator()(smt2lib::smtAstReferenceNode& e);

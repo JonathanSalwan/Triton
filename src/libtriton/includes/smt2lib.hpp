@@ -79,12 +79,13 @@ namespace triton {
       EXTRACT_NODE = 167,     /*!< ((_ extract x y) z) */
       ITE_NODE = 173,         /*!< (ite x y z) */
       LAND_NODE = 179,        /*!< (and x y) */
-      LOR_NODE = 181,         /*!< (or x y) */
-      REFERENCE_NODE = 191,   /*!< Reference node */
-      STRING_NODE = 193,      /*!< String node */
-      SX_NODE = 197,          /*!< ((_ sign_extend x) y) */
-      VARIABLE_NODE = 199,    /*!< Variable node */
-      ZX_NODE = 211           /*!< ((_ zero_extend x) y) */
+      LNOT_NODE = 181,        /*!< (and x y) */
+      LOR_NODE = 191,         /*!< (or x y) */
+      REFERENCE_NODE = 193,   /*!< Reference node */
+      STRING_NODE = 197,      /*!< String node */
+      SX_NODE = 199,          /*!< ((_ sign_extend x) y) */
+      VARIABLE_NODE = 211,    /*!< Variable node */
+      ZX_NODE = 223           /*!< ((_ zero_extend x) y) */
     };
 
 
@@ -619,6 +620,18 @@ namespace triton {
     };
 
 
+    //! (lnot <expr>)
+    class smtAstLnotNode : public smtAstAbstractNode
+    {
+      public:
+        smtAstLnotNode(smtAstAbstractNode* expr);
+        smtAstLnotNode(const smtAstLnotNode& copy);
+        ~smtAstLnotNode();
+        virtual void accept(Visitor& v);
+        virtual double hash(void);
+    };
+
+
     //! (or <expr1> <expr2>)
     class smtAstLorNode : public smtAstAbstractNode
     {
@@ -830,6 +843,9 @@ namespace triton {
     std::ostream& operator<<(std::ostream& stream, smtAstLandNode* node);
 
     //! Displays the node in smt2-lib syntax.
+    std::ostream& operator<<(std::ostream& stream, smtAstLnotNode* node);
+
+    //! Displays the node in smt2-lib syntax.
     std::ostream& operator<<(std::ostream& stream, smtAstLorNode* node);
 
     //! Displays the node in smt2-lib syntax.
@@ -985,6 +1001,9 @@ namespace triton {
 
     //! smt2-lib C++ api - land node builder
     smtAstAbstractNode* land(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+
+    //! smt2-lib C++ api - lnot node builder
+    smtAstAbstractNode* lnot(smtAstAbstractNode* expr);
 
     //! smt2-lib C++ api - lor node builder
     smtAstAbstractNode* lor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);

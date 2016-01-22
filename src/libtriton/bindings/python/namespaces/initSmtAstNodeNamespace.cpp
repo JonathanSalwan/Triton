@@ -72,6 +72,7 @@ The SMT_AST_NODE namespace contains all kinds of node.
 - **SMT_AST_NODE.EXTRACT**
 - **SMT_AST_NODE.ITE**
 - **SMT_AST_NODE.LAND**
+- **SMT_AST_NODE.LNOT**
 - **SMT_AST_NODE.LOR**
 - **SMT_AST_NODE.REFERENCE**
 - **SMT_AST_NODE.STRING**
@@ -130,6 +131,7 @@ namespace triton {
         PyDict_SetItemString(smtAstNodeDict, "EXTRACT", PyLong_FromUint(triton::smt2lib::EXTRACT_NODE));
         PyDict_SetItemString(smtAstNodeDict, "ITE", PyLong_FromUint(triton::smt2lib::ITE_NODE));
         PyDict_SetItemString(smtAstNodeDict, "LAND", PyLong_FromUint(triton::smt2lib::LAND_NODE));
+        PyDict_SetItemString(smtAstNodeDict, "LNOT", PyLong_FromUint(triton::smt2lib::LNOT_NODE));
         PyDict_SetItemString(smtAstNodeDict, "LOR", PyLong_FromUint(triton::smt2lib::LOR_NODE));
         PyDict_SetItemString(smtAstNodeDict, "REFERENCE", PyLong_FromUint(triton::smt2lib::REFERENCE_NODE));
         PyDict_SetItemString(smtAstNodeDict, "STRING", PyLong_FromUint(triton::smt2lib::STRING_NODE));

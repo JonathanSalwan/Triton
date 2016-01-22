@@ -67,7 +67,7 @@ namespace triton {
 
 
       std::ostream &operator<<(std::ostream &stream, SolverModel model) {
-        stream << model.getName() << " = " << model.getValue();
+        stream << model.getName() << " = " << std::hex << model.getValue() << std::dec;
         return stream;
       }
 
