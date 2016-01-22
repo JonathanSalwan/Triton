@@ -372,6 +372,12 @@ Returns the memory value according to the `readSize` from the address.
 - **getCurrentRegisterValue(\ref py_REG_page reg)**<br>
 Returns the register value from a \ref py_REG_page.
 
+- **getImageName(integer addr)**<br>
+Returns the image name from a given address. Returns an empty string if not found.
+
+- **getRoutineName(integer addr)**<br>
+Returns the routine name from a given address. Returns an empty string if not found.
+
 - **getSyscallArgument(\ref py_STANDARD_page std, integer argNum)**<br>
 Returns the argument's value of the system call which is executed in the current context. It is a user's responsibility to make sure that the
 current instruction is a syscall. This function is mainly used in a `SYSCALL_ENTRY` \ref py_CALLBACK_page.
