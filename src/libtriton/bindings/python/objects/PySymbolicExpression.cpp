@@ -99,11 +99,11 @@ e.g: `SYMEXPR.REG`
 - **getNewAst(void)**<br>
 Returns a new SMT AST root node of the symbolic expression as \ref py_SmtAstNode_page. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
 
-- **getOriginAddress(void)**</br>
-Returns the origin memory address if `isMem()` is equal to true, 0 otherwise.
+- **getOriginAddress(void)**<br>
+Returns the origin memory address if `isMem()` is equal to `True`, `0` otherwise. This address represents the target assignment.
 
-- **getOriginRegister(void)**</br>
-Returns the origin register if `isReg()` is equal true, `REG.INVALID` otherwise.
+- **getOriginRegister(void)**<br>
+Returns the origin register if `isReg()` is equal `True`, `REG.INVALID` otherwise. This register represents the target assignment.
 
 - **isMem(void)**<br>
 Returns true if the expression is assigned to a memory.
