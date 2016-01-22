@@ -161,6 +161,16 @@ namespace tracer {
     }
 
 
+    static PyObject* pintool_getImageName(PyObject* self, PyObject* addr) {
+      if (!PyLong_Check(addr) && !PyInt_Check(addr))
+        return PyErr_Format(PyExc_TypeError, "tracer::pintool::getImageName(): Expected an address (integer) as argument");
+
+      std::string imageName = tracer::pintool::getImageName(triton::bindings::python::PyLong_AsUint(addr));
+      return PyString_FromFormat("%s", imageName.c_str());;
+    }
+
+
+
     static PyObject* pintool_getSyscallArgument(PyObject* self, PyObject* args) {
       PyObject* num = nullptr;
       PyObject* std = nullptr;
@@ -415,6 +425,7 @@ namespace tracer {
       {"disableSnapshot",           pintool_disableSnapshot,            METH_NOARGS,    ""},
       {"getCurrentMemoryValue",     pintool_getCurrentMemoryValue,      METH_VARARGS,   ""},
       {"getCurrentRegisterValue",   pintool_getCurrentRegisterValue,    METH_O,         ""},
+      {"getImageName",              pintool_getImageName,               METH_O,         ""},
       {"getSyscallArgument",        pintool_getSyscallArgument,         METH_VARARGS,   ""},
       {"getSyscallNumber",          pintool_getSyscallNumber,           METH_O,         ""},
       {"getSyscallReturn",          pintool_getSyscallReturn,           METH_O,         ""},
