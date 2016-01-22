@@ -197,8 +197,10 @@ class TritonExecution(object):
         print "[+] In main"
         rdi = getCurrentRegisterValue(REG.RDI) # argc
         rsi = getCurrentRegisterValue(REG.RSI) # argv
-        argv0_addr = getCurrentMemoryValue(rsi, 8)                      # argv[0] pointer
-        argv1_addr = getCurrentMemoryValue(rsi + 8, 8)  # argv[1] pointer
+        #argv0_addr = getCurrentMemoryValue(rsi, 8)       # argv[0] pointer
+        #argv1_addr = 0  # argv[1] pointer
+        #argv1_addr = getCurrentMemoryValue(RDI + 8, 1)  # argv[1] pointer
+        print getCurrentMemoryValue(Memory(rsi, 8))
 
 
         print "[+] In main() we set :"
@@ -224,7 +226,6 @@ class TritonExecution(object):
         TritonExecution.worklist    = [Input(inputSeed)]
         TritonExecution.inputTested = []
         TritonExecution.whitelist   = whitelist
-        #setupImageWhitelist(whitelist)
 
         startAnalysisFromAddr(entryPoint)
 
