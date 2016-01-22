@@ -162,9 +162,11 @@ if(${PINTOOL} MATCHES "yes")
     endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
     # Global UNIX CXX Flags
-    if(CMAKE_COMPILER_IS_GNUCXX  OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+    if(CMAKE_COMPILER_IS_GNUCXX)
         set(PINTOOL_CXX_FLAGS "${PINTOOL_CXX_FLAGS} -std=c++11 -fabi-version=2")
-    endif(CMAKE_COMPILER_IS_GNUCXX  OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+    elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+        set(PINTOOL_CXX_FLAGS "${PINTOOL_CXX_FLAGS} -std=c++11")
+    endif()
 
     # Includes directories (Pin)
     if(${ARCHITECTURE} STREQUAL "i386")
