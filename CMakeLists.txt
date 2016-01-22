@@ -124,6 +124,9 @@ endif()
 # Pin stuffs
 if(${PINTOOL} MATCHES "yes")
 
+    # Use the same ABI as pin
+    set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
+
     # Specific Linux CXX Flags
     if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
         if(${ARCHITECTURE} STREQUAL "i386")
