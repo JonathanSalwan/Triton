@@ -195,23 +195,24 @@ class TritonExecution(object):
     def mainAnalysis(threadId):
 
         print "[+] In main"
-        rdi = REG.RDI.getConcreteValue() # argc
-        rsi = REG.RSI.getConcreteValue() # argv
-        argv0_addr = Memory(rsi, CPUSIZE.REG).getConcreteValue()                        # argv[0] pointer
-        argv1_addr = Memory(rsi + CPUSIZE.REG_BIT, CPUSIZE.REG).getConcreteValue()  # argv[1] pointer
+        rdi = getCurrentRegisterValue(REG.RDI) # argc
+        rsi = getCurrentRegisterValue(REG.RSI) # argv
+        argv0_addr = getCurrentMemoryValue(rsi, 8)                      # argv[0] pointer
+        argv1_addr = getCurrentMemoryValue(rsi + 8, 8)  # argv[1] pointer
+
 
         print "[+] In main() we set :"
         od = OrderedDict(sorted(TritonExecution.input.dataAddr.items()))
 
         for k,v in od.iteritems():
             print "\t[0x%x] = %x %c" % (k, v, v)
-            Memory(k, CPUSIZE.BYTE_BIT).setConcreteValue(v)
+            setCurrentMemoryValue(k, CPUSIZE.BYTE_BIT, v)
             convertMemToSymVar(Memory(k, CPUSIZE.BYTE_BIT), "addr_%d" % k)
 
         for idx, byte in enumerate(TritonExecution.input.data):
             if argv1_addr + idx not in TritonExecution.input.dataAddr: # Not overwrite the previous setting
                 print "\t[0x%x] = %x %c" % (argv1_addr + idx, ord(byte), ord(byte))
-                Memory(argv1_addr + idx, CPUSIZE.BYTE_BIT).setConcreteValue(ord(byte))
+                setCurrentMemoryValue(argv1_addr + idx, CPUSIZE.BYTE_BIT, ord(byte))
                 convertMemToSymVar(Memory(argv1_addr + idx, CPUSIZE.BYTE_BIT), "addr_%d" % idx)
 
 
