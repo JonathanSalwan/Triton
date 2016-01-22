@@ -159,7 +159,7 @@ namespace triton {
           triton::__uint getUniqueSymVarId(void);
 
           //! Assigns a symbolic expression to a register.
-          bool assignSymbolicExpressionToRegister(SymbolicExpression *se, triton::arch::RegisterOperand& reg);
+          void assignSymbolicExpressionToRegister(SymbolicExpression *se, triton::arch::RegisterOperand& reg);
 
           //! Returns the full AST of a root node.
           smt2lib::smtAstAbstractNode* getFullAst(smt2lib::smtAstAbstractNode* node);

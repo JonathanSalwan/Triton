@@ -74,35 +74,44 @@ False
 
 >>> expr_1.isReg()
 True
+
+>>> print expr_1.getOriginRegister()
+rax:64 bv[63..0]
 ~~~~~~~~~~~~~
 
 \section SymbolicExpression_py_api Python API - Methods of the SymbolicExpression class
 <hr>
 
-- **getAst()**<br>
+- **getAst(void)**<br>
 Returns the SMT AST root node of the symbolic expression as \ref py_SmtAstNode_page. This is the semantics.
 
-- **getComment()**<br>
+- **getComment(void)**<br>
 Returns the symbolic expression's comment as string if exists.
 
-- **getId()**<br>
+- **getId(void)**<br>
 Returns the symbolic expression's id as integer. This id is always unique.<br>
 e.g: `2387`
 
-- **getKind()**<br>
+- **getKind(void)**<br>
 Returns the symbolic expression's kind as \ref py_SYMEXPR_page.<br>
 e.g: `SYMEXPR.REG`
 
-- **getNewAst()**<br>
+- **getNewAst(void)**<br>
 Returns a new SMT AST root node of the symbolic expression as \ref py_SmtAstNode_page. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
 
-- **isMem()**<br>
+- **getOriginAddress(void)**</br>
+Returns the origin memory address if `isMem()` is equal to true, 0 otherwise.
+
+- **getOriginRegister(void)**</br>
+Returns the origin register if `isReg()` is equal true, `REG.INVALID` otherwise.
+
+- **isMem(void)**<br>
 Returns true if the expression is assigned to a memory.
 
-- **isReg()**<br>
+- **isReg(void)**<br>
 Returns true if the expression is assigned to a register.
 
-- **isTainted()**<br>
+- **isTainted(void)**<br>
 Returns true if the expression is tainted.
 
 - **setAst(\ref py_SmtAstNode_page node)**<br>
@@ -144,6 +153,16 @@ namespace triton {
 
       static PyObject* SymbolicExpression_getNewAst(PyObject* self, PyObject* noarg) {
         return PySmtAstNode(PySymbolicExpression_AsSymbolicExpression(self)->getNewAst());
+      }
+
+
+      static PyObject* SymbolicExpression_getOriginAddress(PyObject* self, PyObject* noarg) {
+        return PyLong_FromUint(PySymbolicExpression_AsSymbolicExpression(self)->getOriginAddress());
+      }
+
+
+      static PyObject* SymbolicExpression_getOriginRegister(PyObject* self, PyObject* noarg) {
+        return PyRegisterOperand(PySymbolicExpression_AsSymbolicExpression(self)->getOriginRegister());
       }
 
 
@@ -191,6 +210,8 @@ namespace triton {
         {"getId",             SymbolicExpression_getId,             METH_NOARGS,    ""},
         {"getKind",           SymbolicExpression_getKind,           METH_NOARGS,    ""},
         {"getNewAst",         SymbolicExpression_getNewAst,         METH_NOARGS,    ""},
+        {"getOriginAddress",  SymbolicExpression_getOriginAddress,  METH_NOARGS,    ""},
+        {"getOriginRegister", SymbolicExpression_getOriginRegister, METH_NOARGS,    ""},
         {"isMem",             SymbolicExpression_isMem,             METH_NOARGS,    ""},
         {"isReg",             SymbolicExpression_isReg,             METH_NOARGS,    ""},
         {"isTainted",         SymbolicExpression_isTainted,         METH_NOARGS,    ""},

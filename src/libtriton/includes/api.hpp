@@ -227,7 +227,7 @@ namespace triton {
         triton::engines::symbolic::SymbolicExpression* createSymbolicVolatileExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, std::string comment="");
 
         //! [**symbolic api**] - Assigns a symbolic expression to a register.
-        bool assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, triton::arch::RegisterOperand& reg);
+        void assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Records a simplification callback.
         void recordSimplificationCallback(triton::engines::symbolic::sfp cb);

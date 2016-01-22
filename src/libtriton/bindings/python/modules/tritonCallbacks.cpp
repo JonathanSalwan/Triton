@@ -594,14 +594,14 @@ namespace triton {
         triton::arch::RegisterOperand arg2 = *PyRegisterOperand_AsRegisterOperand(reg);
 
         try {
-          if (triton::api.assignSymbolicExpressionToRegister(arg1, arg2) == true)
-            Py_RETURN_TRUE;
+          triton::api.assignSymbolicExpressionToRegister(arg1, arg2);
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
-        Py_RETURN_FALSE;
+        Py_INCREF(Py_None);
+        return Py_None;
       }
 
 

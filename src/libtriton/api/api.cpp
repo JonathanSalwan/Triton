@@ -443,9 +443,9 @@ namespace triton {
   }
 
 
-  bool API::assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, triton::arch::RegisterOperand& reg) {
+  void API::assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, triton::arch::RegisterOperand& reg) {
     this->checkSymbolic();
-    return this->sym->assignSymbolicExpressionToRegister(se, reg);
+    this->sym->assignSymbolicExpressionToRegister(se, reg);
   }
 
 

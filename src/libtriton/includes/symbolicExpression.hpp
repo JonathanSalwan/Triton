@@ -9,8 +9,9 @@
 #define TRITON_SYMBOLICEXPRESSION_H
 
 #include <string>
-#include "tritonTypes.hpp"
+#include "registerOperand.hpp"
 #include "smt2lib.hpp"
+#include "tritonTypes.hpp"
 
 
 
@@ -50,7 +51,6 @@ namespace triton {
       class SymbolicExpression {
 
         protected:
-
           //! The symbolic expression's kind.
           symkind_e kind;
 
@@ -62,6 +62,12 @@ namespace triton {
 
           //! The symbolic expression id. This id is unique.
           triton::__uint id;
+
+          //! The origin memory address if `kind` is equal to `triton::engines::symbolic::MEM`, 0 otherwise.
+          triton::__uint originAddress;
+
+          //! The origin register if `kind` is equal to `triton::engines::symbolic::REG`, `REG_INVALID` otherwise.
+          triton::arch::RegisterOperand originRegister;
 
         public:
           //! True if the symbolic expression is tainted.
@@ -91,17 +97,26 @@ namespace triton {
           //! Returns the symbolic expression's id as string.
           std::string getId2Str(void);
 
+          //! Returns the origin memory address if `kind` is equal to `triton::engines::symbolic::MEM`, 0 otherwise.
+          triton::__uint getOriginAddress(void);
+
+          //! Returns the origin register if `kind` is equal to `triton::engines::symbolic::REG`, `REG_INVALID` otherwise.
+          triton::arch::RegisterOperand& getOriginRegister(void);
+
           //! Sets a root node.
           void setAst(smt2lib::smtAstAbstractNode* node);
 
           //! Sets the symbolic expression's kind.
           void setKind(symkind_e k);
 
-          //! Constructor.
-          SymbolicExpression(smt2lib::smtAstAbstractNode* expr, triton::__uint id, symkind_e kind);
+          //! Sets the origin memory address.
+          void setOriginAddress(triton::__uint addr);
+
+          //! Sets the origin register.
+          void setOriginRegister(triton::arch::RegisterOperand& reg);
 
           //! Constructor.
-          SymbolicExpression(smt2lib::smtAstAbstractNode* expr, triton::__uint id, symkind_e kind, std::string comment);
+          SymbolicExpression(smt2lib::smtAstAbstractNode* expr, triton::__uint id, symkind_e kind, std::string comment="");
 
           //! Destructor.
           ~SymbolicExpression();
