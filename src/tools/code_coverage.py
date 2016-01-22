@@ -109,7 +109,6 @@ class TritonExecution(object):
 
     @staticmethod
     def cbefore(instruction):
-        print getRoutineName(instruction.getAddress())
         if instruction.getAddress() == TritonExecution.entryPoint:
             TritonExecution.AddrAfterEP = instruction.getNextAddress()
 
@@ -125,15 +124,14 @@ class TritonExecution(object):
             return
 
         if getRoutineName(instruction.getAddress()) in TritonExecution.whitelist and instruction.isBranch() and instruction.getType is not OPCODE.JMP: # Check if not jmp
-            print instruction
 
             addr1 = instruction.getNextAddress()                         # next address next from the current one
-            addr2 = instruction.getOperands()[0].getImm().getValue()     # Address in the instruction condition (branch taken)
+            addr2 = instruction.getOperands()[0].getValue()     # Address in the instruction condition (branch taken)
 
-            ripId = getRegSymbolicID(REG.RIP)                      # Get the reference of the RIP symbolic register
+            ripId = getSymbolicRegisterId(REG.RIP)                      # Get the reference of the RIP symbolic register
 
             # [PC id, address taken, address not taken]
-            if instruction.isBranchTaken():
+            if instruction.isConditionTaken():
                 TritonExecution.myPC.append([ripId, addr2, addr1])
             else:
                 TritonExecution.myPC.append([ripId, addr1, addr2])
@@ -149,12 +147,12 @@ class TritonExecution(object):
                 expr = []
                 for i in range(0,j):
                     ripId = TritonExecution.myPC[i][0]
-                    symExp = getFullExpression(getSymExpr(ripId).getAst())
+                    symExp = getFullAst(getSymbolicExpressionFromId(ripId).getAst())
                     addr = TritonExecution.myPC[i][1]
                     expr.append(smt2lib.smtAssert(smt2lib.equal(symExp, smt2lib.bv(addr,  CPUSIZE.QWORD_BIT))))
 
                 ripId = TritonExecution.myPC[j][0]
-                symExp = getFullExpression(getSymExpr(ripId).getAst())
+                symExp = getFullAst(getSymbolicExpressionFromId(ripId).getAst())
                 addr = TritonExecution.myPC[j][2]
                 expr.append(smt2lib.smtAssert(smt2lib.equal(symExp, smt2lib.bv(addr,  CPUSIZE.QWORD_BIT))))
 
@@ -200,7 +198,7 @@ class TritonExecution(object):
         rdi = REG.RDI.getConcreteValue() # argc
         rsi = REG.RSI.getConcreteValue() # argv
         argv0_addr = Memory(rsi, CPUSIZE.REG).getConcreteValue()                        # argv[0] pointer
-        argv1_addr = Memory(rsi + CPUSIZE.REG, CPUSIZE.REG).getConcreteValue()  # argv[1] pointer
+        argv1_addr = Memory(rsi + CPUSIZE.REG_BIT, CPUSIZE.REG).getConcreteValue()  # argv[1] pointer
 
         print "[+] In main() we set :"
         od = OrderedDict(sorted(TritonExecution.input.dataAddr.items()))
