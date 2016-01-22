@@ -65,7 +65,7 @@ set(LIBTRITON_CXX_FLAGS " ")
 if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
     # Flags
     set(LIBTRITON_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FLAG_CXX}")
-    set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -Wall -Werror -Wno-unknown-pragmas")
+    set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -Wall -Werror -Wno-unknown-pragmas -Wno-tautological-compare")
     set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -O3 -g3 -ggdb3")
     set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -fno-stack-protector -fomit-frame-pointer -fno-strict-aliasing")
     set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -fPIC -std=c++11")
