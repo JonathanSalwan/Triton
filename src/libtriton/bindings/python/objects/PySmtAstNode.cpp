@@ -157,54 +157,54 @@ namespace triton {
       }
 
 
-      static int SmtAstNode_cmp(SmtAstNode_Object *a, SmtAstNode_Object *b) {
+      static int SmtAstNode_cmp(SmtAstNode_Object* a, SmtAstNode_Object* b) {
         return !(a->node->hash() == b->node->hash());
       }
 
 
-      static PyObject* SmtAstNode_str(SmtAstNode_Object *obj) {
+      static PyObject* SmtAstNode_str(SmtAstNode_Object* obj) {
         std::stringstream str;
         str << obj->node;
         return PyString_FromFormat("%s", str.str().c_str());
       }
 
 
-      static PyObject* SmtAstNode_operatorAdd(PyObject *self, PyObject* other) {
+      static PyObject* SmtAstNode_operatorAdd(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
         return PySmtAstNode(smt2lib::bvadd(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
-      static PyObject* SmtAstNode_operatorSub(PyObject *self, PyObject* other) {
+      static PyObject* SmtAstNode_operatorSub(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
         return PySmtAstNode(smt2lib::bvsub(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
-      static PyObject* SmtAstNode_operatorMul(PyObject *self, PyObject* other) {
+      static PyObject* SmtAstNode_operatorMul(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
         return PySmtAstNode(smt2lib::bvmul(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
-      static PyObject* SmtAstNode_operatorDiv(PyObject *self, PyObject* other) {
+      static PyObject* SmtAstNode_operatorDiv(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
         return PySmtAstNode(smt2lib::bvsdiv(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
-      static PyObject* SmtAstNode_operatorRem(PyObject *self, PyObject* other) {
+      static PyObject* SmtAstNode_operatorRem(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
         return PySmtAstNode(smt2lib::bvsrem(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
-      static PyObject* SmtAstNode_operatorMod(PyObject *self, PyObject* other) {
+      static PyObject* SmtAstNode_operatorMod(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
         return PySmtAstNode(smt2lib::bvsmod(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
@@ -225,35 +225,35 @@ namespace triton {
       }
 
 
-      static PyObject* SmtAstNode_operatorShl(PyObject *self, PyObject* other) {
+      static PyObject* SmtAstNode_operatorShl(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
         return PySmtAstNode(smt2lib::bvshl(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
-      static PyObject* SmtAstNode_operatorShr(PyObject *self, PyObject* other) {
+      static PyObject* SmtAstNode_operatorShr(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
         return PySmtAstNode(smt2lib::bvlshr(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
-      static PyObject* SmtAstNode_operatorAnd(PyObject *self, PyObject* other) {
+      static PyObject* SmtAstNode_operatorAnd(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
         return PySmtAstNode(smt2lib::bvand(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
-      static PyObject* SmtAstNode_operatorXor(PyObject *self, PyObject* other) {
+      static PyObject* SmtAstNode_operatorXor(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
         return PySmtAstNode(smt2lib::bvxor(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
-      static PyObject* SmtAstNode_operatorOr(PyObject *self, PyObject* other) {
+      static PyObject* SmtAstNode_operatorOr(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
         return PySmtAstNode(smt2lib::bvor(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
@@ -358,7 +358,7 @@ namespace triton {
       };
 
 
-      PyObject* PySmtAstNode(triton::smt2lib::smtAstAbstractNode *node) {
+      PyObject* PySmtAstNode(triton::smt2lib::smtAstAbstractNode* node) {
         SmtAstNode_Object *object;
 
         if (node == nullptr)
