@@ -9,8 +9,8 @@
 #include <stdexcept>
 
 #include <api.hpp>
+#include <coreUtils.hpp>
 #include <symbolicEngine.hpp>
-#include <utils.hpp>
 
 #ifdef TRITON_PYTHON_BINDINGS
   #ifdef __unix__

@@ -5,8 +5,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
-#ifndef TRITON_UTIL_H
-#define TRITON_UTIL_H
+#ifndef TRITON_CORE_UTIL_H
+#define TRITON_CORE_UTIL_H
 
 #include "tritonTypes.hpp"
 
@@ -28,5 +28,5 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_UTIL_H */
+#endif /* TRITON_CORE_UTIL_H */
 

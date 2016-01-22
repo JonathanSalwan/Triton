@@ -39,41 +39,44 @@ namespace tracer {
      *  @{
      */
 
-    //! The last Pin CONTEXT known.
-    extern CONTEXT* lastContext;
+      //! The last Pin CONTEXT known.
+      extern CONTEXT* lastContext;
 
-    //! True if the context must be executed.
-    extern bool mustBeExecuted;
+      //! True if the context must be executed.
+      extern bool mustBeExecuted;
 
-    //! Returns the current register value from a RegisterOperand.
-    triton::uint128 getCurrentRegisterValue(triton::arch::RegisterOperand& reg);
+      //! Returns the current register value from a RegisterOperand.
+      triton::uint128 getCurrentRegisterValue(triton::arch::RegisterOperand& reg);
 
-    //! Returns the current memory value from a MemoryOperand.
-    triton::uint128 getCurrentMemoryValue(triton::arch::MemoryOperand& mem);
+      //! Returns the current memory value from a MemoryOperand.
+      triton::uint128 getCurrentMemoryValue(triton::arch::MemoryOperand& mem);
 
-    //! Returns the current memory value from an address.
-    triton::uint128 getCurrentMemoryValue(triton::__uint addr);
+      //! Returns the current memory value from an address.
+      triton::uint128 getCurrentMemoryValue(triton::__uint addr);
 
-    //! Returns the current memory value from an address with a specified readable size.
-    triton::uint128 getCurrentMemoryValue(triton::__uint addr, triton::uint32 size);
+      //! Returns the current memory value from an address with a specified readable size.
+      triton::uint128 getCurrentMemoryValue(triton::__uint addr, triton::uint32 size);
 
-    //! Sets the current register value from a RegisterOperand. `triton::arch::RegisterOperand::getConcreteValue()` is used to define the value.
-    void setCurrentRegisterValue(triton::arch::RegisterOperand& reg);
+      //! Sets the current register value from a RegisterOperand. `triton::arch::RegisterOperand::getConcreteValue()` is used to define the value.
+      void setCurrentRegisterValue(triton::arch::RegisterOperand& reg);
 
-    //! Sets the current register value from a RegisterOperand.
-    void setCurrentRegisterValue(triton::arch::RegisterOperand& reg, triton::uint128 value);
+      //! Sets the current register value from a RegisterOperand.
+      void setCurrentRegisterValue(triton::arch::RegisterOperand& reg, triton::uint128 value);
 
-    //! Sets the current memory value from a MemoryOperand. `triton::arch::MemoryOperand::getConcreteValue()` is used to define the value.
-    void setCurrentMemoryValue(triton::arch::MemoryOperand& mem);
+      //! Sets the current memory value from a MemoryOperand. `triton::arch::MemoryOperand::getConcreteValue()` is used to define the value.
+      void setCurrentMemoryValue(triton::arch::MemoryOperand& mem);
 
-    //! Sets the current memory value from a MemoryOperand.
-    void setCurrentMemoryValue(triton::arch::MemoryOperand& mem, triton::uint128 value);
+      //! Sets the current memory value from a MemoryOperand.
+      void setCurrentMemoryValue(triton::arch::MemoryOperand& mem, triton::uint128 value);
 
-    //! Sets the current memory value from an address.
-    void setCurrentMemoryValue(triton::__uint addr, triton::uint8 value);
+      //! Sets the current memory value from an address.
+      void setCurrentMemoryValue(triton::__uint addr, triton::uint8 value);
 
-    //! Executes the new context.
-    void executeContext(void);
+      //! Executes the new context.
+      void executeContext(void);
+
+      //! Setups the context register from Pin to Triton.
+      void setupContextRegister(triton::arch::Instruction* inst, CONTEXT* ctx);
 
     /*! @} End of context namespace */
     };

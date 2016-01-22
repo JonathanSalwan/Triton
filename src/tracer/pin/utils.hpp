@@ -38,10 +38,6 @@ namespace tracer {
     //! Returns the image name from a given address.
     std::string getImageName(triton::__uint address);
 
-    //! Setups the context register from Pin to Triton.
-    void setupContextRegister(triton::arch::Instruction* inst, CONTEXT* ctx);
-
-
   /*! @} End of pintool namespace */
   };
 /*! @} End of tracer namespace */

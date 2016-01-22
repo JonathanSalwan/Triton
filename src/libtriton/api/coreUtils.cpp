@@ -5,7 +5,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
-#include <utils.hpp>
+#include <coreUtils.hpp>
 #include <cpuSize.hpp>
 
 

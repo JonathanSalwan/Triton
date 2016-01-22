@@ -8,9 +8,9 @@
 #include <cstring>
 
 #include <architecture.hpp>
+#include <coreUtils.hpp>
 #include <cpuSize.hpp>
 #include <immediateOperand.hpp>
-#include <utils.hpp>
 #include <x86Cpu.hpp>
 #include <x86Specifications.hpp>
 

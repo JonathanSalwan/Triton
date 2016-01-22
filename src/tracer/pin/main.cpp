@@ -199,7 +199,7 @@ namespace tracer {
       tritonInst->setThreadId(reinterpret_cast<triton::uint32>(threadId));
 
       /* Setup the concrete context */
-      tracer::pintool::setupContextRegister(tritonInst, ctx);
+      tracer::pintool::context::setupContextRegister(tritonInst, ctx);
 
       /* Disassemble the instruction */
       triton::api.disassembly(*tritonInst);
