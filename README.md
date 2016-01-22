@@ -1,6 +1,6 @@
 <p align="center"><img width="50%" src="http://triton.quarkslab.com/files/triton2.png"/></p>
 
-**Triton** is a dynamic binary analysis (DBA) framework. It provides internal components like a Dynamic Symbolic Exuction (DSE)
+**Triton** is a dynamic binary analysis (DBA) framework. It provides internal components like a Dynamic Symbolic Execution (DSE)
 engine, a Taint Engine, an intermediate representation based on SMT2-Lib of the x86 and x86-64 instructions set, SMT simplification
 passes, an SMT Solver Interface and, the last but not least, Python bindings.
 
