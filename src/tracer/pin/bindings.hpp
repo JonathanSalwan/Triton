@@ -20,9 +20,9 @@
 #include <tritonTypes.hpp>
 
 /* pintool */
-#include "trigger.hpp"
 #include "snapshot.hpp"
-
+#include "trigger.hpp"
+#include "utils.hpp"
 
 
 //! \module The Tracer namespace
@@ -54,12 +54,6 @@ namespace tracer {
 
     //! The initialization of the Pin's Python env.
     void initBindings(void);
-
-    //! Image name from address
-    extern std::string getImageName(triton::__uint address);
-
-    //! Routine name from address
-    extern std::string getRoutineName(triton::__uint address);
 
     //! \module The options namespace
     namespace options {
