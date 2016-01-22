@@ -65,6 +65,7 @@ namespace triton {
     class smtAstExtractNode;
     class smtAstIteNode;
     class smtAstLandNode;
+    class smtAstLnotNode;
     class smtAstLorNode;
     class smtAstReferenceNode;
     class smtAstStringNode;
@@ -120,6 +121,7 @@ namespace triton {
         virtual void operator()(smtAstExtractNode& e) = 0;
         virtual void operator()(smtAstIteNode& e) = 0;
         virtual void operator()(smtAstLandNode& e) = 0;
+        virtual void operator()(smtAstLnotNode& e) = 0;
         virtual void operator()(smtAstLorNode& e) = 0;
         virtual void operator()(smtAstReferenceNode& e) = 0;
         virtual void operator()(smtAstStringNode& e) = 0;

@@ -397,6 +397,14 @@ namespace triton {
     }
 
 
+    void Z3Ast::operator()(smtAstLnotNode& e) {
+      Z3Result op1 = this->eval(*e.getChilds()[0]);
+      z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_not(this->result.getContext(), op1.getExpr()));
+
+      this->result.setExpr(newexpr);
+    }
+
+
     void Z3Ast::operator()(smtAstLorNode& e) {
       Z3Result op1 = this->eval(*e.getChilds()[0]);
       Z3Result op2 = this->eval(*e.getChilds()[1]);

@@ -73,11 +73,8 @@ namespace tracer {
       if (RTN_Valid(rtn)) {
         return RTN_Name(rtn);
       }
-
       return "";
-
     }
-
 
   };
 };

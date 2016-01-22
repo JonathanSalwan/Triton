@@ -353,6 +353,10 @@ e.g: `(ite ifExpr thenExpr elseExpr)`.
 Returns the smt2-lib `triton::smt2lib::land()` syntax as \ref py_SmtAstNode_page.<br>
 e.g: `(and expr1 expr2)`.
 
+- **lnot(SmtAstNode expr)**<br>
+Returns the smt2-lib `triton::smt2lib::lnot()` syntax as \ref py_SmtAstNode_page.<br>
+e.g: `(not expr)`.
+
 - **lor(SmtAstNode expr1, SmtAstNode expr2)**<br>
 Returns the smt2-lib `triton::smt2lib::lor()` syntax as \ref py_SmtAstNode_page.<br>
 e.g: `(or expr1 expr2)`.
@@ -1025,6 +1029,14 @@ namespace triton {
       }
 
 
+      static PyObject* smt2lib_lnot(PyObject* self, PyObject* expr) {
+        if (expr == nullptr || !PySmtAstNode_Check(expr))
+          return PyErr_Format(PyExc_TypeError, "lnot(): expected a SmtAstNode as argument");
+
+        return PySmtAstNode(smt2lib::lnot(PySmtAstNode_AsSmtAstNode(expr)));
+      }
+
+
       static PyObject* smt2lib_lor(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
@@ -1151,6 +1163,7 @@ namespace triton {
         {"extract",     (PyCFunction)smt2lib_extract,    METH_VARARGS,     ""},
         {"ite",         (PyCFunction)smt2lib_ite,        METH_VARARGS,     ""},
         {"land",        (PyCFunction)smt2lib_land,       METH_VARARGS,     ""},
+        {"lnot",        (PyCFunction)smt2lib_lnot,       METH_O,           ""},
         {"lor",         (PyCFunction)smt2lib_lor,        METH_VARARGS,     ""},
         {"reference",   (PyCFunction)smt2lib_reference,  METH_O,           ""},
         {"smtAssert",   (PyCFunction)smt2lib_smtAssert,  METH_O,           ""},

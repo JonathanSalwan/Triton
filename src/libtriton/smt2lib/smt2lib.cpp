@@ -1509,6 +1509,40 @@ namespace triton {
     }
 
 
+    /* ====== Lnot */
+
+
+    smtAstLnotNode::smtAstLnotNode(smtAstAbstractNode *expr) {
+      this->kind = LNOT_NODE;
+      this->addChild(expr);
+    }
+
+
+    smtAstLnotNode::smtAstLnotNode(const smtAstLnotNode &copy) {
+      this->kind = copy.kind;
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(copy.childs[index]);
+    }
+
+
+    smtAstLnotNode::~smtAstLnotNode() {
+    }
+
+
+    void smtAstLnotNode::accept(Visitor& v) {
+      v(*this);
+    }
+
+
+    double smtAstLnotNode::hash(void) {
+      double h = this->kind, s = this->childs.size();
+      if (s) h = h * s;
+      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+        h = h * this->childs[index]->hash();
+      return h;
+    }
+
+
     /* ====== Lor */
 
 
@@ -1774,6 +1808,7 @@ namespace triton {
         case EXTRACT_NODE:    stream << reinterpret_cast<smtAstExtractNode *>(node); break;
         case ITE_NODE:        stream << reinterpret_cast<smtAstIteNode *>(node); break;
         case LAND_NODE:       stream << reinterpret_cast<smtAstLandNode *>(node); break;
+        case LNOT_NODE:       stream << reinterpret_cast<smtAstLnotNode *>(node); break;
         case LOR_NODE:        stream << reinterpret_cast<smtAstLorNode *>(node); break;
         case REFERENCE_NODE:  stream << reinterpret_cast<smtAstReferenceNode *>(node); break;
         case STRING_NODE:     stream << reinterpret_cast<smtAstStringNode *>(node); break;
@@ -2075,6 +2110,13 @@ namespace triton {
     /* land syntax */
     std::ostream &operator<<(std::ostream &stream, smtAstLandNode *node) {
       stream << "(and " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
+      return stream;
+    }
+
+
+    /* lnot syntax */
+    std::ostream &operator<<(std::ostream &stream, smtAstLnotNode *node) {
+      stream << "(not " << node->getChilds()[0] << ")";
       return stream;
     }
 
@@ -2565,6 +2607,14 @@ namespace triton {
     }
 
 
+    smtAstAbstractNode *lnot(smtAstAbstractNode *expr) {
+      smtAstAbstractNode *node = new smtAstLnotNode(expr);
+      if (node == nullptr)
+        throw std::runtime_error("Node builders - Not enough memory");
+      return recordNode(node);
+    }
+
+
     smtAstAbstractNode *lor(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
       smtAstAbstractNode *node = new smtAstLorNode(expr1, expr2);
       if (node == nullptr)
@@ -2656,6 +2706,7 @@ namespace triton {
         case EXTRACT_NODE:    newNode = new smtAstExtractNode(*reinterpret_cast<smtAstExtractNode *>(node)); break;
         case ITE_NODE:        newNode = new smtAstIteNode(*reinterpret_cast<smtAstIteNode *>(node)); break;
         case LAND_NODE:       newNode = new smtAstLandNode(*reinterpret_cast<smtAstLandNode *>(node)); break;
+        case LNOT_NODE:       newNode = new smtAstLnotNode(*reinterpret_cast<smtAstLnotNode *>(node)); break;
         case LOR_NODE:        newNode = new smtAstLorNode(*reinterpret_cast<smtAstLorNode *>(node)); break;
         case REFERENCE_NODE:  newNode = new smtAstReferenceNode(*reinterpret_cast<smtAstReferenceNode *>(node)); break;
         case STRING_NODE:     newNode = new smtAstStringNode(*reinterpret_cast<smtAstStringNode *>(node)); break;

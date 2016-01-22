@@ -395,6 +395,12 @@ namespace triton {
   }
 
 
+  triton::engines::symbolic::SymbolicVariable* API::newSymbolicVariable(triton::uint32 varSize, std::string comment) {
+    this->checkSymbolic();
+    return this->sym->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, varSize, comment);
+  }
+
+
   void API::removeSymbolicExpression(triton::__uint symExprId) {
     this->checkSymbolic();
     return this->sym->removeSymbolicExpression(symExprId);

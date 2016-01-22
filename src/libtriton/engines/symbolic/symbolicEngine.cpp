@@ -362,7 +362,7 @@ namespace triton {
         SymbolicVariable* symVar = nullptr;
         SymbolicExpression* expression = this->getSymbolicExpressionFromId(exprId);
 
-        symVar = this->addSymbolicVariable(triton::engines::symbolic::UNDEF, 0, symVarSize, symVarComment);
+        symVar = this->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, symVarSize, symVarComment);
         expression->setAst(smt2lib::variable(symVar->getSymVarName()));
 
         return symVar;
@@ -384,7 +384,7 @@ namespace triton {
         memSymId = this->getSymbolicMemoryId(memAddr);
 
         // First we create a symbolic variable
-        symVar = this->addSymbolicVariable(triton::engines::symbolic::MEM, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
+        symVar = this->newSymbolicVariable(triton::engines::symbolic::MEM, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
         smt2lib::smtAstAbstractNode* symVarNode = smt2lib::variable(symVar->getSymVarName());
 
         if (symVarNode == nullptr)
@@ -444,7 +444,7 @@ namespace triton {
 
         regSymId = this->getSymbolicRegisterId(reg);
         if (regSymId == triton::engines::symbolic::UNSET) {
-          symVar = this->addSymbolicVariable(triton::engines::symbolic::REG, parentId, symVarSize, symVarComment);
+          symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parentId, symVarSize, symVarComment);
 
           smt2lib::smtAstAbstractNode* tmp = smt2lib::variable(symVar->getSymVarName());
           if (tmp == nullptr)
@@ -459,7 +459,7 @@ namespace triton {
 
         else {
           expression = this->getSymbolicExpressionFromId(regSymId);
-          symVar = this->addSymbolicVariable(triton::engines::symbolic::REG, parentId, symVarSize, symVarComment);
+          symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parentId, symVarSize, symVarComment);
           expression->setAst(smt2lib::variable(symVar->getSymVarName()));
         }
 
@@ -474,12 +474,12 @@ namespace triton {
 
 
       /* Add a new symbolic variable */
-      SymbolicVariable* SymbolicEngine::addSymbolicVariable(triton::engines::symbolic::symkind_e kind, triton::__uint kindValue, triton::uint32 size, std::string comment) {
+      SymbolicVariable* SymbolicEngine::newSymbolicVariable(triton::engines::symbolic::symkind_e kind, triton::__uint kindValue, triton::uint32 size, std::string comment) {
         triton::__uint uniqueId  = this->getUniqueSymVarId();
         SymbolicVariable* symVar = new SymbolicVariable(kind, kindValue, uniqueId, size, comment);
 
         if (symVar == nullptr)
-          throw std::runtime_error("SymbolicEngine::addSymbolicVariable(): Cannot allocate a new symbolic variable");
+          throw std::runtime_error("SymbolicEngine::newSymbolicVariable(): Cannot allocate a new symbolic variable");
 
         this->symbolicVariables[uniqueId] = symVar;
         return symVar;

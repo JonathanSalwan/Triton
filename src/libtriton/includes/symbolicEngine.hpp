@@ -105,7 +105,7 @@ namespace triton {
           void removeSymbolicExpression(triton::__uint symExprId);
 
           //! Adds a symbolic variable.
-          SymbolicVariable* addSymbolicVariable(symkind_e kind, triton::__uint kindValue, triton::uint32 size, std::string comment="");
+          SymbolicVariable* newSymbolicVariable(symkind_e kind, triton::__uint kindValue, triton::uint32 size, std::string comment="");
 
           //! Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
           SymbolicVariable* convertExprToSymVar(triton::__uint exprId, triton::uint32 symVarSize, std::string symVarComment="");
