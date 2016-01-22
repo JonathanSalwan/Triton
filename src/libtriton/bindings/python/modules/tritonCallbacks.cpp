@@ -223,6 +223,9 @@ Returns true if the taint engine is enabled.
 - **newSymbolicExpression(\ref py_SmtAstNode_page node, string comment="")**<br>
 Returns a new symbolic expression. Note that if there are simplification passes recorded, simplification will be applied.
 
+- **newSymbolicVariable(intger varSize, string comment="")**<br>
+Returns a new symbolic variable.
+
 - **processing(\ref py_Instruction_page inst)**<br>
 The main function. This function processes everything (engine, IR, optimization, state, ...) from a given instruction.
 
@@ -1561,6 +1564,36 @@ namespace triton {
       }
 
 
+      static PyObject* triton_newSymbolicVariable(PyObject* self, PyObject* args) {
+        PyObject* size        = nullptr;
+        PyObject* comment     = nullptr;
+        std::string ccomment  = "";
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &size, &comment);
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "newSymbolicVariable(): Architecture is not defined.");
+
+        if (size == nullptr || (!PyLong_Check(size) && !PyInt_Check(size)))
+          return PyErr_Format(PyExc_TypeError, "newSymbolicVariable(): Expects an integer as first argument.");
+
+        if (comment != nullptr && !PyString_Check(comment))
+          return PyErr_Format(PyExc_TypeError, "newSymbolicVariable(): Expects a sting as second  argument.");
+
+        if (comment != nullptr)
+          ccomment = PyString_AsString(comment);
+
+        try {
+          return PySymbolicVariable(triton::api.newSymbolicVariable(PyLong_AsUint(size), ccomment));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* triton_processing(PyObject* self, PyObject* inst) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -2251,6 +2284,7 @@ namespace triton {
         {"isSymbolicOptimizationEnabled",       (PyCFunction)triton_isSymbolicOptimizationEnabled,          METH_O,             ""},
         {"isTaintEngineEnabled",                (PyCFunction)triton_isTaintEngineEnabled,                   METH_NOARGS,        ""},
         {"newSymbolicExpression",               (PyCFunction)triton_newSymbolicExpression,                  METH_VARARGS,       ""},
+        {"newSymbolicVariable",                 (PyCFunction)triton_newSymbolicVariable,                    METH_VARARGS,       ""},
         {"processing",                          (PyCFunction)triton_processing,                             METH_O,             ""},
         {"recordSimplificationCallback",        (PyCFunction)triton_recordSimplificationCallback,           METH_O,             ""},
         {"removeSimplificationCallback",        (PyCFunction)triton_removeSimplificationCallback,           METH_O,             ""},

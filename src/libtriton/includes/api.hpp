@@ -203,7 +203,10 @@ namespace triton {
         smt2lib::smtAstAbstractNode* buildSymbolicRegisterOperand(triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Returns a new symbolic expression. Note that if there are simplification passes recorded, simplification will be applied.
-        triton::engines::symbolic::SymbolicExpression* newSymbolicExpression(smt2lib::smtAstAbstractNode* node, std::string comment);
+        triton::engines::symbolic::SymbolicExpression* newSymbolicExpression(smt2lib::smtAstAbstractNode* node, std::string comment="");
+
+        //! [**symbolic api**] - Returns a new symbolic variable.
+        triton::engines::symbolic::SymbolicVariable* newSymbolicVariable(triton::uint32 varSize, std::string comment="");
 
         //! [**symbolic api**] - Removes the symbolic expression corresponding to the id.
         void removeSymbolicExpression(triton::__uint symExprId);
