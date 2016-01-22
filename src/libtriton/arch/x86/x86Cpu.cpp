@@ -340,11 +340,8 @@ namespace triton {
       if (size == 0 || size > DQWORD_SIZE)
         throw std::invalid_argument("x86Cpu::getLastMemoryValue(): Invalid size memory");
 
-      for (triton::uint32 i = 0; i < size; i++) {
-        ret <<= 8;
-        if (this->memory.find(addr+(size-i-1)) != this->memory.end())
-          ret |= this->memory[addr+(size-i-1)] & 0xff;
-      }
+      for (triton::sint32 i = size-1; i >= 0; i--)
+        ret = ((ret << BYTE_SIZE_BIT) | this->memory[addr+i]);
 
       return ret;
     }
