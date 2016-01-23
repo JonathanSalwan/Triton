@@ -106,7 +106,7 @@ namespace triton {
 
 
       static PyObject* SmtAstNode_getHash(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("d", PySmtAstNode_AsSmtAstNode(self)->hash());
+        return PyLong_FromUint512(PySmtAstNode_AsSmtAstNode(self)->hash(1));
       }
 
 
@@ -158,7 +158,7 @@ namespace triton {
 
 
       static int SmtAstNode_cmp(SmtAstNode_Object* a, SmtAstNode_Object* b) {
-        return !(a->node->hash() == b->node->hash());
+        return !(a->node->hash(1) == b->node->hash(1));
       }
 
 

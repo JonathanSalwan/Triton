@@ -87,12 +87,12 @@ namespace triton {
     }
 
 
-    double smtAstAssertNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstAssertNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
     /* ====== bvadd */
@@ -121,12 +121,12 @@ namespace triton {
     }
 
 
-    double smtAstBvaddNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvaddNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -156,12 +156,12 @@ namespace triton {
     }
 
 
-    double smtAstBvandNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvandNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -192,12 +192,12 @@ namespace triton {
     }
 
 
-    double smtAstBvashrNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvashrNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -227,12 +227,12 @@ namespace triton {
     }
 
 
-    double smtAstBvlshrNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvlshrNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -262,12 +262,12 @@ namespace triton {
     }
 
 
-    double smtAstBvmulNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvmulNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -297,12 +297,12 @@ namespace triton {
     }
 
 
-    double smtAstBvnandNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvnandNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -331,12 +331,12 @@ namespace triton {
     }
 
 
-    double smtAstBvnegNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvnegNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -366,12 +366,12 @@ namespace triton {
     }
 
 
-    double smtAstBvnorNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvnorNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -400,12 +400,12 @@ namespace triton {
     }
 
 
-    double smtAstBvnotNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvnotNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -435,12 +435,12 @@ namespace triton {
     }
 
 
-    double smtAstBvorNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvorNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -479,12 +479,12 @@ namespace triton {
     }
 
 
-    double smtAstBvrolNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvrolNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -523,12 +523,12 @@ namespace triton {
     }
 
 
-    double smtAstBvrorNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvrorNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -558,12 +558,12 @@ namespace triton {
     }
 
 
-    double smtAstBvsdivNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvsdivNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -593,12 +593,12 @@ namespace triton {
     }
 
 
-    double smtAstBvsgeNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvsgeNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -628,12 +628,12 @@ namespace triton {
     }
 
 
-    double smtAstBvsgtNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvsgtNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -663,12 +663,12 @@ namespace triton {
     }
 
 
-    double smtAstBvshlNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvshlNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -698,12 +698,12 @@ namespace triton {
     }
 
 
-    double smtAstBvsleNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvsleNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -733,12 +733,12 @@ namespace triton {
     }
 
 
-    double smtAstBvsltNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvsltNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -768,12 +768,12 @@ namespace triton {
     }
 
 
-    double smtAstBvsmodNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvsmodNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -803,12 +803,12 @@ namespace triton {
     }
 
 
-    double smtAstBvsremNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvsremNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -838,12 +838,12 @@ namespace triton {
     }
 
 
-    double smtAstBvsubNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvsubNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -873,12 +873,12 @@ namespace triton {
     }
 
 
-    double smtAstBvudivNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvudivNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -908,12 +908,12 @@ namespace triton {
     }
 
 
-    double smtAstBvugeNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvugeNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -943,12 +943,12 @@ namespace triton {
     }
 
 
-    double smtAstBvugtNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvugtNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -978,12 +978,12 @@ namespace triton {
     }
 
 
-    double smtAstBvuleNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvuleNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1013,12 +1013,12 @@ namespace triton {
     }
 
 
-    double smtAstBvultNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvultNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1048,12 +1048,12 @@ namespace triton {
     }
 
 
-    double smtAstBvuremNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvuremNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1083,12 +1083,12 @@ namespace triton {
     }
 
 
-    double smtAstBvxnorNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvxnorNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1118,12 +1118,12 @@ namespace triton {
     }
 
 
-    double smtAstBvxorNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvxorNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1153,12 +1153,12 @@ namespace triton {
     }
 
 
-    double smtAstBvNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstBvNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1188,12 +1188,12 @@ namespace triton {
     }
 
 
-    double smtAstCompoundNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstCompoundNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1247,12 +1247,12 @@ namespace triton {
     }
 
 
-    double smtAstConcatNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstConcatNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1285,14 +1285,8 @@ namespace triton {
     }
 
 
-    double smtAstDecimalNode::hash(void) {
-      double hash = this->kind;
-      double high = static_cast<double>(this->value >> 64);
-      double low  = static_cast<double>(this->value);
-
-      hash = static_cast<double>(static_cast<long long>(hash) ^ static_cast<long long>(high));
-      hash = static_cast<double>(static_cast<long long>(hash) ^ static_cast<long long>(low));
-
+    triton::uint512 smtAstDecimalNode::hash(triton::uint32 deep) {
+      triton::uint512 hash = this->kind ^ this->value;
       return hash;
     }
 
@@ -1323,12 +1317,12 @@ namespace triton {
     }
 
 
-    double smtAstDeclareNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstDeclareNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1358,12 +1352,12 @@ namespace triton {
     }
 
 
-    double smtAstDistinctNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstDistinctNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1393,12 +1387,12 @@ namespace triton {
     }
 
 
-    double smtAstEqualNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstEqualNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1429,12 +1423,12 @@ namespace triton {
     }
 
 
-    double smtAstExtractNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstExtractNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1465,12 +1459,12 @@ namespace triton {
     }
 
 
-    double smtAstIteNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstIteNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1500,12 +1494,12 @@ namespace triton {
     }
 
 
-    double smtAstLandNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstLandNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1534,12 +1528,12 @@ namespace triton {
     }
 
 
-    double smtAstLnotNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstLnotNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1569,12 +1563,12 @@ namespace triton {
     }
 
 
-    double smtAstLorNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstLorNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * this->childs[index]->hash();
-      return h;
+        h = h * this->childs[index]->hash(deep+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1607,8 +1601,8 @@ namespace triton {
     }
 
 
-    double smtAstReferenceNode::hash(void) {
-      return this->kind * triton::api.getSymbolicExpressionFromId(this->value)->getAst()->hash();
+    triton::uint512 smtAstReferenceNode::hash(triton::uint32 deep) {
+      return this->kind * triton::api.getSymbolicExpressionFromId(this->value)->getAst()->hash(deep+1);
     }
 
 
@@ -1641,11 +1635,12 @@ namespace triton {
     }
 
 
-    double smtAstStringNode::hash(void) {
-      double h = this->kind, index = 1;
+    triton::uint512 smtAstStringNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind;
+      triton::uint32 index = 1;
       for (std::string::iterator it=this->value.begin(); it != this->value.end(); it++)
-        h = h * std::pow(*it, index++);
-      return h;
+        h = h * triton::smt2lib::pow(*it, index++);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1675,12 +1670,12 @@ namespace triton {
     }
 
 
-    double smtAstSxNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstSxNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1713,11 +1708,12 @@ namespace triton {
     }
 
 
-    double smtAstVariableNode::hash(void) {
-      double h = this->kind, index = 1;
+    triton::uint512 smtAstVariableNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind;
+      triton::uint32 index = 1;
       for (std::string::iterator it=this->value.begin(); it != this->value.end(); it++)
-        h = h * std::pow(*it, index++);
-      return h;
+        h = h * triton::smt2lib::pow(*it, index++);
+      return triton::smt2lib::rotl(h, deep);
     }
 
 
@@ -1747,12 +1743,12 @@ namespace triton {
     }
 
 
-    double smtAstZxNode::hash(void) {
-      double h = this->kind, s = this->childs.size();
+    triton::uint512 smtAstZxNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
-        h = h * std::pow(this->childs[index]->hash(), index+1);
-      return h;
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
     }
 
   }; /* smt2lib namespace */
@@ -2165,7 +2161,7 @@ namespace triton {
 
     /* Compares two trees */
     bool operator==(smtAstAbstractNode& node1, smtAstAbstractNode& node2) {
-      return node1.hash() == node2.hash();
+      return node1.hash(1) == node2.hash(1);
     }
 
 
@@ -2183,7 +2179,7 @@ namespace triton {
     std::set<smtAstAbstractNode*> allocatedNodes;
 
     /* The map for AST summaries. */
-    std::map<double, smtAstAbstractNode*> astSummaries;
+    std::map<triton::uint512, smtAstAbstractNode*> astSummaries;
 
 
     /* Go through every allocated nodes and free them */
@@ -2218,7 +2214,7 @@ namespace triton {
 
     /* Records the allocated node or returns the same node if it already exists inside the summaries */
     smtAstAbstractNode* recordNode(smtAstAbstractNode* node) {
-      //double hash = node->hash();
+      //triton::uint512 hash = node->hash(1);
 
       //if (triton::smt2lib::astSummaries.find(hash) != triton::smt2lib::astSummaries.end()) {
       //  delete node;
@@ -2228,6 +2224,20 @@ namespace triton {
       //triton::smt2lib::astSummaries[hash] = node;
       triton::smt2lib::allocatedNodes.insert(node);
       return node;
+    }
+
+
+    triton::uint512 pow(triton::uint512 hash, triton::uint32 n) {
+      for (triton::uint32 i = 0; i < n; i++)
+        hash = hash * hash;
+      return hash;
+    }
+
+
+    triton::uint512 rotl(triton::uint512 value, triton::uint32 shift) {
+        if ((shift &= 511) == 0)
+          return value;
+        return ((value << shift) | (value >> (512 - shift)));
     }
 
   }; /* smt2lib namespace */
