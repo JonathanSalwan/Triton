@@ -123,12 +123,11 @@ class TritonExecution(object):
             takeSnapshot()
             return
 
-        if getRoutineName(instruction.getAddress()) in TritonExecution.whitelist and instruction.isBranch() and instruction.getType is not OPCODE.JMP: # Check if not jmp
+        if getRoutineName(instruction.getAddress()) in TritonExecution.whitelist and instruction.isBranch() and instruction.getType() != OPCODE.JMP and instruction.getOperands()[0].getType() == OPERAND.IMM:
+            addr1 = instruction.getNextAddress()              # next address next from the current one
+            addr2 = instruction.getOperands()[0].getValue()   # Address in the instruction condition (branch taken)
 
-            addr1 = instruction.getNextAddress()                # next address next from the current one
-            addr2 = instruction.getOperands()[0].getValue()     # Address in the instruction condition (branch taken)
-
-            ripId = getSymbolicRegisterId(REG.RIP)              # Get the reference of the RIP symbolic register
+            ripId = getSymbolicRegisterId(REG.RIP)            # Get the reference of the RIP symbolic register
 
             # [PC id, address taken, address not taken]
             if instruction.isConditionTaken():
@@ -163,7 +162,7 @@ class TritonExecution(object):
                     newInput = deepcopy(TritonExecution.input)
                     newInput.setBound(j + 1)
 
-                    for k, v in model.items():
+                    for k,v in model.items():
                         symVar = getSymbolicVariableFromId(k)
                         newInput.addDataAddress(symVar.getKindValue(), v.getValue())
                     print newInput.dataAddr
@@ -195,25 +194,25 @@ class TritonExecution(object):
     def mainAnalysis(threadId):
 
         print "[+] In main"
+
         rdi = getCurrentRegisterValue(REG.RDI) # argc
         rsi = getCurrentRegisterValue(REG.RSI) # argv
-        argv0_addr = getCurrentMemoryValue(rsi, 8)      # argv[0] pointer
-        argv1_addr = getCurrentMemoryValue(rsi + 8, 8)  # argv[1] pointer
-
+        argv0_addr = getCurrentMemoryValue(getCurrentRegisterValue(REG.RSI), CPUSIZE.REG) # argv[0] pointer
+        argv1_addr = getCurrentMemoryValue(rsi + CPUSIZE.REG, CPUSIZE.REG)                # argv[1] pointer
 
         print "[+] In main() we set :"
         od = OrderedDict(sorted(TritonExecution.input.dataAddr.items()))
 
         for k,v in od.iteritems():
             print "\t[0x%x] = %x %c" % (k, v, v)
-            setCurrentMemoryValue(k, v)
-            convertMemToSymVar(Memory(k, CPUSIZE.BYTE_BIT), "addr_%d" % k)
+            setCurrentMemoryValue(Memory(k, CPUSIZE.BYTE), v)
+            convertMemToSymVar(Memory(k, CPUSIZE.BYTE), "addr_%d" % k)
 
         for idx, byte in enumerate(TritonExecution.input.data):
             if argv1_addr + idx not in TritonExecution.input.dataAddr: # Not overwrite the previous setting
                 print "\t[0x%x] = %x %c" % (argv1_addr + idx, ord(byte), ord(byte))
-                setCurrentMemoryValue(argv1_addr + idx, ord(byte))
-                convertMemToSymVar(Memory(argv1_addr + idx, CPUSIZE.BYTE_BIT), "addr_%d" % idx)
+                setCurrentMemoryValue(Memory(argv1_addr + idx, CPUSIZE.BYTE), ord(byte))
+                convertMemToSymVar(Memory(argv1_addr + idx, CPUSIZE.BYTE), "addr_%d" % idx)
 
 
     @staticmethod
@@ -224,7 +223,6 @@ class TritonExecution(object):
         TritonExecution.worklist    = [Input(inputSeed)]
         TritonExecution.inputTested = []
         TritonExecution.whitelist   = whitelist
-        #setupImageWhitelist(whitelist)
 
         startAnalysisFromAddr(entryPoint)
 
