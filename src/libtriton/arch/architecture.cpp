@@ -192,7 +192,12 @@ namespace triton {
           smt2lib::extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
           triton::api.removeSymbolicExpression((*it)->getId());
         }
-        smt2lib::freeAstNodes(uniqueNodes);
+
+        if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES)) {
+          /* Remove node only if AST_SUMMARIES is disabled */
+          smt2lib::freeAstNodes(uniqueNodes);
+        }
+
         inst.symbolicExpressions.clear();
         triton::api.restoreSymbolicEngine();
       }
@@ -214,7 +219,12 @@ namespace triton {
           else
             newVector.push_back(*it);
         }
-        smt2lib::freeAstNodes(uniqueNodes);
+
+        if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES)) {
+          /* Remove node only if AST_SUMMARIES is disabled */
+          smt2lib::freeAstNodes(uniqueNodes);
+        }
+
         inst.symbolicExpressions = newVector;
       }
 

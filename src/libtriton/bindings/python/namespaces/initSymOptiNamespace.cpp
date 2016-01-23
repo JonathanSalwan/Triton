@@ -33,6 +33,9 @@ The OPTIMIZATION namespace contains all kinds of symbolic optimization.
 \section OPTIMIZATION_py_api Python API - Items of the OPTIMIZATION namespace
 <hr>
 
+- **OPTIMIZATION.AST_SUMMARIES**<br>
+Enabled, Triton will record all AST nodes into an hash table and try to return node already allocated instead of allocate twice the same node. <b>/!\ Still experimental /!\</b>.
+
 - **OPTIMIZATION.ONLY_ON_TAINTED**<br>
 Enabled, Triton will perform symbolic execution only on tainted instructions.
 
@@ -45,7 +48,8 @@ namespace triton {
     namespace python {
 
       void initSymOptiNamespace(PyObject* symOptiDict) {
-        PyDict_SetItemString(symOptiDict, "ONLY_ON_TAINTED", PyLong_FromUint(triton::engines::symbolic::ONLY_ON_TAINTED));
+        PyDict_SetItemString(symOptiDict, "AST_SUMMARIES",    PyLong_FromUint(triton::engines::symbolic::AST_SUMMARIES));
+        PyDict_SetItemString(symOptiDict, "ONLY_ON_TAINTED",  PyLong_FromUint(triton::engines::symbolic::ONLY_ON_TAINTED));
       }
 
     }; /* python namespace */

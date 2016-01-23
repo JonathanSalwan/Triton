@@ -2218,35 +2218,43 @@ namespace triton {
      * Records the allocated node or returns the same node if it already exists inside the summaries.
      */
     smtAstAbstractNode* recordNode(smtAstAbstractNode* node) {
-      //triton::engines::symbolic::SymbolicSummary newSummary(node);
-      //std::list<triton::engines::symbolic::SymbolicSummary> newTableEntry;
-      //triton::uint512 hash = node->hash(1);
+      triton::engines::symbolic::SymbolicSummary newSummary;
+      std::list<triton::engines::symbolic::SymbolicSummary> newTableEntry;
+      triton::uint512 hash = 0;
 
-      ///* Check if the hash is already known */
-      //if (triton::engines::symbolic::astSummaries.find(hash) != triton::engines::symbolic::astSummaries.end()) {
-      //  auto prev = triton::engines::symbolic::astSummaries[hash].begin();
-      //  for (auto it = triton::engines::symbolic::astSummaries[hash].begin(); it != triton::engines::symbolic::astSummaries[hash].end(); it++) {
-      //    if (*it == newSummary) {
-      //      it->incReference();
-      //      if (it->getReference() > prev->getReference()) {
-      //        std::swap(prev, it);
-      //        delete node;
-      //        return prev->getNode();
-      //      }
-      //      delete node;
-      //      return it->getNode();
-      //    }
-      //    prev = it;
-      //  }
-      //  triton::engines::symbolic::astSummaries[hash].push_back(newSummary);
-      //}
-      //else {
-      //  /* Add the new AST entry in the summaries table */
-      //  newTableEntry.push_back(newSummary);
-      //  triton::engines::symbolic::astSummaries[hash] = newTableEntry;
-      //}
 
-      /* Refer the node */
+      /* Check if the AST_SUMMARIES is enabled. */
+      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES)) {
+
+        /* Compute hash */
+        newSummary = triton::engines::symbolic::SymbolicSummary(node);
+        hash = node->hash(1);
+
+        /* Check if the hash is already known */
+        if (triton::engines::symbolic::astSummaries.find(hash) != triton::engines::symbolic::astSummaries.end()) {
+          auto prev = triton::engines::symbolic::astSummaries[hash].begin();
+          for (auto it = triton::engines::symbolic::astSummaries[hash].begin(); it != triton::engines::symbolic::astSummaries[hash].end(); it++) {
+            if (*it == newSummary) {
+              delete node;
+              it->incReference();
+              if (it->getReference() > prev->getReference()) {
+                std::swap(prev, it);
+                return prev->getNode();
+              }
+              return it->getNode();
+            }
+            prev = it;
+          }
+          triton::engines::symbolic::astSummaries[hash].push_back(newSummary);
+        }
+        else {
+          /* Add the new AST entry in the summaries table */
+          newTableEntry.push_back(newSummary);
+          triton::engines::symbolic::astSummaries[hash] = newTableEntry;
+        }
+      }
+
+      /* Record the node */
       triton::smt2lib::allocatedNodes.insert(node);
       return node;
     }

@@ -20,6 +20,14 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
+      SymbolicSummary::SymbolicSummary() {
+        this->node      = nullptr;
+        this->reference = 0;
+        this->result    = 0;
+        this->size      = 0;
+      }
+
+
       SymbolicSummary::SymbolicSummary(triton::smt2lib::smtAstAbstractNode* node) {
         this->node      = node;
         this->reference = 1;

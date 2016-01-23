@@ -57,6 +57,9 @@ namespace triton {
 
         public:
           //! Constructor.
+          SymbolicSummary();
+
+          //! Constructor.
           SymbolicSummary(triton::smt2lib::smtAstAbstractNode* node);
 
           //! Constructor by copy.
