@@ -1605,7 +1605,8 @@ namespace triton {
 
 
     triton::uint512 smtAstReferenceNode::hash(triton::uint32 deep) {
-      return this->kind * triton::api.getSymbolicExpressionFromId(this->value)->getAst()->hash(deep+1);
+      triton::uint512 hash = this->kind ^ this->value;
+      return hash;
     }
 
 
@@ -2227,12 +2228,12 @@ namespace triton {
       if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES)) {
 
         /* Compute hash */
-        newSummary = triton::engines::symbolic::SymbolicSummary(node);
         hash = node->hash(1);
 
         /* Check if the hash is already known */
         if (triton::engines::symbolic::astSummaries.find(hash) != triton::engines::symbolic::astSummaries.end()) {
-          auto prev = triton::engines::symbolic::astSummaries[hash].begin();
+          newSummary = triton::engines::symbolic::SymbolicSummary(node);
+          auto prev  = triton::engines::symbolic::astSummaries[hash].begin();
           for (auto it = triton::engines::symbolic::astSummaries[hash].begin(); it != triton::engines::symbolic::astSummaries[hash].end(); it++) {
             if (*it == newSummary) {
               delete node;
@@ -2249,7 +2250,7 @@ namespace triton {
         }
         else {
           /* Add the new AST entry in the summaries table */
-          newTableEntry.push_back(newSummary);
+          newTableEntry.push_back(triton::engines::symbolic::SymbolicSummary(node));
           triton::engines::symbolic::astSummaries[hash] = newTableEntry;
         }
       }
