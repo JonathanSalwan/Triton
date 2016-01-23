@@ -6,6 +6,8 @@
 */
 
 #include <cmath>
+#include <utility>
+
 #include "api.hpp"
 #include "smt2lib.hpp"
 #include "smt2libZ3Ast.hpp"
@@ -2222,12 +2224,19 @@ namespace triton {
 
       ///* Check if the hash is already known */
       //if (triton::engines::symbolic::astSummaries.find(hash) != triton::engines::symbolic::astSummaries.end()) {
+      //  auto prev = triton::engines::symbolic::astSummaries[hash].begin();
       //  for (auto it = triton::engines::symbolic::astSummaries[hash].begin(); it != triton::engines::symbolic::astSummaries[hash].end(); it++) {
       //    if (*it == newSummary) {
-      //      delete node;
       //      it->incReference();
+      //      if (it->getReference() > prev->getReference()) {
+      //        std::swap(prev, it);
+      //        delete node;
+      //        return prev->getNode();
+      //      }
+      //      delete node;
       //      return it->getNode();
       //    }
+      //    prev = it;
       //  }
       //  triton::engines::symbolic::astSummaries[hash].push_back(newSummary);
       //}
