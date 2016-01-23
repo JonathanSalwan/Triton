@@ -123,7 +123,7 @@ class TritonExecution(object):
             takeSnapshot()
             return
 
-        if getRoutineName(instruction.getAddress()) in TritonExecution.whitelist and instruction.isBranch() and instruction.getType is not OPCODE.JMP and instruction.getOperands()[0].getType() is OPERAND.IMM: # Check if not jmp
+        if getRoutineName(instruction.getAddress()) in TritonExecution.whitelist and instruction.isBranch() and instruction.getType() != OPCODE.JMP and instruction.getOperands()[0].getType() == OPERAND.IMM:
             addr1 = instruction.getNextAddress()              # next address next from the current one
             addr2 = instruction.getOperands()[0].getValue()   # Address in the instruction condition (branch taken)
 
@@ -199,8 +199,6 @@ class TritonExecution(object):
         rsi = getCurrentRegisterValue(REG.RSI) # argv
         argv0_addr = getCurrentMemoryValue(getCurrentRegisterValue(REG.RSI), CPUSIZE.REG) # argv[0] pointer
         argv1_addr = getCurrentMemoryValue(rsi + CPUSIZE.REG, CPUSIZE.REG)                # argv[1] pointer
-        print hex(argv0_addr), hex(argv1_addr)
-
 
         print "[+] In main() we set :"
         od = OrderedDict(sorted(TritonExecution.input.dataAddr.items()))
@@ -238,8 +236,8 @@ class TritonExecution(object):
 if __name__=='__main__':
     # Set architecture
     setArchitecture(ARCH.X86_64)
-    TritonExecution.run("aaa", 0x4004a0, 0x40065D, ["main", "myatoi"])            # ./triton ./tools/code_coverage.py ./samples/code_coverage/test_atoi a
-    #TritonExecution.run("bad !", 0x400480, 0x40061B, ["main", "check"])          # ./triton ./tools/code_coverage.py ./samples/crackmes/crackme_xor abc
-    #TritonExecution.run("aaaaaaaa", 0x400460, 0x400666, ["main", "check"])       # ./triton ./tools/code_coverage.py ./samples/crackmes/crackme_regex_fsm a
-    #TritonExecution.run("aaaaaaaa", 0x400460, 0x402ECA, ["main", "checkinput"])  # ./triton ./tools/code_coverage.py ./samples/crackmes/crackme_regex_fsm_obfuscated a
+    TritonExecution.run("aaa", 0x4004a0, 0x40065D, ["main", "myatoi"])            # ./triton ./src/tools/code_coverage.py ./src/samples/code_coverage/test_atoi a
+    #TritonExecution.run("bad !", 0x400480, 0x40061B, ["main", "check"])          # ./triton ./src/tools/code_coverage.py ./src/samples/crackmes/crackme_xor abc
+    #TritonExecution.run("aaaaaaaa", 0x400460, 0x400666, ["main", "check"])       # ./triton ./src/tools/code_coverage.py ./src/samples/crackmes/crackme_regex_fsm a
+    #TritonExecution.run("aaaaaaaa", 0x400460, 0x402ECA, ["main", "checkinput"])  # ./triton ./src/tools/code_coverage.py ./src/samples/crackmes/crackme_regex_fsm_obfuscated a
 
