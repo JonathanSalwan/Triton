@@ -2218,26 +2218,12 @@ namespace triton {
      * Records the allocated node or returns the same node if it already exists inside the summaries.
      */
     smtAstAbstractNode* recordNode(smtAstAbstractNode* node) {
-
       /* Check if the AST_SUMMARIES is enabled. */
       if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES)) {
-
-        switch (node->getKind()) {
-          case DECIMAL_NODE: {
-            triton::uint128 value = reinterpret_cast<smtAstDecimalNode*>(node)->getValue();
-            if (triton::engines::symbolic::decimalSummaries.find(value) != triton::engines::symbolic::decimalSummaries.end()) {
-              delete node;
-              return triton::engines::symbolic::decimalSummaries[value];
-            }
-            triton::engines::symbolic::decimalSummaries[value] = node;
-            break;
-          }
-          default:
-            break;
-        }
-
+        smtAstAbstractNode* ret = triton::engines::symbolic::browseSummaries(node);
+        if (ret != nullptr)
+          return ret;
       }
-
       /* Record the node */
       triton::smt2lib::allocatedNodes.insert(node);
       return node;

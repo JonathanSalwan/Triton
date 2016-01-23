@@ -41,6 +41,12 @@ namespace triton {
       //! Decimal Summaries
       extern std::map<triton::uint128, triton::smt2lib::smtAstAbstractNode*> decimalSummaries;
 
+      //! Bv Summaries
+      extern std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvSummaries;
+
+      //! Browses into summaries
+      triton::smt2lib::smtAstAbstractNode* browseSummaries(triton::smt2lib::smtAstAbstractNode* node);
+
     /*! @} End of symbolic namespace */
     };
   /*! @} End of engines namespace */
