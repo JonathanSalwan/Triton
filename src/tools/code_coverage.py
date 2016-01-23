@@ -15,7 +15,7 @@
 ## Output:
 ## -------
 ##
-## $ ./triton ./src/tools/code_coverage.py ./src/samples/code_coverage/test_atoi a
+## $ ./triton ./tools/code_coverage.py ./samples/code_coverage/test_atoi a
 ## [+] Take Snapshot
 ## [+] In main
 ## [+] In main() we set :
@@ -125,10 +125,10 @@ class TritonExecution(object):
 
         if getRoutineName(instruction.getAddress()) in TritonExecution.whitelist and instruction.isBranch() and instruction.getType is not OPCODE.JMP: # Check if not jmp
 
-            addr1 = instruction.getNextAddress()                # next address next from the current one
+            addr1 = instruction.getNextAddress()                         # next address next from the current one
             addr2 = instruction.getOperands()[0].getValue()     # Address in the instruction condition (branch taken)
 
-            ripId = getSymbolicRegisterId(REG.RIP)              # Get the reference of the RIP symbolic register
+            ripId = getSymbolicRegisterId(REG.RIP)                      # Get the reference of the RIP symbolic register
 
             # [PC id, address taken, address not taken]
             if instruction.isConditionTaken():
@@ -163,7 +163,7 @@ class TritonExecution(object):
                     newInput = deepcopy(TritonExecution.input)
                     newInput.setBound(j + 1)
 
-                    for k, v in model.items():
+                    for k,v in model.items():
                         symVar = getSymbolicVariableFromId(k)
                         newInput.addDataAddress(symVar.getKindValue(), v.getValue())
                     print newInput.dataAddr
@@ -195,12 +195,12 @@ class TritonExecution(object):
     def mainAnalysis(threadId):
 
         print "[+] In main"
+
         rdi = getCurrentRegisterValue(REG.RDI) # argc
         rsi = getCurrentRegisterValue(REG.RSI) # argv
-        #argv0_addr = getCurrentMemoryValue(rsi, 8)       # argv[0] pointer
-        #argv1_addr = 0  # argv[1] pointer
-        #argv1_addr = getCurrentMemoryValue(RDI + 8, 1)  # argv[1] pointer
-        print getCurrentMemoryValue(Memory(rsi, 8))
+        argv0_addr = getCurrentMemoryValue(getCurrentRegisterValue(REG.RSI), CPUSIZE.REG) # argv[0] pointer
+        argv1_addr = getCurrentMemoryValue(rsi + CPUSIZE.REG, CPUSIZE.REG)                # argv[1] pointer
+        print hex(argv0_addr), hex(argv1_addr)
 
 
         print "[+] In main() we set :"
@@ -208,13 +208,13 @@ class TritonExecution(object):
 
         for k,v in od.iteritems():
             print "\t[0x%x] = %x %c" % (k, v, v)
-            setCurrentMemoryValue(k, v)
+            setCurrentMemoryValue(Memory(k, CPUSIZE.BYTE_BIT), v)
             convertMemToSymVar(Memory(k, CPUSIZE.BYTE_BIT), "addr_%d" % k)
 
         for idx, byte in enumerate(TritonExecution.input.data):
             if argv1_addr + idx not in TritonExecution.input.dataAddr: # Not overwrite the previous setting
-                print "\t[0x%x] = %x %c" % (argv1_addr + idx, ord(byte), ord(byte))
-                setCurrentMemoryValue(argv1_addr + idx, ord(byte))
+                print "\t[0x%x] = %s %s" % (argv1_addr + idx, byte, byte)
+                setCurrentMemoryValue(Memory(argv1_addr + idx, CPUSIZE.BYTE_BIT), ord(byte))
                 convertMemToSymVar(Memory(argv1_addr + idx, CPUSIZE.BYTE_BIT), "addr_%d" % idx)
 
 
@@ -239,8 +239,8 @@ class TritonExecution(object):
 if __name__=='__main__':
     # Set architecture
     setArchitecture(ARCH.X86_64)
-    TritonExecution.run("aaa", 0x4004a0, 0x40065D, ["main", "myatoi"])            # ./triton ./src/tools/code_coverage.py ./src/samples/code_coverage/test_atoi a
-    #TritonExecution.run("bad !", 0x400480, 0x40061B, ["main", "check"])          # ./triton ./src/tools/code_coverage.py ./src/samples/crackmes/crackme_xor abc
-    #TritonExecution.run("aaaaaaaa", 0x400460, 0x400666, ["main", "check"])       # ./triton ./src/tools/code_coverage.py ./src/samples/crackmes/crackme_regex_fsm a
-    #TritonExecution.run("aaaaaaaa", 0x400460, 0x402ECA, ["main", "checkinput"])  # ./triton ./src/tools/code_coverage.py ./src/samples/crackmes/crackme_regex_fsm_obfuscated a
+    TritonExecution.run("aaa", 0x4004a0, 0x40065D, ["main", "myatoi"])           # ./triton ./tools/code_coverage.py ./samples/code_coverage/test_atoi a
+    #TritonExecution.run("bad !", 0x400480, 0x40061B, ["main", "check"])          # ./triton ./tools/code_coverage.py ./samples/crackmes/crackme_xor abc
+    #TritonExecution.run("aaaaaaaa", 0x400460, 0x400666, ["main", "check"])       # ./triton ./tools/code_coverage.py ./samples/crackmes/crackme_regex_fsm a
+    #TritonExecution.run("aaaaaaaa", 0x400460, 0x402ECA, ["main", "checkinput"])  # ./triton ./tools/code_coverage.py ./samples/crackmes/crackme_regex_fsm_obfuscated a
 
