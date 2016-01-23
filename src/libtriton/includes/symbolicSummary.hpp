@@ -84,7 +84,7 @@ namespace triton {
           void operator=(const SymbolicSummary& other);
       };
 
-      /* Compares two summaries */
+      //! Compares two summaries
       bool operator==(SymbolicSummary& summary1, SymbolicSummary& summary2);
 
       //! The map for AST summaries.
