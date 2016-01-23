@@ -15,7 +15,7 @@
 ## Output:
 ## -------
 ##
-## $ ./triton ./tools/code_coverage.py ./samples/code_coverage/test_atoi a
+## $ ./triton ./src/tools/code_coverage.py ./src/samples/code_coverage/test_atoi a
 ## [+] Take Snapshot
 ## [+] In main
 ## [+] In main() we set :
@@ -127,9 +127,7 @@ class TritonExecution(object):
             addr1 = instruction.getNextAddress()              # next address next from the current one
             addr2 = instruction.getOperands()[0].getValue()   # Address in the instruction condition (branch taken)
 
-
-
-            ripId = getSymbolicRegisterId(REG.RIP)                      # Get the reference of the RIP symbolic register
+            ripId = getSymbolicRegisterId(REG.RIP)            # Get the reference of the RIP symbolic register
 
             # [PC id, address taken, address not taken]
             if instruction.isConditionTaken():
@@ -240,7 +238,7 @@ class TritonExecution(object):
 if __name__=='__main__':
     # Set architecture
     setArchitecture(ARCH.X86_64)
-    TritonExecution.run("aaa", 0x4004a0, 0x40065D, ["main", "myatoi"])           # ./triton ./tools/code_coverage.py ./samples/code_coverage/test_atoi a
+    TritonExecution.run("aaa", 0x4004a0, 0x40065D, ["main", "myatoi"])            # ./triton ./tools/code_coverage.py ./samples/code_coverage/test_atoi a
     #TritonExecution.run("bad !", 0x400480, 0x40061B, ["main", "check"])          # ./triton ./tools/code_coverage.py ./samples/crackmes/crackme_xor abc
     #TritonExecution.run("aaaaaaaa", 0x400460, 0x400666, ["main", "check"])       # ./triton ./tools/code_coverage.py ./samples/crackmes/crackme_regex_fsm a
     #TritonExecution.run("aaaaaaaa", 0x400460, 0x402ECA, ["main", "checkinput"])  # ./triton ./tools/code_coverage.py ./samples/crackmes/crackme_regex_fsm_obfuscated a
