@@ -123,10 +123,11 @@ class TritonExecution(object):
             takeSnapshot()
             return
 
-        if getRoutineName(instruction.getAddress()) in TritonExecution.whitelist and instruction.isBranch() and instruction.getType is not OPCODE.JMP: # Check if not jmp
+        if getRoutineName(instruction.getAddress()) in TritonExecution.whitelist and instruction.isBranch() and instruction.getType is not OPCODE.JMP and instruction.getOperands()[0].getType() is OPERAND.IMM: # Check if not jmp
+            addr1 = instruction.getNextAddress()              # next address next from the current one
+            addr2 = instruction.getOperands()[0].getValue()   # Address in the instruction condition (branch taken)
 
-            addr1 = instruction.getNextAddress()                         # next address next from the current one
-            addr2 = instruction.getOperands()[0].getValue()     # Address in the instruction condition (branch taken)
+
 
             ripId = getSymbolicRegisterId(REG.RIP)                      # Get the reference of the RIP symbolic register
 
