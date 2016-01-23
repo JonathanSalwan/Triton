@@ -34,7 +34,7 @@ The OPTIMIZATION namespace contains all kinds of symbolic optimization.
 <hr>
 
 - **OPTIMIZATION.AST_SUMMARIES**<br>
-Enabled, Triton will record all AST nodes into an hash table and try to return node already allocated instead of allocate twice the same node. <b>/!\ Still experimental /!\</b>.
+Enabled, Triton will record all AST nodes into an hash table and try to return node already allocated instead of allocate twice the same node (**still experimental**).
 
 - **OPTIMIZATION.ONLY_ON_TAINTED**<br>
 Enabled, Triton will perform symbolic execution only on tainted instructions.
