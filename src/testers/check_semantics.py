@@ -82,7 +82,6 @@ def cafter(instruction):
 if __name__ == '__main__':
     setArchitecture(ARCH.X86_64)
     startAnalysisFromEntry()
-    enableSymbolicOptimization(OPTIMIZATION.AST_SUMMARIES)
     addCallback(cafter,  CALLBACK.AFTER)
     addCallback(sbefore, CALLBACK.BEFORE_SYMPROC)
     runProgram()

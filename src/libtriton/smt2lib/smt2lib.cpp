@@ -6,7 +6,6 @@
 */
 
 #include <cmath>
-#include <utility>
 
 #include "api.hpp"
 #include "smt2lib.hpp"
@@ -2219,40 +2218,24 @@ namespace triton {
      * Records the allocated node or returns the same node if it already exists inside the summaries.
      */
     smtAstAbstractNode* recordNode(smtAstAbstractNode* node) {
-      triton::engines::symbolic::SymbolicSummary newSummary;
-      std::list<triton::engines::symbolic::SymbolicSummary> newTableEntry;
-      triton::uint512 hash = 0;
-
 
       /* Check if the AST_SUMMARIES is enabled. */
       if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES)) {
 
-        /* Compute hash */
-        hash = node->hash(1);
-
-        /* Check if the hash is already known */
-        if (triton::engines::symbolic::astSummaries.find(hash) != triton::engines::symbolic::astSummaries.end()) {
-          newSummary = triton::engines::symbolic::SymbolicSummary(node);
-          auto prev  = triton::engines::symbolic::astSummaries[hash].begin();
-          for (auto it = triton::engines::symbolic::astSummaries[hash].begin(); it != triton::engines::symbolic::astSummaries[hash].end(); it++) {
-            if (*it == newSummary) {
+        switch (node->getKind()) {
+          case DECIMAL_NODE: {
+            triton::uint128 value = reinterpret_cast<smtAstDecimalNode*>(node)->getValue();
+            if (triton::engines::symbolic::decimalSummaries.find(value) != triton::engines::symbolic::decimalSummaries.end()) {
               delete node;
-              it->incReference();
-              if (it->getReference() > prev->getReference()) {
-                std::swap(prev, it);
-                return prev->getNode();
-              }
-              return it->getNode();
+              return triton::engines::symbolic::decimalSummaries[value];
             }
-            prev = it;
+            triton::engines::symbolic::decimalSummaries[value] = node;
+            break;
           }
-          triton::engines::symbolic::astSummaries[hash].push_back(newSummary);
+          default:
+            break;
         }
-        else {
-          /* Add the new AST entry in the summaries table */
-          newTableEntry.push_back(triton::engines::symbolic::SymbolicSummary(node));
-          triton::engines::symbolic::astSummaries[hash] = newTableEntry;
-        }
+
       }
 
       /* Record the node */

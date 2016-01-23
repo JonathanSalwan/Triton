@@ -38,61 +38,8 @@ namespace triton {
      *  @{
      */
 
-      /*! \class SymbolicSummary
-          \brief The symbolic summary class. */
-      class SymbolicSummary {
-
-        protected:
-          //! The node.
-          triton::smt2lib::smtAstAbstractNode* node;
-
-          //! The evaluated result.
-          triton::uint512 result;
-
-          //! The evaluated result size.
-          triton::uint32 size;
-
-          //! The number of references to this summary.
-          triton::uint32 reference;
-
-        public:
-          //! Constructor.
-          SymbolicSummary();
-
-          //! Constructor.
-          SymbolicSummary(triton::smt2lib::smtAstAbstractNode* node);
-
-          //! Constructor by copy.
-          SymbolicSummary(const SymbolicSummary& other);
-
-          //! Destructor.
-          ~SymbolicSummary();
-
-          //! Returns the node.
-          triton::smt2lib::smtAstAbstractNode* getNode(void);
-
-          //! Returns the number of references to this summary.
-          triton::uint32 getReference(void);
-
-          //! Returns the evaluated result.
-          triton::uint512 getResult(void);
-
-          //! Returns the evaluated result size.
-          triton::uint32 getSize(void);
-
-          //! Increments the number of references to this summary.
-          void incReference(void);
-
-          //! Copies a SymbolicSummary.
-          void operator=(const SymbolicSummary& other);
-      };
-
-      //! Compares two summaries
-      bool operator==(SymbolicSummary& summary1, SymbolicSummary& summary2);
-
-      //! The map for AST summaries.
-      //! \brief <hash:summaries>
-      extern std::map<triton::uint512, std::list<triton::engines::symbolic::SymbolicSummary>> astSummaries;
+      //! Decimal Summaries
+      extern std::map<triton::uint128, triton::smt2lib::smtAstAbstractNode*> decimalSummaries;
 
     /*! @} End of symbolic namespace */
     };
