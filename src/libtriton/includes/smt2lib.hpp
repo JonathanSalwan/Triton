@@ -1032,9 +1032,6 @@ namespace triton {
     //! Garbage collector - This container contains all allocated nodes.
     extern std::set<smtAstAbstractNode*> allocatedNodes;
 
-    //! Garbage collector - The map for AST summaries.
-    extern std::map<triton::uint512, smtAstAbstractNode*> astSummaries;
-
     //! Garbage collector - Go through every allocated nodes and free them.
     void freeAllAstNodes(void);
 

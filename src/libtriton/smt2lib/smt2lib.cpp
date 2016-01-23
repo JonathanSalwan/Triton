@@ -10,6 +10,7 @@
 #include "smt2lib.hpp"
 #include "smt2libZ3Ast.hpp"
 #include "smt2libZ3Result.hpp"
+#include "symbolicSummary.hpp"
 
 
 
@@ -2178,9 +2179,6 @@ namespace triton {
     /* Global container. This container contains all allocated nodes. */
     std::set<smtAstAbstractNode*> allocatedNodes;
 
-    /* The map for AST summaries. */
-    std::map<triton::uint512, smtAstAbstractNode*> astSummaries;
-
 
     /* Go through every allocated nodes and free them */
     void freeAllAstNodes(void) {
@@ -2206,22 +2204,40 @@ namespace triton {
 
     /* Extracts all unique nodes from a partial AST into the uniqueNodes set */
     void extractUniqueAstNodes(std::set<smtAstAbstractNode*>& uniqueNodes, smtAstAbstractNode* root) {
+      std::vector<smtAstAbstractNode*>::const_iterator it;
       uniqueNodes.insert(root);
-      for (auto it = root->getChilds().begin(); it != root->getChilds().end(); it++)
+      for (it = root->getChilds().begin(); it != root->getChilds().end(); it++)
         triton::smt2lib::extractUniqueAstNodes(uniqueNodes, *it);
     }
 
 
-    /* Records the allocated node or returns the same node if it already exists inside the summaries */
+    /*
+     * /!\ Still experimental /!\
+     * Records the allocated node or returns the same node if it already exists inside the summaries.
+     */
     smtAstAbstractNode* recordNode(smtAstAbstractNode* node) {
+      //triton::engines::symbolic::SymbolicSummary newSummary(node);
+      //std::list<triton::engines::symbolic::SymbolicSummary> newTableEntry;
       //triton::uint512 hash = node->hash(1);
 
-      //if (triton::smt2lib::astSummaries.find(hash) != triton::smt2lib::astSummaries.end()) {
-      //  delete node;
-      //  return triton::smt2lib::astSummaries[hash];
+      ///* Check if the hash is already known */
+      //if (triton::engines::symbolic::astSummaries.find(hash) != triton::engines::symbolic::astSummaries.end()) {
+      //  for (auto it = triton::engines::symbolic::astSummaries[hash].begin(); it != triton::engines::symbolic::astSummaries[hash].end(); it++) {
+      //    if (*it == newSummary) {
+      //      delete node;
+      //      it->incReference();
+      //      return it->getNode();
+      //    }
+      //  }
+      //  triton::engines::symbolic::astSummaries[hash].push_back(newSummary);
+      //}
+      //else {
+      //  /* Add the new AST entry in the summaries table */
+      //  newTableEntry.push_back(newSummary);
+      //  triton::engines::symbolic::astSummaries[hash] = newTableEntry;
       //}
 
-      //triton::smt2lib::astSummaries[hash] = node;
+      /* Refer the node */
       triton::smt2lib::allocatedNodes.insert(node);
       return node;
     }
