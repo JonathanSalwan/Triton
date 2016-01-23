@@ -49,40 +49,40 @@ This object is used to represent a Memory access.
 \section Memory_py_api Python API - Methods of the Memory class
 <hr>
 
-- **getAddress()**<br>
+- **getAddress(void)**<br>
 Returns the memory access targer's address.<br>
 e.g: `0x7fffdd745ae0`
 
-- **getBaseReg()**<br>
+- **getBaseReg(void)**<br>
 Returns the memory's base register as \ref py_Register_page if exists.<br>
 
-- **getBitSize()**<br>
+- **getBitSize(void)**<br>
 Returns the memory access' size in bits as integer.<br>
 e.g: `64`
 
-- **getBitvector()**<br>
+- **getBitvector(void)**<br>
 Returns the bitvector as \ref py_Bitvector_page.
 
-- **getConcreteValue()**<br>
+- **getConcreteValue(void)**<br>
 Returns the concrete value as integer. It's basically the content which has been LOADED or STORED.
 
-- **getDisplacement()**<br>
+- **getDisplacement(void)**<br>
 Returns the memory's displacement as \ref py_Immediate_page if exists.
 
-- **getIndexReg()**<br>
+- **getIndexReg(void)**<br>
 Returns the memory's index register as \ref py_Register_page if exists.<br>
 
-- **getScale()**<br>
+- **getScale(void)**<br>
 Returns the memory's scale as \ref py_Immediate_page if exists.
 
-- **getSize()**<br>
+- **getSize(void)**<br>
 Returns the memory access' size in bytes as integer.<br>
 e.g: `8`
 
-- **getType()**<br>
+- **getType(void)**<br>
 Returns memory's type in bytes as \ref py_OPERAND_page.
 
-- **isTrusted()**<br>
+- **isTrusted(void)**<br>
 True if this concrete memory value is trusted and synchronized with the real MMU value.
 
 - **setBaseReg(\ref py_Register_page reg)**<br>

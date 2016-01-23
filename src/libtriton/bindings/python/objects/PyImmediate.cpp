@@ -38,24 +38,24 @@ This object is used to represent an Immediate.
 \section Immediate_py_api Python API - Methods of the Immediate class
 <hr>
 
-- **getBitSize()**<br>
+- **getBitSize(void)**<br>
 Returns the immediate's size in bits as integer.<br>
 e.g: `64`
 
-- **getBitvector()**<br>
+- **getBitvector(void)**<br>
 Returns the bitvector as \ref py_Bitvector_page.
 
-- **getSize()**<br>
+- **getSize(void)**<br>
 Returns immediate's size in bytes as integer.<br>
 e.g: `8`
 
-- **getType()**<br>
+- **getType(void)**<br>
 Returns immediate's type in bytes as \ref py_OPERAND_page.<br>
 
-- **getValue()**<br>
+- **getValue(void)**<br>
 Returns the immediate's value.
 
-- **setValue()**<br>
+- **setValue(void)**<br>
 Sets the immediate's value.
 
 */

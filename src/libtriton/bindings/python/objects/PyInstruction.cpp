@@ -81,40 +81,40 @@ if __name__ == '__main__':
 \section Instruction_py_api Python API - Methods of the Instruction class
 <hr>
 
-- **getAddress()**<br>
+- **getAddress(void)**<br>
 Returns the instruction's address as integer.
 
-- **getDisassembly()**<br>
+- **getDisassembly(void)**<br>
 Returns the instruction's disassembly as string.
 
-- **getNextAddress()**<br>
+- **getNextAddress(void)**<br>
 Returns the next instruction's address as integer.
 
-- **getOpcodes()**<br>
+- **getOpcodes(void)**<br>
 Returns the instruction's opcodes as bytes.
 
-- **getOpcodesSize()**<br>
+- **getOpcodesSize(void)**<br>
 Returns the instruction's opcodes size as integer.
 
-- **getOperands()**<br>
+- **getOperands(void)**<br>
 Returns the instruction's operands as list of \ref py_Immediate_page, \ref py_Memory_page or \ref py_Register_page.
 
-- **getSymbolicExpressions()**<br>
+- **getSymbolicExpressions(void)**<br>
 Returns the instruction's symbolic expressions as list of \ref py_SymbolicExpression_page.
 
-- **getThreadId()**<br>
+- **getThreadId(void)**<br>
 Returns the instruction's thread id as integer.
 
-- **getType()**<br>
+- **getType(void)**<br>
 Returns the instruction's type as \ref py_OPCODE_page.
 
-- **isBranch()**<br>
+- **isBranch(void)**<br>
 Returns true if the instruction modifies is a branch (i.e x86: JUMP, JCC).
 
-- **isConditionTaken()**<br>
+- **isConditionTaken(void)**<br>
 Returns true if the condition is taken (i.e x86: JCC, CMOVCC, SETCC, ...).
 
-- **isControlFlow()**<br>
+- **isControlFlow(void)**<br>
 Returns true if the instruction modifies the control flow (i.e x86: JUMP, JCC, CALL, RET).
 
 - **setAddress(integer addr)**<br>

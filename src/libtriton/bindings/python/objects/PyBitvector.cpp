@@ -37,13 +37,13 @@ This object is used to represent a bitvector. Mainly used by \ref py_Register_pa
 \section Bitvector_py_api Python API - Methods of the Bitvector class
 <hr>
 
-- **getHigh()**<br>
+- **getHigh(void)**<br>
 Returns the highest bit position.
 
-- **getLow()**<br>
+- **getLow(void)**<br>
 Returns the lower bit position.
 
-- **getVectorSize()**<br>
+- **getVectorSize(void)**<br>
 Returns the vector's size.
 
 */

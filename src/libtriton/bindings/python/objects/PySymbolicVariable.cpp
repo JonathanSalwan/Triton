@@ -34,34 +34,34 @@ SymVar_0:64
 \section SymbolicVariable_py_api Python API - Methods of the SymbolicVariable class
 <hr>
 
-- **getBitSize()**<br>
+- **getBitSize(void)**<br>
 Returns the symbolic variable's size as integer.
 
-- **getComment()**<br>
+- **getComment(void)**<br>
 Returns the symbolic variable's comment as string if exists.
 
-- **getConcreteValue()**<br>
+- **getConcreteValue(void)**<br>
 Returns the symbolic variable's concrete value as integer if exists.
 
-- **getId()**<br>
+- **getId(void)**<br>
 Returns the symbolic variable's id as integer. This id is always unique.<br>
 e.g: `18`
 
-- **getKind()**<br>
+- **getKind(void)**<br>
 Returns the symbolic variable's kind as \ref py_SYMEXPR_page.<br>
 e.g: `SYMEXPR.REG`
 
-- **getKindValue()**<br>
+- **getKindValue(void)**<br>
 Returns the kind's value according to the \ref py_SYMEXPR_page.<br>
 If `getKind()` returns triton::engines::symbolic::REG, so `getKindValue()` returns the register's id.<br>
 Otherwise, if `getKind()` returns triton::engines::symbolic::MEM, so `getKindValue()` returns the memory address.<br>
 Then, if `getKind()` returns triton::engines::symbolic::UNDEF, so `getKindValue()` returns `0`.
 
-- **getName()**<br>
+- **getName(void)**<br>
 Returns the symbolic variable's name as string.<br>
 e.g: `SymVar_18`
 
-- **hasConcreteValue()**<br>
+- **hasConcreteValue(void)**<br>
 Returns true if this symbolic variable contains a concrete value.
 
 - **setConcreteValue(integer value)**<br>

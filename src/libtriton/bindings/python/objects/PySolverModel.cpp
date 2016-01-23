@@ -63,13 +63,13 @@ SymVar_0 = 287454020
 \section SolverModel_py_api Python API - Methods of the SolverModel class
 <hr>
 
-- **getId()**<br>
+- **getId(void)**<br>
 Returns the model's id. This id is the same that the variable id.
 
-- **getName()**<br>
+- **getName(void)**<br>
 Returns the model's name. This name is the same that the variable name.
 
-- **getValue()**<br>
+- **getValue(void)**<br>
 Returns the model's value.
 
 */

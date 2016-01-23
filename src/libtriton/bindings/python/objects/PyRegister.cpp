@@ -42,40 +42,40 @@ This object is used to represent a register according to the CPU architecture.
 \section Register_py_api Python API - Methods of the Register class
 <hr>
 
-- **getBitSize()**<br>
+- **getBitSize(void)**<br>
 Returns the register's size in bits as integer.<br>
 e.g: `64`
 
-- **getBitvector()**<br>
+- **getBitvector(void)**<br>
 Returns the bitvector as \ref py_Bitvector_page.
 
-- **getConcreteValue()**<br>
+- **getConcreteValue(void)**<br>
 Returns the register's concrete value.
 
-- **getName()**<br>
+- **getName(void)**<br>
 Returns the register's name as string.<br>
 e.g: `rbx`
 
-- **getParent()**<br>
+- **getParent(void)**<br>
 Returns the register's parent as string \ref py_Register_page.
 
-- **getSize()**<br>
+- **getSize(void)**<br>
 Returns the register's size in bytes as integer.<br>
 e.g: `8`
 
-- **getType()**<br>
+- **getType(void)**<br>
 Returns register's type in bytes as \ref py_OPERAND_page.<br>
 
-- **isValid()**<br>
+- **isValid(void)**<br>
 Returns true if the register is valid.
 
-- **isFlag()**<br>
+- **isFlag(void)**<br>
 Returns true if the register is a flag.
 
-- **isReg()**<br>
+- **isReg(void)**<br>
 Returns true if the register is a register.
 
-- **isTrusted()**<br>
+- **isTrusted(void)**<br>
 True if this concrete register value is trusted and synchronized with the real CPU value.
 
 - **setConcreteValue(integer value)**<br>

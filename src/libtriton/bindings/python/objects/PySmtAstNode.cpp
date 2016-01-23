@@ -46,20 +46,20 @@ This object is used to represent each node of the SMT's AST.
 \section SmtAstNode_py_api Python API - Methods of the SmtAstNode class
 <hr>
 
-- **getBitvectorSize()**<br>
+- **getBitvectorSize(void)**<br>
 Returns the expression's size.
 
-- **getChilds()**<br>
+- **getChilds(void)**<br>
 Returns the list of the childs as \ref py_SmtAstNode_page.
 
-- **getHash()**<br>
+- **getHash(void)**<br>
 Returns the hash (signature) of the AST as float.
 
-- **getKind()**<br>
+- **getKind(void)**<br>
 Returns the kind of the node as \ref py_SMT_AST_NODE_page.<br>
 e.g: `SMT_AST_NODE.BVADD`
 
-- **getValue()**<br>
+- **getValue(void)**<br>
 Returns the node's value as integer or string (it depends of the kind). For example if the node's kind is `decimal`, the value is an integer.
 
 - **setChild(integer index, SmtAstNode node)**<br>
