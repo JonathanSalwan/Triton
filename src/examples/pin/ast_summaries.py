@@ -22,7 +22,7 @@ if __name__ == '__main__':
     setArchitecture(ARCH.X86_64)
 
     # Start JIT at the entry point
-    startAnalysisFromSymbol('check')
+    startAnalysisFromEntry()
 
     # Use AST Summaries
     enableSymbolicOptimization(OPTIMIZATION.AST_SUMMARIES)

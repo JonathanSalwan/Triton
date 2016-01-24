@@ -11,7 +11,6 @@
 #include "smt2lib.hpp"
 #include "smt2libZ3Ast.hpp"
 #include "smt2libZ3Result.hpp"
-#include "symbolicSummary.hpp"
 
 
 
@@ -2220,12 +2219,14 @@ namespace triton {
     smtAstAbstractNode* recordNode(smtAstAbstractNode* node) {
       /* Check if the AST_SUMMARIES is enabled. */
       if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES)) {
-        smtAstAbstractNode* ret = triton::engines::symbolic::browseSummaries(node);
+        smtAstAbstractNode* ret = triton::api.browseSymbolicSummaries(node);
         if (ret != nullptr)
           return ret;
       }
-      /* Record the node */
-      triton::smt2lib::allocatedNodes.insert(node);
+      else {
+        /* Record the node */
+        triton::smt2lib::allocatedNodes.insert(node);
+      }
       return node;
     }
 

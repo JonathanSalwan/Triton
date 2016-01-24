@@ -16,9 +16,10 @@
 #include "registerOperand.hpp"
 #include "smt2lib.hpp"
 #include "symbolicExpression.hpp"
-#include "symbolicVariable.hpp"
-#include "symbolicSimplification.hpp"
 #include "symbolicOptimization.hpp"
+#include "symbolicSimplification.hpp"
+#include "symbolicSummaries.hpp"
+#include "symbolicVariable.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -52,7 +53,7 @@ namespace triton {
 
       //! \class SymbolicEngine
       /*! \brief The symbolic engine class. */
-      class SymbolicEngine : public SymbolicSimplification, public SymbolicOptimization {
+      class SymbolicEngine : public SymbolicSimplification, public SymbolicOptimization, public SymbolicSummaries {
 
         protected:
 

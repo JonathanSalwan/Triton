@@ -489,6 +489,12 @@ namespace triton {
   #endif
 
 
+  smt2lib::smtAstAbstractNode* API::browseSymbolicSummaries(smt2lib::smtAstAbstractNode* node) {
+    this->checkSymbolic();
+    return this->sym->browseSymbolicSummaries(node);
+  }
+
+
   smt2lib::smtAstAbstractNode* API::processSimplification(smt2lib::smtAstAbstractNode* node) {
     this->checkSymbolic();
     return this->sym->processSimplification(node);
