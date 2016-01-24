@@ -2216,7 +2216,7 @@ namespace triton {
     smtAstAbstractNode* recordNode(smtAstAbstractNode* node) {
       /* Check if the AST_SUMMARIES is enabled. */
       if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES)) {
-        smtAstAbstractNode* ret = triton::api.browseSymbolicSummaries(node);
+        smtAstAbstractNode* ret = triton::api.browseAstSummaries(node);
         if (ret != nullptr)
           return ret;
       }

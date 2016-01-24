@@ -1,19 +1,25 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
 ##
-## $ ./triton ./src/examples/pin/ast_summaries.py ./src/samples/crackmes/crackme_xor a
+## $ ./triton ./src/examples/pin/ast_summaries.py ./src/samples/crackmes/crackme_xor elite
 ##
 
 import sys
 
-from pintool import *
-from triton  import *
+from operator   import itemgetter
+from pintool    import *
+from triton     import *
 
 
-def cb_before(inst):
-    print inst
-    for expr in inst.getSymbolicExpressions():
-        print '\t', expr
+def cb_fini():
+    l = getAstSummariesStats().items()
+    l.sort(key=itemgetter(1), reverse=True)
+    print '============================================================='
+    print 'AST Summaries Stats'
+    print '============================================================='
+    for i in l:
+        print '%s: %d' %(i[0].lower(), i[1])
+    print '============================================================='
     return
 
 
@@ -27,8 +33,8 @@ if __name__ == '__main__':
     # Use AST Summaries
     enableSymbolicOptimization(OPTIMIZATION.AST_SUMMARIES)
 
-    # Add callback
-    addCallback(cb_before, CALLBACK.BEFORE)
+    # Add callbacks
+    addCallback(cb_fini, CALLBACK.FINI)
 
     # Run Program
     runProgram()

@@ -5,7 +5,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
-#include <symbolicSummaries.hpp>
+#include <astSummaries.hpp>
 
 
 
@@ -13,15 +13,19 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicSummaries::SymbolicSummaries() {
+      AstSummaries::AstSummaries() {
+        this->allocatedNodes     = 0;
+        this->allocatedSummaries = 0;
       }
 
 
-      SymbolicSummaries::~SymbolicSummaries() {
+      AstSummaries::~AstSummaries() {
       }
 
 
-      triton::smt2lib::smtAstAbstractNode* SymbolicSummaries::browseSymbolicSummaries(triton::smt2lib::smtAstAbstractNode* node) {
+      triton::smt2lib::smtAstAbstractNode* AstSummaries::browseAstSummaries(triton::smt2lib::smtAstAbstractNode* node) {
+        this->allocatedNodes++;
+
         switch (node->getKind()) {
 
           case triton::smt2lib::ASSERT_NODE: {
@@ -497,8 +501,65 @@ namespace triton {
           default:
             break;
         }
+        this->allocatedSummaries++;
         return nullptr;
       }
+
+
+      std::map<std::string, triton::uint32> AstSummaries::getAstSummariesStats(void) {
+        std::map<std::string, triton::uint32> stats;
+        stats["assert"]             = this->assertSummaries.size();
+        stats["bvadd"]              = this->bvaddSummaries.size();
+        stats["bvand"]              = this->bvandSummaries.size();
+        stats["bvashr"]             = this->bvashrSummaries.size();
+        stats["bvlshr"]             = this->bvlshrSummaries.size();
+        stats["bvmul"]              = this->bvmulSummaries.size();
+        stats["bvnand"]             = this->bvnandSummaries.size();
+        stats["bvneg"]              = this->bvnegSummaries.size();
+        stats["bvnor"]              = this->bvnorSummaries.size();
+        stats["bvnot"]              = this->bvnotSummaries.size();
+        stats["bvor"]               = this->bvorSummaries.size();
+        stats["bvrol"]              = this->bvrolSummaries.size();
+        stats["bvror"]              = this->bvrorSummaries.size();
+        stats["bvsdiv"]             = this->bvsdivSummaries.size();
+        stats["bvsge"]              = this->bvsgeSummaries.size();
+        stats["bvsgt"]              = this->bvsgtSummaries.size();
+        stats["bvshl"]              = this->bvshlSummaries.size();
+        stats["bvsle"]              = this->bvsleSummaries.size();
+        stats["bvslt"]              = this->bvsltSummaries.size();
+        stats["bvsmod"]             = this->bvsmodSummaries.size();
+        stats["bvsrem"]             = this->bvsremSummaries.size();
+        stats["bvsub"]              = this->bvsubSummaries.size();
+        stats["bvudiv"]             = this->bvudivSummaries.size();
+        stats["bvuge"]              = this->bvugeSummaries.size();
+        stats["bvugt"]              = this->bvugtSummaries.size();
+        stats["bvule"]              = this->bvuleSummaries.size();
+        stats["bvult"]              = this->bvultSummaries.size();
+        stats["bvurem"]             = this->bvuremSummaries.size();
+        stats["bvxnor"]             = this->bvxnorSummaries.size();
+        stats["bvxor"]              = this->bvxorSummaries.size();
+        stats["bv"]                 = this->bvSummaries.size();
+        stats["compound"]           = this->compoundSummaries.size();
+        stats["concat"]             = this->concatSummaries.size();
+        stats["decimal"]            = this->decimalSummaries.size();
+        stats["declare"]            = this->declareSummaries.size();
+        stats["distinct"]           = this->distinctSummaries.size();
+        stats["equal"]              = this->equalSummaries.size();
+        stats["extract"]            = this->extractSummaries.size();
+        stats["ite"]                = this->iteSummaries.size();
+        stats["land"]               = this->landSummaries.size();
+        stats["lnot"]               = this->lnotSummaries.size();
+        stats["lor"]                = this->lorSummaries.size();
+        stats["reference"]          = this->referenceSummaries.size();
+        stats["string"]             = this->stringSummaries.size();
+        stats["sx"]                 = this->sxSummaries.size();
+        stats["variable"]           = this->variableSummaries.size();
+        stats["zx"]                 = this->zxSummaries.size();
+        stats["allocatedSummaries"] = this->allocatedSummaries;
+        stats["allocatedNodes"]     = this->allocatedNodes;
+        return stats;
+      }
+
 
     }; /* symbolic namespace */
   }; /* engines namespace */

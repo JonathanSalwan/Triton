@@ -148,6 +148,9 @@ Returns the architecture which has been initialized as \ref py_ARCH_page.
 - **getAstFromId(integer symExprId)**<br>
 Returns the partial AST as \ref py_SmtAstNode_page from a symbolic expression id.
 
+- **getAstSummariesStats(void)**<br>
+Returns a dictionary which contains all information about number of nodes allocated via AST summaries.
+
 - **getFullAst(\ref py_SmtAstNode_page node)**<br>
 Returns the full AST of a root node as \ref py_SmtAstNode_page.
 
@@ -1119,6 +1122,29 @@ namespace triton {
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
+      }
+
+
+      static PyObject* triton_getAstSummariesStats(PyObject* self, PyObject* noarg) {
+        PyObject* ret = nullptr;
+        std::map<std::string, triton::uint32> stats;
+        std::map<std::string, triton::uint32>::iterator it;
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getAstSummariesStats(): Architecture is not defined.");
+
+        try {
+          stats = triton::api.getAstSummariesStats();
+          ret   = xPyDict_New();
+          for (it = stats.begin(); it != stats.end(); it++)
+            PyDict_SetItem(ret, PyString_FromString(it->first.c_str()), PyLong_FromUint(it->second));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return ret;
       }
 
 
@@ -2266,6 +2292,7 @@ namespace triton {
         {"evaluateAst",                         (PyCFunction)triton_evaluateAst,                            METH_O,             ""},
         {"getArchitecture",                     (PyCFunction)triton_getArchitecture,                        METH_NOARGS,        ""},
         {"getAstFromId",                        (PyCFunction)triton_getAstFromId,                           METH_O,             ""},
+        {"getAstSummariesStats",                (PyCFunction)triton_getAstSummariesStats,                   METH_NOARGS,        ""},
         {"getFullAst",                          (PyCFunction)triton_getFullAst,                             METH_O,             ""},
         {"getFullAstFromId",                    (PyCFunction)triton_getFullAstFromId,                       METH_O,             ""},
         {"getLastMemoryValue",                  (PyCFunction)triton_getLastMemoryValue,                     METH_O,             ""},

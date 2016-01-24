@@ -38,9 +38,17 @@ namespace triton {
      *  @{
      */
 
-      class SymbolicSummaries {
+      //! \class AstSummaries
+      /*! \brief The AST summaries class */
+      class AstSummaries {
 
         protected:
+          //! Total of allocated nodes.
+          triton::uint32 allocatedNodes;
+
+          //! Total of allocated summaries.
+          triton::uint32 allocatedSummaries;
+
           //! Assert Summaries
           std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> assertSummaries;
 
@@ -184,13 +192,16 @@ namespace triton {
 
       public:
           //! Constructor.
-          SymbolicSummaries();
+          AstSummaries();
 
           //! Destructor.
-          ~SymbolicSummaries();
+          ~AstSummaries();
 
           //! Browses into summaries.
-          triton::smt2lib::smtAstAbstractNode* browseSymbolicSummaries(triton::smt2lib::smtAstAbstractNode* node);
+          triton::smt2lib::smtAstAbstractNode* browseAstSummaries(triton::smt2lib::smtAstAbstractNode* node);
+
+          //! Returns stats about summaries.
+          std::map<std::string, triton::uint32> getAstSummariesStats(void);
       };
 
     /*! @} End of symbolic namespace */

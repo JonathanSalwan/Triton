@@ -489,9 +489,15 @@ namespace triton {
   #endif
 
 
-  smt2lib::smtAstAbstractNode* API::browseSymbolicSummaries(smt2lib::smtAstAbstractNode* node) {
+  smt2lib::smtAstAbstractNode* API::browseAstSummaries(smt2lib::smtAstAbstractNode* node) {
     this->checkSymbolic();
-    return this->sym->browseSymbolicSummaries(node);
+    return this->sym->browseAstSummaries(node);
+  }
+
+
+  std::map<std::string, triton::uint32> API::getAstSummariesStats(void) {
+    this->checkSymbolic();
+    return this->sym->getAstSummariesStats();
   }
 
 
