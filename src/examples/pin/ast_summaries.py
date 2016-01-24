@@ -18,7 +18,8 @@ def cb_fini():
     print 'AST Summaries Stats'
     print '============================================================='
     for i in l:
-        print '%s: %d' %(i[0].lower(), i[1])
+        if i[1] > 0:
+            print '%s: %s' %(i[0], "{:,}".format(i[1]))
     print '============================================================='
     return
 
