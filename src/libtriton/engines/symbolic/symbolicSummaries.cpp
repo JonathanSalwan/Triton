@@ -9,11 +9,6 @@
 
 
 
-/*
- *
- * /!\ Still experimental /!\
- *
- */
 namespace triton {
   namespace engines {
     namespace symbolic {

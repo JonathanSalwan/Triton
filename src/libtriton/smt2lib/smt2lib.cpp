@@ -2212,10 +2212,7 @@ namespace triton {
     }
 
 
-    /*
-     * /!\ Still experimental /!\
-     * Records the allocated node or returns the same node if it already exists inside the summaries.
-     */
+    /* Records the allocated node or returns the same node if it already exists inside the summaries. */
     smtAstAbstractNode* recordNode(smtAstAbstractNode* node) {
       /* Check if the AST_SUMMARIES is enabled. */
       if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES)) {
