@@ -56,7 +56,7 @@ set(CMAKE_BUILD_TYPE Release FORCE)
 set(PROJECT_LIBTRITON "triton")
 set(PROJECT_PINTOOL "pintool")
 
-#To fix olv python version bug http://bugs.python.org/issue21958
+#To fix old python version bug http://bugs.python.org/issue21958
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")	
 set(LIBTRITON_CXX_FLAGS "-DHAVE_ROUND /MT")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
