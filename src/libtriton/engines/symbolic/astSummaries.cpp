@@ -78,7 +78,7 @@ namespace triton {
         switch (kind) {
 
           case triton::smt2lib::DECIMAL_NODE: {
-            auto value      = reinterpret_cast<triton::smt2lib::smtAstDecimalNode*>(node)->getValue();
+            auto value      = static_cast<triton::smt2lib::smtAstDecimalNode*>(node)->getValue();
             auto summaries  = static_cast<std::map<triton::uint128, triton::smt2lib::smtAstAbstractNode*>*>((this->summaries[kind]));
             if (summaries->find(value) != summaries->end()) {
               delete node;
@@ -89,7 +89,7 @@ namespace triton {
           }
 
           case triton::smt2lib::REFERENCE_NODE: {
-            auto value      = reinterpret_cast<triton::smt2lib::smtAstReferenceNode*>(node)->getValue();
+            auto value      = static_cast<triton::smt2lib::smtAstReferenceNode*>(node)->getValue();
             auto summaries  = static_cast<std::map<triton::uint128, triton::smt2lib::smtAstAbstractNode*>*>((this->summaries[kind]));
             if (summaries->find(value) != summaries->end()) {
               delete node;
@@ -100,7 +100,7 @@ namespace triton {
           }
 
           case triton::smt2lib::STRING_NODE: {
-            auto value      = reinterpret_cast<triton::smt2lib::smtAstStringNode*>(node)->getValue();
+            auto value      = static_cast<triton::smt2lib::smtAstStringNode*>(node)->getValue();
             auto summaries  = static_cast<std::map<std::string, triton::smt2lib::smtAstAbstractNode*>*>((this->summaries[kind]));
             if (summaries->find(value) != summaries->end()) {
               delete node;
@@ -111,7 +111,7 @@ namespace triton {
           }
 
           case triton::smt2lib::VARIABLE_NODE: {
-            auto value      = reinterpret_cast<triton::smt2lib::smtAstVariableNode*>(node)->getValue();
+            auto value      = static_cast<triton::smt2lib::smtAstVariableNode*>(node)->getValue();
             auto summaries  = static_cast<std::map<std::string, triton::smt2lib::smtAstAbstractNode*>*>((this->summaries[kind]));
             if (summaries->find(value) != summaries->end()) {
               delete node;
