@@ -110,6 +110,9 @@ namespace triton {
         //! True if this concrete memory value is trusted and synchronized with the real MMU value.
         bool isTrusted(void);
 
+        //! True if the memory is not empty.
+        bool isValid(void);
+
         //! Sets the trust flag.
         void setTrust(bool flag);
 

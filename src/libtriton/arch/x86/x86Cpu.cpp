@@ -274,6 +274,10 @@ namespace triton {
               case X86_OP_MEM: {
                 triton::arch::MemoryOperand mem = inst.popMemoryAccess();
 
+                /* Set the size if the memory is not valid */
+                if (!mem.isValid())
+                  mem.setPair(std::make_pair(((op->size * BYTE_SIZE_BIT) - 1), 0));
+
                 /* LEA if exists */
                 triton::arch::RegisterOperand base(triton::arch::x86::capstoneRegToTritonReg(op->mem.base));
                 triton::arch::RegisterOperand index(triton::arch::x86::capstoneRegToTritonReg(op->mem.index));

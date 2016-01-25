@@ -105,6 +105,13 @@ namespace triton {
     }
 
 
+    bool MemoryOperand::isValid(void) {
+      if (!this->address && !this->concreteValue && !this->trusted && !this->getLow() && !this->getHigh())
+        return false;
+      return true;
+    }
+
+
     void MemoryOperand::setTrust(bool flag) {
       this->trusted = flag;
     }
