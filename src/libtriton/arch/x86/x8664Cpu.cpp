@@ -29,6 +29,40 @@ namespace triton {
     namespace x86 {
 
     x8664Cpu::x8664Cpu() {
+		memset(rax, '\0', QWORD_SIZE);
+		memset(rbx, '\0', QWORD_SIZE);
+		memset(rcx, '\0', QWORD_SIZE);
+		memset(rdx, '\0', QWORD_SIZE);
+		memset(rdi, '\0', QWORD_SIZE);
+		memset(rsi, '\0', QWORD_SIZE);
+		memset(rbp, '\0', QWORD_SIZE);
+		memset(rsp, '\0', QWORD_SIZE);
+		memset(rip, '\0', QWORD_SIZE);
+		memset(r8, '\0', QWORD_SIZE);
+		memset(r9, '\0', QWORD_SIZE);
+		memset(r10, '\0', QWORD_SIZE);
+		memset(r11, '\0', QWORD_SIZE);
+		memset(r12, '\0', QWORD_SIZE);
+		memset(r13, '\0', QWORD_SIZE);
+		memset(r14, '\0', QWORD_SIZE);
+		memset(r15, '\0', QWORD_SIZE);
+		memset(rflags, '\0', QWORD_SIZE);
+		memset(xmm0, '\0', DQWORD_SIZE);
+		memset(xmm1, '\0', DQWORD_SIZE);
+		memset(xmm2, '\0', DQWORD_SIZE);
+		memset(xmm3, '\0', DQWORD_SIZE);
+		memset(xmm4, '\0', DQWORD_SIZE);
+		memset(xmm5, '\0', DQWORD_SIZE);
+		memset(xmm6, '\0', DQWORD_SIZE);
+		memset(xmm7, '\0', DQWORD_SIZE);
+		memset(xmm8, '\0', DQWORD_SIZE);
+		memset(xmm9, '\0', DQWORD_SIZE);
+		memset(xmm10, '\0', DQWORD_SIZE);
+		memset(xmm11, '\0', DQWORD_SIZE);
+		memset(xmm12, '\0', DQWORD_SIZE);
+		memset(xmm13, '\0', DQWORD_SIZE);
+		memset(xmm14, '\0', DQWORD_SIZE);
+		memset(xmm15, '\0', DQWORD_SIZE);
     }
 
 
