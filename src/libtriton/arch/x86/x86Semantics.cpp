@@ -1360,6 +1360,7 @@ namespace triton {
             case DWORD_SIZE:
               bytes.push_front(smt2lib::extract(31, 24, op1));
               bytes.push_front(smt2lib::extract(23, 16, op1));
+            case WORD_SIZE:
               bytes.push_front(smt2lib::extract(15, 8, op1));
               bytes.push_front(smt2lib::extract(7,  0, op1));
               break;
