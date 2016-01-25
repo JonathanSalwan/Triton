@@ -31,6 +31,24 @@ namespace triton {
     namespace x86 {
 
     x86Cpu::x86Cpu() {
+		memset(eax, '\0', DWORD_SIZE);
+		memset(ebx, '\0', DWORD_SIZE);
+		memset(ecx, '\0', DWORD_SIZE);
+		memset(edx, '\0', DWORD_SIZE);
+		memset(edi, '\0', DWORD_SIZE);
+		memset(esi, '\0', DWORD_SIZE);
+		memset(ebp, '\0', DWORD_SIZE);
+		memset(esp, '\0', DWORD_SIZE);
+		memset(eip, '\0', DWORD_SIZE);
+		memset(eflags, '\0', DWORD_SIZE);
+		memset(xmm0, '\0', DQWORD_SIZE);
+		memset(xmm1, '\0', DQWORD_SIZE);
+		memset(xmm2, '\0', DQWORD_SIZE);
+		memset(xmm3, '\0', DQWORD_SIZE);
+		memset(xmm4, '\0', DQWORD_SIZE);
+		memset(xmm5, '\0', DQWORD_SIZE);
+		memset(xmm6, '\0', DQWORD_SIZE);
+		memset(xmm7, '\0', DQWORD_SIZE);
     }
 
 
