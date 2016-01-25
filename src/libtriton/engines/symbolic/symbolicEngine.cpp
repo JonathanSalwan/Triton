@@ -476,7 +476,7 @@ namespace triton {
         triton::__uint address                   = mem.getAddress();
         triton::__uint size                      = mem.getSize();
         triton::__uint symMem                    = triton::engines::symbolic::UNSET;
-        triton::uint8 concreteValue[DQWORD_SIZE] = {0};
+        triton::uint8 concreteValue[DQWORD_SIZE] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
         triton::uint128 value                    = triton::api.getLastMemoryValue(mem);
 
         triton::fromUint128ToBuffer(value, concreteValue);

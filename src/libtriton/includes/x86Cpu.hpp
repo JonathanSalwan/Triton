@@ -58,41 +58,41 @@ namespace triton {
           std::map<triton::__uint, triton::uint8> memory;
 
           //! Concrete value of eax
-          triton::uint8 eax[DWORD_SIZE] = {0};
+          triton::uint8 eax[DWORD_SIZE]     = {0,0,0,0};
           //! Concrete value of ebx
-          triton::uint8 ebx[DWORD_SIZE] = {0};
+          triton::uint8 ebx[DWORD_SIZE]     = {0,0,0,0};
           //! Concrete value of ecx
-          triton::uint8 ecx[DWORD_SIZE] = {0};
+          triton::uint8 ecx[DWORD_SIZE]     = {0,0,0,0};
           //! Concrete value of edx
-          triton::uint8 edx[DWORD_SIZE] = {0};
+          triton::uint8 edx[DWORD_SIZE]     = {0,0,0,0};
           //! Concrete value of edi
-          triton::uint8 edi[DWORD_SIZE] = {0};
+          triton::uint8 edi[DWORD_SIZE]     = {0,0,0,0};
           //! Concrete value of esi
-          triton::uint8 esi[DWORD_SIZE] = {0};
+          triton::uint8 esi[DWORD_SIZE]     = {0,0,0,0};
           //! Concrete value of ebp
-          triton::uint8 ebp[DWORD_SIZE] = {0};
+          triton::uint8 ebp[DWORD_SIZE]     = {0,0,0,0};
           //! Concrete value of esp
-          triton::uint8 esp[DWORD_SIZE] = {0};
+          triton::uint8 esp[DWORD_SIZE]     = {0,0,0,0};
           //! Concrete value of eip
-          triton::uint8 eip[DWORD_SIZE] = {0};
+          triton::uint8 eip[DWORD_SIZE]     = {0,0,0,0};
           //! Concrete value of eflags
-          triton::uint8 eflags[DWORD_SIZE] = {0};
+          triton::uint8 eflags[DWORD_SIZE]  = {0,0,0,0};
           //! Concrete value of xmm0
-          triton::uint8 xmm0[DQWORD_SIZE] = {0};
+          triton::uint8 xmm0[DQWORD_SIZE]   = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
           //! Concrete value of xmm1
-          triton::uint8 xmm1[DQWORD_SIZE] = {0};
+          triton::uint8 xmm1[DQWORD_SIZE]   = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
           //! Concrete value of xmm2
-          triton::uint8 xmm2[DQWORD_SIZE] = {0};
+          triton::uint8 xmm2[DQWORD_SIZE]   = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
           //! Concrete value of xmm3
-          triton::uint8 xmm3[DQWORD_SIZE] = {0};
+          triton::uint8 xmm3[DQWORD_SIZE]   = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
           //! Concrete value of xmm4
-          triton::uint8 xmm4[DQWORD_SIZE] = {0};
+          triton::uint8 xmm4[DQWORD_SIZE]   = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
           //! Concrete value of xmm5
-          triton::uint8 xmm5[DQWORD_SIZE] = {0};
+          triton::uint8 xmm5[DQWORD_SIZE]   = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
           //! Concrete value of xmm6
-          triton::uint8 xmm6[DQWORD_SIZE] = {0};
+          triton::uint8 xmm6[DQWORD_SIZE]   = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
           //! Concrete value of xmm7
-          triton::uint8 xmm7[DQWORD_SIZE] = {0};
+          triton::uint8 xmm7[DQWORD_SIZE]   = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 
         public:
