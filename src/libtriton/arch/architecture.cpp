@@ -180,6 +180,10 @@ namespace triton {
       /* Processing */
       this->cpu->buildSemantics(inst);
 
+      /* Clear unused data */
+      inst.memoryAccess.clear();
+      inst.registerState.clear();
+
       /*
        * If the symbolic engine is disable we delete symbolic
        * expressions and AST nodes. Note that if the taint engine
