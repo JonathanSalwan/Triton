@@ -190,6 +190,9 @@ namespace triton {
           //! Zx Summaries
           std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> zxSummaries;
 
+          //! Summaries
+          std::map<triton::uint32, void*> summaries;
+
       public:
           //! Constructor.
           AstSummaries();
