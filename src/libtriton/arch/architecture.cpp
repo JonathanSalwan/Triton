@@ -77,6 +77,13 @@ namespace triton {
     }
 
 
+    void Architecture::clearArchitecture(void) {
+      if (!this->cpu)
+        throw std::runtime_error("Architecture::clearArchitecture(): You must define an architecture");
+      this->cpu->clear();
+    }
+
+
     bool Architecture::isValid(void) {
       if (this->arch == ARCH_INVALID)
         return false;

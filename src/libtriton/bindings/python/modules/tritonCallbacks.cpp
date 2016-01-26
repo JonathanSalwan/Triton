@@ -238,6 +238,9 @@ Records a simplification callback. The callback will be called before every symb
 - **removeSimplificationCallback(function cb)**<br>
 Removes a simplification callback.
 
+- **resetEngines(void)**<br>
+Resets everything.
+
 - **setArchitecture(\ref py_ARCH_page arch)**<br>
 Initializes an architecture. This function must be called before any call to the rest of the API.
 
@@ -1686,6 +1689,23 @@ namespace triton {
       }
 
 
+      static PyObject* triton_resetEngines(PyObject* self, PyObject* noarg) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "resetEngines(): Architecture is not defined.");
+
+        try {
+          triton::api.resetEngines();
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* triton_setArchitecture(PyObject* self, PyObject* arg) {
         if (!PyLong_Check(arg) && !PyInt_Check(arg))
           return PyErr_Format(PyExc_TypeError, "setArchitecture(): Expects an ARCH as argument.");
@@ -2321,6 +2341,7 @@ namespace triton {
         {"processing",                          (PyCFunction)triton_processing,                             METH_O,             ""},
         {"recordSimplificationCallback",        (PyCFunction)triton_recordSimplificationCallback,           METH_O,             ""},
         {"removeSimplificationCallback",        (PyCFunction)triton_removeSimplificationCallback,           METH_O,             ""},
+        {"resetEngines",                        (PyCFunction)triton_resetEngines,                           METH_NOARGS,        ""},
         {"setArchitecture",                     (PyCFunction)triton_setArchitecture,                        METH_O,             ""},
         {"setLastMemoryValue",                  (PyCFunction)triton_setLastMemoryValue,                     METH_VARARGS,       ""},
         {"setLastRegisterValue",                (PyCFunction)triton_setLastRegisterValue,                   METH_O,             ""},

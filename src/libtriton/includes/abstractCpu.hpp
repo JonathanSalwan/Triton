@@ -43,6 +43,9 @@ namespace triton {
       //! The first function called when the a CPU is initialized.
       virtual void init(void) = 0;
 
+      //! Clears the architecture states (registers and memory).
+      virtual void clear(void) = 0;
+
       //! Returns true if the regId is a flag.
       /*!
           \param regId the register id.

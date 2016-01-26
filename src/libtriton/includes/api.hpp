@@ -88,6 +88,9 @@ namespace triton {
         */
         void setArchitecture(triton::uint32 arch);
 
+        //! [**architecture api**] - Clears the architecture states (registers and memory).
+        void clearArchitecture(void);
+
         //! [**architecture api**] - Returns true if the regId is a flag.
         /*!
           \param regId the register id.
@@ -159,6 +162,14 @@ namespace triton {
         //! [**proccesing api**] - The main function. This function processes everything (engine, IR, optimization, state, ...) from a given instruction.
         void processing(triton::arch::Instruction &inst);
 
+        //! [**proccesing api**] - Initialize everything.
+        void initEngines(void);
+
+        //! [**proccesing api**] - Remove everything.
+        void removeEngines(void);
+
+        //! [**proccesing api**] - Reset everything.
+        void resetEngines(void);
 
 
         /* Symbolic engine API =========================================================================== */

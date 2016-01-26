@@ -29,6 +29,7 @@ namespace triton {
     namespace x86 {
 
     x8664Cpu::x8664Cpu() {
+      this->clear();
     }
 
 
@@ -69,14 +70,14 @@ namespace triton {
       memcpy(this->xmm5, other.xmm5, sizeof(this->xmm5));
       memcpy(this->xmm6, other.xmm6, sizeof(this->xmm6));
       memcpy(this->xmm7, other.xmm7, sizeof(this->xmm7));
-      memcpy(this->xmm7, other.xmm8, sizeof(this->xmm8));
-      memcpy(this->xmm7, other.xmm9, sizeof(this->xmm9));
-      memcpy(this->xmm7, other.xmm10, sizeof(this->xmm10));
-      memcpy(this->xmm7, other.xmm11, sizeof(this->xmm11));
-      memcpy(this->xmm7, other.xmm12, sizeof(this->xmm12));
-      memcpy(this->xmm7, other.xmm13, sizeof(this->xmm13));
-      memcpy(this->xmm7, other.xmm14, sizeof(this->xmm14));
-      memcpy(this->xmm7, other.xmm15, sizeof(this->xmm15));
+      memcpy(this->xmm8, other.xmm8, sizeof(this->xmm8));
+      memcpy(this->xmm9, other.xmm9, sizeof(this->xmm9));
+      memcpy(this->xmm10, other.xmm10, sizeof(this->xmm10));
+      memcpy(this->xmm11, other.xmm11, sizeof(this->xmm11));
+      memcpy(this->xmm12, other.xmm12, sizeof(this->xmm12));
+      memcpy(this->xmm13, other.xmm13, sizeof(this->xmm13));
+      memcpy(this->xmm14, other.xmm14, sizeof(this->xmm14));
+      memcpy(this->xmm15, other.xmm15, sizeof(this->xmm15));
     }
 
 
@@ -211,6 +212,48 @@ namespace triton {
           triton::bindings::python::initSyscallNamespace();
         #endif
       #endif
+    }
+
+
+    void x8664Cpu::clear(void) {
+      /* Clear memory */
+      this->memory.clear();
+
+      /* Clear registers */
+      memset(this->rax,     0x00, sizeof(this->rax));
+      memset(this->rbx,     0x00, sizeof(this->rbx));
+      memset(this->rcx,     0x00, sizeof(this->rcx));
+      memset(this->rdx,     0x00, sizeof(this->rdx));
+      memset(this->rdi,     0x00, sizeof(this->rdi));
+      memset(this->rsi,     0x00, sizeof(this->rsi));
+      memset(this->rsp,     0x00, sizeof(this->rsp));
+      memset(this->rbp,     0x00, sizeof(this->rbp));
+      memset(this->rip,     0x00, sizeof(this->rip));
+      memset(this->rflags,  0x00, sizeof(this->rflags));
+      memset(this->r8,      0x00, sizeof(this->r8));
+      memset(this->r9,      0x00, sizeof(this->r9));
+      memset(this->r10,     0x00, sizeof(this->r10));
+      memset(this->r11,     0x00, sizeof(this->r11));
+      memset(this->r12,     0x00, sizeof(this->r12));
+      memset(this->r13,     0x00, sizeof(this->r13));
+      memset(this->r14,     0x00, sizeof(this->r14));
+      memset(this->r15,     0x00, sizeof(this->r15));
+      memset(this->xmm0,    0x00, sizeof(this->xmm0));
+      memset(this->xmm1,    0x00, sizeof(this->xmm1));
+      memset(this->xmm2,    0x00, sizeof(this->xmm2));
+      memset(this->xmm3,    0x00, sizeof(this->xmm3));
+      memset(this->xmm4,    0x00, sizeof(this->xmm4));
+      memset(this->xmm5,    0x00, sizeof(this->xmm5));
+      memset(this->xmm6,    0x00, sizeof(this->xmm6));
+      memset(this->xmm7,    0x00, sizeof(this->xmm7));
+      memset(this->xmm8,    0x00, sizeof(this->xmm8));
+      memset(this->xmm9,    0x00, sizeof(this->xmm9));
+      memset(this->xmm10,   0x00, sizeof(this->xmm10));
+      memset(this->xmm11,   0x00, sizeof(this->xmm11));
+      memset(this->xmm12,   0x00, sizeof(this->xmm12));
+      memset(this->xmm13,   0x00, sizeof(this->xmm13));
+      memset(this->xmm14,   0x00, sizeof(this->xmm14));
+      memset(this->xmm15,   0x00, sizeof(this->xmm15));
     }
 
 

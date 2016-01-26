@@ -148,10 +148,7 @@ namespace triton {
 
 
   API::~API() {
-    delete this->taint;
-    delete this->sym;
-    delete this->symBackup;
-    delete this->solver;
+    this->removeEngines();
   }
 
 
@@ -184,23 +181,13 @@ namespace triton {
   void API::setArchitecture(uint32 arch) {
     /* Setup and init the targetd architecture */
     this->arch.setArchitecture(arch);
+    this->initEngines();
+  }
 
-    /* After architecture initialized, init all engines */
-    this->taint = new triton::engines::taint::TaintEngine();
-    if (!this->taint)
-      throw std::invalid_argument("API::setArchitecture(): No enough memory.");
 
-    this->sym = new triton::engines::symbolic::SymbolicEngine();
-    if (!this->sym)
-      throw std::invalid_argument("API::setArchitecture(): No enough memory.");
-
-    this->symBackup = new triton::engines::symbolic::SymbolicEngine();
-    if (!this->symBackup)
-      throw std::invalid_argument("API::setArchitecture(): No enough memory.");
-
-    this->solver = new triton::engines::solver::SolverEngine();
-    if (!this->solver)
-      throw std::invalid_argument("API::setArchitecture(): No enough memory.");
+  void API::clearArchitecture(void) {
+    this->checkArchitecture();
+    this->arch.clearArchitecture();
   }
 
 
@@ -308,6 +295,44 @@ namespace triton {
 
 
   /* Processing API ================================================================================ */
+
+  void API::initEngines(void) {
+    this->checkArchitecture();
+
+    this->taint = new triton::engines::taint::TaintEngine();
+    if (!this->taint)
+      throw std::invalid_argument("API::initEngines(): No enough memory.");
+
+    this->sym = new triton::engines::symbolic::SymbolicEngine();
+    if (!this->sym)
+      throw std::invalid_argument("API::initEngines(): No enough memory.");
+
+    this->symBackup = new triton::engines::symbolic::SymbolicEngine();
+    if (!this->symBackup)
+      throw std::invalid_argument("API::initEngines(): No enough memory.");
+
+    this->solver = new triton::engines::solver::SolverEngine();
+    if (!this->solver)
+      throw std::invalid_argument("API::initEngines(): No enough memory.");
+  }
+
+
+  void API::removeEngines(void) {
+    this->checkArchitecture();
+    delete this->taint;
+    delete this->sym;
+    delete this->symBackup;
+    delete this->solver;
+  }
+
+
+  void API::resetEngines(void) {
+    this->checkArchitecture();
+    this->removeEngines();
+    this->initEngines();
+    this->clearArchitecture();
+  }
+
 
   void API::processing(triton::arch::Instruction& inst) {
     this->checkArchitecture();

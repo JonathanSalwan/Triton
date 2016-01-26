@@ -99,6 +99,9 @@ namespace triton {
         */
         void setArchitecture(triton::uint32 arch);
 
+        //! Clears the architecture states (registers and memory).
+        void clearArchitecture(void);
+
         //! Returns all information about the register.
         /*!
           \param reg the register id.

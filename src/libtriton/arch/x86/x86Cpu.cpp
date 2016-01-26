@@ -31,6 +31,7 @@ namespace triton {
     namespace x86 {
 
     x86Cpu::x86Cpu() {
+      this->clear();
     }
 
 
@@ -140,6 +141,32 @@ namespace triton {
           triton::bindings::python::initSyscallNamespace();
         #endif
       #endif
+    }
+
+
+    void x86Cpu::clear(void) {
+      /* Clear memory */
+      this->memory.clear();
+
+      /* Clear registers */
+      memset(this->eax,     0x00, sizeof(this->eax));
+      memset(this->ebx,     0x00, sizeof(this->ebx));
+      memset(this->ecx,     0x00, sizeof(this->ecx));
+      memset(this->edx,     0x00, sizeof(this->edx));
+      memset(this->edi,     0x00, sizeof(this->edi));
+      memset(this->esi,     0x00, sizeof(this->esi));
+      memset(this->esp,     0x00, sizeof(this->esp));
+      memset(this->ebp,     0x00, sizeof(this->ebp));
+      memset(this->eip,     0x00, sizeof(this->eip));
+      memset(this->eflags,  0x00, sizeof(this->eflags));
+      memset(this->xmm0,    0x00, sizeof(this->xmm0));
+      memset(this->xmm1,    0x00, sizeof(this->xmm1));
+      memset(this->xmm2,    0x00, sizeof(this->xmm2));
+      memset(this->xmm3,    0x00, sizeof(this->xmm3));
+      memset(this->xmm4,    0x00, sizeof(this->xmm4));
+      memset(this->xmm5,    0x00, sizeof(this->xmm5));
+      memset(this->xmm6,    0x00, sizeof(this->xmm6));
+      memset(this->xmm7,    0x00, sizeof(this->xmm7));
     }
 
 
