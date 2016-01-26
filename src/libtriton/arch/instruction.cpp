@@ -122,16 +122,20 @@ namespace triton {
 
 
     triton::arch::MemoryOperand Instruction::popMemoryAccess(triton::__uint addr, triton::uint32 size, triton::uint128 value) {
+      /* The default value is zero */
       triton::arch::MemoryOperand mem;
 
+      /* If there is a default value specified, we use it */
       if (addr && size)
         mem = triton::arch::MemoryOperand(addr, size, value);
 
+      /* If there is a memory access recorded, we use it */
       if (this->memoryAccess.size() > 0) {
         mem = this->memoryAccess.front();
         triton::api.setLastMemoryValue(mem);
         this->memoryAccess.pop_front();
       }
+
       return mem;
     }
 
