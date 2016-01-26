@@ -96,7 +96,7 @@ To be able to compile Triton, you must install these libraries before:
 Once libraries installed, you can use `cmake` to build the `libTriton`.
 
 ~~~~~~~~~~~~~{.sh}
-$ git clone -b v0.3 https://github.com/JonathanSalwan/Triton.git
+$ git clone https://github.com/JonathanSalwan/Triton.git
 $ cd Triton
 $ mkdir build
 $ cd build
@@ -111,7 +111,7 @@ This project is also shipped with a Pin \ref Tracer_page and may be compiled wit
 
 ~~~~~~~~~~~~~{.sh}
 $ cd pin-2.14-71313-gcc.4.4.7-linux/source/tools/
-$ git clone -b v0.3 https://github.com/JonathanSalwan/Triton.git
+$ git clone https://github.com/JonathanSalwan/Triton.git
 $ cd Triton
 $ mkdir build
 $ cd build

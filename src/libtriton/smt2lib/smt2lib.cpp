@@ -1220,7 +1220,7 @@ namespace triton {
 
       triton::uint32 size = exprs.size();
       if (size < 2)
-        throw std::length_error("smtAstConcatNode - exprs must contain at less two expressions");
+        throw std::length_error("smtAstConcatNode - exprs must contain at least two expressions");
 
       for (triton::uint32 index = 0; index < size; index++)
         this->addChild(exprs[index]);
@@ -1231,7 +1231,7 @@ namespace triton {
       this->kind = CONCAT_NODE;
 
       if (exprs.size() < 2)
-        throw std::length_error("smtAstConcatNode - exprs must contain at less two expressions");
+        throw std::length_error("smtAstConcatNode - exprs must contain at least two expressions");
 
       std::list<smtAstAbstractNode *>::iterator it = exprs.begin();
       for ( ; it != exprs.end(); it++)
@@ -2052,7 +2052,7 @@ namespace triton {
       triton::uint32 size = childs.size();
 
       if (size < 2)
-        throw std::length_error("smtAstConcatNode - exprs must contain at less two expressions");
+        throw std::length_error("smtAstConcatNode - exprs must contain at least two expressions");
 
       stream << "(concat";
       for (triton::uint32 index = 0; index < size; index++)
