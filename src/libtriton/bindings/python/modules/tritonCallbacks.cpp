@@ -184,8 +184,17 @@ Returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py
 - **getSymbolicMemoryId(intger addr)**<br>
 Returns the symbolic expression id as integer corresponding to the memory address.
 
+- **getSymbolicMemoryValue(intger addr)**<br>
+Returns the symbolic memory value as integer.
+
+- **getSymbolicMemoryValue(\ref py_Memory_page mem)**<br>
+Returns the symbolic memory value as integer.
+
 - **getSymbolicRegisterId(\ref py_REG_page reg)**<br>
 Returns the symbolic expression id as integer corresponding to the register.
+
+- **getSymbolicRegisterValue(\ref py_REG_page reg)**<br>
+Returns the symbolic register value as integer.
 
 - **getSymbolicVariableFromId(integer symVarId)**<br>
 Returns the symbolic variable as \ref py_SymbolicVariable_page corresponding to the symbolic variable id.
@@ -1379,6 +1388,25 @@ namespace triton {
       }
 
 
+      static PyObject* triton_getSymbolicMemoryValue(PyObject* self, PyObject* mem) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getSymbolicMemoryValue(): Architecture is not defined.");
+
+        if (!PyLong_Check(mem) && !PyInt_Check(mem) && !PyMemoryOperand_Check(mem))
+          return PyErr_Format(PyExc_TypeError, "getSymbolicMemoryValue(): Expects an integer or a Memory as argument.");
+
+        try {
+          if (PyLong_Check(mem) || PyInt_Check(mem))
+            return PyLong_FromUint128(triton::api.getSymbolicMemoryValue(PyLong_AsUint(mem)));
+          return PyLong_FromUint128(triton::api.getSymbolicMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* triton_getSymbolicRegisterId(PyObject* self, PyObject* reg) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -1389,6 +1417,23 @@ namespace triton {
 
         try {
           return PyLong_FromUint(triton::api.getSymbolicRegisterId(*PyRegisterOperand_AsRegisterOperand(reg)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* triton_getSymbolicRegisterValue(PyObject* self, PyObject* reg) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterValue(): Architecture is not defined.");
+
+        if (!PyRegisterOperand_Check(reg))
+          return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterValue(): Expects a REG as argument.");
+
+        try {
+          return PyLong_FromUint128(triton::api.getSymbolicRegisterValue(*PyRegisterOperand_AsRegisterOperand(reg)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2323,7 +2368,9 @@ namespace triton {
         {"getSymbolicExpressionFromId",         (PyCFunction)triton_getSymbolicExpressionFromId,            METH_O,             ""},
         {"getSymbolicExpressions",              (PyCFunction)triton_getSymbolicExpressions,                 METH_NOARGS,        ""},
         {"getSymbolicMemoryId",                 (PyCFunction)triton_getSymbolicMemoryId,                    METH_O,             ""},
+        {"getSymbolicMemoryValue",              (PyCFunction)triton_getSymbolicMemoryValue,                 METH_O,             ""},
         {"getSymbolicRegisterId",               (PyCFunction)triton_getSymbolicRegisterId,                  METH_O,             ""},
+        {"getSymbolicRegisterValue",            (PyCFunction)triton_getSymbolicRegisterValue,               METH_O,             ""},
         {"getSymbolicVariableFromId",           (PyCFunction)triton_getSymbolicVariableFromId,              METH_O,             ""},
         {"getSymbolicVariableFromName",         (PyCFunction)triton_getSymbolicVariableFromName,            METH_O,             ""},
         {"getSymbolicVariables",                (PyCFunction)triton_getSymbolicVariables,                   METH_NOARGS,        ""},

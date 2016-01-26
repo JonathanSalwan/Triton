@@ -192,6 +192,15 @@ namespace triton {
         //! [**symbolic api**] - Returns the symbolic expression id corresponding to the register.
         triton::__uint getSymbolicRegisterId(triton::arch::RegisterOperand& reg);
 
+        //! [**symbolic api**] - Returns the symbolic memory value.
+        triton::uint128 getSymbolicMemoryValue(triton::__uint address);
+
+        //! [**symbolic api**] - Returns the symbolic memory value.
+        triton::uint128 getSymbolicMemoryValue(triton::arch::MemoryOperand& mem);
+
+        //! [**symbolic api**] - Returns the symbolic register value.
+        triton::uint128 getSymbolicRegisterValue(triton::arch::RegisterOperand& reg);
+
         //! [**symbolic api**] - Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
         triton::engines::symbolic::SymbolicVariable* convertExprToSymVar(triton::__uint exprId, triton::uint32 symVarSize, std::string symVarComment="");
 

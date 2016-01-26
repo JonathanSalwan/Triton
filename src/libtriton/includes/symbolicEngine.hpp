@@ -132,6 +132,15 @@ namespace triton {
           //! Returns the symbolic expression id corresponding to the register.
           triton::__uint getSymbolicRegisterId(triton::arch::RegisterOperand& reg);
 
+          //! Returns the symbolic memory value.
+          triton::uint128 getSymbolicMemoryValue(triton::__uint address);
+
+          //! Returns the symbolic memory value.
+          triton::uint128 getSymbolicMemoryValue(triton::arch::MemoryOperand& mem);
+
+          //! Returns the symbolic register value.
+          triton::uint128 getSymbolicRegisterValue(triton::arch::RegisterOperand& reg);
+
           //! Returns an immediate symbolic operand.
           smt2lib::smtAstAbstractNode* buildSymbolicImmediateOperand(triton::arch::ImmediateOperand& imm);
 

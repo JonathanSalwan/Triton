@@ -229,7 +229,7 @@ namespace triton {
       }
 
 
-      /* Return the reg reference or UNSET */
+      /* Returns the reg reference or UNSET */
       triton::__uint SymbolicEngine::getSymbolicRegisterId(triton::arch::RegisterOperand& reg) {
         triton::uint32 parentId = reg.getParent().getId();
         if (!triton::api.isCpuRegValid(parentId))
@@ -238,7 +238,28 @@ namespace triton {
       }
 
 
-      /* Create a new symbolic expression */
+      /* Returns the symbolic address value */
+      triton::uint128 SymbolicEngine::getSymbolicMemoryValue(triton::__uint address) {
+        triton::arch::MemoryOperand mem(address, 1, 0);
+        return this->getSymbolicMemoryValue(mem);
+      }
+
+
+      /* Returns the symbolic memory value */
+      triton::uint128 SymbolicEngine::getSymbolicMemoryValue(triton::arch::MemoryOperand& mem) {
+        triton::smt2lib::smtAstAbstractNode* node = this->buildSymbolicMemoryOperand(mem);
+        return triton::api.evaluateAst(node).convert_to<triton::uint128>();
+      }
+
+
+      /* Returns the symbolic register value */
+      triton::uint128 SymbolicEngine::getSymbolicRegisterValue(triton::arch::RegisterOperand& reg) {
+        triton::smt2lib::smtAstAbstractNode* node = this->buildSymbolicRegisterOperand(reg);
+        return triton::api.evaluateAst(node).convert_to<triton::uint128>();
+      }
+
+
+      /* Creates a new symbolic expression */
       /* Get an unique id.
        * Mainly used when a new symbolic expression is created */
       triton::__uint SymbolicEngine::getUniqueSymExprId(void) {
@@ -246,7 +267,7 @@ namespace triton {
       }
 
 
-      /* Create a new symbolic variable */
+      /* Creates a new symbolic variable */
       /* Get an unique id.
        * Mainly used when a new symbolic variable is created */
       triton::__uint SymbolicEngine::getUniqueSymVarId(void) {
@@ -254,7 +275,7 @@ namespace triton {
       }
 
 
-      /* Create a new symbolic expression with comment */
+      /* Creates a new symbolic expression with comment */
       SymbolicExpression* SymbolicEngine::newSymbolicExpression(smt2lib::smtAstAbstractNode* node, triton::engines::symbolic::symkind_e kind, std::string comment) {
         triton::__uint id = this->getUniqueSymExprId();
         node = this->processSimplification(node);
@@ -295,7 +316,7 @@ namespace triton {
       }
 
 
-      /* Get the symbolic expression pointer from a symbolic id */
+      /* Gets the symbolic expression pointer from a symbolic id */
       SymbolicExpression* SymbolicEngine::getSymbolicExpressionFromId(triton::__uint symExprId) {
         if (this->symbolicExpressions.find(symExprId) == this->symbolicExpressions.end())
           throw std::runtime_error("SymbolicEngine::getSymbolicExpressionFromId(): symbolic expression id not found");
@@ -448,7 +469,7 @@ namespace triton {
       }
 
 
-      /* Add a new symbolic variable */
+      /* Adds a new symbolic variable */
       SymbolicVariable* SymbolicEngine::newSymbolicVariable(triton::engines::symbolic::symkind_e kind, triton::__uint kindValue, triton::uint32 size, std::string comment) {
         triton::__uint uniqueId  = this->getUniqueSymVarId();
         SymbolicVariable* symVar = new SymbolicVariable(kind, kindValue, uniqueId, size, comment);
@@ -634,7 +655,7 @@ namespace triton {
       }
 
 
-      /* Add and assign a new memory reference */
+      /* Adds and assign a new memory reference */
       void SymbolicEngine::addMemoryReference(triton::__uint mem, triton::__uint id) {
         this->memoryReference[mem] = id;
       }

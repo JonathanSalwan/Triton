@@ -489,6 +489,24 @@ namespace triton {
   }
 
 
+  triton::uint128 API::getSymbolicMemoryValue(triton::__uint address) {
+    this->checkSymbolic();
+    return this->sym->getSymbolicMemoryValue(address);
+  }
+
+
+  triton::uint128 API::getSymbolicMemoryValue(triton::arch::MemoryOperand& mem) {
+    this->checkSymbolic();
+    return this->sym->getSymbolicMemoryValue(mem);
+  }
+
+
+  triton::uint128 API::getSymbolicRegisterValue(triton::arch::RegisterOperand& reg) {
+    this->checkSymbolic();
+    return this->sym->getSymbolicRegisterValue(reg);
+  }
+
+
   void API::recordSimplificationCallback(triton::engines::symbolic::sfp cb) {
     this->checkSymbolic();
     return this->sym->recordSimplificationCallback(cb);
