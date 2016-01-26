@@ -121,9 +121,12 @@ namespace triton {
     }
 
 
-    /* If there is a concrete value recorded, build the appropriate MemoryOperand. Otherwise, perfrom the analysis on zero. */
-    triton::arch::MemoryOperand Instruction::popMemoryAccess(void) {
+    triton::arch::MemoryOperand Instruction::popMemoryAccess(triton::__uint addr, triton::uint32 size, triton::uint128 value) {
       triton::arch::MemoryOperand mem;
+
+      if (addr && size)
+        mem = triton::arch::MemoryOperand(addr, size, value);
+
       if (this->memoryAccess.size() > 0) {
         mem = this->memoryAccess.front();
         triton::api.setLastMemoryValue(mem);

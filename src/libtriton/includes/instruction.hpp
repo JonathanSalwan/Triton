@@ -125,8 +125,8 @@ namespace triton {
         //! Returns the instruction's type.
         triton::uint32 getType(void) const;
 
-        //! Pops the first memory access which has been recorded.
-        triton::arch::MemoryOperand popMemoryAccess(void);
+        //! If there is a concrete value recorded, build the appropriate MemoryOperand. Otherwise, perfrom the analysis based on args.
+        triton::arch::MemoryOperand popMemoryAccess(triton::__uint=0, triton::uint32 size=0, triton::uint128 value=0);
 
         //! Returns the register's state which has been recorded.
         triton::arch::RegisterOperand getRegisterState(triton::uint32 regId);

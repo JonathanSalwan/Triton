@@ -1382,9 +1382,11 @@ namespace triton {
 
 
         void call_s(triton::arch::Instruction& inst) {
-          auto pc   = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-          auto sp   = triton::arch::OperandWrapper(inst.popMemoryAccess());
-          auto src  = inst.operands[0];
+          auto stack      = TRITON_X86_REG_SP.getParent();
+          auto stackValue = triton::api.getLastRegisterValue(stack).convert_to<triton::__uint>();
+          auto pc         = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
+          auto sp         = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
+          auto src        = inst.operands[0];
 
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(src);
@@ -3004,9 +3006,11 @@ namespace triton {
 
 
         void leave_s(triton::arch::Instruction& inst) {
-          auto bp1 = triton::arch::OperandWrapper(inst.popMemoryAccess());
-          auto bp2 = triton::arch::OperandWrapper(TRITON_X86_REG_BP.getParent());
-          auto sp  = triton::arch::OperandWrapper(TRITON_X86_REG_SP.getParent());
+          auto stack      = TRITON_X86_REG_SP.getParent();
+          auto stackValue = triton::api.getLastRegisterValue(stack).convert_to<triton::__uint>();
+          auto bp1        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
+          auto bp2        = triton::arch::OperandWrapper(TRITON_X86_REG_BP.getParent());
+          auto sp         = triton::arch::OperandWrapper(stack);
 
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(bp2);
@@ -3751,8 +3755,10 @@ namespace triton {
 
 
         void pop_s(triton::arch::Instruction& inst) {
-          auto dst = inst.operands[0];
-          auto src = triton::arch::OperandWrapper(inst.popMemoryAccess());
+          auto stack      = TRITON_X86_REG_SP.getParent();
+          auto stackValue = triton::api.getLastRegisterValue(stack).convert_to<triton::__uint>();
+          auto dst        = inst.operands[0];
+          auto src        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
 
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(src);
@@ -3775,8 +3781,10 @@ namespace triton {
 
 
         void push_s(triton::arch::Instruction& inst) {
-          auto dst = triton::arch::OperandWrapper(inst.popMemoryAccess());
-          auto src = inst.operands[0];
+          auto stack      = TRITON_X86_REG_SP.getParent();
+          auto stackValue = triton::api.getLastRegisterValue(stack).convert_to<triton::__uint>();
+          auto dst        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
+          auto src        = inst.operands[0];
 
           /* Create the SMT semantics - side effect */
           alignSubStack_s(inst, dst.getSize());
@@ -3905,8 +3913,10 @@ namespace triton {
 
 
         void ret_s(triton::arch::Instruction& inst) {
-          auto pc = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-          auto sp = triton::arch::OperandWrapper(inst.popMemoryAccess());
+          auto stack      = TRITON_X86_REG_SP.getParent();
+          auto stackValue = triton::api.getLastRegisterValue(stack).convert_to<triton::__uint>();
+          auto pc         = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
+          auto sp         = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
 
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(sp);
