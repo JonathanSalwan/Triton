@@ -552,6 +552,14 @@ namespace triton {
           writeSize--;
         }
 
+        /* If there is only one reference, we return the symbolic expression */
+        if (ret.size() == 1)
+          return se;
+
+        /* Otherwise, we return the concatenation of all symbolic expressions */
+        se = this->newSymbolicExpression(smt2lib::concat(ret), triton::engines::symbolic::MEM, "concat reference - " + comment);
+        se->setOriginAddress(address);
+        inst.addSymbolicExpression(se);
         return se;
       }
 
