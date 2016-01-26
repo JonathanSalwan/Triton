@@ -328,11 +328,12 @@ namespace triton {
 
 
   void API::resetEngines(void) {
-    this->checkArchitecture();
-    this->removeEngines();
-    this->initEngines();
-    this->clearArchitecture();
-    smt2lib::freeAllAstNodes();
+    if(this->isArchitectureValid()) {
+      this->removeEngines();
+      this->initEngines();
+      this->clearArchitecture();
+      smt2lib::freeAllAstNodes();
+    }
   }
 
 
