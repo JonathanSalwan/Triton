@@ -318,11 +318,12 @@ namespace triton {
 
 
   void API::removeEngines(void) {
-    this->checkArchitecture();
-    delete this->taint;
-    delete this->sym;
-    delete this->symBackup;
-    delete this->solver;
+    if(this->isArchitectureValid()) {
+      delete this->taint;
+      delete this->sym;
+      delete this->symBackup;
+      delete this->solver;
+    }
   }
 
 
