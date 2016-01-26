@@ -6,6 +6,8 @@
 */
 
 #include <stdexcept>
+
+#include <api.hpp>
 #include <cpuSize.hpp>
 #include <memoryOperand.hpp>
 
@@ -56,7 +58,32 @@ namespace triton {
 
 
     triton::__uint MemoryOperand::getAddress(void) const {
-      return this->address;
+      triton::__uint address = 0;
+
+      /* Return the address if it is already defined */
+      if (this->address)
+        return this->address;
+
+      /* Otherwise, try to compute the address */
+      if (triton::api.isArchitectureValid() && this->getBitSize() >= BYTE_SIZE_BIT) {
+        RegisterOperand base          = this->baseReg;
+        RegisterOperand index         = this->indexReg;
+        triton::__uint baseValue      = 0;
+        triton::__uint indexValue     = 0;
+        triton::__uint scaleValue     = this->scale.getValue();
+        triton::__uint dispValue      = this->displacement.getValue();
+        triton::__uint mask           = ((1 << this->getBitSize()) - 1);
+
+        if (base.isValid())
+          baseValue = triton::api.getLastRegisterValue(base).convert_to<triton::__uint>();
+
+        if (index.isValid())
+          indexValue = triton::api.getLastRegisterValue(index).convert_to<triton::__uint>();
+
+        address = (((baseValue + (indexValue * scaleValue)) + dispValue) & (mask ? mask : -1));
+      }
+
+      return address;
     }
 
 
