@@ -126,7 +126,7 @@ namespace triton {
       triton::arch::MemoryOperand mem;
 
       /* If there is a default value specified, we use it */
-      if (addr && size)
+      if (size)
         mem = triton::arch::MemoryOperand(addr, size, value);
 
       /* If there is a memory access recorded, we use it */
