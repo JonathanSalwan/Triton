@@ -331,6 +331,7 @@ namespace triton {
     this->removeEngines();
     this->initEngines();
     this->clearArchitecture();
+    smt2lib::freeAllAstNodes();
   }
 
 

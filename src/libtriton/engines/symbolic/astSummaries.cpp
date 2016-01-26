@@ -68,6 +68,100 @@ namespace triton {
 
 
       AstSummaries::~AstSummaries() {
+        for (auto it = this->assertSummaries.begin(); it != this->assertSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvaddSummaries.begin(); it != this->bvaddSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvandSummaries.begin(); it != this->bvandSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvashrSummaries.begin(); it != this->bvashrSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvlshrSummaries.begin(); it != this->bvlshrSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvmulSummaries.begin(); it != this->bvmulSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvnandSummaries.begin(); it != this->bvnandSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvnegSummaries.begin(); it != this->bvnegSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvnorSummaries.begin(); it != this->bvnorSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvnotSummaries.begin(); it != this->bvnotSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvorSummaries.begin(); it != this->bvorSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvrolSummaries.begin(); it != this->bvrolSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvrorSummaries.begin(); it != this->bvrorSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvsdivSummaries.begin(); it != this->bvsdivSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvsgeSummaries.begin(); it != this->bvsgeSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvsgtSummaries.begin(); it != this->bvsgtSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvshlSummaries.begin(); it != this->bvshlSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvsleSummaries.begin(); it != this->bvsleSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvsltSummaries.begin(); it != this->bvsltSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvsmodSummaries.begin(); it != this->bvsmodSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvsremSummaries.begin(); it != this->bvsremSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvsubSummaries.begin(); it != this->bvsubSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvudivSummaries.begin(); it != this->bvudivSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvugeSummaries.begin(); it != this->bvugeSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvugtSummaries.begin(); it != this->bvugtSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvuleSummaries.begin(); it != this->bvuleSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvultSummaries.begin(); it != this->bvultSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvuremSummaries.begin(); it != this->bvuremSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvxnorSummaries.begin(); it != this->bvxnorSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvxorSummaries.begin(); it != this->bvxorSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvSummaries.begin(); it != this->bvSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->compoundSummaries.begin(); it != this->compoundSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->concatSummaries.begin(); it != this->concatSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->decimalSummaries.begin(); it != this->decimalSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->declareSummaries.begin(); it != this->declareSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->distinctSummaries.begin(); it != this->distinctSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->equalSummaries.begin(); it != this->equalSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->extractSummaries.begin(); it != this->extractSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->iteSummaries.begin(); it != this->iteSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->landSummaries.begin(); it != this->landSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->lnotSummaries.begin(); it != this->lnotSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->lorSummaries.begin(); it != this->lorSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->referenceSummaries.begin(); it != this->referenceSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->stringSummaries.begin(); it != this->stringSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->sxSummaries.begin(); it != this->sxSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->variableSummaries.begin(); it != this->variableSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->zxSummaries.begin(); it != this->zxSummaries.end(); it++)
+          delete it->second;
       }
 
 
