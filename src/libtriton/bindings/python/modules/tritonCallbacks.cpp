@@ -130,6 +130,9 @@ Disables the symbolic optimization.
 - **disassembly(\ref py_Instruction_page inst)**<br>
 Disassembles the instruction and setup operands. You must define an architecture before.
 
+- **enableSymbolicEmulation(bool flag)**<br>
+Enables or disables the symbolic emulation. Set `true` for a full symbolic execution (emulation) or `false` for a concolic execution.
+
 - **enableSymbolicEngine(bool flag)**<br>
 Enables or disables the symbolic execution engine.
 
@@ -157,14 +160,11 @@ Returns the full AST of a root node as \ref py_SmtAstNode_page.
 - **getFullAstFromId(integer symExprId)**<br>
 Returns the full AST as \ref py_SmtAstNode_page from a symbolic expression id.
 
-- **getLastMemoryValue(intger addr)**<br>
-Returns the last concrete value recorded of a memory access.
+- **getMemoryValue(intger addr)**<br>
+If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of a memory access.
 
-- **getLastMemoryValue(\ref py_Memory_page mem)**<br>
-Returns the last concrete value recorded of a memory access.
-
-- **getLastRegisterValue(\ref py_REG_page reg)**<br>
-Returns the last concrete value recorded of a register state.
+- **getMemoryValue(\ref py_Memory_page mem)**<br>
+If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of a memory access.
 
 - **getModel(\ref py_SmtAstNode_page node)**<br>
 Computes and returns a model as a dictionary of {integer symVarId : \ref py_SolverModel_page model} from a symbolic constraint.
@@ -174,6 +174,9 @@ Computes and returns several models from a symbolic constraint. The `limit` is t
 
 - **getParentRegisters(void)**<br>
 Returns the list of parent registers. Each item of this list is a \ref py_REG_page.
+
+- **getRegisterValue(\ref py_REG_page reg)**<br>
+If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of the register.
 
 - **getSymbolicExpressionFromId(intger symExprId)**<br>
 Returns the symbolic expression as \ref py_SymbolicExpression_page corresponding to the id.
@@ -219,6 +222,9 @@ Returns true if the memory is tainted.
 
 - **isRegTainted(\ref py_REG_page reg)**<br>
 Returns true if the register is tainted.
+
+- **isSymbolicEmulationEnabled(void)**<br>
+Returns true if Triton performs a full symbolic execution (emulation).
 
 - **isSymbolicEngineEnabled(void)**<br>
 Returns true if the symbolic execution engine is enabled.
@@ -1032,6 +1038,26 @@ namespace triton {
       }
 
 
+      static PyObject* triton_enableSymbolicEmulation(PyObject* self, PyObject* flag) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "enableSymbolicEmulation(): Architecture is not defined.");
+
+        if (!PyBool_Check(flag))
+          return PyErr_Format(PyExc_TypeError, "enableSymbolicEmulation(): Expects an boolean as argument.");
+
+        try {
+          triton::api.enableSymbolicEmulation(PyLong_AsUint(flag));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* triton_enableSymbolicEngine(PyObject* self, PyObject* flag) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -1194,44 +1220,18 @@ namespace triton {
       }
 
 
-      static PyObject* triton_getLastMemoryValue(PyObject* self, PyObject* mem) {
+      static PyObject* triton_getMemoryValue(PyObject* self, PyObject* mem) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getLastMemoryValue(): Architecture is not defined.");
-
-        if (PyLong_Check(mem) || PyInt_Check(mem)) {
-          try {
-            return PyLong_FromUint128(triton::api.getLastMemoryValue(PyLong_AsUint(mem)));
-          }
-          catch (const std::exception& e) {
-            return PyErr_Format(PyExc_TypeError, "%s", e.what());
-          }
-        }
-
-        else if (PyMemoryOperand_Check(mem)) {
-          try {
-            return PyLong_FromUint128(triton::api.getLastMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem)));
-          }
-          catch (const std::exception& e) {
-            return PyErr_Format(PyExc_TypeError, "%s", e.what());
-          }
-        }
-
-        else
-          return PyErr_Format(PyExc_TypeError, "getLastMemoryValue(): Expects a Memory or an integer as argument.");
-      }
-
-
-      static PyObject* triton_getLastRegisterValue(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getLastRegisterValue(): Architecture is not defined.");
-
-        if (!PyRegisterOperand_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "getLastRegisterValue(): Expects a REG as argument.");
+          return PyErr_Format(PyExc_TypeError, "getMemoryValue(): Architecture is not defined.");
 
         try {
-          return PyLong_FromUint128(triton::api.getLastRegisterValue(*PyRegisterOperand_AsRegisterOperand(reg)));
+          if (PyLong_Check(mem) || PyInt_Check(mem))
+              return PyLong_FromUint128(triton::api.getMemoryValue(PyLong_AsUint(mem)));
+          else if (PyMemoryOperand_Check(mem))
+              return PyLong_FromUint128(triton::api.getMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem)));
+          else
+            return PyErr_Format(PyExc_TypeError, "getMemoryValue(): Expects a Memory or an integer as argument.");
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1329,6 +1329,23 @@ namespace triton {
         }
 
         return ret;
+      }
+
+
+      static PyObject* triton_getRegisterValue(PyObject* self, PyObject* reg) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getRegisterValue(): Architecture is not defined.");
+
+        if (!PyRegisterOperand_Check(reg))
+          return PyErr_Format(PyExc_TypeError, "getRegisterValue(): Expects a REG as argument.");
+
+        try {
+          return PyLong_FromUint128(triton::api.getRegisterValue(*PyRegisterOperand_AsRegisterOperand(reg)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1569,6 +1586,13 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "isRegTainted(): Expects a REG as argument.");
 
         if (triton::api.isRegTainted(*PyRegisterOperand_AsRegisterOperand(reg)) == true)
+          Py_RETURN_TRUE;
+        Py_RETURN_FALSE;
+      }
+
+
+      static PyObject* triton_isSymbolicEmulationEnabled(PyObject* self, PyObject* noarg) {
+        if (triton::api.isSymbolicEmulationEnabled() == true)
           Py_RETURN_TRUE;
         Py_RETURN_FALSE;
       }
@@ -2351,6 +2375,7 @@ namespace triton {
         {"createSymbolicVolatileExpression",    (PyCFunction)triton_createSymbolicVolatileExpression,       METH_VARARGS,       ""},
         {"disableSymbolicOptimization",         (PyCFunction)triton_disableSymbolicOptimization,            METH_O,             ""},
         {"disassembly",                         (PyCFunction)triton_disassembly,                            METH_O,             ""},
+        {"enableSymbolicEmulation",             (PyCFunction)triton_enableSymbolicEmulation,                METH_O,             ""},
         {"enableSymbolicEngine",                (PyCFunction)triton_enableSymbolicEngine,                   METH_O,             ""},
         {"enableSymbolicOptimization",          (PyCFunction)triton_enableSymbolicOptimization,             METH_O,             ""},
         {"enableTaintEngine",                   (PyCFunction)triton_enableTaintEngine,                      METH_O,             ""},
@@ -2360,11 +2385,11 @@ namespace triton {
         {"getAstSummariesStats",                (PyCFunction)triton_getAstSummariesStats,                   METH_NOARGS,        ""},
         {"getFullAst",                          (PyCFunction)triton_getFullAst,                             METH_O,             ""},
         {"getFullAstFromId",                    (PyCFunction)triton_getFullAstFromId,                       METH_O,             ""},
-        {"getLastMemoryValue",                  (PyCFunction)triton_getLastMemoryValue,                     METH_O,             ""},
-        {"getLastRegisterValue",                (PyCFunction)triton_getLastRegisterValue,                   METH_O,             ""},
+        {"getMemoryValue",                      (PyCFunction)triton_getMemoryValue,                         METH_O,             ""},
         {"getModel",                            (PyCFunction)triton_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)triton_getModels,                              METH_VARARGS,       ""},
         {"getParentRegisters",                  (PyCFunction)triton_getParentRegisters,                     METH_NOARGS,        ""},
+        {"getRegisterValue",                    (PyCFunction)triton_getRegisterValue,                       METH_O,             ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)triton_getSymbolicExpressionFromId,            METH_O,             ""},
         {"getSymbolicExpressions",              (PyCFunction)triton_getSymbolicExpressions,                 METH_NOARGS,        ""},
         {"getSymbolicMemoryId",                 (PyCFunction)triton_getSymbolicMemoryId,                    METH_O,             ""},
@@ -2379,6 +2404,7 @@ namespace triton {
         {"isArchitectureValid",                 (PyCFunction)triton_isArchitectureValid,                    METH_NOARGS,        ""},
         {"isMemTainted",                        (PyCFunction)triton_isMemTainted,                           METH_O,             ""},
         {"isRegTainted",                        (PyCFunction)triton_isRegTainted,                           METH_O,             ""},
+        {"isSymbolicEmulationEnabled",          (PyCFunction)triton_isSymbolicEmulationEnabled,             METH_NOARGS,        ""},
         {"isSymbolicEngineEnabled",             (PyCFunction)triton_isSymbolicEngineEnabled,                METH_NOARGS,        ""},
         {"isSymbolicExpressionIdExists",        (PyCFunction)triton_isSymbolicExpressionIdExists,           METH_O,             ""},
         {"isSymbolicOptimizationEnabled",       (PyCFunction)triton_isSymbolicOptimizationEnabled,          METH_O,             ""},

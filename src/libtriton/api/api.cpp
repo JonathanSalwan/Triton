@@ -489,7 +489,7 @@ namespace triton {
   }
 
 
-  triton::uint128 API::getSymbolicMemoryValue(triton::__uint address) {
+  triton::uint8 API::getSymbolicMemoryValue(triton::__uint address) {
     this->checkSymbolic();
     return this->sym->getSymbolicMemoryValue(address);
   }
@@ -498,6 +498,30 @@ namespace triton {
   triton::uint128 API::getSymbolicMemoryValue(triton::arch::MemoryOperand& mem) {
     this->checkSymbolic();
     return this->sym->getSymbolicMemoryValue(mem);
+  }
+
+
+  triton::uint8 API::getMemoryValue(triton::__uint addr) {
+    this->checkSymbolic();
+    if (this->isSymbolicEmulationEnabled())
+      return this->getSymbolicMemoryValue(addr);
+    return this->getLastMemoryValue(addr);
+  }
+
+
+  triton::uint128 API::getMemoryValue(triton::arch::MemoryOperand& mem) {
+    this->checkSymbolic();
+    if (this->isSymbolicEmulationEnabled())
+      return this->getSymbolicMemoryValue(mem);
+    return this->getLastMemoryValue(mem);
+  }
+
+
+  triton::uint128 API::getRegisterValue(triton::arch::RegisterOperand& reg) {
+    this->checkSymbolic();
+    if (this->isSymbolicEmulationEnabled())
+      return this->getSymbolicRegisterValue(reg);
+    return this->getLastRegisterValue(reg);
   }
 
 
@@ -577,6 +601,12 @@ namespace triton {
   }
 
 
+  void API::enableSymbolicEmulation(bool flag) {
+    this->checkSymbolic();
+    this->sym->emulation(flag);
+  }
+
+
   void API::enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti) {
     this->checkSymbolic();
     this->sym->enableOptimization(opti);
@@ -586,6 +616,12 @@ namespace triton {
   void API::disableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti) {
     this->checkSymbolic();
     this->sym->disableOptimization(opti);
+  }
+
+
+  bool API::isSymbolicEmulationEnabled(void) {
+    this->checkSymbolic();
+    return this->sym->isEmulationEnabled();
   }
 
 

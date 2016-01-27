@@ -60,6 +60,14 @@ namespace triton {
           //! Enable / Disable flag.
           bool enableFlag;
 
+          /*! \brief Defines if we use a symbolic emulation.
+           *
+           * \description
+           * **true**: full symbolic execution (emulation).
+           * **false**: concolic execution.
+           */
+          bool emulationFlag;
+
           //! Number of registers
           triton::uint32 numberOfReg;
 
@@ -133,7 +141,7 @@ namespace triton {
           triton::__uint getSymbolicRegisterId(triton::arch::RegisterOperand& reg);
 
           //! Returns the symbolic memory value.
-          triton::uint128 getSymbolicMemoryValue(triton::__uint address);
+          triton::uint8 getSymbolicMemoryValue(triton::__uint address);
 
           //! Returns the symbolic memory value.
           triton::uint128 getSymbolicMemoryValue(triton::arch::MemoryOperand& mem);
@@ -204,8 +212,19 @@ namespace triton {
           //! Concretizes a specific symbolic register reference.
           void concretizeReg(triton::arch::RegisterOperand& reg);
 
+          /*! \brief Enables or disables the symbolic emulation.
+           *
+           * \description
+           * **true**: full symbolic execution (emulation).
+           * **false**: concolic execution.
+           */
+          void emulation(bool flag);
+
           //! Enables or disables the symbolic execution engine.
           void enable(bool flag);
+
+          //! Returns true if the we perform a full symbolic emulation.
+          bool isEmulationEnabled(void);
 
           //! Returns true if the symbolic execution engine is enabled.
           bool isEnabled(void);

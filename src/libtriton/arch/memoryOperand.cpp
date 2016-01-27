@@ -75,10 +75,10 @@ namespace triton {
         triton::__uint mask           = ((1 << this->getBitSize()) - 1);
 
         if (base.isValid())
-          baseValue = triton::api.getSymbolicRegisterValue(base).convert_to<triton::__uint>();
+          baseValue = triton::api.getRegisterValue(base).convert_to<triton::__uint>();
 
         if (index.isValid())
-          indexValue = triton::api.getSymbolicRegisterValue(index).convert_to<triton::__uint>();
+          indexValue = triton::api.getRegisterValue(index).convert_to<triton::__uint>();
 
         address = (((baseValue + (indexValue * scaleValue)) + dispValue) & (mask ? mask : -1));
       }

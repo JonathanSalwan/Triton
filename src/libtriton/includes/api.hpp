@@ -193,13 +193,22 @@ namespace triton {
         triton::__uint getSymbolicRegisterId(triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Returns the symbolic memory value.
-        triton::uint128 getSymbolicMemoryValue(triton::__uint address);
+        triton::uint8 getSymbolicMemoryValue(triton::__uint address);
 
         //! [**symbolic api**] - Returns the symbolic memory value.
         triton::uint128 getSymbolicMemoryValue(triton::arch::MemoryOperand& mem);
 
         //! [**symbolic api**] - Returns the symbolic register value.
         triton::uint128 getSymbolicRegisterValue(triton::arch::RegisterOperand& reg);
+
+        //! [**symbolic api**] - If emulation enabled, returns `getSymbolicMemoryValue()` otherwise `getLastMemoryValue()`.
+        triton::uint8 getMemoryValue(triton::__uint addr);
+
+        //! [**symbolic api**] - If emulation enabled, returns `getSymbolicMemoryValue()` otherwise `getLastMemoryValue()`.
+        triton::uint128 getMemoryValue(triton::arch::MemoryOperand& mem);
+
+        //! [**symbolic api**] - If emulation enabled, returns `getSymbolicRegisterValue()` otherwise `getLastRegisterValue()`.
+        triton::uint128 getRegisterValue(triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
         triton::engines::symbolic::SymbolicVariable* convertExprToSymVar(triton::__uint exprId, triton::uint32 symVarSize, std::string symVarComment="");
@@ -286,11 +295,22 @@ namespace triton {
         //! [**symbolic api**] - Enables or disables the symbolic execution engine.
         void enableSymbolicEngine(bool flag);
 
+        //! [**symbolic api**] - Enables or disables the symbolic emulation.
+        void enableSymbolicEmulation(bool flag);
+
         //! [**symbolic api**] - Enables a symbolic optimization.
         void enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti);
 
         //! [**symbolic api**] - Disables a symbolic optimization.
         void disableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti);
+
+        /*! \brief [**symbolic api**] - Returns true if we perform a full symbolic emulation.
+         *
+         * \description
+         * **true**: full symbolic execution (emulation).
+         * **false**: concolic execution.
+         */
+        bool isSymbolicEmulationEnabled(void);
 
         //! [**symbolic api**] - Returns true if the symbolic execution engine is enabled.
         bool isSymbolicEngineEnabled(void);

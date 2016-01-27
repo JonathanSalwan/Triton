@@ -1383,7 +1383,7 @@ namespace triton {
 
         void call_s(triton::arch::Instruction& inst) {
           auto stack      = TRITON_X86_REG_SP.getParent();
-          auto stackValue = triton::api.getLastRegisterValue(stack).convert_to<triton::__uint>();
+          auto stackValue = triton::api.getRegisterValue(stack).convert_to<triton::__uint>();
           auto pc         = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
           auto sp         = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
           auto src        = inst.operands[0];
@@ -1505,7 +1505,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVA operation");
 
           /* Spread taint and condition flag */
-          if ((!triton::api.getLastRegisterValue(TRITON_X86_REG_CF) & !triton::api.getLastRegisterValue(TRITON_X86_REG_ZF)) == true) {
+          if ((!triton::api.getRegisterValue(TRITON_X86_REG_CF) & !triton::api.getRegisterValue(TRITON_X86_REG_ZF)) == true) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1534,7 +1534,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVAE operation");
 
           /* Spread taint and condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_CF)) {
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_CF)) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1563,7 +1563,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVB operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_CF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_CF)) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1594,7 +1594,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVBE operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_CF) | triton::api.getLastRegisterValue(TRITON_X86_REG_ZF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_CF) | triton::api.getRegisterValue(TRITON_X86_REG_ZF)) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1623,7 +1623,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVE operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_ZF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_ZF)) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1656,7 +1656,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVG operation");
 
           /* Spread taint and condition flag */
-          if (((triton::api.getLastRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getLastRegisterValue(TRITON_X86_REG_OF)) | triton::api.getLastRegisterValue(TRITON_X86_REG_ZF)) == false) {
+          if (((triton::api.getRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getRegisterValue(TRITON_X86_REG_OF)) | triton::api.getRegisterValue(TRITON_X86_REG_ZF)) == false) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1687,7 +1687,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVGE operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_SF) == triton::api.getLastRegisterValue(TRITON_X86_REG_OF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_SF) == triton::api.getRegisterValue(TRITON_X86_REG_OF)) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1718,7 +1718,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVL operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getLastRegisterValue(TRITON_X86_REG_OF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getRegisterValue(TRITON_X86_REG_OF)) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1751,7 +1751,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVBE operation");
 
           /* Spread taint and condition flag */
-          if (((triton::api.getLastRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getLastRegisterValue(TRITON_X86_REG_OF)) | triton::api.getLastRegisterValue(TRITON_X86_REG_ZF)) == true) {
+          if (((triton::api.getRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getRegisterValue(TRITON_X86_REG_OF)) | triton::api.getRegisterValue(TRITON_X86_REG_ZF)) == true) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1780,7 +1780,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVNE operation");
 
           /* Spread taint and condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_ZF)) {
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_ZF)) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1809,7 +1809,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVNO operation");
 
           /* Spread taint and condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_OF)) {
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_OF)) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1838,7 +1838,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVNP operation");
 
           /* Spread taint and condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_PF)) {
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_PF)) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1867,7 +1867,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVNS operation");
 
           /* Spread taint and condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_SF)) {
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_SF)) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1896,7 +1896,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVO operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_OF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_OF)) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1925,7 +1925,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVP operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_PF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_PF)) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -1954,7 +1954,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVS operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_SF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_SF)) {
             expr->isTainted = triton::api.taintAssignment(dst, src);
             inst.setConditionTaken(true);
           }
@@ -2495,7 +2495,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if ((!triton::api.getLastRegisterValue(TRITON_X86_REG_CF) & !triton::api.getLastRegisterValue(TRITON_X86_REG_ZF)) == true)
+          if ((!triton::api.getRegisterValue(TRITON_X86_REG_CF) & !triton::api.getRegisterValue(TRITON_X86_REG_ZF)) == true)
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -2522,7 +2522,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_CF))
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_CF))
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -2548,7 +2548,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_CF))
+          if (triton::api.getRegisterValue(TRITON_X86_REG_CF))
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -2576,7 +2576,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_CF) | triton::api.getLastRegisterValue(TRITON_X86_REG_ZF))
+          if (triton::api.getRegisterValue(TRITON_X86_REG_CF) | triton::api.getRegisterValue(TRITON_X86_REG_ZF))
             inst.setConditionTaken(true);
 
 
@@ -2604,7 +2604,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_ZF))
+          if (triton::api.getRegisterValue(TRITON_X86_REG_ZF))
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -2634,7 +2634,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (((triton::api.getLastRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getLastRegisterValue(TRITON_X86_REG_OF)) | triton::api.getLastRegisterValue(TRITON_X86_REG_ZF)) == false)
+          if (((triton::api.getRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getRegisterValue(TRITON_X86_REG_OF)) | triton::api.getRegisterValue(TRITON_X86_REG_ZF)) == false)
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -2664,7 +2664,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_SF) == triton::api.getLastRegisterValue(TRITON_X86_REG_OF))
+          if (triton::api.getRegisterValue(TRITON_X86_REG_SF) == triton::api.getRegisterValue(TRITON_X86_REG_OF))
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -2693,7 +2693,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getLastRegisterValue(TRITON_X86_REG_OF))
+          if (triton::api.getRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getRegisterValue(TRITON_X86_REG_OF))
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -2724,7 +2724,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (((triton::api.getLastRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getLastRegisterValue(TRITON_X86_REG_OF)) | triton::api.getLastRegisterValue(TRITON_X86_REG_ZF)) == true)
+          if (((triton::api.getRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getRegisterValue(TRITON_X86_REG_OF)) | triton::api.getRegisterValue(TRITON_X86_REG_ZF)) == true)
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -2773,7 +2773,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_ZF))
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_ZF))
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -2799,7 +2799,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_OF))
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_OF))
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -2825,7 +2825,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_PF))
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_PF))
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -2851,7 +2851,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_SF))
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_SF))
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -2877,7 +2877,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_OF))
+          if (triton::api.getRegisterValue(TRITON_X86_REG_OF))
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -2903,7 +2903,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_PF))
+          if (triton::api.getRegisterValue(TRITON_X86_REG_PF))
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -2929,7 +2929,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, pc, "Program Counter");
 
           /* Set condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_SF))
+          if (triton::api.getRegisterValue(TRITON_X86_REG_SF))
             inst.setConditionTaken(true);
 
           /* Spread taint */
@@ -3007,7 +3007,7 @@ namespace triton {
 
         void leave_s(triton::arch::Instruction& inst) {
           auto stack      = TRITON_X86_REG_SP.getParent();
-          auto stackValue = triton::api.getLastRegisterValue(stack).convert_to<triton::__uint>();
+          auto stackValue = triton::api.getRegisterValue(stack).convert_to<triton::__uint>();
           auto bp1        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
           auto bp2        = triton::arch::OperandWrapper(TRITON_X86_REG_BP.getParent());
           auto sp         = triton::arch::OperandWrapper(stack);
@@ -3756,7 +3756,7 @@ namespace triton {
 
         void pop_s(triton::arch::Instruction& inst) {
           auto stack      = TRITON_X86_REG_SP.getParent();
-          auto stackValue = triton::api.getLastRegisterValue(stack).convert_to<triton::__uint>();
+          auto stackValue = triton::api.getRegisterValue(stack).convert_to<triton::__uint>();
           auto dst        = inst.operands[0];
           auto src        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
 
@@ -3782,7 +3782,7 @@ namespace triton {
 
         void push_s(triton::arch::Instruction& inst) {
           auto stack      = TRITON_X86_REG_SP.getParent();
-          auto stackValue = triton::api.getLastRegisterValue(stack).convert_to<triton::__uint>();
+          auto stackValue = triton::api.getRegisterValue(stack).convert_to<triton::__uint>();
           auto dst        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
           auto src        = inst.operands[0];
 
@@ -3914,7 +3914,7 @@ namespace triton {
 
         void ret_s(triton::arch::Instruction& inst) {
           auto stack      = TRITON_X86_REG_SP.getParent();
-          auto stackValue = triton::api.getLastRegisterValue(stack).convert_to<triton::__uint>();
+          auto stackValue = triton::api.getRegisterValue(stack).convert_to<triton::__uint>();
           auto pc         = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
           auto sp         = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
 
@@ -4087,7 +4087,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETA operation");
 
           /* Spread taint and condition flag */
-          if (((!triton::api.getLastRegisterValue(TRITON_X86_REG_CF) & !triton::api.getLastRegisterValue(TRITON_X86_REG_ZF))) == true) {
+          if (((!triton::api.getRegisterValue(TRITON_X86_REG_CF) & !triton::api.getRegisterValue(TRITON_X86_REG_ZF))) == true) {
             expr->isTainted = triton::api.taintUnion(dst, cf);
             expr->isTainted = triton::api.taintUnion(dst, zf);
             inst.setConditionTaken(true);
@@ -4118,7 +4118,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETAE operation");
 
           /* Spread taint and condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_CF)) {
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_CF)) {
             expr->isTainted = triton::api.taintUnion(dst, cf);
             inst.setConditionTaken(true);
           }
@@ -4148,7 +4148,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETB operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_CF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_CF)) {
             expr->isTainted = triton::api.taintUnion(dst, cf);
             inst.setConditionTaken(true);
           }
@@ -4180,7 +4180,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETBE operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_CF) | triton::api.getLastRegisterValue(TRITON_X86_REG_ZF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_CF) | triton::api.getRegisterValue(TRITON_X86_REG_ZF)) {
             expr->isTainted = triton::api.taintUnion(dst, cf);
             expr->isTainted = triton::api.taintUnion(dst, zf);
             inst.setConditionTaken(true);
@@ -4211,7 +4211,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETE operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_ZF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_ZF)) {
             expr->isTainted = triton::api.taintUnion(dst, zf);
             inst.setConditionTaken(true);
           }
@@ -4245,7 +4245,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETG operation");
 
           /* Spread taint and condition flag */
-          if (((triton::api.getLastRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getLastRegisterValue(TRITON_X86_REG_OF)) | triton::api.getLastRegisterValue(TRITON_X86_REG_ZF)) == false) {
+          if (((triton::api.getRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getRegisterValue(TRITON_X86_REG_OF)) | triton::api.getRegisterValue(TRITON_X86_REG_ZF)) == false) {
             expr->isTainted = triton::api.taintUnion(dst, sf);
             expr->isTainted = triton::api.taintUnion(dst, of);
             expr->isTainted = triton::api.taintUnion(dst, zf);
@@ -4279,7 +4279,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETGE operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_SF) == triton::api.getLastRegisterValue(TRITON_X86_REG_OF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_SF) == triton::api.getRegisterValue(TRITON_X86_REG_OF)) {
             expr->isTainted = triton::api.taintUnion(dst, sf);
             expr->isTainted = triton::api.taintUnion(dst, of);
             inst.setConditionTaken(true);
@@ -4312,7 +4312,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETL operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getLastRegisterValue(TRITON_X86_REG_OF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getRegisterValue(TRITON_X86_REG_OF)) {
             expr->isTainted = triton::api.taintUnion(dst, sf);
             expr->isTainted = triton::api.taintUnion(dst, of);
             inst.setConditionTaken(true);
@@ -4347,7 +4347,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETLE operation");
 
           /* Spread taint and condition flag */
-          if (((triton::api.getLastRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getLastRegisterValue(TRITON_X86_REG_OF)) | triton::api.getLastRegisterValue(TRITON_X86_REG_ZF)) == true) {
+          if (((triton::api.getRegisterValue(TRITON_X86_REG_SF) ^ triton::api.getRegisterValue(TRITON_X86_REG_OF)) | triton::api.getRegisterValue(TRITON_X86_REG_ZF)) == true) {
             expr->isTainted = triton::api.taintUnion(dst, sf);
             expr->isTainted = triton::api.taintUnion(dst, of);
             expr->isTainted = triton::api.taintUnion(dst, zf);
@@ -4379,7 +4379,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETNE operation");
 
           /* Spread taint and condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_ZF)) {
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_ZF)) {
             expr->isTainted = triton::api.taintUnion(dst, zf);
             inst.setConditionTaken(true);
           }
@@ -4409,7 +4409,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETNO operation");
 
           /* Spread taint and condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_OF)) {
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_OF)) {
             expr->isTainted = triton::api.taintUnion(dst, of);
             inst.setConditionTaken(true);
           }
@@ -4439,7 +4439,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETNP operation");
 
           /* Spread taint and condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_PF)) {
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_PF)) {
             expr->isTainted = triton::api.taintUnion(dst, pf);
             inst.setConditionTaken(true);
           }
@@ -4469,7 +4469,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETNS operation");
 
           /* Spread taint and condition flag */
-          if (!triton::api.getLastRegisterValue(TRITON_X86_REG_SF)) {
+          if (!triton::api.getRegisterValue(TRITON_X86_REG_SF)) {
             expr->isTainted = triton::api.taintUnion(dst, sf);
             inst.setConditionTaken(true);
           }
@@ -4499,7 +4499,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETO operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_OF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_OF)) {
             expr->isTainted = triton::api.taintUnion(dst, of);
             inst.setConditionTaken(true);
           }
@@ -4529,7 +4529,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETP operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_PF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_PF)) {
             expr->isTainted = triton::api.taintUnion(dst, pf);
             inst.setConditionTaken(true);
           }
@@ -4559,7 +4559,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETS operation");
 
           /* Spread taint and condition flag */
-          if (triton::api.getLastRegisterValue(TRITON_X86_REG_SF)) {
+          if (triton::api.getRegisterValue(TRITON_X86_REG_SF)) {
             expr->isTainted = triton::api.taintUnion(dst, sf);
             inst.setConditionTaken(true);
           }

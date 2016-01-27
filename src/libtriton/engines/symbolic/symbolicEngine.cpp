@@ -88,6 +88,7 @@ namespace triton {
         for (triton::uint32 i = 0; i < this->numberOfReg; i++)
           this->symbolicReg[i] = triton::engines::symbolic::UNSET;
 
+        this->emulationFlag   = false;
         this->enableFlag      = true;
         this->uniqueSymExprId = 0;
         this->uniqueSymVarId  = 0;
@@ -103,6 +104,7 @@ namespace triton {
         for (triton::uint32 i = 0; i < this->numberOfReg; i++)
           this->symbolicReg[i] = other.symbolicReg[i];
 
+        this->emulationFlag               = other.emulationFlag;
         this->enableFlag                  = other.enableFlag;
         this->memoryReference             = other.memoryReference;
         this->symbolicExpressions         = other.symbolicExpressions;
@@ -239,9 +241,9 @@ namespace triton {
 
 
       /* Returns the symbolic address value */
-      triton::uint128 SymbolicEngine::getSymbolicMemoryValue(triton::__uint address) {
+      triton::uint8 SymbolicEngine::getSymbolicMemoryValue(triton::__uint address) {
         triton::arch::MemoryOperand mem(address, 1, 0);
-        return this->getSymbolicMemoryValue(mem);
+        return this->getSymbolicMemoryValue(mem).convert_to<triton::uint8>();
       }
 
 
@@ -676,6 +678,12 @@ namespace triton {
       }
 
 
+      /* Returns true if the we perform a full symbolic emulation. */
+      bool SymbolicEngine::isEmulationEnabled(void) {
+        return this->emulationFlag;
+      }
+
+
       /* Returns true if the symbolic engine is enable. Otherwise returns false. */
       bool SymbolicEngine::isEnabled(void) {
         return this->enableFlag;
@@ -687,6 +695,12 @@ namespace triton {
         if (this->symbolicExpressions.find(symExprId) != this->symbolicExpressions.end())
           return true;
         return false;
+      }
+
+
+      /* Enables or disables the symbolic emulation. */
+      void SymbolicEngine::emulation(bool flag) {
+        this->emulationFlag = flag;
       }
 
 

@@ -49,8 +49,11 @@ trace = [
 
 if __name__ == '__main__':
 
-    #Set the arch
+    # Set the architecture
     setArchitecture(ARCH.X86_64)
+
+    # Define that we perform emulation
+    enableSymbolicEmulation(True)
 
     for (addr, opcodes) in trace:
         # Build an instruction
@@ -79,10 +82,10 @@ if __name__ == '__main__':
     write = inst.getOperands()[0].getAddress()
     print 'Instruction :', inst.getDisassembly()
     print 'Write at    :', hex(write)
-    print 'Content     :', hex(getSymbolicMemoryValue(Memory(write+4, CPUSIZE.DWORD)))
-    print 'RAX value   :', hex(getSymbolicRegisterValue(REG.RAX))
-    print 'RSI value   :', hex(getSymbolicRegisterValue(REG.RSI))
-    print 'RDI value   :', hex(getSymbolicRegisterValue(REG.RDI))
+    print 'Content     :', hex(getMemoryValue(Memory(write+4, CPUSIZE.DWORD)))
+    print 'RAX value   :', hex(getRegisterValue(REG.RAX))
+    print 'RSI value   :', hex(getRegisterValue(REG.RSI))
+    print 'RDI value   :', hex(getRegisterValue(REG.RDI))
 
     sys.exit(0)
 
