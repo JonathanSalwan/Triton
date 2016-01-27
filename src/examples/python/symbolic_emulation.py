@@ -52,6 +52,13 @@
 ## 0x1124aL #7 = ((_ extract 55 48) ((_ extract 63 0) #0)) ; byte reference - MOV operation
 ## 0x1124bL #6 = ((_ extract 63 56) ((_ extract 63 0) #0)) ; byte reference - MOV operation
 ##
+## Craft symbolic stuffs
+## ~~~~~~~~~~~~~~~~~~~~~
+## Memory at 0x11248 : (concat ((_ extract 7 0) #6) ((_ extract 7 0) #7) ((_ extract 7 0) #8) ((_ extract 7 0) #9))
+## Compute memory    : 0x41424344L
+## Register AH       : ((_ extract 15 8) #0)
+## Compute  AH       : 0x47L
+##
 
 
 import  sys
