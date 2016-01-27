@@ -161,10 +161,10 @@ Returns the full AST of a root node as \ref py_SmtAstNode_page.
 Returns the full AST as \ref py_SmtAstNode_page from a symbolic expression id.
 
 - **getMemoryValue(intger addr)**<br>
-If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of a memory access.
+If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of the memory access.
 
 - **getMemoryValue(\ref py_Memory_page mem)**<br>
-If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of a memory access.
+If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of the memory access.
 
 - **getModel(\ref py_SmtAstNode_page node)**<br>
 Computes and returns a model as a dictionary of {integer symVarId : \ref py_SolverModel_page model} from a symbolic constraint.
