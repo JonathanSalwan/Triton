@@ -20,6 +20,7 @@ namespace triton {
       this->address       = 0;
       this->concreteValue = 0;
       this->trusted       = false;
+      this->pcRelative    = 0;
     }
 
 
@@ -27,6 +28,7 @@ namespace triton {
       this->address       = address;
       this->concreteValue = concreteValue;
       this->trusted       = true;
+      this->pcRelative    = 0;
 
       if (size == 0)
         throw std::runtime_error("MemoryOperand::MemoryOperand(): size cannot be zero.");
@@ -74,7 +76,9 @@ namespace triton {
         triton::__uint dispValue      = this->displacement.getValue();
         triton::__uint mask           = -1;
 
-        if (base.isValid())
+        if (this->pcRelative)
+          baseValue = this->pcRelative;
+        else if (base.isValid())
           baseValue = triton::api.getRegisterValue(base).convert_to<triton::__uint>();
 
         if (index.isValid())
@@ -94,6 +98,11 @@ namespace triton {
 
     triton::uint128 MemoryOperand::getConcreteValue(void) const {
       return this->concreteValue;
+    }
+
+
+    triton::__uint MemoryOperand::getPcRelative(void) const {
+      return this->pcRelative;
     }
 
 
@@ -155,6 +164,11 @@ namespace triton {
     }
 
 
+    void MemoryOperand::setPcRelative(triton::__uint addr) {
+      this->pcRelative = addr;
+    }
+
+
     void MemoryOperand::setBaseReg(RegisterOperand base) {
       this->baseReg = base;
     }
@@ -190,6 +204,7 @@ namespace triton {
       this->low           = other.low;
       this->scale         = other.scale;
       this->trusted       = other.trusted;
+      this->pcRelative    = other.pcRelative;
     }
 
 

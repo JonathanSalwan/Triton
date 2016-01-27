@@ -46,6 +46,9 @@ namespace triton {
         //! True if this concrete memory value is trusted and synchronized with the real MMU value.
         bool trusted;
 
+        //! Contains the pc relative if it exists.
+        triton::__uint pcRelative;
+
         //! LEA - If the operand has a base register, this attribute is filled.
         RegisterOperand baseReg;
 
@@ -89,6 +92,9 @@ namespace triton {
         //! Returnts the concrete value (content of the access)
         triton::uint128 getConcreteValue(void) const;
 
+        //! LEA - Gets pc relative.
+        triton::__uint getPcRelative(void) const;
+
         //! Returns the memory's size (in byte).
         triton::uint32 getSize(void) const;
 
@@ -121,6 +127,9 @@ namespace triton {
 
         //! Sets the memory's concrete value.
         void setConcreteValue(triton::uint128 concreteValue);
+
+        //! LEA - Sets pc relative.
+        void setPcRelative(triton::__uint addr);
 
         //! LEA - Sets the base register operand.
         void setBaseReg(RegisterOperand base);
