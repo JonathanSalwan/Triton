@@ -84,7 +84,7 @@ namespace triton {
       virtual std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegInfo(triton::uint32 reg) = 0;
 
       //! Returns all parent registers.
-      virtual std::set<triton::arch::RegisterOperand*> getParentRegisters(void) = 0;
+      virtual std::set<triton::arch::RegisterOperand*> getParentRegister(void) = 0;
 
       //! Disassembles the instruction according to the architecture.
       virtual void disassembly(triton::arch::Instruction &inst) = 0;

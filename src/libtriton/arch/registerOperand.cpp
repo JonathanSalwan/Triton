@@ -175,15 +175,21 @@ namespace triton {
     }
 
 
-    std::ostream &operator<<(std::ostream &stream, RegisterOperand reg) {
+    std::ostream &operator<<(std::ostream &stream, const RegisterOperand reg) {
       stream << reg.getName() << ":" << reg.getBitSize() << " bv[" << reg.getHigh() << ".." << reg.getLow() << "]";
       return stream;
     }
 
 
-    bool operator==(RegisterOperand& reg1, RegisterOperand& reg2) {
+    bool operator==(const RegisterOperand& reg1, const RegisterOperand& reg2) {
       return reg1.getId() == reg2.getId();
     }
+
+
+    bool operator<(const RegisterOperand& reg1, const RegisterOperand& reg2) {
+      return reg1.getId() < reg2.getId();
+    }
+
 
   }; /* arch namespace */
 }; /* triton namespace */

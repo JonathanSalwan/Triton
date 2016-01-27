@@ -133,10 +133,13 @@ namespace triton {
     };
 
     //! Displays a RegisterOperand.
-    std::ostream &operator<<(std::ostream &stream, RegisterOperand reg);
+    std::ostream &operator<<(std::ostream &stream, const RegisterOperand reg);
 
     //! Compares two RegisterOperand.
-    bool operator==(RegisterOperand& reg1, RegisterOperand& reg2);
+    bool operator==(const RegisterOperand& reg1, const RegisterOperand& reg2);
+
+    //! Compares two RegisterOperand (needed for std::map)
+    bool operator<(const RegisterOperand& reg1, const RegisterOperand& reg2);
 
   /*! @} End of arch namespace */
   };

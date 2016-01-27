@@ -40,7 +40,7 @@ def sbefore(instruction):
 def cafter(instruction):
 
     bad  = list()
-    regs = getParentRegisters()
+    regs = getParentRegister()
 
     for reg in regs:
 

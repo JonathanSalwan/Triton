@@ -172,7 +172,7 @@ Computes and returns a model as a dictionary of {integer symVarId : \ref py_Solv
 - **getModels(\ref py_SmtAstNode_page node)**<br>
 Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
 
-- **getParentRegisters(void)**<br>
+- **getParentRegister(void)**<br>
 Returns the list of parent registers. Each item of this list is a \ref py_REG_page.
 
 - **getRegisterValue(\ref py_REG_page reg)**<br>
@@ -184,6 +184,9 @@ Returns the symbolic expression as \ref py_SymbolicExpression_page corresponding
 - **getSymbolicExpressions(void)**<br>
 Returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
 
+- **getSymbolicMemory(void)**<br>
+Returns the map of symbolic memory as {integer address : \ref py_SymbolicExpression_page expr}.
+
 - **getSymbolicMemoryId(intger addr)**<br>
 Returns the symbolic expression id as integer corresponding to the memory address.
 
@@ -192,6 +195,9 @@ Returns the symbolic memory value as integer.
 
 - **getSymbolicMemoryValue(\ref py_Memory_page mem)**<br>
 Returns the symbolic memory value as integer.
+
+- **getSymbolicRegister(void)**<br>
+Returns the map of symbolic register as {\ref py_REG_page reg : \ref py_SymbolicExpression_page expr}.
 
 - **getSymbolicRegisterId(\ref py_REG_page reg)**<br>
 Returns the symbolic expression id as integer corresponding to the register.
@@ -1308,17 +1314,17 @@ namespace triton {
       }
 
 
-      static PyObject* triton_getParentRegisters(PyObject* self, PyObject* noarg) {
+      static PyObject* triton_getParentRegister(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
         std::set<triton::arch::RegisterOperand*> reg;
         std::set<triton::arch::RegisterOperand*>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getParentRegisters(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "getParentRegister(): Architecture is not defined.");
 
         try {
-          reg = triton::api.getParentRegisters();
+          reg = triton::api.getParentRegister();
           ret = xPyList_New(reg.size());
           triton::uint32 index = 0;
           for (it = reg.begin(); it != reg.end(); it++)
@@ -1388,6 +1394,29 @@ namespace triton {
       }
 
 
+      static PyObject* triton_getSymbolicMemory(PyObject* self, PyObject* noarg) {
+        PyObject* ret = nullptr;
+        std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*> regs = triton::api.getSymbolicMemory();
+        std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*>::iterator it;
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getSymbolicMemory(): Architecture is not defined.");
+
+        try {
+          ret = xPyDict_New();
+          for (it = regs.begin(); it != regs.end(); it++) {
+            PyDict_SetItem(ret, PyLong_FromUint(it->first), PySymbolicExpression(it->second));
+          }
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return ret;
+      }
+
+
       static PyObject* triton_getSymbolicMemoryId(PyObject* self, PyObject* addr) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -1421,6 +1450,30 @@ namespace triton {
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
+      }
+
+
+      static PyObject* triton_getSymbolicRegister(PyObject* self, PyObject* noarg) {
+        PyObject* ret = nullptr;
+        std::map<triton::arch::RegisterOperand, triton::engines::symbolic::SymbolicExpression*> regs = triton::api.getSymbolicRegister();
+        std::map<triton::arch::RegisterOperand, triton::engines::symbolic::SymbolicExpression*>::iterator it;
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getSymbolicRegister(): Architecture is not defined.");
+
+        try {
+          ret = xPyDict_New();
+          for (it = regs.begin(); it != regs.end(); it++) {
+            triton::arch::RegisterOperand reg(it->first);
+            PyDict_SetItem(ret, PyRegisterOperand(reg), PySymbolicExpression(it->second));
+          }
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return ret;
       }
 
 
@@ -2388,12 +2441,14 @@ namespace triton {
         {"getMemoryValue",                      (PyCFunction)triton_getMemoryValue,                         METH_O,             ""},
         {"getModel",                            (PyCFunction)triton_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)triton_getModels,                              METH_VARARGS,       ""},
-        {"getParentRegisters",                  (PyCFunction)triton_getParentRegisters,                     METH_NOARGS,        ""},
+        {"getParentRegister",                   (PyCFunction)triton_getParentRegister,                      METH_NOARGS,        ""},
         {"getRegisterValue",                    (PyCFunction)triton_getRegisterValue,                       METH_O,             ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)triton_getSymbolicExpressionFromId,            METH_O,             ""},
         {"getSymbolicExpressions",              (PyCFunction)triton_getSymbolicExpressions,                 METH_NOARGS,        ""},
+        {"getSymbolicMemory",                   (PyCFunction)triton_getSymbolicMemory,                      METH_NOARGS,        ""},
         {"getSymbolicMemoryId",                 (PyCFunction)triton_getSymbolicMemoryId,                    METH_O,             ""},
         {"getSymbolicMemoryValue",              (PyCFunction)triton_getSymbolicMemoryValue,                 METH_O,             ""},
+        {"getSymbolicRegister",                 (PyCFunction)triton_getSymbolicRegister,                    METH_NOARGS,        ""},
         {"getSymbolicRegisterId",               (PyCFunction)triton_getSymbolicRegisterId,                  METH_O,             ""},
         {"getSymbolicRegisterValue",            (PyCFunction)triton_getSymbolicRegisterValue,               METH_O,             ""},
         {"getSymbolicVariableFromId",           (PyCFunction)triton_getSymbolicVariableFromId,              METH_O,             ""},

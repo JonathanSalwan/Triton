@@ -129,7 +129,7 @@ namespace triton {
         std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getCpuRegInformation(triton::uint32 reg);
 
         //! [**architecture api**] - Returns all parent registers.
-        std::set<triton::arch::RegisterOperand*> getParentRegisters(void);
+        std::set<triton::arch::RegisterOperand*> getParentRegister(void);
 
         //! [**architecture api**] - Returns the last concrete value recorded of a memory access.
         triton::uint8 getLastMemoryValue(triton::__uint addr);
@@ -185,6 +185,12 @@ namespace triton {
 
         //! [**symbolic api**] - Restores the last taken backup of the symbolic engine.
         void restoreSymbolicEngine(void);
+
+        //! [**symbolic api**] - Returns the map of symbolic registers defined.
+        std::map<triton::arch::RegisterOperand, triton::engines::symbolic::SymbolicExpression*> getSymbolicRegister(void);
+
+        //! [**symbolic api**] - Returns the map of symbolic memory defined.
+        std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*> getSymbolicMemory(void);
 
         //! [**symbolic api**] - Returns the symbolic expression id corresponding to the memory address.
         triton::__uint getSymbolicMemoryId(triton::__uint addr);

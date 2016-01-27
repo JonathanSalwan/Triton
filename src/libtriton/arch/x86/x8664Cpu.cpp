@@ -312,7 +312,7 @@ namespace triton {
     }
 
 
-    std::set<triton::arch::RegisterOperand*> x8664Cpu::getParentRegisters(void) {
+    std::set<triton::arch::RegisterOperand*> x8664Cpu::getParentRegister(void) {
       std::set<triton::arch::RegisterOperand*> ret;
       ret.insert(&TRITON_X86_REG_RAX);
       ret.insert(&TRITON_X86_REG_RBX);

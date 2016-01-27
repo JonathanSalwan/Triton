@@ -225,7 +225,7 @@ namespace triton {
     }
 
 
-    std::set<triton::arch::RegisterOperand*> x86Cpu::getParentRegisters(void) {
+    std::set<triton::arch::RegisterOperand*> x86Cpu::getParentRegister(void) {
       std::set<triton::arch::RegisterOperand*> ret;
       ret.insert(&TRITON_X86_REG_EAX);
       ret.insert(&TRITON_X86_REG_EBX);

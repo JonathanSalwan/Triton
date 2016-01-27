@@ -231,9 +231,9 @@ namespace triton {
   }
 
 
-  std::set<triton::arch::RegisterOperand*> API::getParentRegisters(void) {
+  std::set<triton::arch::RegisterOperand*> API::getParentRegister(void) {
     this->checkArchitecture();
-    return this->arch.getParentRegisters();
+    return this->arch.getParentRegister();
   }
 
 
@@ -480,6 +480,18 @@ namespace triton {
   triton::__uint API::getSymbolicMemoryId(triton::__uint addr) {
     this->checkSymbolic();
     return this->sym->getSymbolicMemoryId(addr);
+  }
+
+
+  std::map<triton::arch::RegisterOperand, triton::engines::symbolic::SymbolicExpression*> API::getSymbolicRegister(void) {
+    this->checkSymbolic();
+    return this->sym->getSymbolicRegister();
+  }
+
+
+  std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*> API::getSymbolicMemory(void) {
+    this->checkSymbolic();
+    return this->sym->getSymbolicMemory();
   }
 
 

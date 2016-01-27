@@ -117,7 +117,7 @@ namespace triton {
           bool isSSE(triton::uint32 regId);
 
           std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegInfo(triton::uint32 reg);
-          std::set<triton::arch::RegisterOperand*> getParentRegisters(void);
+          std::set<triton::arch::RegisterOperand*> getParentRegister(void);
           triton::uint128 getLastMemoryValue(triton::arch::MemoryOperand& mem);
           triton::uint128 getLastRegisterValue(triton::arch::RegisterOperand& reg);
           triton::uint32 invalidReg(void);

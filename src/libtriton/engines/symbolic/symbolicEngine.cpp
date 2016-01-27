@@ -374,6 +374,33 @@ namespace triton {
       }
 
 
+      /* Returns the map of symbolic registers defined */
+      std::map<triton::arch::RegisterOperand, SymbolicExpression*> SymbolicEngine::getSymbolicRegister(void) {
+        std::map<triton::arch::RegisterOperand, SymbolicExpression*> ret;
+
+        for (triton::uint32 it = 0; it < this->numberOfReg; it++) {
+          if (this->symbolicReg[it] != triton::engines::symbolic::UNSET) {
+            triton::arch::RegisterOperand reg(it);
+            ret[reg] = this->getSymbolicExpressionFromId(this->symbolicReg[it]);
+          }
+        }
+
+        return ret;
+      }
+
+
+      /* Returns the map of symbolic memory defined */
+      std::map<triton::__uint, SymbolicExpression*> SymbolicEngine::getSymbolicMemory(void) {
+        std::map<triton::__uint, SymbolicExpression*> ret;
+        std::map<triton::__uint, triton::__uint>::iterator it;
+
+        for (it = this->memoryReference.begin(); it != this->memoryReference.end(); it++)
+          ret[it->first] = this->getSymbolicExpressionFromId(it->second);
+
+        return ret;
+      }
+
+
       /*
        * Converts an expression id to a symbolic variable.
        * e.g:
