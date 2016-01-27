@@ -72,7 +72,7 @@ namespace triton {
         triton::__uint indexValue     = 0;
         triton::__uint scaleValue     = this->scale.getValue();
         triton::__uint dispValue      = this->displacement.getValue();
-        triton::__uint mask           = ((1 << this->getBitSize()) - 1);
+        triton::__uint mask           = -1;
 
         if (base.isValid())
           baseValue = triton::api.getRegisterValue(base).convert_to<triton::__uint>();
@@ -80,7 +80,7 @@ namespace triton {
         if (index.isValid())
           indexValue = triton::api.getRegisterValue(index).convert_to<triton::__uint>();
 
-        address = (((baseValue + (indexValue * scaleValue)) + dispValue) & (mask ? mask : -1));
+        address = (((baseValue + (indexValue * scaleValue)) + dispValue) & mask);
       }
 
       return address;
