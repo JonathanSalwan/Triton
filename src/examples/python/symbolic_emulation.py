@@ -120,5 +120,15 @@ if __name__ == '__main__':
     for k, v in getSymbolicMemory().items():
         print hex(k), v
 
+    print
+    print 'Craft symbolic stuffs'
+    print '~~~~~~~~~~~~~~~~~~~~~'
+    ah  = buildSymbolicRegister(REG.AH)
+    mem = buildSymbolicMemory(Memory(0x11248, 4))
+    print 'Memory at 0x11248 :', mem
+    print 'Compute memory    :', hex(evaluateAst(mem))
+    print 'Register AH       :', ah
+    print 'Compute  AH       :', hex(evaluateAst(ah))
+
     sys.exit(0)
 

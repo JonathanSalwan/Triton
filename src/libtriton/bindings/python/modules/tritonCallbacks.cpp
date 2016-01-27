@@ -76,6 +76,15 @@ expression to a sub-register like `AX`, `AH` or `AL`, please, craft your express
 - **buildSemantics(\ref py_Instruction_page inst)**<br>
 Builds the instruction semantics based on the SMT2-Lib representation. You must define an architecture before.
 
+- **buildSymbolicImmediate(\ref py_Immediate_page imm)**<br>
+Builds a symbolic \ref py_Immediate_page and returns a \ref py_SmtAstNode_page.
+
+- **buildSymbolicMemory(\ref py_Memory_page mem)**<br>
+Builds a symbolic \ref py_Memory_page and returns a \ref py_SmtAstNode_page.
+
+- **buildSymbolicRegister(\ref py_REG_page reg)**<br>
+Builds a symbolic \ref py_REG_page and returns a \ref py_SmtAstNode_page.
+
 - **concretizeAllMem(void)**<br>
 Concretizes all symbolic memory references.
 
@@ -649,6 +658,57 @@ namespace triton {
 
         Py_INCREF(Py_None);
         return Py_None;
+      }
+
+
+      static PyObject* triton_buildSymbolicImmediate(PyObject* self, PyObject* imm) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "buildSymbolicImmediate(): Architecture is not defined.");
+
+        if (!PyImmediateOperand_Check(imm))
+          return PyErr_Format(PyExc_TypeError, "buildSymbolicImmediate(): Expects an Immediate as argument.");
+
+        try {
+          return PySmtAstNode(triton::api.buildSymbolicImmediateOperand(*PyImmediateOperand_AsImmediateOperand(imm)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* triton_buildSymbolicMemory(PyObject* self, PyObject* mem) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "buildSymbolicMemory(): Architecture is not defined.");
+
+        if (!PyMemoryOperand_Check(mem))
+          return PyErr_Format(PyExc_TypeError, "buildSymbolicMemory(): Expects an Memory as argument.");
+
+        try {
+          return PySmtAstNode(triton::api.buildSymbolicMemoryOperand(*PyMemoryOperand_AsMemoryOperand(mem)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* triton_buildSymbolicRegister(PyObject* self, PyObject* reg) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "buildSymbolicRegister(): Architecture is not defined.");
+
+        if (!PyRegisterOperand_Check(reg))
+          return PyErr_Format(PyExc_TypeError, "buildSymbolicRegister(): Expects an Register as argument.");
+
+        try {
+          return PySmtAstNode(triton::api.buildSymbolicRegisterOperand(*PyRegisterOperand_AsRegisterOperand(reg)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -2411,6 +2471,9 @@ namespace triton {
         {"Register",                            (PyCFunction)triton_Register,                               METH_VARARGS,       ""},
         {"assignSymbolicExpressionToRegister",  (PyCFunction)triton_assignSymbolicExpressionToRegister,     METH_VARARGS,       ""},
         {"buildSemantics",                      (PyCFunction)triton_buildSemantics,                         METH_O,             ""},
+        {"buildSymbolicImmediate",              (PyCFunction)triton_buildSymbolicImmediate,                 METH_O,             ""},
+        {"buildSymbolicMemory",                 (PyCFunction)triton_buildSymbolicMemory,                    METH_O,             ""},
+        {"buildSymbolicRegister",               (PyCFunction)triton_buildSymbolicRegister,                  METH_O,             ""},
         {"concretizeAllMem",                    (PyCFunction)triton_concretizeAllMem,                       METH_NOARGS,        ""},
         {"concretizeAllReg",                    (PyCFunction)triton_concretizeAllReg,                       METH_NOARGS,        ""},
         {"concretizeMem",                       (PyCFunction)triton_concretizeMem,                          METH_O,             ""},
