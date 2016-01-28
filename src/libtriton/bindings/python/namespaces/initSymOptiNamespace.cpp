@@ -34,7 +34,7 @@ The OPTIMIZATION namespace contains all kinds of symbolic optimization.
 <hr>
 
 - **OPTIMIZATION.ALIGNED_MEMORY**<br>
-Enabled, Triton will keep a map of aligned memory to avoid symbolic memory explosion of LOAD/STORE acceess.
+Enabled, Triton will keep a map of aligned memory to avoid symbolic memory explosion of `LOAD` and `STORE` acceess.
 
 - **OPTIMIZATION.AST_SUMMARIES**<br>
 Enabled, Triton will record all AST nodes into several maps and try to return node already allocated instead of allocate twice the same node.
