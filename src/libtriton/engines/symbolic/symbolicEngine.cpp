@@ -206,7 +206,7 @@ namespace triton {
         std::list<std::pair<triton::__uint, triton::uint32>>::iterator it1;
         std::map<std::pair<triton::__uint, triton::uint32>, smt2lib::smtAstAbstractNode*>::iterator it2;
 
-        /* Get address with several size */
+        /* Remove address with several sizes */
         this->alignedMemoryReference.erase(std::make_pair(addr,  BYTE_SIZE));
         this->alignedMemoryReference.erase(std::make_pair(addr,  WORD_SIZE));
         this->alignedMemoryReference.erase(std::make_pair(addr,  DWORD_SIZE));
