@@ -22,7 +22,7 @@ A full documentation is available on our [doxygen page](http://triton.quarkslab.
 ### Internal documentation
 
 * [Dynamic Symbolic Execution](http://triton.quarkslab.com/documentation/doxygen/engine_DSE_page.html)
-* [SMT2Symbolic Execution Optimizations](http://triton.quarkslab.com/documentation/doxygen/py_OPTIMIZATION_page.html)
+* [Symbolic Execution Optimizations](http://triton.quarkslab.com/documentation/doxygen/py_OPTIMIZATION_page.html)
 * [SMT2-Lib Representation](http://triton.quarkslab.com/documentation/doxygen/py_smt2lib_page.html)
 * [SMT Semantics Supported](http://triton.quarkslab.com/documentation/doxygen/SMT_Semantics_Supported_page.html)
 * [SMT Solver Interface](http://triton.quarkslab.com/documentation/doxygen/solver_interface_page.html)
