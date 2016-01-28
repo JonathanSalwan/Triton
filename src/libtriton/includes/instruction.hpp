@@ -161,6 +161,9 @@ namespace triton {
         //! Returns true if the condition is taken (e.g x86: jcc, cmovcc, setcc, ...).
         bool isConditionTaken(void);
 
+        //! Returns true if at least one of its expressions is tainted.
+        bool isTainted(void);
+
         //! Sets flag to define this instruction as branch or not.
         void setBranch(bool flag);
 

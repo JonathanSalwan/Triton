@@ -117,6 +117,9 @@ Returns true if the condition is taken (i.e x86: JCC, CMOVCC, SETCC, ...).
 - **isControlFlow(void)**<br>
 Returns true if the instruction modifies the control flow (i.e x86: JUMP, JCC, CALL, RET).
 
+- **isTainted(void)**<br>
+Returns true if at least one of its expressions is tainted.
+
 - **setAddress(integer addr)**<br>
 Sets the instruction's address.
 
@@ -262,6 +265,13 @@ namespace triton {
       }
 
 
+      static PyObject* Instruction_isTainted(PyObject* self, PyObject* noarg) {
+        if (PyInstruction_AsInstruction(self)->isTainted() == true)
+          Py_RETURN_TRUE;
+        Py_RETURN_FALSE;
+      }
+
+
       static PyObject* Instruction_setAddress(PyObject* self, PyObject* addr) {
         if (!PyLong_Check(addr) && !PyInt_Check(addr))
           return PyErr_Format(PyExc_TypeError, "setAddress(): expected an integer as argument");
@@ -344,6 +354,7 @@ namespace triton {
         {"isBranch",                  Instruction_isBranch,                 METH_NOARGS,     ""},
         {"isConditionTaken",          Instruction_isConditionTaken,         METH_NOARGS,     ""},
         {"isControlFlow",             Instruction_isControlFlow,            METH_NOARGS,     ""},
+        {"isTainted",                 Instruction_isTainted,                METH_NOARGS,     ""},
         {"setAddress",                Instruction_setAddress,               METH_O,          ""},
         {"setOpcodes",                Instruction_setOpcodes,               METH_O,          ""},
         {"setThreadId",               Instruction_setThreadId,              METH_O,          ""},

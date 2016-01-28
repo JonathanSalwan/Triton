@@ -189,6 +189,16 @@ namespace triton {
     }
 
 
+    bool Instruction::isTainted(void) {
+      std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
+      for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
+        if ((*it)->isTainted == true)
+          return true;
+      }
+      return false;
+    }
+
+
     void Instruction::setBranch(bool flag) {
       this->branch = flag;
     }
