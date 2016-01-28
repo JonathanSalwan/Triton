@@ -118,7 +118,7 @@ Returns true if the condition is taken (i.e x86: JCC, CMOVCC, SETCC, ...).
 Returns true if the instruction modifies the control flow (i.e x86: JUMP, JCC, CALL, RET).
 
 - **isTainted(void)**<br>
-Returns true if at least one of its expressions is tainted.
+Returns true if at least one of its \ref py_SymbolicExpression_page is tainted.
 
 - **setAddress(integer addr)**<br>
 Sets the instruction's address.
