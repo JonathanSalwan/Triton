@@ -44,25 +44,6 @@ trace = {
 
 
 
-# Rule (?* (concat ? ? ? ?) ? ?) -> (?* (evaluate) ? ?)
-def concat(node):
-
-    if len(node.getChilds()) and node.getChilds()[0].getKind() == SMT_AST_NODE.CONCAT:
-        c = node.getChilds()[0]
-        n = bv(evaluateAst(c), c.getBitvectorSize())
-        node.setChild(0, n)
-
-    for n in node.getChilds():
-        concat(n)
-
-    if node.getKind() == SMT_AST_NODE.CONCAT:
-        n = bv(evaluateAst(node), node.getBitvectorSize())
-        return n
-
-    return node
-
-
-
 if __name__ == '__main__':
 
     # Set the architecture
@@ -71,8 +52,8 @@ if __name__ == '__main__':
     # Define that we perform emulation
     enableSymbolicEmulation(True)
 
-    # Record simplification passes
-    recordSimplificationCallback(concat)
+    # Symbolic optimization
+    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY)
 
     # Define entry point
     pc = 0x40056d

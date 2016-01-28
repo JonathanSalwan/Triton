@@ -46,8 +46,9 @@ namespace triton {
 
       //! Kinds of symbolic optimization.
       enum optimization_e {
-        ONLY_ON_TAINTED = 1, //!< Perform symbolic execution only on tainted instructions.
+        ALIGNED_MEMORY,      //!< Keep a map of aligned memory.
         AST_SUMMARIES,       //!< Abstract Syntax Tree summaries.
+        ONLY_ON_TAINTED = 1, //!< Perform symbolic execution only on tainted instructions.
       };
 
       //! \class SymbolicOptimization

@@ -101,6 +101,14 @@ namespace triton {
            */
           std::map<triton::__uint, triton::__uint> memoryReference;
 
+          /*! \brief map of <address:size> -> symbolic expression.
+           *
+           * \description
+           * **item1**: <addr:size><br>
+           * **item2**: symbolic reference id
+           */
+          std::map<std::pair<triton::__uint, triton::uint32>, smt2lib::smtAstAbstractNode*> alignedMemoryReference;
+
 
         public:
 
@@ -112,6 +120,9 @@ namespace triton {
 
           //! Removes the symbolic expression corresponding to the id.
           void removeSymbolicExpression(triton::__uint symExprId);
+
+          //! Removes aligned entry.
+          void removeAlignedMemory(triton::__uint addr);
 
           //! Adds a symbolic variable.
           SymbolicVariable* newSymbolicVariable(symkind_e kind, triton::__uint kindValue, triton::uint32 size, std::string comment="");
