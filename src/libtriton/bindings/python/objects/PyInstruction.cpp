@@ -87,6 +87,9 @@ Returns the instruction's address as integer.
 - **getDisassembly(void)**<br>
 Returns the instruction's disassembly as string.
 
+- **getFirstOperand(void)**<br>
+Returns the first instruction's operands.
+
 - **getNextAddress(void)**<br>
 Returns the next instruction's address as integer.
 
@@ -98,6 +101,9 @@ Returns the instruction's opcodes size as integer.
 
 - **getOperands(void)**<br>
 Returns the instruction's operands as list of \ref py_Immediate_page, \ref py_Memory_page or \ref py_Register_page.
+
+- **getSecondOperand(void)**<br>
+Returns the second instruction's operands.
 
 - **getSymbolicExpressions(void)**<br>
 Returns the instruction's symbolic expressions as list of \ref py_SymbolicExpression_page.
