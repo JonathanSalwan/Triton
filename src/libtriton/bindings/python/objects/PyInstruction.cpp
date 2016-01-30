@@ -161,6 +161,36 @@ namespace triton {
       }
 
 
+      static PyObject* Instruction_getFirstOperand(PyObject* self, PyObject* noarg) {
+        triton::arch::Instruction*      inst;
+        triton::uint32                  opSize;
+        PyObject*                       obj = nullptr;
+
+        inst     = PyInstruction_AsInstruction(self);
+        opSize   = inst->operands.size();
+
+        if (opSize < 1) {
+          return PyErr_Format(PyExc_TypeError, "getFirstOperand(): The instruction hasn't operands.");
+        }
+
+
+        if (inst->operands[0].getType() == triton::arch::OP_IMM) {
+          auto imm = inst->operands[0].getImm();
+          obj = PyImmediateOperand(imm);
+        }
+        else if (inst->operands[0].getType() == triton::arch::OP_MEM) {
+          auto mem = inst->operands[0].getMem();
+          obj = PyMemoryOperand(mem);
+        }
+        else if (inst->operands[0].getType() == triton::arch::OP_REG) {
+          auto reg = inst->operands[0].getReg();
+          obj = PyRegisterOperand(reg);
+        }
+
+        return obj;
+      }
+
+
       static PyObject* Instruction_getNextAddress(PyObject* self, PyObject* noarg) {
         return PyLong_FromUint(PyInstruction_AsInstruction(self)->getNextAddress());
       }
@@ -214,6 +244,35 @@ namespace triton {
         return operands;
       }
 
+
+      static PyObject* Instruction_getSecondOperand(PyObject* self, PyObject* noarg) {
+        triton::arch::Instruction*      inst;
+        triton::uint32                  opSize;
+        PyObject*                       obj = nullptr;
+
+        inst     = PyInstruction_AsInstruction(self);
+        opSize   = inst->operands.size();
+
+        if (opSize < 2) {
+          return PyErr_Format(PyExc_TypeError, "getFirstOperand(): The instruction hasn't second operand.");
+        }
+
+
+        if (inst->operands[1].getType() == triton::arch::OP_IMM) {
+          auto imm = inst->operands[1].getImm();
+          obj = PyImmediateOperand(imm);
+        }
+        else if (inst->operands[1].getType() == triton::arch::OP_MEM) {
+          auto mem = inst->operands[1].getMem();
+          obj = PyMemoryOperand(mem);
+        }
+        else if (inst->operands[1].getType() == triton::arch::OP_REG) {
+          auto reg = inst->operands[1].getReg();
+          obj = PyRegisterOperand(reg);
+        }
+
+        return obj;
+      }
 
       static PyObject* Instruction_getSymbolicExpressions(PyObject* self, PyObject* noarg) {
         triton::arch::Instruction*  inst;
@@ -344,10 +403,12 @@ namespace triton {
       PyMethodDef Instruction_callbacks[] = {
         {"getAddress",                Instruction_getAddress,               METH_NOARGS,     ""},
         {"getDisassembly",            Instruction_getDisassembly,           METH_NOARGS,     ""},
+        {"getFirstOperand",           Instruction_getFirstOperand,          METH_NOARGS,     ""},
         {"getNextAddress",            Instruction_getNextAddress,           METH_NOARGS,     ""},
         {"getOpcodes",                Instruction_getOpcodes,               METH_NOARGS,     ""},
         {"getOpcodesSize",            Instruction_getOpcodesSize,           METH_NOARGS,     ""},
         {"getOperands",               Instruction_getOperands,              METH_NOARGS,     ""},
+        {"getSecondOperand",          Instruction_getSecondOperand,         METH_NOARGS,     ""},
         {"getSymbolicExpressions",    Instruction_getSymbolicExpressions,   METH_NOARGS,     ""},
         {"getThreadId",               Instruction_getThreadId,              METH_NOARGS,     ""},
         {"getType",                   Instruction_getType,                  METH_NOARGS,     ""},
