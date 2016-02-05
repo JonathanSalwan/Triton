@@ -648,8 +648,12 @@ namespace tracer {
 
     /* Save the memory access into the Triton instruction */
     static void saveMemoryAccess(triton::arch::Instruction* tritonInst, triton::__uint addr, triton::uint32 size) {
+      /* Mutex */
+      PIN_LockClient();
       triton::uint128 value = tracer::pintool::context::getCurrentMemoryValue(addr, size);
       tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, value));
+      /* Mutex */
+      PIN_UnlockClient();
     }
 
 
