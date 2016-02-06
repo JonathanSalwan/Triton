@@ -154,6 +154,9 @@ Enables or disables the taint engine.
 - **evaluateAst(\ref py_SmtAstNode_page node)**<br>
 Evaluates an AST and returns the symbolic value as integer.
 
+- **getAllRegister(void)**<br>
+Returns the list of all registers. Each item of this list is a \ref py_REG_page.
+
 - **getArchitecture(void)**<br>
 Returns the architecture which has been initialized as \ref py_ARCH_page.
 
@@ -180,9 +183,6 @@ Computes and returns a model as a dictionary of {integer symVarId : \ref py_Solv
 
 - **getModels(\ref py_SmtAstNode_page node)**<br>
 Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
-
-- **getAllRegister(void)**<br>
-Returns the list of all registers. Each item of this list is a \ref py_REG_page.
 
 - **getParentRegister(void)**<br>
 Returns the list of parent registers. Each item of this list is a \ref py_REG_page.
@@ -1210,6 +1210,30 @@ namespace triton {
       }
 
 
+      static PyObject* triton_getAllRegister(PyObject* self, PyObject* noarg) {
+        PyObject* ret = nullptr;
+        std::set<triton::arch::RegisterOperand*> reg;
+        std::set<triton::arch::RegisterOperand*>::iterator it;
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getAllRegister(): Architecture is not defined.");
+
+        try {
+          reg = triton::api.getAllRegister();
+          ret = xPyList_New(reg.size());
+          triton::uint32 index = 0;
+          for (it = reg.begin(); it != reg.end(); it++)
+            PyList_SetItem(ret, index++, PyRegisterOperand(**it));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return ret;
+      }
+
+
       static PyObject* triton_getArchitecture(PyObject* self, PyObject* noarg) {
         return Py_BuildValue("k", triton::api.getArchitecture());
       }
@@ -1368,30 +1392,6 @@ namespace triton {
             if (model.size() > 0)
               PyList_SetItem(ret, index++, mdict);
           }
-        }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        return ret;
-      }
-
-
-      static PyObject* triton_getAllRegister(PyObject* self, PyObject* noarg) {
-        PyObject* ret = nullptr;
-        std::set<triton::arch::RegisterOperand*> reg;
-        std::set<triton::arch::RegisterOperand*>::iterator it;
-
-        /* Check if the architecture is definied */
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getAllRegister(): Architecture is not defined.");
-
-        try {
-          reg = triton::api.getAllRegister();
-          ret = xPyList_New(reg.size());
-          triton::uint32 index = 0;
-          for (it = reg.begin(); it != reg.end(); it++)
-            PyList_SetItem(ret, index++, PyRegisterOperand(**it));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2523,6 +2523,7 @@ namespace triton {
         {"enableSymbolicOptimization",          (PyCFunction)triton_enableSymbolicOptimization,             METH_O,             ""},
         {"enableTaintEngine",                   (PyCFunction)triton_enableTaintEngine,                      METH_O,             ""},
         {"evaluateAst",                         (PyCFunction)triton_evaluateAst,                            METH_O,             ""},
+        {"getAllRegister",                      (PyCFunction)triton_getAllRegister,                         METH_NOARGS,        ""},
         {"getArchitecture",                     (PyCFunction)triton_getArchitecture,                        METH_NOARGS,        ""},
         {"getAstFromId",                        (PyCFunction)triton_getAstFromId,                           METH_O,             ""},
         {"getAstSummariesStats",                (PyCFunction)triton_getAstSummariesStats,                   METH_NOARGS,        ""},
@@ -2531,7 +2532,6 @@ namespace triton {
         {"getMemoryValue",                      (PyCFunction)triton_getMemoryValue,                         METH_O,             ""},
         {"getModel",                            (PyCFunction)triton_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)triton_getModels,                              METH_VARARGS,       ""},
-        {"getAllRegister",                      (PyCFunction)triton_getAllRegister,                         METH_NOARGS,        ""},
         {"getParentRegister",                   (PyCFunction)triton_getParentRegister,                      METH_NOARGS,        ""},
         {"getRegisterValue",                    (PyCFunction)triton_getRegisterValue,                       METH_O,             ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)triton_getSymbolicExpressionFromId,            METH_O,             ""},
