@@ -184,6 +184,9 @@ Computes and returns several models from a symbolic constraint. The `limit` is t
 - **getParentRegister(void)**<br>
 Returns the list of parent registers. Each item of this list is a \ref py_REG_page.
 
+- **getRegister(void)**<br>
+Returns the list of all registers. Each item of this list is a \ref py_REG_page.
+
 - **getRegisterValue(\ref py_REG_page reg)**<br>
 If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of the register.
 
@@ -1398,6 +1401,30 @@ namespace triton {
       }
 
 
+      static PyObject* triton_getRegister(PyObject* self, PyObject* noarg) {
+        PyObject* ret = nullptr;
+        std::set<triton::arch::RegisterOperand*> reg;
+        std::set<triton::arch::RegisterOperand*>::iterator it;
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getRegister(): Architecture is not defined.");
+
+        try {
+          reg = triton::api.getRegister();
+          ret = xPyList_New(reg.size());
+          triton::uint32 index = 0;
+          for (it = reg.begin(); it != reg.end(); it++)
+            PyList_SetItem(ret, index++, PyRegisterOperand(**it));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return ret;
+      }
+
+
       static PyObject* triton_getRegisterValue(PyObject* self, PyObject* reg) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -2505,6 +2532,7 @@ namespace triton {
         {"getModel",                            (PyCFunction)triton_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)triton_getModels,                              METH_VARARGS,       ""},
         {"getParentRegister",                   (PyCFunction)triton_getParentRegister,                      METH_NOARGS,        ""},
+        {"getRegister",                         (PyCFunction)triton_getRegister,                            METH_NOARGS,        ""},
         {"getRegisterValue",                    (PyCFunction)triton_getRegisterValue,                       METH_O,             ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)triton_getSymbolicExpressionFromId,            METH_O,             ""},
         {"getSymbolicExpressions",              (PyCFunction)triton_getSymbolicExpressions,                 METH_NOARGS,        ""},

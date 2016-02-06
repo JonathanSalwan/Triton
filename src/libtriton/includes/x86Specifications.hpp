@@ -41,6 +41,8 @@ namespace triton {
       //! Initializes the 64-bits spec.
       void init64(void);
 
+      extern RegisterOperand x86_reg_invalid;
+
       extern RegisterOperand x86_reg_rax;
       extern RegisterOperand x86_reg_eax;
       extern RegisterOperand x86_reg_ax;
@@ -161,7 +163,6 @@ namespace triton {
       extern RegisterOperand x86_reg_sf;
       extern RegisterOperand x86_reg_tf;
       extern RegisterOperand x86_reg_zf;
-
 
       //! Returns all information about the register from its ID.
       std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> regIdToRegInfo(triton::uint32 reg);
@@ -305,6 +306,8 @@ namespace triton {
         ID_REG_LAST_ITEM //!< must be the last item
       };
 
+      //! Global set of registers.
+      extern RegisterOperand* x86_regs[ID_REG_LAST_ITEM];
 
       //! The list of opcodes.
       enum instructions_e {
@@ -1617,6 +1620,8 @@ namespace triton {
 };
 
 
+//! Temporary INVALID register.
+#define TRITON_X86_REG_INVALID  triton::arch::x86::x86_reg_invalid
 //! Temporary RAX register.
 #define TRITON_X86_REG_RAX      triton::arch::x86::x86_reg_rax
 //! Temporary EAX register.

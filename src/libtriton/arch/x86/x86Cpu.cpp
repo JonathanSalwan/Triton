@@ -225,35 +225,35 @@ namespace triton {
     }
 
 
+    std::set<triton::arch::RegisterOperand*> x86Cpu::getRegister(void) {
+      std::set<triton::arch::RegisterOperand*> ret;
+
+      for (triton::uint32 index = 0; index < triton::arch::x86::ID_REG_LAST_ITEM; index++) {
+        if (this->isRegValid(triton::arch::x86::x86_regs[index]->getId()))
+          ret.insert(triton::arch::x86::x86_regs[index]);
+      }
+
+      return ret;
+    }
+
+
     std::set<triton::arch::RegisterOperand*> x86Cpu::getParentRegister(void) {
       std::set<triton::arch::RegisterOperand*> ret;
-      ret.insert(&TRITON_X86_REG_EAX);
-      ret.insert(&TRITON_X86_REG_EBX);
-      ret.insert(&TRITON_X86_REG_ECX);
-      ret.insert(&TRITON_X86_REG_EDX);
-      ret.insert(&TRITON_X86_REG_EDI);
-      ret.insert(&TRITON_X86_REG_ESI);
-      ret.insert(&TRITON_X86_REG_EBP);
-      ret.insert(&TRITON_X86_REG_ESP);
-      ret.insert(&TRITON_X86_REG_EIP);
-      ret.insert(&TRITON_X86_REG_EFLAGS);
-      ret.insert(&TRITON_X86_REG_AF);
-      ret.insert(&TRITON_X86_REG_CF);
-      ret.insert(&TRITON_X86_REG_DF);
-      ret.insert(&TRITON_X86_REG_IF);
-      ret.insert(&TRITON_X86_REG_OF);
-      ret.insert(&TRITON_X86_REG_PF);
-      ret.insert(&TRITON_X86_REG_SF);
-      ret.insert(&TRITON_X86_REG_TF);
-      ret.insert(&TRITON_X86_REG_ZF);
-      ret.insert(&TRITON_X86_REG_XMM0);
-      ret.insert(&TRITON_X86_REG_XMM1);
-      ret.insert(&TRITON_X86_REG_XMM2);
-      ret.insert(&TRITON_X86_REG_XMM3);
-      ret.insert(&TRITON_X86_REG_XMM4);
-      ret.insert(&TRITON_X86_REG_XMM5);
-      ret.insert(&TRITON_X86_REG_XMM6);
-      ret.insert(&TRITON_X86_REG_XMM7);
+
+      for (triton::uint32 index = 0; index < triton::arch::x86::ID_REG_LAST_ITEM; index++) {
+        /* Add GPR */
+        if (triton::arch::x86::x86_regs[index]->getSize() == this->regSize())
+          ret.insert(triton::arch::x86::x86_regs[index]);
+
+        /* Add Flags */
+        else if (this->isFlag(triton::arch::x86::x86_regs[index]->getId()))
+          ret.insert(triton::arch::x86::x86_regs[index]);
+
+        /* Add SSE */
+        else if (this->isSSE(triton::arch::x86::x86_regs[index]->getId()))
+          ret.insert(triton::arch::x86::x86_regs[index]);
+      }
+
       return ret;
     }
 

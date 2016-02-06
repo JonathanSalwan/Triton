@@ -155,6 +155,13 @@ namespace triton {
     }
 
 
+    std::set<triton::arch::RegisterOperand*> Architecture::getRegister(void) {
+      if (!this->cpu)
+        throw std::runtime_error("Architecture::getRegister(): You must define an architecture");
+      return this->cpu->getRegister();
+    }
+
+
     std::set<triton::arch::RegisterOperand*> Architecture::getParentRegister(void) {
       if (!this->cpu)
         throw std::runtime_error("Architecture::getParentRegister(): You must define an architecture");

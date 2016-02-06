@@ -312,51 +312,35 @@ namespace triton {
     }
 
 
+    std::set<triton::arch::RegisterOperand*> x8664Cpu::getRegister(void) {
+      std::set<triton::arch::RegisterOperand*> ret;
+
+      for (triton::uint32 index = 0; index < triton::arch::x86::ID_REG_LAST_ITEM; index++) {
+        if (this->isRegValid(triton::arch::x86::x86_regs[index]->getId()))
+          ret.insert(triton::arch::x86::x86_regs[index]);
+      }
+
+      return ret;
+    }
+
+
     std::set<triton::arch::RegisterOperand*> x8664Cpu::getParentRegister(void) {
       std::set<triton::arch::RegisterOperand*> ret;
-      ret.insert(&TRITON_X86_REG_RAX);
-      ret.insert(&TRITON_X86_REG_RBX);
-      ret.insert(&TRITON_X86_REG_RCX);
-      ret.insert(&TRITON_X86_REG_RDX);
-      ret.insert(&TRITON_X86_REG_RDI);
-      ret.insert(&TRITON_X86_REG_RSI);
-      ret.insert(&TRITON_X86_REG_RBP);
-      ret.insert(&TRITON_X86_REG_RSP);
-      ret.insert(&TRITON_X86_REG_RIP);
-      ret.insert(&TRITON_X86_REG_RFLAGS);
-      ret.insert(&TRITON_X86_REG_AF);
-      ret.insert(&TRITON_X86_REG_CF);
-      ret.insert(&TRITON_X86_REG_DF);
-      ret.insert(&TRITON_X86_REG_IF);
-      ret.insert(&TRITON_X86_REG_OF);
-      ret.insert(&TRITON_X86_REG_PF);
-      ret.insert(&TRITON_X86_REG_SF);
-      ret.insert(&TRITON_X86_REG_TF);
-      ret.insert(&TRITON_X86_REG_ZF);
-      ret.insert(&TRITON_X86_REG_R8);
-      ret.insert(&TRITON_X86_REG_R9);
-      ret.insert(&TRITON_X86_REG_R10);
-      ret.insert(&TRITON_X86_REG_R11);
-      ret.insert(&TRITON_X86_REG_R12);
-      ret.insert(&TRITON_X86_REG_R13);
-      ret.insert(&TRITON_X86_REG_R14);
-      ret.insert(&TRITON_X86_REG_R15);
-      ret.insert(&TRITON_X86_REG_XMM0);
-      ret.insert(&TRITON_X86_REG_XMM1);
-      ret.insert(&TRITON_X86_REG_XMM2);
-      ret.insert(&TRITON_X86_REG_XMM3);
-      ret.insert(&TRITON_X86_REG_XMM4);
-      ret.insert(&TRITON_X86_REG_XMM5);
-      ret.insert(&TRITON_X86_REG_XMM6);
-      ret.insert(&TRITON_X86_REG_XMM7);
-      ret.insert(&TRITON_X86_REG_XMM8);
-      ret.insert(&TRITON_X86_REG_XMM9);
-      ret.insert(&TRITON_X86_REG_XMM10);
-      ret.insert(&TRITON_X86_REG_XMM11);
-      ret.insert(&TRITON_X86_REG_XMM12);
-      ret.insert(&TRITON_X86_REG_XMM13);
-      ret.insert(&TRITON_X86_REG_XMM14);
-      ret.insert(&TRITON_X86_REG_XMM15);
+
+      for (triton::uint32 index = 0; index < triton::arch::x86::ID_REG_LAST_ITEM; index++) {
+        /* Add GPR */
+        if (triton::arch::x86::x86_regs[index]->getSize() == this->regSize())
+          ret.insert(triton::arch::x86::x86_regs[index]);
+
+        /* Add Flags */
+        else if (this->isFlag(triton::arch::x86::x86_regs[index]->getId()))
+          ret.insert(triton::arch::x86::x86_regs[index]);
+
+        /* Add SSE */
+        else if (this->isSSE(triton::arch::x86::x86_regs[index]->getId()))
+          ret.insert(triton::arch::x86::x86_regs[index]);
+      }
+
       return ret;
     }
 

@@ -23,127 +23,230 @@ namespace triton {
        * class. By default, these X86_REG are empty. We must use init32 or init64 before.
        */
 
-      triton::arch::RegisterOperand x86_reg_rax    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_eax    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_ax     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_ah     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_al     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_invalid = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_rbx    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_ebx    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_bx     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_bh     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_bl     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_rax     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_eax     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_ax      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_ah      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_al      = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_rcx    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_ecx    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_cx     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_ch     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_cl     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_rbx     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_ebx     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_bx      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_bh      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_bl      = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_rdx    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_edx    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_dx     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_dh     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_dl     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_rcx     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_ecx     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cx      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_ch      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cl      = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_rdi    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_edi    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_di     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_dil    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_rdx     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_edx     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_dx      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_dh      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_dl      = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_rsi    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_esi    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_si     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_sil    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_rdi     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_edi     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_di      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_dil     = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_rsp    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_esp    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_sp     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_spl    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_stack  = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_rsi     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_esi     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_si      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_sil     = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_rbp    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_ebp    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_bp     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_bpl    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_rsp     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_esp     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_sp      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_spl     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_stack   = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_rip    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_eip    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_ip     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_pc     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_rbp     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_ebp     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_bp      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_bpl     = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_rflags = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_eflags = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_flags  = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_rip     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_eip     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_ip      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_pc      = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_r8     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r8d    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r8w    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r8b    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_rflags  = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_eflags  = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_flags   = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_r9     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r9d    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r9w    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r9b    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r8      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r8d     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r8w     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r8b     = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_r10    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r10d   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r10w   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r10b   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r9      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r9d     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r9w     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r9b     = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_r11    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r11d   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r11w   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r11b   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r10     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r10d    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r10w    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r10b    = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_r12    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r12d   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r12w   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r12b   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r11     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r11d    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r11w    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r11b    = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_r13    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r13d   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r13w   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r13b   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r12     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r12d    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r12w    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r12b    = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_r14    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r14d   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r14w   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r14b   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r13     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r13d    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r13w    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r13b    = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_r15    = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r15d   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r15w   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_r15b   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r14     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r14d    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r14w    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r14b    = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_xmm0   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm1   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm2   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm3   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm4   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm5   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm6   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm7   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm8   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm9   = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm10  = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm11  = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm12  = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm13  = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm14  = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_xmm15  = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r15     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r15d    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r15w    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_r15b    = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_af     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_cf     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_df     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_if     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_of     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_pf     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_sf     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_tf     = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_zf     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm0    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm1    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm2    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm3    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm4    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm5    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm6    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm7    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm8    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm9    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm10   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm11   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm12   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm13   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm14   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_xmm15   = triton::arch::RegisterOperand();
 
+      triton::arch::RegisterOperand x86_reg_af      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cf      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_df      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_if      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_of      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_pf      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_sf      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_tf      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_zf      = triton::arch::RegisterOperand();
+
+      triton::arch::RegisterOperand* x86_regs[triton::arch::x86::ID_REG_LAST_ITEM] = {
+        &TRITON_X86_REG_INVALID,
+        &TRITON_X86_REG_RAX,
+        &TRITON_X86_REG_RBX,
+        &TRITON_X86_REG_RCX,
+        &TRITON_X86_REG_RDX,
+        &TRITON_X86_REG_RDI,
+        &TRITON_X86_REG_RSI,
+        &TRITON_X86_REG_RBP,
+        &TRITON_X86_REG_RSP,
+        &TRITON_X86_REG_RIP,
+        &TRITON_X86_REG_RFLAGS,
+        &TRITON_X86_REG_R8,
+        &TRITON_X86_REG_R8D,
+        &TRITON_X86_REG_R8W,
+        &TRITON_X86_REG_R8B,
+        &TRITON_X86_REG_R9,
+        &TRITON_X86_REG_R9D,
+        &TRITON_X86_REG_R9W,
+        &TRITON_X86_REG_R9B,
+        &TRITON_X86_REG_R10,
+        &TRITON_X86_REG_R10D,
+        &TRITON_X86_REG_R10W,
+        &TRITON_X86_REG_R10B,
+        &TRITON_X86_REG_R11,
+        &TRITON_X86_REG_R11D,
+        &TRITON_X86_REG_R11W,
+        &TRITON_X86_REG_R11B,
+        &TRITON_X86_REG_R12,
+        &TRITON_X86_REG_R12D,
+        &TRITON_X86_REG_R12W,
+        &TRITON_X86_REG_R12B,
+        &TRITON_X86_REG_R13,
+        &TRITON_X86_REG_R13D,
+        &TRITON_X86_REG_R13W,
+        &TRITON_X86_REG_R13B,
+        &TRITON_X86_REG_R14,
+        &TRITON_X86_REG_R14D,
+        &TRITON_X86_REG_R14W,
+        &TRITON_X86_REG_R14B,
+        &TRITON_X86_REG_R15,
+        &TRITON_X86_REG_R15D,
+        &TRITON_X86_REG_R15W,
+        &TRITON_X86_REG_R15B,
+        &TRITON_X86_REG_EAX,
+        &TRITON_X86_REG_AX,
+        &TRITON_X86_REG_AH,
+        &TRITON_X86_REG_AL,
+        &TRITON_X86_REG_EBX,
+        &TRITON_X86_REG_BX,
+        &TRITON_X86_REG_BH,
+        &TRITON_X86_REG_BL,
+        &TRITON_X86_REG_ECX,
+        &TRITON_X86_REG_CX,
+        &TRITON_X86_REG_CH,
+        &TRITON_X86_REG_CL,
+        &TRITON_X86_REG_EDX,
+        &TRITON_X86_REG_DX,
+        &TRITON_X86_REG_DH,
+        &TRITON_X86_REG_DL,
+        &TRITON_X86_REG_EDI,
+        &TRITON_X86_REG_DI,
+        &TRITON_X86_REG_DIL,
+        &TRITON_X86_REG_ESI,
+        &TRITON_X86_REG_SI,
+        &TRITON_X86_REG_SIL,
+        &TRITON_X86_REG_EBP,
+        &TRITON_X86_REG_BP,
+        &TRITON_X86_REG_BPL,
+        &TRITON_X86_REG_ESP,
+        &TRITON_X86_REG_SP,
+        &TRITON_X86_REG_SPL,
+        &TRITON_X86_REG_EIP,
+        &TRITON_X86_REG_IP,
+        &TRITON_X86_REG_EFLAGS,
+        &TRITON_X86_REG_XMM0,
+        &TRITON_X86_REG_XMM1,
+        &TRITON_X86_REG_XMM2,
+        &TRITON_X86_REG_XMM3,
+        &TRITON_X86_REG_XMM4,
+        &TRITON_X86_REG_XMM5,
+        &TRITON_X86_REG_XMM6,
+        &TRITON_X86_REG_XMM7,
+        &TRITON_X86_REG_XMM8,
+        &TRITON_X86_REG_XMM9,
+        &TRITON_X86_REG_XMM10,
+        &TRITON_X86_REG_XMM11,
+        &TRITON_X86_REG_XMM12,
+        &TRITON_X86_REG_XMM13,
+        &TRITON_X86_REG_XMM14,
+        &TRITON_X86_REG_XMM15,
+        &TRITON_X86_REG_AF,
+        &TRITON_X86_REG_CF,
+        &TRITON_X86_REG_DF,
+        &TRITON_X86_REG_IF,
+        &TRITON_X86_REG_OF,
+        &TRITON_X86_REG_PF,
+        &TRITON_X86_REG_SF,
+        &TRITON_X86_REG_TF,
+        &TRITON_X86_REG_ZF
+      };
 
       /* Returns all information about a register from its triton id */
       std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> regIdToRegInfo(triton::uint32 reg) {

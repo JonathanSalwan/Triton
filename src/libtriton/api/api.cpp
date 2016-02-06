@@ -231,6 +231,12 @@ namespace triton {
   }
 
 
+  std::set<triton::arch::RegisterOperand*> API::getRegister(void) {
+    this->checkArchitecture();
+    return this->arch.getRegister();
+  }
+
+
   std::set<triton::arch::RegisterOperand*> API::getParentRegister(void) {
     this->checkArchitecture();
     return this->arch.getParentRegister();
