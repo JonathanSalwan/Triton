@@ -129,7 +129,7 @@ namespace triton {
         std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getCpuRegInformation(triton::uint32 reg);
 
         //! [**architecture api**] - Returns all registers.
-        std::set<triton::arch::RegisterOperand*> getRegister(void);
+        std::set<triton::arch::RegisterOperand*> getAllRegister(void);
 
         //! [**architecture api**] - Returns all parent registers.
         std::set<triton::arch::RegisterOperand*> getParentRegister(void);

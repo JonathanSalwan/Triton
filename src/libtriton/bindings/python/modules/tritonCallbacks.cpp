@@ -181,11 +181,11 @@ Computes and returns a model as a dictionary of {integer symVarId : \ref py_Solv
 - **getModels(\ref py_SmtAstNode_page node)**<br>
 Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
 
+- **getAllRegister(void)**<br>
+Returns the list of all registers. Each item of this list is a \ref py_REG_page.
+
 - **getParentRegister(void)**<br>
 Returns the list of parent registers. Each item of this list is a \ref py_REG_page.
-
-- **getRegister(void)**<br>
-Returns the list of all registers. Each item of this list is a \ref py_REG_page.
 
 - **getRegisterValue(\ref py_REG_page reg)**<br>
 If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of the register.
@@ -1377,17 +1377,17 @@ namespace triton {
       }
 
 
-      static PyObject* triton_getParentRegister(PyObject* self, PyObject* noarg) {
+      static PyObject* triton_getAllRegister(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
         std::set<triton::arch::RegisterOperand*> reg;
         std::set<triton::arch::RegisterOperand*>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getParentRegister(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "getAllRegister(): Architecture is not defined.");
 
         try {
-          reg = triton::api.getParentRegister();
+          reg = triton::api.getAllRegister();
           ret = xPyList_New(reg.size());
           triton::uint32 index = 0;
           for (it = reg.begin(); it != reg.end(); it++)
@@ -1401,17 +1401,17 @@ namespace triton {
       }
 
 
-      static PyObject* triton_getRegister(PyObject* self, PyObject* noarg) {
+      static PyObject* triton_getParentRegister(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
         std::set<triton::arch::RegisterOperand*> reg;
         std::set<triton::arch::RegisterOperand*>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getRegister(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "getParentRegister(): Architecture is not defined.");
 
         try {
-          reg = triton::api.getRegister();
+          reg = triton::api.getParentRegister();
           ret = xPyList_New(reg.size());
           triton::uint32 index = 0;
           for (it = reg.begin(); it != reg.end(); it++)
@@ -2531,8 +2531,8 @@ namespace triton {
         {"getMemoryValue",                      (PyCFunction)triton_getMemoryValue,                         METH_O,             ""},
         {"getModel",                            (PyCFunction)triton_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)triton_getModels,                              METH_VARARGS,       ""},
+        {"getAllRegister",                      (PyCFunction)triton_getAllRegister,                         METH_NOARGS,        ""},
         {"getParentRegister",                   (PyCFunction)triton_getParentRegister,                      METH_NOARGS,        ""},
-        {"getRegister",                         (PyCFunction)triton_getRegister,                            METH_NOARGS,        ""},
         {"getRegisterValue",                    (PyCFunction)triton_getRegisterValue,                       METH_O,             ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)triton_getSymbolicExpressionFromId,            METH_O,             ""},
         {"getSymbolicExpressions",              (PyCFunction)triton_getSymbolicExpressions,                 METH_NOARGS,        ""},

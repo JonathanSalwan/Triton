@@ -225,7 +225,7 @@ namespace triton {
     }
 
 
-    std::set<triton::arch::RegisterOperand*> x86Cpu::getRegister(void) {
+    std::set<triton::arch::RegisterOperand*> x86Cpu::getAllRegister(void) {
       std::set<triton::arch::RegisterOperand*> ret;
 
       for (triton::uint32 index = 0; index < triton::arch::x86::ID_REG_LAST_ITEM; index++) {

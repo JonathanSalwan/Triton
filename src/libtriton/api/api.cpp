@@ -231,9 +231,9 @@ namespace triton {
   }
 
 
-  std::set<triton::arch::RegisterOperand*> API::getRegister(void) {
+  std::set<triton::arch::RegisterOperand*> API::getAllRegister(void) {
     this->checkArchitecture();
-    return this->arch.getRegister();
+    return this->arch.getAllRegister();
   }
 
 
