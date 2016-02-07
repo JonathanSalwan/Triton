@@ -151,6 +151,9 @@ namespace triton {
       void zf_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, bool vol=false);
 
       //! The ZF semantics.
+      void zfBsf_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& src, smt2lib::smtAstAbstractNode* op2, bool vol=false);
+
+      //! The ZF semantics.
       void zfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, smt2lib::smtAstAbstractNode* op2, bool vol=false);
 
       //! The ADC semantics.
@@ -173,6 +176,9 @@ namespace triton {
 
       //! The ANDPS semantics.
       void andps_s(triton::arch::Instruction& inst);
+
+      //! The BSF semantics.
+      void bsf_s(triton::arch::Instruction& inst);
 
       //! The BSWAP semantics.
       void bswap_s(triton::arch::Instruction& inst);

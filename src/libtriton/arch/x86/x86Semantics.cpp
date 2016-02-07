@@ -38,6 +38,7 @@ ANDNPD                       | Bitwise Logical AND NOT of Packed Double-Precisio
 ANDNPS                       | Bitwise Logical AND NOT of Packed Single-Precision Floating-Point Values
 ANDPD                        | Bitwise Logical AND of Packed Double-Precision Floating-Point Values
 ANDPS                        | Bitwise Logical AND of Packed Single-Precision Floating-Point Values
+BSF                          | Bit Scan Forward
 BSWAP                        | Byte Swap
 CALL                         | Call Procedure
 CBW                          | Convert byte (al) to word (ax).
@@ -171,6 +172,7 @@ namespace triton {
             case ID_INS_ANDNPS:         triton::arch::x86::semantics::andnps_s(inst);     break;
             case ID_INS_ANDPD:          triton::arch::x86::semantics::andpd_s(inst);      break;
             case ID_INS_ANDPS:          triton::arch::x86::semantics::andps_s(inst);      break;
+            case ID_INS_BSF:            triton::arch::x86::semantics::bsf_s(inst);        break;
             case ID_INS_BSWAP:          triton::arch::x86::semantics::bswap_s(inst);      break;
             case ID_INS_CALL:           triton::arch::x86::semantics::call_s(inst);       break;
             case ID_INS_CBW:            triton::arch::x86::semantics::cbw_s(inst);        break;
@@ -1132,6 +1134,27 @@ namespace triton {
         }
 
 
+        void zfBsf_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& src, smt2lib::smtAstAbstractNode* op2, bool vol) {
+          auto bvSize = src.getBitSize();
+
+          /*
+           * Create the SMT semantic.
+           * zf = 1 if op2 == 0 else 0
+           */
+          auto node = smt2lib::ite(
+                        smt2lib::equal(op2, smt2lib::bv(0, bvSize)),
+                        smt2lib::bvtrue(),
+                        smt2lib::bvfalse()
+                      );
+
+          /* Create the symbolic expression */
+          auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_ZF, "Zero flag");
+
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_ZF, parent->isTainted);
+        }
+
+
         void zfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, smt2lib::smtAstAbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto low    = vol ? 0 : dst.getAbstractLow();
@@ -1337,6 +1360,54 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void bsf_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the SMT semantics */
+          auto root = smt2lib::ite(
+                        smt2lib::equal(smt2lib::extract(0, 0, op2), smt2lib::bvtrue()),
+                        smt2lib::bv(0, dst.getBitSize()),
+                        smt2lib::bv(0, dst.getBitSize())
+                      );
+
+          /* Iterate on all others bits */
+          auto node = root;
+          for (triton::uint32 index = 1; index < src.getBitSize(); index++) {
+            auto child = smt2lib::ite(
+                           smt2lib::equal(smt2lib::extract(index, index, op2), smt2lib::bvtrue()),
+                           smt2lib::bv(index, dst.getBitSize()),
+                           smt2lib::bv(0, dst.getBitSize())
+                         );
+            node->getChilds()[2] = child;
+            node = child;
+          }
+
+          /* Apply BSF only if op2 != 0 */
+          root = smt2lib::ite(
+                   smt2lib::equal(op2, smt2lib::bv(0, src.getBitSize())),
+                   op1,
+                   root
+                 );
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, root, dst, "BSF operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate symbolic flags */
+          triton::arch::x86::semantics::zfBsf_s(inst, expr, src, op2);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
