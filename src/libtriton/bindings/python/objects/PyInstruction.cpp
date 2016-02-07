@@ -105,6 +105,9 @@ Returns the instruction's operands as list of \ref py_Immediate_page, \ref py_Me
 - **getSecondOperand(void)**<br>
 Returns the second instruction's operands.
 
+- **getThirdOperand(void)**<br>
+Returns the third instruction's operands.
+
 - **getSymbolicExpressions(void)**<br>
 Returns the instruction's symbolic expressions as list of \ref py_SymbolicExpression_page.
 
@@ -298,6 +301,35 @@ namespace triton {
         return symExprs;
       }
 
+      static PyObject* Instruction_getThirdOperand(PyObject* self, PyObject* noarg) {
+        triton::arch::Instruction*      inst;
+        triton::uint32                  opSize;
+        PyObject*                       obj = nullptr;
+
+        inst     = PyInstruction_AsInstruction(self);
+        opSize   = inst->operands.size();
+
+        if (opSize < 3) {
+          return PyErr_Format(PyExc_TypeError, "getFirstOperand(): The instruction hasn't second operand.");
+        }
+
+
+        if (inst->operands[2].getType() == triton::arch::OP_IMM) {
+          auto imm = inst->operands[2].getImm();
+          obj = PyImmediateOperand(imm);
+        }
+        else if (inst->operands[2].getType() == triton::arch::OP_MEM) {
+          auto mem = inst->operands[2].getMem();
+          obj = PyMemoryOperand(mem);
+        }
+        else if (inst->operands[2].getType() == triton::arch::OP_REG) {
+          auto reg = inst->operands[2].getReg();
+          obj = PyRegisterOperand(reg);
+        }
+
+        return obj;
+      }
+
 
       static PyObject* Instruction_getThreadId(PyObject* self, PyObject* noarg) {
         return Py_BuildValue("k", PyInstruction_AsInstruction(self)->getThreadId());
@@ -416,6 +448,7 @@ namespace triton {
         {"getOperands",               Instruction_getOperands,              METH_NOARGS,     ""},
         {"getSecondOperand",          Instruction_getSecondOperand,         METH_NOARGS,     ""},
         {"getSymbolicExpressions",    Instruction_getSymbolicExpressions,   METH_NOARGS,     ""},
+        {"getThirdOperand",           Instruction_getThirdOperand,          METH_NOARGS,     ""},
         {"getThreadId",               Instruction_getThreadId,              METH_NOARGS,     ""},
         {"getType",                   Instruction_getType,                  METH_NOARGS,     ""},
         {"isBranch",                  Instruction_isBranch,                 METH_NOARGS,     ""},
