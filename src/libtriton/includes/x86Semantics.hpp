@@ -180,6 +180,9 @@ namespace triton {
       //! The BSF semantics.
       void bsf_s(triton::arch::Instruction& inst);
 
+      //! The BSR semantics.
+      void bsr_s(triton::arch::Instruction& inst);
+
       //! The BSWAP semantics.
       void bswap_s(triton::arch::Instruction& inst);
 

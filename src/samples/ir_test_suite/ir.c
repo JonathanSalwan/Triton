@@ -63,6 +63,19 @@ void check(void)
   asm("mov rax, 0x0");
   asm("bsf rbx, rax");
 
+  asm("mov rax, 0x1");
+  asm("mov rbx, 0x0");
+  asm("bsr rbx, rax");
+  asm("mov rax, 0x2");
+  asm("bsr rbx, rax");
+  asm("mov rax, 0x40");
+  asm("bsr rbx, rax");
+  asm("mov rax, 0x1000");
+  asm("bsr rbx, rax");
+  asm("bsr bx, ax");
+  asm("mov rax, 0x0");
+  asm("bsr rbx, rax");
+
   asm("mov rax, 0x1111111111111111");
   asm("mov rbx, 0xffffffffffffffff");
   asm("mov rcx, 0x9090909090909090");
