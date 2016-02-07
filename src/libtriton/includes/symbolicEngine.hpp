@@ -69,7 +69,7 @@ namespace triton {
           bool emulationFlag;
 
           //! Number of registers
-          triton::uint32 numberOfReg;
+          triton::uint32 numberOfRegisters;
 
           //! Symbolic expressions id.
           triton::__uint uniqueSymExprId;

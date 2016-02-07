@@ -98,49 +98,49 @@ namespace triton {
     }
 
 
-    bool Architecture::isReg(triton::uint32 regId) {
+    bool Architecture::isRegister(triton::uint32 regId) {
       if (!this->cpu)
         return false;
-      return this->cpu->isReg(regId);
+      return this->cpu->isRegister(regId);
     }
 
 
-    bool Architecture::isRegValid(triton::uint32 regId) {
+    bool Architecture::isRegisterValid(triton::uint32 regId) {
       if (!this->cpu)
         return false;
-      return this->cpu->isRegValid(regId);
+      return this->cpu->isRegisterValid(regId);
     }
 
 
-    triton::uint32 Architecture::invalidReg(void) {
+    triton::uint32 Architecture::invalidRegister(void) {
       if (!this->cpu)
         return 0;
-      return this->cpu->invalidReg();
+      return this->cpu->invalidRegister();
     }
 
 
-    triton::uint32 Architecture::numberOfReg(void) {
+    triton::uint32 Architecture::numberOfRegisters(void) {
       if (!this->cpu)
         return 0;
-      return this->cpu->numberOfReg();
+      return this->cpu->numberOfRegisters();
     }
 
 
-    triton::uint32 Architecture::regSize(void) {
+    triton::uint32 Architecture::registerSize(void) {
       if (!this->cpu)
         return 0;
-      return this->cpu->regSize();
+      return this->cpu->registerSize();
     }
 
 
-    triton::uint32 Architecture::regBitSize(void) {
+    triton::uint32 Architecture::registerBitSize(void) {
       if (!this->cpu)
         return 0;
-      return this->cpu->regBitSize();
+      return this->cpu->registerBitSize();
     }
 
 
-    std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> Architecture::getRegInfo(triton::uint32 reg) {
+    std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> Architecture::getRegisterInformation(triton::uint32 reg) {
       std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> ret;
 
       std::get<0>(ret) = "unknown"; /* name           */
@@ -149,7 +149,7 @@ namespace triton {
       std::get<3>(ret) = 0;         /* higest reg id  */
 
       if (this->cpu)
-        ret = this->cpu->getRegInfo(reg);
+        ret = this->cpu->getRegisterInformation(reg);
 
       return ret;
     }

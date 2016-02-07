@@ -102,10 +102,10 @@ namespace triton {
         triton::uint32 getType(void) const;
 
         //! LEA - Returns the base register operand.
-        RegisterOperand& getBaseReg(void);
+        RegisterOperand& getBaseRegister(void);
 
         //! LEA - Returns the index register operand.
-        RegisterOperand& getIndexReg(void);
+        RegisterOperand& getIndexRegister(void);
 
         //! LEA - Returns the displacement operand.
         ImmediateOperand& getDisplacement(void);
@@ -132,10 +132,10 @@ namespace triton {
         void setPcRelative(triton::__uint addr);
 
         //! LEA - Sets the base register operand.
-        void setBaseReg(RegisterOperand base);
+        void setBaseRegister(RegisterOperand base);
 
         //! LEA - Sets the index register operand.
-        void setIndexReg(RegisterOperand index);
+        void setIndexRegister(RegisterOperand index);
 
         //! LEA - Sets the displacement operand.
         void setDisplacement(ImmediateOperand displacement);

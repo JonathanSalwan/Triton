@@ -92,12 +92,12 @@ namespace triton {
       }
 
 
-      bool SymbolicExpression::isReg(void) {
+      bool SymbolicExpression::isRegister(void) {
         return (this->kind == triton::engines::symbolic::REG);
       }
 
 
-      bool SymbolicExpression::isMem(void) {
+      bool SymbolicExpression::isMemory(void) {
         return (this->kind == triton::engines::symbolic::MEM);
       }
 

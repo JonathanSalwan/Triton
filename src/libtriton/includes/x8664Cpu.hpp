@@ -140,8 +140,8 @@ namespace triton {
           void init(void);
           void clear(void);
           bool isFlag(triton::uint32 regId);
-          bool isReg(triton::uint32 regId);
-          bool isRegValid(triton::uint32 regId);
+          bool isRegister(triton::uint32 regId);
+          bool isRegisterValid(triton::uint32 regId);
 
           //! Returns true if regId is a GRP.
           bool isGPR(triton::uint32 regId);
@@ -149,15 +149,15 @@ namespace triton {
           //! Returns true if regId is a SSE register.
           bool isSSE(triton::uint32 regId);
 
-          std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegInfo(triton::uint32 reg);
+          std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg);
           std::set<triton::arch::RegisterOperand*> getAllRegisters(void);
           std::set<triton::arch::RegisterOperand*> getParentRegisters(void);
           triton::uint128 getLastMemoryValue(triton::arch::MemoryOperand& mem);
           triton::uint128 getLastRegisterValue(triton::arch::RegisterOperand& reg);
-          triton::uint32 invalidReg(void);
-          triton::uint32 numberOfReg(void);
-          triton::uint32 regBitSize(void);
-          triton::uint32 regSize(void);
+          triton::uint32 invalidRegister(void);
+          triton::uint32 numberOfRegisters(void);
+          triton::uint32 registerBitSize(void);
+          triton::uint32 registerSize(void);
           triton::uint8 getLastMemoryValue(triton::__uint addr);
           void buildSemantics(triton::arch::Instruction &inst);
           void disassembly(triton::arch::Instruction &inst);

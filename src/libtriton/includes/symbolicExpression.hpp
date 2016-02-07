@@ -77,10 +77,10 @@ namespace triton {
           triton::__uint getId(void);
 
           //! Returns true if the symbolic expression is assigned to a memory. \sa triton::engines::symbolic::symkind_e
-          bool isMem(void);
+          bool isMemory(void);
 
           //! Returns true if the symbolic expression is assigned to a register. \sa triton::engines::symbolic::symkind_e
-          bool isReg(void);
+          bool isRegister(void);
 
           //! Returns the symbolic expression's kind.
           symkind_e getKind(void);

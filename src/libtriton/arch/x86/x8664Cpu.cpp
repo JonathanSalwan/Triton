@@ -267,13 +267,13 @@ namespace triton {
     }
 
 
-    bool x8664Cpu::isReg(triton::uint32 regId) {
+    bool x8664Cpu::isRegister(triton::uint32 regId) {
       return ((regId >= triton::arch::x86::ID_REG_RAX && regId <= triton::arch::x86::ID_REG_XMM15) ? true : false);
     }
 
 
-    bool x8664Cpu::isRegValid(triton::uint32 regId) {
-      return (this->isFlag(regId) | this->isReg(regId));
+    bool x8664Cpu::isRegisterValid(triton::uint32 regId) {
+      return (this->isFlag(regId) | this->isRegister(regId));
     }
 
 
@@ -287,27 +287,27 @@ namespace triton {
     }
 
 
-    triton::uint32 x8664Cpu::invalidReg(void) {
+    triton::uint32 x8664Cpu::invalidRegister(void) {
       return triton::arch::x86::ID_REG_INVALID;
     }
 
 
-    triton::uint32 x8664Cpu::numberOfReg(void) {
+    triton::uint32 x8664Cpu::numberOfRegisters(void) {
       return triton::arch::x86::ID_REG_LAST_ITEM;
     }
 
 
-    triton::uint32 x8664Cpu::regSize(void) {
+    triton::uint32 x8664Cpu::registerSize(void) {
       return 8;
     }
 
 
-    triton::uint32 x8664Cpu::regBitSize(void) {
+    triton::uint32 x8664Cpu::registerBitSize(void) {
       return 64;
     }
 
 
-    std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> x8664Cpu::getRegInfo(triton::uint32 reg) {
+    std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> x8664Cpu::getRegisterInformation(triton::uint32 reg) {
       return triton::arch::x86::regIdToRegInfo(reg);
     }
 
@@ -316,7 +316,7 @@ namespace triton {
       std::set<triton::arch::RegisterOperand*> ret;
 
       for (triton::uint32 index = 0; index < triton::arch::x86::ID_REG_LAST_ITEM; index++) {
-        if (this->isRegValid(triton::arch::x86::x86_regs[index]->getId()))
+        if (this->isRegisterValid(triton::arch::x86::x86_regs[index]->getId()))
           ret.insert(triton::arch::x86::x86_regs[index]);
       }
 
@@ -329,7 +329,7 @@ namespace triton {
 
       for (triton::uint32 index = 0; index < triton::arch::x86::ID_REG_LAST_ITEM; index++) {
         /* Add GPR */
-        if (triton::arch::x86::x86_regs[index]->getSize() == this->regSize())
+        if (triton::arch::x86::x86_regs[index]->getSize() == this->registerSize())
           ret.insert(triton::arch::x86::x86_regs[index]);
 
         /* Add Flags */
@@ -402,8 +402,8 @@ namespace triton {
                 if (base == TRITON_X86_REG_PC)
                   mem.setPcRelative(inst.getNextAddress());
 
-                mem.setBaseReg(base);
-                mem.setIndexReg(index);
+                mem.setBaseRegister(base);
+                mem.setIndexRegister(index);
                 mem.setDisplacement(disp);
                 mem.setScale(scale);
 

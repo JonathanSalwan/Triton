@@ -64,22 +64,22 @@ namespace triton {
         triton::uint32 getType(void) const;
 
         //! Returns the immediate operand.
-        ImmediateOperand& getImm(void);
+        ImmediateOperand& getImmediate(void);
 
         //! Returns the memroy operand.
-        MemoryOperand& getMem(void);
+        MemoryOperand& getMemory(void);
 
         //! Returns the register operand.
-        RegisterOperand& getReg(void);
+        RegisterOperand& getRegister(void);
 
         //! Sets the immediate operand.
-        void setImm(ImmediateOperand imm);
+        void setImmediate(ImmediateOperand imm);
 
         //! Sets the memroy operand.
-        void setMem(MemoryOperand mem);
+        void setMemory(MemoryOperand mem);
 
         //! Sets the register operand.
-        void setReg(RegisterOperand reg);
+        void setRegister(RegisterOperand reg);
 
         //! True if this concrete abstract value is trusted and synchronized with the real CPU/MMU value.
         bool isTrusted(void);

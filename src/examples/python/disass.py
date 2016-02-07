@@ -66,8 +66,8 @@ if __name__ == '__main__':
         for op in inst.getOperands():
             print '\t', op
             if op.getType() == OPERAND.MEM:
-                print '\t', op.getBaseReg()
-                print '\t', op.getIndexReg()
+                print '\t', op.getBaseRegister()
+                print '\t', op.getIndexRegister()
                 print '\t', op.getScale()
                 print '\t', op.getDisplacement()
 

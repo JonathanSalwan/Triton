@@ -81,11 +81,11 @@ namespace triton {
       SymbolicEngine::SymbolicEngine() {
         triton::api.checkArchitecture();
 
-        this->numberOfReg = triton::api.cpuNumberOfRegisters();
-        this->symbolicReg = new triton::__uint[this->numberOfReg]();
+        this->numberOfRegisters = triton::api.cpuNumberOfRegisters();
+        this->symbolicReg = new triton::__uint[this->numberOfRegisters]();
 
         /* Init all symbolic registers/flags to UNSET (init state) */
-        for (triton::uint32 i = 0; i < this->numberOfReg; i++)
+        for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
           this->symbolicReg[i] = triton::engines::symbolic::UNSET;
 
         this->emulationFlag   = false;
@@ -98,10 +98,10 @@ namespace triton {
       void SymbolicEngine::init(const SymbolicEngine& other) {
         triton::api.checkArchitecture();
 
-        this->numberOfReg = other.numberOfReg;
-        this->symbolicReg = new triton::__uint[this->numberOfReg]();
+        this->numberOfRegisters = other.numberOfRegisters;
+        this->symbolicReg = new triton::__uint[this->numberOfRegisters]();
 
-        for (triton::uint32 i = 0; i < this->numberOfReg; i++)
+        for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
           this->symbolicReg[i] = other.symbolicReg[i];
 
         this->alignedMemoryReference      = other.alignedMemoryReference;
@@ -155,7 +155,7 @@ namespace triton {
        */
       void SymbolicEngine::concretizeRegister(triton::arch::RegisterOperand& reg) {
         triton::uint32 parentId = reg.getParent().getId();
-        if (!triton::api.isCpuRegValid(parentId))
+        if (!triton::api.isCpuRegisterValid(parentId))
           return;
         this->symbolicReg[parentId] = triton::engines::symbolic::UNSET;
       }
@@ -163,7 +163,7 @@ namespace triton {
 
       /* Same as concretizeRegister but with all registers */
       void SymbolicEngine::concretizeAllRegister(void) {
-        for (triton::uint32 i = 0; i < this->numberOfReg; i++)
+        for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
           this->symbolicReg[i] = triton::engines::symbolic::UNSET;
       }
 
@@ -263,7 +263,7 @@ namespace triton {
       /* Returns the reg reference or UNSET */
       triton::__uint SymbolicEngine::getSymbolicRegisterId(triton::arch::RegisterOperand& reg) {
         triton::uint32 parentId = reg.getParent().getId();
-        if (!triton::api.isCpuRegValid(parentId))
+        if (!triton::api.isCpuRegisterValid(parentId))
           return triton::engines::symbolic::UNSET;
         return this->symbolicReg[parentId];
       }
@@ -328,7 +328,7 @@ namespace triton {
           this->symbolicExpressions.erase(symExprId);
 
           /* Concretize the register if it exists */
-          for (triton::uint32 i = 0; i < this->numberOfReg; i++) {
+          for (triton::uint32 i = 0; i < this->numberOfRegisters; i++) {
             if (this->symbolicReg[i] == symExprId) {
               this->symbolicReg[i] = triton::engines::symbolic::UNSET;
               return;
@@ -407,7 +407,7 @@ namespace triton {
       std::map<triton::arch::RegisterOperand, SymbolicExpression*> SymbolicEngine::getSymbolicRegisters(void) {
         std::map<triton::arch::RegisterOperand, SymbolicExpression*> ret;
 
-        for (triton::uint32 it = 0; it < this->numberOfReg; it++) {
+        for (triton::uint32 it = 0; it < this->numberOfRegisters; it++) {
           if (this->symbolicReg[it] != triton::engines::symbolic::UNSET) {
             triton::arch::RegisterOperand reg(it);
             ret[reg] = this->getSymbolicExpressionFromId(this->symbolicReg[it]);
@@ -501,7 +501,7 @@ namespace triton {
         triton::uint32 symVarSize       = reg.getBitSize();
         triton::uint128 cv              = reg.getConcreteValue();
 
-        if (!triton::api.isCpuRegValid(parentId))
+        if (!triton::api.isCpuRegisterValid(parentId))
           throw std::runtime_error("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");
 
         regSymId = this->getSymbolicRegisterId(reg);

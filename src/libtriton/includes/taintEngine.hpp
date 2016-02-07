@@ -60,7 +60,7 @@ namespace triton {
           std::map<triton::__uint, bool> taintedAddresses;
 
           //! The number of register according to the CPU.
-          triton::uint32 numberOfReg;
+          triton::uint32 numberOfRegisters;
 
           //! Tainted registers. Currently this is an over approximation of the taint but a byte granularity can be used.
           triton::uint8  *taintedRegisters;

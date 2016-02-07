@@ -1407,7 +1407,7 @@ namespace triton {
           auto expr2 = triton::api.createSymbolicExpression(inst, node2, pc, "Program Counter");
 
           /* Spread taint */
-          expr1->isTainted = triton::api.taintAssignmentMemoryImmediate(sp.getMem());
+          expr1->isTainted = triton::api.taintAssignmentMemoryImmediate(sp.getMemory());
           expr2->isTainted = triton::api.taintAssignment(pc, src);
         }
 
@@ -1476,7 +1476,7 @@ namespace triton {
           auto node = smt2lib::bvnot(op1);
 
           /* Create symbolic expression */
-          auto expr = triton::api.createSymbolicFlagExpression(inst, node, dst.getReg(), "CMC operation");
+          auto expr = triton::api.createSymbolicFlagExpression(inst, node, dst.getRegister(), "CMC operation");
 
           /* Spread taint */
           expr->isTainted = triton::api.taintAssignment(dst, dst);
@@ -2003,13 +2003,13 @@ namespace triton {
           triton::arch::OperandWrapper accumulator(TRITON_X86_REG_AL);
           switch (src1.getSize()) {
             case WORD_SIZE:
-              accumulator.setReg(TRITON_X86_REG_AX);
+              accumulator.setRegister(TRITON_X86_REG_AX);
               break;
             case DWORD_SIZE:
-              accumulator.setReg(TRITON_X86_REG_EAX);
+              accumulator.setRegister(TRITON_X86_REG_EAX);
               break;
             case QWORD_SIZE:
-              accumulator.setReg(TRITON_X86_REG_RAX);
+              accumulator.setRegister(TRITON_X86_REG_RAX);
               break;
           }
 
@@ -2938,11 +2938,11 @@ namespace triton {
 
 
         void lea_s(triton::arch::Instruction& inst) {
-          auto dst                = inst.operands[0].getReg();
-          auto srcDisp            = inst.operands[1].getMem().getDisplacement();
-          auto srcBase            = inst.operands[1].getMem().getBaseReg();
-          auto srcIndex           = inst.operands[1].getMem().getIndexReg();
-          auto srcScale           = inst.operands[1].getMem().getScale();
+          auto dst                = inst.operands[0].getRegister();
+          auto srcDisp            = inst.operands[1].getMemory().getDisplacement();
+          auto srcBase            = inst.operands[1].getMemory().getBaseRegister();
+          auto srcIndex           = inst.operands[1].getMemory().getIndexRegister();
+          auto srcScale           = inst.operands[1].getMemory().getScale();
           triton::uint32 leaSize  = 0;
 
           /* Setup LEA size */
@@ -3935,7 +3935,7 @@ namespace triton {
 
           /* Create the SMT semantics - side effect */
           if (inst.operands.size() > 0)
-            alignAddStack_s(inst, inst.operands[0].getImm().getValue());
+            alignAddStack_s(inst, inst.operands[0].getImmediate().getValue());
         }
 
 

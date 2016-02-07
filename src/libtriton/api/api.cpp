@@ -196,38 +196,38 @@ namespace triton {
   }
 
 
-  bool API::isCpuReg(triton::uint32 regId) {
-    return this->arch.isReg(regId);
+  bool API::isCpuRegister(triton::uint32 regId) {
+    return this->arch.isRegister(regId);
   }
 
 
-  bool API::isCpuRegValid(triton::uint32 regId) {
-    return this->arch.isRegValid(regId);
+  bool API::isCpuRegisterValid(triton::uint32 regId) {
+    return this->arch.isRegisterValid(regId);
   }
 
 
   triton::uint32 API::cpuRegisterSize(void) {
-    return this->arch.regSize();
+    return this->arch.registerSize();
   }
 
 
   triton::uint32 API::cpuRegisterBitSize(void) {
-    return this->arch.regBitSize();
+    return this->arch.registerBitSize();
   }
 
 
   triton::uint32 API::cpuInvalidRegister(void) {
-    return this->arch.invalidReg();
+    return this->arch.invalidRegister();
   }
 
 
   triton::uint32 API::cpuNumberOfRegisters(void) {
-    return this->arch.numberOfReg();
+    return this->arch.numberOfRegisters();
   }
 
 
   std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> API::getCpuRegInformation(triton::uint32 reg) {
-    return this->arch.getRegInfo(reg);
+    return this->arch.getRegisterInformation(reg);
   }
 
 
@@ -396,9 +396,9 @@ namespace triton {
   smt2lib::smtAstAbstractNode* API::buildSymbolicOperand(triton::arch::OperandWrapper& op) {
     this->checkSymbolic();
     switch (op.getType()) {
-      case triton::arch::OP_IMM: return this->buildSymbolicImmediateOperand(op.getImm());
-      case triton::arch::OP_MEM: return this->buildSymbolicMemoryOperand(op.getMem());
-      case triton::arch::OP_REG: return this->buildSymbolicRegisterOperand(op.getReg());
+      case triton::arch::OP_IMM: return this->buildSymbolicImmediateOperand(op.getImmediate());
+      case triton::arch::OP_MEM: return this->buildSymbolicMemoryOperand(op.getMemory());
+      case triton::arch::OP_REG: return this->buildSymbolicRegisterOperand(op.getRegister());
       default:
         throw std::runtime_error("API::buildSymbolicOperand(): Invalid operand.");
     }
@@ -444,8 +444,8 @@ namespace triton {
   triton::engines::symbolic::SymbolicExpression* API::createSymbolicExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, triton::arch::OperandWrapper& dst, std::string comment) {
     this->checkSymbolic();
     switch (dst.getType()) {
-      case triton::arch::OP_MEM: return this->createSymbolicMemoryExpression(inst, node, dst.getMem(), comment);
-      case triton::arch::OP_REG: return this->createSymbolicRegisterExpression(inst, node, dst.getReg(), comment);
+      case triton::arch::OP_MEM: return this->createSymbolicMemoryExpression(inst, node, dst.getMemory(), comment);
+      case triton::arch::OP_REG: return this->createSymbolicRegisterExpression(inst, node, dst.getRegister(), comment);
       default:
         throw std::runtime_error("API::buildSymbolicOperand(): Invalid operand.");
     }
@@ -793,8 +793,8 @@ namespace triton {
     this->checkTaint();
     switch (op.getType()) {
       case triton::arch::OP_IMM: return triton::engines::taint::UNTAINTED;
-      case triton::arch::OP_MEM: return this->isMemoryTainted(op.getMem());
-      case triton::arch::OP_REG: return this->isRegisterTainted(op.getReg());
+      case triton::arch::OP_MEM: return this->isMemoryTainted(op.getMemory());
+      case triton::arch::OP_REG: return this->isRegisterTainted(op.getRegister());
       default:
         throw std::runtime_error("API::isTainted(): Invalid operand.");
     }
@@ -823,8 +823,8 @@ namespace triton {
     this->checkTaint();
     switch (op.getType()) {
       case triton::arch::OP_IMM: return triton::engines::taint::UNTAINTED;
-      case triton::arch::OP_MEM: return this->setTaintMemory(op.getMem(), flag);
-      case triton::arch::OP_REG: return this->setTaintRegister(op.getReg(), flag);
+      case triton::arch::OP_MEM: return this->setTaintMemory(op.getMemory(), flag);
+      case triton::arch::OP_REG: return this->setTaintRegister(op.getRegister(), flag);
       default:
         throw std::runtime_error("API::setTaint(): Invalid operand.");
     }
@@ -886,22 +886,22 @@ namespace triton {
     triton::uint32 t2 = op2.getType();
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_IMM)
-      return this->taintUnionMemoryImmediate(op1.getMem());
+      return this->taintUnionMemoryImmediate(op1.getMemory());
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_MEM)
-      return this->taintUnionMemoryMemory(op1.getMem(), op2.getMem());
+      return this->taintUnionMemoryMemory(op1.getMemory(), op2.getMemory());
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_REG)
-      return this->taintUnionMemoryRegister(op1.getMem(), op2.getReg());
+      return this->taintUnionMemoryRegister(op1.getMemory(), op2.getRegister());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_IMM)
-      return this->taintUnionRegisterImmediate(op1.getReg());
+      return this->taintUnionRegisterImmediate(op1.getRegister());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_MEM)
-      return this->taintUnionRegisterMemory(op1.getReg(), op2.getMem());
+      return this->taintUnionRegisterMemory(op1.getRegister(), op2.getMemory());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_REG)
-      return this->taintUnionRegisterRegister(op1.getReg(), op2.getReg());
+      return this->taintUnionRegisterRegister(op1.getRegister(), op2.getRegister());
 
     throw std::runtime_error("API::taintUnion(): Invalid operands.");
   }
@@ -912,22 +912,22 @@ namespace triton {
     triton::uint32 t2 = op2.getType();
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_IMM)
-      return this->taintAssignmentMemoryImmediate(op1.getMem());
+      return this->taintAssignmentMemoryImmediate(op1.getMemory());
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_MEM)
-      return this->taintAssignmentMemoryMemory(op1.getMem(), op2.getMem());
+      return this->taintAssignmentMemoryMemory(op1.getMemory(), op2.getMemory());
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_REG)
-      return this->taintAssignmentMemoryRegister(op1.getMem(), op2.getReg());
+      return this->taintAssignmentMemoryRegister(op1.getMemory(), op2.getRegister());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_IMM)
-      return this->taintAssignmentRegisterImmediate(op1.getReg());
+      return this->taintAssignmentRegisterImmediate(op1.getRegister());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_MEM)
-      return this->taintAssignmentRegisterMemory(op1.getReg(), op2.getMem());
+      return this->taintAssignmentRegisterMemory(op1.getRegister(), op2.getMemory());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_REG)
-      return this->taintAssignmentRegisterRegister(op1.getReg(), op2.getReg());
+      return this->taintAssignmentRegisterRegister(op1.getRegister(), op2.getRegister());
 
     throw std::runtime_error("API::taintAssignment(): Invalid operands.");
   }

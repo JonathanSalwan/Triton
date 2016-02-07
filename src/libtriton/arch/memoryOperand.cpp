@@ -116,12 +116,12 @@ namespace triton {
     }
 
 
-    RegisterOperand& MemoryOperand::getBaseReg(void) {
+    RegisterOperand& MemoryOperand::getBaseRegister(void) {
       return this->baseReg;
     }
 
 
-    RegisterOperand& MemoryOperand::getIndexReg(void) {
+    RegisterOperand& MemoryOperand::getIndexRegister(void) {
       return this->indexReg;
     }
 
@@ -169,12 +169,12 @@ namespace triton {
     }
 
 
-    void MemoryOperand::setBaseReg(RegisterOperand base) {
+    void MemoryOperand::setBaseRegister(RegisterOperand base) {
       this->baseReg = base;
     }
 
 
-    void MemoryOperand::setIndexReg(RegisterOperand index) {
+    void MemoryOperand::setIndexRegister(RegisterOperand index) {
       this->indexReg = index;
     }
 

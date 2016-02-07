@@ -93,28 +93,28 @@ namespace triton {
 
       TaintEngine::TaintEngine() {
         triton::api.checkArchitecture();
-        this->numberOfReg = triton::api.cpuNumberOfRegisters();
-        this->taintedRegisters  = new triton::uint8[this->numberOfReg]();
+        this->numberOfRegisters = triton::api.cpuNumberOfRegisters();
+        this->taintedRegisters  = new triton::uint8[this->numberOfRegisters]();
         this->enableFlag  = true;
 
         if (!this->taintedRegisters)
           throw std::invalid_argument("TaintEngine::TaintEngine(): No enough memory");
 
-        for (triton::uint32 i = 0; i < this->numberOfReg; i++)
+        for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
           this->taintedRegisters[i] = !TAINTED;
       }
 
 
       void TaintEngine::init(const TaintEngine& other) {
         triton::api.checkArchitecture();
-        this->numberOfReg = other.numberOfReg;
-        this->taintedRegisters  = new triton::uint8[this->numberOfReg]();
+        this->numberOfRegisters = other.numberOfRegisters;
+        this->taintedRegisters  = new triton::uint8[this->numberOfRegisters]();
         this->enableFlag  = other.enableFlag;
 
         if (!this->taintedRegisters)
           throw std::invalid_argument("TaintEngine::TaintEngine(): No enough memory");
 
-        for (triton::uint32 i = 0; i < this->numberOfReg; i++)
+        for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
           this->taintedRegisters[i] = other.taintedRegisters[i];
 
         this->taintedAddresses = other.taintedAddresses;

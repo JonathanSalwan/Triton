@@ -53,7 +53,7 @@ This object is used to represent a Memory access.
 Returns the memory access targer's address.<br>
 e.g: `0x7fffdd745ae0`
 
-- **getBaseReg(void)**<br>
+- **getBaseRegister(void)**<br>
 Returns the memory's base register as \ref py_Register_page if exists.<br>
 
 - **getBitSize(void)**<br>
@@ -69,7 +69,7 @@ Returns the concrete value as integer. It's basically the content which has been
 - **getDisplacement(void)**<br>
 Returns the memory's displacement as \ref py_Immediate_page if exists.
 
-- **getIndexReg(void)**<br>
+- **getIndexRegister(void)**<br>
 Returns the memory's index register as \ref py_Register_page if exists.<br>
 
 - **getScale(void)**<br>
@@ -85,7 +85,7 @@ Returns memory's type in bytes as \ref py_OPERAND_page.
 - **isTrusted(void)**<br>
 True if this concrete memory value is trusted and synchronized with the real MMU value.
 
-- **setBaseReg(\ref py_Register_page reg)**<br>
+- **setBaseRegister(\ref py_Register_page reg)**<br>
 Sets the memory's base register.
 
 - **setConcreteValue(integer value)**<br>
@@ -94,7 +94,7 @@ Sets a concrete value to this memory access.
 - **setDisplacement(\ref py_Immediate_page imm)**<br>
 Sets the memory's displacement.
 
-- **setIndexReg(\ref py_Register_page reg)**<br>
+- **setIndexRegister(\ref py_Register_page reg)**<br>
 Sets the memory's index register.
 
 - **setScale(\ref py_Immediate_page imm)**<br>
@@ -123,8 +123,8 @@ namespace triton {
       }
 
 
-      static PyObject* MemoryOperand_getBaseReg(PyObject* self, PyObject* noarg) {
-        triton::arch::RegisterOperand reg(PyMemoryOperand_AsMemoryOperand(self)->getBaseReg());
+      static PyObject* MemoryOperand_getBaseRegister(PyObject* self, PyObject* noarg) {
+        triton::arch::RegisterOperand reg(PyMemoryOperand_AsMemoryOperand(self)->getBaseRegister());
         return PyRegisterOperand(reg);
       }
 
@@ -150,8 +150,8 @@ namespace triton {
       }
 
 
-      static PyObject* MemoryOperand_getIndexReg(PyObject* self, PyObject* noarg) {
-        triton::arch::RegisterOperand reg(PyMemoryOperand_AsMemoryOperand(self)->getIndexReg());
+      static PyObject* MemoryOperand_getIndexRegister(PyObject* self, PyObject* noarg) {
+        triton::arch::RegisterOperand reg(PyMemoryOperand_AsMemoryOperand(self)->getIndexRegister());
         return PyRegisterOperand(reg);
       }
 
@@ -179,14 +179,14 @@ namespace triton {
       }
 
 
-      static PyObject* MemoryOperand_setBaseReg(PyObject* self, PyObject* reg) {
+      static PyObject* MemoryOperand_setBaseRegister(PyObject* self, PyObject* reg) {
         triton::arch::MemoryOperand *mem;
 
         if (!PyRegisterOperand_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "setBaseReg(): expected a Register as argument");
+          return PyErr_Format(PyExc_TypeError, "setBaseRegister(): expected a Register as argument");
 
         mem = PyMemoryOperand_AsMemoryOperand(self);
-        mem->setBaseReg(*PyRegisterOperand_AsRegisterOperand(reg));
+        mem->setBaseRegister(*PyRegisterOperand_AsRegisterOperand(reg));
         Py_INCREF(Py_None);
         return Py_None;
       }
@@ -218,14 +218,14 @@ namespace triton {
       }
 
 
-      static PyObject* MemoryOperand_setIndexReg(PyObject* self, PyObject* reg) {
+      static PyObject* MemoryOperand_setIndexRegister(PyObject* self, PyObject* reg) {
         triton::arch::MemoryOperand *mem;
 
         if (!PyRegisterOperand_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "setIndexReg(): expected a Register as argument");
+          return PyErr_Format(PyExc_TypeError, "setIndexRegister(): expected a Register as argument");
 
         mem = PyMemoryOperand_AsMemoryOperand(self);
-        mem->setIndexReg(*PyRegisterOperand_AsRegisterOperand(reg));
+        mem->setIndexRegister(*PyRegisterOperand_AsRegisterOperand(reg));
         Py_INCREF(Py_None);
         return Py_None;
       }
@@ -263,20 +263,20 @@ namespace triton {
       //! Memory's methods.
       PyMethodDef MemoryOperand_callbacks[] = {
         {"getAddress",        MemoryOperand_getAddress,       METH_NOARGS,      ""},
-        {"getBaseReg",        MemoryOperand_getBaseReg,       METH_NOARGS,      ""},
+        {"getBaseRegister",   MemoryOperand_getBaseRegister,  METH_NOARGS,      ""},
         {"getBitSize",        MemoryOperand_getBitSize,       METH_NOARGS,      ""},
         {"getBitvector",      MemoryOperand_getBitvector,     METH_NOARGS,      ""},
         {"getConcreteValue",  MemoryOperand_getConcreteValue, METH_NOARGS,      ""},
         {"getDisplacement",   MemoryOperand_getDisplacement,  METH_NOARGS,      ""},
-        {"getIndexReg",       MemoryOperand_getIndexReg,      METH_NOARGS,      ""},
+        {"getIndexRegister",  MemoryOperand_getIndexRegister, METH_NOARGS,      ""},
         {"getScale",          MemoryOperand_getScale,         METH_NOARGS,      ""},
         {"getSize",           MemoryOperand_getSize,          METH_NOARGS,      ""},
         {"getType",           MemoryOperand_getType,          METH_NOARGS,      ""},
         {"isTrusted",         MemoryOperand_isTrusted,        METH_NOARGS,      ""},
-        {"setBaseReg",        MemoryOperand_setBaseReg,       METH_O,           ""},
+        {"setBaseRegister",   MemoryOperand_setBaseRegister,  METH_O,           ""},
         {"setConcreteValue",  MemoryOperand_setConcreteValue, METH_O,           ""},
         {"setDisplacement",   MemoryOperand_setDisplacement,  METH_O,           ""},
-        {"setIndexReg",       MemoryOperand_setIndexReg,      METH_O,           ""},
+        {"setIndexRegister",  MemoryOperand_setIndexRegister, METH_O,           ""},
         {"setScale",          MemoryOperand_setScale,         METH_O,           ""},
         {"setTrust",          MemoryOperand_setTrust,         METH_O,           ""},
         {nullptr,             nullptr,                        0,                nullptr}

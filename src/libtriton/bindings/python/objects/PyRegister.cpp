@@ -72,7 +72,7 @@ Returns true if the register is valid.
 - **isFlag(void)**<br>
 Returns true if the register is a flag.
 
-- **isReg(void)**<br>
+- **isRegister(void)**<br>
 Returns true if the register is a register.
 
 - **isTrusted(void)**<br>
@@ -142,8 +142,8 @@ namespace triton {
       }
 
 
-      static PyObject* RegisterOperand_isReg(PyObject* self, PyObject* noarg) {
-        if (PyRegisterOperand_AsRegisterOperand(self)->isReg())
+      static PyObject* RegisterOperand_isRegister(PyObject* self, PyObject* noarg) {
+        if (PyRegisterOperand_AsRegisterOperand(self)->isRegister())
           Py_RETURN_TRUE;
         Py_RETURN_FALSE;
       }
@@ -205,7 +205,7 @@ namespace triton {
         {"getSize",           RegisterOperand_getSize,          METH_NOARGS,    ""},
         {"getType",           RegisterOperand_getType,          METH_NOARGS,    ""},
         {"isFlag",            RegisterOperand_isFlag,           METH_NOARGS,    ""},
-        {"isReg",             RegisterOperand_isReg,            METH_NOARGS,    ""},
+        {"isRegister",        RegisterOperand_isRegister,       METH_NOARGS,    ""},
         {"isTrusted",         RegisterOperand_isTrusted,        METH_NOARGS,    ""},
         {"isValid",           RegisterOperand_isValid,          METH_NOARGS,    ""},
         {"setConcreteValue",  RegisterOperand_setConcreteValue, METH_O,         ""},

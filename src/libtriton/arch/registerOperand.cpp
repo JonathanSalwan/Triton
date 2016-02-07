@@ -42,7 +42,7 @@ namespace triton {
       this->id        = reg;
       this->trusted   = true;
 
-      if (!triton::api.isCpuRegValid(reg)) {
+      if (!triton::api.isCpuRegisterValid(reg)) {
         this->id      = triton::api.cpuInvalidRegister();
         this->trusted = false;
       }
@@ -145,12 +145,12 @@ namespace triton {
 
 
     bool RegisterOperand::isValid(void) {
-      return triton::api.isCpuRegValid(this->id);
+      return triton::api.isCpuRegisterValid(this->id);
     }
 
 
-    bool RegisterOperand::isReg(void) {
-      return triton::api.isCpuReg(this->id);
+    bool RegisterOperand::isRegister(void) {
+      return triton::api.isCpuRegister(this->id);
     }
 
 

@@ -69,10 +69,10 @@ This object is used to represent a symbolic expression.
 >>> print ast
 (bvxor ((_ extract 63 0) (_ bv12345 64)) ((_ extract 63 0) (_ bv67890 64)))
 
->>> expr_1.isMem()
+>>> expr_1.isMemory()
 False
 
->>> expr_1.isReg()
+>>> expr_1.isRegister()
 True
 
 >>> print expr_1.getOriginRegister()
@@ -100,15 +100,15 @@ e.g: `SYMEXPR.REG`
 Returns a new SMT AST root node of the symbolic expression as \ref py_SmtAstNode_page. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
 
 - **getOriginAddress(void)**<br>
-Returns the origin memory address if `isMem()` is equal to `True`, `0` otherwise. This address represents the target assignment.
+Returns the origin memory address if `isMemory()` is equal to `True`, `0` otherwise. This address represents the target assignment.
 
 - **getOriginRegister(void)**<br>
-Returns the origin register if `isReg()` is equal `True`, `REG.INVALID` otherwise. This register represents the target assignment.
+Returns the origin register if `isRegister()` is equal `True`, `REG.INVALID` otherwise. This register represents the target assignment.
 
-- **isMem(void)**<br>
+- **isMemory(void)**<br>
 Returns true if the expression is assigned to a memory.
 
-- **isReg(void)**<br>
+- **isRegister(void)**<br>
 Returns true if the expression is assigned to a register.
 
 - **isTainted(void)**<br>
@@ -166,15 +166,15 @@ namespace triton {
       }
 
 
-      static PyObject* SymbolicExpression_isMem(PyObject* self, PyObject* noarg) {
-        if (PySymbolicExpression_AsSymbolicExpression(self)->isMem() == true)
+      static PyObject* SymbolicExpression_isMemory(PyObject* self, PyObject* noarg) {
+        if (PySymbolicExpression_AsSymbolicExpression(self)->isMemory() == true)
           Py_RETURN_TRUE;
         Py_RETURN_FALSE;
       }
 
 
-      static PyObject* SymbolicExpression_isReg(PyObject* self, PyObject* noarg) {
-        if (PySymbolicExpression_AsSymbolicExpression(self)->isReg() == true)
+      static PyObject* SymbolicExpression_isRegister(PyObject* self, PyObject* noarg) {
+        if (PySymbolicExpression_AsSymbolicExpression(self)->isRegister() == true)
           Py_RETURN_TRUE;
         Py_RETURN_FALSE;
       }
@@ -212,8 +212,8 @@ namespace triton {
         {"getNewAst",         SymbolicExpression_getNewAst,         METH_NOARGS,    ""},
         {"getOriginAddress",  SymbolicExpression_getOriginAddress,  METH_NOARGS,    ""},
         {"getOriginRegister", SymbolicExpression_getOriginRegister, METH_NOARGS,    ""},
-        {"isMem",             SymbolicExpression_isMem,             METH_NOARGS,    ""},
-        {"isReg",             SymbolicExpression_isReg,             METH_NOARGS,    ""},
+        {"isMemory",          SymbolicExpression_isMemory,          METH_NOARGS,    ""},
+        {"isRegister",        SymbolicExpression_isRegister,        METH_NOARGS,    ""},
         {"isTainted",         SymbolicExpression_isTainted,         METH_NOARGS,    ""},
         {"setAst",            SymbolicExpression_setAst,            METH_O,         ""},
         {nullptr,             nullptr,                              0,              nullptr}

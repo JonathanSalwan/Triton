@@ -83,7 +83,7 @@ namespace triton {
         bool isValid(void);
 
         //! Returns true if the register is a register.
-        bool isReg(void);
+        bool isRegister(void);
 
         //! Returns true if the register is a flag.
         bool isFlag(void);

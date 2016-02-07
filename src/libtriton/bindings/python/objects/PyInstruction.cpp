@@ -69,8 +69,8 @@ if __name__ == '__main__':
         for op in inst.getOperands():
             print '\t', op
             if op.getType() == OPERAND.MEM:
-                print '\t\t base  : ', op.getBaseReg()
-                print '\t\t index : ', op.getIndexReg()
+                print '\t\t base  : ', op.getBaseRegister()
+                print '\t\t index : ', op.getIndexRegister()
                 print '\t\t disp  : ', op.getDisplacement()
                 print '\t\t scale : ', op.getScale()
         print
@@ -184,15 +184,15 @@ namespace triton {
 
 
         if (inst->operands[0].getType() == triton::arch::OP_IMM) {
-          auto imm = inst->operands[0].getImm();
+          auto imm = inst->operands[0].getImmediate();
           obj = PyImmediateOperand(imm);
         }
         else if (inst->operands[0].getType() == triton::arch::OP_MEM) {
-          auto mem = inst->operands[0].getMem();
+          auto mem = inst->operands[0].getMemory();
           obj = PyMemoryOperand(mem);
         }
         else if (inst->operands[0].getType() == triton::arch::OP_REG) {
-          auto reg = inst->operands[0].getReg();
+          auto reg = inst->operands[0].getRegister();
           obj = PyRegisterOperand(reg);
         }
 
@@ -233,15 +233,15 @@ namespace triton {
           PyObject* obj = nullptr;
 
           if (inst->operands[index].getType() == triton::arch::OP_IMM) {
-            imm = inst->operands[index].getImm();
+            imm = inst->operands[index].getImmediate();
             obj = PyImmediateOperand(imm);
           }
           else if (inst->operands[index].getType() == triton::arch::OP_MEM) {
-            mem = inst->operands[index].getMem();
+            mem = inst->operands[index].getMemory();
             obj = PyMemoryOperand(mem);
           }
           else if (inst->operands[index].getType() == triton::arch::OP_REG) {
-            reg = inst->operands[index].getReg();
+            reg = inst->operands[index].getRegister();
             obj = PyRegisterOperand(reg);
           }
           else
@@ -268,15 +268,15 @@ namespace triton {
 
 
         if (inst->operands[1].getType() == triton::arch::OP_IMM) {
-          auto imm = inst->operands[1].getImm();
+          auto imm = inst->operands[1].getImmediate();
           obj = PyImmediateOperand(imm);
         }
         else if (inst->operands[1].getType() == triton::arch::OP_MEM) {
-          auto mem = inst->operands[1].getMem();
+          auto mem = inst->operands[1].getMemory();
           obj = PyMemoryOperand(mem);
         }
         else if (inst->operands[1].getType() == triton::arch::OP_REG) {
-          auto reg = inst->operands[1].getReg();
+          auto reg = inst->operands[1].getRegister();
           obj = PyRegisterOperand(reg);
         }
 
@@ -315,15 +315,15 @@ namespace triton {
 
 
         if (inst->operands[2].getType() == triton::arch::OP_IMM) {
-          auto imm = inst->operands[2].getImm();
+          auto imm = inst->operands[2].getImmediate();
           obj = PyImmediateOperand(imm);
         }
         else if (inst->operands[2].getType() == triton::arch::OP_MEM) {
-          auto mem = inst->operands[2].getMem();
+          auto mem = inst->operands[2].getMemory();
           obj = PyMemoryOperand(mem);
         }
         else if (inst->operands[2].getType() == triton::arch::OP_REG) {
-          auto reg = inst->operands[2].getReg();
+          auto reg = inst->operands[2].getRegister();
           obj = PyRegisterOperand(reg);
         }
 

@@ -56,32 +56,32 @@ namespace triton {
       /*!
           \param regId the register id.
       */
-      virtual bool isReg(triton::uint32 regId) = 0;
+      virtual bool isRegister(triton::uint32 regId) = 0;
 
       //! Returns true if the regId is valid.
       /*!
           \param regId the register id.
       */
-      virtual bool isRegValid(triton::uint32 regId) = 0;
+      virtual bool isRegisterValid(triton::uint32 regId) = 0;
 
       //! Returns the max size (in byte) of the CPU registers (GPR).
-      virtual triton::uint32 regSize(void) = 0;
+      virtual triton::uint32 registerSize(void) = 0;
 
       //! Returns the max size (in bit) of the CPU registers (GPR).
-      virtual triton::uint32 regBitSize(void) = 0;
+      virtual triton::uint32 registerBitSize(void) = 0;
 
       //! Returns the id of the invalid CPU register.
-      virtual triton::uint32 invalidReg(void) = 0;
+      virtual triton::uint32 invalidRegister(void) = 0;
 
       //! Returns the number of registers according to the CPU architecture.
-      virtual triton::uint32 numberOfReg(void) = 0;
+      virtual triton::uint32 numberOfRegisters(void) = 0;
 
       //! Returns all information about a register id.
       /*!
           \param reg the register id.
           \return std::tuple<name, b-high, b-low, parentId>
       */
-      virtual std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegInfo(triton::uint32 reg) = 0;
+      virtual std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg) = 0;
 
       //! Returns all registers.
       virtual std::set<triton::arch::RegisterOperand*> getAllRegisters(void) = 0;

@@ -101,13 +101,13 @@ namespace triton {
         /*!
           \param regId the register id.
         */
-        bool isCpuReg(triton::uint32 regId);
+        bool isCpuRegister(triton::uint32 regId);
 
         //! [**architecture api**] - Returns true if the regId is a register or a flag.
         /*!
           \param regId the register id.
         */
-        bool isCpuRegValid(triton::uint32 regId);
+        bool isCpuRegisterValid(triton::uint32 regId);
 
         //! [**architecture api**] - Returns the max size (in byte) of the CPU register (GPR).
         triton::uint32 cpuRegisterSize(void);
