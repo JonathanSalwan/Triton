@@ -312,7 +312,7 @@ namespace triton {
     }
 
 
-    std::set<triton::arch::RegisterOperand*> x8664Cpu::getAllRegister(void) {
+    std::set<triton::arch::RegisterOperand*> x8664Cpu::getAllRegisters(void) {
       std::set<triton::arch::RegisterOperand*> ret;
 
       for (triton::uint32 index = 0; index < triton::arch::x86::ID_REG_LAST_ITEM; index++) {
@@ -324,7 +324,7 @@ namespace triton {
     }
 
 
-    std::set<triton::arch::RegisterOperand*> x8664Cpu::getParentRegister(void) {
+    std::set<triton::arch::RegisterOperand*> x8664Cpu::getParentRegisters(void) {
       std::set<triton::arch::RegisterOperand*> ret;
 
       for (triton::uint32 index = 0; index < triton::arch::x86::ID_REG_LAST_ITEM; index++) {

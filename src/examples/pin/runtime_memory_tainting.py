@@ -15,7 +15,7 @@ ENDC  = "\033[0m"
 def cbeforeSymProc(instruction):
     if instruction.getAddress() == 0x40058b:
         rax = getCurrentRegisterValue(REG.RAX)
-        taintAddr(rax)
+        taintMemory(rax)
 
 
 def cafter(instruction):

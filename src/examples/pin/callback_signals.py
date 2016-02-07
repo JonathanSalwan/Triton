@@ -55,7 +55,7 @@ from pintool import *
 def signals(threadId, sig):
     print 'Signal %d received on thread %d.' %(sig, threadId)
     print '========================== DUMP =========================='
-    regs = getParentRegister()
+    regs = getParentRegisters()
     for reg in regs:
         value  = getCurrentRegisterValue(reg)
         exprId = getSymbolicRegisterId(reg)

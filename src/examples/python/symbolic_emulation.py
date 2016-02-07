@@ -118,7 +118,7 @@ if __name__ == '__main__':
     print
     print 'Symbolic registers information'
     print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-    for k, v in getSymbolicRegister().items():
+    for k, v in getSymbolicRegisters().items():
         print k, v
 
     print

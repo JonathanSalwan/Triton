@@ -224,7 +224,7 @@ class TritonExecution(object):
         TritonExecution.inputTested = []
         TritonExecution.whitelist   = whitelist
 
-        startAnalysisFromAddr(entryPoint)
+        startAnalysisFromAddress(entryPoint)
 
         addCallback(TritonExecution.mainAnalysis,   CALLBACK.ROUTINE_ENTRY, "main") # Called when we are in main's beginning
         addCallback(TritonExecution.cbefore,        CALLBACK.BEFORE)

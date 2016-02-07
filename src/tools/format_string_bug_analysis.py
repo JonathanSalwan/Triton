@@ -53,7 +53,7 @@ def printfAnalysis(threadId):
     arg = getCurrentRegisterValue(REG.RDI)
     index = 0
     while getCurrentMemoryValue(arg + index) != 0x00:
-        if isAddrTainted(arg + index) == True:
+        if isMemoryTainted(arg + index) == True:
             print '[+] Possible format string bug found. The first argument contains some tainted bytes.'
             global TRACE
             for t in TRACE:
@@ -73,7 +73,7 @@ def mainAnalysis(threadId):
         argv = getCurrentMemoryValue(rsi + ((rdi-1) * CPUSIZE.REG), CPUSIZE.REG)
         offset = 0
         while getCurrentMemoryValue(argv + offset) != 0x00:
-            taintAddr(argv + offset)
+            taintMemory(argv + offset)
             offset += 1
         print '[+] %03d bytes tainted from the argv[%d] (%#x) pointer' %(offset, rdi-1, argv)
         rdi -= 1

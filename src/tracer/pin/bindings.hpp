@@ -84,13 +84,13 @@ namespace tracer {
       extern bool startAnalysisFromEntry;
 
       //! Start analysis from a symbol.
-      extern std::set<triton::__uint> startAnalysisFromAddr;
+      extern std::set<triton::__uint> startAnalysisFromAddress;
 
       //! Start analysis from an offset.
       extern std::set<triton::__uint> startAnalysisFromOffset;
 
       //! Stop analysis from address.
-      extern std::set<triton::__uint> stopAnalysisFromAddr;
+      extern std::set<triton::__uint> stopAnalysisFromAddress;
 
       //! Stop analysis from an offset.
       extern std::set<triton::__uint> stopAnalysisFromOffset;

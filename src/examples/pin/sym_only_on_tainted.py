@@ -13,7 +13,7 @@ from triton  import *
 def cb_ir(inst):
     if inst.getAddress() == 0x40058b:
         rax = getCurrentRegisterValue(REG.RAX)
-        taintAddr(rax)
+        taintMemory(rax)
     return
 
 

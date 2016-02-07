@@ -364,11 +364,11 @@ namespace tracer {
     }
 
 
-    static PyObject* pintool_startAnalysisFromAddr(PyObject* self, PyObject* addr) {
+    static PyObject* pintool_startAnalysisFromAddress(PyObject* self, PyObject* addr) {
       if (!PyLong_Check(addr) && !PyInt_Check(addr))
-        return PyErr_Format(PyExc_TypeError, "tracer::pintool::startAnalysisFromAddr(): Expected an address (integer) as argument");
+        return PyErr_Format(PyExc_TypeError, "tracer::pintool::startAnalysisFromAddress(): Expected an address (integer) as argument");
 
-      tracer::pintool::options::startAnalysisFromAddr.insert(triton::bindings::python::PyLong_AsUint(addr));
+      tracer::pintool::options::startAnalysisFromAddress.insert(triton::bindings::python::PyLong_AsUint(addr));
       Py_INCREF(Py_None);
       return Py_None;
     }
@@ -401,11 +401,11 @@ namespace tracer {
     }
 
 
-    static PyObject* pintool_stopAnalysisFromAddr(PyObject* self, PyObject* addr) {
+    static PyObject* pintool_stopAnalysisFromAddress(PyObject* self, PyObject* addr) {
       if (!PyLong_Check(addr) && !PyInt_Check(addr))
-        return PyErr_Format(PyExc_TypeError, "tracer::pintool::stopAnalysisFromAddr(): Expected an address (integer) as argument");
+        return PyErr_Format(PyExc_TypeError, "tracer::pintool::stopAnalysisFromAddress(): Expected an address (integer) as argument");
 
-      tracer::pintool::options::stopAnalysisFromAddr.insert(triton::bindings::python::PyLong_AsUint(addr));
+      tracer::pintool::options::stopAnalysisFromAddress.insert(triton::bindings::python::PyLong_AsUint(addr));
       Py_INCREF(Py_None);
       return Py_None;
     }
@@ -448,11 +448,11 @@ namespace tracer {
       {"setCurrentRegisterValue",   pintool_setCurrentRegisterValue,    METH_VARARGS,   ""},
       {"setupImageBlacklist",       pintool_setupImageBlacklist,        METH_O,         ""},
       {"setupImageWhitelist",       pintool_setupImageWhitelist,        METH_O,         ""},
-      {"startAnalysisFromAddr",     pintool_startAnalysisFromAddr,      METH_O,         ""},
+      {"startAnalysisFromAddress",  pintool_startAnalysisFromAddress,   METH_O,         ""},
       {"startAnalysisFromEntry",    pintool_startAnalysisFromEntry,     METH_NOARGS,    ""},
       {"startAnalysisFromOffset",   pintool_startAnalysisFromOffset,    METH_O,         ""},
       {"startAnalysisFromSymbol",   pintool_startAnalysisFromSymbol,    METH_O,         ""},
-      {"stopAnalysisFromAddr",      pintool_stopAnalysisFromAddr,       METH_O,         ""},
+      {"stopAnalysisFromAddress",   pintool_stopAnalysisFromAddress,    METH_O,         ""},
       {"stopAnalysisFromOffset",    pintool_stopAnalysisFromOffset,     METH_O,         ""},
       {"takeSnapshot",              pintool_takeSnapshot,               METH_NOARGS,    ""},
       {nullptr,                     nullptr,                            0,              nullptr}

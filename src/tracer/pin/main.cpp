@@ -208,7 +208,7 @@ ENDC  = "\033[0m"
 def cbeforeSymProc(instruction):
     if instruction.getAddress() == 0x40058b:
         rax = getCurrentRegisterValue(REG.RAX)
-        taintAddr(rax)
+        taintMemory(rax)
 
 
 def cafter(instruction):
@@ -456,7 +456,7 @@ from pintool import *
 def signals(threadId, sig):
     print 'Signal %d received on thread %d.' %(sig, threadId)
     print '========================== DUMP =========================='
-    regs = getParentRegister()
+    regs = getParentRegisters()
     for reg in regs:
         value  = getCurrentRegisterValue(reg)
         exprId = getSymbolicRegisterId(reg)
@@ -815,7 +815,7 @@ namespace tracer {
       /* Lock / Unlock the Analysis from a Entry point */
       if (tracer::pintool::options::startAnalysisFromEntry) {
         tracer::pintool::options::startAnalysisFromEntry = false;
-        tracer::pintool::options::startAnalysisFromAddr.insert(IMG_Entry(img));
+        tracer::pintool::options::startAnalysisFromAddress.insert(IMG_Entry(img));
       }
 
       /* Lock / Unlock the Analysis from a symbol */
@@ -886,7 +886,7 @@ namespace tracer {
       }
 
       /* Unlock the analysis at the entry point from address */
-      else if (tracer::pintool::options::startAnalysisFromAddr.find(address) != tracer::pintool::options::startAnalysisFromAddr.end()) {
+      else if (tracer::pintool::options::startAnalysisFromAddress.find(address) != tracer::pintool::options::startAnalysisFromAddress.end()) {
           tracer::pintool::options::targetThreadId = PIN_ThreadId();
           tracer::pintool::toggleWrapper(true);
           return true;

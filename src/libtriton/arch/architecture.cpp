@@ -155,17 +155,17 @@ namespace triton {
     }
 
 
-    std::set<triton::arch::RegisterOperand*> Architecture::getAllRegister(void) {
+    std::set<triton::arch::RegisterOperand*> Architecture::getAllRegisters(void) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getAllRegister(): You must define an architecture");
-      return this->cpu->getAllRegister();
+        throw std::runtime_error("Architecture::getAllRegisters(): You must define an architecture");
+      return this->cpu->getAllRegisters();
     }
 
 
-    std::set<triton::arch::RegisterOperand*> Architecture::getParentRegister(void) {
+    std::set<triton::arch::RegisterOperand*> Architecture::getParentRegisters(void) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getParentRegister(): You must define an architecture");
-      return this->cpu->getParentRegister();
+        throw std::runtime_error("Architecture::getParentRegisters(): You must define an architecture");
+      return this->cpu->getParentRegisters();
     }
 
 

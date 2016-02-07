@@ -206,12 +206,12 @@ namespace triton {
   }
 
 
-  triton::uint32 API::cpuRegSize(void) {
+  triton::uint32 API::cpuRegisterSize(void) {
     return this->arch.regSize();
   }
 
 
-  triton::uint32 API::cpuRegBitSize(void) {
+  triton::uint32 API::cpuRegisterBitSize(void) {
     return this->arch.regBitSize();
   }
 
@@ -221,7 +221,7 @@ namespace triton {
   }
 
 
-  triton::uint32 API::cpuNumberOfReg(void) {
+  triton::uint32 API::cpuNumberOfRegisters(void) {
     return this->arch.numberOfReg();
   }
 
@@ -231,15 +231,15 @@ namespace triton {
   }
 
 
-  std::set<triton::arch::RegisterOperand*> API::getAllRegister(void) {
+  std::set<triton::arch::RegisterOperand*> API::getAllRegisters(void) {
     this->checkArchitecture();
-    return this->arch.getAllRegister();
+    return this->arch.getAllRegisters();
   }
 
 
-  std::set<triton::arch::RegisterOperand*> API::getParentRegister(void) {
+  std::set<triton::arch::RegisterOperand*> API::getParentRegisters(void) {
     this->checkArchitecture();
-    return this->arch.getParentRegister();
+    return this->arch.getParentRegisters();
   }
 
 
@@ -489,9 +489,9 @@ namespace triton {
   }
 
 
-  std::map<triton::arch::RegisterOperand, triton::engines::symbolic::SymbolicExpression*> API::getSymbolicRegister(void) {
+  std::map<triton::arch::RegisterOperand, triton::engines::symbolic::SymbolicExpression*> API::getSymbolicRegisters(void) {
     this->checkSymbolic();
-    return this->sym->getSymbolicRegister();
+    return this->sym->getSymbolicRegisters();
   }
 
 
@@ -789,33 +789,33 @@ namespace triton {
   }
 
 
-  bool API::isAddrTainted(__uint addr, uint32 size) {
-    this->checkTaint();
-    return this->taint->isAddrTainted(addr, size);
-  }
-
-
   bool API::isTainted(arch::OperandWrapper& op) {
     this->checkTaint();
     switch (op.getType()) {
       case triton::arch::OP_IMM: return triton::engines::taint::UNTAINTED;
-      case triton::arch::OP_MEM: return this->isMemTainted(op.getMem());
-      case triton::arch::OP_REG: return this->isRegTainted(op.getReg());
+      case triton::arch::OP_MEM: return this->isMemoryTainted(op.getMem());
+      case triton::arch::OP_REG: return this->isRegisterTainted(op.getReg());
       default:
         throw std::runtime_error("API::isTainted(): Invalid operand.");
     }
   }
 
 
-  bool API::isMemTainted(arch::MemoryOperand& mem) {
+  bool API::isMemoryTainted(__uint addr, uint32 size) {
     this->checkTaint();
-    return this->taint->isMemTainted(mem);
+    return this->taint->isMemoryTainted(addr, size);
   }
 
 
-  bool API::isRegTainted(arch::RegisterOperand& reg) {
+  bool API::isMemoryTainted(arch::MemoryOperand& mem) {
     this->checkTaint();
-    return this->taint->isRegTainted(reg);
+    return this->taint->isMemoryTainted(mem);
+  }
+
+
+  bool API::isRegisterTainted(arch::RegisterOperand& reg) {
+    this->checkTaint();
+    return this->taint->isRegisterTainted(reg);
   }
 
 
@@ -823,61 +823,61 @@ namespace triton {
     this->checkTaint();
     switch (op.getType()) {
       case triton::arch::OP_IMM: return triton::engines::taint::UNTAINTED;
-      case triton::arch::OP_MEM: return this->setTaintMem(op.getMem(), flag);
-      case triton::arch::OP_REG: return this->setTaintReg(op.getReg(), flag);
+      case triton::arch::OP_MEM: return this->setTaintMemory(op.getMem(), flag);
+      case triton::arch::OP_REG: return this->setTaintRegister(op.getReg(), flag);
       default:
         throw std::runtime_error("API::setTaint(): Invalid operand.");
     }
   }
 
 
-  bool API::setTaintMem(arch::MemoryOperand& mem, bool flag) {
+  bool API::setTaintMemory(arch::MemoryOperand& mem, bool flag) {
     this->checkTaint();
-    this->taint->setTaintMem(mem, flag);
+    this->taint->setTaintMemory(mem, flag);
     return flag;
   }
 
 
-  bool API::setTaintReg(arch::RegisterOperand& reg, bool flag) {
+  bool API::setTaintRegister(arch::RegisterOperand& reg, bool flag) {
     this->checkTaint();
-    this->taint->setTaintReg(reg, flag);
+    this->taint->setTaintRegister(reg, flag);
     return flag;
   }
 
 
-  bool API::taintAddr(__uint addr) {
+  bool API::taintMemory(__uint addr) {
     this->checkTaint();
-    return this->taint->taintAddr(addr);
+    return this->taint->taintMemory(addr);
   }
 
 
-  bool API::taintMem(arch::MemoryOperand& mem) {
+  bool API::taintMemory(arch::MemoryOperand& mem) {
     this->checkTaint();
-    return this->taint->taintMem(mem);
+    return this->taint->taintMemory(mem);
   }
 
 
-  bool API::taintReg(arch::RegisterOperand& reg) {
+  bool API::taintRegister(arch::RegisterOperand& reg) {
     this->checkTaint();
-    return this->taint->taintReg(reg);
+    return this->taint->taintRegister(reg);
   }
 
 
-  bool API::untaintAddr(__uint addr) {
+  bool API::untaintMemory(__uint addr) {
     this->checkTaint();
-    return this->taint->untaintAddr(addr);
+    return this->taint->untaintMemory(addr);
   }
 
 
-  bool API::untaintMem(arch::MemoryOperand& mem) {
+  bool API::untaintMemory(arch::MemoryOperand& mem) {
     this->checkTaint();
-    return this->taint->untaintMem(mem);
+    return this->taint->untaintMemory(mem);
   }
 
 
-  bool API::untaintReg(arch::RegisterOperand& reg) {
+  bool API::untaintRegister(arch::RegisterOperand& reg) {
     this->checkTaint();
-    return this->taint->untaintReg(reg);
+    return this->taint->untaintRegister(reg);
   }
 
 
@@ -886,22 +886,22 @@ namespace triton {
     triton::uint32 t2 = op2.getType();
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_IMM)
-      return this->taintUnionMemImm(op1.getMem());
+      return this->taintUnionMemoryImmediate(op1.getMem());
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_MEM)
-      return this->taintUnionMemMem(op1.getMem(), op2.getMem());
+      return this->taintUnionMemoryMemory(op1.getMem(), op2.getMem());
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_REG)
-      return this->taintUnionMemReg(op1.getMem(), op2.getReg());
+      return this->taintUnionMemoryRegister(op1.getMem(), op2.getReg());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_IMM)
-      return this->taintUnionRegImm(op1.getReg());
+      return this->taintUnionRegisterImmediate(op1.getReg());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_MEM)
-      return this->taintUnionRegMem(op1.getReg(), op2.getMem());
+      return this->taintUnionRegisterMemory(op1.getReg(), op2.getMem());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_REG)
-      return this->taintUnionRegReg(op1.getReg(), op2.getReg());
+      return this->taintUnionRegisterRegister(op1.getReg(), op2.getReg());
 
     throw std::runtime_error("API::taintUnion(): Invalid operands.");
   }
@@ -912,35 +912,35 @@ namespace triton {
     triton::uint32 t2 = op2.getType();
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_IMM)
-      return this->taintAssignmentMemImm(op1.getMem());
+      return this->taintAssignmentMemoryImmediate(op1.getMem());
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_MEM)
-      return this->taintAssignmentMemMem(op1.getMem(), op2.getMem());
+      return this->taintAssignmentMemoryMemory(op1.getMem(), op2.getMem());
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_REG)
-      return this->taintAssignmentMemReg(op1.getMem(), op2.getReg());
+      return this->taintAssignmentMemoryRegister(op1.getMem(), op2.getReg());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_IMM)
-      return this->taintAssignmentRegImm(op1.getReg());
+      return this->taintAssignmentRegisterImmediate(op1.getReg());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_MEM)
-      return this->taintAssignmentRegMem(op1.getReg(), op2.getMem());
+      return this->taintAssignmentRegisterMemory(op1.getReg(), op2.getMem());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_REG)
-      return this->taintAssignmentRegReg(op1.getReg(), op2.getReg());
+      return this->taintAssignmentRegisterRegister(op1.getReg(), op2.getReg());
 
     throw std::runtime_error("API::taintAssignment(): Invalid operands.");
   }
 
 
-  bool API::taintUnionMemImm(arch::MemoryOperand& memDst) {
+  bool API::taintUnionMemoryImmediate(arch::MemoryOperand& memDst) {
     this->checkTaint();
 
     bool flag = triton::engines::taint::UNTAINTED;
     triton::__uint memAddrDst = memDst.getAddress();
     triton::uint32 writeSize  = memDst.getSize();
 
-    flag = this->taint->unionMemImm(memDst);
+    flag = this->taint->unionMemoryImmediate(memDst);
 
     /* Taint each byte of reference expression */
     for (triton::uint32 i = 0; i != writeSize; i++) {
@@ -955,7 +955,7 @@ namespace triton {
   }
 
 
-  bool API::taintUnionMemMem(arch::MemoryOperand& memDst, arch::MemoryOperand& memSrc) {
+  bool API::taintUnionMemoryMemory(arch::MemoryOperand& memDst, arch::MemoryOperand& memSrc) {
     this->checkTaint();
 
     bool flag = triton::engines::taint::UNTAINTED;
@@ -963,7 +963,7 @@ namespace triton {
     triton::__uint memAddrSrc = memSrc.getAddress();
     triton::uint32 writeSize  = memDst.getSize();
 
-    flag = this->taint->unionMemMem(memDst, memSrc);
+    flag = this->taint->unionMemoryMemory(memDst, memSrc);
 
     /* Taint each byte of reference expression */
     for (triton::uint32 i = 0; i != writeSize; i++) {
@@ -971,21 +971,21 @@ namespace triton {
       if (byteId == triton::engines::symbolic::UNSET)
         continue;
       triton::engines::symbolic::SymbolicExpression* byte = this->getSymbolicExpressionFromId(byteId);
-      byte->isTainted = this->isAddrTainted(memAddrDst + i) | this->isAddrTainted(memAddrSrc + i);
+      byte->isTainted = this->isMemoryTainted(memAddrDst + i) | this->isMemoryTainted(memAddrSrc + i);
     }
 
     return flag;
   }
 
 
-  bool API::taintUnionMemReg(arch::MemoryOperand& memDst, arch::RegisterOperand& regSrc) {
+  bool API::taintUnionMemoryRegister(arch::MemoryOperand& memDst, arch::RegisterOperand& regSrc) {
     this->checkTaint();
 
     bool flag = triton::engines::taint::UNTAINTED;
     triton::__uint memAddrDst = memDst.getAddress();
     triton::uint32 writeSize  = memDst.getSize();
 
-    flag = this->taint->unionMemReg(memDst, regSrc);
+    flag = this->taint->unionMemoryRegister(memDst, regSrc);
 
     /* Taint each byte of reference expression */
     for (triton::uint32 i = 0; i != writeSize; i++) {
@@ -1000,32 +1000,32 @@ namespace triton {
   }
 
 
-  bool API::taintUnionRegImm(arch::RegisterOperand& regDst) {
+  bool API::taintUnionRegisterImmediate(arch::RegisterOperand& regDst) {
     this->checkTaint();
-    return this->taint->unionRegImm(regDst);
+    return this->taint->unionRegisterImmediate(regDst);
   }
 
 
-  bool API::taintUnionRegMem(arch::RegisterOperand& regDst, arch::MemoryOperand& memSrc) {
+  bool API::taintUnionRegisterMemory(arch::RegisterOperand& regDst, arch::MemoryOperand& memSrc) {
     this->checkTaint();
-    return this->taint->unionRegMem(regDst, memSrc);
+    return this->taint->unionRegisterMemory(regDst, memSrc);
   }
 
 
-  bool API::taintUnionRegReg(arch::RegisterOperand& regDst, arch::RegisterOperand& regSrc) {
+  bool API::taintUnionRegisterRegister(arch::RegisterOperand& regDst, arch::RegisterOperand& regSrc) {
     this->checkTaint();
-    return this->taint->unionRegReg(regDst, regSrc);
+    return this->taint->unionRegisterRegister(regDst, regSrc);
   }
 
 
-  bool API::taintAssignmentMemImm(arch::MemoryOperand& memDst) {
+  bool API::taintAssignmentMemoryImmediate(arch::MemoryOperand& memDst) {
     this->checkTaint();
 
     bool flag = triton::engines::taint::UNTAINTED;
     triton::__uint memAddrDst = memDst.getAddress();
     triton::uint32 writeSize  = memDst.getSize();
 
-    flag = this->taint->assignmentMemImm(memDst);
+    flag = this->taint->assignmentMemoryImmediate(memDst);
 
     /* Taint each byte of reference expression */
     for (triton::uint32 i = 0; i != writeSize; i++) {
@@ -1040,7 +1040,7 @@ namespace triton {
   }
 
 
-  bool API::taintAssignmentMemMem(arch::MemoryOperand& memDst, arch::MemoryOperand& memSrc) {
+  bool API::taintAssignmentMemoryMemory(arch::MemoryOperand& memDst, arch::MemoryOperand& memSrc) {
     this->checkTaint();
 
     bool flag = triton::engines::taint::UNTAINTED;
@@ -1048,7 +1048,7 @@ namespace triton {
     triton::__uint memAddrSrc = memSrc.getAddress();
     triton::uint32 writeSize  = memDst.getSize();
 
-    flag = this->taint->assignmentMemMem(memDst, memSrc);
+    flag = this->taint->assignmentMemoryMemory(memDst, memSrc);
 
     /* Taint each byte of reference expression */
     for (triton::uint32 i = 0; i != writeSize; i++) {
@@ -1056,21 +1056,21 @@ namespace triton {
       if (byteId == triton::engines::symbolic::UNSET)
         continue;
       triton::engines::symbolic::SymbolicExpression* byte = this->getSymbolicExpressionFromId(byteId);
-      byte->isTainted = this->isAddrTainted(memAddrSrc + i);
+      byte->isTainted = this->isMemoryTainted(memAddrSrc + i);
     }
 
     return flag;
   }
 
 
-  bool API::taintAssignmentMemReg(arch::MemoryOperand& memDst, arch::RegisterOperand& regSrc) {
+  bool API::taintAssignmentMemoryRegister(arch::MemoryOperand& memDst, arch::RegisterOperand& regSrc) {
     this->checkTaint();
 
     bool flag = triton::engines::taint::UNTAINTED;
     triton::__uint memAddrDst = memDst.getAddress();
     triton::uint32 writeSize  = memDst.getSize();
 
-    flag = this->taint->assignmentMemReg(memDst, regSrc);
+    flag = this->taint->assignmentMemoryRegister(memDst, regSrc);
 
     /* Taint each byte of reference expression */
     for (triton::uint32 i = 0; i != writeSize; i++) {
@@ -1085,21 +1085,21 @@ namespace triton {
   }
 
 
-  bool API::taintAssignmentRegImm(arch::RegisterOperand& regDst) {
+  bool API::taintAssignmentRegisterImmediate(arch::RegisterOperand& regDst) {
     this->checkTaint();
-    return this->taint->assignmentRegImm(regDst);
+    return this->taint->assignmentRegisterImmediate(regDst);
   }
 
 
-  bool API::taintAssignmentRegMem(arch::RegisterOperand& regDst, arch::MemoryOperand& memSrc) {
+  bool API::taintAssignmentRegisterMemory(arch::RegisterOperand& regDst, arch::MemoryOperand& memSrc) {
     this->checkTaint();
-    return this->taint->assignmentRegMem(regDst, memSrc);
+    return this->taint->assignmentRegisterMemory(regDst, memSrc);
   }
 
 
-  bool API::taintAssignmentRegReg(arch::RegisterOperand& regDst, arch::RegisterOperand& regSrc) {
+  bool API::taintAssignmentRegisterRegister(arch::RegisterOperand& regDst, arch::RegisterOperand& regSrc) {
     this->checkTaint();
-    return this->taint->assignmentRegReg(regDst, regSrc);
+    return this->taint->assignmentRegisterRegister(regDst, regSrc);
   }
 
 }; /* triton namespace */

@@ -108,9 +108,9 @@ namespace tracer {
       std::list<const char*>             imageWhitelist;
       std::map<const char*, PyObject*>   callbackRoutineEntry;
       std::map<const char*, PyObject*>   callbackRoutineExit;
-      std::set<triton::__uint>           startAnalysisFromAddr;
+      std::set<triton::__uint>           startAnalysisFromAddress;
       std::set<triton::__uint>           startAnalysisFromOffset;
-      std::set<triton::__uint>           stopAnalysisFromAddr;
+      std::set<triton::__uint>           stopAnalysisFromAddress;
       std::set<triton::__uint>           stopAnalysisFromOffset;
       triton::uint32                     targetThreadId             = -1;
     };

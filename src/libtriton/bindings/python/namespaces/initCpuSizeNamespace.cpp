@@ -98,8 +98,8 @@ namespace triton {
         PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "QWORD_BIT",   PyLong_FromUint(QWORD_SIZE_BIT));
         PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DQWORD",      PyLong_FromUint(DQWORD_SIZE));
         PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DQWORD_BIT",  PyLong_FromUint(DQWORD_SIZE_BIT));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "REG",         PyLong_FromUint(triton::api.cpuRegSize()));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "REG_BIT",     PyLong_FromUint(triton::api.cpuRegBitSize()));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "REG",         PyLong_FromUint(triton::api.cpuRegisterSize()));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "REG_BIT",     PyLong_FromUint(triton::api.cpuRegisterBitSize()));
 
       }
 

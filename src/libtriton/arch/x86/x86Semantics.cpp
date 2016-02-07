@@ -334,7 +334,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, flag, comment);
 
           /* Spread taint */
-          expr->isTainted = triton::api.setTaintReg(flag, triton::engines::taint::UNTAINTED);
+          expr->isTainted = triton::api.setTaintRegister(flag, triton::engines::taint::UNTAINTED);
         }
 
 
@@ -346,19 +346,19 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, flag, comment);
 
           /* Spread taint */
-          expr->isTainted = triton::api.setTaintReg(flag, triton::engines::taint::UNTAINTED);
+          expr->isTainted = triton::api.setTaintRegister(flag, triton::engines::taint::UNTAINTED);
         }
 
 
         void controlFlow_s(triton::arch::Instruction& inst) {
           /* Create the SMT semantics */
-          auto node = smt2lib::bv(inst.getAddress() + inst.getOpcodesSize(), triton::api.cpuRegBitSize());
+          auto node = smt2lib::bv(inst.getAddress() + inst.getOpcodesSize(), triton::api.cpuRegisterBitSize());
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicRegisterExpression(inst, node, TRITON_X86_REG_PC, "Program Counter");
 
           /* Spread taint */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_PC, triton::engines::taint::UNTAINTED);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_PC, triton::engines::taint::UNTAINTED);
         }
 
 
@@ -390,7 +390,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_AF, "Adjust flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_AF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_AF, parent->isTainted);
         }
 
 
@@ -422,7 +422,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_AF, "Adjust flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_AF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_AF, parent->isTainted);
         }
 
 
@@ -451,7 +451,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_CF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
         }
 
 
@@ -473,7 +473,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_CF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
         }
 
 
@@ -497,7 +497,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_CF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
         }
 
 
@@ -521,7 +521,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_CF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
         }
 
 
@@ -550,7 +550,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_CF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
         }
 
 
@@ -578,7 +578,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_CF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
         }
 
 
@@ -618,7 +618,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_CF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
         }
 
 
@@ -648,7 +648,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_CF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
         }
 
 
@@ -670,7 +670,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_CF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
         }
 
 
@@ -692,7 +692,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_CF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
         }
 
 
@@ -719,7 +719,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_CF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
         }
 
 
@@ -743,7 +743,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_OF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
         }
 
 
@@ -765,7 +765,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_OF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
         }
 
 
@@ -789,7 +789,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_OF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
         }
 
 
@@ -813,7 +813,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_OF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
         }
 
 
@@ -854,7 +854,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_OF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
         }
 
 
@@ -897,7 +897,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_OF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
         }
 
 
@@ -919,7 +919,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_OF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
         }
 
 
@@ -946,7 +946,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_OF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
         }
 
 
@@ -969,7 +969,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_OF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
         }
 
 
@@ -993,7 +993,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_OF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
         }
 
 
@@ -1024,7 +1024,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_PF, "Parity flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_PF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_PF, parent->isTainted);
         }
 
 
@@ -1061,7 +1061,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node2, TRITON_X86_REG_PF, "Parity flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_PF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_PF, parent->isTainted);
         }
 
 
@@ -1079,7 +1079,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_SF, "Sign flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_SF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_SF, parent->isTainted);
         }
 
 
@@ -1102,7 +1102,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_SF, "Sign flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_SF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_SF, parent->isTainted);
         }
 
 
@@ -1128,7 +1128,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_ZF, "Zero flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_ZF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_ZF, parent->isTainted);
         }
 
 
@@ -1159,7 +1159,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_ZF, "Zero flag");
 
           /* Spread the taint from the parent to the child */
-          expr->isTainted = triton::api.setTaintReg(TRITON_X86_REG_ZF, parent->isTainted);
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_ZF, parent->isTainted);
         }
 
 
@@ -1407,7 +1407,7 @@ namespace triton {
           auto expr2 = triton::api.createSymbolicExpression(inst, node2, pc, "Program Counter");
 
           /* Spread taint */
-          expr1->isTainted = triton::api.taintAssignmentMemImm(sp.getMem());
+          expr1->isTainted = triton::api.taintAssignmentMemoryImmediate(sp.getMem());
           expr2->isTainted = triton::api.taintAssignment(pc, src);
         }
 
@@ -2060,7 +2060,7 @@ namespace triton {
           auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "Temporary variable");
 
           /* Spread taint */
-          expr1->isTainted = triton::api.isRegTainted(TRITON_X86_REG_RDX) | triton::api.isRegTainted(TRITON_X86_REG_RAX);
+          expr1->isTainted = triton::api.isRegisterTainted(TRITON_X86_REG_RDX) | triton::api.isRegisterTainted(TRITON_X86_REG_RAX);
 
           /* Create the SMT semantics - RAX = TMP[63...0] */
           auto node2 = smt2lib::extract(QWORD_SIZE_BIT-1, 0, smt2lib::reference(expr1->getId()));
@@ -2069,7 +2069,7 @@ namespace triton {
           auto expr2 = triton::api.createSymbolicExpression(inst, node2, src, "CQO operation - RAX");
 
           /* Spread taint */
-          expr2->isTainted = triton::api.setTaintReg(TRITON_X86_REG_RAX, expr1->isTainted);
+          expr2->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_RAX, expr1->isTainted);
 
           /* Create the SMT semantics - RDX = TMP[127...64] */
           auto node3 = smt2lib::extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, smt2lib::reference(expr1->getId()));
@@ -2078,7 +2078,7 @@ namespace triton {
           auto expr3 = triton::api.createSymbolicExpression(inst, node3, dst, "CQO operation - RDX");
 
           /* Spread taint */
-          expr3->isTainted = triton::api.setTaintReg(TRITON_X86_REG_RDX, expr1->isTainted);
+          expr3->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_RDX, expr1->isTainted);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
@@ -2997,8 +2997,8 @@ namespace triton {
           auto expr = triton::api.createSymbolicRegisterExpression(inst, node, dst, "LEA operation");
 
           /* Spread taint */
-          expr->isTainted = triton::api.taintAssignmentRegReg(dst, srcBase);
-          expr->isTainted = triton::api.taintUnionRegReg(dst, srcIndex);
+          expr->isTainted = triton::api.taintAssignmentRegisterRegister(dst, srcBase);
+          expr->isTainted = triton::api.taintUnionRegisterRegister(dst, srcIndex);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);

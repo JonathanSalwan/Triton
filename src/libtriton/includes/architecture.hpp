@@ -110,10 +110,10 @@ namespace triton {
         std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegInfo(triton::uint32 reg);
 
         //! Returns all registers.
-        std::set<triton::arch::RegisterOperand*> getAllRegister(void);
+        std::set<triton::arch::RegisterOperand*> getAllRegisters(void);
 
         //! Returns all parent registers.
-        std::set<triton::arch::RegisterOperand*> getParentRegister(void);
+        std::set<triton::arch::RegisterOperand*> getParentRegisters(void);
 
         //! Disassembles the instruction according to the architecture.
         void disassembly(triton::arch::Instruction &inst);

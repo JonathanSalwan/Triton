@@ -81,7 +81,7 @@ namespace triton {
       SymbolicEngine::SymbolicEngine() {
         triton::api.checkArchitecture();
 
-        this->numberOfReg = triton::api.cpuNumberOfReg();
+        this->numberOfReg = triton::api.cpuNumberOfRegisters();
         this->symbolicReg = new triton::__uint[this->numberOfReg]();
 
         /* Init all symbolic registers/flags to UNSET (init state) */
@@ -404,7 +404,7 @@ namespace triton {
 
 
       /* Returns the map of symbolic registers defined */
-      std::map<triton::arch::RegisterOperand, SymbolicExpression*> SymbolicEngine::getSymbolicRegister(void) {
+      std::map<triton::arch::RegisterOperand, SymbolicExpression*> SymbolicEngine::getSymbolicRegisters(void) {
         std::map<triton::arch::RegisterOperand, SymbolicExpression*> ret;
 
         for (triton::uint32 it = 0; it < this->numberOfReg; it++) {
@@ -672,18 +672,18 @@ namespace triton {
         switch (regSize) {
           case BYTE_SIZE:
             if (reg.getLow() == 0) {
-              finalExpr = smt2lib::concat(smt2lib::extract((triton::api.cpuRegBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
+              finalExpr = smt2lib::concat(smt2lib::extract((triton::api.cpuRegisterBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
             }
             else {
               finalExpr = smt2lib::concat(
-                            smt2lib::extract((triton::api.cpuRegBitSize() - 1), WORD_SIZE_BIT, origReg),
+                            smt2lib::extract((triton::api.cpuRegisterBitSize() - 1), WORD_SIZE_BIT, origReg),
                             smt2lib::concat(node, smt2lib::extract((BYTE_SIZE_BIT - 1), 0, origReg))
                           );
             }
             break;
 
           case WORD_SIZE:
-            finalExpr = smt2lib::concat(smt2lib::extract((triton::api.cpuRegBitSize() - 1), WORD_SIZE_BIT, origReg), node);
+            finalExpr = smt2lib::concat(smt2lib::extract((triton::api.cpuRegisterBitSize() - 1), WORD_SIZE_BIT, origReg), node);
             break;
 
           case DWORD_SIZE:

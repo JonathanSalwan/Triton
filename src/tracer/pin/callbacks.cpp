@@ -207,7 +207,7 @@ namespace tracer {
         if (tracer::pintool::options::targetThreadId != -1)
           return;
 
-        if (tracer::pintool::options::startAnalysisFromAddr.find(addr) != tracer::pintool::options::startAnalysisFromAddr.end()) {
+        if (tracer::pintool::options::startAnalysisFromAddress.find(addr) != tracer::pintool::options::startAnalysisFromAddress.end()) {
           tracer::pintool::analysisTrigger.update(true);
           tracer::pintool::options::targetThreadId = threadId;
         }
@@ -226,7 +226,7 @@ namespace tracer {
         if (tracer::pintool::options::targetThreadId != threadId)
           return;
 
-        if (tracer::pintool::options::stopAnalysisFromAddr.find(addr) != tracer::pintool::options::stopAnalysisFromAddr.end()) {
+        if (tracer::pintool::options::stopAnalysisFromAddress.find(addr) != tracer::pintool::options::stopAnalysisFromAddress.end()) {
           tracer::pintool::analysisTrigger.update(false);
           tracer::pintool::options::targetThreadId = -1;
         }

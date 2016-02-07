@@ -149,7 +149,7 @@ namespace triton {
           SymbolicExpression* getSymbolicExpressionFromId(triton::__uint symExprId);
 
           //! Returns the map of symbolic registers defined.
-          std::map<triton::arch::RegisterOperand, SymbolicExpression*> getSymbolicRegister(void);
+          std::map<triton::arch::RegisterOperand, SymbolicExpression*> getSymbolicRegisters(void);
 
           //! Returns the map of symbolic memory defined.
           std::map<triton::__uint, SymbolicExpression*> getSymbolicMemory(void);
