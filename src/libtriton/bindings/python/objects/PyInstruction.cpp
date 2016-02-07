@@ -263,7 +263,7 @@ namespace triton {
         opSize   = inst->operands.size();
 
         if (opSize < 2) {
-          return PyErr_Format(PyExc_TypeError, "getFirstOperand(): The instruction hasn't second operand.");
+          return PyErr_Format(PyExc_TypeError, "getSecondOperand(): The instruction hasn't second operand.");
         }
 
 
@@ -310,7 +310,7 @@ namespace triton {
         opSize   = inst->operands.size();
 
         if (opSize < 3) {
-          return PyErr_Format(PyExc_TypeError, "getFirstOperand(): The instruction hasn't second operand.");
+          return PyErr_Format(PyExc_TypeError, "getThirdOperand(): The instruction hasn't third operand.");
         }
 
 
