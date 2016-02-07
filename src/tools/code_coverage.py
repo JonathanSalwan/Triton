@@ -206,13 +206,13 @@ class TritonExecution(object):
         for k,v in od.iteritems():
             print "\t[0x%x] = %x %c" % (k, v, v)
             setCurrentMemoryValue(Memory(k, CPUSIZE.BYTE), v)
-            convertMemToSymVar(Memory(k, CPUSIZE.BYTE), "addr_%d" % k)
+            convertMemoryToSymbolicVariable(Memory(k, CPUSIZE.BYTE), "addr_%d" % k)
 
         for idx, byte in enumerate(TritonExecution.input.data):
             if argv1_addr + idx not in TritonExecution.input.dataAddr: # Not overwrite the previous setting
                 print "\t[0x%x] = %x %c" % (argv1_addr + idx, ord(byte), ord(byte))
                 setCurrentMemoryValue(Memory(argv1_addr + idx, CPUSIZE.BYTE), ord(byte))
-                convertMemToSymVar(Memory(argv1_addr + idx, CPUSIZE.BYTE), "addr_%d" % idx)
+                convertMemoryToSymbolicVariable(Memory(argv1_addr + idx, CPUSIZE.BYTE), "addr_%d" % idx)
 
 
     @staticmethod

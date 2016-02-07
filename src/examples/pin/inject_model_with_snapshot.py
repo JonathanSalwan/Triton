@@ -70,7 +70,7 @@ def csym(instruction):
 def cafter(instruction):
     # 0x40058b: movzx eax, byte ptr [rax]
     if instruction.getAddress() == 0x40058b:
-        var = convertRegToSymVar(REG.RAX)
+        var = convertRegisterToSymbolicVariable(REG.RAX)
         return
 
     # 0x4005ae: cmp ecx, eax

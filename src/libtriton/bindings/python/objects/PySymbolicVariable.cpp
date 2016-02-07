@@ -26,7 +26,7 @@
 This object is used to represent a symbolic variable contained in a \ref py_SymbolicExpression_page.
 
 ~~~~~~~~~~~~~{.py}
->>> symvar = convertRegToSymVar(REG.RAX)
+>>> symvar = convertRegisterToSymbolicVariable(REG.RAX)
 >>> print symvar
 SymVar_0:64
 ~~~~~~~~~~~~~

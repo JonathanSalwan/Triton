@@ -30,8 +30,8 @@ namespace triton {
 
     void RegisterOperand::clear(void) {
       this->name    = "unknown";
-      this->id      = triton::api.cpuInvalidReg();
-      this->parent  = triton::api.cpuInvalidReg();
+      this->id      = triton::api.cpuInvalidRegister();
+      this->parent  = triton::api.cpuInvalidRegister();
       this->trusted = false;
     }
 
@@ -43,7 +43,7 @@ namespace triton {
       this->trusted   = true;
 
       if (!triton::api.isCpuRegValid(reg)) {
-        this->id      = triton::api.cpuInvalidReg();
+        this->id      = triton::api.cpuInvalidRegister();
         this->trusted = false;
       }
 

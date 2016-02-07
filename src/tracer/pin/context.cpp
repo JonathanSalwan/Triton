@@ -243,7 +243,7 @@ namespace tracer {
         triton::api.setLastRegisterValue(syncReg);
 
         /* We must concretize the register because the last symbolic value is now false */
-        triton::api.concretizeReg(reg);
+        triton::api.concretizeRegister(reg);
 
         /* Define that the context must be executed as soon as possible */
         tracer::pintool::context::mustBeExecuted = true;
@@ -264,7 +264,7 @@ namespace tracer {
         triton::api.setLastMemoryValue(mem);
 
         /* We must concretize the memory because the last symbolic value is now false */
-        triton::api.concretizeMem(mem);
+        triton::api.concretizeMemory(mem);
 
         /* Inject memory value */
         for (triton::uint32 i = 0; i <= size; i++) {
@@ -284,7 +284,7 @@ namespace tracer {
         triton::api.setLastMemoryValue(addr, value);
 
         /* We must concretize the memory because the last symbolic value is now false */
-        triton::api.concretizeMem(addr);
+        triton::api.concretizeMemory(addr);
 
         /* Inject memory value */
         *((triton::uint8*)(addr)) = static_cast<triton::uint8>(value & 0xff);

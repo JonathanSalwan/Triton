@@ -216,7 +216,7 @@ namespace triton {
   }
 
 
-  triton::uint32 API::cpuInvalidReg(void) {
+  triton::uint32 API::cpuInvalidRegister(void) {
     return this->arch.invalidReg();
   }
 
@@ -375,21 +375,21 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SymbolicVariable* API::convertExprToSymVar(triton::__uint exprId, triton::uint32 symVarSize, std::string symVarComment) {
+  triton::engines::symbolic::SymbolicVariable* API::convertExpressionToSymbolicVariable(triton::__uint exprId, triton::uint32 symVarSize, std::string symVarComment) {
     this->checkSymbolic();
-    return this->sym->convertExprToSymVar(exprId, symVarSize, symVarComment);
+    return this->sym->convertExpressionToSymbolicVariable(exprId, symVarSize, symVarComment);
   }
 
 
-  triton::engines::symbolic::SymbolicVariable* API::convertMemToSymVar(triton::arch::MemoryOperand mem, std::string symVarComment) {
+  triton::engines::symbolic::SymbolicVariable* API::convertMemoryToSymbolicVariable(triton::arch::MemoryOperand mem, std::string symVarComment) {
     this->checkSymbolic();
-    return this->sym->convertMemToSymVar(mem, symVarComment);
+    return this->sym->convertMemoryToSymbolicVariable(mem, symVarComment);
   }
 
 
-  triton::engines::symbolic::SymbolicVariable* API::convertRegToSymVar(triton::arch::RegisterOperand reg, std::string symVarComment) {
+  triton::engines::symbolic::SymbolicVariable* API::convertRegisterToSymbolicVariable(triton::arch::RegisterOperand reg, std::string symVarComment) {
     this->checkSymbolic();
-    return this->sym->convertRegToSymVar(reg, symVarComment);
+    return this->sym->convertRegisterToSymbolicVariable(reg, symVarComment);
   }
 
 
@@ -661,33 +661,33 @@ namespace triton {
   }
 
 
-  void API::concretizeAllMem(void) {
+  void API::concretizeAllMemory(void) {
     this->checkSymbolic();
-    this->sym->concretizeAllMem();
+    this->sym->concretizeAllMemory();
   }
 
 
-  void API::concretizeAllReg(void) {
+  void API::concretizeAllRegister(void) {
     this->checkSymbolic();
-    this->sym->concretizeAllReg();
+    this->sym->concretizeAllRegister();
   }
 
 
-  void API::concretizeMem(triton::arch::MemoryOperand& mem) {
+  void API::concretizeMemory(triton::arch::MemoryOperand& mem) {
     this->checkSymbolic();
-    this->sym->concretizeMem(mem);
+    this->sym->concretizeMemory(mem);
   }
 
 
-  void API::concretizeMem(triton::__uint addr) {
+  void API::concretizeMemory(triton::__uint addr) {
     this->checkSymbolic();
-    this->sym->concretizeMem(addr);
+    this->sym->concretizeMemory(addr);
   }
 
 
-  void API::concretizeReg(triton::arch::RegisterOperand& reg) {
+  void API::concretizeRegister(triton::arch::RegisterOperand& reg) {
     this->checkSymbolic();
-    this->sym->concretizeReg(reg);
+    this->sym->concretizeRegister(reg);
   }
 
 

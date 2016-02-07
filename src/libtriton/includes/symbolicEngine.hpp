@@ -128,13 +128,13 @@ namespace triton {
           SymbolicVariable* newSymbolicVariable(symkind_e kind, triton::__uint kindValue, triton::uint32 size, std::string comment="");
 
           //! Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
-          SymbolicVariable* convertExprToSymVar(triton::__uint exprId, triton::uint32 symVarSize, std::string symVarComment="");
+          SymbolicVariable* convertExpressionToSymbolicVariable(triton::__uint exprId, triton::uint32 symVarSize, std::string symVarComment="");
 
           //! Converts a symbolic memory expression to a symbolic variable.
-          SymbolicVariable* convertMemToSymVar(triton::arch::MemoryOperand& mem, std::string symVarComment="");
+          SymbolicVariable* convertMemoryToSymbolicVariable(triton::arch::MemoryOperand& mem, std::string symVarComment="");
 
           //! Converts a symbolic register expression to a symbolic variable.
-          SymbolicVariable* convertRegToSymVar(triton::arch::RegisterOperand& reg, std::string symVarComment="");
+          SymbolicVariable* convertRegisterToSymbolicVariable(triton::arch::RegisterOperand& reg, std::string symVarComment="");
 
           //! Returns the symbolic variable corresponding to the symbolic variable id.
           SymbolicVariable* getSymbolicVariableFromId(triton::__uint symVarId);
@@ -215,19 +215,19 @@ namespace triton {
           void addMemoryReference(triton::__uint mem, triton::__uint id);
 
           //! Concretizes all symbolic memory references.
-          void concretizeAllMem(void);
+          void concretizeAllMemory(void);
 
           //! Concretizes all symbolic register references.
-          void concretizeAllReg(void);
+          void concretizeAllRegister(void);
 
           //! Concretizes a specific symbolic memory reference.
-          void concretizeMem(triton::arch::MemoryOperand& mem);
+          void concretizeMemory(triton::arch::MemoryOperand& mem);
 
           //! Concretizes a specific symbolic memory reference.
-          void concretizeMem(triton::__uint addr);
+          void concretizeMemory(triton::__uint addr);
 
           //! Concretizes a specific symbolic register reference.
-          void concretizeReg(triton::arch::RegisterOperand& reg);
+          void concretizeRegister(triton::arch::RegisterOperand& reg);
 
           /*! \brief Enables or disables the symbolic emulation.
            *

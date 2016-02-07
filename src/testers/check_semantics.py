@@ -32,8 +32,8 @@ RED   = "\033[91m"
 
 
 def sbefore(instruction):
-    concretizeAllMem()
-    concretizeAllReg()
+    concretizeAllMemory()
+    concretizeAllRegister()
     return
 
 

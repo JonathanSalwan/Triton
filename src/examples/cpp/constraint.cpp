@@ -47,7 +47,7 @@ int main(int ac, const char **av) {
   inst.setOpcodes(trace[0].inst, trace[0].size);
 
   /* Define RAX as symbolic variable */
-  api.convertRegToSymVar(TRITON_X86_REG_RAX);
+  api.convertRegisterToSymbolicVariable(TRITON_X86_REG_RAX);
 
   /* Process everything */
   api.processing(inst);

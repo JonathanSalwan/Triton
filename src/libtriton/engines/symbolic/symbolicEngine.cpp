@@ -153,7 +153,7 @@ namespace triton {
        * will be over the concretization. This method must be called before symbolic
        * processing.
        */
-      void SymbolicEngine::concretizeReg(triton::arch::RegisterOperand& reg) {
+      void SymbolicEngine::concretizeRegister(triton::arch::RegisterOperand& reg) {
         triton::uint32 parentId = reg.getParent().getId();
         if (!triton::api.isCpuRegValid(parentId))
           return;
@@ -161,8 +161,8 @@ namespace triton {
       }
 
 
-      /* Same as concretizeReg but with all registers */
-      void SymbolicEngine::concretizeAllReg(void) {
+      /* Same as concretizeRegister but with all registers */
+      void SymbolicEngine::concretizeAllRegister(void) {
         for (triton::uint32 i = 0; i < this->numberOfReg; i++)
           this->symbolicReg[i] = triton::engines::symbolic::UNSET;
       }
@@ -173,11 +173,11 @@ namespace triton {
        * assignment will be over the concretization. This method must be called
        * before symbolic processing.
        */
-      void SymbolicEngine::concretizeMem(triton::arch::MemoryOperand& mem) {
+      void SymbolicEngine::concretizeMemory(triton::arch::MemoryOperand& mem) {
         triton::__uint addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
         for (triton::uint32 index = 0; index < size; index++)
-          this->concretizeMem(addr+index);
+          this->concretizeMemory(addr+index);
       }
 
 
@@ -186,15 +186,15 @@ namespace triton {
        * assignment will be over the concretization. This method must be called
        * before symbolic processing.
        */
-      void SymbolicEngine::concretizeMem(triton::__uint addr) {
+      void SymbolicEngine::concretizeMemory(triton::__uint addr) {
         this->memoryReference.erase(addr);
         if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
           this->removeAlignedMemory(addr);
       }
 
 
-      /* Same as concretizeMem but with all address memory */
-      void SymbolicEngine::concretizeAllMem(void) {
+      /* Same as concretizeMemory but with all address memory */
+      void SymbolicEngine::concretizeAllMemory(void) {
         this->memoryReference.clear();
         this->alignedMemoryReference.clear();
       }
@@ -338,7 +338,7 @@ namespace triton {
           /* Concretize the memory if it exists */
           for (it = this->memoryReference.begin(); it != memoryReference.end(); it++) {
             if (it->second == symExprId) {
-              this->concretizeMem(it->first);
+              this->concretizeMemory(it->first);
               return;
             }
           }
@@ -434,10 +434,10 @@ namespace triton {
        * Converts an expression id to a symbolic variable.
        * e.g:
        * #43 = (_ bv10 8)
-       * convertExprToSymVar(43, 8)
+       * convertExpressionToSymbolicVariable(43, 8)
        * #43 = SymVar_4
        */
-      SymbolicVariable* SymbolicEngine::convertExprToSymVar(triton::__uint exprId, triton::uint32 symVarSize, std::string symVarComment) {
+      SymbolicVariable* SymbolicEngine::convertExpressionToSymbolicVariable(triton::__uint exprId, triton::uint32 symVarSize, std::string symVarComment) {
         SymbolicVariable* symVar = nullptr;
         SymbolicExpression* expression = this->getSymbolicExpressionFromId(exprId);
 
@@ -449,7 +449,7 @@ namespace triton {
 
 
       /* The memory size is used to define the symbolic variable's size. */
-      SymbolicVariable* SymbolicEngine::convertMemToSymVar(triton::arch::MemoryOperand& mem, std::string symVarComment) {
+      SymbolicVariable* SymbolicEngine::convertMemoryToSymbolicVariable(triton::arch::MemoryOperand& mem, std::string symVarComment) {
         smt2lib::smtAstAbstractNode* tmp = nullptr;
         SymbolicExpression* se           = nullptr;
         SymbolicVariable* symVar         = nullptr;
@@ -493,7 +493,7 @@ namespace triton {
       }
 
 
-      SymbolicVariable* SymbolicEngine::convertRegToSymVar(triton::arch::RegisterOperand& reg, std::string symVarComment) {
+      SymbolicVariable* SymbolicEngine::convertRegisterToSymbolicVariable(triton::arch::RegisterOperand& reg, std::string symVarComment) {
         SymbolicVariable* symVar        = nullptr;
         SymbolicExpression* expression  = nullptr;
         triton::__uint regSymId         = triton::engines::symbolic::UNSET;
@@ -502,7 +502,7 @@ namespace triton {
         triton::uint128 cv              = reg.getConcreteValue();
 
         if (!triton::api.isCpuRegValid(parentId))
-          throw std::runtime_error("SymbolicEngine::convertRegToSymVar(): Invalid register id");
+          throw std::runtime_error("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");
 
         regSymId = this->getSymbolicRegisterId(reg);
         if (regSymId == triton::engines::symbolic::UNSET) {

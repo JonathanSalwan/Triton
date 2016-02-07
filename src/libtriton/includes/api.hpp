@@ -116,7 +116,7 @@ namespace triton {
         triton::uint32 cpuRegBitSize(void);
 
         //! [**architecture api**] - Returns the invalid CPU register id.
-        triton::uint32 cpuInvalidReg(void);
+        triton::uint32 cpuInvalidRegister(void);
 
         //! [**architecture api**] - Returns the number of registers according to the CPU architecture.
         triton::uint32 cpuNumberOfReg(void);
@@ -220,13 +220,13 @@ namespace triton {
         triton::uint128 getRegisterValue(triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
-        triton::engines::symbolic::SymbolicVariable* convertExprToSymVar(triton::__uint exprId, triton::uint32 symVarSize, std::string symVarComment="");
+        triton::engines::symbolic::SymbolicVariable* convertExpressionToSymbolicVariable(triton::__uint exprId, triton::uint32 symVarSize, std::string symVarComment="");
 
         //! [**symbolic api**] - Converts a symbolic memory expression to a symbolic variable.
-        triton::engines::symbolic::SymbolicVariable* convertMemToSymVar(triton::arch::MemoryOperand mem, std::string symVarComment="");
+        triton::engines::symbolic::SymbolicVariable* convertMemoryToSymbolicVariable(triton::arch::MemoryOperand mem, std::string symVarComment="");
 
         //! [**symbolic api**] - Converts a symbolic register expression to a symbolic variable.
-        triton::engines::symbolic::SymbolicVariable* convertRegToSymVar(triton::arch::RegisterOperand reg, std::string symVarComment="");
+        triton::engines::symbolic::SymbolicVariable* convertRegisterToSymbolicVariable(triton::arch::RegisterOperand reg, std::string symVarComment="");
 
         //! [**symbolic api**] - Returns a symbolic operand.
         smt2lib::smtAstAbstractNode* buildSymbolicOperand(triton::arch::OperandWrapper& op);
@@ -331,19 +331,19 @@ namespace triton {
         bool isSymbolicOptimizationEnabled(enum triton::engines::symbolic::optimization_e opti);
 
         //! [**symbolic api**] - Concretizes all symbolic memory references.
-        void concretizeAllMem(void);
+        void concretizeAllMemory(void);
 
         //! [**symbolic api**] - Concretizes all symbolic register references.
-        void concretizeAllReg(void);
+        void concretizeAllRegister(void);
 
         //! [**symbolic api**] - Concretizes a specific symbolic memory reference.
-        void concretizeMem(triton::arch::MemoryOperand& mem);
+        void concretizeMemory(triton::arch::MemoryOperand& mem);
 
         //! [**symbolic api**] - Concretizes a specific symbolic memory reference.
-        void concretizeMem(triton::__uint addr);
+        void concretizeMemory(triton::__uint addr);
 
         //! [**symbolic api**] - Concretizes a specific symbolic register reference.
-        void concretizeReg(triton::arch::RegisterOperand& reg);
+        void concretizeRegister(triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Returns the partial AST from a symbolic expression id.
         smt2lib::smtAstAbstractNode* getAstFromId(triton::__uint symExprId);

@@ -85,31 +85,31 @@ Builds a symbolic \ref py_Memory_page and returns a \ref py_SmtAstNode_page.
 - **buildSymbolicRegister(\ref py_REG_page reg)**<br>
 Builds a symbolic \ref py_REG_page and returns a \ref py_SmtAstNode_page.
 
-- **concretizeAllMem(void)**<br>
+- **concretizeAllMemory(void)**<br>
 Concretizes all symbolic memory references.
 
-- **concretizeAllReg(void)**<br>
+- **concretizeAllRegister(void)**<br>
 Concretizes all symbolic register references.
 
-- **concretizeMem(integer addr)**<br>
+- **concretizeMemory(integer addr)**<br>
 Concretizes a specific symbolic memory reference.
 
-- **concretizeMem(\ref py_Memory_page mem)**<br>
+- **concretizeMemory(\ref py_Memory_page mem)**<br>
 Concretizes a specific symbolic memory reference.
 
-- **concretizeReg(\ref py_REG_page reg)**<br>
+- **concretizeRegister(\ref py_REG_page reg)**<br>
 Concretizes a specific symbolic register reference.
 
-- **convertExprToSymVar(integer symExprId, integer symVarSize, string comment="")**<br>
+- **convertExpressionToSymbolicVariable(integer symExprId, integer symVarSize, string comment="")**<br>
 Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits. This function returns the \ref py_SymbolicVariable_page created.
 
-- **convertMemToSymVar(\ref py_Memory_page mem, string comment="")**<br>
+- **convertMemoryToSymbolicVariable(\ref py_Memory_page mem, string comment="")**<br>
 Converts a symbolic memory expression to a symbolic variable. This function returns the \ref py_SymbolicVariable_page created.
 
-- **convertRegToSymVar(\ref py_REG_page reg, string comment="")**<br>
+- **convertRegisterToSymbolicVariable(\ref py_REG_page reg, string comment="")**<br>
 Converts a symbolic register expression to a symbolic variable. This function returns the \ref py_SymbolicVariable_page created.
 
-- **cpuInvalidReg(void)**<br>
+- **cpuInvalidRegister(void)**<br>
  Returns the invalid CPU register id.
 
 - **cpuNumberOfReg(void)**<br>
@@ -715,35 +715,35 @@ namespace triton {
       }
 
 
-      static PyObject* triton_concretizeAllMem(PyObject* self, PyObject* noarg) {
+      static PyObject* triton_concretizeAllMemory(PyObject* self, PyObject* noarg) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "concretizeAllMem(): Architecture is not defined.");
-        triton::api.concretizeAllMem();
+          return PyErr_Format(PyExc_TypeError, "concretizeAllMemory(): Architecture is not defined.");
+        triton::api.concretizeAllMemory();
         Py_INCREF(Py_None);
         return Py_None;
       }
 
 
-      static PyObject* triton_concretizeAllReg(PyObject* self, PyObject* noarg) {
+      static PyObject* triton_concretizeAllRegister(PyObject* self, PyObject* noarg) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "concretizeAllReg(): Architecture is not defined.");
-        triton::api.concretizeAllReg();
+          return PyErr_Format(PyExc_TypeError, "concretizeAllRegister(): Architecture is not defined.");
+        triton::api.concretizeAllRegister();
         Py_INCREF(Py_None);
         return Py_None;
       }
 
 
-      static PyObject* triton_concretizeMem(PyObject* self, PyObject* mem) {
+      static PyObject* triton_concretizeMemory(PyObject* self, PyObject* mem) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "concretizeMem(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "concretizeMemory(): Architecture is not defined.");
 
         /* If mem is an address */
         if (PyLong_Check(mem) || PyInt_Check(mem)) {
           try {
-            triton::api.concretizeMem(PyLong_AsUint(mem));
+            triton::api.concretizeMemory(PyLong_AsUint(mem));
           }
           catch (const std::exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -753,7 +753,7 @@ namespace triton {
         /* If mem is a Memory */
         else if (PyMemoryOperand_Check(mem)) {
           try {
-            triton::api.concretizeMem(*PyMemoryOperand_AsMemoryOperand(mem));
+            triton::api.concretizeMemory(*PyMemoryOperand_AsMemoryOperand(mem));
           }
           catch (const std::exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -762,24 +762,24 @@ namespace triton {
 
         /* Invalid parameter */
         else
-          return PyErr_Format(PyExc_TypeError, "concretizeMem(): Expects an integer or Memory as argument.");
+          return PyErr_Format(PyExc_TypeError, "concretizeMemory(): Expects an integer or Memory as argument.");
 
         Py_INCREF(Py_None);
         return Py_None;
       }
 
 
-      static PyObject* triton_concretizeReg(PyObject* self, PyObject* reg) {
+      static PyObject* triton_concretizeRegister(PyObject* self, PyObject* reg) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "concretizeReg(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "concretizeRegister(): Architecture is not defined.");
 
         /* If mem is a Memory */
         if (!PyRegisterOperand_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "concretizeReg(): Expects a REG as argument.");
+          return PyErr_Format(PyExc_TypeError, "concretizeRegister(): Expects a REG as argument.");
 
         try {
-          triton::api.concretizeReg(*PyRegisterOperand_AsRegisterOperand(reg));
+          triton::api.concretizeRegister(*PyRegisterOperand_AsRegisterOperand(reg));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -790,7 +790,7 @@ namespace triton {
       }
 
 
-      static PyObject* triton_convertExprToSymVar(PyObject* self, PyObject* args) {
+      static PyObject* triton_convertExpressionToSymbolicVariable(PyObject* self, PyObject* args) {
         PyObject* exprId        = nullptr;
         PyObject* symVarSize    = nullptr;
         PyObject* comment       = nullptr;
@@ -801,22 +801,22 @@ namespace triton {
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "convertExpressionToSymbolicVariable(): Architecture is not defined.");
 
         if (exprId == nullptr || (!PyLong_Check(exprId) && !PyInt_Check(exprId)))
-          return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): Expects an integer as first argument.");
+          return PyErr_Format(PyExc_TypeError, "convertExpressionToSymbolicVariable(): Expects an integer as first argument.");
 
         if (symVarSize == nullptr || (!PyLong_Check(symVarSize) && !PyInt_Check(symVarSize)))
-          return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): Expects an integer as second argument.");
+          return PyErr_Format(PyExc_TypeError, "convertExpressionToSymbolicVariable(): Expects an integer as second argument.");
 
         if (comment != nullptr && !PyString_Check(comment))
-          return PyErr_Format(PyExc_TypeError, "convertExprToSymVar(): Expects a sting as third argument.");
+          return PyErr_Format(PyExc_TypeError, "convertExpressionToSymbolicVariable(): Expects a sting as third argument.");
 
         if (comment != nullptr)
           ccomment = PyString_AsString(comment);
 
         try {
-          return PySymbolicVariable(triton::api.convertExprToSymVar(PyLong_AsUint(exprId), PyLong_AsUint(symVarSize), ccomment));
+          return PySymbolicVariable(triton::api.convertExpressionToSymbolicVariable(PyLong_AsUint(exprId), PyLong_AsUint(symVarSize), ccomment));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -824,7 +824,7 @@ namespace triton {
       }
 
 
-      static PyObject* triton_convertMemToSymVar(PyObject* self, PyObject* args) {
+      static PyObject* triton_convertMemoryToSymbolicVariable(PyObject* self, PyObject* args) {
         PyObject* mem           = nullptr;
         PyObject* comment       = nullptr;
         std::string ccomment    = "";
@@ -834,19 +834,19 @@ namespace triton {
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "convertMemoryToSymbolicVariable(): Architecture is not defined.");
 
         if (mem == nullptr || (!PyMemoryOperand_Check(mem)))
-          return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): Expects a Memory as first argument.");
+          return PyErr_Format(PyExc_TypeError, "convertMemoryToSymbolicVariable(): Expects a Memory as first argument.");
 
         if (comment != nullptr && !PyString_Check(comment))
-          return PyErr_Format(PyExc_TypeError, "convertMemToSymVar(): Expects a sting as second argument.");
+          return PyErr_Format(PyExc_TypeError, "convertMemoryToSymbolicVariable(): Expects a sting as second argument.");
 
         if (comment != nullptr)
           ccomment = PyString_AsString(comment);
 
         try {
-          return PySymbolicVariable(triton::api.convertMemToSymVar(*PyMemoryOperand_AsMemoryOperand(mem), ccomment));
+          return PySymbolicVariable(triton::api.convertMemoryToSymbolicVariable(*PyMemoryOperand_AsMemoryOperand(mem), ccomment));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -854,7 +854,7 @@ namespace triton {
       }
 
 
-      static PyObject* triton_convertRegToSymVar(PyObject* self, PyObject* args) {
+      static PyObject* triton_convertRegisterToSymbolicVariable(PyObject* self, PyObject* args) {
         PyObject* reg           = nullptr;
         PyObject* comment       = nullptr;
         std::string ccomment    = "";
@@ -864,19 +864,19 @@ namespace triton {
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "convertRegisterToSymbolicVariable(): Architecture is not defined.");
 
         if (reg == nullptr || (!PyRegisterOperand_Check(reg)))
-          return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): Expects a REG as first argument.");
+          return PyErr_Format(PyExc_TypeError, "convertRegisterToSymbolicVariable(): Expects a REG as first argument.");
 
         if (comment != nullptr && !PyString_Check(comment))
-          return PyErr_Format(PyExc_TypeError, "convertRegToSymVar(): Expects a sting as second argument.");
+          return PyErr_Format(PyExc_TypeError, "convertRegisterToSymbolicVariable(): Expects a sting as second argument.");
 
         if (comment != nullptr)
           ccomment = PyString_AsString(comment);
 
         try {
-          return PySymbolicVariable(triton::api.convertRegToSymVar(*PyRegisterOperand_AsRegisterOperand(reg), ccomment));
+          return PySymbolicVariable(triton::api.convertRegisterToSymbolicVariable(*PyRegisterOperand_AsRegisterOperand(reg), ccomment));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -884,8 +884,8 @@ namespace triton {
       }
 
 
-      static PyObject* triton_cpuInvalidReg(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", triton::api.cpuInvalidReg());
+      static PyObject* triton_cpuInvalidRegister(PyObject* self, PyObject* noarg) {
+        return Py_BuildValue("k", triton::api.cpuInvalidRegister());
       }
 
 
@@ -2501,14 +2501,14 @@ namespace triton {
         {"buildSymbolicImmediate",              (PyCFunction)triton_buildSymbolicImmediate,                 METH_O,             ""},
         {"buildSymbolicMemory",                 (PyCFunction)triton_buildSymbolicMemory,                    METH_O,             ""},
         {"buildSymbolicRegister",               (PyCFunction)triton_buildSymbolicRegister,                  METH_O,             ""},
-        {"concretizeAllMem",                    (PyCFunction)triton_concretizeAllMem,                       METH_NOARGS,        ""},
-        {"concretizeAllReg",                    (PyCFunction)triton_concretizeAllReg,                       METH_NOARGS,        ""},
-        {"concretizeMem",                       (PyCFunction)triton_concretizeMem,                          METH_O,             ""},
-        {"concretizeReg",                       (PyCFunction)triton_concretizeReg,                          METH_O,             ""},
-        {"convertExprToSymVar",                 (PyCFunction)triton_convertExprToSymVar,                    METH_VARARGS,       ""},
-        {"convertMemToSymVar",                  (PyCFunction)triton_convertMemToSymVar,                     METH_VARARGS,       ""},
-        {"convertRegToSymVar",                  (PyCFunction)triton_convertRegToSymVar,                     METH_VARARGS,       ""},
-        {"cpuInvalidReg",                       (PyCFunction)triton_cpuInvalidReg,                          METH_NOARGS,        ""},
+        {"concretizeAllMemory",                    (PyCFunction)triton_concretizeAllMemory,                       METH_NOARGS,        ""},
+        {"concretizeAllRegister",                    (PyCFunction)triton_concretizeAllRegister,                       METH_NOARGS,        ""},
+        {"concretizeMemory",                       (PyCFunction)triton_concretizeMemory,                          METH_O,             ""},
+        {"concretizeRegister",                       (PyCFunction)triton_concretizeRegister,                          METH_O,             ""},
+        {"convertExpressionToSymbolicVariable",                 (PyCFunction)triton_convertExpressionToSymbolicVariable,                    METH_VARARGS,       ""},
+        {"convertMemoryToSymbolicVariable",                  (PyCFunction)triton_convertMemoryToSymbolicVariable,                     METH_VARARGS,       ""},
+        {"convertRegisterToSymbolicVariable",                  (PyCFunction)triton_convertRegisterToSymbolicVariable,                     METH_VARARGS,       ""},
+        {"cpuInvalidRegister",                       (PyCFunction)triton_cpuInvalidRegister,                          METH_NOARGS,        ""},
         {"cpuNumberOfReg",                      (PyCFunction)triton_cpuNumberOfReg,                         METH_NOARGS,        ""},
         {"cpuRegBitSize",                       (PyCFunction)triton_cpuRegBitSize,                          METH_NOARGS,        ""},
         {"cpuRegSize",                          (PyCFunction)triton_cpuRegSize,                             METH_NOARGS,        ""},
