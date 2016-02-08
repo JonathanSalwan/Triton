@@ -213,5 +213,11 @@ namespace triton {
       return stream;
     }
 
+
+    std::ostream &operator<<(std::ostream &stream, MemoryOperand* mem) {
+      stream << *mem;
+      return stream;
+    }
+
   }; /* arch namespace */
 }; /* triton namespace */

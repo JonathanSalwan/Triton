@@ -80,6 +80,9 @@ namespace triton {
     //! Displays a BitsVector.
     std::ostream &operator<<(std::ostream &stream, BitsVector bv);
 
+    //! Displays a BitsVector.
+    std::ostream &operator<<(std::ostream &stream, BitsVector* bv);
+
   /*! @} End of arch namespace */
   };
 /*! @} End of triton namespace */

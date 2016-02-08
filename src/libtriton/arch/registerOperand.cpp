@@ -175,8 +175,14 @@ namespace triton {
     }
 
 
-    std::ostream &operator<<(std::ostream &stream, const RegisterOperand reg) {
+    std::ostream &operator<<(std::ostream &stream, RegisterOperand reg) {
       stream << reg.getName() << ":" << reg.getBitSize() << " bv[" << reg.getHigh() << ".." << reg.getLow() << "]";
+      return stream;
+    }
+
+
+    std::ostream &operator<<(std::ostream &stream, RegisterOperand* reg) {
+      stream << *reg;
       return stream;
     }
 

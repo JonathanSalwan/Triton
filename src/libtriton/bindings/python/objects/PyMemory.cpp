@@ -253,9 +253,15 @@ namespace triton {
       }
 
 
-      static PyObject* Memory_str(MemoryOperand_Object *obj) {
+      static int MemoryOperand_print(PyObject* self) {
+        std::cout << PyMemoryOperand_AsMemoryOperand(self);
+        return 0;
+      }
+
+
+      static PyObject* MemoryOperand_str(PyObject* self) {
         std::stringstream str;
-        str << *(obj->mem);
+        str << PyMemoryOperand_AsMemoryOperand(self);
         return PyString_FromFormat("%s", str.str().c_str());
       }
 
@@ -290,7 +296,7 @@ namespace triton {
           sizeof(MemoryOperand_Object),               /* tp_basicsize*/
           0,                                          /* tp_itemsize*/
           (destructor)MemoryOperand_dealloc,          /* tp_dealloc*/
-          0,                                          /* tp_print*/
+          (printfunc)MemoryOperand_print,             /* tp_print*/
           0,                                          /* tp_getattr*/
           0,                                          /* tp_setattr*/
           0,                                          /* tp_compare*/
@@ -300,7 +306,7 @@ namespace triton {
           0,                                          /* tp_as_mapping*/
           0,                                          /* tp_hash */
           0,                                          /* tp_call*/
-          (reprfunc)Memory_str,                       /* tp_str*/
+          (reprfunc)MemoryOperand_str,                /* tp_str*/
           0,                                          /* tp_getattro*/
           0,                                          /* tp_setattro*/
           0,                                          /* tp_as_buffer*/

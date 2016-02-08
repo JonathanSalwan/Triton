@@ -136,9 +136,15 @@ namespace triton {
       }
 
 
-      static PyObject* SymbolicVariable_str(SymbolicVariable_Object *obj) {
+      static int SymbolicVariable_print(PyObject* self) {
+        std::cout << PySymbolicVariable_AsSymbolicVariable(self);
+        return 0;
+      }
+
+
+      static PyObject* SymbolicVariable_str(PyObject* self) {
         std::stringstream str;
-        str << *(obj->symVar);
+        str << PySymbolicVariable_AsSymbolicVariable(self);
         return PyString_FromFormat("%s", str.str().c_str());
       }
 
@@ -165,7 +171,7 @@ namespace triton {
           sizeof(SymbolicVariable_Object),            /* tp_basicsize*/
           0,                                          /* tp_itemsize*/
           (destructor)SymbolicVariable_dealloc,       /* tp_dealloc*/
-          0,                                          /* tp_print*/
+          (printfunc)SymbolicVariable_print,          /* tp_print*/
           0,                                          /* tp_getattr*/
           0,                                          /* tp_setattr*/
           0,                                          /* tp_compare*/

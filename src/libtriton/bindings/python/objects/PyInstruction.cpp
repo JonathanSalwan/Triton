@@ -430,9 +430,15 @@ namespace triton {
       }
 
 
-      static PyObject* Instruction_str(Instruction_Object *obj) {
+      static int Instruction_print(PyObject* self) {
+        std::cout << PyInstruction_AsInstruction(self);
+        return 0;
+      }
+
+
+      static PyObject* Instruction_str(PyObject* self) {
         std::stringstream str;
-        str << *(obj->inst);
+        str << PyInstruction_AsInstruction(self);
         return PyString_FromFormat("%s", str.str().c_str());
       }
 
@@ -470,7 +476,7 @@ namespace triton {
           sizeof(Instruction_Object),                 /* tp_basicsize*/
           0,                                          /* tp_itemsize*/
           (destructor)Instruction_dealloc,            /* tp_dealloc*/
-          0,                                          /* tp_print*/
+          (printfunc)Instruction_print,               /* tp_print*/
           0,                                          /* tp_getattr*/
           0,                                          /* tp_setattr*/
           0,                                          /* tp_compare*/

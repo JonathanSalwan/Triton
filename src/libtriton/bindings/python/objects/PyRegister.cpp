@@ -188,9 +188,15 @@ namespace triton {
       }
 
 
-      static PyObject* Register_str(RegisterOperand_Object *obj) {
+      static int RegisterOperand_print(PyObject* self) {
+        std::cout << PyRegisterOperand_AsRegisterOperand(self);
+        return 0;
+      }
+
+
+      static PyObject* RegisterOperand_str(PyObject* self) {
         std::stringstream str;
-        str << *(obj->reg);
+        str << PyRegisterOperand_AsRegisterOperand(self);
         return PyString_FromFormat("%s", str.str().c_str());
       }
 
@@ -221,7 +227,7 @@ namespace triton {
           sizeof(RegisterOperand_Object),             /* tp_basicsize*/
           0,                                          /* tp_itemsize*/
           (destructor)RegisterOperand_dealloc,        /* tp_dealloc*/
-          0,                                          /* tp_print*/
+          (printfunc)RegisterOperand_print,           /* tp_print*/
           0,                                          /* tp_getattr*/
           0,                                          /* tp_setattr*/
           0,                                          /* tp_compare*/
@@ -231,7 +237,7 @@ namespace triton {
           0,                                          /* tp_as_mapping*/
           0,                                          /* tp_hash */
           0,                                          /* tp_call*/
-          (reprfunc)Register_str,                     /* tp_str*/
+          (reprfunc)RegisterOperand_str,              /* tp_str*/
           0,                                          /* tp_getattro*/
           0,                                          /* tp_setattro*/
           0,                                          /* tp_as_buffer*/

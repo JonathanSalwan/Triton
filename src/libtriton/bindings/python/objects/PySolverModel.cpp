@@ -102,9 +102,15 @@ namespace triton {
       }
 
 
-      static PyObject* SolverModel_str(SolverModel_Object *obj) {
+      static int SolverModel_print(PyObject* self) {
+        std::cout << PySolverModel_AsSolverModel(self);
+        return 0;
+      }
+
+
+      static PyObject* SolverModel_str(PyObject* self) {
         std::stringstream str;
-        str << *(obj->model);
+        str << PySolverModel_AsSolverModel(self);
         return PyString_FromFormat("%s", str.str().c_str());
       }
 
@@ -125,7 +131,7 @@ namespace triton {
           sizeof(SolverModel_Object),                 /* tp_basicsize*/
           0,                                          /* tp_itemsize*/
           (destructor)SolverModel_dealloc,            /* tp_dealloc*/
-          0,                                          /* tp_print*/
+          (printfunc)SolverModel_print,               /* tp_print*/
           0,                                          /* tp_getattr*/
           0,                                          /* tp_setattr*/
           0,                                          /* tp_compare*/

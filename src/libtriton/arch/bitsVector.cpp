@@ -106,5 +106,11 @@ namespace triton {
       return stream;
     }
 
+
+    std::ostream &operator<<(std::ostream &stream, BitsVector* bv) {
+      stream << *bv;
+      return stream;
+    }
+
   }; /* arch namespace */
 }; /* triton namespace */

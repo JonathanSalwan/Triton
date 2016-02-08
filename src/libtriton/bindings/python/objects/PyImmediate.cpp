@@ -107,9 +107,15 @@ namespace triton {
       }
 
 
-      static PyObject* Immediate_str(ImmediateOperand_Object *obj) {
+      static int ImmediateOperand_print(PyObject* self) {
+        std::cout << PyImmediateOperand_AsImmediateOperand(self);
+        return 0;
+      }
+
+
+      static PyObject* ImmediateOperand_str(PyObject* self) {
         std::stringstream str;
-        str << *(obj->imm);
+        str << PyImmediateOperand_AsImmediateOperand(self);
         return PyString_FromFormat("%s", str.str().c_str());
       }
 
@@ -133,7 +139,7 @@ namespace triton {
           sizeof(ImmediateOperand_Object),            /* tp_basicsize*/
           0,                                          /* tp_itemsize*/
           (destructor)ImmediateOperand_dealloc,       /* tp_dealloc*/
-          0,                                          /* tp_print*/
+          (printfunc)ImmediateOperand_print,          /* tp_print*/
           0,                                          /* tp_getattr*/
           0,                                          /* tp_setattr*/
           0,                                          /* tp_compare*/
@@ -143,7 +149,7 @@ namespace triton {
           0,                                          /* tp_as_mapping*/
           0,                                          /* tp_hash */
           0,                                          /* tp_call*/
-          (reprfunc)Immediate_str,                    /* tp_str*/
+          (reprfunc)ImmediateOperand_str,             /* tp_str*/
           0,                                          /* tp_getattro*/
           0,                                          /* tp_setattro*/
           0,                                          /* tp_as_buffer*/

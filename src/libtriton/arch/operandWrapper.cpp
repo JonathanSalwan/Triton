@@ -164,5 +164,11 @@ namespace triton {
       return stream;
     }
 
+
+    std::ostream &operator<<(std::ostream &stream, triton::arch::OperandWrapper* op) {
+      stream << *op;
+      return stream;
+    }
+
   };
 };

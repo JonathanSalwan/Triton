@@ -75,8 +75,14 @@ namespace triton {
       }
 
 
-      static PyObject* Bitvector_str(Bitvector_Object* obj) {
-        return PyString_FromFormat("bv[%d..%d]", obj->high, obj->low);
+      static int Bitvector_print(PyObject* self) {
+        std::cout << "bv[" << std::dec << PyBitvector_AsHigh(self) << ".." << PyBitvector_AsLow(self) << "]";
+        return 0;
+      }
+
+
+      static PyObject* Bitvector_str(PyObject* self) {
+        return PyString_FromFormat("bv[%d..%d]", PyBitvector_AsHigh(self), PyBitvector_AsLow(self));
       }
 
 
@@ -96,7 +102,7 @@ namespace triton {
           sizeof(Bitvector_Object),                   /* tp_basicsize*/
           0,                                          /* tp_itemsize*/
           (destructor)Bitvector_dealloc,              /* tp_dealloc*/
-          0,                                          /* tp_print*/
+          (printfunc)Bitvector_print,                 /* tp_print*/
           0,                                          /* tp_getattr*/
           0,                                          /* tp_setattr*/
           0,                                          /* tp_compare*/

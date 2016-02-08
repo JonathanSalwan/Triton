@@ -243,6 +243,12 @@ namespace triton {
       return stream;
     }
 
+
+    std::ostream &operator<<(std::ostream &stream, Instruction* inst) {
+      stream << *inst;
+      return stream;
+    }
+
   };
 };
 

@@ -106,6 +106,9 @@ namespace triton {
     //! Displays a OperandWrapper according to the concrete type.
     std::ostream &operator<<(std::ostream &stream, triton::arch::OperandWrapper op);
 
+    //! Displays a OperandWrapper according to the concrete type.
+    std::ostream &operator<<(std::ostream &stream, triton::arch::OperandWrapper* op);
+
   /*! @} End of arch namespace */
   };
 /*! @} End of triton namespace */

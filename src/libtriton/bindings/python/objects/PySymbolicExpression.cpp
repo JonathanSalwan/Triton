@@ -196,9 +196,15 @@ namespace triton {
       }
 
 
-      static PyObject* SymbolicExpression_str(SymbolicExpression_Object *obj) {
+      static int SymbolicExpression_print(PyObject* self) {
+        std::cout << PySymbolicExpression_AsSymbolicExpression(self);
+        return 0;
+      }
+
+
+      static PyObject* SymbolicExpression_str(PyObject* self) {
         std::stringstream str;
-        str << obj->symExpr;
+        str << PySymbolicExpression_AsSymbolicExpression(self);
         return PyString_FromFormat("%s", str.str().c_str());
       }
 
@@ -222,26 +228,26 @@ namespace triton {
 
       PyTypeObject SymbolicExpression_Type = {
           PyObject_HEAD_INIT(&PyType_Type)
-          0,                                          /* ob_size*/
-          "SymbolicExpression",                       /* tp_name*/
-          sizeof(SymbolicExpression_Object),          /* tp_basicsize*/
-          0,                                          /* tp_itemsize*/
-          (destructor)SymbolicExpression_dealloc,     /* tp_dealloc*/
-          0,                                          /* tp_print*/
-          0,                                          /* tp_getattr*/
-          0,                                          /* tp_setattr*/
-          0,                                          /* tp_compare*/
-          0,                                          /* tp_repr*/
-          0,                                          /* tp_as_number*/
-          0,                                          /* tp_as_sequence*/
-          0,                                          /* tp_as_mapping*/
+          0,                                          /* ob_size */
+          "SymbolicExpression",                       /* tp_name */
+          sizeof(SymbolicExpression_Object),          /* tp_basicsize */
+          0,                                          /* tp_itemsize */
+          (destructor)SymbolicExpression_dealloc,     /* tp_dealloc */
+          (printfunc)SymbolicExpression_print,        /* tp_print */
+          0,                                          /* tp_getattr */
+          0,                                          /* tp_setattr */
+          0,                                          /* tp_compare */
+          0,                                          /* tp_repr */
+          0,                                          /* tp_as_number */
+          0,                                          /* tp_as_sequence */
+          0,                                          /* tp_as_mapping */
           0,                                          /* tp_hash */
-          0,                                          /* tp_call*/
-          (reprfunc)SymbolicExpression_str,           /* tp_str*/
-          0,                                          /* tp_getattro*/
-          0,                                          /* tp_setattro*/
-          0,                                          /* tp_as_buffer*/
-          Py_TPFLAGS_DEFAULT,                         /* tp_flags*/
+          0,                                          /* tp_call */
+          (reprfunc)SymbolicExpression_str,           /* tp_str */
+          0,                                          /* tp_getattro */
+          0,                                          /* tp_setattro */
+          0,                                          /* tp_as_buffer */
+          Py_TPFLAGS_DEFAULT,                         /* tp_flags */
           "SymbolicExpression objects",               /* tp_doc */
           0,                                          /* tp_traverse */
           0,                                          /* tp_clear */

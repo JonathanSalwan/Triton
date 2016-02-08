@@ -157,14 +157,20 @@ namespace triton {
       }
 
 
+      static int SmtAstNode_print(PyObject* self) {
+        std::cout << PySmtAstNode_AsSmtAstNode(self);
+        return 0;
+      }
+
+
       static int SmtAstNode_cmp(SmtAstNode_Object* a, SmtAstNode_Object* b) {
         return !(a->node->hash(1) == b->node->hash(1));
       }
 
 
-      static PyObject* SmtAstNode_str(SmtAstNode_Object* obj) {
+      static PyObject* SmtAstNode_str(PyObject* self) {
         std::stringstream str;
-        str << obj->node;
+        str << PySmtAstNode_AsSmtAstNode(self);
         return PyString_FromFormat("%s", str.str().c_str());
       }
 
@@ -322,7 +328,7 @@ namespace triton {
         sizeof(SmtAstNode_Object),                  /* tp_basicsize*/
         0,                                          /* tp_itemsize*/
         (destructor)SmtAstNode_dealloc,             /* tp_dealloc*/
-        0,                                          /* tp_print*/
+        (printfunc)SmtAstNode_print,                /* tp_print*/
         0,                                          /* tp_getattr*/
         0,                                          /* tp_setattr*/
         (cmpfunc)SmtAstNode_cmp,                    /* tp_compare*/

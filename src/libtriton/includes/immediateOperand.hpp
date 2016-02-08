@@ -81,6 +81,9 @@ namespace triton {
     //! Displays an ImmediateOperand.
     std::ostream &operator<<(std::ostream &stream, ImmediateOperand imm);
 
+    //! Displays an ImmediateOperand.
+    std::ostream &operator<<(std::ostream &stream, ImmediateOperand* imm);
+
   /*! @} End of arch namespace */
   };
 /*! @} End of triton namespace */

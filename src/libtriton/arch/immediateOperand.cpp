@@ -89,5 +89,11 @@ namespace triton {
       return stream;
     }
 
+
+    std::ostream &operator<<(std::ostream &stream, ImmediateOperand* imm) {
+      stream << *imm;
+      return stream;
+    }
+
   }; /* arch namespace */
 }; /* triton namespace */
