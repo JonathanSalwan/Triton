@@ -62,6 +62,14 @@ namespace triton {
       (*((triton::uint64*)(this->r13)))    = (*((triton::uint64*)(other.r13)));
       (*((triton::uint64*)(this->r14)))    = (*((triton::uint64*)(other.r14)));
       (*((triton::uint64*)(this->r15)))    = (*((triton::uint64*)(other.r15)));
+      (*((triton::uint64*)(this->mm0)))    = (*((triton::uint64*)(other.mm0)));
+      (*((triton::uint64*)(this->mm1)))    = (*((triton::uint64*)(other.mm1)));
+      (*((triton::uint64*)(this->mm2)))    = (*((triton::uint64*)(other.mm2)));
+      (*((triton::uint64*)(this->mm3)))    = (*((triton::uint64*)(other.mm3)));
+      (*((triton::uint64*)(this->mm4)))    = (*((triton::uint64*)(other.mm4)));
+      (*((triton::uint64*)(this->mm5)))    = (*((triton::uint64*)(other.mm5)));
+      (*((triton::uint64*)(this->mm6)))    = (*((triton::uint64*)(other.mm6)));
+      (*((triton::uint64*)(this->mm7)))    = (*((triton::uint64*)(other.mm7)));
       memcpy(this->xmm0, other.xmm0, sizeof(this->xmm0));
       memcpy(this->xmm1, other.xmm1, sizeof(this->xmm1));
       memcpy(this->xmm2, other.xmm2, sizeof(this->xmm2));
@@ -176,6 +184,15 @@ namespace triton {
       triton::arch::x86::x86_reg_r15w   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_R15W);
       triton::arch::x86::x86_reg_r15b   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_R15B);
 
+      triton::arch::x86::x86_reg_mm0    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM0);
+      triton::arch::x86::x86_reg_mm1    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM1);
+      triton::arch::x86::x86_reg_mm2    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM2);
+      triton::arch::x86::x86_reg_mm3    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM3);
+      triton::arch::x86::x86_reg_mm4    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM4);
+      triton::arch::x86::x86_reg_mm5    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM5);
+      triton::arch::x86::x86_reg_mm6    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM6);
+      triton::arch::x86::x86_reg_mm7    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM7);
+
       triton::arch::x86::x86_reg_xmm0   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM0);
       triton::arch::x86::x86_reg_xmm1   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM1);
       triton::arch::x86::x86_reg_xmm2   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM2);
@@ -238,6 +255,14 @@ namespace triton {
       memset(this->r13,     0x00, sizeof(this->r13));
       memset(this->r14,     0x00, sizeof(this->r14));
       memset(this->r15,     0x00, sizeof(this->r15));
+      memset(this->mm0,     0x00, sizeof(this->mm0));
+      memset(this->mm1,     0x00, sizeof(this->mm1));
+      memset(this->mm2,     0x00, sizeof(this->mm2));
+      memset(this->mm3,     0x00, sizeof(this->mm3));
+      memset(this->mm4,     0x00, sizeof(this->mm4));
+      memset(this->mm5,     0x00, sizeof(this->mm5));
+      memset(this->mm6,     0x00, sizeof(this->mm6));
+      memset(this->mm7,     0x00, sizeof(this->mm7));
       memset(this->xmm0,    0x00, sizeof(this->xmm0));
       memset(this->xmm1,    0x00, sizeof(this->xmm1));
       memset(this->xmm2,    0x00, sizeof(this->xmm2));
@@ -278,7 +303,12 @@ namespace triton {
 
 
     bool x8664Cpu::isGPR(triton::uint32 regId) {
-      return ((regId >= triton::arch::x86::ID_REG_RAX && regId < triton::arch::x86::ID_REG_XMM0) ? true : false);
+      return ((regId >= triton::arch::x86::ID_REG_RAX && regId < triton::arch::x86::ID_REG_MM0) ? true : false);
+    }
+
+
+    bool x8664Cpu::isMMX(triton::uint32 regId) {
+      return ((regId >= triton::arch::x86::ID_REG_MM0 && regId <= triton::arch::x86::ID_REG_MM7) ? true : false);
     }
 
 
@@ -298,12 +328,12 @@ namespace triton {
 
 
     triton::uint32 x8664Cpu::registerSize(void) {
-      return 8;
+      return QWORD_SIZE;
     }
 
 
     triton::uint32 x8664Cpu::registerBitSize(void) {
-      return 64;
+      return QWORD_SIZE_BIT;
     }
 
 
@@ -334,6 +364,10 @@ namespace triton {
 
         /* Add Flags */
         else if (this->isFlag(triton::arch::x86::x86_regs[index]->getId()))
+          ret.insert(triton::arch::x86::x86_regs[index]);
+
+        /* Add MMX */
+        else if (this->isMMX(triton::arch::x86::x86_regs[index]->getId()))
           ret.insert(triton::arch::x86::x86_regs[index]);
 
         /* Add SSE */
@@ -563,6 +597,15 @@ namespace triton {
         case triton::arch::x86::ID_REG_R15W: return (*((triton::uint16*)(this->r15)));
         case triton::arch::x86::ID_REG_R15B: return (*((triton::uint8*)(this->r15)));
 
+        case triton::arch::x86::ID_REG_MM0:  return (*((triton::uint64*)(this->mm0)));
+        case triton::arch::x86::ID_REG_MM1:  return (*((triton::uint64*)(this->mm1)));
+        case triton::arch::x86::ID_REG_MM2:  return (*((triton::uint64*)(this->mm2)));
+        case triton::arch::x86::ID_REG_MM3:  return (*((triton::uint64*)(this->mm3)));
+        case triton::arch::x86::ID_REG_MM4:  return (*((triton::uint64*)(this->mm4)));
+        case triton::arch::x86::ID_REG_MM5:  return (*((triton::uint64*)(this->mm5)));
+        case triton::arch::x86::ID_REG_MM6:  return (*((triton::uint64*)(this->mm6)));
+        case triton::arch::x86::ID_REG_MM7:  return (*((triton::uint64*)(this->mm7)));
+
         case triton::arch::x86::ID_REG_XMM0:  value = triton::fromBufferToUint128(this->xmm0); return value;
         case triton::arch::x86::ID_REG_XMM1:  value = triton::fromBufferToUint128(this->xmm1); return value;
         case triton::arch::x86::ID_REG_XMM2:  value = triton::fromBufferToUint128(this->xmm2); return value;
@@ -635,7 +678,7 @@ namespace triton {
         case triton::arch::x86::ID_REG_EBX: (*((triton::uint32*)(this->rbx)))  = static_cast<triton::uint32>(value); break;
         case triton::arch::x86::ID_REG_BX:  (*((triton::uint16*)(this->rbx)))  = static_cast<triton::uint16>(value); break;
         case triton::arch::x86::ID_REG_BH:  (*((triton::uint8*)(this->rbx+1))) = static_cast<triton::uint8>(value); break;
-        case triton::arch::x86::ID_REG_BL:  (*((triton::uint8*)(this->rbx)))  = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_BL:  (*((triton::uint8*)(this->rbx)))   = static_cast<triton::uint8>(value); break;
 
         case triton::arch::x86::ID_REG_RCX: (*((triton::uint64*)(this->rcx)))  = static_cast<triton::uint64>(value); break;
         case triton::arch::x86::ID_REG_ECX: (*((triton::uint32*)(this->rcx)))  = static_cast<triton::uint32>(value); break;
@@ -714,6 +757,15 @@ namespace triton {
         case triton::arch::x86::ID_REG_R15D: (*((triton::uint32*)(this->r15))) = static_cast<triton::uint32>(value); break;
         case triton::arch::x86::ID_REG_R15W: (*((triton::uint16*)(this->r15))) = static_cast<triton::uint16>(value); break;
         case triton::arch::x86::ID_REG_R15B: (*((triton::uint8*)(this->r15)))  = static_cast<triton::uint8>(value); break;
+
+        case triton::arch::x86::ID_REG_MM0:  (*((triton::uint64*)(this->mm0))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM1:  (*((triton::uint64*)(this->mm1))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM2:  (*((triton::uint64*)(this->mm2))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM3:  (*((triton::uint64*)(this->mm3))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM4:  (*((triton::uint64*)(this->mm4))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM5:  (*((triton::uint64*)(this->mm5))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM6:  (*((triton::uint64*)(this->mm6))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM7:  (*((triton::uint64*)(this->mm7))) = static_cast<triton::uint64>(value); break;
 
         case triton::arch::x86::ID_REG_XMM0:  triton::fromUint128ToBuffer(value, this->xmm0); break;
         case triton::arch::x86::ID_REG_XMM1:  triton::fromUint128ToBuffer(value, this->xmm1); break;

@@ -137,6 +137,15 @@ namespace triton {
       extern RegisterOperand x86_reg_r15w;
       extern RegisterOperand x86_reg_r15b;
 
+      extern RegisterOperand x86_reg_mm0;
+      extern RegisterOperand x86_reg_mm1;
+      extern RegisterOperand x86_reg_mm2;
+      extern RegisterOperand x86_reg_mm3;
+      extern RegisterOperand x86_reg_mm4;
+      extern RegisterOperand x86_reg_mm5;
+      extern RegisterOperand x86_reg_mm6;
+      extern RegisterOperand x86_reg_mm7;
+
       extern RegisterOperand x86_reg_xmm0;
       extern RegisterOperand x86_reg_xmm1;
       extern RegisterOperand x86_reg_xmm2;
@@ -272,6 +281,16 @@ namespace triton {
         ID_REG_IP, //!< ip
 
         ID_REG_EFLAGS, //!< eflags
+
+        /* MMX */
+        ID_REG_MM0, //!< mm0
+        ID_REG_MM1, //!< mm1
+        ID_REG_MM2, //!< mm2
+        ID_REG_MM3, //!< mm3
+        ID_REG_MM4, //!< mm4
+        ID_REG_MM5, //!< mm5
+        ID_REG_MM6, //!< mm6
+        ID_REG_MM7, //!< mm7
 
         /* SSE */
         ID_REG_XMM0, //!< xmm0
@@ -1772,6 +1791,22 @@ namespace triton {
 #define TRITON_X86_REG_R15W     triton::arch::x86::x86_reg_r15w
 //! Temporary R15B register.
 #define TRITON_X86_REG_R15B     triton::arch::x86::x86_reg_r15b
+//! Temporary MM0 register.
+#define TRITON_X86_REG_MM0     triton::arch::x86::x86_reg_mm0
+//! Temporary MM1 register.
+#define TRITON_X86_REG_MM1     triton::arch::x86::x86_reg_mm1
+//! Temporary MM2 register.
+#define TRITON_X86_REG_MM2     triton::arch::x86::x86_reg_mm2
+//! Temporary MM3 register.
+#define TRITON_X86_REG_MM3     triton::arch::x86::x86_reg_mm3
+//! Temporary MM4 register.
+#define TRITON_X86_REG_MM4     triton::arch::x86::x86_reg_mm4
+//! Temporary MM5 register.
+#define TRITON_X86_REG_MM5     triton::arch::x86::x86_reg_mm5
+//! Temporary MM6 register.
+#define TRITON_X86_REG_MM6     triton::arch::x86::x86_reg_mm6
+//! Temporary MM7 register.
+#define TRITON_X86_REG_MM7     triton::arch::x86::x86_reg_mm7
 //! Temporary XMM0 register.
 #define TRITON_X86_REG_XMM0     triton::arch::x86::x86_reg_xmm0
 //! Temporary XMM1 register.

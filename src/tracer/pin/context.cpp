@@ -51,6 +51,14 @@ namespace tracer {
             case triton::arch::x86::ID_REG_R13:     PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_R13,    reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_R14:     PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_R14,    reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_R15:     PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_R15,    reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::x86::ID_REG_MM0:     return 0; /* Pin doesn't support MMX */
+            case triton::arch::x86::ID_REG_MM1:     return 0; /* Pin doesn't support MMX */
+            case triton::arch::x86::ID_REG_MM2:     return 0; /* Pin doesn't support MMX */
+            case triton::arch::x86::ID_REG_MM3:     return 0; /* Pin doesn't support MMX */
+            case triton::arch::x86::ID_REG_MM4:     return 0; /* Pin doesn't support MMX */
+            case triton::arch::x86::ID_REG_MM5:     return 0; /* Pin doesn't support MMX */
+            case triton::arch::x86::ID_REG_MM6:     return 0; /* Pin doesn't support MMX */
+            case triton::arch::x86::ID_REG_MM7:     return 0; /* Pin doesn't support MMX */
             case triton::arch::x86::ID_REG_XMM0:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_XMM0,   reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_XMM1:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_XMM1,   reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_XMM2:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_XMM2,   reinterpret_cast<triton::uint8*>(buffer)); break;
@@ -71,7 +79,7 @@ namespace tracer {
               if (reg.isFlag())
                 PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_RFLAGS, reinterpret_cast<triton::uint8*>(buffer));
               else
-                throw std::runtime_error("tracer::pintool::getCurrentRegisterValue(): Invalid register.");
+                throw std::runtime_error("tracer::pintool::context::getCurrentRegisterValue(): Invalid register.");
               break;
           }
 
@@ -95,6 +103,14 @@ namespace tracer {
             case triton::arch::x86::ID_REG_ESP:     PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_ESP,    reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_EIP:     PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_EIP,    reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_EFLAGS:  PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_EFLAGS, reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::x86::ID_REG_MM0:     return 0; /* Pin doesn't support MMX */
+            case triton::arch::x86::ID_REG_MM1:     return 0; /* Pin doesn't support MMX */
+            case triton::arch::x86::ID_REG_MM2:     return 0; /* Pin doesn't support MMX */
+            case triton::arch::x86::ID_REG_MM3:     return 0; /* Pin doesn't support MMX */
+            case triton::arch::x86::ID_REG_MM4:     return 0; /* Pin doesn't support MMX */
+            case triton::arch::x86::ID_REG_MM5:     return 0; /* Pin doesn't support MMX */
+            case triton::arch::x86::ID_REG_MM6:     return 0; /* Pin doesn't support MMX */
+            case triton::arch::x86::ID_REG_MM7:     return 0; /* Pin doesn't support MMX */
             case triton::arch::x86::ID_REG_XMM0:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_XMM0,   reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_XMM1:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_XMM1,   reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_XMM2:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_XMM2,   reinterpret_cast<triton::uint8*>(buffer)); break;
@@ -107,7 +123,7 @@ namespace tracer {
               if (reg.isFlag())
                 PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_EFLAGS, reinterpret_cast<triton::uint8*>(buffer));
               else
-                throw std::runtime_error("tracer::pintool::getCurrentRegisterValue(): Invalid register.");
+                throw std::runtime_error("tracer::pintool::context::getCurrentRegisterValue(): Invalid register.");
               break;
           }
 
@@ -135,7 +151,7 @@ namespace tracer {
 
       triton::uint128 getCurrentMemoryValue(triton::__uint addr) {
         if (PIN_CheckReadAccess(reinterpret_cast<void*>(addr)) == false)
-          throw std::runtime_error("tracer::pintool::getCurrentMemoryValue(): Page not readable.");
+          throw std::runtime_error("tracer::pintool::context::getCurrentMemoryValue(): Page not readable.");
         return static_cast<triton::uint128>(*(reinterpret_cast<triton::uint8*>(addr)));
       }
 
@@ -144,7 +160,7 @@ namespace tracer {
         triton::uint128 value = 0;
 
         if (PIN_CheckReadAccess(reinterpret_cast<void*>(addr)) == false || PIN_CheckReadAccess(reinterpret_cast<void*>(addr+size-1)) == false)
-          throw std::runtime_error("tracer::pintool::getCurrentMemoryValue(): Page not readable.");
+          throw std::runtime_error("tracer::pintool::context::getCurrentMemoryValue(): Page not readable.");
 
         switch(size) {
           case BYTE_SIZE:   value = *(reinterpret_cast<triton::uint8*>(addr));                            break;
@@ -167,7 +183,7 @@ namespace tracer {
         triton::uint8 buffer[DQWORD_SIZE] = {0};
 
         if (reg.getId() != reg.getParent().getId() || reg.isFlag())
-          throw std::runtime_error("tracer::pintool::setCurrentRegisterValue(): You cannot set a Pin register value on a sub-register or a flag.");
+          throw std::runtime_error("tracer::pintool::context::setCurrentRegisterValue(): You cannot set a Pin register value on a sub-register or a flag.");
 
         triton::fromUint128ToBuffer(value, buffer);
 
@@ -208,7 +224,7 @@ namespace tracer {
             case triton::arch::x86::ID_REG_XMM14:   PIN_SetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_XMM14,  reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_XMM15:   PIN_SetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_XMM15,  reinterpret_cast<triton::uint8*>(buffer)); break;
             default:
-              throw std::runtime_error("tracer::pintool::setCurrentRegisterValue(): Invalid register.");
+              throw std::runtime_error("tracer::pintool::context::setCurrentRegisterValue(): Invalid register.");
           }
         #endif
 
@@ -233,7 +249,7 @@ namespace tracer {
             case triton::arch::x86::ID_REG_XMM6:    PIN_SetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_XMM6,   reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_XMM7:    PIN_SetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_XMM7,   reinterpret_cast<triton::uint8*>(buffer)); break;
             default:
-              throw std::runtime_error("tracer::pintool::setCurrentRegisterValue(): Invalid register.");
+              throw std::runtime_error("tracer::pintool::context::setCurrentRegisterValue(): Invalid register.");
           }
         #endif
 
@@ -269,7 +285,7 @@ namespace tracer {
         /* Inject memory value */
         for (triton::uint32 i = 0; i <= size; i++) {
           if (PIN_CheckWriteAccess(reinterpret_cast<void*>((addr+i))) == false)
-            throw std::runtime_error("tracer::pintool::setCurrentMemoryValue(): Page not writable.");
+            throw std::runtime_error("tracer::pintool::context::setCurrentMemoryValue(): Page not writable.");
           *((triton::uint8 *)(addr+i)) = static_cast<triton::uint8>(value & 0xff);
           value >>= 8;
         }
@@ -278,7 +294,7 @@ namespace tracer {
 
       void setCurrentMemoryValue(triton::__uint addr, triton::uint8 value) {
         if (PIN_CheckWriteAccess(reinterpret_cast<void*>(addr)) == false)
-          throw std::runtime_error("tracer::pintool::setCurrentMemoryValue(): Page not writable.");
+          throw std::runtime_error("tracer::pintool::context::setCurrentMemoryValue(): Page not writable.");
 
         /* Sync with the libTriton */
         triton::api.setLastMemoryValue(addr, value);

@@ -56,6 +56,14 @@ namespace triton {
       (*((triton::uint32*)(this->ebp)))     = (*((triton::uint32*)(other.ebp)));
       (*((triton::uint32*)(this->eip)))     = (*((triton::uint32*)(other.eip)));
       (*((triton::uint32*)(this->eflags)))  = (*((triton::uint32*)(other.eflags)));
+      (*((triton::uint64*)(this->mm0)))     = (*((triton::uint64*)(other.mm0)));
+      (*((triton::uint64*)(this->mm1)))     = (*((triton::uint64*)(other.mm1)));
+      (*((triton::uint64*)(this->mm2)))     = (*((triton::uint64*)(other.mm2)));
+      (*((triton::uint64*)(this->mm3)))     = (*((triton::uint64*)(other.mm3)));
+      (*((triton::uint64*)(this->mm4)))     = (*((triton::uint64*)(other.mm4)));
+      (*((triton::uint64*)(this->mm5)))     = (*((triton::uint64*)(other.mm5)));
+      (*((triton::uint64*)(this->mm6)))     = (*((triton::uint64*)(other.mm6)));
+      (*((triton::uint64*)(this->mm7)))     = (*((triton::uint64*)(other.mm7)));
       memcpy(this->xmm0, other.xmm0, sizeof(this->xmm0));
       memcpy(this->xmm1, other.xmm1, sizeof(this->xmm1));
       memcpy(this->xmm2, other.xmm2, sizeof(this->xmm2));
@@ -113,6 +121,15 @@ namespace triton {
       triton::arch::x86::x86_reg_eflags = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_EFLAGS);
       triton::arch::x86::x86_reg_flags  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_EFLAGS);
 
+      triton::arch::x86::x86_reg_mm0    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM0);
+      triton::arch::x86::x86_reg_mm1    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM1);
+      triton::arch::x86::x86_reg_mm2    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM2);
+      triton::arch::x86::x86_reg_mm3    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM3);
+      triton::arch::x86::x86_reg_mm4    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM4);
+      triton::arch::x86::x86_reg_mm5    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM5);
+      triton::arch::x86::x86_reg_mm6    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM6);
+      triton::arch::x86::x86_reg_mm7    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM7);
+
       triton::arch::x86::x86_reg_xmm0   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM0);
       triton::arch::x86::x86_reg_xmm1   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM1);
       triton::arch::x86::x86_reg_xmm2   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM2);
@@ -159,6 +176,14 @@ namespace triton {
       memset(this->ebp,     0x00, sizeof(this->ebp));
       memset(this->eip,     0x00, sizeof(this->eip));
       memset(this->eflags,  0x00, sizeof(this->eflags));
+      memset(this->mm0,     0x00, sizeof(this->mm0));
+      memset(this->mm1,     0x00, sizeof(this->mm1));
+      memset(this->mm2,     0x00, sizeof(this->mm2));
+      memset(this->mm3,     0x00, sizeof(this->mm3));
+      memset(this->mm4,     0x00, sizeof(this->mm4));
+      memset(this->mm5,     0x00, sizeof(this->mm5));
+      memset(this->mm6,     0x00, sizeof(this->mm6));
+      memset(this->mm7,     0x00, sizeof(this->mm7));
       memset(this->xmm0,    0x00, sizeof(this->xmm0));
       memset(this->xmm1,    0x00, sizeof(this->xmm1));
       memset(this->xmm2,    0x00, sizeof(this->xmm2));
@@ -191,7 +216,12 @@ namespace triton {
 
 
     bool x86Cpu::isGPR(triton::uint32 regId) {
-      return ((regId >= triton::arch::x86::ID_REG_EAX && regId < triton::arch::x86::ID_REG_XMM0) ? true : false);
+      return ((regId >= triton::arch::x86::ID_REG_EAX && regId < triton::arch::x86::ID_REG_MM0) ? true : false);
+    }
+
+
+    bool x86Cpu::isMMX(triton::uint32 regId) {
+      return ((regId >= triton::arch::x86::ID_REG_MM0 && regId <= triton::arch::x86::ID_REG_MM7) ? true : false);
     }
 
 
@@ -211,12 +241,12 @@ namespace triton {
 
 
     triton::uint32 x86Cpu::registerSize(void) {
-      return 4;
+      return DWORD_SIZE;
     }
 
 
     triton::uint32 x86Cpu::registerBitSize(void) {
-      return 32;
+      return DWORD_SIZE_BIT;
     }
 
 
@@ -247,6 +277,10 @@ namespace triton {
 
         /* Add Flags */
         else if (this->isFlag(triton::arch::x86::x86_regs[index]->getId()))
+          ret.insert(triton::arch::x86::x86_regs[index]);
+
+        /* Add MMX */
+        else if (this->isMMX(triton::arch::x86::x86_regs[index]->getId()))
           ret.insert(triton::arch::x86::x86_regs[index]);
 
         /* Add SSE */
@@ -422,6 +456,15 @@ namespace triton {
 
         case triton::arch::x86::ID_REG_EFLAGS: return (*((triton::uint32*)(this->eflags)));
 
+        case triton::arch::x86::ID_REG_MM0:  return (*((triton::uint64*)(this->mm0)));
+        case triton::arch::x86::ID_REG_MM1:  return (*((triton::uint64*)(this->mm1)));
+        case triton::arch::x86::ID_REG_MM2:  return (*((triton::uint64*)(this->mm2)));
+        case triton::arch::x86::ID_REG_MM3:  return (*((triton::uint64*)(this->mm3)));
+        case triton::arch::x86::ID_REG_MM4:  return (*((triton::uint64*)(this->mm4)));
+        case triton::arch::x86::ID_REG_MM5:  return (*((triton::uint64*)(this->mm5)));
+        case triton::arch::x86::ID_REG_MM6:  return (*((triton::uint64*)(this->mm6)));
+        case triton::arch::x86::ID_REG_MM7:  return (*((triton::uint64*)(this->mm7)));
+
         case triton::arch::x86::ID_REG_XMM0: value = triton::fromBufferToUint128(this->xmm0); return value;
         case triton::arch::x86::ID_REG_XMM1: value = triton::fromBufferToUint128(this->xmm1); return value;
         case triton::arch::x86::ID_REG_XMM2: value = triton::fromBufferToUint128(this->xmm2); return value;
@@ -476,46 +519,55 @@ namespace triton {
         throw std::invalid_argument("x86Cpu::setLastRegisterValue(): You cannot set an isolated flag. Use the flags register EFLAGS.");
 
       switch (reg.getId()) {
-        case triton::arch::x86::ID_REG_EAX: (*((triton::uint32*)(this->eax))) = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_AX:  (*((triton::uint16*)(this->eax))) = static_cast<triton::uint16>(value); break;
+        case triton::arch::x86::ID_REG_EAX: (*((triton::uint32*)(this->eax)))  = static_cast<triton::uint32>(value); break;
+        case triton::arch::x86::ID_REG_AX:  (*((triton::uint16*)(this->eax)))  = static_cast<triton::uint16>(value); break;
         case triton::arch::x86::ID_REG_AH:  (*((triton::uint8*)(this->eax+1))) = static_cast<triton::uint8>(value); break;
-        case triton::arch::x86::ID_REG_AL:  (*((triton::uint8*)(this->eax))) = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_AL:  (*((triton::uint8*)(this->eax)))   = static_cast<triton::uint8>(value); break;
 
-        case triton::arch::x86::ID_REG_EBX: (*((triton::uint32*)(this->ebx))) = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_BX:  (*((triton::uint16*)(this->ebx))) = static_cast<triton::uint16>(value); break;
+        case triton::arch::x86::ID_REG_EBX: (*((triton::uint32*)(this->ebx)))  = static_cast<triton::uint32>(value); break;
+        case triton::arch::x86::ID_REG_BX:  (*((triton::uint16*)(this->ebx)))  = static_cast<triton::uint16>(value); break;
         case triton::arch::x86::ID_REG_BH:  (*((triton::uint8*)(this->ebx+1))) = static_cast<triton::uint8>(value); break;
-        case triton::arch::x86::ID_REG_BL:  (*((triton::uint8*)(this->ebx))) = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_BL:  (*((triton::uint8*)(this->ebx)))   = static_cast<triton::uint8>(value); break;
 
-        case triton::arch::x86::ID_REG_ECX: (*((triton::uint32*)(this->ecx))) = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_CX:  (*((triton::uint16*)(this->ecx))) = static_cast<triton::uint16>(value); break;
+        case triton::arch::x86::ID_REG_ECX: (*((triton::uint32*)(this->ecx)))  = static_cast<triton::uint32>(value); break;
+        case triton::arch::x86::ID_REG_CX:  (*((triton::uint16*)(this->ecx)))  = static_cast<triton::uint16>(value); break;
         case triton::arch::x86::ID_REG_CH:  (*((triton::uint8*)(this->ecx+1))) = static_cast<triton::uint8>(value); break;
-        case triton::arch::x86::ID_REG_CL:  (*((triton::uint8*)(this->ecx))) = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_CL:  (*((triton::uint8*)(this->ecx)))   = static_cast<triton::uint8>(value); break;
 
-        case triton::arch::x86::ID_REG_EDX: (*((triton::uint32*)(this->edx))) = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_DX:  (*((triton::uint16*)(this->edx))) = static_cast<triton::uint16>(value); break;
+        case triton::arch::x86::ID_REG_EDX: (*((triton::uint32*)(this->edx)))  = static_cast<triton::uint32>(value); break;
+        case triton::arch::x86::ID_REG_DX:  (*((triton::uint16*)(this->edx)))  = static_cast<triton::uint16>(value); break;
         case triton::arch::x86::ID_REG_DH:  (*((triton::uint8*)(this->edx+1))) = static_cast<triton::uint8>(value); break;
-        case triton::arch::x86::ID_REG_DL:  (*((triton::uint8*)(this->edx))) = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_DL:  (*((triton::uint8*)(this->edx)))   = static_cast<triton::uint8>(value); break;
 
-        case triton::arch::x86::ID_REG_EDI: (*((triton::uint32*)(this->edi))) = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_DI:  (*((triton::uint16*)(this->edi))) = static_cast<triton::uint16>(value); break;
-        case triton::arch::x86::ID_REG_DIL: (*((triton::uint8*)(this->edi))) = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_EDI: (*((triton::uint32*)(this->edi)))  = static_cast<triton::uint32>(value); break;
+        case triton::arch::x86::ID_REG_DI:  (*((triton::uint16*)(this->edi)))  = static_cast<triton::uint16>(value); break;
+        case triton::arch::x86::ID_REG_DIL: (*((triton::uint8*)(this->edi)))   = static_cast<triton::uint8>(value); break;
 
-        case triton::arch::x86::ID_REG_ESI: (*((triton::uint32*)(this->esi))) = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_SI:  (*((triton::uint16*)(this->esi))) = static_cast<triton::uint16>(value); break;
-        case triton::arch::x86::ID_REG_SIL: (*((triton::uint8*)(this->esi))) = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_ESI: (*((triton::uint32*)(this->esi)))  = static_cast<triton::uint32>(value); break;
+        case triton::arch::x86::ID_REG_SI:  (*((triton::uint16*)(this->esi)))  = static_cast<triton::uint16>(value); break;
+        case triton::arch::x86::ID_REG_SIL: (*((triton::uint8*)(this->esi)))   = static_cast<triton::uint8>(value); break;
 
-        case triton::arch::x86::ID_REG_ESP: (*((triton::uint32*)(this->esp))) = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_SP:  (*((triton::uint16*)(this->esp))) = static_cast<triton::uint16>(value); break;
-        case triton::arch::x86::ID_REG_SPL: (*((triton::uint8*)(this->esp))) = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_ESP: (*((triton::uint32*)(this->esp)))  = static_cast<triton::uint32>(value); break;
+        case triton::arch::x86::ID_REG_SP:  (*((triton::uint16*)(this->esp)))  = static_cast<triton::uint16>(value); break;
+        case triton::arch::x86::ID_REG_SPL: (*((triton::uint8*)(this->esp)))   = static_cast<triton::uint8>(value); break;
 
-        case triton::arch::x86::ID_REG_EBP: (*((triton::uint32*)(this->ebp))) = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_BP:  (*((triton::uint16*)(this->ebp))) = static_cast<triton::uint16>(value); break;
-        case triton::arch::x86::ID_REG_BPL: (*((triton::uint8*)(this->ebp))) = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_EBP: (*((triton::uint32*)(this->ebp)))  = static_cast<triton::uint32>(value); break;
+        case triton::arch::x86::ID_REG_BP:  (*((triton::uint16*)(this->ebp)))  = static_cast<triton::uint16>(value); break;
+        case triton::arch::x86::ID_REG_BPL: (*((triton::uint8*)(this->ebp)))   = static_cast<triton::uint8>(value); break;
 
-        case triton::arch::x86::ID_REG_EIP: (*((triton::uint32*)(this->eip))) = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_IP:  (*((triton::uint16*)(this->eip))) = static_cast<triton::uint16>(value); break;
+        case triton::arch::x86::ID_REG_EIP: (*((triton::uint32*)(this->eip)))  = static_cast<triton::uint32>(value); break;
+        case triton::arch::x86::ID_REG_IP:  (*((triton::uint16*)(this->eip)))  = static_cast<triton::uint16>(value); break;
 
         case triton::arch::x86::ID_REG_EFLAGS: (*((triton::uint32*)(this->eflags))) = static_cast<triton::uint32>(value); break;
+
+        case triton::arch::x86::ID_REG_MM0:  (*((triton::uint64*)(this->mm0))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM1:  (*((triton::uint64*)(this->mm1))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM2:  (*((triton::uint64*)(this->mm2))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM3:  (*((triton::uint64*)(this->mm3))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM4:  (*((triton::uint64*)(this->mm4))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM5:  (*((triton::uint64*)(this->mm5))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM6:  (*((triton::uint64*)(this->mm6))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM7:  (*((triton::uint64*)(this->mm7))) = static_cast<triton::uint64>(value); break;
 
         case triton::arch::x86::ID_REG_XMM0: triton::fromUint128ToBuffer(value, this->xmm0); break;
         case triton::arch::x86::ID_REG_XMM1: triton::fromUint128ToBuffer(value, this->xmm1); break;

@@ -119,6 +119,15 @@ namespace triton {
       triton::arch::RegisterOperand x86_reg_r15w    = triton::arch::RegisterOperand();
       triton::arch::RegisterOperand x86_reg_r15b    = triton::arch::RegisterOperand();
 
+      triton::arch::RegisterOperand x86_reg_mm0     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_mm1     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_mm2     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_mm3     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_mm4     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_mm5     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_mm6     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_mm7     = triton::arch::RegisterOperand();
+
       triton::arch::RegisterOperand x86_reg_xmm0    = triton::arch::RegisterOperand();
       triton::arch::RegisterOperand x86_reg_xmm1    = triton::arch::RegisterOperand();
       triton::arch::RegisterOperand x86_reg_xmm2    = triton::arch::RegisterOperand();
@@ -221,6 +230,14 @@ namespace triton {
         &TRITON_X86_REG_EIP,
         &TRITON_X86_REG_IP,
         &TRITON_X86_REG_EFLAGS,
+        &TRITON_X86_REG_MM0,
+        &TRITON_X86_REG_MM1,
+        &TRITON_X86_REG_MM2,
+        &TRITON_X86_REG_MM3,
+        &TRITON_X86_REG_MM4,
+        &TRITON_X86_REG_MM5,
+        &TRITON_X86_REG_MM6,
+        &TRITON_X86_REG_MM7,
         &TRITON_X86_REG_XMM0,
         &TRITON_X86_REG_XMM1,
         &TRITON_X86_REG_XMM2,
@@ -774,6 +791,62 @@ namespace triton {
             std::get<3>(ret) = triton::arch::x86::ID_REG_R15;
             break;
 
+          case triton::arch::x86::ID_REG_MM0:
+            std::get<0>(ret) = "mm0";
+            std::get<1>(ret) = QWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_MM0;
+            break;
+
+          case triton::arch::x86::ID_REG_MM1:
+            std::get<0>(ret) = "mm1";
+            std::get<1>(ret) = QWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_MM1;
+            break;
+
+          case triton::arch::x86::ID_REG_MM2:
+            std::get<0>(ret) = "mm2";
+            std::get<1>(ret) = QWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_MM2;
+            break;
+
+          case triton::arch::x86::ID_REG_MM3:
+            std::get<0>(ret) = "mm3";
+            std::get<1>(ret) = QWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_MM3;
+            break;
+
+          case triton::arch::x86::ID_REG_MM4:
+            std::get<0>(ret) = "mm4";
+            std::get<1>(ret) = QWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_MM4;
+            break;
+
+          case triton::arch::x86::ID_REG_MM5:
+            std::get<0>(ret) = "mm5";
+            std::get<1>(ret) = QWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_MM5;
+            break;
+
+          case triton::arch::x86::ID_REG_MM6:
+            std::get<0>(ret) = "mm6";
+            std::get<1>(ret) = QWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_MM6;
+            break;
+
+          case triton::arch::x86::ID_REG_MM7:
+            std::get<0>(ret) = "mm7";
+            std::get<1>(ret) = QWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_MM7;
+            break;
+
           case triton::arch::x86::ID_REG_XMM0:
             std::get<0>(ret) = "xmm0";
             std::get<1>(ret) = DQWORD_SIZE_BIT-1;
@@ -1249,6 +1322,38 @@ namespace triton {
 
           case X86_REG_R15B:
             tritonId = triton::arch::x86::ID_REG_R15B;
+            break;
+
+          case X86_REG_MM0:
+            tritonId = triton::arch::x86::ID_REG_MM0;
+            break;
+
+          case X86_REG_MM1:
+            tritonId = triton::arch::x86::ID_REG_MM1;
+            break;
+
+          case X86_REG_MM2:
+            tritonId = triton::arch::x86::ID_REG_MM2;
+            break;
+
+          case X86_REG_MM3:
+            tritonId = triton::arch::x86::ID_REG_MM3;
+            break;
+
+          case X86_REG_MM4:
+            tritonId = triton::arch::x86::ID_REG_MM4;
+            break;
+
+          case X86_REG_MM5:
+            tritonId = triton::arch::x86::ID_REG_MM5;
+            break;
+
+          case X86_REG_MM6:
+            tritonId = triton::arch::x86::ID_REG_MM6;
+            break;
+
+          case X86_REG_MM7:
+            tritonId = triton::arch::x86::ID_REG_MM7;
             break;
 
           case X86_REG_XMM0:

@@ -67,6 +67,14 @@ According to the CPU architecture, the REG namespace contains all kinds of regis
 - **REG.EIP**
 - **REG.IP**
 - **REG.EFLAGS**
+- **REG.MM0**
+- **REG.MM1**
+- **REG.MM2**
+- **REG.MM3**
+- **REG.MM4**
+- **REG.MM5**
+- **REG.MM6**
+- **REG.MM7**
 - **REG.XMM0**
 - **REG.XMM1**
 - **REG.XMM2**
@@ -159,6 +167,14 @@ According to the CPU architecture, the REG namespace contains all kinds of regis
 - **REG.BPL**
 - **REG.EIP**
 - **REG.IP**
+- **REG.MM0**
+- **REG.MM1**
+- **REG.MM2**
+- **REG.MM3**
+- **REG.MM4**
+- **REG.MM5**
+- **REG.MM6**
+- **REG.MM7**
 - **REG.XMM0**
 - **REG.XMM1**
 - **REG.XMM2**
@@ -284,6 +300,14 @@ namespace triton {
             PyDict_SetItemString(triton::bindings::python::registersDict, "EIP", PyRegisterOperand(TRITON_X86_REG_EIP));
             PyDict_SetItemString(triton::bindings::python::registersDict, "IP", PyRegisterOperand(TRITON_X86_REG_IP));
             PyDict_SetItemString(triton::bindings::python::registersDict, "EFLAGS", PyRegisterOperand(TRITON_X86_REG_EFLAGS));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM0", PyRegisterOperand(TRITON_X86_REG_MM0));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM1", PyRegisterOperand(TRITON_X86_REG_MM1));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM2", PyRegisterOperand(TRITON_X86_REG_MM2));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM3", PyRegisterOperand(TRITON_X86_REG_MM3));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM4", PyRegisterOperand(TRITON_X86_REG_MM4));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM5", PyRegisterOperand(TRITON_X86_REG_MM5));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM6", PyRegisterOperand(TRITON_X86_REG_MM6));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM7", PyRegisterOperand(TRITON_X86_REG_MM7));
             PyDict_SetItemString(triton::bindings::python::registersDict, "XMM0", PyRegisterOperand(TRITON_X86_REG_XMM0));
             PyDict_SetItemString(triton::bindings::python::registersDict, "XMM1", PyRegisterOperand(TRITON_X86_REG_XMM1));
             PyDict_SetItemString(triton::bindings::python::registersDict, "XMM2", PyRegisterOperand(TRITON_X86_REG_XMM2));

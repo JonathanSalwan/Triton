@@ -77,6 +77,22 @@ namespace triton {
           triton::uint8 eip[DWORD_SIZE];
           //! Concrete value of eflags
           triton::uint8 eflags[DWORD_SIZE];
+          //! Concrete value of mm0
+          triton::uint8 mm0[QWORD_SIZE];
+          //! Concrete value of mm1
+          triton::uint8 mm1[QWORD_SIZE];
+          //! Concrete value of mm2
+          triton::uint8 mm2[QWORD_SIZE];
+          //! Concrete value of mm3
+          triton::uint8 mm3[QWORD_SIZE];
+          //! Concrete value of mm4
+          triton::uint8 mm4[QWORD_SIZE];
+          //! Concrete value of mm5
+          triton::uint8 mm5[QWORD_SIZE];
+          //! Concrete value of mm6
+          triton::uint8 mm6[QWORD_SIZE];
+          //! Concrete value of mm7
+          triton::uint8 mm7[QWORD_SIZE];
           //! Concrete value of xmm0
           triton::uint8 xmm0[DQWORD_SIZE];
           //! Concrete value of xmm1
@@ -112,6 +128,9 @@ namespace triton {
 
           //! Returns true if regId is a GRP.
           bool isGPR(triton::uint32 regId);
+
+          //! Returns true if regId is a MMX register.
+          bool isMMX(triton::uint32 regId);
 
           //! Returns true if regId is a SSE register.
           bool isSSE(triton::uint32 regId);
