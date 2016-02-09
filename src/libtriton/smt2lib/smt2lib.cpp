@@ -202,6 +202,40 @@ namespace triton {
     }
 
 
+    /* ====== bvdecl */
+
+
+    smtAstBvdeclNode::smtAstBvdeclNode(triton::uint32 size) {
+      this->kind = BVDECL_NODE;
+      this->addChild(decimal(size));
+    }
+
+
+    smtAstBvdeclNode::smtAstBvdeclNode(const smtAstBvdeclNode &copy) {
+      this->kind = copy.kind;
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(copy.childs[index]);
+    }
+
+
+    smtAstBvdeclNode::~smtAstBvdeclNode() {
+    }
+
+
+    void smtAstBvdeclNode::accept(Visitor& v) {
+      v(*this);
+    }
+
+
+    triton::uint512 smtAstBvdeclNode::hash(triton::uint32 deep) {
+      triton::uint512 h = this->kind, s = this->childs.size();
+      if (s) h = h * s;
+      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+        h = h * triton::smt2lib::pow(this->childs[index]->hash(deep+1), index+1);
+      return triton::smt2lib::rotl(h, deep);
+    }
+
+
     /* ====== bvlshr */
 
 
@@ -1770,6 +1804,7 @@ namespace triton {
         case BVADD_NODE:      stream << reinterpret_cast<smtAstBvaddNode *>(node); break;
         case BVAND_NODE:      stream << reinterpret_cast<smtAstBvandNode *>(node); break;
         case BVASHR_NODE:     stream << reinterpret_cast<smtAstBvashrNode *>(node); break;
+        case BVDECL_NODE:     stream << reinterpret_cast<smtAstBvdeclNode *>(node); break;
         case BVLSHR_NODE:     stream << reinterpret_cast<smtAstBvlshrNode *>(node); break;
         case BVMUL_NODE:      stream << reinterpret_cast<smtAstBvmulNode *>(node); break;
         case BVNAND_NODE:     stream << reinterpret_cast<smtAstBvnandNode *>(node); break;
@@ -1844,6 +1879,13 @@ namespace triton {
     /* bvashr syntax */
     std::ostream &operator<<(std::ostream &stream, smtAstBvashrNode *node) {
       stream << "(bvashr " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
+      return stream;
+    }
+
+
+    /* bvdecl syntax */
+    std::ostream &operator<<(std::ostream &stream, smtAstBvdeclNode *node) {
+      stream << "(_ BitVec " << node->getChilds()[0] << ")";
       return stream;
     }
 
@@ -2291,6 +2333,14 @@ namespace triton {
     }
 
 
+    smtAstAbstractNode *bvdecl(triton::uint32 size) {
+      smtAstAbstractNode *node = new smtAstBvdeclNode(size);
+      if (node == nullptr)
+        throw std::runtime_error("Node builders - Not enough memory");
+      return recordNode(node);
+    }
+
+
     smtAstAbstractNode *bvfalse(void) {
       smtAstAbstractNode *node = new smtAstBvNode(0, 1);
       if (node == nullptr)
@@ -2578,6 +2628,7 @@ namespace triton {
       return recordNode(node);
     }
 
+
     smtAstAbstractNode *distinct(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
       smtAstAbstractNode *node = new smtAstDistinctNode(expr1, expr2);
       if (node == nullptr)
@@ -2681,6 +2732,7 @@ namespace triton {
         case BVADD_NODE:      newNode = new smtAstBvaddNode(*reinterpret_cast<smtAstBvaddNode *>(node)); break;
         case BVAND_NODE:      newNode = new smtAstBvandNode(*reinterpret_cast<smtAstBvandNode *>(node)); break;
         case BVASHR_NODE:     newNode = new smtAstBvashrNode(*reinterpret_cast<smtAstBvashrNode *>(node)); break;
+        case BVDECL_NODE:     newNode = new smtAstBvdeclNode(*reinterpret_cast<smtAstBvdeclNode *>(node)); break;
         case BVLSHR_NODE:     newNode = new smtAstBvlshrNode(*reinterpret_cast<smtAstBvlshrNode *>(node)); break;
         case BVMUL_NODE:      newNode = new smtAstBvmulNode(*reinterpret_cast<smtAstBvmulNode *>(node)); break;
         case BVNAND_NODE:     newNode = new smtAstBvnandNode(*reinterpret_cast<smtAstBvnandNode *>(node)); break;

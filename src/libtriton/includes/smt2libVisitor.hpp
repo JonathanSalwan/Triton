@@ -29,6 +29,7 @@ namespace triton {
     class smtAstBvaddNode;
     class smtAstBvandNode;
     class smtAstBvashrNode;
+    class smtAstBvdeclNode;
     class smtAstBvlshrNode;
     class smtAstBvmulNode;
     class smtAstBvnandNode;
@@ -85,6 +86,7 @@ namespace triton {
         virtual void operator()(smtAstBvaddNode& e) = 0;
         virtual void operator()(smtAstBvandNode& e) = 0;
         virtual void operator()(smtAstBvashrNode& e) = 0;
+        virtual void operator()(smtAstBvdeclNode& e) = 0;
         virtual void operator()(smtAstBvlshrNode& e) = 0;
         virtual void operator()(smtAstBvmulNode& e) = 0;
         virtual void operator()(smtAstBvnandNode& e) = 0;

@@ -217,6 +217,10 @@ e.g: `(bvand expr1 epxr2)`.
 Returns the smt2-lib `triton::smt2lib::bvashr()` syntax as \ref py_SmtAstNode_page.<br>
 e.g: `(bvashr expr1 epxr2)`.
 
+- **bvdecl(integer size)**<br>
+Returns the smt2-lib `triton::smt2lib::bvdecl()` syntax as \ref py_SmtAstNode_page.<br>
+e.g: `(_ BitVec size)`.
+
 - **bvfalse()**<br>
 This is an alias on the `(_ bv0 1)` smt2-lib expression.
 
@@ -459,6 +463,14 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvashr(): expected a SmtAstNode as second argument");
 
         return PySmtAstNode(smt2lib::bvashr(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+      }
+
+
+      static PyObject* smt2lib_bvdecl(PyObject* self, PyObject* size) {
+        if (size == nullptr || (!PyLong_Check(size) && !PyInt_Check(size)))
+          return PyErr_Format(PyExc_TypeError, "bvdecl(): expected an integer as argument");
+
+        return PySmtAstNode(smt2lib::bvdecl(PyLong_AsUint(size)));
       }
 
 
@@ -1128,6 +1140,7 @@ namespace triton {
         {"bvadd",       (PyCFunction)smt2lib_bvadd,      METH_VARARGS,     ""},
         {"bvand",       (PyCFunction)smt2lib_bvand,      METH_VARARGS,     ""},
         {"bvashr",      (PyCFunction)smt2lib_bvashr,     METH_VARARGS,     ""},
+        {"bvdecl",      (PyCFunction)smt2lib_bvdecl,     METH_O,           ""},
         {"bvfalse",     (PyCFunction)smt2lib_bvfalse,    METH_NOARGS,      ""},
         {"bvlshr",      (PyCFunction)smt2lib_bvlshr,     METH_VARARGS,     ""},
         {"bvmul",       (PyCFunction)smt2lib_bvmul,      METH_VARARGS,     ""},

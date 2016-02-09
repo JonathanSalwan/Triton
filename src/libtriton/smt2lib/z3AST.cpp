@@ -68,6 +68,11 @@ namespace triton {
     }
 
 
+    void Z3Ast::operator()(smtAstBvdeclNode& e) {
+      throw std::runtime_error("smtAstBvdeclNode not implemented");
+    }
+
+
     void Z3Ast::operator()(smtAstBvlshrNode& e) {
       Z3Result op1 = this->eval(*e.getChilds()[0]);
       Z3Result op2 = this->eval(*e.getChilds()[1]);

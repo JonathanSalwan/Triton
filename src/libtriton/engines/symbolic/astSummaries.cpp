@@ -21,6 +21,7 @@ namespace triton {
         this->summaries[triton::smt2lib::BVADD_NODE]      = &this->bvaddSummaries;
         this->summaries[triton::smt2lib::BVAND_NODE]      = &this->bvandSummaries;
         this->summaries[triton::smt2lib::BVASHR_NODE]     = &this->bvashrSummaries;
+        this->summaries[triton::smt2lib::BVDECL_NODE]     = &this->bvdeclSummaries;
         this->summaries[triton::smt2lib::BVLSHR_NODE]     = &this->bvlshrSummaries;
         this->summaries[triton::smt2lib::BVMUL_NODE]      = &this->bvmulSummaries;
         this->summaries[triton::smt2lib::BVNAND_NODE]     = &this->bvnandSummaries;
@@ -75,6 +76,8 @@ namespace triton {
         for (auto it = this->bvandSummaries.begin(); it != this->bvandSummaries.end(); it++)
           delete it->second;
         for (auto it = this->bvashrSummaries.begin(); it != this->bvashrSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->bvdeclSummaries.begin(); it != this->bvdeclSummaries.end(); it++)
           delete it->second;
         for (auto it = this->bvlshrSummaries.begin(); it != this->bvlshrSummaries.end(); it++)
           delete it->second;
@@ -239,6 +242,7 @@ namespace triton {
         stats["bvadd"]              = this->bvaddSummaries.size();
         stats["bvand"]              = this->bvandSummaries.size();
         stats["bvashr"]             = this->bvashrSummaries.size();
+        stats["bvdecl"]             = this->bvdeclSummaries.size();
         stats["bvlshr"]             = this->bvlshrSummaries.size();
         stats["bvmul"]              = this->bvmulSummaries.size();
         stats["bvnand"]             = this->bvnandSummaries.size();

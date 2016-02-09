@@ -61,6 +61,9 @@ namespace triton {
           //! Bvashr Summaries
           std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvashrSummaries;
 
+          //! Bvdecl Summaries
+          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvdeclSummaries;
+
           //! Bvlshr Summaries
           std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvlshrSummaries;
 
