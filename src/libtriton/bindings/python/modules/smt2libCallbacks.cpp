@@ -415,7 +415,12 @@ namespace triton {
         if (op2 == nullptr || (!PyLong_Check(op2) && !PyInt_Check(op2)))
           return PyErr_Format(PyExc_TypeError, "bv(): expected an integer as second argument");
 
-        return PySmtAstNode(smt2lib::bv(PyLong_AsUint128(op1), PyLong_AsUint(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bv(PyLong_AsUint128(op1), PyLong_AsUint(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -432,7 +437,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvadd(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvadd(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvadd(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -449,7 +459,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvand(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvand(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvand(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -466,7 +481,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvashr(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvashr(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvashr(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -474,12 +494,22 @@ namespace triton {
         if (size == nullptr || (!PyLong_Check(size) && !PyInt_Check(size)))
           return PyErr_Format(PyExc_TypeError, "bvdecl(): expected an integer as argument");
 
-        return PySmtAstNode(smt2lib::bvdecl(PyLong_AsUint(size)));
+        try {
+          return PySmtAstNode(smt2lib::bvdecl(PyLong_AsUint(size)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* smt2lib_bvfalse(PyObject* self, PyObject* args) {
-        return PySmtAstNode(smt2lib::bvfalse());
+        try {
+          return PySmtAstNode(smt2lib::bvfalse());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -496,7 +526,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvlshr(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvlshr(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvlshr(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -513,7 +548,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvmul(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvmul(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvmul(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -530,7 +570,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvnand(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvnand(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvnand(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -538,7 +583,12 @@ namespace triton {
         if (!PySmtAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvneg(): expected a SmtAstNode as first argument");
 
-        return PySmtAstNode(smt2lib::bvneg(PySmtAstNode_AsSmtAstNode(op1)));
+        try {
+          return PySmtAstNode(smt2lib::bvneg(PySmtAstNode_AsSmtAstNode(op1)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -555,7 +605,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvnor(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvnor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvnor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -563,7 +618,12 @@ namespace triton {
         if (!PySmtAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvnot(): expected a SmtAstNode as first argument");
 
-        return PySmtAstNode(smt2lib::bvnot(PySmtAstNode_AsSmtAstNode(op1)));
+        try {
+          return PySmtAstNode(smt2lib::bvnot(PySmtAstNode_AsSmtAstNode(op1)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -580,7 +640,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvor(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -597,7 +662,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvror(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvror(PyLong_AsUint(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvror(PyLong_AsUint(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -614,7 +684,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvrol(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvrol(PyLong_AsUint(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvrol(PyLong_AsUint(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -631,7 +706,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvsdiv(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvsdiv(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvsdiv(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -648,7 +728,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvsge(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvsge(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvsge(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -665,7 +750,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvsgt(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvsgt(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvsgt(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -682,7 +772,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvshl(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvshl(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvshl(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -699,7 +794,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvsle(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvsle(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvsle(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -716,7 +816,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvslt(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvslt(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvslt(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -733,7 +838,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvsmod(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvsmod(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvsmod(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -750,7 +860,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvsrem(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvsrem(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvsrem(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -767,12 +882,22 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvsub(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvsub(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvsub(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* smt2lib_bvtrue(PyObject* self, PyObject* args) {
-        return PySmtAstNode(smt2lib::bvtrue());
+        try {
+          return PySmtAstNode(smt2lib::bvtrue());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -789,7 +914,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvudiv(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvudiv(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvudiv(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -806,7 +936,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvuge(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvuge(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvuge(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -823,7 +958,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvugt(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvugt(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvugt(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -840,7 +980,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvule(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvule(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvule(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -857,7 +1002,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvult(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvult(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvult(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -874,7 +1024,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvurem(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvurem(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvurem(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -891,7 +1046,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvxnor(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvxnor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvxnor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -908,7 +1068,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "bvxor(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::bvxor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::bvxor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -925,7 +1090,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "distinct(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::distinct(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::distinct(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -945,7 +1115,12 @@ namespace triton {
           exprs.push_back(PySmtAstNode_AsSmtAstNode(item));
         }
 
-        return PySmtAstNode(smt2lib::compound(exprs));
+        try {
+          return PySmtAstNode(smt2lib::compound(exprs));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -965,7 +1140,12 @@ namespace triton {
           exprs.push_back(PySmtAstNode_AsSmtAstNode(item));
         }
 
-        return PySmtAstNode(smt2lib::concat(exprs));
+        try {
+          return PySmtAstNode(smt2lib::concat(exprs));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -982,7 +1162,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "equal(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::equal(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::equal(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1003,7 +1188,12 @@ namespace triton {
         if (op3 == nullptr || !PySmtAstNode_Check(op3))
           return PyErr_Format(PyExc_TypeError, "extract(): expected a SmtAstNode as third argument");
 
-        return PySmtAstNode(smt2lib::extract(PyLong_AsUint(op1), PyLong_AsUint(op2), PySmtAstNode_AsSmtAstNode(op3)));
+        try {
+          return PySmtAstNode(smt2lib::extract(PyLong_AsUint(op1), PyLong_AsUint(op2), PySmtAstNode_AsSmtAstNode(op3)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1024,7 +1214,12 @@ namespace triton {
         if (op3 == nullptr || !PySmtAstNode_Check(op3))
           return PyErr_Format(PyExc_TypeError, "ite(): expected a SmtAstNode as third argument");
 
-        return PySmtAstNode(smt2lib::ite(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2), PySmtAstNode_AsSmtAstNode(op3)));
+        try {
+          return PySmtAstNode(smt2lib::ite(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2), PySmtAstNode_AsSmtAstNode(op3)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1041,7 +1236,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "land(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::land(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::land(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1062,7 +1262,12 @@ namespace triton {
         if (op3 == nullptr || !PySmtAstNode_Check(op3))
           return PyErr_Format(PyExc_TypeError, "let(): expected a SmtAstNode as third argument");
 
-        return PySmtAstNode(smt2lib::let(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2), PySmtAstNode_AsSmtAstNode(op3)));
+        try {
+          return PySmtAstNode(smt2lib::let(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2), PySmtAstNode_AsSmtAstNode(op3)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1070,7 +1275,12 @@ namespace triton {
         if (expr == nullptr || !PySmtAstNode_Check(expr))
           return PyErr_Format(PyExc_TypeError, "lnot(): expected a SmtAstNode as argument");
 
-        return PySmtAstNode(smt2lib::lnot(PySmtAstNode_AsSmtAstNode(expr)));
+        try {
+          return PySmtAstNode(smt2lib::lnot(PySmtAstNode_AsSmtAstNode(expr)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1087,7 +1297,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "lor(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::lor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::lor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1098,7 +1313,12 @@ namespace triton {
         if (!triton::api.isSymbolicExpressionIdExists(PyLong_AsUint(exprId)))
           return PyErr_Format(PyExc_TypeError, "reference(): symbolic expression id not found");
 
-        return PySmtAstNode(smt2lib::reference(PyLong_AsUint(exprId)));
+        try {
+          return PySmtAstNode(smt2lib::reference(PyLong_AsUint(exprId)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1106,7 +1326,12 @@ namespace triton {
         if (!PySmtAstNode_Check(expr))
           return PyErr_Format(PyExc_TypeError, "smtAssert(): expected a SmtAstNode as first argument");
 
-        return PySmtAstNode(smt2lib::smtAssert(PySmtAstNode_AsSmtAstNode(expr)));
+        try {
+          return PySmtAstNode(smt2lib::smtAssert(PySmtAstNode_AsSmtAstNode(expr)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1114,7 +1339,12 @@ namespace triton {
         if (!PyString_Check(expr))
           return PyErr_Format(PyExc_TypeError, "string(): expected a string as first argument");
 
-        return PySmtAstNode(smt2lib::string(PyString_AsString(expr)));
+        try {
+          return PySmtAstNode(smt2lib::string(PyString_AsString(expr)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1131,7 +1361,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "sx(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::sx(PyLong_AsUint(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::sx(PyLong_AsUint(op1), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1139,7 +1374,12 @@ namespace triton {
         if (!PyString_Check(expr))
           return PyErr_Format(PyExc_TypeError, "variable(): expected a string as first argument");
 
-        return PySmtAstNode(smt2lib::variable(PyString_AsString(expr)));
+        try {
+          return PySmtAstNode(smt2lib::variable(PyString_AsString(expr)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1156,7 +1396,12 @@ namespace triton {
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "zx(): expected a SmtAstNode as second argument");
 
-        return PySmtAstNode(smt2lib::zx(PyLong_AsUint(op2), PySmtAstNode_AsSmtAstNode(op2)));
+        try {
+          return PySmtAstNode(smt2lib::zx(PyLong_AsUint(op2), PySmtAstNode_AsSmtAstNode(op2)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
