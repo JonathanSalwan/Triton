@@ -36,6 +36,7 @@ The SMT_AST_NODE namespace contains all kinds of node.
 - **SMT_AST_NODE.BVADD**
 - **SMT_AST_NODE.BVAND**
 - **SMT_AST_NODE.BVASHR**
+- **SMT_AST_NODE.BVDECL**
 - **SMT_AST_NODE.BVLSHR**
 - **SMT_AST_NODE.BVMUL**
 - **SMT_AST_NODE.BVNAND**
@@ -95,6 +96,7 @@ namespace triton {
         PyDict_SetItemString(smtAstNodeDict, "BVADD", PyLong_FromUint(triton::smt2lib::BVADD_NODE));
         PyDict_SetItemString(smtAstNodeDict, "BVAND", PyLong_FromUint(triton::smt2lib::BVAND_NODE));
         PyDict_SetItemString(smtAstNodeDict, "BVASHR", PyLong_FromUint(triton::smt2lib::BVASHR_NODE));
+        PyDict_SetItemString(smtAstNodeDict, "BVDECL", PyLong_FromUint(triton::smt2lib::BVDECL_NODE));
         PyDict_SetItemString(smtAstNodeDict, "BVLSHR", PyLong_FromUint(triton::smt2lib::BVLSHR_NODE));
         PyDict_SetItemString(smtAstNodeDict, "BVMUL", PyLong_FromUint(triton::smt2lib::BVMUL_NODE));
         PyDict_SetItemString(smtAstNodeDict, "BVNAND", PyLong_FromUint(triton::smt2lib::BVNAND_NODE));
