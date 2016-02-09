@@ -477,6 +477,12 @@ namespace triton {
   }
 
 
+  void API::assignSymbolicExpressionToMemory(triton::engines::symbolic::SymbolicExpression* se, triton::arch::MemoryOperand& mem) {
+    this->checkSymbolic();
+    this->sym->assignSymbolicExpressionToMemory(se, mem);
+  }
+
+
   void API::assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, triton::arch::RegisterOperand& reg) {
     this->checkSymbolic();
     this->sym->assignSymbolicExpressionToRegister(se, reg);

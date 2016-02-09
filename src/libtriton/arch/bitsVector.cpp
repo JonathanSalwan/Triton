@@ -19,7 +19,7 @@ namespace triton {
     }
 
 
-    BitsVector::BitsVector(triton::uint32 high, triton::uint32 low) {
+    BitsVector::BitsVector(triton::uint32 high /* bits */, triton::uint32 low /* bits */) {
       this->high = high;
       this->low  = low;
     }

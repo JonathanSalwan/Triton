@@ -749,6 +749,32 @@ namespace triton {
       }
 
 
+      /* Assigns a symbolic expression to a memory */
+      void SymbolicEngine::assignSymbolicExpressionToMemory(SymbolicExpression *se, triton::arch::MemoryOperand& mem) {
+        smt2lib::smtAstAbstractNode* node = se->getAst();
+        triton::__uint address            = mem.getAddress();
+        triton::uint32 writeSize          = mem.getSize();
+
+        /* Check if the symbolic expression's size is equal to the memory access */
+        if (node->getBitvectorSize() != mem.getBitSize())
+          throw std::runtime_error("SymbolicEngine::assignSymbolicExpressionToMemory(): The symbolic expression's size is not equal to the memory access.");
+
+        /*
+         * As the x86's memory can be accessed without alignment, each byte of the
+         * memory must be assigned to an unique reference.
+         */
+        while (writeSize) {
+          /* Extract each byte of the memory */
+          smt2lib::smtAstAbstractNode* tmp = smt2lib::extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), node);
+          SymbolicExpression* byteRef = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "byte reference");
+          byteRef->setOriginAddress((address + writeSize) - 1);
+          /* Assign memory with little endian */
+          this->addMemoryReference((address + writeSize) - 1, byteRef->getId());
+          writeSize--;
+        }
+      }
+
+
       /* Returns true if the we perform a full symbolic emulation. */
       bool SymbolicEngine::isEmulationEnabled(void) {
         return this->emulationFlag;

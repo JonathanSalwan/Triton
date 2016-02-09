@@ -33,8 +33,8 @@ namespace triton {
       if (size == 0)
         throw std::runtime_error("MemoryOperand::MemoryOperand(): size cannot be zero.");
 
-      if (size > DQWORD_SIZE)
-        throw std::runtime_error("MemoryOperand::MemoryOperand(): size cannot be greater than a DQWORD.");
+      if (size != BYTE_SIZE && size != WORD_SIZE && size != DWORD_SIZE && size != QWORD_SIZE && size != DQWORD_SIZE)
+        throw std::runtime_error("MemoryOperand::MemoryOperand(): size must be aligned.");
 
       this->setPair(std::make_pair(((size * BYTE_SIZE_BIT) - 1), 0));
     }

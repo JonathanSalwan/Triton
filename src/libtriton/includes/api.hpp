@@ -264,6 +264,9 @@ namespace triton {
         //! [**symbolic api**] - Returns the new symbolic volatile expression and links this expression to the instruction.
         triton::engines::symbolic::SymbolicExpression* createSymbolicVolatileExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, std::string comment="");
 
+        //! [**symbolic api**] - Assigns a symbolic expression to a memory.
+        void assignSymbolicExpressionToMemory(triton::engines::symbolic::SymbolicExpression* se, triton::arch::MemoryOperand& mem);
+
         //! [**symbolic api**] - Assigns a symbolic expression to a register.
         void assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, triton::arch::RegisterOperand& reg);
 

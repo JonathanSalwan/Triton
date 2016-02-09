@@ -67,6 +67,10 @@ If you want to use the libTriton without Python bindings, recompile the project 
 
 \subsection triton_py_api_methods Methods
 
+- <b>assignSymbolicExpressionToMemory(\ref py_SymbolicExpression_page symExpr, \ref py_Memory_page mem)</b><br>
+Assigns a \ref py_SymbolicExpression_page to a \ref py_Memory_page area. **Be careful**, use this function only if you know what you are doing.
+The symbolic expression (`symExpr`) must be aligned to the memory access.
+
 - <b>assignSymbolicExpressionToRegister(\ref py_SymbolicExpression_page symExpr, \ref py_REG_page reg)</b><br>
 Assigns a \ref py_SymbolicExpression_page to a \ref py_REG_page. **Be careful**, use this function only if you know what you are doing.
 The symbolic expression (`symExpr`) must be aligned to the targeted size register. E.g: for SSE registers, the expression must be aligned
@@ -609,6 +613,38 @@ namespace triton {
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
+      }
+
+
+      static PyObject* triton_assignSymbolicExpressionToMemory(PyObject* self, PyObject* args) {
+        PyObject* se  = nullptr;
+        PyObject* mem = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &se, &mem);
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToMemory(): Architecture is not defined.");
+
+        if (se == nullptr || (!PySymbolicExpression_Check(se)))
+          return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToMemory(): Expects a SymbolicExpression as first argument.");
+
+        if (mem == nullptr || (!PyMemoryOperand_Check(mem)))
+          return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToMemory(): Expects a Memory as second argument.");
+
+        triton::engines::symbolic::SymbolicExpression* arg1 = PySymbolicExpression_AsSymbolicExpression(se);
+        triton::arch::MemoryOperand arg2 = *PyMemoryOperand_AsMemoryOperand(mem);
+
+        try {
+          triton::api.assignSymbolicExpressionToMemory(arg1, arg2);
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
       }
 
 
@@ -2466,6 +2502,7 @@ namespace triton {
         {"Instruction",                         (PyCFunction)triton_Instruction,                            METH_NOARGS,        ""},
         {"Memory",                              (PyCFunction)triton_Memory,                                 METH_VARARGS,       ""},
         {"Register",                            (PyCFunction)triton_Register,                               METH_VARARGS,       ""},
+        {"assignSymbolicExpressionToMemory",    (PyCFunction)triton_assignSymbolicExpressionToMemory,       METH_VARARGS,       ""},
         {"assignSymbolicExpressionToRegister",  (PyCFunction)triton_assignSymbolicExpressionToRegister,     METH_VARARGS,       ""},
         {"buildSemantics",                      (PyCFunction)triton_buildSemantics,                         METH_O,             ""},
         {"buildSymbolicImmediate",              (PyCFunction)triton_buildSymbolicImmediate,                 METH_O,             ""},

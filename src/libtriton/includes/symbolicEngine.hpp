@@ -196,6 +196,9 @@ namespace triton {
           //! Assigns a symbolic expression to a register.
           void assignSymbolicExpressionToRegister(SymbolicExpression *se, triton::arch::RegisterOperand& reg);
 
+          //! Assigns a symbolic expression to a memory.
+          void assignSymbolicExpressionToMemory(SymbolicExpression *se, triton::arch::MemoryOperand& mem);
+
           //! Returns the full AST of a root node.
           smt2lib::smtAstAbstractNode* getFullAst(smt2lib::smtAstAbstractNode* node);
 
