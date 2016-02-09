@@ -357,6 +357,10 @@ e.g: `(ite ifExpr thenExpr elseExpr)`.
 Returns the smt2-lib `triton::smt2lib::land()` syntax as \ref py_SmtAstNode_page.<br>
 e.g: `(and expr1 expr2)`.
 
+- **let(SmtAstNode expr1, SmtAstNode expr2, SmtAstNode expr3)**<br>
+Returns the smt2-lib `triton::smt2lib::let()` syntax as \ref py_SmtAstNode_page.<br>
+e.g: `(let ((expr1 expr2)) expr3)`.
+
 - **lnot(SmtAstNode expr)**<br>
 Returns the smt2-lib `triton::smt2lib::lnot()` syntax as \ref py_SmtAstNode_page.<br>
 e.g: `(not expr)`.
@@ -1029,7 +1033,7 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OOO", &op1, &op2);
+        PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
         if (op1 == nullptr || !PySmtAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "land(): expected a SmtAstNode as first argument");
@@ -1038,6 +1042,27 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "land(): expected a SmtAstNode as second argument");
 
         return PySmtAstNode(smt2lib::land(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+      }
+
+
+      static PyObject* smt2lib_let(PyObject* self, PyObject* args) {
+        PyObject* op1 = nullptr;
+        PyObject* op2 = nullptr;
+        PyObject* op3 = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OOO", &op1, &op2, &op3);
+
+        if (op1 == nullptr || !PySmtAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "let(): expected a SmtAstNode as first argument");
+
+        if (op2 == nullptr || !PySmtAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "let(): expected a SmtAstNode as second argument");
+
+        if (op3 == nullptr || !PySmtAstNode_Check(op3))
+          return PyErr_Format(PyExc_TypeError, "let(): expected a SmtAstNode as third argument");
+
+        return PySmtAstNode(smt2lib::let(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2), PySmtAstNode_AsSmtAstNode(op3)));
       }
 
 
@@ -1054,7 +1079,7 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OOO", &op1, &op2);
+        PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
         if (op1 == nullptr || !PySmtAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "lor(): expected a SmtAstNode as first argument");
@@ -1176,6 +1201,7 @@ namespace triton {
         {"extract",     (PyCFunction)smt2lib_extract,    METH_VARARGS,     ""},
         {"ite",         (PyCFunction)smt2lib_ite,        METH_VARARGS,     ""},
         {"land",        (PyCFunction)smt2lib_land,       METH_VARARGS,     ""},
+        {"let",         (PyCFunction)smt2lib_let,        METH_VARARGS,     ""},
         {"lnot",        (PyCFunction)smt2lib_lnot,       METH_O,           ""},
         {"lor",         (PyCFunction)smt2lib_lor,        METH_VARARGS,     ""},
         {"reference",   (PyCFunction)smt2lib_reference,  METH_O,           ""},

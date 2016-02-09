@@ -172,6 +172,9 @@ namespace triton {
           //! Land Summaries
           std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> landSummaries;
 
+          //! Let Summaries
+          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> letSummaries;
+
           //! Lnot Summaries
           std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> lnotSummaries;
 

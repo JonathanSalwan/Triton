@@ -81,14 +81,15 @@ namespace triton {
       FUNCTION_NODE = 179,    /*!< (define-fun w (x) y z) */
       ITE_NODE = 181,         /*!< (ite x y z) */
       LAND_NODE = 191,        /*!< (and x y) */
-      LNOT_NODE = 193,        /*!< (and x y) */
-      LOR_NODE = 197,         /*!< (or x y) */
-      PARAM_NODE = 199,       /*!< (x y) */
-      REFERENCE_NODE = 211,   /*!< Reference node */
-      STRING_NODE = 223,      /*!< String node */
-      SX_NODE = 227,          /*!< ((_ sign_extend x) y) */
-      VARIABLE_NODE = 229,    /*!< Variable node */
-      ZX_NODE = 233           /*!< ((_ zero_extend x) y) */
+      LET_NODE = 193,         /*!< (let ((x y)) z) */
+      LNOT_NODE = 197,        /*!< (and x y) */
+      LOR_NODE = 199,         /*!< (or x y) */
+      PARAM_NODE = 211,       /*!< (x y) */
+      REFERENCE_NODE = 223,   /*!< Reference node */
+      STRING_NODE = 227,      /*!< String node */
+      SX_NODE = 229,          /*!< ((_ sign_extend x) y) */
+      VARIABLE_NODE = 233,    /*!< Variable node */
+      ZX_NODE = 239           /*!< ((_ zero_extend x) y) */
     };
 
 
@@ -594,6 +595,17 @@ namespace triton {
     };
 
 
+    //! (let ((<expr1> <expr2>)) <expr3>)
+    class smtAstLetNode : public smtAstAbstractNode {
+      public:
+        smtAstLetNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2, smtAstAbstractNode* expr3);
+        smtAstLetNode(const smtAstLetNode& copy);
+        ~smtAstLetNode();
+        virtual void accept(Visitor& v);
+        virtual triton::uint512 hash(triton::uint32 deep);
+    };
+
+
     //! (lnot <expr>)
     class smtAstLnotNode : public smtAstAbstractNode {
       public:
@@ -813,6 +825,9 @@ namespace triton {
     std::ostream& operator<<(std::ostream& stream, smtAstLandNode* node);
 
     //! Displays the node in smt2-lib syntax.
+    std::ostream& operator<<(std::ostream& stream, smtAstLetNode* node);
+
+    //! Displays the node in smt2-lib syntax.
     std::ostream& operator<<(std::ostream& stream, smtAstLnotNode* node);
 
     //! Displays the node in smt2-lib syntax.
@@ -974,6 +989,9 @@ namespace triton {
 
     //! smt2-lib C++ api - land node builder
     smtAstAbstractNode* land(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+
+    //! smt2-lib C++ api - let node builder
+    smtAstAbstractNode* let(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2, smtAstAbstractNode* expr3);
 
     //! smt2-lib C++ api - lnot node builder
     smtAstAbstractNode* lnot(smtAstAbstractNode* expr);

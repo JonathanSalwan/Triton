@@ -58,6 +58,7 @@ namespace triton {
         this->summaries[triton::smt2lib::EXTRACT_NODE]    = &this->extractSummaries;
         this->summaries[triton::smt2lib::ITE_NODE]        = &this->iteSummaries;
         this->summaries[triton::smt2lib::LAND_NODE]       = &this->landSummaries;
+        this->summaries[triton::smt2lib::LET_NODE]        = &this->letSummaries;
         this->summaries[triton::smt2lib::LNOT_NODE]       = &this->lnotSummaries;
         this->summaries[triton::smt2lib::LOR_NODE]        = &this->lorSummaries;
         this->summaries[triton::smt2lib::REFERENCE_NODE]  = &this->referenceSummaries;
@@ -150,6 +151,8 @@ namespace triton {
         for (auto it = this->iteSummaries.begin(); it != this->iteSummaries.end(); it++)
           delete it->second;
         for (auto it = this->landSummaries.begin(); it != this->landSummaries.end(); it++)
+          delete it->second;
+        for (auto it = this->letSummaries.begin(); it != this->letSummaries.end(); it++)
           delete it->second;
         for (auto it = this->lnotSummaries.begin(); it != this->lnotSummaries.end(); it++)
           delete it->second;
@@ -279,6 +282,7 @@ namespace triton {
         stats["extract"]            = this->extractSummaries.size();
         stats["ite"]                = this->iteSummaries.size();
         stats["land"]               = this->landSummaries.size();
+        stats["let"]                = this->letSummaries.size();
         stats["lnot"]               = this->lnotSummaries.size();
         stats["lor"]                = this->lorSummaries.size();
         stats["reference"]          = this->referenceSummaries.size();

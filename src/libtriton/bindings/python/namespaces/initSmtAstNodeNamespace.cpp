@@ -33,6 +33,7 @@ The SMT_AST_NODE namespace contains all kinds of node.
 <hr>
 
 - **SMT_AST_NODE.ASSERT**
+- **SMT_AST_NODE.BV**
 - **SMT_AST_NODE.BVADD**
 - **SMT_AST_NODE.BVAND**
 - **SMT_AST_NODE.BVASHR**
@@ -63,7 +64,6 @@ The SMT_AST_NODE namespace contains all kinds of node.
 - **SMT_AST_NODE.BVUREM**
 - **SMT_AST_NODE.BVXNOR**
 - **SMT_AST_NODE.BVXOR**
-- **SMT_AST_NODE.BV**
 - **SMT_AST_NODE.COMPOUND**
 - **SMT_AST_NODE.CONCAT**
 - **SMT_AST_NODE.DECIMAL**
@@ -71,10 +71,13 @@ The SMT_AST_NODE namespace contains all kinds of node.
 - **SMT_AST_NODE.DISTINCT**
 - **SMT_AST_NODE.EQUAL**
 - **SMT_AST_NODE.EXTRACT**
+- **SMT_AST_NODE.FUNCTION**
 - **SMT_AST_NODE.ITE**
 - **SMT_AST_NODE.LAND**
+- **SMT_AST_NODE.LET**
 - **SMT_AST_NODE.LNOT**
 - **SMT_AST_NODE.LOR**
+- **SMT_AST_NODE.PARAM**
 - **SMT_AST_NODE.REFERENCE**
 - **SMT_AST_NODE.STRING**
 - **SMT_AST_NODE.SX**
@@ -93,6 +96,7 @@ namespace triton {
       void initSmtAstNodeNamespace(PyObject* smtAstNodeDict) {
 
         PyDict_SetItemString(smtAstNodeDict, "ASSERT", PyLong_FromUint(triton::smt2lib::ASSERT_NODE));
+        PyDict_SetItemString(smtAstNodeDict, "BV", PyLong_FromUint(triton::smt2lib::BV_NODE));
         PyDict_SetItemString(smtAstNodeDict, "BVADD", PyLong_FromUint(triton::smt2lib::BVADD_NODE));
         PyDict_SetItemString(smtAstNodeDict, "BVAND", PyLong_FromUint(triton::smt2lib::BVAND_NODE));
         PyDict_SetItemString(smtAstNodeDict, "BVASHR", PyLong_FromUint(triton::smt2lib::BVASHR_NODE));
@@ -123,7 +127,6 @@ namespace triton {
         PyDict_SetItemString(smtAstNodeDict, "BVUREM", PyLong_FromUint(triton::smt2lib::BVUREM_NODE));
         PyDict_SetItemString(smtAstNodeDict, "BVXNOR", PyLong_FromUint(triton::smt2lib::BVXNOR_NODE));
         PyDict_SetItemString(smtAstNodeDict, "BVXOR", PyLong_FromUint(triton::smt2lib::BVXOR_NODE));
-        PyDict_SetItemString(smtAstNodeDict, "BV", PyLong_FromUint(triton::smt2lib::BV_NODE));
         PyDict_SetItemString(smtAstNodeDict, "COMPOUND", PyLong_FromUint(triton::smt2lib::COMPOUND_NODE));
         PyDict_SetItemString(smtAstNodeDict, "CONCAT", PyLong_FromUint(triton::smt2lib::CONCAT_NODE));
         PyDict_SetItemString(smtAstNodeDict, "DECIMAL", PyLong_FromUint(triton::smt2lib::DECIMAL_NODE));
@@ -131,10 +134,13 @@ namespace triton {
         PyDict_SetItemString(smtAstNodeDict, "DISTINCT", PyLong_FromUint(triton::smt2lib::DISTINCT_NODE));
         PyDict_SetItemString(smtAstNodeDict, "EQUAL", PyLong_FromUint(triton::smt2lib::EQUAL_NODE));
         PyDict_SetItemString(smtAstNodeDict, "EXTRACT", PyLong_FromUint(triton::smt2lib::EXTRACT_NODE));
+        PyDict_SetItemString(smtAstNodeDict, "FUNCTION", PyLong_FromUint(triton::smt2lib::FUNCTION_NODE));
         PyDict_SetItemString(smtAstNodeDict, "ITE", PyLong_FromUint(triton::smt2lib::ITE_NODE));
         PyDict_SetItemString(smtAstNodeDict, "LAND", PyLong_FromUint(triton::smt2lib::LAND_NODE));
+        PyDict_SetItemString(smtAstNodeDict, "LET", PyLong_FromUint(triton::smt2lib::LET_NODE));
         PyDict_SetItemString(smtAstNodeDict, "LNOT", PyLong_FromUint(triton::smt2lib::LNOT_NODE));
         PyDict_SetItemString(smtAstNodeDict, "LOR", PyLong_FromUint(triton::smt2lib::LOR_NODE));
+        PyDict_SetItemString(smtAstNodeDict, "PARAM", PyLong_FromUint(triton::smt2lib::PARAM_NODE));
         PyDict_SetItemString(smtAstNodeDict, "REFERENCE", PyLong_FromUint(triton::smt2lib::REFERENCE_NODE));
         PyDict_SetItemString(smtAstNodeDict, "STRING", PyLong_FromUint(triton::smt2lib::STRING_NODE));
         PyDict_SetItemString(smtAstNodeDict, "SX", PyLong_FromUint(triton::smt2lib::SX_NODE));
