@@ -351,6 +351,9 @@ namespace triton {
       //! The MOVDDUP semantics.
       void movddup_s(triton::arch::Instruction& inst);
 
+      //! The MOVDQ2Q semantics.
+      void movdq2q_s(triton::arch::Instruction& inst);
+
       //! The MOVDQA semantics.
       void movdqa_s(triton::arch::Instruction& inst);
 
