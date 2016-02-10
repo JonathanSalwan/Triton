@@ -78,10 +78,10 @@ namespace triton {
       };
 
     //! Display a solver model.
-    std::ostream &operator<<(std::ostream &stream, SolverModel model);
+    std::ostream& operator<<(std::ostream& stream, SolverModel model);
 
     //! Display a solver model.
-    std::ostream &operator<<(std::ostream &stream, SolverModel* model);
+    std::ostream& operator<<(std::ostream& stream, SolverModel* model);
 
     /*! @} End of solver namespace */
     };

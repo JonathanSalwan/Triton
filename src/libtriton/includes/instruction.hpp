@@ -181,10 +181,10 @@ namespace triton {
     };
 
     //! Displays an Instruction.
-    std::ostream &operator<<(std::ostream &stream, Instruction inst);
+    std::ostream& operator<<(std::ostream& stream, Instruction inst);
 
     //! Displays an Instruction.
-    std::ostream &operator<<(std::ostream &stream, Instruction* inst);
+    std::ostream& operator<<(std::ostream& stream, Instruction* inst);
 
   /*! @} End of arch namespace */
   };

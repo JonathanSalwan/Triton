@@ -121,10 +121,10 @@ namespace triton {
       };
 
       //! Displays a symbolic variable.
-      std::ostream &operator<<(std::ostream &stream, SymbolicVariable symVar);
+      std::ostream& operator<<(std::ostream& stream, SymbolicVariable symVar);
 
       //! Displays a symbolic variable.
-      std::ostream &operator<<(std::ostream &stream, SymbolicVariable* symVar);
+      std::ostream& operator<<(std::ostream& stream, SymbolicVariable* symVar);
 
     /*! @} End of symbolic namespace */
     };

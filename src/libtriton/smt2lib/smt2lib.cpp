@@ -1837,7 +1837,7 @@ namespace triton {
   namespace smt2lib {
 
     /* Syntax dispatcher from an abstract node */
-    std::ostream &operator<<(std::ostream &stream, smtAstAbstractNode* node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstAbstractNode* node) {
       switch (node->getKind()) {
         case ASSERT_NODE:               stream << reinterpret_cast<smtAstAssertNode*>(node); break;
         case BVADD_NODE:                stream << reinterpret_cast<smtAstBvaddNode*>(node); break;

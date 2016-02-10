@@ -123,10 +123,10 @@ namespace triton {
       };
 
       //! Displays a symbolic expression.
-      std::ostream &operator<<(std::ostream &stream, SymbolicExpression symExpr);
+      std::ostream& operator<<(std::ostream& stream, SymbolicExpression symExpr);
 
       //! Displays a symbolic expression.
-      std::ostream &operator<<(std::ostream &stream, SymbolicExpression* symExpr);
+      std::ostream& operator<<(std::ostream& stream, SymbolicExpression* symExpr);
 
     /*! @} End of symbolic namespace */
     };

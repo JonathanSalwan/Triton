@@ -106,13 +106,13 @@ namespace triton {
       }
 
 
-      std::ostream &operator<<(std::ostream &stream, SymbolicVariable symVar) {
+      std::ostream& operator<<(std::ostream& stream, SymbolicVariable symVar) {
         stream << symVar.getSymVarName() << ":" << symVar.getSymVarSize();
         return stream;
       }
 
 
-      std::ostream &operator<<(std::ostream &stream, SymbolicVariable* symVar) {
+      std::ostream& operator<<(std::ostream& stream, SymbolicVariable* symVar) {
         stream << *symVar;
         return stream;
       }

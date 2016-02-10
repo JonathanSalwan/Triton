@@ -101,13 +101,13 @@ namespace triton {
     }
 
 
-    std::ostream &operator<<(std::ostream &stream, BitsVector bv) {
+    std::ostream& operator<<(std::ostream& stream, BitsVector bv) {
       stream << "bv[" << bv.getHigh() << ".." << bv.getLow() << "]";
       return stream;
     }
 
 
-    std::ostream &operator<<(std::ostream &stream, BitsVector* bv) {
+    std::ostream& operator<<(std::ostream& stream, BitsVector* bv) {
       stream << *bv;
       return stream;
     }

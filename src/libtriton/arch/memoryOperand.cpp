@@ -208,13 +208,13 @@ namespace triton {
     }
 
 
-    std::ostream &operator<<(std::ostream &stream, MemoryOperand mem) {
+    std::ostream& operator<<(std::ostream& stream, MemoryOperand mem) {
       stream << "*[0x" << std::hex << mem.getAddress() << "]:" << std::dec << mem.getBitSize() << " bv[" << mem.getHigh() << ".." << mem.getLow() << "]";
       return stream;
     }
 
 
-    std::ostream &operator<<(std::ostream &stream, MemoryOperand* mem) {
+    std::ostream& operator<<(std::ostream& stream, MemoryOperand* mem) {
       stream << *mem;
       return stream;
     }

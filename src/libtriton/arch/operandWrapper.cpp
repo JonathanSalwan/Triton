@@ -153,7 +153,7 @@ namespace triton {
     }
 
 
-    std::ostream &operator<<(std::ostream &stream, triton::arch::OperandWrapper op) {
+    std::ostream& operator<<(std::ostream& stream, triton::arch::OperandWrapper op) {
       switch (op.getType()) {
         case triton::arch::OP_IMM: stream << op.getImmediate(); break;
         case triton::arch::OP_MEM: stream << op.getMemory(); break;
@@ -165,7 +165,7 @@ namespace triton {
     }
 
 
-    std::ostream &operator<<(std::ostream &stream, triton::arch::OperandWrapper* op) {
+    std::ostream& operator<<(std::ostream &stream, triton::arch::OperandWrapper* op) {
       stream << *op;
       return stream;
     }

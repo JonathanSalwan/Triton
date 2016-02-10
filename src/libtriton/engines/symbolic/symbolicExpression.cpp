@@ -102,7 +102,7 @@ namespace triton {
       }
 
 
-      std::ostream &operator<<(std::ostream &stream, SymbolicExpression symExpr) {
+      std::ostream& operator<<(std::ostream& stream, SymbolicExpression symExpr) {
         stream << symExpr.getId2Str() << " = " << symExpr.getAst();
         if (!symExpr.getComment().empty())
           stream << " ; " << symExpr.getComment();
@@ -110,7 +110,7 @@ namespace triton {
       }
 
 
-      std::ostream &operator<<(std::ostream &stream, SymbolicExpression* symExpr) {
+      std::ostream& operator<<(std::ostream& stream, SymbolicExpression* symExpr) {
         stream << *symExpr;
         return stream;
       }

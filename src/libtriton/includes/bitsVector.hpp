@@ -71,17 +71,17 @@ namespace triton {
         BitsVector(triton::uint32 high, triton::uint32 low);
 
         //! Constructor by copy.
-        BitsVector(const triton::arch::BitsVector &copy);
+        BitsVector(const triton::arch::BitsVector& copy);
 
         //! Destructor.
         ~BitsVector();
     };
 
     //! Displays a BitsVector.
-    std::ostream &operator<<(std::ostream &stream, BitsVector bv);
+    std::ostream& operator<<(std::ostream& stream, BitsVector bv);
 
     //! Displays a BitsVector.
-    std::ostream &operator<<(std::ostream &stream, BitsVector* bv);
+    std::ostream& operator<<(std::ostream& stream, BitsVector* bv);
 
   /*! @} End of arch namespace */
   };

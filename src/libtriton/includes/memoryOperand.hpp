@@ -149,10 +149,10 @@ namespace triton {
    };
 
     //! Displays an MemoryOperand.
-    std::ostream &operator<<(std::ostream &stream, MemoryOperand mem);
+    std::ostream& operator<<(std::ostream& stream, MemoryOperand mem);
 
     //! Displays an MemoryOperand.
-    std::ostream &operator<<(std::ostream &stream, MemoryOperand* mem);
+    std::ostream& operator<<(std::ostream& stream, MemoryOperand* mem);
 
   /*! @} End of arch namespace */
   };

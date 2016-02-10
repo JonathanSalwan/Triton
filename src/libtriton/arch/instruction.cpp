@@ -238,13 +238,13 @@ namespace triton {
     }
 
 
-    std::ostream &operator<<(std::ostream &stream, Instruction inst) {
+    std::ostream& operator<<(std::ostream& stream, Instruction inst) {
       stream << std::hex << inst.getAddress() << ": " << inst.getDisassembly() << std::dec;
       return stream;
     }
 
 
-    std::ostream &operator<<(std::ostream &stream, Instruction* inst) {
+    std::ostream& operator<<(std::ostream& stream, Instruction* inst) {
       stream << *inst;
       return stream;
     }
