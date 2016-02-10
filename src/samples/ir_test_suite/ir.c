@@ -260,6 +260,11 @@ void check(void)
   asm("movddup xmm2, xmm0");
   asm("movddup xmm3, xmm2");
 
+  asm("mov esi, 0x11223344");
+  asm("movd xmm1, esi");
+  asm("movapd xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("movd esi, xmm1");
+
   asm("orpd xmm0, xmm1");
   asm("orps xmm1, xmm3");
 

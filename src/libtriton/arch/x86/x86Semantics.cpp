@@ -94,6 +94,7 @@ LEAVE                        | High Level Procedure Exit
 MOV                          | Move
 MOVAPD                       | Move Aligned Packed Double-Precision Floating-Point Values
 MOVAPS                       | Move Aligned Packed Single-Precision Floating-Point Values
+MOVD                         | Move Doubleword
 MOVDDUP                      | Move One Double-FP and Duplicate
 MOVDQ2Q                      | Move Quadword from XMM to MMX Technology Register
 MOVDQA                       | Move Aligned Double Quadword
@@ -232,6 +233,7 @@ namespace triton {
             case ID_INS_MOVABS:         triton::arch::x86::semantics::movabs_s(inst);     break;
             case ID_INS_MOVAPD:         triton::arch::x86::semantics::movapd_s(inst);     break;
             case ID_INS_MOVAPS:         triton::arch::x86::semantics::movaps_s(inst);     break;
+            case ID_INS_MOVD:           triton::arch::x86::semantics::movd_s(inst);       break;
             case ID_INS_MOVDDUP:        triton::arch::x86::semantics::movddup_s(inst);    break;
             case ID_INS_MOVDQ2Q:        triton::arch::x86::semantics::movdq2q_s(inst);    break;
             case ID_INS_MOVDQA:         triton::arch::x86::semantics::movdqa_s(inst);     break;
@@ -3236,6 +3238,44 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVAPS operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void movd_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the SMT semantics */
+          smt2lib::smtAstAbstractNode* node = nullptr;
+
+          switch (dst.getBitSize()) {
+            /* GPR 32-bits */
+            case DWORD_SIZE_BIT:
+              node = smt2lib::extract(DWORD_SIZE_BIT-1, 0, op2);
+              break;
+
+            /* MMX 64-bits */
+            case QWORD_SIZE_BIT:
+              node = smt2lib::zx(DWORD_SIZE_BIT, smt2lib::extract(DWORD_SIZE_BIT-1, 0, op2));
+              break;
+
+            /* XMM 128-bits */
+            case DQWORD_SIZE_BIT:
+              node = smt2lib::zx(QWORD_SIZE_BIT + DWORD_SIZE_BIT, smt2lib::extract(DWORD_SIZE_BIT-1, 0, op2));
+              break;
+          }
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVD operation");
 
           /* Spread taint */
           expr->isTainted = triton::api.taintAssignment(dst, src);
