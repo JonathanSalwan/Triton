@@ -595,10 +595,10 @@ namespace triton {
     };
 
 
-    //! (let ((<expr1> <expr2>)) <expr3>)
+    //! (let ((<alias> <expr2>)) <expr3>)
     class smtAstLetNode : public smtAstAbstractNode {
       public:
-        smtAstLetNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2, smtAstAbstractNode* expr3);
+        smtAstLetNode(std::string alias, smtAstAbstractNode* expr2, smtAstAbstractNode* expr3);
         smtAstLetNode(const smtAstLetNode& copy);
         ~smtAstLetNode();
         virtual void accept(Visitor& v);
@@ -991,7 +991,7 @@ namespace triton {
     smtAstAbstractNode* land(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
     //! smt2-lib C++ api - let node builder
-    smtAstAbstractNode* let(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2, smtAstAbstractNode* expr3);
+    smtAstAbstractNode* let(std::string alias, smtAstAbstractNode* expr2, smtAstAbstractNode* expr3);
 
     //! smt2-lib C++ api - lnot node builder
     smtAstAbstractNode* lnot(smtAstAbstractNode* expr);

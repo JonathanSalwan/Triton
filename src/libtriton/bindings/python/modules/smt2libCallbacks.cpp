@@ -357,9 +357,9 @@ e.g: `(ite ifExpr thenExpr elseExpr)`.
 Returns the smt2-lib `triton::smt2lib::land()` syntax as \ref py_SmtAstNode_page.<br>
 e.g: `(and expr1 expr2)`.
 
-- **let(SmtAstNode expr1, SmtAstNode expr2, SmtAstNode expr3)**<br>
+- **let(string alias, SmtAstNode expr2, SmtAstNode expr3)**<br>
 Returns the smt2-lib `triton::smt2lib::let()` syntax as \ref py_SmtAstNode_page.<br>
-e.g: `(let ((expr1 expr2)) expr3)`.
+e.g: `(let ((alias expr2)) expr3)`.
 
 - **lnot(SmtAstNode expr)**<br>
 Returns the smt2-lib `triton::smt2lib::lnot()` syntax as \ref py_SmtAstNode_page.<br>
@@ -1253,8 +1253,8 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOO", &op1, &op2, &op3);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "let(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyString_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "let(): expected a string as first argument");
 
         if (op2 == nullptr || !PySmtAstNode_Check(op2))
           return PyErr_Format(PyExc_TypeError, "let(): expected a SmtAstNode as second argument");
@@ -1263,7 +1263,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "let(): expected a SmtAstNode as third argument");
 
         try {
-          return PySmtAstNode(smt2lib::let(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2), PySmtAstNode_AsSmtAstNode(op3)));
+          return PySmtAstNode(smt2lib::let(PyString_AsString(op1), PySmtAstNode_AsSmtAstNode(op2), PySmtAstNode_AsSmtAstNode(op3)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

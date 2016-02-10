@@ -207,7 +207,7 @@ namespace triton {
 
     smtAstBvdeclNode::smtAstBvdeclNode(triton::uint32 size) {
       this->kind = BVDECL_NODE;
-      this->addChild(decimal(size));
+      this->addChild(triton::smt2lib::decimal(size));
     }
 
 
@@ -484,7 +484,7 @@ namespace triton {
 
     smtAstBvrolNode::smtAstBvrolNode(triton::uint32 rot, smtAstAbstractNode *expr) {
       this->kind = BVROL_NODE;
-      this->addChild(decimal(rot));
+      this->addChild(triton::smt2lib::decimal(rot));
       this->addChild(expr);
     }
 
@@ -528,7 +528,7 @@ namespace triton {
 
     smtAstBvrorNode::smtAstBvrorNode(triton::uint32 rot, smtAstAbstractNode *expr) {
       this->kind = BVROR_NODE;
-      this->addChild(decimal(rot));
+      this->addChild(triton::smt2lib::decimal(rot));
       this->addChild(expr);
     }
 
@@ -1167,8 +1167,8 @@ namespace triton {
 
     smtAstBvNode::smtAstBvNode(triton::uint128 value, triton::uint32 size) {
       this->kind = BV_NODE;
-      this->addChild(decimal(value));
-      this->addChild(decimal(size));
+      this->addChild(triton::smt2lib::decimal(value));
+      this->addChild(triton::smt2lib::decimal(size));
     }
 
 
@@ -1331,8 +1331,8 @@ namespace triton {
 
     smtAstDeclareNode::smtAstDeclareNode(std::string symVarName, triton::uint32 symVarSize) {
       this->kind = DECLARE_NODE;
-      this->addChild(string(symVarName));
-      this->addChild(decimal(symVarSize));
+      this->addChild(triton::smt2lib::string(symVarName));
+      this->addChild(triton::smt2lib::decimal(symVarSize));
     }
 
 
@@ -1436,8 +1436,8 @@ namespace triton {
 
     smtAstExtractNode::smtAstExtractNode(triton::uint32 high, triton::uint32 low, smtAstAbstractNode *expr) {
       this->kind = EXTRACT_NODE;
-      this->addChild(decimal(high));
-      this->addChild(decimal(low));
+      this->addChild(triton::smt2lib::decimal(high));
+      this->addChild(triton::smt2lib::decimal(low));
       this->addChild(expr);
     }
 
@@ -1541,9 +1541,9 @@ namespace triton {
     /* ====== Let */
 
 
-    smtAstLetNode::smtAstLetNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2, smtAstAbstractNode *expr3) {
+    smtAstLetNode::smtAstLetNode(std::string alias, smtAstAbstractNode *expr2, smtAstAbstractNode *expr3) {
       this->kind = LET_NODE;
-      this->addChild(expr1);
+      this->addChild(triton::smt2lib::string(alias));
       this->addChild(expr2);
       this->addChild(expr3);
     }
@@ -1721,7 +1721,7 @@ namespace triton {
 
     smtAstSxNode::smtAstSxNode(triton::uint32 sizeExt, smtAstAbstractNode *expr) {
       this->kind = SX_NODE;
-      this->addChild(decimal(sizeExt));
+      this->addChild(triton::smt2lib::decimal(sizeExt));
       this->addChild(expr);
     }
 
@@ -1794,7 +1794,7 @@ namespace triton {
 
     smtAstZxNode::smtAstZxNode(triton::uint32 sizeExt, smtAstAbstractNode *expr) {
       this->kind = ZX_NODE;
-      this->addChild(decimal(sizeExt));
+      this->addChild(triton::smt2lib::decimal(sizeExt));
       this->addChild(expr);
     }
 
@@ -2713,8 +2713,8 @@ namespace triton {
     }
 
 
-    smtAstAbstractNode *let(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2, smtAstAbstractNode *expr3) {
-      smtAstAbstractNode *node = new smtAstLetNode(expr1, expr2, expr3);
+    smtAstAbstractNode *let(std::string alias, smtAstAbstractNode *expr2, smtAstAbstractNode *expr3) {
+      smtAstAbstractNode *node = new smtAstLetNode(alias, expr2, expr3);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
