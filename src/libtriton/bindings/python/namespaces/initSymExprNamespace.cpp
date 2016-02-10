@@ -48,10 +48,10 @@ namespace triton {
 
       void initSymExprNamespace(PyObject* symExprDict) {
 
-        PyDict_SetItemString(symExprDict, "UNSET", PyLong_FromUint(static_cast<triton::__uint>(-1)));
-        PyDict_SetItemString(symExprDict, "UNDEF", PyLong_FromUint(triton::engines::symbolic::UNDEF));
-        PyDict_SetItemString(symExprDict, "MEM", PyLong_FromUint(triton::engines::symbolic::MEM));
-        PyDict_SetItemString(symExprDict, "REG", PyLong_FromUint(triton::engines::symbolic::REG));
+        PyDict_SetItemString(symExprDict, "UNSET",  PyLong_FromUint(static_cast<triton::__uint>(-1)));
+        PyDict_SetItemString(symExprDict, "UNDEF",  PyLong_FromUint(triton::engines::symbolic::UNDEF));
+        PyDict_SetItemString(symExprDict, "MEM",    PyLong_FromUint(triton::engines::symbolic::MEM));
+        PyDict_SetItemString(symExprDict, "REG",    PyLong_FromUint(triton::engines::symbolic::REG));
 
       }
 

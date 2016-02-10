@@ -47,10 +47,10 @@ namespace triton {
 
       void initOperandNamespace(PyObject* operandDict) {
 
-        PyDict_SetItemString(operandDict, "INVALID", PyLong_FromUint(triton::arch::OP_INVALID));
-        PyDict_SetItemString(operandDict, "IMM", PyLong_FromUint(triton::arch::OP_IMM));
-        PyDict_SetItemString(operandDict, "MEM", PyLong_FromUint(triton::arch::OP_MEM));
-        PyDict_SetItemString(operandDict, "REG", PyLong_FromUint(triton::arch::OP_REG));
+        PyDict_SetItemString(operandDict, "INVALID",  PyLong_FromUint(triton::arch::OP_INVALID));
+        PyDict_SetItemString(operandDict, "IMM",      PyLong_FromUint(triton::arch::OP_IMM));
+        PyDict_SetItemString(operandDict, "MEM",      PyLong_FromUint(triton::arch::OP_MEM));
+        PyDict_SetItemString(operandDict, "REG",      PyLong_FromUint(triton::arch::OP_REG));
 
       }
 
