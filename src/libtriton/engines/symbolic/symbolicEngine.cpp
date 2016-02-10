@@ -397,7 +397,7 @@ namespace triton {
         std::stringstream stream;
 
         for(it = this->symbolicVariables.begin(); it != this->symbolicVariables.end(); it++)
-          stream << smt2lib::declare(it->second->getSymVarName(), it->second->getSymVarSize());
+          stream << smt2lib::declareFunction(it->second->getSymVarName(), smt2lib::bvdecl(it->second->getSymVarSize()));
 
         return stream.str();
       }

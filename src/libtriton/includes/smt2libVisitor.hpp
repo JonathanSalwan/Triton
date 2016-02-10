@@ -60,7 +60,7 @@ namespace triton {
     class smtAstCompoundNode;
     class smtAstConcatNode;
     class smtAstDecimalNode;
-    class smtAstDeclareNode;
+    class smtAstDeclareFunctionNode;
     class smtAstDistinctNode;
     class smtAstEqualNode;
     class smtAstExtractNode;
@@ -118,7 +118,7 @@ namespace triton {
         virtual void operator()(smtAstCompoundNode& e) = 0;
         virtual void operator()(smtAstConcatNode& e) = 0;
         virtual void operator()(smtAstDecimalNode& e) = 0;
-        virtual void operator()(smtAstDeclareNode& e) = 0;
+        virtual void operator()(smtAstDeclareFunctionNode& e) = 0;
         virtual void operator()(smtAstDistinctNode& e) = 0;
         virtual void operator()(smtAstEqualNode& e) = 0;
         virtual void operator()(smtAstExtractNode& e) = 0;

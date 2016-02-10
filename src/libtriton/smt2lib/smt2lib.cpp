@@ -29,7 +29,7 @@ namespace triton {
     }
 
 
-    smtAstAbstractNode::smtAstAbstractNode(const smtAstAbstractNode &copy) {
+    smtAstAbstractNode::smtAstAbstractNode(const smtAstAbstractNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -53,12 +53,12 @@ namespace triton {
     }
 
 
-    std::vector<smtAstAbstractNode *> &smtAstAbstractNode::getChilds(void) {
+    std::vector<smtAstAbstractNode*>& smtAstAbstractNode::getChilds(void) {
       return this->childs;
     }
 
 
-    void smtAstAbstractNode::addChild(smtAstAbstractNode *child) {
+    void smtAstAbstractNode::addChild(smtAstAbstractNode* child) {
       this->childs.push_back(child);
     }
 
@@ -66,13 +66,13 @@ namespace triton {
     /* ====== assert */
 
 
-    smtAstAssertNode::smtAstAssertNode(smtAstAbstractNode *expr) {
+    smtAstAssertNode::smtAstAssertNode(smtAstAbstractNode* expr) {
       this->kind = ASSERT_NODE;
       this->addChild(expr);
     }
 
 
-    smtAstAssertNode::smtAstAssertNode(const smtAstAssertNode &copy) {
+    smtAstAssertNode::smtAstAssertNode(const smtAstAssertNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -99,14 +99,14 @@ namespace triton {
     /* ====== bvadd */
 
 
-    smtAstBvaddNode::smtAstBvaddNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvaddNode::smtAstBvaddNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVADD_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvaddNode::smtAstBvaddNode(const smtAstBvaddNode &copy) {
+    smtAstBvaddNode::smtAstBvaddNode(const smtAstBvaddNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -118,7 +118,7 @@ namespace triton {
 
 
     void smtAstBvaddNode::accept(Visitor& v) {
-      v(*this);
+       v(*this);
     }
 
 
@@ -134,14 +134,14 @@ namespace triton {
     /* ====== bvand */
 
 
-    smtAstBvandNode::smtAstBvandNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvandNode::smtAstBvandNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVAND_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvandNode::smtAstBvandNode(const smtAstBvandNode &copy) {
+    smtAstBvandNode::smtAstBvandNode(const smtAstBvandNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -170,14 +170,14 @@ namespace triton {
     /* ====== bvashr */
 
 
-    smtAstBvashrNode::smtAstBvashrNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvashrNode::smtAstBvashrNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVASHR_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvashrNode::smtAstBvashrNode(const smtAstBvashrNode &copy) {
+    smtAstBvashrNode::smtAstBvashrNode(const smtAstBvashrNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -211,7 +211,7 @@ namespace triton {
     }
 
 
-    smtAstBvdeclNode::smtAstBvdeclNode(const smtAstBvdeclNode &copy) {
+    smtAstBvdeclNode::smtAstBvdeclNode(const smtAstBvdeclNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -239,14 +239,14 @@ namespace triton {
     /* ====== bvlshr */
 
 
-    smtAstBvlshrNode::smtAstBvlshrNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvlshrNode::smtAstBvlshrNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVLSHR_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvlshrNode::smtAstBvlshrNode(const smtAstBvlshrNode &copy) {
+    smtAstBvlshrNode::smtAstBvlshrNode(const smtAstBvlshrNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -274,14 +274,14 @@ namespace triton {
     /* ====== bvmul */
 
 
-    smtAstBvmulNode::smtAstBvmulNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvmulNode::smtAstBvmulNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVMUL_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvmulNode::smtAstBvmulNode(const smtAstBvmulNode &copy) {
+    smtAstBvmulNode::smtAstBvmulNode(const smtAstBvmulNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -309,14 +309,14 @@ namespace triton {
     /* ====== bvnand */
 
 
-    smtAstBvnandNode::smtAstBvnandNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvnandNode::smtAstBvnandNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVNAND_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvnandNode::smtAstBvnandNode(const smtAstBvnandNode &copy) {
+    smtAstBvnandNode::smtAstBvnandNode(const smtAstBvnandNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -344,13 +344,13 @@ namespace triton {
     /* ====== bvneg */
 
 
-    smtAstBvnegNode::smtAstBvnegNode(smtAstAbstractNode *expr) {
+    smtAstBvnegNode::smtAstBvnegNode(smtAstAbstractNode* expr) {
       this->kind = BVNEG_NODE;
       this->addChild(expr);
     }
 
 
-    smtAstBvnegNode::smtAstBvnegNode(const smtAstBvnegNode &copy) {
+    smtAstBvnegNode::smtAstBvnegNode(const smtAstBvnegNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -378,14 +378,14 @@ namespace triton {
     /* ====== bvnor */
 
 
-    smtAstBvnorNode::smtAstBvnorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvnorNode::smtAstBvnorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVNOR_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvnorNode::smtAstBvnorNode(const smtAstBvnorNode &copy) {
+    smtAstBvnorNode::smtAstBvnorNode(const smtAstBvnorNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -413,13 +413,13 @@ namespace triton {
     /* ====== bvnot */
 
 
-    smtAstBvnotNode::smtAstBvnotNode(smtAstAbstractNode *expr) {
+    smtAstBvnotNode::smtAstBvnotNode(smtAstAbstractNode* expr) {
       this->kind = BVNOT_NODE;
       this->addChild(expr);
     }
 
 
-    smtAstBvnotNode::smtAstBvnotNode(const smtAstBvnotNode &copy) {
+    smtAstBvnotNode::smtAstBvnotNode(const smtAstBvnotNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -447,14 +447,14 @@ namespace triton {
     /* ====== bvor */
 
 
-    smtAstBvorNode::smtAstBvorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvorNode::smtAstBvorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVOR_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvorNode::smtAstBvorNode(const smtAstBvorNode &copy) {
+    smtAstBvorNode::smtAstBvorNode(const smtAstBvorNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -482,21 +482,21 @@ namespace triton {
     /* ====== bvrol */
 
 
-    smtAstBvrolNode::smtAstBvrolNode(triton::uint32 rot, smtAstAbstractNode *expr) {
+    smtAstBvrolNode::smtAstBvrolNode(triton::uint32 rot, smtAstAbstractNode* expr) {
       this->kind = BVROL_NODE;
       this->addChild(triton::smt2lib::decimal(rot));
       this->addChild(expr);
     }
 
 
-    smtAstBvrolNode::smtAstBvrolNode(const smtAstBvrolNode &copy) {
+    smtAstBvrolNode::smtAstBvrolNode(const smtAstBvrolNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
 
 
-    smtAstBvrolNode::smtAstBvrolNode(smtAstAbstractNode *rot, smtAstAbstractNode *expr) {
+    smtAstBvrolNode::smtAstBvrolNode(smtAstAbstractNode* rot, smtAstAbstractNode* expr) {
       if (rot->getKind() != DECIMAL_NODE)
         throw std::runtime_error("smtAstBvrolNode - rot must be a decimal expression");
       this->kind = BVROL_NODE;
@@ -526,21 +526,21 @@ namespace triton {
     /* ====== bvror */
 
 
-    smtAstBvrorNode::smtAstBvrorNode(triton::uint32 rot, smtAstAbstractNode *expr) {
+    smtAstBvrorNode::smtAstBvrorNode(triton::uint32 rot, smtAstAbstractNode* expr) {
       this->kind = BVROR_NODE;
       this->addChild(triton::smt2lib::decimal(rot));
       this->addChild(expr);
     }
 
 
-    smtAstBvrorNode::smtAstBvrorNode(const smtAstBvrorNode &copy) {
+    smtAstBvrorNode::smtAstBvrorNode(const smtAstBvrorNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
 
 
-    smtAstBvrorNode::smtAstBvrorNode(smtAstAbstractNode *rot, smtAstAbstractNode *expr) {
+    smtAstBvrorNode::smtAstBvrorNode(smtAstAbstractNode* rot, smtAstAbstractNode* expr) {
       if (rot->getKind() != DECIMAL_NODE)
         throw std::runtime_error("smtAstBvrorNode - rot must be a decimal expression");
       this->kind = BVROR_NODE;
@@ -570,14 +570,14 @@ namespace triton {
     /* ====== bvsdiv */
 
 
-    smtAstBvsdivNode::smtAstBvsdivNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvsdivNode::smtAstBvsdivNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSDIV_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvsdivNode::smtAstBvsdivNode(const smtAstBvsdivNode &copy) {
+    smtAstBvsdivNode::smtAstBvsdivNode(const smtAstBvsdivNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -605,14 +605,14 @@ namespace triton {
     /* ====== bvsge */
 
 
-    smtAstBvsgeNode::smtAstBvsgeNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvsgeNode::smtAstBvsgeNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSGE_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvsgeNode::smtAstBvsgeNode(const smtAstBvsgeNode &copy) {
+    smtAstBvsgeNode::smtAstBvsgeNode(const smtAstBvsgeNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -640,14 +640,14 @@ namespace triton {
     /* ====== bvsgt */
 
 
-    smtAstBvsgtNode::smtAstBvsgtNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvsgtNode::smtAstBvsgtNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSGT_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvsgtNode::smtAstBvsgtNode(const smtAstBvsgtNode &copy) {
+    smtAstBvsgtNode::smtAstBvsgtNode(const smtAstBvsgtNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -675,14 +675,14 @@ namespace triton {
     /* ====== bvshl */
 
 
-    smtAstBvshlNode::smtAstBvshlNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvshlNode::smtAstBvshlNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSHL_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvshlNode::smtAstBvshlNode(const smtAstBvshlNode &copy) {
+    smtAstBvshlNode::smtAstBvshlNode(const smtAstBvshlNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -710,14 +710,14 @@ namespace triton {
     /* ====== bvsle */
 
 
-    smtAstBvsleNode::smtAstBvsleNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvsleNode::smtAstBvsleNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSLE_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvsleNode::smtAstBvsleNode(const smtAstBvsleNode &copy) {
+    smtAstBvsleNode::smtAstBvsleNode(const smtAstBvsleNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -745,14 +745,14 @@ namespace triton {
     /* ====== bvslt */
 
 
-    smtAstBvsltNode::smtAstBvsltNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvsltNode::smtAstBvsltNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSLT_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvsltNode::smtAstBvsltNode(const smtAstBvsltNode &copy) {
+    smtAstBvsltNode::smtAstBvsltNode(const smtAstBvsltNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -780,14 +780,14 @@ namespace triton {
     /* ====== bvsmod */
 
 
-    smtAstBvsmodNode::smtAstBvsmodNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvsmodNode::smtAstBvsmodNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSMOD_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvsmodNode::smtAstBvsmodNode(const smtAstBvsmodNode &copy) {
+    smtAstBvsmodNode::smtAstBvsmodNode(const smtAstBvsmodNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -815,14 +815,14 @@ namespace triton {
     /* ====== bvsrem */
 
 
-    smtAstBvsremNode::smtAstBvsremNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvsremNode::smtAstBvsremNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSREM_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvsremNode::smtAstBvsremNode(const smtAstBvsremNode &copy) {
+    smtAstBvsremNode::smtAstBvsremNode(const smtAstBvsremNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -850,14 +850,14 @@ namespace triton {
     /* ====== bvsub */
 
 
-    smtAstBvsubNode::smtAstBvsubNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvsubNode::smtAstBvsubNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSUB_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvsubNode::smtAstBvsubNode(const smtAstBvsubNode &copy) {
+    smtAstBvsubNode::smtAstBvsubNode(const smtAstBvsubNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -885,14 +885,14 @@ namespace triton {
     /* ====== bvudiv */
 
 
-    smtAstBvudivNode::smtAstBvudivNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvudivNode::smtAstBvudivNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVUDIV_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvudivNode::smtAstBvudivNode(const smtAstBvudivNode &copy) {
+    smtAstBvudivNode::smtAstBvudivNode(const smtAstBvudivNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -920,14 +920,14 @@ namespace triton {
     /* ====== bvuge */
 
 
-    smtAstBvugeNode::smtAstBvugeNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvugeNode::smtAstBvugeNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVUGE_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvugeNode::smtAstBvugeNode(const smtAstBvugeNode &copy) {
+    smtAstBvugeNode::smtAstBvugeNode(const smtAstBvugeNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -955,14 +955,14 @@ namespace triton {
     /* ====== bvugt */
 
 
-    smtAstBvugtNode::smtAstBvugtNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvugtNode::smtAstBvugtNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVUGT_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvugtNode::smtAstBvugtNode(const smtAstBvugtNode &copy) {
+    smtAstBvugtNode::smtAstBvugtNode(const smtAstBvugtNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -990,14 +990,14 @@ namespace triton {
     /* ====== bvule */
 
 
-    smtAstBvuleNode::smtAstBvuleNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvuleNode::smtAstBvuleNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVULE_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvuleNode::smtAstBvuleNode(const smtAstBvuleNode &copy) {
+    smtAstBvuleNode::smtAstBvuleNode(const smtAstBvuleNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1025,14 +1025,14 @@ namespace triton {
     /* ====== bvult */
 
 
-    smtAstBvultNode::smtAstBvultNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvultNode::smtAstBvultNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVULT_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvultNode::smtAstBvultNode(const smtAstBvultNode &copy) {
+    smtAstBvultNode::smtAstBvultNode(const smtAstBvultNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1060,14 +1060,14 @@ namespace triton {
     /* ====== bvurem */
 
 
-    smtAstBvuremNode::smtAstBvuremNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvuremNode::smtAstBvuremNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVUREM_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvuremNode::smtAstBvuremNode(const smtAstBvuremNode &copy) {
+    smtAstBvuremNode::smtAstBvuremNode(const smtAstBvuremNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1095,14 +1095,14 @@ namespace triton {
     /* ====== bvxnor */
 
 
-    smtAstBvxnorNode::smtAstBvxnorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvxnorNode::smtAstBvxnorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVXNOR_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvxnorNode::smtAstBvxnorNode(const smtAstBvxnorNode &copy) {
+    smtAstBvxnorNode::smtAstBvxnorNode(const smtAstBvxnorNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1130,14 +1130,14 @@ namespace triton {
     /* ====== bvxor */
 
 
-    smtAstBvxorNode::smtAstBvxorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstBvxorNode::smtAstBvxorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVXOR_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstBvxorNode::smtAstBvxorNode(const smtAstBvxorNode &copy) {
+    smtAstBvxorNode::smtAstBvxorNode(const smtAstBvxorNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1172,7 +1172,7 @@ namespace triton {
     }
 
 
-    smtAstBvNode::smtAstBvNode(const smtAstBvNode &copy) {
+    smtAstBvNode::smtAstBvNode(const smtAstBvNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1200,14 +1200,14 @@ namespace triton {
     /* ====== compound */
 
 
-    smtAstCompoundNode::smtAstCompoundNode(std::vector<smtAstAbstractNode *> exprs) {
+    smtAstCompoundNode::smtAstCompoundNode(std::vector<smtAstAbstractNode*> exprs) {
       this->kind = COMPOUND_NODE;
       for (triton::uint32 index = 0; index < exprs.size(); index++)
         this->addChild(exprs[index]);
     }
 
 
-    smtAstCompoundNode::smtAstCompoundNode(const smtAstCompoundNode &copy) {
+    smtAstCompoundNode::smtAstCompoundNode(const smtAstCompoundNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1235,21 +1235,21 @@ namespace triton {
     /* ====== concat */
 
 
-    smtAstConcatNode::smtAstConcatNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstConcatNode::smtAstConcatNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = CONCAT_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstConcatNode::smtAstConcatNode(const smtAstConcatNode &copy) {
+    smtAstConcatNode::smtAstConcatNode(const smtAstConcatNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
 
 
-    smtAstConcatNode::smtAstConcatNode(std::vector<smtAstAbstractNode *> exprs) {
+    smtAstConcatNode::smtAstConcatNode(std::vector<smtAstAbstractNode*> exprs) {
       this->kind = CONCAT_NODE;
 
       triton::uint32 size = exprs.size();
@@ -1261,7 +1261,7 @@ namespace triton {
     }
 
 
-    smtAstConcatNode::smtAstConcatNode(std::list<smtAstAbstractNode *> exprs) {
+    smtAstConcatNode::smtAstConcatNode(std::list<smtAstAbstractNode*> exprs) {
       this->kind = CONCAT_NODE;
 
       if (exprs.size() < 2)
@@ -1300,7 +1300,7 @@ namespace triton {
     }
 
 
-    smtAstDecimalNode::smtAstDecimalNode(const smtAstDecimalNode &copy) {
+    smtAstDecimalNode::smtAstDecimalNode(const smtAstDecimalNode& copy) {
       this->kind  = copy.kind;
       this->value = copy.value;
     }
@@ -1329,30 +1329,33 @@ namespace triton {
     /* ====== Declare node */
 
 
-    smtAstDeclareNode::smtAstDeclareNode(std::string symVarName, triton::uint32 symVarSize) {
-      this->kind = DECLARE_NODE;
-      this->addChild(triton::smt2lib::string(symVarName));
-      this->addChild(triton::smt2lib::decimal(symVarSize));
+    smtAstDeclareFunctionNode::smtAstDeclareFunctionNode(std::string name, smtAstAbstractNode* bvDecl) {
+      this->kind = DECLARE_FUNCTION_NODE;
+      this->addChild(triton::smt2lib::string(name));
+      this->addChild(bvDecl);
+
+      if (bvDecl->getKind() != BVDECL_NODE)
+        throw std::runtime_error("smtAstDeclareFunctionNode - The second argument must be a bitvector declaration");
     }
 
 
-    smtAstDeclareNode::smtAstDeclareNode(const smtAstDeclareNode &copy) {
+    smtAstDeclareFunctionNode::smtAstDeclareFunctionNode(const smtAstDeclareFunctionNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
 
 
-    smtAstDeclareNode::~smtAstDeclareNode() {
+    smtAstDeclareFunctionNode::~smtAstDeclareFunctionNode() {
     }
 
 
-    void smtAstDeclareNode::accept(Visitor& v) {
+    void smtAstDeclareFunctionNode::accept(Visitor& v) {
       v(*this);
     }
 
 
-    triton::uint512 smtAstDeclareNode::hash(triton::uint32 deep) {
+    triton::uint512 smtAstDeclareFunctionNode::hash(triton::uint32 deep) {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1364,14 +1367,14 @@ namespace triton {
     /* ====== Distinct node */
 
 
-    smtAstDistinctNode::smtAstDistinctNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstDistinctNode::smtAstDistinctNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind  = DISTINCT_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstDistinctNode::smtAstDistinctNode(const smtAstDistinctNode &copy) {
+    smtAstDistinctNode::smtAstDistinctNode(const smtAstDistinctNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1399,14 +1402,14 @@ namespace triton {
     /* ====== equal */
 
 
-    smtAstEqualNode::smtAstEqualNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstEqualNode::smtAstEqualNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = EQUAL_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstEqualNode::smtAstEqualNode(const smtAstEqualNode &copy) {
+    smtAstEqualNode::smtAstEqualNode(const smtAstEqualNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1434,7 +1437,7 @@ namespace triton {
     /* ====== extract */
 
 
-    smtAstExtractNode::smtAstExtractNode(triton::uint32 high, triton::uint32 low, smtAstAbstractNode *expr) {
+    smtAstExtractNode::smtAstExtractNode(triton::uint32 high, triton::uint32 low, smtAstAbstractNode* expr) {
       this->kind = EXTRACT_NODE;
       this->addChild(triton::smt2lib::decimal(high));
       this->addChild(triton::smt2lib::decimal(low));
@@ -1442,7 +1445,7 @@ namespace triton {
     }
 
 
-    smtAstExtractNode::smtAstExtractNode(const smtAstExtractNode &copy) {
+    smtAstExtractNode::smtAstExtractNode(const smtAstExtractNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1470,7 +1473,7 @@ namespace triton {
     /* ====== ite */
 
 
-    smtAstIteNode::smtAstIteNode(smtAstAbstractNode *ifExpr, smtAstAbstractNode *thenExpr, smtAstAbstractNode *elseExpr) {
+    smtAstIteNode::smtAstIteNode(smtAstAbstractNode* ifExpr, smtAstAbstractNode* thenExpr, smtAstAbstractNode* elseExpr) {
       this->kind = ITE_NODE;
       this->addChild(ifExpr);
       this->addChild(thenExpr);
@@ -1478,7 +1481,7 @@ namespace triton {
     }
 
 
-    smtAstIteNode::smtAstIteNode(const smtAstIteNode &copy) {
+    smtAstIteNode::smtAstIteNode(const smtAstIteNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1506,14 +1509,14 @@ namespace triton {
     /* ====== Land */
 
 
-    smtAstLandNode::smtAstLandNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstLandNode::smtAstLandNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = LAND_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstLandNode::smtAstLandNode(const smtAstLandNode &copy) {
+    smtAstLandNode::smtAstLandNode(const smtAstLandNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1541,7 +1544,7 @@ namespace triton {
     /* ====== Let */
 
 
-    smtAstLetNode::smtAstLetNode(std::string alias, smtAstAbstractNode *expr2, smtAstAbstractNode *expr3) {
+    smtAstLetNode::smtAstLetNode(std::string alias, smtAstAbstractNode* expr2, smtAstAbstractNode* expr3) {
       this->kind = LET_NODE;
       this->addChild(triton::smt2lib::string(alias));
       this->addChild(expr2);
@@ -1549,7 +1552,7 @@ namespace triton {
     }
 
 
-    smtAstLetNode::smtAstLetNode(const smtAstLetNode &copy) {
+    smtAstLetNode::smtAstLetNode(const smtAstLetNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1577,13 +1580,13 @@ namespace triton {
     /* ====== Lnot */
 
 
-    smtAstLnotNode::smtAstLnotNode(smtAstAbstractNode *expr) {
+    smtAstLnotNode::smtAstLnotNode(smtAstAbstractNode* expr) {
       this->kind = LNOT_NODE;
       this->addChild(expr);
     }
 
 
-    smtAstLnotNode::smtAstLnotNode(const smtAstLnotNode &copy) {
+    smtAstLnotNode::smtAstLnotNode(const smtAstLnotNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1611,14 +1614,14 @@ namespace triton {
     /* ====== Lor */
 
 
-    smtAstLorNode::smtAstLorNode(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
+    smtAstLorNode::smtAstLorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = LOR_NODE;
       this->addChild(expr1);
       this->addChild(expr2);
     }
 
 
-    smtAstLorNode::smtAstLorNode(const smtAstLorNode &copy) {
+    smtAstLorNode::smtAstLorNode(const smtAstLorNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1652,7 +1655,7 @@ namespace triton {
     }
 
 
-    smtAstReferenceNode::smtAstReferenceNode(const smtAstReferenceNode &copy) {
+    smtAstReferenceNode::smtAstReferenceNode(const smtAstReferenceNode& copy) {
       this->kind  = copy.kind;
       this->value = copy.value;
     }
@@ -1687,7 +1690,7 @@ namespace triton {
     }
 
 
-    smtAstStringNode::smtAstStringNode(const smtAstStringNode &copy) {
+    smtAstStringNode::smtAstStringNode(const smtAstStringNode& copy) {
       this->kind  = copy.kind;
       this->value = copy.value;
     }
@@ -1719,14 +1722,14 @@ namespace triton {
     /* ====== sx */
 
 
-    smtAstSxNode::smtAstSxNode(triton::uint32 sizeExt, smtAstAbstractNode *expr) {
+    smtAstSxNode::smtAstSxNode(triton::uint32 sizeExt, smtAstAbstractNode* expr) {
       this->kind = SX_NODE;
       this->addChild(triton::smt2lib::decimal(sizeExt));
       this->addChild(expr);
     }
 
 
-    smtAstSxNode::smtAstSxNode(const smtAstSxNode &copy) {
+    smtAstSxNode::smtAstSxNode(const smtAstSxNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1760,7 +1763,7 @@ namespace triton {
     }
 
 
-    smtAstVariableNode::smtAstVariableNode(const smtAstVariableNode &copy) {
+    smtAstVariableNode::smtAstVariableNode(const smtAstVariableNode& copy) {
       this->kind  = copy.kind;
       this->value = copy.value;
     }
@@ -1792,14 +1795,14 @@ namespace triton {
     /* ====== zx */
 
 
-    smtAstZxNode::smtAstZxNode(triton::uint32 sizeExt, smtAstAbstractNode *expr) {
+    smtAstZxNode::smtAstZxNode(triton::uint32 sizeExt, smtAstAbstractNode* expr) {
       this->kind = ZX_NODE;
       this->addChild(triton::smt2lib::decimal(sizeExt));
       this->addChild(expr);
     }
 
 
-    smtAstZxNode::smtAstZxNode(const smtAstZxNode &copy) {
+    smtAstZxNode::smtAstZxNode(const smtAstZxNode& copy) {
       this->kind = copy.kind;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
@@ -1834,57 +1837,57 @@ namespace triton {
   namespace smt2lib {
 
     /* Syntax dispatcher from an abstract node */
-    std::ostream &operator<<(std::ostream &stream, smtAstAbstractNode *node) {
+    std::ostream &operator<<(std::ostream &stream, smtAstAbstractNode* node) {
       switch (node->getKind()) {
-        case ASSERT_NODE:     stream << reinterpret_cast<smtAstAssertNode *>(node); break;
-        case BVADD_NODE:      stream << reinterpret_cast<smtAstBvaddNode *>(node); break;
-        case BVAND_NODE:      stream << reinterpret_cast<smtAstBvandNode *>(node); break;
-        case BVASHR_NODE:     stream << reinterpret_cast<smtAstBvashrNode *>(node); break;
-        case BVDECL_NODE:     stream << reinterpret_cast<smtAstBvdeclNode *>(node); break;
-        case BVLSHR_NODE:     stream << reinterpret_cast<smtAstBvlshrNode *>(node); break;
-        case BVMUL_NODE:      stream << reinterpret_cast<smtAstBvmulNode *>(node); break;
-        case BVNAND_NODE:     stream << reinterpret_cast<smtAstBvnandNode *>(node); break;
-        case BVNEG_NODE:      stream << reinterpret_cast<smtAstBvnegNode *>(node); break;
-        case BVNOR_NODE:      stream << reinterpret_cast<smtAstBvnorNode *>(node); break;
-        case BVNOT_NODE:      stream << reinterpret_cast<smtAstBvnotNode *>(node); break;
-        case BVOR_NODE:       stream << reinterpret_cast<smtAstBvorNode *>(node); break;
-        case BVROL_NODE:      stream << reinterpret_cast<smtAstBvrolNode *>(node); break;
-        case BVROR_NODE:      stream << reinterpret_cast<smtAstBvrorNode *>(node); break;
-        case BVSDIV_NODE:     stream << reinterpret_cast<smtAstBvsdivNode *>(node); break;
-        case BVSGE_NODE:      stream << reinterpret_cast<smtAstBvsgeNode *>(node); break;
-        case BVSGT_NODE:      stream << reinterpret_cast<smtAstBvsgtNode *>(node); break;
-        case BVSHL_NODE:      stream << reinterpret_cast<smtAstBvshlNode *>(node); break;
-        case BVSLE_NODE:      stream << reinterpret_cast<smtAstBvsleNode *>(node); break;
-        case BVSLT_NODE:      stream << reinterpret_cast<smtAstBvsltNode *>(node); break;
-        case BVSMOD_NODE:     stream << reinterpret_cast<smtAstBvsmodNode *>(node); break;
-        case BVSREM_NODE:     stream << reinterpret_cast<smtAstBvsremNode *>(node); break;
-        case BVSUB_NODE:      stream << reinterpret_cast<smtAstBvsubNode *>(node); break;
-        case BVUDIV_NODE:     stream << reinterpret_cast<smtAstBvudivNode *>(node); break;
-        case BVUGE_NODE:      stream << reinterpret_cast<smtAstBvugeNode *>(node); break;
-        case BVUGT_NODE:      stream << reinterpret_cast<smtAstBvugtNode *>(node); break;
-        case BVULE_NODE:      stream << reinterpret_cast<smtAstBvuleNode *>(node); break;
-        case BVULT_NODE:      stream << reinterpret_cast<smtAstBvultNode *>(node); break;
-        case BVUREM_NODE:     stream << reinterpret_cast<smtAstBvuremNode *>(node); break;
-        case BVXNOR_NODE:     stream << reinterpret_cast<smtAstBvxnorNode *>(node); break;
-        case BVXOR_NODE:      stream << reinterpret_cast<smtAstBvxorNode *>(node); break;
-        case BV_NODE:         stream << reinterpret_cast<smtAstBvNode *>(node); break;
-        case COMPOUND_NODE:   stream << reinterpret_cast<smtAstCompoundNode *>(node); break;
-        case CONCAT_NODE:     stream << reinterpret_cast<smtAstConcatNode *>(node); break;
-        case DECIMAL_NODE:    stream << reinterpret_cast<smtAstDecimalNode *>(node); break;
-        case DECLARE_NODE:    stream << reinterpret_cast<smtAstDeclareNode *>(node); break;
-        case DISTINCT_NODE:   stream << reinterpret_cast<smtAstDistinctNode *>(node); break;
-        case EQUAL_NODE:      stream << reinterpret_cast<smtAstEqualNode *>(node); break;
-        case EXTRACT_NODE:    stream << reinterpret_cast<smtAstExtractNode *>(node); break;
-        case ITE_NODE:        stream << reinterpret_cast<smtAstIteNode *>(node); break;
-        case LAND_NODE:       stream << reinterpret_cast<smtAstLandNode *>(node); break;
-        case LET_NODE:        stream << reinterpret_cast<smtAstLetNode *>(node); break;
-        case LNOT_NODE:       stream << reinterpret_cast<smtAstLnotNode *>(node); break;
-        case LOR_NODE:        stream << reinterpret_cast<smtAstLorNode *>(node); break;
-        case REFERENCE_NODE:  stream << reinterpret_cast<smtAstReferenceNode *>(node); break;
-        case STRING_NODE:     stream << reinterpret_cast<smtAstStringNode *>(node); break;
-        case SX_NODE:         stream << reinterpret_cast<smtAstSxNode *>(node); break;
-        case VARIABLE_NODE:   stream << reinterpret_cast<smtAstVariableNode *>(node); break;
-        case ZX_NODE:         stream << reinterpret_cast<smtAstZxNode *>(node); break;
+        case ASSERT_NODE:               stream << reinterpret_cast<smtAstAssertNode*>(node); break;
+        case BVADD_NODE:                stream << reinterpret_cast<smtAstBvaddNode*>(node); break;
+        case BVAND_NODE:                stream << reinterpret_cast<smtAstBvandNode*>(node); break;
+        case BVASHR_NODE:               stream << reinterpret_cast<smtAstBvashrNode*>(node); break;
+        case BVDECL_NODE:               stream << reinterpret_cast<smtAstBvdeclNode*>(node); break;
+        case BVLSHR_NODE:               stream << reinterpret_cast<smtAstBvlshrNode*>(node); break;
+        case BVMUL_NODE:                stream << reinterpret_cast<smtAstBvmulNode*>(node); break;
+        case BVNAND_NODE:               stream << reinterpret_cast<smtAstBvnandNode*>(node); break;
+        case BVNEG_NODE:                stream << reinterpret_cast<smtAstBvnegNode*>(node); break;
+        case BVNOR_NODE:                stream << reinterpret_cast<smtAstBvnorNode*>(node); break;
+        case BVNOT_NODE:                stream << reinterpret_cast<smtAstBvnotNode*>(node); break;
+        case BVOR_NODE:                 stream << reinterpret_cast<smtAstBvorNode*>(node); break;
+        case BVROL_NODE:                stream << reinterpret_cast<smtAstBvrolNode*>(node); break;
+        case BVROR_NODE:                stream << reinterpret_cast<smtAstBvrorNode*>(node); break;
+        case BVSDIV_NODE:               stream << reinterpret_cast<smtAstBvsdivNode*>(node); break;
+        case BVSGE_NODE:                stream << reinterpret_cast<smtAstBvsgeNode*>(node); break;
+        case BVSGT_NODE:                stream << reinterpret_cast<smtAstBvsgtNode*>(node); break;
+        case BVSHL_NODE:                stream << reinterpret_cast<smtAstBvshlNode*>(node); break;
+        case BVSLE_NODE:                stream << reinterpret_cast<smtAstBvsleNode*>(node); break;
+        case BVSLT_NODE:                stream << reinterpret_cast<smtAstBvsltNode*>(node); break;
+        case BVSMOD_NODE:               stream << reinterpret_cast<smtAstBvsmodNode*>(node); break;
+        case BVSREM_NODE:               stream << reinterpret_cast<smtAstBvsremNode*>(node); break;
+        case BVSUB_NODE:                stream << reinterpret_cast<smtAstBvsubNode*>(node); break;
+        case BVUDIV_NODE:               stream << reinterpret_cast<smtAstBvudivNode*>(node); break;
+        case BVUGE_NODE:                stream << reinterpret_cast<smtAstBvugeNode*>(node); break;
+        case BVUGT_NODE:                stream << reinterpret_cast<smtAstBvugtNode*>(node); break;
+        case BVULE_NODE:                stream << reinterpret_cast<smtAstBvuleNode*>(node); break;
+        case BVULT_NODE:                stream << reinterpret_cast<smtAstBvultNode*>(node); break;
+        case BVUREM_NODE:               stream << reinterpret_cast<smtAstBvuremNode*>(node); break;
+        case BVXNOR_NODE:               stream << reinterpret_cast<smtAstBvxnorNode*>(node); break;
+        case BVXOR_NODE:                stream << reinterpret_cast<smtAstBvxorNode*>(node); break;
+        case BV_NODE:                   stream << reinterpret_cast<smtAstBvNode*>(node); break;
+        case COMPOUND_NODE:             stream << reinterpret_cast<smtAstCompoundNode*>(node); break;
+        case CONCAT_NODE:               stream << reinterpret_cast<smtAstConcatNode*>(node); break;
+        case DECIMAL_NODE:              stream << reinterpret_cast<smtAstDecimalNode*>(node); break;
+        case DECLARE_FUNCTION_NODE:     stream << reinterpret_cast<smtAstDeclareFunctionNode*>(node); break;
+        case DISTINCT_NODE:             stream << reinterpret_cast<smtAstDistinctNode*>(node); break;
+        case EQUAL_NODE:                stream << reinterpret_cast<smtAstEqualNode*>(node); break;
+        case EXTRACT_NODE:              stream << reinterpret_cast<smtAstExtractNode*>(node); break;
+        case ITE_NODE:                  stream << reinterpret_cast<smtAstIteNode*>(node); break;
+        case LAND_NODE:                 stream << reinterpret_cast<smtAstLandNode*>(node); break;
+        case LET_NODE:                  stream << reinterpret_cast<smtAstLetNode*>(node); break;
+        case LNOT_NODE:                 stream << reinterpret_cast<smtAstLnotNode*>(node); break;
+        case LOR_NODE:                  stream << reinterpret_cast<smtAstLorNode*>(node); break;
+        case REFERENCE_NODE:            stream << reinterpret_cast<smtAstReferenceNode*>(node); break;
+        case STRING_NODE:               stream << reinterpret_cast<smtAstStringNode*>(node); break;
+        case SX_NODE:                   stream << reinterpret_cast<smtAstSxNode*>(node); break;
+        case VARIABLE_NODE:             stream << reinterpret_cast<smtAstVariableNode*>(node); break;
+        case ZX_NODE:                   stream << reinterpret_cast<smtAstZxNode*>(node); break;
         default:
           throw std::invalid_argument("triton::smt2lib::operator<<(smtAstAbstractNode) - Invalid kind node");
       }
@@ -1893,231 +1896,231 @@ namespace triton {
 
 
     /* assert syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstAssertNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstAssertNode* node) {
       stream << "(assert " << node->getChilds()[0] << ")";
       return stream;
     }
 
 
     /* bvadd syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvaddNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvaddNode* node) {
       stream << "(bvadd " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvand syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvandNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvandNode* node) {
       stream << "(bvand " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvashr syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvashrNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvashrNode* node) {
       stream << "(bvashr " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvdecl syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvdeclNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvdeclNode* node) {
       stream << "(_ BitVec " << node->getChilds()[0] << ")";
       return stream;
     }
 
 
     /* bvlshr syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvlshrNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvlshrNode* node) {
       stream << "(bvlshr " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvmul syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvmulNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvmulNode* node) {
       stream << "(bvmul " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvnand syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvnandNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvnandNode* node) {
       stream << "(bvnand " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvneg syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvnegNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvnegNode* node) {
       stream << "(bvneg " << node->getChilds()[0] << ")";
       return stream;
     }
 
 
     /* bvnor syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvnorNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvnorNode* node) {
       stream << "(bvnor " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvnot syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvnotNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvnotNode* node) {
       stream << "(bvnot " << node->getChilds()[0] << ")";
       return stream;
     }
 
 
     /* bvor syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvorNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvorNode* node) {
       stream << "(bvor " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvrol syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvrolNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvrolNode* node) {
       stream << "((_ rotate_left " << node->getChilds()[0] << ") " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvror syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvrorNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvrorNode* node) {
       stream << "((_ rotate_right " << node->getChilds()[0] << ") " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvsdiv syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvsdivNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvsdivNode* node) {
       stream << "(bvsdiv " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvsge syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvsgeNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvsgeNode* node) {
       stream << "(bvsge " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvsgt syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvsgtNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvsgtNode* node) {
       stream << "(bvsgt " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvshl syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvshlNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvshlNode* node) {
       stream << "(bvshl " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvsle syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvsleNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvsleNode* node) {
       stream << "(bvsle " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvslt syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvsltNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvsltNode* node) {
       stream << "(bvslt " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvsmod syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvsmodNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvsmodNode* node) {
       stream << "(bvsmod " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvsrem syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvsremNode *node) {
-      stream << "(bvsrem " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
+    std::ostream& operator<<(std::ostream& stream, smtAstBvsremNode* node) {
+       stream << "(bvsrem " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvsub syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvsubNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvsubNode* node) {
       stream << "(bvsub " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvudiv syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvudivNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvudivNode* node) {
       stream << "(bvudiv " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvuge syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvugeNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvugeNode* node) {
       stream << "(bvuge " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvugt syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvugtNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvugtNode* node) {
       stream << "(bvugt " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvule syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvuleNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvuleNode* node) {
       stream << "(bvule " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvult syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvultNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvultNode* node) {
       stream << "(bvult " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvurem syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvuremNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvuremNode* node) {
       stream << "(bvurem " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvxnor syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvxnorNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvxnorNode* node) {
       stream << "(bvxnor " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bvxor syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvxorNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvxorNode* node) {
       stream << "(bvxor " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* bv syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstBvNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstBvNode* node) {
       stream << "(_ bv" << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* compound syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstCompoundNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstCompoundNode* node) {
       for (triton::uint32 index = 0; index < node->getChilds().size(); index++)
         stream << node->getChilds()[index];
       return stream;
@@ -2125,9 +2128,9 @@ namespace triton {
 
 
     /* concat syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstConcatNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstConcatNode* node) {
 
-      std::vector<smtAstAbstractNode *> childs = node->getChilds();
+      std::vector<smtAstAbstractNode*> childs = node->getChilds();
       triton::uint32 size = childs.size();
 
       if (size < 2)
@@ -2143,105 +2146,105 @@ namespace triton {
 
 
     /* decimal syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstDecimalNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstDecimalNode* node) {
       stream << node->getValue();
       return stream;
     }
 
 
     /* declare syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstDeclareNode *node) {
-      stream << "(declare-fun " << node->getChilds()[0] << " () (_ BitVec " << node->getChilds()[1] << "))";
+    std::ostream& operator<<(std::ostream& stream, smtAstDeclareFunctionNode* node) {
+      stream << "(declare-fun " << node->getChilds()[0] << " () " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* distinct syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstDistinctNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstDistinctNode* node) {
       stream << "(distinct " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* equal syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstEqualNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstEqualNode* node) {
       stream << "(= " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* extract syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstExtractNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstExtractNode* node) {
       stream << "((_ extract " << node->getChilds()[0] << " " << node->getChilds()[1] << ") " << node->getChilds()[2] << ")";
       return stream;
     }
 
 
     /* ite syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstIteNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstIteNode* node) {
       stream << "(ite " << node->getChilds()[0] << " " << node->getChilds()[1] << " " << node->getChilds()[2] << ")";
       return stream;
     }
 
 
     /* land syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstLandNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstLandNode* node) {
       stream << "(and " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* let syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstLetNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstLetNode* node) {
       stream << "(let ((" << node->getChilds()[0] << " " << node->getChilds()[1] << ")) " << node->getChilds()[2] << ")";
       return stream;
     }
 
 
     /* lnot syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstLnotNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstLnotNode* node) {
       stream << "(not " << node->getChilds()[0] << ")";
       return stream;
     }
 
 
     /* lor syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstLorNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstLorNode* node) {
       stream << "(or " << node->getChilds()[0] << " " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* reference syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstReferenceNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstReferenceNode* node) {
       stream << "#" << node->getValue();
       return stream;
     }
 
 
     /* string syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstStringNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstStringNode* node) {
       stream << node->getValue();
       return stream;
     }
 
 
     /* sx syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstSxNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstSxNode* node) {
       stream << "((_ sign_extend " << node->getChilds()[0] << ") " << node->getChilds()[1] << ")";
       return stream;
     }
 
 
     /* variable syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstVariableNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstVariableNode* node) {
       stream << node->getValue();
       return stream;
     }
 
 
     /* zx syntax */
-    std::ostream &operator<<(std::ostream &stream, smtAstZxNode *node) {
+    std::ostream& operator<<(std::ostream& stream, smtAstZxNode* node) {
       stream << "((_ zero_extend " << node->getChilds()[0] << ") " << node->getChilds()[1] << ")";
       return stream;
     }
@@ -2337,498 +2340,498 @@ namespace triton {
 namespace triton {
   namespace smt2lib {
 
-    smtAstAbstractNode *smtAssert(smtAstAbstractNode *expr) {
-      smtAstAbstractNode *node = new smtAstAssertNode(expr);
+    smtAstAbstractNode* smtAssert(smtAstAbstractNode* expr) {
+      smtAstAbstractNode* node = new smtAstAssertNode(expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bv(triton::uint128 value, triton::uint32 size) {
-      smtAstAbstractNode *node = new smtAstBvNode(value, size);
+    smtAstAbstractNode* bv(triton::uint128 value, triton::uint32 size) {
+      smtAstAbstractNode* node = new smtAstBvNode(value, size);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvadd(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvaddNode(expr1, expr2);
+    smtAstAbstractNode* bvadd(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvaddNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvand(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvandNode(expr1, expr2);
+    smtAstAbstractNode* bvand(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvandNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvashr(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvashrNode(expr1, expr2);
+    smtAstAbstractNode* bvashr(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvashrNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvdecl(triton::uint32 size) {
-      smtAstAbstractNode *node = new smtAstBvdeclNode(size);
+    smtAstAbstractNode* bvdecl(triton::uint32 size) {
+      smtAstAbstractNode* node = new smtAstBvdeclNode(size);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvfalse(void) {
-      smtAstAbstractNode *node = new smtAstBvNode(0, 1);
+    smtAstAbstractNode* bvfalse(void) {
+      smtAstAbstractNode* node = new smtAstBvNode(0, 1);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvlshr(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvlshrNode(expr1, expr2);
+    smtAstAbstractNode* bvlshr(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvlshrNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvmul(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvmulNode(expr1, expr2);
+    smtAstAbstractNode* bvmul(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvmulNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvnand(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvnandNode(expr1, expr2);
+    smtAstAbstractNode* bvnand(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvnandNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvneg(smtAstAbstractNode *expr) {
-      smtAstAbstractNode *node = new smtAstBvnegNode(expr);
+    smtAstAbstractNode* bvneg(smtAstAbstractNode* expr) {
+      smtAstAbstractNode* node = new smtAstBvnegNode(expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvnor(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvnorNode(expr1, expr2);
+    smtAstAbstractNode* bvnor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvnorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvnot(smtAstAbstractNode *expr) {
-      smtAstAbstractNode *node = new smtAstBvnotNode(expr);
+    smtAstAbstractNode* bvnot(smtAstAbstractNode* expr) {
+      smtAstAbstractNode* node = new smtAstBvnotNode(expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvor(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvorNode(expr1, expr2);
+    smtAstAbstractNode* bvor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvrol(triton::uint32 rot, smtAstAbstractNode *expr) {
-      smtAstAbstractNode *node = new smtAstBvrolNode(rot, expr);
+    smtAstAbstractNode* bvrol(triton::uint32 rot, smtAstAbstractNode* expr) {
+      smtAstAbstractNode* node = new smtAstBvrolNode(rot, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvrol(smtAstAbstractNode *rot, smtAstAbstractNode *expr) {
-      smtAstAbstractNode *node = new smtAstBvrolNode(rot, expr);
+    smtAstAbstractNode* bvrol(smtAstAbstractNode* rot, smtAstAbstractNode* expr) {
+      smtAstAbstractNode* node = new smtAstBvrolNode(rot, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvror(triton::uint32 rot, smtAstAbstractNode *expr) {
-      smtAstAbstractNode *node = new smtAstBvrorNode(rot, expr);
+    smtAstAbstractNode* bvror(triton::uint32 rot, smtAstAbstractNode* expr) {
+      smtAstAbstractNode* node = new smtAstBvrorNode(rot, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvror(smtAstAbstractNode *rot, smtAstAbstractNode *expr) {
-      smtAstAbstractNode *node = new smtAstBvrorNode(rot, expr);
+    smtAstAbstractNode* bvror(smtAstAbstractNode* rot, smtAstAbstractNode* expr) {
+      smtAstAbstractNode* node = new smtAstBvrorNode(rot, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvsdiv(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvsdivNode(expr1, expr2);
+    smtAstAbstractNode* bvsdiv(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvsdivNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvsge(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvsgeNode(expr1, expr2);
+    smtAstAbstractNode* bvsge(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvsgeNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvsgt(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvsgtNode(expr1, expr2);
+    smtAstAbstractNode* bvsgt(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvsgtNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvshl(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvshlNode(expr1, expr2);
+    smtAstAbstractNode* bvshl(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvshlNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvsle(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvsleNode(expr1, expr2);
+    smtAstAbstractNode* bvsle(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvsleNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvslt(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvsltNode(expr1, expr2);
+    smtAstAbstractNode* bvslt(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvsltNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvsmod(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvsmodNode(expr1, expr2);
+    smtAstAbstractNode* bvsmod(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvsmodNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvsrem(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvsremNode(expr1, expr2);
+    smtAstAbstractNode* bvsrem(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvsremNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvsub(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvsubNode(expr1, expr2);
+    smtAstAbstractNode* bvsub(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvsubNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvtrue(void) {
-      smtAstAbstractNode *node = new smtAstBvNode(1, 1);
+    smtAstAbstractNode* bvtrue(void) {
+      smtAstAbstractNode* node = new smtAstBvNode(1, 1);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvudiv(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvudivNode(expr1, expr2);
+    smtAstAbstractNode* bvudiv(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvudivNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvuge(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvugeNode(expr1, expr2);
+    smtAstAbstractNode* bvuge(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvugeNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvugt(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvugtNode(expr1, expr2);
+    smtAstAbstractNode* bvugt(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvugtNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvule(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvuleNode(expr1, expr2);
+    smtAstAbstractNode* bvule(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvuleNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvult(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvultNode(expr1, expr2);
+    smtAstAbstractNode* bvult(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvultNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvurem(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvuremNode(expr1, expr2);
+    smtAstAbstractNode* bvurem(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvuremNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvxnor(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvxnorNode(expr1, expr2);
+     smtAstAbstractNode* bvxnor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvxnorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *bvxor(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstBvxorNode(expr1, expr2);
+    smtAstAbstractNode* bvxor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstBvxorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *compound(std::vector<smtAstAbstractNode*> exprs) {
-      smtAstAbstractNode *node = new smtAstCompoundNode(exprs);
+    smtAstAbstractNode* compound(std::vector<smtAstAbstractNode*> exprs) {
+      smtAstAbstractNode* node = new smtAstCompoundNode(exprs);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *concat(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstConcatNode(expr1, expr2);
+    smtAstAbstractNode* concat(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstConcatNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *concat(std::vector<smtAstAbstractNode *> exprs) {
-      smtAstAbstractNode *node = new smtAstConcatNode(exprs);
+    smtAstAbstractNode* concat(std::vector<smtAstAbstractNode*> exprs) {
+      smtAstAbstractNode* node = new smtAstConcatNode(exprs);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *concat(std::list<smtAstAbstractNode *> exprs) {
-      smtAstAbstractNode *node = new smtAstConcatNode(exprs);
+    smtAstAbstractNode* concat(std::list<smtAstAbstractNode*> exprs) {
+      smtAstAbstractNode* node = new smtAstConcatNode(exprs);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *decimal(triton::uint128 value) {
-      smtAstAbstractNode *node = new smtAstDecimalNode(value);
+    smtAstAbstractNode* decimal(triton::uint128 value) {
+      smtAstAbstractNode* node = new smtAstDecimalNode(value);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *declare(std::string symVarName, triton::uint32 symVarSize) {
-      smtAstAbstractNode *node = new smtAstDeclareNode(symVarName, symVarSize);
+    smtAstAbstractNode* declareFunction(std::string name, smtAstAbstractNode* bvDecl) {
+      smtAstAbstractNode* node = new smtAstDeclareFunctionNode(name, bvDecl);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *distinct(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstDistinctNode(expr1, expr2);
+    smtAstAbstractNode* distinct(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstDistinctNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *equal(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstEqualNode(expr1, expr2);
+    smtAstAbstractNode* equal(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstEqualNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *extract(triton::uint32 high, triton::uint32 low, smtAstAbstractNode *expr) {
-      smtAstAbstractNode *node = new smtAstExtractNode(high, low, expr);
+    smtAstAbstractNode* extract(triton::uint32 high, triton::uint32 low, smtAstAbstractNode* expr) {
+      smtAstAbstractNode* node = new smtAstExtractNode(high, low, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *ite(smtAstAbstractNode *ifExpr, smtAstAbstractNode *thenExpr, smtAstAbstractNode *elseExpr) {
-      smtAstAbstractNode *node = new smtAstIteNode(ifExpr, thenExpr, elseExpr);
+    smtAstAbstractNode* ite(smtAstAbstractNode* ifExpr, smtAstAbstractNode* thenExpr, smtAstAbstractNode* elseExpr) {
+      smtAstAbstractNode* node = new smtAstIteNode(ifExpr, thenExpr, elseExpr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *land(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstLandNode(expr1, expr2);
+    smtAstAbstractNode* land(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstLandNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *let(std::string alias, smtAstAbstractNode *expr2, smtAstAbstractNode *expr3) {
-      smtAstAbstractNode *node = new smtAstLetNode(alias, expr2, expr3);
+    smtAstAbstractNode* let(std::string alias, smtAstAbstractNode* expr2, smtAstAbstractNode* expr3) {
+      smtAstAbstractNode* node = new smtAstLetNode(alias, expr2, expr3);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *lnot(smtAstAbstractNode *expr) {
-      smtAstAbstractNode *node = new smtAstLnotNode(expr);
+    smtAstAbstractNode* lnot(smtAstAbstractNode* expr) {
+      smtAstAbstractNode* node = new smtAstLnotNode(expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *lor(smtAstAbstractNode *expr1, smtAstAbstractNode *expr2) {
-      smtAstAbstractNode *node = new smtAstLorNode(expr1, expr2);
+    smtAstAbstractNode* lor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
+      smtAstAbstractNode* node = new smtAstLorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *reference(triton::__uint value) {
-      smtAstAbstractNode *node = new smtAstReferenceNode(value);
+    smtAstAbstractNode* reference(triton::__uint value) {
+      smtAstAbstractNode* node = new smtAstReferenceNode(value);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *string(std::string value) {
-      smtAstAbstractNode *node = new smtAstStringNode(value);
+    smtAstAbstractNode* string(std::string value) {
+      smtAstAbstractNode* node = new smtAstStringNode(value);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *sx(triton::uint32 sizeExt, smtAstAbstractNode *expr) {
-      smtAstAbstractNode *node = new smtAstSxNode(sizeExt, expr);
+    smtAstAbstractNode* sx(triton::uint32 sizeExt, smtAstAbstractNode* expr) {
+      smtAstAbstractNode* node = new smtAstSxNode(sizeExt, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *variable(std::string value) {
-      smtAstAbstractNode *node = new smtAstVariableNode(value);
+    smtAstAbstractNode* variable(std::string value) {
+      smtAstAbstractNode* node = new smtAstVariableNode(value);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *zx(triton::uint32 sizeExt, smtAstAbstractNode *expr) {
-      smtAstAbstractNode *node = new smtAstZxNode(sizeExt, expr);
+    smtAstAbstractNode* zx(triton::uint32 sizeExt, smtAstAbstractNode* expr) {
+      smtAstAbstractNode* node = new smtAstZxNode(sizeExt, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);
     }
 
 
-    smtAstAbstractNode *newInstance(smtAstAbstractNode *node) {
-      smtAstAbstractNode *newNode = nullptr;
+    smtAstAbstractNode* newInstance(smtAstAbstractNode* node) {
+      smtAstAbstractNode* newNode = nullptr;
       switch (node->getKind()) {
-        case ASSERT_NODE:     newNode = new smtAstAssertNode(*reinterpret_cast<smtAstAssertNode *>(node)); break;
-        case BVADD_NODE:      newNode = new smtAstBvaddNode(*reinterpret_cast<smtAstBvaddNode *>(node)); break;
-        case BVAND_NODE:      newNode = new smtAstBvandNode(*reinterpret_cast<smtAstBvandNode *>(node)); break;
-        case BVASHR_NODE:     newNode = new smtAstBvashrNode(*reinterpret_cast<smtAstBvashrNode *>(node)); break;
-        case BVDECL_NODE:     newNode = new smtAstBvdeclNode(*reinterpret_cast<smtAstBvdeclNode *>(node)); break;
-        case BVLSHR_NODE:     newNode = new smtAstBvlshrNode(*reinterpret_cast<smtAstBvlshrNode *>(node)); break;
-        case BVMUL_NODE:      newNode = new smtAstBvmulNode(*reinterpret_cast<smtAstBvmulNode *>(node)); break;
-        case BVNAND_NODE:     newNode = new smtAstBvnandNode(*reinterpret_cast<smtAstBvnandNode *>(node)); break;
-        case BVNEG_NODE:      newNode = new smtAstBvnegNode(*reinterpret_cast<smtAstBvnegNode *>(node)); break;
-        case BVNOR_NODE:      newNode = new smtAstBvnorNode(*reinterpret_cast<smtAstBvnorNode *>(node)); break;
-        case BVNOT_NODE:      newNode = new smtAstBvnotNode(*reinterpret_cast<smtAstBvnotNode *>(node)); break;
-        case BVOR_NODE:       newNode = new smtAstBvorNode(*reinterpret_cast<smtAstBvorNode *>(node)); break;
-        case BVROL_NODE:      newNode = new smtAstBvrolNode(*reinterpret_cast<smtAstBvrolNode *>(node)); break;
-        case BVROR_NODE:      newNode = new smtAstBvrorNode(*reinterpret_cast<smtAstBvrorNode *>(node)); break;
-        case BVSDIV_NODE:     newNode = new smtAstBvsdivNode(*reinterpret_cast<smtAstBvsdivNode *>(node)); break;
-        case BVSGE_NODE:      newNode = new smtAstBvsgeNode(*reinterpret_cast<smtAstBvsgeNode *>(node)); break;
-        case BVSGT_NODE:      newNode = new smtAstBvsgtNode(*reinterpret_cast<smtAstBvsgtNode *>(node)); break;
-        case BVSHL_NODE:      newNode = new smtAstBvshlNode(*reinterpret_cast<smtAstBvshlNode *>(node)); break;
-        case BVSLE_NODE:      newNode = new smtAstBvsleNode(*reinterpret_cast<smtAstBvsleNode *>(node)); break;
-        case BVSLT_NODE:      newNode = new smtAstBvsltNode(*reinterpret_cast<smtAstBvsltNode *>(node)); break;
-        case BVSMOD_NODE:     newNode = new smtAstBvsmodNode(*reinterpret_cast<smtAstBvsmodNode *>(node)); break;
-        case BVSREM_NODE:     newNode = new smtAstBvsremNode(*reinterpret_cast<smtAstBvsremNode *>(node)); break;
-        case BVSUB_NODE:      newNode = new smtAstBvsubNode(*reinterpret_cast<smtAstBvsubNode *>(node)); break;
-        case BVUDIV_NODE:     newNode = new smtAstBvudivNode(*reinterpret_cast<smtAstBvudivNode *>(node)); break;
-        case BVUGE_NODE:      newNode = new smtAstBvugeNode(*reinterpret_cast<smtAstBvugeNode *>(node)); break;
-        case BVUGT_NODE:      newNode = new smtAstBvugtNode(*reinterpret_cast<smtAstBvugtNode *>(node)); break;
-        case BVULE_NODE:      newNode = new smtAstBvuleNode(*reinterpret_cast<smtAstBvuleNode *>(node)); break;
-        case BVULT_NODE:      newNode = new smtAstBvultNode(*reinterpret_cast<smtAstBvultNode *>(node)); break;
-        case BVUREM_NODE:     newNode = new smtAstBvuremNode(*reinterpret_cast<smtAstBvuremNode *>(node)); break;
-        case BVXNOR_NODE:     newNode = new smtAstBvxnorNode(*reinterpret_cast<smtAstBvxnorNode *>(node)); break;
-        case BVXOR_NODE:      newNode = new smtAstBvxorNode(*reinterpret_cast<smtAstBvxorNode *>(node)); break;
-        case BV_NODE:         newNode = new smtAstBvNode(*reinterpret_cast<smtAstBvNode *>(node)); break;
-        case COMPOUND_NODE:   newNode = new smtAstCompoundNode(*reinterpret_cast<smtAstCompoundNode *>(node)); break;
-        case CONCAT_NODE:     newNode = new smtAstConcatNode(*reinterpret_cast<smtAstConcatNode *>(node)); break;
-        case DECIMAL_NODE:    newNode = new smtAstDecimalNode(*reinterpret_cast<smtAstDecimalNode *>(node)); break;
-        case DECLARE_NODE:    newNode = new smtAstDeclareNode(*reinterpret_cast<smtAstDeclareNode *>(node)); break;
-        case DISTINCT_NODE:   newNode = new smtAstDistinctNode(*reinterpret_cast<smtAstDistinctNode *>(node)); break;
-        case EQUAL_NODE:      newNode = new smtAstEqualNode(*reinterpret_cast<smtAstEqualNode *>(node)); break;
-        case EXTRACT_NODE:    newNode = new smtAstExtractNode(*reinterpret_cast<smtAstExtractNode *>(node)); break;
-        case ITE_NODE:        newNode = new smtAstIteNode(*reinterpret_cast<smtAstIteNode *>(node)); break;
-        case LAND_NODE:       newNode = new smtAstLandNode(*reinterpret_cast<smtAstLandNode *>(node)); break;
-        case LET_NODE:        newNode = new smtAstLetNode(*reinterpret_cast<smtAstLetNode *>(node)); break;
-        case LNOT_NODE:       newNode = new smtAstLnotNode(*reinterpret_cast<smtAstLnotNode *>(node)); break;
-        case LOR_NODE:        newNode = new smtAstLorNode(*reinterpret_cast<smtAstLorNode *>(node)); break;
-        case REFERENCE_NODE:  newNode = new smtAstReferenceNode(*reinterpret_cast<smtAstReferenceNode *>(node)); break;
-        case STRING_NODE:     newNode = new smtAstStringNode(*reinterpret_cast<smtAstStringNode *>(node)); break;
-        case SX_NODE:         newNode = new smtAstSxNode(*reinterpret_cast<smtAstSxNode *>(node)); break;
-        case VARIABLE_NODE:   newNode = new smtAstVariableNode(*reinterpret_cast<smtAstVariableNode *>(node)); break;
-        case ZX_NODE:         newNode = new smtAstZxNode(*reinterpret_cast<smtAstZxNode *>(node)); break;
+        case ASSERT_NODE:               newNode = new smtAstAssertNode(*reinterpret_cast<smtAstAssertNode*>(node)); break;
+        case BVADD_NODE:                newNode = new smtAstBvaddNode(*reinterpret_cast<smtAstBvaddNode*>(node)); break;
+        case BVAND_NODE:                newNode = new smtAstBvandNode(*reinterpret_cast<smtAstBvandNode*>(node)); break;
+        case BVASHR_NODE:               newNode = new smtAstBvashrNode(*reinterpret_cast<smtAstBvashrNode*>(node)); break;
+        case BVDECL_NODE:               newNode = new smtAstBvdeclNode(*reinterpret_cast<smtAstBvdeclNode*>(node)); break;
+        case BVLSHR_NODE:               newNode = new smtAstBvlshrNode(*reinterpret_cast<smtAstBvlshrNode*>(node)); break;
+        case BVMUL_NODE:                newNode = new smtAstBvmulNode(*reinterpret_cast<smtAstBvmulNode*>(node)); break;
+        case BVNAND_NODE:               newNode = new smtAstBvnandNode(*reinterpret_cast<smtAstBvnandNode*>(node)); break;
+        case BVNEG_NODE:                newNode = new smtAstBvnegNode(*reinterpret_cast<smtAstBvnegNode*>(node)); break;
+        case BVNOR_NODE:                newNode = new smtAstBvnorNode(*reinterpret_cast<smtAstBvnorNode*>(node)); break;
+        case BVNOT_NODE:                newNode = new smtAstBvnotNode(*reinterpret_cast<smtAstBvnotNode*>(node)); break;
+        case BVOR_NODE:                 newNode = new smtAstBvorNode(*reinterpret_cast<smtAstBvorNode*>(node)); break;
+        case BVROL_NODE:                newNode = new smtAstBvrolNode(*reinterpret_cast<smtAstBvrolNode*>(node)); break;
+        case BVROR_NODE:                newNode = new smtAstBvrorNode(*reinterpret_cast<smtAstBvrorNode*>(node)); break;
+        case BVSDIV_NODE:               newNode = new smtAstBvsdivNode(*reinterpret_cast<smtAstBvsdivNode*>(node)); break;
+        case BVSGE_NODE:                newNode = new smtAstBvsgeNode(*reinterpret_cast<smtAstBvsgeNode*>(node)); break;
+        case BVSGT_NODE:                newNode = new smtAstBvsgtNode(*reinterpret_cast<smtAstBvsgtNode*>(node)); break;
+        case BVSHL_NODE:                newNode = new smtAstBvshlNode(*reinterpret_cast<smtAstBvshlNode*>(node)); break;
+        case BVSLE_NODE:                newNode = new smtAstBvsleNode(*reinterpret_cast<smtAstBvsleNode*>(node)); break;
+        case BVSLT_NODE:                newNode = new smtAstBvsltNode(*reinterpret_cast<smtAstBvsltNode*>(node)); break;
+        case BVSMOD_NODE:               newNode = new smtAstBvsmodNode(*reinterpret_cast<smtAstBvsmodNode*>(node)); break;
+        case BVSREM_NODE:               newNode = new smtAstBvsremNode(*reinterpret_cast<smtAstBvsremNode*>(node)); break;
+        case BVSUB_NODE:                newNode = new smtAstBvsubNode(*reinterpret_cast<smtAstBvsubNode*>(node)); break;
+        case BVUDIV_NODE:               newNode = new smtAstBvudivNode(*reinterpret_cast<smtAstBvudivNode*>(node)); break;
+        case BVUGE_NODE:                newNode = new smtAstBvugeNode(*reinterpret_cast<smtAstBvugeNode*>(node)); break;
+        case BVUGT_NODE:                newNode = new smtAstBvugtNode(*reinterpret_cast<smtAstBvugtNode*>(node)); break;
+        case BVULE_NODE:                newNode = new smtAstBvuleNode(*reinterpret_cast<smtAstBvuleNode*>(node)); break;
+        case BVULT_NODE:                newNode = new smtAstBvultNode(*reinterpret_cast<smtAstBvultNode*>(node)); break;
+        case BVUREM_NODE:               newNode = new smtAstBvuremNode(*reinterpret_cast<smtAstBvuremNode*>(node)); break;
+        case BVXNOR_NODE:               newNode = new smtAstBvxnorNode(*reinterpret_cast<smtAstBvxnorNode*>(node)); break;
+        case BVXOR_NODE:                newNode = new smtAstBvxorNode(*reinterpret_cast<smtAstBvxorNode*>(node)); break;
+        case BV_NODE:                   newNode = new smtAstBvNode(*reinterpret_cast<smtAstBvNode*>(node)); break;
+        case COMPOUND_NODE:             newNode = new smtAstCompoundNode(*reinterpret_cast<smtAstCompoundNode*>(node)); break;
+        case CONCAT_NODE:               newNode = new smtAstConcatNode(*reinterpret_cast<smtAstConcatNode*>(node)); break;
+        case DECIMAL_NODE:              newNode = new smtAstDecimalNode(*reinterpret_cast<smtAstDecimalNode*>(node)); break;
+        case DECLARE_FUNCTION_NODE:     newNode = new smtAstDeclareFunctionNode(*reinterpret_cast<smtAstDeclareFunctionNode*>(node)); break;
+        case DISTINCT_NODE:             newNode = new smtAstDistinctNode(*reinterpret_cast<smtAstDistinctNode*>(node)); break;
+        case EQUAL_NODE:                newNode = new smtAstEqualNode(*reinterpret_cast<smtAstEqualNode*>(node)); break;
+        case EXTRACT_NODE:              newNode = new smtAstExtractNode(*reinterpret_cast<smtAstExtractNode*>(node)); break;
+        case ITE_NODE:                  newNode = new smtAstIteNode(*reinterpret_cast<smtAstIteNode*>(node)); break;
+        case LAND_NODE:                 newNode = new smtAstLandNode(*reinterpret_cast<smtAstLandNode*>(node)); break;
+        case LET_NODE:                  newNode = new smtAstLetNode(*reinterpret_cast<smtAstLetNode*>(node)); break;
+        case LNOT_NODE:                 newNode = new smtAstLnotNode(*reinterpret_cast<smtAstLnotNode*>(node)); break;
+        case LOR_NODE:                  newNode = new smtAstLorNode(*reinterpret_cast<smtAstLorNode*>(node)); break;
+        case REFERENCE_NODE:            newNode = new smtAstReferenceNode(*reinterpret_cast<smtAstReferenceNode*>(node)); break;
+        case STRING_NODE:               newNode = new smtAstStringNode(*reinterpret_cast<smtAstStringNode*>(node)); break;
+        case SX_NODE:                   newNode = new smtAstSxNode(*reinterpret_cast<smtAstSxNode*>(node)); break;
+        case VARIABLE_NODE:             newNode = new smtAstVariableNode(*reinterpret_cast<smtAstVariableNode*>(node)); break;
+        case ZX_NODE:                   newNode = new smtAstZxNode(*reinterpret_cast<smtAstZxNode*>(node)); break;
         default:
           throw std::invalid_argument("triton::smt2lib::newInstance() - Invalid kind node");
       }

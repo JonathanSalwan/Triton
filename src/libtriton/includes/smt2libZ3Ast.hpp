@@ -123,7 +123,7 @@ namespace triton {
         //! Evaluate operator.
         virtual void operator()(smt2lib::smtAstDecimalNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstDeclareNode& e);
+        virtual void operator()(smt2lib::smtAstDeclareFunctionNode& e);
         //! Evaluate operator.
         virtual void operator()(smt2lib::smtAstDistinctNode& e);
         //! Evaluate operator.

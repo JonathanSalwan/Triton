@@ -155,7 +155,7 @@ namespace triton {
           std::map<triton::uint128, triton::smt2lib::smtAstAbstractNode*> decimalSummaries;
 
           //! Declare Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> declareSummaries;
+          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> declareFunctionSummaries;
 
           //! Distinct Summaries
           std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> distinctSummaries;

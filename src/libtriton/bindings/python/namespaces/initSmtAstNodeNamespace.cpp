@@ -67,7 +67,7 @@ The SMT_AST_NODE namespace contains all kinds of node.
 - **SMT_AST_NODE.COMPOUND**
 - **SMT_AST_NODE.CONCAT**
 - **SMT_AST_NODE.DECIMAL**
-- **SMT_AST_NODE.DECLARE**
+- **SMT_AST_NODE.DECLARE_FUNCTION**
 - **SMT_AST_NODE.DISTINCT**
 - **SMT_AST_NODE.EQUAL**
 - **SMT_AST_NODE.EXTRACT**
@@ -130,7 +130,7 @@ namespace triton {
         PyDict_SetItemString(smtAstNodeDict, "COMPOUND", PyLong_FromUint(triton::smt2lib::COMPOUND_NODE));
         PyDict_SetItemString(smtAstNodeDict, "CONCAT", PyLong_FromUint(triton::smt2lib::CONCAT_NODE));
         PyDict_SetItemString(smtAstNodeDict, "DECIMAL", PyLong_FromUint(triton::smt2lib::DECIMAL_NODE));
-        PyDict_SetItemString(smtAstNodeDict, "DECLARE", PyLong_FromUint(triton::smt2lib::DECLARE_NODE));
+        PyDict_SetItemString(smtAstNodeDict, "DECLARE_FUNCTION", PyLong_FromUint(triton::smt2lib::DECLARE_FUNCTION_NODE));
         PyDict_SetItemString(smtAstNodeDict, "DISTINCT", PyLong_FromUint(triton::smt2lib::DISTINCT_NODE));
         PyDict_SetItemString(smtAstNodeDict, "EQUAL", PyLong_FromUint(triton::smt2lib::EQUAL_NODE));
         PyDict_SetItemString(smtAstNodeDict, "EXTRACT", PyLong_FromUint(triton::smt2lib::EXTRACT_NODE));

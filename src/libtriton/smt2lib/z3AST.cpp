@@ -346,8 +346,8 @@ namespace triton {
     }
 
 
-    void Z3Ast::operator()(smtAstDeclareNode& e) {
-      throw std::runtime_error("smtAstDeclareNode not implemented");
+    void Z3Ast::operator()(smtAstDeclareFunctionNode& e) {
+      throw std::runtime_error("smtAstDeclareFunctionNode not implemented");
     }
 
 
