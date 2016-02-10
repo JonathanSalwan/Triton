@@ -256,6 +256,10 @@ void check(void)
   asm("movhlps xmm6, xmm4");
   asm("movlhps xmm7, xmm5");
 
+  asm("movddup xmm1, qword ptr [%0]" :: "r"(tab1));
+  asm("movddup xmm2, xmm0");
+  asm("movddup xmm3, xmm2");
+
   asm("orpd xmm0, xmm1");
   asm("orps xmm1, xmm3");
 
