@@ -9,7 +9,7 @@
 
 #include <api.hpp>
 #include <smt2lib.hpp>
-#include <smt2libZ3Ast.hpp>
+#include <smt2libTritonToZ3Ast.hpp>
 #include <smt2libZ3Result.hpp>
 #include <solverEngine.hpp>
 
@@ -195,7 +195,7 @@ namespace triton {
       triton::uint512 SolverEngine::evaluateAst(smt2lib::smtAstAbstractNode *node) {
         if (node == nullptr)
           throw std::runtime_error("SolverEngine::evaluateAst(): node cannot be null.");
-        triton::smt2lib::Z3Ast z3ast{};
+        triton::smt2lib::TritonToZ3Ast z3ast{};
         triton::smt2lib::Z3Result result = z3ast.eval(*node);
         triton::uint512 nbResult{result.getStringValue()};
         return nbResult;

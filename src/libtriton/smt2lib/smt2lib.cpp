@@ -9,7 +9,7 @@
 
 #include "api.hpp"
 #include "smt2lib.hpp"
-#include "smt2libZ3Ast.hpp"
+#include "smt2libTritonToZ3Ast.hpp"
 #include "smt2libZ3Result.hpp"
 
 
@@ -47,7 +47,7 @@ namespace triton {
 
 
     triton::uint32 smtAstAbstractNode::getBitvectorSize(void) {
-      Z3Ast ast;
+      TritonToZ3Ast ast;
       Z3Result result = ast.eval(*this);
       return result.getBitvectorSize();
     }

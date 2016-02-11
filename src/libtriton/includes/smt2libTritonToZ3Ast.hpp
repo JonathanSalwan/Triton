@@ -5,8 +5,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
-#ifndef TRITON_Z3AST_H
-#define TRITON_Z3AST_H
+#ifndef TRITON_TRITONTOZ3AST_H
+#define TRITON_TRITONTOZ3AST_H
 
 #include <z3++.h>
 
@@ -32,9 +32,9 @@ namespace triton {
    *  @{
    */
 
-    //! \class Z3Ast
+    //! \class TritonToZ3Ast
     /*! \brief Converts a Triton's AST to Z3's AST. */
-    class Z3Ast : public Visitor {
+    class TritonToZ3Ast : public Visitor {
 
       protected:
         //! The result.
@@ -42,10 +42,10 @@ namespace triton {
 
       public:
         //! Constructor.
-        Z3Ast();
+        TritonToZ3Ast();
 
         //! Destructor.
-        ~Z3Ast();
+        ~TritonToZ3Ast();
 
         //! Evaluates a Triton AST.
         virtual Z3Result& eval(smt2lib::smtAstAbstractNode& e);
@@ -157,5 +157,5 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_Z3AST_H */
+#endif /* TRITON_TRITONTOZ3AST_H */
 
