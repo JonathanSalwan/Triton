@@ -17,7 +17,8 @@
 namespace triton {
   namespace smt2lib {
 
-    TritonToZ3Ast::TritonToZ3Ast() {
+    TritonToZ3Ast::TritonToZ3Ast(bool eval) {
+      this->isEval = eval;
     }
 
 
@@ -460,21 +461,29 @@ namespace triton {
       if (symVar->getSymVarSize() > QWORD_SIZE_BIT)
         throw std::runtime_error("smtAstVariableNode: size above 64 bits is not supported yet");
 
-      if (symVar->getSymVarKind() == triton::engines::symbolic::MEM) {
-        triton::uint32 memSize   = symVar->getSymVarSize();
-        triton::uint128 memValue = symVar->getConcreteValue();
-        std::string memStrValue(memValue);
-        z3::expr newexpr = this->result.getContext().bv_val(memStrValue.c_str(), memSize);
-        this->result.setExpr(newexpr);
+      /* If the conversion is used to evaluate a node, we concretize symbolic variables */
+      if (this->isEval) {
+        if (symVar->getSymVarKind() == triton::engines::symbolic::MEM) {
+          triton::uint32 memSize   = symVar->getSymVarSize();
+          triton::uint128 memValue = symVar->getConcreteValue();
+          std::string memStrValue(memValue);
+          z3::expr newexpr = this->result.getContext().bv_val(memStrValue.c_str(), memSize);
+          this->result.setExpr(newexpr);
+        }
+        else if (symVar->getSymVarKind() == triton::engines::symbolic::REG) {
+          triton::uint128 regValue = symVar->getConcreteValue();
+          std::string regStrValue(regValue);
+          z3::expr newexpr = this->result.getContext().bv_val(regStrValue.c_str(), symVar->getSymVarSize());
+          this->result.setExpr(newexpr);
+        }
+        else
+          throw std::runtime_error("smtAstVariableNode: UNSET");
       }
-      else if (symVar->getSymVarKind() == triton::engines::symbolic::REG) {
-        triton::uint128 regValue = symVar->getConcreteValue();
-        std::string regStrValue(regValue);
-        z3::expr newexpr = this->result.getContext().bv_val(regStrValue.c_str(), symVar->getSymVarSize());
-        this->result.setExpr(newexpr);
-      }
+      /* Otherwise, we keep the symbolic variables for a real conversion */
       else {
-        throw std::runtime_error("smtAstVariableNode: UNSET");
+        //z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_const(this->result.getContext(), Z3_mk_string_symbol(this->result.getContext(), symVar->getSymVarName().c_str()), Z3_mk_bv_sort(this->result.getContext(), symVar->getSymVarSize())));
+        z3::expr newexpr = this->result.getContext().bv_const(symVar->getSymVarName().c_str(), symVar->getSymVarSize());
+        this->result.setExpr(newexpr);
       }
     }
 

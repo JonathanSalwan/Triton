@@ -175,7 +175,7 @@ namespace triton {
 
         /* Check if we can use z3 to simplify the expression before using our own rules */
         if (this->z3Enabled) {
-          triton::smt2lib::TritonToZ3Ast  z3Ast{};
+          triton::smt2lib::TritonToZ3Ast  z3Ast{false};
           triton::smt2lib::Z3ToTritonAst  tritonAst{};
           triton::smt2lib::Z3Result       result = z3Ast.eval(*node);
 

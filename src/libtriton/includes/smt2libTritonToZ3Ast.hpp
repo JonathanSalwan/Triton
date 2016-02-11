@@ -36,13 +36,17 @@ namespace triton {
     /*! \brief Converts a Triton's AST to Z3's AST. */
     class TritonToZ3Ast : public Visitor {
 
+      private:
+        //! This flag define if the conversion is used to evaluated a node or not.
+        bool isEval;
+
       protected:
         //! The result.
         Z3Result result;
 
       public:
         //! Constructor.
-        TritonToZ3Ast();
+        TritonToZ3Ast(bool eval=true);
 
         //! Destructor.
         ~TritonToZ3Ast();
