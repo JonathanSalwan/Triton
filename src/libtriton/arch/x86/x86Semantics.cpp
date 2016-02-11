@@ -4004,7 +4004,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(src);
 
           /* Create the SMT semantics */
-          auto node = op1;
+          auto node = smt2lib::zx(dst.getBitSize() - src.getBitSize(), op1);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PUSH operation");
