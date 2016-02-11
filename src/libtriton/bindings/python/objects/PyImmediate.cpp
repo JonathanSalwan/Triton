@@ -21,7 +21,7 @@
 \section py_Immediate_description Description
 <hr>
 
-This object is used to represent an Immediate.
+This object is used to represent an immediate operand.
 
 ~~~~~~~~~~~~~{.py}
 >>> imm = Immediate(0x1234, CPUSIZE.WORD)

@@ -22,7 +22,7 @@
 \section py_Memory_description Description
 <hr>
 
-This object is used to represent a Memory access.
+This object is used to represent a memory access operand.
 
 ~~~~~~~~~~~~~{.py}
 >>> from triton import Memory

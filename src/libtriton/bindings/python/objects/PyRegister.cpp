@@ -23,7 +23,7 @@
 \section py_Register_description Description
 <hr>
 
-This object is used to represent a register according to the CPU architecture.
+This object is used to represent a register operand according to the CPU architecture.
 
 ~~~~~~~~~~~~~{.py}
 >>> ah = REG.AH
