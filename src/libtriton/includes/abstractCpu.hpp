@@ -9,6 +9,7 @@
 #define TRITON_ABSTRACTCPU_HPP
 
 #include <set>
+#include <tuple>
 
 #include "instruction.hpp"
 #include "memoryOperand.hpp"

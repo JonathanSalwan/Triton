@@ -6,6 +6,10 @@
 */
 
 #include <stdexcept>
+
+#include <smt2libTritonToZ3Ast.hpp>
+#include <smt2libZ3Result.hpp>
+#include <smt2libZ3ToTritonAst.hpp>
 #include <symbolicSimplification.hpp>
 
 #ifdef TRITON_PYTHON_BINDINGS
@@ -120,10 +124,21 @@ namespace triton {
 
 
       SymbolicSimplification::SymbolicSimplification() {
+        this->z3Enabled = false;
       }
 
 
       SymbolicSimplification::~SymbolicSimplification() {
+      }
+
+
+      bool SymbolicSimplification::isZ3SimplificationEnabled(void) {
+        return this->z3Enabled;
+      }
+
+
+      void SymbolicSimplification::enableZ3Simplification(bool flag) {
+        this->z3Enabled = flag;
       }
 
 
@@ -154,6 +169,21 @@ namespace triton {
 
 
       smt2lib::smtAstAbstractNode* SymbolicSimplification::processSimplification(smt2lib::smtAstAbstractNode* node) {
+
+        if (node == nullptr)
+          throw std::runtime_error("SymbolicSimplification::processSimplification(): node cannot be null.");
+
+        /* Check if we can use z3 to simplify the expression before using our own rules */
+        if (this->z3Enabled) {
+          triton::smt2lib::TritonToZ3Ast  z3Ast{};
+          triton::smt2lib::Z3ToTritonAst  tritonAst{};
+          triton::smt2lib::Z3Result       result = z3Ast.eval(*node);
+
+          /* Simplify and convert back to Triton's AST */
+          z3::expr expr = result.getExpr().simplify();
+          tritonAst.setExpr(expr);
+          node = tritonAst.convert();
+        }
 
         std::list<triton::engines::symbolic::sfp>::iterator it1;
         for (it1 = this->simplificationCallbacks.begin(); it1 != this->simplificationCallbacks.end(); it1++) {

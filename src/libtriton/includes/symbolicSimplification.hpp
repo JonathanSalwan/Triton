@@ -52,6 +52,9 @@ namespace triton {
       class SymbolicSimplification {
 
         protected:
+          //! Flag to define if we can use z3 to simplify expressions. Default: false.
+          bool z3Enabled;
+
           //! List of simplification callbacks. These callbacks will be called before assigning a symbolic expression to a register or part of memory.
           std::list<triton::engines::symbolic::sfp> simplificationCallbacks;
 
@@ -66,6 +69,12 @@ namespace triton {
 
           //! Destructor.
           ~SymbolicSimplification();
+
+          //! Returns true if Triton can use the simplification passes of z3.
+          bool isZ3SimplificationEnabled(void);
+
+          //! Enabled, Triton will use the simplification passes of z3 before to call its recorded simplification passes.
+          void enableZ3Simplification(bool flag);
 
           //! Records a simplification callback.
           void recordSimplificationCallback(triton::engines::symbolic::sfp cb);

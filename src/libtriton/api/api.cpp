@@ -631,6 +631,12 @@ namespace triton {
   }
 
 
+  void API::enableSymbolicZ3Simplification(bool flag) {
+    this->checkSymbolic();
+    this->sym->enableZ3Simplification(flag);
+  }
+
+
   void API::enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti) {
     this->checkSymbolic();
     this->sym->enableOptimization(opti);
@@ -652,6 +658,12 @@ namespace triton {
   bool API::isSymbolicEngineEnabled(void) {
     this->checkSymbolic();
     return this->sym->isEnabled();
+  }
+
+
+  bool API::isSymbolicZ3SimplificationEnabled(void) {
+    this->checkSymbolic();
+    return this->sym->isZ3SimplificationEnabled();
   }
 
 
