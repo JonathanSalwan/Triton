@@ -155,7 +155,7 @@ previous section), the new expression is not really useful for an humain.
 (concat ((_ extract 7 2) SymVar_0) (bvnot ((_ extract 1 1) SymVar_0)) ((_ extract 0 0) SymVar_0))
 ~~~~~~~~~~~~~
 
-As you can see Z3 tries to apply a bit-to-bit simplification. That's why, Triton allows you to deal with both, Z3's simplification passes and your own rules.
+As you can see, Z3 tries to apply a bit-to-bit simplification. That's why, Triton allows you to deal with both, Z3's simplification passes and your own rules.
 
 */
 
