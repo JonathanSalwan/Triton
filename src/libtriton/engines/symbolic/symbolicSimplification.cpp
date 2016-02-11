@@ -38,6 +38,9 @@ triton::smt2lib::smtAstAbstractNode. Then, your callback will be called before e
 Note that you can record several simplification callbacks or remove a specific callback using the
 triton::API::removeSimplificationCallback() function.
 
+\subsection SMT_simplification_triton Simplification via Triton's rules
+<hr>
+
 Below, a little example which replaces all \f$ A \oplus A \rightarrow A = 0\f$.
 
 ~~~~~~~~~~~~~{.cpp}
@@ -112,6 +115,47 @@ if __name__ == "__main__":
     c = simplify(c)
     print 'Simp: ', c
 ~~~~~~~~~~~~~
+
+\subsection SMT_simplification_z3 Simplification via Z3
+<hr>
+
+As Triton is able to convert a Triton's AST to a Z3's AST and vice versa, you can benefit to the power of Z3 to simplify your expression, then, come back to a Triton's AST and apply your own rules.
+
+~~~~~~~~~~~~~{.py}
+>>> enableSymbolicZ3Simplification(True)
+
+>>> var = newSymbolicVariable(8)
+>>> a = variable(var.getName())
+>>> b = bv(0x38, 8)
+>>> c = bv(0xde, 8)
+>>> d = bv(0x4f, 8)
+>>> c = a * ((b & c) | d)
+
+>>> print c
+(bvmul SymVar_0 (bvor (bvand (_ bv56 8) (_ bv222 8)) (_ bv79 8)))
+
+>>> c = simplify(c)
+>>> print c
+(bvmul (_ bv95 8) SymVar_0)
+~~~~~~~~~~~~~
+
+Note that applying a SMT simplification doesn't means that your expression will be more readable by an humain. For example, if we perform a simplification of a bitwise operation (as described in the
+previous section), the new expression is not really useful for an humain.
+
+~~~~~~~~~~~~~{.py}
+>>> a = variable(var.getName())
+>>> b = bv(2, 8)
+>>> c = (~b & a) | (~a & b) # a ^ b
+
+>>> print c
+(bvor (bvand (bvnot (_ bv2 8)) SymVar_0) (bvand (bvnot SymVar_0) (_ bv2 8)))
+
+>>> c = simplify(c)
+>>> print c
+(concat ((_ extract 7 2) SymVar_0) (bvnot ((_ extract 1 1) SymVar_0)) ((_ extract 0 0) SymVar_0))
+~~~~~~~~~~~~~
+
+As you can see Z3 tries to apply a bit-to-bit simplification. That's why, Triton allows you to deal with both, Z3's simplification passes and your own rules.
 
 */
 
