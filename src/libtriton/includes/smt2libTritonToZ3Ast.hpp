@@ -40,6 +40,9 @@ namespace triton {
         //! This flag define if the conversion is used to evaluated a node or not.
         bool isEval;
 
+        //! The map of symbols. E.g: (let (symbols expr1) expr2)
+        std::map<std::string, smt2lib::smtAstAbstractNode*> symbols;
+
       protected:
         //! The result.
         Z3Result result;
