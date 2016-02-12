@@ -397,7 +397,7 @@ namespace triton {
         }
 
         /* Variable? */
-        case 0x82d: {
+        case Z3_OP_UNINTERPRETED: {
           node = triton::smt2lib::variable(function.name().str());
           break;
         }
