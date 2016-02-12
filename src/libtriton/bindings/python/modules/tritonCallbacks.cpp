@@ -302,8 +302,8 @@ Sets the targeted memory as tainted or not.
 - **setTaintRegister(\ref py_REG_page reg, bool flag)**<br>
 Sets the targeted register as tainted or not.
 
-- **simplify(\ref py_SmtAstNode_page node)**<br>
-Calls all simplification callbacks recorded and returns the simplified node as \ref py_SmtAstNode_page.
+- **simplify(\ref py_SmtAstNode_page node, bool z3=False)**<br>
+Calls all simplification callbacks recorded and returns the simplified node as \ref py_SmtAstNode_page. If the z3 flag is set to True, Triton will use z3 to simplify the given `node`, then it will call all recorded rules.
 
 - <b>taintAssignmentMemoryImmediate(\ref py_Memory_page memDst)</b><br>
 Taints `memDst` with an assignment - `memDst` is untained.
@@ -2134,16 +2134,28 @@ namespace triton {
       }
 
 
-      static PyObject* triton_simplify(PyObject* self, PyObject* node) {
+      static PyObject* triton_simplify(PyObject* self, PyObject* args) {
+        PyObject* node        = nullptr;
+        PyObject* z3Flag      = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &node, &z3Flag);
+
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "simplify(): Architecture is not defined.");
 
-        if (!PySmtAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "simplify(): Expects a SmtAstNode as argument.");
+        if (node == nullptr || !PySmtAstNode_Check(node))
+          return PyErr_Format(PyExc_TypeError, "simplify(): Expects a SmtAstNode as first argument.");
+
+        if (z3Flag != nullptr && !PyBool_Check(z3Flag))
+          return PyErr_Format(PyExc_TypeError, "simplify(): Expects a boolean as second argument.");
+
+        if (z3Flag == nullptr)
+          z3Flag = PyLong_FromUint(false);
 
         try {
-          return PySmtAstNode(triton::api.processSimplification(PySmtAstNode_AsSmtAstNode(node)));
+          return PySmtAstNode(triton::api.processSimplification(PySmtAstNode_AsSmtAstNode(node), PyLong_AsUint(z3Flag)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2619,7 +2631,7 @@ namespace triton {
         {"setLastRegisterValue",                (PyCFunction)triton_setLastRegisterValue,                   METH_O,             ""},
         {"setTaintMemory",                      (PyCFunction)triton_setTaintMemory,                         METH_VARARGS,       ""},
         {"setTaintRegister",                    (PyCFunction)triton_setTaintRegister,                       METH_VARARGS,       ""},
-        {"simplify",                            (PyCFunction)triton_simplify,                               METH_O,             ""},
+        {"simplify",                            (PyCFunction)triton_simplify,                               METH_VARARGS,       ""},
         {"taintAssignmentMemoryImmediate",      (PyCFunction)triton_taintAssignmentMemoryImmediate,         METH_O,             ""},
         {"taintAssignmentMemoryMemory",         (PyCFunction)triton_taintAssignmentMemoryMemory,            METH_VARARGS,       ""},
         {"taintAssignmentMemoryRegister",       (PyCFunction)triton_taintAssignmentMemoryRegister,          METH_VARARGS,       ""},

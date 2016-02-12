@@ -293,7 +293,7 @@ namespace triton {
         std::map<std::string, triton::uint32> getAstSummariesStats(void);
 
         //! [**symbolic api**] - Processes all recorded simplifications. Returns the simplified node.
-        smt2lib::smtAstAbstractNode* processSimplification(smt2lib::smtAstAbstractNode* node);
+        smt2lib::smtAstAbstractNode* processSimplification(smt2lib::smtAstAbstractNode* node, bool z3=false);
 
         //! [**symbolic api**] - Returns the symbolic expression corresponding to the id.
         triton::engines::symbolic::SymbolicExpression* getSymbolicExpressionFromId(triton::__uint symExprId);

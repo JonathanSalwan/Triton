@@ -93,7 +93,7 @@ namespace triton {
           #endif
 
           //! Processes all recorded simplifications. Returns the simplified node.
-          smt2lib::smtAstAbstractNode* processSimplification(smt2lib::smtAstAbstractNode* node);
+          smt2lib::smtAstAbstractNode* processSimplification(smt2lib::smtAstAbstractNode* node, bool z3=false);
       };
 
     /*! @} End of symbolic namespace */

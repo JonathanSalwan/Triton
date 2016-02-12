@@ -595,9 +595,9 @@ namespace triton {
   }
 
 
-  smt2lib::smtAstAbstractNode* API::processSimplification(smt2lib::smtAstAbstractNode* node) {
+  smt2lib::smtAstAbstractNode* API::processSimplification(smt2lib::smtAstAbstractNode* node, bool z3) {
     this->checkSymbolic();
-    return this->sym->processSimplification(node);
+    return this->sym->processSimplification(node, z3);
   }
 
 

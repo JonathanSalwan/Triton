@@ -212,13 +212,13 @@ namespace triton {
       #endif
 
 
-      smt2lib::smtAstAbstractNode* SymbolicSimplification::processSimplification(smt2lib::smtAstAbstractNode* node) {
+      smt2lib::smtAstAbstractNode* SymbolicSimplification::processSimplification(smt2lib::smtAstAbstractNode* node, bool z3) {
 
         if (node == nullptr)
           throw std::runtime_error("SymbolicSimplification::processSimplification(): node cannot be null.");
 
         /* Check if we can use z3 to simplify the expression before using our own rules */
-        if (this->z3Enabled) {
+        if (this->z3Enabled | z3) {
           triton::smt2lib::TritonToZ3Ast  z3Ast{false};
           triton::smt2lib::Z3ToTritonAst  tritonAst{};
           triton::smt2lib::Z3Result       result = z3Ast.eval(*node);
