@@ -303,7 +303,7 @@ Sets the targeted memory as tainted or not.
 Sets the targeted register as tainted or not.
 
 - **simplify(\ref py_SmtAstNode_page node, bool z3=False)**<br>
-Calls all simplification callbacks recorded and returns the simplified node as \ref py_SmtAstNode_page. If the z3 flag is set to True, Triton will use z3 to simplify the given `node`, then it will call all recorded rules.
+Calls all simplification callbacks recorded and returns the simplified node as \ref py_SmtAstNode_page. If the z3 flag is set to True, Triton will use z3 to simplify the given `node` before to call recorded callbacks.
 
 - <b>taintAssignmentMemoryImmediate(\ref py_Memory_page memDst)</b><br>
 Taints `memDst` with an assignment - `memDst` is untained.
