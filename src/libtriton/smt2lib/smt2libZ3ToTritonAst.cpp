@@ -69,9 +69,11 @@ namespace triton {
         }
 
         case Z3_OP_DISTINCT: {
-          if (expr.num_args() != 2)
-            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_DISTINCT must conatin two arguments.");
+          if (expr.num_args() < 2)
+            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_DISTINCT must conatin at least two arguments.");
           node = triton::smt2lib::distinct(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
+          for (triton::uint32 i = 2; i < expr.num_args(); i++)
+            node = triton::smt2lib::distinct(node, this->visit(expr.arg(i)));
           break;
         }
 
@@ -83,16 +85,20 @@ namespace triton {
         }
 
         case Z3_OP_AND: {
-          if (expr.num_args() != 2)
-            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_AND must conatin two arguments.");
+          if (expr.num_args() < 2)
+            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_AND must conatin at least two arguments.");
           node = triton::smt2lib::land(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
+          for (triton::uint32 i = 2; i < expr.num_args(); i++)
+            node = triton::smt2lib::land(node, this->visit(expr.arg(i)));
           break;
         }
 
         case Z3_OP_OR: {
-          if (expr.num_args() != 2)
-            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_OR must conatin two arguments.");
+          if (expr.num_args() < 2)
+            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_OR must conatin at least two arguments.");
           node = triton::smt2lib::lor(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
+          for (triton::uint32 i = 2; i < expr.num_args(); i++)
+            node = triton::smt2lib::lor(node, this->visit(expr.arg(i)));
           break;
         }
 
@@ -111,9 +117,11 @@ namespace triton {
         }
 
         case Z3_OP_BADD: {
-          if (expr.num_args() != 2)
-            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BADD must conatin two arguments.");
+          if (expr.num_args() < 2)
+            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BADD must conatin at least two arguments.");
           node = triton::smt2lib::bvadd(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
+          for (triton::uint32 i = 2; i < expr.num_args(); i++)
+            node = triton::smt2lib::bvadd(node, this->visit(expr.arg(i)));
           break;
         }
 
@@ -125,9 +133,11 @@ namespace triton {
         }
 
         case Z3_OP_BMUL: {
-          if (expr.num_args() != 2)
-            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BMUL must conatin two arguments.");
+          if (expr.num_args() < 2)
+            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BMUL must conatin at least two arguments.");
           node = triton::smt2lib::bvmul(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
+          for (triton::uint32 i = 2; i < expr.num_args(); i++)
+            node = triton::smt2lib::bvmul(node, this->visit(expr.arg(i)));
           break;
         }
 
@@ -223,16 +233,20 @@ namespace triton {
         }
 
         case Z3_OP_BAND: {
-          if (expr.num_args() != 2)
-            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BAND must conatin two arguments.");
+          if (expr.num_args() < 2)
+            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BAND must conatin at least two arguments.");
           node = triton::smt2lib::bvand(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
+          for (triton::uint32 i = 2; i < expr.num_args(); i++)
+            node = triton::smt2lib::bvand(node, this->visit(expr.arg(i)));
           break;
         }
 
         case Z3_OP_BOR: {
-          if (expr.num_args() != 2)
-            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BOR must conatin two arguments.");
+          if (expr.num_args() < 2)
+            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BOR must conatin at least two arguments.");
           node = triton::smt2lib::bvor(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
+          for (triton::uint32 i = 2; i < expr.num_args(); i++)
+            node = triton::smt2lib::bvor(node, this->visit(expr.arg(i)));
           break;
         }
 
@@ -244,9 +258,11 @@ namespace triton {
         }
 
         case Z3_OP_BXOR: {
-          if (expr.num_args() != 2)
-            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BXOR must conatin two arguments.");
+          if (expr.num_args() < 2)
+            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BXOR must conatin at least two arguments.");
           node = triton::smt2lib::bvxor(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
+          for (triton::uint32 i = 2; i < expr.num_args(); i++)
+            node = triton::smt2lib::bvxor(node, this->visit(expr.arg(i)));
           break;
         }
 
@@ -306,23 +322,29 @@ namespace triton {
         }
 
         case Z3_OP_BSHL: {
-          if (expr.num_args() != 2)
-            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BSHL must conatin two arguments.");
+          if (expr.num_args() < 2)
+            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BSHL must conatin at least two arguments.");
           node = triton::smt2lib::bvshl(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
+          for (triton::uint32 i = 2; i < expr.num_args(); i++)
+            node = triton::smt2lib::bvshl(node, this->visit(expr.arg(i)));
           break;
         }
 
         case Z3_OP_BLSHR: {
-          if (expr.num_args() != 2)
-            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BLSHR must conatin two arguments.");
+          if (expr.num_args() < 2)
+            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BLSHR must conatin at least two arguments.");
           node = triton::smt2lib::bvlshr(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
+          for (triton::uint32 i = 2; i < expr.num_args(); i++)
+            node = triton::smt2lib::bvlshr(node, this->visit(expr.arg(i)));
           break;
         }
 
         case Z3_OP_BASHR: {
-          if (expr.num_args() != 2)
-            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BASHR must conatin two arguments.");
+          if (expr.num_args() < 2)
+            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_BASHR must conatin at least two arguments.");
           node = triton::smt2lib::bvashr(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
+          for (triton::uint32 i = 2; i < expr.num_args(); i++)
+            node = triton::smt2lib::bvashr(node, this->visit(expr.arg(i)));
           break;
         }
 
