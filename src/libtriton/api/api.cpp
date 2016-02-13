@@ -139,11 +139,12 @@ namespace triton {
 
 
   API::API() {
-    this->arch      = arch::Architecture();
-    this->taint     = nullptr;
-    this->sym       = nullptr;
-    this->symBackup = nullptr;
-    this->solver    = nullptr;
+    this->arch        = arch::Architecture();
+    this->pseudocode  = nullptr;
+    this->solver      = nullptr;
+    this->sym         = nullptr;
+    this->symBackup   = nullptr;
+    this->taint       = nullptr;
   }
 
 
@@ -320,15 +321,20 @@ namespace triton {
     this->solver = new triton::engines::solver::SolverEngine();
     if (!this->solver)
       throw std::invalid_argument("API::initEngines(): No enough memory.");
+
+    this->pseudocode = new triton::smt2lib::pseudocode::Pseudocode();
+    if (!this->pseudocode)
+      throw std::invalid_argument("API::initEngines(): No enough memory.");
   }
 
 
   void API::removeEngines(void) {
     if(this->isArchitectureValid()) {
-      delete this->taint;
+      delete this->pseudocode;
+      delete this->solver;
       delete this->sym;
       delete this->symBackup;
-      delete this->solver;
+      delete this->taint;
     }
   }
 
@@ -347,6 +353,21 @@ namespace triton {
     this->checkArchitecture();
     this->disassembly(inst);
     this->buildSemantics(inst);
+  }
+
+
+
+  /* Pseudocode interface API ======================================================================= */
+
+  void API::checkPseudocode(void) {
+    if (!this->pseudocode)
+      throw std::runtime_error("API::checkPseudocode(): Pseudocode interface is undefined.");
+  }
+
+
+  std::ostream& API::pseudocodeDisplay(std::ostream& stream, smt2lib::smtAstAbstractNode* node) {
+    this->checkPseudocode();
+    return this->pseudocode->display(stream, node);
   }
 
 

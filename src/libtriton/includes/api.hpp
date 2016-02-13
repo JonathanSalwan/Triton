@@ -15,6 +15,7 @@
 #include "operandWrapper.hpp"
 #include "registerOperand.hpp"
 #include "smt2lib.hpp"
+#include "smt2libPseudocode.hpp"
 #include "solverEngine.hpp"
 #include "symbolicEngine.hpp"
 #include "taintEngine.hpp"
@@ -56,6 +57,9 @@ namespace triton {
 
         //! The solver engine.
         triton::engines::solver::SolverEngine* solver;
+
+        //! The pseudocode interface.
+        triton::smt2lib::pseudocode::Pseudocode* pseudocode;
 
       public:
 
@@ -173,6 +177,17 @@ namespace triton {
 
         //! [**proccesing api**] - Reset everything.
         void resetEngines(void);
+
+
+
+        /* Pseudocode interface API ======================================================================= */
+
+        //! [**pseudocode api**] - Raises an exception if the pseudocode interface is not initialized.
+        void checkPseudocode(void);
+
+        //! [**pseudocode api**] - Display a node according to the pseudocode mode.
+        std::ostream& pseudocodeDisplay(std::ostream& stream, smt2lib::smtAstAbstractNode* node);
+
 
 
         /* Symbolic engine API =========================================================================== */
