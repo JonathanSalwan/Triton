@@ -10,28 +10,9 @@
 
 
 
-//! \module The Triton namespace
 namespace triton {
-/*!
- *  \addtogroup triton
- *  @{
- */
-
-  //! \module The SMT2-Lib namespace
   namespace smt2lib {
-  /*!
-   *  \ingroup triton
-   *  \addtogroup smt2-lib
-   *  @{
-   */
-
-    //! \module The pseudocode namespace
     namespace pseudocode {
-    /*!
-     *  \ingroup smt2lib
-     *  \addtogroup pseudocode
-     *  @{
-     */
 
       SmtSyntax::SmtSyntax() {
       }
