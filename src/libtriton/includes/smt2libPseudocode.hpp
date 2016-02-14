@@ -65,7 +65,7 @@ namespace triton {
           ~Pseudocode();
 
           //! Returns the pseudocode's mode.
-          enum mode_e getKind(void);
+          enum mode_e getMode(void);
 
           //! Sets the pseudocode's mode.
           void setMode(enum mode_e mode);

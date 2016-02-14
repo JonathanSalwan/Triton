@@ -38,7 +38,7 @@ namespace triton {
       }
 
 
-      enum mode_e Pseudocode::getKind(void) {
+      enum mode_e Pseudocode::getMode(void) {
         return this->mode;
       }
 

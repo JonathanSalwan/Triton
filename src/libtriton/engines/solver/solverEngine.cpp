@@ -119,9 +119,13 @@ namespace triton {
         std::stringstream                                 formula;
         z3::context                                       ctx;
         z3::solver                                        solver(ctx);
+        triton::smt2lib::pseudocode::mode_e               pseudocodeMode = triton::api.getPseudocodeMode();
 
         if (node == nullptr)
           throw std::runtime_error("SolverEngine::getModels(): node cannot be null.");
+
+        /* Switch into the SMT mode */
+        triton::api.setPseudocodeMode(triton::smt2lib::pseudocode::SMT_SYNTAX);
 
         /* First, set the QF_AUFBV flag  */
         formula << "(set-logic QF_AUFBV)";
@@ -175,6 +179,9 @@ namespace triton {
           /* Decrement the limit */
           limit--;
         }
+
+        /* Restore the pseudocode mode */
+        triton::api.setPseudocodeMode(pseudocodeMode);
 
         return ret;
       }

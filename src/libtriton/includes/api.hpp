@@ -188,6 +188,12 @@ namespace triton {
         //! [**pseudocode api**] - Display a node according to the pseudocode mode.
         std::ostream& pseudocodeDisplay(std::ostream& stream, smt2lib::smtAstAbstractNode* node);
 
+        //! [**pseudocode api**] - Returns the pseudocode's mode.
+        triton::smt2lib::pseudocode::mode_e getPseudocodeMode(void);
+
+        //! [**pseudocode api**] - Sets the pseudocode's mode.
+        void setPseudocodeMode(triton::smt2lib::pseudocode::mode_e mode);
+
 
 
         /* Symbolic engine API =========================================================================== */

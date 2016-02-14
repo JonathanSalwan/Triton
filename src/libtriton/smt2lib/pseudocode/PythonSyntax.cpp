@@ -6,6 +6,8 @@
 */
 
 #include <stdexcept>
+
+#include <api.hpp>
 #include <smt2libPythonSyntax.hpp>
 
 
@@ -83,343 +85,365 @@ namespace triton {
 
       /* assert syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstAssertNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "assert(" << node->getChilds()[0] << ")";
         return stream;
       }
 
 
       /* bvadd syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvaddNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " + " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvand syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvandNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " & " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvashr syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvashrNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " >> " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvdecl syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvdeclNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "bvdecl(" << node->getChilds()[0] << ")";
         return stream;
       }
 
 
       /* bvlshr syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvlshrNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " >> " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvmul syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvmulNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " * " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvnand syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvnandNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "~(" << node->getChilds()[0] << " & " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvneg syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvnegNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "-" << node->getChilds()[0];
         return stream;
       }
 
 
       /* bvnor syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvnorNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "~(" << node->getChilds()[0] << " | " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvnot syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvnotNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "~" << node->getChilds()[0];
         return stream;
       }
 
 
       /* bvor syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvorNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " | " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvrol syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvrolNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "rol(" << node->getChilds()[0] << ", " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvror syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvrorNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "ror(" << node->getChilds()[0] << ", " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvsdiv syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvsdivNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " / " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvsge syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvsgeNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " >= " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvsgt syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvsgtNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " > " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvshl syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvshlNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " << " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvsle syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvsleNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " <= " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvslt syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvsltNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " < " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvsmod syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvsmodNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " % " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvsrem syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvsremNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " % " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvsub syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvsubNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " - " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvudiv syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvudivNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " / " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvuge syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvugeNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " >= " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvugt syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvugtNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " > " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvule syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvuleNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " <= " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvult syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvultNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " < " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvurem syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvuremNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " % " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvxnor syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvxnorNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "xnor(" << node->getChilds()[0] << ", " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bvxor syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvxorNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " ^ " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* bv syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << node->getChilds()[0];
         return stream;
       }
 
 
       /* compound syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstCompoundNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        for (triton::uint32 index = 0; index < node->getChilds().size(); index++)
+          stream << node->getChilds()[index] << std::endl;
         return stream;
       }
 
 
       /* concat syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstConcatNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(";
+        for (triton::uint32 index = node->getChilds().size()-1; index > 0; index--)
+          stream << "(" << node->getChilds()[index] << " << " << BYTE_SIZE_BIT * index << ") | ";
+        stream << node->getChilds()[0] << ")";
         return stream;
       }
 
 
       /* decimal syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstDecimalNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << std::hex << "0x" << node->getValue() << std::dec;
         return stream;
       }
 
 
       /* declare syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstDeclareFunctionNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << node->getChilds()[0];
         return stream;
       }
 
 
       /* distinct syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstDistinctNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " != " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* equal syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstEqualNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " == " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* extract syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstExtractNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        triton::uint128 mask = -1;
+        triton::uint64 high  = reinterpret_cast<triton::smt2lib::smtAstDecimalNode*>(node->getChilds()[0])->getValue().convert_to<triton::uint64>();
+        triton::uint64 low   = reinterpret_cast<triton::smt2lib::smtAstDecimalNode*>(node->getChilds()[1])->getValue().convert_to<triton::uint64>();
+
+        mask = mask >> (127 - (high - low));
+
+        if (high - low == triton::api.cpuRegisterBitSize() - 1)
+          stream << node->getChilds()[2];
+        else if (low == 0)
+          stream << "(" << node->getChilds()[2] << " & " << std::hex << "0x" << mask << std::dec << ")";
+        else
+          stream << "((" << node->getChilds()[2] << " >> " << low << ")" << " & " << std::hex << "0x" << mask << std::dec << ")";
+
         return stream;
       }
 
 
       /* ite syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstIteNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "if " << node->getChilds()[0] << " then " << node->getChilds()[1] << " else " << node->getChilds()[2];
         return stream;
       }
 
 
       /* land syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstLandNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " && " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* let syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstLetNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << node->getChilds()[2];
         return stream;
       }
 
 
       /* lnot syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstLnotNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "not " << node->getChilds()[0];
         return stream;
       }
 
 
       /* lor syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstLorNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "(" << node->getChilds()[0] << " || " << node->getChilds()[1] << ")";
         return stream;
       }
 
 
       /* reference syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstReferenceNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << "#" << node->getValue();
         return stream;
       }
 
 
       /* string syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstStringNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << node->getValue();
         return stream;
       }
 
 
       /* sx syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstSxNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        triton::uint128 extend = reinterpret_cast<triton::smt2lib::smtAstDecimalNode*>(node->getChilds()[0])->getValue();
+
+        if (extend)
+          stream << "sx(" << node->getChilds()[0] << ", " << node->getChilds()[1] << ")";
+        else
+          stream << node->getChilds()[1];
+
         return stream;
       }
 
 
       /* variable syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstVariableNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << node->getValue();
         return stream;
       }
 
 
       /* zx syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstZxNode* node) {
-        throw std::invalid_argument("Not implemented yet.");
+        stream << node->getChilds()[1];
         return stream;
       }
 

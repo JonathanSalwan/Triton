@@ -371,6 +371,18 @@ namespace triton {
   }
 
 
+  triton::smt2lib::pseudocode::mode_e API::getPseudocodeMode(void) {
+    this->checkPseudocode();
+    return this->pseudocode->getMode();
+  }
+
+
+  void API::setPseudocodeMode(triton::smt2lib::pseudocode::mode_e mode) {
+    this->checkPseudocode();
+    this->pseudocode->setMode(mode);
+  }
+
+
 
   /* Symbolic Engine API ============================================================================ */
 
