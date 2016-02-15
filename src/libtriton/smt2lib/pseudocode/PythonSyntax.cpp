@@ -92,9 +92,7 @@ namespace triton {
 
       /* bvadd syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvaddNode* node) {
-        triton::uint512 mask = -1;
-        mask = mask >> (512 - node->getBitvectorSize());
-        stream << "((" << node->getChilds()[0] << " + " << node->getChilds()[1] << ") & 0x" << std::hex << mask << std::dec << ")";
+        stream << "((" << node->getChilds()[0] << " + " << node->getChilds()[1] << ") & 0x" << std::hex << node->getBitvectorMask() << std::dec << ")";
         return stream;
       }
 
@@ -129,9 +127,7 @@ namespace triton {
 
       /* bvmul syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvmulNode* node) {
-        triton::uint512 mask = -1;
-        mask = mask >> (512 - node->getBitvectorSize());
-        stream << "((" << node->getChilds()[0] << " * " << node->getChilds()[1] << ") & 0x" << std::hex << mask << std::dec << ")";
+        stream << "((" << node->getChilds()[0] << " * " << node->getChilds()[1] << ") & 0x" << std::hex << node->getBitvectorMask() << std::dec << ")";
         return stream;
       }
 
@@ -208,9 +204,7 @@ namespace triton {
 
       /* bvshl syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvshlNode* node) {
-        triton::uint512 mask = -1;
-        mask = mask >> (512 - node->getBitvectorSize());
-        stream << "((" << node->getChilds()[0] << " << " << node->getChilds()[1] << ") & 0x" << std::hex << mask << std::dec << ")";
+        stream << "((" << node->getChilds()[0] << " << " << node->getChilds()[1] << ") & 0x" << std::hex << node->getBitvectorMask() << std::dec << ")";
         return stream;
       }
 
@@ -245,9 +239,7 @@ namespace triton {
 
       /* bvsub syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstBvsubNode* node) {
-        triton::uint512 mask = -1;
-        mask = mask >> (512 - node->getBitvectorSize());
-        stream << "((" << node->getChilds()[0] << " - " << node->getChilds()[1] << ") & 0x" << std::hex << mask << std::dec << ")";
+        stream << "((" << node->getChilds()[0] << " - " << node->getChilds()[1] << ") & 0x" << std::hex << node->getBitvectorMask() << std::dec << ")";
         return stream;
       }
 
@@ -363,18 +355,14 @@ namespace triton {
 
       /* extract syntax */
       std::ostream& PythonSyntax::display(std::ostream& stream, triton::smt2lib::smtAstExtractNode* node) {
-        triton::uint512 mask = -1;
-        triton::uint64  high = reinterpret_cast<triton::smt2lib::smtAstDecimalNode*>(node->getChilds()[0])->getValue().convert_to<triton::uint64>();
-        triton::uint64  low  = reinterpret_cast<triton::smt2lib::smtAstDecimalNode*>(node->getChilds()[1])->getValue().convert_to<triton::uint64>();
+        triton::uint64 low = reinterpret_cast<triton::smt2lib::smtAstDecimalNode*>(node->getChilds()[1])->getValue().convert_to<triton::uint64>();
 
-        mask = mask >> (511 - (high - low));
-
-        if (high - low == triton::api.cpuRegisterBitSize() - 1)
+        if (node->getBitvectorSize() == triton::api.cpuRegisterBitSize())
           stream << node->getChilds()[2];
         else if (low == 0)
-          stream << "(" << node->getChilds()[2] << " & " << std::hex << "0x" << mask << std::dec << ")";
+          stream << "(" << node->getChilds()[2] << " & " << std::hex << "0x" << node->getBitvectorMask() << std::dec << ")";
         else
-          stream << "((" << node->getChilds()[2] << " >> " << low << ")" << " & " << std::hex << "0x" << mask << std::dec << ")";
+          stream << "((" << node->getChilds()[2] << " >> " << low << ")" << " & " << std::hex << "0x" << node->getBitvectorMask() << std::dec << ")";
 
         return stream;
       }

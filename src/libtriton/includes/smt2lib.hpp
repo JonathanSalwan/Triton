@@ -124,6 +124,9 @@ namespace triton {
         //! Returns the node's size.
         triton::uint32 getBitvectorSize(void);
 
+        //! Returns the vector's mask according the node's size.
+        triton::uint512 getBitvectorMask(void);
+
         //! Returns the node's childs.
         std::vector<smtAstAbstractNode*>& getChilds(void);
 

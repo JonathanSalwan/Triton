@@ -54,6 +54,13 @@ namespace triton {
     }
 
 
+    triton::uint512 smtAstAbstractNode::getBitvectorMask(void) {
+      triton::uint512 mask = -1;
+      mask = mask >> (512 - this->size);
+      return mask;
+    }
+
+
     std::vector<smtAstAbstractNode*>& smtAstAbstractNode::getChilds(void) {
       return this->childs;
     }
