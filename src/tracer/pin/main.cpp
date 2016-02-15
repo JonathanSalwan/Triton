@@ -1056,8 +1056,7 @@ namespace tracer {
 
       /* Exec the Pin's python bindings */
       tracer::pintool::initBindings();
-      if (!tracer::pintool::execScript(KnobPythonModule.Value().c_str()))
-        throw std::runtime_error("tracer::pintool::main(): Script file can't be found.");
+      tracer::pintool::execScript(KnobPythonModule.Value().c_str());
 
       return 0;
     }

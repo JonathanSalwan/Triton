@@ -283,6 +283,7 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 configure_file(
     ${CMAKE_SOURCE_DIR}/src/libtriton/includes/version.hpp.in
     ${CMAKE_SOURCE_DIR}/src/libtriton/includes/version.hpp
+    IMMEDIATE @ONLY
 )
 
 
@@ -325,11 +326,19 @@ target_link_libraries(
 
 
 if(${PINTOOL} MATCHES "yes")
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/src/tracer/pin/init.in
+        ${CMAKE_SOURCE_DIR}/src/tracer/pin/init.cpp
+        IMMEDIATE @ONLY
+    )
+
     file(
         GLOB_RECURSE
         PINTOOL_SOURCE_FILES
         ${CMAKE_SOURCE_DIR}/src/tracer/pin/*
     )
+    list(REMOVE_ITEM PINTOOL_SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/tracer/pin/init.in)
+
     add_library(${PROJECT_PINTOOL} SHARED ${PINTOOL_SOURCE_FILES})
     set_target_properties(${PROJECT_PINTOOL} PROPERTIES COMPILE_FLAGS ${PINTOOL_CXX_FLAGS})
     set_target_properties(${PROJECT_PINTOOL} PROPERTIES LINK_FLAGS ${PINTOOL_SHARED_LINKER_FLAGS})
@@ -369,6 +378,7 @@ if(${PINTOOL} MATCHES "yes")
             IMMEDIATE @ONLY
         )
     endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
 endif(${PINTOOL} MATCHES "yes")
 
 
