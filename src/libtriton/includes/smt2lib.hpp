@@ -102,6 +102,9 @@ namespace triton {
         //! The node's childs.
         std::vector<smtAstAbstractNode*> childs;
 
+        //! The node's size.
+        triton::uint32 size;
+
       public:
         //! Constructor.
         smtAstAbstractNode(enum kind_e kind);
@@ -118,11 +121,14 @@ namespace triton {
         //! Returns the node's kind.
         enum kind_e getKind(void);
 
-        //! Returns the expression's size.
+        //! Returns the node's size.
         triton::uint32 getBitvectorSize(void);
 
         //! Returns the node's childs.
         std::vector<smtAstAbstractNode*>& getChilds(void);
+
+        //! Sets the node's size.
+        void setBitvectorSize(triton::uint32 size);
 
         //! Adds a child.
         void addChild(smtAstAbstractNode* child);

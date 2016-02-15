@@ -21,16 +21,19 @@ namespace triton {
 
     smtAstAbstractNode::smtAstAbstractNode(enum kind_e kind) {
       this->kind = kind;
+      this->size = 0;
     }
 
 
     smtAstAbstractNode::smtAstAbstractNode() {
       this->kind = UNDEFINED_NODE;
+      this->size = 0;
     }
 
 
     smtAstAbstractNode::smtAstAbstractNode(const smtAstAbstractNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -47,9 +50,7 @@ namespace triton {
 
 
     triton::uint32 smtAstAbstractNode::getBitvectorSize(void) {
-      TritonToZ3Ast ast;
-      Z3Result result = ast.eval(*this);
-      return result.getBitvectorSize();
+      return this->size;
     }
 
 
@@ -63,17 +64,24 @@ namespace triton {
     }
 
 
+    void smtAstAbstractNode::setBitvectorSize(triton::uint32 size) {
+      this->size = size;
+    }
+
+
     /* ====== assert */
 
 
     smtAstAssertNode::smtAstAssertNode(smtAstAbstractNode* expr) {
       this->kind = ASSERT_NODE;
+      this->size = 1;
       this->addChild(expr);
     }
 
 
     smtAstAssertNode::smtAstAssertNode(const smtAstAssertNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -101,6 +109,9 @@ namespace triton {
 
     smtAstBvaddNode::smtAstBvaddNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVADD_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvaddNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -108,6 +119,7 @@ namespace triton {
 
     smtAstBvaddNode::smtAstBvaddNode(const smtAstBvaddNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -136,6 +148,9 @@ namespace triton {
 
     smtAstBvandNode::smtAstBvandNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVAND_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvandNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -143,6 +158,7 @@ namespace triton {
 
     smtAstBvandNode::smtAstBvandNode(const smtAstBvandNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -172,6 +188,9 @@ namespace triton {
 
     smtAstBvashrNode::smtAstBvashrNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVASHR_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvashrNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -179,6 +198,7 @@ namespace triton {
 
     smtAstBvashrNode::smtAstBvashrNode(const smtAstBvashrNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -207,12 +227,16 @@ namespace triton {
 
     smtAstBvdeclNode::smtAstBvdeclNode(triton::uint32 size) {
       this->kind = BVDECL_NODE;
+      if (!size)
+        throw std::runtime_error("triton::smt2lib::smtAstBvdeclNode(): Size connot be equal to zero.");
+      this->size = size;
       this->addChild(triton::smt2lib::decimal(size));
     }
 
 
     smtAstBvdeclNode::smtAstBvdeclNode(const smtAstBvdeclNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -241,6 +265,9 @@ namespace triton {
 
     smtAstBvlshrNode::smtAstBvlshrNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVLSHR_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvlshrNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -248,6 +275,7 @@ namespace triton {
 
     smtAstBvlshrNode::smtAstBvlshrNode(const smtAstBvlshrNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -276,6 +304,9 @@ namespace triton {
 
     smtAstBvmulNode::smtAstBvmulNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVMUL_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvmulNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -283,6 +314,7 @@ namespace triton {
 
     smtAstBvmulNode::smtAstBvmulNode(const smtAstBvmulNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -311,6 +343,9 @@ namespace triton {
 
     smtAstBvnandNode::smtAstBvnandNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVNAND_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvnandNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -318,6 +353,7 @@ namespace triton {
 
     smtAstBvnandNode::smtAstBvnandNode(const smtAstBvnandNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -346,12 +382,14 @@ namespace triton {
 
     smtAstBvnegNode::smtAstBvnegNode(smtAstAbstractNode* expr) {
       this->kind = BVNEG_NODE;
+      this->size = expr->getBitvectorSize();
       this->addChild(expr);
     }
 
 
     smtAstBvnegNode::smtAstBvnegNode(const smtAstBvnegNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -380,6 +418,9 @@ namespace triton {
 
     smtAstBvnorNode::smtAstBvnorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVNOR_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvnorNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -387,6 +428,7 @@ namespace triton {
 
     smtAstBvnorNode::smtAstBvnorNode(const smtAstBvnorNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -415,12 +457,14 @@ namespace triton {
 
     smtAstBvnotNode::smtAstBvnotNode(smtAstAbstractNode* expr) {
       this->kind = BVNOT_NODE;
+      this->size = expr->getBitvectorSize();
       this->addChild(expr);
     }
 
 
     smtAstBvnotNode::smtAstBvnotNode(const smtAstBvnotNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -449,6 +493,9 @@ namespace triton {
 
     smtAstBvorNode::smtAstBvorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVOR_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvorNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -456,6 +503,7 @@ namespace triton {
 
     smtAstBvorNode::smtAstBvorNode(const smtAstBvorNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -484,6 +532,7 @@ namespace triton {
 
     smtAstBvrolNode::smtAstBvrolNode(triton::uint32 rot, smtAstAbstractNode* expr) {
       this->kind = BVROL_NODE;
+      this->size = expr->getBitvectorSize();
       this->addChild(triton::smt2lib::decimal(rot));
       this->addChild(expr);
     }
@@ -491,6 +540,7 @@ namespace triton {
 
     smtAstBvrolNode::smtAstBvrolNode(const smtAstBvrolNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -528,6 +578,7 @@ namespace triton {
 
     smtAstBvrorNode::smtAstBvrorNode(triton::uint32 rot, smtAstAbstractNode* expr) {
       this->kind = BVROR_NODE;
+      this->size = expr->getBitvectorSize();
       this->addChild(triton::smt2lib::decimal(rot));
       this->addChild(expr);
     }
@@ -535,6 +586,7 @@ namespace triton {
 
     smtAstBvrorNode::smtAstBvrorNode(const smtAstBvrorNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -572,6 +624,9 @@ namespace triton {
 
     smtAstBvsdivNode::smtAstBvsdivNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSDIV_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvsdivNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -579,6 +634,7 @@ namespace triton {
 
     smtAstBvsdivNode::smtAstBvsdivNode(const smtAstBvsdivNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -607,6 +663,9 @@ namespace triton {
 
     smtAstBvsgeNode::smtAstBvsgeNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSGE_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvsgeNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -614,6 +673,7 @@ namespace triton {
 
     smtAstBvsgeNode::smtAstBvsgeNode(const smtAstBvsgeNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -642,6 +702,9 @@ namespace triton {
 
     smtAstBvsgtNode::smtAstBvsgtNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSGT_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvsgtNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -649,6 +712,7 @@ namespace triton {
 
     smtAstBvsgtNode::smtAstBvsgtNode(const smtAstBvsgtNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -677,6 +741,9 @@ namespace triton {
 
     smtAstBvshlNode::smtAstBvshlNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSHL_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvshlNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -684,6 +751,7 @@ namespace triton {
 
     smtAstBvshlNode::smtAstBvshlNode(const smtAstBvshlNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -712,6 +780,9 @@ namespace triton {
 
     smtAstBvsleNode::smtAstBvsleNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSLE_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvsleNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -719,6 +790,7 @@ namespace triton {
 
     smtAstBvsleNode::smtAstBvsleNode(const smtAstBvsleNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -747,6 +819,9 @@ namespace triton {
 
     smtAstBvsltNode::smtAstBvsltNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSLT_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvsltNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -754,6 +829,7 @@ namespace triton {
 
     smtAstBvsltNode::smtAstBvsltNode(const smtAstBvsltNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -782,6 +858,9 @@ namespace triton {
 
     smtAstBvsmodNode::smtAstBvsmodNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSMOD_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvsmodNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -789,6 +868,7 @@ namespace triton {
 
     smtAstBvsmodNode::smtAstBvsmodNode(const smtAstBvsmodNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -817,6 +897,9 @@ namespace triton {
 
     smtAstBvsremNode::smtAstBvsremNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSREM_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvsremNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -824,6 +907,7 @@ namespace triton {
 
     smtAstBvsremNode::smtAstBvsremNode(const smtAstBvsremNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -852,6 +936,9 @@ namespace triton {
 
     smtAstBvsubNode::smtAstBvsubNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVSUB_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvsubNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -859,6 +946,7 @@ namespace triton {
 
     smtAstBvsubNode::smtAstBvsubNode(const smtAstBvsubNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -887,6 +975,9 @@ namespace triton {
 
     smtAstBvudivNode::smtAstBvudivNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVUDIV_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvudivNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -894,6 +985,7 @@ namespace triton {
 
     smtAstBvudivNode::smtAstBvudivNode(const smtAstBvudivNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -922,6 +1014,9 @@ namespace triton {
 
     smtAstBvugeNode::smtAstBvugeNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVUGE_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvugeNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -929,6 +1024,7 @@ namespace triton {
 
     smtAstBvugeNode::smtAstBvugeNode(const smtAstBvugeNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -957,6 +1053,9 @@ namespace triton {
 
     smtAstBvugtNode::smtAstBvugtNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVUGT_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvugtNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -964,6 +1063,7 @@ namespace triton {
 
     smtAstBvugtNode::smtAstBvugtNode(const smtAstBvugtNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -992,6 +1092,9 @@ namespace triton {
 
     smtAstBvuleNode::smtAstBvuleNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVULE_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvuleNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -999,6 +1102,7 @@ namespace triton {
 
     smtAstBvuleNode::smtAstBvuleNode(const smtAstBvuleNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1027,6 +1131,9 @@ namespace triton {
 
     smtAstBvultNode::smtAstBvultNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVULT_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvultNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -1034,6 +1141,7 @@ namespace triton {
 
     smtAstBvultNode::smtAstBvultNode(const smtAstBvultNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1062,6 +1170,9 @@ namespace triton {
 
     smtAstBvuremNode::smtAstBvuremNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVUREM_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvuremNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -1069,6 +1180,7 @@ namespace triton {
 
     smtAstBvuremNode::smtAstBvuremNode(const smtAstBvuremNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1097,6 +1209,9 @@ namespace triton {
 
     smtAstBvxnorNode::smtAstBvxnorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVXNOR_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvxnorNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -1104,6 +1219,7 @@ namespace triton {
 
     smtAstBvxnorNode::smtAstBvxnorNode(const smtAstBvxnorNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1132,6 +1248,9 @@ namespace triton {
 
     smtAstBvxorNode::smtAstBvxorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = BVXOR_NODE;
+      if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstBvxorNode(): Must take two nodes of same size.");
+      this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -1139,6 +1258,7 @@ namespace triton {
 
     smtAstBvxorNode::smtAstBvxorNode(const smtAstBvxorNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1167,6 +1287,9 @@ namespace triton {
 
     smtAstBvNode::smtAstBvNode(triton::uint128 value, triton::uint32 size) {
       this->kind = BV_NODE;
+      if (!size)
+        throw std::runtime_error("triton::smt2lib::smtAstBvNode(): Size connot be equal to zero.");
+      this->size = size;
       this->addChild(triton::smt2lib::decimal(value));
       this->addChild(triton::smt2lib::decimal(size));
     }
@@ -1174,6 +1297,7 @@ namespace triton {
 
     smtAstBvNode::smtAstBvNode(const smtAstBvNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1202,6 +1326,7 @@ namespace triton {
 
     smtAstCompoundNode::smtAstCompoundNode(std::vector<smtAstAbstractNode*> exprs) {
       this->kind = COMPOUND_NODE;
+      this->size = 0;
       for (triton::uint32 index = 0; index < exprs.size(); index++)
         this->addChild(exprs[index]);
     }
@@ -1209,6 +1334,7 @@ namespace triton {
 
     smtAstCompoundNode::smtAstCompoundNode(const smtAstCompoundNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1237,6 +1363,7 @@ namespace triton {
 
     smtAstConcatNode::smtAstConcatNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = CONCAT_NODE;
+      this->size = expr1->getBitvectorSize() + expr2->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -1244,6 +1371,7 @@ namespace triton {
 
     smtAstConcatNode::smtAstConcatNode(const smtAstConcatNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1251,25 +1379,31 @@ namespace triton {
 
     smtAstConcatNode::smtAstConcatNode(std::vector<smtAstAbstractNode*> exprs) {
       this->kind = CONCAT_NODE;
+      this->size = 0;
 
       triton::uint32 size = exprs.size();
       if (size < 2)
         throw std::length_error("smtAstConcatNode - exprs must contain at least two expressions");
 
-      for (triton::uint32 index = 0; index < size; index++)
+      for (triton::uint32 index = 0; index < size; index++) {
         this->addChild(exprs[index]);
+        this->size += exprs[index]->getBitvectorSize();
+      }
     }
 
 
     smtAstConcatNode::smtAstConcatNode(std::list<smtAstAbstractNode*> exprs) {
       this->kind = CONCAT_NODE;
+      this->size = 0;
 
       if (exprs.size() < 2)
         throw std::length_error("smtAstConcatNode - exprs must contain at least two expressions");
 
       std::list<smtAstAbstractNode *>::iterator it = exprs.begin();
-      for ( ; it != exprs.end(); it++)
+      for ( ; it != exprs.end(); it++) {
         this->addChild(*it);
+        this->size += (*it)->getBitvectorSize();
+      }
     }
 
 
@@ -1297,12 +1431,14 @@ namespace triton {
     smtAstDecimalNode::smtAstDecimalNode(triton::uint128 value) {
       this->kind  = DECIMAL_NODE;
       this->value = value;
+      this->size  = 0;
     }
 
 
     smtAstDecimalNode::smtAstDecimalNode(const smtAstDecimalNode& copy) {
       this->kind  = copy.kind;
       this->value = copy.value;
+      this->size  = copy.size;
     }
 
 
@@ -1331,16 +1467,17 @@ namespace triton {
 
     smtAstDeclareFunctionNode::smtAstDeclareFunctionNode(std::string name, smtAstAbstractNode* bvDecl) {
       this->kind = DECLARE_FUNCTION_NODE;
-      this->addChild(triton::smt2lib::string(name));
-      this->addChild(bvDecl);
-
       if (bvDecl->getKind() != BVDECL_NODE)
         throw std::runtime_error("smtAstDeclareFunctionNode - The second argument must be a bitvector declaration");
+      this->size = bvDecl->getBitvectorSize();
+      this->addChild(triton::smt2lib::string(name));
+      this->addChild(bvDecl);
     }
 
 
     smtAstDeclareFunctionNode::smtAstDeclareFunctionNode(const smtAstDeclareFunctionNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1368,7 +1505,8 @@ namespace triton {
 
 
     smtAstDistinctNode::smtAstDistinctNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
-      this->kind  = DISTINCT_NODE;
+      this->kind = DISTINCT_NODE;
+      this->size = 1;
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -1376,6 +1514,7 @@ namespace triton {
 
     smtAstDistinctNode::smtAstDistinctNode(const smtAstDistinctNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1404,6 +1543,7 @@ namespace triton {
 
     smtAstEqualNode::smtAstEqualNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = EQUAL_NODE;
+      this->size = 1;
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -1411,6 +1551,7 @@ namespace triton {
 
     smtAstEqualNode::smtAstEqualNode(const smtAstEqualNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1439,6 +1580,9 @@ namespace triton {
 
     smtAstExtractNode::smtAstExtractNode(triton::uint32 high, triton::uint32 low, smtAstAbstractNode* expr) {
       this->kind = EXTRACT_NODE;
+      if (low > high)
+        throw std::runtime_error("triton::smt2lib::smtAstExtractNode(): The high bit must be greater than the low bit.");
+      this->size = ((high - low) + 1);
       this->addChild(triton::smt2lib::decimal(high));
       this->addChild(triton::smt2lib::decimal(low));
       this->addChild(expr);
@@ -1447,6 +1591,7 @@ namespace triton {
 
     smtAstExtractNode::smtAstExtractNode(const smtAstExtractNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1475,6 +1620,9 @@ namespace triton {
 
     smtAstIteNode::smtAstIteNode(smtAstAbstractNode* ifExpr, smtAstAbstractNode* thenExpr, smtAstAbstractNode* elseExpr) {
       this->kind = ITE_NODE;
+      if (thenExpr->getBitvectorSize() != elseExpr->getBitvectorSize())
+        throw std::runtime_error("triton::smt2lib::smtAstIteNode(): Must take two nodes of same size.");
+      this->size = thenExpr->getBitvectorSize();
       this->addChild(ifExpr);
       this->addChild(thenExpr);
       this->addChild(elseExpr);
@@ -1483,6 +1631,7 @@ namespace triton {
 
     smtAstIteNode::smtAstIteNode(const smtAstIteNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1511,6 +1660,7 @@ namespace triton {
 
     smtAstLandNode::smtAstLandNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = LAND_NODE;
+      this->size = 1;
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -1518,6 +1668,7 @@ namespace triton {
 
     smtAstLandNode::smtAstLandNode(const smtAstLandNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1546,6 +1697,7 @@ namespace triton {
 
     smtAstLetNode::smtAstLetNode(std::string alias, smtAstAbstractNode* expr2, smtAstAbstractNode* expr3) {
       this->kind = LET_NODE;
+      this->size = expr3->getBitvectorSize();
       this->addChild(triton::smt2lib::string(alias));
       this->addChild(expr2);
       this->addChild(expr3);
@@ -1554,6 +1706,7 @@ namespace triton {
 
     smtAstLetNode::smtAstLetNode(const smtAstLetNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1582,12 +1735,14 @@ namespace triton {
 
     smtAstLnotNode::smtAstLnotNode(smtAstAbstractNode* expr) {
       this->kind = LNOT_NODE;
+      this->size = 1;
       this->addChild(expr);
     }
 
 
     smtAstLnotNode::smtAstLnotNode(const smtAstLnotNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1616,6 +1771,7 @@ namespace triton {
 
     smtAstLorNode::smtAstLorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = LOR_NODE;
+      this->size = 1;
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -1623,6 +1779,7 @@ namespace triton {
 
     smtAstLorNode::smtAstLorNode(const smtAstLorNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1652,12 +1809,17 @@ namespace triton {
     smtAstReferenceNode::smtAstReferenceNode(triton::__uint value) {
       this->kind  = REFERENCE_NODE;
       this->value = value;
+      if (!triton::api.isSymbolicExpressionIdExists(value))
+        this->size = 0;
+      else
+        this->size = triton::api.getAstFromId(value)->getBitvectorSize();
     }
 
 
     smtAstReferenceNode::smtAstReferenceNode(const smtAstReferenceNode& copy) {
       this->kind  = copy.kind;
       this->value = copy.value;
+      this->size  = copy.size;
     }
 
 
@@ -1687,12 +1849,14 @@ namespace triton {
     smtAstStringNode::smtAstStringNode(std::string value) {
       this->kind  = STRING_NODE;
       this->value = value;
+      this->size  = 0;
     }
 
 
     smtAstStringNode::smtAstStringNode(const smtAstStringNode& copy) {
       this->kind  = copy.kind;
       this->value = copy.value;
+      this->size  = copy.size;
     }
 
 
@@ -1724,6 +1888,7 @@ namespace triton {
 
     smtAstSxNode::smtAstSxNode(triton::uint32 sizeExt, smtAstAbstractNode* expr) {
       this->kind = SX_NODE;
+      this->size = sizeExt + expr->getBitvectorSize();
       this->addChild(triton::smt2lib::decimal(sizeExt));
       this->addChild(expr);
     }
@@ -1731,6 +1896,7 @@ namespace triton {
 
     smtAstSxNode::smtAstSxNode(const smtAstSxNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }
@@ -1760,12 +1926,14 @@ namespace triton {
     smtAstVariableNode::smtAstVariableNode(std::string variable) {
       this->kind  = VARIABLE_NODE;
       this->value = variable;
+      this->size  = 0;
     }
 
 
     smtAstVariableNode::smtAstVariableNode(const smtAstVariableNode& copy) {
       this->kind  = copy.kind;
       this->value = copy.value;
+      this->size  = copy.size;
     }
 
 
@@ -1797,6 +1965,7 @@ namespace triton {
 
     smtAstZxNode::smtAstZxNode(triton::uint32 sizeExt, smtAstAbstractNode* expr) {
       this->kind = ZX_NODE;
+      this->size = sizeExt + expr->getBitvectorSize();
       this->addChild(triton::smt2lib::decimal(sizeExt));
       this->addChild(expr);
     }
@@ -1804,6 +1973,7 @@ namespace triton {
 
     smtAstZxNode::smtAstZxNode(const smtAstZxNode& copy) {
       this->kind = copy.kind;
+      this->size = copy.size;
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(copy.childs[index]);
     }

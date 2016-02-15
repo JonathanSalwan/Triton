@@ -1397,7 +1397,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "zx(): expected a SmtAstNode as second argument");
 
         try {
-          return PySmtAstNode(smt2lib::zx(PyLong_AsUint(op2), PySmtAstNode_AsSmtAstNode(op2)));
+          return PySmtAstNode(smt2lib::zx(PyLong_AsUint(op1), PySmtAstNode_AsSmtAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

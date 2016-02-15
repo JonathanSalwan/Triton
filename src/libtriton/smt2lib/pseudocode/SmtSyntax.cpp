@@ -315,7 +315,6 @@ namespace triton {
 
       /* concat syntax */
       std::ostream& SmtSyntax::display(std::ostream& stream, triton::smt2lib::smtAstConcatNode* node) {
-
         std::vector<triton::smt2lib::smtAstAbstractNode*> childs = node->getChilds();
         triton::uint32 size = childs.size();
 
