@@ -10,7 +10,7 @@
 
 #include <set>
 
-#include "abstractCpu.hpp"
+#include "cpuInterface.hpp"
 #include "instruction.hpp"
 #include "memoryOperand.hpp"
 #include "registerOperand.hpp"
@@ -50,7 +50,7 @@ namespace triton {
         triton::uint32 arch;
 
         //! Instance to the real CPU class.
-        triton::arch::AbstractCpu *cpu;
+        triton::arch::cpuInterface *cpu;
 
       public:
 
@@ -79,7 +79,7 @@ namespace triton {
         triton::uint32 getArchitecture(void) const;
 
         //! Returns the CPU
-        triton::arch::AbstractCpu* getCpu(void);
+        triton::arch::cpuInterface* getCpu(void);
 
         //! Returns the invalid CPU register id.
         triton::uint32 invalidRegister(void);

@@ -12,7 +12,7 @@
 #include <set>
 #include <tuple>
 
-#include "abstractCpu.hpp"
+#include "cpuInterface.hpp"
 #include "instruction.hpp"
 #include "memoryOperand.hpp"
 #include "registerOperand.hpp"
@@ -45,7 +45,7 @@ namespace triton {
 
       //! \class x86Cpu
       /*! \brief This class is used to describe the x86 (32-bits) spec. */
-      class x86Cpu : public AbstractCpu {
+      class x86Cpu : public cpuInterface {
 
         protected:
 

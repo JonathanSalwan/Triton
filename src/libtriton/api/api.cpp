@@ -139,12 +139,12 @@ namespace triton {
 
 
   API::API() {
-    this->arch        = arch::Architecture();
-    this->pseudocode  = nullptr;
-    this->solver      = nullptr;
-    this->sym         = nullptr;
-    this->symBackup   = nullptr;
-    this->taint       = nullptr;
+    this->arch              = arch::Architecture();
+    this->astRepresentation = nullptr;
+    this->solver            = nullptr;
+    this->sym               = nullptr;
+    this->symBackup         = nullptr;
+    this->taint             = nullptr;
   }
 
 
@@ -172,7 +172,7 @@ namespace triton {
   }
 
 
-  triton::arch::AbstractCpu* API::getCpu(void) {
+  triton::arch::cpuInterface* API::getCpu(void) {
     if (!this->isArchitectureValid())
       throw std::runtime_error("API::checkArchitecture(): You must define an architecture.");
     return this->arch.getCpu();
@@ -180,7 +180,7 @@ namespace triton {
 
 
   void API::setArchitecture(uint32 arch) {
-    /* Setup and init the targetd architecture */
+    /* Setup and init the targeted architecture */
     this->arch.setArchitecture(arch);
     this->initEngines();
   }
@@ -322,15 +322,15 @@ namespace triton {
     if (!this->solver)
       throw std::invalid_argument("API::initEngines(): No enough memory.");
 
-    this->pseudocode = new triton::smt2lib::pseudocode::Pseudocode();
-    if (!this->pseudocode)
+    this->astRepresentation = new triton::smt2lib::representation::AstRepresentation();
+    if (!this->astRepresentation)
       throw std::invalid_argument("API::initEngines(): No enough memory.");
   }
 
 
   void API::removeEngines(void) {
     if(this->isArchitectureValid()) {
-      delete this->pseudocode;
+      delete this->astRepresentation;
       delete this->solver;
       delete this->sym;
       delete this->symBackup;
@@ -357,29 +357,29 @@ namespace triton {
 
 
 
-  /* Pseudocode interface API ======================================================================= */
+  /* AST representation interface API =============================================================== */
 
-  void API::checkPseudocode(void) {
-    if (!this->pseudocode)
-      throw std::runtime_error("API::checkPseudocode(): Pseudocode interface is undefined.");
+  void API::checkAstRepresentation(void) {
+    if (!this->astRepresentation)
+      throw std::runtime_error("API::checkAstRepresentation(): AST representation interface is undefined.");
   }
 
 
-  std::ostream& API::pseudocodeDisplay(std::ostream& stream, smt2lib::smtAstAbstractNode* node) {
-    this->checkPseudocode();
-    return this->pseudocode->display(stream, node);
+  std::ostream& API::printAstRepresentation(std::ostream& stream, smt2lib::smtAstAbstractNode* node) {
+    this->checkAstRepresentation();
+    return this->astRepresentation->print(stream, node);
   }
 
 
-  triton::smt2lib::pseudocode::mode_e API::getPseudocodeMode(void) {
-    this->checkPseudocode();
-    return this->pseudocode->getMode();
+  triton::smt2lib::representation::mode_e API::getAstRepresentationMode(void) {
+    this->checkAstRepresentation();
+    return this->astRepresentation->getMode();
   }
 
 
-  void API::setPseudocodeMode(triton::smt2lib::pseudocode::mode_e mode) {
-    this->checkPseudocode();
-    this->pseudocode->setMode(mode);
+  void API::setAstRepresentationMode(triton::smt2lib::representation::mode_e mode) {
+    this->checkAstRepresentation();
+    this->astRepresentation->setMode(mode);
   }
 
 

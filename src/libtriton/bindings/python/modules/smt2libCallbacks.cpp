@@ -74,7 +74,7 @@ extension from al to `EAX`, then a zero extension from `EAX` to `RAX`.
 \section ast_representation AST representation
 <hr>
 
-An abstract syntax tree ([AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree)) is a representation of a grammar as tree. Triton uses its own SMT
+An abstract representation tree ([AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree)) is a representation of a grammar as tree. Triton uses its own SMT
 representation as AST for all symbolic expressions. As all SMT expressions are built at runtime, an AST is available at each program point. For example,
 let assume this set of instructions:
 
@@ -202,133 +202,133 @@ a \>> b           | (bvlshr a b)
 <hr>
 
 - **bv(integer value, integer size)**<br>
-Returns the smt2-lib `triton::smt2lib::bv()` syntax as \ref py_SmtAstNode_page. The `size` is in bits.<br>
+Returns the smt2-lib `triton::smt2lib::bv()` representation as \ref py_SmtAstNode_page. The `size` is in bits.<br>
 e.g: `(_ bvValue size)`.
 
 - **bvadd(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvadd()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvadd()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvadd expr1 epxr2)`.
 
 - **bvand(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib syntax `triton::smt2lib::bvand()` as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvand()` as \ref py_SmtAstNode_page.<br>
 e.g: `(bvand expr1 epxr2)`.
 
 - **bvashr(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvashr()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvashr()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvashr expr1 epxr2)`.
 
 - **bvdecl(integer size)**<br>
-Returns the smt2-lib `triton::smt2lib::bvdecl()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvdecl()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(_ BitVec size)`.
 
 - **bvfalse()**<br>
 This is an alias on the `(_ bv0 1)` smt2-lib expression.
 
 - **bvlshr(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvlshr()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvlshr()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(lshr expr1 epxr2)`.
 
 - **bvmul(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvmul()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvmul()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvmul expr1 expr2)`.
 
 - **bvnand(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvnand()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvnand()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvnand expr1 expr2)`.
 
 - **bvneg(SmtAstNode expr1)**<br>
-Returns the smt2-lib `triton::smt2lib::bvneg()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvneg()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvneg expr1)`.
 
 - **bvnor(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvnor()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvnor()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvnor expr1 expr2)`.
 
 - **bvnot(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvnot()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvnot()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvnot expr1)`.
 
 - **bvor(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvor()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvor()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvor expr1 expr2)`.
 
 - **bvror(integer displacement, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvror()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvror()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `((_ rotate_right displacement) expr)`.
 
 - **bvrol(integer displacement, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvrol()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvrol()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `((_ rotate_left displacement) expr)`.
 
 - **bvsdiv(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvsdiv()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvsdiv()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvsdiv expr1 epxr2)`.
 
 - **bvsge(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvsge()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvsge()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvsge expr1 epxr2)`.
 
 - **bvsgt(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvsgt()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvsgt()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvsgt expr1 epxr2)`.
 
 - **bvshl(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvshl()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvshl()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvshl expr1 expr2)`.
 
 - **bvsle(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvsle()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvsle()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvsle expr1 epxr2)`.
 
 - **bvslt(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvslt()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvslt()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvslt expr1 epxr2)`.
 
 - **bvsmod(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvsmod()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvsmod()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvsmod expr1 expr2)`.
 
 - **bvsrem(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvsrem()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvsrem()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvsrem expr1 expr2)`.
 
 - **bvsub(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvsub()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvsub()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvsub expr1 epxr2)`.
 
 - **bvtrue()**<br>
 This is an alias on the `(_ bv1 1)` smt2-lib expression.
 
 - **bvudiv(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvudiv()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvudiv()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvudiv expr1 epxr2)`.
 
 - **bvuge(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvuge()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvuge()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvuge expr1 epxr2)`.
 
 - **bvugt(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvugt()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvugt()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvugt expr1 epxr2)`.
 
 - **bvule(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvule()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvule()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvule expr1 epxr2)`.
 
 - **bvult(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvult()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvult()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvult expr1 epxr2)`.
 
 - **bvurem(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvurem()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvurem()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvurem expr1 expr2)`.
 
 - **bvxnor(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvxnor()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvxnor()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvxnor expr1 expr2)`.
 
 - **bvxor(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::bvxor()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::bvxor()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(bvxor expr1 epxr2)`.
 
 - **compound([SmtAstNode expr ...])**<br>
@@ -338,59 +338,59 @@ Returns the `triton::smt2lib::compound()` node as \ref py_SmtAstNode_page.
 Returns the `triton::smt2lib::concat()` node as \ref py_SmtAstNode_page.
 
 - **distinct(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::distinct()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::distinct()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(distinct expr1 expr2)`
 
 - **equal(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::equal()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::equal()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(= expr1 epxr2)`.
 
 - **extract(integer high, integer low, SmtAstNode expr1)**<br>
-Returns the smt2-lib `triton::smt2lib::extract()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::extract()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `((_ extract high low) expr1)`.
 
 - **ite(SmtAstNode ifExpr, SmtAstNode thenExpr, SmtAstNode elseExpr)**<br>
-Returns the smt2-lib `triton::smt2lib::ite()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::ite()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(ite ifExpr thenExpr elseExpr)`.
 
 - **land(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::land()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::land()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(and expr1 expr2)`.
 
 - **let(string alias, SmtAstNode expr2, SmtAstNode expr3)**<br>
-Returns the smt2-lib `triton::smt2lib::let()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::let()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(let ((alias expr2)) expr3)`.
 
 - **lnot(SmtAstNode expr)**<br>
-Returns the smt2-lib `triton::smt2lib::lnot()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::lnot()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(not expr)`.
 
 - **lor(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the smt2-lib `triton::smt2lib::lor()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::lor()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(or expr1 expr2)`.
 
 - **reference(integer exprId)**<br>
-Returns the reference (`triton::smt2lib::reference()`) node syntax as \ref py_SmtAstNode_page.
+Returns the reference (`triton::smt2lib::reference()`) node representation as \ref py_SmtAstNode_page.
 Be careful, the targeted node reference is always on the max vector size, except for volatile
 expressions.<br>
 e.g: `#123`.
 
 - **smtAssert(SmtAstNode expr1)**<br>
-Returns the smt2-lib `triton::smt2lib::smtAssert()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::smtAssert()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `(assert expr1)`.
 
 - **string(string s)**<br>
 Returns a `triton::smt2lib::string()` node as \ref py_SmtAstNode_page.
 
 - **sx(integer sizeExt, SmtAstNode expr1)**<br>
-Returns the smt2-lib `triton::smt2lib::sx()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::sx()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `((_ sign_extend sizeExt) expr1)`.
 
 - **variable(string s)**<br>
 Returns a `triton::smt2lib::variable()` node as \ref py_SmtAstNode_page.
 
 - **zx(integer sizeExt, SmtAstNode expr1)**<br>
-Returns the smt2-lib `triton::smt2lib::zx()` syntax as \ref py_SmtAstNode_page.<br>
+Returns the smt2-lib `triton::smt2lib::zx()` representation as \ref py_SmtAstNode_page.<br>
 e.g: `((_ zero_extend sizeExt) expr1)`.
 
 */

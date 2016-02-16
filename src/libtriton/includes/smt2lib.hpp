@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-#include "smt2libVisitor.hpp"
+#include "astVisitor.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -137,7 +137,7 @@ namespace triton {
         void addChild(smtAstAbstractNode* child);
 
         //! Entry point for a visitor.
-        virtual void accept(Visitor& v) = 0;
+        virtual void accept(AstVisitor& v) = 0;
 
         //! Returns the has of the tree. The hash is computed recursively on the whole tree.
         virtual triton::uint512 hash(triton::uint32 deep) = 0;
@@ -150,7 +150,7 @@ namespace triton {
         smtAstAssertNode(smtAstAbstractNode* expr);
         smtAstAssertNode(const smtAstAssertNode& copy);
         ~smtAstAssertNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -161,7 +161,7 @@ namespace triton {
         smtAstBvaddNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvaddNode(const smtAstBvaddNode& copy);
         ~smtAstBvaddNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -172,7 +172,7 @@ namespace triton {
         smtAstBvandNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvandNode(const smtAstBvandNode& copy);
         ~smtAstBvandNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -183,7 +183,7 @@ namespace triton {
         smtAstBvashrNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvashrNode(const smtAstBvashrNode& copy);
         ~smtAstBvashrNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -194,7 +194,7 @@ namespace triton {
         smtAstBvdeclNode(triton::uint32 size);
         smtAstBvdeclNode(const smtAstBvdeclNode& copy);
         ~smtAstBvdeclNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -205,7 +205,7 @@ namespace triton {
         smtAstBvlshrNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvlshrNode(const smtAstBvlshrNode& copy);
         ~smtAstBvlshrNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -216,7 +216,7 @@ namespace triton {
         smtAstBvmulNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvmulNode(const smtAstBvmulNode& copy);
         ~smtAstBvmulNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -227,7 +227,7 @@ namespace triton {
         smtAstBvnandNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvnandNode(const smtAstBvnandNode& copy);
         ~smtAstBvnandNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -238,7 +238,7 @@ namespace triton {
         smtAstBvnegNode(smtAstAbstractNode* expr);
         smtAstBvnegNode(const smtAstBvnegNode& copy);
         ~smtAstBvnegNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -249,7 +249,7 @@ namespace triton {
         smtAstBvnorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvnorNode(const smtAstBvnorNode& copy);
         ~smtAstBvnorNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -260,7 +260,7 @@ namespace triton {
         smtAstBvnotNode(smtAstAbstractNode* expr1);
         smtAstBvnotNode(const smtAstBvnotNode& copy);
         ~smtAstBvnotNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -271,7 +271,7 @@ namespace triton {
         smtAstBvorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvorNode(const smtAstBvorNode& copy);
         ~smtAstBvorNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -283,7 +283,7 @@ namespace triton {
         smtAstBvrolNode(smtAstAbstractNode* rot, smtAstAbstractNode* expr);
         smtAstBvrolNode(const smtAstBvrolNode& copy);
         ~smtAstBvrolNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -295,7 +295,7 @@ namespace triton {
         smtAstBvrorNode(smtAstAbstractNode* rot, smtAstAbstractNode* expr);
         smtAstBvrorNode(const smtAstBvrorNode& copy);
         ~smtAstBvrorNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -306,7 +306,7 @@ namespace triton {
         smtAstBvsdivNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvsdivNode(const smtAstBvsdivNode& copy);
         ~smtAstBvsdivNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -317,7 +317,7 @@ namespace triton {
         smtAstBvsgeNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvsgeNode(const smtAstBvsgeNode& copy);
         ~smtAstBvsgeNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -328,7 +328,7 @@ namespace triton {
         smtAstBvsgtNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvsgtNode(const smtAstBvsgtNode& copy);
         ~smtAstBvsgtNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -339,7 +339,7 @@ namespace triton {
         smtAstBvshlNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvshlNode(const smtAstBvshlNode& copy);
         ~smtAstBvshlNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -350,7 +350,7 @@ namespace triton {
         smtAstBvsleNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvsleNode(const smtAstBvsleNode& copy);
         ~smtAstBvsleNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -361,7 +361,7 @@ namespace triton {
         smtAstBvsltNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvsltNode(const smtAstBvsltNode& copy);
         ~smtAstBvsltNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -372,7 +372,7 @@ namespace triton {
         smtAstBvsmodNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvsmodNode(const smtAstBvsmodNode& copy);
         ~smtAstBvsmodNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -383,7 +383,7 @@ namespace triton {
         smtAstBvsremNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvsremNode(const smtAstBvsremNode& copy);
         ~smtAstBvsremNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -394,7 +394,7 @@ namespace triton {
         smtAstBvsubNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvsubNode(const smtAstBvsubNode& copy);
         ~smtAstBvsubNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -405,7 +405,7 @@ namespace triton {
         smtAstBvudivNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvudivNode(const smtAstBvudivNode& copy);
         ~smtAstBvudivNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -416,7 +416,7 @@ namespace triton {
         smtAstBvugeNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvugeNode(const smtAstBvugeNode& copy);
         ~smtAstBvugeNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -427,7 +427,7 @@ namespace triton {
         smtAstBvugtNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvugtNode(const smtAstBvugtNode& copy);
         ~smtAstBvugtNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -438,7 +438,7 @@ namespace triton {
         smtAstBvuleNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvuleNode(const smtAstBvuleNode& copy);
         ~smtAstBvuleNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -449,7 +449,7 @@ namespace triton {
         smtAstBvultNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvultNode(const smtAstBvultNode& copy);
         ~smtAstBvultNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -460,7 +460,7 @@ namespace triton {
         smtAstBvuremNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvuremNode(const smtAstBvuremNode& copy);
         ~smtAstBvuremNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -471,7 +471,7 @@ namespace triton {
         smtAstBvxnorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvxnorNode(const smtAstBvxnorNode& copy);
         ~smtAstBvxnorNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -482,7 +482,7 @@ namespace triton {
         smtAstBvxorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstBvxorNode(const smtAstBvxorNode& copy);
         ~smtAstBvxorNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -493,7 +493,7 @@ namespace triton {
         smtAstBvNode(triton::uint128 value, triton::uint32 size);
         smtAstBvNode(const smtAstBvNode& copy);
         ~smtAstBvNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -504,7 +504,7 @@ namespace triton {
         smtAstCompoundNode(std::vector<smtAstAbstractNode*> exprs);
         smtAstCompoundNode(const smtAstCompoundNode& copy);
         ~smtAstCompoundNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -517,7 +517,7 @@ namespace triton {
         smtAstConcatNode(std::list<smtAstAbstractNode* > exprs);
         smtAstConcatNode(const smtAstConcatNode& copy);
         ~smtAstConcatNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -533,7 +533,7 @@ namespace triton {
         ~smtAstDecimalNode();
 
         triton::uint128 getValue(void);
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -544,7 +544,7 @@ namespace triton {
         smtAstDeclareFunctionNode(std::string name, smtAstAbstractNode* bvDecl);
         smtAstDeclareFunctionNode(const smtAstDeclareFunctionNode& copy);
         ~smtAstDeclareFunctionNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -555,7 +555,7 @@ namespace triton {
         smtAstDistinctNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstDistinctNode(const smtAstDistinctNode& copy);
         ~smtAstDistinctNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -566,7 +566,7 @@ namespace triton {
         smtAstEqualNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstEqualNode(const smtAstEqualNode& copy);
         ~smtAstEqualNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -577,7 +577,7 @@ namespace triton {
         smtAstExtractNode(triton::uint32 high, triton::uint32 low, smtAstAbstractNode* expr);
         smtAstExtractNode(const smtAstExtractNode& copy);
         ~smtAstExtractNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -588,7 +588,7 @@ namespace triton {
         smtAstIteNode(smtAstAbstractNode* ifExpr, smtAstAbstractNode* thenExpr, smtAstAbstractNode* elseExpr);
         smtAstIteNode(const smtAstIteNode& copy);
         ~smtAstIteNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -599,7 +599,7 @@ namespace triton {
         smtAstLandNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstLandNode(const smtAstLandNode& copy);
         ~smtAstLandNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -610,7 +610,7 @@ namespace triton {
         smtAstLetNode(std::string alias, smtAstAbstractNode* expr2, smtAstAbstractNode* expr3);
         smtAstLetNode(const smtAstLetNode& copy);
         ~smtAstLetNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -621,7 +621,7 @@ namespace triton {
         smtAstLnotNode(smtAstAbstractNode* expr);
         smtAstLnotNode(const smtAstLnotNode& copy);
         ~smtAstLnotNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -632,7 +632,7 @@ namespace triton {
         smtAstLorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
         smtAstLorNode(const smtAstLorNode& copy);
         ~smtAstLorNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -646,7 +646,7 @@ namespace triton {
         smtAstReferenceNode(triton::__uint value);
         smtAstReferenceNode(const smtAstReferenceNode& copy);
         ~smtAstReferenceNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
 
         triton::__uint getValue(void);
@@ -662,7 +662,7 @@ namespace triton {
         smtAstStringNode(std::string value);
         smtAstStringNode(const smtAstStringNode& copy);
         ~smtAstStringNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
 
         std::string getValue(void);
@@ -675,7 +675,7 @@ namespace triton {
         smtAstSxNode(triton::uint32 sizeExt, smtAstAbstractNode* expr);
         smtAstSxNode(const smtAstSxNode& copy);
         ~smtAstSxNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
@@ -689,7 +689,7 @@ namespace triton {
         smtAstVariableNode(std::string value);
         smtAstVariableNode(const smtAstVariableNode& copy);
         ~smtAstVariableNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
 
         std::string getValue(void);
@@ -702,12 +702,12 @@ namespace triton {
         smtAstZxNode(triton::uint32 sizeExt, smtAstAbstractNode* expr);
         smtAstZxNode(const smtAstZxNode& copy);
         ~smtAstZxNode();
-        virtual void accept(Visitor& v);
+        virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
-    //! Displays the node in smt2-lib syntax.
+    //! Displays the node in smt2-lib representation.
     std::ostream& operator<<(std::ostream& stream, smtAstAbstractNode* node);
 
 

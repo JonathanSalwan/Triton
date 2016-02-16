@@ -5,8 +5,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
-#ifndef TRITON_SMT2LIBVISITOR_H
-#define TRITON_SMT2LIBVISITOR_H
+#ifndef TRITON_ASTVISITOR_H
+#define TRITON_ASTVISITOR_H
 
 
 
@@ -75,13 +75,13 @@ namespace triton {
     class smtAstVariableNode;
     class smtAstZxNode;
 
-    //! \interface Visitor
+    //! \interface AstVisitor
     /*! \brief This interface is used to go through the smt2-lib AST. */
-    class Visitor {
+    class AstVisitor {
 
       public:
-        Visitor(){};
-        virtual ~Visitor(){};
+        AstVisitor(){};
+        virtual ~AstVisitor(){};
 
         virtual void operator()(smtAstAssertNode& e) = 0;
         virtual void operator()(smtAstBvaddNode& e) = 0;
@@ -133,12 +133,12 @@ namespace triton {
         virtual void operator()(smtAstVariableNode& e) = 0;
         virtual void operator()(smtAstZxNode& e) = 0;
 
-    }; /* Visitor class */
+    }; /* AstVisitor class */
 
   /*! @} End of smt2lib namespace */
   };
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_SMT2LIBVISITOR_H */
+#endif /* TRITON_ASTVISITOR_H */
 

@@ -5,8 +5,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
-#ifndef TRITON_ABSTRACTCPU_HPP
-#define TRITON_ABSTRACTCPU_HPP
+#ifndef TRITON_CPUINTERFACE_HPP
+#define TRITON_CPUINTERFACE_HPP
 
 #include <set>
 #include <tuple>
@@ -34,12 +34,12 @@ namespace triton {
    */
 
 
-  /*! \interface AbstractCpu
+  /*! \interface cpuInterface
       \brief This interface is used as abstract CPU interface. All CPU must use this interface. */
-  class AbstractCpu  {
+  class cpuInterface  {
     public:
       //! Constructor.
-      virtual ~AbstractCpu(){};
+      virtual ~cpuInterface(){};
 
       //! The first function called when the a CPU is initialized.
       virtual void init(void) = 0;
@@ -120,4 +120,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif  /* !ABSTRACTCPU_HPP */
+#endif /* TRITON_CPUINTERFACE_HPP */

@@ -11,8 +11,8 @@
 #include <z3++.h>
 
 #include "smt2lib.hpp"
-#include "smt2libVisitor.hpp"
-#include "smt2libZ3Result.hpp"
+#include "astVisitor.hpp"
+#include "z3Result.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -34,7 +34,7 @@ namespace triton {
 
     //! \class TritonToZ3Ast
     /*! \brief Converts a Triton's AST to Z3's AST. */
-    class TritonToZ3Ast : public Visitor {
+    class TritonToZ3Ast : public AstVisitor {
 
       private:
         //! This flag define if the conversion is used to evaluated a node or not.

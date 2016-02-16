@@ -9,8 +9,8 @@
 
 #include <api.hpp>
 #include <smt2lib.hpp>
-#include <smt2libTritonToZ3Ast.hpp>
-#include <smt2libZ3Result.hpp>
+#include <tritonToZ3Ast.hpp>
+#include <z3Result.hpp>
 #include <solverEngine.hpp>
 
 
@@ -119,13 +119,13 @@ namespace triton {
         std::stringstream                                 formula;
         z3::context                                       ctx;
         z3::solver                                        solver(ctx);
-        triton::smt2lib::pseudocode::mode_e               pseudocodeMode = triton::api.getPseudocodeMode();
+        triton::smt2lib::representation::mode_e           representationMode = triton::api.getAstRepresentationMode();
 
         if (node == nullptr)
           throw std::runtime_error("SolverEngine::getModels(): node cannot be null.");
 
         /* Switch into the SMT mode */
-        triton::api.setPseudocodeMode(triton::smt2lib::pseudocode::SMT_SYNTAX);
+        triton::api.setAstRepresentationMode(triton::smt2lib::representation::SMT_REPRESENTATION);
 
         /* First, set the QF_AUFBV flag  */
         formula << "(set-logic QF_AUFBV)";
@@ -180,8 +180,8 @@ namespace triton {
           limit--;
         }
 
-        /* Restore the pseudocode mode */
-        triton::api.setPseudocodeMode(pseudocodeMode);
+        /* Restore the representation mode */
+        triton::api.setAstRepresentationMode(representationMode);
 
         return ret;
       }

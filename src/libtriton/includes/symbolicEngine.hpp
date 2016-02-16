@@ -211,7 +211,7 @@ namespace triton {
           //! Returns all symbolic variables.
           std::map<triton::__uint, SymbolicVariable*>& getSymbolicVariables(void);
 
-          //! Returns all variable declarations syntax.
+          //! Returns all variable declarations representation.
           std::string getVariablesDeclaration(void);
 
           //! Adds a symbolic memory reference.

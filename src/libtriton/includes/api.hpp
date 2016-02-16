@@ -9,13 +9,13 @@
 #define TRITON_API_H
 
 #include "architecture.hpp"
+#include "astRepresentation.hpp"
 #include "immediateOperand.hpp"
 #include "instruction.hpp"
 #include "memoryOperand.hpp"
 #include "operandWrapper.hpp"
 #include "registerOperand.hpp"
 #include "smt2lib.hpp"
-#include "smt2libPseudocode.hpp"
 #include "solverEngine.hpp"
 #include "symbolicEngine.hpp"
 #include "taintEngine.hpp"
@@ -58,8 +58,8 @@ namespace triton {
         //! The solver engine.
         triton::engines::solver::SolverEngine* solver;
 
-        //! The pseudocode interface.
-        triton::smt2lib::pseudocode::Pseudocode* pseudocode;
+        //! The AST representation interface.
+        triton::smt2lib::representation::AstRepresentation* astRepresentation;
 
       public:
 
@@ -84,7 +84,7 @@ namespace triton {
         void checkArchitecture(void);
 
         //! [**architecture api**] - Returns the CPU instance.
-        triton::arch::AbstractCpu* getCpu(void);
+        triton::arch::cpuInterface* getCpu(void);
 
         //! [**architecture api**] - Setup an architecture.
         /*!
@@ -180,19 +180,19 @@ namespace triton {
 
 
 
-        /* Pseudocode interface API ======================================================================= */
+        /* AST Representation interface API ============================================================== */
 
-        //! [**pseudocode api**] - Raises an exception if the pseudocode interface is not initialized.
-        void checkPseudocode(void);
+        //! [**AST representation api**] - Raises an exception if the AST representation interface is not initialized.
+        void checkAstRepresentation(void);
 
-        //! [**pseudocode api**] - Display a node according to the pseudocode mode.
-        std::ostream& pseudocodeDisplay(std::ostream& stream, smt2lib::smtAstAbstractNode* node);
+        //! [**AST representation api**] - Display a node according to the AST representation mode.
+        std::ostream& printAstRepresentation(std::ostream& stream, smt2lib::smtAstAbstractNode* node);
 
-        //! [**pseudocode api**] - Returns the pseudocode mode.
-        triton::smt2lib::pseudocode::mode_e getPseudocodeMode(void);
+        //! [**AST representation api**] - Returns the AST representation mode.
+        triton::smt2lib::representation::mode_e getAstRepresentationMode(void);
 
-        //! [**pseudocode api**] - Sets the pseudocode mode.
-        void setPseudocodeMode(triton::smt2lib::pseudocode::mode_e mode);
+        //! [**AST representation api**] - Sets the AST representation mode.
+        void setAstRepresentationMode(triton::smt2lib::representation::mode_e mode);
 
 
 
@@ -393,7 +393,7 @@ namespace triton {
         //! [**symbolic api**] - Returns all symbolic variables as a map of <SymVarId : SymVar>
         std::map<triton::__uint, triton::engines::symbolic::SymbolicVariable*>& getSymbolicVariables(void);
 
-        //! [**symbolic api**] - Returns all variable declarations syntax.
+        //! [**symbolic api**] - Returns all variable declarations representation.
         std::string getVariablesDeclaration(void);
 
 

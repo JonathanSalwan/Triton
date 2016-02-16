@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <api.hpp>
 #include <cpuSize.hpp>
-#include <smt2libTritonToZ3Ast.hpp>
+#include <tritonToZ3Ast.hpp>
 #include <symbolicExpression.hpp>
 #include <symbolicVariable.hpp>
 

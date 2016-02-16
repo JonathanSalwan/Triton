@@ -7,9 +7,9 @@
 
 #include <stdexcept>
 
-#include <smt2libTritonToZ3Ast.hpp>
-#include <smt2libZ3Result.hpp>
-#include <smt2libZ3ToTritonAst.hpp>
+#include <tritonToZ3Ast.hpp>
+#include <z3Result.hpp>
+#include <z3ToTritonAst.hpp>
 #include <symbolicSimplification.hpp>
 
 #ifdef TRITON_PYTHON_BINDINGS

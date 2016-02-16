@@ -9,8 +9,8 @@
 
 #include "api.hpp"
 #include "smt2lib.hpp"
-#include "smt2libTritonToZ3Ast.hpp"
-#include "smt2libZ3Result.hpp"
+#include "tritonToZ3Ast.hpp"
+#include "z3Result.hpp"
 
 
 
@@ -98,7 +98,7 @@ namespace triton {
     }
 
 
-    void smtAstAssertNode::accept(Visitor& v) {
+    void smtAstAssertNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -136,7 +136,7 @@ namespace triton {
     }
 
 
-    void smtAstBvaddNode::accept(Visitor& v) {
+    void smtAstBvaddNode::accept(AstVisitor& v) {
        v(*this);
     }
 
@@ -175,7 +175,7 @@ namespace triton {
     }
 
 
-    void smtAstBvandNode::accept(Visitor& v) {
+    void smtAstBvandNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -215,7 +215,7 @@ namespace triton {
     }
 
 
-    void smtAstBvashrNode::accept(Visitor& v) {
+    void smtAstBvashrNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -255,7 +255,7 @@ namespace triton {
     }
 
 
-    void smtAstBvdeclNode::accept(Visitor& v) {
+    void smtAstBvdeclNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -294,7 +294,7 @@ namespace triton {
     }
 
 
-    void smtAstBvlshrNode::accept(Visitor& v) {
+    void smtAstBvlshrNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -333,7 +333,7 @@ namespace triton {
     }
 
 
-    void smtAstBvmulNode::accept(Visitor& v) {
+    void smtAstBvmulNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -372,7 +372,7 @@ namespace triton {
     }
 
 
-    void smtAstBvnandNode::accept(Visitor& v) {
+    void smtAstBvnandNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -408,7 +408,7 @@ namespace triton {
     }
 
 
-    void smtAstBvnegNode::accept(Visitor& v) {
+    void smtAstBvnegNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -447,7 +447,7 @@ namespace triton {
     }
 
 
-    void smtAstBvnorNode::accept(Visitor& v) {
+    void smtAstBvnorNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -483,7 +483,7 @@ namespace triton {
     }
 
 
-    void smtAstBvnotNode::accept(Visitor& v) {
+    void smtAstBvnotNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -522,7 +522,7 @@ namespace triton {
     }
 
 
-    void smtAstBvorNode::accept(Visitor& v) {
+    void smtAstBvorNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -568,7 +568,7 @@ namespace triton {
     }
 
 
-    void smtAstBvrolNode::accept(Visitor& v) {
+    void smtAstBvrolNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -614,7 +614,7 @@ namespace triton {
     }
 
 
-    void smtAstBvrorNode::accept(Visitor& v) {
+    void smtAstBvrorNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -653,7 +653,7 @@ namespace triton {
     }
 
 
-    void smtAstBvsdivNode::accept(Visitor& v) {
+    void smtAstBvsdivNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -692,7 +692,7 @@ namespace triton {
     }
 
 
-    void smtAstBvsgeNode::accept(Visitor& v) {
+    void smtAstBvsgeNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -731,7 +731,7 @@ namespace triton {
     }
 
 
-    void smtAstBvsgtNode::accept(Visitor& v) {
+    void smtAstBvsgtNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -770,7 +770,7 @@ namespace triton {
     }
 
 
-    void smtAstBvshlNode::accept(Visitor& v) {
+    void smtAstBvshlNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -809,7 +809,7 @@ namespace triton {
     }
 
 
-    void smtAstBvsleNode::accept(Visitor& v) {
+    void smtAstBvsleNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -848,7 +848,7 @@ namespace triton {
     }
 
 
-    void smtAstBvsltNode::accept(Visitor& v) {
+    void smtAstBvsltNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -887,7 +887,7 @@ namespace triton {
     }
 
 
-    void smtAstBvsmodNode::accept(Visitor& v) {
+    void smtAstBvsmodNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -926,7 +926,7 @@ namespace triton {
     }
 
 
-    void smtAstBvsremNode::accept(Visitor& v) {
+    void smtAstBvsremNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -965,7 +965,7 @@ namespace triton {
     }
 
 
-    void smtAstBvsubNode::accept(Visitor& v) {
+    void smtAstBvsubNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1004,7 +1004,7 @@ namespace triton {
     }
 
 
-    void smtAstBvudivNode::accept(Visitor& v) {
+    void smtAstBvudivNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1043,7 +1043,7 @@ namespace triton {
     }
 
 
-    void smtAstBvugeNode::accept(Visitor& v) {
+    void smtAstBvugeNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1082,7 +1082,7 @@ namespace triton {
     }
 
 
-    void smtAstBvugtNode::accept(Visitor& v) {
+    void smtAstBvugtNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1121,7 +1121,7 @@ namespace triton {
     }
 
 
-    void smtAstBvuleNode::accept(Visitor& v) {
+    void smtAstBvuleNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1160,7 +1160,7 @@ namespace triton {
     }
 
 
-    void smtAstBvultNode::accept(Visitor& v) {
+    void smtAstBvultNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1199,7 +1199,7 @@ namespace triton {
     }
 
 
-    void smtAstBvuremNode::accept(Visitor& v) {
+    void smtAstBvuremNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1238,7 +1238,7 @@ namespace triton {
     }
 
 
-    void smtAstBvxnorNode::accept(Visitor& v) {
+    void smtAstBvxnorNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1277,7 +1277,7 @@ namespace triton {
     }
 
 
-    void smtAstBvxorNode::accept(Visitor& v) {
+    void smtAstBvxorNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1318,7 +1318,7 @@ namespace triton {
     }
 
 
-    void smtAstBvNode::accept(Visitor& v) {
+    void smtAstBvNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1355,7 +1355,7 @@ namespace triton {
     }
 
 
-    void smtAstCompoundNode::accept(Visitor& v) {
+    void smtAstCompoundNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1427,7 +1427,7 @@ namespace triton {
     }
 
 
-    void smtAstConcatNode::accept(Visitor& v) {
+    void smtAstConcatNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1467,7 +1467,7 @@ namespace triton {
     }
 
 
-    void smtAstDecimalNode::accept(Visitor& v) {
+    void smtAstDecimalNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1503,7 +1503,7 @@ namespace triton {
     }
 
 
-    void smtAstDeclareFunctionNode::accept(Visitor& v) {
+    void smtAstDeclareFunctionNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1540,7 +1540,7 @@ namespace triton {
     }
 
 
-    void smtAstDistinctNode::accept(Visitor& v) {
+    void smtAstDistinctNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1577,7 +1577,7 @@ namespace triton {
     }
 
 
-    void smtAstEqualNode::accept(Visitor& v) {
+    void smtAstEqualNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1617,7 +1617,7 @@ namespace triton {
     }
 
 
-    void smtAstExtractNode::accept(Visitor& v) {
+    void smtAstExtractNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1657,7 +1657,7 @@ namespace triton {
     }
 
 
-    void smtAstIteNode::accept(Visitor& v) {
+    void smtAstIteNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1694,7 +1694,7 @@ namespace triton {
     }
 
 
-    void smtAstLandNode::accept(Visitor& v) {
+    void smtAstLandNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1732,7 +1732,7 @@ namespace triton {
     }
 
 
-    void smtAstLetNode::accept(Visitor& v) {
+    void smtAstLetNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1768,7 +1768,7 @@ namespace triton {
     }
 
 
-    void smtAstLnotNode::accept(Visitor& v) {
+    void smtAstLnotNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1805,7 +1805,7 @@ namespace triton {
     }
 
 
-    void smtAstLorNode::accept(Visitor& v) {
+    void smtAstLorNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1848,7 +1848,7 @@ namespace triton {
     }
 
 
-    void smtAstReferenceNode::accept(Visitor& v) {
+    void smtAstReferenceNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1885,7 +1885,7 @@ namespace triton {
     }
 
 
-    void smtAstStringNode::accept(Visitor& v) {
+    void smtAstStringNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1924,7 +1924,7 @@ namespace triton {
     }
 
 
-    void smtAstSxNode::accept(Visitor& v) {
+    void smtAstSxNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -1964,7 +1964,7 @@ namespace triton {
     }
 
 
-    void smtAstVariableNode::accept(Visitor& v) {
+    void smtAstVariableNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -2003,7 +2003,7 @@ namespace triton {
     }
 
 
-    void smtAstZxNode::accept(Visitor& v) {
+    void smtAstZxNode::accept(AstVisitor& v) {
       v(*this);
     }
 
@@ -2026,9 +2026,9 @@ namespace triton {
 namespace triton {
   namespace smt2lib {
 
-    /* Syntax dispatcher from an abstract node */
+    /* Representation dispatcher from an abstract node */
     std::ostream& operator<<(std::ostream& stream, smtAstAbstractNode* node) {
-      return triton::api.pseudocodeDisplay(stream, node);
+      return triton::api.printAstRepresentation(stream, node);
     }
 
 

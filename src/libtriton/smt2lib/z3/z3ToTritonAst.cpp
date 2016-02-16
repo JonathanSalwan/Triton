@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <list>
 
-#include <smt2libZ3ToTritonAst.hpp>
+#include <z3ToTritonAst.hpp>
 
 
 

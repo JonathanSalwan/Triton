@@ -12,7 +12,7 @@
 #include <set>
 #include <tuple>
 
-#include "abstractCpu.hpp"
+#include "cpuInterface.hpp"
 #include "instruction.hpp"
 #include "memoryOperand.hpp"
 #include "registerOperand.hpp"
@@ -46,7 +46,7 @@ namespace triton {
 
       //! \class x8664Cpu
       /*! \brief This class is used to describe the x86 (64-bits) spec. */
-      class x8664Cpu : public AbstractCpu {
+      class x8664Cpu : public cpuInterface {
 
         protected:
 

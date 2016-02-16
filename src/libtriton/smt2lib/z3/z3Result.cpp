@@ -6,7 +6,7 @@
 */
 
 #include <stdexcept>
-#include <smt2libZ3Result.hpp>
+#include <z3Result.hpp>
 
 
 
