@@ -307,7 +307,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::ast::bv(delta, dst.getBitSize());
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvadd(op1, op2);
 
           /* Create symbolic expression */
@@ -325,7 +325,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::ast::bv(delta, dst.getBitSize());
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvsub(op1, op2);
 
           /* Create symbolic expression */
@@ -337,7 +337,7 @@ namespace triton {
 
 
         void clearFlag_s(triton::arch::Instruction& inst, triton::arch::RegisterOperand& flag, std::string comment) {
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bv(0, 1);
 
           /* Create symbolic expression */
@@ -349,7 +349,7 @@ namespace triton {
 
 
         void setFlag_s(triton::arch::Instruction& inst, triton::arch::RegisterOperand& flag, std::string comment) {
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bv(1, 1);
 
           /* Create symbolic expression */
@@ -361,7 +361,7 @@ namespace triton {
 
 
         void controlFlow_s(triton::arch::Instruction& inst) {
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bv(inst.getAddress() + inst.getOpcodesSize(), triton::api.cpuRegisterBitSize());
 
           /* Create symbolic expression */
@@ -372,13 +372,13 @@ namespace triton {
         }
 
 
-        void af_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void af_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto low    = vol ? 0 : dst.getAbstractLow();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * af = 0x10 == (0x10 & (regDst ^ op1 ^ op2))
            */
           auto node = triton::ast::ite(
@@ -404,13 +404,13 @@ namespace triton {
         }
 
 
-        void afNeg_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, bool vol) {
+        void afNeg_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol) {
           auto bvSize = dst.getBitSize();
           auto low    = vol ? 0 : dst.getAbstractLow();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * af = 0x10 == (0x10 & (op1 ^ regDst))
            */
           auto node = triton::ast::ite(
@@ -436,13 +436,13 @@ namespace triton {
         }
 
 
-        void cfAdd_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void cfAdd_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto low    = vol ? 0 : dst.getAbstractLow();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * cf = extract(bvSize, bvSize, ((op0 & op1) ^ ((op0 ^ op1 ^ parent) & (op0 ^ op1))));
            */
           auto node = triton::ast::extract(high, high,
@@ -465,9 +465,9 @@ namespace triton {
         }
 
 
-        void cfImul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, triton::ast::smtAstAbstractNode* res, bool vol) {
+        void cfImul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* res, bool vol) {
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * cf = 0 if sx(dst) == node else 1
            */
           auto node = triton::ast::ite(
@@ -487,11 +487,11 @@ namespace triton {
         }
 
 
-        void cfMul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, bool vol) {
+        void cfMul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol) {
           auto bvSize = dst.getBitSize();
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * cf = 0 if op1 == 0 else 1
            */
           auto node = triton::ast::ite(
@@ -511,11 +511,11 @@ namespace triton {
         }
 
 
-        void cfNeg_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, bool vol) {
+        void cfNeg_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol) {
           auto bvSize = dst.getBitSize();
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * cf = 0 if op1 == 0 else 1
            */
           auto node = triton::ast::ite(
@@ -535,23 +535,23 @@ namespace triton {
         }
 
 
-        void cfRcl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void cfRcl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
           auto cf     = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_CF));
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * cf = high(res & 1) if op2 != 0 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
            * concretization of the op2.
            */
-          triton::ast::smtAstAbstractNode* node;
+          triton::ast::AbstractNode* node;
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::cfRcl_s() - op2 must be a smtAstDecimalNode node");
+            throw std::runtime_error("triton::arch::x86::semantics::cfRcl_s() - op2 must be a DecimalNode node");
 
-          if (reinterpret_cast<triton::ast::smtAstDecimalNode*>(op2)->getValue() != 0)
+          if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0)
             node = triton::ast::extract(high, high, triton::ast::reference(parent->getId()));
           else
             node = triton::api.buildSymbolicOperand(cf);
@@ -564,22 +564,22 @@ namespace triton {
         }
 
 
-        void cfRol_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void cfRol_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
           auto low = vol ? 0 : dst.getAbstractLow();
           auto cf  = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_CF));
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * cf = (res & 1) if op2 != 0 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
            * concretization of the op2.
            */
-          triton::ast::smtAstAbstractNode* node;
+          triton::ast::AbstractNode* node;
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::cfRol_s() - op2 must be a smtAstDecimalNode node");
+            throw std::runtime_error("triton::arch::x86::semantics::cfRol_s() - op2 must be a DecimalNode node");
 
-          if (reinterpret_cast<triton::ast::smtAstDecimalNode*>(op2)->getValue() != 0)
+          if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0)
             node = triton::ast::extract(low, low, triton::ast::reference(parent->getId()));
           else
             node = triton::api.buildSymbolicOperand(cf);
@@ -592,24 +592,24 @@ namespace triton {
         }
 
 
-        void cfRor_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void cfRor_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto low    = vol ? 0 : dst.getAbstractLow();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
           auto cf     = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_CF));
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * cf = (res >> bvSize - 1) & 1 if op2 != 0 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
            * concretization of the op2.
            */
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::cfRor_s() - op2 must be a smtAstDecimalNode node");
+            throw std::runtime_error("triton::arch::x86::semantics::cfRor_s() - op2 must be a DecimalNode node");
 
-          triton::ast::smtAstAbstractNode* node;
-          if (reinterpret_cast<triton::ast::smtAstDecimalNode*>(op2)->getValue() != 0) {
+          triton::ast::AbstractNode* node;
+          if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0) {
             node = triton::ast::extract(0, 0,
               triton::ast::bvlshr(
                 triton::ast::extract(high, low, triton::ast::reference(parent->getId())),
@@ -632,12 +632,12 @@ namespace triton {
         }
 
 
-        void cfSar_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void cfSar_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto cf     = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_CF));
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * if op2 != 0:
            *   if op2 > bvSize:
            *     cf.id = ((op1 >> (bvSize - 1)) & 1)
@@ -662,12 +662,12 @@ namespace triton {
         }
 
 
-        void cfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void cfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto cf     = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_CF));
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * cf = (op1 >> (bvSize - op2) & 1) if op2 != 0
            */
           auto node = triton::ast::ite(
@@ -684,12 +684,12 @@ namespace triton {
         }
 
 
-        void cfShr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void cfShr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto cf     = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_CF));
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * cf = ((op1 >> (bvSize - 1)) & 1) if op2 != 0
            */
           auto node = triton::ast::ite(
@@ -706,13 +706,13 @@ namespace triton {
         }
 
 
-        void cfSub_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void cfSub_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto low    = vol ? 0 : dst.getAbstractLow();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * cf = extract(bvSize, bvSize (((op1 ^ op2 ^ res) ^ ((op1 ^ res) & (op1 ^ op2)))))
            */
           auto node = triton::ast::extract(high, high,
@@ -733,13 +733,13 @@ namespace triton {
         }
 
 
-        void ofAdd_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void ofAdd_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto low    = vol ? 0 : dst.getAbstractLow();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * of = high:bool((op1 ^ ~op2) & (op1 ^ regDst))
            */
           auto node = triton::ast::extract(high, high,
@@ -757,9 +757,9 @@ namespace triton {
         }
 
 
-        void ofImul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, triton::ast::smtAstAbstractNode* res, bool vol) {
+        void ofImul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* res, bool vol) {
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * of = 0 if sx(dst) == node else 1
            */
           auto node = triton::ast::ite(
@@ -779,11 +779,11 @@ namespace triton {
         }
 
 
-        void ofMul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, bool vol) {
+        void ofMul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol) {
           auto bvSize = dst.getBitSize();
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * of = 0 if up == 0 else 1
            */
           auto node = triton::ast::ite(
@@ -803,13 +803,13 @@ namespace triton {
         }
 
 
-        void ofNeg_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, bool vol) {
+        void ofNeg_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol) {
           auto bvSize = dst.getBitSize();
           auto low    = vol ? 0 : dst.getAbstractLow();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * of = (res & op1) >> (bvSize - 1) & 1
            */
           auto node = triton::ast::extract(0, 0,
@@ -827,7 +827,7 @@ namespace triton {
         }
 
 
-        void ofRol_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void ofRol_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto low    = vol ? 0 : dst.getAbstractLow();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -835,17 +835,17 @@ namespace triton {
           auto of     = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_OF));
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * of = ((cf ^ (res >> (bvsize - 1))) & 1) if op2 == 1 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
            * concretization of the op2.
            */
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::ofRol_s() - op2 must be a smtAstDecimalNode node");
+            throw std::runtime_error("triton::arch::x86::semantics::ofRol_s() - op2 must be a DecimalNode node");
 
-          triton::ast::smtAstAbstractNode* node;
-          if (reinterpret_cast<triton::ast::smtAstDecimalNode*>(op2)->getValue() == 1) {
+          triton::ast::AbstractNode* node;
+          if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() == 1) {
             node = triton::ast::extract(0, 0,
                       triton::ast::bvxor(
                         triton::ast::zx(bvSize-1, triton::api.buildSymbolicOperand(cf)),
@@ -868,24 +868,24 @@ namespace triton {
         }
 
 
-        void ofRor_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void ofRor_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto low    = vol ? 0 : dst.getAbstractLow();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
           auto of     = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_OF));
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * of = (((res >> (bvSize - 1)) ^ (res >> (bvSize - 2))) & 1) if op2 == 1 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
            * concretization of the op2.
            */
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::ofRor_s() - op2 must be a smtAstDecimalNode node");
+            throw std::runtime_error("triton::arch::x86::semantics::ofRor_s() - op2 must be a DecimalNode node");
 
-          triton::ast::smtAstAbstractNode* node;
-          if (reinterpret_cast<triton::ast::smtAstDecimalNode *>(op2)->getValue() == 1) {
+          triton::ast::AbstractNode* node;
+          if (reinterpret_cast<triton::ast::DecimalNode *>(op2)->getValue() == 1) {
             node = triton::ast::extract(0, 0,
                      triton::ast::bvxor(
                        triton::ast::bvshl(
@@ -911,12 +911,12 @@ namespace triton {
         }
 
 
-        void ofSar_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void ofSar_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto of     = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_OF));
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * of = 0 if op2 == 1
            */
           auto node = triton::ast::ite(
@@ -933,12 +933,12 @@ namespace triton {
         }
 
 
-        void ofShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void ofShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto of     = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_OF));
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * of = bit_cast((op1 >> (bvSize - 1)) ^ (op1 >> (bvSize - 2)), int1(1)); if op2 == 1
            */
           auto node = triton::ast::ite(
@@ -960,13 +960,13 @@ namespace triton {
         }
 
 
-        void ofShr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void ofShr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
           auto of     = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_OF));
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * of = (op1 >> (bvSize - 1) & 1) if op2 == 1
            */
           auto node = triton::ast::ite(
@@ -983,13 +983,13 @@ namespace triton {
         }
 
 
-        void ofSub_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op1, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void ofSub_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto low    = vol ? 0 : dst.getAbstractLow();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * of = high:bool((op1 ^ op2) & (op1 ^ regDst))
            */
           auto node = triton::ast::extract(high, high,
@@ -1012,7 +1012,7 @@ namespace triton {
           auto high   = vol ? BYTE_SIZE_BIT-1 : !low ? BYTE_SIZE_BIT-1 : WORD_SIZE_BIT-1;
 
           /*
-           * Create the SMT semantics.
+           * Create the semantics.
            *
            * pf is set to one if there is an even number of bit set to 1 in the least
            * significant byte of the result.
@@ -1038,14 +1038,14 @@ namespace triton {
         }
 
 
-        void pfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void pfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto low    = vol ? 0 : dst.getAbstractLow();
           auto high   = vol ? BYTE_SIZE_BIT-1 : !low ? BYTE_SIZE_BIT-1 : WORD_SIZE_BIT-1;
           auto pf     = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_PF));
 
           /*
-           * Create the SMT semantics.
+           * Create the semantics.
            * pf if op2 != 0
            */
           auto node1 = triton::ast::bv(1, 1);
@@ -1080,7 +1080,7 @@ namespace triton {
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * sf = high:bool(regDst)
            */
           auto node = triton::ast::extract(high, high, triton::ast::reference(parent->getId()));
@@ -1093,13 +1093,13 @@ namespace triton {
         }
 
 
-        void sfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void sfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
           auto sf     = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_SF));
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * sf if op2 != 0
            */
           auto node = triton::ast::ite(
@@ -1122,7 +1122,7 @@ namespace triton {
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * zf = 0 == regDst
            */
           auto node = triton::ast::ite(
@@ -1142,11 +1142,11 @@ namespace triton {
         }
 
 
-        void zfBsf_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& src, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void zfBsf_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& src, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = src.getBitSize();
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * zf = 1 if op2 == 0 else 0
            */
           auto node = triton::ast::ite(
@@ -1163,14 +1163,14 @@ namespace triton {
         }
 
 
-        void zfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::smtAstAbstractNode* op2, bool vol) {
+        void zfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
           auto low    = vol ? 0 : dst.getAbstractLow();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
           auto zf     = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_ZF));
 
           /*
-           * Create the SMT semantic.
+           * Create the semantic.
            * zf if op2 != 0
            */
           auto node = triton::ast::ite(
@@ -1204,7 +1204,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(src);
           auto op3 = triton::api.buildSymbolicOperand(cf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvadd(triton::ast::bvadd(op1, op2), triton::ast::zx(dst.getBitSize()-1, op3));
 
           /* Create symbolic expression */
@@ -1235,7 +1235,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvadd(op1, op2);
 
           /* Create symbolic expression */
@@ -1265,7 +1265,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvand(op1, op2);
 
           /* Create symbolic expression */
@@ -1294,7 +1294,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvand(triton::ast::bvnot(op1), op2);
 
           /* Create symbolic expression */
@@ -1316,7 +1316,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvand(triton::ast::bvnot(op1), op2);
 
           /* Create symbolic expression */
@@ -1338,7 +1338,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvand(op1, op2);
 
           /* Create symbolic expression */
@@ -1360,7 +1360,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvand(op1, op2);
 
           /* Create symbolic expression */
@@ -1384,7 +1384,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto root = triton::ast::ite(
                         triton::ast::equal(triton::ast::extract(0, 0, op2), triton::ast::bvtrue()),
                         triton::ast::bv(0, bvSize1),
@@ -1434,7 +1434,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto root = triton::ast::ite(
                         triton::ast::equal(triton::ast::extract(bvSize2-1, bvSize2-1, op2), triton::ast::bvtrue()),
                         triton::ast::bv(0, bvSize1),
@@ -1480,8 +1480,8 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
-          std::list<triton::ast::smtAstAbstractNode *> bytes;
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> bytes;
           switch (src.getSize()) {
             case QWORD_SIZE:
               bytes.push_front(triton::ast::extract(63, 56, op1));
@@ -1522,13 +1522,13 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics - side effect */
+          /* Create the semantics - side effect */
           alignSubStack_s(inst, sp.getSize());
 
-          /* Create the SMT semantics - side effect */
+          /* Create the semantics - side effect */
           auto node1 = triton::ast::bv(inst.getNextAddress(), pc.getBitSize());
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node2 = op1;
 
           /* Create the symbolic expression */
@@ -1549,7 +1549,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(dst);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::sx(BYTE_SIZE_BIT, triton::ast::extract(BYTE_SIZE_BIT-1, 0, op1));
 
           /* Create symbolic expression */
@@ -1569,7 +1569,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(dst);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::sx(DWORD_SIZE_BIT, triton::ast::extract(DWORD_SIZE_BIT-1, 0, op1));
 
           /* Create symbolic expression */
@@ -1603,7 +1603,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(dst);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvnot(op1);
 
           /* Create symbolic expression */
@@ -1629,7 +1629,7 @@ namespace triton {
           auto op3 = triton::api.buildSymbolicOperand(cf);
           auto op4 = triton::api.buildSymbolicOperand(zf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvand(triton::ast::bvnot(op3), triton::ast::bvnot(op4)), triton::ast::bvtrue()), op2, op1);
 
           /* Create symbolic expression */
@@ -1658,7 +1658,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(src);
           auto op3 = triton::api.buildSymbolicOperand(cf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvfalse()), op2, op1);
 
           /* Create symbolic expression */
@@ -1687,7 +1687,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(src);
           auto op3 = triton::api.buildSymbolicOperand(cf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvtrue()), op2, op1);
 
           /* Create symbolic expression */
@@ -1718,7 +1718,7 @@ namespace triton {
           auto op3 = triton::api.buildSymbolicOperand(cf);
           auto op4 = triton::api.buildSymbolicOperand(zf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvor(op3, op4), triton::ast::bvtrue()), op2, op1);
 
           /* Create symbolic expression */
@@ -1747,7 +1747,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(src);
           auto op3 = triton::api.buildSymbolicOperand(zf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvtrue()), op2, op1);
 
           /* Create symbolic expression */
@@ -1780,7 +1780,7 @@ namespace triton {
           auto op4 = triton::api.buildSymbolicOperand(of);
           auto op5 = triton::api.buildSymbolicOperand(zf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvor(triton::ast::bvxor(op3, op4), op5), triton::ast::bvfalse()), op2, op1);
 
           /* Create symbolic expression */
@@ -1811,7 +1811,7 @@ namespace triton {
           auto op3 = triton::api.buildSymbolicOperand(sf);
           auto op4 = triton::api.buildSymbolicOperand(of);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, op4), op2, op1);
 
           /* Create symbolic expression */
@@ -1842,7 +1842,7 @@ namespace triton {
           auto op3 = triton::api.buildSymbolicOperand(sf);
           auto op4 = triton::api.buildSymbolicOperand(of);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvxor(op3, op4), triton::ast::bvtrue()), op2, op1);
 
           /* Create symbolic expression */
@@ -1875,7 +1875,7 @@ namespace triton {
           auto op4 = triton::api.buildSymbolicOperand(of);
           auto op5 = triton::api.buildSymbolicOperand(zf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvor(triton::ast::bvxor(op3, op4), op5), triton::ast::bvtrue()), op2, op1);
 
           /* Create symbolic expression */
@@ -1904,7 +1904,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(src);
           auto op3 = triton::api.buildSymbolicOperand(zf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvfalse()), op2, op1);
 
           /* Create symbolic expression */
@@ -1933,7 +1933,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(src);
           auto op3 = triton::api.buildSymbolicOperand(of);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvfalse()), op2, op1);
 
           /* Create symbolic expression */
@@ -1962,7 +1962,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(src);
           auto op3 = triton::api.buildSymbolicOperand(pf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvfalse()), op2, op1);
 
           /* Create symbolic expression */
@@ -1991,7 +1991,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(src);
           auto op3 = triton::api.buildSymbolicOperand(sf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvfalse()), op2, op1);
 
           /* Create symbolic expression */
@@ -2020,7 +2020,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(src);
           auto op3 = triton::api.buildSymbolicOperand(of);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvtrue()), op2, op1);
 
           /* Create symbolic expression */
@@ -2049,7 +2049,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(src);
           auto op3 = triton::api.buildSymbolicOperand(pf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvtrue()), op2, op1);
 
           /* Create symbolic expression */
@@ -2078,7 +2078,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(src);
           auto op3 = triton::api.buildSymbolicOperand(sf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvtrue()), op2, op1);
 
           /* Create symbolic expression */
@@ -2105,7 +2105,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::ast::sx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(src));
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvsub(op1, op2);
 
           /* Create symbolic expression */
@@ -2149,7 +2149,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(src1);
           auto op3 = triton::api.buildSymbolicOperand(src2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node1 = triton::ast::bvsub(op1, op2);
           auto node2 = triton::ast::ite(triton::ast::equal(op1, op2), op3, op2);
           auto node3 = triton::ast::ite(triton::ast::equal(op1, op2), op1, op2);
@@ -2184,7 +2184,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics - TMP = 128 bitvec (RDX:RAX) */
+          /* Create the semantics - TMP = 128 bitvec (RDX:RAX) */
           auto node1 = triton::ast::sx(QWORD_SIZE_BIT, op1);
 
           /* Create symbolic expression */
@@ -2193,7 +2193,7 @@ namespace triton {
           /* Spread taint */
           expr1->isTainted = triton::api.isRegisterTainted(TRITON_X86_REG_RDX) | triton::api.isRegisterTainted(TRITON_X86_REG_RAX);
 
-          /* Create the SMT semantics - RAX = TMP[63...0] */
+          /* Create the semantics - RAX = TMP[63...0] */
           auto node2 = triton::ast::extract(QWORD_SIZE_BIT-1, 0, triton::ast::reference(expr1->getId()));
 
           /* Create symbolic expression */
@@ -2202,7 +2202,7 @@ namespace triton {
           /* Spread taint */
           expr2->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_RAX, expr1->isTainted);
 
-          /* Create the SMT semantics - RDX = TMP[127...64] */
+          /* Create the semantics - RDX = TMP[127...64] */
           auto node3 = triton::ast::extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, triton::ast::reference(expr1->getId()));
 
           /* Create symbolic expression */
@@ -2222,7 +2222,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(dst);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::sx(WORD_SIZE_BIT, triton::ast::extract(WORD_SIZE_BIT-1, 0, op1));
 
           /* Create symbolic expression */
@@ -2243,7 +2243,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::ast::bv(1, dst.getBitSize());
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvsub(op1, op2);
 
           /* Create symbolic expression */
@@ -2578,7 +2578,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::ast::bv(1, dst.getBitSize());
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvadd(op1, op2);
 
           /* Create symbolic expression */
@@ -2612,7 +2612,7 @@ namespace triton {
           auto op3 = triton::api.buildSymbolicOperand(srcImm1);
           auto op4 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(
                           triton::ast::bvand(
@@ -2646,7 +2646,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(srcImm1);
           auto op3 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvfalse()), op3, op2);
 
           /* Create symbolic expression */
@@ -2672,7 +2672,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(srcImm1);
           auto op3 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvtrue()), op3, op2);
 
           /* Create symbolic expression */
@@ -2700,7 +2700,7 @@ namespace triton {
           auto op3 = triton::api.buildSymbolicOperand(srcImm1);
           auto op4 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvor(op1, op2), triton::ast::bvtrue()), op4, op3);
 
           /* Create symbolic expression */
@@ -2728,7 +2728,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(srcImm1);
           auto op3 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvtrue()), op3, op2);
 
           /* Create symbolic expression */
@@ -2758,7 +2758,7 @@ namespace triton {
           auto op4 = triton::api.buildSymbolicOperand(srcImm1);
           auto op5 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvor(triton::ast::bvxor(op1, op2), op3), triton::ast::bvfalse()), op5, op4);
 
           /* Create symbolic expression */
@@ -2788,7 +2788,7 @@ namespace triton {
           auto op3 = triton::api.buildSymbolicOperand(srcImm1);
           auto op4 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, op2), op4, op3);
 
           /* Create symbolic expression */
@@ -2817,7 +2817,7 @@ namespace triton {
           auto op3 = triton::api.buildSymbolicOperand(srcImm1);
           auto op4 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvxor(op1, op2), triton::ast::bvtrue()), op4, op3);
 
           /* Create symbolic expression */
@@ -2848,7 +2848,7 @@ namespace triton {
           auto op4 = triton::api.buildSymbolicOperand(srcImm1);
           auto op5 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvor(triton::ast::bvxor(op1, op2), op3), triton::ast::bvtrue()), op5, op4);
 
           /* Create symbolic expression */
@@ -2872,7 +2872,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = op1;
 
           /* Create symbolic expression */
@@ -2897,7 +2897,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(srcImm1);
           auto op3 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvfalse()), op3, op2);
 
           /* Create symbolic expression */
@@ -2923,7 +2923,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(srcImm1);
           auto op3 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvfalse()), op3, op2);
 
           /* Create symbolic expression */
@@ -2949,7 +2949,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(srcImm1);
           auto op3 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvfalse()), op3, op2);
 
           /* Create symbolic expression */
@@ -2975,7 +2975,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(srcImm1);
           auto op3 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvfalse()), op3, op2);
 
           /* Create symbolic expression */
@@ -3001,7 +3001,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(srcImm1);
           auto op3 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvtrue()), op3, op2);
 
           /* Create symbolic expression */
@@ -3027,7 +3027,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(srcImm1);
           auto op3 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvtrue()), op3, op2);
 
           /* Create symbolic expression */
@@ -3053,7 +3053,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(srcImm1);
           auto op3 = triton::api.buildSymbolicOperand(srcImm2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvtrue()), op3, op2);
 
           /* Create symbolic expression */
@@ -3092,7 +3092,7 @@ namespace triton {
             op2 = triton::ast::zx(leaSize - srcDisp.getBitSize(), op2);
 
           /* Base */
-          triton::ast::smtAstAbstractNode* op3;
+          triton::ast::AbstractNode* op3;
           if (srcBase.isValid())
             op3 = triton::api.buildSymbolicRegisterOperand(srcBase);
           else
@@ -3103,7 +3103,7 @@ namespace triton {
             op3 = triton::ast::bvadd(op3, triton::ast::bv(inst.getOpcodesSize(), leaSize));
 
           /* Index */
-          triton::ast::smtAstAbstractNode* op4;
+          triton::ast::AbstractNode* op4;
           if (srcIndex.isValid())
             op4 = triton::api.buildSymbolicRegisterOperand(srcIndex);
           else
@@ -3114,7 +3114,7 @@ namespace triton {
           if (leaSize > srcScale.getBitSize())
             op5 = triton::ast::zx(leaSize - srcScale.getBitSize(), op5);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           /* Effective address = Displacement + BaseReg + IndexReg * Scale */
           auto node = triton::ast::bvadd(op2, triton::ast::bvadd(op3, triton::ast::bvmul(op4, op5)));
 
@@ -3167,7 +3167,7 @@ namespace triton {
           /* Spread taint */
           expr2->isTainted = triton::api.taintAssignment(bp2, bp1);
 
-          /* Create the SMT semantics - side effect */
+          /* Create the semantics - side effect */
           alignAddStack_s(inst, bp1.getSize());
 
           /* Upate the symbolic control flow */
@@ -3179,7 +3179,7 @@ namespace triton {
           auto dst = inst.operands[0];
           auto src = inst.operands[1];
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::api.buildSymbolicOperand(src);
 
           /* Create symbolic expression */
@@ -3197,7 +3197,7 @@ namespace triton {
           auto dst = inst.operands[0];
           auto src = inst.operands[1];
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::api.buildSymbolicOperand(src);
 
           /* Create symbolic expression */
@@ -3215,7 +3215,7 @@ namespace triton {
           auto dst = inst.operands[0];
           auto src = inst.operands[1];
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::api.buildSymbolicOperand(src);
 
           /* Create symbolic expression */
@@ -3233,7 +3233,7 @@ namespace triton {
           auto dst = inst.operands[0];
           auto src = inst.operands[1];
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::api.buildSymbolicOperand(src);
 
           /* Create symbolic expression */
@@ -3254,8 +3254,8 @@ namespace triton {
           /* Create symbolic operands */
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
-          triton::ast::smtAstAbstractNode* node = nullptr;
+          /* Create the semantics */
+          triton::ast::AbstractNode* node = nullptr;
 
           switch (dst.getBitSize()) {
             /* GPR 32-bits */
@@ -3292,7 +3292,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::concat(triton::ast::extract(QWORD_SIZE_BIT-1, 0, op2), triton::ast::extract(QWORD_SIZE_BIT-1, 0, op2));
 
           /* Create symbolic expression */
@@ -3313,7 +3313,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::extract(QWORD_SIZE_BIT-1, 0, op2);
 
           /* Create symbolic expression */
@@ -3331,7 +3331,7 @@ namespace triton {
           auto dst = inst.operands[0];
           auto src = inst.operands[1];
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::api.buildSymbolicOperand(src);
 
           /* Create symbolic expression */
@@ -3349,7 +3349,7 @@ namespace triton {
           auto dst = inst.operands[0];
           auto src = inst.operands[1];
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::api.buildSymbolicOperand(src);
 
           /* Create symbolic expression */
@@ -3371,7 +3371,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::concat(
                         triton::ast::extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op1), /* Destination[127..64] unchanged */
                         triton::ast::extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op2)  /* Destination[63..0] = Source[127..64]; */
@@ -3396,7 +3396,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::concat(
                         triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2), /* Destination[127..64] = Source */
                         triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op1)  /* Destination[63..0] unchanged */
@@ -3421,7 +3421,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::concat(
                         triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2), /* Destination[127..64] = Source */
                         triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op1)  /* Destination[63..0] unchanged */
@@ -3446,7 +3446,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::concat(
                         triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2), /* Destination[127..64] = Source[63..0] */
                         triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op1)  /* Destination[63..0] unchanged */
@@ -3471,7 +3471,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::concat(
                         triton::ast::extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op1), /* Destination[127..64] unchanged */
                         triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2)                /* Destination[63..0] = Source */
@@ -3496,7 +3496,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::concat(
                         triton::ast::extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op1), /* Destination[127..64] unchanged */
                         triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2)                /* Destination[63..0] = Source */
@@ -3520,7 +3520,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::sx(dst.getBitSize() - src.getBitSize(), op1);
 
           /* Create symbolic expression */
@@ -3541,7 +3541,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::sx(dst.getBitSize() - src.getBitSize(), op1);
 
           /* Create symbolic expression */
@@ -3562,7 +3562,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::zx(dst.getBitSize() - src.getBitSize(), op1);
 
           /* Create symbolic expression */
@@ -3588,7 +3588,7 @@ namespace triton {
               /* Create symbolic operands */
               auto op1 = triton::api.buildSymbolicOperand(src1);
               auto op2 = triton::api.buildSymbolicOperand(src2);
-              /* Create the SMT semantics */
+              /* Create the semantics */
               auto node = triton::ast::bvmul(triton::ast::zx(BYTE_SIZE_BIT, op1), triton::ast::zx(BYTE_SIZE_BIT, op2));
               /* Create symbolic expression */
               auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MUL operation");
@@ -3609,7 +3609,7 @@ namespace triton {
               /* Create symbolic operands */
               auto op1 = triton::api.buildSymbolicOperand(src1);
               auto op2 = triton::api.buildSymbolicOperand(src2);
-              /* Create the SMT semantics */
+              /* Create the semantics */
               auto node = triton::ast::bvmul(triton::ast::zx(WORD_SIZE_BIT, op1), triton::ast::zx(WORD_SIZE_BIT, op2));
               /* Create symbolic expression for ax */
               auto ax = triton::ast::extract((WORD_SIZE_BIT - 1), 0, node);
@@ -3636,7 +3636,7 @@ namespace triton {
               /* Create symbolic operands */
               auto op1 = triton::api.buildSymbolicOperand(src1);
               auto op2 = triton::api.buildSymbolicOperand(src2);
-              /* Create the SMT semantics */
+              /* Create the semantics */
               auto node = triton::ast::bvmul(triton::ast::zx(DWORD_SIZE_BIT, op1), triton::ast::zx(DWORD_SIZE_BIT, op2));
               /* Create symbolic expression for eax */
               auto eax = triton::ast::extract((DWORD_SIZE_BIT - 1), 0, node);
@@ -3663,7 +3663,7 @@ namespace triton {
               /* Create symbolic operands */
               auto op1 = triton::api.buildSymbolicOperand(src1);
               auto op2 = triton::api.buildSymbolicOperand(src2);
-              /* Create the SMT semantics */
+              /* Create the semantics */
               auto node = triton::ast::bvmul(triton::ast::zx(QWORD_SIZE_BIT, op1), triton::ast::zx(QWORD_SIZE_BIT, op2));
               /* Create symbolic expression for eax */
               auto rax = triton::ast::extract((QWORD_SIZE_BIT - 1), 0, node);
@@ -3695,7 +3695,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvneg(op1);
 
           /* Create symbolic expression */
@@ -3729,7 +3729,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvnot(op1);
 
           /* Create symbolic expression */
@@ -3751,7 +3751,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvor(op1, op2);
 
           /* Create symbolic expression */
@@ -3780,7 +3780,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvor(op1, op2);
 
           /* Create symbolic expression */
@@ -3802,7 +3802,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvor(op1, op2);
 
           /* Create symbolic expression */
@@ -3824,8 +3824,8 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
-          std::list<triton::ast::smtAstAbstractNode *> pck;
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
           for (triton::uint32 index = 0; index < dst.getSize(); index++) {
             uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
             uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
@@ -3859,8 +3859,8 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
-          std::list<triton::ast::smtAstAbstractNode *> pck;
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
           for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
             uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
             uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
@@ -3894,8 +3894,8 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
-          std::list<triton::ast::smtAstAbstractNode *> pck;
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
           for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
             uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
             uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
@@ -3928,8 +3928,8 @@ namespace triton {
           /* Create symbolic operands */
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
-          std::list<triton::ast::smtAstAbstractNode *> mskb;
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> mskb;
           switch (src.getSize()) {
             case DQWORD_SIZE:
               mskb.push_back(triton::ast::extract(127, 127, op2));
@@ -3974,7 +3974,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = op1;
 
           /* Create symbolic expression */
@@ -3983,7 +3983,7 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = triton::api.taintAssignment(dst, src);
 
-          /* Create the SMT semantics - side effect */
+          /* Create the semantics - side effect */
           alignAddStack_s(inst, src.getSize());
 
           /* Upate the symbolic control flow */
@@ -3997,13 +3997,13 @@ namespace triton {
           auto dst        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
           auto src        = inst.operands[0];
 
-          /* Create the SMT semantics - side effect */
+          /* Create the semantics - side effect */
           alignSubStack_s(inst, dst.getSize());
 
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::zx(dst.getBitSize() - src.getBitSize(), op1);
 
           /* Create symbolic expression */
@@ -4025,7 +4025,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvxor(op1, op2);
 
           /* Create symbolic expression */
@@ -4053,7 +4053,7 @@ namespace triton {
           auto op2 = triton::ast::decimal(src.getConcreteValue());
           auto op3 = triton::api.buildSymbolicOperand(srcCf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node1 = triton::ast::bvrol(op2, triton::ast::concat(op3, op1));
 
           /* Create symbolic expression */
@@ -4062,7 +4062,7 @@ namespace triton {
           /* Spread taint */
           expr1->isTainted = triton::api.isTainted(dst) | triton::api.isTainted(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node2 = triton::ast::extract(dst.getBitSize()-1, 0, node1);
 
           /* Create symbolic expression */
@@ -4095,7 +4095,7 @@ namespace triton {
           auto op2 = triton::ast::decimal(src.getConcreteValue());
           auto op3 = triton::api.buildSymbolicOperand(srcCf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node1 = triton::ast::bvror(op2, triton::ast::concat(op3, op1));
 
           /* Create symbolic expression */
@@ -4104,7 +4104,7 @@ namespace triton {
           /* Spread taint */
           expr1->isTainted = triton::api.isTainted(dst) | triton::api.isTainted(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node2 = triton::ast::extract(dst.getBitSize()-1, 0, node1);
 
           /* Create symbolic expression */
@@ -4132,7 +4132,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(sp);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = op1;
 
           /* Create symbolic expression */
@@ -4141,10 +4141,10 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = triton::api.taintAssignment(pc, sp);
 
-          /* Create the SMT semantics - side effect */
+          /* Create the semantics - side effect */
           alignAddStack_s(inst, sp.getSize());
 
-          /* Create the SMT semantics - side effect */
+          /* Create the semantics - side effect */
           if (inst.operands.size() > 0)
             alignAddStack_s(inst, inst.operands[0].getImmediate().getValue());
         }
@@ -4162,7 +4162,7 @@ namespace triton {
            */
           auto op2 = triton::ast::decimal(src.getConcreteValue());
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvrol(op2, op1);
 
           /* Create symbolic expression */
@@ -4192,7 +4192,7 @@ namespace triton {
            */
           auto op2 = triton::ast::decimal(src.getConcreteValue());
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvror(op2, op1);
 
           /* Create symbolic expression */
@@ -4218,7 +4218,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(src));
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvashr(op1, op2);
 
           /* Create symbolic expression */
@@ -4249,7 +4249,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(src);
           auto op3 = triton::ast::zx(src.getBitSize()-1, triton::api.buildSymbolicOperand(srcCf));
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvsub(op1, triton::ast::bvadd(op2, op3));
 
           /* Create symbolic expression */
@@ -4281,7 +4281,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(cf);
           auto op3 = triton::api.buildSymbolicOperand(zf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(
                           triton::ast::bvand(
@@ -4318,7 +4318,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op2 = triton::api.buildSymbolicOperand(cf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bvfalse()),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4348,7 +4348,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op2 = triton::api.buildSymbolicOperand(cf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bvtrue()),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4380,7 +4380,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(cf);
           auto op3 = triton::api.buildSymbolicOperand(zf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(triton::ast::bvor(op2, op3), triton::ast::bvtrue()),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4411,7 +4411,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op2 = triton::api.buildSymbolicOperand(zf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bvtrue()),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4445,7 +4445,7 @@ namespace triton {
           auto op3 = triton::api.buildSymbolicOperand(of);
           auto op4 = triton::api.buildSymbolicOperand(zf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(triton::ast::bvor(triton::ast::bvxor(op2, op3), op4), triton::ast::bvfalse()),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4479,7 +4479,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(sf);
           auto op3 = triton::api.buildSymbolicOperand(of);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, op3),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4512,7 +4512,7 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(sf);
           auto op3 = triton::api.buildSymbolicOperand(of);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(triton::ast::bvxor(op2, op3), triton::ast::bvtrue()),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4547,7 +4547,7 @@ namespace triton {
           auto op3 = triton::api.buildSymbolicOperand(of);
           auto op4 = triton::api.buildSymbolicOperand(zf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(triton::ast::bvor(triton::ast::bvxor(op2, op3), op4), triton::ast::bvtrue()),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4579,7 +4579,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op2 = triton::api.buildSymbolicOperand(zf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bvfalse()),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4609,7 +4609,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op2 = triton::api.buildSymbolicOperand(of);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bvfalse()),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4639,7 +4639,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op2 = triton::api.buildSymbolicOperand(pf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bvfalse()),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4669,7 +4669,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op2 = triton::api.buildSymbolicOperand(sf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bvfalse()),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4699,7 +4699,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op2 = triton::api.buildSymbolicOperand(of);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bvtrue()),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4729,7 +4729,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op2 = triton::api.buildSymbolicOperand(pf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bvtrue()),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4759,7 +4759,7 @@ namespace triton {
           /* Create symbolic operands */
           auto op2 = triton::api.buildSymbolicOperand(sf);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bvtrue()),
                         triton::ast::bv(1, dst.getBitSize()),
@@ -4790,7 +4790,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(src));
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvshl(op1, op2);
 
           /* Create symbolic expression */
@@ -4819,7 +4819,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(src));
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvlshr(op1, op2);
 
           /* Create symbolic expression */
@@ -4862,7 +4862,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvsub(op1, op2);
 
           /* Create symbolic expression */
@@ -4892,7 +4892,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(src1);
           auto op2 = triton::api.buildSymbolicOperand(src2);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvand(op1, op2);
 
           /* Create symbolic expression */
@@ -4923,7 +4923,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node1 = op2;
           auto node2 = op1;
 
@@ -4939,7 +4939,7 @@ namespace triton {
           op1 = triton::api.buildSymbolicOperand(dst);
           op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node3 = triton::ast::bvadd(op1, op2);
 
           /* Create symbolic expression */
@@ -4963,7 +4963,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node1 = op2;
           auto node2 = op1;
 
@@ -4988,7 +4988,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvxor(op1, op2);
 
           /* Create symbolic expression */
@@ -5017,7 +5017,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvxor(op1, op2);
 
           /* Create symbolic expression */
@@ -5039,7 +5039,7 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
 
-          /* Create the SMT semantics */
+          /* Create the semantics */
           auto node = triton::ast::bvxor(op1, op2);
 
           /* Create symbolic expression */

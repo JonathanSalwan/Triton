@@ -63,7 +63,7 @@ Let assume that the \f$rax\f$'s symbolic expression contains a symbolic variable
 this program point, we want that \f$rax = 0\f$. We first get the symbolic expression id corresponding to the \f$rax\f$ register, then, its AST.
 When the AST has been got, we are able to build our constraint such that \f$ AST_{constraint} = assert(AST_{rax} == 0) \f$.
 
-The solver interface triton::API::getModel() gets as parameter a triton::ast::smtAstAbstractNode which corresponds to the \f$ AST_{constraint} \f$ and
+The solver interface triton::API::getModel() gets as parameter a triton::ast::AbstractNode which corresponds to the \f$ AST_{constraint} \f$ and
 returns a list of triton::engines::solver::SolverModel. Each model for a symbolic variable \f$x \in X\f$ is represented by a triton::engines::solver::SolverModel.
 For example, if there are two symbolic variables in your constraint, the triton::API::getModel() function will return a list of two items.
 
@@ -114,7 +114,7 @@ namespace triton {
       }
 
 
-      std::list<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(triton::ast::smtAstAbstractNode *node, triton::uint32 limit) {
+      std::list<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(triton::ast::AbstractNode *node, triton::uint32 limit) {
         std::list<std::map<triton::uint32, SolverModel>>  ret;
         std::stringstream                                 formula;
         z3::context                                       ctx;
@@ -187,7 +187,7 @@ namespace triton {
       }
 
 
-      std::map<triton::uint32, SolverModel> SolverEngine::getModel(triton::ast::smtAstAbstractNode *node) {
+      std::map<triton::uint32, SolverModel> SolverEngine::getModel(triton::ast::AbstractNode *node) {
         std::map<triton::uint32, SolverModel> ret;
         std::list<std::map<triton::uint32, SolverModel>> allModels;
 
@@ -199,7 +199,7 @@ namespace triton {
       }
 
 
-      triton::uint512 SolverEngine::evaluateAst(triton::ast::smtAstAbstractNode *node) {
+      triton::uint512 SolverEngine::evaluateAst(triton::ast::AbstractNode *node) {
         if (node == nullptr)
           throw std::runtime_error("SolverEngine::evaluateAst(): node cannot be null.");
         triton::ast::TritonToZ3Ast z3ast{};

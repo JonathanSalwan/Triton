@@ -33,8 +33,8 @@ or a volatile symbolic expression.
 
 The record of a simplification pass is really straightforward. You have to record your simplification
 callback using the triton::API::recordSimplificationCallback() function. Your simplification callback
-must takes as unique parameter a pointer of triton::ast::smtAstAbstractNode and returns a pointer of
-triton::ast::smtAstAbstractNode. Then, your callback will be called before every symbolic assignment.
+must takes as unique parameter a pointer of triton::ast::AbstractNode and returns a pointer of
+triton::ast::AbstractNode. Then, your callback will be called before every symbolic assignment.
 Note that you can record several simplification callbacks or remove a specific callback using the
 triton::API::removeSimplificationCallback() function.
 
@@ -45,7 +45,7 @@ Below, a little example which replaces all \f$ A \oplus A \rightarrow A = 0\f$.
 
 ~~~~~~~~~~~~~{.cpp}
 // Rule: if (bvxor x x) -> (_ bv0 x_size)
-triton::ast::smtAstAbstractNode* xor_simplification(triton::ast::smtAstAbstractNode* node) {
+triton::ast::AbstractNode* xor_simplification(triton::ast::AbstractNode* node) {
 
   if (node->getKind() == triton::ast::BVXOR_NODE) {
     if (*(node->getChilds()[0]) == *(node->getChilds()[1]))
@@ -212,7 +212,7 @@ namespace triton {
       #endif
 
 
-      triton::ast::smtAstAbstractNode* SymbolicSimplification::processSimplification(triton::ast::smtAstAbstractNode* node, bool z3) {
+      triton::ast::AbstractNode* SymbolicSimplification::processSimplification(triton::ast::AbstractNode* node, bool z3) {
 
         if (node == nullptr)
           throw std::runtime_error("SymbolicSimplification::processSimplification(): node cannot be null.");
@@ -253,7 +253,7 @@ namespace triton {
             throw std::runtime_error("SymbolicSimplification::processSimplification(): Fail to call the python callback.");
           }
 
-          /* Check if the callback has returned a smtAstAbstractNode */
+          /* Check if the callback has returned a AbstractNode */
           if (!PySmtAstNode_Check(ret))
             throw std::runtime_error("SymbolicSimplification::processSimplification(): You must return a SmtAstNode object.");
 

@@ -976,7 +976,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::smtAstAbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
+        triton::ast::AbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
         triton::arch::RegisterOperand arg3 = *PyRegisterOperand_AsRegisterOperand(flag);
 
         try {
@@ -1018,7 +1018,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::smtAstAbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
+        triton::ast::AbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
         triton::arch::MemoryOperand arg3 = *PyMemoryOperand_AsMemoryOperand(mem);
 
         try {
@@ -1060,7 +1060,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::smtAstAbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
+        triton::ast::AbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
         triton::arch::RegisterOperand arg3 = *PyRegisterOperand_AsRegisterOperand(reg);
 
         try {
@@ -1098,7 +1098,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::smtAstAbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
+        triton::ast::AbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
 
         try {
           return PySymbolicExpression(triton::api.createSymbolicVolatileExpression(arg1, arg2, ccomment));

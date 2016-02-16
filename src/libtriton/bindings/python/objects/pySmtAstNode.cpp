@@ -105,7 +105,7 @@ namespace triton {
 
       static PyObject* SmtAstNode_getChilds(PyObject* self, PyObject* noarg) {
         PyObject* childs;
-        triton::ast::smtAstAbstractNode *node = PySmtAstNode_AsSmtAstNode(self);
+        triton::ast::AbstractNode *node = PySmtAstNode_AsSmtAstNode(self);
 
         triton::__uint size = node->getChilds().size();
         childs = xPyList_New(size);
@@ -127,19 +127,19 @@ namespace triton {
 
 
       static PyObject* SmtAstNode_getValue(PyObject* self, PyObject* noarg) {
-        triton::ast::smtAstAbstractNode *node = PySmtAstNode_AsSmtAstNode(self);
+        triton::ast::AbstractNode *node = PySmtAstNode_AsSmtAstNode(self);
 
         if (node->getKind() == triton::ast::DECIMAL_NODE)
-          return PyLong_FromUint128(reinterpret_cast<triton::ast::smtAstDecimalNode *>(node)->getValue());
+          return PyLong_FromUint128(reinterpret_cast<triton::ast::DecimalNode *>(node)->getValue());
 
         else if (node->getKind() == triton::ast::REFERENCE_NODE)
-          return PyLong_FromUint(reinterpret_cast<triton::ast::smtAstReferenceNode *>(node)->getValue());
+          return PyLong_FromUint(reinterpret_cast<triton::ast::ReferenceNode *>(node)->getValue());
 
         else if (node->getKind() == triton::ast::STRING_NODE)
-          return Py_BuildValue("s", reinterpret_cast<triton::ast::smtAstStringNode *>(node)->getValue().c_str());
+          return Py_BuildValue("s", reinterpret_cast<triton::ast::StringNode *>(node)->getValue().c_str());
 
         else if (node->getKind() == triton::ast::VARIABLE_NODE)
-          return Py_BuildValue("s", reinterpret_cast<triton::ast::smtAstVariableNode *>(node)->getValue().c_str());
+          return Py_BuildValue("s", reinterpret_cast<triton::ast::VariableNode *>(node)->getValue().c_str());
 
         return PyErr_Format(PyExc_TypeError, "SmtAstNode::getValue(): Cannot use getValue() on this kind of node.");
       }
@@ -149,7 +149,7 @@ namespace triton {
         PyObject* index = nullptr;
         PyObject* node = nullptr;
         triton::__uint i;
-        triton::ast::smtAstAbstractNode *dst, *src;
+        triton::ast::AbstractNode *dst, *src;
 
         PyArg_ParseTuple(args, "|OO", &index, &node);
 
@@ -379,7 +379,7 @@ namespace triton {
       };
 
 
-      PyObject* PySmtAstNode(triton::ast::smtAstAbstractNode* node) {
+      PyObject* PySmtAstNode(triton::ast::AbstractNode* node) {
         SmtAstNode_Object *object;
 
         if (node == nullptr)

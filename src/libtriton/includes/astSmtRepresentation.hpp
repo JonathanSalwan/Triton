@@ -47,154 +47,154 @@ namespace triton {
           ~AstSmtRepresentation();
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstAbstractNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::AbstractNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstAssertNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::AssertNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvaddNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvaddNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvandNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvandNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvashrNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvashrNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvdeclNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvdeclNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvlshrNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvlshrNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvmulNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvmulNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvnandNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvnandNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvnegNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvnegNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvnorNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvnorNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvnotNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvnotNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvorNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvorNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvrolNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvrolNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvrorNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvrorNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvsdivNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvsdivNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvsgeNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvsgeNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvsgtNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvsgtNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvshlNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvshlNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvsleNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvsleNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvsltNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvsltNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvsmodNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvsmodNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvsremNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvsremNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvsubNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvsubNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvudivNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvudivNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvugeNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvugeNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvugtNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvugtNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvuleNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvuleNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvultNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvultNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvuremNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvuremNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvxnorNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvxnorNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstBvxorNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::BvxorNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstCompoundNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::CompoundNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstConcatNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::ConcatNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstDecimalNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::DecimalNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstDeclareFunctionNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::DeclareFunctionNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstDistinctNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::DistinctNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstEqualNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::EqualNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstExtractNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::ExtractNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstIteNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::IteNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstLandNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::LandNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstLetNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::LetNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstLnotNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::LnotNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstLorNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::LorNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstReferenceNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::ReferenceNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstStringNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::StringNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstSxNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::SxNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstVariableNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::VariableNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::smtAstZxNode* node);
+          std::ostream& print(std::ostream& stream, triton::ast::ZxNode* node);
       };
 
 

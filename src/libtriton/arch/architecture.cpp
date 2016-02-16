@@ -204,7 +204,7 @@ namespace triton {
        * is enable we must compute semanitcs to spread the taint.
        */
       if (!triton::api.isSymbolicEngineEnabled()) {
-        std::set<triton::ast::smtAstAbstractNode*> uniqueNodes;
+        std::set<triton::ast::AbstractNode*> uniqueNodes;
         std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
         for (it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
           triton::ast::extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
@@ -226,7 +226,7 @@ namespace triton {
        * expressions untainted and their AST nodes.
        */
       if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ONLY_ON_TAINTED)) {
-        std::set<triton::ast::smtAstAbstractNode*> uniqueNodes;
+        std::set<triton::ast::AbstractNode*> uniqueNodes;
         std::vector<triton::engines::symbolic::SymbolicExpression*> newVector;
         std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
         for (it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {

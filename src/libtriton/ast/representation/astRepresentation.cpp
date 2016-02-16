@@ -50,7 +50,7 @@ namespace triton {
       }
 
 
-      std::ostream& AstRepresentation::print(std::ostream& stream, smtAstAbstractNode* node) {
+      std::ostream& AstRepresentation::print(std::ostream& stream, AbstractNode* node) {
         return this->representation[this->mode]->print(stream, node);
       }
 

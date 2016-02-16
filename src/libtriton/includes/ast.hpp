@@ -94,29 +94,29 @@ namespace triton {
 
 
     //! Abstract node
-    class smtAstAbstractNode {
+    class AbstractNode {
       protected:
         //! The kind of the node.
         enum kind_e kind;
 
         //! The childs of the node.
-        std::vector<smtAstAbstractNode*> childs;
+        std::vector<AbstractNode*> childs;
 
         //! The size of the node.
         triton::uint32 size;
 
       public:
         //! Constructor.
-        smtAstAbstractNode(enum kind_e kind);
+        AbstractNode(enum kind_e kind);
 
         //! Constructor by copy.
-        smtAstAbstractNode(const smtAstAbstractNode& copy);
+        AbstractNode(const AbstractNode& copy);
 
         //! Constructor.
-        smtAstAbstractNode();
+        AbstractNode();
 
         //! Destructor.
-        virtual ~smtAstAbstractNode();
+        virtual ~AbstractNode();
 
         //! Returns the kind of the node.
         enum kind_e getKind(void);
@@ -128,13 +128,13 @@ namespace triton {
         triton::uint512 getBitvectorMask(void);
 
         //! Returns the childs of the node.
-        std::vector<smtAstAbstractNode*>& getChilds(void);
+        std::vector<AbstractNode*>& getChilds(void);
 
         //! Sets the size of the node.
         void setBitvectorSize(triton::uint32 size);
 
         //! Adds a child.
-        void addChild(smtAstAbstractNode* child);
+        void addChild(AbstractNode* child);
 
         //! Entry point for a visitor.
         virtual void accept(AstVisitor& v) = 0;
@@ -145,392 +145,392 @@ namespace triton {
 
 
     //! (assert <expr1>) node
-    class smtAstAssertNode : public smtAstAbstractNode {
+    class AssertNode : public AbstractNode {
       public:
-        smtAstAssertNode(smtAstAbstractNode* expr);
-        smtAstAssertNode(const smtAstAssertNode& copy);
-        ~smtAstAssertNode();
+        AssertNode(AbstractNode* expr);
+        AssertNode(const AssertNode& copy);
+        ~AssertNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvadd <expr1> <expr2>) node
-    class smtAstBvaddNode : public smtAstAbstractNode {
+    class BvaddNode : public AbstractNode {
       public:
-        smtAstBvaddNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvaddNode(const smtAstBvaddNode& copy);
-        ~smtAstBvaddNode();
+        BvaddNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvaddNode(const BvaddNode& copy);
+        ~BvaddNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvand <expr1> <expr2>) node
-    class smtAstBvandNode : public smtAstAbstractNode {
+    class BvandNode : public AbstractNode {
       public:
-        smtAstBvandNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvandNode(const smtAstBvandNode& copy);
-        ~smtAstBvandNode();
+        BvandNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvandNode(const BvandNode& copy);
+        ~BvandNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvashr <expr1> <expr2>) node
-    class smtAstBvashrNode : public smtAstAbstractNode {
+    class BvashrNode : public AbstractNode {
       public:
-        smtAstBvashrNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvashrNode(const smtAstBvashrNode& copy);
-        ~smtAstBvashrNode();
+        BvashrNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvashrNode(const BvashrNode& copy);
+        ~BvashrNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (_ BitVec x) node
-    class smtAstBvdeclNode : public smtAstAbstractNode {
+    class BvdeclNode : public AbstractNode {
       public:
-        smtAstBvdeclNode(triton::uint32 size);
-        smtAstBvdeclNode(const smtAstBvdeclNode& copy);
-        ~smtAstBvdeclNode();
+        BvdeclNode(triton::uint32 size);
+        BvdeclNode(const BvdeclNode& copy);
+        ~BvdeclNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvlshr <expr1> <expr2>) node
-    class smtAstBvlshrNode : public smtAstAbstractNode {
+    class BvlshrNode : public AbstractNode {
       public:
-        smtAstBvlshrNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvlshrNode(const smtAstBvlshrNode& copy);
-        ~smtAstBvlshrNode();
+        BvlshrNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvlshrNode(const BvlshrNode& copy);
+        ~BvlshrNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvmul <expr1> <expr2>) node
-    class smtAstBvmulNode : public smtAstAbstractNode {
+    class BvmulNode : public AbstractNode {
       public:
-        smtAstBvmulNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvmulNode(const smtAstBvmulNode& copy);
-        ~smtAstBvmulNode();
+        BvmulNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvmulNode(const BvmulNode& copy);
+        ~BvmulNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvnand <expr1> <expr2>) node
-    class smtAstBvnandNode : public smtAstAbstractNode {
+    class BvnandNode : public AbstractNode {
       public:
-        smtAstBvnandNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvnandNode(const smtAstBvnandNode& copy);
-        ~smtAstBvnandNode();
+        BvnandNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvnandNode(const BvnandNode& copy);
+        ~BvnandNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvneg <expr>) node
-    class smtAstBvnegNode : public smtAstAbstractNode {
+    class BvnegNode : public AbstractNode {
       public:
-        smtAstBvnegNode(smtAstAbstractNode* expr);
-        smtAstBvnegNode(const smtAstBvnegNode& copy);
-        ~smtAstBvnegNode();
+        BvnegNode(AbstractNode* expr);
+        BvnegNode(const BvnegNode& copy);
+        ~BvnegNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvnor <expr1> <expr2>) node
-    class smtAstBvnorNode : public smtAstAbstractNode {
+    class BvnorNode : public AbstractNode {
       public:
-        smtAstBvnorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvnorNode(const smtAstBvnorNode& copy);
-        ~smtAstBvnorNode();
+        BvnorNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvnorNode(const BvnorNode& copy);
+        ~BvnorNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvnot <expr>) node
-    class smtAstBvnotNode : public smtAstAbstractNode {
+    class BvnotNode : public AbstractNode {
       public:
-        smtAstBvnotNode(smtAstAbstractNode* expr1);
-        smtAstBvnotNode(const smtAstBvnotNode& copy);
-        ~smtAstBvnotNode();
+        BvnotNode(AbstractNode* expr1);
+        BvnotNode(const BvnotNode& copy);
+        ~BvnotNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvor <expr1> <expr2>) node
-    class smtAstBvorNode : public smtAstAbstractNode {
+    class BvorNode : public AbstractNode {
       public:
-        smtAstBvorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvorNode(const smtAstBvorNode& copy);
-        ~smtAstBvorNode();
+        BvorNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvorNode(const BvorNode& copy);
+        ~BvorNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! ((_ rotate_left rot) expr) node
-    class smtAstBvrolNode : public smtAstAbstractNode {
+    class BvrolNode : public AbstractNode {
       public:
-        smtAstBvrolNode(triton::uint32 rot, smtAstAbstractNode* expr);
-        smtAstBvrolNode(smtAstAbstractNode* rot, smtAstAbstractNode* expr);
-        smtAstBvrolNode(const smtAstBvrolNode& copy);
-        ~smtAstBvrolNode();
+        BvrolNode(triton::uint32 rot, AbstractNode* expr);
+        BvrolNode(AbstractNode* rot, AbstractNode* expr);
+        BvrolNode(const BvrolNode& copy);
+        ~BvrolNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! ((_ rotate_right rot) expr) node
-    class smtAstBvrorNode : public smtAstAbstractNode {
+    class BvrorNode : public AbstractNode {
       public:
-        smtAstBvrorNode(triton::uint32 rot, smtAstAbstractNode* expr);
-        smtAstBvrorNode(smtAstAbstractNode* rot, smtAstAbstractNode* expr);
-        smtAstBvrorNode(const smtAstBvrorNode& copy);
-        ~smtAstBvrorNode();
+        BvrorNode(triton::uint32 rot, AbstractNode* expr);
+        BvrorNode(AbstractNode* rot, AbstractNode* expr);
+        BvrorNode(const BvrorNode& copy);
+        ~BvrorNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvsdiv <expr1> <expr2>) node
-    class smtAstBvsdivNode : public smtAstAbstractNode {
+    class BvsdivNode : public AbstractNode {
       public:
-        smtAstBvsdivNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvsdivNode(const smtAstBvsdivNode& copy);
-        ~smtAstBvsdivNode();
+        BvsdivNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvsdivNode(const BvsdivNode& copy);
+        ~BvsdivNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvsge <expr1> <expr2>) node
-    class smtAstBvsgeNode : public smtAstAbstractNode {
+    class BvsgeNode : public AbstractNode {
       public:
-        smtAstBvsgeNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvsgeNode(const smtAstBvsgeNode& copy);
-        ~smtAstBvsgeNode();
+        BvsgeNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvsgeNode(const BvsgeNode& copy);
+        ~BvsgeNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvsgt <expr1> <expr2>) node
-    class smtAstBvsgtNode : public smtAstAbstractNode {
+    class BvsgtNode : public AbstractNode {
       public:
-        smtAstBvsgtNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvsgtNode(const smtAstBvsgtNode& copy);
-        ~smtAstBvsgtNode();
+        BvsgtNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvsgtNode(const BvsgtNode& copy);
+        ~BvsgtNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvshl <expr1> <expr2>) node
-    class smtAstBvshlNode : public smtAstAbstractNode {
+    class BvshlNode : public AbstractNode {
       public:
-        smtAstBvshlNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvshlNode(const smtAstBvshlNode& copy);
-        ~smtAstBvshlNode();
+        BvshlNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvshlNode(const BvshlNode& copy);
+        ~BvshlNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvsle <expr1> <expr2>) node
-    class smtAstBvsleNode : public smtAstAbstractNode {
+    class BvsleNode : public AbstractNode {
       public:
-        smtAstBvsleNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvsleNode(const smtAstBvsleNode& copy);
-        ~smtAstBvsleNode();
+        BvsleNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvsleNode(const BvsleNode& copy);
+        ~BvsleNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvslt <expr1> <expr2>) node
-    class smtAstBvsltNode : public smtAstAbstractNode {
+    class BvsltNode : public AbstractNode {
       public:
-        smtAstBvsltNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvsltNode(const smtAstBvsltNode& copy);
-        ~smtAstBvsltNode();
+        BvsltNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvsltNode(const BvsltNode& copy);
+        ~BvsltNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvsmod <expr1> <expr2>) node
-    class smtAstBvsmodNode : public smtAstAbstractNode {
+    class BvsmodNode : public AbstractNode {
       public:
-        smtAstBvsmodNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvsmodNode(const smtAstBvsmodNode& copy);
-        ~smtAstBvsmodNode();
+        BvsmodNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvsmodNode(const BvsmodNode& copy);
+        ~BvsmodNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvsrem <expr1> <expr2>) node
-    class smtAstBvsremNode : public smtAstAbstractNode {
+    class BvsremNode : public AbstractNode {
       public:
-        smtAstBvsremNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvsremNode(const smtAstBvsremNode& copy);
-        ~smtAstBvsremNode();
+        BvsremNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvsremNode(const BvsremNode& copy);
+        ~BvsremNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvsub <expr1> <expr2>) node
-    class smtAstBvsubNode : public smtAstAbstractNode {
+    class BvsubNode : public AbstractNode {
       public:
-        smtAstBvsubNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvsubNode(const smtAstBvsubNode& copy);
-        ~smtAstBvsubNode();
+        BvsubNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvsubNode(const BvsubNode& copy);
+        ~BvsubNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvudiv <expr1> <expr2>) node
-    class smtAstBvudivNode : public smtAstAbstractNode {
+    class BvudivNode : public AbstractNode {
       public:
-        smtAstBvudivNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvudivNode(const smtAstBvudivNode& copy);
-        ~smtAstBvudivNode();
+        BvudivNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvudivNode(const BvudivNode& copy);
+        ~BvudivNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvuge <expr1> <expr2>) node
-    class smtAstBvugeNode : public smtAstAbstractNode {
+    class BvugeNode : public AbstractNode {
       public:
-        smtAstBvugeNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvugeNode(const smtAstBvugeNode& copy);
-        ~smtAstBvugeNode();
+        BvugeNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvugeNode(const BvugeNode& copy);
+        ~BvugeNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvugt <expr1> <expr2>) node
-    class smtAstBvugtNode : public smtAstAbstractNode {
+    class BvugtNode : public AbstractNode {
       public:
-        smtAstBvugtNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvugtNode(const smtAstBvugtNode& copy);
-        ~smtAstBvugtNode();
+        BvugtNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvugtNode(const BvugtNode& copy);
+        ~BvugtNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvule <expr1> <expr2>) node
-    class smtAstBvuleNode : public smtAstAbstractNode {
+    class BvuleNode : public AbstractNode {
       public:
-        smtAstBvuleNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvuleNode(const smtAstBvuleNode& copy);
-        ~smtAstBvuleNode();
+        BvuleNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvuleNode(const BvuleNode& copy);
+        ~BvuleNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvult <expr1> <expr2>) node
-    class smtAstBvultNode : public smtAstAbstractNode {
+    class BvultNode : public AbstractNode {
       public:
-        smtAstBvultNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvultNode(const smtAstBvultNode& copy);
-        ~smtAstBvultNode();
+        BvultNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvultNode(const BvultNode& copy);
+        ~BvultNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvurem <expr1> <expr2>) node
-    class smtAstBvuremNode : public smtAstAbstractNode {
+    class BvuremNode : public AbstractNode {
       public:
-        smtAstBvuremNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvuremNode(const smtAstBvuremNode& copy);
-        ~smtAstBvuremNode();
+        BvuremNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvuremNode(const BvuremNode& copy);
+        ~BvuremNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvxnor <expr1> <expr2>) node
-    class smtAstBvxnorNode : public smtAstAbstractNode {
+    class BvxnorNode : public AbstractNode {
       public:
-        smtAstBvxnorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvxnorNode(const smtAstBvxnorNode& copy);
-        ~smtAstBvxnorNode();
+        BvxnorNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvxnorNode(const BvxnorNode& copy);
+        ~BvxnorNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (bvxor <expr1> <expr2>) node
-    class smtAstBvxorNode : public smtAstAbstractNode {
+    class BvxorNode : public AbstractNode {
       public:
-        smtAstBvxorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstBvxorNode(const smtAstBvxorNode& copy);
-        ~smtAstBvxorNode();
+        BvxorNode(AbstractNode* expr1, AbstractNode* expr2);
+        BvxorNode(const BvxorNode& copy);
+        ~BvxorNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (_ bv<value> <size>) node
-    class smtAstBvNode : public smtAstAbstractNode {
+    class BvNode : public AbstractNode {
       public:
-        smtAstBvNode(triton::uint128 value, triton::uint32 size);
-        smtAstBvNode(const smtAstBvNode& copy);
-        ~smtAstBvNode();
+        BvNode(triton::uint128 value, triton::uint32 size);
+        BvNode(const BvNode& copy);
+        ~BvNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! compound node
-    class smtAstCompoundNode : public smtAstAbstractNode {
+    class CompoundNode : public AbstractNode {
       public:
-        smtAstCompoundNode(std::vector<smtAstAbstractNode*> exprs);
-        smtAstCompoundNode(const smtAstCompoundNode& copy);
-        ~smtAstCompoundNode();
+        CompoundNode(std::vector<AbstractNode*> exprs);
+        CompoundNode(const CompoundNode& copy);
+        ~CompoundNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (concat <expr1> <expr2> ...) node
-    class smtAstConcatNode : public smtAstAbstractNode {
+    class ConcatNode : public AbstractNode {
       public:
-        smtAstConcatNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstConcatNode(std::vector<smtAstAbstractNode* > exprs);
-        smtAstConcatNode(std::list<smtAstAbstractNode* > exprs);
-        smtAstConcatNode(const smtAstConcatNode& copy);
-        ~smtAstConcatNode();
+        ConcatNode(AbstractNode* expr1, AbstractNode* expr2);
+        ConcatNode(std::vector<AbstractNode* > exprs);
+        ConcatNode(std::list<AbstractNode* > exprs);
+        ConcatNode(const ConcatNode& copy);
+        ~ConcatNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! Decimal node
-    class smtAstDecimalNode : public smtAstAbstractNode {
+    class DecimalNode : public AbstractNode {
       protected:
         triton::uint128 value;
 
       public:
-        smtAstDecimalNode(triton::uint128 value);
-        smtAstDecimalNode(const smtAstDecimalNode& copy);
-        ~smtAstDecimalNode();
+        DecimalNode(triton::uint128 value);
+        DecimalNode(const DecimalNode& copy);
+        ~DecimalNode();
 
         triton::uint128 getValue(void);
         virtual void accept(AstVisitor& v);
@@ -539,113 +539,113 @@ namespace triton {
 
 
     //! (declare-fun <name> () bvDecl) node
-    class smtAstDeclareFunctionNode : public smtAstAbstractNode {
+    class DeclareFunctionNode : public AbstractNode {
       public:
-        smtAstDeclareFunctionNode(std::string name, smtAstAbstractNode* bvDecl);
-        smtAstDeclareFunctionNode(const smtAstDeclareFunctionNode& copy);
-        ~smtAstDeclareFunctionNode();
+        DeclareFunctionNode(std::string name, AbstractNode* bvDecl);
+        DeclareFunctionNode(const DeclareFunctionNode& copy);
+        ~DeclareFunctionNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (distinct <expr1> <expr2> ...) node
-    class smtAstDistinctNode : public smtAstAbstractNode {
+    class DistinctNode : public AbstractNode {
       public:
-        smtAstDistinctNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstDistinctNode(const smtAstDistinctNode& copy);
-        ~smtAstDistinctNode();
+        DistinctNode(AbstractNode* expr1, AbstractNode* expr2);
+        DistinctNode(const DistinctNode& copy);
+        ~DistinctNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (= <expr1> <expr2> ...) node
-    class smtAstEqualNode : public smtAstAbstractNode {
+    class EqualNode : public AbstractNode {
       public:
-        smtAstEqualNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstEqualNode(const smtAstEqualNode& copy);
-        ~smtAstEqualNode();
+        EqualNode(AbstractNode* expr1, AbstractNode* expr2);
+        EqualNode(const EqualNode& copy);
+        ~EqualNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! ((_ extract <high> <low>) <expr>) node
-    class smtAstExtractNode : public smtAstAbstractNode {
+    class ExtractNode : public AbstractNode {
       public:
-        smtAstExtractNode(triton::uint32 high, triton::uint32 low, smtAstAbstractNode* expr);
-        smtAstExtractNode(const smtAstExtractNode& copy);
-        ~smtAstExtractNode();
+        ExtractNode(triton::uint32 high, triton::uint32 low, AbstractNode* expr);
+        ExtractNode(const ExtractNode& copy);
+        ~ExtractNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (ite ifExpr thenExpr elseExpr)
-    class smtAstIteNode : public smtAstAbstractNode {
+    class IteNode : public AbstractNode {
       public:
-        smtAstIteNode(smtAstAbstractNode* ifExpr, smtAstAbstractNode* thenExpr, smtAstAbstractNode* elseExpr);
-        smtAstIteNode(const smtAstIteNode& copy);
-        ~smtAstIteNode();
+        IteNode(AbstractNode* ifExpr, AbstractNode* thenExpr, AbstractNode* elseExpr);
+        IteNode(const IteNode& copy);
+        ~IteNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (and <expr1> <expr2>)
-    class smtAstLandNode : public smtAstAbstractNode {
+    class LandNode : public AbstractNode {
       public:
-        smtAstLandNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstLandNode(const smtAstLandNode& copy);
-        ~smtAstLandNode();
+        LandNode(AbstractNode* expr1, AbstractNode* expr2);
+        LandNode(const LandNode& copy);
+        ~LandNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (let ((<alias> <expr2>)) <expr3>)
-    class smtAstLetNode : public smtAstAbstractNode {
+    class LetNode : public AbstractNode {
       public:
-        smtAstLetNode(std::string alias, smtAstAbstractNode* expr2, smtAstAbstractNode* expr3);
-        smtAstLetNode(const smtAstLetNode& copy);
-        ~smtAstLetNode();
+        LetNode(std::string alias, AbstractNode* expr2, AbstractNode* expr3);
+        LetNode(const LetNode& copy);
+        ~LetNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (lnot <expr>)
-    class smtAstLnotNode : public smtAstAbstractNode {
+    class LnotNode : public AbstractNode {
       public:
-        smtAstLnotNode(smtAstAbstractNode* expr);
-        smtAstLnotNode(const smtAstLnotNode& copy);
-        ~smtAstLnotNode();
+        LnotNode(AbstractNode* expr);
+        LnotNode(const LnotNode& copy);
+        ~LnotNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! (or <expr1> <expr2>)
-    class smtAstLorNode : public smtAstAbstractNode {
+    class LorNode : public AbstractNode {
       public:
-        smtAstLorNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
-        smtAstLorNode(const smtAstLorNode& copy);
-        ~smtAstLorNode();
+        LorNode(AbstractNode* expr1, AbstractNode* expr2);
+        LorNode(const LorNode& copy);
+        ~LorNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! Reference node
-    class smtAstReferenceNode : public smtAstAbstractNode {
+    class ReferenceNode : public AbstractNode {
       protected:
         triton::__uint value;
 
       public:
-        smtAstReferenceNode(triton::__uint value);
-        smtAstReferenceNode(const smtAstReferenceNode& copy);
-        ~smtAstReferenceNode();
+        ReferenceNode(triton::__uint value);
+        ReferenceNode(const ReferenceNode& copy);
+        ~ReferenceNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
 
@@ -654,14 +654,14 @@ namespace triton {
 
 
     //! String node
-    class smtAstStringNode : public smtAstAbstractNode {
+    class StringNode : public AbstractNode {
       protected:
         std::string value;
 
       public:
-        smtAstStringNode(std::string value);
-        smtAstStringNode(const smtAstStringNode& copy);
-        ~smtAstStringNode();
+        StringNode(std::string value);
+        StringNode(const StringNode& copy);
+        ~StringNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
 
@@ -670,25 +670,25 @@ namespace triton {
 
 
     //! ((_ sign_extend sizeExt) <expr>) node
-    class smtAstSxNode : public smtAstAbstractNode {
+    class SxNode : public AbstractNode {
       public:
-        smtAstSxNode(triton::uint32 sizeExt, smtAstAbstractNode* expr);
-        smtAstSxNode(const smtAstSxNode& copy);
-        ~smtAstSxNode();
+        SxNode(triton::uint32 sizeExt, AbstractNode* expr);
+        SxNode(const SxNode& copy);
+        ~SxNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! Variable node
-    class smtAstVariableNode : public smtAstAbstractNode {
+    class VariableNode : public AbstractNode {
       protected:
         std::string value;
 
       public:
-        smtAstVariableNode(std::string value);
-        smtAstVariableNode(const smtAstVariableNode& copy);
-        ~smtAstVariableNode();
+        VariableNode(std::string value);
+        VariableNode(const VariableNode& copy);
+        ~VariableNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
 
@@ -697,206 +697,206 @@ namespace triton {
 
 
     //! ((_ zero_extend sizeExt) <expr>) node
-    class smtAstZxNode : public smtAstAbstractNode {
+    class ZxNode : public AbstractNode {
       public:
-        smtAstZxNode(triton::uint32 sizeExt, smtAstAbstractNode* expr);
-        smtAstZxNode(const smtAstZxNode& copy);
-        ~smtAstZxNode();
+        ZxNode(triton::uint32 sizeExt, AbstractNode* expr);
+        ZxNode(const ZxNode& copy);
+        ~ZxNode();
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
     };
 
 
     //! Displays the node in ast representation.
-    std::ostream& operator<<(std::ostream& stream, smtAstAbstractNode* node);
+    std::ostream& operator<<(std::ostream& stream, AbstractNode* node);
 
 
     //! Compares two trees.
-    bool operator==(smtAstAbstractNode& node1, smtAstAbstractNode& node2);
+    bool operator==(AbstractNode& node1, AbstractNode& node2);
 
 
     //! ast C++ api - bv node builder
-    smtAstAbstractNode* bv(triton::uint128 value, triton::uint32 size);
+    AbstractNode* bv(triton::uint128 value, triton::uint32 size);
 
     //! ast C++ api - bvadd node builder
-    smtAstAbstractNode* bvadd(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvadd(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvand node builder
-    smtAstAbstractNode* bvand(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvand(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvashr node builder
-    smtAstAbstractNode* bvashr(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvashr(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvdecl node builder
-    smtAstAbstractNode* bvdecl(triton::uint32 size);
+    AbstractNode* bvdecl(triton::uint32 size);
 
     //! ast C++ api - bvfalse node builder
-    smtAstAbstractNode* bvfalse(void);
+    AbstractNode* bvfalse(void);
 
     //! ast C++ api - bvlshr node builder
-    smtAstAbstractNode* bvlshr(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvlshr(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvmul node builder
-    smtAstAbstractNode* bvmul(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvmul(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvnand node builder
-    smtAstAbstractNode* bvnand(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvnand(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvneg node builder
-    smtAstAbstractNode* bvneg(smtAstAbstractNode* expr);
+    AbstractNode* bvneg(AbstractNode* expr);
 
     //! ast C++ api - bvnor node builder
-    smtAstAbstractNode* bvnor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvnor(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvnot node builder
-    smtAstAbstractNode* bvnot(smtAstAbstractNode* expr);
+    AbstractNode* bvnot(AbstractNode* expr);
 
     //! ast C++ api - bvor node builder
-    smtAstAbstractNode* bvor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvor(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvrol node builder
-    smtAstAbstractNode* bvrol(triton::uint32 rot, smtAstAbstractNode* expr);
+    AbstractNode* bvrol(triton::uint32 rot, AbstractNode* expr);
 
     //! ast C++ api - bvrol node builder
-    smtAstAbstractNode* bvrol(smtAstAbstractNode* rot, smtAstAbstractNode* expr);
+    AbstractNode* bvrol(AbstractNode* rot, AbstractNode* expr);
 
     //! ast C++ api - bvror node builder
-    smtAstAbstractNode* bvror(triton::uint32 rot, smtAstAbstractNode* expr);
+    AbstractNode* bvror(triton::uint32 rot, AbstractNode* expr);
 
     //! ast C++ api - bvror node builder
-    smtAstAbstractNode* bvror(smtAstAbstractNode* rot, smtAstAbstractNode* expr);
+    AbstractNode* bvror(AbstractNode* rot, AbstractNode* expr);
 
     //! ast C++ api - bvsdiv node builder
-    smtAstAbstractNode* bvsdiv(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvsdiv(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvsge node builder
-    smtAstAbstractNode* bvsge(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvsge(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvsgt node builder
-    smtAstAbstractNode* bvsgt(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvsgt(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvshl node builder
-    smtAstAbstractNode* bvshl(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvshl(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvsle node builder
-    smtAstAbstractNode* bvsle(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvsle(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvslt node builder
-    smtAstAbstractNode* bvslt(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvslt(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvsmod node builder
-    smtAstAbstractNode* bvsmod(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvsmod(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvsrem node builder
-    smtAstAbstractNode* bvsrem(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvsrem(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvsub node builder
-    smtAstAbstractNode* bvsub(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvsub(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvtrue node builder
-    smtAstAbstractNode* bvtrue(void);
+    AbstractNode* bvtrue(void);
 
     //! ast C++ api - bvudiv node builder
-    smtAstAbstractNode* bvudiv(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvudiv(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvuge node builder
-    smtAstAbstractNode* bvuge(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvuge(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvugt node builder
-    smtAstAbstractNode* bvugt(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvugt(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvule node builder
-    smtAstAbstractNode* bvule(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvule(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvult node builder
-    smtAstAbstractNode* bvult(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvult(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvurem node builder
-    smtAstAbstractNode* bvurem(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvurem(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvxnor node builder
-    smtAstAbstractNode* bvxnor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvxnor(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - bvxor node builder
-    smtAstAbstractNode* bvxor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* bvxor(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - compound node builder
-    smtAstAbstractNode* compound(std::vector<smtAstAbstractNode* > exprs);
+    AbstractNode* compound(std::vector<AbstractNode* > exprs);
 
     //! ast C++ api - concat node builder
-    smtAstAbstractNode* concat(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* concat(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - concat node builder
-    smtAstAbstractNode* concat(std::vector<smtAstAbstractNode* > exprs);
+    AbstractNode* concat(std::vector<AbstractNode* > exprs);
 
     //! ast C++ api - concat node builder
-    smtAstAbstractNode* concat(std::list<smtAstAbstractNode* > exprs);
+    AbstractNode* concat(std::list<AbstractNode* > exprs);
 
     //! ast C++ api - decimal node builder
-    smtAstAbstractNode* decimal(triton::uint128 value);
+    AbstractNode* decimal(triton::uint128 value);
 
     //! ast C++ api - declare node builder
-    smtAstAbstractNode* declareFunction(std::string name, smtAstAbstractNode* bvDecl);
+    AbstractNode* declareFunction(std::string name, AbstractNode* bvDecl);
 
     //! ast C++ api - distinct node builder
-    smtAstAbstractNode* distinct(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* distinct(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - equal node builder
-    smtAstAbstractNode* equal(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* equal(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - extract node builder
-    smtAstAbstractNode* extract(triton::uint32 high, triton::uint32 low, smtAstAbstractNode* expr);
+    AbstractNode* extract(triton::uint32 high, triton::uint32 low, AbstractNode* expr);
 
     //! ast C++ api - ite node builder
-    smtAstAbstractNode* ite(smtAstAbstractNode* ifExpr, smtAstAbstractNode* thenExpr, smtAstAbstractNode* elseExpr);
+    AbstractNode* ite(AbstractNode* ifExpr, AbstractNode* thenExpr, AbstractNode* elseExpr);
 
     //! ast C++ api - land node builder
-    smtAstAbstractNode* land(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* land(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - let node builder
-    smtAstAbstractNode* let(std::string alias, smtAstAbstractNode* expr2, smtAstAbstractNode* expr3);
+    AbstractNode* let(std::string alias, AbstractNode* expr2, AbstractNode* expr3);
 
     //! ast C++ api - lnot node builder
-    smtAstAbstractNode* lnot(smtAstAbstractNode* expr);
+    AbstractNode* lnot(AbstractNode* expr);
 
     //! ast C++ api - lor node builder
-    smtAstAbstractNode* lor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
+    AbstractNode* lor(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - reference node builder
-    smtAstAbstractNode* reference(triton::__uint value);
+    AbstractNode* reference(triton::__uint value);
 
     //! ast C++ api - assert node builder
-    smtAstAbstractNode* assert_(smtAstAbstractNode* expr);
+    AbstractNode* assert_(AbstractNode* expr);
 
     //! ast C++ api - string node builder
-    smtAstAbstractNode* string(std::string value);
+    AbstractNode* string(std::string value);
 
     //! ast C++ api - sx node builder
-    smtAstAbstractNode* sx(triton::uint32 sizeExt, smtAstAbstractNode* expr);
+    AbstractNode* sx(triton::uint32 sizeExt, AbstractNode* expr);
 
     //! ast C++ api - variable node builder
-    smtAstAbstractNode* variable(std::string variable);
+    AbstractNode* variable(std::string variable);
 
     //! ast C++ api - zx node builder
-    smtAstAbstractNode* zx(triton::uint32 sizeExt, smtAstAbstractNode* expr);
+    AbstractNode* zx(triton::uint32 sizeExt, AbstractNode* expr);
 
     //! ast C++ api - Duplicates the AST
-    smtAstAbstractNode* newInstance(smtAstAbstractNode* node);
+    AbstractNode* newInstance(AbstractNode* node);
 
     //! Garbage collector - This container contains all allocated nodes.
-    extern std::set<smtAstAbstractNode*> allocatedNodes;
+    extern std::set<AbstractNode*> allocatedNodes;
 
     //! Garbage collector - Go through every allocated nodes and free them.
     void freeAllAstNodes(void);
 
     //! Garbage collector - Frees a set of nodes and removes them from the global container.
-    void freeAstNodes(std::set<smtAstAbstractNode*>& nodes);
+    void freeAstNodes(std::set<AbstractNode*>& nodes);
 
     //! Garbage collector - Extracts all unique nodes from a partial AST into the `uniqueNodes` set.
-    void extractUniqueAstNodes(std::set<smtAstAbstractNode*>& uniqueNodes, smtAstAbstractNode* root);
+    void extractUniqueAstNodes(std::set<AbstractNode*>& uniqueNodes, AbstractNode* root);
 
     //! Garbage collector - Records the allocated node or returns the same node if it already exists inside the summaries.
-    smtAstAbstractNode* recordNode(smtAstAbstractNode* node);
+    AbstractNode* recordNode(AbstractNode* node);
 
     //! Custom pow function for hash routine.
     triton::uint512 pow(triton::uint512 hash, triton::uint32 n);

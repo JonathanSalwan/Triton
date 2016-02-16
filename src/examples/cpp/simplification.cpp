@@ -36,7 +36,7 @@ struct op trace[] = {
 
 
 /* if (bvxor x x) -> (_ bv0 x_size) */
-ast::smtAstAbstractNode* xor_simplification(ast::smtAstAbstractNode* node) {
+ast::AbstractNode* xor_simplification(ast::AbstractNode* node) {
 
   if (node->getKind() == ast::BVXOR_NODE) {
     if (*(node->getChilds()[0]) == *(node->getChilds()[1]))

@@ -1100,7 +1100,7 @@ namespace triton {
 
 
       static PyObject* ast_compound(PyObject* self, PyObject* exprsList) {
-        std::vector<triton::ast::smtAstAbstractNode *> exprs;
+        std::vector<triton::ast::AbstractNode *> exprs;
 
         if (exprsList == nullptr || !PyList_Check(exprsList))
           return PyErr_Format(PyExc_TypeError, "compound(): expected a list of SmtAstNodes as first argument");
@@ -1125,7 +1125,7 @@ namespace triton {
 
 
       static PyObject* ast_concat(PyObject* self, PyObject* exprsList) {
-        std::vector<triton::ast::smtAstAbstractNode *> exprs;
+        std::vector<triton::ast::AbstractNode *> exprs;
 
         if (exprsList == nullptr || !PyList_Check(exprsList))
           return PyErr_Format(PyExc_TypeError, "concat(): expected a list of SmtAstNodes as first argument");

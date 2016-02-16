@@ -52,7 +52,7 @@ namespace tracer {
         bool mustBeRestore;
 
         //! AST node state.
-        std::set<triton::ast::smtAstAbstractNode*> nodesList;
+        std::set<triton::ast::AbstractNode*> nodesList;
 
         //! Snapshot of the symbolic engine.
         triton::engines::symbolic::SymbolicEngine *snapshotSymEngine;

@@ -14,7 +14,7 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicExpression::SymbolicExpression(triton::ast::smtAstAbstractNode* node, triton::__uint id, symkind_e kind, std::string comment) : originRegister() {
+      SymbolicExpression::SymbolicExpression(triton::ast::AbstractNode* node, triton::__uint id, symkind_e kind, std::string comment) : originRegister() {
         this->comment       = comment;
         this->ast           = node;
         this->id            = id;
@@ -28,14 +28,14 @@ namespace triton {
       }
 
 
-      triton::ast::smtAstAbstractNode* SymbolicExpression::getAst(void) {
+      triton::ast::AbstractNode* SymbolicExpression::getAst(void) {
         if (this->ast == nullptr)
           throw std::runtime_error("SymbolicExpression::getAst(): No AST defined.");
         return this->ast;
       }
 
 
-      triton::ast::smtAstAbstractNode* SymbolicExpression::getNewAst(void) {
+      triton::ast::AbstractNode* SymbolicExpression::getNewAst(void) {
         if (this->ast == nullptr)
           throw std::runtime_error("SymbolicExpression::getNewAst(): No AST defined.");
         return triton::ast::newInstance(this->ast);
@@ -72,7 +72,7 @@ namespace triton {
       }
 
 
-      void SymbolicExpression::setAst(triton::ast::smtAstAbstractNode* node) {
+      void SymbolicExpression::setAst(triton::ast::AbstractNode* node) {
         this->ast = node;
       }
 

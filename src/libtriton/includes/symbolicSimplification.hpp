@@ -45,7 +45,7 @@ namespace triton {
      *  @{
      */
 
-      typedef triton::ast::smtAstAbstractNode* (*sfp)(triton::ast::smtAstAbstractNode*);
+      typedef triton::ast::AbstractNode* (*sfp)(triton::ast::AbstractNode*);
 
       //! \class SymbolicSimplification
       /*! \brief The symbolic simplification class */
@@ -93,7 +93,7 @@ namespace triton {
           #endif
 
           //! Processes all recorded simplifications. Returns the simplified node.
-          triton::ast::smtAstAbstractNode* processSimplification(triton::ast::smtAstAbstractNode* node, bool z3=false);
+          triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node, bool z3=false);
       };
 
     /*! @} End of symbolic namespace */

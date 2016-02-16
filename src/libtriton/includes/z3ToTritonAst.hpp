@@ -42,7 +42,7 @@ namespace triton {
 
       private:
         //! Vists and converts
-        triton::ast::smtAstAbstractNode* visit(z3::expr const& expr);
+        triton::ast::AbstractNode* visit(z3::expr const& expr);
 
 
       public:
@@ -62,7 +62,7 @@ namespace triton {
         void setExpr(z3::expr& expr);
 
         //! Converts to Triton's AST
-        triton::ast::smtAstAbstractNode* convert(void);
+        triton::ast::AbstractNode* convert(void);
     };
 
   /*! @} End of ast namespace */

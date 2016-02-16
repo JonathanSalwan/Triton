@@ -171,15 +171,15 @@ namespace triton {
       }
 
 
-      triton::ast::smtAstAbstractNode* AstSummaries::browseAstSummaries(triton::ast::smtAstAbstractNode* node) {
+      triton::ast::AbstractNode* AstSummaries::browseAstSummaries(triton::ast::AbstractNode* node) {
         this->allocatedNodes++;
         triton::uint32 kind = node->getKind();
 
         switch (kind) {
 
           case triton::ast::DECIMAL_NODE: {
-            auto value      = static_cast<triton::ast::smtAstDecimalNode*>(node)->getValue();
-            auto summaries  = static_cast<std::map<triton::uint128, triton::ast::smtAstAbstractNode*>*>((this->summaries[kind]));
+            auto value      = static_cast<triton::ast::DecimalNode*>(node)->getValue();
+            auto summaries  = static_cast<std::map<triton::uint128, triton::ast::AbstractNode*>*>((this->summaries[kind]));
             if (summaries->find(value) != summaries->end()) {
               delete node;
               return (*summaries)[value];
@@ -189,8 +189,8 @@ namespace triton {
           }
 
           case triton::ast::REFERENCE_NODE: {
-            auto value      = static_cast<triton::ast::smtAstReferenceNode*>(node)->getValue();
-            auto summaries  = static_cast<std::map<triton::uint128, triton::ast::smtAstAbstractNode*>*>((this->summaries[kind]));
+            auto value      = static_cast<triton::ast::ReferenceNode*>(node)->getValue();
+            auto summaries  = static_cast<std::map<triton::uint128, triton::ast::AbstractNode*>*>((this->summaries[kind]));
             if (summaries->find(value) != summaries->end()) {
               delete node;
               return (*summaries)[value];
@@ -200,8 +200,8 @@ namespace triton {
           }
 
           case triton::ast::STRING_NODE: {
-            auto value      = static_cast<triton::ast::smtAstStringNode*>(node)->getValue();
-            auto summaries  = static_cast<std::map<std::string, triton::ast::smtAstAbstractNode*>*>((this->summaries[kind]));
+            auto value      = static_cast<triton::ast::StringNode*>(node)->getValue();
+            auto summaries  = static_cast<std::map<std::string, triton::ast::AbstractNode*>*>((this->summaries[kind]));
             if (summaries->find(value) != summaries->end()) {
               delete node;
               return (*summaries)[value];
@@ -211,8 +211,8 @@ namespace triton {
           }
 
           case triton::ast::VARIABLE_NODE: {
-            auto value      = static_cast<triton::ast::smtAstVariableNode*>(node)->getValue();
-            auto summaries  = static_cast<std::map<std::string, triton::ast::smtAstAbstractNode*>*>((this->summaries[kind]));
+            auto value      = static_cast<triton::ast::VariableNode*>(node)->getValue();
+            auto summaries  = static_cast<std::map<std::string, triton::ast::AbstractNode*>*>((this->summaries[kind]));
             if (summaries->find(value) != summaries->end()) {
               delete node;
               return (*summaries)[value];
@@ -223,7 +223,7 @@ namespace triton {
 
           default: {
             auto value      = node->getChilds();
-            auto summaries  = static_cast<std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*>*>((this->summaries[kind]));
+            auto summaries  = static_cast<std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*>*>((this->summaries[kind]));
             if (summaries->find(value) != summaries->end()) {
               delete node;
               return (*summaries)[value];

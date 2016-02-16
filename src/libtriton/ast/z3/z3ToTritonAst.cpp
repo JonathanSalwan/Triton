@@ -40,13 +40,13 @@ namespace triton {
     }
 
 
-    smtAstAbstractNode* Z3ToTritonAst::convert(void) {
+    AbstractNode* Z3ToTritonAst::convert(void) {
       return this->visit(this->expr);
     }
 
 
-    smtAstAbstractNode* Z3ToTritonAst::visit(z3::expr const& expr) {
-      smtAstAbstractNode* node = nullptr;
+    AbstractNode* Z3ToTritonAst::visit(z3::expr const& expr) {
+      AbstractNode* node = nullptr;
 
       /* Currently, only support application node */
       if (expr.is_quantifier())
@@ -325,7 +325,7 @@ namespace triton {
           if (expr.num_args() < 2)
             throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_CONCAT must conatin at leat two arguments.");
 
-          std::list<smtAstAbstractNode*> args;
+          std::list<AbstractNode*> args;
           for (triton::uint32 i = 0; i < expr.num_args(); i++) {
             args.push_back(this->visit(expr.arg(i)));
           }

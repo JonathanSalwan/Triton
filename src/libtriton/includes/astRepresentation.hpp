@@ -71,7 +71,7 @@ namespace triton {
           void setMode(enum mode_e mode);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, smtAstAbstractNode* node);
+          std::ostream& print(std::ostream& stream, AbstractNode* node);
       };
 
     /*! @} End of representation namespace */

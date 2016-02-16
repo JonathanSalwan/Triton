@@ -46,7 +46,7 @@ namespace triton {
           //! Constructor.
           virtual ~AstRepresentationInterface(){};
           //! Entry point of print.
-          virtual std::ostream& print(std::ostream& stream, triton::ast::smtAstAbstractNode* node) = 0;
+          virtual std::ostream& print(std::ostream& stream, triton::ast::AbstractNode* node) = 0;
       };
 
 

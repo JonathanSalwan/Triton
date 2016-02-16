@@ -83,7 +83,7 @@ namespace triton {
       PyObject* PySolverModel(triton::engines::solver::SolverModel &model);
 
       //! Creates the SmtAstNode python class.
-      PyObject* PySmtAstNode(triton::ast::smtAstAbstractNode *node);
+      PyObject* PySmtAstNode(triton::ast::AbstractNode *node);
 
       //! Creates the SymbolicExpression python class.
       PyObject* PySymbolicExpression(triton::engines::symbolic::SymbolicExpression *expr);
@@ -163,7 +163,7 @@ namespace triton {
       //! pySmtAstNode object.
       typedef struct {
         PyObject_HEAD
-        triton::ast::smtAstAbstractNode *node;
+        triton::ast::AbstractNode *node;
       } SmtAstNode_Object;
 
       //! pySmtAstNode type.
@@ -238,10 +238,10 @@ namespace triton {
 /*! Returns the triton::engines::solver::SolverModel. */
 #define PySolverModel_AsSolverModel(v) (((triton::bindings::python::SolverModel_Object *)(v))->model)
 
-/*! Checks if the pyObject is a triton::ast::smtAstAbstractNode. */
+/*! Checks if the pyObject is a triton::ast::AbstractNode. */
 #define PySmtAstNode_Check(v) ((v)->ob_type == &triton::bindings::python::SmtAstNode_Type)
 
-/*! Returns the triton::ast::smtAstAbstractNode. */
+/*! Returns the triton::ast::AbstractNode. */
 #define PySmtAstNode_AsSmtAstNode(v) (((triton::bindings::python::SmtAstNode_Object *)(v))->node)
 
 /*! Checks if the pyObject is a triton::engines::symbolic::SymbolicExpression. */
