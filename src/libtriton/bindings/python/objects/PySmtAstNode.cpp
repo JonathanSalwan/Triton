@@ -46,8 +46,12 @@ This object is used to represent each node of the SMT's AST.
 \section SmtAstNode_py_api Python API - Methods of the SmtAstNode class
 <hr>
 
+- **getBitvectorMask(void)**<br>
+Returns the node vector's mask according to its size.<br>
+e.g: `0xffffffff`
+
 - **getBitvectorSize(void)**<br>
-Returns the expression's size.
+Returns the node's size.
 
 - **getChilds(void)**<br>
 Returns the list of the childs as \ref py_SmtAstNode_page.
@@ -79,15 +83,22 @@ namespace triton {
       }
 
 
+      static PyObject* SmtAstNode_getBitvectorMask(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint512(PySmtAstNode_AsSmtAstNode(self)->getBitvectorMask());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* SmtAstNode_getBitvectorSize(PyObject* self, PyObject* noarg) {
         try {
           return Py_BuildValue("k", PySmtAstNode_AsSmtAstNode(self)->getBitvectorSize());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-        catch (const z3::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.msg());
         }
       }
 
@@ -268,6 +279,7 @@ namespace triton {
 
       //! SmtAstNode's methods.
       PyMethodDef SmtAstNode_callbacks[] = {
+        {"getBitvectorMask",  SmtAstNode_getBitvectorMask,  METH_NOARGS,     ""},
         {"getBitvectorSize",  SmtAstNode_getBitvectorSize,  METH_NOARGS,     ""},
         {"getChilds",         SmtAstNode_getChilds,         METH_NOARGS,     ""},
         {"getHash",           SmtAstNode_getHash,           METH_NOARGS,     ""},

@@ -41,8 +41,8 @@ namespace triton {
 
       //! All kind of pseudocode mode.
       enum mode_e {
-        SMT_SYNTAX = 0,   /*!< SMT syntax */
-        PYTHON_SYNTAX,    /*!< Python syntax */
+        SMT_SYNTAX,     /*!< SMT syntax */
+        PYTHON_SYNTAX,  /*!< Python syntax */
         LAST_SYNTAX
       };
 
