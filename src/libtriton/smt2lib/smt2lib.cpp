@@ -236,6 +236,8 @@ namespace triton {
       this->kind = BVDECL_NODE;
       if (!size)
         throw std::runtime_error("triton::smt2lib::smtAstBvdeclNode(): Size connot be equal to zero.");
+      if (size > MAX_BITS_SUPPORTED)
+        throw std::runtime_error("triton::smt2lib::smtAstBvdeclNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
       this->size = size;
       this->addChild(triton::smt2lib::decimal(size));
     }
@@ -1296,6 +1298,8 @@ namespace triton {
       this->kind = BV_NODE;
       if (!size)
         throw std::runtime_error("triton::smt2lib::smtAstBvNode(): Size connot be equal to zero.");
+      if (size > MAX_BITS_SUPPORTED)
+        throw std::runtime_error("triton::smt2lib::smtAstBvNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
       this->size = size;
       this->addChild(triton::smt2lib::decimal(value));
       this->addChild(triton::smt2lib::decimal(size));
@@ -1371,6 +1375,8 @@ namespace triton {
     smtAstConcatNode::smtAstConcatNode(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2) {
       this->kind = CONCAT_NODE;
       this->size = expr1->getBitvectorSize() + expr2->getBitvectorSize();
+      if (size > MAX_BITS_SUPPORTED)
+        throw std::runtime_error("triton::smt2lib::smtAstConcatNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -1388,14 +1394,15 @@ namespace triton {
       this->kind = CONCAT_NODE;
       this->size = 0;
 
-      triton::uint32 size = exprs.size();
-      if (size < 2)
+      if (exprs.size() < 2)
         throw std::length_error("smtAstConcatNode - exprs must contain at least two expressions");
 
-      for (triton::uint32 index = 0; index < size; index++) {
+      for (triton::uint32 index = 0; index < exprs.size(); index++) {
         this->addChild(exprs[index]);
         this->size += exprs[index]->getBitvectorSize();
       }
+      if (this->size > MAX_BITS_SUPPORTED)
+        throw std::runtime_error("triton::smt2lib::smtAstConcatNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
     }
 
 
@@ -1411,6 +1418,8 @@ namespace triton {
         this->addChild(*it);
         this->size += (*it)->getBitvectorSize();
       }
+      if (this->size > MAX_BITS_SUPPORTED)
+        throw std::runtime_error("triton::smt2lib::smtAstConcatNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
     }
 
 
@@ -1896,6 +1905,8 @@ namespace triton {
     smtAstSxNode::smtAstSxNode(triton::uint32 sizeExt, smtAstAbstractNode* expr) {
       this->kind = SX_NODE;
       this->size = sizeExt + expr->getBitvectorSize();
+      if (size > MAX_BITS_SUPPORTED)
+        throw std::runtime_error("triton::smt2lib::smtAstSxNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
       this->addChild(triton::smt2lib::decimal(sizeExt));
       this->addChild(expr);
     }
@@ -1973,6 +1984,8 @@ namespace triton {
     smtAstZxNode::smtAstZxNode(triton::uint32 sizeExt, smtAstAbstractNode* expr) {
       this->kind = ZX_NODE;
       this->size = sizeExt + expr->getBitvectorSize();
+      if (size > MAX_BITS_SUPPORTED)
+        throw std::runtime_error("triton::smt2lib::smtAstZxNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
       this->addChild(triton::smt2lib::decimal(sizeExt));
       this->addChild(expr);
     }

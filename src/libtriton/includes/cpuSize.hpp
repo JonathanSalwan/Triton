@@ -9,37 +9,39 @@
 #define TRITON_CPUSIZE_H
 
 /*! Returns the FLAG size in bit. */
-#define FLAG_SIZE_BIT     1
+#define FLAG_SIZE_BIT 1
 
 /*! Returns the BYTE size in byte. */
-#define BYTE_SIZE         1
+#define BYTE_SIZE 1
 
 /*! Returns the BYTE size in bit. */
-#define BYTE_SIZE_BIT     8
+#define BYTE_SIZE_BIT 8
 
 /*! Returns the WORD size in byte. */
-#define WORD_SIZE         2
+#define WORD_SIZE 2
 
 /*! Returns the WORD size in bit. */
-#define WORD_SIZE_BIT     16
+#define WORD_SIZE_BIT 16
 
 /*! Returns the DWORD size in byte. */
-#define DWORD_SIZE        4
+#define DWORD_SIZE 4
 
 /*! Returns the DWORD size in bit. */
-#define DWORD_SIZE_BIT    32
+#define DWORD_SIZE_BIT 32
 
 /*! Returns the QWORD size in byte. */
-#define QWORD_SIZE        8
+#define QWORD_SIZE 8
 
 /*! Returns the QWORD size in bit. */
-#define QWORD_SIZE_BIT    64
+#define QWORD_SIZE_BIT 64
 
 /*! Returns the DQWORD size in byte. */
-#define DQWORD_SIZE       16
+#define DQWORD_SIZE 16
 
 /*! Returns the DQWORD size in bit. */
-#define DQWORD_SIZE_BIT   128
+#define DQWORD_SIZE_BIT 128
+
+/*! Returns the max bits supported */
+#define MAX_BITS_SUPPORTED 512
 
 #endif /* TRITON_CPUSIZE_H */
-
