@@ -95,14 +95,14 @@ namespace triton {
           */
           bool isRegisterTainted(triton::arch::RegisterOperand& reg);
 
-          //! Sets memory's flag.
+          //! Sets memory flag.
           /*!
             \param mem the memory operand.
             \param flag TAINTED or !TAINTED
           */
           bool setTaintMemory(triton::arch::MemoryOperand& mem, bool flag);
 
-          //! Sets register's flag.
+          //! Sets register flag.
           /*!
             \param reg the register operand.
             \param flag TAINTED or !TAINTED

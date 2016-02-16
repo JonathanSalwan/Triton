@@ -34,7 +34,7 @@ namespace triton {
     class ImmediateOperand : public BitsVector, public OperandInterface {
 
       protected:
-        //! The operand's value.
+        //! The value of the operand.
         triton::__uint value;
 
         //! Copy an ImmediateOperand.
@@ -53,7 +53,7 @@ namespace triton {
         //! Destructor.
         ~ImmediateOperand();
 
-        //! Returns the operand's value.
+        //! Returns the value of the operand.
         triton::__uint getValue(void) const;
 
         //! Returns the highest bit. \sa BitsVector::getHigh()
@@ -62,16 +62,16 @@ namespace triton {
         //! Returns the lower bit. \sa BitsVector::getLow()
         triton::uint32 getAbstractLow(void) const;
 
-        //! Returns the immediate's size in bits
+        //! Returns the size (in bits) of the immediate vector.
         triton::uint32 getBitSize(void) const;
 
-        //! Returns the immediate's size in byte
+        //! Returns the size (in bytes) of the immediate vector.
         triton::uint32 getSize(void) const;
 
-        //! Returns the operand's type.
+        //! Returns the type of the operand.
         triton::uint32 getType(void) const;
 
-        //! Sets the operand's value.
+        //! Sets the value of the operand.
         void setValue(triton::__uint v);
 
         //! Copy an ImmediateOperand.

@@ -45,7 +45,7 @@ namespace triton {
         //! If the operand is an immediate, this attribute is filled.
         RegisterOperand reg;
 
-        //! If the operand's type.
+        //! The type of the operand.
         triton::uint32 type;
 
         //! Immediate constructor.
@@ -60,7 +60,7 @@ namespace triton {
         //! Destructor.
         ~OperandWrapper();
 
-        //! Returns the abstract operand's type.
+        //! Returns the abstract type of the operand.
         triton::uint32 getType(void) const;
 
         //! Returns the immediate operand.
@@ -87,10 +87,10 @@ namespace triton {
         //! Sets the trust flag.
         void setTrust(bool flag);
 
-        //! Returns the abstract operand's size (in bytes).
+        //! Returns the abstract size (in bytes) of the operand.
         triton::uint32 getSize(void);
 
-        //! Returns the abstract operand's size (in bits).
+        //! Returns the abstract size (in bits) of the operand.
         triton::uint32 getBitSize(void);
 
         //! Returns the highest bit position of the abstract operand.

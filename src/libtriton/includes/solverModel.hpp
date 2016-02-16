@@ -39,23 +39,23 @@ namespace triton {
       class SolverModel
       {
         protected:
-          //! The variable's name.
+          //! The name of the variable.
           std::string name;
 
-          //! The variable's id.
+          //! The id of the variable.
           triton::uint32 id;
 
-          //! The model's value.
+          //! The value of the model.
           triton::uint512 value;
 
         public:
-          //! Returns the variable's name.
+          //! Returns the name of the variable.
           std::string getName(void);
 
-          //! Returns the variable's id.
+          //! Returns the id of the variable.
           triton::uint32 getId(void);
 
-          //! Returns the model's value.
+          //! Returns the value of the model.
           triton::uint512 getValue(void);
 
           //! Copies a SolverModel

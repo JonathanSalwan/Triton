@@ -51,13 +51,13 @@ namespace triton {
       class SymbolicExpression {
 
         protected:
-          //! The symbolic expression's kind.
+          //! The kind of the symbolic expression.
           symkind_e kind;
 
-          //! The symbolic expression's root node (AST SMT2-Lib).
+          //! The root node (AST SMT2-Lib) of the symbolic expression.
           smt2lib::smtAstAbstractNode* ast;
 
-          //! The symbolic expression's comment.
+          //! The comment of the symbolic expression.
           std::string comment;
 
           //! The symbolic expression id. This id is unique.
@@ -82,7 +82,7 @@ namespace triton {
           //! Returns true if the symbolic expression is assigned to a register. \sa triton::engines::symbolic::symkind_e
           bool isRegister(void);
 
-          //! Returns the symbolic expression's kind.
+          //! Returns the kind of the symbolic expression.
           symkind_e getKind(void);
 
           //! Returns the SMT AST root node of the symbolic expression. This is the semantics.
@@ -91,10 +91,10 @@ namespace triton {
           //! Returns a new SMT AST root node of the symbolic expression. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
           smt2lib::smtAstAbstractNode* getNewAst(void);
 
-          //! Returns the symbolic expression's comment.
+          //! Returns the comment of the symbolic expression.
           std::string getComment(void);
 
-          //! Returns the symbolic expression's id as string.
+          //! Returns the id as string of the symbolic expression.
           std::string getId2Str(void);
 
           //! Returns the origin memory address if `kind` is equal to `triton::engines::symbolic::MEM`, 0 otherwise.
@@ -106,7 +106,7 @@ namespace triton {
           //! Sets a root node.
           void setAst(smt2lib::smtAstAbstractNode* node);
 
-          //! Sets the symbolic expression's kind.
+          //! Sets the kind of the symbolic expression.
           void setKind(symkind_e k);
 
           //! Sets the origin memory address.

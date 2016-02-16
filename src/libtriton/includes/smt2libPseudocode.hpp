@@ -64,10 +64,10 @@ namespace triton {
           //! Destructor.
           ~Pseudocode();
 
-          //! Returns the pseudocode's mode.
+          //! Returns the pseudocode mode.
           enum mode_e getMode(void);
 
-          //! Sets the pseudocode's mode.
+          //! Sets the pseudocode mode.
           void setMode(enum mode_e mode);
 
           //! Displays the node according to the pseudocode mode.

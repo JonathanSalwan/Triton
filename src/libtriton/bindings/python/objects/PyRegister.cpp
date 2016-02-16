@@ -43,28 +43,28 @@ This object is used to represent a register operand according to the CPU archite
 <hr>
 
 - **getBitSize(void)**<br>
-Returns the register's size in bits as integer.<br>
+Returns the size (in bits) of the register as integer.<br>
 e.g: `64`
 
 - **getBitvector(void)**<br>
 Returns the bitvector as \ref py_Bitvector_page.
 
 - **getConcreteValue(void)**<br>
-Returns the register's concrete value.
+Returns the concrete value assigned to this register operand.
 
 - **getName(void)**<br>
-Returns the register's name as string.<br>
+Returns the name of the register as string.<br>
 e.g: `rbx`
 
 - **getParent(void)**<br>
-Returns the register's parent as string \ref py_Register_page.
+Returns the parent register as \ref py_Register_page.
 
 - **getSize(void)**<br>
-Returns the register's size in bytes as integer.<br>
+Returns the size (in bytes) of the register as integer.<br>
 e.g: `8`
 
 - **getType(void)**<br>
-Returns register's type in bytes as \ref py_OPERAND_page.<br>
+Returns type of the register as \ref py_OPERAND_page.<br>
 
 - **isValid(void)**<br>
 Returns true if the register is valid.
@@ -92,7 +92,7 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      //! Register's Destructor.
+      //! Register destructor.
       void RegisterOperand_dealloc(PyObject* self) {
         delete PyRegisterOperand_AsRegisterOperand(self);
         Py_DECREF(self);
@@ -167,11 +167,11 @@ namespace triton {
         triton::arch::RegisterOperand *reg;
 
         if (!PyLong_Check(value) && !PyInt_Check(value))
-          return PyErr_Format(PyExc_TypeError, "setConcretevalue(): expected an integer as argument");
+          return PyErr_Format(PyExc_TypeError, "Register::setConcretevalue(): Expected an integer as argument.");
 
         reg = PyRegisterOperand_AsRegisterOperand(self);
         if (reg->isFlag())
-          return PyErr_Format(PyExc_TypeError, "setConcreteValue(): You cannot set a concrete value on a flag.");
+          return PyErr_Format(PyExc_TypeError, "Register::setConcreteValue(): You cannot set a concrete value on a flag.");
 
         reg->setConcreteValue(PyLong_AsUint128(value));
         Py_INCREF(Py_None);
@@ -181,7 +181,7 @@ namespace triton {
 
       static PyObject* RegisterOperand_setTrust(PyObject* self, PyObject* flag) {
         if (!PyBool_Check(flag))
-          return PyErr_Format(PyExc_TypeError, "setTrust(): expected a boolean as argument");
+          return PyErr_Format(PyExc_TypeError, "Register::setTrust(): Expected a boolean as argument.");
         PyRegisterOperand_AsRegisterOperand(self)->setTrust(PyLong_AsUint(flag));
         Py_INCREF(Py_None);
         return Py_None;
@@ -201,7 +201,7 @@ namespace triton {
       }
 
 
-      //! Register's methods.
+      //! Register methods.
       PyMethodDef RegisterOperand_callbacks[] = {
         {"getBitSize",        RegisterOperand_getBitSize,       METH_NOARGS,    ""},
         {"getBitvector",      RegisterOperand_getBitvector,     METH_NOARGS,    ""},

@@ -46,7 +46,7 @@ namespace triton {
         //! Returns the lower bit
         triton::uint32 getLow(void) const;
 
-        //! Returns the vector's size
+        //! Returns the size of the vector
         triton::uint32 getVectorSize(void) const;
 
         //! Returns the pair<high, low>
@@ -55,13 +55,13 @@ namespace triton {
         //! Copy a BitsVector.
         void operator=(const BitsVector& other);
 
-        //! Sets the highest bit's position
+        //! Sets the highest bit position
         void setHigh(triton::uint32 v);
 
-        //! Sets the lower bit's position
+        //! Sets the lower bit position
         void setLow(triton::uint32 v);
 
-        //! Sets the pair<high, low>'s position
+        //! Sets the pair<high, low> position
         void setPair(std::pair<triton::uint32, triton::uint32> p);
 
         //! Constructor.

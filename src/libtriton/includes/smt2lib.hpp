@@ -96,13 +96,13 @@ namespace triton {
     //! Abstract node
     class smtAstAbstractNode {
       protected:
-        //! The node's kind.
+        //! The kind of the node.
         enum kind_e kind;
 
-        //! The node's childs.
+        //! The childs of the node.
         std::vector<smtAstAbstractNode*> childs;
 
-        //! The node's size.
+        //! The size of the node.
         triton::uint32 size;
 
       public:
@@ -118,19 +118,19 @@ namespace triton {
         //! Destructor.
         virtual ~smtAstAbstractNode();
 
-        //! Returns the node's kind.
+        //! Returns the kind of the node.
         enum kind_e getKind(void);
 
-        //! Returns the node's size.
+        //! Returns the size of the node.
         triton::uint32 getBitvectorSize(void);
 
-        //! Returns the vector's mask according the node's size.
+        //! Returns the vector mask according the size of the node.
         triton::uint512 getBitvectorMask(void);
 
-        //! Returns the node's childs.
+        //! Returns the childs of the node.
         std::vector<smtAstAbstractNode*>& getChilds(void);
 
-        //! Sets the node's size.
+        //! Sets the size of the node.
         void setBitvectorSize(triton::uint32 size);
 
         //! Adds a child.
@@ -139,7 +139,7 @@ namespace triton {
         //! Entry point for a visitor.
         virtual void accept(Visitor& v) = 0;
 
-        //! Returns the graph's hash. The hash is computed recursively on the whole graph.
+        //! Returns the has of the tree. The hash is computed recursively on the whole tree.
         virtual triton::uint512 hash(triton::uint32 deep) = 0;
     };
 

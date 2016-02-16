@@ -773,7 +773,7 @@ namespace tracer {
       /* Mutex */
       PIN_LockClient();
 
-      /* Collect image's informations */
+      /* Collect image information */
       std::string imagePath     = IMG_Name(img);
       triton::__uint imageBase  = IMG_LowAddress(img);
       triton::__uint imageSize  = (IMG_HighAddress(img) + 1) - imageBase;

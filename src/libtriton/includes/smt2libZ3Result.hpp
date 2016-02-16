@@ -61,7 +61,7 @@ namespace triton {
         //! Returns the expression.
         z3::expr& getExpr(void);
 
-        //! Returns the expression's size.
+        //! Returns the size of the expression.
         triton::uint32 getBitvectorSize(void);
 
         //! Returns the value as string.

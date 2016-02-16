@@ -188,10 +188,10 @@ namespace triton {
         //! [**pseudocode api**] - Display a node according to the pseudocode mode.
         std::ostream& pseudocodeDisplay(std::ostream& stream, smt2lib::smtAstAbstractNode* node);
 
-        //! [**pseudocode api**] - Returns the pseudocode's mode.
+        //! [**pseudocode api**] - Returns the pseudocode mode.
         triton::smt2lib::pseudocode::mode_e getPseudocodeMode(void);
 
-        //! [**pseudocode api**] - Sets the pseudocode's mode.
+        //! [**pseudocode api**] - Sets the pseudocode mode.
         void setPseudocodeMode(triton::smt2lib::pseudocode::mode_e mode);
 
 
@@ -201,7 +201,7 @@ namespace triton {
         //! [**symbolic api**] - Raises an exception if the symbolic engine is not initialized.
         void checkSymbolic(void);
 
-        //! [**symbolic api**] - Returns the symbolic engine's instance.
+        //! [**symbolic api**] - Returns the instance of the symbolic engine.
         triton::engines::symbolic::SymbolicEngine* getSymbolicEngine(void);
 
         //! [**symbolic api**] - Applies a backup of the symbolic engine.
@@ -431,7 +431,7 @@ namespace triton {
         //! [**taint api**] - Raises an exception if the taint engine is not initialized.
         void checkTaint(void);
 
-        //! [**taint api**] - Returns the taint engine's instance.
+        //! [**taint api**] - Returns the instance of the taint engine.
         triton::engines::taint::TaintEngine* getTaintEngine(void);
 
         //! [**taint api**] - Enables or disables the taint engine.
@@ -462,7 +462,7 @@ namespace triton {
         */
         bool isRegisterTainted(triton::arch::RegisterOperand& reg);
 
-        //! [**taint api**] - Sets abstract operand's flag.
+        //! [**taint api**] - Sets abstract flag of the operand.
         /*!
           \param op the abstract operand.
           \param flag TAINTED or !TAINTED
@@ -471,7 +471,7 @@ namespace triton {
         bool setTaint(triton::arch::OperandWrapper& op, bool flag);
 
 
-        //! [**taint api**] - Sets memory's flag.
+        //! [**taint api**] - Sets memory flag.
         /*!
           \param mem the memory operand.
           \param flag TAINTED or !TAINTED
@@ -479,7 +479,7 @@ namespace triton {
         */
         bool setTaintMemory(triton::arch::MemoryOperand& mem, bool flag);
 
-        //! [**taint api**] - Sets register's flag.
+        //! [**taint api**] - Sets register flag.
         /*!
           \param reg the register operand.
           \param flag TAINTED or !TAINTED

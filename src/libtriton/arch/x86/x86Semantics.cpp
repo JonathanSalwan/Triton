@@ -545,7 +545,7 @@ namespace triton {
            * cf = high(res & 1) if op2 != 0 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
-           * op2's concretization.
+           * concretization of the op2.
            */
           smt2lib::smtAstAbstractNode* node;
           if (op2->getKind() != smt2lib::DECIMAL_NODE)
@@ -573,7 +573,7 @@ namespace triton {
            * cf = (res & 1) if op2 != 0 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
-           * op2's concretization.
+           * concretization of the op2.
            */
           smt2lib::smtAstAbstractNode* node;
           if (op2->getKind() != smt2lib::DECIMAL_NODE)
@@ -603,7 +603,7 @@ namespace triton {
            * cf = (res >> bvSize - 1) & 1 if op2 != 0 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
-           * op2's concretization.
+           * concretization of the op2.
            */
           if (op2->getKind() != smt2lib::DECIMAL_NODE)
             throw std::runtime_error("triton::arch::x86::semantics::cfRor_s() - op2 must be a smtAstDecimalNode node");
@@ -839,7 +839,7 @@ namespace triton {
            * of = ((cf ^ (res >> (bvsize - 1))) & 1) if op2 == 1 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
-           * op2's concretization.
+           * concretization of the op2.
            */
           if (op2->getKind() != smt2lib::DECIMAL_NODE)
             throw std::runtime_error("triton::arch::x86::semantics::ofRol_s() - op2 must be a smtAstDecimalNode node");
@@ -879,7 +879,7 @@ namespace triton {
            * of = (((res >> (bvSize - 1)) ^ (res >> (bvSize - 2))) & 1) if op2 == 1 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
-           * op2's concretization.
+           * concretization of the op2.
            */
           if (op2->getKind() != smt2lib::DECIMAL_NODE)
             throw std::runtime_error("triton::arch::x86::semantics::ofRor_s() - op2 must be a smtAstDecimalNode node");
@@ -2465,7 +2465,7 @@ namespace triton {
             case 1: {
               auto src = inst.operands[0];
 
-              /* Operand's size */
+              /* size of the Operand */
               switch (src.getSize()) {
 
                 /* dst = AX */
@@ -4047,8 +4047,8 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(dst);
           /*
-           * Note that the SMT2-LIB doesn't support expression as rotate's value.
-           * The op2 must be the concretization's value.
+           * Note that the SMT2-LIB doesn't support expression as rotate value.
+           * The op2 must be the value of the concretization.
            */
           auto op2 = smt2lib::decimal(src.getConcreteValue());
           auto op3 = triton::api.buildSymbolicOperand(srcCf);
@@ -4089,8 +4089,8 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(dst);
           /*
-           * Note that the SMT2-LIB doesn't support expression as rotate's value.
-           * The op2 must be the concretization's value.
+           * Note that the SMT2-LIB doesn't support expression as rotate value.
+           * The op2 must be the value of the concretization.
            */
           auto op2 = smt2lib::decimal(src.getConcreteValue());
           auto op3 = triton::api.buildSymbolicOperand(srcCf);
@@ -4157,8 +4157,8 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(dst);
           /*
-           * Note that the SMT2-LIB doesn't support expression as rotate's value.
-           * The op2 must be the concretization's value.
+           * Note that the SMT2-LIB doesn't support expression as rotate value.
+           * The op2 must be the value of the concretization.
            */
           auto op2 = smt2lib::decimal(src.getConcreteValue());
 
@@ -4187,8 +4187,8 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(dst);
           /*
-           * Note that the SMT2-LIB doesn't support expression as rotate's value.
-           * The op2 must be the concretization's value.
+           * Note that the SMT2-LIB doesn't support expression as rotate value.
+           * The op2 must be the value of the concretization.
            */
           auto op2 = smt2lib::decimal(src.getConcreteValue());
 

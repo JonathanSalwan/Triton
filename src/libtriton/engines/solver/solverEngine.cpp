@@ -68,13 +68,13 @@ returns a list of triton::engines::solver::SolverModel. Each model for a symboli
 For example, if there are two symbolic variables in your constraint, the triton::API::getModel() function will return a list of two items.
 
 ~~~~~~~~~~~~~{cpp}
-  // Get the RAX's symbolic ID
+  // Get the symbolic id of RAX
   auto raxSymId = api.getSymbolicRegisterId(TRITON_X86_REG_RAX);
 
-  // Get the RAX's full AST
+  // Get the full AST of RAX
   auto raxFullAst = api.getFullAstFromId(raxSymId);
 
-  // Modify RAX's AST to build the constraint
+  // Modify the AST of RAX to build the constraint
   auto constraint = smt2lib::smtAssert(smt2lib::equal(raxFullAst, smt2lib::bv(0, raxFullAst->getBitvectorSize())));
 
   // Ask a model

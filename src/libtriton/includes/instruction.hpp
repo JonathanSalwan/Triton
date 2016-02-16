@@ -43,22 +43,22 @@ namespace triton {
     class Instruction {
 
       protected:
-        //! The instruction's thread id.
+        //! The thread id of the instruction.
         triton::uint32 tid;
 
-        //! The instruction's address.
+        //! The address of the instruction.
         triton::__uint address;
 
-        //! The instruction's disassembly
+        //! The disassembly of the instruction.
         std::stringstream disassembly;
 
-        //! The instruction's opcodes
+        //! The opcodes of the instruction.
         triton::uint8 opcodes[32];
 
-        //! The instruction opcodes' size
+        //! The size of the instruction.
         triton::uint32 opcodesSize;
 
-        //! The instruction's type
+        //! The type of the instruction.
         triton::uint32 type;
 
         //! True if this instruction is a branch.
@@ -74,7 +74,7 @@ namespace triton {
         void copy(const Instruction& other);
 
       public:
-        //! The memory's access list
+        //! The memory access list
         std::list<triton::arch::MemoryOperand> memoryAccess;
 
         //! A registers state
@@ -86,7 +86,7 @@ namespace triton {
         //! A list of operands
         std::vector<triton::arch::OperandWrapper> operands;
 
-        //! The instruction's semantics
+        //! The semantics set of the instruction.
         std::vector<triton::engines::symbolic::SymbolicExpression*> symbolicExpressions;
 
         //! Constructor.
@@ -101,52 +101,52 @@ namespace triton {
         //! Copies an Instruction.
         void operator=(const Instruction& other);
 
-        //! Returns the instruction's tid.
+        //! Returns the thread id of the instruction.
         triton::uint32 getThreadId(void) const;
 
-        //! Sets the instruction's tid.
+        //! Sets the thread id of the instruction.
         void setThreadId(triton::uint32 tid);
 
-        //! Returns the instruction's address.
+        //! Returns the address of the instruction.
         triton::__uint getAddress(void) const;
 
-        //! Returns the next instruction's address.
+        //! Returns the next address of the instruction.
         triton::__uint getNextAddress(void) const;
 
-        //! Sets the instruction's address.
+        //! Sets the address of the instruction.
         void setAddress(triton::__uint addr);
 
-        //! Returns the instruction's disassembly.
+        //! Returns the disassembly of the instruction.
         std::string getDisassembly(void) const;
 
-        //! Returns the instruction's opcodes.
+        //! Returns the opcodes of the instruction.
         const triton::uint8* getOpcodes(void) const;
 
-        //! Returns the instruction's type.
+        //! Returns the type of the instruction.
         triton::uint32 getType(void) const;
 
         //! If there is a concrete value recorded, build the appropriate MemoryOperand. Otherwise, perfrom the analysis based on args.
         triton::arch::MemoryOperand popMemoryAccess(triton::__uint=0, triton::uint32 size=0, triton::uint128 value=0);
 
-        //! Returns the register's state which has been recorded.
+        //! Returns the register state which has been recorded.
         triton::arch::RegisterOperand getRegisterState(triton::uint32 regId);
 
-        //! Sets the instruction's opcodes.
+        //! Sets the opcodes of the instruction.
         void setOpcodes(triton::uint8* opcodes, triton::uint32 size);
 
         //! Returns the instruction opcodes' size
         triton::uint32 getOpcodesSize(void) const;
 
-        //! Sets the instruction's type.
+        //! Sets the type of the instruction.
         void setType(triton::uint32 type);
 
-        //! Sets the instruction's disassembly.
+        //! Sets the disassembly of the instruction.
         void setDisassembly(std::string str);
 
-        //! Records an instruction's context for a memory access.
+        //! Records an instruction context for a memory access.
         void updateContext(MemoryOperand mem);
 
-        //! Records an instruction's context for a register state.
+        //! Records an instruction context for a register state.
         void updateContext(RegisterOperand reg);
 
         //! Adds a symbolic expression
@@ -173,10 +173,10 @@ namespace triton {
         //! Sets flag to define if the condition is taken or not.
         void setConditionTaken(bool flag);
 
-        //! Resets all instruction's information.
+        //! Resets all instruction information.
         void reset(void);
 
-        //! Resets partially instruction's information. All except memory and register states.
+        //! Resets partially instruction information. All except memory and register states.
         void partialReset(void);
     };
 

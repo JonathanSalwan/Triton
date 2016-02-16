@@ -44,7 +44,7 @@ Returns the highest bit position.
 Returns the lower bit position.
 
 - **getVectorSize(void)**<br>
-Returns the vector's size.
+Returns the size of the vector.
 
 */
 
@@ -54,7 +54,7 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      //! Bitvector's Destructor.
+      //! Bitvector destructor.
       void Bitvector_dealloc(PyObject* self) {
         Py_DECREF(self);
       }
@@ -86,7 +86,7 @@ namespace triton {
       }
 
 
-      //! Bitvector's methods.
+      //! Bitvector methods.
       PyMethodDef Bitvector_callbacks[] = {
         {"getHigh",       Bitvector_getHigh,        METH_NOARGS,     ""},
         {"getLow",        Bitvector_getLow,         METH_NOARGS,     ""},

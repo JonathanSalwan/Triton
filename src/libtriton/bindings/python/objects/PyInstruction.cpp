@@ -82,40 +82,40 @@ if __name__ == '__main__':
 <hr>
 
 - **getAddress(void)**<br>
-Returns the instruction's address as integer.
+Returns the address of the instruction as integer.
 
 - **getDisassembly(void)**<br>
-Returns the instruction's disassembly as string.
+Returns the disassembly of the instruction as string.
 
 - **getFirstOperand(void)**<br>
-Returns the first instruction's operands.
+Returns the first operand of the instruction.
 
 - **getNextAddress(void)**<br>
-Returns the next instruction's address as integer.
+Returns the next address of the instruction as integer.
 
 - **getOpcodes(void)**<br>
-Returns the instruction's opcodes as bytes.
+Returns the opcodes of the instruction as bytes.
 
 - **getOpcodesSize(void)**<br>
-Returns the instruction's opcodes size as integer.
+Returns the opcodes size of the instruction as integer.
 
 - **getOperands(void)**<br>
-Returns the instruction's operands as list of \ref py_Immediate_page, \ref py_Memory_page or \ref py_Register_page.
+Returns the operands of the instruction as list of \ref py_Immediate_page, \ref py_Memory_page or \ref py_Register_page.
 
 - **getSecondOperand(void)**<br>
-Returns the second instruction's operands.
+Returns the second operand of the instruction.
 
 - **getThirdOperand(void)**<br>
-Returns the third instruction's operands.
+Returns the third operand of the instruction.
 
 - **getSymbolicExpressions(void)**<br>
-Returns the instruction's symbolic expressions as list of \ref py_SymbolicExpression_page.
+Returns the symbolic expression of the instruction as list of \ref py_SymbolicExpression_page.
 
 - **getThreadId(void)**<br>
-Returns the instruction's thread id as integer.
+Returns the thread id of the instruction as integer.
 
 - **getType(void)**<br>
-Returns the instruction's type as \ref py_OPCODE_page.
+Returns the type of the instruction as \ref py_OPCODE_page.
 
 - **isBranch(void)**<br>
 Returns true if the instruction modifies is a branch (i.e x86: JUMP, JCC).
@@ -130,20 +130,20 @@ Returns true if the instruction modifies the control flow (i.e x86: JUMP, JCC, C
 Returns true if at least one of its \ref py_SymbolicExpression_page is tainted.
 
 - **setAddress(integer addr)**<br>
-Sets the instruction's address.
+Sets the address of the instruction.
 
 - **setOpcodes(bytes opcodes, integer size)**<br>
-Sets the instruction's opcodes.
+Sets the opcodes of the instruction.
 
 - **setThreadId(integer tid)**<br>
-Sets the instruction's thread id.
+Sets the thread id of the instruction.
 
 - **updateContext(\ref py_Memory_page memCtx)**<br>
-Updates the instruction's context by adding a concrete value for a **LOAD** memory access. Please note that you don't have to define a **STORE**
+Updates the context of the instruction by adding a concrete value for a **LOAD** memory access. Please note that you don't have to define a **STORE**
 concrete value, this value will be computed symbolically - **Only LOAD** accesses are necessary.
 
 - **updateContext(\ref py_Register_page regCtx)**<br>
-Updates the instruction's context by adding a concrete value for a specific register. Be careful you cannot update the context on a flag.
+Updates the context of the instruction by adding a concrete value for a specific register. Be careful you cannot update the context on a flag.
 
 */
 
@@ -153,7 +153,7 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      //! Instruction's Destructor.
+      //! Instruction destructor.
       void Instruction_dealloc(PyObject* self) {
         delete PyInstruction_AsInstruction(self);
         Py_DECREF(self);
@@ -179,7 +179,7 @@ namespace triton {
         opSize   = inst->operands.size();
 
         if (opSize < 1) {
-          return PyErr_Format(PyExc_TypeError, "getFirstOperand(): The instruction hasn't operands.");
+          return PyErr_Format(PyExc_TypeError, "Instruction::getFirstOperand(): The instruction hasn't operands.");
         }
 
 
@@ -263,7 +263,7 @@ namespace triton {
         opSize   = inst->operands.size();
 
         if (opSize < 2) {
-          return PyErr_Format(PyExc_TypeError, "getSecondOperand(): The instruction hasn't second operand.");
+          return PyErr_Format(PyExc_TypeError, "Instruction::getSecondOperand(): The instruction hasn't second operand.");
         }
 
 
@@ -310,7 +310,7 @@ namespace triton {
         opSize   = inst->operands.size();
 
         if (opSize < 3) {
-          return PyErr_Format(PyExc_TypeError, "getThirdOperand(): The instruction hasn't third operand.");
+          return PyErr_Format(PyExc_TypeError, "Instruction::getThirdOperand(): The instruction hasn't third operand.");
         }
 
 
@@ -371,7 +371,7 @@ namespace triton {
 
       static PyObject* Instruction_setAddress(PyObject* self, PyObject* addr) {
         if (!PyLong_Check(addr) && !PyInt_Check(addr))
-          return PyErr_Format(PyExc_TypeError, "setAddress(): expected an integer as argument");
+          return PyErr_Format(PyExc_TypeError, "Instruction::setAddress(): Expected an integer as argument.");
         PyInstruction_AsInstruction(self)->setAddress(PyLong_AsUint(addr));
         Py_INCREF(Py_None);
         return Py_None;
@@ -381,10 +381,10 @@ namespace triton {
       static PyObject* Instruction_setOpcodes(PyObject* self, PyObject* opc) {
 
         if (!PyBytes_Check(opc))
-          return PyErr_Format(PyExc_TypeError, "setOpcodes(): expected a bytes array as argument");
+          return PyErr_Format(PyExc_TypeError, "Instruction::setOpcodes(): Expected a bytes array as argument.");
 
         if (PyBytes_Size(opc) >= 32)
-          return PyErr_Format(PyExc_TypeError, "setOpcodes(): Invalid size (too big)");
+          return PyErr_Format(PyExc_TypeError, "Instruction::setOpcodes(): Invalid size (too big).");
 
         PyInstruction_AsInstruction(self)->setOpcodes(reinterpret_cast<triton::uint8*>(PyBytes_AsString(opc)), PyBytes_Size(opc));
         Py_INCREF(Py_None);
@@ -395,7 +395,7 @@ namespace triton {
       static PyObject* Instruction_setThreadId(PyObject* self, PyObject* tid) {
 
         if (!PyLong_Check(tid) && !PyInt_Check(tid))
-          return PyErr_Format(PyExc_TypeError, "setThreadId(): expected an integer as argument");
+          return PyErr_Format(PyExc_TypeError, "Instruction::setThreadId(): Expected an integer as argument.");
 
         PyInstruction_AsInstruction(self)->setThreadId(PyLong_AsUint(tid));
         Py_INCREF(Py_None);
@@ -409,7 +409,7 @@ namespace triton {
         triton::arch::RegisterOperand* regCtx;
 
         if (!PyMemoryOperand_Check(ctx) && !PyRegisterOperand_Check(ctx))
-          return PyErr_Format(PyExc_TypeError, "updateContext(): expected a Memory or Register as argument");
+          return PyErr_Format(PyExc_TypeError, "Instruction::updateContext(): Expected a Memory or Register as argument.");
 
         inst = PyInstruction_AsInstruction(self);
 
@@ -421,7 +421,7 @@ namespace triton {
         else if (PyRegisterOperand_Check(ctx)) {
           regCtx = PyRegisterOperand_AsRegisterOperand(ctx);
           if (regCtx->isFlag())
-            return PyErr_Format(PyExc_TypeError, "updateContext(): You cannot update the context on an isolated flag.");
+            return PyErr_Format(PyExc_TypeError, "Instruction::updateContext(): You cannot update the context on an isolated flag.");
           inst->updateContext(*regCtx);
         }
 
@@ -443,7 +443,7 @@ namespace triton {
       }
 
 
-      //! Instruction's methods.
+      //! Instruction methods.
       PyMethodDef Instruction_callbacks[] = {
         {"getAddress",                Instruction_getAddress,               METH_NOARGS,     ""},
         {"getDisassembly",            Instruction_getDisassembly,           METH_NOARGS,     ""},

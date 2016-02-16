@@ -35,30 +35,30 @@ SymVar_0:64
 <hr>
 
 - **getBitSize(void)**<br>
-Returns the symbolic variable's size as integer.
+Returns the size of the symbolic variable as integer.
 
 - **getComment(void)**<br>
-Returns the symbolic variable's comment as string if exists.
+Returns the comment (if exists) of the symbolic variable as string.
 
 - **getConcreteValue(void)**<br>
-Returns the symbolic variable's concrete value as integer if exists.
+Returns the concrete value (if exists) of the symbolic variable.
 
 - **getId(void)**<br>
-Returns the symbolic variable's id as integer. This id is always unique.<br>
+Returns the id of the symbolic variable as integer. This id is always unique.<br>
 e.g: `18`
 
 - **getKind(void)**<br>
-Returns the symbolic variable's kind as \ref py_SYMEXPR_page.<br>
+Returns the kind of the symbolic variable as \ref py_SYMEXPR_page.<br>
 e.g: `SYMEXPR.REG`
 
 - **getKindValue(void)**<br>
-Returns the kind's value according to the \ref py_SYMEXPR_page.<br>
-If `getKind()` returns triton::engines::symbolic::REG, so `getKindValue()` returns the register's id.<br>
-Otherwise, if `getKind()` returns triton::engines::symbolic::MEM, so `getKindValue()` returns the memory address.<br>
+Returns the kind value according to the \ref py_SYMEXPR_page.<br>
+If `getKind()` returns triton::engines::symbolic::REG, so `getKindValue()` returns the if of the register.<br>
+Otherwise, if `getKind()` returns triton::engines::symbolic::MEM, so `getKindValue()` returns the address of the memory access.<br>
 Then, if `getKind()` returns triton::engines::symbolic::UNDEF, so `getKindValue()` returns `0`.
 
 - **getName(void)**<br>
-Returns the symbolic variable's name as string.<br>
+Returns name of the the symbolic variable as string.<br>
 e.g: `SymVar_18`
 
 - **hasConcreteValue(void)**<br>
@@ -75,7 +75,7 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      //! SymbolicVariable's Destructor.
+      //! SymbolicVariable destructor.
       void SymbolicVariable_dealloc(PyObject* self) {
         Py_DECREF(self);
       }
@@ -127,7 +127,7 @@ namespace triton {
         triton::engines::symbolic::SymbolicVariable *symVar;
 
         if (!PyLong_Check(value) && !PyInt_Check(value))
-          return PyErr_Format(PyExc_TypeError, "setConcretevalue(): expected an integer as argument");
+          return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setConcretevalue(): Expected an integer as argument.");
 
         symVar = PySymbolicVariable_AsSymbolicVariable(self);
         symVar->setSymVarConcreteValue(PyLong_AsUint128(value));
@@ -149,7 +149,7 @@ namespace triton {
       }
 
 
-      //! SymbolicVariable's methods.
+      //! SymbolicVariable methods.
       PyMethodDef SymbolicVariable_callbacks[] = {
         {"getBitSize",        SymbolicVariable_getBitSize,        METH_NOARGS,    ""},
         {"getComment",        SymbolicVariable_getComment,        METH_NOARGS,    ""},

@@ -50,14 +50,14 @@ This object is used to represent a memory access operand.
 <hr>
 
 - **getAddress(void)**<br>
-Returns the memory access targer's address.<br>
+Returns the target address of the memory access.<br>
 e.g: `0x7fffdd745ae0`
 
 - **getBaseRegister(void)**<br>
-Returns the memory's base register as \ref py_Register_page if exists.<br>
+Returns the base register (if exists) of the  memory access as \ref py_Register_page.<br>
 
 - **getBitSize(void)**<br>
-Returns the memory access' size in bits as integer.<br>
+Returns the size (in bits) of the memory access as integer.<br>
 e.g: `64`
 
 - **getBitvector(void)**<br>
@@ -67,38 +67,38 @@ Returns the bitvector as \ref py_Bitvector_page.
 Returns the concrete value as integer. It's basically the content which has been LOADED or STORED.
 
 - **getDisplacement(void)**<br>
-Returns the memory's displacement as \ref py_Immediate_page if exists.
+Returns the displacement (if exists) of the memory access as \ref py_Immediate_page.
 
 - **getIndexRegister(void)**<br>
-Returns the memory's index register as \ref py_Register_page if exists.<br>
+Returns the index register (if exists) of the memory access as \ref py_Register_page.<br>
 
 - **getScale(void)**<br>
-Returns the memory's scale as \ref py_Immediate_page if exists.
+Returns the scale (if exists) of the  memory access as \ref py_Immediate_page.
 
 - **getSize(void)**<br>
-Returns the memory access' size in bytes as integer.<br>
+Returns the size (in bytes) of the  memory access as integer.<br>
 e.g: `8`
 
 - **getType(void)**<br>
-Returns memory's type in bytes as \ref py_OPERAND_page.
+Returns type of the memory access as \ref py_OPERAND_page.
 
 - **isTrusted(void)**<br>
 True if this concrete memory value is trusted and synchronized with the real MMU value.
 
 - **setBaseRegister(\ref py_Register_page reg)**<br>
-Sets the memory's base register.
+Sets the base register of the memory access.
 
 - **setConcreteValue(integer value)**<br>
 Sets a concrete value to this memory access.
 
 - **setDisplacement(\ref py_Immediate_page imm)**<br>
-Sets the memory's displacement.
+Sets the displacement of the memory access.
 
 - **setIndexRegister(\ref py_Register_page reg)**<br>
-Sets the memory's index register.
+Sets the index register of the memory' access.
 
 - **setScale(\ref py_Immediate_page imm)**<br>
-Sets the memory's scale.
+Sets the scale of the memory access.
 
 - **setTrust(bool flag)**<br>
 Sets the trust flag.
@@ -111,7 +111,7 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      //! Memory's Destructor.
+      //! Memory destructor.
       void MemoryOperand_dealloc(PyObject* self) {
         delete PyMemoryOperand_AsMemoryOperand(self);
         Py_DECREF(self);
@@ -183,7 +183,7 @@ namespace triton {
         triton::arch::MemoryOperand *mem;
 
         if (!PyRegisterOperand_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "setBaseRegister(): expected a Register as argument");
+          return PyErr_Format(PyExc_TypeError, "Memory::setBaseRegister(): Expected a Register as argument.");
 
         mem = PyMemoryOperand_AsMemoryOperand(self);
         mem->setBaseRegister(*PyRegisterOperand_AsRegisterOperand(reg));
@@ -196,7 +196,7 @@ namespace triton {
         triton::arch::MemoryOperand *mem;
 
         if (!PyLong_Check(value) && !PyInt_Check(value))
-          return PyErr_Format(PyExc_TypeError, "setConcretevalue(): expected an integer as argument");
+          return PyErr_Format(PyExc_TypeError, "Memory::setConcretevalue(): Expected an integer as argument.");
 
         mem = PyMemoryOperand_AsMemoryOperand(self);
         mem->setConcreteValue(PyLong_AsUint128(value));
@@ -209,7 +209,7 @@ namespace triton {
         triton::arch::MemoryOperand *mem;
 
         if (!PyImmediateOperand_Check(imm))
-          return PyErr_Format(PyExc_TypeError, "setDisplacement(): expected an Immediate as argument");
+          return PyErr_Format(PyExc_TypeError, "Memory::setDisplacement(): Expected an Immediate as argument.");
 
         mem = PyMemoryOperand_AsMemoryOperand(self);
         mem->setDisplacement(*PyImmediateOperand_AsImmediateOperand(imm));
@@ -222,7 +222,7 @@ namespace triton {
         triton::arch::MemoryOperand *mem;
 
         if (!PyRegisterOperand_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "setIndexRegister(): expected a Register as argument");
+          return PyErr_Format(PyExc_TypeError, "Memory::setIndexRegister(): Expected a Register as argument.");
 
         mem = PyMemoryOperand_AsMemoryOperand(self);
         mem->setIndexRegister(*PyRegisterOperand_AsRegisterOperand(reg));
@@ -235,7 +235,7 @@ namespace triton {
         triton::arch::MemoryOperand *mem;
 
         if (!PyImmediateOperand_Check(imm))
-          return PyErr_Format(PyExc_TypeError, "setScale(): expected an Immediate as argument");
+          return PyErr_Format(PyExc_TypeError, "Memory::setScale(): Expected an Immediate as argument.");
 
         mem = PyMemoryOperand_AsMemoryOperand(self);
         mem->setScale(*PyImmediateOperand_AsImmediateOperand(imm));
@@ -246,7 +246,7 @@ namespace triton {
 
       static PyObject* MemoryOperand_setTrust(PyObject* self, PyObject* flag) {
         if (!PyBool_Check(flag))
-          return PyErr_Format(PyExc_TypeError, "setTrust(): expected a boolean as argument");
+          return PyErr_Format(PyExc_TypeError, "Memory::setTrust(): Expected a boolean as argument.");
         PyMemoryOperand_AsMemoryOperand(self)->setTrust(PyLong_AsUint(flag));
         Py_INCREF(Py_None);
         return Py_None;
@@ -266,7 +266,7 @@ namespace triton {
       }
 
 
-      //! Memory's methods.
+      //! Memory methods.
       PyMethodDef MemoryOperand_callbacks[] = {
         {"getAddress",        MemoryOperand_getAddress,       METH_NOARGS,      ""},
         {"getBaseRegister",   MemoryOperand_getBaseRegister,  METH_NOARGS,      ""},

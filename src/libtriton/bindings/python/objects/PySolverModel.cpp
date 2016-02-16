@@ -64,13 +64,13 @@ SymVar_0 = 287454020
 <hr>
 
 - **getId(void)**<br>
-Returns the model's id. This id is the same that the variable id.
+Returns the if of the model as integer. This id is the same that the variable id.
 
 - **getName(void)**<br>
-Returns the model's name. This name is the same that the variable name.
+Returns the name of the model as string. This name is the same that the variable name.
 
 - **getValue(void)**<br>
-Returns the model's value.
+Returns the value of the model as integer.
 
 */
 
@@ -80,7 +80,7 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      //! SolverModel's Destructor.
+      //! SolverModel destructor.
       void SolverModel_dealloc(PyObject* self) {
         delete PySolverModel_AsSolverModel(self);
         Py_DECREF(self);
@@ -115,7 +115,7 @@ namespace triton {
       }
 
 
-      //! SolverModel's methods.
+      //! SolverModel methods.
       PyMethodDef SolverModel_callbacks[] = {
         {"getId",     SolverModel_getId,      METH_NOARGS,    ""},
         {"getName",   SolverModel_getName,    METH_NOARGS,    ""},

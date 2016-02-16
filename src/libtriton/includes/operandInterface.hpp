@@ -27,7 +27,7 @@ namespace triton {
    *  @{
    */
 
-    //! Operand's type
+    //! Type Operand
     enum operandType_e {
       OP_INVALID = 0, //!< invalid operand
       OP_IMM,         //!< immediate operand
@@ -44,21 +44,21 @@ namespace triton {
         //! Destructor.
         virtual ~OperandInterface() {};
 
-        //! Returns the operand's size (in bit).
+        //! Returns the size (in bits) of the operand.
         virtual triton::uint32 getBitSize(void) const = 0;
 
-        //! Returns the operand's size (in byte).
+        //! Returns the size (in bytes) of the operand.
         virtual triton::uint32 getSize(void) const = 0;
 
-        //! Returns the operand's highest bit.
+        //! Returns the highest bit of the operand vector.
         /*! \sa BitsVector::getHigh() */
         virtual triton::uint32 getAbstractHigh(void) const = 0;
 
-        //! Returns the operand's lower bit.
+        //! Returns the lower bit of the operand vector.
         /*! \sa BitsVector::getLow() */
         virtual triton::uint32 getAbstractLow(void) const = 0;
 
-        //! Returns the operand's type (Imm, Mem, Reg).
+        //! Returns the type of the operand (`Imm`, `Mem`, `Reg`).
         virtual triton::uint32 getType(void) const = 0;
 
     };

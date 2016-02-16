@@ -86,14 +86,14 @@ rax:64 bv[63..0]
 Returns the SMT AST root node of the symbolic expression as \ref py_SmtAstNode_page. This is the semantics.
 
 - **getComment(void)**<br>
-Returns the symbolic expression's comment as string if exists.
+Returns the comment (if exists) of the symbolic expression as string.
 
 - **getId(void)**<br>
-Returns the symbolic expression's id as integer. This id is always unique.<br>
+Returns the if of the symbolic expression as integer. This id is always unique.<br>
 e.g: `2387`
 
 - **getKind(void)**<br>
-Returns the symbolic expression's kind as \ref py_SYMEXPR_page.<br>
+Returns the kind of the symbolic expression as \ref py_SYMEXPR_page.<br>
 e.g: `SYMEXPR.REG`
 
 - **getNewAst(void)**<br>
@@ -125,7 +125,7 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      //! SymbolicExpression's Destructor.
+      //! SymbolicExpression destructor.
       void SymbolicExpression_dealloc(PyObject* self) {
         Py_DECREF(self);
       }
@@ -189,7 +189,7 @@ namespace triton {
 
       static PyObject* SymbolicExpression_setAst(PyObject* self, PyObject* node) {
         if (!PySmtAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "setAst(): expected a SmtAstNode as argument");
+          return PyErr_Format(PyExc_TypeError, "SymbolicExpression::setAst(): Expected a SmtAstNode as argument.");
         PySymbolicExpression_AsSymbolicExpression(self)->setAst(PySmtAstNode_AsSmtAstNode(node));
         Py_INCREF(Py_None);
         return Py_None;
@@ -209,7 +209,7 @@ namespace triton {
       }
 
 
-      //! SymbolicExpression's methods.
+      //! SymbolicExpression methods.
       PyMethodDef SymbolicExpression_callbacks[] = {
         {"getAst",            SymbolicExpression_getAst,            METH_NOARGS,    ""},
         {"getComment",        SymbolicExpression_getComment,        METH_NOARGS,    ""},

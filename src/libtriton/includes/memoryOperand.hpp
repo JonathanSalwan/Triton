@@ -77,16 +77,16 @@ namespace triton {
         //! Destructor.
         ~MemoryOperand();
 
-        //! Returns the memory's address.
+        //! Returns the address of the memory.
         triton::__uint getAddress(void) const;
 
-        //! Returns the memory's highest bit. \sa BitsVector::getHigh()
+        //! Returns the highest bit of the memory vector. \saa BitsVector::getHigh()
         triton::uint32 getAbstractHigh(void) const;
 
-        //! Returns the memory's lower bit. \sa BitsVector::getLow()
+        //! Returns the lower bit of the memory vector. \sa BitsVector::getLow()
         triton::uint32 getAbstractLow(void) const;
 
-        //! Returns the memory's size (in bit).
+        //! Returns the size (in bits) of the memory vector.
         triton::uint32 getBitSize(void) const;
 
         //! Returnts the concrete value (content of the access)
@@ -95,10 +95,10 @@ namespace triton {
         //! LEA - Gets pc relative.
         triton::__uint getPcRelative(void) const;
 
-        //! Returns the memory's size (in byte).
+        //! Returns the size (in bytes) of the memory vector.
         triton::uint32 getSize(void) const;
 
-        //! Returns the operand's type.
+        //! Returns the type of the operand.
         triton::uint32 getType(void) const;
 
         //! LEA - Returns the base register operand.
@@ -122,10 +122,10 @@ namespace triton {
         //! Sets the trust flag.
         void setTrust(bool flag);
 
-        //! Sets the memory's address.
+        //! Sets the address of the memory access.
         void setAddress(triton::__uint addr);
 
-        //! Sets the memory's concrete value.
+        //! Sets the concrete value of the memory access.
         void setConcreteValue(triton::uint128 concreteValue);
 
         //! LEA - Sets pc relative.

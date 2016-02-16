@@ -39,13 +39,13 @@ namespace triton {
     class RegisterOperand : public BitsVector, public OperandInterface {
 
       protected:
-        //! The register's name.
+        //! The name of the register.
         std::string name;
 
-        //! The register's id.
+        //! The id of the register.
         triton::uint32 id;
 
-        //! The register parent's id.
+        //! The parent id of the register.
         triton::uint32 parent;
 
         //! The concrete value (content of the register)
@@ -76,7 +76,7 @@ namespace triton {
         //! Destructor.
         ~RegisterOperand();
 
-        //! Returns the register parent's id.
+        //! Returns the parent id of the register.
         RegisterOperand getParent(void) const;
 
         //! Returns true if the register is valid.
@@ -94,25 +94,25 @@ namespace triton {
         //! Sets the trust flag.
         void setTrust(bool flag);
 
-        //! Returns the register's name.
+        //! Returns the name of the register.
         std::string getName(void) const;
 
-        //! Returns the register's highest bit. \sa BitsVector::getHigh()
+        //! Returns the highest bit of the register vector. \sa BitsVector::getHigh()
         triton::uint32 getAbstractHigh(void) const;
 
-        //! Returns the register's lower bit. \sa BitsVector::getLow()
+        //! Returns the lower bit of the register vector. \sa BitsVector::getLow()
         triton::uint32 getAbstractLow(void) const;
 
-        //! Returns the register's size (in bit).
+        //! Returns the size (in bits) of the register.
         triton::uint32 getBitSize(void) const;
 
-        //! Returns the register's id.
+        //! Returns the id of the register.
         triton::uint32 getId(void) const;
 
-        //! Returns the register's size (in byte).
+        //! Returns the size (in bytes) of the register.
         triton::uint32 getSize(void) const;
 
-        //! Returns the operand's type.
+        //! Returns the type of the operand.
         triton::uint32 getType(void) const;
 
         //! Returns the concrete value.
@@ -121,13 +121,13 @@ namespace triton {
         //! Copies a RegisterOperand.
         void operator=(const RegisterOperand& other);
 
-        //! Sets the register's id.
+        //! Sets the id of the register.
         void setId(triton::uint32 reg);
 
-        //! Sets the register parent's id.
+        //! Sets the parent id of the register.
         void setParent(triton::uint32 reg);
 
-        //! Sets the register's concrete value. This method cannot be called on a flag.
+        //! Sets the concrete value of the register. This method cannot be called on a flag.
         void setConcreteValue(triton::uint128 concreteValue);
 
     };

@@ -39,24 +39,24 @@ This object is used to represent an immediate operand.
 <hr>
 
 - **getBitSize(void)**<br>
-Returns the immediate's size in bits as integer.<br>
+Returns the size (in bits) of the immediate as integer.<br>
 e.g: `64`
 
 - **getBitvector(void)**<br>
 Returns the bitvector as \ref py_Bitvector_page.
 
 - **getSize(void)**<br>
-Returns immediate's size in bytes as integer.<br>
+Returns the size (in bytes) of the immediate as integer.<br>
 e.g: `8`
 
 - **getType(void)**<br>
-Returns immediate's type in bytes as \ref py_OPERAND_page.<br>
+Returns the type of the immediate as \ref py_OPERAND_page.<br>
 
 - **getValue(void)**<br>
-Returns the immediate's value.
+Returns the immediate value.
 
 - **setValue(void)**<br>
-Sets the immediate's value.
+Sets the immediate value.
 
 */
 
@@ -66,7 +66,7 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      //! Immediate's Destructor.
+      //! Immediate destructor.
       void ImmediateOperand_dealloc(PyObject* self) {
         delete PyImmediateOperand_AsImmediateOperand(self);
         Py_DECREF(self);
@@ -120,7 +120,7 @@ namespace triton {
       }
 
 
-      //! Immediate's methods.
+      //! Immediate methods.
       PyMethodDef ImmediateOperand_callbacks[] = {
         {"getBitSize",    ImmediateOperand_getBitSize,     METH_NOARGS,     ""},
         {"getBitvector",  ImmediateOperand_getBitvector,   METH_NOARGS,     ""},

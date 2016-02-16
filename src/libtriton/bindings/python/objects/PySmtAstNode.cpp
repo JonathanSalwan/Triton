@@ -24,7 +24,7 @@
 \section py_SmtAstNode_description Description
 <hr>
 
-This object is used to represent each node of the SMT's AST.
+This object is used to represent each AST node of an expression.
 
 ~~~~~~~~~~~~~{.py}
 >>> node = bvadd(bv(1, 8), bvxor(bv(10, 8), bv(20, 8)))
@@ -47,11 +47,11 @@ This object is used to represent each node of the SMT's AST.
 <hr>
 
 - **getBitvectorMask(void)**<br>
-Returns the node vector's mask according to its size.<br>
+Returns the mask of the node vector according to its size.<br>
 e.g: `0xffffffff`
 
 - **getBitvectorSize(void)**<br>
-Returns the node's size.
+Returns the node vector size.
 
 - **getChilds(void)**<br>
 Returns the list of the childs as \ref py_SmtAstNode_page.
@@ -64,7 +64,7 @@ Returns the kind of the node as \ref py_SMT_AST_NODE_page.<br>
 e.g: `SMT_AST_NODE.BVADD`
 
 - **getValue(void)**<br>
-Returns the node's value as integer or string (it depends of the kind). For example if the node's kind is `decimal`, the value is an integer.
+Returns the node value as integer or string (it depends of the kind). For example if the kind of node is `decimal`, the value is an integer.
 
 - **setChild(integer index, SmtAstNode node)**<br>
 Replaces a child node.
@@ -77,7 +77,7 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      //! SmtAstNode's Destructor.
+      //! SmtAstNode destructor.
       void SmtAstNode_dealloc(PyObject* self) {
         Py_DECREF(self);
       }
@@ -132,13 +132,16 @@ namespace triton {
         if (node->getKind() == triton::smt2lib::DECIMAL_NODE)
           return PyLong_FromUint128(reinterpret_cast<triton::smt2lib::smtAstDecimalNode *>(node)->getValue());
 
-        else if (node->getKind() == triton::smt2lib::STRING_NODE)
-          return Py_BuildValue("s", reinterpret_cast<triton::smt2lib::smtAstStringNode *>(node)->getValue().c_str());
-
         else if (node->getKind() == triton::smt2lib::REFERENCE_NODE)
           return PyLong_FromUint(reinterpret_cast<triton::smt2lib::smtAstReferenceNode *>(node)->getValue());
 
-        return PyErr_Format(PyExc_TypeError, "SmtAstNode.getValue() - Cannot use getValue() on this kind of node");
+        else if (node->getKind() == triton::smt2lib::STRING_NODE)
+          return Py_BuildValue("s", reinterpret_cast<triton::smt2lib::smtAstStringNode *>(node)->getValue().c_str());
+
+        else if (node->getKind() == triton::smt2lib::VARIABLE_NODE)
+          return Py_BuildValue("s", reinterpret_cast<triton::smt2lib::smtAstVariableNode *>(node)->getValue().c_str());
+
+        return PyErr_Format(PyExc_TypeError, "SmtAstNode::getValue(): Cannot use getValue() on this kind of node.");
       }
 
 
@@ -151,16 +154,16 @@ namespace triton {
         PyArg_ParseTuple(args, "|OO", &index, &node);
 
         if (index == nullptr || (!PyLong_Check(index) && !PyInt_Check(index)))
-          return PyErr_Format(PyExc_TypeError, "setChild(): expected an index (integer) as first argument");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::setChild(): Expected an index (integer) as first argument.");
 
         if (node == nullptr || !PySmtAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "setChild(): expected a SmtAstNode as second argument");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::setChild(): Expected a SmtAstNode as second argument.");
 
         i = PyLong_AsUint(index);
         src = PySmtAstNode_AsSmtAstNode(node);
         dst = PySmtAstNode_AsSmtAstNode(self);
         if (i >= dst->getChilds().size())
-          return PyErr_Format(PyExc_TypeError, "setChild(): index out-of-range");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::setChild(): index out-of-range.");
 
         dst->getChilds()[i] = src;
 
@@ -188,96 +191,96 @@ namespace triton {
 
       static PyObject* SmtAstNode_operatorAdd(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorAdd(): Expected a SmtAstNode as arguments.");
         return PySmtAstNode(smt2lib::bvadd(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorSub(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorSub(): Expected a SmtAstNode as arguments.");
         return PySmtAstNode(smt2lib::bvsub(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorMul(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorMul(): Expected a SmtAstNode as arguments.");
         return PySmtAstNode(smt2lib::bvmul(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorDiv(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorDiv(): Expected a SmtAstNode as arguments.");
         return PySmtAstNode(smt2lib::bvsdiv(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorRem(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorRem(): Expected a SmtAstNode as arguments.");
         return PySmtAstNode(smt2lib::bvsrem(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorMod(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorMod(): Expected a SmtAstNode as arguments.");
         return PySmtAstNode(smt2lib::bvsmod(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorNeg(PyObject* node) {
         if (!PySmtAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as argument");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorNeg(): Expected a SmtAstNode as argument.");
         return PySmtAstNode(smt2lib::bvneg(PySmtAstNode_AsSmtAstNode(node)));
       }
 
 
       static PyObject* SmtAstNode_operatorNot(PyObject* node) {
         if (!PySmtAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as argument");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorNot(): Expected a SmtAstNode as argument.");
         return PySmtAstNode(smt2lib::bvnot(PySmtAstNode_AsSmtAstNode(node)));
       }
 
 
       static PyObject* SmtAstNode_operatorShl(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorShl(): Expected a SmtAstNode as arguments.");
         return PySmtAstNode(smt2lib::bvshl(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorShr(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorShr(): Expected a SmtAstNode as arguments.");
         return PySmtAstNode(smt2lib::bvlshr(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorAnd(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorAnd(): Expected a SmtAstNode as arguments.");
         return PySmtAstNode(smt2lib::bvand(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorXor(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorXor(): Expected a SmtAstNode as arguments.");
         return PySmtAstNode(smt2lib::bvxor(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorOr(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "operator(): expected a SmtAstNode as arguments");
+          return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorOr(): Expected a SmtAstNode as arguments.");
         return PySmtAstNode(smt2lib::bvor(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
-      //! SmtAstNode's methods.
+      //! SmtAstNode methods.
       PyMethodDef SmtAstNode_callbacks[] = {
         {"getBitvectorMask",  SmtAstNode_getBitvectorMask,  METH_NOARGS,     ""},
         {"getBitvectorSize",  SmtAstNode_getBitvectorSize,  METH_NOARGS,     ""},

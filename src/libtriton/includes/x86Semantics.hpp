@@ -45,7 +45,7 @@ namespace triton {
 
       /* Utils ================================================================================= */
 
-      //! Builds the instruction's semantics.
+      //! Builds the semantics of the instruction.
       void build(triton::arch::Instruction& inst);
 
 

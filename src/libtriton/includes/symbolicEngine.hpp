@@ -112,7 +112,7 @@ namespace triton {
 
         public:
 
-          //! Symbolic register's state.
+          //! Symbolic register state.
           triton::__uint* symbolicReg;
 
           //! Creates a new symbolic expression.
