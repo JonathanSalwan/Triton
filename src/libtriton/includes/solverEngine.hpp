@@ -15,7 +15,7 @@
 
 #include <z3++.h>
 
-#include "smt2lib.hpp"
+#include "ast.hpp"
 #include "solverModel.hpp"
 #include "tritonTypes.hpp"
 
@@ -54,7 +54,7 @@ namespace triton {
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          std::map<triton::uint32, SolverModel> getModel(smt2lib::smtAstAbstractNode *node);
+          std::map<triton::uint32, SolverModel> getModel(triton::ast::smtAstAbstractNode *node);
 
           //! Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
           /*! \brief list of map of symbolic variable id -> model
@@ -63,10 +63,10 @@ namespace triton {
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          std::list<std::map<triton::uint32, SolverModel>> getModels(smt2lib::smtAstAbstractNode *node, triton::uint32 limit);
+          std::list<std::map<triton::uint32, SolverModel>> getModels(triton::ast::smtAstAbstractNode *node, triton::uint32 limit);
 
           //! Evaluates an AST and returns the symbolic value.
-          triton::uint512 evaluateAst(smt2lib::smtAstAbstractNode *node);
+          triton::uint512 evaluateAst(triton::ast::smtAstAbstractNode *node);
 
           //! Constructor.
           SolverEngine();

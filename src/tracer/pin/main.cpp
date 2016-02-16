@@ -42,7 +42,7 @@ To use the `libTriton`, your tracer must provide two kinds of information at eac
 - The current opcode executed.
 - A state context (register and memory).
 
-Based on these two information, Triton will translate the control flow into the \ref py_smt2lib_page representation. As an example, let assume that you have dumped
+Based on these two information, Triton will translate the control flow into the \ref py_ast_page representation. As an example, let assume that you have dumped
 a trace into a database with all registers state and memory access - these information may come from Valgrind, Pin, Qemu or whatever. The following Python code
 uses the Triton's API to build the semantics of each instruction stored in the database.
 

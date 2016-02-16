@@ -58,8 +58,8 @@ namespace triton {
       extern PyObject* syscallsDict;
       #endif
 
-      //! smt2lib python module.
-      extern PyObject* smt2libModule;
+      //! ast python module.
+      extern PyObject* astModule;
 
       //! triton python module.
       extern PyObject* tritonModule;
@@ -67,8 +67,8 @@ namespace triton {
       //! triton python methods.
       extern PyMethodDef tritonCallbacks[];
 
-      //! smt2lib python methods.
-      extern PyMethodDef smt2libCallbacks[];
+      //! ast python methods.
+      extern PyMethodDef astCallbacks[];
 
       //! Initializes the ARCH python namespace.
       void initArchNamespace(PyObject* archDict);
@@ -88,8 +88,8 @@ namespace triton {
       //! Initializes the OPTIMIZATION python namespace.
       void initSymOptiNamespace(PyObject* symOptiDict);
 
-      //! Initializes the SMT_AST_NODE python namespace.
-      void initSmtAstNodeNamespace(PyObject* smtAstNodeDict);
+      //! Initializes the AST_NODE python namespace.
+      void initAstNodeNamespace(PyObject* astNodeDict);
 
       //! Initializes the SYMEXPR python namespace.
       void initSymExprNamespace(PyObject* symExprDict);

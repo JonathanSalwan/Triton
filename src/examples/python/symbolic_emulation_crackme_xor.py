@@ -5,8 +5,9 @@
 
 
 import  sys
-from    triton  import *
-from    smt2lib import *
+
+from triton import *
+from ast    import *
 
 trace = {
                                               #   <serial> function

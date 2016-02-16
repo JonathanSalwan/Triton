@@ -12,10 +12,10 @@
 #include <map>
 #include <string>
 
+#include "ast.hpp"
 #include "astSummaries.hpp"
 #include "memoryOperand.hpp"
 #include "registerOperand.hpp"
-#include "smt2lib.hpp"
 #include "symbolicExpression.hpp"
 #include "symbolicOptimization.hpp"
 #include "symbolicSimplification.hpp"
@@ -107,7 +107,7 @@ namespace triton {
            * **item1**: <addr:size><br>
            * **item2**: symbolic reference id
            */
-          std::map<std::pair<triton::__uint, triton::uint32>, smt2lib::smtAstAbstractNode*> alignedMemoryReference;
+          std::map<std::pair<triton::__uint, triton::uint32>, triton::ast::smtAstAbstractNode*> alignedMemoryReference;
 
 
         public:
@@ -116,7 +116,7 @@ namespace triton {
           triton::__uint* symbolicReg;
 
           //! Creates a new symbolic expression.
-          SymbolicExpression* newSymbolicExpression(smt2lib::smtAstAbstractNode* node, symkind_e kind, std::string comment="");
+          SymbolicExpression* newSymbolicExpression(triton::ast::smtAstAbstractNode* node, symkind_e kind, std::string comment="");
 
           //! Removes the symbolic expression corresponding to the id.
           void removeSymbolicExpression(triton::__uint symExprId);
@@ -167,25 +167,25 @@ namespace triton {
           triton::uint128 getSymbolicRegisterValue(triton::arch::RegisterOperand& reg);
 
           //! Returns an immediate symbolic operand.
-          smt2lib::smtAstAbstractNode* buildSymbolicImmediateOperand(triton::arch::ImmediateOperand& imm);
+          triton::ast::smtAstAbstractNode* buildSymbolicImmediateOperand(triton::arch::ImmediateOperand& imm);
 
           //! Returns a symbolic memory operand.
-          smt2lib::smtAstAbstractNode* buildSymbolicMemoryOperand(triton::arch::MemoryOperand& mem);
+          triton::ast::smtAstAbstractNode* buildSymbolicMemoryOperand(triton::arch::MemoryOperand& mem);
 
           //! Returns a symbolic register operand.
-          smt2lib::smtAstAbstractNode* buildSymbolicRegisterOperand(triton::arch::RegisterOperand& reg);
+          triton::ast::smtAstAbstractNode* buildSymbolicRegisterOperand(triton::arch::RegisterOperand& reg);
 
           //! Returns the new symbolic memory expression expression and links this expression to the instruction.
-          SymbolicExpression* createSymbolicMemoryExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, triton::arch::MemoryOperand& mem, std::string comment="");
+          SymbolicExpression* createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::smtAstAbstractNode* node, triton::arch::MemoryOperand& mem, std::string comment="");
 
           //! Returns the new symbolic register expression expression and links this expression to the instruction.
-          SymbolicExpression* createSymbolicRegisterExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, triton::arch::RegisterOperand& reg, std::string comment="");
+          SymbolicExpression* createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::smtAstAbstractNode* node, triton::arch::RegisterOperand& reg, std::string comment="");
 
           //! Returns the new symbolic flag expression expression and links this expression to the instruction.
-          SymbolicExpression* createSymbolicFlagExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, triton::arch::RegisterOperand& flag, std::string comment="");
+          SymbolicExpression* createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::smtAstAbstractNode* node, triton::arch::RegisterOperand& flag, std::string comment="");
 
           //! Returns the new symbolic volatile expression expression and links this expression to the instruction.
-          SymbolicExpression* createSymbolicVolatileExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, std::string comment="");
+          SymbolicExpression* createSymbolicVolatileExpression(triton::arch::Instruction& inst, triton::ast::smtAstAbstractNode* node, std::string comment="");
 
           //! Returns an unique symbolic expression id.
           triton::__uint getUniqueSymExprId(void);
@@ -200,7 +200,7 @@ namespace triton {
           void assignSymbolicExpressionToMemory(SymbolicExpression *se, triton::arch::MemoryOperand& mem);
 
           //! Returns the full AST of a root node.
-          smt2lib::smtAstAbstractNode* getFullAst(smt2lib::smtAstAbstractNode* node);
+          triton::ast::smtAstAbstractNode* getFullAst(triton::ast::smtAstAbstractNode* node);
 
           //! Returns the list of the tainted symbolic expressions.
           std::list<SymbolicExpression*> getTaintedSymbolicExpressions(void);

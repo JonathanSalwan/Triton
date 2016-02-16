@@ -71,7 +71,7 @@ namespace tracer {
         this->snapshotTaintEngine = new triton::engines::taint::TaintEngine(*triton::api.getTaintEngine());
 
         /* 4 - Save current taint engine state */
-        this->nodesList = triton::smt2lib::allocatedNodes;
+        this->nodesList = triton::ast::allocatedNodes;
 
         /* 5 - Save the Triton CPU state */
         #if defined(__x86_64__) || defined(_M_X64)
@@ -119,7 +119,7 @@ namespace tracer {
         }
 
         /* 4 - Delete unused AST nodes */
-        for (auto i = triton::smt2lib::allocatedNodes.begin(); i != triton::smt2lib::allocatedNodes.end(); ++i) {
+        for (auto i = triton::ast::allocatedNodes.begin(); i != triton::ast::allocatedNodes.end(); ++i) {
           if (this->nodesList.find(*i) == this->nodesList.end())
             delete *i;
         }
@@ -131,7 +131,7 @@ namespace tracer {
         *triton::api.getTaintEngine() = *this->snapshotTaintEngine;
 
         /* 7 - Restore current AST node state */
-        triton::smt2lib::allocatedNodes = this->nodesList;
+        triton::ast::allocatedNodes = this->nodesList;
 
         /* 8 - Restore the Triton CPU state */
         #if defined(__x86_64__) || defined(_M_X64)

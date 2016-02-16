@@ -26,7 +26,7 @@
 # [+] Analysis done!
 
 from triton  import *
-from smt2lib import *
+from ast     import *
 from pintool import *
 
 password  = dict()
@@ -77,7 +77,7 @@ def cafter(instruction):
     if instruction.getAddress() == 0x4005ae:
         zfId    = getSymbolicRegisterId(REG.ZF)
         zfExpr  = getFullAstFromId(zfId)
-        expr    = smtAssert(equal(zfExpr, bvtrue())) # (assert (= zf True))
+        expr    = assert_(equal(zfExpr, bvtrue())) # (assert (= zf True))
         models  = getModel(expr)
         global password
         for k, v in models.items():

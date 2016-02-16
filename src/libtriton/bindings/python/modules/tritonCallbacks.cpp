@@ -62,7 +62,7 @@ If you want to use the libTriton without Python bindings, recompile the project 
 
 \subsection triton_py_api_modules Modules
 
-- \ref smt2lib
+- \ref ast
 
 
 \subsection triton_py_api_methods Methods
@@ -75,7 +75,7 @@ The symbolic expression (`symExpr`) must be aligned to the memory access.
 Assigns a \ref py_SymbolicExpression_page to a \ref py_REG_page. **Be careful**, use this function only if you know what you are doing.
 The symbolic expression (`symExpr`) must be aligned to the targeted size register. E.g: for SSE registers, the expression must be aligned
 to 128-bits. Otherwise, you will probably get a sort mismatch error when you will solve the expression. If you want to assign an
-expression to a sub-register like `AX`, `AH` or `AL`, please, craft your expression with the `concat()` and `extract()` smt2lib functions.
+expression to a sub-register like `AX`, `AH` or `AL`, please, craft your expression with the `concat()` and `extract()` ast functions.
 
 - **buildSemantics(\ref py_Instruction_page inst)**<br>
 Builds the instruction semantics based on the SMT2-Lib representation. You must define an architecture before.
@@ -368,7 +368,7 @@ Untaints a register.
 - \ref py_OPERAND_page
 - \ref py_OPTIMIZATION_page
 - \ref py_REG_page
-- \ref py_SMT_AST_NODE_page
+- \ref py_AST_NODE_page
 - \ref py_SYMEXPR_page
 - \ref py_SYSCALL_page
 - \ref py_VERSION_page
@@ -976,7 +976,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::smt2lib::smtAstAbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
+        triton::ast::smtAstAbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
         triton::arch::RegisterOperand arg3 = *PyRegisterOperand_AsRegisterOperand(flag);
 
         try {
@@ -1018,7 +1018,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::smt2lib::smtAstAbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
+        triton::ast::smtAstAbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
         triton::arch::MemoryOperand arg3 = *PyMemoryOperand_AsMemoryOperand(mem);
 
         try {
@@ -1060,7 +1060,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::smt2lib::smtAstAbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
+        triton::ast::smtAstAbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
         triton::arch::RegisterOperand arg3 = *PyRegisterOperand_AsRegisterOperand(reg);
 
         try {
@@ -1098,7 +1098,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::smt2lib::smtAstAbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
+        triton::ast::smtAstAbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
 
         try {
           return PySymbolicExpression(triton::api.createSymbolicVolatileExpression(arg1, arg2, ccomment));

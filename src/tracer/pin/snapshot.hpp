@@ -15,7 +15,7 @@
 
 /* libTriton */
 #include <api.hpp>
-#include <smt2lib.hpp>
+#include <ast.hpp>
 #include <symbolicEngine.hpp>
 #include <taintEngine.hpp>
 #include <x8664Cpu.hpp>
@@ -52,7 +52,7 @@ namespace tracer {
         bool mustBeRestore;
 
         //! AST node state.
-        std::set<triton::smt2lib::smtAstAbstractNode*> nodesList;
+        std::set<triton::ast::smtAstAbstractNode*> nodesList;
 
         //! Snapshot of the symbolic engine.
         triton::engines::symbolic::SymbolicEngine *snapshotSymEngine;

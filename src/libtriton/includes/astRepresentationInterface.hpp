@@ -9,7 +9,7 @@
 #define TRITON_ASTREPRESENTATIONINTERFACE_HPP
 
 #include <iostream>
-#include "smt2lib.hpp"
+#include "ast.hpp"
 
 
 
@@ -21,17 +21,17 @@ namespace triton {
  */
 
   //! \module The SMT2-Lib namespace
-  namespace smt2lib {
+  namespace ast {
   /*!
    *  \ingroup triton
-   *  \addtogroup smt2-lib
+   *  \addtogroup ast
    *  @{
    */
 
     //! \module The representation namespace
     namespace representation {
     /*!
-     *  \ingroup smt2-lib
+     *  \ingroup ast
      *  \addtogroup representation
      *  @{
      */
@@ -46,13 +46,13 @@ namespace triton {
           //! Constructor.
           virtual ~AstRepresentationInterface(){};
           //! Entry point of print.
-          virtual std::ostream& print(std::ostream& stream, triton::smt2lib::smtAstAbstractNode* node) = 0;
+          virtual std::ostream& print(std::ostream& stream, triton::ast::smtAstAbstractNode* node) = 0;
       };
 
 
     /*! @} End of representation namespace */
     };
-  /*! @} End of smt2lib namespace */
+  /*! @} End of ast namespace */
   };
 /*! @} End of triton namespace */
 };

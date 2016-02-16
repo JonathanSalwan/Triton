@@ -5,8 +5,8 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
-#ifndef TRITON_SMT2LIB_H
-#define TRITON_SMT2LIB_H
+#ifndef TRITON_AST_H
+#define TRITON_AST_H
 
 #include <list>
 #include <map>
@@ -29,10 +29,10 @@ namespace triton {
  */
 
   //! \module The SMT2-Lib namespace
-  namespace smt2lib {
+  namespace ast {
   /*!
    *  \ingroup triton
-   *  \addtogroup smt2-lib
+   *  \addtogroup ast
    *  @{
    */
 
@@ -707,7 +707,7 @@ namespace triton {
     };
 
 
-    //! Displays the node in smt2-lib representation.
+    //! Displays the node in ast representation.
     std::ostream& operator<<(std::ostream& stream, smtAstAbstractNode* node);
 
 
@@ -715,172 +715,172 @@ namespace triton {
     bool operator==(smtAstAbstractNode& node1, smtAstAbstractNode& node2);
 
 
-    //! smt2-lib C++ api - bv node builder
+    //! ast C++ api - bv node builder
     smtAstAbstractNode* bv(triton::uint128 value, triton::uint32 size);
 
-    //! smt2-lib C++ api - bvadd node builder
+    //! ast C++ api - bvadd node builder
     smtAstAbstractNode* bvadd(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvand node builder
+    //! ast C++ api - bvand node builder
     smtAstAbstractNode* bvand(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvashr node builder
+    //! ast C++ api - bvashr node builder
     smtAstAbstractNode* bvashr(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvdecl node builder
+    //! ast C++ api - bvdecl node builder
     smtAstAbstractNode* bvdecl(triton::uint32 size);
 
-    //! smt2-lib C++ api - bvfalse node builder
+    //! ast C++ api - bvfalse node builder
     smtAstAbstractNode* bvfalse(void);
 
-    //! smt2-lib C++ api - bvlshr node builder
+    //! ast C++ api - bvlshr node builder
     smtAstAbstractNode* bvlshr(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvmul node builder
+    //! ast C++ api - bvmul node builder
     smtAstAbstractNode* bvmul(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvnand node builder
+    //! ast C++ api - bvnand node builder
     smtAstAbstractNode* bvnand(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvneg node builder
+    //! ast C++ api - bvneg node builder
     smtAstAbstractNode* bvneg(smtAstAbstractNode* expr);
 
-    //! smt2-lib C++ api - bvnor node builder
+    //! ast C++ api - bvnor node builder
     smtAstAbstractNode* bvnor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvnot node builder
+    //! ast C++ api - bvnot node builder
     smtAstAbstractNode* bvnot(smtAstAbstractNode* expr);
 
-    //! smt2-lib C++ api - bvor node builder
+    //! ast C++ api - bvor node builder
     smtAstAbstractNode* bvor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvrol node builder
+    //! ast C++ api - bvrol node builder
     smtAstAbstractNode* bvrol(triton::uint32 rot, smtAstAbstractNode* expr);
 
-    //! smt2-lib C++ api - bvrol node builder
+    //! ast C++ api - bvrol node builder
     smtAstAbstractNode* bvrol(smtAstAbstractNode* rot, smtAstAbstractNode* expr);
 
-    //! smt2-lib C++ api - bvror node builder
+    //! ast C++ api - bvror node builder
     smtAstAbstractNode* bvror(triton::uint32 rot, smtAstAbstractNode* expr);
 
-    //! smt2-lib C++ api - bvror node builder
+    //! ast C++ api - bvror node builder
     smtAstAbstractNode* bvror(smtAstAbstractNode* rot, smtAstAbstractNode* expr);
 
-    //! smt2-lib C++ api - bvsdiv node builder
+    //! ast C++ api - bvsdiv node builder
     smtAstAbstractNode* bvsdiv(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvsge node builder
+    //! ast C++ api - bvsge node builder
     smtAstAbstractNode* bvsge(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvsgt node builder
+    //! ast C++ api - bvsgt node builder
     smtAstAbstractNode* bvsgt(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvshl node builder
+    //! ast C++ api - bvshl node builder
     smtAstAbstractNode* bvshl(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvsle node builder
+    //! ast C++ api - bvsle node builder
     smtAstAbstractNode* bvsle(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvslt node builder
+    //! ast C++ api - bvslt node builder
     smtAstAbstractNode* bvslt(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvsmod node builder
+    //! ast C++ api - bvsmod node builder
     smtAstAbstractNode* bvsmod(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvsrem node builder
+    //! ast C++ api - bvsrem node builder
     smtAstAbstractNode* bvsrem(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvsub node builder
+    //! ast C++ api - bvsub node builder
     smtAstAbstractNode* bvsub(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvtrue node builder
+    //! ast C++ api - bvtrue node builder
     smtAstAbstractNode* bvtrue(void);
 
-    //! smt2-lib C++ api - bvudiv node builder
+    //! ast C++ api - bvudiv node builder
     smtAstAbstractNode* bvudiv(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvuge node builder
+    //! ast C++ api - bvuge node builder
     smtAstAbstractNode* bvuge(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvugt node builder
+    //! ast C++ api - bvugt node builder
     smtAstAbstractNode* bvugt(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvule node builder
+    //! ast C++ api - bvule node builder
     smtAstAbstractNode* bvule(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvult node builder
+    //! ast C++ api - bvult node builder
     smtAstAbstractNode* bvult(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvurem node builder
+    //! ast C++ api - bvurem node builder
     smtAstAbstractNode* bvurem(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvxnor node builder
+    //! ast C++ api - bvxnor node builder
     smtAstAbstractNode* bvxnor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - bvxor node builder
+    //! ast C++ api - bvxor node builder
     smtAstAbstractNode* bvxor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - compound node builder
+    //! ast C++ api - compound node builder
     smtAstAbstractNode* compound(std::vector<smtAstAbstractNode* > exprs);
 
-    //! smt2-lib C++ api - concat node builder
+    //! ast C++ api - concat node builder
     smtAstAbstractNode* concat(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - concat node builder
+    //! ast C++ api - concat node builder
     smtAstAbstractNode* concat(std::vector<smtAstAbstractNode* > exprs);
 
-    //! smt2-lib C++ api - concat node builder
+    //! ast C++ api - concat node builder
     smtAstAbstractNode* concat(std::list<smtAstAbstractNode* > exprs);
 
-    //! smt2-lib C++ api - decimal node builder
+    //! ast C++ api - decimal node builder
     smtAstAbstractNode* decimal(triton::uint128 value);
 
-    //! smt2-lib C++ api - declare node builder
+    //! ast C++ api - declare node builder
     smtAstAbstractNode* declareFunction(std::string name, smtAstAbstractNode* bvDecl);
 
-    //! smt2-lib C++ api - distinct node builder
+    //! ast C++ api - distinct node builder
     smtAstAbstractNode* distinct(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - equal node builder
+    //! ast C++ api - equal node builder
     smtAstAbstractNode* equal(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - extract node builder
+    //! ast C++ api - extract node builder
     smtAstAbstractNode* extract(triton::uint32 high, triton::uint32 low, smtAstAbstractNode* expr);
 
-    //! smt2-lib C++ api - ite node builder
+    //! ast C++ api - ite node builder
     smtAstAbstractNode* ite(smtAstAbstractNode* ifExpr, smtAstAbstractNode* thenExpr, smtAstAbstractNode* elseExpr);
 
-    //! smt2-lib C++ api - land node builder
+    //! ast C++ api - land node builder
     smtAstAbstractNode* land(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - let node builder
+    //! ast C++ api - let node builder
     smtAstAbstractNode* let(std::string alias, smtAstAbstractNode* expr2, smtAstAbstractNode* expr3);
 
-    //! smt2-lib C++ api - lnot node builder
+    //! ast C++ api - lnot node builder
     smtAstAbstractNode* lnot(smtAstAbstractNode* expr);
 
-    //! smt2-lib C++ api - lor node builder
+    //! ast C++ api - lor node builder
     smtAstAbstractNode* lor(smtAstAbstractNode* expr1, smtAstAbstractNode* expr2);
 
-    //! smt2-lib C++ api - reference node builder
+    //! ast C++ api - reference node builder
     smtAstAbstractNode* reference(triton::__uint value);
 
-    //! smt2-lib C++ api - smtAssert node builder
-    smtAstAbstractNode* smtAssert(smtAstAbstractNode* expr);
+    //! ast C++ api - assert node builder
+    smtAstAbstractNode* assert_(smtAstAbstractNode* expr);
 
-    //! smt2-lib C++ api - string node builder
+    //! ast C++ api - string node builder
     smtAstAbstractNode* string(std::string value);
 
-    //! smt2-lib C++ api - sx node builder
+    //! ast C++ api - sx node builder
     smtAstAbstractNode* sx(triton::uint32 sizeExt, smtAstAbstractNode* expr);
 
-    //! smt2-lib C++ api - variable node builder
+    //! ast C++ api - variable node builder
     smtAstAbstractNode* variable(std::string variable);
 
-    //! smt2-lib C++ api - zx node builder
+    //! ast C++ api - zx node builder
     smtAstAbstractNode* zx(triton::uint32 sizeExt, smtAstAbstractNode* expr);
 
-    //! smt2-lib C++ api - Duplicates the AST
+    //! ast C++ api - Duplicates the AST
     smtAstAbstractNode* newInstance(smtAstAbstractNode* node);
 
     //! Garbage collector - This container contains all allocated nodes.
@@ -904,11 +904,11 @@ namespace triton {
     //! Custom rotate left function for hash routine.
     triton::uint512 rotl(triton::uint512 value, triton::uint32 shift);
 
-  /*! @} End of smt2lib namespace */
+  /*! @} End of ast namespace */
   };
 /*! @} End of triton namespace */
 };
 
 
-#endif /* TRITON_SMT2LIB_H */
+#endif /* TRITON_AST_H */
 

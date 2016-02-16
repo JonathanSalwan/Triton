@@ -11,7 +11,7 @@
 
 
 namespace triton {
-  namespace smt2lib {
+  namespace ast {
 
     Z3Result::Z3Result()
       : context(), expr(this->context) {
@@ -74,5 +74,5 @@ namespace triton {
       std::cout << this->expr << std::endl;
     }
 
-  }; /* smt2lib namespace */
+  }; /* ast namespace */
 }; /* triton namespace */

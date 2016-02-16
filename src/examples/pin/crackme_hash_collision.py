@@ -1,6 +1,6 @@
 
 from triton  import *
-from smt2lib import *
+from ast     import *
 from pintool import *
 
 #
@@ -62,17 +62,17 @@ def cafter(instruction):
 
         # We want printable characters
         expr = compound([
-                 smtAssert(bvugt(variable('SymVar_0'), bv(96,  CPUSIZE.QWORD_BIT))),
-                 smtAssert(bvult(variable('SymVar_0'), bv(123, CPUSIZE.QWORD_BIT))),
-                 smtAssert(bvugt(variable('SymVar_1'), bv(96,  CPUSIZE.QWORD_BIT))),
-                 smtAssert(bvult(variable('SymVar_1'), bv(123, CPUSIZE.QWORD_BIT))),
-                 smtAssert(bvugt(variable('SymVar_2'), bv(96,  CPUSIZE.QWORD_BIT))),
-                 smtAssert(bvult(variable('SymVar_2'), bv(123, CPUSIZE.QWORD_BIT))),
-                 smtAssert(bvugt(variable('SymVar_3'), bv(96,  CPUSIZE.QWORD_BIT))),
-                 smtAssert(bvult(variable('SymVar_3'), bv(123, CPUSIZE.QWORD_BIT))),
-                 smtAssert(bvugt(variable('SymVar_4'), bv(96,  CPUSIZE.QWORD_BIT))),
-                 smtAssert(bvult(variable('SymVar_4'), bv(123, CPUSIZE.QWORD_BIT))),
-                 smtAssert(equal(raxExpr, bv(0xad6d, CPUSIZE.QWORD_BIT)))  # collision: (assert (= rax 0xad6d)
+                 assert_(bvugt(variable('SymVar_0'), bv(96,  CPUSIZE.QWORD_BIT))),
+                 assert_(bvult(variable('SymVar_0'), bv(123, CPUSIZE.QWORD_BIT))),
+                 assert_(bvugt(variable('SymVar_1'), bv(96,  CPUSIZE.QWORD_BIT))),
+                 assert_(bvult(variable('SymVar_1'), bv(123, CPUSIZE.QWORD_BIT))),
+                 assert_(bvugt(variable('SymVar_2'), bv(96,  CPUSIZE.QWORD_BIT))),
+                 assert_(bvult(variable('SymVar_2'), bv(123, CPUSIZE.QWORD_BIT))),
+                 assert_(bvugt(variable('SymVar_3'), bv(96,  CPUSIZE.QWORD_BIT))),
+                 assert_(bvult(variable('SymVar_3'), bv(123, CPUSIZE.QWORD_BIT))),
+                 assert_(bvugt(variable('SymVar_4'), bv(96,  CPUSIZE.QWORD_BIT))),
+                 assert_(bvult(variable('SymVar_4'), bv(123, CPUSIZE.QWORD_BIT))),
+                 assert_(equal(raxExpr, bv(0xad6d, CPUSIZE.QWORD_BIT)))  # collision: (assert (= rax 0xad6d)
                ])
 
         # Get max 20 different models

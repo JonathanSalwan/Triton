@@ -10,7 +10,7 @@
 
 #include <list>
 #include "tritonTypes.hpp"
-#include "smt2lib.hpp"
+#include "ast.hpp"
 
 #ifdef TRITON_PYTHON_BINDINGS
   #ifdef __unix__
@@ -45,7 +45,7 @@ namespace triton {
      *  @{
      */
 
-      typedef smt2lib::smtAstAbstractNode* (*sfp)(smt2lib::smtAstAbstractNode*);
+      typedef triton::ast::smtAstAbstractNode* (*sfp)(triton::ast::smtAstAbstractNode*);
 
       //! \class SymbolicSimplification
       /*! \brief The symbolic simplification class */
@@ -93,7 +93,7 @@ namespace triton {
           #endif
 
           //! Processes all recorded simplifications. Returns the simplified node.
-          smt2lib::smtAstAbstractNode* processSimplification(smt2lib::smtAstAbstractNode* node, bool z3=false);
+          triton::ast::smtAstAbstractNode* processSimplification(triton::ast::smtAstAbstractNode* node, bool z3=false);
       };
 
     /*! @} End of symbolic namespace */

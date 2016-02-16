@@ -1,6 +1,6 @@
 
 from triton  import *
-from smt2lib import *
+from ast import *
 from pintool import *
 
 import sys

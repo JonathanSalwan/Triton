@@ -18,10 +18,10 @@ namespace triton {
  */
 
   //! \module The SMT2-Lib namespace
-  namespace smt2lib {
+  namespace ast {
   /*!
    *  \ingroup triton
-   *  \addtogroup smt2-lib
+   *  \addtogroup ast
    *  @{
    */
 
@@ -76,7 +76,7 @@ namespace triton {
     class smtAstZxNode;
 
     //! \interface AstVisitor
-    /*! \brief This interface is used to go through the smt2-lib AST. */
+    /*! \brief This interface is used to go through the ast AST. */
     class AstVisitor {
 
       public:
@@ -135,7 +135,7 @@ namespace triton {
 
     }; /* AstVisitor class */
 
-  /*! @} End of smt2lib namespace */
+  /*! @} End of ast namespace */
   };
 /*! @} End of triton namespace */
 };

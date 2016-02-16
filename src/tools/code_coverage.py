@@ -59,7 +59,7 @@
 ## $
 ##
 
-import  smt2lib
+import  ast
 
 from    triton      import *
 from    pintool     import *
@@ -148,14 +148,14 @@ class TritonExecution(object):
                     ripId = TritonExecution.myPC[i][0]
                     symExp = getFullAst(getSymbolicExpressionFromId(ripId).getAst())
                     addr = TritonExecution.myPC[i][1]
-                    expr.append(smt2lib.smtAssert(smt2lib.equal(symExp, smt2lib.bv(addr,  CPUSIZE.QWORD_BIT))))
+                    expr.append(ast.smtAssert(ast.equal(symExp, ast.bv(addr,  CPUSIZE.QWORD_BIT))))
 
                 ripId = TritonExecution.myPC[j][0]
                 symExp = getFullAst(getSymbolicExpressionFromId(ripId).getAst())
                 addr = TritonExecution.myPC[j][2]
-                expr.append(smt2lib.smtAssert(smt2lib.equal(symExp, smt2lib.bv(addr,  CPUSIZE.QWORD_BIT))))
+                expr.append(ast.smtAssert(ast.equal(symExp, ast.bv(addr,  CPUSIZE.QWORD_BIT))))
 
-                expr = smt2lib.compound(expr)
+                expr = ast.compound(expr)
                 model = getModel(expr)
 
                 if len(model) > 0:

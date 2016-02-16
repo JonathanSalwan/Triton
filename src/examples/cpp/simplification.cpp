@@ -36,11 +36,11 @@ struct op trace[] = {
 
 
 /* if (bvxor x x) -> (_ bv0 x_size) */
-smt2lib::smtAstAbstractNode* xor_simplification(smt2lib::smtAstAbstractNode* node) {
+ast::smtAstAbstractNode* xor_simplification(ast::smtAstAbstractNode* node) {
 
-  if (node->getKind() == smt2lib::BVXOR_NODE) {
+  if (node->getKind() == ast::BVXOR_NODE) {
     if (*(node->getChilds()[0]) == *(node->getChilds()[1]))
-      return smt2lib::bv(0, node->getBitvectorSize());
+      return ast::bv(0, node->getBitvectorSize());
   }
 
   return node;

@@ -12,7 +12,7 @@
 #include "astPythonRepresentation.hpp"
 #include "astRepresentationInterface.hpp"
 #include "astSmtRepresentation.hpp"
-#include "smt2lib.hpp"
+#include "ast.hpp"
 
 
 
@@ -24,17 +24,17 @@ namespace triton {
  */
 
   //! \module The SMT2-Lib namespace
-  namespace smt2lib {
+  namespace ast {
   /*!
    *  \ingroup triton
-   *  \addtogroup smt2-lib
+   *  \addtogroup ast
    *  @{
    */
 
     //! \module The representation namespace
     namespace representation {
     /*!
-     *  \ingroup smt2-lib
+     *  \ingroup ast
      *  \addtogroup representation
      *  @{
      */
@@ -54,7 +54,7 @@ namespace triton {
           enum mode_e mode;
 
           //! AstRepresentation interface.
-          triton::smt2lib::representation::AstRepresentationInterface* representation[triton::smt2lib::representation::LAST_REPRESENTATION];
+          triton::ast::representation::AstRepresentationInterface* representation[triton::ast::representation::LAST_REPRESENTATION];
 
 
         public:
@@ -76,7 +76,7 @@ namespace triton {
 
     /*! @} End of representation namespace */
     };
-  /*! @} End of smt2lib namespace */
+  /*! @} End of ast namespace */
   };
 /*! @} End of triton namespace */
 };

@@ -22,13 +22,13 @@
 
 import sys
 
-from triton  import *
-from smt2lib import *
+from triton import *
+from ast    import *
 
 
 # a ^ a -> a = 0
 def xor_1(node):
-    if node.getKind() == SMT_AST_NODE.BVXOR:
+    if node.getKind() == AST_NODE.BVXOR:
         if node.getChilds()[0] == node.getChilds()[1]:
             return bv(0, node.getBitvectorSize())
     return node
@@ -40,25 +40,25 @@ def xor_2(node):
     def getNot(node):
         a = node.getChilds()[0]
         b = node.getChilds()[1]
-        if a.getKind() == SMT_AST_NODE.BVNOT and b.getKind() != SMT_AST_NODE.BVNOT:
+        if a.getKind() == AST_NODE.BVNOT and b.getKind() != AST_NODE.BVNOT:
             return a
-        if b.getKind() == SMT_AST_NODE.BVNOT and a.getKind() != SMT_AST_NODE.BVNOT:
+        if b.getKind() == AST_NODE.BVNOT and a.getKind() != AST_NODE.BVNOT:
             return b
         return None
 
     def getNonNot(node):
         a = node.getChilds()[0]
         b = node.getChilds()[1]
-        if a.getKind() != SMT_AST_NODE.BVNOT and b.getKind() == SMT_AST_NODE.BVNOT:
+        if a.getKind() != AST_NODE.BVNOT and b.getKind() == AST_NODE.BVNOT:
             return a
-        if b.getKind() != SMT_AST_NODE.BVNOT and a.getKind() == SMT_AST_NODE.BVNOT:
+        if b.getKind() != AST_NODE.BVNOT and a.getKind() == AST_NODE.BVNOT:
             return b
         return None
 
-    if node.getKind() == SMT_AST_NODE.BVOR:
+    if node.getKind() == AST_NODE.BVOR:
         c1 = node.getChilds()[0]
         c2 = node.getChilds()[1]
-        if c1.getKind() == SMT_AST_NODE.BVAND and c2.getKind() == SMT_AST_NODE.BVAND:
+        if c1.getKind() == AST_NODE.BVAND and c2.getKind() == AST_NODE.BVAND:
             c1_not    = getNot(c1)
             c2_not    = getNot(c2)
             c1_nonNot = getNonNot(c1)

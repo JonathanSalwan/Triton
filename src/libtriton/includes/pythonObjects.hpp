@@ -16,7 +16,7 @@
 #include "instruction.hpp"
 #include "memoryOperand.hpp"
 #include "registerOperand.hpp"
-#include "smt2lib.hpp"
+#include "ast.hpp"
 #include "solverModel.hpp"
 #include "symbolicExpression.hpp"
 #include "symbolicVariable.hpp"
@@ -83,7 +83,7 @@ namespace triton {
       PyObject* PySolverModel(triton::engines::solver::SolverModel &model);
 
       //! Creates the SmtAstNode python class.
-      PyObject* PySmtAstNode(triton::smt2lib::smtAstAbstractNode *node);
+      PyObject* PySmtAstNode(triton::ast::smtAstAbstractNode *node);
 
       //! Creates the SymbolicExpression python class.
       PyObject* PySymbolicExpression(triton::engines::symbolic::SymbolicExpression *expr);
@@ -163,7 +163,7 @@ namespace triton {
       //! pySmtAstNode object.
       typedef struct {
         PyObject_HEAD
-        triton::smt2lib::smtAstAbstractNode *node;
+        triton::ast::smtAstAbstractNode *node;
       } SmtAstNode_Object;
 
       //! pySmtAstNode type.
@@ -238,10 +238,10 @@ namespace triton {
 /*! Returns the triton::engines::solver::SolverModel. */
 #define PySolverModel_AsSolverModel(v) (((triton::bindings::python::SolverModel_Object *)(v))->model)
 
-/*! Checks if the pyObject is a triton::smt2lib::smtAstAbstractNode. */
+/*! Checks if the pyObject is a triton::ast::smtAstAbstractNode. */
 #define PySmtAstNode_Check(v) ((v)->ob_type == &triton::bindings::python::SmtAstNode_Type)
 
-/*! Returns the triton::smt2lib::smtAstAbstractNode. */
+/*! Returns the triton::ast::smtAstAbstractNode. */
 #define PySmtAstNode_AsSmtAstNode(v) (((triton::bindings::python::SmtAstNode_Object *)(v))->node)
 
 /*! Checks if the pyObject is a triton::engines::symbolic::SymbolicExpression. */

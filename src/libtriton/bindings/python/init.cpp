@@ -28,7 +28,7 @@ namespace triton {
       PyObject* cpuSizeDict           = nullptr; /* Must be global because it's updated on-the-fly */
       PyObject* opcodesDict           = nullptr; /* Must be global because it's updated on-the-fly */
       PyObject* registersDict         = nullptr; /* Must be global because it's updated on-the-fly */
-      PyObject* smt2libModule         = nullptr; /* Must be global because may be updated on-the-fly */
+      PyObject* astModule             = nullptr; /* Must be global because may be updated on-the-fly */
       PyObject* tritonModule          = nullptr; /* Must be global because may be updated on-the-fly */
       #ifdef __unix__
       PyObject* syscallsDict          = nullptr; /* Must be global because it's updated on-the-fly */
@@ -50,11 +50,11 @@ namespace triton {
           exit(1);
         }
 
-        /* Create the smt2lib module ================================================================= */
+        /* Create the ast module ================================================================= */
 
-        triton::bindings::python::smt2libModule = Py_InitModule("smt2lib", smt2libCallbacks);
-        if (triton::bindings::python::smt2libModule == nullptr) {
-          std::cerr << "Failed to initialize the smt2lib bindings" << std::endl;
+        triton::bindings::python::astModule = Py_InitModule("ast", astCallbacks);
+        if (triton::bindings::python::astModule == nullptr) {
+          std::cerr << "Failed to initialize the ast bindings" << std::endl;
           PyErr_Print();
           exit(1);
         }
@@ -93,11 +93,11 @@ namespace triton {
         triton::bindings::python::registersDict = xPyDict_New();
         PyObject* idRegClass = xPyClass_New(nullptr, triton::bindings::python::registersDict, xPyString_FromString("REG"));
 
-        /* Create the SMT_AST_NODE namespace ========================================================= */
+        /* Create the AST_NODE namespace ============================================================= */
 
-        PyObject* smtAstNodeDict = xPyDict_New();
-        initSmtAstNodeNamespace(smtAstNodeDict);
-        PyObject* idSmtAstNodeDictClass = xPyClass_New(nullptr, smtAstNodeDict, xPyString_FromString("SMT_AST_NODE"));
+        PyObject* astNodeDict = xPyDict_New();
+        initAstNodeNamespace(astNodeDict);
+        PyObject* idSmtAstNodeDictClass = xPyClass_New(nullptr, astNodeDict, xPyString_FromString("AST_NODE"));
 
         /* Create the SYMEXPR namespace ============================================================== */
 
@@ -121,16 +121,16 @@ namespace triton {
         /* Init triton module ======================================================================== */
 
         /* Add every modules and namespace into the triton module */
+        PyModule_AddObject(triton::bindings::python::tritonModule, "ast",               triton::bindings::python::astModule);
         PyModule_AddObject(triton::bindings::python::tritonModule, "ARCH",              idArchDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "CPUSIZE",           idCpuSizeClass);            /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPCODE",            idOpcodesClass);            /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPERAND",           idOperandClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPTIMIZATION",      idSymOptiClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "REG",               idRegClass);                /* Empty: filled on the fly */
-        PyModule_AddObject(triton::bindings::python::tritonModule, "SMT_AST_NODE",      idSmtAstNodeDictClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "AST_NODE",      idSmtAstNodeDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYMEXPR",           idSymExprClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "VERSION",           idVersionClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "smt2lib",           triton::bindings::python::smt2libModule);
         #ifdef __unix__
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL",           idSyscallsClass);           /* Empty: filled on the fly */
         #endif

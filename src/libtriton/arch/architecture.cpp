@@ -204,16 +204,16 @@ namespace triton {
        * is enable we must compute semanitcs to spread the taint.
        */
       if (!triton::api.isSymbolicEngineEnabled()) {
-        std::set<smt2lib::smtAstAbstractNode*> uniqueNodes;
+        std::set<triton::ast::smtAstAbstractNode*> uniqueNodes;
         std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
         for (it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
-          smt2lib::extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
+          triton::ast::extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
           triton::api.removeSymbolicExpression((*it)->getId());
         }
 
         if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES)) {
           /* Remove node only if AST_SUMMARIES is disabled */
-          smt2lib::freeAstNodes(uniqueNodes);
+          triton::ast::freeAstNodes(uniqueNodes);
         }
 
         inst.symbolicExpressions.clear();
@@ -226,12 +226,12 @@ namespace triton {
        * expressions untainted and their AST nodes.
        */
       if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ONLY_ON_TAINTED)) {
-        std::set<smt2lib::smtAstAbstractNode*> uniqueNodes;
+        std::set<triton::ast::smtAstAbstractNode*> uniqueNodes;
         std::vector<triton::engines::symbolic::SymbolicExpression*> newVector;
         std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
         for (it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
           if ((*it)->isTainted == triton::engines::taint::UNTAINTED) {
-            smt2lib::extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
+            triton::ast::extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
             triton::api.removeSymbolicExpression((*it)->getId());
           }
           else
@@ -240,7 +240,7 @@ namespace triton {
 
         if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES)) {
           /* Remove node only if AST_SUMMARIES is disabled */
-          smt2lib::freeAstNodes(uniqueNodes);
+          triton::ast::freeAstNodes(uniqueNodes);
         }
 
         inst.symbolicExpressions = newVector;

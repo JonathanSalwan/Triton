@@ -10,7 +10,7 @@
 
 #include <string>
 #include "registerOperand.hpp"
-#include "smt2lib.hpp"
+#include "ast.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -55,7 +55,7 @@ namespace triton {
           symkind_e kind;
 
           //! The root node (AST SMT2-Lib) of the symbolic expression.
-          smt2lib::smtAstAbstractNode* ast;
+          triton::ast::smtAstAbstractNode* ast;
 
           //! The comment of the symbolic expression.
           std::string comment;
@@ -86,10 +86,10 @@ namespace triton {
           symkind_e getKind(void);
 
           //! Returns the SMT AST root node of the symbolic expression. This is the semantics.
-          smt2lib::smtAstAbstractNode* getAst(void);
+          triton::ast::smtAstAbstractNode* getAst(void);
 
           //! Returns a new SMT AST root node of the symbolic expression. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
-          smt2lib::smtAstAbstractNode* getNewAst(void);
+          triton::ast::smtAstAbstractNode* getNewAst(void);
 
           //! Returns the comment of the symbolic expression.
           std::string getComment(void);
@@ -104,7 +104,7 @@ namespace triton {
           triton::arch::RegisterOperand& getOriginRegister(void);
 
           //! Sets a root node.
-          void setAst(smt2lib::smtAstAbstractNode* node);
+          void setAst(triton::ast::smtAstAbstractNode* node);
 
           //! Sets the kind of the symbolic expression.
           void setKind(symkind_e k);
@@ -116,7 +116,7 @@ namespace triton {
           void setOriginRegister(triton::arch::RegisterOperand& reg);
 
           //! Constructor.
-          SymbolicExpression(smt2lib::smtAstAbstractNode* expr, triton::__uint id, symkind_e kind, std::string comment="");
+          SymbolicExpression(triton::ast::smtAstAbstractNode* expr, triton::__uint id, symkind_e kind, std::string comment="");
 
           //! Destructor.
           ~SymbolicExpression();

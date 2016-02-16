@@ -12,7 +12,7 @@
 #include <pythonObjects.hpp>
 #include <pythonXFunctions.hpp>
 #include <pythonUtils.hpp>
-#include <smt2lib.hpp>
+#include <ast.hpp>
 
 
 
@@ -60,8 +60,8 @@ Returns the list of the childs as \ref py_SmtAstNode_page.
 Returns the hash (signature) of the AST as float.
 
 - **getKind(void)**<br>
-Returns the kind of the node as \ref py_SMT_AST_NODE_page.<br>
-e.g: `SMT_AST_NODE.BVADD`
+Returns the kind of the node as \ref py_AST_NODE_page.<br>
+e.g: `AST_NODE.BVADD`
 
 - **getValue(void)**<br>
 Returns the node value as integer or string (it depends of the kind). For example if the kind of node is `decimal`, the value is an integer.
@@ -105,7 +105,7 @@ namespace triton {
 
       static PyObject* SmtAstNode_getChilds(PyObject* self, PyObject* noarg) {
         PyObject* childs;
-        triton::smt2lib::smtAstAbstractNode *node = PySmtAstNode_AsSmtAstNode(self);
+        triton::ast::smtAstAbstractNode *node = PySmtAstNode_AsSmtAstNode(self);
 
         triton::__uint size = node->getChilds().size();
         childs = xPyList_New(size);
@@ -127,19 +127,19 @@ namespace triton {
 
 
       static PyObject* SmtAstNode_getValue(PyObject* self, PyObject* noarg) {
-        triton::smt2lib::smtAstAbstractNode *node = PySmtAstNode_AsSmtAstNode(self);
+        triton::ast::smtAstAbstractNode *node = PySmtAstNode_AsSmtAstNode(self);
 
-        if (node->getKind() == triton::smt2lib::DECIMAL_NODE)
-          return PyLong_FromUint128(reinterpret_cast<triton::smt2lib::smtAstDecimalNode *>(node)->getValue());
+        if (node->getKind() == triton::ast::DECIMAL_NODE)
+          return PyLong_FromUint128(reinterpret_cast<triton::ast::smtAstDecimalNode *>(node)->getValue());
 
-        else if (node->getKind() == triton::smt2lib::REFERENCE_NODE)
-          return PyLong_FromUint(reinterpret_cast<triton::smt2lib::smtAstReferenceNode *>(node)->getValue());
+        else if (node->getKind() == triton::ast::REFERENCE_NODE)
+          return PyLong_FromUint(reinterpret_cast<triton::ast::smtAstReferenceNode *>(node)->getValue());
 
-        else if (node->getKind() == triton::smt2lib::STRING_NODE)
-          return Py_BuildValue("s", reinterpret_cast<triton::smt2lib::smtAstStringNode *>(node)->getValue().c_str());
+        else if (node->getKind() == triton::ast::STRING_NODE)
+          return Py_BuildValue("s", reinterpret_cast<triton::ast::smtAstStringNode *>(node)->getValue().c_str());
 
-        else if (node->getKind() == triton::smt2lib::VARIABLE_NODE)
-          return Py_BuildValue("s", reinterpret_cast<triton::smt2lib::smtAstVariableNode *>(node)->getValue().c_str());
+        else if (node->getKind() == triton::ast::VARIABLE_NODE)
+          return Py_BuildValue("s", reinterpret_cast<triton::ast::smtAstVariableNode *>(node)->getValue().c_str());
 
         return PyErr_Format(PyExc_TypeError, "SmtAstNode::getValue(): Cannot use getValue() on this kind of node.");
       }
@@ -149,7 +149,7 @@ namespace triton {
         PyObject* index = nullptr;
         PyObject* node = nullptr;
         triton::__uint i;
-        triton::smt2lib::smtAstAbstractNode *dst, *src;
+        triton::ast::smtAstAbstractNode *dst, *src;
 
         PyArg_ParseTuple(args, "|OO", &index, &node);
 
@@ -192,91 +192,91 @@ namespace triton {
       static PyObject* SmtAstNode_operatorAdd(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorAdd(): Expected a SmtAstNode as arguments.");
-        return PySmtAstNode(smt2lib::bvadd(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
+        return PySmtAstNode(triton::ast::bvadd(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorSub(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorSub(): Expected a SmtAstNode as arguments.");
-        return PySmtAstNode(smt2lib::bvsub(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
+        return PySmtAstNode(triton::ast::bvsub(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorMul(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorMul(): Expected a SmtAstNode as arguments.");
-        return PySmtAstNode(smt2lib::bvmul(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
+        return PySmtAstNode(triton::ast::bvmul(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorDiv(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorDiv(): Expected a SmtAstNode as arguments.");
-        return PySmtAstNode(smt2lib::bvsdiv(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
+        return PySmtAstNode(triton::ast::bvsdiv(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorRem(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorRem(): Expected a SmtAstNode as arguments.");
-        return PySmtAstNode(smt2lib::bvsrem(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
+        return PySmtAstNode(triton::ast::bvsrem(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorMod(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorMod(): Expected a SmtAstNode as arguments.");
-        return PySmtAstNode(smt2lib::bvsmod(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
+        return PySmtAstNode(triton::ast::bvsmod(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorNeg(PyObject* node) {
         if (!PySmtAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorNeg(): Expected a SmtAstNode as argument.");
-        return PySmtAstNode(smt2lib::bvneg(PySmtAstNode_AsSmtAstNode(node)));
+        return PySmtAstNode(triton::ast::bvneg(PySmtAstNode_AsSmtAstNode(node)));
       }
 
 
       static PyObject* SmtAstNode_operatorNot(PyObject* node) {
         if (!PySmtAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorNot(): Expected a SmtAstNode as argument.");
-        return PySmtAstNode(smt2lib::bvnot(PySmtAstNode_AsSmtAstNode(node)));
+        return PySmtAstNode(triton::ast::bvnot(PySmtAstNode_AsSmtAstNode(node)));
       }
 
 
       static PyObject* SmtAstNode_operatorShl(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorShl(): Expected a SmtAstNode as arguments.");
-        return PySmtAstNode(smt2lib::bvshl(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
+        return PySmtAstNode(triton::ast::bvshl(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorShr(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorShr(): Expected a SmtAstNode as arguments.");
-        return PySmtAstNode(smt2lib::bvlshr(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
+        return PySmtAstNode(triton::ast::bvlshr(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorAnd(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorAnd(): Expected a SmtAstNode as arguments.");
-        return PySmtAstNode(smt2lib::bvand(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
+        return PySmtAstNode(triton::ast::bvand(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorXor(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorXor(): Expected a SmtAstNode as arguments.");
-        return PySmtAstNode(smt2lib::bvxor(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
+        return PySmtAstNode(triton::ast::bvxor(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
       static PyObject* SmtAstNode_operatorOr(PyObject* self, PyObject* other) {
         if (!PySmtAstNode_Check(self) || !PySmtAstNode_Check(other))
           return PyErr_Format(PyExc_TypeError, "SmtAstNode::operatorOr(): Expected a SmtAstNode as arguments.");
-        return PySmtAstNode(smt2lib::bvor(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
+        return PySmtAstNode(triton::ast::bvor(PySmtAstNode_AsSmtAstNode(self), PySmtAstNode_AsSmtAstNode(other)));
       }
 
 
@@ -379,7 +379,7 @@ namespace triton {
       };
 
 
-      PyObject* PySmtAstNode(triton::smt2lib::smtAstAbstractNode* node) {
+      PyObject* PySmtAstNode(triton::ast::smtAstAbstractNode* node) {
         SmtAstNode_Object *object;
 
         if (node == nullptr)

@@ -14,7 +14,7 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicExpression::SymbolicExpression(smt2lib::smtAstAbstractNode* node, triton::__uint id, symkind_e kind, std::string comment) : originRegister() {
+      SymbolicExpression::SymbolicExpression(triton::ast::smtAstAbstractNode* node, triton::__uint id, symkind_e kind, std::string comment) : originRegister() {
         this->comment       = comment;
         this->ast           = node;
         this->id            = id;
@@ -28,17 +28,17 @@ namespace triton {
       }
 
 
-      smt2lib::smtAstAbstractNode* SymbolicExpression::getAst(void) {
+      triton::ast::smtAstAbstractNode* SymbolicExpression::getAst(void) {
         if (this->ast == nullptr)
           throw std::runtime_error("SymbolicExpression::getAst(): No AST defined.");
         return this->ast;
       }
 
 
-      smt2lib::smtAstAbstractNode* SymbolicExpression::getNewAst(void) {
+      triton::ast::smtAstAbstractNode* SymbolicExpression::getNewAst(void) {
         if (this->ast == nullptr)
           throw std::runtime_error("SymbolicExpression::getNewAst(): No AST defined.");
-        return smt2lib::newInstance(this->ast);
+        return triton::ast::newInstance(this->ast);
       }
 
 
@@ -72,7 +72,7 @@ namespace triton {
       }
 
 
-      void SymbolicExpression::setAst(smt2lib::smtAstAbstractNode* node) {
+      void SymbolicExpression::setAst(triton::ast::smtAstAbstractNode* node) {
         this->ast = node;
       }
 

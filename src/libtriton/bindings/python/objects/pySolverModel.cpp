@@ -27,7 +27,7 @@ This object is used to represent a model from a SMT solver.
 
 ~~~~~~~~~~~~~{.py}
 >>> from triton import *
->>> from smt2lib import *
+>>> from ast import *
 >>>
 >>> setArchitecture(ARCH.X86_64)
 >>> inst = Instruction()
@@ -45,7 +45,7 @@ SymVar_0:64
 >>> print raxAst
 (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64))
 >>>
->>> constraint = smtAssert(equal(raxAst, bv(0, raxAst.getBitvectorSize())))
+>>> constraint = assert(equal(raxAst, bv(0, raxAst.getBitvectorSize())))
 >>> print constraint
 (assert (= (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64)) (_ bv0 64)))
 >>>

@@ -62,7 +62,7 @@ int main(int ac, const char **av) {
   std::cout << "RAX expr: " << raxFullAst << std::endl;
 
   /* Modify RAX's AST to build the constraint */
-  auto constraint = smt2lib::smtAssert(smt2lib::equal(raxFullAst, smt2lib::bv(0, raxFullAst->getBitvectorSize())));
+  auto constraint = ast::assert_(ast::equal(raxFullAst, ast::bv(0, raxFullAst->getBitvectorSize())));
 
   /* Display the AST */
   std::cout << "constraint: " << constraint << std::endl;

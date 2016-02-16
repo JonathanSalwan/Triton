@@ -10,7 +10,7 @@
 
 #include <z3++.h>
 
-#include "smt2lib.hpp"
+#include "ast.hpp"
 #include "astVisitor.hpp"
 #include "z3Result.hpp"
 #include "tritonTypes.hpp"
@@ -25,10 +25,10 @@ namespace triton {
  */
 
   //! \module The SMT2-Lib namespace
-  namespace smt2lib {
+  namespace ast {
   /*!
    *  \ingroup triton
-   *  \addtogroup smt2-lib
+   *  \addtogroup ast
    *  @{
    */
 
@@ -41,7 +41,7 @@ namespace triton {
         bool isEval;
 
         //! The map of symbols. E.g: (let (symbols expr1) expr2)
-        std::map<std::string, smt2lib::smtAstAbstractNode*> symbols;
+        std::map<std::string, triton::ast::smtAstAbstractNode*> symbols;
 
       protected:
         //! The result.
@@ -55,111 +55,111 @@ namespace triton {
         ~TritonToZ3Ast();
 
         //! Evaluates a Triton AST.
-        virtual Z3Result& eval(smt2lib::smtAstAbstractNode& e);
+        virtual Z3Result& eval(triton::ast::smtAstAbstractNode& e);
 
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstAbstractNode& e);
+        virtual void operator()(triton::ast::smtAstAbstractNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstAssertNode& e);
+        virtual void operator()(triton::ast::smtAstAssertNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvaddNode& e);
+        virtual void operator()(triton::ast::smtAstBvaddNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvandNode& e);
+        virtual void operator()(triton::ast::smtAstBvandNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvashrNode& e);
+        virtual void operator()(triton::ast::smtAstBvashrNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvdeclNode& e);
+        virtual void operator()(triton::ast::smtAstBvdeclNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvlshrNode& e);
+        virtual void operator()(triton::ast::smtAstBvlshrNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvmulNode& e);
+        virtual void operator()(triton::ast::smtAstBvmulNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvsmodNode& e);
+        virtual void operator()(triton::ast::smtAstBvsmodNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvnandNode& e);
+        virtual void operator()(triton::ast::smtAstBvnandNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvnegNode& e);
+        virtual void operator()(triton::ast::smtAstBvnegNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvnorNode& e);
+        virtual void operator()(triton::ast::smtAstBvnorNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvnotNode& e);
+        virtual void operator()(triton::ast::smtAstBvnotNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvorNode& e);
+        virtual void operator()(triton::ast::smtAstBvorNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvrolNode& e);
+        virtual void operator()(triton::ast::smtAstBvrolNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvrorNode& e);
+        virtual void operator()(triton::ast::smtAstBvrorNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvsdivNode& e);
+        virtual void operator()(triton::ast::smtAstBvsdivNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvsgeNode& e);
+        virtual void operator()(triton::ast::smtAstBvsgeNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvsgtNode& e);
+        virtual void operator()(triton::ast::smtAstBvsgtNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvshlNode& e);
+        virtual void operator()(triton::ast::smtAstBvshlNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvsleNode& e);
+        virtual void operator()(triton::ast::smtAstBvsleNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvsltNode& e);
+        virtual void operator()(triton::ast::smtAstBvsltNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvsremNode& e);
+        virtual void operator()(triton::ast::smtAstBvsremNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvsubNode& e);
+        virtual void operator()(triton::ast::smtAstBvsubNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvudivNode& e);
+        virtual void operator()(triton::ast::smtAstBvudivNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvugeNode& e);
+        virtual void operator()(triton::ast::smtAstBvugeNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvugtNode& e);
+        virtual void operator()(triton::ast::smtAstBvugtNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvuleNode& e);
+        virtual void operator()(triton::ast::smtAstBvuleNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvultNode& e);
+        virtual void operator()(triton::ast::smtAstBvultNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvuremNode& e);
+        virtual void operator()(triton::ast::smtAstBvuremNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvxnorNode& e);
+        virtual void operator()(triton::ast::smtAstBvxnorNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvxorNode& e);
+        virtual void operator()(triton::ast::smtAstBvxorNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstBvNode& e);
+        virtual void operator()(triton::ast::smtAstBvNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstCompoundNode& e);
+        virtual void operator()(triton::ast::smtAstCompoundNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstConcatNode& e);
+        virtual void operator()(triton::ast::smtAstConcatNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstDecimalNode& e);
+        virtual void operator()(triton::ast::smtAstDecimalNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstDeclareFunctionNode& e);
+        virtual void operator()(triton::ast::smtAstDeclareFunctionNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstDistinctNode& e);
+        virtual void operator()(triton::ast::smtAstDistinctNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstEqualNode& e);
+        virtual void operator()(triton::ast::smtAstEqualNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstExtractNode& e);
+        virtual void operator()(triton::ast::smtAstExtractNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstIteNode& e);
+        virtual void operator()(triton::ast::smtAstIteNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstLandNode& e);
+        virtual void operator()(triton::ast::smtAstLandNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstLetNode& e);
+        virtual void operator()(triton::ast::smtAstLetNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstLnotNode& e);
+        virtual void operator()(triton::ast::smtAstLnotNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstLorNode& e);
+        virtual void operator()(triton::ast::smtAstLorNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstReferenceNode& e);
+        virtual void operator()(triton::ast::smtAstReferenceNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstStringNode& e);
+        virtual void operator()(triton::ast::smtAstStringNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstSxNode& e);
+        virtual void operator()(triton::ast::smtAstSxNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstVariableNode& e);
+        virtual void operator()(triton::ast::smtAstVariableNode& e);
         //! Evaluate operator.
-        virtual void operator()(smt2lib::smtAstZxNode& e);
+        virtual void operator()(triton::ast::smtAstZxNode& e);
     };
 
-  /*! @} End of smt2lib namespace */
+  /*! @} End of ast namespace */
   };
 /*! @} End of triton namespace */
 };

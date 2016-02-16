@@ -9,7 +9,7 @@
 #define TRITON_Z3TOTRITONAST_H
 
 #include <z3++.h>
-#include "smt2lib.hpp"
+#include "ast.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -22,10 +22,10 @@ namespace triton {
  */
 
   //! \module The SMT2-Lib namespace
-  namespace smt2lib {
+  namespace ast {
   /*!
    *  \ingroup triton
-   *  \addtogroup smt2-lib
+   *  \addtogroup ast
    *  @{
    */
 
@@ -42,7 +42,7 @@ namespace triton {
 
       private:
         //! Vists and converts
-        smtAstAbstractNode* visit(z3::expr const& expr);
+        triton::ast::smtAstAbstractNode* visit(z3::expr const& expr);
 
 
       public:
@@ -62,10 +62,10 @@ namespace triton {
         void setExpr(z3::expr& expr);
 
         //! Converts to Triton's AST
-        smtAstAbstractNode* convert(void);
+        triton::ast::smtAstAbstractNode* convert(void);
     };
 
-  /*! @} End of smt2lib namespace */
+  /*! @} End of ast namespace */
   };
 /*! @} End of triton namespace */
 };

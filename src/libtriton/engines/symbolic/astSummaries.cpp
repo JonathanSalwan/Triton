@@ -17,55 +17,55 @@ namespace triton {
         this->allocatedNodes     = 0;
         this->allocatedSummaries = 0;
 
-        this->summaries[triton::smt2lib::ASSERT_NODE]             = &this->assertSummaries;
-        this->summaries[triton::smt2lib::BVADD_NODE]              = &this->bvaddSummaries;
-        this->summaries[triton::smt2lib::BVAND_NODE]              = &this->bvandSummaries;
-        this->summaries[triton::smt2lib::BVASHR_NODE]             = &this->bvashrSummaries;
-        this->summaries[triton::smt2lib::BVDECL_NODE]             = &this->bvdeclSummaries;
-        this->summaries[triton::smt2lib::BVLSHR_NODE]             = &this->bvlshrSummaries;
-        this->summaries[triton::smt2lib::BVMUL_NODE]              = &this->bvmulSummaries;
-        this->summaries[triton::smt2lib::BVNAND_NODE]             = &this->bvnandSummaries;
-        this->summaries[triton::smt2lib::BVNEG_NODE]              = &this->bvnegSummaries;
-        this->summaries[triton::smt2lib::BVNOR_NODE]              = &this->bvnorSummaries;
-        this->summaries[triton::smt2lib::BVNOT_NODE]              = &this->bvnotSummaries;
-        this->summaries[triton::smt2lib::BVOR_NODE]               = &this->bvorSummaries;
-        this->summaries[triton::smt2lib::BVROL_NODE]              = &this->bvrolSummaries;
-        this->summaries[triton::smt2lib::BVROR_NODE]              = &this->bvrorSummaries;
-        this->summaries[triton::smt2lib::BVSDIV_NODE]             = &this->bvsdivSummaries;
-        this->summaries[triton::smt2lib::BVSGE_NODE]              = &this->bvsgeSummaries;
-        this->summaries[triton::smt2lib::BVSGT_NODE]              = &this->bvsgtSummaries;
-        this->summaries[triton::smt2lib::BVSHL_NODE]              = &this->bvshlSummaries;
-        this->summaries[triton::smt2lib::BVSLE_NODE]              = &this->bvsleSummaries;
-        this->summaries[triton::smt2lib::BVSLT_NODE]              = &this->bvsltSummaries;
-        this->summaries[triton::smt2lib::BVSMOD_NODE]             = &this->bvsmodSummaries;
-        this->summaries[triton::smt2lib::BVSREM_NODE]             = &this->bvsremSummaries;
-        this->summaries[triton::smt2lib::BVSUB_NODE]              = &this->bvsubSummaries;
-        this->summaries[triton::smt2lib::BVUDIV_NODE]             = &this->bvudivSummaries;
-        this->summaries[triton::smt2lib::BVUGE_NODE]              = &this->bvugeSummaries;
-        this->summaries[triton::smt2lib::BVUGT_NODE]              = &this->bvugtSummaries;
-        this->summaries[triton::smt2lib::BVULE_NODE]              = &this->bvuleSummaries;
-        this->summaries[triton::smt2lib::BVULT_NODE]              = &this->bvultSummaries;
-        this->summaries[triton::smt2lib::BVUREM_NODE]             = &this->bvuremSummaries;
-        this->summaries[triton::smt2lib::BVXNOR_NODE]             = &this->bvxnorSummaries;
-        this->summaries[triton::smt2lib::BVXOR_NODE]              = &this->bvxorSummaries;
-        this->summaries[triton::smt2lib::BV_NODE]                 = &this->bvSummaries;
-        this->summaries[triton::smt2lib::COMPOUND_NODE]           = &this->compoundSummaries;
-        this->summaries[triton::smt2lib::CONCAT_NODE]             = &this->concatSummaries;
-        this->summaries[triton::smt2lib::DECIMAL_NODE]            = &this->decimalSummaries;
-        this->summaries[triton::smt2lib::DECLARE_FUNCTION_NODE]   = &this->declareFunctionSummaries;
-        this->summaries[triton::smt2lib::DISTINCT_NODE]           = &this->distinctSummaries;
-        this->summaries[triton::smt2lib::EQUAL_NODE]              = &this->equalSummaries;
-        this->summaries[triton::smt2lib::EXTRACT_NODE]            = &this->extractSummaries;
-        this->summaries[triton::smt2lib::ITE_NODE]                = &this->iteSummaries;
-        this->summaries[triton::smt2lib::LAND_NODE]               = &this->landSummaries;
-        this->summaries[triton::smt2lib::LET_NODE]                = &this->letSummaries;
-        this->summaries[triton::smt2lib::LNOT_NODE]               = &this->lnotSummaries;
-        this->summaries[triton::smt2lib::LOR_NODE]                = &this->lorSummaries;
-        this->summaries[triton::smt2lib::REFERENCE_NODE]          = &this->referenceSummaries;
-        this->summaries[triton::smt2lib::STRING_NODE]             = &this->stringSummaries;
-        this->summaries[triton::smt2lib::SX_NODE]                 = &this->sxSummaries;
-        this->summaries[triton::smt2lib::VARIABLE_NODE]           = &this->variableSummaries;
-        this->summaries[triton::smt2lib::ZX_NODE]                 = &this->zxSummaries;
+        this->summaries[triton::ast::ASSERT_NODE]             = &this->assertSummaries;
+        this->summaries[triton::ast::BVADD_NODE]              = &this->bvaddSummaries;
+        this->summaries[triton::ast::BVAND_NODE]              = &this->bvandSummaries;
+        this->summaries[triton::ast::BVASHR_NODE]             = &this->bvashrSummaries;
+        this->summaries[triton::ast::BVDECL_NODE]             = &this->bvdeclSummaries;
+        this->summaries[triton::ast::BVLSHR_NODE]             = &this->bvlshrSummaries;
+        this->summaries[triton::ast::BVMUL_NODE]              = &this->bvmulSummaries;
+        this->summaries[triton::ast::BVNAND_NODE]             = &this->bvnandSummaries;
+        this->summaries[triton::ast::BVNEG_NODE]              = &this->bvnegSummaries;
+        this->summaries[triton::ast::BVNOR_NODE]              = &this->bvnorSummaries;
+        this->summaries[triton::ast::BVNOT_NODE]              = &this->bvnotSummaries;
+        this->summaries[triton::ast::BVOR_NODE]               = &this->bvorSummaries;
+        this->summaries[triton::ast::BVROL_NODE]              = &this->bvrolSummaries;
+        this->summaries[triton::ast::BVROR_NODE]              = &this->bvrorSummaries;
+        this->summaries[triton::ast::BVSDIV_NODE]             = &this->bvsdivSummaries;
+        this->summaries[triton::ast::BVSGE_NODE]              = &this->bvsgeSummaries;
+        this->summaries[triton::ast::BVSGT_NODE]              = &this->bvsgtSummaries;
+        this->summaries[triton::ast::BVSHL_NODE]              = &this->bvshlSummaries;
+        this->summaries[triton::ast::BVSLE_NODE]              = &this->bvsleSummaries;
+        this->summaries[triton::ast::BVSLT_NODE]              = &this->bvsltSummaries;
+        this->summaries[triton::ast::BVSMOD_NODE]             = &this->bvsmodSummaries;
+        this->summaries[triton::ast::BVSREM_NODE]             = &this->bvsremSummaries;
+        this->summaries[triton::ast::BVSUB_NODE]              = &this->bvsubSummaries;
+        this->summaries[triton::ast::BVUDIV_NODE]             = &this->bvudivSummaries;
+        this->summaries[triton::ast::BVUGE_NODE]              = &this->bvugeSummaries;
+        this->summaries[triton::ast::BVUGT_NODE]              = &this->bvugtSummaries;
+        this->summaries[triton::ast::BVULE_NODE]              = &this->bvuleSummaries;
+        this->summaries[triton::ast::BVULT_NODE]              = &this->bvultSummaries;
+        this->summaries[triton::ast::BVUREM_NODE]             = &this->bvuremSummaries;
+        this->summaries[triton::ast::BVXNOR_NODE]             = &this->bvxnorSummaries;
+        this->summaries[triton::ast::BVXOR_NODE]              = &this->bvxorSummaries;
+        this->summaries[triton::ast::BV_NODE]                 = &this->bvSummaries;
+        this->summaries[triton::ast::COMPOUND_NODE]           = &this->compoundSummaries;
+        this->summaries[triton::ast::CONCAT_NODE]             = &this->concatSummaries;
+        this->summaries[triton::ast::DECIMAL_NODE]            = &this->decimalSummaries;
+        this->summaries[triton::ast::DECLARE_FUNCTION_NODE]   = &this->declareFunctionSummaries;
+        this->summaries[triton::ast::DISTINCT_NODE]           = &this->distinctSummaries;
+        this->summaries[triton::ast::EQUAL_NODE]              = &this->equalSummaries;
+        this->summaries[triton::ast::EXTRACT_NODE]            = &this->extractSummaries;
+        this->summaries[triton::ast::ITE_NODE]                = &this->iteSummaries;
+        this->summaries[triton::ast::LAND_NODE]               = &this->landSummaries;
+        this->summaries[triton::ast::LET_NODE]                = &this->letSummaries;
+        this->summaries[triton::ast::LNOT_NODE]               = &this->lnotSummaries;
+        this->summaries[triton::ast::LOR_NODE]                = &this->lorSummaries;
+        this->summaries[triton::ast::REFERENCE_NODE]          = &this->referenceSummaries;
+        this->summaries[triton::ast::STRING_NODE]             = &this->stringSummaries;
+        this->summaries[triton::ast::SX_NODE]                 = &this->sxSummaries;
+        this->summaries[triton::ast::VARIABLE_NODE]           = &this->variableSummaries;
+        this->summaries[triton::ast::ZX_NODE]                 = &this->zxSummaries;
       }
 
 
@@ -171,15 +171,15 @@ namespace triton {
       }
 
 
-      triton::smt2lib::smtAstAbstractNode* AstSummaries::browseAstSummaries(triton::smt2lib::smtAstAbstractNode* node) {
+      triton::ast::smtAstAbstractNode* AstSummaries::browseAstSummaries(triton::ast::smtAstAbstractNode* node) {
         this->allocatedNodes++;
         triton::uint32 kind = node->getKind();
 
         switch (kind) {
 
-          case triton::smt2lib::DECIMAL_NODE: {
-            auto value      = static_cast<triton::smt2lib::smtAstDecimalNode*>(node)->getValue();
-            auto summaries  = static_cast<std::map<triton::uint128, triton::smt2lib::smtAstAbstractNode*>*>((this->summaries[kind]));
+          case triton::ast::DECIMAL_NODE: {
+            auto value      = static_cast<triton::ast::smtAstDecimalNode*>(node)->getValue();
+            auto summaries  = static_cast<std::map<triton::uint128, triton::ast::smtAstAbstractNode*>*>((this->summaries[kind]));
             if (summaries->find(value) != summaries->end()) {
               delete node;
               return (*summaries)[value];
@@ -188,9 +188,9 @@ namespace triton {
             break;
           }
 
-          case triton::smt2lib::REFERENCE_NODE: {
-            auto value      = static_cast<triton::smt2lib::smtAstReferenceNode*>(node)->getValue();
-            auto summaries  = static_cast<std::map<triton::uint128, triton::smt2lib::smtAstAbstractNode*>*>((this->summaries[kind]));
+          case triton::ast::REFERENCE_NODE: {
+            auto value      = static_cast<triton::ast::smtAstReferenceNode*>(node)->getValue();
+            auto summaries  = static_cast<std::map<triton::uint128, triton::ast::smtAstAbstractNode*>*>((this->summaries[kind]));
             if (summaries->find(value) != summaries->end()) {
               delete node;
               return (*summaries)[value];
@@ -199,9 +199,9 @@ namespace triton {
             break;
           }
 
-          case triton::smt2lib::STRING_NODE: {
-            auto value      = static_cast<triton::smt2lib::smtAstStringNode*>(node)->getValue();
-            auto summaries  = static_cast<std::map<std::string, triton::smt2lib::smtAstAbstractNode*>*>((this->summaries[kind]));
+          case triton::ast::STRING_NODE: {
+            auto value      = static_cast<triton::ast::smtAstStringNode*>(node)->getValue();
+            auto summaries  = static_cast<std::map<std::string, triton::ast::smtAstAbstractNode*>*>((this->summaries[kind]));
             if (summaries->find(value) != summaries->end()) {
               delete node;
               return (*summaries)[value];
@@ -210,9 +210,9 @@ namespace triton {
             break;
           }
 
-          case triton::smt2lib::VARIABLE_NODE: {
-            auto value      = static_cast<triton::smt2lib::smtAstVariableNode*>(node)->getValue();
-            auto summaries  = static_cast<std::map<std::string, triton::smt2lib::smtAstAbstractNode*>*>((this->summaries[kind]));
+          case triton::ast::VARIABLE_NODE: {
+            auto value      = static_cast<triton::ast::smtAstVariableNode*>(node)->getValue();
+            auto summaries  = static_cast<std::map<std::string, triton::ast::smtAstAbstractNode*>*>((this->summaries[kind]));
             if (summaries->find(value) != summaries->end()) {
               delete node;
               return (*summaries)[value];
@@ -223,7 +223,7 @@ namespace triton {
 
           default: {
             auto value      = node->getChilds();
-            auto summaries  = static_cast<std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*>*>((this->summaries[kind]));
+            auto summaries  = static_cast<std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*>*>((this->summaries[kind]));
             if (summaries->find(value) != summaries->end()) {
               delete node;
               return (*summaries)[value];

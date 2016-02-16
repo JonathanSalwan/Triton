@@ -10,7 +10,7 @@
 
 #include <list>
 
-#include "smt2lib.hpp"
+#include "ast.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -50,151 +50,151 @@ namespace triton {
           triton::uint32 allocatedSummaries;
 
           //! Assert Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> assertSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> assertSummaries;
 
           //! Bvadd Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvaddSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvaddSummaries;
 
           //! Bvand Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvandSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvandSummaries;
 
           //! Bvashr Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvashrSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvashrSummaries;
 
           //! Bvdecl Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvdeclSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvdeclSummaries;
 
           //! Bvlshr Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvlshrSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvlshrSummaries;
 
           //! Bvmul Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvmulSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvmulSummaries;
 
           //! Bvnand Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvnandSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvnandSummaries;
 
           //! Bvneg Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvnegSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvnegSummaries;
 
           //! Bvnor Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvnorSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvnorSummaries;
 
           //! Bvnot Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvnotSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvnotSummaries;
 
           //! Bvor Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvorSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvorSummaries;
 
           //! Bvrol Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvrolSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvrolSummaries;
 
           //! Bvror Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvrorSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvrorSummaries;
 
           //! Bvsdiv Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvsdivSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvsdivSummaries;
 
           //! Bvsge Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvsgeSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvsgeSummaries;
 
           //! Bvsgt Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvsgtSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvsgtSummaries;
 
           //! Bvshl Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvshlSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvshlSummaries;
 
           //! Bvsle Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvsleSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvsleSummaries;
 
           //! Bvslt Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvsltSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvsltSummaries;
 
           //! Bvsmod Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvsmodSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvsmodSummaries;
 
           //! Bvsrem Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvsremSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvsremSummaries;
 
           //! Bvsub Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvsubSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvsubSummaries;
 
           //! Bvudiv Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvudivSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvudivSummaries;
 
           //! Bvuge Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvugeSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvugeSummaries;
 
           //! Bvugt Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvugtSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvugtSummaries;
 
           //! Bvule Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvuleSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvuleSummaries;
 
           //! Bvult Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvultSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvultSummaries;
 
           //! Bvurem Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvuremSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvuremSummaries;
 
           //! Bvxnor Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvxnorSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvxnorSummaries;
 
           //! Bvxor Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvxorSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvxorSummaries;
 
           //! Bv Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> bvSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> bvSummaries;
 
           //! Compound Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> compoundSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> compoundSummaries;
 
           //! Concat Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> concatSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> concatSummaries;
 
           //! Decimal Summaries
-          std::map<triton::uint128, triton::smt2lib::smtAstAbstractNode*> decimalSummaries;
+          std::map<triton::uint128, triton::ast::smtAstAbstractNode*> decimalSummaries;
 
           //! Declare Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> declareFunctionSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> declareFunctionSummaries;
 
           //! Distinct Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> distinctSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> distinctSummaries;
 
           //! Equal Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> equalSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> equalSummaries;
 
           //! Extract Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> extractSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> extractSummaries;
 
           //! Ite Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> iteSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> iteSummaries;
 
           //! Land Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> landSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> landSummaries;
 
           //! Let Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> letSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> letSummaries;
 
           //! Lnot Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> lnotSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> lnotSummaries;
 
           //! Lor Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> lorSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> lorSummaries;
 
           //! Reference Summaries
-          std::map<triton::uint128, triton::smt2lib::smtAstAbstractNode*> referenceSummaries;
+          std::map<triton::uint128, triton::ast::smtAstAbstractNode*> referenceSummaries;
 
           //! String Summaries
-          std::map<std::string, triton::smt2lib::smtAstAbstractNode*> stringSummaries;
+          std::map<std::string, triton::ast::smtAstAbstractNode*> stringSummaries;
 
           //! Sx Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> sxSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> sxSummaries;
 
           //! Variable Summaries
-          std::map<std::string, triton::smt2lib::smtAstAbstractNode*> variableSummaries;
+          std::map<std::string, triton::ast::smtAstAbstractNode*> variableSummaries;
 
           //! Zx Summaries
-          std::map<std::vector<triton::smt2lib::smtAstAbstractNode*>, triton::smt2lib::smtAstAbstractNode*> zxSummaries;
+          std::map<std::vector<triton::ast::smtAstAbstractNode*>, triton::ast::smtAstAbstractNode*> zxSummaries;
 
           //! Summaries
           std::map<triton::uint32, void*> summaries;
@@ -207,7 +207,7 @@ namespace triton {
           ~AstSummaries();
 
           //! Browses into summaries.
-          triton::smt2lib::smtAstAbstractNode* browseAstSummaries(triton::smt2lib::smtAstAbstractNode* node);
+          triton::ast::smtAstAbstractNode* browseAstSummaries(triton::ast::smtAstAbstractNode* node);
 
           //! Returns stats about summaries.
           std::map<std::string, triton::uint32> getAstSummariesStats(void);

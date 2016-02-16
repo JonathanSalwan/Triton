@@ -33,8 +33,8 @@ or a volatile symbolic expression.
 
 The record of a simplification pass is really straightforward. You have to record your simplification
 callback using the triton::API::recordSimplificationCallback() function. Your simplification callback
-must takes as unique parameter a pointer of triton::smt2lib::smtAstAbstractNode and returns a pointer of
-triton::smt2lib::smtAstAbstractNode. Then, your callback will be called before every symbolic assignment.
+must takes as unique parameter a pointer of triton::ast::smtAstAbstractNode and returns a pointer of
+triton::ast::smtAstAbstractNode. Then, your callback will be called before every symbolic assignment.
 Note that you can record several simplification callbacks or remove a specific callback using the
 triton::API::removeSimplificationCallback() function.
 
@@ -45,11 +45,11 @@ Below, a little example which replaces all \f$ A \oplus A \rightarrow A = 0\f$.
 
 ~~~~~~~~~~~~~{.cpp}
 // Rule: if (bvxor x x) -> (_ bv0 x_size)
-smt2lib::smtAstAbstractNode* xor_simplification(smt2lib::smtAstAbstractNode* node) {
+triton::ast::smtAstAbstractNode* xor_simplification(triton::ast::smtAstAbstractNode* node) {
 
-  if (node->getKind() == smt2lib::BVXOR_NODE) {
+  if (node->getKind() == triton::ast::BVXOR_NODE) {
     if (*(node->getChilds()[0]) == *(node->getChilds()[1]))
-      return smt2lib::bv(0, node->getBitvectorSize());
+      return triton::ast::bv(0, node->getBitvectorSize());
   }
 
   return node;
@@ -72,25 +72,25 @@ def xor_bitwise(node):
     def getNot(node):
         a = node.getChilds()[0]
         b = node.getChilds()[1]
-        if a.getKind() == SMT_AST_NODE.BVNOT and b.getKind() != SMT_AST_NODE.BVNOT:
+        if a.getKind() == AST_NODE.BVNOT and b.getKind() != AST_NODE.BVNOT:
             return a
-        if b.getKind() == SMT_AST_NODE.BVNOT and a.getKind() != SMT_AST_NODE.BVNOT:
+        if b.getKind() == AST_NODE.BVNOT and a.getKind() != AST_NODE.BVNOT:
             return b
         return None
 
     def getNonNot(node):
         a = node.getChilds()[0]
         b = node.getChilds()[1]
-        if a.getKind() != SMT_AST_NODE.BVNOT and b.getKind() == SMT_AST_NODE.BVNOT:
+        if a.getKind() != AST_NODE.BVNOT and b.getKind() == AST_NODE.BVNOT:
             return a
-        if b.getKind() != SMT_AST_NODE.BVNOT and a.getKind() == SMT_AST_NODE.BVNOT:
+        if b.getKind() != AST_NODE.BVNOT and a.getKind() == AST_NODE.BVNOT:
             return b
         return None
 
-    if node.getKind() == SMT_AST_NODE.BVOR:
+    if node.getKind() == AST_NODE.BVOR:
         c1 = node.getChilds()[0]
         c2 = node.getChilds()[1]
-        if c1.getKind() == SMT_AST_NODE.BVAND and c2.getKind() == SMT_AST_NODE.BVAND:
+        if c1.getKind() == AST_NODE.BVAND and c2.getKind() == AST_NODE.BVAND:
             c1_not    = getNot(c1)
             c2_not    = getNot(c2)
             c1_nonNot = getNonNot(c1)
@@ -212,16 +212,16 @@ namespace triton {
       #endif
 
 
-      smt2lib::smtAstAbstractNode* SymbolicSimplification::processSimplification(smt2lib::smtAstAbstractNode* node, bool z3) {
+      triton::ast::smtAstAbstractNode* SymbolicSimplification::processSimplification(triton::ast::smtAstAbstractNode* node, bool z3) {
 
         if (node == nullptr)
           throw std::runtime_error("SymbolicSimplification::processSimplification(): node cannot be null.");
 
         /* Check if we can use z3 to simplify the expression before using our own rules */
         if (this->z3Enabled | z3) {
-          triton::smt2lib::TritonToZ3Ast  z3Ast{false};
-          triton::smt2lib::Z3ToTritonAst  tritonAst{};
-          triton::smt2lib::Z3Result       result = z3Ast.eval(*node);
+          triton::ast::TritonToZ3Ast  z3Ast{false};
+          triton::ast::Z3ToTritonAst  tritonAst{};
+          triton::ast::Z3Result       result = z3Ast.eval(*node);
 
           /* Simplify and convert back to Triton's AST */
           z3::expr expr = result.getExpr().simplify();

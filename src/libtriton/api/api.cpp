@@ -22,7 +22,7 @@
 \section description_sec Description
 
 Triton is a dynamic binary analysis (DBA) framework. It provides internal components
-like a \ref engine_DSE_page (DSE) engine, a \ref engine_Taint_page, an intermediate representation based on \ref py_smt2lib_page of the x86 and x86-64
+like a \ref engine_DSE_page (DSE) engine, a \ref engine_Taint_page, an intermediate representation based on \ref py_ast_page of the x86 and x86-64
 instructions set, \ref SMT_simplification_page, an \ref solver_interface_page and, the last but not least,
 \ref py_triton_page. Based on these components, you are able to build program analysis tools,
 automate reverse engineering and perform software verification.
@@ -322,7 +322,7 @@ namespace triton {
     if (!this->solver)
       throw std::invalid_argument("API::initEngines(): No enough memory.");
 
-    this->astRepresentation = new triton::smt2lib::representation::AstRepresentation();
+    this->astRepresentation = new triton::ast::representation::AstRepresentation();
     if (!this->astRepresentation)
       throw std::invalid_argument("API::initEngines(): No enough memory.");
   }
@@ -344,7 +344,7 @@ namespace triton {
       this->removeEngines();
       this->initEngines();
       this->clearArchitecture();
-      smt2lib::freeAllAstNodes();
+      triton::ast::freeAllAstNodes();
     }
   }
 
@@ -365,19 +365,19 @@ namespace triton {
   }
 
 
-  std::ostream& API::printAstRepresentation(std::ostream& stream, smt2lib::smtAstAbstractNode* node) {
+  std::ostream& API::printAstRepresentation(std::ostream& stream, triton::ast::smtAstAbstractNode* node) {
     this->checkAstRepresentation();
     return this->astRepresentation->print(stream, node);
   }
 
 
-  triton::smt2lib::representation::mode_e API::getAstRepresentationMode(void) {
+  triton::ast::representation::mode_e API::getAstRepresentationMode(void) {
     this->checkAstRepresentation();
     return this->astRepresentation->getMode();
   }
 
 
-  void API::setAstRepresentationMode(triton::smt2lib::representation::mode_e mode) {
+  void API::setAstRepresentationMode(triton::ast::representation::mode_e mode) {
     this->checkAstRepresentation();
     this->astRepresentation->setMode(mode);
   }
@@ -426,7 +426,7 @@ namespace triton {
   }
 
 
-  smt2lib::smtAstAbstractNode* API::buildSymbolicOperand(triton::arch::OperandWrapper& op) {
+  triton::ast::smtAstAbstractNode* API::buildSymbolicOperand(triton::arch::OperandWrapper& op) {
     this->checkSymbolic();
     switch (op.getType()) {
       case triton::arch::OP_IMM: return this->buildSymbolicImmediateOperand(op.getImmediate());
@@ -438,25 +438,25 @@ namespace triton {
   }
 
 
-  smt2lib::smtAstAbstractNode* API::buildSymbolicImmediateOperand(triton::arch::ImmediateOperand& imm) {
+  triton::ast::smtAstAbstractNode* API::buildSymbolicImmediateOperand(triton::arch::ImmediateOperand& imm) {
     this->checkSymbolic();
     return this->sym->buildSymbolicImmediateOperand(imm);
   }
 
 
-  smt2lib::smtAstAbstractNode* API::buildSymbolicMemoryOperand(triton::arch::MemoryOperand& mem) {
+  triton::ast::smtAstAbstractNode* API::buildSymbolicMemoryOperand(triton::arch::MemoryOperand& mem) {
     this->checkSymbolic();
     return this->sym->buildSymbolicMemoryOperand(mem);
   }
 
 
-  smt2lib::smtAstAbstractNode* API::buildSymbolicRegisterOperand(triton::arch::RegisterOperand& reg) {
+  triton::ast::smtAstAbstractNode* API::buildSymbolicRegisterOperand(triton::arch::RegisterOperand& reg) {
     this->checkSymbolic();
     return this->sym->buildSymbolicRegisterOperand(reg);
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::newSymbolicExpression(smt2lib::smtAstAbstractNode* node, std::string comment) {
+  triton::engines::symbolic::SymbolicExpression* API::newSymbolicExpression(triton::ast::smtAstAbstractNode* node, std::string comment) {
     this->checkSymbolic();
     return this->sym->newSymbolicExpression(node, triton::engines::symbolic::UNDEF, comment);
   }
@@ -474,7 +474,7 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::createSymbolicExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, triton::arch::OperandWrapper& dst, std::string comment) {
+  triton::engines::symbolic::SymbolicExpression* API::createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::smtAstAbstractNode* node, triton::arch::OperandWrapper& dst, std::string comment) {
     this->checkSymbolic();
     switch (dst.getType()) {
       case triton::arch::OP_MEM: return this->createSymbolicMemoryExpression(inst, node, dst.getMemory(), comment);
@@ -486,25 +486,25 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::createSymbolicMemoryExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, triton::arch::MemoryOperand& mem, std::string comment) {
+  triton::engines::symbolic::SymbolicExpression* API::createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::smtAstAbstractNode* node, triton::arch::MemoryOperand& mem, std::string comment) {
     this->checkSymbolic();
     return this->sym->createSymbolicMemoryExpression(inst, node, mem, comment);
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::createSymbolicRegisterExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, triton::arch::RegisterOperand& reg, std::string comment) {
+  triton::engines::symbolic::SymbolicExpression* API::createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::smtAstAbstractNode* node, triton::arch::RegisterOperand& reg, std::string comment) {
     this->checkSymbolic();
     return this->sym->createSymbolicRegisterExpression(inst, node, reg, comment);
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::createSymbolicFlagExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, triton::arch::RegisterOperand& flag, std::string comment) {
+  triton::engines::symbolic::SymbolicExpression* API::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::smtAstAbstractNode* node, triton::arch::RegisterOperand& flag, std::string comment) {
     this->checkSymbolic();
     return this->sym->createSymbolicFlagExpression(inst, node, flag, comment);
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::createSymbolicVolatileExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, std::string comment) {
+  triton::engines::symbolic::SymbolicExpression* API::createSymbolicVolatileExpression(triton::arch::Instruction& inst, triton::ast::smtAstAbstractNode* node, std::string comment) {
     this->checkSymbolic();
     return this->sym->createSymbolicVolatileExpression(inst, node, comment);
   }
@@ -616,7 +616,7 @@ namespace triton {
   #endif
 
 
-  smt2lib::smtAstAbstractNode* API::browseAstSummaries(smt2lib::smtAstAbstractNode* node) {
+  triton::ast::smtAstAbstractNode* API::browseAstSummaries(triton::ast::smtAstAbstractNode* node) {
     this->checkSymbolic();
     return this->sym->browseAstSummaries(node);
   }
@@ -628,7 +628,7 @@ namespace triton {
   }
 
 
-  smt2lib::smtAstAbstractNode* API::processSimplification(smt2lib::smtAstAbstractNode* node, bool z3) {
+  triton::ast::smtAstAbstractNode* API::processSimplification(triton::ast::smtAstAbstractNode* node, bool z3) {
     this->checkSymbolic();
     return this->sym->processSimplification(node, z3);
   }
@@ -742,22 +742,22 @@ namespace triton {
   }
 
 
-  smt2lib::smtAstAbstractNode* API::getFullAst(smt2lib::smtAstAbstractNode* node) {
+  triton::ast::smtAstAbstractNode* API::getFullAst(triton::ast::smtAstAbstractNode* node) {
     this->checkSymbolic();
     return this->sym->getFullAst(node);
   }
 
 
-  smt2lib::smtAstAbstractNode* API::getAstFromId(triton::__uint symExprId) {
+  triton::ast::smtAstAbstractNode* API::getAstFromId(triton::__uint symExprId) {
     this->checkSymbolic();
     triton::engines::symbolic::SymbolicExpression* symExpr = this->getSymbolicExpressionFromId(symExprId);
     return symExpr->getAst();
   }
 
 
-  smt2lib::smtAstAbstractNode* API::getFullAstFromId(triton::__uint symExprId) {
+  triton::ast::smtAstAbstractNode* API::getFullAstFromId(triton::__uint symExprId) {
     this->checkSymbolic();
-    smt2lib::smtAstAbstractNode* partialAst = this->getAstFromId(symExprId);
+    triton::ast::smtAstAbstractNode* partialAst = this->getAstFromId(symExprId);
     return this->getFullAst(partialAst);
   }
 
@@ -795,19 +795,19 @@ namespace triton {
   }
 
 
-  std::map<triton::uint32, triton::engines::solver::SolverModel> API::getModel(smt2lib::smtAstAbstractNode *node) {
+  std::map<triton::uint32, triton::engines::solver::SolverModel> API::getModel(triton::ast::smtAstAbstractNode *node) {
     this->checkSolver();
     return this->solver->getModel(node);
   }
 
 
-  std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> API::getModels(smt2lib::smtAstAbstractNode *node, triton::uint32 limit) {
+  std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> API::getModels(triton::ast::smtAstAbstractNode *node, triton::uint32 limit) {
     this->checkSolver();
     return this->solver->getModels(node, limit);
   }
 
 
-  triton::uint512 API::evaluateAst(smt2lib::smtAstAbstractNode *node) {
+  triton::uint512 API::evaluateAst(triton::ast::smtAstAbstractNode *node) {
     this->checkSolver();
     return this->solver->evaluateAst(node);
   }

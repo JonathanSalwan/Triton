@@ -15,7 +15,7 @@
 #include "memoryOperand.hpp"
 #include "operandWrapper.hpp"
 #include "registerOperand.hpp"
-#include "smt2lib.hpp"
+#include "ast.hpp"
 #include "solverEngine.hpp"
 #include "symbolicEngine.hpp"
 #include "taintEngine.hpp"
@@ -59,7 +59,7 @@ namespace triton {
         triton::engines::solver::SolverEngine* solver;
 
         //! The AST representation interface.
-        triton::smt2lib::representation::AstRepresentation* astRepresentation;
+        triton::ast::representation::AstRepresentation* astRepresentation;
 
       public:
 
@@ -186,13 +186,13 @@ namespace triton {
         void checkAstRepresentation(void);
 
         //! [**AST representation api**] - Display a node according to the AST representation mode.
-        std::ostream& printAstRepresentation(std::ostream& stream, smt2lib::smtAstAbstractNode* node);
+        std::ostream& printAstRepresentation(std::ostream& stream, triton::ast::smtAstAbstractNode* node);
 
         //! [**AST representation api**] - Returns the AST representation mode.
-        triton::smt2lib::representation::mode_e getAstRepresentationMode(void);
+        triton::ast::representation::mode_e getAstRepresentationMode(void);
 
         //! [**AST representation api**] - Sets the AST representation mode.
-        void setAstRepresentationMode(triton::smt2lib::representation::mode_e mode);
+        void setAstRepresentationMode(triton::ast::representation::mode_e mode);
 
 
 
@@ -250,19 +250,19 @@ namespace triton {
         triton::engines::symbolic::SymbolicVariable* convertRegisterToSymbolicVariable(triton::arch::RegisterOperand reg, std::string symVarComment="");
 
         //! [**symbolic api**] - Returns a symbolic operand.
-        smt2lib::smtAstAbstractNode* buildSymbolicOperand(triton::arch::OperandWrapper& op);
+        triton::ast::smtAstAbstractNode* buildSymbolicOperand(triton::arch::OperandWrapper& op);
 
         //! [**symbolic api**] - Returns an immediate symbolic operand.
-        smt2lib::smtAstAbstractNode* buildSymbolicImmediateOperand(triton::arch::ImmediateOperand& imm);
+        triton::ast::smtAstAbstractNode* buildSymbolicImmediateOperand(triton::arch::ImmediateOperand& imm);
 
         //! [**symbolic api**] - Returns a symbolic memory operand.
-        smt2lib::smtAstAbstractNode* buildSymbolicMemoryOperand(triton::arch::MemoryOperand& mem);
+        triton::ast::smtAstAbstractNode* buildSymbolicMemoryOperand(triton::arch::MemoryOperand& mem);
 
         //! [**symbolic api**] - Returns a symbolic register operand.
-        smt2lib::smtAstAbstractNode* buildSymbolicRegisterOperand(triton::arch::RegisterOperand& reg);
+        triton::ast::smtAstAbstractNode* buildSymbolicRegisterOperand(triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Returns a new symbolic expression. Note that if there are simplification passes recorded, simplification will be applied.
-        triton::engines::symbolic::SymbolicExpression* newSymbolicExpression(smt2lib::smtAstAbstractNode* node, std::string comment="");
+        triton::engines::symbolic::SymbolicExpression* newSymbolicExpression(triton::ast::smtAstAbstractNode* node, std::string comment="");
 
         //! [**symbolic api**] - Returns a new symbolic variable.
         triton::engines::symbolic::SymbolicVariable* newSymbolicVariable(triton::uint32 varSize, std::string comment="");
@@ -271,19 +271,19 @@ namespace triton {
         void removeSymbolicExpression(triton::__uint symExprId);
 
         //! [**symbolic api**] - Returns the new symbolic abstract expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, triton::arch::OperandWrapper& dst, std::string comment="");
+        triton::engines::symbolic::SymbolicExpression* createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::smtAstAbstractNode* node, triton::arch::OperandWrapper& dst, std::string comment="");
 
         //! [**symbolic api**] - Returns the new symbolic memory expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicMemoryExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, triton::arch::MemoryOperand& mem, std::string comment="");
+        triton::engines::symbolic::SymbolicExpression* createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::smtAstAbstractNode* node, triton::arch::MemoryOperand& mem, std::string comment="");
 
         //! [**symbolic api**] - Returns the new symbolic register expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicRegisterExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, triton::arch::RegisterOperand& reg, std::string comment="");
+        triton::engines::symbolic::SymbolicExpression* createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::smtAstAbstractNode* node, triton::arch::RegisterOperand& reg, std::string comment="");
 
         //! [**symbolic api**] - Returns the new symbolic flag expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicFlagExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, triton::arch::RegisterOperand& flag, std::string comment="");
+        triton::engines::symbolic::SymbolicExpression* createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::smtAstAbstractNode* node, triton::arch::RegisterOperand& flag, std::string comment="");
 
         //! [**symbolic api**] - Returns the new symbolic volatile expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicVolatileExpression(triton::arch::Instruction& inst, smt2lib::smtAstAbstractNode* node, std::string comment="");
+        triton::engines::symbolic::SymbolicExpression* createSymbolicVolatileExpression(triton::arch::Instruction& inst, triton::ast::smtAstAbstractNode* node, std::string comment="");
 
         //! [**symbolic api**] - Assigns a symbolic expression to a memory.
         void assignSymbolicExpressionToMemory(triton::engines::symbolic::SymbolicExpression* se, triton::arch::MemoryOperand& mem);
@@ -308,13 +308,13 @@ namespace triton {
         #endif
 
         //! [**symbolic api**] - Browses AST Summaries if the optimization `AST_SUMMARIES` is enabled.
-        smt2lib::smtAstAbstractNode* browseAstSummaries(smt2lib::smtAstAbstractNode* node);
+        triton::ast::smtAstAbstractNode* browseAstSummaries(triton::ast::smtAstAbstractNode* node);
 
         //! [**symbolic api**] - Returns all stats about AST Summaries.
         std::map<std::string, triton::uint32> getAstSummariesStats(void);
 
         //! [**symbolic api**] - Processes all recorded simplifications. Returns the simplified node.
-        smt2lib::smtAstAbstractNode* processSimplification(smt2lib::smtAstAbstractNode* node, bool z3=false);
+        triton::ast::smtAstAbstractNode* processSimplification(triton::ast::smtAstAbstractNode* node, bool z3=false);
 
         //! [**symbolic api**] - Returns the symbolic expression corresponding to the id.
         triton::engines::symbolic::SymbolicExpression* getSymbolicExpressionFromId(triton::__uint symExprId);
@@ -376,13 +376,13 @@ namespace triton {
         void concretizeRegister(triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Returns the partial AST from a symbolic expression id.
-        smt2lib::smtAstAbstractNode* getAstFromId(triton::__uint symExprId);
+        triton::ast::smtAstAbstractNode* getAstFromId(triton::__uint symExprId);
 
         //! [**symbolic api**] - Returns the full AST of a root node.
-        smt2lib::smtAstAbstractNode* getFullAst(smt2lib::smtAstAbstractNode* node);
+        triton::ast::smtAstAbstractNode* getFullAst(triton::ast::smtAstAbstractNode* node);
 
         //! [**symbolic api**] - Returns the full AST from a symbolic expression id.
-        smt2lib::smtAstAbstractNode* getFullAstFromId(triton::__uint symExprId);
+        triton::ast::smtAstAbstractNode* getFullAstFromId(triton::__uint symExprId);
 
         //! [**symbolic api**] - Returns the list of the tainted symbolic expressions.
         std::list<triton::engines::symbolic::SymbolicExpression*> getTaintedSymbolicExpressions(void);
@@ -410,7 +410,7 @@ namespace triton {
          * **item1**: symbolic variable id<br>
          * **item2**: model
          */
-        std::map<triton::uint32, triton::engines::solver::SolverModel> getModel(smt2lib::smtAstAbstractNode *node);
+        std::map<triton::uint32, triton::engines::solver::SolverModel> getModel(triton::ast::smtAstAbstractNode *node);
 
         //! [**solver api**] - Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
         /*! \brief list of map of symbolic variable id -> model
@@ -419,10 +419,10 @@ namespace triton {
          * **item1**: symbolic variable id<br>
          * **item2**: model
          */
-        std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(smt2lib::smtAstAbstractNode *node, triton::uint32 limit);
+        std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(triton::ast::smtAstAbstractNode *node, triton::uint32 limit);
 
         //! [**solver api**] - Evaluates an AST and returns the symbolic value.
-        triton::uint512 evaluateAst(smt2lib::smtAstAbstractNode *node);
+        triton::uint512 evaluateAst(triton::ast::smtAstAbstractNode *node);
 
 
 
