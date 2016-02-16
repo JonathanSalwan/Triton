@@ -65,7 +65,7 @@ This object is used to represent a symbolic expression.
 
 >>> ast = expr_1.getAst()
 >>> ast
-<SmtAstNode object at 0x7f93ddeb3c00>
+<AstNode object at 0x7f93ddeb3c00>
 >>> print ast
 (bvxor ((_ extract 63 0) (_ bv12345 64)) ((_ extract 63 0) (_ bv67890 64)))
 
@@ -83,7 +83,7 @@ rax:64 bv[63..0]
 <hr>
 
 - **getAst(void)**<br>
-Returns the SMT AST root node of the symbolic expression as \ref py_SmtAstNode_page. This is the semantics.
+Returns the SMT AST root node of the symbolic expression as \ref py_AstNode_page. This is the semantics.
 
 - **getComment(void)**<br>
 Returns the comment (if exists) of the symbolic expression as string.
@@ -97,7 +97,7 @@ Returns the kind of the symbolic expression as \ref py_SYMEXPR_page.<br>
 e.g: `SYMEXPR.REG`
 
 - **getNewAst(void)**<br>
-Returns a new SMT AST root node of the symbolic expression as \ref py_SmtAstNode_page. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
+Returns a new SMT AST root node of the symbolic expression as \ref py_AstNode_page. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
 
 - **getOriginAddress(void)**<br>
 Returns the origin memory address if `isMemory()` is equal to `True`, `0` otherwise. This address represents the target assignment.
@@ -114,7 +114,7 @@ Returns true if the expression is assigned to a register.
 - **isTainted(void)**<br>
 Returns true if the expression is tainted.
 
-- **setAst(\ref py_SmtAstNode_page node)**<br>
+- **setAst(\ref py_AstNode_page node)**<br>
 Sets a root node.
 
 */
@@ -132,7 +132,7 @@ namespace triton {
 
 
       static PyObject* SymbolicExpression_getAst(PyObject* self, PyObject* noarg) {
-        return PySmtAstNode(PySymbolicExpression_AsSymbolicExpression(self)->getAst());
+        return PyAstNode(PySymbolicExpression_AsSymbolicExpression(self)->getAst());
       }
 
 
@@ -152,7 +152,7 @@ namespace triton {
 
 
       static PyObject* SymbolicExpression_getNewAst(PyObject* self, PyObject* noarg) {
-        return PySmtAstNode(PySymbolicExpression_AsSymbolicExpression(self)->getNewAst());
+        return PyAstNode(PySymbolicExpression_AsSymbolicExpression(self)->getNewAst());
       }
 
 
@@ -188,9 +188,9 @@ namespace triton {
 
 
       static PyObject* SymbolicExpression_setAst(PyObject* self, PyObject* node) {
-        if (!PySmtAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "SymbolicExpression::setAst(): Expected a SmtAstNode as argument.");
-        PySymbolicExpression_AsSymbolicExpression(self)->setAst(PySmtAstNode_AsSmtAstNode(node));
+        if (!PyAstNode_Check(node))
+          return PyErr_Format(PyExc_TypeError, "SymbolicExpression::setAst(): Expected a AstNode as argument.");
+        PySymbolicExpression_AsSymbolicExpression(self)->setAst(PyAstNode_AsAstNode(node));
         Py_INCREF(Py_None);
         return Py_None;
       }

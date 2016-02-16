@@ -21,7 +21,7 @@ namespace triton {
  *  @{
  */
 
-  //! \module The SMT2-Lib namespace
+  //! \module The AST namespace
   namespace ast {
   /*!
    *  \ingroup triton

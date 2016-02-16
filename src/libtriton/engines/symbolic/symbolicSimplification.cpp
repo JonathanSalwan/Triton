@@ -242,7 +242,7 @@ namespace triton {
 
           /* Create function args */
           PyObject* args = triton::bindings::python::xPyTuple_New(1);
-          PyTuple_SetItem(args, 0, triton::bindings::python::PySmtAstNode(node));
+          PyTuple_SetItem(args, 0, triton::bindings::python::PyAstNode(node));
 
           /* Call the callback */
           PyObject* ret = PyObject_CallObject(*it2, args);
@@ -254,11 +254,11 @@ namespace triton {
           }
 
           /* Check if the callback has returned a AbstractNode */
-          if (!PySmtAstNode_Check(ret))
-            throw std::runtime_error("SymbolicSimplification::processSimplification(): You must return a SmtAstNode object.");
+          if (!PyAstNode_Check(ret))
+            throw std::runtime_error("SymbolicSimplification::processSimplification(): You must return a AstNode object.");
 
           /* Update node */
-          node = PySmtAstNode_AsSmtAstNode(ret);
+          node = PyAstNode_AsAstNode(ret);
           Py_DECREF(args);
         }
         #endif

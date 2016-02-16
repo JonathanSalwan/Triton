@@ -54,7 +54,7 @@ namespace triton {
           //! The kind of the symbolic expression.
           symkind_e kind;
 
-          //! The root node (AST SMT2-Lib) of the symbolic expression.
+          //! The root node (AST) of the symbolic expression.
           triton::ast::AbstractNode* ast;
 
           //! The comment of the symbolic expression.

@@ -22,7 +22,7 @@
 \section description_sec Description
 
 Triton is a dynamic binary analysis (DBA) framework. It provides internal components
-like a \ref engine_DSE_page (DSE) engine, a \ref engine_Taint_page, an intermediate representation based on \ref py_ast_page of the x86 and x86-64
+like a \ref engine_DSE_page (DSE) engine, a \ref engine_Taint_page, several \ref py_ast_page of the x86 and the x86-64
 instructions set, \ref SMT_simplification_page, an \ref solver_interface_page and, the last but not least,
 \ref py_triton_page. Based on these components, you are able to build program analysis tools,
 automate reverse engineering and perform software verification.

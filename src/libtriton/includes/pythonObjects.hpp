@@ -82,8 +82,8 @@ namespace triton {
       //! Creates the SolverModel python class.
       PyObject* PySolverModel(triton::engines::solver::SolverModel &model);
 
-      //! Creates the SmtAstNode python class.
-      PyObject* PySmtAstNode(triton::ast::AbstractNode *node);
+      //! Creates the AstNode python class.
+      PyObject* PyAstNode(triton::ast::AbstractNode *node);
 
       //! Creates the SymbolicExpression python class.
       PyObject* PySymbolicExpression(triton::engines::symbolic::SymbolicExpression *expr);
@@ -158,16 +158,16 @@ namespace triton {
       //! pySolverModel type.
       extern PyTypeObject SolverModel_Type;
 
-      /* SmtAstNode ===================================================== */
+      /* AstNode ======================================================== */
 
-      //! pySmtAstNode object.
+      //! pyAstNode object.
       typedef struct {
         PyObject_HEAD
         triton::ast::AbstractNode *node;
-      } SmtAstNode_Object;
+      } AstNode_Object;
 
-      //! pySmtAstNode type.
-      extern PyTypeObject SmtAstNode_Type;
+      //! pyAstNode type.
+      extern PyTypeObject AstNode_Type;
 
       /* SymbolicExpression ============================================= */
 
@@ -239,10 +239,10 @@ namespace triton {
 #define PySolverModel_AsSolverModel(v) (((triton::bindings::python::SolverModel_Object *)(v))->model)
 
 /*! Checks if the pyObject is a triton::ast::AbstractNode. */
-#define PySmtAstNode_Check(v) ((v)->ob_type == &triton::bindings::python::SmtAstNode_Type)
+#define PyAstNode_Check(v) ((v)->ob_type == &triton::bindings::python::AstNode_Type)
 
 /*! Returns the triton::ast::AbstractNode. */
-#define PySmtAstNode_AsSmtAstNode(v) (((triton::bindings::python::SmtAstNode_Object *)(v))->node)
+#define PyAstNode_AsAstNode(v) (((triton::bindings::python::AstNode_Object *)(v))->node)
 
 /*! Checks if the pyObject is a triton::engines::symbolic::SymbolicExpression. */
 #define PySymbolicExpression_Check(v) ((v)->ob_type == &triton::bindings::python::SymbolicExpression_Type)

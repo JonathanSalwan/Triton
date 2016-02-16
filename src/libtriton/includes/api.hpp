@@ -159,7 +159,7 @@ namespace triton {
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa  processing().
         void disassembly(triton::arch::Instruction &inst);
 
-        //! [**architecture api**] - Builds the instruction semantics based on the SMT2-Lib representation. You must define an architecture before. \sa processing().
+        //! [**architecture api**] - Builds the instruction semantics. You must define an architecture before. \sa processing().
         void buildSemantics(triton::arch::Instruction &inst);
 
 

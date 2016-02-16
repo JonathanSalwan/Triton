@@ -8,9 +8,9 @@
 #ifdef TRITON_PYTHON_BINDINGS
 
 #include <api.hpp>
-#include <pythonUtils.hpp>
 #include <ast.hpp>
 #include <pythonObjects.hpp>
+#include <pythonUtils.hpp>
 
 #ifdef __unix__
   #include <python2.7/Python.h>
@@ -20,7 +20,7 @@
 
 
 
-/*! \page py_ast_page SMT2-Lib
+/*! \page py_ast_page AST Representations
     \brief [**python api**] All information about the ast python module.
     \anchor ast
 
@@ -37,7 +37,7 @@ The [SMT-LIB](http://smtlib.cs.uiowa.edu/) is an international initiative aimed 
 <module 'ast' (built-in)>
 ~~~~~~~~~~~~~
 
-Triton uses the SMT2-Lib to represent the instruction's semantics. Then, via the API you will be able to build and to modify your own symbolic expressions.
+Triton uses the AST to represent the instruction's semantics. Then, via the API you will be able to build and to modify your own symbolic expressions.
 
 ~~~~~~~~~~~~~{.asm}
 Instruction:  add rax, rdx
@@ -146,7 +146,7 @@ models  = getModel(newExpr)
 
 >>> node = bvadd(bv(1, 8), bvxor(bv(10, 8), bv(20, 8)))
 >>> print type(node)
-<type 'SmtAstNode'>
+<type 'AstNode'>
 
 >>> print node
 (bvadd (_ bv1 8) (bvxor (_ bv10 8) (_ bv20 8)))
@@ -181,9 +181,9 @@ models  = getModel(newExpr)
 (bvor (bvand (_ bv1 8) (bvnot (_ bv2 8))) (bvand (bvnot (_ bv1 8)) (_ bv2 8)))
 ~~~~~~~~~~~~~
 
-As we can't overload all SMT2-Lib's operators only these following operators are overloaded:
+As we can't overload all AST's operators only these following operators are overloaded:
 
-Python's Operator | SMT2-Lib format
+Python's Operator | e.g: SMT2-Lib format
 ------------------|------------------
 a + b             | (bvadd a b)
 a - b             | (bvsub a b)
@@ -202,195 +202,195 @@ a \>> b           | (bvlshr a b)
 <hr>
 
 - **bv(integer value, integer size)**<br>
-Returns the ast `triton::ast::bv()` representation as \ref py_SmtAstNode_page. The `size` is in bits.<br>
+Returns the ast `triton::ast::bv()` representation as \ref py_AstNode_page. The `size` is in bits.<br>
 e.g: `(_ bvValue size)`.
 
-- **bvadd(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvadd()` representation as \ref py_SmtAstNode_page.<br>
+- **bvadd(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvadd()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvadd expr1 epxr2)`.
 
-- **bvand(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvand()` as \ref py_SmtAstNode_page.<br>
+- **bvand(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvand()` as \ref py_AstNode_page.<br>
 e.g: `(bvand expr1 epxr2)`.
 
-- **bvashr(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvashr()` representation as \ref py_SmtAstNode_page.<br>
+- **bvashr(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvashr()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvashr expr1 epxr2)`.
 
 - **bvdecl(integer size)**<br>
-Returns the ast `triton::ast::bvdecl()` representation as \ref py_SmtAstNode_page.<br>
+Returns the ast `triton::ast::bvdecl()` representation as \ref py_AstNode_page.<br>
 e.g: `(_ BitVec size)`.
 
 - **bvfalse()**<br>
 This is an alias on the `(_ bv0 1)` ast expression.
 
-- **bvlshr(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvlshr()` representation as \ref py_SmtAstNode_page.<br>
+- **bvlshr(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvlshr()` representation as \ref py_AstNode_page.<br>
 e.g: `(lshr expr1 epxr2)`.
 
-- **bvmul(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvmul()` representation as \ref py_SmtAstNode_page.<br>
+- **bvmul(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvmul()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvmul expr1 expr2)`.
 
-- **bvnand(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvnand()` representation as \ref py_SmtAstNode_page.<br>
+- **bvnand(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvnand()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvnand expr1 expr2)`.
 
-- **bvneg(SmtAstNode expr1)**<br>
-Returns the ast `triton::ast::bvneg()` representation as \ref py_SmtAstNode_page.<br>
+- **bvneg(AstNode expr1)**<br>
+Returns the ast `triton::ast::bvneg()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvneg expr1)`.
 
-- **bvnor(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvnor()` representation as \ref py_SmtAstNode_page.<br>
+- **bvnor(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvnor()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvnor expr1 expr2)`.
 
-- **bvnot(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvnot()` representation as \ref py_SmtAstNode_page.<br>
+- **bvnot(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvnot()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvnot expr1)`.
 
-- **bvor(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvor()` representation as \ref py_SmtAstNode_page.<br>
+- **bvor(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvor()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvor expr1 expr2)`.
 
-- **bvror(integer displacement, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvror()` representation as \ref py_SmtAstNode_page.<br>
+- **bvror(integer displacement, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvror()` representation as \ref py_AstNode_page.<br>
 e.g: `((_ rotate_right displacement) expr)`.
 
-- **bvrol(integer displacement, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvrol()` representation as \ref py_SmtAstNode_page.<br>
+- **bvrol(integer displacement, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvrol()` representation as \ref py_AstNode_page.<br>
 e.g: `((_ rotate_left displacement) expr)`.
 
-- **bvsdiv(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvsdiv()` representation as \ref py_SmtAstNode_page.<br>
+- **bvsdiv(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvsdiv()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvsdiv expr1 epxr2)`.
 
-- **bvsge(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvsge()` representation as \ref py_SmtAstNode_page.<br>
+- **bvsge(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvsge()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvsge expr1 epxr2)`.
 
-- **bvsgt(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvsgt()` representation as \ref py_SmtAstNode_page.<br>
+- **bvsgt(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvsgt()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvsgt expr1 epxr2)`.
 
-- **bvshl(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvshl()` representation as \ref py_SmtAstNode_page.<br>
+- **bvshl(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvshl()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvshl expr1 expr2)`.
 
-- **bvsle(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvsle()` representation as \ref py_SmtAstNode_page.<br>
+- **bvsle(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvsle()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvsle expr1 epxr2)`.
 
-- **bvslt(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvslt()` representation as \ref py_SmtAstNode_page.<br>
+- **bvslt(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvslt()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvslt expr1 epxr2)`.
 
-- **bvsmod(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvsmod()` representation as \ref py_SmtAstNode_page.<br>
+- **bvsmod(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvsmod()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvsmod expr1 expr2)`.
 
-- **bvsrem(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvsrem()` representation as \ref py_SmtAstNode_page.<br>
+- **bvsrem(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvsrem()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvsrem expr1 expr2)`.
 
-- **bvsub(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvsub()` representation as \ref py_SmtAstNode_page.<br>
+- **bvsub(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvsub()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvsub expr1 epxr2)`.
 
 - **bvtrue()**<br>
 This is an alias on the `(_ bv1 1)` ast expression.
 
-- **bvudiv(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvudiv()` representation as \ref py_SmtAstNode_page.<br>
+- **bvudiv(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvudiv()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvudiv expr1 epxr2)`.
 
-- **bvuge(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvuge()` representation as \ref py_SmtAstNode_page.<br>
+- **bvuge(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvuge()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvuge expr1 epxr2)`.
 
-- **bvugt(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvugt()` representation as \ref py_SmtAstNode_page.<br>
+- **bvugt(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvugt()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvugt expr1 epxr2)`.
 
-- **bvule(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvule()` representation as \ref py_SmtAstNode_page.<br>
+- **bvule(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvule()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvule expr1 epxr2)`.
 
-- **bvult(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvult()` representation as \ref py_SmtAstNode_page.<br>
+- **bvult(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvult()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvult expr1 epxr2)`.
 
-- **bvurem(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvurem()` representation as \ref py_SmtAstNode_page.<br>
+- **bvurem(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvurem()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvurem expr1 expr2)`.
 
-- **bvxnor(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvxnor()` representation as \ref py_SmtAstNode_page.<br>
+- **bvxnor(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvxnor()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvxnor expr1 expr2)`.
 
-- **bvxor(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::bvxor()` representation as \ref py_SmtAstNode_page.<br>
+- **bvxor(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::bvxor()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvxor expr1 epxr2)`.
 
-- **compound([SmtAstNode expr ...])**<br>
-Returns the `triton::ast::compound()` node as \ref py_SmtAstNode_page.
+- **compound([AstNode expr ...])**<br>
+Returns the `triton::ast::compound()` node as \ref py_AstNode_page.
 
-- **concat([SmtAstNode expr ...])**<br>
-Returns the `triton::ast::concat()` node as \ref py_SmtAstNode_page.
+- **concat([AstNode expr ...])**<br>
+Returns the `triton::ast::concat()` node as \ref py_AstNode_page.
 
-- **distinct(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::distinct()` representation as \ref py_SmtAstNode_page.<br>
+- **distinct(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::distinct()` representation as \ref py_AstNode_page.<br>
 e.g: `(distinct expr1 expr2)`
 
-- **equal(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::equal()` representation as \ref py_SmtAstNode_page.<br>
+- **equal(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::equal()` representation as \ref py_AstNode_page.<br>
 e.g: `(= expr1 epxr2)`.
 
-- **extract(integer high, integer low, SmtAstNode expr1)**<br>
-Returns the ast `triton::ast::extract()` representation as \ref py_SmtAstNode_page.<br>
+- **extract(integer high, integer low, AstNode expr1)**<br>
+Returns the ast `triton::ast::extract()` representation as \ref py_AstNode_page.<br>
 e.g: `((_ extract high low) expr1)`.
 
-- **ite(SmtAstNode ifExpr, SmtAstNode thenExpr, SmtAstNode elseExpr)**<br>
-Returns the ast `triton::ast::ite()` representation as \ref py_SmtAstNode_page.<br>
+- **ite(AstNode ifExpr, AstNode thenExpr, AstNode elseExpr)**<br>
+Returns the ast `triton::ast::ite()` representation as \ref py_AstNode_page.<br>
 e.g: `(ite ifExpr thenExpr elseExpr)`.
 
-- **land(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::land()` representation as \ref py_SmtAstNode_page.<br>
+- **land(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::land()` representation as \ref py_AstNode_page.<br>
 e.g: `(and expr1 expr2)`.
 
-- **let(string alias, SmtAstNode expr2, SmtAstNode expr3)**<br>
-Returns the ast `triton::ast::let()` representation as \ref py_SmtAstNode_page.<br>
+- **let(string alias, AstNode expr2, AstNode expr3)**<br>
+Returns the ast `triton::ast::let()` representation as \ref py_AstNode_page.<br>
 e.g: `(let ((alias expr2)) expr3)`.
 
-- **lnot(SmtAstNode expr)**<br>
-Returns the ast `triton::ast::lnot()` representation as \ref py_SmtAstNode_page.<br>
+- **lnot(AstNode expr)**<br>
+Returns the ast `triton::ast::lnot()` representation as \ref py_AstNode_page.<br>
 e.g: `(not expr)`.
 
-- **lor(SmtAstNode expr1, SmtAstNode expr2)**<br>
-Returns the ast `triton::ast::lor()` representation as \ref py_SmtAstNode_page.<br>
+- **lor(AstNode expr1, AstNode expr2)**<br>
+Returns the ast `triton::ast::lor()` representation as \ref py_AstNode_page.<br>
 e.g: `(or expr1 expr2)`.
 
 - **reference(integer exprId)**<br>
-Returns the reference (`triton::ast::reference()`) node representation as \ref py_SmtAstNode_page.
+Returns the reference (`triton::ast::reference()`) node representation as \ref py_AstNode_page.
 Be careful, the targeted node reference is always on the max vector size, except for volatile
 expressions.<br>
 e.g: `#123`.
 
-- **assert_(SmtAstNode expr1)**<br>
-Returns the ast `triton::ast::assert_()` representation as \ref py_SmtAstNode_page.<br>
+- **assert_(AstNode expr1)**<br>
+Returns the ast `triton::ast::assert_()` representation as \ref py_AstNode_page.<br>
 e.g: `(assert expr1)`.
 
 - **string(string s)**<br>
-Returns a `triton::ast::string()` node as \ref py_SmtAstNode_page.
+Returns a `triton::ast::string()` node as \ref py_AstNode_page.
 
-- **sx(integer sizeExt, SmtAstNode expr1)**<br>
-Returns the ast `triton::ast::sx()` representation as \ref py_SmtAstNode_page.<br>
+- **sx(integer sizeExt, AstNode expr1)**<br>
+Returns the ast `triton::ast::sx()` representation as \ref py_AstNode_page.<br>
 e.g: `((_ sign_extend sizeExt) expr1)`.
 
 - **variable(string s)**<br>
-Returns a `triton::ast::variable()` node as \ref py_SmtAstNode_page.
+Returns a `triton::ast::variable()` node as \ref py_AstNode_page.
 
-- **zx(integer sizeExt, SmtAstNode expr1)**<br>
-Returns the ast `triton::ast::zx()` representation as \ref py_SmtAstNode_page.<br>
+- **zx(integer sizeExt, AstNode expr1)**<br>
+Returns the ast `triton::ast::zx()` representation as \ref py_AstNode_page.<br>
 e.g: `((_ zero_extend sizeExt) expr1)`.
 
 */
@@ -416,7 +416,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bv(): expected an integer as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bv(PyLong_AsUint128(op1), PyLong_AsUint(op2)));
+          return PyAstNode(triton::ast::bv(PyLong_AsUint128(op1), PyLong_AsUint(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -431,14 +431,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvadd(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvadd(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvadd(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvadd(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvadd(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvadd(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -453,14 +453,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvand(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvand(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvand(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvand(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvand(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvand(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -475,14 +475,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvashr(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvashr(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvashr(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvashr(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvashr(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvashr(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -495,7 +495,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvdecl(): expected an integer as argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvdecl(PyLong_AsUint(size)));
+          return PyAstNode(triton::ast::bvdecl(PyLong_AsUint(size)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -505,7 +505,7 @@ namespace triton {
 
       static PyObject* ast_bvfalse(PyObject* self, PyObject* args) {
         try {
-          return PySmtAstNode(triton::ast::bvfalse());
+          return PyAstNode(triton::ast::bvfalse());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -520,14 +520,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvlshr(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvlshr(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvlshr(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvlshr(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvlshr(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvlshr(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -542,14 +542,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvmul(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvmul(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvmul(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvmul(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvmul(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvmul(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -564,14 +564,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvnand(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvnand(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvnand(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvnand(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvnand(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvnand(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -580,11 +580,11 @@ namespace triton {
 
 
       static PyObject* ast_bvneg(PyObject* self, PyObject* op1) {
-        if (!PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvneg(): expected a SmtAstNode as first argument");
+        if (!PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvneg(): expected a AstNode as first argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvneg(PySmtAstNode_AsSmtAstNode(op1)));
+          return PyAstNode(triton::ast::bvneg(PyAstNode_AsAstNode(op1)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -599,14 +599,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvnor(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvnor(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvnor(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvnor(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvnor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvnor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -615,11 +615,11 @@ namespace triton {
 
 
       static PyObject* ast_bvnot(PyObject* self, PyObject* op1) {
-        if (!PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvnot(): expected a SmtAstNode as first argument");
+        if (!PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvnot(): expected a AstNode as first argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvnot(PySmtAstNode_AsSmtAstNode(op1)));
+          return PyAstNode(triton::ast::bvnot(PyAstNode_AsAstNode(op1)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -634,14 +634,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvor(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvor(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvor(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvor(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -659,11 +659,11 @@ namespace triton {
         if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
           return PyErr_Format(PyExc_TypeError, "bvror(): expected an integer as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvror(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvror(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvror(PyLong_AsUint(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvror(PyLong_AsUint(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -681,11 +681,11 @@ namespace triton {
         if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
           return PyErr_Format(PyExc_TypeError, "bvrol(): expected a integer as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvrol(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvrol(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvrol(PyLong_AsUint(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvrol(PyLong_AsUint(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -700,14 +700,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvsdiv(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvsdiv(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvsdiv(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvsdiv(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvsdiv(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvsdiv(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -722,14 +722,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvsge(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvsge(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvsge(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvsge(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvsge(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvsge(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -744,14 +744,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvsgt(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvsgt(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvsgt(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvsgt(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvsgt(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvsgt(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -766,14 +766,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvshl(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvshl(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvshl(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvshl(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvshl(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvshl(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -788,14 +788,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvsle(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvsle(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvsle(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvsle(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvsle(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvsle(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -810,14 +810,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvslt(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvslt(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvslt(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvslt(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvslt(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvslt(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -832,14 +832,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvsmod(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvsmod(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvsmod(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvsmod(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvsmod(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvsmod(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -854,14 +854,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvsrem(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvsrem(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvsrem(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvsrem(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvsrem(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvsrem(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -876,14 +876,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvsub(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvsub(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvsub(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvsub(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvsub(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvsub(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -893,7 +893,7 @@ namespace triton {
 
       static PyObject* ast_bvtrue(PyObject* self, PyObject* args) {
         try {
-          return PySmtAstNode(triton::ast::bvtrue());
+          return PyAstNode(triton::ast::bvtrue());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -908,14 +908,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvudiv(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvudiv(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvudiv(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvudiv(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvudiv(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvudiv(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -930,14 +930,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvuge(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvuge(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvuge(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvuge(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvuge(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvuge(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -952,14 +952,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvugt(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvugt(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvugt(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvugt(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvugt(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvugt(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -974,14 +974,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvule(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvule(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvule(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvule(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvule(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvule(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -996,14 +996,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvult(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvult(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvult(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvult(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvult(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvult(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1018,14 +1018,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvurem(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvurem(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvurem(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvurem(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvurem(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvurem(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1040,14 +1040,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvxnor(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvxnor(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvxnor(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvxnor(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvxnor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvxnor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1062,14 +1062,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "bvxor(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvxor(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvxor(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "bvxor(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::bvxor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::bvxor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1084,14 +1084,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "distinct(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "distinct(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "distinct(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "distinct(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::distinct(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::distinct(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1103,20 +1103,20 @@ namespace triton {
         std::vector<triton::ast::AbstractNode *> exprs;
 
         if (exprsList == nullptr || !PyList_Check(exprsList))
-          return PyErr_Format(PyExc_TypeError, "compound(): expected a list of SmtAstNodes as first argument");
+          return PyErr_Format(PyExc_TypeError, "compound(): expected a list of AstNodes as first argument");
 
         /* Check if the mems list contains only integer item and craft a std::list */
         for (Py_ssize_t i = 0; i < PyList_Size(exprsList); i++){
           PyObject* item = PyList_GetItem(exprsList, i);
 
-          if (!PySmtAstNode_Check(item))
-            return PyErr_Format(PyExc_TypeError, "compound(): Each element from the list must be a SmtAstNode");
+          if (!PyAstNode_Check(item))
+            return PyErr_Format(PyExc_TypeError, "compound(): Each element from the list must be a AstNode");
 
-          exprs.push_back(PySmtAstNode_AsSmtAstNode(item));
+          exprs.push_back(PyAstNode_AsAstNode(item));
         }
 
         try {
-          return PySmtAstNode(triton::ast::compound(exprs));
+          return PyAstNode(triton::ast::compound(exprs));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1128,20 +1128,20 @@ namespace triton {
         std::vector<triton::ast::AbstractNode *> exprs;
 
         if (exprsList == nullptr || !PyList_Check(exprsList))
-          return PyErr_Format(PyExc_TypeError, "concat(): expected a list of SmtAstNodes as first argument");
+          return PyErr_Format(PyExc_TypeError, "concat(): expected a list of AstNodes as first argument");
 
-        /* Check if the list contains only PySmtAstNode */
+        /* Check if the list contains only PyAstNode */
         for (Py_ssize_t i = 0; i < PyList_Size(exprsList); i++){
           PyObject* item = PyList_GetItem(exprsList, i);
 
-          if (!PySmtAstNode_Check(item))
-            return PyErr_Format(PyExc_TypeError, "concat(): Each element from the list must be a SmtAstNode");
+          if (!PyAstNode_Check(item))
+            return PyErr_Format(PyExc_TypeError, "concat(): Each element from the list must be a AstNode");
 
-          exprs.push_back(PySmtAstNode_AsSmtAstNode(item));
+          exprs.push_back(PyAstNode_AsAstNode(item));
         }
 
         try {
-          return PySmtAstNode(triton::ast::concat(exprs));
+          return PyAstNode(triton::ast::concat(exprs));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1156,14 +1156,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "equal(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "equal(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "equal(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "equal(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::equal(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::equal(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1185,11 +1185,11 @@ namespace triton {
         if (op2 == nullptr || (!PyLong_Check(op2) && !PyInt_Check(op2)))
           return PyErr_Format(PyExc_TypeError, "extract(): expected an integer as second argument");
 
-        if (op3 == nullptr || !PySmtAstNode_Check(op3))
-          return PyErr_Format(PyExc_TypeError, "extract(): expected a SmtAstNode as third argument");
+        if (op3 == nullptr || !PyAstNode_Check(op3))
+          return PyErr_Format(PyExc_TypeError, "extract(): expected a AstNode as third argument");
 
         try {
-          return PySmtAstNode(triton::ast::extract(PyLong_AsUint(op1), PyLong_AsUint(op2), PySmtAstNode_AsSmtAstNode(op3)));
+          return PyAstNode(triton::ast::extract(PyLong_AsUint(op1), PyLong_AsUint(op2), PyAstNode_AsAstNode(op3)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1205,17 +1205,17 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOO", &op1, &op2, &op3);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "ite(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "ite(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "ite(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "ite(): expected a AstNode as second argument");
 
-        if (op3 == nullptr || !PySmtAstNode_Check(op3))
-          return PyErr_Format(PyExc_TypeError, "ite(): expected a SmtAstNode as third argument");
+        if (op3 == nullptr || !PyAstNode_Check(op3))
+          return PyErr_Format(PyExc_TypeError, "ite(): expected a AstNode as third argument");
 
         try {
-          return PySmtAstNode(triton::ast::ite(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2), PySmtAstNode_AsSmtAstNode(op3)));
+          return PyAstNode(triton::ast::ite(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2), PyAstNode_AsAstNode(op3)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1230,14 +1230,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "land(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "land(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "land(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "land(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::land(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::land(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1256,14 +1256,14 @@ namespace triton {
         if (op1 == nullptr || !PyString_Check(op1))
           return PyErr_Format(PyExc_TypeError, "let(): expected a string as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "let(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "let(): expected a AstNode as second argument");
 
-        if (op3 == nullptr || !PySmtAstNode_Check(op3))
-          return PyErr_Format(PyExc_TypeError, "let(): expected a SmtAstNode as third argument");
+        if (op3 == nullptr || !PyAstNode_Check(op3))
+          return PyErr_Format(PyExc_TypeError, "let(): expected a AstNode as third argument");
 
         try {
-          return PySmtAstNode(triton::ast::let(PyString_AsString(op1), PySmtAstNode_AsSmtAstNode(op2), PySmtAstNode_AsSmtAstNode(op3)));
+          return PyAstNode(triton::ast::let(PyString_AsString(op1), PyAstNode_AsAstNode(op2), PyAstNode_AsAstNode(op3)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1272,11 +1272,11 @@ namespace triton {
 
 
       static PyObject* ast_lnot(PyObject* self, PyObject* expr) {
-        if (expr == nullptr || !PySmtAstNode_Check(expr))
-          return PyErr_Format(PyExc_TypeError, "lnot(): expected a SmtAstNode as argument");
+        if (expr == nullptr || !PyAstNode_Check(expr))
+          return PyErr_Format(PyExc_TypeError, "lnot(): expected a AstNode as argument");
 
         try {
-          return PySmtAstNode(triton::ast::lnot(PySmtAstNode_AsSmtAstNode(expr)));
+          return PyAstNode(triton::ast::lnot(PyAstNode_AsAstNode(expr)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1291,14 +1291,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || !PySmtAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "lor(): expected a SmtAstNode as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "lor(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "lor(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "lor(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::lor(PySmtAstNode_AsSmtAstNode(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::lor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1314,7 +1314,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "reference(): symbolic expression id not found");
 
         try {
-          return PySmtAstNode(triton::ast::reference(PyLong_AsUint(exprId)));
+          return PyAstNode(triton::ast::reference(PyLong_AsUint(exprId)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1323,11 +1323,11 @@ namespace triton {
 
 
       static PyObject* ast_assert(PyObject* self, PyObject* expr) {
-        if (!PySmtAstNode_Check(expr))
-          return PyErr_Format(PyExc_TypeError, "assert_(): expected a SmtAstNode as first argument");
+        if (!PyAstNode_Check(expr))
+          return PyErr_Format(PyExc_TypeError, "assert_(): expected a AstNode as first argument");
 
         try {
-          return PySmtAstNode(triton::ast::assert_(PySmtAstNode_AsSmtAstNode(expr)));
+          return PyAstNode(triton::ast::assert_(PyAstNode_AsAstNode(expr)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1340,7 +1340,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "string(): expected a string as first argument");
 
         try {
-          return PySmtAstNode(triton::ast::string(PyString_AsString(expr)));
+          return PyAstNode(triton::ast::string(PyString_AsString(expr)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1358,11 +1358,11 @@ namespace triton {
         if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
           return PyErr_Format(PyExc_TypeError, "sx(): expected an integer as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "sx(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "sx(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::sx(PyLong_AsUint(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::sx(PyLong_AsUint(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1375,7 +1375,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "variable(): expected a string as first argument");
 
         try {
-          return PySmtAstNode(triton::ast::variable(PyString_AsString(expr)));
+          return PyAstNode(triton::ast::variable(PyString_AsString(expr)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1393,11 +1393,11 @@ namespace triton {
         if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
           return PyErr_Format(PyExc_TypeError, "zx(): expected an integer as first argument");
 
-        if (op2 == nullptr || !PySmtAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "zx(): expected a SmtAstNode as second argument");
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "zx(): expected a AstNode as second argument");
 
         try {
-          return PySmtAstNode(triton::ast::zx(PyLong_AsUint(op1), PySmtAstNode_AsSmtAstNode(op2)));
+          return PyAstNode(triton::ast::zx(PyLong_AsUint(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

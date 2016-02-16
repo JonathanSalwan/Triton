@@ -54,7 +54,7 @@ If you want to use the libTriton without Python bindings, recompile the project 
 - \ref py_Instruction_page
 - \ref py_Memory_page
 - \ref py_Register_page
-- \ref py_SmtAstNode_page
+- \ref py_AstNode_page
 - \ref py_SolverModel_page
 - \ref py_SymbolicExpression_page
 - \ref py_SymbolicVariable_page
@@ -78,16 +78,16 @@ to 128-bits. Otherwise, you will probably get a sort mismatch error when you wil
 expression to a sub-register like `AX`, `AH` or `AL`, please, craft your expression with the `concat()` and `extract()` ast functions.
 
 - **buildSemantics(\ref py_Instruction_page inst)**<br>
-Builds the instruction semantics based on the SMT2-Lib representation. You must define an architecture before.
+Builds the instruction semantics. You must define an architecture before.
 
 - **buildSymbolicImmediate(\ref py_Immediate_page imm)**<br>
-Builds a symbolic \ref py_Immediate_page and returns a \ref py_SmtAstNode_page.
+Builds a symbolic \ref py_Immediate_page and returns a \ref py_AstNode_page.
 
 - **buildSymbolicMemory(\ref py_Memory_page mem)**<br>
-Builds a symbolic \ref py_Memory_page and returns a \ref py_SmtAstNode_page.
+Builds a symbolic \ref py_Memory_page and returns a \ref py_AstNode_page.
 
 - **buildSymbolicRegister(\ref py_REG_page reg)**<br>
-Builds a symbolic \ref py_REG_page and returns a \ref py_SmtAstNode_page.
+Builds a symbolic \ref py_REG_page and returns a \ref py_AstNode_page.
 
 - **concretizeAllMemory(void)**<br>
 Concretizes all symbolic memory references.
@@ -125,16 +125,16 @@ Returns the max size (in bit) of the CPU register (GPR).
 - **cpuRegisterSize(void)**<br>
 Returns the max size (in byte) of the CPU register (GPR).
 
-- <b>createSymbolicFlagExpression(\ref py_Instruction_page inst, \ref py_SmtAstNode_page node, \ref py_REG_page flag, string comment="")</b><br>
+- <b>createSymbolicFlagExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page flag, string comment="")</b><br>
 Returns the new symbolic register expression as \ref py_SymbolicExpression_page and links this expression to the \ref py_Instruction_page.
 
-- <b>createSymbolicMemoryExpression(\ref py_Instruction_page inst, \ref py_SmtAstNode_page node, \ref py_Memory_page mem, string comment="")</b><br>
+- <b>createSymbolicMemoryExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_Memory_page mem, string comment="")</b><br>
 Returns the new symbolic memory expression as \ref py_SymbolicExpression_page and links this expression to the \ref py_Instruction_page.
 
-- <b>createSymbolicRegisterExpression(\ref py_Instruction_page inst, \ref py_SmtAstNode_page node, \ref py_REG_page reg, string comment="")</b><br>
+- <b>createSymbolicRegisterExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page reg, string comment="")</b><br>
 Returns the new symbolic register expression as \ref py_SymbolicExpression_page and links this expression to the \ref py_Instruction_page.
 
-- <b>createSymbolicVolatileExpression (\ref py_Instruction_page inst, \ref py_SmtAstNode_page node, string comment="")</b><br>
+- <b>createSymbolicVolatileExpression (\ref py_Instruction_page inst, \ref py_AstNode_page node, string comment="")</b><br>
 Returns the new symbolic volatile expression as \ref py_SymbolicExpression_page and links this expression to the \ref py_Instruction_page.
 
 - **disableSymbolicOptimization(\ref py_OPTIMIZATION_page opti)**<br>
@@ -158,7 +158,7 @@ Enabled, Triton will use the simplification passes of z3 before to call its reco
 - **enableTaintEngine(bool flag)**<br>
 Enables or disables the taint engine.
 
-- **evaluateAst(\ref py_SmtAstNode_page node)**<br>
+- **evaluateAst(\ref py_AstNode_page node)**<br>
 Evaluates an AST and returns the symbolic value as integer.
 
 - **getAllRegisters(void)**<br>
@@ -168,16 +168,16 @@ Returns the list of all registers. Each item of this list is a \ref py_REG_page.
 Returns the architecture which has been initialized as \ref py_ARCH_page.
 
 - **getAstFromId(integer symExprId)**<br>
-Returns the partial AST as \ref py_SmtAstNode_page from a symbolic expression id.
+Returns the partial AST as \ref py_AstNode_page from a symbolic expression id.
 
 - **getAstSummariesStats(void)**<br>
 Returns a dictionary which contains all information about number of nodes allocated via AST summaries.
 
-- **getFullAst(\ref py_SmtAstNode_page node)**<br>
-Returns the full AST of a root node as \ref py_SmtAstNode_page.
+- **getFullAst(\ref py_AstNode_page node)**<br>
+Returns the full AST of a root node as \ref py_AstNode_page.
 
 - **getFullAstFromId(integer symExprId)**<br>
-Returns the full AST as \ref py_SmtAstNode_page from a symbolic expression id.
+Returns the full AST as \ref py_AstNode_page from a symbolic expression id.
 
 - **getMemoryValue(intger addr)**<br>
 If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of the memory access.
@@ -185,10 +185,10 @@ If the emulation is enabled, returns the emulated value otherwise returns the la
 - **getMemoryValue(\ref py_Memory_page mem)**<br>
 If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of the memory access.
 
-- **getModel(\ref py_SmtAstNode_page node)**<br>
+- **getModel(\ref py_AstNode_page node)**<br>
 Computes and returns a model as a dictionary of {integer symVarId : \ref py_SolverModel_page model} from a symbolic constraint.
 
-- **getModels(\ref py_SmtAstNode_page node)**<br>
+- **getModels(\ref py_AstNode_page node)**<br>
 Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
 
 - **getParentRegisters(void)**<br>
@@ -266,7 +266,7 @@ Returns true if Triton can use the simplification passes of z3.
 - **isTaintEngineEnabled(void)**<br>
 Returns true if the taint engine is enabled.
 
-- **newSymbolicExpression(\ref py_SmtAstNode_page node, string comment="")**<br>
+- **newSymbolicExpression(\ref py_AstNode_page node, string comment="")**<br>
 Returns a new symbolic expression. Note that if there are simplification passes recorded, simplification will be applied.
 
 - **newSymbolicVariable(intger varSize, string comment="")**<br>
@@ -302,8 +302,8 @@ Sets the targeted memory as tainted or not.
 - **setTaintRegister(\ref py_REG_page reg, bool flag)**<br>
 Sets the targeted register as tainted or not.
 
-- **simplify(\ref py_SmtAstNode_page node, bool z3=False)**<br>
-Calls all simplification callbacks recorded and returns the simplified node as \ref py_SmtAstNode_page. If the `z3` flag is set to True, Triton will use z3 to simplify the given `node` before to call recorded callbacks.
+- **simplify(\ref py_AstNode_page node, bool z3=False)**<br>
+Calls all simplification callbacks recorded and returns the simplified node as \ref py_AstNode_page. If the `z3` flag is set to True, Triton will use z3 to simplify the given `node` before to call recorded callbacks.
 
 - <b>taintAssignmentMemoryImmediate(\ref py_Memory_page memDst)</b><br>
 Taints `memDst` with an assignment - `memDst` is untained.
@@ -715,7 +715,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "buildSymbolicImmediate(): Expects an Immediate as argument.");
 
         try {
-          return PySmtAstNode(triton::api.buildSymbolicImmediateOperand(*PyImmediateOperand_AsImmediateOperand(imm)));
+          return PyAstNode(triton::api.buildSymbolicImmediateOperand(*PyImmediateOperand_AsImmediateOperand(imm)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -732,7 +732,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "buildSymbolicMemory(): Expects an Memory as argument.");
 
         try {
-          return PySmtAstNode(triton::api.buildSymbolicMemoryOperand(*PyMemoryOperand_AsMemoryOperand(mem)));
+          return PyAstNode(triton::api.buildSymbolicMemoryOperand(*PyMemoryOperand_AsMemoryOperand(mem)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -749,7 +749,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "buildSymbolicRegister(): Expects an Register as argument.");
 
         try {
-          return PySmtAstNode(triton::api.buildSymbolicRegisterOperand(*PyRegisterOperand_AsRegisterOperand(reg)));
+          return PyAstNode(triton::api.buildSymbolicRegisterOperand(*PyRegisterOperand_AsRegisterOperand(reg)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -963,8 +963,8 @@ namespace triton {
         if (inst == nullptr || (!PyInstance_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects an Instruction as first argument.");
 
-        if (node == nullptr || (!PySmtAstNode_Check(node)))
-          return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects a SmtAstNode as second argument.");
+        if (node == nullptr || (!PyAstNode_Check(node)))
+          return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects a AstNode as second argument.");
 
         if (flag == nullptr || (!PyRegisterOperand_Check(flag)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects a REG as third argument.");
@@ -976,7 +976,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::AbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
+        triton::ast::AbstractNode *arg2 = PyAstNode_AsAstNode(node);
         triton::arch::RegisterOperand arg3 = *PyRegisterOperand_AsRegisterOperand(flag);
 
         try {
@@ -1005,8 +1005,8 @@ namespace triton {
         if (inst == nullptr || (!PyInstance_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicMemoryExpression(): Expects an Instruction as first argument.");
 
-        if (node == nullptr || (!PySmtAstNode_Check(node)))
-          return PyErr_Format(PyExc_TypeError, "createSymbolicMemoryExpression(): Expects a SmtAstNode as second argument.");
+        if (node == nullptr || (!PyAstNode_Check(node)))
+          return PyErr_Format(PyExc_TypeError, "createSymbolicMemoryExpression(): Expects a AstNode as second argument.");
 
         if (mem == nullptr || (!PyMemoryOperand_Check(mem)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicMemoryExpression(): Expects a Memory as third argument.");
@@ -1018,7 +1018,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::AbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
+        triton::ast::AbstractNode *arg2 = PyAstNode_AsAstNode(node);
         triton::arch::MemoryOperand arg3 = *PyMemoryOperand_AsMemoryOperand(mem);
 
         try {
@@ -1047,8 +1047,8 @@ namespace triton {
         if (inst == nullptr || (!PyInstance_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects an Instruction as first argument.");
 
-        if (node == nullptr || (!PySmtAstNode_Check(node)))
-          return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects a SmtAstNode as second argument.");
+        if (node == nullptr || (!PyAstNode_Check(node)))
+          return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects a AstNode as second argument.");
 
         if (reg == nullptr || (!PyRegisterOperand_Check(reg)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects a REG as third argument.");
@@ -1060,7 +1060,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::AbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
+        triton::ast::AbstractNode *arg2 = PyAstNode_AsAstNode(node);
         triton::arch::RegisterOperand arg3 = *PyRegisterOperand_AsRegisterOperand(reg);
 
         try {
@@ -1088,8 +1088,8 @@ namespace triton {
         if (inst == nullptr || (!PyInstance_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicVolatileExpression(): Expects an Instruction as first argument.");
 
-        if (node == nullptr || (!PySmtAstNode_Check(node)))
-          return PyErr_Format(PyExc_TypeError, "createSymbolicVolatileExpression(): Expects a SmtAstNode as second argument.");
+        if (node == nullptr || (!PyAstNode_Check(node)))
+          return PyErr_Format(PyExc_TypeError, "createSymbolicVolatileExpression(): Expects a AstNode as second argument.");
 
         if (comment != nullptr && !PyString_Check(comment))
           return PyErr_Format(PyExc_TypeError, "createSymbolicVolatileExpression(): Expects a sting as third argument.");
@@ -1098,7 +1098,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::AbstractNode *arg2 = PySmtAstNode_AsSmtAstNode(node);
+        triton::ast::AbstractNode *arg2 = PyAstNode_AsAstNode(node);
 
         try {
           return PySymbolicExpression(triton::api.createSymbolicVolatileExpression(arg1, arg2, ccomment));
@@ -1254,11 +1254,11 @@ namespace triton {
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "evaluateAst(): Architecture is not defined.");
 
-        if (!PySmtAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "evaluateAst(): Expects a SmtAstNode as argument.");
+        if (!PyAstNode_Check(node))
+          return PyErr_Format(PyExc_TypeError, "evaluateAst(): Expects a AstNode as argument.");
 
         try {
-          return PyLong_FromUint512(triton::api.evaluateAst(PySmtAstNode_AsSmtAstNode(node)));
+          return PyLong_FromUint512(triton::api.evaluateAst(PyAstNode_AsAstNode(node)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1310,7 +1310,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getAstFromId(): Expects an integer as argument.");
 
         try {
-          return PySmtAstNode(triton::api.getAstFromId(PyLong_AsUint(symExprId)));
+          return PyAstNode(triton::api.getAstFromId(PyLong_AsUint(symExprId)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1346,11 +1346,11 @@ namespace triton {
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getFullAst(): Architecture is not defined.");
 
-        if (!PySmtAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "getFullAst(): Expects a SmtAstNode as argument.");
+        if (!PyAstNode_Check(node))
+          return PyErr_Format(PyExc_TypeError, "getFullAst(): Expects a AstNode as argument.");
 
         try {
-          return PySmtAstNode(triton::api.getFullAst(PySmtAstNode_AsSmtAstNode(node)));
+          return PyAstNode(triton::api.getFullAst(PyAstNode_AsAstNode(node)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1367,7 +1367,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getFullAstFromId(): Expects an integer as argument.");
 
         try {
-          return PySmtAstNode(triton::api.getFullAstFromId(PyLong_AsUint(symExprId)));
+          return PyAstNode(triton::api.getFullAstFromId(PyLong_AsUint(symExprId)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1403,12 +1403,12 @@ namespace triton {
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getModel(): Architecture is not defined.");
 
-        if (!PySmtAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "getModel(): Expects a SmtAstNode as argument.");
+        if (!PyAstNode_Check(node))
+          return PyErr_Format(PyExc_TypeError, "getModel(): Expects a AstNode as argument.");
 
         try {
           ret = xPyDict_New();
-          model = triton::api.getModel(PySmtAstNode_AsSmtAstNode(node));
+          model = triton::api.getModel(PyAstNode_AsAstNode(node));
           for (it = model.begin(); it != model.end(); it++) {
             PyDict_SetItem(ret, PyLong_FromUint(it->first), PySolverModel(it->second));
           }
@@ -1436,14 +1436,14 @@ namespace triton {
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getModels(): Architecture is not defined.");
 
-        if (node == nullptr || !PySmtAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "getModels(): Expects a SmtAstNode as first argument.");
+        if (node == nullptr || !PyAstNode_Check(node))
+          return PyErr_Format(PyExc_TypeError, "getModels(): Expects a AstNode as first argument.");
 
         if (limit == nullptr || (!PyLong_Check(limit) && !PyInt_Check(limit)))
           return PyErr_Format(PyExc_TypeError, "getModels(): Expects an integer as second argument.");
 
         try {
-          models = triton::api.getModels(PySmtAstNode_AsSmtAstNode(node), PyLong_AsUint(limit));
+          models = triton::api.getModels(PyAstNode_AsAstNode(node), PyLong_AsUint(limit));
           ret = xPyList_New(models.size());
           for (it = models.begin(); it != models.end(); it++) {
             PyObject* mdict = xPyDict_New();
@@ -1865,8 +1865,8 @@ namespace triton {
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "newSymbolicExpression(): Architecture is not defined.");
 
-        if (node == nullptr || (!PySmtAstNode_Check(node)))
-          return PyErr_Format(PyExc_TypeError, "newSymbolicExpression(): Expects a SmtAstNode as first argument.");
+        if (node == nullptr || (!PyAstNode_Check(node)))
+          return PyErr_Format(PyExc_TypeError, "newSymbolicExpression(): Expects a AstNode as first argument.");
 
         if (comment != nullptr && !PyString_Check(comment))
           return PyErr_Format(PyExc_TypeError, "newSymbolicExpression(): Expects a sting as second argument.");
@@ -1875,7 +1875,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         try {
-          return PySymbolicExpression(triton::api.newSymbolicExpression(PySmtAstNode_AsSmtAstNode(node), ccomment));
+          return PySymbolicExpression(triton::api.newSymbolicExpression(PyAstNode_AsAstNode(node), ccomment));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2145,8 +2145,8 @@ namespace triton {
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "simplify(): Architecture is not defined.");
 
-        if (node == nullptr || !PySmtAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "simplify(): Expects a SmtAstNode as first argument.");
+        if (node == nullptr || !PyAstNode_Check(node))
+          return PyErr_Format(PyExc_TypeError, "simplify(): Expects a AstNode as first argument.");
 
         if (z3Flag != nullptr && !PyBool_Check(z3Flag))
           return PyErr_Format(PyExc_TypeError, "simplify(): Expects a boolean as second argument.");
@@ -2155,7 +2155,7 @@ namespace triton {
           z3Flag = PyLong_FromUint(false);
 
         try {
-          return PySmtAstNode(triton::api.processSimplification(PySmtAstNode_AsSmtAstNode(node), PyLong_AsUint(z3Flag)));
+          return PyAstNode(triton::api.processSimplification(PyAstNode_AsAstNode(node), PyLong_AsUint(z3Flag)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

@@ -97,7 +97,7 @@ namespace triton {
 
         PyObject* astNodeDict = xPyDict_New();
         initAstNodeNamespace(astNodeDict);
-        PyObject* idSmtAstNodeDictClass = xPyClass_New(nullptr, astNodeDict, xPyString_FromString("AST_NODE"));
+        PyObject* idAstNodeDictClass = xPyClass_New(nullptr, astNodeDict, xPyString_FromString("AST_NODE"));
 
         /* Create the SYMEXPR namespace ============================================================== */
 
@@ -128,7 +128,7 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPERAND",           idOperandClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPTIMIZATION",      idSymOptiClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "REG",               idRegClass);                /* Empty: filled on the fly */
-        PyModule_AddObject(triton::bindings::python::tritonModule, "AST_NODE",      idSmtAstNodeDictClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "AST_NODE",          idAstNodeDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYMEXPR",           idSymExprClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "VERSION",           idVersionClass);
         #ifdef __unix__
