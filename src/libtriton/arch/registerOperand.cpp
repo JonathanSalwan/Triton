@@ -6,6 +6,7 @@
 */
 
 #include <stdexcept>
+
 #include <api.hpp>
 #include <registerOperand.hpp>
 

@@ -23,8 +23,8 @@
 \section solver_interface_description Description
 <hr>
 
-The solver engine is the interface between an SMT solver and **Triton** itself. All requests are sent to the SMT solver
-as an \ref py_ast_page AST. The AST representation as string looks like a manually crafted SMT2-LIB script.
+The solver engine is the interface between a SMT solver and **Triton** itself. All requests are sent to the SMT solver
+as Triton AST (See: \ref py_ast_page). The AST representation as string looks like a manually crafted SMT2-LIB script.
 
 <b>Example:</b>
 
@@ -119,7 +119,7 @@ namespace triton {
         std::stringstream                                 formula;
         z3::context                                       ctx;
         z3::solver                                        solver(ctx);
-        triton::ast::representation::mode_e               representationMode = triton::api.getAstRepresentationMode();
+        triton::uint32                                    representationMode = triton::api.getAstRepresentationMode();
 
         if (node == nullptr)
           throw std::runtime_error("SolverEngine::getModels(): node cannot be null.");

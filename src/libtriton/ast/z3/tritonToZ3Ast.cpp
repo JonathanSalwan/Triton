@@ -6,11 +6,12 @@
 */
 
 #include <stdexcept>
+
 #include <api.hpp>
 #include <cpuSize.hpp>
-#include <tritonToZ3Ast.hpp>
 #include <symbolicExpression.hpp>
 #include <symbolicVariable.hpp>
+#include <tritonToZ3Ast.hpp>
 
 
 

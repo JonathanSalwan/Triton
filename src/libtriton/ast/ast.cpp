@@ -7,10 +7,10 @@
 
 #include <cmath>
 
-#include "api.hpp"
-#include "ast.hpp"
-#include "tritonToZ3Ast.hpp"
-#include "z3Result.hpp"
+#include <api.hpp>
+#include <ast.hpp>
+#include <tritonToZ3Ast.hpp>
+#include <z3Result.hpp>
 
 
 
@@ -1945,9 +1945,11 @@ namespace triton {
 
 
     VariableNode::VariableNode(std::string variable) {
-      this->kind  = VARIABLE_NODE;
+      this->kind = VARIABLE_NODE;
+      if (!triton::api.getSymbolicVariableFromName(variable))
+        throw std::runtime_error("triton::ast::VariableNode(): Symbolic variable not found.");
       this->value = variable;
-      this->size  = 0;
+      this->size = triton::api.getSymbolicVariableFromName(variable)->getSymVarSize();
     }
 
 

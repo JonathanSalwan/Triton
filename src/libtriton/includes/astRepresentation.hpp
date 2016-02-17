@@ -51,7 +51,7 @@ namespace triton {
       class AstRepresentation {
         protected:
           //! The representation mode.
-          enum mode_e mode;
+          triton::uint32 mode;
 
           //! AstRepresentation interface.
           triton::ast::representation::AstRepresentationInterface* representation[triton::ast::representation::LAST_REPRESENTATION];
@@ -65,10 +65,10 @@ namespace triton {
           ~AstRepresentation();
 
           //! Returns the representation mode.
-          enum mode_e getMode(void);
+          triton::uint32 getMode(void);
 
           //! Sets the representation mode.
-          void setMode(enum mode_e mode);
+          void setMode(triton::uint32 mode);
 
           //! Displays the node according to the representation mode.
           std::ostream& print(std::ostream& stream, AbstractNode* node);

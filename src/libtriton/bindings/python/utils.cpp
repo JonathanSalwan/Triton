@@ -8,9 +8,10 @@
 #ifdef TRITON_PYTHON_BINDINGS
 
 #include <stdexcept>
-#include <tritonTypes.hpp>
+
 #include <pythonBindings.hpp>
 #include <pythonUtils.hpp>
+#include <tritonTypes.hpp>
 
 #ifdef __unix__
   #include <python2.7/Python.h>

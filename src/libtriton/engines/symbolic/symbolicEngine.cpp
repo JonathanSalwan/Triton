@@ -450,12 +450,12 @@ namespace triton {
 
       /* The memory size is used to define the symbolic variable's size. */
       SymbolicVariable* SymbolicEngine::convertMemoryToSymbolicVariable(triton::arch::MemoryOperand& mem, std::string symVarComment) {
-        triton::ast::AbstractNode* tmp = nullptr;
-        SymbolicExpression* se               = nullptr;
-        SymbolicVariable* symVar             = nullptr;
-        triton::__uint memSymId              = triton::engines::symbolic::UNSET;
-        triton::__uint memAddr               = mem.getAddress();
-        triton::uint32 symVarSize            = mem.getSize();
+        triton::ast::AbstractNode* tmp  = nullptr;
+        SymbolicExpression* se          = nullptr;
+        SymbolicVariable* symVar        = nullptr;
+        triton::__uint memSymId         = triton::engines::symbolic::UNSET;
+        triton::__uint memAddr          = mem.getAddress();
+        triton::uint32 symVarSize       = mem.getSize();
 
         memSymId = this->getSymbolicMemoryId(memAddr);
 
@@ -553,7 +553,7 @@ namespace triton {
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicMemoryOperand(triton::arch::MemoryOperand& mem) {
         std::list<triton::ast::AbstractNode*> opVec;
 
-        triton::ast::AbstractNode* tmp     = nullptr;
+        triton::ast::AbstractNode* tmp           = nullptr;
         triton::__uint address                   = mem.getAddress();
         triton::uint32 size                      = mem.getSize();
         triton::__uint symMem                    = triton::engines::symbolic::UNSET;
@@ -603,10 +603,10 @@ namespace triton {
       /* Returns a symbolic register operand */
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicRegisterOperand(triton::arch::RegisterOperand& reg) {
         triton::ast::AbstractNode* op = nullptr;
-        triton::__uint symReg               = this->getSymbolicRegisterId(reg);
-        triton::uint32 bvSize               = reg.getBitSize();
-        triton::uint32 high                 = reg.getHigh();
-        triton::uint32 low                  = reg.getLow();
+        triton::__uint symReg         = this->getSymbolicRegisterId(reg);
+        triton::uint32 bvSize         = reg.getBitSize();
+        triton::uint32 high           = reg.getHigh();
+        triton::uint32 low            = reg.getLow();
 
         if (symReg != triton::engines::symbolic::UNSET)
           op = triton::ast::extract(high, low, triton::ast::reference(symReg));
@@ -659,10 +659,10 @@ namespace triton {
 
       /* Returns the new symbolic register expression */
       SymbolicExpression* SymbolicEngine::createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterOperand& reg, std::string comment) {
-        triton::ast::AbstractNode* finalExpr  = nullptr;
-        triton::ast::AbstractNode* origReg    = nullptr;
-        triton::uint32 regSize                      = reg.getSize();
-        triton::arch::RegisterOperand parentReg     = reg.getParent();
+        triton::ast::AbstractNode* finalExpr      = nullptr;
+        triton::ast::AbstractNode* origReg        = nullptr;
+        triton::uint32 regSize                    = reg.getSize();
+        triton::arch::RegisterOperand parentReg   = reg.getParent();
 
         if (reg.isFlag())
           throw std::runtime_error("SymbolicEngine::createSymbolicRegisterExpression(): The register cannot be a flag.");
@@ -752,8 +752,8 @@ namespace triton {
       /* Assigns a symbolic expression to a memory */
       void SymbolicEngine::assignSymbolicExpressionToMemory(SymbolicExpression *se, triton::arch::MemoryOperand& mem) {
         triton::ast::AbstractNode* node = se->getAst();
-        triton::__uint address                = mem.getAddress();
-        triton::uint32 writeSize              = mem.getSize();
+        triton::__uint address          = mem.getAddress();
+        triton::uint32 writeSize        = mem.getSize();
 
         /* Check if the symbolic expression's size is equal to the memory access */
         if (node->getBitvectorSize() != mem.getBitSize())

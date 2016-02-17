@@ -22,8 +22,8 @@
 \section description_sec Description
 
 Triton is a dynamic binary analysis (DBA) framework. It provides internal components
-like a \ref engine_DSE_page (DSE) engine, a \ref engine_Taint_page, several \ref py_ast_page of the x86 and the x86-64
-instructions set, \ref SMT_simplification_page, an \ref solver_interface_page and, the last but not least,
+like a \ref engine_DSE_page (DSE) engine, a \ref engine_Taint_page, \ref py_ast_page of the x86 and the x86-64
+instruction set, \ref SMT_simplification_page, a \ref solver_interface_page and, the last but not least,
 \ref py_triton_page. Based on these components, you are able to build program analysis tools,
 automate reverse engineering and perform software verification.
 
@@ -179,7 +179,7 @@ namespace triton {
   }
 
 
-  void API::setArchitecture(uint32 arch) {
+  void API::setArchitecture(triton::uint32 arch) {
     /* Setup and init the targeted architecture */
     this->arch.setArchitecture(arch);
     this->initEngines();
@@ -371,13 +371,13 @@ namespace triton {
   }
 
 
-  triton::ast::representation::mode_e API::getAstRepresentationMode(void) {
+  triton::uint32 API::getAstRepresentationMode(void) {
     this->checkAstRepresentation();
     return this->astRepresentation->getMode();
   }
 
 
-  void API::setAstRepresentationMode(triton::ast::representation::mode_e mode) {
+  void API::setAstRepresentationMode(triton::uint32 mode) {
     this->checkAstRepresentation();
     this->astRepresentation->setMode(mode);
   }

@@ -20,7 +20,7 @@
 \section SMT_Semantics_Supported_description Description
 <hr>
 
-Here is the instructions' list of what **Triton** can converts into the \ref py_ast_page representation.
+Here is the instructions' list of what **Triton** can converts into \ref py_ast_page.
 These semantics are based on the [Medusa's semantics](https://github.com/wisk/medusa/blob/dev/arch/x86.yaml).
 Please note that our main objective is not to support all semantics right now, we are currently focusing on
 the design of **Triton**'s engines. When engines will be reliable, we will write the last semantics :-).

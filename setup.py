@@ -15,10 +15,10 @@ package_name        = "triton"
 version             = "0.3"
 package_description = """
 Triton is a dynamic binary analysis (DBA) framework. It provides internal components like a
-Dynamic Symbolic Exuction (DSE) engine, a Taint Engine, an intermediate representation of
-x86 and x86-64 instructions into SMT2-Lib, SMT simplification passes, a Z3 interface to solve
-constraints and, the last but not least, Python bindings. Based on these components, you are
-able to build program analysis tools, automate reverse engineering and perform software verification.
+Dynamic Symbolic Exuction (DSE) engine, a Taint Engine, AST Semantics representations of the x86 and
+the x86-64 instruction set, SMT simplification passes, a Z3 interface to solve constraints and,
+the last but not least, Python bindings. Based on these components, you are able to build
+program analysis tools, automate reverse engineering and perform software verification.
 """.strip()
 
 if platform.system() == 'Linux':

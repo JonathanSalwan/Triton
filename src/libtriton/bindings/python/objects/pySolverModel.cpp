@@ -45,7 +45,7 @@ SymVar_0:64
 >>> print raxAst
 (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64))
 >>>
->>> constraint = assert(equal(raxAst, bv(0, raxAst.getBitvectorSize())))
+>>> constraint = assert_(equal(raxAst, bv(0, raxAst.getBitvectorSize())))
 >>> print constraint
 (assert (= (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64)) (_ bv0 64)))
 >>>

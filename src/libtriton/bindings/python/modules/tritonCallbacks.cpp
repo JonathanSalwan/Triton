@@ -49,12 +49,12 @@ If you want to use the libTriton without Python bindings, recompile the project 
 
 \subsection triton_py_api_classes Classes
 
+- \ref py_AstNode_page
 - \ref py_Bitvector_page
 - \ref py_Immediate_page
 - \ref py_Instruction_page
 - \ref py_Memory_page
 - \ref py_Register_page
-- \ref py_AstNode_page
 - \ref py_SolverModel_page
 - \ref py_SymbolicExpression_page
 - \ref py_SymbolicVariable_page
@@ -166,6 +166,9 @@ Returns the list of all registers. Each item of this list is a \ref py_REG_page.
 
 - **getArchitecture(void)**<br>
 Returns the architecture which has been initialized as \ref py_ARCH_page.
+
+- **getAstRepresentationMode(void)**<br>
+Returns the AST representation mode as \ref py_AST_REPRESENTATION_page.
 
 - **getAstFromId(integer symExprId)**<br>
 Returns the partial AST as \ref py_AstNode_page from a symbolic expression id.
@@ -287,6 +290,9 @@ Resets everything.
 - **setArchitecture(\ref py_ARCH_page arch)**<br>
 Initializes an architecture. This function must be called before any call to the rest of the API.
 
+- **setAstRepresentationMode(\ref py_AST_REPRESENTATION_page mode)**<br>
+Sets the AST representation mode.
+
 - **setLastMemoryValue(integer addr, integer value)**<br>
 Sets the last concrete value of a memory access.
 
@@ -363,12 +369,13 @@ Untaints a register.
 \subsection triton_py_api_namespaces Namespaces
 
 - \ref py_ARCH_page
+- \ref py_AST_NODE_page
+- \ref py_AST_REPRESENTATION_page
 - \ref py_CPUSIZE_page
 - \ref py_OPCODE_page
 - \ref py_OPERAND_page
 - \ref py_OPTIMIZATION_page
 - \ref py_REG_page
-- \ref py_AST_NODE_page
 - \ref py_SYMEXPR_page
 - \ref py_SYSCALL_page
 - \ref py_VERSION_page
@@ -1297,7 +1304,7 @@ namespace triton {
 
 
       static PyObject* triton_getArchitecture(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", triton::api.getArchitecture());
+        return PyLong_FromUint(triton::api.getArchitecture());
       }
 
 
@@ -1315,6 +1322,14 @@ namespace triton {
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
+      }
+
+
+      static PyObject* triton_getAstRepresentationMode(PyObject* self, PyObject* noarg) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getAstRepresentationMode(): Architecture is not defined.");
+        return PyLong_FromUint(triton::api.getAstRepresentationMode());
       }
 
 
@@ -2006,6 +2021,22 @@ namespace triton {
       }
 
 
+      static PyObject* triton_setAstRepresentationMode(PyObject* self, PyObject* arg) {
+        if (!PyLong_Check(arg) && !PyInt_Check(arg))
+          return PyErr_Format(PyExc_TypeError, "setArcsetAstRepresentationMode(): Expects an AST_REPRESENTATION as argument.");
+
+        try {
+          triton::api.setAstRepresentationMode(PyLong_AsUint(arg));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* triton_setLastMemoryValue(PyObject* self, PyObject* args) {
         PyObject* mem    = nullptr;
         PyObject* value  = nullptr;
@@ -2591,6 +2622,7 @@ namespace triton {
         {"getAllRegisters",                     (PyCFunction)triton_getAllRegisters,                        METH_NOARGS,        ""},
         {"getArchitecture",                     (PyCFunction)triton_getArchitecture,                        METH_NOARGS,        ""},
         {"getAstFromId",                        (PyCFunction)triton_getAstFromId,                           METH_O,             ""},
+        {"getAstRepresentationMode",            (PyCFunction)triton_getAstRepresentationMode,               METH_NOARGS,        ""},
         {"getAstSummariesStats",                (PyCFunction)triton_getAstSummariesStats,                   METH_NOARGS,        ""},
         {"getFullAst",                          (PyCFunction)triton_getFullAst,                             METH_O,             ""},
         {"getFullAstFromId",                    (PyCFunction)triton_getFullAstFromId,                       METH_O,             ""},
@@ -2627,6 +2659,7 @@ namespace triton {
         {"removeSimplificationCallback",        (PyCFunction)triton_removeSimplificationCallback,           METH_O,             ""},
         {"resetEngines",                        (PyCFunction)triton_resetEngines,                           METH_NOARGS,        ""},
         {"setArchitecture",                     (PyCFunction)triton_setArchitecture,                        METH_O,             ""},
+        {"setAstRepresentationMode",            (PyCFunction)triton_setAstRepresentationMode,               METH_O,             ""},
         {"setLastMemoryValue",                  (PyCFunction)triton_setLastMemoryValue,                     METH_VARARGS,       ""},
         {"setLastRegisterValue",                (PyCFunction)triton_setLastRegisterValue,                   METH_O,             ""},
         {"setTaintMemory",                      (PyCFunction)triton_setTaintMemory,                         METH_VARARGS,       ""},

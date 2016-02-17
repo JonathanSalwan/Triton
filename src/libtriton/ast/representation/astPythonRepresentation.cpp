@@ -370,7 +370,7 @@ namespace triton {
 
       /* ite representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::IteNode* node) {
-        stream << "if " << node->getChilds()[0] << " then " << node->getChilds()[1] << " else " << node->getChilds()[2];
+        stream << node->getChilds()[1] << " if " << node->getChilds()[0] << " else " << node->getChilds()[2];
         return stream;
       }
 

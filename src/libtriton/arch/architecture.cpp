@@ -6,6 +6,7 @@
 */
 
 #include <stdexcept>
+
 #include <api.hpp>
 #include <architecture.hpp>
 #include <x8664Cpu.hpp>

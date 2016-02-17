@@ -73,6 +73,12 @@ namespace triton {
       //! Initializes the ARCH python namespace.
       void initArchNamespace(PyObject* archDict);
 
+      //! Initializes the AST_NODE python namespace.
+      void initAstNodeNamespace(PyObject* astNodeDict);
+
+      //! Initializes the AST_REPRESENTATION python namespace.
+      void initAstRepresentationNamespace(PyObject* astRepresentationDict);
+
       //! Initializes the CPUSIZE python namespace.
       void initCpuSizeNamespace(void);
 
@@ -87,9 +93,6 @@ namespace triton {
 
       //! Initializes the OPTIMIZATION python namespace.
       void initSymOptiNamespace(PyObject* symOptiDict);
-
-      //! Initializes the AST_NODE python namespace.
-      void initAstNodeNamespace(PyObject* astNodeDict);
 
       //! Initializes the SYMEXPR python namespace.
       void initSymExprNamespace(PyObject* symExprDict);

@@ -8,8 +8,8 @@
 #ifdef TRITON_PYTHON_BINDINGS
 
 #include <pythonObjects.hpp>
-#include <pythonXFunctions.hpp>
 #include <pythonUtils.hpp>
+#include <pythonXFunctions.hpp>
 
 
 

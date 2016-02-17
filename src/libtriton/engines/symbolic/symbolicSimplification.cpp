@@ -26,7 +26,7 @@
 \section SMT_simplification_description Description
 <hr>
 
-Triton allows you to optimize your AST of SMT just before the assignment to a register, a memory
+Triton allows you to optimize your AST (See: \ref py_ast_page) just before the assignment to a register, a memory
 or a volatile symbolic expression.
 
 <p align="center"><img src="http://triton.quarkslab.com/files/simplification.png"/></p>

@@ -188,11 +188,11 @@ namespace triton {
         //! [**AST representation api**] - Display a node according to the AST representation mode.
         std::ostream& printAstRepresentation(std::ostream& stream, triton::ast::AbstractNode* node);
 
-        //! [**AST representation api**] - Returns the AST representation mode.
-        triton::ast::representation::mode_e getAstRepresentationMode(void);
+        //! [**AST representation api**] - Returns the AST representation mode as triton::ast::representation::mode_e.
+        triton::uint32 getAstRepresentationMode(void);
 
         //! [**AST representation api**] - Sets the AST representation mode.
-        void setAstRepresentationMode(triton::ast::representation::mode_e mode);
+        void setAstRepresentationMode(triton::uint32 mode);
 
 
 

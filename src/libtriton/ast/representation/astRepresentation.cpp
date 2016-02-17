@@ -7,8 +7,8 @@
 
 #include <stdexcept>
 
-#include "api.hpp"
-#include "astRepresentation.hpp"
+#include <api.hpp>
+#include <astRepresentation.hpp>
 
 
 
@@ -38,12 +38,12 @@ namespace triton {
       }
 
 
-      enum mode_e AstRepresentation::getMode(void) {
+      triton::uint32 AstRepresentation::getMode(void) {
         return this->mode;
       }
 
 
-      void AstRepresentation::setMode(enum mode_e mode) {
+      void AstRepresentation::setMode(triton::uint32 mode) {
         if (mode >= triton::ast::representation::LAST_REPRESENTATION)
           throw std::runtime_error("triton::ast::representation::AstRepresentation::setMode(): Invalid representation mode.");
         this->mode = mode;

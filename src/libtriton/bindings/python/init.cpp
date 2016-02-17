@@ -8,6 +8,7 @@
 #ifdef TRITON_PYTHON_BINDINGS
 
 #include <iostream>
+
 #include <pythonBindings.hpp>
 #include <pythonXFunctions.hpp>
 
@@ -50,7 +51,7 @@ namespace triton {
           exit(1);
         }
 
-        /* Create the ast module ================================================================= */
+        /* Create the ast module ===================================================================== */
 
         triton::bindings::python::astModule = Py_InitModule("ast", astCallbacks);
         if (triton::bindings::python::astModule == nullptr) {
@@ -60,18 +61,30 @@ namespace triton {
         }
 
 
-        /* Create the ARCH namespace ========================================================= */
+        /* Create the ARCH namespace ================================================================= */
 
         PyObject* archDict = xPyDict_New();
         initArchNamespace(archDict);
         PyObject* idArchDictClass = xPyClass_New(nullptr, archDict, xPyString_FromString("ARCH"));
+
+        /* Create the AST_NODE namespace ============================================================= */
+
+        PyObject* astNodeDict = xPyDict_New();
+        initAstNodeNamespace(astNodeDict);
+        PyObject* idAstNodeDictClass = xPyClass_New(nullptr, astNodeDict, xPyString_FromString("AST_NODE"));
+
+        /* Create the AST_REPRESENTATION namespace =================================================== */
+
+        PyObject* astRepresentationDict = xPyDict_New();
+        initAstRepresentationNamespace(astRepresentationDict);
+        PyObject* idAstRepresentationDictClass = xPyClass_New(nullptr, astRepresentationDict, xPyString_FromString("AST_REPRESENTATION"));
 
         /* Create the CPUSIZE namespace ============================================================== */
 
         triton::bindings::python::cpuSizeDict = xPyDict_New();
         PyObject* idCpuSizeClass = xPyClass_New(nullptr, triton::bindings::python::cpuSizeDict, xPyString_FromString("CPUSIZE"));
 
-        /* Create the OPCODE namespace ============================================================== */
+        /* Create the OPCODE namespace =============================================================== */
 
         triton::bindings::python::opcodesDict = xPyDict_New();
         PyObject* idOpcodesClass = xPyClass_New(nullptr, triton::bindings::python::opcodesDict, xPyString_FromString("OPCODE"));
@@ -92,12 +105,6 @@ namespace triton {
 
         triton::bindings::python::registersDict = xPyDict_New();
         PyObject* idRegClass = xPyClass_New(nullptr, triton::bindings::python::registersDict, xPyString_FromString("REG"));
-
-        /* Create the AST_NODE namespace ============================================================= */
-
-        PyObject* astNodeDict = xPyDict_New();
-        initAstNodeNamespace(astNodeDict);
-        PyObject* idAstNodeDictClass = xPyClass_New(nullptr, astNodeDict, xPyString_FromString("AST_NODE"));
 
         /* Create the SYMEXPR namespace ============================================================== */
 
@@ -121,18 +128,19 @@ namespace triton {
         /* Init triton module ======================================================================== */
 
         /* Add every modules and namespace into the triton module */
-        PyModule_AddObject(triton::bindings::python::tritonModule, "ast",               triton::bindings::python::astModule);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "ARCH",              idArchDictClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "CPUSIZE",           idCpuSizeClass);            /* Empty: filled on the fly */
-        PyModule_AddObject(triton::bindings::python::tritonModule, "OPCODE",            idOpcodesClass);            /* Empty: filled on the fly */
-        PyModule_AddObject(triton::bindings::python::tritonModule, "OPERAND",           idOperandClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "OPTIMIZATION",      idSymOptiClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "REG",               idRegClass);                /* Empty: filled on the fly */
-        PyModule_AddObject(triton::bindings::python::tritonModule, "AST_NODE",          idAstNodeDictClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "SYMEXPR",           idSymExprClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "VERSION",           idVersionClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "ast",                 triton::bindings::python::astModule);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "ARCH",                idArchDictClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "AST_NODE",            idAstNodeDictClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "AST_REPRESENTATION",  idAstRepresentationDictClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "CPUSIZE",             idCpuSizeClass);            /* Empty: filled on the fly */
+        PyModule_AddObject(triton::bindings::python::tritonModule, "OPCODE",              idOpcodesClass);            /* Empty: filled on the fly */
+        PyModule_AddObject(triton::bindings::python::tritonModule, "OPERAND",             idOperandClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "OPTIMIZATION",        idSymOptiClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "REG",                 idRegClass);                /* Empty: filled on the fly */
+        PyModule_AddObject(triton::bindings::python::tritonModule, "SYMEXPR",             idSymExprClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "VERSION",             idVersionClass);
         #ifdef __unix__
-        PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL",           idSyscallsClass);           /* Empty: filled on the fly */
+        PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL",             idSyscallsClass);           /* Empty: filled on the fly */
         #endif
 
         triton::bindings::python::initialized = true;

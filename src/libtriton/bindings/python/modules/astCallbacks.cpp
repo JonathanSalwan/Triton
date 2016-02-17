@@ -20,16 +20,17 @@
 
 
 
-/*! \page py_ast_page AST Representations
+/*! \page py_ast_page AST Semantics Representations
     \brief [**python api**] All information about the ast python module.
     \anchor ast
 
 \tableofcontents
 
-\section ast_py_description Description
+\section ast_description Description
 <hr>
 
-The [SMT-LIB](http://smtlib.cs.uiowa.edu/) is an international initiative aimed at facilitating research and development in Satisfiability Modulo Theories (SMT).
+Triton converts the x86 and x86-64 instruction set semantics into AST representations which allows you to perform precise analysis and allow you to build and to
+modify your own symbolic expressions.
 
 ~~~~~~~~~~~~~{.py}
 >>> from triton import ast
@@ -37,7 +38,8 @@ The [SMT-LIB](http://smtlib.cs.uiowa.edu/) is an international initiative aimed 
 <module 'ast' (built-in)>
 ~~~~~~~~~~~~~
 
-Triton uses the AST to represent the instruction's semantics. Then, via the API you will be able to build and to modify your own symbolic expressions.
+\subsection ast_form_page AST Form
+<hr>
 
 ~~~~~~~~~~~~~{.asm}
 Instruction:  add rax, rdx
@@ -71,11 +73,11 @@ On the line 1, a new 64bit-vector is created with the concatenation of `RAX[63..
 to the AMD64 behavior, if a 32-bit register is written, the CPU clears the 32-bit MSB of the corresponding register. So, in this case, we apply a sign
 extension from al to `EAX`, then a zero extension from `EAX` to `RAX`.
 
-\section ast_representation AST representation
+\section ast_representation_page AST representation
 <hr>
 
-An abstract representation tree ([AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree)) is a representation of a grammar as tree. Triton uses its own SMT
-representation as AST for all symbolic expressions. As all SMT expressions are built at runtime, an AST is available at each program point. For example,
+An abstract representation tree ([AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree)) is a representation of a grammar as tree. Triton uses its own AST
+representation for all symbolic expressions. As all symbolic expressions are built at runtime, an AST is available at each program point. For example,
 let assume this set of instructions:
 
 ~~~~~~~~~~~~~{.asm}
@@ -94,11 +96,11 @@ This AST represents the semantics of the `AL` register at the program point 5 fr
 a better comprehension. The real AST contains some `concat` and `extract` as mentioned in the previous chapter. According to the API you can build
 your own AST or to modify an AST given by Triton and perform some modifications and simplifications before sending it to the solver.
 
-\section ast_grammar The SMT's grammar slightly modified
+\subsection ast_reference_node_page The AST reference node
+<hr>
 
-To manage easiest the subgraphs and to keep the SSA form of registers and memory, we have been constraint to modify slightly the grammar
-of the SMT. Actually, only one kind of node has been added in the grammar. We have added a `REFERENCE` node which is a "terminate" node of a
-graph but contains a reference to a subgraph. Below an example of one "partial" graph linked with two others subgraphs.
+To manage easiest the subtree and to keep the SSA form of registers and memory, we have added a `REFERENCE` node which is a "terminate" node of a
+tree but contains a reference to another subtree. Below, an example of one "partial" tree linked with two others subtrees.
 
 <p align="center"><img width="600" src="http://triton.quarkslab.com/files/smt_ast_ref.svg"/></p>
 
@@ -106,20 +108,54 @@ If you try to go through the full AST you will fail at the first reference node 
 The only way to jump from a reference node to the targeted node is to use the triton::engines::symbolic::SymbolicEngine::getFullAst() function.
 
 ~~~~~~~~~~~~~{.py}
-[IN]  zfId = getSymbolicRegisterId(REG.ZF)
-[IN]  partialGraph = getSymbolicExpressionFromId(zfId).getAst()
-[IN]  print partialGraph
-[OUT] (ite (= #89 (_ bv0 32)) (_ bv1 1) (_ bv0 1))
+>>> zfId = getSymbolicRegisterId(REG.ZF)
+>>> partialTree = getSymbolicExpressionFromId(zfId).getAst()
+>>> print partialTree
+(ite (= #89 (_ bv0 32)) (_ bv1 1) (_ bv0 1))
 
-[IN]  fullGraph = getFullAst(partialGraph)
-[IN]  print fullGraph
-[OUT] (ite (= (bvsub ((_ extract 31 0) ((_ zero_extend 32) ((_ extract 31 0) ((_ zero_extend 32) (bvxor ((_ extract 31 0) ((_ zero_extend 32) (bvsub ((_ extract 31 0) ((_ zero_extend 32) ((_ sign_extend 24) ((_ extract 7 0) SymVar_0)))) (_ bv1 32)))) (_ bv85 32)))))) ((_ extract 31 0) ((_ zero_extend 32) ((_ sign_extend 24) ((_ extract 7 0) ((_ zero_extend 32) ((_ zero_extend 24) ((_ extract 7 0) (_ bv49 8))))))))) (_ bv0 32)) (_ bv1 1) (_ bv0 1))
+>>> fullTree = getFullAst(partialTree)
+>>> print fullTree
+(ite (= (bvsub ((_ extract 31 0) ((_ zero_extend 32) ((_ extract 31 0) ((_ zero_extend 32) (bvxor ((_ extract 31 0) ((_ zero_extend 32) (bvsub ((_ extract 31 0) ((_ zero_extend 32) ((_ sign_extend 24) ((_ extract 7 0) SymVar_0)))) (_ bv1 32)))) (_ bv85 32)))))) ((_ extract 31 0) ((_ zero_extend 32) ((_ sign_extend 24) ((_ extract 7 0) ((_ zero_extend 32) ((_ zero_extend 24) ((_ extract 7 0) (_ bv49 8))))))))) (_ bv0 32)) (_ bv1 1) (_ bv0 1))
 ~~~~~~~~~~~~~
 
-\section ast_py_example Examples
+\subsection ast_smt_python_page The SMT or Python Syntax
 <hr>
 
-\subsection ast_py_example_1 Get a register's expression and create an assert
+By default, Triton represents semantics into [SMT-LIB](http://smtlib.cs.uiowa.edu/) which is an international initiative aimed at facilitating research and development in Satisfiability Modulo Theories (SMT). However,
+Triton allows you to display your AST via a Python syntax.
+
+~~~~~~~~~~~~~{.py}
+>>> from triton import *
+
+>>> setArchitecture(ARCH.X86_64)
+>>> setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
+>>> inst = Instruction()
+>>> inst.setOpcodes("\x48\x01\xd8") # add rax, rbx
+>>> inst.setAddress(0x400000)
+>>> inst.updateContext(Register(REG.RAX, 0x1122334455667788));
+>>> inst.updateContext(Register(REG.RBX, 0x8877665544332211));
+>>> processing(inst)
+
+>>> print inst
+400000: add rax, rbx
+
+>>> for expr in inst.getSymbolicExpressions():
+...     print expr
+...
+#0 = ((0x1122334455667788 + 0x8877665544332211) & 0xFFFFFFFFFFFFFFFF) ; ADD operation
+#1 = 0x1 if (0x10 == (0x10 & (#0 ^ (0x1122334455667788 ^ 0x8877665544332211)))) else 0x0 ; Adjust flag
+#2 = ((((0x1122334455667788 & 0x8877665544332211) ^ (((0x1122334455667788 ^ 0x8877665544332211) ^ #0) & (0x1122334455667788 ^ 0x8877665544332211))) >> 63) & 0x1) ; Carry flag
+#3 = ((((0x1122334455667788 ^ ~0x8877665544332211) & (0x1122334455667788 ^ #0)) >> 63) & 0x1) ; Overflow flag
+#4 = ((((((((0x1 ^ (((#0 & 0xFF) >> 0x0) & 0x1)) ^ (((#0 & 0xFF) >> 0x1) & 0x1)) ^ (((#0 & 0xFF) >> 0x2) & 0x1)) ^ (((#0 & 0xFF) >> 0x3) & 0x1)) ^ (((#0 & 0xFF) >> 0x4) & 0x1)) ^ (((#0 & 0xFF) >> 0x5) & 0x1)) ^ (((#0 & 0xFF) >> 0x6) & 0x1)) ^ (((#0 & 0xFF) >> 0x7) & 0x1)) ; Parity flag
+#5 = ((#0 >> 63) & 0x1) ; Sign flag
+#6 = 0x1 if (#0 == 0x0) else 0x0 ; Zero flag
+#7 = 0x400003 ; Program Counter
+~~~~~~~~~~~~~
+
+\section ast_py_examples_page Examples
+<hr>
+
+\subsection ast_py_examples_page_1 Get a register's expression and create an assert
 
 ~~~~~~~~~~~~~{.py}
 # Get the symbolic expression of the ZF flag
@@ -139,7 +175,7 @@ models  = getModel(newExpr)
 ~~~~~~~~~~~~~
 
 
-\subsection ast_py_example_2 Play with the AST
+\subsection ast_py_examples_page_2 Play with the AST
 
 ~~~~~~~~~~~~~{.py}
 # Node information
@@ -171,7 +207,7 @@ models  = getModel(newExpr)
 (bvadd (_ bv123 8) (bvxor (_ bv10 8) (_ bv20 8)))
 ~~~~~~~~~~~~~
 
-\subsection ast_py_example_3 Python operators
+\subsection ast_py_examples_page_3 Python operators
 
 ~~~~~~~~~~~~~{.py}
 >>> a = bv(1, 8)
