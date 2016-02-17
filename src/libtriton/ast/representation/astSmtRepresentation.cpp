@@ -402,7 +402,7 @@ namespace triton {
 
       /* reference representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ReferenceNode* node) {
-        stream << "#" << node->getValue();
+        stream << "ref!" << node->getValue();
         return stream;
       }
 

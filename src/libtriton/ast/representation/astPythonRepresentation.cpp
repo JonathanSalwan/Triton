@@ -410,7 +410,7 @@ namespace triton {
 
       /* reference representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::ReferenceNode* node) {
-        stream << "#" << node->getValue();
+        stream << "ref_" << node->getValue();
         return stream;
       }
 

@@ -43,30 +43,30 @@ modify your own symbolic expressions.
 
 ~~~~~~~~~~~~~{.asm}
 Instruction:  add rax, rdx
-Expression:   #41 = (bvadd ((_ extract 63 0) #40) ((_ extract 63 0) #39))
+Expression:   ref!41 = (bvadd ((_ extract 63 0) ref!40) ((_ extract 63 0) ref!39))
 ~~~~~~~~~~~~~
 
-As all Triton's expressions are on [SSA form](http://en.wikipedia.org/wiki/Static_single_assignment_form), the id `#41` is the new expression of the `RAX`
-register, the id `#40` is the previous expression of the `RAX` register and the id `#39` is the previous expression of the `RDX` register.
+As all Triton's expressions are on [SSA form](http://en.wikipedia.org/wiki/Static_single_assignment_form), the id `ref!41` is the new expression of the `RAX`
+register, the id `ref!40` is the previous expression of the `RAX` register and the id `ref!39` is the previous expression of the `RDX` register.
 An \ref py_Instruction_page may contain several expressions (\ref py_SymbolicExpression_page). For example, the previous `add rax, rdx` instruction contains
 7 expressions: 1 `ADD` semantics and 6 flags (`AF, CF, OF, PF, SF and ZF`) semantics where each flag is stored in a new \ref py_SymbolicExpression_page.
 
 ~~~~~~~~~~~~~{.asm}
 Instruction: add rax, rdx
-Expressions: #41 = (bvadd ((_ extract 63 0) #40) ((_ extract 63 0) #39))
-             #42 = (ite (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #41 (bvxor ((_ extract 63 0) #40) ((_ extract 63 0) #39))))) (_ bv1 1) (_ bv0 1))
-             #43 = (ite (bvult #41 ((_ extract 63 0) #40)) (_ bv1 1) (_ bv0 1))
-             #44 = (ite (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) #40) (bvnot ((_ extract 63 0) #39))) (bvxor ((_ extract 63 0) #40) #41))) (_ bv1 1)) (_ bv1 1) (_ bv0 1))
-             #45 = (ite (= (parity_flag ((_ extract 7 0) #41)) (_ bv0 1)) (_ bv1 1) (_ bv0 1))
-             #46 = (ite (= ((_ extract 63 63) #41) (_ bv1 1)) (_ bv1 1) (_ bv0 1))
-             #47 = (ite (= #41 (_ bv0 64)) (_ bv1 1) (_ bv0 1))
+Expressions: ref!41 = (bvadd ((_ extract 63 0) ref!40) ((_ extract 63 0) ref!39))
+             ref!42 = (ite (= (_ bv16 64) (bvand (_ bv16 64) (bvxor ref!41 (bvxor ((_ extract 63 0) ref!40) ((_ extract 63 0) ref!39))))) (_ bv1 1) (_ bv0 1))
+             ref!43 = (ite (bvult ref!41 ((_ extract 63 0) ref!40)) (_ bv1 1) (_ bv0 1))
+             ref!44 = (ite (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) ref!40) (bvnot ((_ extract 63 0) ref!39))) (bvxor ((_ extract 63 0) ref!40) ref!41))) (_ bv1 1)) (_ bv1 1) (_ bv0 1))
+             ref!45 = (ite (= (parity_flag ((_ extract 7 0) ref!41)) (_ bv0 1)) (_ bv1 1) (_ bv0 1))
+             ref!46 = (ite (= ((_ extract 63 63) ref!41) (_ bv1 1)) (_ bv1 1) (_ bv0 1))
+             ref!47 = (ite (= ref!41 (_ bv0 64)) (_ bv1 1) (_ bv0 1))
 ~~~~~~~~~~~~~
 
 Triton deals with 64-bits registers (and 128-bits for SSE). It means that it uses the `concat` and `extract` functions when operations are performed on subregister.
 
 ~~~~~~~~~~~~~{.asm}
-mov al, 0xff  -> #193 = (concat ((_ extract 63 8) #191) (_ bv255 8))
-movsx eax, al -> #195 = ((_ zero_extend 32) ((_ sign_extend 24) ((_ extract 7 0) #193)))
+mov al, 0xff  -> ref!193 = (concat ((_ extract 63 8) ref!191) (_ bv255 8))
+movsx eax, al -> ref!195 = ((_ zero_extend 32) ((_ sign_extend 24) ((_ extract 7 0) ref!193)))
 ~~~~~~~~~~~~~
 
 On the line 1, a new 64bit-vector is created with the concatenation of `RAX[63..8]` and the concretization of the value `0xff`. On the line 2, according
@@ -111,7 +111,7 @@ The only way to jump from a reference node to the targeted node is to use the tr
 >>> zfId = getSymbolicRegisterId(REG.ZF)
 >>> partialTree = getSymbolicExpressionFromId(zfId).getAst()
 >>> print partialTree
-(ite (= #89 (_ bv0 32)) (_ bv1 1) (_ bv0 1))
+(ite (= ref!89 (_ bv0 32)) (_ bv1 1) (_ bv0 1))
 
 >>> fullTree = getFullAst(partialTree)
 >>> print fullTree
@@ -142,14 +142,14 @@ Triton allows you to display your AST via a Python syntax.
 >>> for expr in inst.getSymbolicExpressions():
 ...     print expr
 ...
-#0 = ((0x1122334455667788 + 0x8877665544332211) & 0xFFFFFFFFFFFFFFFF) ; ADD operation
-#1 = 0x1 if (0x10 == (0x10 & (#0 ^ (0x1122334455667788 ^ 0x8877665544332211)))) else 0x0 ; Adjust flag
-#2 = ((((0x1122334455667788 & 0x8877665544332211) ^ (((0x1122334455667788 ^ 0x8877665544332211) ^ #0) & (0x1122334455667788 ^ 0x8877665544332211))) >> 63) & 0x1) ; Carry flag
-#3 = ((((0x1122334455667788 ^ ~0x8877665544332211) & (0x1122334455667788 ^ #0)) >> 63) & 0x1) ; Overflow flag
-#4 = ((((((((0x1 ^ (((#0 & 0xFF) >> 0x0) & 0x1)) ^ (((#0 & 0xFF) >> 0x1) & 0x1)) ^ (((#0 & 0xFF) >> 0x2) & 0x1)) ^ (((#0 & 0xFF) >> 0x3) & 0x1)) ^ (((#0 & 0xFF) >> 0x4) & 0x1)) ^ (((#0 & 0xFF) >> 0x5) & 0x1)) ^ (((#0 & 0xFF) >> 0x6) & 0x1)) ^ (((#0 & 0xFF) >> 0x7) & 0x1)) ; Parity flag
-#5 = ((#0 >> 63) & 0x1) ; Sign flag
-#6 = 0x1 if (#0 == 0x0) else 0x0 ; Zero flag
-#7 = 0x400003 ; Program Counter
+ref_0 = ((0x1122334455667788 + 0x8877665544332211) & 0xFFFFFFFFFFFFFFFF) ; ADD operation
+ref_1 = 0x1 if (0x10 == (0x10 & (ref_0 ^ (0x1122334455667788 ^ 0x8877665544332211)))) else 0x0 ; Adjust flag
+ref_2 = ((((0x1122334455667788 & 0x8877665544332211) ^ (((0x1122334455667788 ^ 0x8877665544332211) ^ ref_0) & (0x1122334455667788 ^ 0x8877665544332211))) >> 63) & 0x1) ; Carry flag
+ref_3 = ((((0x1122334455667788 ^ ~0x8877665544332211) & (0x1122334455667788 ^ ref_0)) >> 63) & 0x1) ; Overflow flag
+ref_4 = ((((((((0x1 ^ (((ref_0 & 0xFF) >> 0x0) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x1) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x2) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x3) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x4) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x5) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x6) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x7) & 0x1)) ; Parity flag
+ref_5 = ((ref_0 >> 63) & 0x1) ; Sign flag
+ref_6 = 0x1 if (ref_0 == 0x0) else 0x0 ; Zero flag
+ref_7 = 0x400003 ; Program Counter
 ~~~~~~~~~~~~~
 
 \section ast_py_examples_page Examples
@@ -409,7 +409,7 @@ e.g: `(or expr1 expr2)`.
 Returns the reference (`triton::ast::reference()`) node representation as \ref py_AstNode_page.
 Be careful, the targeted node reference is always on the max vector size, except for volatile
 expressions.<br>
-e.g: `#123`.
+e.g: `ref!123`.
 
 - **assert_(AstNode expr1)**<br>
 Returns the ast `triton::ast::assert_()` representation as \ref py_AstNode_page.<br>

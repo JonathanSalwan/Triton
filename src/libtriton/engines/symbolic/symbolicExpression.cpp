@@ -6,6 +6,8 @@
 */
 
 #include <stdexcept>
+#include <api.hpp>
+#include <astRepresentation.hpp>
 #include <symbolicExpression.hpp>
 
 
@@ -53,7 +55,14 @@ namespace triton {
 
 
       std::string SymbolicExpression::getId2Str(void) {
-        return "#" + std::to_string(this->id);
+        if (triton::api.getAstRepresentationMode() == triton::ast::representation::SMT_REPRESENTATION)
+          return "ref!" + std::to_string(this->id);
+
+        else if (triton::api.getAstRepresentationMode() == triton::ast::representation::PYTHON_REPRESENTATION)
+          return "ref_" + std::to_string(this->id);
+
+        else
+          throw std::runtime_error("SymbolicExpression::getId2Str(): Invalid AST representation mode.");
       }
 
 

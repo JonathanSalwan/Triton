@@ -46,19 +46,19 @@ This object is used to represent a symbolic expression.
 >>> for expr in inst.getSymbolicExpressions():
 ...     print expr
 ...
-#0 = (bvxor ((_ extract 63 0) (_ bv12345 64)) ((_ extract 63 0) (_ bv67890 64))) ; XOR operation
-#1 = (_ bv0 1) ; Clears carry flag
-#2 = (_ bv0 1) ; Clears overflow flag
-#3 = (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (_ bv1 1) ((_ extract 0 0) [... skipped ...] ; Parity flag
-#4 = (ite (= ((_ extract 63 63) #0) (_ bv1 1)) (_ bv1 1) (_ bv0 1)) ; Sign flag
-#5 = (ite (= ((_ extract 63 0) #0) (_ bv0 64)) (_ bv1 1) (_ bv0 1)) ; Zero flag
-#6 = (_ bv4194307 64) ; Program Counter
+ref!0 = (bvxor ((_ extract 63 0) (_ bv12345 64)) ((_ extract 63 0) (_ bv67890 64))) ; XOR operation
+ref!1 = (_ bv0 1) ; Clears carry flag
+ref!2 = (_ bv0 1) ; Clears overflow flag
+ref!3 = (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (_ bv1 1) ((_ extract 0 0) [... skipped ...] ; Parity flag
+ref!4 = (ite (= ((_ extract 63 63) ref!0) (_ bv1 1)) (_ bv1 1) (_ bv0 1)) ; Sign flag
+ref!5 = (ite (= ((_ extract 63 0) ref!0) (_ bv0 64)) (_ bv1 1) (_ bv0 1)) ; Zero flag
+ref!6 = (_ bv4194307 64) ; Program Counter
 
 >>> expr_1 = inst.getSymbolicExpressions()[0]
 >>> expr_1
 <SymbolicExpression object at 0x7f93ddeb3b40>
 >>> print expr_1
-#0 = (bvxor ((_ extract 63 0) (_ bv12345 64)) ((_ extract 63 0) (_ bv67890 64))) ; XOR operation
+ref!0 = (bvxor ((_ extract 63 0) (_ bv12345 64)) ((_ extract 63 0) (_ bv67890 64))) ; XOR operation
 
 >>> print expr_1.getId()
 0

@@ -247,12 +247,12 @@ if __name__ == '__main__':
 ##
 ##  $ ./triton ./src/examples/pin/runtime_register_modification.py ./src/samples/crackmes/crackme_xor a
 ##  4005f9: mov dword ptr [rbp - 4], eax
-##          #180 = ((_ extract 31 24) (_ bv0 32)) ; byte reference - MOV operation
-##          #181 = ((_ extract 23 16) (_ bv0 32)) ; byte reference - MOV operation
-##          #182 = ((_ extract 15 8) (_ bv0 32)) ; byte reference - MOV operation
-##          #183 = ((_ extract 7 0) (_ bv0 32)) ; byte reference - MOV operation
-##          #184 = (concat ((_ extract 31 24) (_ bv0 32)) ((_ extract 23 16) (_ bv0 32)) ((_ extract 15 8) (_ bv0 32)) ((_ extract 7 0) (_ bv0 32))) ; concat reference - MOV operation
-##          #185 = (_ bv4195836 64) ; Program Counter
+##          ref!180 = ((_ extract 31 24) (_ bv0 32)) ; byte reference - MOV operation
+##          ref!181 = ((_ extract 23 16) (_ bv0 32)) ; byte reference - MOV operation
+##          ref!182 = ((_ extract 15 8) (_ bv0 32)) ; byte reference - MOV operation
+##          ref!183 = ((_ extract 7 0) (_ bv0 32)) ; byte reference - MOV operation
+##          ref!184 = (concat ((_ extract 31 24) (_ bv0 32)) ((_ extract 23 16) (_ bv0 32)) ((_ extract 15 8) (_ bv0 32)) ((_ extract 7 0) (_ bv0 32))) ; concat reference - MOV operation
+##          ref!185 = (_ bv4195836 64) ; Program Counter
 ##  Win
 ##
 
@@ -410,12 +410,12 @@ from pintool import *
 #  ========================== DUMP ==========================
 #  rax:    0x00000000000000                        ((_ zero_extend 32) (_ bv234 32))
 #  rbx:    0x00000000000000                        UNSET
-#  rcx:    0x00000000001ba4                        ((_ zero_extend 32) ((_ extract 31 0) #81))
-#  rdx:    0x0000000000000b                        ((_ sign_extend 32) ((_ extract 31 0) #34))
-#  rdi:    0x00000000001ba4                        ((_ sign_extend 32) ((_ extract 31 0) #83))
-#  rsi:    0x00000000001ba4                        ((_ sign_extend 32) ((_ extract 31 0) #90))
-#  rbp:    0x007fff097e3540                        ((_ extract 63 0) #0)
-#  rsp:    0x007fff097e3528                        (bvsub ((_ extract 63 0) #47) (_ bv8 64))
+#  rcx:    0x00000000001ba4                        ((_ zero_extend 32) ((_ extract 31 0) ref!81))
+#  rdx:    0x0000000000000b                        ((_ sign_extend 32) ((_ extract 31 0) ref!34))
+#  rdi:    0x00000000001ba4                        ((_ sign_extend 32) ((_ extract 31 0) ref!83))
+#  rsi:    0x00000000001ba4                        ((_ sign_extend 32) ((_ extract 31 0) ref!90))
+#  rbp:    0x007fff097e3540                        ((_ extract 63 0) ref!0)
+#  rsp:    0x007fff097e3528                        (bvsub ((_ extract 63 0) ref!47) (_ bv8 64))
 #  rip:    0x007f3fa0735ea7                        (_ bv139911251582629 64)
 #  r8:     0x007f3fa0a94c80                        UNSET
 #  r9:     0x007f3fb671b120                        UNSET
@@ -441,15 +441,15 @@ from pintool import *
 #  xmm13:  0x00000000000000                        UNSET
 #  xmm14:  0x00000000000000                        UNSET
 #  xmm15:  0x00000000000000                        UNSET
-#  af:     0x00000000000000                        (ite (= (_ bv16 64) (bvand (_ bv16 64) (bvxor #12 (bvxor ((_ extract 63 0) #0) (_ bv16 64))))) (_ bv1 1) (_ bv0 1))
+#  af:     0x00000000000000                        (ite (= (_ bv16 64) (bvand (_ bv16 64) (bvxor ref!12 (bvxor ((_ extract 63 0) ref!0) (_ bv16 64))))) (_ bv1 1) (_ bv0 1))
 #  cf:     0x00000000000000                        (_ bv0 1)
 #  df:     0x00000000000000                        UNSET
 #  if:     0x00000000000001                        UNSET
 #  of:     0x00000000000000                        (_ bv0 1)
-#  pd:     0x00000000000001                        (ite (= (parity_flag ((_ extract 7 0) #73)) (_ bv0 1)) (_ bv1 1) (_ bv0 1))
-#  sf:     0x00000000000000                        (ite (= ((_ extract 31 31) #73) (_ bv1 1)) (_ bv1 1) (_ bv0 1))
+#  pd:     0x00000000000001                        (ite (= (parity_flag ((_ extract 7 0) ref!73)) (_ bv0 1)) (_ bv1 1) (_ bv0 1))
+#  sf:     0x00000000000000                        (ite (= ((_ extract 31 31) ref!73) (_ bv1 1)) (_ bv1 1) (_ bv0 1))
 #  tf:     0x00000000000000                        UNSET
-#  zf:     0x00000000000001                        (ite (= #73 (_ bv0 32)) (_ bv1 1) (_ bv0 1))
+#  zf:     0x00000000000001                        (ite (= ref!73 (_ bv0 32)) (_ bv1 1) (_ bv0 1))
 
 
 
