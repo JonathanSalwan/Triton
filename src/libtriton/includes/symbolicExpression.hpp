@@ -94,8 +94,11 @@ namespace triton {
           //! Returns the comment of the symbolic expression.
           std::string getComment(void);
 
-          //! Returns the id as string of the symbolic expression.
-          std::string getId2Str(void);
+          //! Returns the id as string of the symbolic expression according the mode of the AST representation.
+          std::string getFormattedId(void);
+
+          //! Returns the comment as string of the symbolic expression according the mode of the AST representation.
+          std::string getFormattedComment(void);
 
           //! Returns the origin memory address if `kind` is equal to `triton::engines::symbolic::MEM`, 0 otherwise.
           triton::__uint getOriginAddress(void);

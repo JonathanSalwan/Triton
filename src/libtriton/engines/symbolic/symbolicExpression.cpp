@@ -54,7 +54,7 @@ namespace triton {
       }
 
 
-      std::string SymbolicExpression::getId2Str(void) {
+      std::string SymbolicExpression::getFormattedId(void) {
         if (triton::api.getAstRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
           return "ref!" + std::to_string(this->id);
 
@@ -62,7 +62,22 @@ namespace triton {
           return "ref_" + std::to_string(this->id);
 
         else
-          throw std::runtime_error("SymbolicExpression::getId2Str(): Invalid AST representation mode.");
+          throw std::runtime_error("SymbolicExpression::getFormattedId(): Invalid AST representation mode.");
+      }
+
+
+      std::string SymbolicExpression::getFormattedComment(void) {
+        if (this->getComment().empty())
+          return "";
+
+        else if (triton::api.getAstRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
+          return "; " + this->getComment();
+
+        else if (triton::api.getAstRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION)
+          return "# " + this->getComment();
+
+        else
+          throw std::runtime_error("SymbolicExpression::getFormattedComment(): Invalid AST representation mode.");
       }
 
 
@@ -112,9 +127,9 @@ namespace triton {
 
 
       std::ostream& operator<<(std::ostream& stream, SymbolicExpression symExpr) {
-        stream << symExpr.getId2Str() << " = " << symExpr.getAst();
+        stream << symExpr.getFormattedId() << " = " << symExpr.getAst();
         if (!symExpr.getComment().empty())
-          stream << " ; " << symExpr.getComment();
+          stream << " " << symExpr.getFormattedComment();
         return stream;
       }
 
