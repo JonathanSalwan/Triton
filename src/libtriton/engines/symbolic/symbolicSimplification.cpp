@@ -125,17 +125,17 @@ As Triton is able to convert a Triton's AST to a Z3's AST and vice versa, you ca
 >>> enableSymbolicZ3Simplification(True)
 
 >>> var = newSymbolicVariable(8)
->>> a = variable(var.getName())
+>>> a = variable(var)
 >>> b = bv(0x38, 8)
 >>> c = bv(0xde, 8)
 >>> d = bv(0x4f, 8)
->>> c = a * ((b & c) | d)
+>>> e = a * ((b & c) | d)
 
->>> print c
+>>> print e
 (bvmul SymVar_0 (bvor (bvand (_ bv56 8) (_ bv222 8)) (_ bv79 8)))
 
->>> c = simplify(c)
->>> print c
+>>> f = simplify(e)
+>>> print f
 (bvmul (_ bv95 8) SymVar_0)
 ~~~~~~~~~~~~~
 
@@ -143,15 +143,15 @@ Note that applying a SMT simplification doesn't means that your expression will 
 previous section), the new expression is not really useful for an humain.
 
 ~~~~~~~~~~~~~{.py}
->>> a = variable(var.getName())
+>>> a = variable(var)
 >>> b = bv(2, 8)
 >>> c = (~b & a) | (~a & b) # a ^ b
 
 >>> print c
 (bvor (bvand (bvnot (_ bv2 8)) SymVar_0) (bvand (bvnot SymVar_0) (_ bv2 8)))
 
->>> c = simplify(c)
->>> print c
+>>> d = simplify(c)
+>>> print d
 (concat ((_ extract 7 2) SymVar_0) (bvnot ((_ extract 1 1) SymVar_0)) ((_ extract 0 0) SymVar_0))
 ~~~~~~~~~~~~~
 
