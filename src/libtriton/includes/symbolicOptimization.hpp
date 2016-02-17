@@ -9,6 +9,8 @@
 #define TRITON_SYMBOLICOPTIMIZATION_H
 
 #include <set>
+
+#include "symbolicEnums.hpp"
 #include "tritonTypes.hpp"
 
 #ifdef TRITON_PYTHON_BINDINGS
@@ -43,13 +45,6 @@ namespace triton {
      *  \addtogroup symbolic
      *  @{
      */
-
-      //! Kinds of symbolic optimization.
-      enum optimization_e {
-        ALIGNED_MEMORY,     //!< Keep a map of aligned memory.
-        AST_SUMMARIES,      //!< Abstract Syntax Tree summaries.
-        ONLY_ON_TAINTED,    //!< Perform symbolic execution only on tainted instructions.
-      };
 
       //! \class SymbolicOptimization
       /*! \brief The symbolic simplification class */

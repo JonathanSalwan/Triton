@@ -9,14 +9,9 @@
 #define TRITON_SYMBOLICVARIABLE_H
 
 #include <string>
-#include "symbolicExpression.hpp"
+
+#include "symbolicEnums.hpp"
 #include "tritonTypes.hpp"
-
-/*! Defines the name of a symbolic variable. */
-#define SYMVAR_NAME "SymVar_"
-
-/*! Defines the size of a symbolic variable' name. */
-#define SYMVAR_NAME_SIZE (sizeof(SYMVAR_NAME) - 1)
 
 
 
@@ -55,7 +50,7 @@ namespace triton {
           //! The comment of the symbolic variable.
           std::string symVarComment;
 
-          //! The name of the symbolic variable. \sa SYMVAR_NAME
+          //! The name of the symbolic variable. \sa TRITON_SYMVAR_NAME
           std::string symVarName;
 
           //! The id of the symbolic variable. This id is unique.
@@ -117,7 +112,6 @@ namespace triton {
 
           //! Sets the concrete value of the symbolic variable.
           void setSymVarConcreteValue(triton::uint128 value);
-
       };
 
       //! Displays a symbolic variable.

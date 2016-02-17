@@ -9,8 +9,10 @@
 #define TRITON_SYMBOLICEXPRESSION_H
 
 #include <string>
-#include "registerOperand.hpp"
+
 #include "ast.hpp"
+#include "registerOperand.hpp"
+#include "symbolicEnums.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -37,14 +39,6 @@ namespace triton {
      *  \addtogroup symbolic
      *  @{
      */
-
-      //! Defines the kind of symbolic variables.
-      enum symkind_e {
-        UNDEF = 0, //!< Undefined
-        REG,       //!< Assigned to a register.
-        MEM        //!< Assigned to a memory.
-      };
-
 
       //! \class SymbolicExpression
       /*! \brief The symbolic expression class */

@@ -25,7 +25,7 @@ namespace triton {
 
       SolverModel::SolverModel(std::string name, triton::uint512 value) {
         this->name  = name;
-        this->id    = std::atoi(name.c_str() + SYMVAR_NAME_SIZE);
+        this->id    = std::atoi(name.c_str() + TRITON_SYMVAR_NAME_SIZE);
         this->value = value;
       }
 

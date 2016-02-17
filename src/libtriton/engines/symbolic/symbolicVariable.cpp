@@ -24,7 +24,7 @@ namespace triton {
         this->symVarId               = id;
         this->symVarKind             = kind;
         this->symVarKindValue        = kindValue;
-        this->symVarName             = SYMVAR_NAME + std::to_string(id);
+        this->symVarName             = TRITON_SYMVAR_NAME + std::to_string(id);
         this->symVarSize             = size;
         this->symVarConcreteValue    = concreteValue;
         this->symVarHasConcreteValue = true;

@@ -9,8 +9,9 @@
 #define TRITON_SYMBOLICSIMPLIFICATION_H
 
 #include <list>
-#include "tritonTypes.hpp"
+
 #include "ast.hpp"
+#include "tritonTypes.hpp"
 
 #ifdef TRITON_PYTHON_BINDINGS
   #ifdef __unix__

@@ -16,6 +16,7 @@
 #include "astSummaries.hpp"
 #include "memoryOperand.hpp"
 #include "registerOperand.hpp"
+#include "symbolicEnums.hpp"
 #include "symbolicExpression.hpp"
 #include "symbolicOptimization.hpp"
 #include "symbolicSimplification.hpp"
@@ -46,10 +47,6 @@ namespace triton {
      *  \addtogroup symbolic
      *  @{
      */
-
-      //! The UNSET value.
-      const triton::__uint UNSET = -1;
-
 
       //! \class SymbolicEngine
       /*! \brief The symbolic engine class. */

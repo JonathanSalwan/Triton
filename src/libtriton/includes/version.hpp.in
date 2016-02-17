@@ -18,8 +18,7 @@ namespace triton {
  */
 
   //! The libTriton's version.
-  enum version_e
-  {
+  enum version_e {
     MAJOR = @VERSION_MAJOR@,
     MINOR = @VERSION_MINOR@,
     BUILD = @VERSION_BUILD@

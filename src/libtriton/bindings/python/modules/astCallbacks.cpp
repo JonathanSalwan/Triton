@@ -20,7 +20,7 @@
 
 
 
-/*! \page py_ast_page AST Semantics Representations
+/*! \page py_ast_page AST Representations
     \brief [**python api**] All information about the ast python module.
     \anchor ast
 
@@ -29,7 +29,7 @@
 \section ast_description Description
 <hr>
 
-Triton converts the x86 and x86-64 instruction set semantics into AST representations which allows you to perform precise analysis and allow you to build and to
+Triton converts the x86 and the x86-64 instruction set semantics into AST representations which allows you to perform precise analysis and allow you to build and to
 modify your own symbolic expressions.
 
 ~~~~~~~~~~~~~{.py}

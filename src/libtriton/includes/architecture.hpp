@@ -50,7 +50,7 @@ namespace triton {
         triton::uint32 arch;
 
         //! Instance to the real CPU class.
-        triton::arch::cpuInterface *cpu;
+        triton::arch::cpuInterface* cpu;
 
       public:
 
