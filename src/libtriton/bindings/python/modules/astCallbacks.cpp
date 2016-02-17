@@ -46,8 +46,8 @@ Instruction:  add rax, rdx
 Expression:   ref!41 = (bvadd ((_ extract 63 0) ref!40) ((_ extract 63 0) ref!39))
 ~~~~~~~~~~~~~
 
-As all Triton's expressions are on [SSA form](http://en.wikipedia.org/wiki/Static_single_assignment_form), the id `ref!41` is the new expression of the `RAX`
-register, the id `ref!40` is the previous expression of the `RAX` register and the id `ref!39` is the previous expression of the `RDX` register.
+As all Triton's expressions are on [SSA form](http://en.wikipedia.org/wiki/Static_single_assignment_form), the `ref!41` is the new expression of the `RAX`
+register, the `ref!40` is the previous expression of the `RAX` register and the `ref!39` is the previous expression of the `RDX` register.
 An \ref py_Instruction_page may contain several expressions (\ref py_SymbolicExpression_page). For example, the previous `add rax, rdx` instruction contains
 7 expressions: 1 `ADD` semantics and 6 flags (`AF, CF, OF, PF, SF and ZF`) semantics where each flag is stored in a new \ref py_SymbolicExpression_page.
 
