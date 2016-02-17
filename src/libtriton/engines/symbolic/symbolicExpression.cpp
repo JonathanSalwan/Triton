@@ -55,10 +55,10 @@ namespace triton {
 
 
       std::string SymbolicExpression::getId2Str(void) {
-        if (triton::api.getAstRepresentationMode() == triton::ast::representation::SMT_REPRESENTATION)
+        if (triton::api.getAstRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
           return "ref!" + std::to_string(this->id);
 
-        else if (triton::api.getAstRepresentationMode() == triton::ast::representation::PYTHON_REPRESENTATION)
+        else if (triton::api.getAstRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION)
           return "ref_" + std::to_string(this->id);
 
         else

@@ -31,15 +31,15 @@ namespace triton {
    *  @{
    */
 
-    //! \module The representation namespace
-    namespace representation {
+    //! \module The Representations namespace
+    namespace representations {
     /*!
      *  \ingroup ast
-     *  \addtogroup representation
+     *  \addtogroup representations
      *  @{
      */
 
-      //! All kind of representation mode.
+      //! All kinds of representation mode.
       enum mode_e {
         SMT_REPRESENTATION,     /*!< SMT representation */
         PYTHON_REPRESENTATION,  /*!< Python representation */
@@ -54,7 +54,7 @@ namespace triton {
           triton::uint32 mode;
 
           //! AstRepresentation interface.
-          triton::ast::representation::AstRepresentationInterface* representation[triton::ast::representation::LAST_REPRESENTATION];
+          triton::ast::representations::AstRepresentationInterface* representations[triton::ast::representations::LAST_REPRESENTATION];
 
 
         public:
@@ -74,7 +74,7 @@ namespace triton {
           std::ostream& print(std::ostream& stream, AbstractNode* node);
       };
 
-    /*! @} End of representation namespace */
+    /*! @} End of representations namespace */
     };
   /*! @} End of ast namespace */
   };

@@ -125,7 +125,7 @@ namespace triton {
           throw std::runtime_error("SolverEngine::getModels(): node cannot be null.");
 
         /* Switch into the SMT mode */
-        triton::api.setAstRepresentationMode(triton::ast::representation::SMT_REPRESENTATION);
+        triton::api.setAstRepresentationMode(triton::ast::representations::SMT_REPRESENTATION);
 
         /* First, set the QF_AUFBV flag  */
         formula << "(set-logic QF_AUFBV)";

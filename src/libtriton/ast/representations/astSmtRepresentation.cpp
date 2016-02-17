@@ -12,7 +12,7 @@
 
 namespace triton {
   namespace ast {
-    namespace representation {
+    namespace representations {
 
       AstSmtRepresentation::AstSmtRepresentation() {
       }

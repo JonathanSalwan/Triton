@@ -14,7 +14,7 @@
 
 namespace triton {
   namespace ast {
-    namespace representation {
+    namespace representations {
 
       AstPythonRepresentation::AstPythonRepresentation() {
       }

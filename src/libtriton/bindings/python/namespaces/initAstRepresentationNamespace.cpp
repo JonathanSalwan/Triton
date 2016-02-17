@@ -44,8 +44,8 @@ namespace triton {
     namespace python {
 
       void initAstRepresentationNamespace(PyObject* astRepresentationDict) {
-        PyDict_SetItemString(astRepresentationDict, "SMT",    PyLong_FromUint(triton::ast::representation::SMT_REPRESENTATION));
-        PyDict_SetItemString(astRepresentationDict, "PYTHON", PyLong_FromUint(triton::ast::representation::PYTHON_REPRESENTATION));
+        PyDict_SetItemString(astRepresentationDict, "SMT",    PyLong_FromUint(triton::ast::representations::SMT_REPRESENTATION));
+        PyDict_SetItemString(astRepresentationDict, "PYTHON", PyLong_FromUint(triton::ast::representations::PYTHON_REPRESENTATION));
       }
 
     }; /* python namespace */

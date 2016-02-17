@@ -322,7 +322,7 @@ namespace triton {
     if (!this->solver)
       throw std::invalid_argument("API::initEngines(): No enough memory.");
 
-    this->astRepresentation = new triton::ast::representation::AstRepresentation();
+    this->astRepresentation = new triton::ast::representations::AstRepresentation();
     if (!this->astRepresentation)
       throw std::invalid_argument("API::initEngines(): No enough memory.");
   }

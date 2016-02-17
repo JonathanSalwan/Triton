@@ -59,7 +59,7 @@ namespace triton {
         triton::engines::solver::SolverEngine* solver;
 
         //! The AST representation interface.
-        triton::ast::representation::AstRepresentation* astRepresentation;
+        triton::ast::representations::AstRepresentation* astRepresentation;
 
       public:
 
@@ -188,7 +188,7 @@ namespace triton {
         //! [**AST representation api**] - Display a node according to the AST representation mode.
         std::ostream& printAstRepresentation(std::ostream& stream, triton::ast::AbstractNode* node);
 
-        //! [**AST representation api**] - Returns the AST representation mode as triton::ast::representation::mode_e.
+        //! [**AST representation api**] - Returns the AST representation mode as triton::ast::representations::mode_e.
         triton::uint32 getAstRepresentationMode(void);
 
         //! [**AST representation api**] - Sets the AST representation mode.

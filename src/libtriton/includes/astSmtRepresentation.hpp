@@ -29,11 +29,11 @@ namespace triton {
    *  @{
    */
 
-    //! \module The representation namespace
-    namespace representation {
+    //! \module The Representations namespace
+    namespace representations {
     /*!
      *  \ingroup ast
-     *  \addtogroup representation
+     *  \addtogroup representations
      *  @{
      */
 
@@ -198,7 +198,7 @@ namespace triton {
       };
 
 
-    /*! @} End of representation namespace */
+    /*! @} End of representations namespace */
     };
   /*! @} End of ast namespace */
   };
