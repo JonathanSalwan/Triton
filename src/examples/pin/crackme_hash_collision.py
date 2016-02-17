@@ -60,18 +60,24 @@ def cafter(instruction):
         raxId = getSymbolicRegisterId(REG.RAX)
         raxExpr = getFullAstFromId(raxId)
 
+        SymVar_0 = getSymbolicVariableFromName('SymVar_0')
+        SymVar_1 = getSymbolicVariableFromName('SymVar_1')
+        SymVar_2 = getSymbolicVariableFromName('SymVar_2')
+        SymVar_3 = getSymbolicVariableFromName('SymVar_3')
+        SymVar_4 = getSymbolicVariableFromName('SymVar_4')
+
         # We want printable characters
         expr = compound([
-                 assert_(bvugt(variable('SymVar_0'), bv(96,  CPUSIZE.QWORD_BIT))),
-                 assert_(bvult(variable('SymVar_0'), bv(123, CPUSIZE.QWORD_BIT))),
-                 assert_(bvugt(variable('SymVar_1'), bv(96,  CPUSIZE.QWORD_BIT))),
-                 assert_(bvult(variable('SymVar_1'), bv(123, CPUSIZE.QWORD_BIT))),
-                 assert_(bvugt(variable('SymVar_2'), bv(96,  CPUSIZE.QWORD_BIT))),
-                 assert_(bvult(variable('SymVar_2'), bv(123, CPUSIZE.QWORD_BIT))),
-                 assert_(bvugt(variable('SymVar_3'), bv(96,  CPUSIZE.QWORD_BIT))),
-                 assert_(bvult(variable('SymVar_3'), bv(123, CPUSIZE.QWORD_BIT))),
-                 assert_(bvugt(variable('SymVar_4'), bv(96,  CPUSIZE.QWORD_BIT))),
-                 assert_(bvult(variable('SymVar_4'), bv(123, CPUSIZE.QWORD_BIT))),
+                 assert_(bvugt(variable(SymVar_0), bv(96,  CPUSIZE.QWORD_BIT))),
+                 assert_(bvult(variable(SymVar_0), bv(123, CPUSIZE.QWORD_BIT))),
+                 assert_(bvugt(variable(SymVar_1), bv(96,  CPUSIZE.QWORD_BIT))),
+                 assert_(bvult(variable(SymVar_1), bv(123, CPUSIZE.QWORD_BIT))),
+                 assert_(bvugt(variable(SymVar_2), bv(96,  CPUSIZE.QWORD_BIT))),
+                 assert_(bvult(variable(SymVar_2), bv(123, CPUSIZE.QWORD_BIT))),
+                 assert_(bvugt(variable(SymVar_3), bv(96,  CPUSIZE.QWORD_BIT))),
+                 assert_(bvult(variable(SymVar_3), bv(123, CPUSIZE.QWORD_BIT))),
+                 assert_(bvugt(variable(SymVar_4), bv(96,  CPUSIZE.QWORD_BIT))),
+                 assert_(bvult(variable(SymVar_4), bv(123, CPUSIZE.QWORD_BIT))),
                  assert_(equal(raxExpr, bv(0xad6d, CPUSIZE.QWORD_BIT)))  # collision: (assert (= rax 0xad6d)
                ])
 

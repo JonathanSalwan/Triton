@@ -422,7 +422,7 @@ Returns a `triton::ast::string()` node as \ref py_AstNode_page.
 Returns the ast `triton::ast::sx()` representation as \ref py_AstNode_page.<br>
 e.g: `((_ sign_extend sizeExt) expr1)`.
 
-- **variable(string s)**<br>
+- **variable(\ref py_SymbolicVariable_page symVar)**<br>
 Returns a `triton::ast::variable()` node as \ref py_AstNode_page.
 
 - **zx(integer sizeExt, AstNode expr1)**<br>
@@ -1406,12 +1406,12 @@ namespace triton {
       }
 
 
-      static PyObject* ast_variable(PyObject* self, PyObject* expr) {
-        if (!PyString_Check(expr))
-          return PyErr_Format(PyExc_TypeError, "variable(): expected a string as first argument");
+      static PyObject* ast_variable(PyObject* self, PyObject* symVar) {
+        if (!PySymbolicVariable_Check(symVar))
+          return PyErr_Format(PyExc_TypeError, "variable(): expected a SymbolicVariable as first argument");
 
         try {
-          return PyAstNode(triton::ast::variable(PyString_AsString(expr)));
+          return PyAstNode(triton::ast::variable(*PySymbolicVariable_AsSymbolicVariable(symVar)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

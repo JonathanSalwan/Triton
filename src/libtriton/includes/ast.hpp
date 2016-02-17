@@ -18,6 +18,7 @@
 
 #include "astEnums.hpp"
 #include "astVisitor.hpp"
+#include "symbolicVariable.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -630,7 +631,7 @@ namespace triton {
         std::string value;
 
       public:
-        VariableNode(std::string value);
+        VariableNode(triton::engines::symbolic::SymbolicVariable& symVar);
         VariableNode(const VariableNode& copy);
         ~VariableNode();
         virtual void accept(AstVisitor& v);
@@ -819,7 +820,7 @@ namespace triton {
     AbstractNode* sx(triton::uint32 sizeExt, AbstractNode* expr);
 
     //! ast C++ api - variable node builder
-    AbstractNode* variable(std::string variable);
+    AbstractNode* variable(triton::engines::symbolic::SymbolicVariable& symVar);
 
     //! ast C++ api - zx node builder
     AbstractNode* zx(triton::uint32 sizeExt, AbstractNode* expr);

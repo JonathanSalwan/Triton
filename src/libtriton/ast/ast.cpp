@@ -1944,12 +1944,10 @@ namespace triton {
     /* ====== Variable node */
 
 
-    VariableNode::VariableNode(std::string variable) {
-      this->kind = VARIABLE_NODE;
-      if (!triton::api.getSymbolicVariableFromName(variable))
-        throw std::runtime_error("triton::ast::VariableNode(): Symbolic variable not found.");
-      this->value = variable;
-      this->size = triton::api.getSymbolicVariableFromName(variable)->getSymVarSize();
+    VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar) {
+      this->kind  = VARIABLE_NODE;
+      this->value = symVar.getSymVarName();
+      this->size  = symVar.getSymVarSize();
     }
 
 
@@ -2551,8 +2549,8 @@ namespace triton {
     }
 
 
-    AbstractNode* variable(std::string value) {
-      AbstractNode* node = new VariableNode(value);
+    AbstractNode* variable(triton::engines::symbolic::SymbolicVariable& symVar) {
+      AbstractNode* node = new VariableNode(symVar);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);

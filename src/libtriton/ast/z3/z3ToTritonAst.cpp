@@ -8,6 +8,8 @@
 #include <stdexcept>
 #include <list>
 
+#include <api.hpp>
+#include <symbolicVariable.hpp>
 #include <z3ToTritonAst.hpp>
 
 
@@ -396,9 +398,16 @@ namespace triton {
           break;
         }
 
-        /* Variable? */
+        /* Variable or string */
         case Z3_OP_UNINTERPRETED: {
-          node = triton::ast::variable(function.name().str());
+          std::string name = function.name().str();
+          triton::engines::symbolic::SymbolicVariable* symVar = triton::api.getSymbolicVariableFromName(name);
+
+          if (symVar)
+            node = triton::ast::variable(*symVar);
+          else
+            node = triton::ast::string(name);
+
           break;
         }
 

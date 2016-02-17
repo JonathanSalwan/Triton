@@ -442,7 +442,7 @@ namespace triton {
         SymbolicExpression* expression = this->getSymbolicExpressionFromId(exprId);
 
         symVar = this->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, symVarSize, symVarComment);
-        expression->setAst(triton::ast::variable(symVar->getSymVarName()));
+        expression->setAst(triton::ast::variable(*symVar));
 
         return symVar;
       }
@@ -461,7 +461,7 @@ namespace triton {
 
         /* First we create a symbolic variable */
         symVar = this->newSymbolicVariable(triton::engines::symbolic::MEM, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
-        triton::ast::AbstractNode* symVarNode = triton::ast::variable(symVar->getSymVarName());
+        triton::ast::AbstractNode* symVarNode = triton::ast::variable(*symVar);
 
         /*  Split expression in bytes */
         for (triton::sint32 index = symVarSize-1; index >= 0; index--) {
@@ -507,7 +507,7 @@ namespace triton {
         regSymId = this->getSymbolicRegisterId(reg);
         if (regSymId == triton::engines::symbolic::UNSET) {
           symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parentId, symVarSize, symVarComment);
-          triton::ast::AbstractNode* tmp = triton::ast::variable(symVar->getSymVarName());
+          triton::ast::AbstractNode* tmp = triton::ast::variable(*symVar);
           SymbolicExpression* se = this->newSymbolicExpression(tmp, triton::engines::symbolic::REG);
           se->setOriginRegister(reg);
           this->symbolicReg[parentId] = se->getId();
@@ -516,7 +516,7 @@ namespace triton {
         else {
           expression = this->getSymbolicExpressionFromId(regSymId);
           symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parentId, symVarSize, symVarComment);
-          expression->setAst(triton::ast::variable(symVar->getSymVarName()));
+          expression->setAst(triton::ast::variable(*symVar));
         }
 
         /* Setup the concrete value to the symbolic variable */

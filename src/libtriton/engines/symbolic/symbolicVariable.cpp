@@ -6,7 +6,9 @@
 */
 
 #include <stdexcept>
+
 #include <symbolicVariable.hpp>
+#include <cpuSize.hpp>
 
 
 
@@ -28,6 +30,9 @@ namespace triton {
         this->symVarSize             = size;
         this->symVarConcreteValue    = concreteValue;
         this->symVarHasConcreteValue = true;
+
+        if (this->symVarSize > MAX_BITS_SUPPORTED)
+          throw std::runtime_error("SymbolicVariable::SymbolicVariable(): Size connot be greater than MAX_BITS_SUPPORTED.");
       }
 
 
