@@ -58,7 +58,7 @@ set(PROJECT_PINTOOL "pintool")
 
 
 # Default flags
-#To fix old python version bug http://bugs.python.org/issue21958
+# To fix old python version bug http://bugs.python.org/issue21958
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     set(LIBTRITON_CXX_FLAGS "-DHAVE_ROUND /MT")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -220,7 +220,7 @@ endif(${PINTOOL} MATCHES "yes")
 include_directories("${CMAKE_SOURCE_DIR}/src/libtriton/includes")
 
 
-#Note: Windows ?!
+# Note: Windows ?!
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     # Triton have to generate a syscalls table from the kernel source
     # This following code tries to find the unistd_64.h or unistd_32.h header depending on the architecture.

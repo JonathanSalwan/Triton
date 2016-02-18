@@ -280,6 +280,19 @@ namespace triton {
       }
 
 
+      static int AstNode_coerce(PyObject** self, PyObject** other) {
+        if (PyLong_Check(*other) || PyInt_Check(*other)) {
+          triton::uint128 value = PyLong_AsUint128(*other);
+          triton::__uint size   = PyAstNode_AsAstNode(*self)->getBitvectorSize();
+          if (size) {
+            *other = PyAstNode(triton::ast::bv(value, size));
+            return 0;
+          }
+        }
+        return 1;
+      }
+
+
       //! AstNode methods.
       PyMethodDef AstNode_callbacks[] = {
         {"getBitvectorMask",  AstNode_getBitvectorMask,  METH_NOARGS,     ""},
@@ -311,7 +324,7 @@ namespace triton {
         AstNode_operatorAnd,                        /* nb_and */
         AstNode_operatorXor,                        /* nb_xor */
         AstNode_operatorOr,                         /* nb_or */
-        0,                                          /* nb_coerce */
+        AstNode_coerce,                             /* nb_coerce */
         0,                                          /* nb_int */
         0,                                          /* nb_long */
         0,                                          /* nb_float */
