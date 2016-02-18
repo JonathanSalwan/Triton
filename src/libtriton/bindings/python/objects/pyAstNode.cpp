@@ -286,6 +286,7 @@ namespace triton {
           triton::__uint size   = PyAstNode_AsAstNode(*self)->getBitvectorSize();
           if (size) {
             *other = PyAstNode(triton::ast::bv(value, size));
+            Py_INCREF(*self);
             return 0;
           }
         }
