@@ -288,7 +288,7 @@ namespace triton {
 
       /* bvxnor representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::BvxnorNode* node) {
-        stream << "xnor(" << node->getChilds()[0] << ", " << node->getChilds()[1] << ")";
+        stream << "~(" << node->getChilds()[0] << " ^ " << node->getChilds()[1] << ")";
         return stream;
       }
 

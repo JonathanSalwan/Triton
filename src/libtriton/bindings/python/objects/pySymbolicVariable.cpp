@@ -61,9 +61,6 @@ Then, if `getKind()` returns triton::engines::symbolic::UNDEF, so `getKindValue(
 Returns name of the the symbolic variable as string.<br>
 e.g: `SymVar_18`
 
-- **hasConcreteValue(void)**<br>
-Returns true if this symbolic variable contains a concrete value.
-
 - **setConcreteValue(integer value)**<br>
 Sets a concrete value. `value` must be less than 128-bits.
 
@@ -116,13 +113,6 @@ namespace triton {
       }
 
 
-      static PyObject* SymbolicVariable_hasConcreteValue(PyObject* self, PyObject* noarg) {
-        if (PySymbolicVariable_AsSymbolicVariable(self)->hasConcreteValue() == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
-      }
-
-
       static PyObject* SymbolicVariable_setConcreteValue(PyObject* self, PyObject* value) {
         triton::engines::symbolic::SymbolicVariable *symVar;
 
@@ -158,7 +148,6 @@ namespace triton {
         {"getKind",           SymbolicVariable_getKind,           METH_NOARGS,    ""},
         {"getKindValue",      SymbolicVariable_getKindValue,      METH_NOARGS,    ""},
         {"getName",           SymbolicVariable_getName,           METH_NOARGS,    ""},
-        {"hasConcreteValue",  SymbolicVariable_hasConcreteValue,  METH_NOARGS,    ""},
         {"setConcreteValue",  SymbolicVariable_setConcreteValue,  METH_O,         ""},
         {nullptr,             nullptr,                            0,              nullptr}
       };

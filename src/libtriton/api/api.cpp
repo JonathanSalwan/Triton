@@ -652,6 +652,24 @@ namespace triton {
   }
 
 
+  std::vector<triton::ast::AbstractNode*>& API::getPathConstraint(void) {
+    this->checkSymbolic();
+    return this->sym->getPathConstraint();
+  }
+
+
+  triton::ast::AbstractNode* API::getPathConstraintAst(void) {
+    this->checkSymbolic();
+    return this->sym->getPathConstraintAst();
+  }
+
+
+  void API::addPathConstraint(triton::ast::AbstractNode* pc) {
+    this->checkSymbolic();
+    this->sym->addPathConstraint(pc);
+  }
+
+
   void API::enableSymbolicEngine(bool flag) {
     this->checkSymbolic();
     this->sym->enable(flag);

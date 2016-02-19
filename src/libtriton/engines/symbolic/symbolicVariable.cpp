@@ -29,20 +29,9 @@ namespace triton {
         this->symVarName             = TRITON_SYMVAR_NAME + std::to_string(id);
         this->symVarSize             = size;
         this->symVarConcreteValue    = concreteValue;
-        this->symVarHasConcreteValue = true;
 
         if (this->symVarSize > MAX_BITS_SUPPORTED)
           throw std::runtime_error("SymbolicVariable::SymbolicVariable(): Size connot be greater than MAX_BITS_SUPPORTED.");
-      }
-
-
-      SymbolicVariable::SymbolicVariable(symkind_e kind,
-                                         triton::__uint kindValue,
-                                         triton::__uint id,
-                                         triton::uint32 size,
-                                         std::string comment
-                                         ) : SymbolicVariable(kind, kindValue, id, size, comment, 0) {
-        this->symVarHasConcreteValue = false;
       }
 
 
@@ -54,7 +43,6 @@ namespace triton {
         this->symVarName             = copy.symVarName;
         this->symVarSize             = copy.symVarSize;
         this->symVarConcreteValue    = copy.symVarConcreteValue;
-        this->symVarHasConcreteValue = copy.symVarHasConcreteValue;
       }
 
 
@@ -93,21 +81,12 @@ namespace triton {
 
 
       triton::uint128 SymbolicVariable::getConcreteValue(void) {
-        if (this->symVarHasConcreteValue)
-          return this->symVarConcreteValue;
-        else
-          throw std::runtime_error("SymbolicVariable::SymbolicVariable(): The symbolic variable has not a concrete value.");
-      }
-
-
-      bool SymbolicVariable::hasConcreteValue(void) {
-        return this->symVarHasConcreteValue;
+        return this->symVarConcreteValue;
       }
 
 
       void SymbolicVariable::setSymVarConcreteValue(triton::uint128 value) {
-        this->symVarConcreteValue    = value;
-        this->symVarHasConcreteValue = true;
+        this->symVarConcreteValue = value;
       }
 
 

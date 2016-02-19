@@ -69,16 +69,10 @@ namespace triton {
           //! The concrete value of the symbolic variable.
           triton::uint128 symVarConcreteValue;
 
-          //! True if the symbolic variable has a concrete value.
-          bool symVarHasConcreteValue;
-
         public:
 
           //! Constructor.
-          SymbolicVariable(symkind_e kind, triton::__uint kindValue, triton::__uint id, triton::uint32 size, std::string comment, triton::uint128 concreteValue);
-
-          //! Constructor.
-          SymbolicVariable(symkind_e kind, triton::__uint kindValue, triton::__uint id, triton::uint32 size, std::string comment);
+          SymbolicVariable(symkind_e kind, triton::__uint kindValue, triton::__uint id, triton::uint32 size, std::string comment, triton::uint128 concreteValue=0);
 
           //! Constructor by copy.
           SymbolicVariable(const SymbolicVariable &copy);
@@ -106,9 +100,6 @@ namespace triton {
 
           //! Returns the concrete value (if exists) of the symbolic variable.
           triton::uint128 getConcreteValue(void);
-
-          //! Returns true if the symbolic variable has a concrete value.
-          bool hasConcreteValue(void);
 
           //! Sets the concrete value of the symbolic variable.
           void setSymVarConcreteValue(triton::uint128 value);

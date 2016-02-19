@@ -50,6 +50,9 @@ namespace triton {
         //! The size of the node.
         triton::uint32 size;
 
+        //! The value of the tree from this root node.
+        triton::uint512 eval;
+
       public:
         //! Constructor.
         AbstractNode(enum kind_e kind);
@@ -71,6 +74,9 @@ namespace triton {
 
         //! Returns the vector mask according the size of the node.
         triton::uint512 getBitvectorMask(void);
+
+        //! Evaluates the tree.
+        triton::uint512 evaluate(void);
 
         //! Returns the childs of the node.
         std::vector<AbstractNode*>& getChilds(void);
