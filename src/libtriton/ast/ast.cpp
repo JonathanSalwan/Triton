@@ -131,7 +131,7 @@ namespace triton {
         throw std::runtime_error("BvaddNode::BvaddNode(): Must take two nodes of same size.");
 
       this->size = expr1->getBitvectorSize();
-      this->eval = ((expr1->evaluate() + expr1->evaluate()) & this->getBitvectorMask());
+      this->eval = ((expr1->evaluate() + expr2->evaluate()) & this->getBitvectorMask());
 
       this->addChild(expr1);
       this->addChild(expr2);
@@ -175,7 +175,7 @@ namespace triton {
         throw std::runtime_error("BvandNode::BvandNode(): Must take two nodes of same size.");
 
       this->size = expr1->getBitvectorSize();
-      this->eval = (expr1->evaluate() | expr1->evaluate());
+      this->eval = (expr1->evaluate() & expr2->evaluate());
 
       this->addChild(expr1);
       this->addChild(expr2);
@@ -210,7 +210,7 @@ namespace triton {
 
 
 
-    /* ====== bvashr */
+    /* ====== bvashr (shift with sign extension fill) */
 
 
     BvashrNode::BvashrNode(AbstractNode* expr1, AbstractNode* expr2) {
@@ -220,7 +220,7 @@ namespace triton {
         throw std::runtime_error("BvashrNode::BvashrNode(): Must take two nodes of same size.");
 
       this->size = expr1->getBitvectorSize();
-      this->eval = (expr1->evaluate() >> expr2->evaluate().convert_to<triton::uint32>());
+      this->eval = (expr1->evaluate().convert_to<triton::sint512>() >> expr2->evaluate().convert_to<triton::sint32>()).convert_to<triton::uint512>();
 
       this->addChild(expr1);
       this->addChild(expr2);
@@ -300,7 +300,7 @@ namespace triton {
     }
 
 
-    /* ====== bvlshr */
+    /* ====== bvlshr (shift with zero filled) */
 
 
     BvlshrNode::BvlshrNode(AbstractNode* expr1, AbstractNode* expr2) {
@@ -1482,7 +1482,7 @@ namespace triton {
         throw std::runtime_error("BvNode::BvNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
 
       this->size = size;
-      this->eval = value;
+      this->eval = (value & this->getBitvectorMask());
 
       this->addChild(triton::ast::decimal(value));
       this->addChild(triton::ast::decimal(size));
@@ -1734,7 +1734,7 @@ namespace triton {
     DistinctNode::DistinctNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = DISTINCT_NODE;
       this->size = 1;
-      this->eval = expr1->evaluate() != expr2->evaluate();
+      this->eval = (expr1->evaluate() != expr2->evaluate());
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -1773,7 +1773,7 @@ namespace triton {
     EqualNode::EqualNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = EQUAL_NODE;
       this->size = 1;
-      this->eval = expr1->evaluate() == expr2->evaluate();
+      this->eval = (expr1->evaluate() == expr2->evaluate());
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -2150,8 +2150,7 @@ namespace triton {
       if (size > MAX_BITS_SUPPORTED)
         throw std::runtime_error("SxNode::SxNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
 
-      triton::uint32 sign_bit = (1 << (sizeExt - 1));
-      this->eval = ((expr->evaluate() & (sign_bit - 1)) - (expr->evaluate() & sign_bit));
+      this->eval = ((((expr->evaluate() >> (expr->getBitvectorSize()-1)) == 0) ? expr->evaluate() : (expr->evaluate() | ~expr->getBitvectorMask())) & this->getBitvectorMask());
 
       this->addChild(triton::ast::decimal(sizeExt));
       this->addChild(expr);
@@ -2230,16 +2229,16 @@ namespace triton {
     /* ====== zx */
 
 
-    ZxNode::ZxNode(triton::uint32 sizeExt, AbstractNode* expr) {
+    ZxNode::ZxNode(triton::uint32 zeroExt, AbstractNode* expr) {
       this->kind = ZX_NODE;
 
-      this->size = sizeExt + expr->getBitvectorSize();
+      this->size = zeroExt + expr->getBitvectorSize();
       if (size > MAX_BITS_SUPPORTED)
         throw std::runtime_error("ZxNode::ZxNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
 
-      this->eval = expr->evaluate();
+      this->eval = (expr->evaluate() & this->getBitvectorMask());
 
-      this->addChild(triton::ast::decimal(sizeExt));
+      this->addChild(triton::ast::decimal(zeroExt));
       this->addChild(expr);
     }
 
@@ -2808,8 +2807,8 @@ namespace triton {
     }
 
 
-    AbstractNode* zx(triton::uint32 sizeExt, AbstractNode* expr) {
-      AbstractNode* node = new ZxNode(sizeExt, expr);
+    AbstractNode* zx(triton::uint32 zeroExt, AbstractNode* expr) {
+      AbstractNode* node = new ZxNode(zeroExt, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       return recordNode(node);

@@ -650,7 +650,7 @@ namespace triton {
     //! ((_ zero_extend sizeExt) <expr>) node
     class ZxNode : public AbstractNode {
       public:
-        ZxNode(triton::uint32 sizeExt, AbstractNode* expr);
+        ZxNode(triton::uint32 zeroExt, AbstractNode* expr);
         ZxNode(const ZxNode& copy);
         ~ZxNode();
         virtual void accept(AstVisitor& v);
@@ -829,7 +829,7 @@ namespace triton {
     AbstractNode* variable(triton::engines::symbolic::SymbolicVariable& symVar);
 
     //! ast C++ api - zx node builder
-    AbstractNode* zx(triton::uint32 sizeExt, AbstractNode* expr);
+    AbstractNode* zx(triton::uint32 zeroExt, AbstractNode* expr);
 
     //! ast C++ api - Duplicates the AST
     AbstractNode* newInstance(AbstractNode* node);
