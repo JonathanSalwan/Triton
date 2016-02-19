@@ -382,7 +382,7 @@ namespace triton {
 
       /* land representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::LandNode* node) {
-        stream << "(" << node->getChilds()[0] << " && " << node->getChilds()[1] << ")";
+        stream << "(" << node->getChilds()[0] << " and " << node->getChilds()[1] << ")";
         return stream;
       }
 
@@ -403,7 +403,7 @@ namespace triton {
 
       /* lor representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::LorNode* node) {
-        stream << "(" << node->getChilds()[0] << " || " << node->getChilds()[1] << ")";
+        stream << "(" << node->getChilds()[0] << " or " << node->getChilds()[1] << ")";
         return stream;
       }
 
