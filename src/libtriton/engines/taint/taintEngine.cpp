@@ -98,7 +98,7 @@ namespace triton {
         this->enableFlag  = true;
 
         if (!this->taintedRegisters)
-          throw std::invalid_argument("TaintEngine::TaintEngine(): No enough memory");
+          throw std::invalid_argument("TaintEngine::TaintEngine(): No enough memory.");
 
         for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
           this->taintedRegisters[i] = !TAINTED;
@@ -112,7 +112,7 @@ namespace triton {
         this->enableFlag  = other.enableFlag;
 
         if (!this->taintedRegisters)
-          throw std::invalid_argument("TaintEngine::TaintEngine(): No enough memory");
+          throw std::invalid_argument("TaintEngine::TaintEngine(): No enough memory.");
 
         for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
           this->taintedRegisters[i] = other.taintedRegisters[i];

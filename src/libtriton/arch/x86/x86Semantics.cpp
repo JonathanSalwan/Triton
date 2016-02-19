@@ -549,7 +549,7 @@ namespace triton {
            */
           triton::ast::AbstractNode* node;
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::cfRcl_s() - op2 must be a DecimalNode node");
+            throw std::runtime_error("triton::arch::x86::semantics::cfRcl_s(): op2 must be a DecimalNode node.");
 
           if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0)
             node = triton::ast::extract(high, high, triton::ast::reference(parent->getId()));
@@ -577,7 +577,7 @@ namespace triton {
            */
           triton::ast::AbstractNode* node;
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::cfRol_s() - op2 must be a DecimalNode node");
+            throw std::runtime_error("triton::arch::x86::semantics::cfRol_s(): op2 must be a DecimalNode node.");
 
           if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0)
             node = triton::ast::extract(low, low, triton::ast::reference(parent->getId()));
@@ -606,7 +606,7 @@ namespace triton {
            * concretization of the op2.
            */
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::cfRor_s() - op2 must be a DecimalNode node");
+            throw std::runtime_error("triton::arch::x86::semantics::cfRor_s(): op2 must be a DecimalNode node.");
 
           triton::ast::AbstractNode* node;
           if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0) {
@@ -842,7 +842,7 @@ namespace triton {
            * concretization of the op2.
            */
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::ofRol_s() - op2 must be a DecimalNode node");
+            throw std::runtime_error("triton::arch::x86::semantics::ofRol_s(): op2 must be a DecimalNode node.");
 
           triton::ast::AbstractNode* node;
           if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() == 1) {
@@ -882,7 +882,7 @@ namespace triton {
            * concretization of the op2.
            */
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::ofRor_s() - op2 must be a DecimalNode node");
+            throw std::runtime_error("triton::arch::x86::semantics::ofRor_s(): op2 must be a DecimalNode node.");
 
           triton::ast::AbstractNode* node;
           if (reinterpret_cast<triton::ast::DecimalNode *>(op2)->getValue() == 1) {
@@ -1496,7 +1496,7 @@ namespace triton {
               bytes.push_front(triton::ast::extract(7,  0, op1));
               break;
             default:
-              throw std::runtime_error("Error: triton::arch::x86::semantics::bswap_s() - Invalid operand size");
+              throw std::runtime_error("Error: triton::arch::x86::semantics::bswap_s(): Invalid operand size.");
           }
 
           auto node = triton::ast::concat(bytes);

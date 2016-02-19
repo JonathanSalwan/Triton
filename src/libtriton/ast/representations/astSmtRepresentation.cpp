@@ -75,7 +75,7 @@ namespace triton {
           case VARIABLE_NODE:             return this->print(stream, reinterpret_cast<triton::ast::VariableNode*>(node)); break;
           case ZX_NODE:                   return this->print(stream, reinterpret_cast<triton::ast::ZxNode*>(node)); break;
           default:
-            throw std::invalid_argument("triton::ast::AstSmtRepresentation::print(AbstractNode) - Invalid kind node");
+            throw std::invalid_argument("AstSmtRepresentation::print(AbstractNode): Invalid kind node.");
         }
         return stream;
       }
@@ -319,7 +319,7 @@ namespace triton {
         triton::uint32 size = childs.size();
 
         if (size < 2)
-          throw std::length_error("ConcatNode - exprs must contain at least two expressions");
+          throw std::length_error("AstSmtRepresentation::print(ConcatNode): Exprs must contain at least two expressions.");
 
         stream << "(concat";
         for (triton::uint32 index = 0; index < size; index++)

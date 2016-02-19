@@ -117,7 +117,7 @@ namespace triton {
     BvaddNode::BvaddNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVADD_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvaddNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvaddNode::BvaddNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -156,7 +156,7 @@ namespace triton {
     BvandNode::BvandNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVAND_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvandNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvandNode::BvandNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -196,7 +196,7 @@ namespace triton {
     BvashrNode::BvashrNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVASHR_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvashrNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvashrNode::BvashrNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -235,9 +235,9 @@ namespace triton {
     BvdeclNode::BvdeclNode(triton::uint32 size) {
       this->kind = BVDECL_NODE;
       if (!size)
-        throw std::runtime_error("triton::ast::BvdeclNode(): Size connot be equal to zero.");
+        throw std::runtime_error("BvdeclNode::BvdeclNode(): Size connot be equal to zero.");
       if (size > MAX_BITS_SUPPORTED)
-        throw std::runtime_error("triton::ast::BvdeclNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw std::runtime_error("BvdeclNode::BvdeclNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
       this->size = size;
       this->addChild(triton::ast::decimal(size));
     }
@@ -275,7 +275,7 @@ namespace triton {
     BvlshrNode::BvlshrNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVLSHR_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvlshrNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvlshrNode::BvlshrNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -314,7 +314,7 @@ namespace triton {
     BvmulNode::BvmulNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVMUL_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvmulNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvmulNode::BvmulNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -353,7 +353,7 @@ namespace triton {
     BvnandNode::BvnandNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVNAND_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvnandNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvnandNode::BvnandNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -428,7 +428,7 @@ namespace triton {
     BvnorNode::BvnorNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVNOR_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvnorNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvnorNode::BvnorNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -503,7 +503,7 @@ namespace triton {
     BvorNode::BvorNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVOR_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvorNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvorNode::BvorNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -557,7 +557,7 @@ namespace triton {
 
     BvrolNode::BvrolNode(AbstractNode* rot, AbstractNode* expr) {
       if (rot->getKind() != DECIMAL_NODE)
-        throw std::runtime_error("BvrolNode - rot must be a decimal expression");
+        throw std::runtime_error("BvrolNode::BvrolNode(): rot must be a decimal expression.");
       this->kind = BVROL_NODE;
       this->addChild(rot);
       this->addChild(expr);
@@ -603,7 +603,7 @@ namespace triton {
 
     BvrorNode::BvrorNode(AbstractNode* rot, AbstractNode* expr) {
       if (rot->getKind() != DECIMAL_NODE)
-        throw std::runtime_error("BvrorNode - rot must be a decimal expression");
+        throw std::runtime_error("BvrorNode::BvrorNode(): rot must be a decimal expression.");
       this->kind = BVROR_NODE;
       this->addChild(rot);
       this->addChild(expr);
@@ -634,7 +634,7 @@ namespace triton {
     BvsdivNode::BvsdivNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVSDIV_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvsdivNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvsdivNode::BvsdivNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -673,7 +673,7 @@ namespace triton {
     BvsgeNode::BvsgeNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVSGE_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvsgeNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvsgeNode::BvsgeNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -712,7 +712,7 @@ namespace triton {
     BvsgtNode::BvsgtNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVSGT_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvsgtNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvsgtNode::BvsgtNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -751,7 +751,7 @@ namespace triton {
     BvshlNode::BvshlNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVSHL_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvshlNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvshlNode::BvshlNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -790,7 +790,7 @@ namespace triton {
     BvsleNode::BvsleNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVSLE_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvsleNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvsleNode::BvsleNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -829,7 +829,7 @@ namespace triton {
     BvsltNode::BvsltNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVSLT_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvsltNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvsltNode::BvsltNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -868,7 +868,7 @@ namespace triton {
     BvsmodNode::BvsmodNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVSMOD_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvsmodNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvsmodNode::BvsmodNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -907,7 +907,7 @@ namespace triton {
     BvsremNode::BvsremNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVSREM_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvsremNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvsremNode::BvsremNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -946,7 +946,7 @@ namespace triton {
     BvsubNode::BvsubNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVSUB_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvsubNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvsubNode::BvsubNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -985,7 +985,7 @@ namespace triton {
     BvudivNode::BvudivNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVUDIV_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvudivNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvudivNode::BvudivNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -1024,7 +1024,7 @@ namespace triton {
     BvugeNode::BvugeNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVUGE_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvugeNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvugeNode::BvugeNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -1063,7 +1063,7 @@ namespace triton {
     BvugtNode::BvugtNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVUGT_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvugtNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvugtNode::BvugtNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -1102,7 +1102,7 @@ namespace triton {
     BvuleNode::BvuleNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVULE_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvuleNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvuleNode::BvuleNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -1141,7 +1141,7 @@ namespace triton {
     BvultNode::BvultNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVULT_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvultNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvultNode::BvultNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -1180,7 +1180,7 @@ namespace triton {
     BvuremNode::BvuremNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVUREM_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvuremNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvuremNode::BvuremNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -1219,7 +1219,7 @@ namespace triton {
     BvxnorNode::BvxnorNode(AbstractNode* expr1, AbstractNode* expr2) {
       this->kind = BVXNOR_NODE;
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize())
-        throw std::runtime_error("triton::ast::BvxnorNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvxnorNode::BvxnorNode(): Must take two nodes of same size.");
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
       this->addChild(expr2);
@@ -1260,7 +1260,7 @@ namespace triton {
       if (expr1->getBitvectorSize() != expr2->getBitvectorSize()) {
         std::cout << expr1 << std::endl;
         std::cout << expr2 << std::endl;
-        throw std::runtime_error("triton::ast::BvxorNode(): Must take two nodes of same size.");
+        throw std::runtime_error("BvxorNode::BvxorNode(): Must take two nodes of same size.");
       }
       this->size = expr1->getBitvectorSize();
       this->addChild(expr1);
@@ -1300,9 +1300,9 @@ namespace triton {
     BvNode::BvNode(triton::uint128 value, triton::uint32 size) {
       this->kind = BV_NODE;
       if (!size)
-        throw std::runtime_error("triton::ast::BvNode(): Size connot be equal to zero.");
+        throw std::runtime_error("BvNode::BvNode(): Size connot be equal to zero.");
       if (size > MAX_BITS_SUPPORTED)
-        throw std::runtime_error("triton::ast::BvNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw std::runtime_error("BvNode::BvNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
       this->size = size;
       this->addChild(triton::ast::decimal(value));
       this->addChild(triton::ast::decimal(size));
@@ -1379,7 +1379,7 @@ namespace triton {
       this->kind = CONCAT_NODE;
       this->size = expr1->getBitvectorSize() + expr2->getBitvectorSize();
       if (size > MAX_BITS_SUPPORTED)
-        throw std::runtime_error("triton::ast::ConcatNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw std::runtime_error("ConcatNode::ConcatNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
       this->addChild(expr1);
       this->addChild(expr2);
     }
@@ -1398,14 +1398,14 @@ namespace triton {
       this->size = 0;
 
       if (exprs.size() < 2)
-        throw std::length_error("ConcatNode - exprs must contain at least two expressions");
+        throw std::length_error("ConcatNode::ConcatNode(): exprs must contain at least two expressions.");
 
       for (triton::uint32 index = 0; index < exprs.size(); index++) {
         this->addChild(exprs[index]);
         this->size += exprs[index]->getBitvectorSize();
       }
       if (this->size > MAX_BITS_SUPPORTED)
-        throw std::runtime_error("triton::ast::ConcatNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw std::runtime_error("ConcatNode::ConcatNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
     }
 
 
@@ -1414,7 +1414,7 @@ namespace triton {
       this->size = 0;
 
       if (exprs.size() < 2)
-        throw std::length_error("ConcatNode - exprs must contain at least two expressions");
+        throw std::length_error("ConcatNode::ConcatNode():  exprs must contain at least two expressions.");
 
       std::list<AbstractNode *>::iterator it = exprs.begin();
       for ( ; it != exprs.end(); it++) {
@@ -1422,7 +1422,7 @@ namespace triton {
         this->size += (*it)->getBitvectorSize();
       }
       if (this->size > MAX_BITS_SUPPORTED)
-        throw std::runtime_error("triton::ast::ConcatNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw std::runtime_error("ConcatNode::ConcatNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
     }
 
 
@@ -1487,7 +1487,7 @@ namespace triton {
     DeclareFunctionNode::DeclareFunctionNode(std::string name, AbstractNode* bvDecl) {
       this->kind = DECLARE_FUNCTION_NODE;
       if (bvDecl->getKind() != BVDECL_NODE)
-        throw std::runtime_error("DeclareFunctionNode - The second argument must be a bitvector declaration");
+        throw std::runtime_error("DeclareFunctionNode::DeclareFunctionNode(): The second argument must be a bitvector declaration.");
       this->size = bvDecl->getBitvectorSize();
       this->addChild(triton::ast::string(name));
       this->addChild(bvDecl);
@@ -1600,7 +1600,7 @@ namespace triton {
     ExtractNode::ExtractNode(triton::uint32 high, triton::uint32 low, AbstractNode* expr) {
       this->kind = EXTRACT_NODE;
       if (low > high)
-        throw std::runtime_error("triton::ast::ExtractNode(): The high bit must be greater than the low bit.");
+        throw std::runtime_error("ExtractNode::ExtractNode(): The high bit must be greater than the low bit.");
       this->size = ((high - low) + 1);
       this->addChild(triton::ast::decimal(high));
       this->addChild(triton::ast::decimal(low));
@@ -1640,7 +1640,7 @@ namespace triton {
     IteNode::IteNode(AbstractNode* ifExpr, AbstractNode* thenExpr, AbstractNode* elseExpr) {
       this->kind = ITE_NODE;
       if (thenExpr->getBitvectorSize() != elseExpr->getBitvectorSize())
-        throw std::runtime_error("triton::ast::IteNode(): Must take two nodes of same size.");
+        throw std::runtime_error("IteNode::IteNode(): Must take two nodes of same size.");
       this->size = thenExpr->getBitvectorSize();
       this->addChild(ifExpr);
       this->addChild(thenExpr);
@@ -1909,7 +1909,7 @@ namespace triton {
       this->kind = SX_NODE;
       this->size = sizeExt + expr->getBitvectorSize();
       if (size > MAX_BITS_SUPPORTED)
-        throw std::runtime_error("triton::ast::SxNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw std::runtime_error("SxNode::SxNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
       this->addChild(triton::ast::decimal(sizeExt));
       this->addChild(expr);
     }
@@ -1988,7 +1988,7 @@ namespace triton {
       this->kind = ZX_NODE;
       this->size = sizeExt + expr->getBitvectorSize();
       if (size > MAX_BITS_SUPPORTED)
-        throw std::runtime_error("triton::ast::ZxNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw std::runtime_error("ZxNode::ZxNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
       this->addChild(triton::ast::decimal(sizeExt));
       this->addChild(expr);
     }
@@ -2618,10 +2618,10 @@ namespace triton {
         case VARIABLE_NODE:             newNode = new VariableNode(*reinterpret_cast<VariableNode*>(node)); break;
         case ZX_NODE:                   newNode = new ZxNode(*reinterpret_cast<ZxNode*>(node)); break;
         default:
-          throw std::invalid_argument("triton::ast::newInstance() - Invalid kind node");
+          throw std::invalid_argument("triton::ast::newInstance(): Invalid kind node.");
       }
       if (newNode == nullptr)
-        throw std::invalid_argument("triton::ast::newInstance() - No enough memory");
+        throw std::invalid_argument("triton::ast::newInstance(): No enough memory.");
       return recordNode(node);
     }
 

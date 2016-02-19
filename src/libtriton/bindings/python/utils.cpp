@@ -36,20 +36,20 @@ namespace triton {
               triton::__uint val = PyInt_AsLong(vv);
               return val;
           }
-          throw std::runtime_error("Error: PyLong_AsUint(): Bad internal call");
+          throw std::runtime_error("triton::bindings::python::PyLong_AsUint(): Bad internal call.");
         }
 
         v = reinterpret_cast<PyLongObject *>(vv);
         i = Py_SIZE(v);
         x = 0;
         if (i < 0)
-          throw std::runtime_error("Error: PyLong_AsUint(): can't convert negative value to unsigned long");
+          throw std::runtime_error("triton::bindings::python::PyLong_AsUint(): Cannot convert negative value to unsigned long.");
 
         while (--i >= 0) {
             prev = x;
             x = (x << PyLong_SHIFT) | v->ob_digit[i];
             if ((x >> PyLong_SHIFT) != prev)
-                throw std::runtime_error("Error: PyLong_AsUint(): long int too large to convert");
+                throw std::runtime_error("triton::bindings::python::PyLong_AsUint(): long int too large to convert.");
         }
 
         return x;
@@ -66,20 +66,20 @@ namespace triton {
               triton::uint128 val = PyInt_AsLong(vv);
               return val;
           }
-          throw std::runtime_error("Error: PyLong_AsUint128(): Bad internal call");
+          throw std::runtime_error("triton::bindings::python::PyLong_AsUint128(): Bad internal call.");
         }
 
         v = reinterpret_cast<PyLongObject *>(vv);
         i = Py_SIZE(v);
         x = 0;
         if (i < 0)
-          throw std::runtime_error("Error: PyLong_AsUint128(): can't convert negative value to unsigned long");
+          throw std::runtime_error("triton::bindings::python::PyLong_AsUint128(): Cannot convert negative value to unsigned long.");
 
         while (--i >= 0) {
             prev = x;
             x = (x << PyLong_SHIFT) | v->ob_digit[i];
             if ((x >> PyLong_SHIFT) != prev)
-                throw std::runtime_error("Error: PyLong_AsUint128(): long int too large to convert");
+                throw std::runtime_error("triton::bindings::python::PyLong_AsUint128(): long int too large to convert.");
         }
 
         return x;
@@ -96,20 +96,20 @@ namespace triton {
               triton::uint256 val = PyInt_AsLong(vv);
               return val;
           }
-          throw std::runtime_error("Error: PyLong_AsUint256(): Bad internal call");
+          throw std::runtime_error("triton::bindings::python::PyLong_AsUint256(): Bad internal call.");
         }
 
         v = reinterpret_cast<PyLongObject *>(vv);
         i = Py_SIZE(v);
         x = 0;
         if (i < 0)
-          throw std::runtime_error("Error: PyLong_AsUint256(): can't convert negative value to unsigned long");
+          throw std::runtime_error("triton::bindings::python::PyLong_AsUint256(): Cannot convert negative value to unsigned long.");
 
         while (--i >= 0) {
             prev = x;
             x = (x << PyLong_SHIFT) | v->ob_digit[i];
             if ((x >> PyLong_SHIFT) != prev)
-                throw std::runtime_error("Error: PyLong_AsUint256(): long int too large to convert");
+                throw std::runtime_error("triton::bindings::python::PyLong_AsUint256(): long int too large to convert.");
         }
 
         return x;
@@ -126,20 +126,20 @@ namespace triton {
               triton::uint512 val = PyInt_AsLong(vv);
               return val;
           }
-          throw std::runtime_error("Error: PyLong_AsUint512(): Bad internal call");
+          throw std::runtime_error("triton::bindings::python::PyLong_AsUint512(): Bad internal call.");
         }
 
         v = reinterpret_cast<PyLongObject *>(vv);
         i = Py_SIZE(v);
         x = 0;
         if (i < 0)
-          throw std::runtime_error("Error: PyLong_AsUint512(): can't convert negative value to unsigned long");
+          throw std::runtime_error("triton::bindings::python::PyLong_AsUint512(): Cannot convert negative value to unsigned long.");
 
         while (--i >= 0) {
             prev = x;
             x = (x << PyLong_SHIFT) | v->ob_digit[i];
             if ((x >> PyLong_SHIFT) != prev)
-                throw std::runtime_error("Error: PyLong_AsUint512(): long int too large to convert");
+                throw std::runtime_error("triton::bindings::python::PyLong_AsUint512(): long int too large to convert.");
         }
 
         return x;

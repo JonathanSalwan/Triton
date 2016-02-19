@@ -307,6 +307,7 @@ namespace triton {
       };
 
 
+      //! AstNode operator methods.
       PyNumberMethods AstNode_NumberMethods = {
         AstNode_operatorAdd,                        /* nb_add */
         AstNode_operatorSub,                        /* nb_subtract */

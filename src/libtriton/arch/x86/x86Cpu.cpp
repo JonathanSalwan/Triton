@@ -403,7 +403,7 @@ namespace triton {
       triton::uint32 size = mem.getSize();
 
       if (size == 0 || size > DQWORD_SIZE)
-        throw std::invalid_argument("x86Cpu::getLastMemoryValue(): Invalid size memory");
+        throw std::invalid_argument("x86Cpu::getLastMemoryValue(): Invalid size memory.");
 
       for (triton::sint32 i = size-1; i >= 0; i--)
         ret = ((ret << BYTE_SIZE_BIT) | this->memory[addr+i]);
@@ -485,7 +485,7 @@ namespace triton {
         case triton::arch::x86::ID_REG_ZF: return (((*((triton::uint32*)(this->eflags))) >> 6) & 1);
 
         default:
-          throw std::invalid_argument("x86Cpu::getLastRegisterValue(): Invalid register");
+          throw std::invalid_argument("x86Cpu::getLastRegisterValue(): Invalid register.");
       }
 
       return value;
@@ -503,7 +503,7 @@ namespace triton {
       triton::uint128 cv  = mem.getConcreteValue();
 
       if (size == 0 || size > DQWORD_SIZE)
-        throw std::invalid_argument("x86Cpu::setLastMemoryValue(): Invalid size memory");
+        throw std::invalid_argument("x86Cpu::setLastMemoryValue(): Invalid size memory.");
 
       for (triton::uint32 i = 0; i < size; i++) {
         this->memory[addr+i] = static_cast<triton::uint8>(cv & 0xff);
@@ -579,7 +579,7 @@ namespace triton {
         case triton::arch::x86::ID_REG_XMM7: triton::fromUint128ToBuffer(value, this->xmm7); break;
 
         default:
-          throw std::invalid_argument("x86Cpu:setLastRegisterValue() - Invalid register");
+          throw std::invalid_argument("x86Cpu:setLastRegisterValue() - Invalid register.");
       }
     }
 

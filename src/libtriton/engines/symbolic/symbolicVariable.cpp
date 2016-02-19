@@ -96,7 +96,7 @@ namespace triton {
         if (this->symVarHasConcreteValue)
           return this->symVarConcreteValue;
         else
-          throw std::runtime_error("SymbolicVariable::SymbolicVariable(): The symbolic variable has not a concrete value");
+          throw std::runtime_error("SymbolicVariable::SymbolicVariable(): The symbolic variable has not a concrete value.");
       }
 
 

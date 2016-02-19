@@ -241,7 +241,6 @@ namespace triton {
       Z3Result op2 = this->eval(*e.getChilds()[1]);
       z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_bvudiv(this->result.getContext(), op1.getExpr(), op2.getExpr()));
 
-
       this->result.setExpr(newexpr);
     }
 

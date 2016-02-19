@@ -59,10 +59,10 @@ namespace triton {
       this->high = v;
 
       if (this->high > DQWORD_SIZE_BIT)
-        throw std::runtime_error("BitsVector::setHigh(): size cannot be greater than a DQWORD.");
+        throw std::runtime_error("BitsVector::setHigh(): The highest bit cannot be greater than a DQWORD.");
 
       if (this->getVectorSize() % BYTE_SIZE_BIT && this->getVectorSize() != FLAG_SIZE_BIT)
-        throw std::runtime_error("BitsVector::setHigh(): the vector size must be a multiple of 8");
+        throw std::runtime_error("BitsVector::setHigh(): The vector size must be a multiple of 8.");
     }
 
 
@@ -70,10 +70,10 @@ namespace triton {
       this->low = v;
 
       if (this->low > this->high)
-        throw std::runtime_error("BitsVector::setLow(): low cannot be greater than high.");
+        throw std::runtime_error("BitsVector::setLow(): The lower bit cannot be greater than highest.");
 
       if (this->low % BYTE_SIZE_BIT)
-        throw std::runtime_error("BitsVector::setLow(): low must be a multiple of 8");
+        throw std::runtime_error("BitsVector::setLow(): The lower bit must be a multiple of 8.");
     }
 
 
@@ -82,16 +82,16 @@ namespace triton {
       this->low  = std::get<1>(p);
 
       if (this->high > DQWORD_SIZE_BIT)
-        throw std::runtime_error("BitsVector::setPair(): size cannot be greater than a DQWORD.");
+        throw std::runtime_error("BitsVector::setPair(): The highest bit cannot be greater than a DQWORD.");
 
       if (this->low % BYTE_SIZE_BIT)
-        throw std::runtime_error("BitsVector::setPair(): low must be a multiple of 8");
+        throw std::runtime_error("BitsVector::setPair(): The lower bit must be a multiple of 8.");
 
       if (this->low > this->high)
-        throw std::runtime_error("BitsVector::setPair(): low cannot be greater than high.");
+        throw std::runtime_error("BitsVector::setPair(): The lower bit cannot be greater than highest.");
 
       if (this->getVectorSize() % BYTE_SIZE_BIT && this->getVectorSize() != FLAG_SIZE_BIT)
-        throw std::runtime_error("BitsVector::setHigh(): the vector size must be a multiple of 8");
+        throw std::runtime_error("BitsVector::setHigh(): The vector size must be a multiple of 8.");
     }
 
 

@@ -35,7 +35,7 @@ namespace triton {
 
     triton::arch::cpuInterface* Architecture::getCpu(void) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getCpu(): CPU undefined");
+        throw std::runtime_error("Architecture::getCpu(): CPU undefined.");
       return this->cpu;
     }
 
@@ -44,11 +44,11 @@ namespace triton {
 
       /* Check if the architecture is already definied */
       if (this->arch != ARCH_INVALID)
-        throw std::runtime_error("Architecture::setArchitecture(): Architecture is already defined");
+        throw std::runtime_error("Architecture::setArchitecture(): Architecture is already defined.");
 
       /* Check if the architecture is valid */
       if (!(arch > ARCH_INVALID && arch < ARCH_LAST_ITEM))
-        throw std::runtime_error("Architecture::setArchitecture(): Invalid architecture");
+        throw std::runtime_error("Architecture::setArchitecture(): Invalid architecture.");
 
       /* Setup global variables */
       this->arch = arch;
@@ -62,14 +62,14 @@ namespace triton {
           #endif
           this->cpu = new x86::x8664Cpu();
           if (!this->cpu)
-            throw std::runtime_error("Architecture::setArchitecture(): Not enough memory");
+            throw std::runtime_error("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();
           break;
 
         case ARCH_X86:
           this->cpu = new x86::x86Cpu();
           if (!this->cpu)
-            throw std::runtime_error("Architecture::setArchitecture(): Not enough memory");
+            throw std::runtime_error("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();
           break;
 
@@ -80,7 +80,7 @@ namespace triton {
 
     void Architecture::clearArchitecture(void) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::clearArchitecture(): You must define an architecture");
+        throw std::runtime_error("Architecture::clearArchitecture(): You must define an architecture.");
       this->cpu->clear();
     }
 
@@ -158,28 +158,28 @@ namespace triton {
 
     std::set<triton::arch::RegisterOperand*> Architecture::getAllRegisters(void) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getAllRegisters(): You must define an architecture");
+        throw std::runtime_error("Architecture::getAllRegisters(): You must define an architecture.");
       return this->cpu->getAllRegisters();
     }
 
 
     std::set<triton::arch::RegisterOperand*> Architecture::getParentRegisters(void) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getParentRegisters(): You must define an architecture");
+        throw std::runtime_error("Architecture::getParentRegisters(): You must define an architecture.");
       return this->cpu->getParentRegisters();
     }
 
 
     void Architecture::disassembly(triton::arch::Instruction &inst) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::disassembly(): You must define an architecture");
+        throw std::runtime_error("Architecture::disassembly(): You must define an architecture.");
       this->cpu->disassembly(inst);
     }
 
 
     void Architecture::buildSemantics(triton::arch::Instruction &inst) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::disassembly(): You must define an architecture");
+        throw std::runtime_error("Architecture::disassembly(): You must define an architecture.");
 
       /* Clear previous expressions if exist */
       inst.symbolicExpressions.clear();
@@ -252,42 +252,42 @@ namespace triton {
 
     triton::uint8 Architecture::getLastMemoryValue(triton::__uint addr) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getLastMemoryValue(): You must define an architecture");
+        throw std::runtime_error("Architecture::getLastMemoryValue(): You must define an architecture.");
       return this->cpu->getLastMemoryValue(addr);
     }
 
 
     triton::uint128 Architecture::getLastMemoryValue(triton::arch::MemoryOperand& mem) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getLastMemoryValue(): You must define an architecture");
+        throw std::runtime_error("Architecture::getLastMemoryValue(): You must define an architecture.");
       return this->cpu->getLastMemoryValue(mem);
     }
 
 
     triton::uint128 Architecture::getLastRegisterValue(triton::arch::RegisterOperand& reg) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getLastRegisterValue(): You must define an architecture");
+        throw std::runtime_error("Architecture::getLastRegisterValue(): You must define an architecture.");
       return this->cpu->getLastRegisterValue(reg);
     }
 
 
     void Architecture::setLastMemoryValue(triton::__uint addr, triton::uint8 value) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::setLastMemoryValue(): You must define an architecture");
+        throw std::runtime_error("Architecture::setLastMemoryValue(): You must define an architecture.");
       this->cpu->setLastMemoryValue(addr, value);
     }
 
 
     void Architecture::setLastMemoryValue(triton::arch::MemoryOperand& mem) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::setLastMemoryValue(): You must define an architecture");
+        throw std::runtime_error("Architecture::setLastMemoryValue(): You must define an architecture.");
       this->cpu->setLastMemoryValue(mem);
     }
 
 
     void Architecture::setLastRegisterValue(triton::arch::RegisterOperand& reg) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::setLastRegisterValue(): You must define an architecture");
+        throw std::runtime_error("Architecture::setLastRegisterValue(): You must define an architecture.");
       this->cpu->setLastRegisterValue(reg);
     }
 

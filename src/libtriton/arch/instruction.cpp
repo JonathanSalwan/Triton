@@ -100,7 +100,7 @@ namespace triton {
 
     void Instruction::setOpcodes(triton::uint8* opcodes, triton::uint32 size) {
       if (size >= sizeof(this->opcodes))
-       throw std::runtime_error("Instruction::setOpcodes(): Invalid size (too big)");
+       throw std::runtime_error("Instruction::setOpcodes(): Invalid size (too big).");
       std::memcpy(this->opcodes, opcodes, size);
       this->opcodesSize = size;
     }

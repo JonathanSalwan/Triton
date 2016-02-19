@@ -52,7 +52,7 @@ namespace triton {
       triton::__uint result = 0;
 
       if (!this->expr.is_int())
-        throw std::runtime_error("getUintValue: The ast is not a numerical value");
+        throw std::runtime_error("Z3Result::getUintValue(): The ast is not a numerical value.");
 
       #if defined(__x86_64__) || defined(_M_X64)
       Z3_get_numeral_uint64(this->context, this->expr, &result);
