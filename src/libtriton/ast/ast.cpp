@@ -979,7 +979,11 @@ namespace triton {
         throw std::runtime_error("BvsmodNode::BvsmodNode(): Must take two nodes of same size.");
 
       this->size = expr1->getBitvectorSize();
-      this->eval = (expr1->evaluate().convert_to<triton::sint512>() % expr2->evaluate().convert_to<triton::sint512>()).convert_to<triton::uint512>();
+
+      if (expr2->evaluate() == 0)
+        this->eval = expr1->evaluate();
+      else
+        this->eval = (expr1->evaluate().convert_to<triton::sint512>() % expr2->evaluate().convert_to<triton::sint512>()).convert_to<triton::uint512>();
 
       this->addChild(expr1);
       this->addChild(expr2);
@@ -1023,7 +1027,11 @@ namespace triton {
         throw std::runtime_error("BvsremNode::BvsremNode(): Must take two nodes of same size.");
 
       this->size = expr1->getBitvectorSize();
-      this->eval = (expr1->evaluate().convert_to<triton::sint512>() % expr2->evaluate().convert_to<triton::sint512>()).convert_to<triton::uint512>();
+
+      if (expr2->evaluate() == 0)
+        this->eval = expr1->evaluate();
+      else
+        this->eval = (expr1->evaluate().convert_to<triton::sint512>() % expr2->evaluate().convert_to<triton::sint512>()).convert_to<triton::uint512>();
 
       this->addChild(expr1);
       this->addChild(expr2);
@@ -1335,7 +1343,11 @@ namespace triton {
         throw std::runtime_error("BvuremNode::BvuremNode(): Must take two nodes of same size.");
 
       this->size = expr1->getBitvectorSize();
-      this->eval = (expr1->evaluate() % expr2->evaluate());
+
+      if (expr2->evaluate() == 0)
+        this->eval = expr1->evaluate();
+      else
+        this->eval = (expr1->evaluate() % expr2->evaluate());
 
       this->addChild(expr1);
       this->addChild(expr2);
