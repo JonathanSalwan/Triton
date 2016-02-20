@@ -866,12 +866,17 @@ namespace triton {
 
 
     void BvrolNode::init(void) {
+      triton::uint32 rot = 0;
+
       if (this->childs[0]->getKind() != DECIMAL_NODE)
         throw std::runtime_error("BvrolNode::init(): rot must be a DECIMAL_NODE.");
 
+      rot = reinterpret_cast<DecimalNode*>(this->childs[0])->getValue().convert_to<triton::uint32>();
+
       /* Init attributes */
       this->size = this->childs[1]->getBitvectorSize();
-      /* TODO eval */
+      rot %= this->size;
+      this->eval = (((this->childs[1]->evaluate() << rot) | (this->childs[1]->evaluate() >> (this->size - rot))) & this->getBitvectorMask());
 
       /* Init childs */
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -935,12 +940,17 @@ namespace triton {
 
 
     void BvrorNode::init(void) {
+      triton::uint32 rot = 0;
+
       if (this->childs[0]->getKind() != DECIMAL_NODE)
         throw std::runtime_error("BvrorNode::init(): rot must be a DECIMAL_NODE.");
 
+      rot = reinterpret_cast<DecimalNode*>(this->childs[0])->getValue().convert_to<triton::uint32>();
+
       /* Init attributes */
       this->size = this->childs[1]->getBitvectorSize();
-      /* TODO eval */
+      rot %= this->size;
+      this->eval = (((this->childs[1]->evaluate() >> rot) | (this->childs[1]->evaluate() << (this->size - rot))) & this->getBitvectorMask());
 
       /* Init childs */
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
