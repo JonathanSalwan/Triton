@@ -148,12 +148,12 @@ class TritonExecution(object):
                     ripId = TritonExecution.myPC[i][0]
                     symExp = getFullAst(getSymbolicExpressionFromId(ripId).getAst())
                     addr = TritonExecution.myPC[i][1]
-                    expr.append(ast.smtAssert(ast.equal(symExp, ast.bv(addr,  CPUSIZE.QWORD_BIT))))
+                    expr.append(ast.assert_(ast.equal(symExp, ast.bv(addr,  CPUSIZE.QWORD_BIT))))
 
                 ripId = TritonExecution.myPC[j][0]
                 symExp = getFullAst(getSymbolicExpressionFromId(ripId).getAst())
                 addr = TritonExecution.myPC[j][2]
-                expr.append(ast.smtAssert(ast.equal(symExp, ast.bv(addr,  CPUSIZE.QWORD_BIT))))
+                expr.append(ast.assert_(ast.equal(symExp, ast.bv(addr,  CPUSIZE.QWORD_BIT))))
 
                 expr = ast.compound(expr)
                 model = getModel(expr)

@@ -432,11 +432,14 @@ namespace triton {
 
       /* Add a path constraint */
       void SymbolicEngine::addPathConstraint(triton::ast::AbstractNode* pc) {
-        triton::uint128 value = pc->evaluate().convert_to<triton::uint128>();
-        triton::uint32  size  = pc->getBitvectorSize();
+        triton::uint128 value = 0;
+        triton::uint32  size  = 0;
 
         if (pc == nullptr)
           throw std::runtime_error("SymbolicEngine::addPathConstraint(): The PC node cannot be null.");
+
+        value = pc->evaluate().convert_to<triton::uint128>();
+        size  = pc->getBitvectorSize();
 
         if (size == 0)
           throw std::runtime_error("SymbolicEngine::addPathConstraint(): The PC node size cannot be zero.");
