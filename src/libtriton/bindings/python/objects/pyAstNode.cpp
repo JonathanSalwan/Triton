@@ -166,6 +166,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "AstNode::setChild(): index out-of-range.");
 
         dst->getChilds()[i] = src;
+        dst->init();
 
         Py_RETURN_TRUE;
       }

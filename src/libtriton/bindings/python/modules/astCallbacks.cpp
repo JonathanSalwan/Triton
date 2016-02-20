@@ -425,9 +425,9 @@ e.g: `((_ sign_extend sizeExt) expr1)`.
 - **variable(\ref py_SymbolicVariable_page symVar)**<br>
 Returns a `triton::ast::variable()` node as \ref py_AstNode_page.
 
-- **zx(integer zeroExt, AstNode expr1)**<br>
+- **zx(integer sizeExt, AstNode expr1)**<br>
 Returns the ast `triton::ast::zx()` representation as \ref py_AstNode_page.<br>
-e.g: `((_ zero_extend zeroExt) expr1)`.
+e.g: `((_ zero_extend sizeExt) expr1)`.
 
 */
 

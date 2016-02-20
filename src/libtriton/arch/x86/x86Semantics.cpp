@@ -1400,6 +1400,7 @@ namespace triton {
                            triton::ast::bv(0, bvSize1)
                          );
             node->getChilds()[2] = child;
+            node->init();
             node = child;
           }
 
@@ -1450,6 +1451,7 @@ namespace triton {
                            triton::ast::bv(0, bvSize1)
                          );
             node->getChilds()[2] = child;
+            node->init();
             node = child;
           }
 
