@@ -1025,7 +1025,7 @@ namespace triton {
       this->size = this->childs[0]->getBitvectorSize();
 
       if (op2Signed == 0) {
-        this->eval = -1;
+        this->eval = (op1Signed < 0 ? 1 : -1);
         this->eval &= this->getBitvectorMask();
       }
       else
