@@ -691,7 +691,7 @@ namespace triton {
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
-      this->eval = (~(this->childs[0]->evaluate() | this->childs[0]->evaluate()) & this->getBitvectorMask());
+      this->eval = (~(this->childs[0]->evaluate() | this->childs[1]->evaluate()) & this->getBitvectorMask());
 
       /* Init childs */
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
