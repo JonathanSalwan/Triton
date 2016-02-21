@@ -103,7 +103,7 @@ if __name__ == '__main__':
         print inst
 
         # Next instruction
-        pc = evaluateAst(buildSymbolicRegister(REG.RIP))
+        pc = buildSymbolicRegister(REG.RIP).evaluate()
 
     sys.exit(0)
 

@@ -158,8 +158,8 @@ Enabled, Triton will use the simplification passes of z3 before to call its reco
 - **enableTaintEngine(bool flag)**<br>
 Enables or disables the taint engine.
 
-- **evaluateAst(\ref py_AstNode_page node)**<br>
-Evaluates an AST and returns the symbolic value as integer.
+- **evaluateAstViaZ3(\ref py_AstNode_page node)**<br>
+Evaluates an AST via Z3 and returns the symbolic value as integer.
 
 - **getAllRegisters(void)**<br>
 Returns the list of all registers. Each item of this list is a \ref py_REG_page.
@@ -1256,16 +1256,16 @@ namespace triton {
       }
 
 
-      static PyObject* triton_evaluateAst(PyObject* self, PyObject* node) {
+      static PyObject* triton_evaluateAstViaZ3(PyObject* self, PyObject* node) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "evaluateAst(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "evaluateAstViaZ3(): Architecture is not defined.");
 
         if (!PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "evaluateAst(): Expects a AstNode as argument.");
+          return PyErr_Format(PyExc_TypeError, "evaluateAstViaZ3(): Expects a AstNode as argument.");
 
         try {
-          return PyLong_FromUint512(triton::api.evaluateAst(PyAstNode_AsAstNode(node)));
+          return PyLong_FromUint512(triton::api.evaluateAstViaZ3(PyAstNode_AsAstNode(node)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2618,7 +2618,7 @@ namespace triton {
         {"enableSymbolicOptimization",          (PyCFunction)triton_enableSymbolicOptimization,             METH_O,             ""},
         {"enableSymbolicZ3Simplification",      (PyCFunction)triton_enableSymbolicZ3Simplification,         METH_O,             ""},
         {"enableTaintEngine",                   (PyCFunction)triton_enableTaintEngine,                      METH_O,             ""},
-        {"evaluateAst",                         (PyCFunction)triton_evaluateAst,                            METH_O,             ""},
+        {"evaluateAstViaZ3",                    (PyCFunction)triton_evaluateAstViaZ3,                       METH_O,             ""},
         {"getAllRegisters",                     (PyCFunction)triton_getAllRegisters,                        METH_NOARGS,        ""},
         {"getArchitecture",                     (PyCFunction)triton_getArchitecture,                        METH_NOARGS,        ""},
         {"getAstFromId",                        (PyCFunction)triton_getAstFromId,                           METH_O,             ""},

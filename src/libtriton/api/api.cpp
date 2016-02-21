@@ -825,11 +825,9 @@ namespace triton {
   }
 
 
-  triton::uint512 API::evaluateAst(triton::ast::AbstractNode *node) {
+  triton::uint512 API::evaluateAstViaZ3(triton::ast::AbstractNode *node) {
     this->checkSolver();
-    // TODO delete this methods
-    //return this->solver->evaluateAst(node);
-    return node->evaluate();
+    return this->solver->evaluateAstViaZ3(node);
   }
 
 

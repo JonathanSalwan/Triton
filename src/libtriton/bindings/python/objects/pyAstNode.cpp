@@ -46,6 +46,9 @@ This object is used to represent each AST node of an expression.
 \section AstNode_py_api Python API - Methods of the AstNode class
 <hr>
 
+- **evaluate(void)**<br>
+Evaluates the tree and returns the value as integer.
+
 - **getBitvectorMask(void)**<br>
 Returns the mask of the node vector according to its size.<br>
 e.g: `0xffffffff`
@@ -54,7 +57,7 @@ e.g: `0xffffffff`
 Returns the node vector size.
 
 - **getChilds(void)**<br>
-Returns the list of the childs as \ref py_AstNode_page.
+Returns the list of child nodes as \ref py_AstNode_page.
 
 - **getHash(void)**<br>
 Returns the hash (signature) of the AST as float.
@@ -62,6 +65,9 @@ Returns the hash (signature) of the AST as float.
 - **getKind(void)**<br>
 Returns the kind of the node as \ref py_AST_NODE_page.<br>
 e.g: `AST_NODE.BVADD`
+
+- **getParent(void)**<br>
+Returns the parent node as \ref py_AstNode_page.
 
 - **getValue(void)**<br>
 Returns the node value as integer or string (it depends of the kind). For example if the kind of node is `decimal`, the value is an integer.
@@ -80,6 +86,16 @@ namespace triton {
       //! AstNode destructor.
       void AstNode_dealloc(PyObject* self) {
         Py_DECREF(self);
+      }
+
+
+      static PyObject* AstNode_evaluate(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint512(PyAstNode_AsAstNode(self)->evaluate());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -123,6 +139,16 @@ namespace triton {
 
       static PyObject* AstNode_getKind(PyObject* self, PyObject* noarg) {
         return Py_BuildValue("k", PyAstNode_AsAstNode(self)->getKind());
+      }
+
+
+      static PyObject* AstNode_getParent(PyObject* self, PyObject* noarg) {
+        triton::ast::AbstractNode* parent = PyAstNode_AsAstNode(self)->getParent();
+        if (parent == nullptr) {
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
+        return PyAstNode(parent);
       }
 
 
@@ -297,14 +323,16 @@ namespace triton {
 
       //! AstNode methods.
       PyMethodDef AstNode_callbacks[] = {
+        {"evaluate",          AstNode_evaluate,          METH_NOARGS,     ""},
         {"getBitvectorMask",  AstNode_getBitvectorMask,  METH_NOARGS,     ""},
         {"getBitvectorSize",  AstNode_getBitvectorSize,  METH_NOARGS,     ""},
         {"getChilds",         AstNode_getChilds,         METH_NOARGS,     ""},
         {"getHash",           AstNode_getHash,           METH_NOARGS,     ""},
         {"getKind",           AstNode_getKind,           METH_NOARGS,     ""},
+        {"getParent",         AstNode_getParent,         METH_NOARGS,     ""},
         {"getValue",          AstNode_getValue,          METH_NOARGS,     ""},
         {"setChild",          AstNode_setChild,          METH_VARARGS,    ""},
-        {nullptr,             nullptr,                      0,               nullptr}
+        {nullptr,             nullptr,                   0,               nullptr}
       };
 
 

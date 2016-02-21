@@ -65,8 +65,8 @@ namespace triton {
            */
           std::list<std::map<triton::uint32, SolverModel>> getModels(triton::ast::AbstractNode *node, triton::uint32 limit);
 
-          //! Evaluates an AST and returns the symbolic value.
-          triton::uint512 evaluateAst(triton::ast::AbstractNode *node);
+          //! Evaluates an AST via Z3 and returns the symbolic value.
+          triton::uint512 evaluateAstViaZ3(triton::ast::AbstractNode *node);
 
           //! Constructor.
           SolverEngine();

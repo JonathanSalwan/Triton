@@ -199,9 +199,9 @@ namespace triton {
       }
 
 
-      triton::uint512 SolverEngine::evaluateAst(triton::ast::AbstractNode *node) {
+      triton::uint512 SolverEngine::evaluateAstViaZ3(triton::ast::AbstractNode *node) {
         if (node == nullptr)
-          throw std::runtime_error("SolverEngine::evaluateAst(): node cannot be null.");
+          throw std::runtime_error("SolverEngine::evaluateAstViaZ3(): node cannot be null.");
         triton::ast::TritonToZ3Ast z3ast{};
         triton::ast::Z3Result result = z3ast.eval(*node);
         triton::uint512 nbResult{result.getStringValue()};

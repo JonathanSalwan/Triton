@@ -51,7 +51,8 @@ def cafter(instruction):
             continue
 
         expr   = getFullAstFromId(seid)
-        svalue = evaluateAst(expr)
+        svalue = expr.evaluate()
+        #svalue = evaluateAstViaZ3(expr)
 
         if cvalue != svalue:
             bad.append({

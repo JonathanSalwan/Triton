@@ -280,14 +280,14 @@ namespace triton {
       /* Returns the symbolic memory value */
       triton::uint128 SymbolicEngine::getSymbolicMemoryValue(triton::arch::MemoryOperand& mem) {
         triton::ast::AbstractNode* node = this->buildSymbolicMemoryOperand(mem);
-        return triton::api.evaluateAst(node).convert_to<triton::uint128>();
+        return node->evaluate().convert_to<triton::uint128>();
       }
 
 
       /* Returns the symbolic register value */
       triton::uint128 SymbolicEngine::getSymbolicRegisterValue(triton::arch::RegisterOperand& reg) {
         triton::ast::AbstractNode* node = this->buildSymbolicRegisterOperand(reg);
-        return triton::api.evaluateAst(node).convert_to<triton::uint128>();
+        return node->evaluate().convert_to<triton::uint128>();
       }
 
 

@@ -133,9 +133,9 @@ if __name__ == '__main__':
     ah  = buildSymbolicRegister(REG.AH)
     mem = buildSymbolicMemory(Memory(0x11248, 4))
     print 'Memory at 0x11248 :', mem
-    print 'Compute memory    :', hex(evaluateAst(mem))
+    print 'Compute memory    :', hex(mem.evaluate())
     print 'Register AH       :', ah
-    print 'Compute  AH       :', hex(evaluateAst(ah))
+    print 'Compute  AH       :', hex(ah.evaluate())
 
     sys.exit(0)
 
