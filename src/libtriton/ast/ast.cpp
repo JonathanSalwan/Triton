@@ -308,20 +308,17 @@ namespace triton {
 
 
     void BvashrNode::init(void) {
+      triton::sint512 op1Signed = 0;
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvashrNode::init(): Must take two nodes of same size.");
 
+      /* Extend sign */
+      op1Signed = triton::ast::modularSignExtend(this->childs[0]);
+
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
-
-      if (this->childs[1]->evaluate()) {
-        this->eval = ((this->childs[0]->evaluate().convert_to<triton::sint512>() >> this->childs[1]->evaluate().convert_to<triton::uint32>()).convert_to<triton::uint512>() & this->getBitvectorMask());
-        if (this->childs[0]->evaluate() >> (this->childs[0]->getBitvectorSize()-1))
-          this->eval = ((-(this->eval.convert_to<triton::sint512>())).convert_to<triton::uint512>() & this->getBitvectorMask());
-      }
-      else {
-        this->eval = this->childs[0]->evaluate();
-      }
+      this->eval = ((op1Signed >> this->childs[1]->evaluate().convert_to<triton::uint32>()).convert_to<triton::uint512>() & this->getBitvectorMask());
 
       /* Init childs */
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1020,17 +1017,17 @@ namespace triton {
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsdivNode::init(): Must take two nodes of same size.");
 
-      op1Signed = this->childs[0]->evaluate().convert_to<triton::sint512>();
-      op2Signed = this->childs[1]->evaluate().convert_to<triton::sint512>();
-
-      if (op1Signed >> (this->childs[0]->getBitvectorSize()-1)) op1Signed = -op1Signed;
-      if (op2Signed >> (this->childs[1]->getBitvectorSize()-1)) op2Signed = -op2Signed;
+      /* Sign extend */
+      op1Signed = triton::ast::modularSignExtend(this->childs[0]);
+      op2Signed = triton::ast::modularSignExtend(this->childs[1]);
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
 
-      if (op2Signed == 0)
-        this->eval = (-1 & this->getBitvectorMask());
+      if (op2Signed == 0) {
+        this->eval = -1;
+        this->eval &= this->getBitvectorMask();
+      }
       else
         this->eval = ((op1Signed / op2Signed).convert_to<triton::uint512>() & this->getBitvectorMask());
 
@@ -1094,11 +1091,9 @@ namespace triton {
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsgeNode::init(): Must take two nodes of same size.");
 
-      op1Signed = this->childs[0]->evaluate().convert_to<triton::sint512>();
-      op2Signed = this->childs[1]->evaluate().convert_to<triton::sint512>();
-
-      if (op1Signed >> (this->childs[0]->getBitvectorSize()-1)) op1Signed = -op1Signed;
-      if (op2Signed >> (this->childs[1]->getBitvectorSize()-1)) op2Signed = -op2Signed;
+      /* Sign extend */
+      op1Signed = triton::ast::modularSignExtend(this->childs[0]);
+      op2Signed = triton::ast::modularSignExtend(this->childs[1]);
 
       /* Init attributes */
       this->size = 1;
@@ -1164,11 +1159,9 @@ namespace triton {
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsgtNode::init(): Must take two nodes of same size.");
 
-      op1Signed = this->childs[0]->evaluate().convert_to<triton::sint512>();
-      op2Signed = this->childs[1]->evaluate().convert_to<triton::sint512>();
-
-      if (op1Signed >> (this->childs[0]->getBitvectorSize()-1)) op1Signed = -op1Signed;
-      if (op2Signed >> (this->childs[1]->getBitvectorSize()-1)) op2Signed = -op2Signed;
+      /* Sign extend */
+      op1Signed = triton::ast::modularSignExtend(this->childs[0]);
+      op2Signed = triton::ast::modularSignExtend(this->childs[1]);
 
       /* Init attributes */
       this->size = 1;
@@ -1295,11 +1288,9 @@ namespace triton {
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsleNode::init(): Must take two nodes of same size.");
 
-      op1Signed = this->childs[0]->evaluate().convert_to<triton::sint512>();
-      op2Signed = this->childs[1]->evaluate().convert_to<triton::sint512>();
-
-      if (op1Signed >> (this->childs[0]->getBitvectorSize()-1)) op1Signed = -op1Signed;
-      if (op2Signed >> (this->childs[1]->getBitvectorSize()-1)) op2Signed = -op2Signed;
+      /* Sign extend */
+      op1Signed = triton::ast::modularSignExtend(this->childs[0]);
+      op2Signed = triton::ast::modularSignExtend(this->childs[1]);
 
       /* Init attributes */
       this->size = 1;
@@ -1365,11 +1356,9 @@ namespace triton {
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsltNode::init(): Must take two nodes of same size.");
 
-      op1Signed = this->childs[0]->evaluate().convert_to<triton::sint512>();
-      op2Signed = this->childs[1]->evaluate().convert_to<triton::sint512>();
-
-      if (op1Signed >> (this->childs[0]->getBitvectorSize()-1)) op1Signed = -op1Signed;
-      if (op2Signed >> (this->childs[1]->getBitvectorSize()-1)) op2Signed = -op2Signed;
+      /* Sign extend */
+      op1Signed = triton::ast::modularSignExtend(this->childs[0]);
+      op2Signed = triton::ast::modularSignExtend(this->childs[1]);
 
       /* Init attributes */
       this->size = 1;
@@ -1435,11 +1424,9 @@ namespace triton {
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsmodNode::init(): Must take two nodes of same size.");
 
-      op1Signed = this->childs[0]->evaluate().convert_to<triton::sint512>();
-      op2Signed = this->childs[1]->evaluate().convert_to<triton::sint512>();
-
-      if (op1Signed >> (this->childs[0]->getBitvectorSize()-1)) op1Signed = -op1Signed;
-      if (op2Signed >> (this->childs[1]->getBitvectorSize()-1)) op2Signed = -op2Signed;
+      /* Sign extend */
+      op1Signed = triton::ast::modularSignExtend(this->childs[0]);
+      op2Signed = triton::ast::modularSignExtend(this->childs[1]);
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -1509,11 +1496,9 @@ namespace triton {
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsremNode::init(): Must take two nodes of same size.");
 
-      op1Signed = this->childs[0]->evaluate().convert_to<triton::sint512>();
-      op2Signed = this->childs[1]->evaluate().convert_to<triton::sint512>();
-
-      if (op1Signed >> (this->childs[0]->getBitvectorSize()-1)) op1Signed = -op1Signed;
-      if (op2Signed >> (this->childs[1]->getBitvectorSize()-1)) op2Signed = -op2Signed;
+      /* Sign extend */
+      op1Signed = triton::ast::modularSignExtend(this->childs[0]);
+      op2Signed = triton::ast::modularSignExtend(this->childs[1]);
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -3303,9 +3288,24 @@ namespace triton {
 
 
     triton::uint512 rotl(triton::uint512 value, triton::uint32 shift) {
-        if ((shift &= 511) == 0)
-          return value;
-        return ((value << shift) | (value >> (512 - shift)));
+      if ((shift &= 511) == 0)
+        return value;
+      return ((value << shift) | (value >> (512 - shift)));
+    }
+
+
+    triton::sint512 modularSignExtend(AbstractNode* node) {
+      triton::sint512 value = 0;
+
+      if (node->evaluate() >> (node->getBitvectorSize()-1)) {
+        value = -1;
+        value = ((value << node->getBitvectorSize()) | node->evaluate());
+      }
+      else {
+        value = node->evaluate();
+      }
+
+      return value;
     }
 
   }; /* ast namespace */

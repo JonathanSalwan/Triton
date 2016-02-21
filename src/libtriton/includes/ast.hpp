@@ -919,6 +919,9 @@ namespace triton {
     //! Custom rotate left function for hash routine.
     triton::uint512 rotl(triton::uint512 value, triton::uint32 shift);
 
+    //! Custom modular sign extend for bitwise operation.
+    triton::sint512 modularSignExtend(AbstractNode* node);
+
   /*! @} End of ast namespace */
   };
 /*! @} End of triton namespace */
