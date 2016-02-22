@@ -319,6 +319,10 @@ namespace triton {
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = ((op1Signed >> this->childs[1]->evaluate().convert_to<triton::uint32>()).convert_to<triton::uint512>() & this->getBitvectorMask());
+      if (this->eval == 0 && op1Signed < 0) {
+        this->eval = -1;
+        this->eval &= this->getBitvectorMask();
+      }
 
       /* Init childs */
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
