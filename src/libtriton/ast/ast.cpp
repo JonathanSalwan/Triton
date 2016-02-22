@@ -324,7 +324,9 @@ namespace triton {
 
 
     void BvashrNode::init(void) {
-      triton::sint512 op1Signed = 0;
+      triton::uint32 shift  = 0;
+      triton::uint512 mask  = 0;
+      triton::uint512 value = 0;
 
       if (this->childs.size() < 2)
         throw std::runtime_error("BvashrNode::init(): Must take at least two childs.");
@@ -332,15 +334,34 @@ namespace triton {
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvashrNode::init(): Must take two nodes of same size.");
 
-      /* Extend sign */
-      op1Signed = triton::ast::modularSignExtend(this->childs[0]);
+      value = this->childs[0]->evaluate();
+      shift = this->childs[1]->evaluate().convert_to<triton::uint32>();
+
+      /* Mask based on the sign */
+      if (this->childs[0]->isSigned())
+        mask = (1 << (this->childs[0]->getBitvectorSize()-1));
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
-      this->eval = ((op1Signed >> this->childs[1]->evaluate().convert_to<triton::uint32>()).convert_to<triton::uint512>() & this->getBitvectorMask());
-      if (this->eval == 0 && op1Signed < 0) {
+
+      if (shift >= this->size && this->childs[0]->isSigned()) {
         this->eval = -1;
         this->eval &= this->getBitvectorMask();
+      }
+
+      else if (shift >= this->size && !this->childs[0]->isSigned()) {
+        this->eval = 0;
+      }
+
+      else if (shift == 0) {
+        this->eval = value;
+      }
+
+      else {
+        this->eval = value & this->getBitvectorMask();
+        for (triton::uint32 index = 1; index <= shift; index++) {
+          this->eval = (((this->eval >> 1) | mask) & this->getBitvectorMask());
+        }
       }
 
       /* Init childs */
@@ -918,7 +939,8 @@ namespace triton {
 
 
     void BvrolNode::init(void) {
-      triton::uint32 rot = 0;
+      triton::uint32 rot    = 0;
+      triton::uint512 value = 0;
 
       if (this->childs.size() < 2)
         throw std::runtime_error("BvrolNode::init(): Must take at least two childs.");
@@ -926,12 +948,13 @@ namespace triton {
       if (this->childs[0]->getKind() != DECIMAL_NODE)
         throw std::runtime_error("BvrolNode::init(): rot must be a DECIMAL_NODE.");
 
-      rot = reinterpret_cast<DecimalNode*>(this->childs[0])->getValue().convert_to<triton::uint32>();
+      rot   = reinterpret_cast<DecimalNode*>(this->childs[0])->getValue().convert_to<triton::uint32>();
+      value = this->childs[1]->evaluate();
 
       /* Init attributes */
       this->size = this->childs[1]->getBitvectorSize();
       rot %= this->size;
-      this->eval = (((this->childs[1]->evaluate() << rot) | (this->childs[1]->evaluate() >> (this->size - rot))) & this->getBitvectorMask());
+      this->eval = (((value << rot) | (value >> (this->size - rot))) & this->getBitvectorMask());
 
       /* Init childs */
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -995,7 +1018,8 @@ namespace triton {
 
 
     void BvrorNode::init(void) {
-      triton::uint32 rot = 0;
+      triton::uint32 rot    = 0;
+      triton::uint512 value = 0;
 
       if (this->childs.size() < 2)
         throw std::runtime_error("BvrorNode::init(): Must take at least two childs.");
@@ -1003,12 +1027,13 @@ namespace triton {
       if (this->childs[0]->getKind() != DECIMAL_NODE)
         throw std::runtime_error("BvrorNode::init(): rot must be a DECIMAL_NODE.");
 
-      rot = reinterpret_cast<DecimalNode*>(this->childs[0])->getValue().convert_to<triton::uint32>();
+      rot   = reinterpret_cast<DecimalNode*>(this->childs[0])->getValue().convert_to<triton::uint32>();
+      value = this->childs[1]->evaluate();
 
       /* Init attributes */
       this->size = this->childs[1]->getBitvectorSize();
       rot %= this->size;
-      this->eval = (((this->childs[1]->evaluate() >> rot) | (this->childs[1]->evaluate() << (this->size - rot))) & this->getBitvectorMask());
+      this->eval = (((value >> rot) | (value << (this->size - rot))) & this->getBitvectorMask());
 
       /* Init childs */
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
