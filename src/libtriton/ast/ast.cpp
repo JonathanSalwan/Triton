@@ -127,6 +127,9 @@ namespace triton {
 
 
     void AssertNode::init(void) {
+      if (this->childs.size() < 1)
+        throw std::runtime_error("AssertNode::init(): Must take at least one child.");
+
       /* Init attributes */
       this->size = 1;
       this->eval = 0;
@@ -185,6 +188,9 @@ namespace triton {
 
 
     void BvaddNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvaddNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvaddNode::init(): Must take two nodes of same size.");
 
@@ -246,6 +252,9 @@ namespace triton {
 
 
     void BvandNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvandNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvandNode::init(): Must take two nodes of same size.");
 
@@ -309,6 +318,9 @@ namespace triton {
 
     void BvashrNode::init(void) {
       triton::sint512 op1Signed = 0;
+
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvashrNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvashrNode::init(): Must take two nodes of same size.");
@@ -379,6 +391,9 @@ namespace triton {
     void BvdeclNode::init(void) {
       triton::uint32 size = 0;
 
+      if (this->childs.size() < 1)
+        throw std::runtime_error("BvdeclNode::init(): Must take at least one child.");
+
       if (this->childs[0]->getKind() != DECIMAL_NODE)
         throw std::runtime_error("BvdeclNode::init(): Child must be a DECIMAL_NODE.");
 
@@ -447,6 +462,9 @@ namespace triton {
 
 
     void BvlshrNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvlshrNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvlshrNode::init(): Must take two nodes of same size.");
 
@@ -508,6 +526,9 @@ namespace triton {
 
 
     void BvmulNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvmulNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvmulNode::init(): Must take two nodes of same size.");
 
@@ -569,6 +590,9 @@ namespace triton {
 
 
     void BvnandNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvnandNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvnandNode::init(): Must take two nodes of same size.");
 
@@ -629,6 +653,9 @@ namespace triton {
 
 
     void BvnegNode::init(void) {
+      if (this->childs.size() < 1)
+        throw std::runtime_error("BvnegNode::init(): Must take at least one child.");
+
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = ((-(this->childs[0]->evaluate().convert_to<triton::sint512>())).convert_to<triton::uint512>() & this->getBitvectorMask());
@@ -687,6 +714,9 @@ namespace triton {
 
 
     void BvnorNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvnorNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvnorNode::init(): Must take two nodes of same size.");
 
@@ -747,6 +777,9 @@ namespace triton {
 
 
     void BvnotNode::init(void) {
+      if (this->childs.size() < 1)
+        throw std::runtime_error("BvnotNode::init(): Must take at least one child.");
+
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = (~this->childs[0]->evaluate() & this->getBitvectorMask());
@@ -805,6 +838,9 @@ namespace triton {
 
 
     void BvorNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvorNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[0]->getBitvectorSize())
         throw std::runtime_error("BvorNode::init(): Must take two nodes of same size.");
 
@@ -876,6 +912,9 @@ namespace triton {
 
     void BvrolNode::init(void) {
       triton::uint32 rot = 0;
+
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvrolNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getKind() != DECIMAL_NODE)
         throw std::runtime_error("BvrolNode::init(): rot must be a DECIMAL_NODE.");
@@ -951,6 +990,9 @@ namespace triton {
     void BvrorNode::init(void) {
       triton::uint32 rot = 0;
 
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvrorNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getKind() != DECIMAL_NODE)
         throw std::runtime_error("BvrorNode::init(): rot must be a DECIMAL_NODE.");
 
@@ -1017,6 +1059,9 @@ namespace triton {
     void BvsdivNode::init(void) {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
+
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvsdivNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsdivNode::init(): Must take two nodes of same size.");
@@ -1092,6 +1137,9 @@ namespace triton {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
 
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvsgeNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsgeNode::init(): Must take two nodes of same size.");
 
@@ -1160,6 +1208,9 @@ namespace triton {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
 
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvsgtNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsgtNode::init(): Must take two nodes of same size.");
 
@@ -1225,6 +1276,9 @@ namespace triton {
 
 
     void BvshlNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvshlNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvshlNode::init(): Must take two nodes of same size.");
 
@@ -1288,6 +1342,9 @@ namespace triton {
     void BvsleNode::init(void) {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
+
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvsleNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsleNode::init(): Must take two nodes of same size.");
@@ -1357,6 +1414,9 @@ namespace triton {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
 
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvsltNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsltNode::init(): Must take two nodes of same size.");
 
@@ -1424,6 +1484,9 @@ namespace triton {
     void BvsmodNode::init(void) {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
+
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvsmodNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsmodNode::init(): Must take two nodes of same size.");
@@ -1497,6 +1560,9 @@ namespace triton {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
 
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvsremNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsremNode::init(): Must take two nodes of same size.");
 
@@ -1566,6 +1632,9 @@ namespace triton {
 
 
     void BvsubNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvsubNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvsubNode::init(): Must take two nodes of same size.");
 
@@ -1627,6 +1696,9 @@ namespace triton {
 
 
     void BvudivNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvudivNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvudivNode::init(): Must take two nodes of same size.");
 
@@ -1692,6 +1764,9 @@ namespace triton {
 
 
     void BvugeNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvugeNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvugeNode::init(): Must take two nodes of same size.");
 
@@ -1753,6 +1828,9 @@ namespace triton {
 
 
     void BvugtNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvugtNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvugtNode::init(): Must take two nodes of same size.");
 
@@ -1814,6 +1892,9 @@ namespace triton {
 
 
     void BvuleNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvuleNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvuleNode::init(): Must take two nodes of same size.");
 
@@ -1875,6 +1956,9 @@ namespace triton {
 
 
     void BvultNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvultNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvultNode::init(): Must take two nodes of same size.");
 
@@ -1936,6 +2020,9 @@ namespace triton {
 
 
     void BvuremNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvuremNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvuremNode::init(): Must take two nodes of same size.");
 
@@ -2001,6 +2088,9 @@ namespace triton {
 
 
     void BvxnorNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvxnorNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvxnorNode::init(): Must take two nodes of same size.");
 
@@ -2062,6 +2152,9 @@ namespace triton {
 
 
     void BvxorNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvxorNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
         throw std::runtime_error("BvxorNode::init(): Must take two nodes of same size.");
 
@@ -2125,6 +2218,9 @@ namespace triton {
     void BvNode::init(void) {
       triton::uint128 value = 0;
       triton::uint32 size   = 0;
+
+      if (this->childs.size() < 2)
+        throw std::runtime_error("BvNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getKind() != DECIMAL_NODE || this->childs[1]->getKind() != DECIMAL_NODE)
         throw std::runtime_error("BvNode::init(): Size and value must be a DECIMAL_NODE.");
@@ -2196,6 +2292,9 @@ namespace triton {
 
 
     void CompoundNode::init(void) {
+      if (this->childs.size() < 1)
+        throw std::runtime_error("CompoundNode::init(): Must take at least one child.");
+
       /* Init attributes */
       this->size = 0;
       this->eval = 0;
@@ -2271,7 +2370,7 @@ namespace triton {
 
     void ConcatNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::length_error("ConcatNode::init(): Childs must contain at least two expressions.");
+        throw std::runtime_error("ConcatNode::init(): Must take at least two childs.");
 
       /* Init attributes */
       this->size = 0;
@@ -2390,6 +2489,9 @@ namespace triton {
 
 
     void DeclareFunctionNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("DeclareFunctionNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getKind() != STRING_NODE)
         throw std::runtime_error("DeclareFunctionNode::init(): The first argument must be a STRING_NODE.");
 
@@ -2454,6 +2556,9 @@ namespace triton {
 
 
     void DistinctNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("DistinctNode::init(): Must take at least two childs.");
+
       /* Init attributes */
       this->size = 1;
       this->eval = (this->childs[0]->evaluate() != this->childs[1]->evaluate());
@@ -2512,6 +2617,9 @@ namespace triton {
 
 
     void EqualNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("EqualNode::init(): Must take at least two childs.");
+
       /* Init attributes */
       this->size = 1;
       this->eval = (this->childs[0]->evaluate() == this->childs[1]->evaluate());
@@ -2573,6 +2681,9 @@ namespace triton {
     void ExtractNode::init(void) {
       triton::uint32 high = 0;
       triton::uint32 low  = 0;
+
+      if (this->childs.size() < 3)
+        throw std::runtime_error("ExtractNode::init(): Must take at least three childs.");
 
       if (this->childs[0]->getKind() != DECIMAL_NODE || this->childs[1]->getKind() != DECIMAL_NODE)
         throw std::runtime_error("ExtractNode::init(): The highest and lower bit must be a DECIMAL_NODE.");
@@ -2642,6 +2753,9 @@ namespace triton {
 
 
     void IteNode::init(void) {
+      if (this->childs.size() < 3)
+        throw std::runtime_error("IteNode::init(): Must take at least three childs.");
+
       if (this->childs[1]->getBitvectorSize() != this->childs[2]->getBitvectorSize())
         throw std::runtime_error("IteNode::init(): Must take two nodes of same size as 'then' and 'else' branches.");
 
@@ -2703,6 +2817,9 @@ namespace triton {
 
 
     void LandNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("LandNode::init(): Must take at least two childs.");
+
       /* Init attributes */
       this->size = 1;
       this->eval = (this->childs[0]->evaluate() && this->childs[1]->evaluate());
@@ -2762,6 +2879,9 @@ namespace triton {
 
 
     void LetNode::init(void) {
+      if (this->childs.size() < 3)
+        throw std::runtime_error("LetNode::init(): Must take at least three childs.");
+
       if (this->childs[0]->getKind() != STRING_NODE)
         throw std::runtime_error("LetNode::init(): The alias node must be a STRING_NODE.");
 
@@ -2822,6 +2942,9 @@ namespace triton {
 
 
     void LnotNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("LnotNode::init(): Must take at least two childs.");
+
       /* Init attributes */
       this->size = 1;
       this->eval = !(this->childs[0]->evaluate());
@@ -2880,6 +3003,9 @@ namespace triton {
 
 
     void LorNode::init(void) {
+      if (this->childs.size() < 2)
+        throw std::runtime_error("LorNode::init(): Must take at least two childs.");
+
       /* Init attributes */
       this->size = 1;
       this->eval = (this->childs[0]->evaluate() || this->childs[1]->evaluate());
@@ -3048,6 +3174,9 @@ namespace triton {
     void SxNode::init(void) {
       triton::uint32 sizeExt = 0;
 
+      if (this->childs.size() < 2)
+        throw std::runtime_error("SxNode::init(): Must take at least two childs.");
+
       if (this->childs[0]->getKind() != DECIMAL_NODE)
         throw std::runtime_error("SxNode::init(): The sizeExt must be a DECIMAL_NODE.");
 
@@ -3165,6 +3294,9 @@ namespace triton {
 
     void ZxNode::init(void) {
       triton::uint32 sizeExt = 0;
+
+      if (this->childs.size() < 2)
+        throw std::runtime_error("ZxNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getKind() != DECIMAL_NODE)
         throw std::runtime_error("ZxNode::init(): The sizeExt must be a DECIMAL_NODE.");
