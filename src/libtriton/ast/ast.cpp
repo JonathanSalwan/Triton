@@ -67,6 +67,13 @@ namespace triton {
     }
 
 
+    bool AbstractNode::isSigned(void) {
+      if ((this->eval >> (this->size-1)) & 1)
+        return true;
+      return false;
+    }
+
+
     triton::uint512 AbstractNode::evaluate(void) {
       return this->eval;
     }
@@ -3441,7 +3448,7 @@ namespace triton {
     triton::sint512 modularSignExtend(AbstractNode* node) {
       triton::sint512 value = 0;
 
-      if (node->evaluate() >> (node->getBitvectorSize()-1)) {
+      if ((node->evaluate() >> (node->getBitvectorSize()-1)) & 1) {
         value = -1;
         value = ((value << node->getBitvectorSize()) | node->evaluate());
       }

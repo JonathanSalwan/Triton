@@ -78,6 +78,9 @@ namespace triton {
         //! Returns the vector mask according the size of the node.
         triton::uint512 getBitvectorMask(void);
 
+        //! According to the size of the expression, returns true if the MSB is 1.
+        bool isSigned(void);
+
         //! Evaluates the tree.
         triton::uint512 evaluate(void);
 

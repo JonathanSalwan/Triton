@@ -72,6 +72,9 @@ Returns the parent node as \ref py_AstNode_page.
 - **getValue(void)**<br>
 Returns the node value as integer or string (it depends of the kind). For example if the kind of node is `decimal`, the value is an integer.
 
+- **isSigned(void)**<br>
+According to the size of the expression, returns true if the MSB is 1.
+
 - **setChild(integer index, AstNode node)**<br>
 Replaces a child node.
 
@@ -168,6 +171,13 @@ namespace triton {
           return Py_BuildValue("s", reinterpret_cast<triton::ast::VariableNode *>(node)->getValue().c_str());
 
         return PyErr_Format(PyExc_TypeError, "AstNode::getValue(): Cannot use getValue() on this kind of node.");
+      }
+
+
+      static PyObject* AstNode_isSigned(PyObject* self, PyObject* noarg) {
+        if (PyAstNode_AsAstNode(self)->isSigned())
+          Py_RETURN_TRUE;
+        Py_RETURN_FALSE;
       }
 
 
@@ -331,6 +341,7 @@ namespace triton {
         {"getKind",           AstNode_getKind,           METH_NOARGS,     ""},
         {"getParent",         AstNode_getParent,         METH_NOARGS,     ""},
         {"getValue",          AstNode_getValue,          METH_NOARGS,     ""},
+        {"isSigned",          AstNode_isSigned,          METH_NOARGS,     ""},
         {"setChild",          AstNode_setChild,          METH_VARARGS,    ""},
         {nullptr,             nullptr,                   0,               nullptr}
       };
