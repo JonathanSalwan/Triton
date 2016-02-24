@@ -32,7 +32,7 @@ if __name__ == '__main__':
     startAnalysisFromEntry()
 
     # Use AST Summaries
-    enableSymbolicOptimization(OPTIMIZATION.AST_SUMMARIES)
+    enableSymbolicOptimization(OPTIMIZATION.AST_SUMMARIES, True)
 
     # Add callbacks
     addCallback(cb_fini, CALLBACK.FINI)

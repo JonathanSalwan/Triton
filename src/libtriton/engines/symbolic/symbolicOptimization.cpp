@@ -35,13 +35,11 @@ namespace triton {
       }
 
 
-      void SymbolicOptimization::disableOptimization(enum optimization_e opti) {
-        this->enabledOptimizations.erase(opti);
-      }
-
-
-      void SymbolicOptimization::enableOptimization(enum optimization_e opti) {
-        this->enabledOptimizations.insert(opti);
+      void SymbolicOptimization::enableOptimization(enum optimization_e opti, bool flag) {
+        if (flag == true)
+          this->enabledOptimizations.insert(opti);
+        else
+          this->enabledOptimizations.erase(opti);
       }
 
     }; /* symbolic namespace */

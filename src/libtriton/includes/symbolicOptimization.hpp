@@ -64,11 +64,8 @@ namespace triton {
           //! Returns true if the symbolic optimization is enabled.
           bool isOptimizationEnabled(enum optimization_e opti);
 
-          //! Disables a symbolic optimization.
-          void disableOptimization(enum optimization_e opti);
-
-          //! Enables a symbolic optimization.
-          void enableOptimization(enum optimization_e opti);
+          //! Enables or disables a symbolic optimization.
+          void enableOptimization(enum optimization_e opti, bool flag);
       };
 
     /*! @} End of symbolic namespace */

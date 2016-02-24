@@ -54,7 +54,7 @@ if __name__ == '__main__':
     enableSymbolicEmulation(True)
 
     # Symbolic optimization
-    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY)
+    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
 
     # Define entry point
     pc = 0x40056d

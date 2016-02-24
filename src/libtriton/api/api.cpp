@@ -688,15 +688,9 @@ namespace triton {
   }
 
 
-  void API::enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti) {
+  void API::enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti, bool flag) {
     this->checkSymbolic();
-    this->sym->enableOptimization(opti);
-  }
-
-
-  void API::disableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti) {
-    this->checkSymbolic();
-    this->sym->disableOptimization(opti);
+    this->sym->enableOptimization(opti, flag);
   }
 
 

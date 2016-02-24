@@ -343,11 +343,8 @@ namespace triton {
         //! [**symbolic api**] - Enabled, Triton will use the simplification passes of z3 before to call its recorded simplification passes.
         void enableSymbolicZ3Simplification(bool flag);
 
-        //! [**symbolic api**] - Enables a symbolic optimization.
-        void enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti);
-
-        //! [**symbolic api**] - Disables a symbolic optimization.
-        void disableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti);
+        //! [**symbolic api**] - Enables or disables a symbolic optimization.
+        void enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti, bool flag);
 
         /*! \brief [**symbolic api**] - Returns true if we perform a full symbolic emulation.
          *

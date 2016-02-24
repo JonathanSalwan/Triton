@@ -137,9 +137,6 @@ Returns the new symbolic register expression as \ref py_SymbolicExpression_page 
 - <b>createSymbolicVolatileExpression (\ref py_Instruction_page inst, \ref py_AstNode_page node, string comment="")</b><br>
 Returns the new symbolic volatile expression as \ref py_SymbolicExpression_page and links this expression to the \ref py_Instruction_page.
 
-- **disableSymbolicOptimization(\ref py_OPTIMIZATION_page opti)**<br>
-Disables the symbolic optimization.
-
 - **disassembly(\ref py_Instruction_page inst)**<br>
 Disassembles the instruction and setup operands. You must define an architecture before.
 
@@ -149,8 +146,8 @@ Enables or disables the symbolic emulation. Set `true` for a full symbolic execu
 - **enableSymbolicEngine(bool flag)**<br>
 Enables or disables the symbolic execution engine.
 
-- **enableSymbolicOptimization(\ref py_OPTIMIZATION_page opti)**<br>
-Enables the symbolic optimization.
+- **enableSymbolicOptimization(\ref py_OPTIMIZATION_page opti, bool flag)**<br>
+Enables or disablrs a symbolic optimization.
 
 - **enableSymbolicZ3Simplification(bool flag)**<br>
 Enabled, Triton will use the simplification passes of z3 before to call its recorded simplification passes.
@@ -1116,26 +1113,6 @@ namespace triton {
       }
 
 
-      static PyObject* triton_disableSymbolicOptimization(PyObject* self, PyObject* opti) {
-        /* Check if the architecture is definied */
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "disableSymbolicOptimization(): Architecture is not defined.");
-
-        if (!PyLong_Check(opti) && !PyInt_Check(opti))
-          return PyErr_Format(PyExc_TypeError, "disableSymbolicOptimization(): Expects an OPTIMIZATION as argument.");
-
-        try {
-          triton::api.disableSymbolicOptimization(static_cast<enum triton::engines::symbolic::optimization_e>(PyLong_AsUint(opti)));
-        }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        Py_INCREF(Py_None);
-        return Py_None;
-      }
-
-
       static PyObject* triton_disassembly(PyObject* self, PyObject* inst) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -1196,16 +1173,25 @@ namespace triton {
       }
 
 
-      static PyObject* triton_enableSymbolicOptimization(PyObject* self, PyObject* opti) {
+      static PyObject* triton_enableSymbolicOptimization(PyObject* self, PyObject* args) {
+        PyObject* opti = nullptr;
+        PyObject* flag = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &opti, &flag);
+
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "enableSymbolicOptimization(): Architecture is not defined.");
 
-        if (!PyLong_Check(opti) && !PyInt_Check(opti))
+        if (opti == nullptr || (!PyLong_Check(opti) && !PyInt_Check(opti)))
           return PyErr_Format(PyExc_TypeError, "enableSymbolicOptimization(): Expects an OPTIMIZATION as argument.");
 
+        if (flag == nullptr || !PyBool_Check(flag))
+          return PyErr_Format(PyExc_TypeError, "enableSymbolicOptimization(): Expects an boolean flag as second argument.");
+
         try {
-          triton::api.enableSymbolicOptimization(static_cast<enum triton::engines::symbolic::optimization_e>(PyLong_AsUint(opti)));
+          triton::api.enableSymbolicOptimization(static_cast<enum triton::engines::symbolic::optimization_e>(PyLong_AsUint(opti)), PyLong_AsUint(flag));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2611,11 +2597,10 @@ namespace triton {
         {"createSymbolicMemoryExpression",      (PyCFunction)triton_createSymbolicMemoryExpression,         METH_VARARGS,       ""},
         {"createSymbolicRegisterExpression",    (PyCFunction)triton_createSymbolicRegisterExpression,       METH_VARARGS,       ""},
         {"createSymbolicVolatileExpression",    (PyCFunction)triton_createSymbolicVolatileExpression,       METH_VARARGS,       ""},
-        {"disableSymbolicOptimization",         (PyCFunction)triton_disableSymbolicOptimization,            METH_O,             ""},
         {"disassembly",                         (PyCFunction)triton_disassembly,                            METH_O,             ""},
         {"enableSymbolicEmulation",             (PyCFunction)triton_enableSymbolicEmulation,                METH_O,             ""},
         {"enableSymbolicEngine",                (PyCFunction)triton_enableSymbolicEngine,                   METH_O,             ""},
-        {"enableSymbolicOptimization",          (PyCFunction)triton_enableSymbolicOptimization,             METH_O,             ""},
+        {"enableSymbolicOptimization",          (PyCFunction)triton_enableSymbolicOptimization,             METH_VARARGS,       ""},
         {"enableSymbolicZ3Simplification",      (PyCFunction)triton_enableSymbolicZ3Simplification,         METH_O,             ""},
         {"enableTaintEngine",                   (PyCFunction)triton_enableTaintEngine,                      METH_O,             ""},
         {"evaluateAstViaZ3",                    (PyCFunction)triton_evaluateAstViaZ3,                       METH_O,             ""},

@@ -1400,6 +1400,11 @@ namespace triton {
           auto src     = inst.operands[1];
           auto bvSize1 = dst.getBitSize();
           auto bvSize2 = src.getBitSize();
+          bool opti    = false;
+
+          /* In the case of bsf/bsr we cannot use this optimization */
+          opti = triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES);
+          triton::api.enableSymbolicOptimization(triton::engines::symbolic::AST_SUMMARIES, false);
 
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(dst);
@@ -1443,6 +1448,9 @@ namespace triton {
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
+
+          /* Restore the optimization state */
+          triton::api.enableSymbolicOptimization(triton::engines::symbolic::AST_SUMMARIES, opti);
         }
 
 
@@ -1451,6 +1459,11 @@ namespace triton {
           auto src     = inst.operands[1];
           auto bvSize1 = dst.getBitSize();
           auto bvSize2 = src.getBitSize();
+          bool opti    = false;
+
+          /* In the case of bsf/bsr we cannot use this optimization */
+          opti = triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES);
+          triton::api.enableSymbolicOptimization(triton::engines::symbolic::AST_SUMMARIES, false);
 
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(dst);
@@ -1494,6 +1507,9 @@ namespace triton {
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
+
+          /* Restore the optimization state */
+          triton::api.enableSymbolicOptimization(triton::engines::symbolic::AST_SUMMARIES, opti);
         }
 
 
