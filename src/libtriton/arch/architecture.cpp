@@ -212,8 +212,8 @@ namespace triton {
           triton::api.removeSymbolicExpression((*it)->getId());
         }
 
-        if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES)) {
-          /* Remove node only if AST_SUMMARIES is disabled */
+        if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES)) {
+          /* Remove node only if AST_DICTIONARIES is disabled */
           triton::ast::freeAstNodes(uniqueNodes);
         }
 
@@ -239,8 +239,8 @@ namespace triton {
             newVector.push_back(*it);
         }
 
-        if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES)) {
-          /* Remove node only if AST_SUMMARIES is disabled */
+        if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES)) {
+          /* Remove node only if AST_DICTIONARIES is disabled */
           triton::ast::freeAstNodes(uniqueNodes);
         }
 

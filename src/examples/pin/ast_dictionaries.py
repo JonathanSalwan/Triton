@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
 ##
-## $ ./triton ./src/examples/pin/ast_summaries.py ./src/samples/crackmes/crackme_xor elite
+## $ ./triton ./src/examples/pin/ast_dictionaries.py ./src/samples/crackmes/crackme_xor elite
 ##
 
 import sys
@@ -12,10 +12,10 @@ from triton     import *
 
 
 def cb_fini():
-    l = getAstSummariesStats().items()
+    l = getAstDictionariesStats().items()
     l.sort(key=itemgetter(1), reverse=True)
     print '============================================================='
-    print 'AST Summaries Stats'
+    print 'AST Dictionaries Stats'
     print '============================================================='
     for i in l:
         if i[1] > 0:
@@ -31,8 +31,8 @@ if __name__ == '__main__':
     # Start JIT at the entry point
     startAnalysisFromEntry()
 
-    # Use AST Summaries
-    enableSymbolicOptimization(OPTIMIZATION.AST_SUMMARIES, True)
+    # Use AST Dictionaries
+    enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
 
     # Add callbacks
     addCallback(cb_fini, CALLBACK.FINI)

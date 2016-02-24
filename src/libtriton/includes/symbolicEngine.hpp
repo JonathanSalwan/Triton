@@ -13,7 +13,7 @@
 #include <string>
 
 #include "ast.hpp"
-#include "astSummaries.hpp"
+#include "astDictionaries.hpp"
 #include "memoryOperand.hpp"
 #include "registerOperand.hpp"
 #include "symbolicEnums.hpp"
@@ -50,7 +50,10 @@ namespace triton {
 
       //! \class SymbolicEngine
       /*! \brief The symbolic engine class. */
-      class SymbolicEngine : public SymbolicSimplification, public SymbolicOptimization, public AstSummaries {
+      class SymbolicEngine
+        : public triton::engines::symbolic::SymbolicSimplification,
+          public triton::engines::symbolic::SymbolicOptimization,
+          public triton::ast::AstDictionaries {
 
         protected:
 

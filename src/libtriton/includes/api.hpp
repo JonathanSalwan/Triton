@@ -307,11 +307,11 @@ namespace triton {
         void removeSimplificationCallback(PyObject* cb);
         #endif
 
-        //! [**symbolic api**] - Browses AST Summaries if the optimization `AST_SUMMARIES` is enabled.
-        triton::ast::AbstractNode* browseAstSummaries(triton::ast::AbstractNode* node);
+        //! [**symbolic api**] - Browses AST Dictionaries if the optimization `AST_DICTIONARIES` is enabled.
+        triton::ast::AbstractNode* browseAstDictionaries(triton::ast::AbstractNode* node);
 
-        //! [**symbolic api**] - Returns all stats about AST Summaries.
-        std::map<std::string, triton::uint32> getAstSummariesStats(void);
+        //! [**symbolic api**] - Returns all stats about AST Dictionaries.
+        std::map<std::string, triton::uint32> getAstDictionariesStats(void);
 
         //! [**symbolic api**] - Processes all recorded simplifications. Returns the simplified node.
         triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node, bool z3=false);

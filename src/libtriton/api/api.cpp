@@ -616,15 +616,15 @@ namespace triton {
   #endif
 
 
-  triton::ast::AbstractNode* API::browseAstSummaries(triton::ast::AbstractNode* node) {
+  triton::ast::AbstractNode* API::browseAstDictionaries(triton::ast::AbstractNode* node) {
     this->checkSymbolic();
-    return this->sym->browseAstSummaries(node);
+    return this->sym->browseAstDictionaries(node);
   }
 
 
-  std::map<std::string, triton::uint32> API::getAstSummariesStats(void) {
+  std::map<std::string, triton::uint32> API::getAstDictionariesStats(void) {
     this->checkSymbolic();
-    return this->sym->getAstSummariesStats();
+    return this->sym->getAstDictionariesStats();
   }
 
 

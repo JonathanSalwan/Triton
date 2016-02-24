@@ -90,7 +90,7 @@ namespace triton {
 
 
     void AbstractNode::setParent(AbstractNode* p) {
-      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES) == false)
+      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES) == false)
         this->parent = p;
     }
 
@@ -3436,11 +3436,11 @@ namespace triton {
     }
 
 
-    /* Records the allocated node or returns the same node if it already exists inside the summaries. */
+    /* Records the allocated node or returns the same node if it already exists inside the dictionaries. */
     AbstractNode* recordNode(AbstractNode* node) {
-      /* Check if the AST_SUMMARIES is enabled. */
-      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_SUMMARIES)) {
-        AbstractNode* ret = triton::api.browseAstSummaries(node);
+      /* Check if the AST_DICTIONARIES is enabled. */
+      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES)) {
+        AbstractNode* ret = triton::api.browseAstDictionaries(node);
         if (ret != nullptr)
           return ret;
       }

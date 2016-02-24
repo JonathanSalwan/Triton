@@ -36,8 +36,8 @@ The OPTIMIZATION namespace contains all kinds of symbolic optimization.
 - **OPTIMIZATION.ALIGNED_MEMORY**<br>
 Enabled, Triton will keep a map of aligned memory to reduce the symbolic memory explosion of `LOAD` and `STORE` acceess.
 
-- **OPTIMIZATION.AST_SUMMARIES**<br>
-Enabled, Triton will record all AST nodes into several maps and try to return node already allocated instead of allocate twice the same node.
+- **OPTIMIZATION.AST_DICTIONARIES**<br>
+Enabled, Triton will record all AST nodes into several dictionaries and try to return node already allocated instead of allocate twice the same node.
 
 - **OPTIMIZATION.ONLY_ON_TAINTED**<br>
 Enabled, Triton will perform symbolic execution only on tainted instructions.
@@ -52,7 +52,7 @@ namespace triton {
 
       void initSymOptiNamespace(PyObject* symOptiDict) {
         PyDict_SetItemString(symOptiDict, "ALIGNED_MEMORY",   PyLong_FromUint(triton::engines::symbolic::ALIGNED_MEMORY));
-        PyDict_SetItemString(symOptiDict, "AST_SUMMARIES",    PyLong_FromUint(triton::engines::symbolic::AST_SUMMARIES));
+        PyDict_SetItemString(symOptiDict, "AST_DICTIONARIES", PyLong_FromUint(triton::engines::symbolic::AST_DICTIONARIES));
         PyDict_SetItemString(symOptiDict, "ONLY_ON_TAINTED",  PyLong_FromUint(triton::engines::symbolic::ONLY_ON_TAINTED));
       }
 

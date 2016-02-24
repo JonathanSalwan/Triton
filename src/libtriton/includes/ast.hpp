@@ -89,7 +89,7 @@ namespace triton {
 
         /*!
          * \brief Returns the parent node or nullptr if there is no parent yet.
-         * \brief Note that if there is the AST_SUMMARIES optimization enabled, this feature will always return a nullptr.
+         * \brief Note that if there is the AST_DICTIONARIES optimization enabled, this feature will always return a nullptr.
          */
         AbstractNode* getParent(void);
 
@@ -913,7 +913,7 @@ namespace triton {
     //! Garbage collector - Extracts all unique nodes from a partial AST into the `uniqueNodes` set.
     void extractUniqueAstNodes(std::set<AbstractNode*>& uniqueNodes, AbstractNode* root);
 
-    //! Garbage collector - Records the allocated node or returns the same node if it already exists inside the summaries.
+    //! Garbage collector - Records the allocated node or returns the same node if it already exists inside the dictionaries.
     AbstractNode* recordNode(AbstractNode* node);
 
     //! Custom pow function for hash routine.
