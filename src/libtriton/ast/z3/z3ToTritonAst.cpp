@@ -104,6 +104,14 @@ namespace triton {
           break;
         }
 
+
+        case Z3_OP_NOT: {
+          if (expr.num_args() != 1)
+            throw std::runtime_error("Z3ToTritonAst::visit(): Z3_OP_NOT must conatin at one argument.");
+          node = triton::ast::lnot(this->visit(expr.arg(0)));
+          break;
+        }
+
         case Z3_OP_BNUM: {
           std::string stringValue = Z3_get_numeral_string(this->context, expr);
           triton::uint128 intValue{stringValue};

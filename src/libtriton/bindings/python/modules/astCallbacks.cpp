@@ -237,6 +237,10 @@ a \>> b           | (bvlshr a b)
 \section ast_py_api Python API - Methods of the ast module
 <hr>
 
+- **assert_(AstNode expr1)**<br>
+Returns the ast `triton::ast::assert_()` representation as \ref py_AstNode_page.<br>
+e.g: `(assert expr1)`.
+
 - **bv(integer value, integer size)**<br>
 Returns the ast `triton::ast::bv()` representation as \ref py_AstNode_page. The `size` is in bits.<br>
 e.g: `(_ bvValue size)`.
@@ -377,6 +381,9 @@ Returns the `triton::ast::concat()` node as \ref py_AstNode_page.
 Returns the ast `triton::ast::distinct()` representation as \ref py_AstNode_page.<br>
 e.g: `(distinct expr1 expr2)`
 
+- **duplicate(AstNode expr)**<br>
+Duplicates the node and returns a new instance as \ref py_AstNode_page. When you play with a node, it's recommended to use this function before any manipulation.
+
 - **equal(AstNode expr1, AstNode expr2)**<br>
 Returns the ast `triton::ast::equal()` representation as \ref py_AstNode_page.<br>
 e.g: `(= expr1 epxr2)`.
@@ -411,10 +418,6 @@ Be careful, the targeted node reference is always on the max vector size, except
 expressions.<br>
 e.g: `ref!123`.
 
-- **assert_(AstNode expr1)**<br>
-Returns the ast `triton::ast::assert_()` representation as \ref py_AstNode_page.<br>
-e.g: `(assert expr1)`.
-
 - **string(string s)**<br>
 Returns a `triton::ast::string()` node as \ref py_AstNode_page.
 
@@ -436,6 +439,19 @@ e.g: `((_ zero_extend sizeExt) expr1)`.
 namespace triton {
   namespace bindings {
     namespace python {
+
+
+      static PyObject* ast_assert(PyObject* self, PyObject* expr) {
+        if (!PyAstNode_Check(expr))
+          return PyErr_Format(PyExc_TypeError, "assert_(): expected a AstNode as first argument");
+
+        try {
+          return PyAstNode(triton::ast::assert_(PyAstNode_AsAstNode(expr)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
 
 
       static PyObject* ast_bv(PyObject* self, PyObject* args) {
@@ -1135,6 +1151,19 @@ namespace triton {
       }
 
 
+      static PyObject* ast_duplicate(PyObject* self, PyObject* expr) {
+        if (!PyAstNode_Check(expr))
+          return PyErr_Format(PyExc_TypeError, "duplicate(): expected a AstNode as argument");
+
+        try {
+          return PyAstNode(triton::ast::newInstance(PyAstNode_AsAstNode(expr)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* ast_compound(PyObject* self, PyObject* exprsList) {
         std::vector<triton::ast::AbstractNode *> exprs;
 
@@ -1358,19 +1387,6 @@ namespace triton {
       }
 
 
-      static PyObject* ast_assert(PyObject* self, PyObject* expr) {
-        if (!PyAstNode_Check(expr))
-          return PyErr_Format(PyExc_TypeError, "assert_(): expected a AstNode as first argument");
-
-        try {
-          return PyAstNode(triton::ast::assert_(PyAstNode_AsAstNode(expr)));
-        }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* ast_string(PyObject* self, PyObject* expr) {
         if (!PyString_Check(expr))
           return PyErr_Format(PyExc_TypeError, "string(): expected a string as first argument");
@@ -1442,6 +1458,7 @@ namespace triton {
 
 
       PyMethodDef astCallbacks[] = {
+        {"assert_",     (PyCFunction)ast_assert,     METH_O,           ""},
         {"bv",          (PyCFunction)ast_bv,         METH_VARARGS,     ""},
         {"bvadd",       (PyCFunction)ast_bvadd,      METH_VARARGS,     ""},
         {"bvand",       (PyCFunction)ast_bvand,      METH_VARARGS,     ""},
@@ -1475,9 +1492,10 @@ namespace triton {
         {"bvurem",      (PyCFunction)ast_bvurem,     METH_VARARGS,     ""},
         {"bvxnor",      (PyCFunction)ast_bvxnor,     METH_VARARGS,     ""},
         {"bvxor",       (PyCFunction)ast_bvxor,      METH_VARARGS,     ""},
-        {"distinct",    (PyCFunction)ast_distinct,   METH_VARARGS,     ""},
         {"compound",    (PyCFunction)ast_compound,   METH_O,           ""},
         {"concat",      (PyCFunction)ast_concat,     METH_O,           ""},
+        {"distinct",    (PyCFunction)ast_distinct,   METH_VARARGS,     ""},
+        {"duplicate",   (PyCFunction)ast_duplicate,  METH_O,           ""},
         {"equal",       (PyCFunction)ast_equal,      METH_VARARGS,     ""},
         {"extract",     (PyCFunction)ast_extract,    METH_VARARGS,     ""},
         {"ite",         (PyCFunction)ast_ite,        METH_VARARGS,     ""},
@@ -1486,12 +1504,11 @@ namespace triton {
         {"lnot",        (PyCFunction)ast_lnot,       METH_O,           ""},
         {"lor",         (PyCFunction)ast_lor,        METH_VARARGS,     ""},
         {"reference",   (PyCFunction)ast_reference,  METH_O,           ""},
-        {"assert_",     (PyCFunction)ast_assert,      METH_O,           ""},
         {"string",      (PyCFunction)ast_string,     METH_O,           ""},
         {"sx",          (PyCFunction)ast_sx,         METH_VARARGS,     ""},
         {"variable",    (PyCFunction)ast_variable,   METH_O,           ""},
         {"zx",          (PyCFunction)ast_zx,         METH_VARARGS,     ""},
-        {nullptr,       nullptr,                         0,                nullptr}
+        {nullptr,       nullptr,                     0,                nullptr}
       };
 
     }; /* python namespace */

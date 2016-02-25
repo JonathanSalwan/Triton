@@ -2,26 +2,48 @@
 ## -*- coding: utf-8 -*-
 ##
 ##  $ ./triton ./src/examples/pin/path_constraints.py ./src/samples/crackmes/crackme_xor a
-##  [+] 10 bytes tainted from the argv[1] (0x7ffd5dbe060e) pointer
+##  [+] 10 bytes tainted from the argv[1] (0x7ffd4a50c60e) pointer
 ##  loose
-##  New path possible path with the input: [SymVar_0 = 65 (e)]
+##  B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
 ##
 ##  $ ./triton ./src/examples/pin/path_constraints.py ./src/samples/crackmes/crackme_xor e
-##  [+] 10 bytes tainted from the argv[1] (0x7ffe20c4d60e) pointer
+##  [+] 10 bytes tainted from the argv[1] (0x7fff0b23160e) pointer
 ##  loose
-##  New path possible path with the input: [SymVar_0 = 65 (e) and SymVar_1 = 6C (l)]
+##  B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
+##  B1: SymVar_1 = 6C (l)  |  B2: SymVar_1 = 0 ()
 ##
 ##  $ ./triton ./src/examples/pin/path_constraints.py ./src/samples/crackmes/crackme_xor el
-##  [+] 10 bytes tainted from the argv[1] (0x7ffd1bc0d60d) pointer
+##  [+] 10 bytes tainted from the argv[1] (0x7ffda0d4e60d) pointer
 ##  loose
-##  New path possible path with the input: [SymVar_0 = 65 (e) and SymVar_1 = 6C (l) and SymVar_2 = 69 (i)]
+##  B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
+##  B1: SymVar_1 = 6C (l)  |  B2: SymVar_1 = 0 ()
+##  B1: SymVar_2 = 69 (i)  |  B2: SymVar_2 = 0 ()
 ##
 ##  $ ./triton ./src/examples/pin/path_constraints.py ./src/samples/crackmes/crackme_xor eli
-##  [+] 10 bytes tainted from the argv[1] (0x7ffc083e960c) pointer
+##  [+] 10 bytes tainted from the argv[1] (0x7ffc18b6f60c) pointer
 ##  loose
-##  New path possible path with the input: [SymVar_0 = 65 (e) and SymVar_1 = 6C (l) and SymVar_2 = 69 (i) and SymVar_3 = 74 (t)]
+##  B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
+##  B1: SymVar_1 = 6C (l)  |  B2: SymVar_1 = 0 ()
+##  B1: SymVar_2 = 69 (i)  |  B2: SymVar_2 = 0 ()
+##  B1: SymVar_3 = 74 (t)  |  B2: SymVar_3 = 0 ()
 ##
-##  [...]
+##  $ ./triton ./src/examples/pin/path_constraints.py ./src/samples/crackmes/crackme_xor elit
+##  [+] 10 bytes tainted from the argv[1] (0x7ffcf797160b) pointer
+##  loose
+##  B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
+##  B1: SymVar_1 = 6C (l)  |  B2: SymVar_1 = 0 ()
+##  B1: SymVar_2 = 69 (i)  |  B2: SymVar_2 = 0 ()
+##  B1: SymVar_3 = 74 (t)  |  B2: SymVar_3 = 0 ()
+##  B1: SymVar_4 = 65 (e)  |  B2: SymVar_4 = 0 ()
+##
+##  $ ./triton ./src/examples/pin/path_constraints.py ./src/samples/crackmes/crackme_xor elite
+##  [+] 10 bytes tainted from the argv[1] (0x7ffdfa2d260a) pointer
+##  Win
+##  B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
+##  B1: SymVar_1 = 6C (l)  |  B2: SymVar_1 = 0 ()
+##  B1: SymVar_2 = 69 (i)  |  B2: SymVar_2 = 0 ()
+##  B1: SymVar_3 = 74 (t)  |  B2: SymVar_3 = 0 ()
+##  B1: SymVar_4 = 65 (e)  |  B2: SymVar_4 = 0 ()
 ##
 
 from triton  import *
@@ -41,7 +63,8 @@ def tainting(threadId):
         offset = 0
         while offset != TAINTING_SIZE:
             taintMemory(argv + offset)
-            convertMemoryToSymbolicVariable(Memory(argv + offset, CPUSIZE.BYTE))
+            concreteValue = getCurrentMemoryValue(argv + offset)
+            convertMemoryToSymbolicVariable(Memory(argv + offset, CPUSIZE.BYTE, concreteValue))
             offset += 1
         print '[+] %02d bytes tainted from the argv[%d] (%#x) pointer' %(offset, rdi-1, argv)
         rdi -= 1
@@ -51,12 +74,25 @@ def tainting(threadId):
 
 def fini():
     pc = getPathConstraints()
-    newInput = list()
     for c in pc:
-        models = getModel(assert_(lnot(c)))
-        for k, v in models.items():
-            newInput.append('%s (%c)' %(str(v), chr(v.getValue())))
-    print 'New path possible path with the input: [%s]' %(' and '.join(newInput))
+        if c.getChilds()[0].getKind() == AST_NODE.ITE:
+            ite  = c.getChilds()[0]
+            b1   = ite.getChilds()[1]
+            b2   = ite.getChilds()[2]
+            seed = list()
+
+            # Branch 1
+            models  = getModel(assert_(equal(ite, b1)))
+            for k, v in models.items():
+                seed.append(v)
+
+            # Branch 2
+            models  = getModel(assert_(equal(ite, b2)))
+            for k, v in models.items():
+                seed.append(v)
+
+            if seed:
+                print 'B1: %s (%c)  |  B2: %s (%c)' %(seed[0], chr(seed[0].getValue()), seed[1], chr(seed[1].getValue()))
     return
 
 

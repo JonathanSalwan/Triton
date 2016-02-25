@@ -46,7 +46,7 @@ namespace triton {
 
         /* Then, we create a conjunction of pc */
         for (it = this->pathConstraints.begin(); it != this->pathConstraints.end(); it++) {
-          node = triton::ast::land(node, *it);
+          node = triton::ast::land(node, triton::ast::newInstance(*it));
         }
 
         return node;

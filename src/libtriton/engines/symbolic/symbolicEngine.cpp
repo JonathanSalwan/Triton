@@ -457,11 +457,15 @@ namespace triton {
         triton::__uint memSymId         = triton::engines::symbolic::UNSET;
         triton::__uint memAddr          = mem.getAddress();
         triton::uint32 symVarSize       = mem.getSize();
+        triton::uint128 cv              = mem.getConcreteValue() | triton::api.getLastMemoryValue(mem);
 
         memSymId = this->getSymbolicMemoryId(memAddr);
 
         /* First we create a symbolic variable */
         symVar = this->newSymbolicVariable(triton::engines::symbolic::MEM, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
+        /* Setup the concrete value to the symbolic variable */
+        symVar->setSymVarConcreteValue(cv);
+        /* Create the AST node */
         triton::ast::AbstractNode* symVarNode = triton::ast::variable(*symVar);
 
         /*  Split expression in bytes */
@@ -487,9 +491,6 @@ namespace triton {
             removeAlignedMemory(memAddr+index);
         }
 
-        /* Setup the concrete value to the symbolic variable */
-        symVar->setSymVarConcreteValue(triton::api.getLastMemoryValue(mem));
-
         return symVar;
       }
 
@@ -500,15 +501,20 @@ namespace triton {
         triton::__uint regSymId         = triton::engines::symbolic::UNSET;
         triton::uint32 parentId         = reg.getParent().getId();
         triton::uint32 symVarSize       = reg.getBitSize();
-        triton::uint128 cv              = reg.getConcreteValue();
+        triton::uint128 cv              = reg.getConcreteValue() | triton::api.getLastRegisterValue(reg);
 
         if (!triton::api.isCpuRegisterValid(parentId))
           throw std::runtime_error("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");
 
         regSymId = this->getSymbolicRegisterId(reg);
         if (regSymId == triton::engines::symbolic::UNSET) {
+          /* Create the symbolic variable */
           symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parentId, symVarSize, symVarComment);
+          /* Setup the concrete value to the symbolic variable */
+          symVar->setSymVarConcreteValue(cv);
+          /* Create the AST node */
           triton::ast::AbstractNode* tmp = triton::ast::variable(*symVar);
+          /* Create the symbolic expression */
           SymbolicExpression* se = this->newSymbolicExpression(tmp, triton::engines::symbolic::REG);
           se->setOriginRegister(reg);
           this->symbolicReg[parentId] = se->getId();
@@ -519,12 +525,6 @@ namespace triton {
           symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parentId, symVarSize, symVarComment);
           expression->setAst(triton::ast::variable(*symVar));
         }
-
-        /* Setup the concrete value to the symbolic variable */
-        if (cv == 0)
-          symVar->setSymVarConcreteValue(triton::api.getLastRegisterValue(reg));
-        else
-          symVar->setSymVarConcreteValue(cv);
 
         return symVar;
       }
