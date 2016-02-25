@@ -62,7 +62,7 @@ namespace triton {
           //! Returns the logical conjunction AST of path constraints.
           triton::ast::AbstractNode* getPathConstraintsAst(void);
 
-          //! Returns the number of constraints. This is basically equivalent to the number of basic block reached.
+          //! Returns the number of constraints.
           triton::uint32 getNumberOfPathConstraints(void);
 
           //! Add a path constraint.
