@@ -31,3 +31,19 @@ A full documentation is available on our [doxygen page](http://triton.quarkslab.
 * [Replay Trace via Snapshot](http://triton.quarkslab.com/documentation/doxygen/Snapshot_page.html)
 * [Tracer Independent](http://triton.quarkslab.com/documentation/doxygen/Tracer_page.html)
 * [Python Bindings](http://triton.quarkslab.com/documentation/doxygen/py_triton_page.html)
+
+### News
+
+A [blog](http://triton.quarkslab.com/blog/) is available and you can follow us on twitter [@qb_triton](https://twitter.com/qb_triton) or via our [RSS](http://triton.quarkslab.com/rss.xml) feed.
+
+### Support
+
+* **IRC**: #qb_triton@freenode
+* **Mail**: triton at quarkslab com
+
+### Authors
+
+* **Jonathan Salwan** - Lead dev, Quarkslab
+* **Florent Saudel** - Core dev, Bordeaux University
+* **Romain Thomas** - Core dev, Quarkslab
+
