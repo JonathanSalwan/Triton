@@ -40,8 +40,9 @@ namespace triton {
       this->size = copy.size;
       this->eval = copy.eval;
       this->parent = copy.parent;
+
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(copy.childs[index]);
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -121,11 +122,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -182,11 +181,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -246,11 +243,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -311,11 +306,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -404,11 +397,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -477,11 +468,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -541,11 +530,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -605,11 +592,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -668,11 +653,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -729,11 +712,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -792,11 +773,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -853,11 +832,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -925,11 +902,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1005,11 +980,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1076,11 +1049,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1153,11 +1124,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1224,11 +1193,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1295,11 +1262,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1359,11 +1324,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1430,11 +1393,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1501,11 +1462,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1576,11 +1535,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1655,11 +1612,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1719,11 +1674,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1787,11 +1740,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1851,11 +1802,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1915,11 +1864,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -1979,11 +1926,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -2043,11 +1988,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -2111,11 +2054,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -2175,11 +2116,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -2239,11 +2178,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -2315,11 +2252,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -2392,11 +2327,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -2512,11 +2445,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -2579,11 +2510,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -2640,11 +2569,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -2702,11 +2629,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -2776,11 +2701,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -2840,11 +2763,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -2902,11 +2823,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -2965,11 +2884,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -3026,11 +2943,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -3195,11 +3110,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -3316,11 +3229,9 @@ namespace triton {
       this->eval = copy.eval;
       this->parent = copy.parent;
 
-      /* Copy and init childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++) {
-        this->childs.push_back(copy.childs[index]);
-        copy.childs[index]->setParent(this);
-      }
+      /* Copy childs */
+      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
+        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
     }
 
 
@@ -3494,7 +3405,7 @@ namespace triton {
       AbstractNode* node = new AssertNode(expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3502,7 +3413,7 @@ namespace triton {
       AbstractNode* node = new BvNode(value, size);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3510,7 +3421,7 @@ namespace triton {
       AbstractNode* node = new BvaddNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3518,7 +3429,7 @@ namespace triton {
       AbstractNode* node = new BvandNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3526,7 +3437,7 @@ namespace triton {
       AbstractNode* node = new BvashrNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3534,7 +3445,7 @@ namespace triton {
       AbstractNode* node = new BvdeclNode(size);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3542,7 +3453,7 @@ namespace triton {
       AbstractNode* node = new BvNode(0, 1);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3550,7 +3461,7 @@ namespace triton {
       AbstractNode* node = new BvlshrNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3558,7 +3469,7 @@ namespace triton {
       AbstractNode* node = new BvmulNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3566,7 +3477,7 @@ namespace triton {
       AbstractNode* node = new BvnandNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3574,7 +3485,7 @@ namespace triton {
       AbstractNode* node = new BvnegNode(expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3582,7 +3493,7 @@ namespace triton {
       AbstractNode* node = new BvnorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3590,7 +3501,7 @@ namespace triton {
       AbstractNode* node = new BvnotNode(expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3598,7 +3509,7 @@ namespace triton {
       AbstractNode* node = new BvorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3606,7 +3517,7 @@ namespace triton {
       AbstractNode* node = new BvrolNode(rot, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3614,7 +3525,7 @@ namespace triton {
       AbstractNode* node = new BvrolNode(rot, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3622,7 +3533,7 @@ namespace triton {
       AbstractNode* node = new BvrorNode(rot, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3630,7 +3541,7 @@ namespace triton {
       AbstractNode* node = new BvrorNode(rot, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3638,7 +3549,7 @@ namespace triton {
       AbstractNode* node = new BvsdivNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3646,7 +3557,7 @@ namespace triton {
       AbstractNode* node = new BvsgeNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3654,7 +3565,7 @@ namespace triton {
       AbstractNode* node = new BvsgtNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3662,7 +3573,7 @@ namespace triton {
       AbstractNode* node = new BvshlNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3670,7 +3581,7 @@ namespace triton {
       AbstractNode* node = new BvsleNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3678,7 +3589,7 @@ namespace triton {
       AbstractNode* node = new BvsltNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3686,7 +3597,7 @@ namespace triton {
       AbstractNode* node = new BvsmodNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3694,7 +3605,7 @@ namespace triton {
       AbstractNode* node = new BvsremNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3702,7 +3613,7 @@ namespace triton {
       AbstractNode* node = new BvsubNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3710,7 +3621,7 @@ namespace triton {
       AbstractNode* node = new BvNode(1, 1);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3718,7 +3629,7 @@ namespace triton {
       AbstractNode* node = new BvudivNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3726,7 +3637,7 @@ namespace triton {
       AbstractNode* node = new BvugeNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3734,7 +3645,7 @@ namespace triton {
       AbstractNode* node = new BvugtNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3742,7 +3653,7 @@ namespace triton {
       AbstractNode* node = new BvuleNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3750,7 +3661,7 @@ namespace triton {
       AbstractNode* node = new BvultNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3758,7 +3669,7 @@ namespace triton {
       AbstractNode* node = new BvuremNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3766,7 +3677,7 @@ namespace triton {
       AbstractNode* node = new BvxnorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3774,7 +3685,7 @@ namespace triton {
       AbstractNode* node = new BvxorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3782,7 +3693,7 @@ namespace triton {
       AbstractNode* node = new CompoundNode(exprs);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3790,7 +3701,7 @@ namespace triton {
       AbstractNode* node = new ConcatNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3798,7 +3709,7 @@ namespace triton {
       AbstractNode* node = new ConcatNode(exprs);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3806,7 +3717,7 @@ namespace triton {
       AbstractNode* node = new ConcatNode(exprs);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3814,7 +3725,7 @@ namespace triton {
       AbstractNode* node = new DecimalNode(value);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3822,7 +3733,7 @@ namespace triton {
       AbstractNode* node = new DeclareFunctionNode(name, bvDecl);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3830,7 +3741,7 @@ namespace triton {
       AbstractNode* node = new DistinctNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3838,7 +3749,7 @@ namespace triton {
       AbstractNode* node = new EqualNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3846,7 +3757,7 @@ namespace triton {
       AbstractNode* node = new ExtractNode(high, low, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3854,7 +3765,7 @@ namespace triton {
       AbstractNode* node = new IteNode(ifExpr, thenExpr, elseExpr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3862,7 +3773,7 @@ namespace triton {
       AbstractNode* node = new LandNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3870,7 +3781,7 @@ namespace triton {
       AbstractNode* node = new LetNode(alias, expr2, expr3);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3878,7 +3789,7 @@ namespace triton {
       AbstractNode* node = new LnotNode(expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3886,7 +3797,7 @@ namespace triton {
       AbstractNode* node = new LorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3894,7 +3805,7 @@ namespace triton {
       AbstractNode* node = new ReferenceNode(value);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3902,7 +3813,7 @@ namespace triton {
       AbstractNode* node = new StringNode(value);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3910,7 +3821,7 @@ namespace triton {
       AbstractNode* node = new SxNode(sizeExt, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3918,7 +3829,7 @@ namespace triton {
       AbstractNode* node = new VariableNode(symVar);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3926,7 +3837,7 @@ namespace triton {
       AbstractNode* node = new ZxNode(sizeExt, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return recordNode(node);
+      return triton::ast::recordNode(node);
     }
 
 
@@ -3987,7 +3898,7 @@ namespace triton {
       }
       if (newNode == nullptr)
         throw std::invalid_argument("triton::ast::newInstance(): No enough memory.");
-      return recordNode(node);
+      return newNode;
     }
 
   }; /* ast namespace */

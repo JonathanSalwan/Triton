@@ -15,6 +15,7 @@
 #include "ast.hpp"
 #include "astDictionaries.hpp"
 #include "memoryOperand.hpp"
+#include "pathManager.hpp"
 #include "registerOperand.hpp"
 #include "symbolicEnums.hpp"
 #include "symbolicExpression.hpp"
@@ -51,9 +52,10 @@ namespace triton {
       //! \class SymbolicEngine
       /*! \brief The symbolic engine class. */
       class SymbolicEngine
-        : public triton::engines::symbolic::SymbolicSimplification,
+        : public triton::ast::AstDictionaries,
           public triton::engines::symbolic::SymbolicOptimization,
-          public triton::ast::AstDictionaries {
+          public triton::engines::symbolic::SymbolicSimplification,
+          public triton::engines::symbolic::PathManager {
 
         protected:
 
@@ -108,10 +110,6 @@ namespace triton {
            * **item2**: symbolic reference id
            */
           std::map<std::pair<triton::__uint, triton::uint32>, triton::ast::AbstractNode*> alignedMemoryReference;
-
-          //! \brief The logical conjunction vector of path constraint.
-          std::vector<triton::ast::AbstractNode*> pathConstraint;
-
 
         public:
 
@@ -216,15 +214,6 @@ namespace triton {
 
           //! Returns all variable declarations representation.
           std::string getVariablesDeclaration(void);
-
-          //! Returns the logical conjunction vector of path constraint.
-          std::vector<triton::ast::AbstractNode*>& getPathConstraint(void);
-
-          //! Returns the logical conjunction AST of path constraint.
-          triton::ast::AbstractNode* getPathConstraintAst(void);
-
-          //! Add a path constraint.
-          void addPathConstraint(triton::ast::AbstractNode* pc);
 
           //! Adds a symbolic memory reference.
           void addMemoryReference(triton::__uint mem, triton::__uint id);

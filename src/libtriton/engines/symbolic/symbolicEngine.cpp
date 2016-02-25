@@ -109,7 +109,7 @@ namespace triton {
         this->enableFlag                  = other.enableFlag;
         this->enabledOptimizations        = other.enabledOptimizations;
         this->memoryReference             = other.memoryReference;
-        this->pathConstraint              = other.pathConstraint;
+        this->pathConstraints             = other.pathConstraints;
         this->simplificationCallbacks     = other.simplificationCallbacks;
         this->symbolicExpressions         = other.symbolicExpressions;
         this->symbolicVariables           = other.symbolicVariables;
@@ -401,51 +401,6 @@ namespace triton {
           stream << triton::ast::declareFunction(it->second->getSymVarName(), triton::ast::bvdecl(it->second->getSymVarSize()));
 
         return stream.str();
-      }
-
-
-      /* Returns the logical conjunction vector of path constraint */
-      std::vector<triton::ast::AbstractNode*>& SymbolicEngine::getPathConstraint(void) {
-        return this->pathConstraint;
-      }
-
-
-      /* Returns the logical conjunction AST of path constraint */
-      triton::ast::AbstractNode* SymbolicEngine::getPathConstraintAst(void) {
-        triton::ast::AbstractNode* node = nullptr;
-        std::vector<triton::ast::AbstractNode*>::iterator it;
-
-        /* by default PC is T (top) */
-        node = triton::ast::equal(
-                 triton::ast::bvtrue(),
-                 triton::ast::bvtrue()
-               );
-
-        /* Then, we create a conjunction of pc */
-        for (it = this->pathConstraint.begin(); it != this->pathConstraint.end(); it++) {
-          node = triton::ast::land(node, *it);
-        }
-
-        return node;
-      }
-
-
-      /* Add a path constraint */
-      void SymbolicEngine::addPathConstraint(triton::ast::AbstractNode* pc) {
-        triton::uint128 value = 0;
-        triton::uint32  size  = 0;
-
-        if (pc == nullptr)
-          throw std::runtime_error("SymbolicEngine::addPathConstraint(): The PC node cannot be null.");
-
-        value = pc->evaluate().convert_to<triton::uint128>();
-        size  = pc->getBitvectorSize();
-
-        if (size == 0)
-          throw std::runtime_error("SymbolicEngine::addPathConstraint(): The PC node size cannot be zero.");
-
-        pc = triton::ast::equal(pc, triton::ast::bv(value, size));
-        this->pathConstraint.push_back(pc);
       }
 
 

@@ -652,15 +652,15 @@ namespace triton {
   }
 
 
-  std::vector<triton::ast::AbstractNode*>& API::getPathConstraint(void) {
+  std::vector<triton::ast::AbstractNode*>& API::getPathConstraints(void) {
     this->checkSymbolic();
-    return this->sym->getPathConstraint();
+    return this->sym->getPathConstraints();
   }
 
 
-  triton::ast::AbstractNode* API::getPathConstraintAst(void) {
+  triton::ast::AbstractNode* API::getPathConstraintsAst(void) {
     this->checkSymbolic();
-    return this->sym->getPathConstraintAst();
+    return this->sym->getPathConstraintsAst();
   }
 
 
