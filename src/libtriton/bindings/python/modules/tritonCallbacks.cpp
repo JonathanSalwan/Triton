@@ -194,6 +194,12 @@ Computes and returns several models from a symbolic constraint. The `limit` is t
 - **getParentRegisters(void)**<br>
 Returns the list of parent registers. Each item of this list is a \ref py_REG_page.
 
+- **getPathConstraints(void)**<br>
+Returns the logical conjunction vector of path constraints as list of \ref py_AstNode_page.
+
+- **getPathConstraintsAst(void)**<br>
+Returns the logical conjunction AST of path constraints as \ref py_AstNode_page.
+
 - **getRegisterValue(\ref py_REG_page reg)**<br>
 If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of the register.
 
@@ -1488,6 +1494,43 @@ namespace triton {
       }
 
 
+      static PyObject* triton_getPathConstraints(PyObject* self, PyObject* noarg) {
+        PyObject* ret = nullptr;
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getPathConstraintsAst(): Architecture is not defined.");
+
+        try {
+          std::vector<triton::ast::AbstractNode*>& pc = triton::api.getPathConstraints();
+          ret = xPyList_New(pc.size());
+
+          triton::uint32 index = 0;
+          for (auto it = pc.begin(); it != pc.end(); it++)
+            PyList_SetItem(ret, index++, PyAstNode(*it));
+
+          return ret;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* triton_getPathConstraintsAst(PyObject* self, PyObject* noarg) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getPathConstraintsAst(): Architecture is not defined.");
+
+        try {
+          return PyAstNode(triton::api.getPathConstraintsAst());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* triton_getRegisterValue(PyObject* self, PyObject* reg) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -2615,6 +2658,8 @@ namespace triton {
         {"getModel",                            (PyCFunction)triton_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)triton_getModels,                              METH_VARARGS,       ""},
         {"getParentRegisters",                  (PyCFunction)triton_getParentRegisters,                     METH_NOARGS,        ""},
+        {"getPathConstraints",                  (PyCFunction)triton_getPathConstraints,                     METH_NOARGS,        ""},
+        {"getPathConstraintsAst",               (PyCFunction)triton_getPathConstraintsAst,                  METH_NOARGS,        ""},
         {"getRegisterValue",                    (PyCFunction)triton_getRegisterValue,                       METH_O,             ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)triton_getSymbolicExpressionFromId,            METH_O,             ""},
         {"getSymbolicExpressions",              (PyCFunction)triton_getSymbolicExpressions,                 METH_NOARGS,        ""},

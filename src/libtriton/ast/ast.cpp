@@ -2895,8 +2895,8 @@ namespace triton {
 
 
     void LnotNode::init(void) {
-      if (this->childs.size() < 2)
-        throw std::runtime_error("LnotNode::init(): Must take at least two childs.");
+      if (this->childs.size() < 1)
+        throw std::runtime_error("LnotNode::init(): Must take at least one child.");
 
       /* Init attributes */
       this->size = 1;
