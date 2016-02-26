@@ -32,7 +32,7 @@ import  sys
 from    triton import *
 
 
-trace = [
+code = [
     (0x40000, "\x40\xf6\xee"),      # imul   sil
     (0x40003, "\x66\xf7\xe9"),      # imul   cx
     (0x40006, "\x48\xf7\xe9"),      # imul   rcx
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     #Set the arch
     setArchitecture(ARCH.X86_64)
 
-    for (addr, opcodes) in trace:
+    for (addr, opcodes) in code:
         # Build an instruction
         inst = Instruction()
 

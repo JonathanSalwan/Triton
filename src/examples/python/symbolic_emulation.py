@@ -65,7 +65,7 @@ import  sys
 from    triton import *
 
 
-trace = [
+code = [
     (0x400000, "\x48\xB8\x48\x47\x46\x45\x44\x43\x42\x41"),     # movabs rax, 0x4142434445464748
     (0x40000a, "\x48\xC7\xC6\x08\x00\x00\x00"),                 # mov    rsi, 0x8
     (0x400011, "\x48\xC7\xC7\x00\x00\x01\x00"),                 # mov    rdi, 0x10000
@@ -81,7 +81,7 @@ if __name__ == '__main__':
     # Define that we perform emulation
     enableSymbolicEmulation(True)
 
-    for (addr, opcodes) in trace:
+    for (addr, opcodes) in code:
         # Build an instruction
         inst = Instruction()
 

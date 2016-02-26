@@ -38,7 +38,7 @@ import  sys
 from    triton import *
 
 
-trace = [
+code = [
     (0x400000, "\x48\x8b\x05\xb8\x13\x00\x00"), # mov        rax, QWORD PTR [rip+0x13b8]
     (0x400007, "\x48\x8d\x34\xc3"),             # lea        rsi, [rbx+rax*8]
     (0x40000b, "\x67\x48\x8D\x74\xC3\x0A"),     # lea        rsi, [ebx+eax*8+0xa]
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     #Set the arch
     setArchitecture(ARCH.X86_64)
 
-    for (addr, opcodes) in trace:
+    for (addr, opcodes) in code:
         # Build an instruction
         inst = Instruction()
 

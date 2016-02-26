@@ -9,7 +9,7 @@ import  sys
 from triton import *
 from ast    import *
 
-trace = {
+function = {
                                               #   <serial> function
   0x40056d: "\x55",                           #   push    rbp
   0x40056e: "\x48\x89\xe5",                   #   mov     rbp,rsp
@@ -85,13 +85,13 @@ if __name__ == '__main__':
     setLastRegisterValue(Register(REG.RSP, 0x7fffffff))
     setLastRegisterValue(Register(REG.RBP, 0x7fffffff))
 
-    while pc in trace:
+    while pc in function:
 
         # Build an instruction
         inst = Instruction()
 
         # Setup opcodes
-        inst.setOpcodes(trace[pc])
+        inst.setOpcodes(function[pc])
 
         # Setup Address
         inst.setAddress(pc)
