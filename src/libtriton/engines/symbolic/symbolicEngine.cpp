@@ -457,7 +457,7 @@ namespace triton {
         triton::__uint memSymId         = triton::engines::symbolic::UNSET;
         triton::__uint memAddr          = mem.getAddress();
         triton::uint32 symVarSize       = mem.getSize();
-        triton::uint128 cv              = mem.getConcreteValue() | triton::api.getLastMemoryValue(mem);
+        triton::uint128 cv              = mem.getConcreteValue() ? mem.getConcreteValue() : triton::api.getLastMemoryValue(mem);
 
         memSymId = this->getSymbolicMemoryId(memAddr);
 
@@ -501,7 +501,7 @@ namespace triton {
         triton::__uint regSymId         = triton::engines::symbolic::UNSET;
         triton::uint32 parentId         = reg.getParent().getId();
         triton::uint32 symVarSize       = reg.getBitSize();
-        triton::uint128 cv              = reg.getConcreteValue() | triton::api.getLastRegisterValue(reg);
+        triton::uint128 cv              = reg.getConcreteValue() ? reg.getConcreteValue() : triton::api.getLastRegisterValue(reg);
 
         if (!triton::api.isCpuRegisterValid(parentId))
           throw std::runtime_error("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");

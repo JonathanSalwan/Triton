@@ -73,22 +73,25 @@ def tainting(threadId):
 
 
 def fini():
-    pc = getPathConstraints()
-    for c in pc:
-        if c.getChilds()[0].getKind() == AST_NODE.ITE:
-            ite  = c.getChilds()[0]
-            b1   = ite.getChilds()[1]
-            b2   = ite.getChilds()[2]
+    pco = getPathConstraints()
+    for pc in pco:
+        if pc.isMultipleBranches():
+            b1   =  pc.getBranchConstraints()[0]['constraint']
+            b2   =  pc.getBranchConstraints()[1]['constraint']
+            print b1
+            print b2
             seed = list()
 
             # Branch 1
-            models  = getModel(assert_(equal(ite, b1)))
+            models  = getModel(assert_(b1))
             for k, v in models.items():
+                print v
                 seed.append(v)
 
             # Branch 2
-            models  = getModel(assert_(equal(ite, b2)))
+            models  = getModel(assert_(b2))
             for k, v in models.items():
+                print v
                 seed.append(v)
 
             if seed:

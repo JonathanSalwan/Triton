@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "ast.hpp"
+#include "pathConstraint.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -43,7 +44,7 @@ namespace triton {
       class PathManager {
         protected:
           //! \brief The logical conjunction vector of path constraints.
-          std::vector<triton::ast::AbstractNode*> pathConstraints;
+          std::vector<triton::engines::symbolic::PathConstraint> pathConstraints;
 
 
         public:
@@ -57,7 +58,7 @@ namespace triton {
           ~PathManager();
 
           //! Returns the logical conjunction vector of path constraints.
-          std::vector<triton::ast::AbstractNode*>& getPathConstraints(void);
+          std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void);
 
           //! Returns the logical conjunction AST of path constraints.
           triton::ast::AbstractNode* getPathConstraintsAst(void);
@@ -65,8 +66,11 @@ namespace triton {
           //! Returns the number of constraints.
           triton::uint32 getNumberOfPathConstraints(void);
 
-          //! Add a path constraint.
+          //! Adds a path constraint.
           void addPathConstraint(triton::ast::AbstractNode* pc);
+
+          //! Clears the logical conjunction vector of path constraints.
+          void clearPathConstraints(void);
       };
 
     /*! @} End of symbolic namespace */

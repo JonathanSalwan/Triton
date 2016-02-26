@@ -326,13 +326,16 @@ namespace triton {
         triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromName(std::string& symVarName);
 
         //! [**symbolic api**] - Returns the logical conjunction vector of path constraints.
-        std::vector<triton::ast::AbstractNode*>& getPathConstraints(void);
+        std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void);
 
         //! [**symbolic api**] - Returns the logical conjunction AST of path constraints.
         triton::ast::AbstractNode* getPathConstraintsAst(void);
 
-        //! [**symbolic api**] - Add a path constraint.
+        //! [**symbolic api**] - Adds a path constraint.
         void addPathConstraint(triton::ast::AbstractNode* pc);
+
+        //! [**symbolic api**] - Clears the logical conjunction vector of path constraints.
+        void clearPathConstraints(void);
 
         //! [**symbolic api**] - Enables or disables the symbolic execution engine.
         void enableSymbolicEngine(bool flag);

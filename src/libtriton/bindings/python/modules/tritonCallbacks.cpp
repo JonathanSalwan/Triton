@@ -54,6 +54,7 @@ If you want to use the libTriton without Python bindings, recompile the project 
 - \ref py_Immediate_page
 - \ref py_Instruction_page
 - \ref py_Memory_page
+- \ref py_PathConstraint_page
 - \ref py_Register_page
 - \ref py_SolverModel_page
 - \ref py_SymbolicExpression_page
@@ -88,6 +89,9 @@ Builds a symbolic \ref py_Memory_page and returns a \ref py_AstNode_page.
 
 - **buildSymbolicRegister(\ref py_REG_page reg)**<br>
 Builds a symbolic \ref py_REG_page and returns a \ref py_AstNode_page.
+
+- **clearPathConstraints(void)**<br>
+Clears the logical conjunction vector of path constraints.
 
 - **concretizeAllMemory(void)**<br>
 Concretizes all symbolic memory references.
@@ -195,7 +199,7 @@ Computes and returns several models from a symbolic constraint. The `limit` is t
 Returns the list of parent registers. Each item of this list is a \ref py_REG_page.
 
 - **getPathConstraints(void)**<br>
-Returns the logical conjunction vector of path constraints as list of \ref py_AstNode_page.
+Returns the logical conjunction vector of path constraints as list of \ref py_PathConstraint_page.
 
 - **getPathConstraintsAst(void)**<br>
 Returns the logical conjunction AST of path constraints as \ref py_AstNode_page.
@@ -764,6 +768,16 @@ namespace triton {
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
+      }
+
+
+      static PyObject* triton_clearPathConstraints(PyObject* self, PyObject* noarg) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "clearPathConstraints(): Architecture is not defined.");
+        triton::api.clearPathConstraints();
+        Py_INCREF(Py_None);
+        return Py_None;
       }
 
 
@@ -1502,12 +1516,12 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getPathConstraintsAst(): Architecture is not defined.");
 
         try {
-          std::vector<triton::ast::AbstractNode*>& pc = triton::api.getPathConstraints();
+          std::vector<triton::engines::symbolic::PathConstraint>& pc = triton::api.getPathConstraints();
           ret = xPyList_New(pc.size());
 
           triton::uint32 index = 0;
           for (auto it = pc.begin(); it != pc.end(); it++)
-            PyList_SetItem(ret, index++, PyAstNode(*it));
+            PyList_SetItem(ret, index++, PyPathConstraint(*it));
 
           return ret;
         }
@@ -2625,6 +2639,7 @@ namespace triton {
         {"buildSymbolicImmediate",              (PyCFunction)triton_buildSymbolicImmediate,                 METH_O,             ""},
         {"buildSymbolicMemory",                 (PyCFunction)triton_buildSymbolicMemory,                    METH_O,             ""},
         {"buildSymbolicRegister",               (PyCFunction)triton_buildSymbolicRegister,                  METH_O,             ""},
+        {"clearPathConstraints",                (PyCFunction)triton_clearPathConstraints,                   METH_NOARGS,        ""},
         {"concretizeAllMemory",                 (PyCFunction)triton_concretizeAllMemory,                    METH_NOARGS,        ""},
         {"concretizeAllRegister",               (PyCFunction)triton_concretizeAllRegister,                  METH_NOARGS,        ""},
         {"concretizeMemory",                    (PyCFunction)triton_concretizeMemory,                       METH_O,             ""},
