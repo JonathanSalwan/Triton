@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
 ##
-##  $ ./symbolic_emulation_crackme_xor_solving.py
+##  $ ./code_coverage_crackme_xor.py
 ##  Seed injected: {4096: 1}
 ##  Seed injected: {4096L: 101L}
 ##  Seed injected: {4096L: 0L}
