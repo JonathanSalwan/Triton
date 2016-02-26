@@ -60,7 +60,7 @@ namespace triton {
           //! Destructore.
           ~PathConstraint();
 
-          //! Add a branch to the path constraint.
+          //! Adds a branch to the path constraint.
           void addBranchConstraint(bool taken, triton::__uint bbAddr, triton::ast::AbstractNode* pc);
 
           //! Returns the branch constraints.
