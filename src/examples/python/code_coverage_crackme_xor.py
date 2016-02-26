@@ -41,7 +41,7 @@ from ast    import *
 #
 # The objective is to cover this function and so return 1.
 #
-trace = {
+function = {
                                               #   <serial> function
   0x40056d: "\x55",                           #   push    rbp
   0x40056e: "\x48\x89\xe5",                   #   mov     rbp,rsp
@@ -79,12 +79,12 @@ trace = {
 
 # This function emulates the code.
 def run(ip):
-    while ip in trace:
+    while ip in function:
         # Build an instruction
         inst = Instruction()
 
         # Setup opcodes
-        inst.setOpcodes(trace[ip])
+        inst.setOpcodes(function[ip])
 
         # Setup Address
         inst.setAddress(ip)
