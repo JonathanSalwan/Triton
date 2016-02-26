@@ -60,10 +60,10 @@ B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
 <hr>
 
 - **getBranchConstraints(void)**<br>
-Returns the branch constraints as list of dictionary `{'taken', 'target', 'constraint'}`.
+Returns the branch constraints as list of dictionary `{taken, target, constraint}`.
 
 - **getTakenAddress(void)**<br>
-Returns the address of the branch taken as integer.
+Returns the address of the taken branch as integer.
 
 - **getTakenPathConstraintAst(void)**<br>
 Returns the path constraint AST of the taken branch as \ref py_AstNode_page.
