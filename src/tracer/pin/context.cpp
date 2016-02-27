@@ -150,9 +150,11 @@ namespace tracer {
 
 
       triton::uint128 getCurrentMemoryValue(triton::__uint addr) {
+        triton::uint128 value = 0;
         if (PIN_CheckReadAccess(reinterpret_cast<void*>(addr)) == false)
           throw std::runtime_error("tracer::pintool::context::getCurrentMemoryValue(): Page not readable.");
-        return static_cast<triton::uint128>(*(reinterpret_cast<triton::uint8*>(addr)));
+        value = *(reinterpret_cast<triton::uint8*>(addr));
+        return value;
       }
 
 
@@ -286,7 +288,7 @@ namespace tracer {
         for (triton::uint32 i = 0; i <= size; i++) {
           if (PIN_CheckWriteAccess(reinterpret_cast<void*>((addr+i))) == false)
             throw std::runtime_error("tracer::pintool::context::setCurrentMemoryValue(): Page not writable.");
-          *((triton::uint8 *)(addr+i)) = static_cast<triton::uint8>(value & 0xff);
+          *((triton::uint8 *)(addr+i)) = (value & 0xff).convert_to<triton::uint8>();
           value >>= 8;
         }
       }
@@ -303,7 +305,7 @@ namespace tracer {
         triton::api.concretizeMemory(addr);
 
         /* Inject memory value */
-        *((triton::uint8*)(addr)) = static_cast<triton::uint8>(value & 0xff);
+        *((triton::uint8*)(addr)) = (value & 0xff);
       }
 
 

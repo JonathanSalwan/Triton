@@ -506,7 +506,7 @@ namespace triton {
         throw std::invalid_argument("x86Cpu::setLastMemoryValue(): Invalid size memory.");
 
       for (triton::uint32 i = 0; i < size; i++) {
-        this->memory[addr+i] = static_cast<triton::uint8>(cv & 0xff);
+        this->memory[addr+i] = (cv & 0xff).convert_to<triton::uint8>();
         cv >>= 8;
       }
     }
@@ -519,55 +519,55 @@ namespace triton {
         throw std::invalid_argument("x86Cpu::setLastRegisterValue(): You cannot set an isolated flag. Use the flags register EFLAGS.");
 
       switch (reg.getId()) {
-        case triton::arch::x86::ID_REG_EAX: (*((triton::uint32*)(this->eax)))  = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_AX:  (*((triton::uint16*)(this->eax)))  = static_cast<triton::uint16>(value); break;
-        case triton::arch::x86::ID_REG_AH:  (*((triton::uint8*)(this->eax+1))) = static_cast<triton::uint8>(value); break;
-        case triton::arch::x86::ID_REG_AL:  (*((triton::uint8*)(this->eax)))   = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_EAX: (*((triton::uint32*)(this->eax)))  = value.convert_to<triton::uint32>(); break;
+        case triton::arch::x86::ID_REG_AX:  (*((triton::uint16*)(this->eax)))  = value.convert_to<triton::uint16>(); break;
+        case triton::arch::x86::ID_REG_AH:  (*((triton::uint8*)(this->eax+1))) = value.convert_to<triton::uint8>(); break;
+        case triton::arch::x86::ID_REG_AL:  (*((triton::uint8*)(this->eax)))   = value.convert_to<triton::uint8>(); break;
 
-        case triton::arch::x86::ID_REG_EBX: (*((triton::uint32*)(this->ebx)))  = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_BX:  (*((triton::uint16*)(this->ebx)))  = static_cast<triton::uint16>(value); break;
-        case triton::arch::x86::ID_REG_BH:  (*((triton::uint8*)(this->ebx+1))) = static_cast<triton::uint8>(value); break;
-        case triton::arch::x86::ID_REG_BL:  (*((triton::uint8*)(this->ebx)))   = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_EBX: (*((triton::uint32*)(this->ebx)))  = value.convert_to<triton::uint32>(); break;
+        case triton::arch::x86::ID_REG_BX:  (*((triton::uint16*)(this->ebx)))  = value.convert_to<triton::uint16>(); break;
+        case triton::arch::x86::ID_REG_BH:  (*((triton::uint8*)(this->ebx+1))) = value.convert_to<triton::uint8>(); break;
+        case triton::arch::x86::ID_REG_BL:  (*((triton::uint8*)(this->ebx)))   = value.convert_to<triton::uint8>(); break;
 
-        case triton::arch::x86::ID_REG_ECX: (*((triton::uint32*)(this->ecx)))  = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_CX:  (*((triton::uint16*)(this->ecx)))  = static_cast<triton::uint16>(value); break;
-        case triton::arch::x86::ID_REG_CH:  (*((triton::uint8*)(this->ecx+1))) = static_cast<triton::uint8>(value); break;
-        case triton::arch::x86::ID_REG_CL:  (*((triton::uint8*)(this->ecx)))   = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_ECX: (*((triton::uint32*)(this->ecx)))  = value.convert_to<triton::uint32>(); break;
+        case triton::arch::x86::ID_REG_CX:  (*((triton::uint16*)(this->ecx)))  = value.convert_to<triton::uint16>(); break;
+        case triton::arch::x86::ID_REG_CH:  (*((triton::uint8*)(this->ecx+1))) = value.convert_to<triton::uint8>(); break;
+        case triton::arch::x86::ID_REG_CL:  (*((triton::uint8*)(this->ecx)))   = value.convert_to<triton::uint8>(); break;
 
-        case triton::arch::x86::ID_REG_EDX: (*((triton::uint32*)(this->edx)))  = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_DX:  (*((triton::uint16*)(this->edx)))  = static_cast<triton::uint16>(value); break;
-        case triton::arch::x86::ID_REG_DH:  (*((triton::uint8*)(this->edx+1))) = static_cast<triton::uint8>(value); break;
-        case triton::arch::x86::ID_REG_DL:  (*((triton::uint8*)(this->edx)))   = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_EDX: (*((triton::uint32*)(this->edx)))  = value.convert_to<triton::uint32>(); break;
+        case triton::arch::x86::ID_REG_DX:  (*((triton::uint16*)(this->edx)))  = value.convert_to<triton::uint16>(); break;
+        case triton::arch::x86::ID_REG_DH:  (*((triton::uint8*)(this->edx+1))) = value.convert_to<triton::uint8>(); break;
+        case triton::arch::x86::ID_REG_DL:  (*((triton::uint8*)(this->edx)))   = value.convert_to<triton::uint8>(); break;
 
-        case triton::arch::x86::ID_REG_EDI: (*((triton::uint32*)(this->edi)))  = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_DI:  (*((triton::uint16*)(this->edi)))  = static_cast<triton::uint16>(value); break;
-        case triton::arch::x86::ID_REG_DIL: (*((triton::uint8*)(this->edi)))   = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_EDI: (*((triton::uint32*)(this->edi)))  = value.convert_to<triton::uint32>(); break;
+        case triton::arch::x86::ID_REG_DI:  (*((triton::uint16*)(this->edi)))  = value.convert_to<triton::uint16>(); break;
+        case triton::arch::x86::ID_REG_DIL: (*((triton::uint8*)(this->edi)))   = value.convert_to<triton::uint8>(); break;
 
-        case triton::arch::x86::ID_REG_ESI: (*((triton::uint32*)(this->esi)))  = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_SI:  (*((triton::uint16*)(this->esi)))  = static_cast<triton::uint16>(value); break;
-        case triton::arch::x86::ID_REG_SIL: (*((triton::uint8*)(this->esi)))   = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_ESI: (*((triton::uint32*)(this->esi)))  = value.convert_to<triton::uint32>(); break;
+        case triton::arch::x86::ID_REG_SI:  (*((triton::uint16*)(this->esi)))  = value.convert_to<triton::uint16>(); break;
+        case triton::arch::x86::ID_REG_SIL: (*((triton::uint8*)(this->esi)))   = value.convert_to<triton::uint8>(); break;
 
-        case triton::arch::x86::ID_REG_ESP: (*((triton::uint32*)(this->esp)))  = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_SP:  (*((triton::uint16*)(this->esp)))  = static_cast<triton::uint16>(value); break;
-        case triton::arch::x86::ID_REG_SPL: (*((triton::uint8*)(this->esp)))   = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_ESP: (*((triton::uint32*)(this->esp)))  = value.convert_to<triton::uint32>(); break;
+        case triton::arch::x86::ID_REG_SP:  (*((triton::uint16*)(this->esp)))  = value.convert_to<triton::uint16>(); break;
+        case triton::arch::x86::ID_REG_SPL: (*((triton::uint8*)(this->esp)))   = value.convert_to<triton::uint8>(); break;
 
-        case triton::arch::x86::ID_REG_EBP: (*((triton::uint32*)(this->ebp)))  = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_BP:  (*((triton::uint16*)(this->ebp)))  = static_cast<triton::uint16>(value); break;
-        case triton::arch::x86::ID_REG_BPL: (*((triton::uint8*)(this->ebp)))   = static_cast<triton::uint8>(value); break;
+        case triton::arch::x86::ID_REG_EBP: (*((triton::uint32*)(this->ebp)))  = value.convert_to<triton::uint32>(); break;
+        case triton::arch::x86::ID_REG_BP:  (*((triton::uint16*)(this->ebp)))  = value.convert_to<triton::uint16>(); break;
+        case triton::arch::x86::ID_REG_BPL: (*((triton::uint8*)(this->ebp)))   = value.convert_to<triton::uint8>(); break;
 
-        case triton::arch::x86::ID_REG_EIP: (*((triton::uint32*)(this->eip)))  = static_cast<triton::uint32>(value); break;
-        case triton::arch::x86::ID_REG_IP:  (*((triton::uint16*)(this->eip)))  = static_cast<triton::uint16>(value); break;
+        case triton::arch::x86::ID_REG_EIP: (*((triton::uint32*)(this->eip)))  = value.convert_to<triton::uint32>(); break;
+        case triton::arch::x86::ID_REG_IP:  (*((triton::uint16*)(this->eip)))  = value.convert_to<triton::uint16>(); break;
 
-        case triton::arch::x86::ID_REG_EFLAGS: (*((triton::uint32*)(this->eflags))) = static_cast<triton::uint32>(value); break;
+        case triton::arch::x86::ID_REG_EFLAGS: (*((triton::uint32*)(this->eflags))) = value.convert_to<triton::uint32>(); break;
 
-        case triton::arch::x86::ID_REG_MM0:  (*((triton::uint64*)(this->mm0))) = static_cast<triton::uint64>(value); break;
-        case triton::arch::x86::ID_REG_MM1:  (*((triton::uint64*)(this->mm1))) = static_cast<triton::uint64>(value); break;
-        case triton::arch::x86::ID_REG_MM2:  (*((triton::uint64*)(this->mm2))) = static_cast<triton::uint64>(value); break;
-        case triton::arch::x86::ID_REG_MM3:  (*((triton::uint64*)(this->mm3))) = static_cast<triton::uint64>(value); break;
-        case triton::arch::x86::ID_REG_MM4:  (*((triton::uint64*)(this->mm4))) = static_cast<triton::uint64>(value); break;
-        case triton::arch::x86::ID_REG_MM5:  (*((triton::uint64*)(this->mm5))) = static_cast<triton::uint64>(value); break;
-        case triton::arch::x86::ID_REG_MM6:  (*((triton::uint64*)(this->mm6))) = static_cast<triton::uint64>(value); break;
-        case triton::arch::x86::ID_REG_MM7:  (*((triton::uint64*)(this->mm7))) = static_cast<triton::uint64>(value); break;
+        case triton::arch::x86::ID_REG_MM0:  (*((triton::uint64*)(this->mm0))) = value.convert_to<triton::uint64>(); break;
+        case triton::arch::x86::ID_REG_MM1:  (*((triton::uint64*)(this->mm1))) = value.convert_to<triton::uint64>(); break;
+        case triton::arch::x86::ID_REG_MM2:  (*((triton::uint64*)(this->mm2))) = value.convert_to<triton::uint64>(); break;
+        case triton::arch::x86::ID_REG_MM3:  (*((triton::uint64*)(this->mm3))) = value.convert_to<triton::uint64>(); break;
+        case triton::arch::x86::ID_REG_MM4:  (*((triton::uint64*)(this->mm4))) = value.convert_to<triton::uint64>(); break;
+        case triton::arch::x86::ID_REG_MM5:  (*((triton::uint64*)(this->mm5))) = value.convert_to<triton::uint64>(); break;
+        case triton::arch::x86::ID_REG_MM6:  (*((triton::uint64*)(this->mm6))) = value.convert_to<triton::uint64>(); break;
+        case triton::arch::x86::ID_REG_MM7:  (*((triton::uint64*)(this->mm7))) = value.convert_to<triton::uint64>(); break;
 
         case triton::arch::x86::ID_REG_XMM0: triton::fromUint128ToBuffer(value, this->xmm0); break;
         case triton::arch::x86::ID_REG_XMM1: triton::fromUint128ToBuffer(value, this->xmm1); break;

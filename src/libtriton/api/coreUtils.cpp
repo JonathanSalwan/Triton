@@ -19,7 +19,7 @@ namespace triton {
 
   void fromUint128ToBuffer(triton::uint128 value, triton::uint8* buffer) {
     for (triton::uint32 i = 0; i < DQWORD_SIZE; i++) {
-      buffer[i] = static_cast<triton::uint8>(value & 0xff);
+      buffer[i] = (value & 0xff).convert_to<triton::uint8>();
       value >>= BYTE_SIZE_BIT;
     }
   }

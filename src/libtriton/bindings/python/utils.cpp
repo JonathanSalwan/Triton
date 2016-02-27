@@ -27,7 +27,7 @@ namespace triton {
     namespace python {
 
       triton::__uint PyLong_AsUint(PyObject* vv) {
-        PyLongObject *v;
+        PyLongObject* v;
         triton::__uint x, prev;
         Py_ssize_t i;
 
@@ -39,7 +39,7 @@ namespace triton {
           throw std::runtime_error("triton::bindings::python::PyLong_AsUint(): Bad internal call.");
         }
 
-        v = reinterpret_cast<PyLongObject *>(vv);
+        v = reinterpret_cast<PyLongObject*>(vv);
         i = Py_SIZE(v);
         x = 0;
         if (i < 0)
@@ -57,7 +57,7 @@ namespace triton {
 
 
       triton::uint128 PyLong_AsUint128(PyObject* vv) {
-        PyLongObject *v;
+        PyLongObject* v;
         triton::uint128 x, prev;
         Py_ssize_t i;
 
@@ -69,7 +69,7 @@ namespace triton {
           throw std::runtime_error("triton::bindings::python::PyLong_AsUint128(): Bad internal call.");
         }
 
-        v = reinterpret_cast<PyLongObject *>(vv);
+        v = reinterpret_cast<PyLongObject*>(vv);
         i = Py_SIZE(v);
         x = 0;
         if (i < 0)
@@ -87,7 +87,7 @@ namespace triton {
 
 
       triton::uint256 PyLong_AsUint256(PyObject* vv) {
-        PyLongObject *v;
+        PyLongObject* v;
         triton::uint256 x, prev;
         Py_ssize_t i;
 
@@ -99,7 +99,7 @@ namespace triton {
           throw std::runtime_error("triton::bindings::python::PyLong_AsUint256(): Bad internal call.");
         }
 
-        v = reinterpret_cast<PyLongObject *>(vv);
+        v = reinterpret_cast<PyLongObject*>(vv);
         i = Py_SIZE(v);
         x = 0;
         if (i < 0)
@@ -117,7 +117,7 @@ namespace triton {
 
 
       triton::uint512 PyLong_AsUint512(PyObject* vv) {
-        PyLongObject *v;
+        PyLongObject* v;
         triton::uint512 x, prev;
         Py_ssize_t i;
 
@@ -129,7 +129,7 @@ namespace triton {
           throw std::runtime_error("triton::bindings::python::PyLong_AsUint512(): Bad internal call.");
         }
 
-        v = reinterpret_cast<PyLongObject *>(vv);
+        v = reinterpret_cast<PyLongObject*>(vv);
         i = Py_SIZE(v);
         x = 0;
         if (i < 0)
@@ -148,7 +148,7 @@ namespace triton {
 
       /* Returns a PyObject from a {32,64}-bits integer */
       PyObject* PyLong_FromUint(triton::__uint value) {
-        PyLongObject *v;
+        PyLongObject* v;
         triton::__uint t;
         int ndigits = 0;
 
@@ -160,20 +160,20 @@ namespace triton {
         }
 
         v = _PyLong_New(ndigits);
-        digit *p = v->ob_digit;
+        digit* p = v->ob_digit;
         Py_SIZE(v) = ndigits;
         while (value) {
           *p++ = static_cast<digit>(value & PyLong_MASK);
           value >>= PyLong_SHIFT;
         }
 
-        return (PyObject* )v;
+        return (PyObject*)v;
       }
 
 
       /* Returns a PyObject from a 128-bits integer */
       PyObject* PyLong_FromUint128(triton::uint128 value) {
-        PyLongObject *v;
+        PyLongObject* v;
         triton::uint128 t;
         int ndigits = 0;
 
@@ -185,20 +185,20 @@ namespace triton {
         }
 
         v = _PyLong_New(ndigits);
-        digit *p = v->ob_digit;
+        digit* p = v->ob_digit;
         Py_SIZE(v) = ndigits;
         while (value) {
-          *p++ = static_cast<digit>(value & PyLong_MASK);
+          *p++ = (value & PyLong_MASK).convert_to<digit>();
           value >>= PyLong_SHIFT;
         }
 
-        return (PyObject* )v;
+        return (PyObject*)v;
       }
 
 
       /* Returns a PyObject from a 256-bits integer */
       PyObject* PyLong_FromUint256(triton::uint256 value) {
-        PyLongObject *v;
+        PyLongObject* v;
         triton::uint256 t;
         int ndigits = 0;
 
@@ -210,20 +210,20 @@ namespace triton {
         }
 
         v = _PyLong_New(ndigits);
-        digit *p = v->ob_digit;
+        digit* p = v->ob_digit;
         Py_SIZE(v) = ndigits;
         while (value) {
-          *p++ = static_cast<digit>(value & PyLong_MASK);
+          *p++ = (value & PyLong_MASK).convert_to<digit>();
           value >>= PyLong_SHIFT;
         }
 
-        return (PyObject* )v;
+        return (PyObject*)v;
       }
 
 
       /* Returns a PyObject from a 512-bits integer */
       PyObject* PyLong_FromUint512(triton::uint512 value) {
-        PyLongObject *v;
+        PyLongObject* v;
         triton::uint512 t = 0;
         int ndigits = 0;
 
@@ -235,14 +235,14 @@ namespace triton {
         }
 
         v = _PyLong_New(ndigits);
-        digit *p = v->ob_digit;
+        digit* p = v->ob_digit;
         Py_SIZE(v) = ndigits;
         while (value) {
-          *p++ = static_cast<digit>(value & PyLong_MASK);
+          *p++ = (value & PyLong_MASK).convert_to<digit>();
           value >>= PyLong_SHIFT;
         }
 
-        return (PyObject* )v;
+        return (PyObject*)v;
       }
 
     }; /* python namespace */

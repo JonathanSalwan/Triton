@@ -275,7 +275,7 @@ namespace tracer {
           if (value != nullptr && PyMemoryOperand_Check(mem))
             tracer::pintool::context::setCurrentMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem), triton::bindings::python::PyLong_AsUint128(value));
           else if (value != nullptr && (PyInt_Check(mem) || PyLong_Check(mem))) {
-            triton::uint8 v = static_cast<triton::uint8>(triton::bindings::python::PyLong_AsUint128(value) & 0xff);
+            triton::uint8 v = (triton::bindings::python::PyLong_AsUint128(value) & 0xff).convert_to<triton::uint8>();
             tracer::pintool::context::setCurrentMemoryValue(triton::bindings::python::PyLong_AsUint(mem), v);
           }
           else
