@@ -332,7 +332,7 @@ namespace triton {
         triton::ast::AbstractNode* getPathConstraintsAst(void);
 
         //! [**symbolic api**] - Adds a path constraint.
-        void addPathConstraint(triton::ast::AbstractNode* pc);
+        void addPathConstraint(triton::engines::symbolic::SymbolicExpression* expr);
 
         //! [**symbolic api**] - Clears the logical conjunction vector of path constraints.
         void clearPathConstraints(void);

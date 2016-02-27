@@ -1581,7 +1581,7 @@ namespace triton {
           expr2->isTainted = triton::api.taintAssignment(pc, src);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node2);
+          triton::api.addPathConstraint(expr2);
         }
 
 
@@ -2676,7 +2676,7 @@ namespace triton {
           expr->isTainted = triton::api.taintUnion(pc, zf);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -2705,7 +2705,7 @@ namespace triton {
           expr->isTainted = triton::api.taintAssignment(pc, cf);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -2734,7 +2734,7 @@ namespace triton {
           expr->isTainted = triton::api.taintAssignment(pc, cf);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -2767,7 +2767,7 @@ namespace triton {
           expr->isTainted = triton::api.taintUnion(pc, zf);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -2796,7 +2796,7 @@ namespace triton {
           expr->isTainted = triton::api.taintAssignment(pc, zf);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -2831,7 +2831,7 @@ namespace triton {
           expr->isTainted = triton::api.taintUnion(pc, zf);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -2863,7 +2863,7 @@ namespace triton {
           expr->isTainted = triton::api.taintUnion(pc, of);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -2895,7 +2895,7 @@ namespace triton {
           expr->isTainted = triton::api.taintUnion(pc, of);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -2930,7 +2930,7 @@ namespace triton {
           expr->isTainted = triton::api.taintUnion(pc, zf);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -2954,7 +2954,7 @@ namespace triton {
           expr->isTainted = triton::api.taintAssignment(pc, src);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -2983,7 +2983,7 @@ namespace triton {
           expr->isTainted = triton::api.taintAssignment(pc, zf);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -3012,7 +3012,7 @@ namespace triton {
           expr->isTainted = triton::api.taintAssignment(pc, of);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -3041,7 +3041,7 @@ namespace triton {
           expr->isTainted = triton::api.taintAssignment(pc, pf);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -3070,7 +3070,7 @@ namespace triton {
           expr->isTainted = triton::api.taintAssignment(pc, sf);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -3099,7 +3099,7 @@ namespace triton {
           expr->isTainted = triton::api.taintAssignment(pc, of);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -3128,7 +3128,7 @@ namespace triton {
           expr->isTainted = triton::api.taintAssignment(pc, pf);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -3157,7 +3157,7 @@ namespace triton {
           expr->isTainted = triton::api.taintAssignment(pc, sf);
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 
@@ -4242,7 +4242,7 @@ namespace triton {
             alignAddStack_s(inst, inst.operands[0].getImmediate().getValue());
 
           /* Create the path constraint */
-          triton::api.addPathConstraint(node);
+          triton::api.addPathConstraint(expr);
         }
 
 

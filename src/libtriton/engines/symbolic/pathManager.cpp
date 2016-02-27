@@ -6,7 +6,10 @@
 */
 
 #include <stdexcept>
+
+#include <api.hpp>
 #include <pathManager.hpp>
+#include <symbolicEnums.hpp>
 
 
 
@@ -59,13 +62,19 @@ namespace triton {
 
 
       /* Add a path constraint */
-      void PathManager::addPathConstraint(triton::ast::AbstractNode* pc) {
+      void PathManager::addPathConstraint(triton::engines::symbolic::SymbolicExpression* expr) {
+        triton::ast::AbstractNode* pc = nullptr;
         triton::engines::symbolic::PathConstraint pco;
         triton::__uint targetBb = 0;
         triton::uint32 size = 0;
 
+        pc = expr->getAst();
         if (pc == nullptr)
           throw std::runtime_error("PathManager::addPathConstraint(): The PC node cannot be null.");
+
+        /* If ONLY_ON_TAINTED is enabled and the expression untainted, we skip the storing process. */
+        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ONLY_ON_TAINTED) && !expr->isTainted)
+          return;
 
         /* Basic block taken */
         targetBb = pc->evaluate().convert_to<triton::__uint>();

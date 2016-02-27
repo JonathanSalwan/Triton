@@ -10,8 +10,8 @@
 
 #include <vector>
 
-#include "ast.hpp"
 #include "pathConstraint.hpp"
+#include "symbolicExpression.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -67,7 +67,7 @@ namespace triton {
           triton::uint32 getNumberOfPathConstraints(void);
 
           //! Adds a path constraint.
-          void addPathConstraint(triton::ast::AbstractNode* pc);
+          void addPathConstraint(triton::engines::symbolic::SymbolicExpression* expr);
 
           //! Clears the logical conjunction vector of path constraints.
           void clearPathConstraints(void);

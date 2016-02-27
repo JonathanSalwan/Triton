@@ -664,9 +664,9 @@ namespace triton {
   }
 
 
-  void API::addPathConstraint(triton::ast::AbstractNode* pc) {
+  void API::addPathConstraint(triton::engines::symbolic::SymbolicExpression* expr) {
     this->checkSymbolic();
-    this->sym->addPathConstraint(pc);
+    this->sym->addPathConstraint(expr);
   }
 
 
