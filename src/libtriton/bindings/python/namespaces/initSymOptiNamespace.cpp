@@ -42,6 +42,9 @@ Enabled, Triton will record all AST nodes into several dictionaries and try to r
 - **OPTIMIZATION.ONLY_ON_TAINTED**<br>
 Enabled, Triton will perform symbolic execution only on tainted instructions.
 
+- **OPTIMIZATION.PC_TRACKING_SYMBOLIC**<br>
+Enabled, Triton will track path constraints only if they are symbolized. This optimization is enabled by default.
+
 */
 
 
@@ -51,9 +54,10 @@ namespace triton {
     namespace python {
 
       void initSymOptiNamespace(PyObject* symOptiDict) {
-        PyDict_SetItemString(symOptiDict, "ALIGNED_MEMORY",   PyLong_FromUint(triton::engines::symbolic::ALIGNED_MEMORY));
-        PyDict_SetItemString(symOptiDict, "AST_DICTIONARIES", PyLong_FromUint(triton::engines::symbolic::AST_DICTIONARIES));
-        PyDict_SetItemString(symOptiDict, "ONLY_ON_TAINTED",  PyLong_FromUint(triton::engines::symbolic::ONLY_ON_TAINTED));
+        PyDict_SetItemString(symOptiDict, "ALIGNED_MEMORY",         PyLong_FromUint(triton::engines::symbolic::ALIGNED_MEMORY));
+        PyDict_SetItemString(symOptiDict, "AST_DICTIONARIES",       PyLong_FromUint(triton::engines::symbolic::AST_DICTIONARIES));
+        PyDict_SetItemString(symOptiDict, "ONLY_ON_TAINTED",        PyLong_FromUint(triton::engines::symbolic::ONLY_ON_TAINTED));
+        PyDict_SetItemString(symOptiDict, "PC_TRACKING_SYMBOLIC",   PyLong_FromUint(triton::engines::symbolic::PC_TRACKING_SYMBOLIC));
       }
 
     }; /* python namespace */

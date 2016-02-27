@@ -72,7 +72,11 @@ namespace triton {
         if (pc == nullptr)
           throw std::runtime_error("PathManager::addPathConstraint(): The PC node cannot be null.");
 
-        /* If ONLY_ON_TAINTED is enabled and the expression untainted, we skip the storing process. */
+        /* If PC_TRACKING_SYMBOLIC is enabled, Triton will track path constraints only if they are symbolized. */
+        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::PC_TRACKING_SYMBOLIC) && !pc->isSymbolized())
+          return;
+
+        /* If ONLY_ON_TAINTED is enabled and the expression untainted, Triton will skip the storing process. */
         if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ONLY_ON_TAINTED) && !expr->isTainted)
           return;
 
