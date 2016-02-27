@@ -20,26 +20,29 @@ namespace triton {
     /* ====== Abstract node */
 
     AbstractNode::AbstractNode(enum kind_e kind) {
-      this->kind    = kind;
-      this->size    = 0;
-      this->eval    = 0;
-      this->parent  = nullptr;
+      this->eval        = 0;
+      this->kind        = kind;
+      this->parent      = nullptr;
+      this->size        = 0;
+      this->symbolized  = false;
     }
 
 
     AbstractNode::AbstractNode() {
-      this->kind    = UNDEFINED_NODE;
-      this->size    = 0;
-      this->eval    = 0;
-      this->parent  = nullptr;
+      this->eval        = 0;
+      this->kind        = UNDEFINED_NODE;
+      this->parent      = nullptr;
+      this->size        = 0;
+      this->symbolized  = false;
     }
 
 
     AbstractNode::AbstractNode(const AbstractNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
         this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
@@ -72,6 +75,11 @@ namespace triton {
       if ((this->eval >> (this->size-1)) & 1)
         return true;
       return false;
+    }
+
+
+    bool AbstractNode::isSymbolized(void) {
+      return this->symbolized;
     }
 
 
@@ -117,10 +125,11 @@ namespace triton {
 
 
     AssertNode::AssertNode(const AssertNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -140,9 +149,11 @@ namespace triton {
       this->size = 1;
       this->eval = 0;
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -176,10 +187,11 @@ namespace triton {
 
 
     BvaddNode::BvaddNode(const BvaddNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -202,9 +214,11 @@ namespace triton {
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = ((this->childs[0]->evaluate() + this->childs[1]->evaluate()) & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -238,10 +252,11 @@ namespace triton {
 
 
     BvandNode::BvandNode(const BvandNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -264,9 +279,11 @@ namespace triton {
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = (this->childs[0]->evaluate() & this->childs[1]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -301,10 +318,11 @@ namespace triton {
 
 
     BvashrNode::BvashrNode(const BvashrNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -357,9 +375,11 @@ namespace triton {
         }
       }
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -392,10 +412,11 @@ namespace triton {
 
 
     BvdeclNode::BvdeclNode(const BvdeclNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -427,9 +448,11 @@ namespace triton {
       this->size = size;
       this->eval = 0;
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -463,10 +486,11 @@ namespace triton {
 
 
     BvlshrNode::BvlshrNode(const BvlshrNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -489,9 +513,11 @@ namespace triton {
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = (this->childs[0]->evaluate() >> this->childs[1]->evaluate().convert_to<triton::uint32>());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -525,10 +551,11 @@ namespace triton {
 
 
     BvmulNode::BvmulNode(const BvmulNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -551,9 +578,11 @@ namespace triton {
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = ((this->childs[0]->evaluate() * this->childs[1]->evaluate()) & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -587,10 +616,11 @@ namespace triton {
 
 
     BvnandNode::BvnandNode(const BvnandNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -613,9 +643,11 @@ namespace triton {
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = (~(this->childs[0]->evaluate() & this->childs[1]->evaluate()) & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -648,10 +680,11 @@ namespace triton {
 
 
     BvnegNode::BvnegNode(const BvnegNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -671,9 +704,11 @@ namespace triton {
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = ((-(this->childs[0]->evaluate().convert_to<triton::sint512>())).convert_to<triton::uint512>() & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -707,10 +742,11 @@ namespace triton {
 
 
     BvnorNode::BvnorNode(const BvnorNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -733,9 +769,11 @@ namespace triton {
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = (~(this->childs[0]->evaluate() | this->childs[1]->evaluate()) & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -768,10 +806,11 @@ namespace triton {
 
 
     BvnotNode::BvnotNode(const BvnotNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -791,9 +830,11 @@ namespace triton {
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = (~this->childs[0]->evaluate() & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -827,10 +868,11 @@ namespace triton {
 
 
     BvorNode::BvorNode(const BvorNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -853,9 +895,11 @@ namespace triton {
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = (this->childs[0]->evaluate() | this->childs[1]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -897,10 +941,11 @@ namespace triton {
 
 
     BvrolNode::BvrolNode(const BvrolNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -931,9 +976,11 @@ namespace triton {
       rot %= this->size;
       this->eval = (((value << rot) | (value >> (this->size - rot))) & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -975,10 +1022,11 @@ namespace triton {
 
 
     BvrorNode::BvrorNode(const BvrorNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1008,9 +1056,11 @@ namespace triton {
       rot %= this->size;
       this->eval = (((value >> rot) | (value << (this->size - rot))) & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1044,10 +1094,11 @@ namespace triton {
 
 
     BvsdivNode::BvsdivNode(const BvsdivNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1083,9 +1134,11 @@ namespace triton {
       else
         this->eval = ((op1Signed / op2Signed).convert_to<triton::uint512>() & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1119,10 +1172,11 @@ namespace triton {
 
 
     BvsgeNode::BvsgeNode(const BvsgeNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1152,9 +1206,11 @@ namespace triton {
       this->size = 1;
       this->eval = (op1Signed >= op2Signed);
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1188,10 +1244,11 @@ namespace triton {
 
 
     BvsgtNode::BvsgtNode(const BvsgtNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1221,9 +1278,11 @@ namespace triton {
       this->size = 1;
       this->eval = (op1Signed > op2Signed);
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1257,10 +1316,11 @@ namespace triton {
 
 
     BvshlNode::BvshlNode(const BvshlNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1283,9 +1343,11 @@ namespace triton {
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = ((this->childs[0]->evaluate() << this->childs[1]->evaluate().convert_to<triton::uint32>()) & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1319,10 +1381,11 @@ namespace triton {
 
 
     BvsleNode::BvsleNode(const BvsleNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1352,9 +1415,11 @@ namespace triton {
       this->size = 1;
       this->eval = (op1Signed <= op2Signed);
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1388,10 +1453,11 @@ namespace triton {
 
 
     BvsltNode::BvsltNode(const BvsltNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1421,9 +1487,11 @@ namespace triton {
       this->size = 1;
       this->eval = (op1Signed < op2Signed);
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1457,10 +1525,11 @@ namespace triton {
 
 
     BvsmodNode::BvsmodNode(const BvsmodNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1494,9 +1563,11 @@ namespace triton {
       else
         this->eval = ((((op1Signed % op2Signed) + op2Signed) % op2Signed).convert_to<triton::uint512>() & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1530,10 +1601,11 @@ namespace triton {
 
 
     BvsremNode::BvsremNode(const BvsremNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1571,9 +1643,11 @@ namespace triton {
           this->eval = ((this->childs[0]->evaluate() % this->childs[1]->evaluate()) & this->getBitvectorMask());
       }
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1607,10 +1681,11 @@ namespace triton {
 
 
     BvsubNode::BvsubNode(const BvsubNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1633,9 +1708,11 @@ namespace triton {
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = ((this->childs[0]->evaluate() - this->childs[1]->evaluate()) & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1669,10 +1746,11 @@ namespace triton {
 
 
     BvudivNode::BvudivNode(const BvudivNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1699,9 +1777,11 @@ namespace triton {
       else
         this->eval = (this->childs[0]->evaluate() / this->childs[1]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1735,10 +1815,11 @@ namespace triton {
 
 
     BvugeNode::BvugeNode(const BvugeNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1761,9 +1842,11 @@ namespace triton {
       this->size = 1;
       this->eval = (this->childs[0]->evaluate() >= this->childs[1]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1797,10 +1880,11 @@ namespace triton {
 
 
     BvugtNode::BvugtNode(const BvugtNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1823,9 +1907,11 @@ namespace triton {
       this->size = 1;
       this->eval = (this->childs[0]->evaluate() > this->childs[1]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1859,10 +1945,11 @@ namespace triton {
 
 
     BvuleNode::BvuleNode(const BvuleNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1885,9 +1972,11 @@ namespace triton {
       this->size = 1;
       this->eval = (this->childs[0]->evaluate() <= this->childs[1]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1921,10 +2010,11 @@ namespace triton {
 
 
     BvultNode::BvultNode(const BvultNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -1947,9 +2037,11 @@ namespace triton {
       this->size = 1;
       this->eval = (this->childs[0]->evaluate() < this->childs[1]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -1983,10 +2075,11 @@ namespace triton {
 
 
     BvuremNode::BvuremNode(const BvuremNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2013,9 +2106,11 @@ namespace triton {
       else
         this->eval = (this->childs[0]->evaluate() % this->childs[1]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2049,10 +2144,11 @@ namespace triton {
 
 
     BvxnorNode::BvxnorNode(const BvxnorNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2075,9 +2171,11 @@ namespace triton {
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = (~(this->childs[0]->evaluate() ^ this->childs[1]->evaluate()) & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2111,10 +2209,11 @@ namespace triton {
 
 
     BvxorNode::BvxorNode(const BvxorNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2137,9 +2236,11 @@ namespace triton {
       this->size = this->childs[0]->getBitvectorSize();
       this->eval = (this->childs[0]->evaluate() ^ this->childs[1]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2173,10 +2274,11 @@ namespace triton {
 
 
     BvNode::BvNode(const BvNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2211,9 +2313,11 @@ namespace triton {
       this->size = size;
       this->eval = (value & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2247,10 +2351,11 @@ namespace triton {
 
 
     CompoundNode::CompoundNode(const CompoundNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2270,9 +2375,11 @@ namespace triton {
       this->size = 0;
       this->eval = 0;
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2322,10 +2429,11 @@ namespace triton {
 
 
     ConcatNode::ConcatNode(const ConcatNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2354,9 +2462,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->childs.size()-1; index++)
         this->eval = ((this->eval << this->childs[index+1]->getBitvectorSize()) | this->childs[index+1]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2389,11 +2499,12 @@ namespace triton {
 
 
     DecimalNode::DecimalNode(const DecimalNode& copy) {
-      this->kind   = copy.kind;
-      this->value  = copy.value;
-      this->size   = copy.size;
-      this->eval   = copy.eval;
-      this->parent = copy.parent;
+      this->kind       = copy.kind;
+      this->value      = copy.value;
+      this->size       = copy.size;
+      this->eval       = copy.eval;
+      this->parent     = copy.parent;
+      this->symbolized = copy.symbolized;
     }
 
 
@@ -2403,8 +2514,9 @@ namespace triton {
 
     void DecimalNode::init(void) {
       /* Init attributes */
-      this->size = 0;
-      this->eval = 0;
+      this->eval        = 0;
+      this->size        = 0;
+      this->symbolized  = false;
 
       /* Init parents */
       if (this->parent)
@@ -2440,10 +2552,11 @@ namespace triton {
 
 
     DeclareFunctionNode::DeclareFunctionNode(const DeclareFunctionNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2469,9 +2582,11 @@ namespace triton {
       this->size = this->childs[1]->getBitvectorSize();
       this->eval = this->childs[1]->evaluate();
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2505,10 +2620,11 @@ namespace triton {
 
 
     DistinctNode::DistinctNode(const DistinctNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2528,9 +2644,11 @@ namespace triton {
       this->size = 1;
       this->eval = (this->childs[0]->evaluate() != this->childs[1]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2564,10 +2682,11 @@ namespace triton {
 
 
     EqualNode::EqualNode(const EqualNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2587,9 +2706,11 @@ namespace triton {
       this->size = 1;
       this->eval = (this->childs[0]->evaluate() == this->childs[1]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2624,10 +2745,11 @@ namespace triton {
 
 
     ExtractNode::ExtractNode(const ExtractNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2659,9 +2781,11 @@ namespace triton {
       this->size = ((high - low) + 1);
       this->eval = ((this->childs[2]->evaluate() >> low) & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2696,10 +2820,11 @@ namespace triton {
 
 
     IteNode::IteNode(const IteNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2722,9 +2847,11 @@ namespace triton {
       this->size = this->childs[1]->getBitvectorSize();
       this->eval = this->childs[0]->evaluate() ? this->childs[1]->evaluate() : this->childs[2]->evaluate();
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2758,10 +2885,11 @@ namespace triton {
 
 
     LandNode::LandNode(const LandNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2781,9 +2909,11 @@ namespace triton {
       this->size = 1;
       this->eval = (this->childs[0]->evaluate() && this->childs[1]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2818,10 +2948,11 @@ namespace triton {
 
 
     LetNode::LetNode(const LetNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2844,9 +2975,11 @@ namespace triton {
       this->size = this->childs[2]->getBitvectorSize();
       this->eval = this->childs[2]->evaluate();
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2879,10 +3012,11 @@ namespace triton {
 
 
     LnotNode::LnotNode(const LnotNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2902,9 +3036,11 @@ namespace triton {
       this->size = 1;
       this->eval = !(this->childs[0]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2938,10 +3074,11 @@ namespace triton {
 
 
     LorNode::LorNode(const LorNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -2961,9 +3098,11 @@ namespace triton {
       this->size = 1;
       this->eval = (this->childs[0]->evaluate() || this->childs[1]->evaluate());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -2996,11 +3135,12 @@ namespace triton {
 
 
     ReferenceNode::ReferenceNode(const ReferenceNode& copy) {
-      this->kind   = copy.kind;
-      this->value  = copy.value;
-      this->size   = copy.size;
-      this->eval   = copy.eval;
-      this->parent = copy.parent;
+      this->kind        = copy.kind;
+      this->value       = copy.value;
+      this->size        = copy.size;
+      this->eval        = copy.eval;
+      this->parent      = copy.parent;
+      this->symbolized  = copy.symbolized;
     }
 
 
@@ -3011,12 +3151,14 @@ namespace triton {
     void ReferenceNode::init(void) {
       /* Init attributes */
       if (!triton::api.isSymbolicExpressionIdExists(this->value)) {
-        this->size = 0;
-        this->eval = 0;
+        this->eval        = 0;
+        this->size        = 0;
+        this->symbolized  = false;
       }
       else {
-        this->size = triton::api.getAstFromId(this->value)->getBitvectorSize();
-        this->eval = triton::api.getAstFromId(this->value)->evaluate();
+        this->eval        = triton::api.getAstFromId(this->value)->evaluate();
+        this->size        = triton::api.getAstFromId(this->value)->getBitvectorSize();
+        this->symbolized  = triton::api.getAstFromId(this->value)->isSymbolized();
       }
 
       /* Init parents */
@@ -3047,15 +3189,17 @@ namespace triton {
     StringNode::StringNode(std::string value) {
       this->kind  = STRING_NODE;
       this->value = value;
+      this->init();
     }
 
 
     StringNode::StringNode(const StringNode& copy) {
-      this->kind   = copy.kind;
-      this->value  = copy.value;
-      this->size   = copy.size;
-      this->eval   = copy.eval;
-      this->parent = copy.parent;
+      this->kind        = copy.kind;
+      this->value       = copy.value;
+      this->size        = copy.size;
+      this->eval        = copy.eval;
+      this->parent      = copy.parent;
+      this->symbolized  = copy.symbolized;
     }
 
 
@@ -3065,8 +3209,9 @@ namespace triton {
 
     void StringNode::init(void) {
       /* Init attributes */
-      this->size  = 0;
-      this->eval  = 0;
+      this->eval        = 0;
+      this->size        = 0;
+      this->symbolized  = false;
 
       /* Init parents */
       if (this->parent)
@@ -3105,10 +3250,11 @@ namespace triton {
 
 
     SxNode::SxNode(const SxNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -3138,9 +3284,11 @@ namespace triton {
 
       this->eval = ((((this->childs[1]->evaluate() >> (this->childs[1]->getBitvectorSize()-1)) == 0) ? this->childs[1]->evaluate() : (this->childs[1]->evaluate() | ~(this->childs[1]->getBitvectorMask()))) & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)
@@ -3166,19 +3314,22 @@ namespace triton {
 
 
     VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar) {
-      this->kind  = VARIABLE_NODE;
-      this->value = symVar.getSymVarName();
-      this->size  = symVar.getSymVarSize();
-      this->eval  = (symVar.getConcreteValue() & this->getBitvectorMask());
+      this->kind        = VARIABLE_NODE;
+      this->value       = symVar.getSymVarName();
+      this->size        = symVar.getSymVarSize();
+      this->eval        = (symVar.getConcreteValue() & this->getBitvectorMask());
+      this->symbolized  = true;
+      this->init();
     }
 
 
     VariableNode::VariableNode(const VariableNode& copy) {
-      this->kind   = copy.kind;
-      this->value  = copy.value;
-      this->size   = copy.size;
-      this->eval   = copy.eval;
-      this->parent = copy.parent;
+      this->kind        = copy.kind;
+      this->value       = copy.value;
+      this->size        = copy.size;
+      this->eval        = copy.eval;
+      this->parent      = copy.parent;
+      this->symbolized  = copy.symbolized;
     }
 
 
@@ -3224,10 +3375,11 @@ namespace triton {
 
 
     ZxNode::ZxNode(const ZxNode& copy) {
-      this->kind = copy.kind;
-      this->size = copy.size;
-      this->eval = copy.eval;
-      this->parent = copy.parent;
+      this->eval        = copy.eval;
+      this->kind        = copy.kind;
+      this->parent      = copy.parent;
+      this->size        = copy.size;
+      this->symbolized  = copy.symbolized;
 
       /* Copy childs */
       for (triton::uint32 index = 0; index < copy.childs.size(); index++)
@@ -3257,9 +3409,11 @@ namespace triton {
 
       this->eval = (this->childs[1]->evaluate() & this->getBitvectorMask());
 
-      /* Init childs */
-      for (triton::uint32 index = 0; index < this->childs.size(); index++)
+      /* Init childs and spread information */
+      for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
+        this->symbolized |= this->childs[index]->isSymbolized();
+      }
 
       /* Init parents */
       if (this->parent)

@@ -75,6 +75,9 @@ Returns the node value as integer or string (it depends of the kind). For exampl
 - **isSigned(void)**<br>
 According to the size of the expression, returns true if the MSB is 1.
 
+- **isSymbolized(void)**<br>
+Returns true if the tree contains a symbolic variable.
+
 - **setChild(integer index, AstNode node)**<br>
 Replaces a child node.
 
@@ -176,6 +179,13 @@ namespace triton {
 
       static PyObject* AstNode_isSigned(PyObject* self, PyObject* noarg) {
         if (PyAstNode_AsAstNode(self)->isSigned())
+          Py_RETURN_TRUE;
+        Py_RETURN_FALSE;
+      }
+
+
+      static PyObject* AstNode_isSymbolized(PyObject* self, PyObject* noarg) {
+        if (PyAstNode_AsAstNode(self)->isSymbolized())
           Py_RETURN_TRUE;
         Py_RETURN_FALSE;
       }
@@ -342,6 +352,7 @@ namespace triton {
         {"getParent",         AstNode_getParent,         METH_NOARGS,     ""},
         {"getValue",          AstNode_getValue,          METH_NOARGS,     ""},
         {"isSigned",          AstNode_isSigned,          METH_NOARGS,     ""},
+        {"isSymbolized",      AstNode_isSymbolized,      METH_NOARGS,     ""},
         {"setChild",          AstNode_setChild,          METH_VARARGS,    ""},
         {nullptr,             nullptr,                   0,               nullptr}
       };

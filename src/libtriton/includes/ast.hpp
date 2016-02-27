@@ -56,6 +56,9 @@ namespace triton {
         //! The value of the tree from this root node.
         triton::uint512 eval;
 
+        //! This value is set to true if the tree contains a symbolic variable.
+        bool symbolized;
+
       public:
         //! Constructor.
         AbstractNode(enum kind_e kind);
@@ -80,6 +83,9 @@ namespace triton {
 
         //! According to the size of the expression, returns true if the MSB is 1.
         bool isSigned(void);
+
+        //! Returns true if the tree contains a symbolic variable.
+        bool isSymbolized(void);
 
         //! Evaluates the tree.
         triton::uint512 evaluate(void);
