@@ -132,67 +132,122 @@ namespace triton {
 
 
       static PyObject* SymbolicExpression_getAst(PyObject* self, PyObject* noarg) {
-        return PyAstNode(PySymbolicExpression_AsSymbolicExpression(self)->getAst());
+        try {
+          return PyAstNode(PySymbolicExpression_AsSymbolicExpression(self)->getAst());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicExpression_getComment(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("s", PySymbolicExpression_AsSymbolicExpression(self)->getComment().c_str());
+        try {
+          return Py_BuildValue("s", PySymbolicExpression_AsSymbolicExpression(self)->getComment().c_str());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicExpression_getId(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", PySymbolicExpression_AsSymbolicExpression(self)->getId());
+        try {
+          return Py_BuildValue("k", PySymbolicExpression_AsSymbolicExpression(self)->getId());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicExpression_getKind(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", PySymbolicExpression_AsSymbolicExpression(self)->getKind());
+        try {
+          return Py_BuildValue("k", PySymbolicExpression_AsSymbolicExpression(self)->getKind());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicExpression_getNewAst(PyObject* self, PyObject* noarg) {
-        return PyAstNode(PySymbolicExpression_AsSymbolicExpression(self)->getNewAst());
+        try {
+          return PyAstNode(PySymbolicExpression_AsSymbolicExpression(self)->getNewAst());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicExpression_getOriginAddress(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint(PySymbolicExpression_AsSymbolicExpression(self)->getOriginAddress());
+        try {
+          return PyLong_FromUint(PySymbolicExpression_AsSymbolicExpression(self)->getOriginAddress());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicExpression_getOriginRegister(PyObject* self, PyObject* noarg) {
-        return PyRegisterOperand(PySymbolicExpression_AsSymbolicExpression(self)->getOriginRegister());
+        try {
+          return PyRegisterOperand(PySymbolicExpression_AsSymbolicExpression(self)->getOriginRegister());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicExpression_isMemory(PyObject* self, PyObject* noarg) {
-        if (PySymbolicExpression_AsSymbolicExpression(self)->isMemory() == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PySymbolicExpression_AsSymbolicExpression(self)->isMemory() == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicExpression_isRegister(PyObject* self, PyObject* noarg) {
-        if (PySymbolicExpression_AsSymbolicExpression(self)->isRegister() == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PySymbolicExpression_AsSymbolicExpression(self)->isRegister() == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicExpression_isTainted(PyObject* self, PyObject* noarg) {
-        if (PySymbolicExpression_AsSymbolicExpression(self)->isTainted == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PySymbolicExpression_AsSymbolicExpression(self)->isTainted == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicExpression_setAst(PyObject* self, PyObject* node) {
-        if (!PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "SymbolicExpression::setAst(): Expected a AstNode as argument.");
-        PySymbolicExpression_AsSymbolicExpression(self)->setAst(PyAstNode_AsAstNode(node));
-        Py_INCREF(Py_None);
+        try {
+          if (!PyAstNode_Check(node))
+            return PyErr_Format(PyExc_TypeError, "SymbolicExpression::setAst(): Expected a AstNode as argument.");
+          PySymbolicExpression_AsSymbolicExpression(self)->setAst(PyAstNode_AsAstNode(node));
+          Py_INCREF(Py_None);
         return Py_None;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -203,9 +258,14 @@ namespace triton {
 
 
       static PyObject* SymbolicExpression_str(PyObject* self) {
-        std::stringstream str;
-        str << PySymbolicExpression_AsSymbolicExpression(self);
-        return PyString_FromFormat("%s", str.str().c_str());
+        try {
+          std::stringstream str;
+          str << PySymbolicExpression_AsSymbolicExpression(self);
+          return PyString_FromFormat("%s", str.str().c_str());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -270,7 +330,7 @@ namespace triton {
 
 
       PyObject* PySymbolicExpression(triton::engines::symbolic::SymbolicExpression* symExpr) {
-        SymbolicExpression_Object *object;
+        SymbolicExpression_Object* object;
 
         if (symExpr == nullptr)
           return PyErr_Format(PyExc_TypeError, "PySymbolicExpression(): symExpr cannot be null.");
@@ -280,7 +340,7 @@ namespace triton {
         if (object != NULL)
           object->symExpr = symExpr;
 
-        return (PyObject* )object;
+        return (PyObject*)object;
       }
 
     }; /* python namespace */

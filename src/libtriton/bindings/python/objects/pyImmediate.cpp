@@ -74,36 +74,66 @@ namespace triton {
 
 
       static PyObject* ImmediateOperand_getBitvector(PyObject* self, PyObject* noarg) {
-        return PyBitvector(*PyImmediateOperand_AsImmediateOperand(self));
+        try {
+          return PyBitvector(*PyImmediateOperand_AsImmediateOperand(self));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* ImmediateOperand_getBitSize(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", PyImmediateOperand_AsImmediateOperand(self)->getBitSize());
+        try {
+          return Py_BuildValue("k", PyImmediateOperand_AsImmediateOperand(self)->getBitSize());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* ImmediateOperand_getSize(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", PyImmediateOperand_AsImmediateOperand(self)->getSize());
+        try {
+          return Py_BuildValue("k", PyImmediateOperand_AsImmediateOperand(self)->getSize());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* ImmediateOperand_getType(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", PyImmediateOperand_AsImmediateOperand(self)->getType());
+        try {
+          return Py_BuildValue("k", PyImmediateOperand_AsImmediateOperand(self)->getType());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* ImmediateOperand_getValue(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint(PyImmediateOperand_AsImmediateOperand(self)->getValue());
+        try {
+          return PyLong_FromUint(PyImmediateOperand_AsImmediateOperand(self)->getValue());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* ImmediateOperand_setValue(PyObject* self, PyObject* value) {
-        if (!PyLong_Check(value) && !PyInt_Check(value))
-          return PyErr_Format(PyExc_TypeError, "setValue(): expected an integer as argument");
-        PyImmediateOperand_AsImmediateOperand(self)->setValue(PyLong_AsUint(value));
-        Py_INCREF(Py_None);
-        return Py_None;
+        try {
+          if (!PyLong_Check(value) && !PyInt_Check(value))
+            return PyErr_Format(PyExc_TypeError, "setValue(): expected an integer as argument");
+          PyImmediateOperand_AsImmediateOperand(self)->setValue(PyLong_AsUint(value));
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -114,9 +144,14 @@ namespace triton {
 
 
       static PyObject* ImmediateOperand_str(PyObject* self) {
-        std::stringstream str;
-        str << PyImmediateOperand_AsImmediateOperand(self);
-        return PyString_FromFormat("%s", str.str().c_str());
+        try {
+          std::stringstream str;
+          str << PyImmediateOperand_AsImmediateOperand(self);
+          return PyString_FromFormat("%s", str.str().c_str());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -175,15 +210,15 @@ namespace triton {
       };
 
 
-      PyObject* PyImmediateOperand(triton::arch::ImmediateOperand &imm) {
-        ImmediateOperand_Object *object;
+      PyObject* PyImmediateOperand(triton::arch::ImmediateOperand& imm) {
+        ImmediateOperand_Object* object;
 
         PyType_Ready(&ImmediateOperand_Type);
         object = PyObject_NEW(ImmediateOperand_Object, &ImmediateOperand_Type);
         if (object != NULL)
           object->imm = new triton::arch::ImmediateOperand(imm);
 
-        return (PyObject* )object;
+        return (PyObject*)object;
       }
 
     }; /* python namespace */

@@ -88,17 +88,32 @@ namespace triton {
 
 
       static PyObject* SolverModel_getId(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", PySolverModel_AsSolverModel(self)->getId());
+        try {
+          return Py_BuildValue("k", PySolverModel_AsSolverModel(self)->getId());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SolverModel_getName(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("s", PySolverModel_AsSolverModel(self)->getName().c_str());
+        try {
+          return Py_BuildValue("s", PySolverModel_AsSolverModel(self)->getName().c_str());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SolverModel_getValue(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint512(PySolverModel_AsSolverModel(self)->getValue());
+        try {
+          return PyLong_FromUint512(PySolverModel_AsSolverModel(self)->getValue());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -109,9 +124,14 @@ namespace triton {
 
 
       static PyObject* SolverModel_str(PyObject* self) {
-        std::stringstream str;
-        str << PySolverModel_AsSolverModel(self);
-        return PyString_FromFormat("%s", str.str().c_str());
+        try {
+          std::stringstream str;
+          str << PySolverModel_AsSolverModel(self);
+          return PyString_FromFormat("%s", str.str().c_str());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -167,15 +187,15 @@ namespace triton {
       };
 
 
-      PyObject* PySolverModel(triton::engines::solver::SolverModel &model) {
-        SolverModel_Object *object;
+      PyObject* PySolverModel(triton::engines::solver::SolverModel& model) {
+        SolverModel_Object* object;
 
         PyType_Ready(&SolverModel_Type);
         object = PyObject_NEW(SolverModel_Object, &SolverModel_Type);
         if (object != NULL)
           object->model = new triton::engines::solver::SolverModel(model);
 
-        return (PyObject* )object;
+        return (PyObject*)object;
       }
 
     }; /* python namespace */

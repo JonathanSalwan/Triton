@@ -79,50 +79,90 @@ namespace triton {
 
 
       static PyObject* SymbolicVariable_getKind(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", PySymbolicVariable_AsSymbolicVariable(self)->getSymVarKind());
+        try {
+          return Py_BuildValue("k", PySymbolicVariable_AsSymbolicVariable(self)->getSymVarKind());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicVariable_getName(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("s", PySymbolicVariable_AsSymbolicVariable(self)->getSymVarName().c_str());
+        try {
+          return Py_BuildValue("s", PySymbolicVariable_AsSymbolicVariable(self)->getSymVarName().c_str());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicVariable_getId(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", PySymbolicVariable_AsSymbolicVariable(self)->getSymVarId());
+        try {
+          return Py_BuildValue("k", PySymbolicVariable_AsSymbolicVariable(self)->getSymVarId());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicVariable_getKindValue(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint(PySymbolicVariable_AsSymbolicVariable(self)->getSymVarKindValue());
+        try {
+          return PyLong_FromUint(PySymbolicVariable_AsSymbolicVariable(self)->getSymVarKindValue());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicVariable_getBitSize(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", PySymbolicVariable_AsSymbolicVariable(self)->getSymVarSize());
+        try {
+          return Py_BuildValue("k", PySymbolicVariable_AsSymbolicVariable(self)->getSymVarSize());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicVariable_getComment(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("s", PySymbolicVariable_AsSymbolicVariable(self)->getSymVarComment().c_str());
+        try {
+          return Py_BuildValue("s", PySymbolicVariable_AsSymbolicVariable(self)->getSymVarComment().c_str());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicVariable_getConcreteValue(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint128(PySymbolicVariable_AsSymbolicVariable(self)->getConcreteValue());
+        try {
+          return PyLong_FromUint128(PySymbolicVariable_AsSymbolicVariable(self)->getConcreteValue());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* SymbolicVariable_setConcreteValue(PyObject* self, PyObject* value) {
-        triton::engines::symbolic::SymbolicVariable *symVar;
+        try {
+          triton::engines::symbolic::SymbolicVariable *symVar;
 
-        if (!PyLong_Check(value) && !PyInt_Check(value))
-          return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setConcretevalue(): Expected an integer as argument.");
+          if (!PyLong_Check(value) && !PyInt_Check(value))
+            return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setConcretevalue(): Expected an integer as argument.");
 
-        symVar = PySymbolicVariable_AsSymbolicVariable(self);
-        symVar->setSymVarConcreteValue(PyLong_AsUint128(value));
-        Py_INCREF(Py_None);
-        return Py_None;
+          symVar = PySymbolicVariable_AsSymbolicVariable(self);
+          symVar->setSymVarConcreteValue(PyLong_AsUint128(value));
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -133,9 +173,14 @@ namespace triton {
 
 
       static PyObject* SymbolicVariable_str(PyObject* self) {
-        std::stringstream str;
-        str << PySymbolicVariable_AsSymbolicVariable(self);
-        return PyString_FromFormat("%s", str.str().c_str());
+        try {
+          std::stringstream str;
+          str << PySymbolicVariable_AsSymbolicVariable(self);
+          return PyString_FromFormat("%s", str.str().c_str());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -197,7 +242,7 @@ namespace triton {
 
 
       PyObject* PySymbolicVariable(triton::engines::symbolic::SymbolicVariable* symVar) {
-        SymbolicVariable_Object *object;
+        SymbolicVariable_Object* object;
 
         if (symVar == nullptr)
           return PyErr_Format(PyExc_TypeError, "PySymbolicVariable(): symVar cannot be null.");
@@ -207,7 +252,7 @@ namespace triton {
         if (object != NULL)
           object->symVar = symVar;
 
-        return (PyObject* )object;
+        return (PyObject*)object;
       }
 
     }; /* python namespace */

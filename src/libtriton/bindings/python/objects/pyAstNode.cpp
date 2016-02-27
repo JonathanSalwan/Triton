@@ -126,95 +126,135 @@ namespace triton {
 
 
       static PyObject* AstNode_getChilds(PyObject* self, PyObject* noarg) {
-        PyObject* childs;
-        triton::ast::AbstractNode *node = PyAstNode_AsAstNode(self);
+        try {
+          PyObject* childs;
+          triton::ast::AbstractNode *node = PyAstNode_AsAstNode(self);
 
-        triton::__uint size = node->getChilds().size();
-        childs = xPyList_New(size);
-        for (triton::__uint index = 0; index < size; index++)
-          PyList_SetItem(childs, index, PyAstNode(node->getChilds()[index]));
+          triton::__uint size = node->getChilds().size();
+          childs = xPyList_New(size);
+          for (triton::__uint index = 0; index < size; index++)
+            PyList_SetItem(childs, index, PyAstNode(node->getChilds()[index]));
 
-        return childs;
+          return childs;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_getHash(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint512(PyAstNode_AsAstNode(self)->hash(1));
+        try {
+          return PyLong_FromUint512(PyAstNode_AsAstNode(self)->hash(1));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_getKind(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", PyAstNode_AsAstNode(self)->getKind());
+        try {
+          return Py_BuildValue("k", PyAstNode_AsAstNode(self)->getKind());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_getParent(PyObject* self, PyObject* noarg) {
-        triton::ast::AbstractNode* parent = PyAstNode_AsAstNode(self)->getParent();
-        if (parent == nullptr) {
-          Py_INCREF(Py_None);
-          return Py_None;
+        try {
+          triton::ast::AbstractNode* parent = PyAstNode_AsAstNode(self)->getParent();
+          if (parent == nullptr) {
+            Py_INCREF(Py_None);
+            return Py_None;
+          }
+          return PyAstNode(parent);
         }
-        return PyAstNode(parent);
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_getValue(PyObject* self, PyObject* noarg) {
-        triton::ast::AbstractNode *node = PyAstNode_AsAstNode(self);
+        try {
+          triton::ast::AbstractNode *node = PyAstNode_AsAstNode(self);
 
-        if (node->getKind() == triton::ast::DECIMAL_NODE)
-          return PyLong_FromUint128(reinterpret_cast<triton::ast::DecimalNode *>(node)->getValue());
+          if (node->getKind() == triton::ast::DECIMAL_NODE)
+            return PyLong_FromUint128(reinterpret_cast<triton::ast::DecimalNode *>(node)->getValue());
 
-        else if (node->getKind() == triton::ast::REFERENCE_NODE)
-          return PyLong_FromUint(reinterpret_cast<triton::ast::ReferenceNode *>(node)->getValue());
+          else if (node->getKind() == triton::ast::REFERENCE_NODE)
+            return PyLong_FromUint(reinterpret_cast<triton::ast::ReferenceNode *>(node)->getValue());
 
-        else if (node->getKind() == triton::ast::STRING_NODE)
-          return Py_BuildValue("s", reinterpret_cast<triton::ast::StringNode *>(node)->getValue().c_str());
+          else if (node->getKind() == triton::ast::STRING_NODE)
+            return Py_BuildValue("s", reinterpret_cast<triton::ast::StringNode *>(node)->getValue().c_str());
 
-        else if (node->getKind() == triton::ast::VARIABLE_NODE)
-          return Py_BuildValue("s", reinterpret_cast<triton::ast::VariableNode *>(node)->getValue().c_str());
+          else if (node->getKind() == triton::ast::VARIABLE_NODE)
+            return Py_BuildValue("s", reinterpret_cast<triton::ast::VariableNode *>(node)->getValue().c_str());
 
-        return PyErr_Format(PyExc_TypeError, "AstNode::getValue(): Cannot use getValue() on this kind of node.");
+          return PyErr_Format(PyExc_TypeError, "AstNode::getValue(): Cannot use getValue() on this kind of node.");
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_isSigned(PyObject* self, PyObject* noarg) {
-        if (PyAstNode_AsAstNode(self)->isSigned())
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyAstNode_AsAstNode(self)->isSigned())
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_isSymbolized(PyObject* self, PyObject* noarg) {
-        if (PyAstNode_AsAstNode(self)->isSymbolized())
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyAstNode_AsAstNode(self)->isSymbolized())
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_setChild(PyObject* self, PyObject* args) {
-        PyObject* index = nullptr;
-        PyObject* node = nullptr;
-        triton::__uint i;
-        triton::ast::AbstractNode *dst, *src;
+        try {
+          PyObject* index = nullptr;
+          PyObject* node = nullptr;
+          triton::__uint i;
+          triton::ast::AbstractNode *dst, *src;
 
-        PyArg_ParseTuple(args, "|OO", &index, &node);
+          PyArg_ParseTuple(args, "|OO", &index, &node);
 
-        if (index == nullptr || (!PyLong_Check(index) && !PyInt_Check(index)))
-          return PyErr_Format(PyExc_TypeError, "AstNode::setChild(): Expected an index (integer) as first argument.");
+          if (index == nullptr || (!PyLong_Check(index) && !PyInt_Check(index)))
+            return PyErr_Format(PyExc_TypeError, "AstNode::setChild(): Expected an index (integer) as first argument.");
 
-        if (node == nullptr || !PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "AstNode::setChild(): Expected a AstNode as second argument.");
+          if (node == nullptr || !PyAstNode_Check(node))
+            return PyErr_Format(PyExc_TypeError, "AstNode::setChild(): Expected a AstNode as second argument.");
 
-        i = PyLong_AsUint(index);
-        src = PyAstNode_AsAstNode(node);
-        dst = PyAstNode_AsAstNode(self);
-        if (i >= dst->getChilds().size())
-          return PyErr_Format(PyExc_TypeError, "AstNode::setChild(): index out-of-range.");
+          i = PyLong_AsUint(index);
+          src = PyAstNode_AsAstNode(node);
+          dst = PyAstNode_AsAstNode(self);
+          if (i >= dst->getChilds().size())
+            return PyErr_Format(PyExc_TypeError, "AstNode::setChild(): index out-of-range.");
 
-        dst->getChilds()[i] = src;
-        dst->init();
+          dst->getChilds()[i] = src;
+          dst->init();
 
-        Py_RETURN_TRUE;
+          Py_RETURN_TRUE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -230,100 +270,170 @@ namespace triton {
 
 
       static PyObject* AstNode_str(PyObject* self) {
-        std::stringstream str;
-        str << PyAstNode_AsAstNode(self);
-        return PyString_FromFormat("%s", str.str().c_str());
+        try {
+          std::stringstream str;
+          str << PyAstNode_AsAstNode(self);
+          return PyString_FromFormat("%s", str.str().c_str());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_operatorAdd(PyObject* self, PyObject* other) {
-        if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "AstNode::operatorAdd(): Expected a AstNode as arguments.");
-        return PyAstNode(triton::ast::bvadd(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        try {
+          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
+            return PyErr_Format(PyExc_TypeError, "AstNode::operatorAdd(): Expected a AstNode as arguments.");
+          return PyAstNode(triton::ast::bvadd(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_operatorSub(PyObject* self, PyObject* other) {
-        if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "AstNode::operatorSub(): Expected a AstNode as arguments.");
-        return PyAstNode(triton::ast::bvsub(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        try {
+          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
+            return PyErr_Format(PyExc_TypeError, "AstNode::operatorSub(): Expected a AstNode as arguments.");
+          return PyAstNode(triton::ast::bvsub(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_operatorMul(PyObject* self, PyObject* other) {
-        if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "AstNode::operatorMul(): Expected a AstNode as arguments.");
-        return PyAstNode(triton::ast::bvmul(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        try {
+          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
+            return PyErr_Format(PyExc_TypeError, "AstNode::operatorMul(): Expected a AstNode as arguments.");
+          return PyAstNode(triton::ast::bvmul(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_operatorDiv(PyObject* self, PyObject* other) {
-        if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "AstNode::operatorDiv(): Expected a AstNode as arguments.");
-        return PyAstNode(triton::ast::bvsdiv(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        try {
+          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
+            return PyErr_Format(PyExc_TypeError, "AstNode::operatorDiv(): Expected a AstNode as arguments.");
+          return PyAstNode(triton::ast::bvsdiv(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_operatorRem(PyObject* self, PyObject* other) {
-        if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "AstNode::operatorRem(): Expected a AstNode as arguments.");
-        return PyAstNode(triton::ast::bvsrem(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        try {
+          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
+            return PyErr_Format(PyExc_TypeError, "AstNode::operatorRem(): Expected a AstNode as arguments.");
+          return PyAstNode(triton::ast::bvsrem(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_operatorMod(PyObject* self, PyObject* other) {
-        if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "AstNode::operatorMod(): Expected a AstNode as arguments.");
-        return PyAstNode(triton::ast::bvsmod(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        try {
+          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
+            return PyErr_Format(PyExc_TypeError, "AstNode::operatorMod(): Expected a AstNode as arguments.");
+          return PyAstNode(triton::ast::bvsmod(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_operatorNeg(PyObject* node) {
-        if (!PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "AstNode::operatorNeg(): Expected a AstNode as argument.");
-        return PyAstNode(triton::ast::bvneg(PyAstNode_AsAstNode(node)));
+        try {
+          if (!PyAstNode_Check(node))
+            return PyErr_Format(PyExc_TypeError, "AstNode::operatorNeg(): Expected a AstNode as argument.");
+          return PyAstNode(triton::ast::bvneg(PyAstNode_AsAstNode(node)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_operatorNot(PyObject* node) {
-        if (!PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "AstNode::operatorNot(): Expected a AstNode as argument.");
-        return PyAstNode(triton::ast::bvnot(PyAstNode_AsAstNode(node)));
+        try {
+          if (!PyAstNode_Check(node))
+            return PyErr_Format(PyExc_TypeError, "AstNode::operatorNot(): Expected a AstNode as argument.");
+          return PyAstNode(triton::ast::bvnot(PyAstNode_AsAstNode(node)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_operatorShl(PyObject* self, PyObject* other) {
-        if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "AstNode::operatorShl(): Expected a AstNode as arguments.");
-        return PyAstNode(triton::ast::bvshl(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        try {
+          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
+            return PyErr_Format(PyExc_TypeError, "AstNode::operatorShl(): Expected a AstNode as arguments.");
+          return PyAstNode(triton::ast::bvshl(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_operatorShr(PyObject* self, PyObject* other) {
-        if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "AstNode::operatorShr(): Expected a AstNode as arguments.");
-        return PyAstNode(triton::ast::bvlshr(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        try {
+          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
+            return PyErr_Format(PyExc_TypeError, "AstNode::operatorShr(): Expected a AstNode as arguments.");
+          return PyAstNode(triton::ast::bvlshr(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_operatorAnd(PyObject* self, PyObject* other) {
-        if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "AstNode::operatorAnd(): Expected a AstNode as arguments.");
-        return PyAstNode(triton::ast::bvand(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        try {
+          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
+            return PyErr_Format(PyExc_TypeError, "AstNode::operatorAnd(): Expected a AstNode as arguments.");
+          return PyAstNode(triton::ast::bvand(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_operatorXor(PyObject* self, PyObject* other) {
-        if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "AstNode::operatorXor(): Expected a AstNode as arguments.");
-        return PyAstNode(triton::ast::bvxor(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        try {
+          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
+            return PyErr_Format(PyExc_TypeError, "AstNode::operatorXor(): Expected a AstNode as arguments.");
+          return PyAstNode(triton::ast::bvxor(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* AstNode_operatorOr(PyObject* self, PyObject* other) {
-        if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-          return PyErr_Format(PyExc_TypeError, "AstNode::operatorOr(): Expected a AstNode as arguments.");
-        return PyAstNode(triton::ast::bvor(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        try {
+          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
+            return PyErr_Format(PyExc_TypeError, "AstNode::operatorOr(): Expected a AstNode as arguments.");
+          return PyAstNode(triton::ast::bvor(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -446,7 +556,7 @@ namespace triton {
 
 
       PyObject* PyAstNode(triton::ast::AbstractNode* node) {
-        AstNode_Object *object;
+        AstNode_Object* object;
 
         if (node == nullptr)
           return PyErr_Format(PyExc_TypeError, "PyAstNode(): The node cannot be null.");
@@ -456,7 +566,7 @@ namespace triton {
         if (object != NULL)
           object->node = node;
 
-        return (PyObject* )object;
+        return (PyObject*)object;
       }
 
     }; /* python namespace */

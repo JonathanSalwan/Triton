@@ -2781,6 +2781,9 @@ namespace triton {
       this->size = ((high - low) + 1);
       this->eval = ((this->childs[2]->evaluate() >> low) & this->getBitvectorMask());
 
+      if (this->size > this->childs[2]->getBitvectorSize())
+        throw std::runtime_error("ExtractNode::init(): The size of the extraction is higher than the child expression.");
+
       /* Init childs and spread information */
       for (triton::uint32 index = 0; index < this->childs.size(); index++) {
         this->childs[index]->setParent(this);
@@ -3159,6 +3162,8 @@ namespace triton {
         this->eval        = triton::api.getAstFromId(this->value)->evaluate();
         this->size        = triton::api.getAstFromId(this->value)->getBitvectorSize();
         this->symbolized  = triton::api.getAstFromId(this->value)->isSymbolized();
+
+        triton::api.getAstFromId(this->value)->setParent(this);
       }
 
       /* Init parents */

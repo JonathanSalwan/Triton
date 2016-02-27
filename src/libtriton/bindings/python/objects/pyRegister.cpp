@@ -100,91 +100,156 @@ namespace triton {
 
 
       static PyObject* RegisterOperand_getBitSize(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", PyRegisterOperand_AsRegisterOperand(self)->getBitSize());
+        try {
+          return Py_BuildValue("k", PyRegisterOperand_AsRegisterOperand(self)->getBitSize());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* RegisterOperand_getBitvector(PyObject* self, PyObject* noarg) {
-        return PyBitvector(*PyRegisterOperand_AsRegisterOperand(self));
+        try {
+          return PyBitvector(*PyRegisterOperand_AsRegisterOperand(self));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* RegisterOperand_getConcreteValue(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint128(PyRegisterOperand_AsRegisterOperand(self)->getConcreteValue());
+        try {
+          return PyLong_FromUint128(PyRegisterOperand_AsRegisterOperand(self)->getConcreteValue());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* RegisterOperand_getName(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("s", PyRegisterOperand_AsRegisterOperand(self)->getName().c_str());
+        try {
+          return Py_BuildValue("s", PyRegisterOperand_AsRegisterOperand(self)->getName().c_str());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* RegisterOperand_getParent(PyObject* self, PyObject* noarg) {
-        triton::arch::RegisterOperand parent = PyRegisterOperand_AsRegisterOperand(self)->getParent();
-        return PyRegisterOperand(parent);
+        try {
+          triton::arch::RegisterOperand parent = PyRegisterOperand_AsRegisterOperand(self)->getParent();
+          return PyRegisterOperand(parent);
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* RegisterOperand_getSize(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", PyRegisterOperand_AsRegisterOperand(self)->getSize());
+        try {
+          return Py_BuildValue("k", PyRegisterOperand_AsRegisterOperand(self)->getSize());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* RegisterOperand_getType(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", PyRegisterOperand_AsRegisterOperand(self)->getType());
+        try {
+          return Py_BuildValue("k", PyRegisterOperand_AsRegisterOperand(self)->getType());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* RegisterOperand_isValid(PyObject* self, PyObject* noarg) {
-        if (PyRegisterOperand_AsRegisterOperand(self)->isValid())
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyRegisterOperand_AsRegisterOperand(self)->isValid())
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* RegisterOperand_isRegister(PyObject* self, PyObject* noarg) {
-        if (PyRegisterOperand_AsRegisterOperand(self)->isRegister())
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyRegisterOperand_AsRegisterOperand(self)->isRegister())
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* RegisterOperand_isTrusted(PyObject* self, PyObject* noarg) {
-        if (PyRegisterOperand_AsRegisterOperand(self)->isTrusted())
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyRegisterOperand_AsRegisterOperand(self)->isTrusted())
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* RegisterOperand_isFlag(PyObject* self, PyObject* noarg) {
-        if (PyRegisterOperand_AsRegisterOperand(self)->isFlag())
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyRegisterOperand_AsRegisterOperand(self)->isFlag())
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* RegisterOperand_setConcreteValue(PyObject* self, PyObject* value) {
-        triton::arch::RegisterOperand *reg;
+        try {
+          triton::arch::RegisterOperand *reg;
 
-        if (!PyLong_Check(value) && !PyInt_Check(value))
-          return PyErr_Format(PyExc_TypeError, "Register::setConcretevalue(): Expected an integer as argument.");
+          if (!PyLong_Check(value) && !PyInt_Check(value))
+            return PyErr_Format(PyExc_TypeError, "Register::setConcretevalue(): Expected an integer as argument.");
 
-        reg = PyRegisterOperand_AsRegisterOperand(self);
-        if (reg->isFlag())
-          return PyErr_Format(PyExc_TypeError, "Register::setConcreteValue(): You cannot set a concrete value on a flag.");
+          reg = PyRegisterOperand_AsRegisterOperand(self);
+          if (reg->isFlag())
+            return PyErr_Format(PyExc_TypeError, "Register::setConcreteValue(): You cannot set a concrete value on a flag.");
 
-        reg->setConcreteValue(PyLong_AsUint128(value));
-        Py_INCREF(Py_None);
-        return Py_None;
+          reg->setConcreteValue(PyLong_AsUint128(value));
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* RegisterOperand_setTrust(PyObject* self, PyObject* flag) {
-        if (!PyBool_Check(flag))
-          return PyErr_Format(PyExc_TypeError, "Register::setTrust(): Expected a boolean as argument.");
-        PyRegisterOperand_AsRegisterOperand(self)->setTrust(PyLong_AsUint(flag));
-        Py_INCREF(Py_None);
-        return Py_None;
+        try {
+          if (!PyBool_Check(flag))
+            return PyErr_Format(PyExc_TypeError, "Register::setTrust(): Expected a boolean as argument.");
+          PyRegisterOperand_AsRegisterOperand(self)->setTrust(PyLong_AsUint(flag));
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -195,9 +260,14 @@ namespace triton {
 
 
       static PyObject* RegisterOperand_str(PyObject* self) {
-        std::stringstream str;
-        str << PyRegisterOperand_AsRegisterOperand(self);
-        return PyString_FromFormat("%s", str.str().c_str());
+        try {
+          std::stringstream str;
+          str << PyRegisterOperand_AsRegisterOperand(self);
+          return PyString_FromFormat("%s", str.str().c_str());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -263,15 +333,15 @@ namespace triton {
       };
 
 
-      PyObject* PyRegisterOperand(triton::arch::RegisterOperand &reg) {
-        RegisterOperand_Object *object;
+      PyObject* PyRegisterOperand(triton::arch::RegisterOperand& reg) {
+        RegisterOperand_Object* object;
 
         PyType_Ready(&RegisterOperand_Type);
         object = PyObject_NEW(RegisterOperand_Object, &RegisterOperand_Type);
         if (object != NULL)
           object->reg = new triton::arch::RegisterOperand(reg);
 
-        return (PyObject* )object;
+        return (PyObject*)object;
       }
 
     }; /* python namespace */
