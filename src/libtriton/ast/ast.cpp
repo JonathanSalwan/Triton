@@ -3319,11 +3319,8 @@ namespace triton {
 
 
     VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar) {
-      this->kind        = VARIABLE_NODE;
-      this->value       = symVar.getSymVarName();
-      this->size        = symVar.getSymVarSize();
-      this->eval        = (symVar.getConcreteValue() & this->getBitvectorMask());
-      this->symbolized  = true;
+      this->kind  = VARIABLE_NODE;
+      this->value = symVar.getSymVarName();
       this->init();
     }
 
@@ -3343,6 +3340,17 @@ namespace triton {
 
 
     void VariableNode::init(void) {
+      triton::engines::symbolic::SymbolicVariable* symVar = nullptr;
+
+      symVar = triton::api.getSymbolicVariableFromName(this->value);
+      if (symVar) {
+        this->size        = symVar->getSymVarSize();
+        this->eval        = (symVar->getConcreteValue() & this->getBitvectorMask());
+        this->symbolized  = true;
+      }
+      else
+        throw std::runtime_error("VariableNode::init(): Variable not found.");
+
       /* Init parents */
       if (this->parent)
         this->parent->init();
@@ -3475,6 +3483,10 @@ namespace triton {
     std::set<AbstractNode*> allocatedNodes;
 
 
+    /* Global map. This map maintains a link between symbolic variables and their nodes. */
+    std::map<std::string, AbstractNode*> variableNodes;
+
+
     /* Go through every allocated nodes and free them */
     void freeAllAstNodes(void) {
       std::set<AbstractNode*>::const_iterator it;
@@ -3483,6 +3495,7 @@ namespace triton {
         delete *it;
       }
       triton::ast::allocatedNodes.clear();
+      triton::ast::variableNodes.clear();
     }
 
 
@@ -3490,7 +3503,14 @@ namespace triton {
     void freeAstNodes(std::set<AbstractNode*>& nodes) {
       std::set<AbstractNode*>::iterator it;
       for (it = nodes.begin(); it != nodes.end(); it++) {
+        /* Remove the node from the global set */
         triton::ast::allocatedNodes.erase(*it);
+
+        /* Remove the node from the global variables map */
+        if ((*it)->getKind() == VARIABLE_NODE)
+          triton::ast::variableNodes.erase(reinterpret_cast<VariableNode*>(*it)->getValue());
+
+        /* Delete the node */
         delete *it;
       }
       nodes.clear();
@@ -3985,10 +4005,13 @@ namespace triton {
 
 
     AbstractNode* variable(triton::engines::symbolic::SymbolicVariable& symVar) {
+      AbstractNode* ret  = nullptr;
       AbstractNode* node = new VariableNode(symVar);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      ret = triton::ast::recordNode(node);
+      triton::ast::variableNodes[symVar.getSymVarName()] = ret;
+      return ret;
     }
 
 

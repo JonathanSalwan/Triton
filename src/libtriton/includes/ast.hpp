@@ -910,6 +910,9 @@ namespace triton {
     //! Garbage collector - This container contains all allocated nodes.
     extern std::set<AbstractNode*> allocatedNodes;
 
+    //! Garbage collector - This map maintains a link between symbolic variables and their nodes.
+    extern std::map<std::string, AbstractNode*> variableNodes;
+
     //! Garbage collector - Go through every allocated nodes and free them.
     void freeAllAstNodes(void);
 

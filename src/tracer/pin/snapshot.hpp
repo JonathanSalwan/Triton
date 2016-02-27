@@ -54,11 +54,14 @@ namespace tracer {
         //! AST node state.
         std::set<triton::ast::AbstractNode*> nodesList;
 
+        //! Variables node state.
+        std::map<std::string, triton::ast::AbstractNode*> variablesMap;
+
         //! Snapshot of the symbolic engine.
-        triton::engines::symbolic::SymbolicEngine *snapshotSymEngine;
+        triton::engines::symbolic::SymbolicEngine* snapshotSymEngine;
 
         //! Snapshot of the taint engine.
-        triton::engines::taint::TaintEngine *snapshotTaintEngine;
+        triton::engines::taint::TaintEngine* snapshotTaintEngine;
 
         //! Snapshot of triton CPU.
         #if defined(__x86_64__) || defined(_M_X64)
