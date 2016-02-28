@@ -443,6 +443,8 @@ namespace triton {
         SymbolicExpression* expression = this->getSymbolicExpressionFromId(exprId);
 
         symVar = this->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, symVarSize, symVarComment);
+        if (expression->getAst())
+            symVar->setSymVarConcreteValue(expression->getAst()->evaluate().convert_to<triton::uint128>());
         expression->setAst(triton::ast::variable(*symVar));
 
         return symVar;
@@ -523,6 +525,7 @@ namespace triton {
         else {
           expression = this->getSymbolicExpressionFromId(regSymId);
           symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parentId, symVarSize, symVarComment);
+          symVar->setSymVarConcreteValue(cv);
           expression->setAst(triton::ast::variable(*symVar));
         }
 
