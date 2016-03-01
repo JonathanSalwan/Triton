@@ -101,6 +101,9 @@ namespace triton {
           //! Returns the concrete value (if exists) of the symbolic variable.
           triton::uint128 getConcreteValue(void);
 
+          //! Sets the comment of the symbolic variable.
+          void setSymVarComment(std::string comment);
+
           //! Sets the concrete value of the symbolic variable.
           void setSymVarConcreteValue(triton::uint128 value);
       };

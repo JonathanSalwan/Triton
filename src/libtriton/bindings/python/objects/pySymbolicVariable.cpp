@@ -61,6 +61,9 @@ Then, if `getKind()` returns triton::engines::symbolic::UNDEF, so `getKindValue(
 Returns name of the the symbolic variable as string.<br>
 e.g: `SymVar_18`
 
+- **setComment(string comment)**<br>
+Sets a comment of the symbolic variable.
+
 - **setConcreteValue(integer value)**<br>
 Sets a concrete value. `value` must be less than 128-bits.
 
@@ -148,15 +151,25 @@ namespace triton {
       }
 
 
+      static PyObject* SymbolicVariable_setComment(PyObject* self, PyObject* comment) {
+        try {
+          if (!PyString_Check(comment))
+            return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setComment(): Expected a string as argument.");
+          PySymbolicVariable_AsSymbolicVariable(self)->setSymVarComment(PyString_AsString(comment));
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* SymbolicVariable_setConcreteValue(PyObject* self, PyObject* value) {
         try {
-          triton::engines::symbolic::SymbolicVariable *symVar;
-
           if (!PyLong_Check(value) && !PyInt_Check(value))
             return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setConcretevalue(): Expected an integer as argument.");
-
-          symVar = PySymbolicVariable_AsSymbolicVariable(self);
-          symVar->setSymVarConcreteValue(PyLong_AsUint128(value));
+          PySymbolicVariable_AsSymbolicVariable(self)->setSymVarConcreteValue(PyLong_AsUint128(value));
           Py_INCREF(Py_None);
           return Py_None;
         }
@@ -193,6 +206,7 @@ namespace triton {
         {"getKind",           SymbolicVariable_getKind,           METH_NOARGS,    ""},
         {"getKindValue",      SymbolicVariable_getKindValue,      METH_NOARGS,    ""},
         {"getName",           SymbolicVariable_getName,           METH_NOARGS,    ""},
+        {"setComment",        SymbolicVariable_setComment,        METH_O,         ""},
         {"setConcreteValue",  SymbolicVariable_setConcreteValue,  METH_O,         ""},
         {nullptr,             nullptr,                            0,              nullptr}
       };

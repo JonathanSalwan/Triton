@@ -86,6 +86,11 @@ namespace triton {
       }
 
 
+      void SymbolicVariable::setSymVarComment(std::string comment) {
+        this->symVarComment = comment;
+      }
+
+
       void SymbolicVariable::setSymVarConcreteValue(triton::uint128 value) {
         this->symVarConcreteValue = value;
         if (triton::ast::variableNodes.find(this->getSymVarName()) != triton::ast::variableNodes.end())
