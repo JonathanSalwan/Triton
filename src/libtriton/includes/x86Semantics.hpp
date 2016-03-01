@@ -426,6 +426,9 @@ namespace triton {
       //! The POP semantics.
       void pop_s(triton::arch::Instruction& inst);
 
+      //! The POR semantics.
+      void por_s(triton::arch::Instruction& inst);
+
       //! The PUSH semantics.
       void push_s(triton::arch::Instruction& inst);
 

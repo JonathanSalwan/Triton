@@ -119,6 +119,7 @@ PCMPEQD                      | Compare Packed Data for Equal (dwords)
 PCMPEQW                      | Compare Packed Data for Equal (words)
 PMOVMSKB                     | Move Byte Mask
 POP                          | Pop a Value from the Stack
+POR                          | Bitwise Logical OR
 PUSH                         | Push a Value onto the Stack
 PXOR                         | Logical Exclusive OR
 RCL                          | Rotate Left with Carry
@@ -259,6 +260,7 @@ namespace triton {
             case ID_INS_PCMPEQW:        triton::arch::x86::semantics::pcmpeqw_s(inst);    break;
             case ID_INS_PMOVMSKB:       triton::arch::x86::semantics::pmovmskb_s(inst);   break;
             case ID_INS_POP:            triton::arch::x86::semantics::pop_s(inst);        break;
+            case ID_INS_POR:            triton::arch::x86::semantics::por_s(inst);        break;
             case ID_INS_PUSH:           triton::arch::x86::semantics::push_s(inst);       break;
             case ID_INS_PXOR:           triton::arch::x86::semantics::pxor_s(inst);       break;
             case ID_INS_RCL:            triton::arch::x86::semantics::rcl_s(inst);        break;
@@ -4078,6 +4080,28 @@ namespace triton {
 
           /* Create the semantics - side effect */
           alignAddStack_s(inst, src.getSize());
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void por_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          auto node = triton::ast::bvor(op1, op2);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "POR operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
