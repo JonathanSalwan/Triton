@@ -411,6 +411,12 @@ namespace triton {
       //! The ORPS semantics.
       void orps_s(triton::arch::Instruction& inst);
 
+      //! The PAND semantics.
+      void pand_s(triton::arch::Instruction& inst);
+
+      //! The PANDN semantics.
+      void pandn_s(triton::arch::Instruction& inst);
+
       //! The PCMPEQB semantics.
       void pcmpeqb_s(triton::arch::Instruction& inst);
 

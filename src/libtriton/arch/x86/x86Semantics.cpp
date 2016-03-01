@@ -114,6 +114,8 @@ NOT                          | One's Complement Negation
 OR                           | Logical Inclusive OR
 ORPD                         | Bitwise Logical OR of Double-Precision Floating-Point Values
 ORPS                         | Bitwise Logical OR of Single-Precision Floating-Point Values
+PAND                         | Logical AND
+PANDN                        | Logical AND NOT
 PCMPEQB                      | Compare Packed Data for Equal (bytes)
 PCMPEQD                      | Compare Packed Data for Equal (dwords)
 PCMPEQW                      | Compare Packed Data for Equal (words)
@@ -255,6 +257,8 @@ namespace triton {
             case ID_INS_OR:             triton::arch::x86::semantics::or_s(inst);         break;
             case ID_INS_ORPD:           triton::arch::x86::semantics::orpd_s(inst);       break;
             case ID_INS_ORPS:           triton::arch::x86::semantics::orps_s(inst);       break;
+            case ID_INS_PAND:           triton::arch::x86::semantics::pand_s(inst);       break;
+            case ID_INS_PANDN:          triton::arch::x86::semantics::pandn_s(inst);      break;
             case ID_INS_PCMPEQB:        triton::arch::x86::semantics::pcmpeqb_s(inst);    break;
             case ID_INS_PCMPEQD:        triton::arch::x86::semantics::pcmpeqd_s(inst);    break;
             case ID_INS_PCMPEQW:        triton::arch::x86::semantics::pcmpeqw_s(inst);    break;
@@ -3904,6 +3908,50 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "ORPS operation");
 
           /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pand_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          auto node = triton::ast::bvand(op1, op2);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PAND operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pandn_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          auto node = triton::ast::bvand(triton::ast::bvnot(op1), op2);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PANDN operation");
+
+          /* Spread taint */
           expr->isTainted = triton::api.taintUnion(dst, src);
 
           /* Upate the symbolic control flow */
