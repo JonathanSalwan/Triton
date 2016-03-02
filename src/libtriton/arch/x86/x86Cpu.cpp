@@ -10,15 +10,10 @@
 #include <architecture.hpp>
 #include <coreUtils.hpp>
 #include <cpuSize.hpp>
+#include <externalLibs.hpp>
 #include <immediateOperand.hpp>
 #include <x86Cpu.hpp>
 #include <x86Specifications.hpp>
-
-#ifdef __unix__
-  #include <capstone/capstone.h>
-#elif _WIN32
-  #include <capstone.h>
-#endif
 
 #ifdef TRITON_PYTHON_BINDINGS
   #include <pythonBindings.hpp>
@@ -293,26 +288,26 @@ namespace triton {
 
 
     void x86Cpu::disassembly(triton::arch::Instruction &inst) {
-      csh       handle;
-      cs_insn*  insn;
-      size_t    count;
+      triton::extlibs::capstone::csh       handle;
+      triton::extlibs::capstone::cs_insn*  insn;
+      size_t                               count = 0;
 
       /* Check if the opcodes and opcodes' size are defined */
       if (inst.getOpcodes() == nullptr || inst.getOpcodesSize() == 0)
         throw std::runtime_error("x86Cpu::disassembly(): Opcodes and opcodesSize must be definied.");
 
       /* Open capstone */
-      if (cs_open(CS_ARCH_X86, CS_MODE_32, &handle) != CS_ERR_OK)
+      if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_X86, triton::extlibs::capstone::CS_MODE_32, &handle) != triton::extlibs::capstone::CS_ERR_OK)
         throw std::runtime_error("x86Cpu::disassembly(): Cannot open capstone.");
 
       /* Init capstone's options */
-      cs_option(handle, CS_OPT_DETAIL, CS_OPT_ON);
-      cs_option(handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_INTEL);
+      triton::extlibs::capstone::cs_option(handle, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
+      triton::extlibs::capstone::cs_option(handle, triton::extlibs::capstone::CS_OPT_SYNTAX, triton::extlibs::capstone::CS_OPT_SYNTAX_INTEL);
 
       /* Let's disass and build our operands */
-      count = cs_disasm(handle, inst.getOpcodes(), inst.getOpcodesSize(), inst.getAddress(), 0, &insn);
+      count = triton::extlibs::capstone::cs_disasm(handle, inst.getOpcodes(), inst.getOpcodesSize(), inst.getAddress(), 0, &insn);
       if (count > 0) {
-        cs_detail* detail = insn->detail;
+        triton::extlibs::capstone::cs_detail* detail = insn->detail;
         for (triton::uint32 j = 0; j < count; j++) {
 
           /* Init the disassembly */
@@ -325,14 +320,14 @@ namespace triton {
 
           /* Init operands */
           for (triton::uint32 n = 0; n < detail->x86.op_count; n++) {
-            cs_x86_op *op = &(detail->x86.operands[n]);
+            triton::extlibs::capstone::cs_x86_op* op = &(detail->x86.operands[n]);
             switch(op->type) {
 
-              case X86_OP_IMM:
+              case triton::extlibs::capstone::X86_OP_IMM:
                 inst.operands.push_back(triton::arch::OperandWrapper(triton::arch::ImmediateOperand(op->imm, op->size)));
                 break;
 
-              case X86_OP_MEM: {
+              case triton::extlibs::capstone::X86_OP_MEM: {
                 triton::arch::MemoryOperand mem = inst.popMemoryAccess();
 
                 /* Set the size if the memory is not valid */
@@ -354,7 +349,7 @@ namespace triton {
                 break;
               }
 
-              case X86_OP_REG:
+              case triton::extlibs::capstone::X86_OP_REG:
                 inst.operands.push_back(triton::arch::OperandWrapper(inst.getRegisterState(triton::arch::x86::capstoneRegToTritonReg(op->reg))));
                 break;
 
@@ -367,18 +362,20 @@ namespace triton {
         /* Set branch */
         if (detail->groups_count > 0) {
           for (triton::uint32 n = 0; n < detail->groups_count; n++) {
-            if (detail->groups[n] == X86_GRP_JUMP)
+            if (detail->groups[n] == triton::extlibs::capstone::X86_GRP_JUMP)
               inst.setBranch(true);
-            if (detail->groups[n] == X86_GRP_JUMP || detail->groups[n] == X86_GRP_CALL || detail->groups[n] == X86_GRP_RET)
+            if (detail->groups[n] == triton::extlibs::capstone::X86_GRP_JUMP ||
+                detail->groups[n] == triton::extlibs::capstone::X86_GRP_CALL ||
+                detail->groups[n] == triton::extlibs::capstone::X86_GRP_RET)
               inst.setControlFlow(true);
           }
         }
-        cs_free(insn, count);
+        triton::extlibs::capstone::cs_free(insn, count);
       }
       else
         throw std::runtime_error("x86Cpu::disassembly(): Failed to disassemble the given code.");
 
-      cs_close(&handle);
+      triton::extlibs::capstone::cs_close(&handle);
       return;
     }
 
