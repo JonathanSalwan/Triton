@@ -335,6 +335,7 @@ namespace triton {
       delete this->sym;
       delete this->symBackup;
       delete this->taint;
+      triton::ast::freeAllAstNodes();
     }
   }
 
