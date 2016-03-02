@@ -671,7 +671,8 @@ namespace triton {
         if (reg.isFlag())
           throw std::runtime_error("SymbolicEngine::createSymbolicRegisterExpression(): The register cannot be a flag.");
 
-        origReg = this->buildSymbolicRegisterOperand(parentReg);
+        if (regSize == BYTE_SIZE || regSize == WORD_SIZE)
+          origReg = this->buildSymbolicRegisterOperand(parentReg);
 
         switch (regSize) {
           case BYTE_SIZE:
