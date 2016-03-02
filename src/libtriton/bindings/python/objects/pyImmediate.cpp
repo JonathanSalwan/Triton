@@ -68,6 +68,7 @@ namespace triton {
 
       //! Immediate destructor.
       void ImmediateOperand_dealloc(PyObject* self) {
+        std::cout << std::flush;
         delete PyImmediateOperand_AsImmediateOperand(self);
         Py_DECREF(self);
       }

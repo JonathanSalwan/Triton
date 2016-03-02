@@ -56,6 +56,7 @@ namespace triton {
 
       //! Bitvector destructor.
       void Bitvector_dealloc(PyObject* self) {
+        std::cout << std::flush;
         Py_DECREF(self);
       }
 

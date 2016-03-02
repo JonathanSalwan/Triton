@@ -113,6 +113,7 @@ namespace triton {
 
       //! Memory destructor.
       void MemoryOperand_dealloc(PyObject* self) {
+        std::cout << std::flush;
         delete PyMemoryOperand_AsMemoryOperand(self);
         Py_DECREF(self);
       }

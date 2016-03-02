@@ -155,6 +155,7 @@ namespace triton {
 
       //! Instruction destructor.
       void Instruction_dealloc(PyObject* self) {
+        std::cout << std::flush;
         delete PyInstruction_AsInstruction(self);
         Py_DECREF(self);
       }

@@ -94,6 +94,7 @@ namespace triton {
 
       //! Register destructor.
       void RegisterOperand_dealloc(PyObject* self) {
+        std::cout << std::flush;
         delete PyRegisterOperand_AsRegisterOperand(self);
         Py_DECREF(self);
       }

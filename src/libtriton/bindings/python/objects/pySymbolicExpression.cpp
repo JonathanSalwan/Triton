@@ -127,6 +127,7 @@ namespace triton {
 
       //! SymbolicExpression destructor.
       void SymbolicExpression_dealloc(PyObject* self) {
+        std::cout << std::flush;
         Py_DECREF(self);
       }
 
