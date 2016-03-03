@@ -46,32 +46,32 @@ namespace triton {
 
     void x86Cpu::copy(const x86Cpu& other) {
       this->memory = other.memory;
-      (*((triton::uint32*)(this->eax)))     = (*((triton::uint32*)(other.eax)));
-      (*((triton::uint32*)(this->ebx)))     = (*((triton::uint32*)(other.ebx)));
-      (*((triton::uint32*)(this->ecx)))     = (*((triton::uint32*)(other.ecx)));
-      (*((triton::uint32*)(this->edx)))     = (*((triton::uint32*)(other.edx)));
-      (*((triton::uint32*)(this->edi)))     = (*((triton::uint32*)(other.edi)));
-      (*((triton::uint32*)(this->esi)))     = (*((triton::uint32*)(other.esi)));
-      (*((triton::uint32*)(this->esp)))     = (*((triton::uint32*)(other.esp)));
-      (*((triton::uint32*)(this->ebp)))     = (*((triton::uint32*)(other.ebp)));
-      (*((triton::uint32*)(this->eip)))     = (*((triton::uint32*)(other.eip)));
-      (*((triton::uint32*)(this->eflags)))  = (*((triton::uint32*)(other.eflags)));
-      (*((triton::uint64*)(this->mm0)))     = (*((triton::uint64*)(other.mm0)));
-      (*((triton::uint64*)(this->mm1)))     = (*((triton::uint64*)(other.mm1)));
-      (*((triton::uint64*)(this->mm2)))     = (*((triton::uint64*)(other.mm2)));
-      (*((triton::uint64*)(this->mm3)))     = (*((triton::uint64*)(other.mm3)));
-      (*((triton::uint64*)(this->mm4)))     = (*((triton::uint64*)(other.mm4)));
-      (*((triton::uint64*)(this->mm5)))     = (*((triton::uint64*)(other.mm5)));
-      (*((triton::uint64*)(this->mm6)))     = (*((triton::uint64*)(other.mm6)));
-      (*((triton::uint64*)(this->mm7)))     = (*((triton::uint64*)(other.mm7)));
-      memcpy(this->xmm0, other.xmm0, sizeof(this->xmm0));
-      memcpy(this->xmm1, other.xmm1, sizeof(this->xmm1));
-      memcpy(this->xmm2, other.xmm2, sizeof(this->xmm2));
-      memcpy(this->xmm3, other.xmm3, sizeof(this->xmm3));
-      memcpy(this->xmm4, other.xmm4, sizeof(this->xmm4));
-      memcpy(this->xmm5, other.xmm5, sizeof(this->xmm5));
-      memcpy(this->xmm6, other.xmm6, sizeof(this->xmm6));
-      memcpy(this->xmm7, other.xmm7, sizeof(this->xmm7));
+      memcpy(this->eax,     other.eax,    sizeof(this->eax));
+      memcpy(this->ebx,     other.ebx,    sizeof(this->ebx));
+      memcpy(this->ecx,     other.ecx,    sizeof(this->ecx));
+      memcpy(this->edx,     other.edx,    sizeof(this->edx));
+      memcpy(this->edi,     other.edi,    sizeof(this->edi));
+      memcpy(this->esi,     other.esi,    sizeof(this->esi));
+      memcpy(this->esp,     other.esp,    sizeof(this->esp));
+      memcpy(this->ebp,     other.ebp,    sizeof(this->ebp));
+      memcpy(this->eip,     other.eip,    sizeof(this->eip));
+      memcpy(this->eflags,  other.eflags, sizeof(this->eflags));
+      memcpy(this->mm0,     other.mm0,    sizeof(this->mm0));
+      memcpy(this->mm1,     other.mm1,    sizeof(this->mm1));
+      memcpy(this->mm2,     other.mm2,    sizeof(this->mm2));
+      memcpy(this->mm3,     other.mm3,    sizeof(this->mm3));
+      memcpy(this->mm4,     other.mm4,    sizeof(this->mm4));
+      memcpy(this->mm5,     other.mm5,    sizeof(this->mm5));
+      memcpy(this->mm6,     other.mm6,    sizeof(this->mm6));
+      memcpy(this->mm7,     other.mm7,    sizeof(this->mm7));
+      memcpy(this->xmm0,    other.xmm0,   sizeof(this->xmm0));
+      memcpy(this->xmm1,    other.xmm1,   sizeof(this->xmm1));
+      memcpy(this->xmm2,    other.xmm2,   sizeof(this->xmm2));
+      memcpy(this->xmm3,    other.xmm3,   sizeof(this->xmm3));
+      memcpy(this->xmm4,    other.xmm4,   sizeof(this->xmm4));
+      memcpy(this->xmm5,    other.xmm5,   sizeof(this->xmm5));
+      memcpy(this->xmm6,    other.xmm6,   sizeof(this->xmm6));
+      memcpy(this->xmm7,    other.xmm7,   sizeof(this->xmm7));
     }
 
 
