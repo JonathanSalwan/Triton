@@ -183,6 +183,9 @@ Returns the full AST of a root node as \ref py_AstNode_page.
 - **getFullAstFromId(integer symExprId)**<br>
 Returns the full AST as \ref py_AstNode_page from a symbolic expression id.
 
+- **getMemoryAreaValue(integer baseAddr, integer size)**<br>
+If the emulation is enabled, returns the emulated value otherwise returns the last concrete values of a memory area as a list of integer.
+
 - **getMemoryValue(intger addr)**<br>
 If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of the memory access.
 
@@ -299,6 +302,9 @@ Initializes an architecture. This function must be called before any call to the
 
 - **setAstRepresentationMode(\ref py_AST_REPRESENTATION_page mode)**<br>
 Sets the AST representation mode.
+
+- **setLastMemoryAreaValue(integer baseAddr, [integer,])**<br>
+Sets the last concrete values of a memory area.
 
 - **setLastMemoryValue(integer addr, integer value)**<br>
 Sets the last concrete value of a memory access.
@@ -1396,6 +1402,33 @@ namespace triton {
       }
 
 
+      static PyObject* triton_getMemoryAreaValue(PyObject* self, PyObject* args) {
+        std::vector<triton::uint8> vv;
+        PyObject* ret  = nullptr;
+        PyObject* addr = nullptr;
+        PyObject* size = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &addr, &size);
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getMemoryValue(): Architecture is not defined.");
+
+        try {
+          vv  = triton::api.getLastMemoryAreaValue(PyLong_AsUint(addr), PyLong_AsUint(size));
+          ret = xPyList_New(vv.size());
+          for (triton::uint32 index = 0; index < vv.size(); index++)
+            PyList_SetItem(ret, index, PyLong_FromUint(vv[index]));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return ret;
+      }
+
+
       static PyObject* triton_getMemoryValue(PyObject* self, PyObject* mem) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -2080,6 +2113,45 @@ namespace triton {
       }
 
 
+      static PyObject* triton_setLastMemoryAreaValue(PyObject* self, PyObject* args) {
+        std::vector<triton::uint8> vv;
+        PyObject* baseAddr  = nullptr;
+        PyObject* values    = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &baseAddr, &values);
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Architecture is not defined.");
+
+        if (baseAddr == nullptr || (!PyLong_Check(baseAddr) && !PyInt_Check(baseAddr)))
+          return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Expects an integer as first argument.");
+
+        if (values == nullptr || !PyList_Check(values))
+          return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Expects a list as second argument.");
+
+        for (Py_ssize_t i = 0; i < PyList_Size(values); i++) {
+          PyObject* item = PyList_GetItem(values, i);
+
+          if ((!PyLong_Check(item) && !PyInt_Check(item)) || PyLong_AsUint(item) > 0xff)
+            return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Each item of the list must be a 8-bits integer.");
+
+          vv.push_back(PyLong_AsUint(item));
+        }
+
+        try {
+          triton::api.setLastMemoryAreaValue(PyLong_AsUint(baseAddr), vv);
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* triton_setLastMemoryValue(PyObject* self, PyObject* args) {
         PyObject* mem    = nullptr;
         PyObject* value  = nullptr;
@@ -2669,6 +2741,7 @@ namespace triton {
         {"getAstDictionariesStats",             (PyCFunction)triton_getAstDictionariesStats,                METH_NOARGS,        ""},
         {"getFullAst",                          (PyCFunction)triton_getFullAst,                             METH_O,             ""},
         {"getFullAstFromId",                    (PyCFunction)triton_getFullAstFromId,                       METH_O,             ""},
+        {"getMemoryAreaValue",                  (PyCFunction)triton_getMemoryAreaValue,                     METH_VARARGS,       ""},
         {"getMemoryValue",                      (PyCFunction)triton_getMemoryValue,                         METH_O,             ""},
         {"getModel",                            (PyCFunction)triton_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)triton_getModels,                              METH_VARARGS,       ""},
@@ -2705,6 +2778,7 @@ namespace triton {
         {"resetEngines",                        (PyCFunction)triton_resetEngines,                           METH_NOARGS,        ""},
         {"setArchitecture",                     (PyCFunction)triton_setArchitecture,                        METH_O,             ""},
         {"setAstRepresentationMode",            (PyCFunction)triton_setAstRepresentationMode,               METH_O,             ""},
+        {"setLastMemoryAreaValue",              (PyCFunction)triton_setLastMemoryAreaValue,                 METH_VARARGS,       ""},
         {"setLastMemoryValue",                  (PyCFunction)triton_setLastMemoryValue,                     METH_VARARGS,       ""},
         {"setLastRegisterValue",                (PyCFunction)triton_setLastRegisterValue,                   METH_O,             ""},
         {"setTaintMemory",                      (PyCFunction)triton_setTaintMemory,                         METH_VARARGS,       ""},

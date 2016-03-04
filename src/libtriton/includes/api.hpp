@@ -144,6 +144,9 @@ namespace triton {
         //! [**architecture api**] - Returns the last concrete value recorded of a memory access.
         triton::uint128 getLastMemoryValue(triton::arch::MemoryOperand& mem);
 
+        //! [**architecture api**] - Returns the last concrete values of a memory area.
+        std::vector<triton::uint8> getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size);
+
         //! [**architecture api**] - Returns the last concrete value recorded of a register state.
         triton::uint128 getLastRegisterValue(triton::arch::RegisterOperand& reg);
 
@@ -152,6 +155,9 @@ namespace triton {
 
         //! [**architecture api**] - Sets the last concrete value of a memory access.
         void setLastMemoryValue(triton::arch::MemoryOperand& mem);
+
+        //! [**architecture api**] - Sets the last concrete values of a memory area.
+        void setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values);
 
         //! [**architecture api**] - Sets the last concrete value of a register state. You cannot set an isolated flag, if so, use the flags registers like EFLAGS or RFLAGS.
         void setLastRegisterValue(triton::arch::RegisterOperand& reg);

@@ -264,6 +264,13 @@ namespace triton {
     }
 
 
+    std::vector<triton::uint8> Architecture::getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) {
+      if (!this->cpu)
+        throw std::runtime_error("Architecture::getLastMemoryAreaValue(): You must define an architecture.");
+      return this->cpu->getLastMemoryAreaValue(baseAddr, size);
+    }
+
+
     triton::uint128 Architecture::getLastRegisterValue(triton::arch::RegisterOperand& reg) {
       if (!this->cpu)
         throw std::runtime_error("Architecture::getLastRegisterValue(): You must define an architecture.");
@@ -282,6 +289,13 @@ namespace triton {
       if (!this->cpu)
         throw std::runtime_error("Architecture::setLastMemoryValue(): You must define an architecture.");
       this->cpu->setLastMemoryValue(mem);
+    }
+
+
+    void Architecture::setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values) {
+      if (!this->cpu)
+        throw std::runtime_error("Architecture::setLastMemoryAreaValue(): You must define an architecture.");
+      this->cpu->setLastMemoryAreaValue(baseAddr, values);
     }
 
 

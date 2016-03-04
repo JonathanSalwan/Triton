@@ -254,6 +254,11 @@ namespace triton {
   }
 
 
+  std::vector<triton::uint8> API::getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) {
+    return this->arch.getLastMemoryAreaValue(baseAddr, size);
+  }
+
+
   triton::uint128 API::getLastRegisterValue(triton::arch::RegisterOperand& reg) {
     return this->arch.getLastRegisterValue(reg);
   }
@@ -266,6 +271,11 @@ namespace triton {
 
   void API::setLastMemoryValue(triton::arch::MemoryOperand& mem) {
     this->arch.setLastMemoryValue(mem);
+  }
+
+
+  void API::setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values) {
+    this->arch.setLastMemoryAreaValue(baseAddr, values);
   }
 
 

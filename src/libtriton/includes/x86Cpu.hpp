@@ -11,6 +11,7 @@
 #include <map>
 #include <set>
 #include <tuple>
+#include <vector>
 
 #include "cpuInterface.hpp"
 #include "instruction.hpp"
@@ -139,6 +140,7 @@ namespace triton {
           std::set<triton::arch::RegisterOperand*> getAllRegisters(void);
           std::set<triton::arch::RegisterOperand*> getParentRegisters(void);
           triton::uint128 getLastMemoryValue(triton::arch::MemoryOperand& mem);
+          std::vector<triton::uint8> getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) ;
           triton::uint128 getLastRegisterValue(triton::arch::RegisterOperand& reg);
           triton::uint32 invalidRegister(void);
           triton::uint32 numberOfRegisters(void);
@@ -149,6 +151,7 @@ namespace triton {
           void disassembly(triton::arch::Instruction &inst);
           void setLastMemoryValue(triton::__uint addr, triton::uint8 value);
           void setLastMemoryValue(triton::arch::MemoryOperand& mem);
+          void setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values);
           void setLastRegisterValue(triton::arch::RegisterOperand& reg);
 
           //! Copies a x86Cpu class.

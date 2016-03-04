@@ -10,6 +10,7 @@
 
 #include <set>
 #include <tuple>
+#include <vector>
 
 #include "instruction.hpp"
 #include "memoryOperand.hpp"
@@ -102,6 +103,9 @@ namespace triton {
       //! Returns the last concrete value recorded of a memory access.
       virtual triton::uint128 getLastMemoryValue(triton::arch::MemoryOperand& mem) = 0;
 
+      //! Returns the last concrete values of a memory area.
+      virtual std::vector<triton::uint8> getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) = 0;
+
       //! Returns the last concrete value recorded of a register state.
       virtual triton::uint128 getLastRegisterValue(triton::arch::RegisterOperand& reg) = 0;
 
@@ -110,6 +114,9 @@ namespace triton {
 
       //! Sets the last concrete value of a memory access.
       virtual void setLastMemoryValue(triton::arch::MemoryOperand& mem) = 0;
+
+      //! Sets the last concrete values of a memory area.
+      virtual void setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values) = 0;
 
       //! Sets the last concrete value of a register state.
       virtual void setLastRegisterValue(triton::arch::RegisterOperand& reg) = 0;

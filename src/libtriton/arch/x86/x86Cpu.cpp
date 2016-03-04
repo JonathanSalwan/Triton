@@ -409,6 +409,20 @@ namespace triton {
     }
 
 
+    std::vector<triton::uint8> x86Cpu::getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) {
+      std::vector<triton::uint8> area;
+
+      for (triton::uint32 index = 0; index < size; index++) {
+        if (this->memory.find(baseAddr+index) != this->memory.end())
+          area.push_back(this->memory[baseAddr+index]);
+        else
+          area.push_back(0x00);
+      }
+
+      return area;
+    }
+
+
     triton::uint128 x86Cpu::getLastRegisterValue(triton::arch::RegisterOperand& reg) {
       triton::uint128 value = 0;
       switch (reg.getId()) {
@@ -505,6 +519,13 @@ namespace triton {
       for (triton::uint32 i = 0; i < size; i++) {
         this->memory[addr+i] = (cv & 0xff).convert_to<triton::uint8>();
         cv >>= 8;
+      }
+    }
+
+
+    void x86Cpu::setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values) {
+      for (triton::uint32 index = 0; index < values.size(); index++) {
+        this->memory[baseAddr+index] = values[index];
       }
     }
 

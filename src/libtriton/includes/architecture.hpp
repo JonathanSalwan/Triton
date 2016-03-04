@@ -9,6 +9,7 @@
 #define TRITON_ARCHITECTURE_H
 
 #include <set>
+#include <vector>
 
 #include "cpuInterface.hpp"
 #include "instruction.hpp"
@@ -127,6 +128,9 @@ namespace triton {
         //! Returns the last concrete value recorded of a memory access.
         triton::uint128 getLastMemoryValue(triton::arch::MemoryOperand& mem);
 
+        //! Returns the last concrete values of a memory area.
+        std::vector<triton::uint8> getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size);
+
         //! Returns the last concrete value recorded of a register state.
         triton::uint128 getLastRegisterValue(triton::arch::RegisterOperand& reg);
 
@@ -135,6 +139,9 @@ namespace triton {
 
         //! Sets the last concrete value of a memory access.
         void setLastMemoryValue(triton::arch::MemoryOperand& mem);
+
+        //! Sets the last concrete values of a memory area.
+        void setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values);
 
         //! Sets the last concrete value of a register state.
         void setLastRegisterValue(triton::arch::RegisterOperand& reg);
