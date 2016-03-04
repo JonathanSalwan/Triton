@@ -39,6 +39,9 @@ Enabled, Triton will keep a map of aligned memory to reduce the symbolic memory 
 - **OPTIMIZATION.AST_DICTIONARIES**<br>
 Enabled, Triton will record all AST nodes into several dictionaries and try to return node already allocated instead of allocate twice the same node.
 
+- **OPTIMIZATION.ONLY_ON_SYMBOLIZED**<br>
+Enabled, Triton will perform symbolic execution only on symbolized expressions.
+
 - **OPTIMIZATION.ONLY_ON_TAINTED**<br>
 Enabled, Triton will perform symbolic execution only on tainted instructions.
 
@@ -56,6 +59,7 @@ namespace triton {
       void initSymOptiNamespace(PyObject* symOptiDict) {
         PyDict_SetItemString(symOptiDict, "ALIGNED_MEMORY",         PyLong_FromUint(triton::engines::symbolic::ALIGNED_MEMORY));
         PyDict_SetItemString(symOptiDict, "AST_DICTIONARIES",       PyLong_FromUint(triton::engines::symbolic::AST_DICTIONARIES));
+        PyDict_SetItemString(symOptiDict, "ONLY_ON_SYMBOLIZED",     PyLong_FromUint(triton::engines::symbolic::ONLY_ON_SYMBOLIZED));
         PyDict_SetItemString(symOptiDict, "ONLY_ON_TAINTED",        PyLong_FromUint(triton::engines::symbolic::ONLY_ON_TAINTED));
         PyDict_SetItemString(symOptiDict, "PC_TRACKING_SYMBOLIC",   PyLong_FromUint(triton::engines::symbolic::PC_TRACKING_SYMBOLIC));
       }

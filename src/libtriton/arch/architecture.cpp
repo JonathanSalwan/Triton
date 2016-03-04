@@ -247,6 +247,32 @@ namespace triton {
         inst.symbolicExpressions = newVector;
       }
 
+      /*
+       * If the symbolic engine is defined to process symbolic
+       * execution only on symbolized expressions, we delete all
+       * concrete expressions and their AST nodes.
+       */
+      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ONLY_ON_SYMBOLIZED)) {
+        std::set<triton::ast::AbstractNode*> uniqueNodes;
+        std::vector<triton::engines::symbolic::SymbolicExpression*> newVector;
+        std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
+        for (it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
+          if ((*it)->getAst()->isSymbolized() == false) {
+            triton::ast::extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
+            triton::api.removeSymbolicExpression((*it)->getId());
+          }
+          else
+            newVector.push_back(*it);
+        }
+
+        if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES)) {
+          /* Remove node only if AST_DICTIONARIES is disabled */
+          triton::ast::freeAstNodes(uniqueNodes);
+        }
+
+        inst.symbolicExpressions = newVector;
+      }
+
     }
 
 
