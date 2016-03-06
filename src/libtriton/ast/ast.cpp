@@ -348,12 +348,14 @@ namespace triton {
       value = this->childs[0]->evaluate();
       shift = this->childs[1]->evaluate().convert_to<triton::uint32>();
 
-      /* Mask based on the sign */
-      if (this->childs[0]->isSigned())
-        mask = (1 << (this->childs[0]->getBitvectorSize()-1));
-
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
+
+      /* Mask based on the sign */
+      if (this->childs[0]->isSigned()) {
+        mask = 1;
+        mask = ((mask << (this->size-1)) & this->getBitvectorMask());
+      }
 
       if (shift >= this->size && this->childs[0]->isSigned()) {
         this->eval = -1;
@@ -370,7 +372,7 @@ namespace triton {
 
       else {
         this->eval = value & this->getBitvectorMask();
-        for (triton::uint32 index = 1; index <= shift; index++) {
+        for (triton::uint32 index = 0; index < shift; index++) {
           this->eval = (((this->eval >> 1) | mask) & this->getBitvectorMask());
         }
       }
