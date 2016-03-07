@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:15.10
 MAINTAINER Pete Markowsky <pete@markowsky.us>
 RUN apt-get update && apt-get dist-upgrade -y && \
     apt-get install -y git cmake build-essential clang ca-certificates curl \
@@ -25,7 +25,7 @@ RUN cd /opt && curl -o pin.tgz -L http://software.intel.com/sites/landingpage/pi
 # RUN cd /opt && git clone https://github.com/JonathanSalwan/Triton.git && \
 #     cd Triton && mkdir build && cd build && cmake -G "Unix Makefiles" .. && \
 #     make install &&  cd .. && python setup.py install
-RUN cd /opt && \
+RUN cd /opt/pin-2.14-71313-gcc.4.4.7-linux/source/tools/ && \
    curl -o master.zip -L https://github.com/JonathanSalwan/Triton/archive/master.zip && unzip master.zip && cd Triton-master/ && mkdir build && cd build && \
-   cmake -G "Unix Makefiles" .. && make install && cd .. && python setup.py install
+   cmake -G "Unix Makefiles" -DPINTOOL=yes -DKERNEL4=yes .. && make install && cd .. && python setup.py install
 ENTRYPOINT /bin/bash
