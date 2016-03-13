@@ -272,7 +272,7 @@ namespace triton {
 
       /* Returns the symbolic address value */
       triton::uint8 SymbolicEngine::getSymbolicMemoryValue(triton::__uint address) {
-        triton::arch::MemoryOperand mem(address, 1, 0);
+        triton::arch::MemoryOperand mem(address, BYTE_SIZE, 0);
         return this->getSymbolicMemoryValue(mem).convert_to<triton::uint8>();
       }
 
@@ -281,6 +281,17 @@ namespace triton {
       triton::uint128 SymbolicEngine::getSymbolicMemoryValue(triton::arch::MemoryOperand& mem) {
         triton::ast::AbstractNode* node = this->buildSymbolicMemoryOperand(mem);
         return node->evaluate().convert_to<triton::uint128>();
+      }
+
+
+      /* Returns the symbolic values of a memory area */
+      std::vector<triton::uint8> SymbolicEngine::getSymbolicMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) {
+        std::vector<triton::uint8> area;
+
+        for (triton::uint32 index = 0; index < size; index++)
+          area.push_back(this->getSymbolicMemoryValue(baseAddr+index));
+
+        return area;
       }
 
 

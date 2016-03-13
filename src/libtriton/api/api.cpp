@@ -569,6 +569,12 @@ namespace triton {
   }
 
 
+  std::vector<triton::uint8> API::getSymbolicMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) {
+    this->checkSymbolic();
+    return this->sym->getSymbolicMemoryAreaValue(baseAddr, size);
+  }
+
+
   triton::uint8 API::getMemoryValue(triton::__uint addr) {
     this->checkSymbolic();
     if (this->isSymbolicEmulationEnabled())
@@ -582,6 +588,14 @@ namespace triton {
     if (this->isSymbolicEmulationEnabled())
       return this->getSymbolicMemoryValue(mem);
     return this->getLastMemoryValue(mem);
+  }
+
+
+  std::vector<triton::uint8> API::getMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) {
+    this->checkSymbolic();
+    if (this->isSymbolicEmulationEnabled())
+      return this->getSymbolicMemoryAreaValue(baseAddr, size);
+    return this->getLastMemoryAreaValue(baseAddr, size);
   }
 
 

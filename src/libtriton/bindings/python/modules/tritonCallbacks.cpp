@@ -1416,7 +1416,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getMemoryValue(): Architecture is not defined.");
 
         try {
-          vv  = triton::api.getLastMemoryAreaValue(PyLong_AsUint(addr), PyLong_AsUint(size));
+          vv  = triton::api.getMemoryAreaValue(PyLong_AsUint(addr), PyLong_AsUint(size));
           ret = xPyList_New(vv.size());
           for (triton::uint32 index = 0; index < vv.size(); index++)
             PyList_SetItem(ret, index, PyLong_FromUint(vv[index]));
