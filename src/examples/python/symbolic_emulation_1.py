@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
 ##
-## $ ./src/examples/python/emulation.py
+## $ ./src/examples/python/symbolic_emulation_1.py
 ## 400000: movabs rax, 0x4142434445464748
 ##         ref!0 = (_ bv4702394921427289928 64) ; MOVABS operation
 ##         ref!1 = (_ bv4194314 64) ; Program Counter
