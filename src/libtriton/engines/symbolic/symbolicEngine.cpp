@@ -450,13 +450,18 @@ namespace triton {
        * #43 = SymVar_4
        */
       SymbolicVariable* SymbolicEngine::convertExpressionToSymbolicVariable(triton::__uint exprId, triton::uint32 symVarSize, std::string symVarComment) {
+        triton::ast::AbstractNode* tmp  = nullptr;
         SymbolicVariable* symVar = nullptr;
         SymbolicExpression* expression = this->getSymbolicExpressionFromId(exprId);
 
         symVar = this->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, symVarSize, symVarComment);
         if (expression->getAst())
             symVar->setSymVarConcreteValue(expression->getAst()->evaluate().convert_to<triton::uint128>());
-        expression->setAst(triton::ast::variable(*symVar));
+
+        tmp = triton::ast::variable(*symVar);
+        tmp->setParent(expression->getAst()->getParent());
+        expression->setAst(tmp);
+        tmp->init();
 
         return symVar;
       }
@@ -495,7 +500,9 @@ namespace triton {
           }
           else {
             se = this->getSymbolicExpressionFromId(memSymId);
+            tmp->setParent(se->getAst()->getParent());
             se->setAst(tmp);
+            tmp->init();
           }
 
           /* Add the new memory reference */
@@ -534,10 +541,18 @@ namespace triton {
         }
 
         else {
+          /* Get the symbolic expression */
           expression = this->getSymbolicExpressionFromId(regSymId);
+          /* Create the symbolic variable */
           symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parentId, symVarSize, symVarComment);
+          /* Setup the concrete value to the symbolic variable */
           symVar->setSymVarConcreteValue(cv);
-          expression->setAst(triton::ast::variable(*symVar));
+          /* Create the AST node */
+          triton::ast::AbstractNode* tmp = triton::ast::variable(*symVar);
+          /* Set the AST node */
+          tmp->setParent(expression->getAst()->getParent());
+          expression->setAst(tmp);
+          tmp->init();
         }
 
         return symVar;
