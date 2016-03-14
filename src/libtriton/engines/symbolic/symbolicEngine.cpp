@@ -575,7 +575,7 @@ namespace triton {
         triton::uint8 concreteValue[DQWORD_SIZE] = {0};
         triton::uint128 value                    = triton::api.getLastMemoryValue(mem);
 
-        triton::fromUint128ToBuffer(value, concreteValue);
+        triton::utils::fromUintToBuffer(value, concreteValue);
 
         /*
          * Symbolic optimization
