@@ -67,7 +67,7 @@ Returns the kind of the node as \ref py_AST_NODE_page.<br>
 e.g: `AST_NODE.BVADD`
 
 - **getParents(void)**<br>
-Returns the list parent nodes as \ref py_AstNode_page. The list is empty if there is still no parent defined.
+Returns the parents list nodes as \ref py_AstNode_page. The list is empty if there is still no parent defined.
 
 - **getValue(void)**<br>
 Returns the node value as integer or string (it depends of the kind). For example if the kind of node is `decimal`, the value is an integer.
