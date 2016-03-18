@@ -62,6 +62,8 @@ void check(void)
   asm("bsf bx, ax");
   asm("mov rax, 0x0");
   asm("bsf rbx, rax");
+  asm("mov rax, 0x8000000000000000");
+  asm("bsf rbx, rax");
 
   asm("mov rax, 0x1");
   asm("mov rbx, 0x0");

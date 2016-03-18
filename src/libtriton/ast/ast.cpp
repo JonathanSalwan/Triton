@@ -22,7 +22,6 @@ namespace triton {
     AbstractNode::AbstractNode(enum kind_e kind) {
       this->eval        = 0;
       this->kind        = kind;
-      this->parent      = nullptr;
       this->size        = 0;
       this->symbolized  = false;
     }
@@ -31,7 +30,6 @@ namespace triton {
     AbstractNode::AbstractNode() {
       this->eval        = 0;
       this->kind        = UNDEFINED_NODE;
-      this->parent      = nullptr;
       this->size        = 0;
       this->symbolized  = false;
     }
@@ -40,7 +38,7 @@ namespace triton {
     AbstractNode::AbstractNode(const AbstractNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -93,19 +91,47 @@ namespace triton {
     }
 
 
-    AbstractNode* AbstractNode::getParent(void) {
-      return this->parent;
+    std::set<AbstractNode*>& AbstractNode::getParents(void) {
+      return this->parents;
     }
 
 
     void AbstractNode::setParent(AbstractNode* p) {
-      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES) == false)
-        this->parent = p;
+      this->parents.insert(p);
+    }
+
+
+    void AbstractNode::removeParent(AbstractNode* p) {
+      this->parents.erase(p);
+    }
+
+
+    void AbstractNode::setParent(std::set<AbstractNode*>& p) {
+      for (std::set<AbstractNode*>::iterator it = p.begin(); it != p.end(); it++)
+        this->parents.insert(*it);
     }
 
 
     void AbstractNode::addChild(AbstractNode* child) {
       this->childs.push_back(child);
+    }
+
+
+    void AbstractNode::setChild(triton::uint32 index, AbstractNode* child) {
+      if (index >= this->childs.size())
+        throw std::runtime_error("AbstractNode::setChild(): Invalid index.");
+
+      if (child == nullptr)
+        throw std::runtime_error("AbstractNode::setChild(): child cannot be null.");
+
+      /* Setup the parent of the child */
+      child->setParent(this);
+
+      /* Remove the parent of the old child */
+      this->childs[index]->removeParent(this);
+
+      /* Setup the child of the parent */
+      this->childs[index] = child;
     }
 
 
@@ -127,7 +153,7 @@ namespace triton {
     AssertNode::AssertNode(const AssertNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -156,8 +182,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -189,7 +215,7 @@ namespace triton {
     BvaddNode::BvaddNode(const BvaddNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -221,8 +247,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -254,7 +280,7 @@ namespace triton {
     BvandNode::BvandNode(const BvandNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -286,8 +312,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -320,7 +346,7 @@ namespace triton {
     BvashrNode::BvashrNode(const BvashrNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -384,8 +410,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -416,7 +442,7 @@ namespace triton {
     BvdeclNode::BvdeclNode(const BvdeclNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -457,8 +483,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -490,7 +516,7 @@ namespace triton {
     BvlshrNode::BvlshrNode(const BvlshrNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -522,8 +548,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -555,7 +581,7 @@ namespace triton {
     BvmulNode::BvmulNode(const BvmulNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -587,8 +613,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -620,7 +646,7 @@ namespace triton {
     BvnandNode::BvnandNode(const BvnandNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -652,8 +678,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -684,7 +710,7 @@ namespace triton {
     BvnegNode::BvnegNode(const BvnegNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -713,8 +739,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -746,7 +772,7 @@ namespace triton {
     BvnorNode::BvnorNode(const BvnorNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -778,8 +804,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -810,7 +836,7 @@ namespace triton {
     BvnotNode::BvnotNode(const BvnotNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -839,8 +865,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -872,7 +898,7 @@ namespace triton {
     BvorNode::BvorNode(const BvorNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -904,8 +930,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -945,7 +971,7 @@ namespace triton {
     BvrolNode::BvrolNode(const BvrolNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -985,8 +1011,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -1026,7 +1052,7 @@ namespace triton {
     BvrorNode::BvrorNode(const BvrorNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -1065,8 +1091,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -1098,7 +1124,7 @@ namespace triton {
     BvsdivNode::BvsdivNode(const BvsdivNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -1143,8 +1169,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -1176,7 +1202,7 @@ namespace triton {
     BvsgeNode::BvsgeNode(const BvsgeNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -1215,8 +1241,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -1248,7 +1274,7 @@ namespace triton {
     BvsgtNode::BvsgtNode(const BvsgtNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -1287,8 +1313,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -1320,7 +1346,7 @@ namespace triton {
     BvshlNode::BvshlNode(const BvshlNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -1352,8 +1378,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -1385,7 +1411,7 @@ namespace triton {
     BvsleNode::BvsleNode(const BvsleNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -1424,8 +1450,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -1457,7 +1483,7 @@ namespace triton {
     BvsltNode::BvsltNode(const BvsltNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -1496,8 +1522,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -1529,7 +1555,7 @@ namespace triton {
     BvsmodNode::BvsmodNode(const BvsmodNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -1572,8 +1598,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -1605,7 +1631,7 @@ namespace triton {
     BvsremNode::BvsremNode(const BvsremNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -1652,8 +1678,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -1685,7 +1711,7 @@ namespace triton {
     BvsubNode::BvsubNode(const BvsubNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -1717,8 +1743,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -1750,7 +1776,7 @@ namespace triton {
     BvudivNode::BvudivNode(const BvudivNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -1786,8 +1812,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -1819,7 +1845,7 @@ namespace triton {
     BvugeNode::BvugeNode(const BvugeNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -1851,8 +1877,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -1884,7 +1910,7 @@ namespace triton {
     BvugtNode::BvugtNode(const BvugtNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -1916,8 +1942,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -1949,7 +1975,7 @@ namespace triton {
     BvuleNode::BvuleNode(const BvuleNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -1981,8 +2007,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2014,7 +2040,7 @@ namespace triton {
     BvultNode::BvultNode(const BvultNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -2046,8 +2072,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2079,7 +2105,7 @@ namespace triton {
     BvuremNode::BvuremNode(const BvuremNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -2115,8 +2141,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2148,7 +2174,7 @@ namespace triton {
     BvxnorNode::BvxnorNode(const BvxnorNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -2180,8 +2206,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2213,7 +2239,7 @@ namespace triton {
     BvxorNode::BvxorNode(const BvxorNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -2245,8 +2271,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2278,7 +2304,7 @@ namespace triton {
     BvNode::BvNode(const BvNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -2322,8 +2348,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2355,7 +2381,7 @@ namespace triton {
     CompoundNode::CompoundNode(const CompoundNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -2384,8 +2410,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2433,7 +2459,7 @@ namespace triton {
     ConcatNode::ConcatNode(const ConcatNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -2471,8 +2497,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2505,7 +2531,7 @@ namespace triton {
       this->value      = copy.value;
       this->size       = copy.size;
       this->eval       = copy.eval;
-      this->parent     = copy.parent;
+      this->parents    = copy.parents;
       this->symbolized = copy.symbolized;
     }
 
@@ -2521,8 +2547,8 @@ namespace triton {
       this->symbolized  = false;
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2556,7 +2582,7 @@ namespace triton {
     DeclareFunctionNode::DeclareFunctionNode(const DeclareFunctionNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -2591,8 +2617,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2624,7 +2650,7 @@ namespace triton {
     DistinctNode::DistinctNode(const DistinctNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -2653,8 +2679,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2686,7 +2712,7 @@ namespace triton {
     EqualNode::EqualNode(const EqualNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -2715,8 +2741,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2749,7 +2775,7 @@ namespace triton {
     ExtractNode::ExtractNode(const ExtractNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -2793,8 +2819,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2827,7 +2853,7 @@ namespace triton {
     IteNode::IteNode(const IteNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -2859,8 +2885,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2892,7 +2918,7 @@ namespace triton {
     LandNode::LandNode(const LandNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -2921,8 +2947,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -2955,7 +2981,7 @@ namespace triton {
     LetNode::LetNode(const LetNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -2987,8 +3013,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -3019,7 +3045,7 @@ namespace triton {
     LnotNode::LnotNode(const LnotNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -3048,8 +3074,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -3081,7 +3107,7 @@ namespace triton {
     LorNode::LorNode(const LorNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -3110,8 +3136,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -3144,7 +3170,7 @@ namespace triton {
       this->value       = copy.value;
       this->size        = copy.size;
       this->eval        = copy.eval;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->symbolized  = copy.symbolized;
     }
 
@@ -3169,8 +3195,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -3205,7 +3231,7 @@ namespace triton {
       this->value       = copy.value;
       this->size        = copy.size;
       this->eval        = copy.eval;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->symbolized  = copy.symbolized;
     }
 
@@ -3221,8 +3247,8 @@ namespace triton {
       this->symbolized  = false;
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -3259,7 +3285,7 @@ namespace triton {
     SxNode::SxNode(const SxNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -3298,8 +3324,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -3332,7 +3358,7 @@ namespace triton {
       this->value       = copy.value;
       this->size        = copy.size;
       this->eval        = copy.eval;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->symbolized  = copy.symbolized;
     }
 
@@ -3354,8 +3380,8 @@ namespace triton {
         throw std::runtime_error("VariableNode::init(): Variable not found.");
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 
@@ -3392,7 +3418,7 @@ namespace triton {
     ZxNode::ZxNode(const ZxNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
-      this->parent      = copy.parent;
+      this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
 
@@ -3431,8 +3457,8 @@ namespace triton {
       }
 
       /* Init parents */
-      if (this->parent)
-        this->parent->init();
+      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
+        (*it)->init();
     }
 
 

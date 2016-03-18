@@ -47,8 +47,8 @@ namespace triton {
         //! The childs of the node.
         std::vector<AbstractNode*> childs;
 
-        //! The parent node. nullptr if there is no parent.
-        AbstractNode* parent;
+        //! The parents of the node. Empty if there is still no parent.
+        std::set<AbstractNode*> parents;
 
         //! The size of the node.
         triton::uint32 size;
@@ -94,19 +94,28 @@ namespace triton {
         std::vector<AbstractNode*>& getChilds(void);
 
         /*!
-         * \brief Returns the parent node or nullptr if there is no parent yet.
-         * \brief Note that if there is the AST_DICTIONARIES optimization enabled, this feature will always return a nullptr.
+         * \brief Returns the parents of node or an empty set if there is still no parent defined.
+         * \brief Note that if there is the `AST_DICTIONARIES` optimization enabled, this feature will probably not represent the real tree of your expression.
          */
-        AbstractNode* getParent(void);
+        std::set<AbstractNode*>& getParents(void);
 
-        //! Sets the parent node.
+        //! Removes a parent node.
+        void removeParent(AbstractNode* p);
+
+        //! Sets a parent node.
         void setParent(AbstractNode* p);
+
+        //! Sets the parent nodes.
+        void setParent(std::set<AbstractNode*>& p);
 
         //! Sets the size of the node.
         void setBitvectorSize(triton::uint32 size);
 
         //! Adds a child.
         void addChild(AbstractNode* child);
+
+        //! Sets a child at an index.
+        void setChild(triton::uint32 index, AbstractNode* child);
 
         //! Init stuffs like size and eval.
         virtual void init(void) = 0;

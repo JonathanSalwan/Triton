@@ -66,8 +66,8 @@ Returns the hash (signature) of the AST as float.
 Returns the kind of the node as \ref py_AST_NODE_page.<br>
 e.g: `AST_NODE.BVADD`
 
-- **getParent(void)**<br>
-Returns the parent node as \ref py_AstNode_page.
+- **getParents(void)**<br>
+Returns the list parent nodes as \ref py_AstNode_page. The list is empty if there is still no parent defined.
 
 - **getValue(void)**<br>
 Returns the node value as integer or string (it depends of the kind). For example if the kind of node is `decimal`, the value is an integer.
@@ -164,15 +164,16 @@ namespace triton {
       }
 
 
-      static PyObject* AstNode_getParent(PyObject* self, PyObject* noarg) {
+      static PyObject* AstNode_getParents(PyObject* self, PyObject* noarg) {
         try {
-          triton::ast::AbstractNode* parent = PyAstNode_AsAstNode(self)->getParent();
-          if (parent == nullptr) {
-            Py_INCREF(Py_None);
-            return Py_None;
+          PyObject* ret = nullptr;
+          std::set<triton::ast::AbstractNode*>& parents = PyAstNode_AsAstNode(self)->getParents();
+          ret = xPyList_New(parents.size());
+          triton::uint32 index = 0;
+          for (std::set<triton::ast::AbstractNode*>::iterator it = parents.begin(); it != parents.end(); it++)
+            PyList_SetItem(ret, index++, PyAstNode(*it));
+          return ret;
           }
-          return PyAstNode(parent);
-        }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -245,10 +246,7 @@ namespace triton {
           i = PyLong_AsUint(index);
           src = PyAstNode_AsAstNode(node);
           dst = PyAstNode_AsAstNode(self);
-          if (i >= dst->getChilds().size())
-            return PyErr_Format(PyExc_TypeError, "AstNode::setChild(): index out-of-range.");
-
-          dst->getChilds()[i] = src;
+          dst->setChild(i, src);
           dst->init();
 
           Py_RETURN_TRUE;
@@ -460,7 +458,7 @@ namespace triton {
         {"getChilds",         AstNode_getChilds,         METH_NOARGS,     ""},
         {"getHash",           AstNode_getHash,           METH_NOARGS,     ""},
         {"getKind",           AstNode_getKind,           METH_NOARGS,     ""},
-        {"getParent",         AstNode_getParent,         METH_NOARGS,     ""},
+        {"getParents",        AstNode_getParents,        METH_NOARGS,     ""},
         {"getValue",          AstNode_getValue,          METH_NOARGS,     ""},
         {"isSigned",          AstNode_isSigned,          METH_NOARGS,     ""},
         {"isSymbolized",      AstNode_isSymbolized,      METH_NOARGS,     ""},

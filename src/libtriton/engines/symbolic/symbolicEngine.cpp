@@ -459,7 +459,7 @@ namespace triton {
             symVar->setSymVarConcreteValue(expression->getAst()->evaluate().convert_to<triton::uint128>());
 
         tmp = triton::ast::variable(*symVar);
-        tmp->setParent(expression->getAst()->getParent());
+        tmp->setParent(expression->getAst()->getParents());
         expression->setAst(tmp);
         tmp->init();
 
@@ -500,7 +500,7 @@ namespace triton {
           }
           else {
             se = this->getSymbolicExpressionFromId(memSymId);
-            tmp->setParent(se->getAst()->getParent());
+            tmp->setParent(se->getAst()->getParents());
             se->setAst(tmp);
             tmp->init();
           }
@@ -550,7 +550,7 @@ namespace triton {
           /* Create the AST node */
           triton::ast::AbstractNode* tmp = triton::ast::variable(*symVar);
           /* Set the AST node */
-          tmp->setParent(expression->getAst()->getParent());
+          tmp->setParent(expression->getAst()->getParents());
           expression->setAst(tmp);
           tmp->init();
         }
