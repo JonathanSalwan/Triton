@@ -3493,7 +3493,9 @@ namespace triton {
 
     /* Compares two trees */
     bool operator==(AbstractNode& node1, AbstractNode& node2) {
-      return node1.hash(1) == node2.hash(1);
+      return (node1.evaluate() == node2.evaluate()) &&
+             (node1.getBitvectorSize() == node2.getBitvectorSize()) &&
+             (node1.hash(1) == node2.hash(1));
     }
 
 
