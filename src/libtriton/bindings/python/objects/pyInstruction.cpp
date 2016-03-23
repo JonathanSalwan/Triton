@@ -132,7 +132,7 @@ Returns true if at least one of its \ref py_SymbolicExpression_page is tainted.
 - **setAddress(integer addr)**<br>
 Sets the address of the instruction.
 
-- **setOpcodes(bytes opcodes, integer size)**<br>
+- **setOpcodes(bytes opcodes)**<br>
 Sets the opcodes of the instruction.
 
 - **setThreadId(integer tid)**<br>
