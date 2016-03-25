@@ -79,6 +79,7 @@ script:
   - ./ir.bin
   - ./simplification.bin
   - ./constraint.bin
+  - cd ../../../
 
   # libPintool + libTriton unit testing
   - sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"
