@@ -36,13 +36,13 @@ symVarMem = None
 
 def csym(instruction):
     # Prologue of the function
-    if instruction.getAddress() == 0x40056d and isSnapshotEnabled() == False:
+    if instruction.getAddress() == 0x400556 and isSnapshotEnabled() == False:
         takeSnapshot()
         print '[+] Take a snapshot at the prologue of the function'
         return
 
     # 0x40058b: movzx eax, byte ptr [rax]
-    if instruction.getAddress() == 0x40058b:
+    if instruction.getAddress() == 0x400574:
         global symVarMem
         rax = getCurrentRegisterValue(REG.RAX)
         symVarMem = rax
@@ -52,7 +52,7 @@ def csym(instruction):
         return
 
     # Epilogue of the function
-    if instruction.getAddress() == 0x4005c8:
+    if instruction.getAddress() == 0x4005b1:
         rax = getCurrentRegisterValue(REG.RAX)
         # The function returns 0 if the password is valid
         # So, we restore the snapshot until this function
@@ -69,12 +69,12 @@ def csym(instruction):
 
 def cafter(instruction):
     # 0x40058b: movzx eax, byte ptr [rax]
-    if instruction.getAddress() == 0x40058b:
+    if instruction.getAddress() == 0x400574:
         var = convertRegisterToSymbolicVariable(REG.RAX)
         return
 
     # 0x4005ae: cmp ecx, eax
-    if instruction.getAddress() == 0x4005ae:
+    if instruction.getAddress() == 0x400597:
         zfId    = getSymbolicRegisterId(REG.ZF)
         zfExpr  = getFullAstFromId(zfId)
         expr    = assert_(equal(zfExpr, bvtrue())) # (assert (= zf True))

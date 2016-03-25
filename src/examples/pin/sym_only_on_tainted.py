@@ -11,7 +11,7 @@ from triton  import *
 
 
 def cb_ir(inst):
-    if inst.getAddress() == 0x40058b:
+    if inst.getAddress() == 0x400574:
         rax = getCurrentRegisterValue(REG.RAX)
         taintMemory(rax)
     return

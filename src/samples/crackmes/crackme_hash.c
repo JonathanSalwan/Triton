@@ -26,8 +26,8 @@ int main(int ac, char **av)
   if (ret == 0xad6d)
     printf("Win\n");
   else
-    printf("loose\n");
+    printf("fail\n");
 
-  return ret;
+  return 0;
 }
 

@@ -48,14 +48,14 @@ from pintool import *
 
 def cafter(instruction):
 
-    # movzx esi,BYTE PTR [rax]
+    # movzx  eax,BYTE PTR [rax]
     # RAX points on the user password
-    if instruction.getAddress() == 0x400572:
-        convertRegisterToSymbolicVariable(REG.RSI)
+    if instruction.getAddress() == 0x4005ab:
+        convertRegisterToSymbolicVariable(REG.RAX)
 
     # mov eax,DWORD PTR [rbp-0x4]
     # RAX must be equal to 0xad6d to win
-    if instruction.getAddress() == 0x4005c5:
+    if instruction.getAddress() == 0x4005ce:
         print '[+] Please wait, computing in progress...'
         raxId = getSymbolicRegisterId(REG.RAX)
         raxExpr = getFullAstFromId(raxId)

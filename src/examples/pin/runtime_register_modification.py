@@ -20,11 +20,11 @@ from   triton  import *
 
 
 def cb1(inst):
-    if inst.getAddress() == 0x4005f9:
+    if inst.getAddress() == 0x4005e2:
         setCurrentRegisterValue(REG.RAX, 0)
 
 def cb2(inst):
-    if inst.getAddress() == 0x4005f9:
+    if inst.getAddress() == 0x4005e2:
         print inst
         for expr in inst.getSymbolicExpressions():
             print '\t', expr
