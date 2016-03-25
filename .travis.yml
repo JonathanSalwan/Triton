@@ -26,7 +26,7 @@ env:
 before_script:
   - sudo add-apt-repository ppa:boost-latest/ppa -y
   - sudo apt-get update -q
-  - sudo apt-get install libboost1.53-all-dev
+  - sudo apt-get install libboost1.58-all-dev
   - sudo apt-get install python-pip
   - sudo apt-get install python-setuptools
   - export CC="gcc-4.9"
