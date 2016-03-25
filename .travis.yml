@@ -26,74 +26,71 @@ addons:
 env:
   - PYTHON_VERSION=2.7
 
-before_script:
+before_install:
   - sudo add-apt-repository ppa:hvr/z3 -y
   - sudo apt-get update -q
   - sudo apt-get install -y libz3-dev
-  - sudo apt-get install python-pip
   - sudo apt-get install python-setuptools
   - export CC="gcc-4.9"
   - export CXX="g++-4.9"
-  - cd ~
+  - cd ..
+  - pwd
+  - ls
+  # Install capstone
   - git clone https://github.com/aquynh/capstone.git
   - cd capstone
   - bash ./make.sh
   - sudo make install
-  #- cd ~
-  #- git clone https://github.com/Z3Prover/z3.git
-  #- cd z3
-  #- ./configure
-  #- cd build
-  #- sudo make install -j2
-  - cd ~
+  - cd ../
+  # Download pin
   - wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz
   - tar -xf pin-2.14-71313-gcc.4.4.7-linux.tar.gz
+  - ls
+  #- cd ./pin-2.14-71313-gcc.4.4.7-linux/source/tools/
 
 script:
-  - cd ~
-  - cd ./pin-2.14-71313-gcc.4.4.7-linux/source/tools/
-  - git clone https://github.com/JonathanSalwan/Triton.git
-  - cd Triton
-  - mkdir build
-  - cd build
-  - cmake -DPINTOOL=yes -DKERNEL4=yes ..
-  - sudo make -j2 install
-  - cd ..
-  - sudo python ./setup.py install
+  #- cd Triton
+  #- mkdir build
+  #- cd build
+  #- cmake -DPINTOOL=yes -DKERNEL4=yes ..
+  #- sudo make -j2 install
+  #- cd ..
+  #- sudo python ./setup.py install
 
-  # libTriton unit testing
-  # Python
-  - python ./src/examples/python/code_coverage_crackme_xor.py
-  - python ./src/examples/python/disass.py
-  - python ./src/examples/python/ir.py
-  - python ./src/examples/python/simplification.py
-  - python ./src/examples/python/symbolic_emulation_1.py
-  - python ./src/examples/python/symbolic_emulation_2.py
-  - python ./src/examples/python/symbolic_emulation_crackme_xor.py
-  - python ./src/testers/check_eval.py
-  # C++
-  - cd src/examples/cpp
-  - make
-  - ./taint_reg.bin
-  - ./info_reg.bin
-  - ./ir.bin
-  - ./simplification.bin
-  - ./constraint.bin
-  - cd ../../../
+after_success:
+  ## libTriton unit testing
+  ## Python
+  #- python ./src/examples/python/code_coverage_crackme_xor.py
+  #- python ./src/examples/python/disass.py
+  #- python ./src/examples/python/ir.py
+  #- python ./src/examples/python/simplification.py
+  #- python ./src/examples/python/symbolic_emulation_1.py
+  #- python ./src/examples/python/symbolic_emulation_2.py
+  #- python ./src/examples/python/symbolic_emulation_crackme_xor.py
+  #- python ./src/testers/check_eval.py
+  ## C++
+  #- cd src/examples/cpp
+  #- make
+  #- ./taint_reg.bin
+  #- ./info_reg.bin
+  #- ./ir.bin
+  #- ./simplification.bin
+  #- ./constraint.bin
+  #- cd ../../../
 
-  # libPintool + libTriton unit testing
-  - sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"
-  - ./triton ./src/testers/check_semantics.py ./src/samples/ir_test_suite/ir
-  - ./triton ./src/examples/pin/ast_dictionaries.py ./src/samples/crackmes/crackme_xor elite
-  - ./triton ./src/examples/pin/blacklist.py ./src/samples/crackmes/crackme_xor a
-  - ./triton ./src/examples/pin/callback_image.py ./src/samples/ir_test_suite/ir
-  - ./triton ./src/examples/pin/callback_routine.py  ./src/samples/vulns/testSuite
-  - ./triton ./src/examples/pin/callback_syscall.py  ./src/samples/crackmes/crackme_xor a
-  - ./triton ./src/examples/pin/crackme_hash_collision.py ./src/samples/crackmes/crackme_hash aaaaa
-  - ./triton ./src/examples/pin/inject_model_with_snapshot.py ./src/samples/crackmes/crackme_xor a
-  - ./triton ./src/examples/pin/ir.py ./src/samples/crackmes/crackme_xor a
-  - ./triton ./src/examples/pin/runtime_memory_tainting.py ./src/samples/crackmes/crackme_xor a
-  - ./triton ./src/examples/pin/runtime_register_modification.py ./src/samples/crackmes/crackme_xor a
-  - ./triton ./src/examples/pin/strlen.py ./src/samples/others/strlen 1
-  - ./triton ./src/examples/pin/sym_only_on_tainted.py ./src/samples/crackmes/crackme_xor a
+  ## libPintool + libTriton unit testing
+  #- sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"
+  #- ./triton ./src/testers/check_semantics.py ./src/samples/ir_test_suite/ir
+  #- ./triton ./src/examples/pin/ast_dictionaries.py ./src/samples/crackmes/crackme_xor elite
+  #- ./triton ./src/examples/pin/blacklist.py ./src/samples/crackmes/crackme_xor a
+  #- ./triton ./src/examples/pin/callback_image.py ./src/samples/ir_test_suite/ir
+  #- ./triton ./src/examples/pin/callback_routine.py  ./src/samples/vulns/testSuite
+  #- ./triton ./src/examples/pin/callback_syscall.py  ./src/samples/crackmes/crackme_xor a
+  #- ./triton ./src/examples/pin/crackme_hash_collision.py ./src/samples/crackmes/crackme_hash aaaaa
+  #- ./triton ./src/examples/pin/inject_model_with_snapshot.py ./src/samples/crackmes/crackme_xor a
+  #- ./triton ./src/examples/pin/ir.py ./src/samples/crackmes/crackme_xor a
+  #- ./triton ./src/examples/pin/runtime_memory_tainting.py ./src/samples/crackmes/crackme_xor a
+  #- ./triton ./src/examples/pin/runtime_register_modification.py ./src/samples/crackmes/crackme_xor a
+  #- ./triton ./src/examples/pin/strlen.py ./src/samples/others/strlen 1
+  #- ./triton ./src/examples/pin/sym_only_on_tainted.py ./src/samples/crackmes/crackme_xor a
 
