@@ -59,3 +59,15 @@ script:
   - sudo python ./setup.py install
   - sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"
   - ./triton src/testers/check_semantics.py ./src/samples/ir_test_suite/ir
+  - python src/examples/python/code_coverage_crackme_xor.py
+  - python src/examples/python/ir.py
+  - python src/examples/python/symbolic_emulation_1.py
+  - python src/examples/python/symbolic_emulation_2.py
+  - python src/examples/python/symbolic_emulation_crackme_xor.py
+  - cd src/examples/cpp
+  - make
+  - ./taint_reg.bin
+  - ./info_reg.bin
+  - ./ir.bin
+  - ./simplification.bin
+  - ./constraint.bin
