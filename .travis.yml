@@ -26,7 +26,7 @@ before_script:
   - export CXX="g++-4.9"
   - git clone https://github.com/aquynh/capstone.git
   - cd capstone
-  - sh ./make.sh
+  - bash ./make.sh
   - sudo make install
   - wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz
   - tar -xf pin-2.14-71313-gcc.4.4.7-linux.tar.gz
