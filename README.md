@@ -12,7 +12,7 @@ As **Triton** is still a young project, please, **don't blame us** if it is not 
 
 A full documentation is available on our [doxygen page](http://triton.quarkslab.com/documentation/doxygen).</p>
 
-<p><a href="https://travis-ci.org/JonathanSalwan/Triton"><img src="https://travis-ci.org/JonathanSalwan/Triton.svg?branch=master"></a></p>
+<p><a href="https://travis-ci.org/JonathanSalwan/Triton/branches"><img src="https://travis-ci.org/JonathanSalwan/Triton.svg?branch=master"></a></p>
 
 ### Quick start
 
