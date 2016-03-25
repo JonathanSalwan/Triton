@@ -60,13 +60,18 @@ script:
   - sudo make -j2 install
   - cd ..
   - sudo python ./setup.py install
-  - sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"
-  - ./triton src/testers/check_semantics.py ./src/samples/ir_test_suite/ir
-  - python src/examples/python/code_coverage_crackme_xor.py
-  - python src/examples/python/ir.py
-  - python src/examples/python/symbolic_emulation_1.py
-  - python src/examples/python/symbolic_emulation_2.py
-  - python src/examples/python/symbolic_emulation_crackme_xor.py
+
+  # libTriton unit testing
+  # Python
+  - python ./src/examples/python/code_coverage_crackme_xor.py
+  - python ./src/examples/python/disass.py
+  - python ./src/examples/python/ir.py
+  - python ./src/examples/python/simplification.py
+  - python ./src/examples/python/symbolic_emulation_1.py
+  - python ./src/examples/python/symbolic_emulation_2.py
+  - python ./src/examples/python/symbolic_emulation_crackme_xor.py
+  - python ./src/testers/check_eval.py
+  # C++
   - cd src/examples/cpp
   - make
   - ./taint_reg.bin
@@ -74,3 +79,21 @@ script:
   - ./ir.bin
   - ./simplification.bin
   - ./constraint.bin
+
+  # libPintool + libTriton unit testing
+  - sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"
+  - ./triton ./src/testers/check_semantics.py ./src/samples/ir_test_suite/ir
+  - ./triton ./src/examples/pin/ast_dictionaries.py ./src/samples/crackmes/crackme_xor elite
+  - ./triton ./src/examples/pin/blacklist.py ./src/samples/crackmes/crackme_xor a
+  - ./triton ./src/examples/pin/callback_image.py ./src/samples/ir_test_suite/ir
+  - ./triton ./src/examples/pin/callback_routine.py  ./src/samples/vulns/testSuite
+  - ./triton ./src/examples/pin/callback_signals.py ./src/samples/others/signals
+  - ./triton ./src/examples/pin/callback_syscall.py  ./src/samples/crackmes/crackme_xor a
+  - ./triton ./src/examples/pin/crackme_hash_collision.py ./src/samples/crackmes/crackme_hash aaaaa
+  - ./triton ./src/examples/pin/inject_model_with_snapshot.py ./src/samples/crackmes/crackme_xor a
+  - ./triton ./src/examples/pin/ir.py ./src/samples/crackmes/crackme_xor a
+  - ./triton ./src/examples/pin/runtime_memory_tainting.py ./src/samples/crackmes/crackme_xor a
+  - ./triton ./src/examples/pin/runtime_register_modification.py ./src/samples/crackmes/crackme_xor a
+  - ./triton ./src/examples/pin/strlen.py ./src/samples/others/strlen 1
+  - ./triton ./src/examples/pin/sym_only_on_tainted.py ./src/samples/crackmes/crackme_xor a
+

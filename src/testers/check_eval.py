@@ -659,6 +659,7 @@ tests = [
 ]
 
 if __name__ == '__main__':
+    ret = 0
     for test in tests:
         trv = test.evaluate()
         z3v = evaluateAstViaZ3(test)
@@ -666,7 +667,8 @@ if __name__ == '__main__':
             print '[KO]', test
             print '\tTriton value : %x' %(trv)
             print '\tZ3 value     : %x' %(z3v)
+            ret += 1
         else:
             print '[OK]', test
-    sys.exit(0)
+    sys.exit(ret)
 
