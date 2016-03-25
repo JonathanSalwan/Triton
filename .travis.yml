@@ -88,7 +88,7 @@ after_success:
   - ./triton ./src/examples/pin/callback_syscall.py  ./src/samples/crackmes/crackme_xor a
   - ./triton ./src/examples/pin/crackme_hash_collision.py ./src/samples/crackmes/crackme_hash aaaaa
   - ./triton ./src/examples/pin/inject_model_with_snapshot.py ./src/samples/crackmes/crackme_xor a
-  - ./triton ./src/examples/pin/ir.py ./src/samples/crackmes/crackme_xor a
+  - ./triton ./src/examples/pin/ir.py ./src/samples/crackmes/crackme_xor a > /dev/null
   - ./triton ./src/examples/pin/runtime_memory_tainting.py ./src/samples/crackmes/crackme_xor a
   - ./triton ./src/examples/pin/runtime_register_modification.py ./src/samples/crackmes/crackme_xor a
   - ./triton ./src/examples/pin/strlen.py ./src/samples/others/strlen 1
