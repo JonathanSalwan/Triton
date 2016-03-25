@@ -27,6 +27,9 @@ env:
   - PYTHON_VERSION=2.7
 
 before_script:
+  - sudo add-apt-repository ppa:hvr/z3 -y
+  - sudo apt-get update -q
+  - sudo apt-get install -y libz3-dev
   - sudo apt-get install python-pip
   - sudo apt-get install python-setuptools
   - export CC="gcc-4.9"
@@ -36,12 +39,12 @@ before_script:
   - cd capstone
   - bash ./make.sh
   - sudo make install
-  - cd ~
-  - git clone https://github.com/Z3Prover/z3.git
-  - cd z3
-  - ./configure
-  - cd build
-  - sudo make install -j2
+  #- cd ~
+  #- git clone https://github.com/Z3Prover/z3.git
+  #- cd z3
+  #- ./configure
+  #- cd build
+  #- sudo make install -j2
   - cd ~
   - wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz
   - tar -xf pin-2.14-71313-gcc.4.4.7-linux.tar.gz
