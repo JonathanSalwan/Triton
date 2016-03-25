@@ -355,7 +355,6 @@ namespace triton {
       this->removeEngines();
       this->initEngines();
       this->clearArchitecture();
-      triton::ast::freeAllAstNodes();
     }
   }
 
