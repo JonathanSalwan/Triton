@@ -1,0 +1,44 @@
+language:
+  - cpp
+
+sudo: required
+
+cache:
+- apt
+- ccache
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-4.9
+    - g++-4.9
+    - ccache
+    - libboost-all-dev
+    - python2-dev
+
+env:
+  - PYTHON_VERSION=2.7
+
+before_script:
+  - export CC="gcc-4.9"
+  - export CXX="g++-4.9"
+  - git clone https://github.com/aquynh/capstone.git
+  - cd capstone
+  - sh ./make.sh
+  - sudo make install
+  - wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz
+  - tar -xf pin-2.14-71313-gcc.4.4.7-linux.tar.gz
+  - cd ./pin-2.14-71313-gcc.4.4.7-linux/source/tools/
+  - git clone https://github.com/JonathanSalwan/Triton.git
+  - cd Triton
+
+script:
+  - mkdir build
+  - cd build
+  - cmake -DPINTOOL=yes -DKERNEL4=yes ..
+  - sudo make -j2 install
+  - cd ..
+  - sudo python ./setup.py install
+  - ./triton src/testers/check_semantics.py ./src/samples/ir_test_suite/ir
