@@ -41,7 +41,7 @@ before_script:
   - cd z3
   - ./configure
   - cd build
-  - sudo make install -j3
+  - sudo make install -j2
   - cd ~
   - wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz
   - tar -xf pin-2.14-71313-gcc.4.4.7-linux.tar.gz
@@ -54,7 +54,8 @@ script:
   - mkdir build
   - cd build
   - cmake -DPINTOOL=yes -DKERNEL4=yes ..
-  - sudo make -j3 install
+  - sudo make -j2 install
   - cd ..
   - sudo python ./setup.py install
+  - sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"
   - ./triton src/testers/check_semantics.py ./src/samples/ir_test_suite/ir
