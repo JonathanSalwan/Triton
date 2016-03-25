@@ -1,6 +1,9 @@
 language:
   - cpp
 
+notifications:
+  email: false
+
 sudo: required
 
 cache:
@@ -15,7 +18,7 @@ addons:
     - gcc-4.9
     - g++-4.9
     - ccache
-    - libboost-all-dev
+    - libboost1.53-all-dev
     - python2-dev
 
 env:
@@ -24,17 +27,26 @@ env:
 before_script:
   - export CC="gcc-4.9"
   - export CXX="g++-4.9"
+  - cd ~
   - git clone https://github.com/aquynh/capstone.git
   - cd capstone
   - bash ./make.sh
   - sudo make install
+  - cd ~
+  - git clone https://github.com/Z3Prover/z3.git
+  - cd z3
+  - ./configure
+  - cd build
+  - sudo make install
+  - cd ~
   - wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz
   - tar -xf pin-2.14-71313-gcc.4.4.7-linux.tar.gz
+
+script:
+  - cd ~
   - cd ./pin-2.14-71313-gcc.4.4.7-linux/source/tools/
   - git clone https://github.com/JonathanSalwan/Triton.git
   - cd Triton
-
-script:
   - mkdir build
   - cd build
   - cmake -DPINTOOL=yes -DKERNEL4=yes ..
