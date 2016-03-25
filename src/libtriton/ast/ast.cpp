@@ -3520,12 +3520,11 @@ namespace triton {
     /* Go through every allocated nodes and free them */
     void freeAllAstNodes(void) {
       std::set<AbstractNode*>::const_iterator it;
-      for (it = triton::ast::allocatedNodes.begin(); it != triton::ast::allocatedNodes.end(); it++) {
-        (*it)->getChilds().clear();
-        delete *it;
-      }
-      triton::ast::allocatedNodes.clear();
       triton::ast::variableNodes.clear();
+      for (it = triton::ast::allocatedNodes.begin(); it != triton::ast::allocatedNodes.end();) {
+        delete *it;
+        it = triton::ast::allocatedNodes.erase(it);
+      }
     }
 
 

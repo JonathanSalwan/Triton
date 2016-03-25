@@ -345,7 +345,7 @@ namespace triton {
       delete this->sym;
       delete this->symBackup;
       delete this->taint;
-      //triton::ast::freeAllAstNodes();
+      triton::ast::freeAllAstNodes();
     }
   }
 
@@ -355,7 +355,7 @@ namespace triton {
       this->removeEngines();
       this->initEngines();
       this->clearArchitecture();
-      //triton::ast::freeAllAstNodes();
+      triton::ast::freeAllAstNodes();
     }
   }
 
