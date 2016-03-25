@@ -14,18 +14,19 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
+    - boost-latest
     packages:
     - gcc-4.9
     - g++-4.9
     - ccache
     - python2-dev
+    - libboost1.55-all-dev
+    - cmake
 
 env:
   - PYTHON_VERSION=2.7
 
 before_script:
-  - sudo add-apt-repository ppa:boost-latest/ppa -y
-  - sudo apt-get update -q
   - sudo apt-get install python-pip
   - sudo apt-get install python-setuptools
   - wget http://mirrors.kernel.org/ubuntu/pool/universe/b/boost-mpi-source1.58/libboost1.58-all-dev_1.58.0+dfsg-3.1ubuntu1_amd64.deb
