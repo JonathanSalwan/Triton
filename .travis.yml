@@ -18,13 +18,15 @@ addons:
     - gcc-4.9
     - g++-4.9
     - ccache
-    - libboost1.53-all-dev
     - python2-dev
 
 env:
   - PYTHON_VERSION=2.7
 
 before_script:
+  - sudo apt-get install libboost1.53-all-dev
+  - sudo apt-get install python-pip
+  - sudo apt-get install python-setuptools
   - export CC="gcc-4.9"
   - export CXX="g++-4.9"
   - cd ~
@@ -37,7 +39,7 @@ before_script:
   - cd z3
   - ./configure
   - cd build
-  - sudo make install
+  - sudo make install -j3
   - cd ~
   - wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz
   - tar -xf pin-2.14-71313-gcc.4.4.7-linux.tar.gz
@@ -50,7 +52,7 @@ script:
   - mkdir build
   - cd build
   - cmake -DPINTOOL=yes -DKERNEL4=yes ..
-  - sudo make -j2 install
+  - sudo make -j3 install
   - cd ..
   - sudo python ./setup.py install
   - ./triton src/testers/check_semantics.py ./src/samples/ir_test_suite/ir

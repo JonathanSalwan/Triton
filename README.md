@@ -10,7 +10,9 @@ Based on these components, you are able to build program analysis tools, automat
 As **Triton** is still a young project, please, **don't blame us** if it is not yet reliable. [Open issues](https://github.com/JonathanSalwan/Triton/issues) or
 [pull requests](https://github.com/JonathanSalwan/Triton/pulls) are always better than troll =).
 
-A full documentation is available on our [doxygen page](http://triton.quarkslab.com/documentation/doxygen).
+A full documentation is available on our [doxygen page](http://triton.quarkslab.com/documentation/doxygen).</p>
+
+<p><img src="https://travis-ci.org/JonathanSalwan/Triton.svg?branch=master"></p>
 
 ### Quick start
 
