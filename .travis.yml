@@ -88,7 +88,6 @@ script:
   - ./triton ./src/examples/pin/blacklist.py ./src/samples/crackmes/crackme_xor a
   - ./triton ./src/examples/pin/callback_image.py ./src/samples/ir_test_suite/ir
   - ./triton ./src/examples/pin/callback_routine.py  ./src/samples/vulns/testSuite
-  - ./triton ./src/examples/pin/callback_signals.py ./src/samples/others/signals
   - ./triton ./src/examples/pin/callback_syscall.py  ./src/samples/crackmes/crackme_xor a
   - ./triton ./src/examples/pin/crackme_hash_collision.py ./src/samples/crackmes/crackme_hash aaaaa
   - ./triton ./src/examples/pin/inject_model_with_snapshot.py ./src/samples/crackmes/crackme_xor a
