@@ -7,7 +7,7 @@
 
 #include <stdexcept>
 
-#include <ast.hpp>
+#include <api.hpp>
 #include <cpuSize.hpp>
 #include <symbolicVariable.hpp>
 
@@ -56,7 +56,7 @@ namespace triton {
       }
 
 
-      std::string SymbolicVariable::getSymVarName(void) {
+      std::string& SymbolicVariable::getSymVarName(void) {
         return this->symVarName;
       }
 
@@ -76,7 +76,7 @@ namespace triton {
       }
 
 
-      std::string SymbolicVariable::getSymVarComment(void) {
+      std::string& SymbolicVariable::getSymVarComment(void) {
         return this->symVarComment;
       }
 
@@ -92,9 +92,11 @@ namespace triton {
 
 
       void SymbolicVariable::setSymVarConcreteValue(triton::uint128 value) {
+        triton::ast::AbstractNode* node = triton::api.getAstVariableNode(this->getSymVarName());
+
         this->symVarConcreteValue = value;
-        if (triton::ast::variableNodes.find(this->getSymVarName()) != triton::ast::variableNodes.end())
-          triton::ast::variableNodes[this->getSymVarName()]->init();
+        if (node)
+          node->init();
       }
 
 

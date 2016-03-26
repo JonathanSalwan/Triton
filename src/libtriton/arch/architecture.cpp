@@ -208,13 +208,13 @@ namespace triton {
         std::set<triton::ast::AbstractNode*> uniqueNodes;
         std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
         for (it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
-          triton::ast::extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
+          triton::api.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
           triton::api.removeSymbolicExpression((*it)->getId());
         }
 
         if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES)) {
           /* Remove node only if AST_DICTIONARIES is disabled */
-          triton::ast::freeAstNodes(uniqueNodes);
+          triton::api.freeAstNodes(uniqueNodes);
         }
 
         inst.symbolicExpressions.clear();
@@ -232,7 +232,7 @@ namespace triton {
         std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
         for (it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
           if ((*it)->isTainted == triton::engines::taint::UNTAINTED) {
-            triton::ast::extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
+            triton::api.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
             triton::api.removeSymbolicExpression((*it)->getId());
           }
           else
@@ -241,7 +241,7 @@ namespace triton {
 
         if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES)) {
           /* Remove node only if AST_DICTIONARIES is disabled */
-          triton::ast::freeAstNodes(uniqueNodes);
+          triton::api.freeAstNodes(uniqueNodes);
         }
 
         inst.symbolicExpressions = newVector;
@@ -258,7 +258,7 @@ namespace triton {
         std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
         for (it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
           if ((*it)->getAst()->isSymbolized() == false) {
-            triton::ast::extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
+            triton::api.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
             triton::api.removeSymbolicExpression((*it)->getId());
           }
           else
@@ -267,7 +267,7 @@ namespace triton {
 
         if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES)) {
           /* Remove node only if AST_DICTIONARIES is disabled */
-          triton::ast::freeAstNodes(uniqueNodes);
+          triton::api.freeAstNodes(uniqueNodes);
         }
 
         inst.symbolicExpressions = newVector;

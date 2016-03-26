@@ -84,10 +84,10 @@ namespace triton {
           symkind_e getSymVarKind(void);
 
           //! Returns the comment of the symbolic variable.
-          std::string getSymVarComment(void);
+          std::string& getSymVarComment(void);
 
           //! Returns the name of the symbolic variable.
-          std::string getSymVarName(void);
+          std::string& getSymVarName(void);
 
           //! Returns the id of the symbolic variable. This id is unique.
           triton::__uint getSymVarId(void);

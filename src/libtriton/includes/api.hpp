@@ -9,6 +9,7 @@
 #define TRITON_API_H
 
 #include "architecture.hpp"
+#include "astGarbageCollector.hpp"
 #include "astRepresentation.hpp"
 #include "immediateOperand.hpp"
 #include "instruction.hpp"
@@ -57,6 +58,9 @@ namespace triton {
 
         //! The solver engine.
         triton::engines::solver::SolverEngine* solver;
+
+        //! The AST garbage collector interface.
+        triton::ast::AstGarbageCollector* astGarbageCollector;
 
         //! The AST representation interface.
         triton::ast::representations::AstRepresentation* astRepresentation;
@@ -186,7 +190,44 @@ namespace triton {
 
 
 
-        /* AST Representation interface API ============================================================== */
+        /* AST Garbage Collector API ===================================================================== */
+
+        //! [**AST garbage collector api**] - Raises an exception if the AST garbage collector interface is not initialized.
+        void checkAstGarbageCollector(void);
+
+        //! [**AST garbage collector api**] - Go through every allocated nodes and free them.
+        void freeAllAstNodes(void);
+
+        //! [**AST garbage collector api**] - Frees a set of nodes and removes them from the global container.
+        void freeAstNodes(std::set<triton::ast::AbstractNode*>& nodes);
+
+        //! [**AST garbage collector api**] - Extracts all unique nodes from a partial AST into the uniqueNodes set.
+        void extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root);
+
+        //! [**AST garbage collector api**] - Records the allocated node or returns the same node if it already exists inside the dictionaries.
+        triton::ast::AbstractNode* recordAstNode(triton::ast::AbstractNode* node);
+
+        //! [**AST garbage collector api**] - Records a variable AST node.
+        void recordVariableAstNode(std::string& name, triton::ast::AbstractNode* node);
+
+        //! [**AST garbage collector api**] - Returns all allocated nodes.
+        std::set<triton::ast::AbstractNode*> getAllocatedAstNodes(void);
+
+        //! [**AST garbage collector api**] - Returns all variable nodes recorded.
+        std::map<std::string, triton::ast::AbstractNode*> getAstVariableNodes(void);
+
+        //! [**AST garbage collector api**] - Returns the node of a recorded variable.
+        triton::ast::AbstractNode* getAstVariableNode(std::string& name);
+
+        //! [**AST garbage collector api**] - Sets all allocated nodes.
+        void setAllocatedAstNodes(std::set<triton::ast::AbstractNode*>& nodes);
+
+        //! [**AST garbage collector api**] - Sets all variable nodes recorded.
+        void setAstVariableNodes(std::map<std::string, triton::ast::AbstractNode*>& nodes);
+
+
+
+        /* AST Representation API ======================================================================== */
 
         //! [**AST representation api**] - Raises an exception if the AST representation interface is not initialized.
         void checkAstRepresentation(void);

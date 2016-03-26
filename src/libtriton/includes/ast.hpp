@@ -916,24 +916,6 @@ namespace triton {
     //! ast C++ api - Duplicates the AST
     AbstractNode* newInstance(AbstractNode* node);
 
-    //! Garbage collector - This container contains all allocated nodes.
-    extern std::set<AbstractNode*> allocatedNodes;
-
-    //! Garbage collector - This map maintains a link between symbolic variables and their nodes.
-    extern std::map<std::string, AbstractNode*> variableNodes;
-
-    //! Garbage collector - Go through every allocated nodes and free them.
-    void freeAllAstNodes(void);
-
-    //! Garbage collector - Frees a set of nodes and removes them from the global container.
-    void freeAstNodes(std::set<AbstractNode*>& nodes);
-
-    //! Garbage collector - Extracts all unique nodes from a partial AST into the `uniqueNodes` set.
-    void extractUniqueAstNodes(std::set<AbstractNode*>& uniqueNodes, AbstractNode* root);
-
-    //! Garbage collector - Records the allocated node or returns the same node if it already exists inside the dictionaries.
-    AbstractNode* recordNode(AbstractNode* node);
-
     //! Custom pow function for hash routine.
     triton::uint512 pow(triton::uint512 hash, triton::uint32 n);
 

@@ -139,12 +139,13 @@ namespace triton {
 
 
   API::API() {
-    this->arch              = arch::Architecture();
-    this->astRepresentation = nullptr;
-    this->solver            = nullptr;
-    this->sym               = nullptr;
-    this->symBackup         = nullptr;
-    this->taint             = nullptr;
+    this->arch                = arch::Architecture();
+    this->astGarbageCollector = nullptr;
+    this->astRepresentation   = nullptr;
+    this->solver              = nullptr;
+    this->sym                 = nullptr;
+    this->symBackup           = nullptr;
+    this->taint               = nullptr;
   }
 
 
@@ -332,6 +333,10 @@ namespace triton {
     if (!this->solver)
       throw std::invalid_argument("API::initEngines(): No enough memory.");
 
+    this->astGarbageCollector = new triton::ast::AstGarbageCollector();
+    if (!this->astGarbageCollector)
+      throw std::invalid_argument("API::initEngines(): No enough memory.");
+
     this->astRepresentation = new triton::ast::representations::AstRepresentation();
     if (!this->astRepresentation)
       throw std::invalid_argument("API::initEngines(): No enough memory.");
@@ -340,12 +345,12 @@ namespace triton {
 
   void API::removeEngines(void) {
     if(this->isArchitectureValid()) {
+      delete this->astGarbageCollector;
       delete this->astRepresentation;
       delete this->solver;
       delete this->sym;
       delete this->symBackup;
       delete this->taint;
-      triton::ast::freeAllAstNodes();
     }
   }
 
@@ -367,7 +372,76 @@ namespace triton {
 
 
 
-  /* AST representation interface API =============================================================== */
+  /* AST garbage collector API ====================================================================== */
+
+  void API::checkAstGarbageCollector(void) {
+    if (!this->astGarbageCollector)
+      throw std::runtime_error("API::checkAstGarbageCollector(): AST garbage collector is undefined.");
+  }
+
+
+  void API::freeAllAstNodes(void) {
+    this->checkAstGarbageCollector();
+    this->astGarbageCollector->freeAllAstNodes();
+  }
+
+
+  void API::freeAstNodes(std::set<triton::ast::AbstractNode*>& nodes) {
+    this->checkAstGarbageCollector();
+    this->astGarbageCollector->freeAstNodes(nodes);
+  }
+
+
+  void API::extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root) {
+    this->checkAstGarbageCollector();
+    this->astGarbageCollector->extractUniqueAstNodes(uniqueNodes, root);
+  }
+
+
+  triton::ast::AbstractNode* API::recordAstNode(triton::ast::AbstractNode* node) {
+    this->checkAstGarbageCollector();
+    return this->astGarbageCollector->recordAstNode(node);
+  }
+
+
+  void API::recordVariableAstNode(std::string& name, triton::ast::AbstractNode* node) {
+    this->checkAstGarbageCollector();
+    this->astGarbageCollector->recordVariableAstNode(name, node);
+  }
+
+
+  std::set<triton::ast::AbstractNode*> API::getAllocatedAstNodes(void) {
+    this->checkAstGarbageCollector();
+    return this->astGarbageCollector->getAllocatedAstNodes();
+  }
+
+
+  std::map<std::string, triton::ast::AbstractNode*> API::getAstVariableNodes(void) {
+    this->checkAstGarbageCollector();
+    return this->astGarbageCollector->getAstVariableNodes();
+  }
+
+
+  triton::ast::AbstractNode* API::getAstVariableNode(std::string& name) {
+    this->checkAstGarbageCollector();
+    return this->astGarbageCollector->getAstVariableNode(name);
+  }
+
+
+  void API::setAllocatedAstNodes(std::set<triton::ast::AbstractNode*>& nodes) {
+    this->checkAstGarbageCollector();
+    this->astGarbageCollector->setAllocatedAstNodes(nodes);
+  }
+
+
+  void API::setAstVariableNodes(std::map<std::string, triton::ast::AbstractNode*>& nodes) {
+    this->checkAstGarbageCollector();
+    this->astGarbageCollector->setAstVariableNodes(nodes);
+  }
+
+
+
+  /* AST representation API ========================================================================= */
 
   void API::checkAstRepresentation(void) {
     if (!this->astRepresentation)

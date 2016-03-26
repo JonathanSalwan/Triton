@@ -71,10 +71,10 @@ namespace tracer {
         this->snapshotTaintEngine = new triton::engines::taint::TaintEngine(*triton::api.getTaintEngine());
 
         /* 4 - Save current set of nodes */
-        this->nodesList = triton::ast::allocatedNodes;
+        this->nodesList = triton::api.getAllocatedAstNodes();
 
         /* 5 - Save current map of variables */
-        this->variablesMap = triton::ast::variableNodes;
+        this->variablesMap = triton::api.getAstVariableNodes();
 
         /* 6 - Save the Triton CPU state */
         #if defined(__x86_64__) || defined(_M_X64)
@@ -121,25 +121,19 @@ namespace tracer {
             delete currentSymbolicVars[i->first];
         }
 
-        /* 4 - Delete unused AST nodes */
-        for (auto i = triton::ast::allocatedNodes.begin(); i != triton::ast::allocatedNodes.end(); ++i) {
-          if (this->nodesList.find(*i) == this->nodesList.end())
-            delete *i;
-        }
-
-        /* 5 - Restore current symbolic engine state */
+        /* 4 - Restore current symbolic engine state */
         *triton::api.getSymbolicEngine() = *this->snapshotSymEngine;
 
-        /* 6 - Restore current taint engine state */
+        /* 5 - Restore current taint engine state */
         *triton::api.getTaintEngine() = *this->snapshotTaintEngine;
 
-        /* 7 - Restore current AST node state */
-        triton::ast::allocatedNodes = this->nodesList;
+        /* 6 - Restore current AST node state */
+        triton::api.setAllocatedAstNodes(this->nodesList);
 
-        /* 8 - Restore current variables map state */
-        triton::ast::variableNodes = this->variablesMap;
+        /* 7 - Restore current variables map state */
+        triton::api.setAstVariableNodes(this->variablesMap);
 
-        /* 9 - Restore the Triton CPU state */
+        /* 8 - Restore the Triton CPU state */
         #if defined(__x86_64__) || defined(_M_X64)
         *reinterpret_cast<triton::arch::x86::x8664Cpu*>(triton::api.getCpu()) = *this->cpu;
         #endif
@@ -147,7 +141,7 @@ namespace tracer {
         *reinterpret_cast<triton::arch::x86::x86Cpu*>(triton::api.getCpu()) = *this->cpu;
         #endif
 
-        /* 10 - Restore Pin registers context */
+        /* 9 - Restore Pin registers context */
         PIN_SaveContext(&this->pinCtx, ctx);
 
         this->mustBeRestore = false;

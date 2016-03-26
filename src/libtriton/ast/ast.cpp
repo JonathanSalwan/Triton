@@ -3504,74 +3504,10 @@ namespace triton {
 
 
 
-/* ====== Garbage collector utils */
+/* ====== Math utils */
 
 namespace triton {
   namespace ast {
-
-    /* Global container. This container contains all allocated nodes. */
-    std::set<AbstractNode*> allocatedNodes;
-
-
-    /* Global map. This map maintains a link between symbolic variables and their nodes. */
-    std::map<std::string, AbstractNode*> variableNodes;
-
-
-    /* Go through every allocated nodes and free them */
-    void freeAllAstNodes(void) {
-      std::set<AbstractNode*>::iterator it;
-
-      triton::ast::variableNodes.clear();
-      for (it = triton::ast::allocatedNodes.begin(); it != triton::ast::allocatedNodes.end();) {
-        AbstractNode* tmp = *it;
-        it = triton::ast::allocatedNodes.erase(it);
-        delete tmp;
-      }
-    }
-
-
-    /* Frees a set of nodes and removes them from the global container. */
-    void freeAstNodes(std::set<AbstractNode*>& nodes) {
-      std::set<AbstractNode*>::iterator it;
-      for (it = nodes.begin(); it != nodes.end(); it++) {
-        /* Remove the node from the global set */
-        triton::ast::allocatedNodes.erase(*it);
-
-        /* Remove the node from the global variables map */
-        if ((*it)->getKind() == VARIABLE_NODE)
-          triton::ast::variableNodes.erase(reinterpret_cast<VariableNode*>(*it)->getValue());
-
-        /* Delete the node */
-        delete *it;
-      }
-      nodes.clear();
-    }
-
-
-    /* Extracts all unique nodes from a partial AST into the uniqueNodes set */
-    void extractUniqueAstNodes(std::set<AbstractNode*>& uniqueNodes, AbstractNode* root) {
-      std::vector<AbstractNode*>::const_iterator it;
-      uniqueNodes.insert(root);
-      for (it = root->getChilds().begin(); it != root->getChilds().end(); it++)
-        triton::ast::extractUniqueAstNodes(uniqueNodes, *it);
-    }
-
-
-    /* Records the allocated node or returns the same node if it already exists inside the dictionaries. */
-    AbstractNode* recordNode(AbstractNode* node) {
-      /* Check if the AST_DICTIONARIES is enabled. */
-      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES)) {
-        AbstractNode* ret = triton::api.browseAstDictionaries(node);
-        if (ret != nullptr)
-          return ret;
-      }
-      else {
-        /* Record the node */
-        triton::ast::allocatedNodes.insert(node);
-      }
-      return node;
-    }
-
 
     triton::uint512 pow(triton::uint512 hash, triton::uint32 n) {
       for (triton::uint32 i = 0; i < n; i++)
@@ -3615,7 +3551,7 @@ namespace triton {
       AbstractNode* node = new AssertNode(expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3623,7 +3559,7 @@ namespace triton {
       AbstractNode* node = new BvNode(value, size);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3631,7 +3567,7 @@ namespace triton {
       AbstractNode* node = new BvaddNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3639,7 +3575,7 @@ namespace triton {
       AbstractNode* node = new BvandNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3647,7 +3583,7 @@ namespace triton {
       AbstractNode* node = new BvashrNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3655,7 +3591,7 @@ namespace triton {
       AbstractNode* node = new BvdeclNode(size);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3663,7 +3599,7 @@ namespace triton {
       AbstractNode* node = new BvNode(0, 1);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3671,7 +3607,7 @@ namespace triton {
       AbstractNode* node = new BvlshrNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3679,7 +3615,7 @@ namespace triton {
       AbstractNode* node = new BvmulNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3687,7 +3623,7 @@ namespace triton {
       AbstractNode* node = new BvnandNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3695,7 +3631,7 @@ namespace triton {
       AbstractNode* node = new BvnegNode(expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3703,7 +3639,7 @@ namespace triton {
       AbstractNode* node = new BvnorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3711,7 +3647,7 @@ namespace triton {
       AbstractNode* node = new BvnotNode(expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3719,7 +3655,7 @@ namespace triton {
       AbstractNode* node = new BvorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3727,7 +3663,7 @@ namespace triton {
       AbstractNode* node = new BvrolNode(rot, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3735,7 +3671,7 @@ namespace triton {
       AbstractNode* node = new BvrolNode(rot, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3743,7 +3679,7 @@ namespace triton {
       AbstractNode* node = new BvrorNode(rot, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3751,7 +3687,7 @@ namespace triton {
       AbstractNode* node = new BvrorNode(rot, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3759,7 +3695,7 @@ namespace triton {
       AbstractNode* node = new BvsdivNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3767,7 +3703,7 @@ namespace triton {
       AbstractNode* node = new BvsgeNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3775,7 +3711,7 @@ namespace triton {
       AbstractNode* node = new BvsgtNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3783,7 +3719,7 @@ namespace triton {
       AbstractNode* node = new BvshlNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3791,7 +3727,7 @@ namespace triton {
       AbstractNode* node = new BvsleNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3799,7 +3735,7 @@ namespace triton {
       AbstractNode* node = new BvsltNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3807,7 +3743,7 @@ namespace triton {
       AbstractNode* node = new BvsmodNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3815,7 +3751,7 @@ namespace triton {
       AbstractNode* node = new BvsremNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3823,7 +3759,7 @@ namespace triton {
       AbstractNode* node = new BvsubNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3831,7 +3767,7 @@ namespace triton {
       AbstractNode* node = new BvNode(1, 1);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3839,7 +3775,7 @@ namespace triton {
       AbstractNode* node = new BvudivNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3847,7 +3783,7 @@ namespace triton {
       AbstractNode* node = new BvugeNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3855,7 +3791,7 @@ namespace triton {
       AbstractNode* node = new BvugtNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3863,7 +3799,7 @@ namespace triton {
       AbstractNode* node = new BvuleNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3871,7 +3807,7 @@ namespace triton {
       AbstractNode* node = new BvultNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3879,7 +3815,7 @@ namespace triton {
       AbstractNode* node = new BvuremNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3887,7 +3823,7 @@ namespace triton {
       AbstractNode* node = new BvxnorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3895,7 +3831,7 @@ namespace triton {
       AbstractNode* node = new BvxorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3903,7 +3839,7 @@ namespace triton {
       AbstractNode* node = new CompoundNode(exprs);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3911,7 +3847,7 @@ namespace triton {
       AbstractNode* node = new ConcatNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3919,7 +3855,7 @@ namespace triton {
       AbstractNode* node = new ConcatNode(exprs);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3927,7 +3863,7 @@ namespace triton {
       AbstractNode* node = new ConcatNode(exprs);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3935,7 +3871,7 @@ namespace triton {
       AbstractNode* node = new DecimalNode(value);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3943,7 +3879,7 @@ namespace triton {
       AbstractNode* node = new DeclareFunctionNode(name, bvDecl);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3951,7 +3887,7 @@ namespace triton {
       AbstractNode* node = new DistinctNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3959,7 +3895,7 @@ namespace triton {
       AbstractNode* node = new EqualNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3967,7 +3903,7 @@ namespace triton {
       AbstractNode* node = new ExtractNode(high, low, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3975,7 +3911,7 @@ namespace triton {
       AbstractNode* node = new IteNode(ifExpr, thenExpr, elseExpr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3983,7 +3919,7 @@ namespace triton {
       AbstractNode* node = new LandNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3991,7 +3927,7 @@ namespace triton {
       AbstractNode* node = new LetNode(alias, expr2, expr3);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -3999,7 +3935,7 @@ namespace triton {
       AbstractNode* node = new LnotNode(expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -4007,7 +3943,7 @@ namespace triton {
       AbstractNode* node = new LorNode(expr1, expr2);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -4015,7 +3951,7 @@ namespace triton {
       AbstractNode* node = new ReferenceNode(value);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -4023,7 +3959,7 @@ namespace triton {
       AbstractNode* node = new StringNode(value);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -4031,7 +3967,7 @@ namespace triton {
       AbstractNode* node = new SxNode(sizeExt, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
@@ -4040,8 +3976,8 @@ namespace triton {
       AbstractNode* node = new VariableNode(symVar);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      ret = triton::ast::recordNode(node);
-      triton::ast::variableNodes[symVar.getSymVarName()] = ret;
+      ret = triton::api.recordAstNode(node);
+      triton::api.recordVariableAstNode(symVar.getSymVarName(), ret);
       return ret;
     }
 
@@ -4050,7 +3986,7 @@ namespace triton {
       AbstractNode* node = new ZxNode(sizeExt, expr);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
-      return triton::ast::recordNode(node);
+      return triton::api.recordAstNode(node);
     }
 
 
