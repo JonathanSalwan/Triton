@@ -345,12 +345,12 @@ namespace triton {
 
   void API::removeEngines(void) {
     if(this->isArchitectureValid()) {
-      delete this->astGarbageCollector;
       delete this->astRepresentation;
       delete this->solver;
       delete this->sym;
       delete this->symBackup;
       delete this->taint;
+      delete this->astGarbageCollector;
     }
   }
 
