@@ -36,10 +36,10 @@ namespace triton {
     /*! \brief The AST garbage collector class */
     class AstGarbageCollector {
       protected:
-        /* This container contains all allocated nodes. */
+        //! This container contains all allocated nodes.
         std::set<triton::ast::AbstractNode*> allocatedNodes;
 
-        /* This map maintains a link between symbolic variables and their nodes. */
+        //! This map maintains a link between symbolic variables and their nodes.
         std::map<std::string, triton::ast::AbstractNode*> variableNodes;
 
 
