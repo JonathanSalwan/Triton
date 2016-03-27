@@ -50,8 +50,8 @@ def cafter(instruction):
 
     # movzx  eax,BYTE PTR [rax]
     # RAX points on the user password
-    if instruction.getAddress() == 0x4005ab:
-        convertRegisterToSymbolicVariable(REG.RAX)
+    if instruction.getAddress() == 0x40057b:
+        convertRegisterToSymbolicVariable(REG.RSI)
 
     # mov eax,DWORD PTR [rbp-0x4]
     # RAX must be equal to 0xad6d to win
