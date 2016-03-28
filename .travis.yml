@@ -57,7 +57,6 @@ script:
   - cd ..
   - sudo python ./setup.py install
 
-after_success:
   # libTriton unit testing
   # Python
   - python ./src/examples/python/code_coverage_crackme_xor.py
