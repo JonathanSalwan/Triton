@@ -49,7 +49,7 @@ namespace triton {
         triton::uint32 parent;
 
         //! The concrete value (content of the register)
-        triton::uint128 concreteValue;
+        triton::uint512 concreteValue;
 
         //! True if this concrete register value is trusted and synchronized with the real CPU value.
         bool trusted;
@@ -58,7 +58,7 @@ namespace triton {
         void copy(const RegisterOperand& other);
 
         //! Setup everything.
-        void setup(triton::uint32 reg, triton::uint128 concreteValue);
+        void setup(triton::uint32 reg, triton::uint512 concreteValue);
 
         //! Resets information.
         void clear(void);
@@ -68,7 +68,7 @@ namespace triton {
         RegisterOperand();
 
         //! Constructor. You cannot set a concreteValue on a flag.
-        RegisterOperand(triton::uint32 reg, triton::uint128 concreteValue=0);
+        RegisterOperand(triton::uint32 reg, triton::uint512 concreteValue=0);
 
         //! Constructor by copy.
         RegisterOperand(const RegisterOperand& other);
@@ -116,7 +116,7 @@ namespace triton {
         triton::uint32 getType(void) const;
 
         //! Returns the concrete value.
-        triton::uint128 getConcreteValue(void) const;
+        triton::uint512 getConcreteValue(void) const;
 
         //! Copies a RegisterOperand.
         void operator=(const RegisterOperand& other);
@@ -128,7 +128,7 @@ namespace triton {
         void setParent(triton::uint32 reg);
 
         //! Sets the concrete value of the register. This method cannot be called on a flag.
-        void setConcreteValue(triton::uint128 concreteValue);
+        void setConcreteValue(triton::uint512 concreteValue);
 
     };
 

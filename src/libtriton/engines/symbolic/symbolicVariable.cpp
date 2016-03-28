@@ -22,7 +22,7 @@ namespace triton {
                                          triton::__uint id,
                                          triton::uint32 size,
                                          std::string comment,
-                                         triton::uint128 concreteValue) {
+                                         triton::uint512 concreteValue) {
         this->symVarComment          = comment;
         this->symVarId               = id;
         this->symVarKind             = kind;
@@ -81,7 +81,7 @@ namespace triton {
       }
 
 
-      triton::uint128 SymbolicVariable::getConcreteValue(void) {
+      triton::uint512 SymbolicVariable::getConcreteValue(void) {
         return this->symVarConcreteValue;
       }
 
@@ -91,7 +91,7 @@ namespace triton {
       }
 
 
-      void SymbolicVariable::setSymVarConcreteValue(triton::uint128 value) {
+      void SymbolicVariable::setSymVarConcreteValue(triton::uint512 value) {
         triton::ast::AbstractNode* node = triton::api.getAstVariableNode(this->getSymVarName());
 
         this->symVarConcreteValue = value;

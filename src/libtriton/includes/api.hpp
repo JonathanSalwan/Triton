@@ -146,13 +146,13 @@ namespace triton {
         triton::uint8 getLastMemoryValue(triton::__uint addr);
 
         //! [**architecture api**] - Returns the last concrete value recorded of a memory access.
-        triton::uint128 getLastMemoryValue(triton::arch::MemoryOperand& mem);
+        triton::uint512 getLastMemoryValue(triton::arch::MemoryOperand& mem);
 
         //! [**architecture api**] - Returns the last concrete values of a memory area.
         std::vector<triton::uint8> getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size);
 
         //! [**architecture api**] - Returns the last concrete value recorded of a register state.
-        triton::uint128 getLastRegisterValue(triton::arch::RegisterOperand& reg);
+        triton::uint512 getLastRegisterValue(triton::arch::RegisterOperand& reg);
 
         //! [**architecture api**] - Sets the last concrete value of a memory access.
         void setLastMemoryValue(triton::__uint addr, triton::uint8 value);
@@ -273,25 +273,25 @@ namespace triton {
         triton::uint8 getSymbolicMemoryValue(triton::__uint address);
 
         //! [**symbolic api**] - Returns the symbolic memory value.
-        triton::uint128 getSymbolicMemoryValue(triton::arch::MemoryOperand& mem);
+        triton::uint512 getSymbolicMemoryValue(triton::arch::MemoryOperand& mem);
 
         //! [**symbolic api**] - Returns the symbolic values of a memory area.
         std::vector<triton::uint8> getSymbolicMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size);
 
         //! [**symbolic api**] - Returns the symbolic register value.
-        triton::uint128 getSymbolicRegisterValue(triton::arch::RegisterOperand& reg);
+        triton::uint512 getSymbolicRegisterValue(triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - If emulation enabled, returns `getSymbolicMemoryValue()` otherwise `getLastMemoryValue()`.
         triton::uint8 getMemoryValue(triton::__uint addr);
 
         //! [**symbolic api**] - If emulation enabled, returns `getSymbolicMemoryValue()` otherwise `getLastMemoryValue()`.
-        triton::uint128 getMemoryValue(triton::arch::MemoryOperand& mem);
+        triton::uint512 getMemoryValue(triton::arch::MemoryOperand& mem);
 
         //! [**symbolic api**] - If emulation enabled, returns `getSymbolicMemoryAreaValue()` otherwise `getLastMemoryAreaValue()`.
         std::vector<triton::uint8> getMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size);
 
         //! [**symbolic api**] - If emulation enabled, returns `getSymbolicRegisterValue()` otherwise `getLastRegisterValue()`.
-        triton::uint128 getRegisterValue(triton::arch::RegisterOperand& reg);
+        triton::uint512 getRegisterValue(triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
         triton::engines::symbolic::SymbolicVariable* convertExpressionToSymbolicVariable(triton::__uint exprId, triton::uint32 symVarSize, std::string symVarComment="");

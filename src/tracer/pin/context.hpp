@@ -46,28 +46,28 @@ namespace tracer {
       extern bool mustBeExecuted;
 
       //! Returns the current register value from a RegisterOperand.
-      triton::uint128 getCurrentRegisterValue(triton::arch::RegisterOperand& reg);
+      triton::uint512 getCurrentRegisterValue(triton::arch::RegisterOperand& reg);
 
       //! Returns the current memory value from a MemoryOperand.
-      triton::uint128 getCurrentMemoryValue(triton::arch::MemoryOperand& mem);
+      triton::uint512 getCurrentMemoryValue(triton::arch::MemoryOperand& mem);
 
       //! Returns the current memory value from an address.
-      triton::uint128 getCurrentMemoryValue(triton::__uint addr);
+      triton::uint512 getCurrentMemoryValue(triton::__uint addr);
 
       //! Returns the current memory value from an address with a specified readable size.
-      triton::uint128 getCurrentMemoryValue(triton::__uint addr, triton::uint32 size);
+      triton::uint512 getCurrentMemoryValue(triton::__uint addr, triton::uint32 size);
 
       //! Sets the current register value from a RegisterOperand. `triton::arch::RegisterOperand::getConcreteValue()` is used to define the value.
       void setCurrentRegisterValue(triton::arch::RegisterOperand& reg);
 
       //! Sets the current register value from a RegisterOperand.
-      void setCurrentRegisterValue(triton::arch::RegisterOperand& reg, triton::uint128 value);
+      void setCurrentRegisterValue(triton::arch::RegisterOperand& reg, triton::uint512 value);
 
       //! Sets the current memory value from a MemoryOperand. `triton::arch::MemoryOperand::getConcreteValue()` is used to define the value.
       void setCurrentMemoryValue(triton::arch::MemoryOperand& mem);
 
       //! Sets the current memory value from a MemoryOperand.
-      void setCurrentMemoryValue(triton::arch::MemoryOperand& mem, triton::uint128 value);
+      void setCurrentMemoryValue(triton::arch::MemoryOperand& mem, triton::uint512 value);
 
       //! Sets the current memory value from an address.
       void setCurrentMemoryValue(triton::__uint addr, triton::uint8 value);

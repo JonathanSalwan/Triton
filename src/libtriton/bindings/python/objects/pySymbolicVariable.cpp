@@ -144,7 +144,7 @@ namespace triton {
 
       static PyObject* SymbolicVariable_getConcreteValue(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint128(PySymbolicVariable_AsSymbolicVariable(self)->getConcreteValue());
+          return PyLong_FromUint512(PySymbolicVariable_AsSymbolicVariable(self)->getConcreteValue());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -170,7 +170,7 @@ namespace triton {
         try {
           if (!PyLong_Check(value) && !PyInt_Check(value))
             return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setConcretevalue(): Expected an integer as argument.");
-          PySymbolicVariable_AsSymbolicVariable(self)->setSymVarConcreteValue(PyLong_AsUint128(value));
+          PySymbolicVariable_AsSymbolicVariable(self)->setSymVarConcreteValue(PyLong_AsUint512(value));
           Py_INCREF(Py_None);
           return Py_None;
         }

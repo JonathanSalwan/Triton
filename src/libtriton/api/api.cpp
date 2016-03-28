@@ -250,7 +250,7 @@ namespace triton {
   }
 
 
-  triton::uint128 API::getLastMemoryValue(triton::arch::MemoryOperand& mem) {
+  triton::uint512 API::getLastMemoryValue(triton::arch::MemoryOperand& mem) {
     return this->arch.getLastMemoryValue(mem);
   }
 
@@ -260,7 +260,7 @@ namespace triton {
   }
 
 
-  triton::uint128 API::getLastRegisterValue(triton::arch::RegisterOperand& reg) {
+  triton::uint512 API::getLastRegisterValue(triton::arch::RegisterOperand& reg) {
     return this->arch.getLastRegisterValue(reg);
   }
 
@@ -636,7 +636,7 @@ namespace triton {
   }
 
 
-  triton::uint128 API::getSymbolicMemoryValue(triton::arch::MemoryOperand& mem) {
+  triton::uint512 API::getSymbolicMemoryValue(triton::arch::MemoryOperand& mem) {
     this->checkSymbolic();
     return this->sym->getSymbolicMemoryValue(mem);
   }
@@ -656,7 +656,7 @@ namespace triton {
   }
 
 
-  triton::uint128 API::getMemoryValue(triton::arch::MemoryOperand& mem) {
+  triton::uint512 API::getMemoryValue(triton::arch::MemoryOperand& mem) {
     this->checkSymbolic();
     if (this->isSymbolicEmulationEnabled())
       return this->getSymbolicMemoryValue(mem);
@@ -672,7 +672,7 @@ namespace triton {
   }
 
 
-  triton::uint128 API::getRegisterValue(triton::arch::RegisterOperand& reg) {
+  triton::uint512 API::getRegisterValue(triton::arch::RegisterOperand& reg) {
     this->checkSymbolic();
     if (this->isSymbolicEmulationEnabled())
       return this->getSymbolicRegisterValue(reg);
@@ -680,7 +680,7 @@ namespace triton {
   }
 
 
-  triton::uint128 API::getSymbolicRegisterValue(triton::arch::RegisterOperand& reg) {
+  triton::uint512 API::getSymbolicRegisterValue(triton::arch::RegisterOperand& reg) {
     this->checkSymbolic();
     return this->sym->getSymbolicRegisterValue(reg);
   }

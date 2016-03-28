@@ -101,13 +101,13 @@ namespace triton {
       virtual triton::uint8 getLastMemoryValue(triton::__uint addr) = 0;
 
       //! Returns the last concrete value recorded of a memory access.
-      virtual triton::uint128 getLastMemoryValue(triton::arch::MemoryOperand& mem) = 0;
+      virtual triton::uint512 getLastMemoryValue(triton::arch::MemoryOperand& mem) = 0;
 
       //! Returns the last concrete values of a memory area.
       virtual std::vector<triton::uint8> getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) = 0;
 
       //! Returns the last concrete value recorded of a register state.
-      virtual triton::uint128 getLastRegisterValue(triton::arch::RegisterOperand& reg) = 0;
+      virtual triton::uint512 getLastRegisterValue(triton::arch::RegisterOperand& reg) = 0;
 
       //! Sets the last concrete value of a memory access.
       virtual void setLastMemoryValue(triton::__uint addr, triton::uint8 value) = 0;

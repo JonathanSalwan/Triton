@@ -468,7 +468,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bv(): expected an integer as second argument");
 
         try {
-          return PyAstNode(triton::ast::bv(PyLong_AsUint128(op1), PyLong_AsUint(op2)));
+          return PyAstNode(triton::ast::bv(PyLong_AsUint512(op1), PyLong_AsUint(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

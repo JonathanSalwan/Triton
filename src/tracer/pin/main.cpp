@@ -650,7 +650,7 @@ namespace tracer {
     static void saveMemoryAccess(triton::arch::Instruction* tritonInst, triton::__uint addr, triton::uint32 size) {
       /* Mutex */
       PIN_LockClient();
-      triton::uint128 value = tracer::pintool::context::getCurrentMemoryValue(addr, size);
+      triton::uint512 value = tracer::pintool::context::getCurrentMemoryValue(addr, size);
       tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, value));
       /* Mutex */
       PIN_UnlockClient();

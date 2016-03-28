@@ -20,7 +20,7 @@ namespace triton {
     }
 
 
-    RegisterOperand::RegisterOperand(triton::uint32 reg, triton::uint128 concreteValue) {
+    RegisterOperand::RegisterOperand(triton::uint32 reg, triton::uint512 concreteValue) {
       if (!triton::api.isArchitectureValid()) {
         this->clear();
         return;
@@ -37,7 +37,7 @@ namespace triton {
     }
 
 
-    void RegisterOperand::setup(triton::uint32 reg, triton::uint128 concreteValue) {
+    void RegisterOperand::setup(triton::uint32 reg, triton::uint512 concreteValue) {
       std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> regInfo;
 
       this->id        = reg;
@@ -112,7 +112,7 @@ namespace triton {
     }
 
 
-    triton::uint128 RegisterOperand::getConcreteValue(void) const {
+    triton::uint512 RegisterOperand::getConcreteValue(void) const {
       return this->concreteValue;
     }
 
@@ -137,7 +137,7 @@ namespace triton {
     }
 
 
-    void RegisterOperand::setConcreteValue(triton::uint128 concreteValue) {
+    void RegisterOperand::setConcreteValue(triton::uint512 concreteValue) {
       if (this->isFlag())
         throw std::runtime_error("RegisterOperand::setConcreteValue(): You cannot set a concrete value on an isolated flag.");
       this->concreteValue = concreteValue;

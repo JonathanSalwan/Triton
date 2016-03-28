@@ -158,9 +158,9 @@ namespace triton {
           std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg);
           std::set<triton::arch::RegisterOperand*> getAllRegisters(void);
           std::set<triton::arch::RegisterOperand*> getParentRegisters(void);
-          triton::uint128 getLastMemoryValue(triton::arch::MemoryOperand& mem);
+          triton::uint512 getLastMemoryValue(triton::arch::MemoryOperand& mem);
           std::vector<triton::uint8> getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) ;
-          triton::uint128 getLastRegisterValue(triton::arch::RegisterOperand& reg);
+          triton::uint512 getLastRegisterValue(triton::arch::RegisterOperand& reg);
           triton::uint32 invalidRegister(void);
           triton::uint32 numberOfRegisters(void);
           triton::uint32 registerBitSize(void);

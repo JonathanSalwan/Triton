@@ -505,7 +505,7 @@ namespace triton {
     //! (_ bv<value> <size>) node
     class BvNode : public AbstractNode {
       public:
-        BvNode(triton::uint128 value, triton::uint32 size);
+        BvNode(triton::uint512 value, triton::uint32 size);
         BvNode(const BvNode& copy);
         ~BvNode();
         virtual void init(void);
@@ -543,17 +543,17 @@ namespace triton {
     //! Decimal node
     class DecimalNode : public AbstractNode {
       protected:
-        triton::uint128 value;
+        triton::uint512 value;
 
       public:
-        DecimalNode(triton::uint128 value);
+        DecimalNode(triton::uint512 value);
         DecimalNode(const DecimalNode& copy);
         ~DecimalNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
 
-        triton::uint128 getValue(void);
+        triton::uint512 getValue(void);
     };
 
 
@@ -749,7 +749,7 @@ namespace triton {
 
 
     //! ast C++ api - bv node builder
-    AbstractNode* bv(triton::uint128 value, triton::uint32 size);
+    AbstractNode* bv(triton::uint512 value, triton::uint32 size);
 
     //! ast C++ api - bvadd node builder
     AbstractNode* bvadd(AbstractNode* expr1, AbstractNode* expr2);
@@ -866,7 +866,7 @@ namespace triton {
     AbstractNode* concat(std::list<AbstractNode* > exprs);
 
     //! ast C++ api - decimal node builder
-    AbstractNode* decimal(triton::uint128 value);
+    AbstractNode* decimal(triton::uint512 value);
 
     //! ast C++ api - declare node builder
     AbstractNode* declareFunction(std::string name, AbstractNode* bvDecl);

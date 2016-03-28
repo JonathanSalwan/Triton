@@ -118,7 +118,7 @@ namespace triton {
     }
 
 
-    triton::uint128 OperandWrapper::getConcreteValue(void) {
+    triton::uint512 OperandWrapper::getConcreteValue(void) {
       switch (this->getType()) {
         case triton::arch::OP_IMM: return this->getImmediate().getValue();
         case triton::arch::OP_MEM: return this->getMemory().getConcreteValue();

@@ -581,7 +581,7 @@ namespace triton {
         PyObject* address       = nullptr;
         PyObject* size          = nullptr;
         PyObject* concreteValue = nullptr;
-        triton::uint128 cv      = 0;
+        triton::uint512 cv      = 0;
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOO", &address, &size, &concreteValue);
@@ -599,7 +599,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "Memory(): Expects an integer as third argument.");
 
         if (concreteValue != nullptr)
-          cv = PyLong_AsUint128(concreteValue);
+          cv = PyLong_AsUint512(concreteValue);
 
         try {
           triton::arch::MemoryOperand mem(PyLong_AsUint(address), PyLong_AsUint(size), cv);
@@ -614,7 +614,7 @@ namespace triton {
       static PyObject* triton_Register(PyObject* self, PyObject* args) {
         PyObject* concreteValue         = nullptr;
         PyObject* regIn                 = nullptr;
-        triton::uint128 cv              = 0;
+        triton::uint512 cv              = 0;
         triton::arch::RegisterOperand*  r;
 
         /* Extract arguments */
@@ -629,7 +629,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "Register(): Expects an integer as second argument.");
 
         if (concreteValue != nullptr)
-          cv = PyLong_AsUint128(concreteValue);
+          cv = PyLong_AsUint512(concreteValue);
 
         try {
           r = PyRegisterOperand_AsRegisterOperand(regIn);
@@ -1436,9 +1436,9 @@ namespace triton {
 
         try {
           if (PyLong_Check(mem) || PyInt_Check(mem))
-              return PyLong_FromUint128(triton::api.getMemoryValue(PyLong_AsUint(mem)));
+              return PyLong_FromUint512(triton::api.getMemoryValue(PyLong_AsUint(mem)));
           else if (PyMemoryOperand_Check(mem))
-              return PyLong_FromUint128(triton::api.getMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem)));
+              return PyLong_FromUint512(triton::api.getMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem)));
           else
             return PyErr_Format(PyExc_TypeError, "getMemoryValue(): Expects a Memory or an integer as argument.");
         }
@@ -1587,7 +1587,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getRegisterValue(): Expects a REG as argument.");
 
         try {
-          return PyLong_FromUint128(triton::api.getRegisterValue(*PyRegisterOperand_AsRegisterOperand(reg)));
+          return PyLong_FromUint512(triton::api.getRegisterValue(*PyRegisterOperand_AsRegisterOperand(reg)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1684,8 +1684,8 @@ namespace triton {
 
         try {
           if (PyLong_Check(mem) || PyInt_Check(mem))
-            return PyLong_FromUint128(triton::api.getSymbolicMemoryValue(PyLong_AsUint(mem)));
-          return PyLong_FromUint128(triton::api.getSymbolicMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem)));
+            return PyLong_FromUint512(triton::api.getSymbolicMemoryValue(PyLong_AsUint(mem)));
+          return PyLong_FromUint512(triton::api.getSymbolicMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1743,7 +1743,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterValue(): Expects a REG as argument.");
 
         try {
-          return PyLong_FromUint128(triton::api.getSymbolicRegisterValue(*PyRegisterOperand_AsRegisterOperand(reg)));
+          return PyLong_FromUint512(triton::api.getSymbolicRegisterValue(*PyRegisterOperand_AsRegisterOperand(reg)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

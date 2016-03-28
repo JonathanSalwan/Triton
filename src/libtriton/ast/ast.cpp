@@ -2293,7 +2293,7 @@ namespace triton {
     /* ====== bv */
 
 
-    BvNode::BvNode(triton::uint128 value, triton::uint32 size) {
+    BvNode::BvNode(triton::uint512 value, triton::uint32 size) {
       this->kind = BV_NODE;
       this->addChild(triton::ast::decimal(value));
       this->addChild(triton::ast::decimal(size));
@@ -2319,7 +2319,7 @@ namespace triton {
 
 
     void BvNode::init(void) {
-      triton::uint128 value = 0;
+      triton::uint512 value = 0;
       triton::uint32 size   = 0;
 
       if (this->childs.size() < 2)
@@ -2519,7 +2519,7 @@ namespace triton {
     /* ====== Decimal node */
 
 
-    DecimalNode::DecimalNode(triton::uint128 value) {
+    DecimalNode::DecimalNode(triton::uint512 value) {
       this->kind  = DECIMAL_NODE;
       this->value = value;
       this->init();
@@ -2552,7 +2552,7 @@ namespace triton {
     }
 
 
-    triton::uint128 DecimalNode::getValue(void) {
+    triton::uint512 DecimalNode::getValue(void) {
       return this->value;
     }
 
@@ -3555,7 +3555,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bv(triton::uint128 value, triton::uint32 size) {
+    AbstractNode* bv(triton::uint512 value, triton::uint32 size) {
       AbstractNode* node = new BvNode(value, size);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
@@ -3867,7 +3867,7 @@ namespace triton {
     }
 
 
-    AbstractNode* decimal(triton::uint128 value) {
+    AbstractNode* decimal(triton::uint512 value) {
       AbstractNode* node = new DecimalNode(value);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");

@@ -126,7 +126,7 @@ namespace triton {
         triton::uint32 getType(void) const;
 
         //! If there is a concrete value recorded, build the appropriate MemoryOperand. Otherwise, perfrom the analysis based on args.
-        triton::arch::MemoryOperand popMemoryAccess(triton::__uint=0, triton::uint32 size=0, triton::uint128 value=0);
+        triton::arch::MemoryOperand popMemoryAccess(triton::__uint=0, triton::uint32 size=0, triton::uint512 value=0);
 
         //! Returns the register state which has been recorded.
         triton::arch::RegisterOperand getRegisterState(triton::uint32 regId);

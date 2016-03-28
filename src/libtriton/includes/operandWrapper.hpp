@@ -100,7 +100,7 @@ namespace triton {
         triton::uint32 getAbstractLow(void);
 
         //! Returns the abstract concrete value.
-        triton::uint128 getConcreteValue(void);
+        triton::uint512 getConcreteValue(void);
     };
 
     //! Displays a OperandWrapper according to the concrete type.

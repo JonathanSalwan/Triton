@@ -41,7 +41,7 @@ namespace triton {
         triton::__uint address;
 
         //! The concrete value (content of the access)
-        triton::uint128 concreteValue;
+        triton::uint512 concreteValue;
 
         //! True if this concrete memory value is trusted and synchronized with the real MMU value.
         bool trusted;
@@ -69,7 +69,7 @@ namespace triton {
         MemoryOperand();
 
         //! Constructor.
-        MemoryOperand(triton::__uint address, triton::uint32 size /* bytes */, triton::uint128 concreteValue=0);
+        MemoryOperand(triton::__uint address, triton::uint32 size /* bytes */, triton::uint512 concreteValue=0);
 
         //! Constructor by copy.
         MemoryOperand(const MemoryOperand& other);
@@ -90,7 +90,7 @@ namespace triton {
         triton::uint32 getBitSize(void) const;
 
         //! Returnts the concrete value (content of the access)
-        triton::uint128 getConcreteValue(void) const;
+        triton::uint512 getConcreteValue(void) const;
 
         //! LEA - Gets pc relative.
         triton::__uint getPcRelative(void) const;
@@ -126,7 +126,7 @@ namespace triton {
         void setAddress(triton::__uint addr);
 
         //! Sets the concrete value of the memory access.
-        void setConcreteValue(triton::uint128 concreteValue);
+        void setConcreteValue(triton::uint512 concreteValue);
 
         //! LEA - Sets pc relative.
         void setPcRelative(triton::__uint addr);

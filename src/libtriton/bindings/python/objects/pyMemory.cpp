@@ -162,7 +162,7 @@ namespace triton {
 
       static PyObject* MemoryOperand_getConcreteValue(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint128(PyMemoryOperand_AsMemoryOperand(self)->getConcreteValue());
+          return PyLong_FromUint512(PyMemoryOperand_AsMemoryOperand(self)->getConcreteValue());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -261,7 +261,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "Memory::setConcretevalue(): Expected an integer as argument.");
 
           mem = PyMemoryOperand_AsMemoryOperand(self);
-          mem->setConcreteValue(PyLong_AsUint128(value));
+          mem->setConcreteValue(PyLong_AsUint512(value));
           Py_INCREF(Py_None);
           return Py_None;
         }

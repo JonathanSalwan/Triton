@@ -122,7 +122,7 @@ namespace triton {
 
       static PyObject* RegisterOperand_getConcreteValue(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint128(PyRegisterOperand_AsRegisterOperand(self)->getConcreteValue());
+          return PyLong_FromUint512(PyRegisterOperand_AsRegisterOperand(self)->getConcreteValue());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -230,7 +230,7 @@ namespace triton {
           if (reg->isFlag())
             return PyErr_Format(PyExc_TypeError, "Register::setConcreteValue(): You cannot set a concrete value on a flag.");
 
-          reg->setConcreteValue(PyLong_AsUint128(value));
+          reg->setConcreteValue(PyLong_AsUint512(value));
           Py_INCREF(Py_None);
           return Py_None;
         }

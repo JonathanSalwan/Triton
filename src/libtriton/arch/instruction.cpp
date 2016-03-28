@@ -121,7 +121,7 @@ namespace triton {
     }
 
 
-    triton::arch::MemoryOperand Instruction::popMemoryAccess(triton::__uint addr, triton::uint32 size, triton::uint128 value) {
+    triton::arch::MemoryOperand Instruction::popMemoryAccess(triton::__uint addr, triton::uint32 size, triton::uint512 value) {
       /* The default value is zero */
       triton::arch::MemoryOperand mem;
 

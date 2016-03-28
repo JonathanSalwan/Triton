@@ -185,7 +185,7 @@ namespace triton {
           triton::ast::AbstractNode *node = PyAstNode_AsAstNode(self);
 
           if (node->getKind() == triton::ast::DECIMAL_NODE)
-            return PyLong_FromUint128(reinterpret_cast<triton::ast::DecimalNode *>(node)->getValue());
+            return PyLong_FromUint512(reinterpret_cast<triton::ast::DecimalNode *>(node)->getValue());
 
           else if (node->getKind() == triton::ast::REFERENCE_NODE)
             return PyLong_FromUint(reinterpret_cast<triton::ast::ReferenceNode *>(node)->getValue());
@@ -438,7 +438,7 @@ namespace triton {
 
       static int AstNode_coerce(PyObject** self, PyObject** other) {
         if (PyLong_Check(*other) || PyInt_Check(*other)) {
-          triton::uint128 value = PyLong_AsUint128(*other);
+          triton::uint512 value = PyLong_AsUint512(*other);
           triton::__uint size   = PyAstNode_AsAstNode(*self)->getBitvectorSize();
           if (size) {
             *other = PyAstNode(triton::ast::bv(value, size));

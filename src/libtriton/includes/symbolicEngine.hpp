@@ -162,13 +162,13 @@ namespace triton {
           triton::uint8 getSymbolicMemoryValue(triton::__uint address);
 
           //! Returns the symbolic memory value.
-          triton::uint128 getSymbolicMemoryValue(triton::arch::MemoryOperand& mem);
+          triton::uint512 getSymbolicMemoryValue(triton::arch::MemoryOperand& mem);
 
           //! Returns the symbolic values of a memory area.
           std::vector<triton::uint8> getSymbolicMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size);
 
           //! Returns the symbolic register value.
-          triton::uint128 getSymbolicRegisterValue(triton::arch::RegisterOperand& reg);
+          triton::uint512 getSymbolicRegisterValue(triton::arch::RegisterOperand& reg);
 
           //! Returns an immediate symbolic operand.
           triton::ast::AbstractNode* buildSymbolicImmediateOperand(triton::arch::ImmediateOperand& imm);

@@ -24,7 +24,7 @@ namespace triton {
     }
 
 
-    MemoryOperand::MemoryOperand(triton::__uint address, triton::uint32 size /* bytes */, triton::uint128 concreteValue) {
+    MemoryOperand::MemoryOperand(triton::__uint address, triton::uint32 size /* bytes */, triton::uint512 concreteValue) {
       this->address       = address;
       this->concreteValue = concreteValue;
       this->trusted       = true;
@@ -33,7 +33,7 @@ namespace triton {
       if (size == 0)
         throw std::runtime_error("MemoryOperand::MemoryOperand(): size cannot be zero.");
 
-      if (size != BYTE_SIZE && size != WORD_SIZE && size != DWORD_SIZE && size != QWORD_SIZE && size != DQWORD_SIZE)
+      if (size != BYTE_SIZE && size != WORD_SIZE && size != DWORD_SIZE && size != QWORD_SIZE && size != DQWORD_SIZE && size != QQWORD_SIZE && size != DQQWORD_SIZE)
         throw std::runtime_error("MemoryOperand::MemoryOperand(): size must be aligned.");
 
       this->setPair(std::make_pair(((size * BYTE_SIZE_BIT) - 1), 0));
@@ -96,7 +96,7 @@ namespace triton {
     }
 
 
-    triton::uint128 MemoryOperand::getConcreteValue(void) const {
+    triton::uint512 MemoryOperand::getConcreteValue(void) const {
       return this->concreteValue;
     }
 
@@ -158,7 +158,7 @@ namespace triton {
     }
 
 
-    void MemoryOperand::setConcreteValue(triton::uint128 concreteValue) {
+    void MemoryOperand::setConcreteValue(triton::uint512 concreteValue) {
       this->concreteValue = concreteValue;
       this->trusted       = true;
     }

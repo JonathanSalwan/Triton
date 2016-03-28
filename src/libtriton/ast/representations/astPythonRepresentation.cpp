@@ -424,7 +424,7 @@ namespace triton {
 
       /* sx representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::SxNode* node) {
-        triton::uint128 extend = reinterpret_cast<triton::ast::DecimalNode*>(node->getChilds()[0])->getValue();
+        triton::uint512 extend = reinterpret_cast<triton::ast::DecimalNode*>(node->getChilds()[0])->getValue();
 
         if (extend)
           stream << "sx(" << node->getChilds()[0] << ", " << node->getChilds()[1] << ")";

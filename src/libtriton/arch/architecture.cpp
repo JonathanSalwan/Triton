@@ -283,7 +283,7 @@ namespace triton {
     }
 
 
-    triton::uint128 Architecture::getLastMemoryValue(triton::arch::MemoryOperand& mem) {
+    triton::uint512 Architecture::getLastMemoryValue(triton::arch::MemoryOperand& mem) {
       if (!this->cpu)
         throw std::runtime_error("Architecture::getLastMemoryValue(): You must define an architecture.");
       return this->cpu->getLastMemoryValue(mem);
@@ -297,7 +297,7 @@ namespace triton {
     }
 
 
-    triton::uint128 Architecture::getLastRegisterValue(triton::arch::RegisterOperand& reg) {
+    triton::uint512 Architecture::getLastRegisterValue(triton::arch::RegisterOperand& reg) {
       if (!this->cpu)
         throw std::runtime_error("Architecture::getLastRegisterValue(): You must define an architecture.");
       return this->cpu->getLastRegisterValue(reg);

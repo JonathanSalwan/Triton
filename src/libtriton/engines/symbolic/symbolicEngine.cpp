@@ -213,16 +213,31 @@ namespace triton {
         this->alignedMemoryReference.erase(std::make_pair(addr,  DWORD_SIZE));
         this->alignedMemoryReference.erase(std::make_pair(addr,  QWORD_SIZE));
         this->alignedMemoryReference.erase(std::make_pair(addr,  DQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr,  QQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr,  DQQWORD_SIZE));
 
         /* Remove overloaded range */
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,  WORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,  DWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,  QWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,  DQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,  DWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,  QWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,  DQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-QWORD_SIZE, DQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,    WORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,    DWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,    QWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,    DQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,    QQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,    DQQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,    DWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,    QWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,    DQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,    QQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,    DQQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,   QWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,   DQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,   QQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,   DQQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-QWORD_SIZE,   DQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-QWORD_SIZE,   QQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-QWORD_SIZE,   DQQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-DQWORD_SIZE,  QQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-DQWORD_SIZE,  DQQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-DQQWORD_SIZE, DQQWORD_SIZE));
       }
 
 
@@ -278,9 +293,9 @@ namespace triton {
 
 
       /* Returns the symbolic memory value */
-      triton::uint128 SymbolicEngine::getSymbolicMemoryValue(triton::arch::MemoryOperand& mem) {
+      triton::uint512 SymbolicEngine::getSymbolicMemoryValue(triton::arch::MemoryOperand& mem) {
         triton::ast::AbstractNode* node = this->buildSymbolicMemoryOperand(mem);
-        return node->evaluate().convert_to<triton::uint128>();
+        return node->evaluate();
       }
 
 
@@ -296,9 +311,9 @@ namespace triton {
 
 
       /* Returns the symbolic register value */
-      triton::uint128 SymbolicEngine::getSymbolicRegisterValue(triton::arch::RegisterOperand& reg) {
+      triton::uint512 SymbolicEngine::getSymbolicRegisterValue(triton::arch::RegisterOperand& reg) {
         triton::ast::AbstractNode* node = this->buildSymbolicRegisterOperand(reg);
-        return node->evaluate().convert_to<triton::uint128>();
+        return node->evaluate();
       }
 
 
@@ -456,7 +471,7 @@ namespace triton {
 
         symVar = this->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, symVarSize, symVarComment);
         if (expression->getAst())
-            symVar->setSymVarConcreteValue(expression->getAst()->evaluate().convert_to<triton::uint128>());
+            symVar->setSymVarConcreteValue(expression->getAst()->evaluate());
 
         tmp = triton::ast::variable(*symVar);
         tmp->setParent(expression->getAst()->getParents());
@@ -475,7 +490,7 @@ namespace triton {
         triton::__uint memSymId         = triton::engines::symbolic::UNSET;
         triton::__uint memAddr          = mem.getAddress();
         triton::uint32 symVarSize       = mem.getSize();
-        triton::uint128 cv              = mem.getConcreteValue() ? mem.getConcreteValue() : triton::api.getLastMemoryValue(mem);
+        triton::uint512 cv              = mem.getConcreteValue() ? mem.getConcreteValue() : triton::api.getLastMemoryValue(mem);
 
         memSymId = this->getSymbolicMemoryId(memAddr);
 
@@ -521,7 +536,7 @@ namespace triton {
         triton::__uint regSymId         = triton::engines::symbolic::UNSET;
         triton::uint32 parentId         = reg.getParent().getId();
         triton::uint32 symVarSize       = reg.getBitSize();
-        triton::uint128 cv              = reg.getConcreteValue() ? reg.getConcreteValue() : triton::api.getLastRegisterValue(reg);
+        triton::uint512 cv              = reg.getConcreteValue() ? reg.getConcreteValue() : triton::api.getLastRegisterValue(reg);
 
         if (!triton::api.isCpuRegisterValid(parentId))
           throw std::runtime_error("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");
@@ -583,12 +598,12 @@ namespace triton {
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicMemoryOperand(triton::arch::MemoryOperand& mem) {
         std::list<triton::ast::AbstractNode*> opVec;
 
-        triton::ast::AbstractNode* tmp           = nullptr;
-        triton::__uint address                   = mem.getAddress();
-        triton::uint32 size                      = mem.getSize();
-        triton::__uint symMem                    = triton::engines::symbolic::UNSET;
-        triton::uint8 concreteValue[DQWORD_SIZE] = {0};
-        triton::uint128 value                    = triton::api.getLastMemoryValue(mem);
+        triton::ast::AbstractNode* tmp            = nullptr;
+        triton::__uint address                    = mem.getAddress();
+        triton::uint32 size                       = mem.getSize();
+        triton::__uint symMem                     = triton::engines::symbolic::UNSET;
+        triton::uint8 concreteValue[DQQWORD_SIZE] = {0};
+        triton::uint512 value                     = triton::api.getLastMemoryValue(mem);
 
         triton::utils::fromUintToBuffer(value, concreteValue);
 
@@ -615,6 +630,8 @@ namespace triton {
         }
 
         switch (opVec.size()) {
+          case DQQWORD_SIZE:
+          case QQWORD_SIZE:
           case DQWORD_SIZE:
           case QWORD_SIZE:
           case DWORD_SIZE:
@@ -726,6 +743,8 @@ namespace triton {
 
           case QWORD_SIZE:
           case DQWORD_SIZE:
+          case QQWORD_SIZE:
+          case DQQWORD_SIZE:
             finalExpr = node;
             break;
         }
