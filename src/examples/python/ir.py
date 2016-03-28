@@ -45,6 +45,7 @@ code = [
     (0x400011, "\x66\x0F\xD7\xD1"),             # pmovmskb   edx, xmm1
     (0x400015, "\x89\xd0"),                     # mov        eax, edx
     (0x400017, "\x80\xf4\x99"),                 # xor        ah, 0x99
+    (0x40001a, "\xC5\xFD\x6F\xCA"),             # vmovdqa    ymm1, ymm2
 ]
 
 
@@ -65,8 +66,8 @@ if __name__ == '__main__':
         inst.setAddress(addr)
 
         # optional - Update register state
-        inst.updateContext(Register(REG.RAX, 12345));
-        inst.updateContext(Register(REG.RBX, 67890));
+        inst.updateContext(Register(REG.RAX,  12345));
+        inst.updateContext(Register(REG.RBX,  67890));
 
         # optional - Add memory access <addr, size, content>
         inst.updateContext(Memory(0x66666666, 8, 0x31003200330034));

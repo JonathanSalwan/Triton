@@ -528,6 +528,9 @@ namespace triton {
       //! The TEST semantics.
       void test_s(triton::arch::Instruction& inst);
 
+      //! The VMOVDQA semantics.
+      void vmovdqa_s(triton::arch::Instruction& inst);
+
       //! The XADD semantics.
       void xadd_s(triton::arch::Instruction& inst);
 

@@ -154,6 +154,7 @@ STC                          | Set Carry Flag
 STD                          | Set Direction Flag
 SUB                          | Subtract
 TEST                         | Logical Compare
+VMOVDQA                      | VEX Move aligned packed integer values
 XADD                         | Exchange and Add
 XCHG                         | Exchange Register/Memory with Register
 XOR                          | Logical Exclusive OR
@@ -297,6 +298,7 @@ namespace triton {
             case ID_INS_STD:            triton::arch::x86::semantics::std_s(inst);        break;
             case ID_INS_SUB:            triton::arch::x86::semantics::sub_s(inst);        break;
             case ID_INS_TEST:           triton::arch::x86::semantics::test_s(inst);       break;
+            case ID_INS_VMOVDQA:        triton::arch::x86::semantics::vmovdqa_s(inst);    break;
             case ID_INS_XADD:           triton::arch::x86::semantics::xadd_s(inst);       break;
             case ID_INS_XCHG:           triton::arch::x86::semantics::xchg_s(inst);       break;
             case ID_INS_XOR:            triton::arch::x86::semantics::xor_s(inst);        break;
@@ -5325,6 +5327,24 @@ namespace triton {
           triton::arch::x86::semantics::pf_s(inst, expr, src1, true);
           triton::arch::x86::semantics::sf_s(inst, expr, src1, true);
           triton::arch::x86::semantics::zf_s(inst, expr, src1, true);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void vmovdqa_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create the semantics */
+          auto node = triton::api.buildSymbolicOperand(src);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "VMOVDQA operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
