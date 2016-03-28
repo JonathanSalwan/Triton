@@ -436,17 +436,17 @@ namespace triton {
 
 
     bool x8664Cpu::isRegister(triton::uint32 regId) {
-      return ((regId >= triton::arch::x86::ID_REG_RAX && regId <= triton::arch::x86::ID_REG_ZMM31) ? true : false);
+      return (this->isGPR(regId) || this->isMMX(regId) || this->isSSE(regId) || this->isAVX256(regId) || this->isAVX512(regId));
     }
 
 
     bool x8664Cpu::isRegisterValid(triton::uint32 regId) {
-      return (this->isFlag(regId) | this->isRegister(regId));
+      return (this->isFlag(regId) || this->isRegister(regId));
     }
 
 
     bool x8664Cpu::isGPR(triton::uint32 regId) {
-      return ((regId >= triton::arch::x86::ID_REG_RAX && regId < triton::arch::x86::ID_REG_MM0) ? true : false);
+      return ((regId >= triton::arch::x86::ID_REG_RAX && regId <= triton::arch::x86::ID_REG_EFLAGS) ? true : false);
     }
 
 

@@ -226,17 +226,17 @@ namespace triton {
 
 
     bool x86Cpu::isRegister(triton::uint32 regId) {
-      return ((regId >= triton::arch::x86::ID_REG_EAX && regId <= triton::arch::x86::ID_REG_XMM7) ? true : false);
+      return (this->isGPR(regId) || this->isMMX(regId) || this->isSSE(regId) || this->isAVX256(regId));
     }
 
 
     bool x86Cpu::isRegisterValid(triton::uint32 regId) {
-      return (this->isFlag(regId) | this->isRegister(regId));
+      return (this->isFlag(regId) || this->isRegister(regId));
     }
 
 
     bool x86Cpu::isGPR(triton::uint32 regId) {
-      return ((regId >= triton::arch::x86::ID_REG_EAX && regId < triton::arch::x86::ID_REG_MM0) ? true : false);
+      return ((regId >= triton::arch::x86::ID_REG_EAX && regId <= triton::arch::x86::ID_REG_EFLAGS) ? true : false);
     }
 
 
