@@ -83,6 +83,14 @@ According to the CPU architecture, the REG namespace contains all kinds of regis
 - **REG.XMM5**
 - **REG.XMM6**
 - **REG.XMM7**
+- **REG.YMM0**
+- **REG.YMM1**
+- **REG.YMM2**
+- **REG.YMM3**
+- **REG.YMM4**
+- **REG.YMM5**
+- **REG.YMM6**
+- **REG.YMM7**
 - **REG.AF**
 - **REG.CF**
 - **REG.DF**
@@ -191,6 +199,54 @@ According to the CPU architecture, the REG namespace contains all kinds of regis
 - **REG.XMM13**
 - **REG.XMM14**
 - **REG.XMM15**
+- **REG.YMM0**
+- **REG.YMM1**
+- **REG.YMM2**
+- **REG.YMM3**
+- **REG.YMM4**
+- **REG.YMM5**
+- **REG.YMM6**
+- **REG.YMM7**
+- **REG.YMM8**
+- **REG.YMM9**
+- **REG.YMM10**
+- **REG.YMM11**
+- **REG.YMM12**
+- **REG.YMM13**
+- **REG.YMM14**
+- **REG.YMM15**
+- **REG.ZMM0**
+- **REG.ZMM1**
+- **REG.ZMM2**
+- **REG.ZMM3**
+- **REG.ZMM4**
+- **REG.ZMM5**
+- **REG.ZMM6**
+- **REG.ZMM7**
+- **REG.ZMM8**
+- **REG.ZMM9**
+- **REG.ZMM10**
+- **REG.ZMM11**
+- **REG.ZMM12**
+- **REG.ZMM13**
+- **REG.ZMM14**
+- **REG.ZMM15**
+- **REG.ZMM16**
+- **REG.ZMM17**
+- **REG.ZMM18**
+- **REG.ZMM19**
+- **REG.ZMM20**
+- **REG.ZMM21**
+- **REG.ZMM22**
+- **REG.ZMM23**
+- **REG.ZMM24**
+- **REG.ZMM25**
+- **REG.ZMM26**
+- **REG.ZMM27**
+- **REG.ZMM28**
+- **REG.ZMM29**
+- **REG.ZMM30**
+- **REG.ZMM31**
 - **REG.AF**
 - **REG.CF**
 - **REG.DF**
@@ -217,89 +273,36 @@ namespace triton {
         switch (api.getArchitecture()) {
 
           case triton::arch::ARCH_X86_64:
-            PyDict_SetItemString(triton::bindings::python::registersDict, "RAX",    PyRegisterOperand(TRITON_X86_REG_RAX));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "RBX",    PyRegisterOperand(TRITON_X86_REG_RBX));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "RCX",    PyRegisterOperand(TRITON_X86_REG_RCX));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "RDX",    PyRegisterOperand(TRITON_X86_REG_RDX));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "RDI",    PyRegisterOperand(TRITON_X86_REG_RDI));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "RSI",    PyRegisterOperand(TRITON_X86_REG_RSI));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "RSP",    PyRegisterOperand(TRITON_X86_REG_RSP));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "RBP",    PyRegisterOperand(TRITON_X86_REG_RBP));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "RIP",    PyRegisterOperand(TRITON_X86_REG_RIP));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "RFLAGS", PyRegisterOperand(TRITON_X86_REG_RFLAGS));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R8",     PyRegisterOperand(TRITON_X86_REG_R8));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R8D",    PyRegisterOperand(TRITON_X86_REG_R8D));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R8W",    PyRegisterOperand(TRITON_X86_REG_R8W));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R8B",    PyRegisterOperand(TRITON_X86_REG_R8B));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R9",     PyRegisterOperand(TRITON_X86_REG_R9));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R9D",    PyRegisterOperand(TRITON_X86_REG_R9D));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R9W",    PyRegisterOperand(TRITON_X86_REG_R9W));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R9B",    PyRegisterOperand(TRITON_X86_REG_R9B));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R10",    PyRegisterOperand(TRITON_X86_REG_R10));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R10D",   PyRegisterOperand(TRITON_X86_REG_R10D));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R10W",   PyRegisterOperand(TRITON_X86_REG_R10W));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R10B",   PyRegisterOperand(TRITON_X86_REG_R10B));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R11",    PyRegisterOperand(TRITON_X86_REG_R11));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R11D",   PyRegisterOperand(TRITON_X86_REG_R11D));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R11W",   PyRegisterOperand(TRITON_X86_REG_R11W));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R11B",   PyRegisterOperand(TRITON_X86_REG_R11B));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R12",    PyRegisterOperand(TRITON_X86_REG_R12));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R12D",   PyRegisterOperand(TRITON_X86_REG_R12D));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R12W",   PyRegisterOperand(TRITON_X86_REG_R12W));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R12B",   PyRegisterOperand(TRITON_X86_REG_R12B));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R13",    PyRegisterOperand(TRITON_X86_REG_R13));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R13D",   PyRegisterOperand(TRITON_X86_REG_R13D));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R13W",   PyRegisterOperand(TRITON_X86_REG_R13W));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R13B",   PyRegisterOperand(TRITON_X86_REG_R13B));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R14",    PyRegisterOperand(TRITON_X86_REG_R14));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R14D",   PyRegisterOperand(TRITON_X86_REG_R14D));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R14W",   PyRegisterOperand(TRITON_X86_REG_R14W));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R14B",   PyRegisterOperand(TRITON_X86_REG_R14B));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R15",    PyRegisterOperand(TRITON_X86_REG_R15));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R15D",   PyRegisterOperand(TRITON_X86_REG_R15D));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R15W",   PyRegisterOperand(TRITON_X86_REG_R15W));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "R15B",   PyRegisterOperand(TRITON_X86_REG_R15B));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM8",   PyRegisterOperand(TRITON_X86_REG_XMM8));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM9",   PyRegisterOperand(TRITON_X86_REG_XMM9));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM10",  PyRegisterOperand(TRITON_X86_REG_XMM10));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM11",  PyRegisterOperand(TRITON_X86_REG_XMM11));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM12",  PyRegisterOperand(TRITON_X86_REG_XMM12));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM13",  PyRegisterOperand(TRITON_X86_REG_XMM13));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM14",  PyRegisterOperand(TRITON_X86_REG_XMM14));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM15",  PyRegisterOperand(TRITON_X86_REG_XMM15));
-
-          case triton::arch::ARCH_X86:
-            PyDict_SetItemString(triton::bindings::python::registersDict, "EAX",    PyRegisterOperand(TRITON_X86_REG_EAX));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "AX",     PyRegisterOperand(TRITON_X86_REG_AX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "AF",     PyRegisterOperand(TRITON_X86_REG_AF));
             PyDict_SetItemString(triton::bindings::python::registersDict, "AH",     PyRegisterOperand(TRITON_X86_REG_AH));
             PyDict_SetItemString(triton::bindings::python::registersDict, "AL",     PyRegisterOperand(TRITON_X86_REG_AL));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "EBX",    PyRegisterOperand(TRITON_X86_REG_EBX));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "BX",     PyRegisterOperand(TRITON_X86_REG_BX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "AX",     PyRegisterOperand(TRITON_X86_REG_AX));
             PyDict_SetItemString(triton::bindings::python::registersDict, "BH",     PyRegisterOperand(TRITON_X86_REG_BH));
             PyDict_SetItemString(triton::bindings::python::registersDict, "BL",     PyRegisterOperand(TRITON_X86_REG_BL));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "ECX",    PyRegisterOperand(TRITON_X86_REG_ECX));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "CX",     PyRegisterOperand(TRITON_X86_REG_CX));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "CH",     PyRegisterOperand(TRITON_X86_REG_CH));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "CL",     PyRegisterOperand(TRITON_X86_REG_CL));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "EDX",    PyRegisterOperand(TRITON_X86_REG_EDX));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "DX",     PyRegisterOperand(TRITON_X86_REG_DX));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "DH",     PyRegisterOperand(TRITON_X86_REG_DH));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "DL",     PyRegisterOperand(TRITON_X86_REG_DL));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "EDI",    PyRegisterOperand(TRITON_X86_REG_EDI));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "DI",     PyRegisterOperand(TRITON_X86_REG_DI));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "DIL",    PyRegisterOperand(TRITON_X86_REG_DIL));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "ESI",    PyRegisterOperand(TRITON_X86_REG_ESI));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "SI",     PyRegisterOperand(TRITON_X86_REG_SI));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "SIL",    PyRegisterOperand(TRITON_X86_REG_SIL));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "ESP",    PyRegisterOperand(TRITON_X86_REG_ESP));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "SP",     PyRegisterOperand(TRITON_X86_REG_SP));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "SPL",    PyRegisterOperand(TRITON_X86_REG_SPL));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "EBP",    PyRegisterOperand(TRITON_X86_REG_EBP));
             PyDict_SetItemString(triton::bindings::python::registersDict, "BP",     PyRegisterOperand(TRITON_X86_REG_BP));
             PyDict_SetItemString(triton::bindings::python::registersDict, "BPL",    PyRegisterOperand(TRITON_X86_REG_BPL));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "BX",     PyRegisterOperand(TRITON_X86_REG_BX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "CF",     PyRegisterOperand(TRITON_X86_REG_CF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "CH",     PyRegisterOperand(TRITON_X86_REG_CH));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "CL",     PyRegisterOperand(TRITON_X86_REG_CL));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "CX",     PyRegisterOperand(TRITON_X86_REG_CX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "DF",     PyRegisterOperand(TRITON_X86_REG_DF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "DH",     PyRegisterOperand(TRITON_X86_REG_DH));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "DI",     PyRegisterOperand(TRITON_X86_REG_DI));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "DIL",    PyRegisterOperand(TRITON_X86_REG_DIL));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "DL",     PyRegisterOperand(TRITON_X86_REG_DL));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "DX",     PyRegisterOperand(TRITON_X86_REG_DX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "EAX",    PyRegisterOperand(TRITON_X86_REG_EAX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "EBP",    PyRegisterOperand(TRITON_X86_REG_EBP));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "EBX",    PyRegisterOperand(TRITON_X86_REG_EBX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ECX",    PyRegisterOperand(TRITON_X86_REG_ECX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "EDI",    PyRegisterOperand(TRITON_X86_REG_EDI));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "EDX",    PyRegisterOperand(TRITON_X86_REG_EDX));
             PyDict_SetItemString(triton::bindings::python::registersDict, "EIP",    PyRegisterOperand(TRITON_X86_REG_EIP));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ESI",    PyRegisterOperand(TRITON_X86_REG_ESI));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ESP",    PyRegisterOperand(TRITON_X86_REG_ESP));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "IF",     PyRegisterOperand(TRITON_X86_REG_IF));
             PyDict_SetItemString(triton::bindings::python::registersDict, "IP",     PyRegisterOperand(TRITON_X86_REG_IP));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "EFLAGS", PyRegisterOperand(TRITON_X86_REG_EFLAGS));
             PyDict_SetItemString(triton::bindings::python::registersDict, "MM0",    PyRegisterOperand(TRITON_X86_REG_MM0));
             PyDict_SetItemString(triton::bindings::python::registersDict, "MM1",    PyRegisterOperand(TRITON_X86_REG_MM1));
             PyDict_SetItemString(triton::bindings::python::registersDict, "MM2",    PyRegisterOperand(TRITON_X86_REG_MM2));
@@ -308,6 +311,171 @@ namespace triton {
             PyDict_SetItemString(triton::bindings::python::registersDict, "MM5",    PyRegisterOperand(TRITON_X86_REG_MM5));
             PyDict_SetItemString(triton::bindings::python::registersDict, "MM6",    PyRegisterOperand(TRITON_X86_REG_MM6));
             PyDict_SetItemString(triton::bindings::python::registersDict, "MM7",    PyRegisterOperand(TRITON_X86_REG_MM7));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "OF",     PyRegisterOperand(TRITON_X86_REG_OF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "PF",     PyRegisterOperand(TRITON_X86_REG_PF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R10",    PyRegisterOperand(TRITON_X86_REG_R10));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R10B",   PyRegisterOperand(TRITON_X86_REG_R10B));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R10D",   PyRegisterOperand(TRITON_X86_REG_R10D));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R10W",   PyRegisterOperand(TRITON_X86_REG_R10W));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R11",    PyRegisterOperand(TRITON_X86_REG_R11));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R11B",   PyRegisterOperand(TRITON_X86_REG_R11B));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R11D",   PyRegisterOperand(TRITON_X86_REG_R11D));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R11W",   PyRegisterOperand(TRITON_X86_REG_R11W));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R12",    PyRegisterOperand(TRITON_X86_REG_R12));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R12B",   PyRegisterOperand(TRITON_X86_REG_R12B));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R12D",   PyRegisterOperand(TRITON_X86_REG_R12D));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R12W",   PyRegisterOperand(TRITON_X86_REG_R12W));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R13",    PyRegisterOperand(TRITON_X86_REG_R13));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R13B",   PyRegisterOperand(TRITON_X86_REG_R13B));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R13D",   PyRegisterOperand(TRITON_X86_REG_R13D));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R13W",   PyRegisterOperand(TRITON_X86_REG_R13W));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R14",    PyRegisterOperand(TRITON_X86_REG_R14));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R14B",   PyRegisterOperand(TRITON_X86_REG_R14B));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R14D",   PyRegisterOperand(TRITON_X86_REG_R14D));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R14W",   PyRegisterOperand(TRITON_X86_REG_R14W));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R15",    PyRegisterOperand(TRITON_X86_REG_R15));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R15B",   PyRegisterOperand(TRITON_X86_REG_R15B));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R15D",   PyRegisterOperand(TRITON_X86_REG_R15D));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R15W",   PyRegisterOperand(TRITON_X86_REG_R15W));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R8",     PyRegisterOperand(TRITON_X86_REG_R8));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R8B",    PyRegisterOperand(TRITON_X86_REG_R8B));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R8D",    PyRegisterOperand(TRITON_X86_REG_R8D));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R8W",    PyRegisterOperand(TRITON_X86_REG_R8W));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R9",     PyRegisterOperand(TRITON_X86_REG_R9));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R9B",    PyRegisterOperand(TRITON_X86_REG_R9B));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R9D",    PyRegisterOperand(TRITON_X86_REG_R9D));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "R9W",    PyRegisterOperand(TRITON_X86_REG_R9W));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "RAX",    PyRegisterOperand(TRITON_X86_REG_RAX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "RBP",    PyRegisterOperand(TRITON_X86_REG_RBP));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "RBX",    PyRegisterOperand(TRITON_X86_REG_RBX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "RCX",    PyRegisterOperand(TRITON_X86_REG_RCX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "RDI",    PyRegisterOperand(TRITON_X86_REG_RDI));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "RDX",    PyRegisterOperand(TRITON_X86_REG_RDX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "RFLAGS", PyRegisterOperand(TRITON_X86_REG_RFLAGS));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "RIP",    PyRegisterOperand(TRITON_X86_REG_RIP));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "RSI",    PyRegisterOperand(TRITON_X86_REG_RSI));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "RSP",    PyRegisterOperand(TRITON_X86_REG_RSP));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "SF",     PyRegisterOperand(TRITON_X86_REG_SF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "SI",     PyRegisterOperand(TRITON_X86_REG_SI));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "SIL",    PyRegisterOperand(TRITON_X86_REG_SIL));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "SP",     PyRegisterOperand(TRITON_X86_REG_SP));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "SPL",    PyRegisterOperand(TRITON_X86_REG_SPL));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "TF",     PyRegisterOperand(TRITON_X86_REG_TF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM0",   PyRegisterOperand(TRITON_X86_REG_XMM0));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM1",   PyRegisterOperand(TRITON_X86_REG_XMM1));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM10",  PyRegisterOperand(TRITON_X86_REG_XMM10));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM11",  PyRegisterOperand(TRITON_X86_REG_XMM11));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM12",  PyRegisterOperand(TRITON_X86_REG_XMM12));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM13",  PyRegisterOperand(TRITON_X86_REG_XMM13));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM14",  PyRegisterOperand(TRITON_X86_REG_XMM14));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM15",  PyRegisterOperand(TRITON_X86_REG_XMM15));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM2",   PyRegisterOperand(TRITON_X86_REG_XMM2));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM3",   PyRegisterOperand(TRITON_X86_REG_XMM3));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM4",   PyRegisterOperand(TRITON_X86_REG_XMM4));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM5",   PyRegisterOperand(TRITON_X86_REG_XMM5));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM6",   PyRegisterOperand(TRITON_X86_REG_XMM6));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM7",   PyRegisterOperand(TRITON_X86_REG_XMM7));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM8",   PyRegisterOperand(TRITON_X86_REG_XMM8));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "XMM9",   PyRegisterOperand(TRITON_X86_REG_XMM9));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM0",   PyRegisterOperand(TRITON_X86_REG_YMM0));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM1",   PyRegisterOperand(TRITON_X86_REG_YMM1));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM10",  PyRegisterOperand(TRITON_X86_REG_YMM10));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM11",  PyRegisterOperand(TRITON_X86_REG_YMM11));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM12",  PyRegisterOperand(TRITON_X86_REG_YMM12));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM13",  PyRegisterOperand(TRITON_X86_REG_YMM13));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM14",  PyRegisterOperand(TRITON_X86_REG_YMM14));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM15",  PyRegisterOperand(TRITON_X86_REG_YMM15));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM2",   PyRegisterOperand(TRITON_X86_REG_YMM2));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM3",   PyRegisterOperand(TRITON_X86_REG_YMM3));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM4",   PyRegisterOperand(TRITON_X86_REG_YMM4));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM5",   PyRegisterOperand(TRITON_X86_REG_YMM5));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM6",   PyRegisterOperand(TRITON_X86_REG_YMM6));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM7",   PyRegisterOperand(TRITON_X86_REG_YMM7));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM8",   PyRegisterOperand(TRITON_X86_REG_YMM8));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM9",   PyRegisterOperand(TRITON_X86_REG_YMM9));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZF",     PyRegisterOperand(TRITON_X86_REG_ZF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM0",   PyRegisterOperand(TRITON_X86_REG_ZMM0));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM1",   PyRegisterOperand(TRITON_X86_REG_ZMM1));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM10",  PyRegisterOperand(TRITON_X86_REG_ZMM10));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM11",  PyRegisterOperand(TRITON_X86_REG_ZMM11));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM12",  PyRegisterOperand(TRITON_X86_REG_ZMM12));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM13",  PyRegisterOperand(TRITON_X86_REG_ZMM13));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM14",  PyRegisterOperand(TRITON_X86_REG_ZMM14));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM15",  PyRegisterOperand(TRITON_X86_REG_ZMM15));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM16",  PyRegisterOperand(TRITON_X86_REG_ZMM16));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM17",  PyRegisterOperand(TRITON_X86_REG_ZMM17));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM18",  PyRegisterOperand(TRITON_X86_REG_ZMM18));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM19",  PyRegisterOperand(TRITON_X86_REG_ZMM19));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM2",   PyRegisterOperand(TRITON_X86_REG_ZMM2));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM20",  PyRegisterOperand(TRITON_X86_REG_ZMM20));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM21",  PyRegisterOperand(TRITON_X86_REG_ZMM21));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM22",  PyRegisterOperand(TRITON_X86_REG_ZMM22));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM23",  PyRegisterOperand(TRITON_X86_REG_ZMM23));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM24",  PyRegisterOperand(TRITON_X86_REG_ZMM24));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM25",  PyRegisterOperand(TRITON_X86_REG_ZMM25));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM26",  PyRegisterOperand(TRITON_X86_REG_ZMM26));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM27",  PyRegisterOperand(TRITON_X86_REG_ZMM27));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM28",  PyRegisterOperand(TRITON_X86_REG_ZMM28));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM29",  PyRegisterOperand(TRITON_X86_REG_ZMM29));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM3",   PyRegisterOperand(TRITON_X86_REG_ZMM3));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM30",  PyRegisterOperand(TRITON_X86_REG_ZMM30));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM31",  PyRegisterOperand(TRITON_X86_REG_ZMM31));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM4",   PyRegisterOperand(TRITON_X86_REG_ZMM4));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM5",   PyRegisterOperand(TRITON_X86_REG_ZMM5));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM6",   PyRegisterOperand(TRITON_X86_REG_ZMM6));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM7",   PyRegisterOperand(TRITON_X86_REG_ZMM7));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM8",   PyRegisterOperand(TRITON_X86_REG_ZMM8));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ZMM9",   PyRegisterOperand(TRITON_X86_REG_ZMM9));
+            break;
+
+          case triton::arch::ARCH_X86:
+            PyDict_SetItemString(triton::bindings::python::registersDict, "AF",     PyRegisterOperand(TRITON_X86_REG_AF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "AH",     PyRegisterOperand(TRITON_X86_REG_AH));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "AL",     PyRegisterOperand(TRITON_X86_REG_AL));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "AX",     PyRegisterOperand(TRITON_X86_REG_AX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "BH",     PyRegisterOperand(TRITON_X86_REG_BH));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "BL",     PyRegisterOperand(TRITON_X86_REG_BL));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "BP",     PyRegisterOperand(TRITON_X86_REG_BP));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "BPL",    PyRegisterOperand(TRITON_X86_REG_BPL));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "BX",     PyRegisterOperand(TRITON_X86_REG_BX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "CF",     PyRegisterOperand(TRITON_X86_REG_CF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "CH",     PyRegisterOperand(TRITON_X86_REG_CH));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "CL",     PyRegisterOperand(TRITON_X86_REG_CL));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "CX",     PyRegisterOperand(TRITON_X86_REG_CX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "DF",     PyRegisterOperand(TRITON_X86_REG_DF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "DH",     PyRegisterOperand(TRITON_X86_REG_DH));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "DI",     PyRegisterOperand(TRITON_X86_REG_DI));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "DIL",    PyRegisterOperand(TRITON_X86_REG_DIL));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "DL",     PyRegisterOperand(TRITON_X86_REG_DL));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "DX",     PyRegisterOperand(TRITON_X86_REG_DX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "EAX",    PyRegisterOperand(TRITON_X86_REG_EAX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "EBP",    PyRegisterOperand(TRITON_X86_REG_EBP));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "EBX",    PyRegisterOperand(TRITON_X86_REG_EBX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ECX",    PyRegisterOperand(TRITON_X86_REG_ECX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "EDI",    PyRegisterOperand(TRITON_X86_REG_EDI));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "EDX",    PyRegisterOperand(TRITON_X86_REG_EDX));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "EFLAGS", PyRegisterOperand(TRITON_X86_REG_EFLAGS));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "EIP",    PyRegisterOperand(TRITON_X86_REG_EIP));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ESI",    PyRegisterOperand(TRITON_X86_REG_ESI));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "ESP",    PyRegisterOperand(TRITON_X86_REG_ESP));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "IF",     PyRegisterOperand(TRITON_X86_REG_IF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "IP",     PyRegisterOperand(TRITON_X86_REG_IP));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM0",    PyRegisterOperand(TRITON_X86_REG_MM0));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM1",    PyRegisterOperand(TRITON_X86_REG_MM1));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM2",    PyRegisterOperand(TRITON_X86_REG_MM2));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM3",    PyRegisterOperand(TRITON_X86_REG_MM3));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM4",    PyRegisterOperand(TRITON_X86_REG_MM4));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM5",    PyRegisterOperand(TRITON_X86_REG_MM5));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM6",    PyRegisterOperand(TRITON_X86_REG_MM6));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "MM7",    PyRegisterOperand(TRITON_X86_REG_MM7));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "OF",     PyRegisterOperand(TRITON_X86_REG_OF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "PF",     PyRegisterOperand(TRITON_X86_REG_PF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "SF",     PyRegisterOperand(TRITON_X86_REG_SF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "SI",     PyRegisterOperand(TRITON_X86_REG_SI));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "SIL",    PyRegisterOperand(TRITON_X86_REG_SIL));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "SP",     PyRegisterOperand(TRITON_X86_REG_SP));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "SPL",    PyRegisterOperand(TRITON_X86_REG_SPL));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "TF",     PyRegisterOperand(TRITON_X86_REG_TF));
             PyDict_SetItemString(triton::bindings::python::registersDict, "XMM0",   PyRegisterOperand(TRITON_X86_REG_XMM0));
             PyDict_SetItemString(triton::bindings::python::registersDict, "XMM1",   PyRegisterOperand(TRITON_X86_REG_XMM1));
             PyDict_SetItemString(triton::bindings::python::registersDict, "XMM2",   PyRegisterOperand(TRITON_X86_REG_XMM2));
@@ -316,14 +484,14 @@ namespace triton {
             PyDict_SetItemString(triton::bindings::python::registersDict, "XMM5",   PyRegisterOperand(TRITON_X86_REG_XMM5));
             PyDict_SetItemString(triton::bindings::python::registersDict, "XMM6",   PyRegisterOperand(TRITON_X86_REG_XMM6));
             PyDict_SetItemString(triton::bindings::python::registersDict, "XMM7",   PyRegisterOperand(TRITON_X86_REG_XMM7));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "AF",     PyRegisterOperand(TRITON_X86_REG_AF));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "CF",     PyRegisterOperand(TRITON_X86_REG_CF));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "DF",     PyRegisterOperand(TRITON_X86_REG_DF));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "IF",     PyRegisterOperand(TRITON_X86_REG_IF));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "OF",     PyRegisterOperand(TRITON_X86_REG_OF));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "PF",     PyRegisterOperand(TRITON_X86_REG_PF));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "SF",     PyRegisterOperand(TRITON_X86_REG_SF));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "TF",     PyRegisterOperand(TRITON_X86_REG_TF));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM0",   PyRegisterOperand(TRITON_X86_REG_YMM0));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM1",   PyRegisterOperand(TRITON_X86_REG_YMM1));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM2",   PyRegisterOperand(TRITON_X86_REG_YMM2));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM3",   PyRegisterOperand(TRITON_X86_REG_YMM3));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM4",   PyRegisterOperand(TRITON_X86_REG_YMM4));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM5",   PyRegisterOperand(TRITON_X86_REG_YMM5));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM6",   PyRegisterOperand(TRITON_X86_REG_YMM6));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "YMM7",   PyRegisterOperand(TRITON_X86_REG_YMM7));
             PyDict_SetItemString(triton::bindings::python::registersDict, "ZF",     PyRegisterOperand(TRITON_X86_REG_ZF));
             break;
         } /* switch */
