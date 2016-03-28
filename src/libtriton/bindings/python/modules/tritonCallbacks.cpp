@@ -120,9 +120,6 @@ Converts a symbolic register expression to a symbolic variable. This function re
 - **cpuInvalidRegister(void)**<br>
  Returns the invalid CPU register id.
 
-- **cpuNumberOfRegisters(void)**<br>
-Returns the number of registers according to the CPU architecture.
-
 - **cpuRegisterBitSize(void)**<br>
 Returns the max size (in bit) of the CPU register (GPR).
 
@@ -958,11 +955,6 @@ namespace triton {
 
       static PyObject* triton_cpuInvalidRegister(PyObject* self, PyObject* noarg) {
         return Py_BuildValue("k", triton::api.cpuInvalidRegister());
-      }
-
-
-      static PyObject* triton_cpuNumberOfRegisters(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", triton::api.cpuNumberOfRegisters());
       }
 
 
@@ -2720,7 +2712,6 @@ namespace triton {
         {"convertMemoryToSymbolicVariable",     (PyCFunction)triton_convertMemoryToSymbolicVariable,        METH_VARARGS,       ""},
         {"convertRegisterToSymbolicVariable",   (PyCFunction)triton_convertRegisterToSymbolicVariable,      METH_VARARGS,       ""},
         {"cpuInvalidRegister",                  (PyCFunction)triton_cpuInvalidRegister,                     METH_NOARGS,        ""},
-        {"cpuNumberOfRegisters",                (PyCFunction)triton_cpuNumberOfRegisters,                   METH_NOARGS,        ""},
         {"cpuRegisterBitSize",                  (PyCFunction)triton_cpuRegisterBitSize,                     METH_NOARGS,        ""},
         {"cpuRegisterSize",                     (PyCFunction)triton_cpuRegisterSize,                        METH_NOARGS,        ""},
         {"createSymbolicFlagExpression",        (PyCFunction)triton_createSymbolicFlagExpression,           METH_VARARGS,       ""},
