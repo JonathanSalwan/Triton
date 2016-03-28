@@ -67,6 +67,14 @@ namespace triton {
       memcpy(this->xmm5,    other.xmm5,   sizeof(this->xmm5));
       memcpy(this->xmm6,    other.xmm6,   sizeof(this->xmm6));
       memcpy(this->xmm7,    other.xmm7,   sizeof(this->xmm7));
+      memcpy(this->ymm0,    other.ymm0,   sizeof(this->ymm0));
+      memcpy(this->ymm1,    other.ymm1,   sizeof(this->ymm1));
+      memcpy(this->ymm2,    other.ymm2,   sizeof(this->ymm2));
+      memcpy(this->ymm3,    other.ymm3,   sizeof(this->ymm3));
+      memcpy(this->ymm4,    other.ymm4,   sizeof(this->ymm4));
+      memcpy(this->ymm5,    other.ymm5,   sizeof(this->ymm5));
+      memcpy(this->ymm6,    other.ymm6,   sizeof(this->ymm6));
+      memcpy(this->ymm7,    other.ymm7,   sizeof(this->ymm7));
     }
 
 
@@ -134,6 +142,15 @@ namespace triton {
       triton::arch::x86::x86_reg_xmm6   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM6);
       triton::arch::x86::x86_reg_xmm7   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM7);
 
+      triton::arch::x86::x86_reg_ymm0   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM0);
+      triton::arch::x86::x86_reg_ymm1   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM1);
+      triton::arch::x86::x86_reg_ymm2   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM2);
+      triton::arch::x86::x86_reg_ymm3   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM3);
+      triton::arch::x86::x86_reg_ymm4   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM4);
+      triton::arch::x86::x86_reg_ymm5   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM5);
+      triton::arch::x86::x86_reg_ymm6   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM6);
+      triton::arch::x86::x86_reg_ymm7   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM7);
+
       triton::arch::x86::x86_reg_af     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_AF);
       triton::arch::x86::x86_reg_cf     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_CF);
       triton::arch::x86::x86_reg_df     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_DF);
@@ -187,6 +204,14 @@ namespace triton {
       memset(this->xmm5,    0x00, sizeof(this->xmm5));
       memset(this->xmm6,    0x00, sizeof(this->xmm6));
       memset(this->xmm7,    0x00, sizeof(this->xmm7));
+      memset(this->ymm0,    0x00, sizeof(this->ymm0));
+      memset(this->ymm1,    0x00, sizeof(this->ymm1));
+      memset(this->ymm2,    0x00, sizeof(this->ymm2));
+      memset(this->ymm3,    0x00, sizeof(this->ymm3));
+      memset(this->ymm4,    0x00, sizeof(this->ymm4));
+      memset(this->ymm5,    0x00, sizeof(this->ymm5));
+      memset(this->ymm6,    0x00, sizeof(this->ymm6));
+      memset(this->ymm7,    0x00, sizeof(this->ymm7));
     }
 
 
@@ -222,6 +247,11 @@ namespace triton {
 
     bool x86Cpu::isSSE(triton::uint32 regId) {
       return ((regId >= triton::arch::x86::ID_REG_XMM0 && regId <= triton::arch::x86::ID_REG_XMM7) ? true : false);
+    }
+
+
+    bool x86Cpu::isAVX256(triton::uint32 regId) {
+      return ((regId >= triton::arch::x86::ID_REG_YMM0 && regId <= triton::arch::x86::ID_REG_YMM7) ? true : false);
     }
 
 
@@ -280,6 +310,10 @@ namespace triton {
 
         /* Add SSE */
         else if (this->isSSE(triton::arch::x86::x86_regs[index]->getId()))
+          ret.insert(triton::arch::x86::x86_regs[index]);
+
+        /* Add AVX-256 */
+        else if (this->isAVX256(triton::arch::x86::x86_regs[index]->getId()))
           ret.insert(triton::arch::x86::x86_regs[index]);
       }
 
@@ -382,7 +416,7 @@ namespace triton {
 
     void x86Cpu::buildSemantics(triton::arch::Instruction &inst) {
       if (!inst.getType())
-        throw std::runtime_error("x8664Cpu::buildSemantics(): You must disassemble the instruction before.");
+        throw std::runtime_error("x86Cpu::buildSemantics(): You must disassemble the instruction before.");
       triton::arch::x86::semantics::build(inst);
     }
 

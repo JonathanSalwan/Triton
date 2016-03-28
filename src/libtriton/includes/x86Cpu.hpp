@@ -110,6 +110,22 @@ namespace triton {
           triton::uint8 xmm6[DQWORD_SIZE];
           //! Concrete value of xmm7
           triton::uint8 xmm7[DQWORD_SIZE];
+          //! Concrete value of ymm0
+          triton::uint8 ymm0[QQWORD_SIZE];
+          //! Concrete value of ymm1
+          triton::uint8 ymm1[QQWORD_SIZE];
+          //! Concrete value of ymm2
+          triton::uint8 ymm2[QQWORD_SIZE];
+          //! Concrete value of ymm3
+          triton::uint8 ymm3[QQWORD_SIZE];
+          //! Concrete value of ymm4
+          triton::uint8 ymm4[QQWORD_SIZE];
+          //! Concrete value of ymm5
+          triton::uint8 ymm5[QQWORD_SIZE];
+          //! Concrete value of ymm6
+          triton::uint8 ymm6[QQWORD_SIZE];
+          //! Concrete value of ymm7
+          triton::uint8 ymm7[QQWORD_SIZE];
 
 
         public:
@@ -135,6 +151,9 @@ namespace triton {
 
           //! Returns true if regId is a SSE register.
           bool isSSE(triton::uint32 regId);
+
+          //! Returns true if regId is a AVX-256 (YMM) register.
+          bool isAVX256(triton::uint32 regId);
 
           std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg);
           std::set<triton::arch::RegisterOperand*> getAllRegisters(void);

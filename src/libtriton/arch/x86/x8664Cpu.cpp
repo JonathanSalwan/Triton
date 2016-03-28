@@ -83,6 +83,54 @@ namespace triton {
       memcpy(this->xmm13,   other.xmm13,  sizeof(this->xmm13));
       memcpy(this->xmm14,   other.xmm14,  sizeof(this->xmm14));
       memcpy(this->xmm15,   other.xmm15,  sizeof(this->xmm15));
+      memcpy(this->ymm0,    other.ymm0,   sizeof(this->ymm0));
+      memcpy(this->ymm1,    other.ymm1,   sizeof(this->ymm1));
+      memcpy(this->ymm2,    other.ymm2,   sizeof(this->ymm2));
+      memcpy(this->ymm3,    other.ymm3,   sizeof(this->ymm3));
+      memcpy(this->ymm4,    other.ymm4,   sizeof(this->ymm4));
+      memcpy(this->ymm5,    other.ymm5,   sizeof(this->ymm5));
+      memcpy(this->ymm6,    other.ymm6,   sizeof(this->ymm6));
+      memcpy(this->ymm7,    other.ymm7,   sizeof(this->ymm7));
+      memcpy(this->ymm8,    other.ymm8,   sizeof(this->ymm8));
+      memcpy(this->ymm9,    other.ymm9,   sizeof(this->ymm9));
+      memcpy(this->ymm10,   other.ymm10,  sizeof(this->ymm10));
+      memcpy(this->ymm11,   other.ymm11,  sizeof(this->ymm11));
+      memcpy(this->ymm12,   other.ymm12,  sizeof(this->ymm12));
+      memcpy(this->ymm13,   other.ymm13,  sizeof(this->ymm13));
+      memcpy(this->ymm14,   other.ymm14,  sizeof(this->ymm14));
+      memcpy(this->ymm15,   other.ymm15,  sizeof(this->ymm15));
+      memcpy(this->zmm0,    other.zmm0,   sizeof(this->zmm0));
+      memcpy(this->zmm1,    other.zmm1,   sizeof(this->zmm1));
+      memcpy(this->zmm2,    other.zmm2,   sizeof(this->zmm2));
+      memcpy(this->zmm3,    other.zmm3,   sizeof(this->zmm3));
+      memcpy(this->zmm4,    other.zmm4,   sizeof(this->zmm4));
+      memcpy(this->zmm5,    other.zmm5,   sizeof(this->zmm5));
+      memcpy(this->zmm6,    other.zmm6,   sizeof(this->zmm6));
+      memcpy(this->zmm7,    other.zmm7,   sizeof(this->zmm7));
+      memcpy(this->zmm8,    other.zmm8,   sizeof(this->zmm8));
+      memcpy(this->zmm9,    other.zmm9,   sizeof(this->zmm9));
+      memcpy(this->zmm10,   other.zmm10,  sizeof(this->zmm10));
+      memcpy(this->zmm11,   other.zmm11,  sizeof(this->zmm11));
+      memcpy(this->zmm12,   other.zmm12,  sizeof(this->zmm12));
+      memcpy(this->zmm13,   other.zmm13,  sizeof(this->zmm13));
+      memcpy(this->zmm14,   other.zmm14,  sizeof(this->zmm14));
+      memcpy(this->zmm15,   other.zmm15,  sizeof(this->zmm15));
+      memcpy(this->zmm16,   other.zmm16,  sizeof(this->zmm16));
+      memcpy(this->zmm17,   other.zmm17,  sizeof(this->zmm17));
+      memcpy(this->zmm18,   other.zmm18,  sizeof(this->zmm18));
+      memcpy(this->zmm19,   other.zmm19,  sizeof(this->zmm19));
+      memcpy(this->zmm20,   other.zmm20,  sizeof(this->zmm20));
+      memcpy(this->zmm21,   other.zmm21,  sizeof(this->zmm21));
+      memcpy(this->zmm22,   other.zmm22,  sizeof(this->zmm22));
+      memcpy(this->zmm23,   other.zmm23,  sizeof(this->zmm23));
+      memcpy(this->zmm24,   other.zmm24,  sizeof(this->zmm24));
+      memcpy(this->zmm25,   other.zmm25,  sizeof(this->zmm25));
+      memcpy(this->zmm26,   other.zmm26,  sizeof(this->zmm26));
+      memcpy(this->zmm27,   other.zmm27,  sizeof(this->zmm27));
+      memcpy(this->zmm28,   other.zmm28,  sizeof(this->zmm28));
+      memcpy(this->zmm29,   other.zmm29,  sizeof(this->zmm29));
+      memcpy(this->zmm30,   other.zmm30,  sizeof(this->zmm30));
+      memcpy(this->zmm31,   other.zmm31,  sizeof(this->zmm31));
     }
 
 
@@ -207,6 +255,56 @@ namespace triton {
       triton::arch::x86::x86_reg_xmm14  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM14);
       triton::arch::x86::x86_reg_xmm15  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM15);
 
+      triton::arch::x86::x86_reg_ymm0   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM0);
+      triton::arch::x86::x86_reg_ymm1   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM1);
+      triton::arch::x86::x86_reg_ymm2   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM2);
+      triton::arch::x86::x86_reg_ymm3   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM3);
+      triton::arch::x86::x86_reg_ymm4   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM4);
+      triton::arch::x86::x86_reg_ymm5   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM5);
+      triton::arch::x86::x86_reg_ymm6   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM6);
+      triton::arch::x86::x86_reg_ymm7   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM7);
+      triton::arch::x86::x86_reg_ymm8   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM8);
+      triton::arch::x86::x86_reg_ymm9   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM9);
+      triton::arch::x86::x86_reg_ymm10  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM10);
+      triton::arch::x86::x86_reg_ymm11  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM11);
+      triton::arch::x86::x86_reg_ymm12  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM12);
+      triton::arch::x86::x86_reg_ymm13  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM13);
+      triton::arch::x86::x86_reg_ymm14  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM14);
+      triton::arch::x86::x86_reg_ymm15  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM15);
+
+      triton::arch::x86::x86_reg_zmm0   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM0);
+      triton::arch::x86::x86_reg_zmm1   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM1);
+      triton::arch::x86::x86_reg_zmm2   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM2);
+      triton::arch::x86::x86_reg_zmm3   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM3);
+      triton::arch::x86::x86_reg_zmm4   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM4);
+      triton::arch::x86::x86_reg_zmm5   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM5);
+      triton::arch::x86::x86_reg_zmm6   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM6);
+      triton::arch::x86::x86_reg_zmm7   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM7);
+      triton::arch::x86::x86_reg_zmm8   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM8);
+      triton::arch::x86::x86_reg_zmm9   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM9);
+      triton::arch::x86::x86_reg_zmm10  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM10);
+      triton::arch::x86::x86_reg_zmm11  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM11);
+      triton::arch::x86::x86_reg_zmm12  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM12);
+      triton::arch::x86::x86_reg_zmm13  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM13);
+      triton::arch::x86::x86_reg_zmm14  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM14);
+      triton::arch::x86::x86_reg_zmm15  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM15);
+      triton::arch::x86::x86_reg_zmm16  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM16);
+      triton::arch::x86::x86_reg_zmm17  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM17);
+      triton::arch::x86::x86_reg_zmm18  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM18);
+      triton::arch::x86::x86_reg_zmm19  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM19);
+      triton::arch::x86::x86_reg_zmm20  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM20);
+      triton::arch::x86::x86_reg_zmm21  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM21);
+      triton::arch::x86::x86_reg_zmm22  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM22);
+      triton::arch::x86::x86_reg_zmm23  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM23);
+      triton::arch::x86::x86_reg_zmm24  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM24);
+      triton::arch::x86::x86_reg_zmm25  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM25);
+      triton::arch::x86::x86_reg_zmm26  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM26);
+      triton::arch::x86::x86_reg_zmm27  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM27);
+      triton::arch::x86::x86_reg_zmm28  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM28);
+      triton::arch::x86::x86_reg_zmm29  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM29);
+      triton::arch::x86::x86_reg_zmm30  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM30);
+      triton::arch::x86::x86_reg_zmm31  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZMM31);
+
       triton::arch::x86::x86_reg_af     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_AF);
       triton::arch::x86::x86_reg_cf     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_CF);
       triton::arch::x86::x86_reg_df     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_DF);
@@ -276,6 +374,54 @@ namespace triton {
       memset(this->xmm13,   0x00, sizeof(this->xmm13));
       memset(this->xmm14,   0x00, sizeof(this->xmm14));
       memset(this->xmm15,   0x00, sizeof(this->xmm15));
+      memset(this->ymm0,    0x00, sizeof(this->ymm0));
+      memset(this->ymm1,    0x00, sizeof(this->ymm1));
+      memset(this->ymm2,    0x00, sizeof(this->ymm2));
+      memset(this->ymm3,    0x00, sizeof(this->ymm3));
+      memset(this->ymm4,    0x00, sizeof(this->ymm4));
+      memset(this->ymm5,    0x00, sizeof(this->ymm5));
+      memset(this->ymm6,    0x00, sizeof(this->ymm6));
+      memset(this->ymm7,    0x00, sizeof(this->ymm7));
+      memset(this->ymm8,    0x00, sizeof(this->ymm8));
+      memset(this->ymm9,    0x00, sizeof(this->ymm9));
+      memset(this->ymm10,   0x00, sizeof(this->ymm10));
+      memset(this->ymm11,   0x00, sizeof(this->ymm11));
+      memset(this->ymm12,   0x00, sizeof(this->ymm12));
+      memset(this->ymm13,   0x00, sizeof(this->ymm13));
+      memset(this->ymm14,   0x00, sizeof(this->ymm14));
+      memset(this->ymm15,   0x00, sizeof(this->ymm15));
+      memset(this->zmm0,    0x00, sizeof(this->zmm0));
+      memset(this->zmm1,    0x00, sizeof(this->zmm1));
+      memset(this->zmm2,    0x00, sizeof(this->zmm2));
+      memset(this->zmm3,    0x00, sizeof(this->zmm3));
+      memset(this->zmm4,    0x00, sizeof(this->zmm4));
+      memset(this->zmm5,    0x00, sizeof(this->zmm5));
+      memset(this->zmm6,    0x00, sizeof(this->zmm6));
+      memset(this->zmm7,    0x00, sizeof(this->zmm7));
+      memset(this->zmm8,    0x00, sizeof(this->zmm8));
+      memset(this->zmm9,    0x00, sizeof(this->zmm9));
+      memset(this->zmm10,   0x00, sizeof(this->zmm10));
+      memset(this->zmm11,   0x00, sizeof(this->zmm11));
+      memset(this->zmm12,   0x00, sizeof(this->zmm12));
+      memset(this->zmm13,   0x00, sizeof(this->zmm13));
+      memset(this->zmm14,   0x00, sizeof(this->zmm14));
+      memset(this->zmm15,   0x00, sizeof(this->zmm15));
+      memset(this->zmm16,   0x00, sizeof(this->zmm16));
+      memset(this->zmm17,   0x00, sizeof(this->zmm17));
+      memset(this->zmm18,   0x00, sizeof(this->zmm18));
+      memset(this->zmm19,   0x00, sizeof(this->zmm19));
+      memset(this->zmm20,   0x00, sizeof(this->zmm20));
+      memset(this->zmm21,   0x00, sizeof(this->zmm21));
+      memset(this->zmm22,   0x00, sizeof(this->zmm22));
+      memset(this->zmm23,   0x00, sizeof(this->zmm23));
+      memset(this->zmm24,   0x00, sizeof(this->zmm24));
+      memset(this->zmm25,   0x00, sizeof(this->zmm25));
+      memset(this->zmm26,   0x00, sizeof(this->zmm26));
+      memset(this->zmm27,   0x00, sizeof(this->zmm27));
+      memset(this->zmm28,   0x00, sizeof(this->zmm28));
+      memset(this->zmm29,   0x00, sizeof(this->zmm29));
+      memset(this->zmm30,   0x00, sizeof(this->zmm30));
+      memset(this->zmm31,   0x00, sizeof(this->zmm31));
     }
 
 
@@ -290,7 +436,7 @@ namespace triton {
 
 
     bool x8664Cpu::isRegister(triton::uint32 regId) {
-      return ((regId >= triton::arch::x86::ID_REG_RAX && regId <= triton::arch::x86::ID_REG_XMM15) ? true : false);
+      return ((regId >= triton::arch::x86::ID_REG_RAX && regId <= triton::arch::x86::ID_REG_ZMM31) ? true : false);
     }
 
 
@@ -311,6 +457,16 @@ namespace triton {
 
     bool x8664Cpu::isSSE(triton::uint32 regId) {
       return ((regId >= triton::arch::x86::ID_REG_XMM0 && regId <= triton::arch::x86::ID_REG_XMM15) ? true : false);
+    }
+
+
+    bool x8664Cpu::isAVX256(triton::uint32 regId) {
+      return ((regId >= triton::arch::x86::ID_REG_YMM0 && regId <= triton::arch::x86::ID_REG_YMM15) ? true : false);
+    }
+
+
+    bool x8664Cpu::isAVX512(triton::uint32 regId) {
+      return ((regId >= triton::arch::x86::ID_REG_ZMM0 && regId <= triton::arch::x86::ID_REG_ZMM31) ? true : false);
     }
 
 
@@ -369,6 +525,14 @@ namespace triton {
 
         /* Add SSE */
         else if (this->isSSE(triton::arch::x86::x86_regs[index]->getId()))
+          ret.insert(triton::arch::x86::x86_regs[index]);
+
+        /* Add AVX-256 */
+        else if (this->isAVX256(triton::arch::x86::x86_regs[index]->getId()))
+          ret.insert(triton::arch::x86::x86_regs[index]);
+
+        /* Add AVX-512 */
+        else if (this->isAVX512(triton::arch::x86::x86_regs[index]->getId()))
           ret.insert(triton::arch::x86::x86_regs[index]);
       }
 

@@ -58,8 +58,8 @@ namespace triton {
     void BitsVector::setHigh(triton::uint32 v) {
       this->high = v;
 
-      if (this->high > DQWORD_SIZE_BIT)
-        throw std::runtime_error("BitsVector::setHigh(): The highest bit cannot be greater than a DQWORD.");
+      if (this->high >= MAX_BITS_SUPPORTED)
+        throw std::runtime_error("BitsVector::setHigh(): The highest bit cannot be greater than MAX_BITS_SUPPORTED.");
 
       if (this->getVectorSize() % BYTE_SIZE_BIT && this->getVectorSize() != FLAG_SIZE_BIT)
         throw std::runtime_error("BitsVector::setHigh(): The vector size must be a multiple of 8.");
@@ -81,8 +81,8 @@ namespace triton {
       this->high = std::get<0>(p);
       this->low  = std::get<1>(p);
 
-      if (this->high > DQWORD_SIZE_BIT)
-        throw std::runtime_error("BitsVector::setPair(): The highest bit cannot be greater than a DQWORD.");
+      if (this->high >= MAX_BITS_SUPPORTED)
+        throw std::runtime_error("BitsVector::setPair(): The highest bit cannot be greater than MAX_BITS_SUPPORTED.");
 
       if (this->low % BYTE_SIZE_BIT)
         throw std::runtime_error("BitsVector::setPair(): The lower bit must be a multiple of 8.");
