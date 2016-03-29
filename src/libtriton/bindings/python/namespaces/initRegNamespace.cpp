@@ -129,7 +129,7 @@ According to the CPU architecture, the REG namespace contains all kinds of regis
 - **REG.RSP**
 - **REG.RBP**
 - **REG.RIP**
-- **REG.RFLAGS**
+- **REG.EFLAGS**
 - **REG.R8**
 - **REG.R8D**
 - **REG.R8W**
@@ -396,7 +396,7 @@ namespace triton {
             PyDict_SetItemString(triton::bindings::python::registersDict, "RCX",    PyRegisterOperand(TRITON_X86_REG_RCX));
             PyDict_SetItemString(triton::bindings::python::registersDict, "RDI",    PyRegisterOperand(TRITON_X86_REG_RDI));
             PyDict_SetItemString(triton::bindings::python::registersDict, "RDX",    PyRegisterOperand(TRITON_X86_REG_RDX));
-            PyDict_SetItemString(triton::bindings::python::registersDict, "RFLAGS", PyRegisterOperand(TRITON_X86_REG_RFLAGS));
+            PyDict_SetItemString(triton::bindings::python::registersDict, "EFLAGS", PyRegisterOperand(TRITON_X86_REG_EFLAGS));
             PyDict_SetItemString(triton::bindings::python::registersDict, "RH",     PyRegisterOperand(TRITON_X86_REG_RH));
             PyDict_SetItemString(triton::bindings::python::registersDict, "RIP",    PyRegisterOperand(TRITON_X86_REG_RIP));
             PyDict_SetItemString(triton::bindings::python::registersDict, "RL",     PyRegisterOperand(TRITON_X86_REG_RL));

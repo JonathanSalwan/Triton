@@ -93,9 +93,7 @@ namespace triton {
       extern RegisterOperand x86_reg_ip;
       extern RegisterOperand x86_reg_pc;
 
-      extern RegisterOperand x86_reg_rflags;
       extern RegisterOperand x86_reg_eflags;
-      extern RegisterOperand x86_reg_flags;
 
       extern RegisterOperand x86_reg_r8;
       extern RegisterOperand x86_reg_r8d;
@@ -267,7 +265,6 @@ namespace triton {
         ID_REG_RBP, //!< rbp
         ID_REG_RSP, //!< rsp
         ID_REG_RIP, //!< rip
-        ID_REG_RFLAGS, //!< rflags
 
         ID_REG_R8, //!< r8
         ID_REG_R8D, //!< r8d
@@ -1863,8 +1860,6 @@ namespace triton {
 #define TRITON_X86_REG_IP       triton::arch::x86::x86_reg_ip
 //! Temporary PC register.
 #define TRITON_X86_REG_PC       triton::arch::x86::x86_reg_pc
-//! Temporary RFLAGS register.
-#define TRITON_X86_REG_RFLAGS   triton::arch::x86::x86_reg_rflags
 //! Temporary EFLAGS register.
 #define TRITON_X86_REG_EFLAGS   triton::arch::x86::x86_reg_eflags
 //! Temporary R8 register.

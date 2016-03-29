@@ -50,7 +50,7 @@ namespace triton {
       memcpy(this->rsp,     other.rsp,    sizeof(this->rsp));
       memcpy(this->rbp,     other.rbp,    sizeof(this->rbp));
       memcpy(this->rip,     other.rip,    sizeof(this->rip));
-      memcpy(this->rflags,  other.rflags, sizeof(this->rflags));
+      memcpy(this->eflags,  other.eflags, sizeof(this->eflags));
       memcpy(this->r8,      other.r8,     sizeof(this->r8));
       memcpy(this->r9,      other.r9,     sizeof(this->r9));
       memcpy(this->r10,     other.r10,    sizeof(this->r10));
@@ -187,8 +187,7 @@ namespace triton {
       triton::arch::x86::x86_reg_ip     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_IP);
       triton::arch::x86::x86_reg_pc     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_RIP);
 
-      triton::arch::x86::x86_reg_rflags = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_RFLAGS);
-      triton::arch::x86::x86_reg_flags  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_RFLAGS);
+      triton::arch::x86::x86_reg_eflags = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_EFLAGS);
 
       triton::arch::x86::x86_reg_r8     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_R8);
       triton::arch::x86::x86_reg_r8d    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_R8D);
@@ -361,7 +360,7 @@ namespace triton {
       memset(this->rsp,     0x00, sizeof(this->rsp));
       memset(this->rbp,     0x00, sizeof(this->rbp));
       memset(this->rip,     0x00, sizeof(this->rip));
-      memset(this->rflags,  0x00, sizeof(this->rflags));
+      memset(this->eflags,  0x00, sizeof(this->eflags));
       memset(this->r8,      0x00, sizeof(this->r8));
       memset(this->r9,      0x00, sizeof(this->r9));
       memset(this->r10,     0x00, sizeof(this->r10));
@@ -753,7 +752,7 @@ namespace triton {
         case triton::arch::x86::ID_REG_EIP: return (*((triton::uint32*)(this->rip)));
         case triton::arch::x86::ID_REG_IP:  return (*((triton::uint16*)(this->rip)));
 
-        case triton::arch::x86::ID_REG_RFLAGS: return (*((triton::uint64*)(this->rflags)));
+        case triton::arch::x86::ID_REG_EFLAGS: return (*((triton::uint64*)(this->eflags)));
 
         case triton::arch::x86::ID_REG_R8:  return (*((triton::uint64*)(this->r8)));
         case triton::arch::x86::ID_REG_R8D: return (*((triton::uint32*)(this->r8)));
@@ -890,15 +889,15 @@ namespace triton {
         case triton::arch::x86::ID_REG_RH:  return (((*((triton::uint64*)(this->mxcsr))) >> 14) & 1);
         case triton::arch::x86::ID_REG_FZ:  return (((*((triton::uint64*)(this->mxcsr))) >> 15) & 1);
 
-        case triton::arch::x86::ID_REG_CF: return (((*((triton::uint64*)(this->rflags))) >> 0) & 1);
-        case triton::arch::x86::ID_REG_PF: return (((*((triton::uint64*)(this->rflags))) >> 2) & 1);
-        case triton::arch::x86::ID_REG_AF: return (((*((triton::uint64*)(this->rflags))) >> 4) & 1);
-        case triton::arch::x86::ID_REG_ZF: return (((*((triton::uint64*)(this->rflags))) >> 6) & 1);
-        case triton::arch::x86::ID_REG_SF: return (((*((triton::uint64*)(this->rflags))) >> 7) & 1);
-        case triton::arch::x86::ID_REG_TF: return (((*((triton::uint64*)(this->rflags))) >> 8) & 1);
-        case triton::arch::x86::ID_REG_IF: return (((*((triton::uint64*)(this->rflags))) >> 9) & 1);
-        case triton::arch::x86::ID_REG_DF: return (((*((triton::uint64*)(this->rflags))) >> 10) & 1);
-        case triton::arch::x86::ID_REG_OF: return (((*((triton::uint64*)(this->rflags))) >> 11) & 1);
+        case triton::arch::x86::ID_REG_CF: return (((*((triton::uint64*)(this->eflags))) >> 0) & 1);
+        case triton::arch::x86::ID_REG_PF: return (((*((triton::uint64*)(this->eflags))) >> 2) & 1);
+        case triton::arch::x86::ID_REG_AF: return (((*((triton::uint64*)(this->eflags))) >> 4) & 1);
+        case triton::arch::x86::ID_REG_ZF: return (((*((triton::uint64*)(this->eflags))) >> 6) & 1);
+        case triton::arch::x86::ID_REG_SF: return (((*((triton::uint64*)(this->eflags))) >> 7) & 1);
+        case triton::arch::x86::ID_REG_TF: return (((*((triton::uint64*)(this->eflags))) >> 8) & 1);
+        case triton::arch::x86::ID_REG_IF: return (((*((triton::uint64*)(this->eflags))) >> 9) & 1);
+        case triton::arch::x86::ID_REG_DF: return (((*((triton::uint64*)(this->eflags))) >> 10) & 1);
+        case triton::arch::x86::ID_REG_OF: return (((*((triton::uint64*)(this->eflags))) >> 11) & 1);
 
         default:
           throw std::invalid_argument("x8664Cpu::getLastRegisterValue(): Invalid register.");
@@ -939,7 +938,7 @@ namespace triton {
       triton::uint512 value = reg.getConcreteValue();
 
       if (reg.isFlag())
-        throw std::invalid_argument("x8664Cpu::setLastRegisterValue(): You cannot set an isolated flag. Use the flags register RFLAGS.");
+        throw std::invalid_argument("x8664Cpu::setLastRegisterValue(): You cannot set an isolated flag. Use the flags register EFLAGS.");
 
       switch (reg.getId()) {
         case triton::arch::x86::ID_REG_RAX: (*((triton::uint64*)(this->rax)))  = value.convert_to<triton::uint64>(); break;
@@ -990,7 +989,7 @@ namespace triton {
         case triton::arch::x86::ID_REG_EIP: (*((triton::uint32*)(this->rip))) = value.convert_to<triton::uint32>(); break;
         case triton::arch::x86::ID_REG_IP:  (*((triton::uint16*)(this->rip))) = value.convert_to<triton::uint16>(); break;
 
-        case triton::arch::x86::ID_REG_RFLAGS: (*((triton::uint64*)(this->rflags))) = value.convert_to<triton::uint64>(); break;
+        case triton::arch::x86::ID_REG_EFLAGS: (*((triton::uint64*)(this->eflags))) = value.convert_to<triton::uint64>(); break;
 
         case triton::arch::x86::ID_REG_R8:  (*((triton::uint64*)(this->r8))) = value.convert_to<triton::uint64>(); break;
         case triton::arch::x86::ID_REG_R8D: (*((triton::uint32*)(this->r8))) = value.convert_to<triton::uint32>(); break;

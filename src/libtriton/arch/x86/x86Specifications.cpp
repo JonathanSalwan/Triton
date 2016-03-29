@@ -75,9 +75,7 @@ namespace triton {
       triton::arch::RegisterOperand x86_reg_ip      = triton::arch::RegisterOperand();
       triton::arch::RegisterOperand x86_reg_pc      = triton::arch::RegisterOperand();
 
-      triton::arch::RegisterOperand x86_reg_rflags  = triton::arch::RegisterOperand();
       triton::arch::RegisterOperand x86_reg_eflags  = triton::arch::RegisterOperand();
-      triton::arch::RegisterOperand x86_reg_flags   = triton::arch::RegisterOperand();
 
       triton::arch::RegisterOperand x86_reg_r8      = triton::arch::RegisterOperand();
       triton::arch::RegisterOperand x86_reg_r8d     = triton::arch::RegisterOperand();
@@ -235,7 +233,7 @@ namespace triton {
         &TRITON_X86_REG_RBP,
         &TRITON_X86_REG_RSP,
         &TRITON_X86_REG_RIP,
-        &TRITON_X86_REG_RFLAGS,
+        &TRITON_X86_REG_EFLAGS,
         &TRITON_X86_REG_R8,
         &TRITON_X86_REG_R8D,
         &TRITON_X86_REG_R8W,
@@ -298,7 +296,6 @@ namespace triton {
         &TRITON_X86_REG_SPL,
         &TRITON_X86_REG_EIP,
         &TRITON_X86_REG_IP,
-        &TRITON_X86_REG_EFLAGS,
         &TRITON_X86_REG_MM0,
         &TRITON_X86_REG_MM1,
         &TRITON_X86_REG_MM2,
@@ -687,18 +684,11 @@ namespace triton {
             std::get<3>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RIP : triton::arch::x86::ID_REG_EIP;
             break;
 
-          case triton::arch::x86::ID_REG_RFLAGS:
-            std::get<0>(ret) = "rflags";
-            std::get<1>(ret) = QWORD_SIZE_BIT-1;
-            std::get<2>(ret) = 0;
-            std::get<3>(ret) = triton::arch::x86::ID_REG_RFLAGS;
-            break;
-
           case triton::arch::x86::ID_REG_EFLAGS:
             std::get<0>(ret) = "eflags";
-            std::get<1>(ret) = DWORD_SIZE_BIT-1;
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
             std::get<2>(ret) = 0;
-            std::get<3>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RFLAGS : triton::arch::x86::ID_REG_EFLAGS;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_EFLAGS;
             break;
 
           case triton::arch::x86::ID_REG_R8:
@@ -1782,7 +1772,7 @@ namespace triton {
             break;
 
           case triton::extlibs::capstone::X86_REG_EFLAGS:
-            tritonId = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RFLAGS : triton::arch::x86::ID_REG_EFLAGS;
+            tritonId = triton::arch::x86::ID_REG_EFLAGS;
             break;
 
           case triton::extlibs::capstone::X86_REG_R8:

@@ -106,7 +106,7 @@ if __name__ == '__main__':
         inst.updateContext(Register(REG.R13,    regs['r13']))
         inst.updateContext(Register(REG.R14,    regs['r14']))
         inst.updateContext(Register(REG.R15,    regs['r15']))
-        inst.updateContext(Register(REG.RFLAGS, regs['rflags']))
+        inst.updateContext(Register(REG.EFLAGS, regs['eflags']))
 
         # Update concrete memory access
         accesses = db.get_memory_access_from_inst_id(inst_id)

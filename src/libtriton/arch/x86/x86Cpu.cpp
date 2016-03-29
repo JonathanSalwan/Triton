@@ -123,7 +123,6 @@ namespace triton {
       triton::arch::x86::x86_reg_pc     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_EIP);
 
       triton::arch::x86::x86_reg_eflags = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_EFLAGS);
-      triton::arch::x86::x86_reg_flags  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_EFLAGS);
 
       triton::arch::x86::x86_reg_mm0    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM0);
       triton::arch::x86::x86_reg_mm1    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MM1);

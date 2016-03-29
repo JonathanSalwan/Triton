@@ -163,7 +163,7 @@ namespace triton {
         //! [**architecture api**] - Sets the last concrete values of a memory area.
         void setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values);
 
-        //! [**architecture api**] - Sets the last concrete value of a register state. You cannot set an isolated flag, if so, use the flags registers like EFLAGS or RFLAGS.
+        //! [**architecture api**] - Sets the last concrete value of a register state. You cannot set an isolated flag, if so, use the flags registers like EFLAGS.
         void setLastRegisterValue(triton::arch::RegisterOperand& reg);
 
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa  processing().
