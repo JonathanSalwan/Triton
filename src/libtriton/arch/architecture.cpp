@@ -24,7 +24,7 @@ namespace triton {
 
 
     Architecture::~Architecture() {
-      delete this->cpu;
+      //delete this->cpu;
     }
 
 
