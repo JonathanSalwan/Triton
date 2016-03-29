@@ -29,137 +29,137 @@ However, feel free to add your own semantics into the [appropriate file](x86Sema
 \subsection SMT_Semantics_Supported_x86 x86 and x86-64 SMT semantics supported
 
 
-Mnemonic                     | Description
------------------------------|----------------------------------------------------
-ADD                          | Add
-ADC                          | Add with Carry
-AND                          | Logical AND
-ANDNPD                       | Bitwise Logical AND NOT of Packed Double-Precision Floating-Point Values
-ANDNPS                       | Bitwise Logical AND NOT of Packed Single-Precision Floating-Point Values
-ANDPD                        | Bitwise Logical AND of Packed Double-Precision Floating-Point Values
-ANDPS                        | Bitwise Logical AND of Packed Single-Precision Floating-Point Values
-BSF                          | Bit Scan Forward
-BSR                          | Bit Scan Reverse
-BSWAP                        | Byte Swap
-CALL                         | Call Procedure
-CBW                          | Convert byte (al) to word (ax).
-CDQE                         | Convert dword (eax) to qword (rax).
-CLC                          | Clear Carry Flag
-CLD                          | Clear Direction Flag
-CMC                          | Complement Carry Flag
-CMOVA                        | Move if not below
-CMOVAE                       | Move if not below or equal
-CMOVB                        | Move if below
-CMOVBE                       | Move if below or equal
-CMOVE                        | Move if zero
-CMOVG                        | Move if not less
-CMOVGE                       | Move if not less or equal
-CMOVL                        | Move if less
-CMOVLE                       | Move if less or equal
-CMOVNE                       | Move if not zero
-CMOVNO                       | Move if not overflow
-CMOVNP                       | Move if not parity
-CMOVNS                       | Move if not sign
-CMOVO                        | Move if overflow
-CMOVP                        | Move if parity
-CMOVS                        | Move if sign
-CMP                          | Compare Two Operands
-CMPXCHG                      | Compare and Exchange
-CQO                          | convert qword (rax) to oword (rdx:rax)
-CWDE                         | Convert word (ax) to dword (eax).
-DEC                          | Decrement by 1
-DIV                          | Unsigned Divide
-IDIV                         | Signed Divide
-IMUL                         | Signed Multiply
-INC                          | Increment by 1
-JA                           | Jump if not below (Jump if above)
-JAE                          | Jump if not below or equal (Jump if above or equal)
-JB                           | Jump if below
-JBE                          | Jump if below or equal
-JE                           | Jump if zero (Jump if equal)
-JG                           | Jump if not less or equal (Jump if greater)
-JGE                          | Jump if not less (Jump if not less)
-JL                           | Jump if less
-JLE                          | Jump if less or equal
-JMP                          | Jump
-JNO                          | Jump if not overflow
-JNP                          | Jump if not parity
-JNS                          | Jump if not sign
-JNZ                          | Jump if not zero
-JO                           | Jump if overflow
-JP                           | Jump if parity
-JS                           | Jump if sign
-LEA                          | Load Effective Address
-LEAVE                        | High Level Procedure Exit
-MOV                          | Move
-MOVAPD                       | Move Aligned Packed Double-Precision Floating-Point Values
-MOVAPS                       | Move Aligned Packed Single-Precision Floating-Point Values
-MOVD                         | Move Doubleword
-MOVDDUP                      | Move One Double-FP and Duplicate
-MOVDQ2Q                      | Move Quadword from XMM to MMX Technology Register
-MOVDQA                       | Move Aligned Double Quadword
-MOVDQU                       | Move Unaligned Double Quadword
-MOVHLPS                      | Move Packed Single-Precision Floating-Point Values High to Low
-MOVHPD                       | Move High Packed Double-Precision Floating-Point Values
-MOVHPS                       | Move High Packed Single-Precision Floating-Point Values
-MOVLHPS                      | Move Packed Single-Precision Floating-Point Values Low to High
-MOVLPD                       | Move Low Packed Double-Precision Floating-Point Values
-MOVLPS                       | Move Low Packed Single-Precision Floating-Point Values
-MOVSX                        | Move with Sign-Extension
-MOVZX                        | Move with Zero-Extend
-MUL                          | Unsigned Multiply
-NEG                          | Two's Complement Negation
-NOP                          | No Operation
-NOT                          | One's Complement Negation
-OR                           | Logical Inclusive OR
-ORPD                         | Bitwise Logical OR of Double-Precision Floating-Point Values
-ORPS                         | Bitwise Logical OR of Single-Precision Floating-Point Values
-PAND                         | Logical AND
-PANDN                        | Logical AND NOT
-PCMPEQB                      | Compare Packed Data for Equal (bytes)
-PCMPEQD                      | Compare Packed Data for Equal (dwords)
-PCMPEQW                      | Compare Packed Data for Equal (words)
-PMOVMSKB                     | Move Byte Mask
-POP                          | Pop a Value from the Stack
-POR                          | Bitwise Logical OR
-PUSH                         | Push a Value onto the Stack
-PXOR                         | Logical Exclusive OR
-RCL                          | Rotate Left with Carry
-RCR                          | Rotate Right with Carry
-RET                          | Return from Procedure
-ROL                          | Rotate Left
-ROR                          | Rotate Right
-SAL                          | Shift Left
-SAR                          | Shift Right Signed
-SBB                          | Integer Subtraction with Borrow
-SETA                         | Set byte if above
-SETAE                        | Set byte if above or equal
-SETB                         | Set byte if below
-SETBE                        | Set byte if below or equal
-SETE                         | Set byte if zero
-SETG                         | Set byte if greater
-SETGE                        | Set byte if greater or equal
-SETL                         | Set byte if less
-SETLE                        | Set byte if less or equal
-SETNE                        | Set byte if not zero
-SETNO                        | Set byte if not overflow
-SETNP                        | Set byte if not parity
-SETNS                        | Set byte if not sign
-SETO                         | Set byte if overflow
-SETP                         | Set byte if parity
-SETS                         | Set byte if sign
-SHL                          | Shift Left
-SHR                          | Shift Right Unsigned
-STC                          | Set Carry Flag
-STD                          | Set Direction Flag
-SUB                          | Subtract
-TEST                         | Logical Compare
-VMOVDQA                      | VEX Move aligned packed integer values
-XADD                         | Exchange and Add
-XCHG                         | Exchange Register/Memory with Register
-XOR                          | Logical Exclusive OR
-XORPD                        | Bitwise Logical XOR for Double-Precision Floating-Point Values
-XORPS                        | Bitwise Logical XOR for Single-Precision Floating-Point Values
+Mnemonic                     | Extensions | Description
+-----------------------------|------------|----------------------------------------------------
+ADD                          |            | Add
+ADC                          |            | Add with Carry
+AND                          |            | Logical AND
+ANDNPD                       | sse2       | Bitwise Logical AND NOT of Packed Double-Precision Floating-Point Values
+ANDNPS                       | sse1       | Bitwise Logical AND NOT of Packed Single-Precision Floating-Point Values
+ANDPD                        | sse2       | Bitwise Logical AND of Packed Double-Precision Floating-Point Values
+ANDPS                        | sse1       | Bitwise Logical AND of Packed Single-Precision Floating-Point Values
+BSF                          |            | Bit Scan Forward
+BSR                          |            | Bit Scan Reverse
+BSWAP                        |            | Byte Swap
+CALL                         |            | Call Procedure
+CBW                          |            | Convert byte (al) to word (ax).
+CDQE                         |            | Convert dword (eax) to qword (rax).
+CLC                          |            | Clear Carry Flag
+CLD                          |            | Clear Direction Flag
+CMC                          |            | Complement Carry Flag
+CMOVA                        |            | Move if not below
+CMOVAE                       |            | Move if not below or equal
+CMOVB                        |            | Move if below
+CMOVBE                       |            | Move if below or equal
+CMOVE                        |            | Move if zero
+CMOVG                        |            | Move if not less
+CMOVGE                       |            | Move if not less or equal
+CMOVL                        |            | Move if less
+CMOVLE                       |            | Move if less or equal
+CMOVNE                       |            | Move if not zero
+CMOVNO                       |            | Move if not overflow
+CMOVNP                       |            | Move if not parity
+CMOVNS                       |            | Move if not sign
+CMOVO                        |            | Move if overflow
+CMOVP                        |            | Move if parity
+CMOVS                        |            | Move if sign
+CMP                          |            | Compare Two Operands
+CMPXCHG                      |            | Compare and Exchange
+CQO                          |            | convert qword (rax) to oword (rdx:rax)
+CWDE                         |            | Convert word (ax) to dword (eax).
+DEC                          |            | Decrement by 1
+DIV                          |            | Unsigned Divide
+IDIV                         |            | Signed Divide
+IMUL                         |            | Signed Multiply
+INC                          |            | Increment by 1
+JA                           |            | Jump if not below (Jump if above)
+JAE                          |            | Jump if not below or equal (Jump if above or equal)
+JB                           |            | Jump if below
+JBE                          |            | Jump if below or equal
+JE                           |            | Jump if zero (Jump if equal)
+JG                           |            | Jump if not less or equal (Jump if greater)
+JGE                          |            | Jump if not less (Jump if not less)
+JL                           |            | Jump if less
+JLE                          |            | Jump if less or equal
+JMP                          |            | Jump
+JNO                          |            | Jump if not overflow
+JNP                          |            | Jump if not parity
+JNS                          |            | Jump if not sign
+JNZ                          |            | Jump if not zero
+JO                           |            | Jump if overflow
+JP                           |            | Jump if parity
+JS                           |            | Jump if sign
+LEA                          |            | Load Effective Address
+LEAVE                        |            | High Level Procedure Exit
+MOV                          |            | Move
+MOVAPD                       | sse2       | Move Aligned Packed Double-Precision Floating-Point Values
+MOVAPS                       | sse1       | Move Aligned Packed Single-Precision Floating-Point Values
+MOVD                         | mmx/sse2   | Move Doubleword
+MOVDDUP                      | sse3       | Move One Double-FP and Duplicate
+MOVDQ2Q                      | sse2       | Move Quadword from XMM to MMX Technology Register
+MOVDQA                       | sse2       | Move Aligned Double Quadword
+MOVDQU                       | sse2       | Move Unaligned Double Quadword
+MOVHLPS                      | sse1       | Move Packed Single-Precision Floating-Point Values High to Low
+MOVHPD                       | sse2       | Move High Packed Double-Precision Floating-Point Values
+MOVHPS                       | sse1       | Move High Packed Single-Precision Floating-Point Values
+MOVLHPS                      | sse1       | Move Packed Single-Precision Floating-Point Values Low to High
+MOVLPD                       | sse2       | Move Low Packed Double-Precision Floating-Point Values
+MOVLPS                       | sse1       | Move Low Packed Single-Precision Floating-Point Values
+MOVSX                        |            | Move with Sign-Extension
+MOVZX                        |            | Move with Zero-Extend
+MUL                          |            | Unsigned Multiply
+NEG                          |            | Two's Complement Negation
+NOP                          |            | No Operation
+NOT                          |            | One's Complement Negation
+OR                           |            | Logical Inclusive OR
+ORPD                         | sse2       | Bitwise Logical OR of Double-Precision Floating-Point Values
+ORPS                         | sse1       | Bitwise Logical OR of Single-Precision Floating-Point Values
+PAND                         | mmx/sse2   | Logical AND
+PANDN                        | mmx/sse2   | Logical AND NOT
+PCMPEQB                      | mmx/sse2   | Compare Packed Data for Equal (bytes)
+PCMPEQD                      | mmx/sse2   | Compare Packed Data for Equal (dwords)
+PCMPEQW                      | mmx/sse2   | Compare Packed Data for Equal (words)
+PMOVMSKB                     | sse1       | Move Byte Mask
+POP                          |            | Pop a Value from the Stack
+POR                          |            | Bitwise Logical OR
+PUSH                         |            | Push a Value onto the Stack
+PXOR                         |            | Logical Exclusive OR
+RCL                          |            | Rotate Left with Carry
+RCR                          |            | Rotate Right with Carry
+RET                          |            | Return from Procedure
+ROL                          |            | Rotate Left
+ROR                          |            | Rotate Right
+SAL                          |            | Shift Left
+SAR                          |            | Shift Right Signed
+SBB                          |            | Integer Subtraction with Borrow
+SETA                         |            | Set byte if above
+SETAE                        |            | Set byte if above or equal
+SETB                         |            | Set byte if below
+SETBE                        |            | Set byte if below or equal
+SETE                         |            | Set byte if zero
+SETG                         |            | Set byte if greater
+SETGE                        |            | Set byte if greater or equal
+SETL                         |            | Set byte if less
+SETLE                        |            | Set byte if less or equal
+SETNE                        |            | Set byte if not zero
+SETNO                        |            | Set byte if not overflow
+SETNP                        |            | Set byte if not parity
+SETNS                        |            | Set byte if not sign
+SETO                         |            | Set byte if overflow
+SETP                         |            | Set byte if parity
+SETS                         |            | Set byte if sign
+SHL                          |            | Shift Left
+SHR                          |            | Shift Right Unsigned
+STC                          |            | Set Carry Flag
+STD                          |            | Set Direction Flag
+SUB                          |            | Subtract
+TEST                         |            | Logical Compare
+VMOVDQA                      | avx2       | VEX Move aligned packed integer values
+XADD                         |            | Exchange and Add
+XCHG                         |            | Exchange Register/Memory with Register
+XOR                          |            | Logical Exclusive OR
+XORPD                        | sse2       | Bitwise Logical XOR for Double-Precision Floating-Point Values
+XORPS                        | sse1       | Bitwise Logical XOR for Single-Precision Floating-Point Values
 
 */
 
