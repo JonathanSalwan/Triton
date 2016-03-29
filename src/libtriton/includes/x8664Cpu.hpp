@@ -239,6 +239,8 @@ namespace triton {
           triton::uint8 zmm30[DQQWORD_SIZE];
           //! Concrete value of zmm31
           triton::uint8 zmm31[DQQWORD_SIZE];
+          //! Concrete value of mxcsr
+          triton::uint8 mxcsr[QWORD_SIZE];
 
 
         public:

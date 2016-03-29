@@ -123,6 +123,7 @@ namespace tracer {
             case triton::arch::x86::ID_REG_ZMM29:   return 0; /* Pin doesn't support AVX-512 */
             case triton::arch::x86::ID_REG_ZMM30:   return 0; /* Pin doesn't support AVX-512 */
             case triton::arch::x86::ID_REG_ZMM31:   return 0; /* Pin doesn't support AVX-512 */
+            case triton::arch::x86::ID_REG_MXCSR:   PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_MXCSR, reinterpret_cast<triton::uint8*>(buffer)); break;
             default:
               if (reg.isFlag())
                 PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_RFLAGS, reinterpret_cast<triton::uint8*>(buffer));
@@ -175,6 +176,7 @@ namespace tracer {
             case triton::arch::x86::ID_REG_YMM5:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM5,   reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_YMM6:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM6,   reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_YMM7:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM7,   reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::x86::ID_REG_MXCSR:   PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_MXCSR,  reinterpret_cast<triton::uint8*>(buffer)); break;
             default:
               if (reg.isFlag())
                 PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_EFLAGS, reinterpret_cast<triton::uint8*>(buffer));
@@ -299,6 +301,7 @@ namespace tracer {
             case triton::arch::x86::ID_REG_YMM13:   PIN_SetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM13,  reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_YMM14:   PIN_SetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM14,  reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_YMM15:   PIN_SetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM15,  reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::x86::ID_REG_MXCSR:   PIN_SetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_MXCSR,  reinterpret_cast<triton::uint8*>(buffer)); break;
             default:
               throw std::runtime_error("tracer::pintool::context::setCurrentRegisterValue(): Invalid register.");
           }
@@ -332,6 +335,7 @@ namespace tracer {
             case triton::arch::x86::ID_REG_YMM5:    PIN_SetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM5,   reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_YMM6:    PIN_SetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM6,   reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_YMM7:    PIN_SetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM7,   reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::x86::ID_REG_MXCSR:   PIN_SetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_MXCSR,  reinterpret_cast<triton::uint8*>(buffer)); break;
             default:
               throw std::runtime_error("tracer::pintool::context::setCurrentRegisterValue(): Invalid register.");
           }
@@ -552,6 +556,9 @@ namespace tracer {
 
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM15, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM15, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
+
+          PIN_GetContextRegval(ctx, LEVEL_BASE::REG_MXCSR, reinterpret_cast<triton::uint8 *>(buffer));
+          inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MXCSR, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
         #endif
 
         #if defined(__i386) || defined(_M_IX86)
@@ -632,6 +639,9 @@ namespace tracer {
 
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM7, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM7, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
+
+          PIN_GetContextRegval(ctx, LEVEL_BASE::REG_MXCSR, reinterpret_cast<triton::uint8 *>(buffer));
+          inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MXCSR, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
         #endif
       }
 

@@ -126,6 +126,8 @@ namespace triton {
           triton::uint8 ymm6[QQWORD_SIZE];
           //! Concrete value of ymm7
           triton::uint8 ymm7[QQWORD_SIZE];
+          //! Concrete value of mxcsr
+          triton::uint8 mxcsr[DWORD_SIZE];
 
 
         public:

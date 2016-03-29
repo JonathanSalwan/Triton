@@ -75,6 +75,7 @@ namespace triton {
       memcpy(this->ymm5,    other.ymm5,   sizeof(this->ymm5));
       memcpy(this->ymm6,    other.ymm6,   sizeof(this->ymm6));
       memcpy(this->ymm7,    other.ymm7,   sizeof(this->ymm7));
+      memcpy(this->mxcsr,   other.mxcsr,  sizeof(this->mxcsr));
     }
 
 
@@ -151,6 +152,25 @@ namespace triton {
       triton::arch::x86::x86_reg_ymm6   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM6);
       triton::arch::x86::x86_reg_ymm7   = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM7);
 
+      triton::arch::x86::x86_reg_mxcsr  = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MXCSR);
+
+      triton::arch::x86::x86_reg_ie     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_IE);
+      triton::arch::x86::x86_reg_de     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_DE);
+      triton::arch::x86::x86_reg_ze     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZE);
+      triton::arch::x86::x86_reg_oe     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_OE);
+      triton::arch::x86::x86_reg_ue     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_UE);
+      triton::arch::x86::x86_reg_pe     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_PE);
+      triton::arch::x86::x86_reg_daz    = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_DAZ);
+      triton::arch::x86::x86_reg_im     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_IM);
+      triton::arch::x86::x86_reg_dm     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_DM);
+      triton::arch::x86::x86_reg_zm     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZM);
+      triton::arch::x86::x86_reg_om     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_OM);
+      triton::arch::x86::x86_reg_um     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_UM);
+      triton::arch::x86::x86_reg_pm     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_PM);
+      triton::arch::x86::x86_reg_rl     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_RL);
+      triton::arch::x86::x86_reg_rh     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_RH);
+      triton::arch::x86::x86_reg_fz     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_FZ);
+
       triton::arch::x86::x86_reg_af     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_AF);
       triton::arch::x86::x86_reg_cf     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_CF);
       triton::arch::x86::x86_reg_df     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_DF);
@@ -160,6 +180,7 @@ namespace triton {
       triton::arch::x86::x86_reg_sf     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_SF);
       triton::arch::x86::x86_reg_tf     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_TF);
       triton::arch::x86::x86_reg_zf     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZF);
+
 
       /* Update python env ======================================================== */
       #ifdef TRITON_PYTHON_BINDINGS
@@ -212,6 +233,7 @@ namespace triton {
       memset(this->ymm5,    0x00, sizeof(this->ymm5));
       memset(this->ymm6,    0x00, sizeof(this->ymm6));
       memset(this->ymm7,    0x00, sizeof(this->ymm7));
+      memset(this->mxcsr,   0x00, sizeof(this->mxcsr));
     }
 
 
@@ -221,7 +243,7 @@ namespace triton {
 
 
     bool x86Cpu::isFlag(triton::uint32 regId) {
-      return ((regId >= triton::arch::x86::ID_REG_AF && regId <= triton::arch::x86::ID_REG_ZF) ? true : false);
+      return ((regId >= triton::arch::x86::ID_REG_AF && regId <= triton::arch::x86::ID_REG_FZ) ? true : false);
     }
 
 
@@ -246,7 +268,7 @@ namespace triton {
 
 
     bool x86Cpu::isSSE(triton::uint32 regId) {
-      return ((regId >= triton::arch::x86::ID_REG_XMM0 && regId <= triton::arch::x86::ID_REG_XMM7) ? true : false);
+      return ((regId >= triton::arch::x86::ID_REG_MXCSR && regId <= triton::arch::x86::ID_REG_XMM7) ? true : false);
     }
 
 
@@ -528,15 +550,34 @@ namespace triton {
         case triton::arch::x86::ID_REG_YMM6: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm6); return value;
         case triton::arch::x86::ID_REG_YMM7: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm7); return value;
 
-        case triton::arch::x86::ID_REG_AF: return (((*((triton::uint32*)(this->eflags))) >> 4) & 1);
-        case triton::arch::x86::ID_REG_CF: return ((*((triton::uint32*)(this->eflags))) & 1);
-        case triton::arch::x86::ID_REG_DF: return (((*((triton::uint32*)(this->eflags))) >> 10) & 1);
-        case triton::arch::x86::ID_REG_IF: return (((*((triton::uint32*)(this->eflags))) >> 9) & 1);
-        case triton::arch::x86::ID_REG_OF: return (((*((triton::uint32*)(this->eflags))) >> 11) & 1);
+        case triton::arch::x86::ID_REG_MXCSR: return (*((triton::uint32*)(this->mxcsr)));
+
+        case triton::arch::x86::ID_REG_IE:  return (((*((triton::uint64*)(this->mxcsr))) >> 0) & 1);
+        case triton::arch::x86::ID_REG_DE:  return (((*((triton::uint64*)(this->mxcsr))) >> 1) & 1);
+        case triton::arch::x86::ID_REG_ZE:  return (((*((triton::uint64*)(this->mxcsr))) >> 2) & 1);
+        case triton::arch::x86::ID_REG_OE:  return (((*((triton::uint64*)(this->mxcsr))) >> 3) & 1);
+        case triton::arch::x86::ID_REG_UE:  return (((*((triton::uint64*)(this->mxcsr))) >> 4) & 1);
+        case triton::arch::x86::ID_REG_PE:  return (((*((triton::uint64*)(this->mxcsr))) >> 5) & 1);
+        case triton::arch::x86::ID_REG_DAZ: return (((*((triton::uint64*)(this->mxcsr))) >> 6) & 1);
+        case triton::arch::x86::ID_REG_IM:  return (((*((triton::uint64*)(this->mxcsr))) >> 7) & 1);
+        case triton::arch::x86::ID_REG_DM:  return (((*((triton::uint64*)(this->mxcsr))) >> 8) & 1);
+        case triton::arch::x86::ID_REG_ZM:  return (((*((triton::uint64*)(this->mxcsr))) >> 9) & 1);
+        case triton::arch::x86::ID_REG_OM:  return (((*((triton::uint64*)(this->mxcsr))) >> 10) & 1);
+        case triton::arch::x86::ID_REG_UM:  return (((*((triton::uint64*)(this->mxcsr))) >> 11) & 1);
+        case triton::arch::x86::ID_REG_PM:  return (((*((triton::uint64*)(this->mxcsr))) >> 12) & 1);
+        case triton::arch::x86::ID_REG_RL:  return (((*((triton::uint64*)(this->mxcsr))) >> 13) & 1);
+        case triton::arch::x86::ID_REG_RH:  return (((*((triton::uint64*)(this->mxcsr))) >> 14) & 1);
+        case triton::arch::x86::ID_REG_FZ:  return (((*((triton::uint64*)(this->mxcsr))) >> 15) & 1);
+
+        case triton::arch::x86::ID_REG_CF: return (((*((triton::uint32*)(this->eflags))) >> 0) & 1);
         case triton::arch::x86::ID_REG_PF: return (((*((triton::uint32*)(this->eflags))) >> 2) & 1);
+        case triton::arch::x86::ID_REG_AF: return (((*((triton::uint32*)(this->eflags))) >> 4) & 1);
+        case triton::arch::x86::ID_REG_ZF: return (((*((triton::uint32*)(this->eflags))) >> 6) & 1);
         case triton::arch::x86::ID_REG_SF: return (((*((triton::uint32*)(this->eflags))) >> 7) & 1);
         case triton::arch::x86::ID_REG_TF: return (((*((triton::uint32*)(this->eflags))) >> 8) & 1);
-        case triton::arch::x86::ID_REG_ZF: return (((*((triton::uint32*)(this->eflags))) >> 6) & 1);
+        case triton::arch::x86::ID_REG_IF: return (((*((triton::uint32*)(this->eflags))) >> 9) & 1);
+        case triton::arch::x86::ID_REG_DF: return (((*((triton::uint32*)(this->eflags))) >> 10) & 1);
+        case triton::arch::x86::ID_REG_OF: return (((*((triton::uint32*)(this->eflags))) >> 11) & 1);
 
         default:
           throw std::invalid_argument("x86Cpu::getLastRegisterValue(): Invalid register.");
@@ -647,6 +688,8 @@ namespace triton {
         case triton::arch::x86::ID_REG_YMM5: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm5); break;
         case triton::arch::x86::ID_REG_YMM6: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm6); break;
         case triton::arch::x86::ID_REG_YMM7: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm7); break;
+
+        case triton::arch::x86::ID_REG_MXCSR: (*((triton::uint32*)(this->mxcsr))) = value.convert_to<triton::uint32>(); break;
 
         default:
           throw std::invalid_argument("x86Cpu:setLastRegisterValue() - Invalid register.");

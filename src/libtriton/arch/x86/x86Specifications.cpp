@@ -195,6 +195,25 @@ namespace triton {
       triton::arch::RegisterOperand x86_reg_zmm30   = triton::arch::RegisterOperand();
       triton::arch::RegisterOperand x86_reg_zmm31   = triton::arch::RegisterOperand();
 
+      triton::arch::RegisterOperand x86_reg_mxcsr   = triton::arch::RegisterOperand();
+
+      triton::arch::RegisterOperand x86_reg_ie      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_de      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_ze      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_oe      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_ue      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_pe      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_daz     = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_im      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_dm      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_zm      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_om      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_um      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_pm      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_rl      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_rh      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_fz      = triton::arch::RegisterOperand();
+
       triton::arch::RegisterOperand x86_reg_af      = triton::arch::RegisterOperand();
       triton::arch::RegisterOperand x86_reg_cf      = triton::arch::RegisterOperand();
       triton::arch::RegisterOperand x86_reg_df      = triton::arch::RegisterOperand();
@@ -352,6 +371,23 @@ namespace triton {
         &TRITON_X86_REG_ZMM29,
         &TRITON_X86_REG_ZMM30,
         &TRITON_X86_REG_ZMM31,
+        &TRITON_X86_REG_MXCSR,
+        &TRITON_X86_REG_IE,
+        &TRITON_X86_REG_DE,
+        &TRITON_X86_REG_ZE,
+        &TRITON_X86_REG_OE,
+        &TRITON_X86_REG_UE,
+        &TRITON_X86_REG_PE,
+        &TRITON_X86_REG_DAZ,
+        &TRITON_X86_REG_IM,
+        &TRITON_X86_REG_DM,
+        &TRITON_X86_REG_ZM,
+        &TRITON_X86_REG_OM,
+        &TRITON_X86_REG_UM,
+        &TRITON_X86_REG_PM,
+        &TRITON_X86_REG_RL,
+        &TRITON_X86_REG_RH,
+        &TRITON_X86_REG_FZ,
         &TRITON_X86_REG_AF,
         &TRITON_X86_REG_CF,
         &TRITON_X86_REG_DF,
@@ -1391,6 +1427,125 @@ namespace triton {
             std::get<1>(ret) = DQQWORD_SIZE_BIT-1;
             std::get<2>(ret) = 0;
             std::get<3>(ret) = triton::arch::x86::ID_REG_ZMM31;
+            break;
+
+          case triton::arch::x86::ID_REG_MXCSR:
+            std::get<0>(ret) = "mxcsr";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_MXCSR;
+            break;
+
+          case triton::arch::x86::ID_REG_IE:
+            std::get<0>(ret) = "ie";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_IE;
+            break;
+
+          case triton::arch::x86::ID_REG_DE:
+            std::get<0>(ret) = "de";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_DE;
+            break;
+
+          case triton::arch::x86::ID_REG_ZE:
+            std::get<0>(ret) = "ze";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_ZE;
+            break;
+
+          case triton::arch::x86::ID_REG_OE:
+            std::get<0>(ret) = "OE";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_OE;
+            break;
+
+          case triton::arch::x86::ID_REG_UE:
+            std::get<0>(ret) = "UE";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_UE;
+            break;
+
+          case triton::arch::x86::ID_REG_PE:
+            std::get<0>(ret) = "PE";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_PE;
+            break;
+
+          case triton::arch::x86::ID_REG_DAZ:
+            std::get<0>(ret) = "DA";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_DAZ;
+            break;
+
+          case triton::arch::x86::ID_REG_IM:
+            std::get<0>(ret) = "IM";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_IM;
+            break;
+
+          case triton::arch::x86::ID_REG_DM:
+            std::get<0>(ret) = "DM";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_DM;
+            break;
+
+          case triton::arch::x86::ID_REG_ZM:
+            std::get<0>(ret) = "ZM";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_ZM;
+            break;
+
+          case triton::arch::x86::ID_REG_OM:
+            std::get<0>(ret) = "OM";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_OM;
+            break;
+
+          case triton::arch::x86::ID_REG_UM:
+            std::get<0>(ret) = "UM";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_UM;
+            break;
+
+          case triton::arch::x86::ID_REG_PM:
+            std::get<0>(ret) = "PM";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_PM;
+            break;
+
+          case triton::arch::x86::ID_REG_RL:
+            std::get<0>(ret) = "RL";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_RL;
+            break;
+
+          case triton::arch::x86::ID_REG_RH:
+            std::get<0>(ret) = "RH";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_RH;
+            break;
+
+          case triton::arch::x86::ID_REG_FZ:
+            std::get<0>(ret) = "FZ";
+            std::get<1>(ret) = 0;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_FZ;
             break;
 
           case triton::arch::x86::ID_REG_AF:

@@ -213,6 +213,8 @@ namespace triton {
       extern RegisterOperand x86_reg_zmm30;
       extern RegisterOperand x86_reg_zmm31;
 
+      extern RegisterOperand x86_reg_mxcsr;
+
       extern RegisterOperand x86_reg_af;
       extern RegisterOperand x86_reg_cf;
       extern RegisterOperand x86_reg_df;
@@ -222,6 +224,23 @@ namespace triton {
       extern RegisterOperand x86_reg_sf;
       extern RegisterOperand x86_reg_tf;
       extern RegisterOperand x86_reg_zf;
+
+      extern RegisterOperand x86_reg_ie;
+      extern RegisterOperand x86_reg_de;
+      extern RegisterOperand x86_reg_ze;
+      extern RegisterOperand x86_reg_oe;
+      extern RegisterOperand x86_reg_ue;
+      extern RegisterOperand x86_reg_pe;
+      extern RegisterOperand x86_reg_daz;
+      extern RegisterOperand x86_reg_im;
+      extern RegisterOperand x86_reg_dm;
+      extern RegisterOperand x86_reg_zm;
+      extern RegisterOperand x86_reg_om;
+      extern RegisterOperand x86_reg_um;
+      extern RegisterOperand x86_reg_pm;
+      extern RegisterOperand x86_reg_rl;
+      extern RegisterOperand x86_reg_rh;
+      extern RegisterOperand x86_reg_fz;
 
       //! Returns all information about the register from its ID.
       std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> regIdToRegInfo(triton::uint32 reg);
@@ -343,6 +362,7 @@ namespace triton {
         ID_REG_MM7, //!< mm7
 
         /* SSE */
+        ID_REG_MXCSR, //!< mxcsr
         ID_REG_XMM0, //!< xmm0
         ID_REG_XMM1, //!< xmm1
         ID_REG_XMM2, //!< xmm2
@@ -422,6 +442,24 @@ namespace triton {
         ID_REG_SF, //!< sf
         ID_REG_TF, //!< tf
         ID_REG_ZF, //!< zf
+
+        /* SSE flags */
+        ID_REG_IE,  //!< ie (Invalid Operation Flag)
+        ID_REG_DE,  //!< de (Denormal Flag)
+        ID_REG_ZE,  //!< ze (Divide By Zero Flag)
+        ID_REG_OE,  //!< oe (Overflow Flag)
+        ID_REG_UE,  //!< ue (Underflow Flag)
+        ID_REG_PE,  //!< pe (Precision Flag)
+        ID_REG_DAZ, //!< da (Denormals Are Zero)
+        ID_REG_IM,  //!< im (Invalid Operation Mask)
+        ID_REG_DM,  //!< dm (Denormal Mask)
+        ID_REG_ZM,  //!< zm (Divide By Zero Mask)
+        ID_REG_OM,  //!< om (Overflow Mask)
+        ID_REG_UM,  //!< um (Underflow Mask)
+        ID_REG_PM,  //!< pm (Precision Mask)
+        ID_REG_RL,  //!< r- (Round Negative)
+        ID_REG_RH,  //!< r+ (Round Positive)
+        ID_REG_FZ,  //!< fz (Flush To Zero)
 
         /* Must be the last item */
         ID_REG_LAST_ITEM //!< must be the last item
@@ -2037,6 +2075,40 @@ namespace triton {
 #define TRITON_X86_REG_ZMM30    triton::arch::x86::x86_reg_zmm30
 //! Temporary ZMM31 register.
 #define TRITON_X86_REG_ZMM31    triton::arch::x86::x86_reg_zmm31
+//! Temporary MXCSR register.
+#define TRITON_X86_REG_MXCSR    triton::arch::x86::x86_reg_mxcsr
+//! Temporary IE register.
+#define TRITON_X86_REG_IE       triton::arch::x86::x86_reg_ie
+//! Temporary DE register.
+#define TRITON_X86_REG_DE       triton::arch::x86::x86_reg_de
+//! Temporary ZE register.
+#define TRITON_X86_REG_ZE       triton::arch::x86::x86_reg_ze
+//! Temporary OE register.
+#define TRITON_X86_REG_OE       triton::arch::x86::x86_reg_oe
+//! Temporary UE register.
+#define TRITON_X86_REG_UE       triton::arch::x86::x86_reg_ue
+//! Temporary PE register.
+#define TRITON_X86_REG_PE       triton::arch::x86::x86_reg_pe
+//! Temporary DAZ register.
+#define TRITON_X86_REG_DAZ      triton::arch::x86::x86_reg_daz
+//! Temporary IM register.
+#define TRITON_X86_REG_IM       triton::arch::x86::x86_reg_im
+//! Temporary DM register.
+#define TRITON_X86_REG_DM       triton::arch::x86::x86_reg_dm
+//! Temporary ZM register.
+#define TRITON_X86_REG_ZM       triton::arch::x86::x86_reg_zm
+//! Temporary OM register.
+#define TRITON_X86_REG_OM       triton::arch::x86::x86_reg_om
+//! Temporary UM register.
+#define TRITON_X86_REG_UM       triton::arch::x86::x86_reg_um
+//! Temporary PM register.
+#define TRITON_X86_REG_PM       triton::arch::x86::x86_reg_pm
+//! Temporary RL register.
+#define TRITON_X86_REG_RL       triton::arch::x86::x86_reg_rl
+//! Temporary RH register.
+#define TRITON_X86_REG_RH       triton::arch::x86::x86_reg_rh
+//! Temporary FZ register.
+#define TRITON_X86_REG_FZ       triton::arch::x86::x86_reg_fz
 //! Temporary AF register.
 #define TRITON_X86_REG_AF       triton::arch::x86::x86_reg_af
 //! Temporary CF register.
