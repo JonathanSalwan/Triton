@@ -300,12 +300,12 @@ namespace triton {
     namespace python {
 
       void initRegNamespace(void) {
-
         if (!triton::bindings::python::initialized)
           return;
 
-        switch (api.getArchitecture()) {
+        PyDict_Clear(triton::bindings::python::registersDict);
 
+        switch (api.getArchitecture()) {
           case triton::arch::ARCH_X86_64:
             PyDict_SetItemString(triton::bindings::python::registersDict, "AF",     PyRegisterOperand(TRITON_X86_REG_AF));
             PyDict_SetItemString(triton::bindings::python::registersDict, "AH",     PyRegisterOperand(TRITON_X86_REG_AH));

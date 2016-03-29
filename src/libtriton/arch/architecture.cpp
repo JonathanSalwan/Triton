@@ -41,11 +41,6 @@ namespace triton {
 
 
     void Architecture::setArchitecture(triton::uint32 arch) {
-
-      /* Check if the architecture is already definied */
-      if (this->arch != ARCH_INVALID)
-        throw std::runtime_error("Architecture::setArchitecture(): Architecture is already defined.");
-
       /* Check if the architecture is valid */
       if (!(arch > ARCH_INVALID && arch < ARCH_LAST_ITEM))
         throw std::runtime_error("Architecture::setArchitecture(): Invalid architecture.");
@@ -55,11 +50,13 @@ namespace triton {
 
       /* Allocate and init the good arch */
       switch (this->arch) {
-
         case ARCH_X86_64:
           #if defined(__i386) || defined(_M_IX86)
             throw std::runtime_error("Architecture::setArchitecture(): You cannot analyze 64-bits code on a 32-bits machine.");
           #endif
+          /* remove previous CPU instance (when setArchitecture() has been called twice) */
+          delete this->cpu;
+          /* init the new instance */
           this->cpu = new x86::x8664Cpu();
           if (!this->cpu)
             throw std::runtime_error("Architecture::setArchitecture(): Not enough memory.");
@@ -67,14 +64,15 @@ namespace triton {
           break;
 
         case ARCH_X86:
+          /* remove previous CPU instance (when setArchitecture() has been called twice) */
+          delete this->cpu;
+          /* init the new instance */
           this->cpu = new x86::x86Cpu();
           if (!this->cpu)
             throw std::runtime_error("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();
           break;
-
       }
-
     }
 
 

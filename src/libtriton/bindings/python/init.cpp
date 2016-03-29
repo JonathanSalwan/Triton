@@ -144,7 +144,6 @@ namespace triton {
         #endif
 
         triton::bindings::python::initialized = true;
-
       }
 
     }; /* python namespace */

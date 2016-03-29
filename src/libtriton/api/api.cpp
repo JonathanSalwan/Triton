@@ -183,6 +183,8 @@ namespace triton {
   void API::setArchitecture(triton::uint32 arch) {
     /* Setup and init the targeted architecture */
     this->arch.setArchitecture(arch);
+    /* remove and re-init previous engines (when setArchitecture() has been called twice) */
+    this->removeEngines();
     this->initEngines();
   }
 

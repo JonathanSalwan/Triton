@@ -94,7 +94,6 @@ namespace triton {
     namespace python {
 
       void initAstNodeNamespace(PyObject* astNodeDict) {
-
         PyDict_SetItemString(astNodeDict, "ASSERT",            PyLong_FromUint(triton::ast::ASSERT_NODE));
         PyDict_SetItemString(astNodeDict, "BV",                PyLong_FromUint(triton::ast::BV_NODE));
         PyDict_SetItemString(astNodeDict, "BVADD",             PyLong_FromUint(triton::ast::BVADD_NODE));
@@ -147,7 +146,6 @@ namespace triton {
         PyDict_SetItemString(astNodeDict, "UNDEFINED",         PyLong_FromUint(triton::ast::UNDEFINED_NODE));
         PyDict_SetItemString(astNodeDict, "VARIABLE",          PyLong_FromUint(triton::ast::VARIABLE_NODE));
         PyDict_SetItemString(astNodeDict, "ZX",                PyLong_FromUint(triton::ast::ZX_NODE));
-
       }
 
     }; /* python namespace */

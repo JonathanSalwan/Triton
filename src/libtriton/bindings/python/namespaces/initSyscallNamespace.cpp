@@ -370,12 +370,12 @@ namespace triton {
     namespace python {
 
       void initSyscallNamespace(void) {
-
         if (!triton::bindings::python::initialized)
           return;
 
-        switch (api.getArchitecture()) {
+        PyDict_Clear(triton::bindings::python::syscallsDict);
 
+        switch (api.getArchitecture()) {
           case triton::arch::ARCH_X86_64:
             for (triton::uint32 i = 0; i < triton::os::unix::NB_SYSCALL64; ++i)
               PyDict_SetItemString(triton::bindings::python::syscallsDict, triton::os::unix::syscallmap64[i], PyLong_FromUint(i));
@@ -385,9 +385,7 @@ namespace triton {
             for (triton::uint32 i = 0; i < triton::os::unix::NB_SYSCALL32; ++i)
               PyDict_SetItemString(triton::bindings::python::syscallsDict, triton::os::unix::syscallmap32[i], PyLong_FromUint(i));
             break;
-
         } /* switch */
-
       }
 
     }; /* python namespace */

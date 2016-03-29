@@ -44,12 +44,10 @@ namespace triton {
     namespace python {
 
       void initArchNamespace(PyObject* archDict) {
-
         PyDict_SetItemString(archDict, "X86", PyLong_FromUint(triton::arch::ARCH_X86));
         #if defined(__x86_64__) || defined(_M_X64)
         PyDict_SetItemString(archDict, "X86_64", PyLong_FromUint(triton::arch::ARCH_X86_64));
         #endif
-
       }
 
     }; /* python namespace */
