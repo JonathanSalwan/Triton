@@ -93,7 +93,7 @@ namespace triton {
         if (!triton::bindings::python::initialized)
           return;
 
-        PyDict_Clear(triton::bindings::python::cpuSizeDict);
+        //PyDict_Clear(triton::bindings::python::cpuSizeDict);
 
         PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "BYTE",        PyLong_FromUint(BYTE_SIZE));
         PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "BYTE_BIT",    PyLong_FromUint(BYTE_SIZE_BIT));

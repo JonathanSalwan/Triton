@@ -1342,7 +1342,7 @@ namespace triton {
         if (!triton::bindings::python::initialized)
           return;
 
-        PyDict_Clear(triton::bindings::python::opcodesDict);
+        //PyDict_Clear(triton::bindings::python::opcodesDict);
 
         PyDict_SetItemString(triton::bindings::python::opcodesDict, "INVALID", PyLong_FromUint(triton::arch::x86::ID_INST_INVALID));
         PyDict_SetItemString(triton::bindings::python::opcodesDict, "AAA", PyLong_FromUint(triton::arch::x86::ID_INS_AAA));

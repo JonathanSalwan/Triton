@@ -373,7 +373,7 @@ namespace triton {
         if (!triton::bindings::python::initialized)
           return;
 
-        PyDict_Clear(triton::bindings::python::syscallsDict);
+        //PyDict_Clear(triton::bindings::python::syscallsDict);
 
         switch (api.getArchitecture()) {
           case triton::arch::ARCH_X86_64:
