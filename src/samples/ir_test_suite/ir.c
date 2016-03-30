@@ -343,6 +343,16 @@ void check(void)
   asm("movsldup xmm6, xmm2");
   asm("movsldup xmm7, xmm3");
   asm("movsldup xmm8, xmm4");
+
+  asm("movupd xmm5, xmm1");
+  asm("movupd xmm6, xmm2");
+  asm("movupd xmm7, xmm3");
+  asm("movupd xmm8, xmm4");
+
+  asm("movups xmm5, xmm1");
+  asm("movups xmm6, xmm2");
+  asm("movups xmm7, xmm3");
+  asm("movups xmm8, xmm4");
 }
 
 int main(){
