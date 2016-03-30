@@ -137,6 +137,8 @@ PCMPEQW                      | mmx/sse2   | Compare Packed Data for Equal (words
 PMOVMSKB                     | sse1       | Move Byte Mask
 POP                          |            | Pop a Value from the Stack
 POR                          | mmx/sse2   | Bitwise Logical OR
+PSLLDQ                       | sse2       | Shift Double Quadword Left Logical
+PSRLDQ                       | sse2       | Shift Double Quadword Right Logical
 PUSH                         |            | Push a Value onto the Stack
 PXOR                         | mmx/sse2   | Logical Exclusive OR
 RCL                          |            | Rotate Left with Carry
@@ -297,6 +299,8 @@ namespace triton {
             case ID_INS_PMOVMSKB:       triton::arch::x86::semantics::pmovmskb_s(inst);   break;
             case ID_INS_POP:            triton::arch::x86::semantics::pop_s(inst);        break;
             case ID_INS_POR:            triton::arch::x86::semantics::por_s(inst);        break;
+            case ID_INS_PSLLDQ:         triton::arch::x86::semantics::pslldq_s(inst);     break;
+            case ID_INS_PSRLDQ:         triton::arch::x86::semantics::psrldq_s(inst);     break;
             case ID_INS_PUSH:           triton::arch::x86::semantics::push_s(inst);       break;
             case ID_INS_PXOR:           triton::arch::x86::semantics::pxor_s(inst);       break;
             case ID_INS_RCL:            triton::arch::x86::semantics::rcl_s(inst);        break;
@@ -4763,6 +4767,70 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "POR operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pslldq_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(src));
+
+          /* Create the semantics */
+          auto node = triton::ast::bvshl(
+                        op1,
+                        triton::ast::bvmul(
+                          triton::ast::ite(
+                            triton::ast::bvuge(op2, triton::ast::bv(WORD_SIZE_BIT, dst.getBitSize())),
+                            triton::ast::bv(WORD_SIZE_BIT, dst.getBitSize()),
+                            op2
+                          ),
+                          triton::ast::bv(QWORD_SIZE, dst.getBitSize())
+                        )
+                      );
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PSLLDQ operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void psrldq_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(src));
+
+          /* Create the semantics */
+          auto node = triton::ast::bvlshr(
+                        op1,
+                        triton::ast::bvmul(
+                          triton::ast::ite(
+                            triton::ast::bvuge(op2, triton::ast::bv(WORD_SIZE_BIT, dst.getBitSize())),
+                            triton::ast::bv(WORD_SIZE_BIT, dst.getBitSize()),
+                            op2
+                          ),
+                          triton::ast::bv(QWORD_SIZE, dst.getBitSize())
+                        )
+                      );
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PSRLDQ operation");
 
           /* Spread taint */
           expr->isTainted = triton::api.taintUnion(dst, src);

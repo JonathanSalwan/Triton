@@ -480,6 +480,12 @@ namespace triton {
       //! The POR semantics.
       void por_s(triton::arch::Instruction& inst);
 
+      //! The PSLLDQ semantics.
+      void pslldq_s(triton::arch::Instruction& inst);
+
+      //! The PSRLDQ semantics.
+      void psrldq_s(triton::arch::Instruction& inst);
+
       //! The PUSH semantics.
       void push_s(triton::arch::Instruction& inst);
 

@@ -358,6 +358,61 @@ void check(void)
   asm("lddqu xmm2, xmmword ptr [%0]" :: "r"(tab2));
   asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
   asm("lddqu xmm4, xmmword ptr [%0]" :: "r"(tab4));
+
+  asm("pslldq xmm1, 1");
+  asm("pslldq xmm2, 2");
+  asm("pslldq xmm3, 3");
+  asm("pslldq xmm4, 4");
+
+  asm("lddqu xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("lddqu xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("lddqu xmm4, xmmword ptr [%0]" :: "r"(tab4));
+
+  asm("pslldq xmm1, 5");
+  asm("pslldq xmm2, 6");
+  asm("pslldq xmm3, 7");
+  asm("pslldq xmm4, 8");
+
+  asm("lddqu xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("lddqu xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("lddqu xmm4, xmmword ptr [%0]" :: "r"(tab4));
+
+  asm("pslldq xmm1, 15");
+  asm("pslldq xmm2, 16");
+  asm("pslldq xmm3, 17");
+  asm("pslldq xmm4, 18");
+
+  asm("lddqu xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("lddqu xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("lddqu xmm4, xmmword ptr [%0]" :: "r"(tab4));
+
+  asm("psrldq xmm1, 1");
+  asm("psrldq xmm2, 2");
+  asm("psrldq xmm3, 3");
+  asm("psrldq xmm4, 4");
+
+  asm("lddqu xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("lddqu xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("lddqu xmm4, xmmword ptr [%0]" :: "r"(tab4));
+
+  asm("psrldq xmm1, 5");
+  asm("psrldq xmm2, 6");
+  asm("psrldq xmm3, 7");
+  asm("psrldq xmm4, 8");
+
+  asm("lddqu xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("lddqu xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("lddqu xmm4, xmmword ptr [%0]" :: "r"(tab4));
+
+  asm("psrldq xmm1, 15");
+  asm("psrldq xmm2, 16");
+  asm("psrldq xmm3, 17");
+  asm("psrldq xmm4, 18");
 }
 
 int main(){
