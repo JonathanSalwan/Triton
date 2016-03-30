@@ -6,6 +6,7 @@ void check(void)
   int tab1[4] = {0x11111111, 0x22222222, 0x33333333, 0x44444444};
   int tab2[4] = {0xd1d1d1d1, 0xffffffff, 0x55555555, 0x44444444};
   int tab3[4] = {0xd1d1d1d1, 0x12345678, 0x55909055, 0x44111144};
+  int tab4[4] = {0x8aaaaaaa, 0x8bbbbbbb, 0x12345678, 0xfedcba98};
 
   // Check concat symbolic expression
   asm("mov sil, 0x99");
@@ -319,6 +320,19 @@ void check(void)
   asm("pcmpeqd xmm1, xmm2");
   asm("pcmpeqd xmm3, xmm4");
   asm("pcmpeqd xmm5, xmm6");
+
+  asm("movaps xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("movaps xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("movaps xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("movaps xmm4, xmmword ptr [%0]" :: "r"(tab4));
+  asm("movmskpd rax, xmm1");
+  asm("movmskpd rax, xmm2");
+  asm("movmskpd rax, xmm3");
+  asm("movmskpd rax, xmm4");
+  asm("movmskps rbx, xmm1");
+  asm("movmskps rbx, xmm2");
+  asm("movmskps rbx, xmm3");
+  asm("movmskps rbx, xmm4");
 }
 
 int main(){

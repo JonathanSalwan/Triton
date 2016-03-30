@@ -105,6 +105,8 @@ MOVHPS                       | sse1       | Move High Packed Single-Precision Fl
 MOVLHPS                      | sse1       | Move Packed Single-Precision Floating-Point Values Low to High
 MOVLPD                       | sse2       | Move Low Packed Double-Precision Floating-Point Values
 MOVLPS                       | sse1       | Move Low Packed Single-Precision Floating-Point Values
+MOVMSKPD                     | sse2       | Extract Packed Double-Precision Floating-Point Sign Mask
+MOVMSKPS                     | sse1       | Extract Packed Single-Precision Floating-Point Sign Mask
 MOVSX                        |            | Move with Sign-Extension
 MOVZX                        |            | Move with Zero-Extend
 MUL                          |            | Unsigned Multiply
@@ -248,6 +250,8 @@ namespace triton {
             case ID_INS_MOVLHPS:        triton::arch::x86::semantics::movlhps_s(inst);    break;
             case ID_INS_MOVLPD:         triton::arch::x86::semantics::movlpd_s(inst);     break;
             case ID_INS_MOVLPS:         triton::arch::x86::semantics::movlps_s(inst);     break;
+            case ID_INS_MOVMSKPD:       triton::arch::x86::semantics::movmskpd_s(inst);   break;
+            case ID_INS_MOVMSKPS:       triton::arch::x86::semantics::movmskps_s(inst);   break;
             case ID_INS_MOVSX:          triton::arch::x86::semantics::movsx_s(inst);      break;
             case ID_INS_MOVSXD:         triton::arch::x86::semantics::movsxd_s(inst);     break;
             case ID_INS_MOVZX:          triton::arch::x86::semantics::movzx_s(inst);      break;
@@ -3854,6 +3858,60 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVLPS operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void movmskpd_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          auto node = triton::ast::zx(30,                       /* Destination[2..31] = 0        */
+                        triton::ast::concat(
+                          triton::ast::extract(127, 127, op2),  /* Destination[1] = Source[127]; */
+                          triton::ast::extract(63, 63, op2)     /* Destination[0] = Source[63];  */
+                        )
+                      );
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVMSKPD operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void movmskps_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> signs;
+
+          signs.push_back(triton::ast::extract(127, 127, op2)); /* Destination[3] = Source[127]; */
+          signs.push_back(triton::ast::extract(95, 95,   op2)); /* Destination[2] = Source[95];  */
+          signs.push_back(triton::ast::extract(63, 63,   op2)); /* Destination[1] = Source[63];  */
+          signs.push_back(triton::ast::extract(31, 31,   op2)); /* Destination[0] = Source[31];  */
+
+          auto node = triton::ast::zx(28, triton::ast::concat(signs));
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVMSKPS operation");
 
           /* Spread taint */
           expr->isTainted = triton::api.taintAssignment(dst, src);
