@@ -112,6 +112,8 @@ MOVNTI                       | sse2       | Store Doubleword Using Non-Temporal 
 MOVNTPD                      | sse2       | Store Packed Double-Precision Floating-Point Values Using Non-Temporal Hint
 MOVNTPS                      | sse1       | Store Packed Single-Precision Floating-Point Values Using Non-Temporal Hint
 MOVNTQ                       | sse1       | Store of Quadword Using Non-Temporal Hint
+MOVSHDUP                     | sse3       | Move Packed Single-FP High and Duplicate
+MOVSLDUP                     | sse3       | Move Packed Single-FP Low and Duplicate
 MOVSX                        |            | Move with Sign-Extension
 MOVZX                        |            | Move with Zero-Extend
 MUL                          |            | Unsigned Multiply
@@ -262,6 +264,8 @@ namespace triton {
             case ID_INS_MOVNTPD:        triton::arch::x86::semantics::movntpd_s(inst);    break;
             case ID_INS_MOVNTPS:        triton::arch::x86::semantics::movntps_s(inst);    break;
             case ID_INS_MOVNTQ:         triton::arch::x86::semantics::movntq_s(inst);     break;
+            case ID_INS_MOVSHDUP:       triton::arch::x86::semantics::movshdup_s(inst);   break;
+            case ID_INS_MOVSLDUP:       triton::arch::x86::semantics::movsldup_s(inst);   break;
             case ID_INS_MOVSX:          triton::arch::x86::semantics::movsx_s(inst);      break;
             case ID_INS_MOVSXD:         triton::arch::x86::semantics::movsxd_s(inst);     break;
             case ID_INS_MOVZX:          triton::arch::x86::semantics::movzx_s(inst);      break;
@@ -4011,6 +4015,60 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVNTQ operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void movshdup_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> bytes;
+
+          bytes.push_back(triton::ast::extract(127, 96, op2));
+          bytes.push_back(triton::ast::extract(127, 96, op2));
+          bytes.push_back(triton::ast::extract(63, 32, op2));
+          bytes.push_back(triton::ast::extract(63, 32, op2));
+
+          auto node = triton::ast::concat(bytes);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVSHDUP operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void movsldup_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> bytes;
+
+          bytes.push_back(triton::ast::extract(95, 64, op2));
+          bytes.push_back(triton::ast::extract(95, 64, op2));
+          bytes.push_back(triton::ast::extract(31, 0, op2));
+          bytes.push_back(triton::ast::extract(31, 0, op2));
+
+          auto node = triton::ast::concat(bytes);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVSLDUP operation");
 
           /* Spread taint */
           expr->isTainted = triton::api.taintAssignment(dst, src);

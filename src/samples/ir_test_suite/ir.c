@@ -333,6 +333,16 @@ void check(void)
   asm("movmskps rbx, xmm2");
   asm("movmskps rbx, xmm3");
   asm("movmskps rbx, xmm4");
+
+  asm("movshdup xmm5, xmm1");
+  asm("movshdup xmm6, xmm2");
+  asm("movshdup xmm7, xmm3");
+  asm("movshdup xmm8, xmm4");
+
+  asm("movsldup xmm5, xmm1");
+  asm("movsldup xmm6, xmm2");
+  asm("movsldup xmm7, xmm3");
+  asm("movsldup xmm8, xmm4");
 }
 
 int main(){
