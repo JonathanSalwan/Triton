@@ -114,6 +114,8 @@ MOVNTPS                      | sse1       | Store Packed Single-Precision Floati
 MOVNTQ                       | sse1       | Store of Quadword Using Non-Temporal Hint
 MOVSHDUP                     | sse3       | Move Packed Single-FP High and Duplicate
 MOVSLDUP                     | sse3       | Move Packed Single-FP Low and Duplicate
+MOVQ                         | mmx/sse2   | Move Quadword
+MOVQ2DQ                      | sse2       | Move Quadword from MMX Technology to XMM Register
 MOVSX                        |            | Move with Sign-Extension
 MOVZX                        |            | Move with Zero-Extend
 MUL                          |            | Unsigned Multiply
@@ -266,6 +268,8 @@ namespace triton {
             case ID_INS_MOVNTQ:         triton::arch::x86::semantics::movntq_s(inst);     break;
             case ID_INS_MOVSHDUP:       triton::arch::x86::semantics::movshdup_s(inst);   break;
             case ID_INS_MOVSLDUP:       triton::arch::x86::semantics::movsldup_s(inst);   break;
+            case ID_INS_MOVQ:           triton::arch::x86::semantics::movq_s(inst);       break;
+            case ID_INS_MOVQ2DQ:        triton::arch::x86::semantics::movq2dq_s(inst);    break;
             case ID_INS_MOVSX:          triton::arch::x86::semantics::movsx_s(inst);      break;
             case ID_INS_MOVSXD:         triton::arch::x86::semantics::movsxd_s(inst);     break;
             case ID_INS_MOVZX:          triton::arch::x86::semantics::movzx_s(inst);      break;
@@ -4069,6 +4073,70 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVSLDUP operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void movq_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          triton::ast::AbstractNode* node = nullptr;
+
+          /* when operating on MMX technology registers and memory locations */
+          if (dst.getBitSize() == QWORD_SIZE_BIT && src.getBitSize() == QWORD_SIZE_BIT)
+            node = op2;
+
+          /* when source and destination operands are XMM registers */
+          else if (dst.getBitSize() == DQWORD_SIZE_BIT && src.getBitSize() == DQWORD_SIZE_BIT)
+            node = triton::ast::concat(
+                    triton::ast::extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, op1),
+                    triton::ast::extract(QWORD_SIZE_BIT-1, 0, op2)
+                   );
+
+          /* when source operand is XMM register and destination operand is memory location */
+          else if (dst.getBitSize() < src.getBitSize())
+            node = triton::ast::extract(QWORD_SIZE_BIT-1, 0, op2);
+
+          /* when source operand is memory location and destination operand is XMM register */
+          else if (dst.getBitSize() > src.getBitSize())
+            node = triton::ast::zx(QWORD_SIZE_BIT, op2);
+
+          /* Invalid operation */
+          else
+            throw std::runtime_error("triton::arch::x86::semantics::movq_s(): Invalid operation.");
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVQ operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void movq2dq_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          auto node = triton::ast::zx(QWORD_SIZE_BIT, op2);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVQ2DQ operation");
 
           /* Spread taint */
           expr->isTainted = triton::api.taintAssignment(dst, src);
