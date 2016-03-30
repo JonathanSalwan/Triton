@@ -353,6 +353,11 @@ void check(void)
   asm("movups xmm6, xmm2");
   asm("movups xmm7, xmm3");
   asm("movups xmm8, xmm4");
+
+  asm("lddqu xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("lddqu xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("lddqu xmm4, xmmword ptr [%0]" :: "r"(tab4));
 }
 
 int main(){

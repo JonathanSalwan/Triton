@@ -330,6 +330,9 @@ namespace triton {
       //! The JS semantics.
       void js_s(triton::arch::Instruction& inst);
 
+      //! The LDDQU semantics.
+      void lddqu_s(triton::arch::Instruction& inst);
+
       //! The LDMXCSR semantics.
       void ldmxcsr_s(triton::arch::Instruction& inst);
 

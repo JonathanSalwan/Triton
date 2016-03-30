@@ -89,6 +89,7 @@ JNZ                          |            | Jump if not zero
 JO                           |            | Jump if overflow
 JP                           |            | Jump if parity
 JS                           |            | Jump if sign
+LDDQU                        | sse3       | Load Unaligned Integer 128 Bits
 LDMXCSR                      | sse1       | Load MXCSR Register
 LEA                          |            | Load Effective Address
 LEAVE                        |            | High Level Procedure Exit
@@ -246,6 +247,7 @@ namespace triton {
             case ID_INS_JO:             triton::arch::x86::semantics::jo_s(inst);         break;
             case ID_INS_JP:             triton::arch::x86::semantics::jp_s(inst);         break;
             case ID_INS_JS:             triton::arch::x86::semantics::js_s(inst);         break;
+            case ID_INS_LDDQU:          triton::arch::x86::semantics::lddqu_s(inst);      break;
             case ID_INS_LDMXCSR:        triton::arch::x86::semantics::ldmxcsr_s(inst);    break;
             case ID_INS_LEA:            triton::arch::x86::semantics::lea_s(inst);        break;
             case ID_INS_LEAVE:          triton::arch::x86::semantics::leave_s(inst);      break;
@@ -3445,6 +3447,24 @@ namespace triton {
 
           /* Create the path constraint */
           triton::api.addPathConstraint(expr);
+        }
+
+
+        void lddqu_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create the semantics */
+          auto node = triton::api.buildSymbolicOperand(src);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "LDDQU operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
         }
 
 
