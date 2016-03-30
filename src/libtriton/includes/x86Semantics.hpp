@@ -330,6 +330,9 @@ namespace triton {
       //! The JS semantics.
       void js_s(triton::arch::Instruction& inst);
 
+      //! The LDMXCSR semantics.
+      void ldmxcsr_s(triton::arch::Instruction& inst);
+
       //! The LEA semantics.
       void lea_s(triton::arch::Instruction& inst);
 
@@ -387,37 +390,37 @@ namespace triton {
       //! The MOVMSKPS semantics.
       void movmskps_s(triton::arch::Instruction& inst);
 
-      //! The MOVNTDQ semantics
+      //! The MOVNTDQ semantics.
       void movntdq_s(triton::arch::Instruction& inst);
 
-      //! The MOVNTI semantics
+      //! The MOVNTI semantics.
       void movnti_s(triton::arch::Instruction& inst);
 
-      //! The MOVNTPD semantics
+      //! The MOVNTPD semantics.
       void movntpd_s(triton::arch::Instruction& inst);
 
-      //! The MOVNTPS semantics
+      //! The MOVNTPS semantics.
       void movntps_s(triton::arch::Instruction& inst);
 
-      //! The MOVNTQ semantics
+      //! The MOVNTQ semantics.
       void movntq_s(triton::arch::Instruction& inst);
 
-      //! The MOVSHDUP semantics
+      //! The MOVSHDUP semantics.
       void movshdup_s(triton::arch::Instruction& inst);
 
-      //! The MOVSLDUP semantics
+      //! The MOVSLDUP semantics.
       void movsldup_s(triton::arch::Instruction& inst);
 
-      //! The MOVQ semantics
+      //! The MOVQ semantics.
       void movq_s(triton::arch::Instruction& inst);
 
-      //! The MOVQ2DQ semantics
+      //! The MOVQ2DQ semantics.
       void movq2dq_s(triton::arch::Instruction& inst);
 
-      //! The MOVUPD semantics
+      //! The MOVUPD semantics.
       void movupd_s(triton::arch::Instruction& inst);
 
-      //! The MOVUPS semantics
+      //! The MOVUPS semantics.
       void movups_s(triton::arch::Instruction& inst);
 
       //! The MOVSX semantics.
@@ -560,6 +563,9 @@ namespace triton {
 
       //! The STD semantics.
       void std_s(triton::arch::Instruction& inst);
+
+      //! The STMXCSR semantics.
+      void stmxcsr_s(triton::arch::Instruction& inst);
 
       //! The SUB semantics.
       void sub_s(triton::arch::Instruction& inst);

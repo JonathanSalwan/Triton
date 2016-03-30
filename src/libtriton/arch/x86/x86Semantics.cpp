@@ -89,6 +89,7 @@ JNZ                          |            | Jump if not zero
 JO                           |            | Jump if overflow
 JP                           |            | Jump if parity
 JS                           |            | Jump if sign
+LDMXCSR                      | sse1       | Load MXCSR Register
 LEA                          |            | Load Effective Address
 LEAVE                        |            | High Level Procedure Exit
 MOV                          |            | Move
@@ -134,9 +135,9 @@ PCMPEQD                      | mmx/sse2   | Compare Packed Data for Equal (dword
 PCMPEQW                      | mmx/sse2   | Compare Packed Data for Equal (words)
 PMOVMSKB                     | sse1       | Move Byte Mask
 POP                          |            | Pop a Value from the Stack
-POR                          |            | Bitwise Logical OR
+POR                          | mmx/sse2   | Bitwise Logical OR
 PUSH                         |            | Push a Value onto the Stack
-PXOR                         |            | Logical Exclusive OR
+PXOR                         | mmx/sse2   | Logical Exclusive OR
 RCL                          |            | Rotate Left with Carry
 RCR                          |            | Rotate Right with Carry
 RET                          |            | Return from Procedure
@@ -165,6 +166,7 @@ SHL                          |            | Shift Left
 SHR                          |            | Shift Right Unsigned
 STC                          |            | Set Carry Flag
 STD                          |            | Set Direction Flag
+STMXCSR                      | sse1       | Store MXCSR Register State
 SUB                          |            | Subtract
 TEST                         |            | Logical Compare
 VMOVDQA                      | avx2       | VEX Move aligned packed integer values
@@ -244,6 +246,7 @@ namespace triton {
             case ID_INS_JO:             triton::arch::x86::semantics::jo_s(inst);         break;
             case ID_INS_JP:             triton::arch::x86::semantics::jp_s(inst);         break;
             case ID_INS_JS:             triton::arch::x86::semantics::js_s(inst);         break;
+            case ID_INS_LDMXCSR:        triton::arch::x86::semantics::ldmxcsr_s(inst);    break;
             case ID_INS_LEA:            triton::arch::x86::semantics::lea_s(inst);        break;
             case ID_INS_LEAVE:          triton::arch::x86::semantics::leave_s(inst);      break;
             case ID_INS_MOV:            triton::arch::x86::semantics::mov_s(inst);        break;
@@ -322,6 +325,7 @@ namespace triton {
             case ID_INS_SHR:            triton::arch::x86::semantics::shr_s(inst);        break;
             case ID_INS_STC:            triton::arch::x86::semantics::stc_s(inst);        break;
             case ID_INS_STD:            triton::arch::x86::semantics::std_s(inst);        break;
+            case ID_INS_STMXCSR:        triton::arch::x86::semantics::stmxcsr_s(inst);    break;
             case ID_INS_SUB:            triton::arch::x86::semantics::sub_s(inst);        break;
             case ID_INS_TEST:           triton::arch::x86::semantics::test_s(inst);       break;
             case ID_INS_VMOVDQA:        triton::arch::x86::semantics::vmovdqa_s(inst);    break;
@@ -3444,6 +3448,24 @@ namespace triton {
         }
 
 
+        void ldmxcsr_s(triton::arch::Instruction& inst) {
+          auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_MXCSR);
+          auto src = inst.operands[0];
+
+          /* Create the semantics */
+          auto node = triton::api.buildSymbolicOperand(src);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "LDMXCSR operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
         void lea_s(triton::arch::Instruction& inst) {
           auto dst                = inst.operands[0].getRegister();
           auto srcDisp            = inst.operands[1].getMemory().getDisplacement();
@@ -5592,6 +5614,27 @@ namespace triton {
 
         void std_s(triton::arch::Instruction& inst) {
           triton::arch::x86::semantics::setFlag_s(inst, TRITON_X86_REG_DF, "Sets direction flag");
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void stmxcsr_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = triton::arch::OperandWrapper(TRITON_X86_REG_MXCSR);
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          auto node = triton::ast::extract(DWORD_SIZE_BIT-1, 0, op2);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "STMXCSR operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
         }
