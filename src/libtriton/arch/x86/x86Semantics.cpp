@@ -107,6 +107,11 @@ MOVLPD                       | sse2       | Move Low Packed Double-Precision Flo
 MOVLPS                       | sse1       | Move Low Packed Single-Precision Floating-Point Values
 MOVMSKPD                     | sse2       | Extract Packed Double-Precision Floating-Point Sign Mask
 MOVMSKPS                     | sse1       | Extract Packed Single-Precision Floating-Point Sign Mask
+MOVNTDQ                      | sse2       | Store Double Quadword Using Non-Temporal Hint
+MOVNTI                       | sse2       | Store Doubleword Using Non-Temporal Hint
+MOVNTPD                      | sse2       | Store Packed Double-Precision Floating-Point Values Using Non-Temporal Hint
+MOVNTPS                      | sse1       | Store Packed Single-Precision Floating-Point Values Using Non-Temporal Hint
+MOVNTQ                       | sse1       | Store of Quadword Using Non-Temporal Hint
 MOVSX                        |            | Move with Sign-Extension
 MOVZX                        |            | Move with Zero-Extend
 MUL                          |            | Unsigned Multiply
@@ -252,6 +257,11 @@ namespace triton {
             case ID_INS_MOVLPS:         triton::arch::x86::semantics::movlps_s(inst);     break;
             case ID_INS_MOVMSKPD:       triton::arch::x86::semantics::movmskpd_s(inst);   break;
             case ID_INS_MOVMSKPS:       triton::arch::x86::semantics::movmskps_s(inst);   break;
+            case ID_INS_MOVNTDQ:        triton::arch::x86::semantics::movntdq_s(inst);    break;
+            case ID_INS_MOVNTI:         triton::arch::x86::semantics::movnti_s(inst);     break;
+            case ID_INS_MOVNTPD:        triton::arch::x86::semantics::movntpd_s(inst);    break;
+            case ID_INS_MOVNTPS:        triton::arch::x86::semantics::movntps_s(inst);    break;
+            case ID_INS_MOVNTQ:         triton::arch::x86::semantics::movntq_s(inst);     break;
             case ID_INS_MOVSX:          triton::arch::x86::semantics::movsx_s(inst);      break;
             case ID_INS_MOVSXD:         triton::arch::x86::semantics::movsxd_s(inst);     break;
             case ID_INS_MOVZX:          triton::arch::x86::semantics::movzx_s(inst);      break;
@@ -3912,6 +3922,95 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVMSKPS operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+        void movntdq_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create the semantics */
+          auto node = triton::api.buildSymbolicOperand(src);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVNTDQ operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void movnti_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create the semantics */
+          auto node = triton::api.buildSymbolicOperand(src);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVNTI operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void movntpd_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create the semantics */
+          auto node = triton::api.buildSymbolicOperand(src);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVNTPD operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void movntps_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create the semantics */
+          auto node = triton::api.buildSymbolicOperand(src);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVNTPS operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void movntq_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create the semantics */
+          auto node = triton::api.buildSymbolicOperand(src);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVNTQ operation");
 
           /* Spread taint */
           expr->isTainted = triton::api.taintAssignment(dst, src);

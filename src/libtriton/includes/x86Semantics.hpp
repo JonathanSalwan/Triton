@@ -387,6 +387,21 @@ namespace triton {
       //! The MOVMSKPS semantics.
       void movmskps_s(triton::arch::Instruction& inst);
 
+      //! The MOVNTDQ semantics
+      void movntdq_s(triton::arch::Instruction& inst);
+
+      //! The MOVNTI semantics
+      void movnti_s(triton::arch::Instruction& inst);
+
+      //! The MOVNTPD semantics
+      void movntpd_s(triton::arch::Instruction& inst);
+
+      //! The MOVNTPS semantics
+      void movntps_s(triton::arch::Instruction& inst);
+
+      //! The MOVNTQ semantics
+      void movntq_s(triton::arch::Instruction& inst);
+
       //! The MOVSX semantics.
       void movsx_s(triton::arch::Instruction& inst);
 
