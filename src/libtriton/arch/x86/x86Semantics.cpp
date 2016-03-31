@@ -139,6 +139,7 @@ POP                          |            | Pop a Value from the Stack
 POR                          | mmx/sse2   | Bitwise Logical OR
 PSLLDQ                       | sse2       | Shift Double Quadword Left Logical
 PSRLDQ                       | sse2       | Shift Double Quadword Right Logical
+PTEST                        | sse4.1     | Logical Compare
 PUSH                         |            | Push a Value onto the Stack
 PXOR                         | mmx/sse2   | Logical Exclusive OR
 RCL                          |            | Rotate Left with Carry
@@ -176,7 +177,8 @@ UNPCKHPD                     | sse2       | Unpack and Interleave High Packed Do
 UNPCKHPS                     | sse1       | Unpack and Interleave High Packed Single-Precision Floating-Point Values
 UNPCKLPD                     | sse2       | Unpack and Interleave Low Packed Double-Precision Floating-Point Values
 UNPCKLPS                     | sse1       | Unpack and Interleave Low Packed Single-Precision Floating-Point Values
-VMOVDQA                      | avx2       | VEX Move aligned packed integer values
+VMOVDQA                      | avx        | VEX Move aligned packed integer values
+VPTEST                       | avx        | VEX Logical Compare
 XADD                         |            | Exchange and Add
 XCHG                         |            | Exchange Register/Memory with Register
 XOR                          |            | Logical Exclusive OR
@@ -305,6 +307,7 @@ namespace triton {
             case ID_INS_POR:            triton::arch::x86::semantics::por_s(inst);        break;
             case ID_INS_PSLLDQ:         triton::arch::x86::semantics::pslldq_s(inst);     break;
             case ID_INS_PSRLDQ:         triton::arch::x86::semantics::psrldq_s(inst);     break;
+            case ID_INS_PTEST:          triton::arch::x86::semantics::ptest_s(inst);      break;
             case ID_INS_PUSH:           triton::arch::x86::semantics::push_s(inst);       break;
             case ID_INS_PXOR:           triton::arch::x86::semantics::pxor_s(inst);       break;
             case ID_INS_RCL:            triton::arch::x86::semantics::rcl_s(inst);        break;
@@ -343,6 +346,7 @@ namespace triton {
             case ID_INS_UNPCKLPD:       triton::arch::x86::semantics::unpcklpd_s(inst);   break;
             case ID_INS_UNPCKLPS:       triton::arch::x86::semantics::unpcklps_s(inst);   break;
             case ID_INS_VMOVDQA:        triton::arch::x86::semantics::vmovdqa_s(inst);    break;
+            case ID_INS_VPTEST:         triton::arch::x86::semantics::vptest_s(inst);     break;
             case ID_INS_XADD:           triton::arch::x86::semantics::xadd_s(inst);       break;
             case ID_INS_XCHG:           triton::arch::x86::semantics::xchg_s(inst);       break;
             case ID_INS_XOR:            triton::arch::x86::semantics::xor_s(inst);        break;
@@ -577,6 +581,32 @@ namespace triton {
                         ),
                         triton::ast::bv(0, 1),
                         triton::ast::bv(1, 1)
+                      );
+
+          /* Create the symbolic expression */
+          auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        }
+
+
+        void cfPtest_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, bool vol) {
+          auto bvSize = dst.getBitSize();
+          auto low    = vol ? 0 : dst.getAbstractLow();
+          auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+
+          /*
+           * Create the semantic.
+           * cf = 0 == regDst
+           */
+          auto node = triton::ast::ite(
+                        triton::ast::equal(
+                          triton::ast::extract(high, low, triton::ast::reference(parent->getId())),
+                          triton::ast::bv(0, bvSize)
+                        ),
+                        triton::ast::bv(1, 1),
+                        triton::ast::bv(0, 1)
                       );
 
           /* Create the symbolic expression */
@@ -4848,6 +4878,39 @@ namespace triton {
         }
 
 
+        void ptest_s(triton::arch::Instruction& inst) {
+          auto src1 = inst.operands[0];
+          auto src2 = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src1);
+          auto op2 = triton::api.buildSymbolicOperand(src2);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::bvand(op1, op2);
+          auto node2 = triton::ast::bvand(op1, triton::ast::bvnot(op2));
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "PTEST operation");
+          auto expr2 = triton::api.createSymbolicVolatileExpression(inst, node2, "PTEST operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.isTainted(src1) | triton::api.isTainted(src2);
+          expr2->isTainted = triton::api.isTainted(src1) | triton::api.isTainted(src2);
+
+          /* Upate symbolic flags */
+          triton::arch::x86::semantics::clearFlag_s(inst, TRITON_X86_REG_AF, "Clears adjust flag");
+          triton::arch::x86::semantics::cfPtest_s(inst, expr2, src1, true);
+          triton::arch::x86::semantics::clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
+          triton::arch::x86::semantics::clearFlag_s(inst, TRITON_X86_REG_PF, "Clears parity flag");
+          triton::arch::x86::semantics::clearFlag_s(inst, TRITON_X86_REG_SF, "Clears sign flag");
+          triton::arch::x86::semantics::zf_s(inst, expr1, src1, true);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
         void push_s(triton::arch::Instruction& inst) {
           auto stack = TRITON_X86_REG_SP.getParent();
 
@@ -5778,7 +5841,7 @@ namespace triton {
           auto node = triton::ast::bvand(op1, op2);
 
           /* Create symbolic expression */
-          auto expr = triton::api.createSymbolicVolatileExpression(inst, node, "AND operation");
+          auto expr = triton::api.createSymbolicVolatileExpression(inst, node, "TEST operation");
 
           /* Spread taint */
           expr->isTainted = triton::api.isTainted(src1) | triton::api.isTainted(src2);
@@ -5915,6 +5978,39 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void vptest_s(triton::arch::Instruction& inst) {
+          auto src1 = inst.operands[0];
+          auto src2 = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src1);
+          auto op2 = triton::api.buildSymbolicOperand(src2);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::bvand(op1, op2);
+          auto node2 = triton::ast::bvand(op1, triton::ast::bvnot(op2));
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "VPTEST operation");
+          auto expr2 = triton::api.createSymbolicVolatileExpression(inst, node2, "VPTEST operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.isTainted(src1) | triton::api.isTainted(src2);
+          expr2->isTainted = triton::api.isTainted(src1) | triton::api.isTainted(src2);
+
+          /* Upate symbolic flags */
+          triton::arch::x86::semantics::clearFlag_s(inst, TRITON_X86_REG_AF, "Clears adjust flag");
+          triton::arch::x86::semantics::cfPtest_s(inst, expr2, src1, true);
+          triton::arch::x86::semantics::clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
+          triton::arch::x86::semantics::clearFlag_s(inst, TRITON_X86_REG_PF, "Clears parity flag");
+          triton::arch::x86::semantics::clearFlag_s(inst, TRITON_X86_REG_SF, "Clears sign flag");
+          triton::arch::x86::semantics::zf_s(inst, expr1, src1, true);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);

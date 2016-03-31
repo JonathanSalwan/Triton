@@ -85,6 +85,9 @@ namespace triton {
       void cfNeg_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol=false);
 
       //! The CF semantics.
+      void cfPtest_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, bool vol=false);
+
+      //! The CF semantics.
       void cfRcl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol=false);
 
       //! The CF semantics.
@@ -486,6 +489,9 @@ namespace triton {
       //! The PSRLDQ semantics.
       void psrldq_s(triton::arch::Instruction& inst);
 
+      //! The PTEST semantics.
+      void ptest_s(triton::arch::Instruction& inst);
+
       //! The PUSH semantics.
       void push_s(triton::arch::Instruction& inst);
 
@@ -593,6 +599,9 @@ namespace triton {
 
       //! The UNPCKLPS semantics.
       void unpcklps_s(triton::arch::Instruction& inst);
+
+      //! The VPTEST semantics.
+      void vptest_s(triton::arch::Instruction& inst);
 
       //! The VMOVDQA semantics.
       void vmovdqa_s(triton::arch::Instruction& inst);
