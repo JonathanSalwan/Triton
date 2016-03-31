@@ -442,6 +442,22 @@ void check(void)
   asm("vptest xmm2, xmm3");
   asm("vptest xmm3, xmm4");
   asm("vptest xmm4, xmm1");
+
+  asm("punpckhbw xmm1, xmm2");
+  asm("punpckhbw xmm2, xmm3");
+  asm("punpckhbw xmm3, xmm4");
+
+  asm("punpckhwd xmm1, xmm2");
+  asm("punpckhwd xmm2, xmm3");
+  asm("punpckhwd xmm3, xmm4");
+
+  asm("punpckhdq xmm1, xmm2");
+  asm("punpckhdq xmm2, xmm3");
+  asm("punpckhdq xmm3, xmm4");
+
+  asm("punpckhqdq xmm1, xmm2");
+  asm("punpckhqdq xmm2, xmm3");
+  asm("punpckhqdq xmm3, xmm4");
 }
 
 int main(){

@@ -140,6 +140,10 @@ POR                          | mmx/sse2   | Bitwise Logical OR
 PSLLDQ                       | sse2       | Shift Double Quadword Left Logical
 PSRLDQ                       | sse2       | Shift Double Quadword Right Logical
 PTEST                        | sse4.1     | Logical Compare
+PUNPCKHBW                    | mmx,sse2   | Unpack High Data (Unpack and interleave high-order bytes)
+PUNPCKHDQ                    | mmx,sse2   | Unpack High Data (Unpack and interleave high-order doublewords)
+PUNPCKHQDQ                   | sse2       | Unpack High Data (Unpack and interleave high-order quadwords)
+PUNPCKHWD                    | mmx,sse2   | Unpack High Data (Unpack and interleave high-order words)
 PUSH                         |            | Push a Value onto the Stack
 PXOR                         | mmx/sse2   | Logical Exclusive OR
 RCL                          |            | Rotate Left with Carry
@@ -308,6 +312,10 @@ namespace triton {
             case ID_INS_PSLLDQ:         triton::arch::x86::semantics::pslldq_s(inst);     break;
             case ID_INS_PSRLDQ:         triton::arch::x86::semantics::psrldq_s(inst);     break;
             case ID_INS_PTEST:          triton::arch::x86::semantics::ptest_s(inst);      break;
+            case ID_INS_PUNPCKHBW:      triton::arch::x86::semantics::punpckhbw_s(inst);  break;
+            case ID_INS_PUNPCKHDQ:      triton::arch::x86::semantics::punpckhdq_s(inst);  break;
+            case ID_INS_PUNPCKHQDQ:     triton::arch::x86::semantics::punpckhqdq_s(inst); break;
+            case ID_INS_PUNPCKHWD:      triton::arch::x86::semantics::punpckhwd_s(inst);  break;
             case ID_INS_PUSH:           triton::arch::x86::semantics::push_s(inst);       break;
             case ID_INS_PXOR:           triton::arch::x86::semantics::pxor_s(inst);       break;
             case ID_INS_RCL:            triton::arch::x86::semantics::rcl_s(inst);        break;
@@ -4905,6 +4913,198 @@ namespace triton {
           triton::arch::x86::semantics::clearFlag_s(inst, TRITON_X86_REG_PF, "Clears parity flag");
           triton::arch::x86::semantics::clearFlag_s(inst, TRITON_X86_REG_SF, "Clears sign flag");
           triton::arch::x86::semantics::zf_s(inst, expr1, src1, true);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void punpckhbw_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> unpack;
+
+          switch (dst.getBitSize()) {
+
+            /* MMX */
+            case QWORD_SIZE_BIT:
+              unpack.push_back(triton::ast::extract(63, 56, op2));
+              unpack.push_back(triton::ast::extract(63, 56, op1));
+              unpack.push_back(triton::ast::extract(55, 48, op2));
+              unpack.push_back(triton::ast::extract(55, 48, op1));
+              unpack.push_back(triton::ast::extract(47, 40, op2));
+              unpack.push_back(triton::ast::extract(55, 40, op1));
+              unpack.push_back(triton::ast::extract(39, 32, op2));
+              unpack.push_back(triton::ast::extract(39, 32, op1));
+              break;
+
+            /* XMM */
+            case DQWORD_SIZE_BIT:
+              unpack.push_back(triton::ast::extract(127, 120, op2));
+              unpack.push_back(triton::ast::extract(127, 120, op1));
+              unpack.push_back(triton::ast::extract(119, 112, op2));
+              unpack.push_back(triton::ast::extract(119, 112, op1));
+              unpack.push_back(triton::ast::extract(111, 104, op2));
+              unpack.push_back(triton::ast::extract(111, 104, op1));
+              unpack.push_back(triton::ast::extract(103, 96,  op2));
+              unpack.push_back(triton::ast::extract(103, 96,  op1));
+              unpack.push_back(triton::ast::extract(95,  88,  op2));
+              unpack.push_back(triton::ast::extract(95,  88,  op1));
+              unpack.push_back(triton::ast::extract(87,  80,  op2));
+              unpack.push_back(triton::ast::extract(87,  80,  op1));
+              unpack.push_back(triton::ast::extract(79,  72,  op2));
+              unpack.push_back(triton::ast::extract(79,  72,  op1));
+              unpack.push_back(triton::ast::extract(71,  64,  op2));
+              unpack.push_back(triton::ast::extract(71,  64,  op1));
+              break;
+
+            default:
+              throw std::runtime_error("triton::arch::x86::semantics::punpckhbw_s(): Invalid operand size.");
+          }
+
+          auto node = triton::ast::concat(unpack);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PUNPCKHBW operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void punpckhdq_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> unpack;
+
+          switch (dst.getBitSize()) {
+
+            /* MMX */
+            case QWORD_SIZE_BIT:
+              unpack.push_back(triton::ast::extract(63, 32, op2));
+              unpack.push_back(triton::ast::extract(63, 32, op1));
+              break;
+
+            /* XMM */
+            case DQWORD_SIZE_BIT:
+              unpack.push_back(triton::ast::extract(127, 96, op2));
+              unpack.push_back(triton::ast::extract(127, 96, op1));
+              unpack.push_back(triton::ast::extract(95,  64, op2));
+              unpack.push_back(triton::ast::extract(95,  64, op1));
+              break;
+
+            default:
+              throw std::runtime_error("triton::arch::x86::semantics::punpckhdq_s(): Invalid operand size.");
+          }
+
+          auto node = triton::ast::concat(unpack);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PUNPCKHDQ operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void punpckhqdq_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> unpack;
+
+          switch (dst.getBitSize()) {
+
+            /* XMM */
+            case DQWORD_SIZE_BIT:
+              unpack.push_back(triton::ast::extract(127, 64, op2));
+              unpack.push_back(triton::ast::extract(127, 64, op1));
+              break;
+
+            default:
+              throw std::runtime_error("triton::arch::x86::semantics::punpckhqdq_s(): Invalid operand size.");
+          }
+
+          auto node = triton::ast::concat(unpack);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PUNPCKHQDQ operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void punpckhwd_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> unpack;
+
+          switch (dst.getBitSize()) {
+
+            /* MMX */
+            case QWORD_SIZE_BIT:
+              unpack.push_back(triton::ast::extract(63, 48, op2));
+              unpack.push_back(triton::ast::extract(63, 48, op1));
+              unpack.push_back(triton::ast::extract(47, 32, op2));
+              unpack.push_back(triton::ast::extract(47, 32, op1));
+              break;
+
+            /* XMM */
+            case DQWORD_SIZE_BIT:
+              unpack.push_back(triton::ast::extract(127, 112, op2));
+              unpack.push_back(triton::ast::extract(127, 112, op1));
+              unpack.push_back(triton::ast::extract(111, 96,  op2));
+              unpack.push_back(triton::ast::extract(111, 96,  op1));
+              unpack.push_back(triton::ast::extract(95,  80,  op2));
+              unpack.push_back(triton::ast::extract(95,  80,  op1));
+              unpack.push_back(triton::ast::extract(79,  64,  op2));
+              unpack.push_back(triton::ast::extract(79,  64,  op1));
+              break;
+
+            default:
+              throw std::runtime_error("triton::arch::x86::semantics::punpckhwd_s(): Invalid operand size.");
+          }
+
+          auto node = triton::ast::concat(unpack);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PUNPCKHWD operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
