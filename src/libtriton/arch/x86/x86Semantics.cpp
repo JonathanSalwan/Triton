@@ -172,6 +172,10 @@ STD                          |            | Set Direction Flag
 STMXCSR                      | sse1       | Store MXCSR Register State
 SUB                          |            | Subtract
 TEST                         |            | Logical Compare
+UNPCKHPD                     | sse2       | Unpack and Interleave High Packed Double- Precision Floating-Point Values
+UNPCKHPS                     | sse1       | Unpack and Interleave High Packed Single-Precision Floating-Point Values
+UNPCKLPD                     | sse2       | Unpack and Interleave Low Packed Double-Precision Floating-Point Values
+UNPCKLPS                     | sse1       | Unpack and Interleave Low Packed Single-Precision Floating-Point Values
 VMOVDQA                      | avx2       | VEX Move aligned packed integer values
 XADD                         |            | Exchange and Add
 XCHG                         |            | Exchange Register/Memory with Register
@@ -334,6 +338,10 @@ namespace triton {
             case ID_INS_STMXCSR:        triton::arch::x86::semantics::stmxcsr_s(inst);    break;
             case ID_INS_SUB:            triton::arch::x86::semantics::sub_s(inst);        break;
             case ID_INS_TEST:           triton::arch::x86::semantics::test_s(inst);       break;
+            case ID_INS_UNPCKHPD:       triton::arch::x86::semantics::unpckhpd_s(inst);   break;
+            case ID_INS_UNPCKHPS:       triton::arch::x86::semantics::unpckhps_s(inst);   break;
+            case ID_INS_UNPCKLPD:       triton::arch::x86::semantics::unpcklpd_s(inst);   break;
+            case ID_INS_UNPCKLPS:       triton::arch::x86::semantics::unpcklps_s(inst);   break;
             case ID_INS_VMOVDQA:        triton::arch::x86::semantics::vmovdqa_s(inst);    break;
             case ID_INS_XADD:           triton::arch::x86::semantics::xadd_s(inst);       break;
             case ID_INS_XCHG:           triton::arch::x86::semantics::xchg_s(inst);       break;
@@ -5781,6 +5789,114 @@ namespace triton {
           triton::arch::x86::semantics::pf_s(inst, expr, src1, true);
           triton::arch::x86::semantics::sf_s(inst, expr, src1, true);
           triton::arch::x86::semantics::zf_s(inst, expr, src1, true);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void unpckhpd_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          auto node = triton::ast::concat(
+                        triton::ast::extract(127, 64, op2),
+                        triton::ast::extract(127, 64, op1)
+                      );
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "UNPCKHPD operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void unpckhps_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> unpack;
+
+          unpack.push_back(triton::ast::extract(127, 96, op2));
+          unpack.push_back(triton::ast::extract(127, 96, op1));
+          unpack.push_back(triton::ast::extract(95, 64, op2));
+          unpack.push_back(triton::ast::extract(95, 64, op1));
+
+          auto node = triton::ast::concat(unpack);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "UNPCKHPS operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void unpcklpd_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          auto node = triton::ast::concat(
+                        triton::ast::extract(63, 0, op2),
+                        triton::ast::extract(63, 0, op1)
+                      );
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "UNPCKLPD operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void unpcklps_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> unpack;
+
+          unpack.push_back(triton::ast::extract(63, 32, op2));
+          unpack.push_back(triton::ast::extract(63, 32, op1));
+          unpack.push_back(triton::ast::extract(31, 0, op2));
+          unpack.push_back(triton::ast::extract(31, 0, op1));
+
+          auto node = triton::ast::concat(unpack);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "UNPCKLPS operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
