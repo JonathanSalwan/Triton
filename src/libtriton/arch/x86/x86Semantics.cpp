@@ -134,6 +134,9 @@ PANDN                        | mmx/sse2   | Logical AND NOT
 PCMPEQB                      | mmx/sse2   | Compare Packed Data for Equal (bytes)
 PCMPEQD                      | mmx/sse2   | Compare Packed Data for Equal (dwords)
 PCMPEQW                      | mmx/sse2   | Compare Packed Data for Equal (words)
+PCMPGTB                      | mmx/sse2   | Compare Packed Data for Greater Than (bytes)
+PCMPGTD                      | mmx/sse2   | Compare Packed Data for Greater Than (dwords)
+PCMPGTW                      | mmx/sse2   | Compare Packed Data for Greater Than (words)
 PMOVMSKB                     | sse1       | Move Byte Mask
 POP                          |            | Pop a Value from the Stack
 POR                          | mmx/sse2   | Bitwise Logical OR
@@ -310,6 +313,9 @@ namespace triton {
             case ID_INS_PCMPEQB:        triton::arch::x86::semantics::pcmpeqb_s(inst);    break;
             case ID_INS_PCMPEQD:        triton::arch::x86::semantics::pcmpeqd_s(inst);    break;
             case ID_INS_PCMPEQW:        triton::arch::x86::semantics::pcmpeqw_s(inst);    break;
+            case ID_INS_PCMPGTB:        triton::arch::x86::semantics::pcmpgtb_s(inst);    break;
+            case ID_INS_PCMPGTD:        triton::arch::x86::semantics::pcmpgtd_s(inst);    break;
+            case ID_INS_PCMPGTW:        triton::arch::x86::semantics::pcmpgtw_s(inst);    break;
             case ID_INS_PMOVMSKB:       triton::arch::x86::semantics::pmovmskb_s(inst);   break;
             case ID_INS_POP:            triton::arch::x86::semantics::pop_s(inst);        break;
             case ID_INS_POR:            triton::arch::x86::semantics::por_s(inst);        break;
@@ -4729,6 +4735,111 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PCMPEQW operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pcmpgtb_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize(); index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvsgt(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::bv(0xff, BYTE_SIZE_BIT),
+                            triton::ast::bv(0x00, BYTE_SIZE_BIT))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PCMPGTB operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pcmpgtd_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvsgt(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::bv(0xffffffff, DWORD_SIZE_BIT),
+                            triton::ast::bv(0x00000000, DWORD_SIZE_BIT))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PCMPGTD operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pcmpgtw_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvsgt(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::bv(0xffff, WORD_SIZE_BIT),
+                            triton::ast::bv(0x0000, WORD_SIZE_BIT))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PCMPGTW operation");
 
           /* Apply the taint */
           expr->isTainted = triton::api.taintAssignment(dst, src);

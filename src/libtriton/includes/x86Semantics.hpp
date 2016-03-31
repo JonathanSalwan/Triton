@@ -474,6 +474,15 @@ namespace triton {
       //! The PCMPEQW semantics.
       void pcmpeqw_s(triton::arch::Instruction& inst);
 
+      //! The PCMPGTB semantics.
+      void pcmpgtb_s(triton::arch::Instruction& inst);
+
+      //! The PCMPGTD semantics.
+      void pcmpgtd_s(triton::arch::Instruction& inst);
+
+      //! The PCMPGTW semantics.
+      void pcmpgtw_s(triton::arch::Instruction& inst);
+
       //! The PMOVMSKB semantics.
       void pmovmskb_s(triton::arch::Instruction& inst);
 

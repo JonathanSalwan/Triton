@@ -323,6 +323,36 @@ void check(void)
 
   asm("movaps xmm1, xmmword ptr [%0]" :: "r"(tab1));
   asm("movaps xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("movaps xmm3, xmmword ptr [%0]" :: "r"(tab1));
+  asm("movaps xmm4, xmmword ptr [%0]" :: "r"(tab1));
+  asm("movaps xmm5, xmmword ptr [%0]" :: "r"(tab2));
+  asm("movaps xmm6, xmmword ptr [%0]" :: "r"(tab3));
+  asm("pcmpgtb xmm1, xmm2");
+  asm("pcmpgtb xmm3, xmm4");
+  asm("pcmpgtb xmm5, xmm6");
+
+  asm("movaps xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("movaps xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("movaps xmm3, xmmword ptr [%0]" :: "r"(tab1));
+  asm("movaps xmm4, xmmword ptr [%0]" :: "r"(tab1));
+  asm("movaps xmm5, xmmword ptr [%0]" :: "r"(tab2));
+  asm("movaps xmm6, xmmword ptr [%0]" :: "r"(tab3));
+  asm("pcmpgtw xmm1, xmm2");
+  asm("pcmpgtw xmm3, xmm4");
+  asm("pcmpgtw xmm5, xmm6");
+
+  asm("movaps xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("movaps xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("movaps xmm3, xmmword ptr [%0]" :: "r"(tab1));
+  asm("movaps xmm4, xmmword ptr [%0]" :: "r"(tab1));
+  asm("movaps xmm5, xmmword ptr [%0]" :: "r"(tab2));
+  asm("movaps xmm6, xmmword ptr [%0]" :: "r"(tab3));
+  asm("pcmpgtd xmm1, xmm2");
+  asm("pcmpgtd xmm3, xmm4");
+  asm("pcmpgtd xmm5, xmm6");
+
+  asm("movaps xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("movaps xmm2, xmmword ptr [%0]" :: "r"(tab2));
   asm("movaps xmm3, xmmword ptr [%0]" :: "r"(tab3));
   asm("movaps xmm4, xmmword ptr [%0]" :: "r"(tab4));
   asm("movmskpd rax, xmm1");
