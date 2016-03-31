@@ -504,6 +504,18 @@ namespace triton {
       //! The PUNPCKHWD semantics.
       void punpckhwd_s(triton::arch::Instruction& inst);
 
+      //! The PUNPCKLBW semantics.
+      void punpcklbw_s(triton::arch::Instruction& inst);
+
+      //! The PUNPCKLDQ semantics.
+      void punpckldq_s(triton::arch::Instruction& inst);
+
+      //! The PUNPCKLQDQ semantics.
+      void punpcklqdq_s(triton::arch::Instruction& inst);
+
+      //! The PUNPCKLWD semantics.
+      void punpcklwd_s(triton::arch::Instruction& inst);
+
       //! The PUSH semantics.
       void push_s(triton::arch::Instruction& inst);
 
