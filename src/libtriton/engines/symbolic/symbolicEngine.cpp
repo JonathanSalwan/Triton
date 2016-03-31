@@ -700,6 +700,7 @@ namespace triton {
         /* Otherwise, we return the concatenation of all symbolic expressions */
         se = this->newSymbolicExpression(triton::ast::concat(ret), triton::engines::symbolic::MEM, "concat reference - " + comment);
         se->setOriginAddress(address);
+        inst.addSymbolicExpression(se);
         return se;
       }
 
