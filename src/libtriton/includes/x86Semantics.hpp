@@ -582,6 +582,18 @@ namespace triton {
       //! The TEST semantics.
       void test_s(triton::arch::Instruction& inst);
 
+      //! The UNPCKHPD semantics.
+      void unpckhpd_s(triton::arch::Instruction& inst);
+
+      //! The UNPCKHPS semantics.
+      void unpckhps_s(triton::arch::Instruction& inst);
+
+      //! The UNPCKLPD semantics.
+      void unpcklpd_s(triton::arch::Instruction& inst);
+
+      //! The UNPCKLPS semantics.
+      void unpcklps_s(triton::arch::Instruction& inst);
+
       //! The VMOVDQA semantics.
       void vmovdqa_s(triton::arch::Instruction& inst);
 

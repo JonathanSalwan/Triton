@@ -413,6 +413,20 @@ void check(void)
   asm("psrldq xmm2, 16");
   asm("psrldq xmm3, 17");
   asm("psrldq xmm4, 18");
+
+  asm("lddqu xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("lddqu xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("lddqu xmm4, xmmword ptr [%0]" :: "r"(tab4));
+
+  asm("unpckhpd xmm1, xmm2");
+  asm("unpckhpd xmm3, xmm4");
+  asm("unpckhps xmm1, xmm4");
+  asm("unpckhps xmm2, xmm3");
+  asm("unpcklpd xmm1, xmm2");
+  asm("unpcklpd xmm3, xmm4");
+  asm("unpcklps xmm1, xmm4");
+  asm("unpcklps xmm2, xmm3");
 }
 
 int main(){
