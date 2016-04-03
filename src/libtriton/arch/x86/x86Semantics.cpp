@@ -65,6 +65,7 @@ CMOVP                        |            | Move if parity
 CMOVS                        |            | Move if sign
 CMP                          |            | Compare Two Operands
 CMPXCHG                      |            | Compare and Exchange
+CMPXCHG8B                    |            | Compare and Exchange 8 Bytes
 CQO                          |            | convert qword (rax) to oword (rdx:rax)
 CWDE                         |            | Convert word (ax) to dword (eax).
 DEC                          |            | Decrement by 1
@@ -242,6 +243,7 @@ namespace triton {
             case ID_INS_CMOVS:          triton::arch::x86::semantics::cmovs_s(inst);      break;
             case ID_INS_CMP:            triton::arch::x86::semantics::cmp_s(inst);        break;
             case ID_INS_CMPXCHG:        triton::arch::x86::semantics::cmpxchg_s(inst);    break;
+            case ID_INS_CMPXCHG8B:      triton::arch::x86::semantics::cmpxchg8b_s(inst);  break;
             case ID_INS_CQO:            triton::arch::x86::semantics::cqo_s(inst);        break;
             case ID_INS_CWDE:           triton::arch::x86::semantics::cwde_s(inst);       break;
             case ID_INS_DEC:            triton::arch::x86::semantics::dec_s(inst);        break;
@@ -2566,6 +2568,49 @@ namespace triton {
           triton::arch::x86::semantics::pf_s(inst, expr1, accumulator, true);
           triton::arch::x86::semantics::sf_s(inst, expr1, accumulator, true);
           triton::arch::x86::semantics::zf_s(inst, expr1, accumulator, true);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void cmpxchg8b_s(triton::arch::Instruction& inst) {
+          auto src1 = inst.operands[0];
+          auto src2 = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
+          auto src3 = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
+          auto src4 = triton::arch::OperandWrapper(TRITON_X86_REG_ECX);
+          auto src5 = triton::arch::OperandWrapper(TRITON_X86_REG_EBX);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src1);
+          auto op2 = triton::api.buildSymbolicOperand(src2);
+          auto op3 = triton::api.buildSymbolicOperand(src3);
+          auto op4 = triton::api.buildSymbolicOperand(src4);
+          auto op5 = triton::api.buildSymbolicOperand(src5);
+
+          /* Create the semantics */
+          /* CMP8B */
+          auto node1 = triton::ast::bvsub(triton::ast::concat(op2, op3), op1);
+          /* Destination */
+          auto node2 = triton::ast::ite(triton::ast::equal(node1, triton::ast::bv(0, QWORD_SIZE_BIT)), triton::ast::concat(op4, op5), op1);
+          /* EDX:EAX */
+          auto node3 = triton::ast::ite(triton::ast::equal(node1, triton::ast::bv(0, QWORD_SIZE_BIT)), triton::ast::concat(op2, op3), op1);
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "CMP operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, src1, "XCHG8B memory operation");
+          auto expr3 = triton::api.createSymbolicExpression(inst, triton::ast::extract(63, 32, node3), src2, "XCHG8B EDX operation");
+          auto expr4 = triton::api.createSymbolicExpression(inst, triton::ast::extract(31, 0, node3), src3, "XCHG8B EAX operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.isTainted(src1) | triton::api.isTainted(src2) | triton::api.isTainted(src3);
+          expr2->isTainted = triton::api.taintAssignment(src1, src2);
+          expr2->isTainted = triton::api.taintUnion(src1, src3);
+          expr3->isTainted = triton::api.taintAssignment(src2, src1);
+          expr4->isTainted = triton::api.taintAssignment(src3, src1);
+
+          /* Upate symbolic flags */
+          triton::arch::x86::semantics::zf_s(inst, expr1, src1, true);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);

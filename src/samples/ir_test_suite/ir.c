@@ -109,6 +109,12 @@ void check(void)
   asm("mov rbx, 0x99");
   asm("cmpxchg ebx, ecx");
 
+  asm("cmpxchg8b qword ptr [%0]" :: "r"(tab1));
+
+  asm("mov edx, dword ptr [%0]" :: "r"(tab1));
+  asm("mov eax, dword ptr [%0]" :: "r"(tab1+4));
+  asm("cmpxchg8b qword ptr [%0]" :: "r"(tab1));
+
   asm("clc");
   asm("cld");
   asm("cmc");
