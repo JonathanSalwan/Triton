@@ -241,6 +241,18 @@ namespace triton {
           triton::uint8 zmm31[DQQWORD_SIZE];
           //! Concrete value of mxcsr
           triton::uint8 mxcsr[QWORD_SIZE];
+          //! Concrete value of CS
+          triton::uint8 cs[QWORD_SIZE];
+          //! Concrete value of DS
+          triton::uint8 ds[QWORD_SIZE];
+          //! Concrete value of ES
+          triton::uint8 es[QWORD_SIZE];
+          //! Concrete value of FS
+          triton::uint8 fs[QWORD_SIZE];
+          //! Concrete value of GS
+          triton::uint8 gs[QWORD_SIZE];
+          //! Concrete value of SS
+          triton::uint8 ss[QWORD_SIZE];
 
 
         public:
@@ -272,6 +284,9 @@ namespace triton {
 
           //! Returns true if regId is a AVX-512 (ZMM) register.
           bool isAVX512(triton::uint32 regId);
+
+          //! Returns true if regId is a Segment.
+          bool isSegment(triton::uint32 regId);
 
           std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg);
           std::set<triton::arch::RegisterOperand*> getAllRegisters(void);

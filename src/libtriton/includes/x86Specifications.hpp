@@ -240,6 +240,14 @@ namespace triton {
       extern RegisterOperand x86_reg_rh;
       extern RegisterOperand x86_reg_fz;
 
+      extern RegisterOperand x86_reg_cs;
+      extern RegisterOperand x86_reg_ds;
+      extern RegisterOperand x86_reg_es;
+      extern RegisterOperand x86_reg_fs;
+      extern RegisterOperand x86_reg_gs;
+      extern RegisterOperand x86_reg_ss;
+
+
       //! Returns all information about the register from its ID.
       std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> regIdToRegInfo(triton::uint32 reg);
 
@@ -251,8 +259,7 @@ namespace triton {
 
 
       //! The list of registers.
-      enum registers_e
-      {
+      enum registers_e {
         ID_REG_INVALID = 0, //!< invalid = 0
 
         /* GPR 64-bits */
@@ -458,12 +465,31 @@ namespace triton {
         ID_REG_RH,  //!< r+ (Round Positive)
         ID_REG_FZ,  //!< fz (Flush To Zero)
 
+        /* Segments */
+        ID_REG_CS,  //!< Code Segment
+        ID_REG_DS,  //!< Data Segment
+        ID_REG_ES,  //!< Extra Segment
+        ID_REG_FS,  //!< F Segment
+        ID_REG_GS,  //!< G Segment
+        ID_REG_SS,  //!< Stack Segment
+
         /* Must be the last item */
         ID_REG_LAST_ITEM //!< must be the last item
       };
 
       //! Global set of registers.
       extern RegisterOperand* x86_regs[ID_REG_LAST_ITEM];
+
+      //! The list of prefixes.
+      enum prefix_e {
+        ID_PREFIX_INVALID = 0,  //!< invalid
+        ID_PREFIX_LOCK,         //!< LOCK
+        ID_PREFIX_REP,          //!< REP
+        ID_PREFIX_REPNE,        //!< REPNE
+
+        /* Must be the last item */
+        ID_PREFIX_LAST_ITEM     //!< must be the last item
+      };
 
       //! The list of opcodes.
       enum instructions_e {
@@ -2122,6 +2148,17 @@ namespace triton {
 #define TRITON_X86_REG_TF       triton::arch::x86::x86_reg_tf
 //! Temporary ZF register.
 #define TRITON_X86_REG_ZF       triton::arch::x86::x86_reg_zf
-
+//! Temporary CS register.
+#define TRITON_X86_REG_CS       triton::arch::x86::x86_reg_cs
+//! Temporary DS register.
+#define TRITON_X86_REG_DS       triton::arch::x86::x86_reg_ds
+//! Temporary ES register.
+#define TRITON_X86_REG_ES       triton::arch::x86::x86_reg_es
+//! Temporary FS register.
+#define TRITON_X86_REG_FS       triton::arch::x86::x86_reg_fs
+//! Temporary GS register.
+#define TRITON_X86_REG_GS       triton::arch::x86::x86_reg_gs
+//! Temporary SS register.
+#define TRITON_X86_REG_SS       triton::arch::x86::x86_reg_ss
 
 #endif /* TRITON_X86SPECIFICATIONS_H */

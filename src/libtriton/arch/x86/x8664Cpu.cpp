@@ -232,6 +232,13 @@ namespace triton {
       triton::arch::x86::x86_reg_sf     = triton::arch::RegisterOperand();
       triton::arch::x86::x86_reg_tf     = triton::arch::RegisterOperand();
       triton::arch::x86::x86_reg_zf     = triton::arch::RegisterOperand();
+
+      triton::arch::x86::x86_reg_cs     = triton::arch::RegisterOperand();
+      triton::arch::x86::x86_reg_ds     = triton::arch::RegisterOperand();
+      triton::arch::x86::x86_reg_es     = triton::arch::RegisterOperand();
+      triton::arch::x86::x86_reg_fs     = triton::arch::RegisterOperand();
+      triton::arch::x86::x86_reg_gs     = triton::arch::RegisterOperand();
+      triton::arch::x86::x86_reg_ss     = triton::arch::RegisterOperand();
     }
 
 
@@ -328,6 +335,12 @@ namespace triton {
       memcpy(this->zmm30,   other.zmm30,  sizeof(this->zmm30));
       memcpy(this->zmm31,   other.zmm31,  sizeof(this->zmm31));
       memcpy(this->mxcsr,   other.mxcsr,  sizeof(this->mxcsr));
+      memcpy(this->cs,      other.cs,     sizeof(this->cs));
+      memcpy(this->ds,      other.ds,     sizeof(this->ds));
+      memcpy(this->es,      other.es,     sizeof(this->es));
+      memcpy(this->fs,      other.fs,     sizeof(this->fs));
+      memcpy(this->gs,      other.gs,     sizeof(this->gs));
+      memcpy(this->ss,      other.ss,     sizeof(this->ss));
     }
 
 
@@ -530,6 +543,13 @@ namespace triton {
       triton::arch::x86::x86_reg_tf     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_TF);
       triton::arch::x86::x86_reg_zf     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ZF);
 
+      triton::arch::x86::x86_reg_cs     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_CS);
+      triton::arch::x86::x86_reg_ds     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_DS);
+      triton::arch::x86::x86_reg_es     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ES);
+      triton::arch::x86::x86_reg_fs     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_FS);
+      triton::arch::x86::x86_reg_gs     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_GS);
+      triton::arch::x86::x86_reg_ss     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_SS);
+
       /* Update python env ======================================================== */
       #ifdef TRITON_PYTHON_BINDINGS
         triton::bindings::python::initRegNamespace();
@@ -638,6 +658,12 @@ namespace triton {
       memset(this->zmm30,   0x00, sizeof(this->zmm30));
       memset(this->zmm31,   0x00, sizeof(this->zmm31));
       memset(this->mxcsr,   0x00, sizeof(this->mxcsr));
+      memset(this->cs,      0x00, sizeof(this->cs));
+      memset(this->ds,      0x00, sizeof(this->ds));
+      memset(this->es,      0x00, sizeof(this->es));
+      memset(this->fs,      0x00, sizeof(this->fs));
+      memset(this->gs,      0x00, sizeof(this->gs));
+      memset(this->ss,      0x00, sizeof(this->ss));
     }
 
 
@@ -652,7 +678,7 @@ namespace triton {
 
 
     bool x8664Cpu::isRegister(triton::uint32 regId) {
-      return (this->isGPR(regId) || this->isMMX(regId) || this->isSSE(regId) || this->isAVX256(regId) || this->isAVX512(regId));
+      return (this->isGPR(regId) || this->isMMX(regId) || this->isSSE(regId) || this->isAVX256(regId) || this->isAVX512(regId) || this->isSegment(regId));
     }
 
 
@@ -683,6 +709,11 @@ namespace triton {
 
     bool x8664Cpu::isAVX512(triton::uint32 regId) {
       return ((regId >= triton::arch::x86::ID_REG_ZMM0 && regId <= triton::arch::x86::ID_REG_ZMM31) ? true : false);
+    }
+
+
+    bool x8664Cpu::isSegment(triton::uint32 regId) {
+      return ((regId >= triton::arch::x86::ID_REG_CS && regId <= triton::arch::x86::ID_REG_SS) ? true : false);
     }
 
 
@@ -1095,6 +1126,13 @@ namespace triton {
         case triton::arch::x86::ID_REG_DF: return (((*((triton::uint64*)(this->eflags))) >> 10) & 1);
         case triton::arch::x86::ID_REG_OF: return (((*((triton::uint64*)(this->eflags))) >> 11) & 1);
 
+        case triton::arch::x86::ID_REG_CS: return (*((triton::uint64*)(this->cs)));
+        case triton::arch::x86::ID_REG_DS: return (*((triton::uint64*)(this->ds)));
+        case triton::arch::x86::ID_REG_ES: return (*((triton::uint64*)(this->es)));
+        case triton::arch::x86::ID_REG_FS: return (*((triton::uint64*)(this->fs)));
+        case triton::arch::x86::ID_REG_GS: return (*((triton::uint64*)(this->gs)));
+        case triton::arch::x86::ID_REG_SS: return (*((triton::uint64*)(this->ss)));
+
         default:
           throw std::invalid_argument("x8664Cpu::getLastRegisterValue(): Invalid register.");
       }
@@ -1304,6 +1342,13 @@ namespace triton {
         case triton::arch::x86::ID_REG_ZMM31: triton::utils::fromUintToBuffer(value, this->zmm31); break;
 
         case triton::arch::x86::ID_REG_MXCSR: (*((triton::uint64*)(this->mxcsr))) = value.convert_to<triton::uint64>(); break;
+
+        case triton::arch::x86::ID_REG_CS:  (*((triton::uint64*)(this->cs))) = value.convert_to<triton::uint64>(); break;
+        case triton::arch::x86::ID_REG_DS:  (*((triton::uint64*)(this->ds))) = value.convert_to<triton::uint64>(); break;
+        case triton::arch::x86::ID_REG_ES:  (*((triton::uint64*)(this->es))) = value.convert_to<triton::uint64>(); break;
+        case triton::arch::x86::ID_REG_FS:  (*((triton::uint64*)(this->fs))) = value.convert_to<triton::uint64>(); break;
+        case triton::arch::x86::ID_REG_GS:  (*((triton::uint64*)(this->gs))) = value.convert_to<triton::uint64>(); break;
+        case triton::arch::x86::ID_REG_SS:  (*((triton::uint64*)(this->ss))) = value.convert_to<triton::uint64>(); break;
 
         default:
           throw std::invalid_argument("x8664Cpu:setLastRegisterValue(): Invalid register.");

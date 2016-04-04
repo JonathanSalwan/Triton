@@ -222,6 +222,14 @@ namespace triton {
       triton::arch::RegisterOperand x86_reg_tf      = triton::arch::RegisterOperand();
       triton::arch::RegisterOperand x86_reg_zf      = triton::arch::RegisterOperand();
 
+      triton::arch::RegisterOperand x86_reg_cs      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_ds      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_es      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_fs      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_gs      = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_ss      = triton::arch::RegisterOperand();
+
+
       triton::arch::RegisterOperand* x86_regs[triton::arch::x86::ID_REG_LAST_ITEM] = {
         &TRITON_X86_REG_INVALID,
         &TRITON_X86_REG_RAX,
@@ -393,8 +401,15 @@ namespace triton {
         &TRITON_X86_REG_PF,
         &TRITON_X86_REG_SF,
         &TRITON_X86_REG_TF,
-        &TRITON_X86_REG_ZF
+        &TRITON_X86_REG_ZF,
+        &TRITON_X86_REG_CS,
+        &TRITON_X86_REG_DS,
+        &TRITON_X86_REG_ES,
+        &TRITON_X86_REG_FS,
+        &TRITON_X86_REG_GS,
+        &TRITON_X86_REG_SS
       };
+
 
       /* Returns all information about a register from its triton id */
       std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> regIdToRegInfo(triton::uint32 reg) {
@@ -1601,6 +1616,48 @@ namespace triton {
             std::get<3>(ret) = triton::arch::x86::ID_REG_ZF;
             break;
 
+          case triton::arch::x86::ID_REG_CS:
+            std::get<0>(ret) = "cs";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CS;
+            break;
+
+          case triton::arch::x86::ID_REG_DS:
+            std::get<0>(ret) = "ds";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_DS;
+            break;
+
+          case triton::arch::x86::ID_REG_ES:
+            std::get<0>(ret) = "es";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_ES;
+            break;
+
+          case triton::arch::x86::ID_REG_FS:
+            std::get<0>(ret) = "fs";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_FS;
+            break;
+
+          case triton::arch::x86::ID_REG_GS:
+            std::get<0>(ret) = "gs";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_GS;
+            break;
+
+          case triton::arch::x86::ID_REG_SS:
+            std::get<0>(ret) = "ss";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_SS;
+            break;
+
         }
         return ret;
       }
@@ -2189,6 +2246,30 @@ namespace triton {
 
           case triton::extlibs::capstone::X86_REG_ZMM31:
             tritonId = triton::arch::x86::ID_REG_ZMM31;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CS:
+            tritonId = triton::arch::x86::ID_REG_CS;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_DS:
+            tritonId = triton::arch::x86::ID_REG_DS;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_ES:
+            tritonId = triton::arch::x86::ID_REG_ES;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_FS:
+            tritonId = triton::arch::x86::ID_REG_FS;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_GS:
+            tritonId = triton::arch::x86::ID_REG_GS;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_SS:
+            tritonId = triton::arch::x86::ID_REG_SS;
             break;
 
           default:
