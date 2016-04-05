@@ -102,6 +102,9 @@ Returns the opcodes size of the instruction as integer.
 - **getOperands(void)**<br>
 Returns the operands of the instruction as list of \ref py_Immediate_page, \ref py_Memory_page or \ref py_Register_page.
 
+- **getPrefix(void)**<br>
+Returns the instruction prefix as \ref py_PREFIX_page.
+
 - **getSecondOperand(void)**<br>
 Returns the second operand of the instruction.
 
@@ -125,6 +128,9 @@ Returns true if the condition is taken (i.e x86: JCC, CMOVCC, SETCC, ...).
 
 - **isControlFlow(void)**<br>
 Returns true if the instruction modifies the control flow (i.e x86: JUMP, JCC, CALL, RET).
+
+- **isPrefixed(void)**<br>
+Returns true if the instruction has a prefix.
 
 - **isTainted(void)**<br>
 Returns true if at least one of its \ref py_SymbolicExpression_page is tainted.
@@ -290,6 +296,16 @@ namespace triton {
       }
 
 
+      static PyObject* Instruction_getPrefix(PyObject* self, PyObject* noarg) {
+        try {
+          return Py_BuildValue("k", PyInstruction_AsInstruction(self)->getPrefix());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* Instruction_getSecondOperand(PyObject* self, PyObject* noarg) {
         try {
           triton::arch::Instruction*      inst;
@@ -438,6 +454,18 @@ namespace triton {
       }
 
 
+      static PyObject* Instruction_isPrefixed(PyObject* self, PyObject* noarg) {
+        try {
+          if (PyInstruction_AsInstruction(self)->isPrefixed() == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* Instruction_isTainted(PyObject* self, PyObject* noarg) {
         try {
           if (PyInstruction_AsInstruction(self)->isTainted() == true)
@@ -556,6 +584,7 @@ namespace triton {
         {"getOpcodes",                Instruction_getOpcodes,               METH_NOARGS,     ""},
         {"getOpcodesSize",            Instruction_getOpcodesSize,           METH_NOARGS,     ""},
         {"getOperands",               Instruction_getOperands,              METH_NOARGS,     ""},
+        {"getPrefix",                 Instruction_getPrefix,                METH_NOARGS,     ""},
         {"getSecondOperand",          Instruction_getSecondOperand,         METH_NOARGS,     ""},
         {"getSymbolicExpressions",    Instruction_getSymbolicExpressions,   METH_NOARGS,     ""},
         {"getThirdOperand",           Instruction_getThirdOperand,          METH_NOARGS,     ""},
@@ -564,6 +593,7 @@ namespace triton {
         {"isBranch",                  Instruction_isBranch,                 METH_NOARGS,     ""},
         {"isConditionTaken",          Instruction_isConditionTaken,         METH_NOARGS,     ""},
         {"isControlFlow",             Instruction_isControlFlow,            METH_NOARGS,     ""},
+        {"isPrefixed",                Instruction_isPrefixed,               METH_NOARGS,     ""},
         {"isTainted",                 Instruction_isTainted,                METH_NOARGS,     ""},
         {"setAddress",                Instruction_setAddress,               METH_O,          ""},
         {"setOpcodes",                Instruction_setOpcodes,               METH_O,          ""},
