@@ -94,6 +94,10 @@ LDDQU                        | sse3       | Load Unaligned Integer 128 Bits
 LDMXCSR                      | sse1       | Load MXCSR Register
 LEA                          |            | Load Effective Address
 LEAVE                        |            | High Level Procedure Exit
+LODSB                        |            | Load byte at address
+LODSD                        |            | Load doubleword at address
+LODSQ                        |            | Load quadword at address
+LODSW                        |            | Load word at address
 MOV                          |            | Move
 MOVAPD                       | sse2       | Move Aligned Packed Double-Precision Floating-Point Values
 MOVAPS                       | sse1       | Move Aligned Packed Single-Precision Floating-Point Values
@@ -272,6 +276,10 @@ namespace triton {
             case ID_INS_LDMXCSR:        triton::arch::x86::semantics::ldmxcsr_s(inst);    break;
             case ID_INS_LEA:            triton::arch::x86::semantics::lea_s(inst);        break;
             case ID_INS_LEAVE:          triton::arch::x86::semantics::leave_s(inst);      break;
+            case ID_INS_LODSB:          triton::arch::x86::semantics::lodsb_s(inst);      break;
+            case ID_INS_LODSD:          triton::arch::x86::semantics::lodsd_s(inst);      break;
+            case ID_INS_LODSQ:          triton::arch::x86::semantics::lodsq_s(inst);      break;
+            case ID_INS_LODSW:          triton::arch::x86::semantics::lodsw_s(inst);      break;
             case ID_INS_MOV:            triton::arch::x86::semantics::mov_s(inst);        break;
             case ID_INS_MOVABS:         triton::arch::x86::semantics::movabs_s(inst);     break;
             case ID_INS_MOVAPD:         triton::arch::x86::semantics::movapd_s(inst);     break;
@@ -452,47 +460,47 @@ namespace triton {
           switch (inst.getPrefix()) {
 
             case triton::arch::x86::ID_PREFIX_REP: {
+              /* Create the semantics for Counter */
+              auto node1 = triton::ast::bvsub(op1, triton::ast::bv(1, counter.getBitSize()));
+
               /* Create the semantics for PC */
-              auto node1 = triton::ast::ite(
-                       triton::ast::equal(op1, triton::ast::bv(0, counter.getBitSize())),
+              auto node2 = triton::ast::ite(
+                       triton::ast::equal(node1, triton::ast::bv(0, counter.getBitSize())),
                        triton::ast::bv(inst.getAddress() + inst.getOpcodesSize(), pc.getBitSize()),
                        triton::ast::bv(inst.getAddress(), pc.getBitSize())
                      );
 
-              /* Create the semantics for Counter */
-              auto node2 = triton::ast::bvsub(op1, triton::ast::bv(1, counter.getBitSize()));
-
               /* Create symbolic expression */
-              auto expr1 = triton::api.createSymbolicExpression(inst, node1, pc, "Program Counter");
-              auto expr2 = triton::api.createSymbolicExpression(inst, node2, counter, "Counter operation");
+              auto expr1 = triton::api.createSymbolicExpression(inst, node1, counter, "Counter operation");
+              auto expr2 = triton::api.createSymbolicExpression(inst, node2, pc, "Program Counter");
 
               /* Spread taint for PC */
-              expr1->isTainted = triton::api.taintAssignment(pc, counter);
-              expr2->isTainted = triton::api.taintUnion(counter, counter);
+              expr1->isTainted = triton::api.taintUnion(counter, counter);
+              expr2->isTainted = triton::api.taintAssignment(pc, counter);
               break;
             }
 
             case triton::arch::x86::ID_PREFIX_REPNE: {
+              /* Create the semantics for Counter */
+              auto node1 = triton::ast::bvsub(op1, triton::ast::bv(1, counter.getBitSize()));
+
               /* Create the semantics for PC */
-              auto node1 = triton::ast::ite(
+              auto node2 = triton::ast::ite(
                        triton::ast::lor(
-                         triton::ast::equal(op1, triton::ast::bv(0, counter.getBitSize())),
+                         triton::ast::equal(node1, triton::ast::bv(0, counter.getBitSize())),
                          triton::ast::equal(op2, triton::ast::bvtrue())
                        ),
                        triton::ast::bv(inst.getAddress() + inst.getOpcodesSize(), pc.getBitSize()),
                        triton::ast::bv(inst.getAddress(), pc.getBitSize())
                      );
 
-              /* Create the semantics for Counter */
-              auto node2 = triton::ast::bvsub(op1, triton::ast::bv(1, counter.getBitSize()));
-
               /* Create symbolic expression */
-              auto expr1 = triton::api.createSymbolicExpression(inst, node1, pc, "Program Counter");
-              auto expr2 = triton::api.createSymbolicExpression(inst, node2, counter, "Counter operation");
+              auto expr1 = triton::api.createSymbolicExpression(inst, node1, counter, "Counter operation");
+              auto expr2 = triton::api.createSymbolicExpression(inst, node2, pc, "Program Counter");
 
               /* Spread taint */
-              expr1->isTainted = triton::api.taintAssignment(pc, counter);
-              expr2->isTainted = triton::api.taintUnion(counter, counter);
+              expr1->isTainted = triton::api.taintUnion(counter, counter);
+              expr2->isTainted = triton::api.taintAssignment(pc, counter);
               break;
             }
 
@@ -3756,6 +3764,134 @@ namespace triton {
 
           /* Create the semantics - side effect */
           alignAddStack_s(inst, bp1.getSize());
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void lodsb_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(index);
+          auto op3 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = op1;
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op3, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op2, triton::ast::bv(BYTE_SIZE, index.getBitSize())),
+                         triton::ast::bvsub(op2, triton::ast::bv(BYTE_SIZE, index.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst, "LODSB operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index, "Index operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst, src);
+          expr2->isTainted = triton::api.taintUnion(index, index);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void lodsd_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(index);
+          auto op3 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = op1;
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op3, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op2, triton::ast::bv(DWORD_SIZE, index.getBitSize())),
+                         triton::ast::bvsub(op2, triton::ast::bv(DWORD_SIZE, index.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst, "LODSD operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index, "Index operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst, src);
+          expr2->isTainted = triton::api.taintUnion(index, index);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void lodsq_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(index);
+          auto op3 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = op1;
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op3, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op2, triton::ast::bv(QWORD_SIZE, index.getBitSize())),
+                         triton::ast::bvsub(op2, triton::ast::bv(QWORD_SIZE, index.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst, "LODSQ operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index, "Index operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst, src);
+          expr2->isTainted = triton::api.taintUnion(index, index);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void lodsw_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(index);
+          auto op3 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = op1;
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op3, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op2, triton::ast::bv(WORD_SIZE, index.getBitSize())),
+                         triton::ast::bvsub(op2, triton::ast::bv(WORD_SIZE, index.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst, "LODSW operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index, "Index operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst, src);
+          expr2->isTainted = triton::api.taintUnion(index, index);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);

@@ -23,6 +23,18 @@ void check(void)
   asm("mov rcx, 5");
   asm("xadd rdx, rcx");
 
+  asm("mov rsi, %0" :: "r"(tab1));
+  asm("mov rcx, 5");
+  asm("rep lodsb");
+
+  asm("mov rsi, %0" :: "r"(tab1));
+  asm("mov rcx, 5");
+  asm("rep lodsd");
+
+  asm("mov rsi, %0" :: "r"(tab1));
+  asm("mov rcx, 5");
+  asm("rep lodsq");
+
   asm("mov rax, -1");
   asm("xor al, 0x99");
   asm("xor ax, 0x99");

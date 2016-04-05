@@ -348,6 +348,18 @@ namespace triton {
       //! The LEAVE semantics.
       void leave_s(triton::arch::Instruction& inst);
 
+      //! The LODSB semantics.
+      void lodsb_s(triton::arch::Instruction& inst);
+
+      //! The LODSD semantics.
+      void lodsd_s(triton::arch::Instruction& inst);
+
+      //! The LODSQ semantics.
+      void lodsq_s(triton::arch::Instruction& inst);
+
+      //! The LODSW semantics.
+      void lodsw_s(triton::arch::Instruction& inst);
+
       //! The MOV semantics.
       void mov_s(triton::arch::Instruction& inst);
 
