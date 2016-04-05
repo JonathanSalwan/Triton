@@ -50,6 +50,9 @@ namespace triton {
       //! OPCODE python dict.
       extern PyObject* opcodesDict;
 
+      //! PREFIX python dict.
+      extern PyObject* prefixesDict;
+
       //! REG python dict.
       extern PyObject* registersDict;
 
@@ -87,6 +90,9 @@ namespace triton {
 
       //! Initializes the OPCODE python namespace.
       void initX86OpcodesNamespace(void);
+
+      //! Initializes the PREFIX python namespace.
+      void initX86PrefixesNamespace(void);
 
       //! Initializes the OPERAND python namespace.
       void initOperandNamespace(PyObject* operandDict);

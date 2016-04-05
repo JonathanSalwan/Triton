@@ -26,10 +26,11 @@ namespace triton {
 
       /* Triton module */
       bool      initialized           = false;
+      PyObject* astModule             = nullptr; /* Must be global because may be updated on-the-fly */
       PyObject* cpuSizeDict           = nullptr; /* Must be global because it's updated on-the-fly */
       PyObject* opcodesDict           = nullptr; /* Must be global because it's updated on-the-fly */
+      PyObject* prefixesDict          = nullptr; /* Must be global because it's updated on-the-fly */
       PyObject* registersDict         = nullptr; /* Must be global because it's updated on-the-fly */
-      PyObject* astModule             = nullptr; /* Must be global because may be updated on-the-fly */
       PyObject* tritonModule          = nullptr; /* Must be global because may be updated on-the-fly */
       #ifdef __unix__
       PyObject* syscallsDict          = nullptr; /* Must be global because it's updated on-the-fly */
@@ -101,6 +102,11 @@ namespace triton {
         initSymOptiNamespace(symOptiDict);
         PyObject* idSymOptiClass = xPyClass_New(nullptr, symOptiDict, xPyString_FromString("OPTIMIZATION"));
 
+        /* Create the PREFIX namespace =============================================================== */
+
+        triton::bindings::python::prefixesDict = xPyDict_New();
+        PyObject* idPrefixesClass = xPyClass_New(nullptr, triton::bindings::python::prefixesDict, xPyString_FromString("PREFIX"));
+
         /* Create the REG namespace ================================================================== */
 
         triton::bindings::python::registersDict = xPyDict_New();
@@ -136,6 +142,7 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPCODE",              idOpcodesClass);            /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPERAND",             idOperandClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPTIMIZATION",        idSymOptiClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "PREFIX",              idPrefixesClass);           /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "REG",                 idRegClass);                /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYMEXPR",             idSymExprClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "VERSION",             idVersionClass);
