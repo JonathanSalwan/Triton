@@ -49,3 +49,15 @@ A [blog](http://triton.quarkslab.com/blog/) is available and you can follow us o
 * **Florent Saudel** - Core dev, Bordeaux University
 * **Romain Thomas** - Core dev, Quarkslab
 
+### Cite Triton
+
+    @inproceedings{SSTIC2015-Saudel-Salwan,
+      author    = {Florent Saudel and Jonathan Salwan},
+      title     = {Triton: A Dynamic Symbolic Execution Framework},
+      booktitle = {Symposium sur la s{\'{e}}curit{\'{e}} des technologies de l'information
+                   et des communications, SSTIC, France, Rennes, June 3-5 2015},
+      publisher = {SSTIC},
+      pages     = {31--54},
+      year      = {2015},
+    }
+
