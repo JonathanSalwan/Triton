@@ -477,7 +477,7 @@ namespace triton {
               auto node1 = triton::ast::ite(
                        triton::ast::lor(
                          triton::ast::equal(op1, triton::ast::bv(0, counter.getBitSize())),
-                         triton::ast::equal(op2, triton::ast::bvfalse())
+                         triton::ast::equal(op2, triton::ast::bvtrue())
                        ),
                        triton::ast::bv(inst.getAddress() + inst.getOpcodesSize(), pc.getBitSize()),
                        triton::ast::bv(inst.getAddress(), pc.getBitSize())
