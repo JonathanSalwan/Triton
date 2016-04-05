@@ -28,7 +28,7 @@
 \section PREFIX_py_description Description
 <hr>
 
-According to the CPU architecture, the PREFIX namespace contains all kinds of instruction prefixes....
+According to the CPU architecture, the PREFIX namespace contains all kinds of instruction prefixes.
 
 \section PREFIX_py_api Python API - Items of the PREFIX namespace
 <hr>
