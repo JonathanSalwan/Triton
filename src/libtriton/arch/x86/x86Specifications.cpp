@@ -412,7 +412,7 @@ namespace triton {
 
 
       /* Returns all information about a register from its triton id */
-      std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> regIdToRegInfo(triton::uint32 reg) {
+      std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> registerIdToRegisterInformation(triton::uint32 reg) {
 
         std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> ret;
 
@@ -1664,7 +1664,7 @@ namespace triton {
 
 
       /* Converts a capstone's register id to a triton's register id */
-      triton::uint32 capstoneRegToTritonReg(triton::uint32 id) {
+      triton::uint32 capstoneRegisterToTritonRegister(triton::uint32 id) {
         triton::uint32 tritonId = triton::arch::x86::ID_REG_INVALID;
 
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -2282,7 +2282,7 @@ namespace triton {
 
 
       /* Converts a capstone's instruction id to a triton's instruction id */
-      triton::uint32 capstoneInstToTritonInst(triton::uint32 id) {
+      triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id) {
         triton::uint32 tritonId = triton::arch::x86::ID_INST_INVALID;
 
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -7478,6 +7478,35 @@ namespace triton {
         return tritonId;
       }
 
+
+      /* Converts a capstone's prefix id to a triton's prefix id */
+      triton::uint32 capstonePrefixToTritonPrefix(triton::uint32 id) {
+        triton::uint32 tritonId = triton::arch::x86::ID_PREFIX_INVALID;
+
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return tritonId;
+
+        switch (id) {
+
+          case triton::extlibs::capstone::X86_PREFIX_LOCK:
+            tritonId = triton::arch::x86::ID_PREFIX_LOCK;
+            break;
+
+          case triton::extlibs::capstone::X86_PREFIX_REP:
+            tritonId = triton::arch::x86::ID_PREFIX_REP;
+            break;
+
+          case triton::extlibs::capstone::X86_PREFIX_REPNE:
+            tritonId = triton::arch::x86::ID_PREFIX_REPNE;
+            break;
+
+          default:
+            tritonId = triton::arch::x86::ID_PREFIX_INVALID;
+            break;
+
+        }
+        return tritonId;
+      }
 
     }; /* x86 namespace */
   }; /* arch namespace */

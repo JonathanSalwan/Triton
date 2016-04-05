@@ -249,13 +249,16 @@ namespace triton {
 
 
       //! Returns all information about the register from its ID.
-      std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> regIdToRegInfo(triton::uint32 reg);
+      std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> registerIdToRegisterInformation(triton::uint32 reg);
 
       //! Converts a capstone's register id to a triton's register id.
-      triton::uint32 capstoneRegToTritonReg(triton::uint32 id);
+      triton::uint32 capstoneRegisterToTritonRegister(triton::uint32 id);
 
       //! Converts a capstone's instruction id to a triton's instruction id.
-      triton::uint32 capstoneInstToTritonInst(triton::uint32 id);
+      triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id);
+
+      //! Converts a capstone's prefix id to a triton's prefix id.
+      triton::uint32 capstonePrefixToTritonPrefix(triton::uint32 id);
 
 
       //! The list of registers.

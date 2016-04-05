@@ -61,6 +61,9 @@ namespace triton {
         //! The type of the instruction.
         triton::uint32 type;
 
+        //! The prefix of the instruction.
+        triton::uint32 prefix;
+
         //! True if this instruction is a branch.
         bool branch;
 
@@ -125,6 +128,9 @@ namespace triton {
         //! Returns the type of the instruction.
         triton::uint32 getType(void) const;
 
+        //! Returns the prefix of the instruction.
+        triton::uint32 getPrefix(void) const;
+
         //! If there is a concrete value recorded, build the appropriate MemoryOperand. Otherwise, perfrom the analysis based on args.
         triton::arch::MemoryOperand popMemoryAccess(triton::__uint=0, triton::uint32 size=0, triton::uint512 value=0);
 
@@ -139,6 +145,9 @@ namespace triton {
 
         //! Sets the type of the instruction.
         void setType(triton::uint32 type);
+
+        //! Sets the prefix of the instruction.
+        void setPrefix(triton::uint32 prefix);
 
         //! Sets the disassembly of the instruction.
         void setDisassembly(std::string str);
@@ -163,6 +172,9 @@ namespace triton {
 
         //! Returns true if at least one of its expressions is tainted.
         bool isTainted(void);
+
+        //! Returns true if the instruction has a prefix.
+        bool isPrefixed(void);
 
         //! Sets flag to define this instruction as branch or not.
         void setBranch(bool flag);

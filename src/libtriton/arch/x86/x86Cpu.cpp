@@ -426,7 +426,7 @@ namespace triton {
 
 
     std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> x86Cpu::getRegisterInformation(triton::uint32 reg) {
-      return triton::arch::x86::regIdToRegInfo(reg);
+      return triton::arch::x86::registerIdToRegisterInformation(reg);
     }
 
 
@@ -500,7 +500,10 @@ namespace triton {
           inst.setDisassembly(str.str());
 
           /* Init the instruction's type */
-          inst.setType(capstoneInstToTritonInst(insn[j].id));
+          inst.setType(capstoneInstructionToTritonInstruction(insn[j].id));
+
+          /* Init the instruction's prefix */
+          inst.setPrefix(capstonePrefixToTritonPrefix(detail->x86.prefix[0]));
 
           /* Init operands */
           for (triton::uint32 n = 0; n < detail->x86.op_count; n++) {
@@ -519,8 +522,8 @@ namespace triton {
                   mem.setPair(std::make_pair(((op->size * BYTE_SIZE_BIT) - 1), 0));
 
                 /* LEA if exists */
-                triton::arch::RegisterOperand base(triton::arch::x86::capstoneRegToTritonReg(op->mem.base));
-                triton::arch::RegisterOperand index(triton::arch::x86::capstoneRegToTritonReg(op->mem.index));
+                triton::arch::RegisterOperand base(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.base));
+                triton::arch::RegisterOperand index(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.index));
                 triton::arch::ImmediateOperand disp(op->mem.disp, op->size);
                 triton::arch::ImmediateOperand scale(op->mem.scale, op->size);
 
@@ -534,7 +537,7 @@ namespace triton {
               }
 
               case triton::extlibs::capstone::X86_OP_REG:
-                inst.operands.push_back(triton::arch::OperandWrapper(inst.getRegisterState(triton::arch::x86::capstoneRegToTritonReg(op->reg))));
+                inst.operands.push_back(triton::arch::OperandWrapper(inst.getRegisterState(triton::arch::x86::capstoneRegisterToTritonRegister(op->reg))));
                 break;
 
               default:

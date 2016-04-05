@@ -23,6 +23,7 @@ namespace triton {
       this->conditionTaken  = false;
       this->controlFlow     = false;
       this->opcodesSize     = 0;
+      this->prefix          = 0;
       this->tid             = 0;
       this->type            = 0;
       std::memset(this->opcodes, 0x00, sizeof(this->opcodes));
@@ -51,6 +52,7 @@ namespace triton {
       this->memoryAccess        = other.memoryAccess;
       this->opcodesSize         = other.opcodesSize;
       this->operands            = other.operands;
+      this->prefix              = other.prefix;
       this->registerState       = other.registerState;
       this->symbolicExpressions = other.symbolicExpressions;
       this->tid                 = other.tid;
@@ -116,6 +118,11 @@ namespace triton {
     }
 
 
+    triton::uint32 Instruction::getPrefix(void) const {
+      return this->prefix;
+    }
+
+
     void Instruction::updateContext(triton::arch::MemoryOperand mem) {
       this->memoryAccess.push_back(mem);
     }
@@ -151,6 +158,11 @@ namespace triton {
 
     void Instruction::setType(triton::uint32 type) {
       this->type = type;
+    }
+
+
+    void Instruction::setPrefix(triton::uint32 prefix) {
+      this->prefix = prefix;
     }
 
 
@@ -195,6 +207,13 @@ namespace triton {
         if ((*it)->isTainted == true)
           return true;
       }
+      return false;
+    }
+
+
+    bool Instruction::isPrefixed(void) {
+      if (this->prefix)
+        return true;
       return false;
     }
 

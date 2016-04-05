@@ -441,14 +441,74 @@ namespace triton {
 
 
         void controlFlow_s(triton::arch::Instruction& inst) {
-          /* Create the semantics */
-          auto node = triton::ast::bv(inst.getAddress() + inst.getOpcodesSize(), triton::api.cpuRegisterBitSize());
+          auto pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC.getParent());
+          auto counter = triton::arch::OperandWrapper(TRITON_X86_REG_CX.getParent());
+          auto zf      = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
-          /* Create symbolic expression */
-          auto expr = triton::api.createSymbolicRegisterExpression(inst, node, TRITON_X86_REG_PC, "Program Counter");
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(counter);
+          auto op2 = triton::api.buildSymbolicOperand(zf);
 
-          /* Spread taint */
-          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_PC, triton::engines::taint::UNTAINTED);
+          switch (inst.getPrefix()) {
+
+            case triton::arch::x86::ID_PREFIX_REP: {
+              /* Create the semantics for PC */
+              auto node1 = triton::ast::ite(
+                       triton::ast::equal(op1, triton::ast::bv(0, counter.getBitSize())),
+                       triton::ast::bv(inst.getAddress() + inst.getOpcodesSize(), pc.getBitSize()),
+                       triton::ast::bv(inst.getAddress(), pc.getBitSize())
+                     );
+
+              /* Create the semantics for Counter */
+              auto node2 = triton::ast::bvsub(op1, triton::ast::bv(1, counter.getBitSize()));
+
+              /* Create symbolic expression */
+              auto expr1 = triton::api.createSymbolicExpression(inst, node1, pc, "Program Counter");
+              auto expr2 = triton::api.createSymbolicExpression(inst, node2, counter, "Counter operation");
+
+              /* Spread taint for PC */
+              expr1->isTainted = triton::api.taintAssignment(pc, counter);
+              expr2->isTainted = triton::api.taintUnion(counter, counter);
+              break;
+            }
+
+            case triton::arch::x86::ID_PREFIX_REPNE: {
+              /* Create the semantics for PC */
+              auto node1 = triton::ast::ite(
+                       triton::ast::lor(
+                         triton::ast::equal(op1, triton::ast::bv(0, counter.getBitSize())),
+                         triton::ast::equal(op2, triton::ast::bvfalse())
+                       ),
+                       triton::ast::bv(inst.getAddress() + inst.getOpcodesSize(), pc.getBitSize()),
+                       triton::ast::bv(inst.getAddress(), pc.getBitSize())
+                     );
+
+              /* Create the semantics for Counter */
+              auto node2 = triton::ast::bvsub(op1, triton::ast::bv(1, counter.getBitSize()));
+
+              /* Create symbolic expression */
+              auto expr1 = triton::api.createSymbolicExpression(inst, node1, pc, "Program Counter");
+              auto expr2 = triton::api.createSymbolicExpression(inst, node2, counter, "Counter operation");
+
+              /* Spread taint */
+              expr1->isTainted = triton::api.taintAssignment(pc, counter);
+              expr2->isTainted = triton::api.taintUnion(counter, counter);
+              break;
+            }
+
+            default: {
+              /* Create the semantics */
+              auto node = triton::ast::bv(inst.getAddress() + inst.getOpcodesSize(), pc.getBitSize());
+
+              /* Create symbolic expression */
+              auto expr = triton::api.createSymbolicRegisterExpression(inst, node, TRITON_X86_REG_PC, "Program Counter");
+
+              /* Spread taint */
+              expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_PC, triton::engines::taint::UNTAINTED);
+              break;
+            }
+
+          }
         }
 
 
