@@ -38,8 +38,8 @@ automate reverse engineering and perform software verification.
   [<a href="http://triton.quarkslab.com/files/sthack2016-rthomas-jsalwan.pdf">slide</a>]<br>
   Abstract: <i>At this presentation we will talk about how a DBA (Dynamic Binary Analysis) may
   help a reverse engineer to reverse obfuscated code. We will first introduce some basic obfuscation
-  techniques and then expose how it's possible to break some stuffs (using our open-source DBA framework
-  - Triton) like detect opaque predicates, reconstruct CFG, find the original algorithm, isolate sensible
+  techniques and then expose how it's possible to break some stuffs (using our open-source DBA framework - Triton) like
+  detect opaque predicates, reconstruct CFG, find the original algorithm, isolate sensible
   data and many more... Then, we will conclude with a demo and few words about our future work.
   </i></li>
 
