@@ -211,6 +211,45 @@ namespace triton {
     }
 
 
+    bool Instruction::isMemoryRead(triton::ast::AbstractNode* root) {
+      std::vector<triton::ast::AbstractNode*>::iterator child;
+      std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
+
+      /* Iterate on all symbolic expressions */
+      if (root == nullptr) {
+        for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
+          root = (*it)->getAst();
+          if (this->isMemoryRead(root) == true)
+            return true;
+        }
+        return false;
+      }
+
+      /* If the node comes from a memory area return true */
+      if (root->getOrigin() & triton::ast::MEMORY_ORIGIN)
+        return true;
+
+      /* Iterate on all sub-trees */
+      for (child = root->getChilds().begin(); child != root->getChilds().end(); child++) {
+        if (this->isMemoryRead(*child) == true)
+          return true;
+      }
+
+      /* Nothing found */
+      return false;
+    }
+
+
+    bool Instruction::isMemoryWrite(void) {
+      std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
+      for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
+        if ((*it)->isMemory() == true)
+          return true;
+      }
+      return false;
+    }
+
+
     bool Instruction::isPrefixed(void) {
       if (this->prefix)
         return true;

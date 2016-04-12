@@ -129,6 +129,12 @@ Returns true if the condition is taken (i.e x86: JCC, CMOVCC, SETCC, ...).
 - **isControlFlow(void)**<br>
 Returns true if the instruction modifies the control flow (i.e x86: JUMP, JCC, CALL, RET).
 
+- **isMemoryRead(void)**<br>
+Returns true if the instruction contains an expression which reads the memory.
+
+- **isMemoryWrite(void)**<br>
+Returns true if the instruction contains an expression which writes into the memory.
+
 - **isPrefixed(void)**<br>
 Returns true if the instruction has a prefix.
 
@@ -454,6 +460,30 @@ namespace triton {
       }
 
 
+      static PyObject* Instruction_isMemoryRead(PyObject* self, PyObject* noarg) {
+        try {
+          if (PyInstruction_AsInstruction(self)->isMemoryRead() == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* Instruction_isMemoryWrite(PyObject* self, PyObject* noarg) {
+        try {
+          if (PyInstruction_AsInstruction(self)->isMemoryWrite() == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* Instruction_isPrefixed(PyObject* self, PyObject* noarg) {
         try {
           if (PyInstruction_AsInstruction(self)->isPrefixed() == true)
@@ -593,6 +623,8 @@ namespace triton {
         {"isBranch",                  Instruction_isBranch,                 METH_NOARGS,     ""},
         {"isConditionTaken",          Instruction_isConditionTaken,         METH_NOARGS,     ""},
         {"isControlFlow",             Instruction_isControlFlow,            METH_NOARGS,     ""},
+        {"isMemoryRead",              Instruction_isMemoryRead,             METH_NOARGS,     ""},
+        {"isMemoryWrite",             Instruction_isMemoryWrite,            METH_NOARGS,     ""},
         {"isPrefixed",                Instruction_isPrefixed,               METH_NOARGS,     ""},
         {"isTainted",                 Instruction_isTainted,                METH_NOARGS,     ""},
         {"setAddress",                Instruction_setAddress,               METH_O,          ""},

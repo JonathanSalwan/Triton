@@ -590,6 +590,7 @@ namespace triton {
       /* Returns an immediate symbolic operand */
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicImmediateOperand(triton::arch::ImmediateOperand& imm) {
         triton::ast::AbstractNode* node = triton::ast::bv(imm.getValue(), imm.getBitSize());
+        node->setOrigin(triton::ast::IMMEDIATE_ORIGIN);
         return node;
       }
 
@@ -643,6 +644,7 @@ namespace triton {
             break;
         }
 
+        tmp->setOrigin(triton::ast::MEMORY_ORIGIN);
         return tmp;
       }
 
@@ -660,6 +662,7 @@ namespace triton {
         else
           op = triton::ast::bv(triton::api.getLastRegisterValue(reg), bvSize);
 
+        op->setOrigin(triton::ast::REGISTER_ORIGIN);
         return op;
       }
 
@@ -674,8 +677,10 @@ namespace triton {
         triton::uint32 writeSize = mem.getSize();
 
         /* Record the aligned memory for a symbolic optimization */
-        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
+        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY)) {
+          node->setOrigin(triton::ast::MEMORY_ORIGIN);
           this->alignedMemoryReference[std::make_pair(address, writeSize)] = node;
+        }
 
         /*
          * As the x86's memory can be accessed without alignment, each byte of the

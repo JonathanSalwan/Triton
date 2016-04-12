@@ -173,6 +173,12 @@ namespace triton {
         //! Returns true if at least one of its expressions is tainted.
         bool isTainted(void);
 
+        //! Returns true if the instruction contains an expression which reads the memory.
+        bool isMemoryRead(triton::ast::AbstractNode* root=nullptr);
+
+        //! Returns true if the instruction contains an expression which writes into the memory.
+        bool isMemoryWrite(void);
+
         //! Returns true if the instruction has a prefix.
         bool isPrefixed(void);
 

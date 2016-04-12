@@ -3,30 +3,115 @@
 ##
 ## Output:
 ##
-##  $ ./disass.py
-##  40000: imul sil
-##          sil:8 bv[7..0]
+## $ python src/examples/python/disass.py
+## 40000: imul sil
+##     ---------------
+##     Is memory read : False
+##     Is memory write: False
+##     ---------------
+##     Operand: sil:8 bv[7..0]
+##     ---------------
+## 40003: imul cx
+##     ---------------
+##     Is memory read : False
+##     Is memory write: False
+##     ---------------
+##     Operand: cx:16 bv[15..0]
+##     ---------------
+## 40006: imul rcx
+##     ---------------
+##     Is memory read : False
+##     Is memory write: False
+##     ---------------
+##     Operand: rcx:64 bv[63..0]
+##     ---------------
+## 40009: imul ecx, ecx, 1
+##     ---------------
+##     Is memory read : False
+##     Is memory write: False
+##     ---------------
+##     Operand: ecx:32 bv[31..0]
+##     ---------------
+##     Operand: ecx:32 bv[31..0]
+##     ---------------
+##     Operand: 0x1:32 bv[31..0]
+##     ---------------
+## 4000c: imul ecx, edx
+##     ---------------
+##     Is memory read : False
+##     Is memory write: False
+##     ---------------
+##     Operand: ecx:32 bv[31..0]
+##     ---------------
+##     Operand: edx:32 bv[31..0]
+##     ---------------
+## 4000f: imul rdx, rcx, 4
+##     ---------------
+##     Is memory read : False
+##     Is memory write: False
+##     ---------------
+##     Operand: rdx:64 bv[63..0]
+##     ---------------
+##     Operand: rcx:64 bv[63..0]
+##     ---------------
+##     Operand: 0x4:64 bv[63..0]
+##     ---------------
 ##
-##  40003: imul cx
-##          cx:16 bv[15..0]
+## 40013: mov byte ptr [rax], 1
+##     ---------------
+##     Is memory read : False
+##     Is memory write: True
+##     ---------------
+##     Operand: *[0x0]:8 bv[7..0]
+##     - base : rax:64 bv[63..0]
+##     - index: unknown:1 bv[0..0]
+##     - scale: 0x1:8 bv[7..0]
+##     - disp : 0x0:8 bv[7..0]
+##     ---------------
+##     Operand: 0x1:8 bv[7..0]
+##     ---------------
 ##
-##  40006: imul rcx
-##          rcx:64 bv[63..0]
+## 40016: mov rdx, qword ptr [rax]
+##     ---------------
+##     Is memory read : True
+##     Is memory write: False
+##     ---------------
+##     Operand: rdx:64 bv[63..0]
+##     ---------------
+##     Operand: *[0x0]:64 bv[63..0]
+##     - base : rax:64 bv[63..0]
+##     - index: unknown:1 bv[0..0]
+##     - scale: 0x1:64 bv[63..0]
+##     - disp : 0x0:64 bv[63..0]
+##     ---------------
 ##
-##  40009: imul ecx, ecx, 1
-##          ecx:32 bv[31..0]
-##          ecx:32 bv[31..0]
-##          0x1:32 bv[31..0]
+## 40019: call rax
+##     ---------------
+##     Is memory read : False
+##     Is memory write: True
+##     ---------------
+##     Operand: rax:64 bv[63..0]
+##     ---------------
 ##
-##  4000c: imul ecx, edx
-##          ecx:32 bv[31..0]
-##          edx:32 bv[31..0]
+## 4001b: ret
+##     ---------------
+##     Is memory read : True
+##     Is memory write: False
+##     ---------------
 ##
-##  4000f: imul rdx, rcx, 4
-##          rdx:64 bv[63..0]
-##          rcx:64 bv[63..0]
-##          0x4:64 bv[63..0]
-##
+## 4001c: add byte ptr [rax], 1
+##     ---------------
+##     Is memory read : True
+##     Is memory write: True
+##     ---------------
+##     Operand: *[0x0]:8 bv[7..0]
+##     - base : rax:64 bv[63..0]
+##     - index: unknown:1 bv[0..0]
+##     - scale: 0x1:8 bv[7..0]
+##     - disp : 0x0:8 bv[7..0]
+##     ---------------
+##     Operand: 0x1:8 bv[7..0]
+##     ---------------
 
 import  sys
 from    triton import *
@@ -39,6 +124,11 @@ code = [
     (0x40009, "\x6b\xc9\x01"),      # imul   ecx,ecx,0x1
     (0x4000c, "\x0f\xaf\xca"),      # imul   ecx,edx
     (0x4000f, "\x48\x6b\xd1\x04"),  # imul   rdx,rcx,0x4
+    (0x40013, "\xC6\x00\x01"),      # mov    BYTE PTR [rax],0x1
+    (0x40016, "\x48\x8B\x10"),      # mov    rdx,QWORD PTR [rax]
+    (0x40019, "\xFF\xD0"),          # call   rax
+    (0x4001b, "\xc3"),              # ret
+    (0x4001c, "\x80\x00\x01"),      # add    BYTE PTR [rax],0x1
 ]
 
 
@@ -63,13 +153,18 @@ if __name__ == '__main__':
 
         # Display instruction
         print inst
+        print '    ---------------'
+        print '    Is memory read :', inst.isMemoryRead()
+        print '    Is memory write:', inst.isMemoryWrite()
+        print '    ---------------'
         for op in inst.getOperands():
-            print '\t', op
+            print '    Operand:', op
             if op.getType() == OPERAND.MEM:
-                print '\t', op.getBaseRegister()
-                print '\t', op.getIndexRegister()
-                print '\t', op.getScale()
-                print '\t', op.getDisplacement()
+                print '    - base :', op.getBaseRegister()
+                print '    - index:', op.getIndexRegister()
+                print '    - scale:', op.getScale()
+                print '    - disp :', op.getDisplacement()
+            print '    ---------------'
 
         print
 

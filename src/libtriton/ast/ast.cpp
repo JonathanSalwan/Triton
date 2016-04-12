@@ -22,6 +22,7 @@ namespace triton {
     AbstractNode::AbstractNode(enum kind_e kind) {
       this->eval        = 0;
       this->kind        = kind;
+      this->origin      = UNDEFINED_ORIGIN;
       this->size        = 0;
       this->symbolized  = false;
     }
@@ -30,6 +31,7 @@ namespace triton {
     AbstractNode::AbstractNode() {
       this->eval        = 0;
       this->kind        = UNDEFINED_NODE;
+      this->origin      = UNDEFINED_ORIGIN;
       this->size        = 0;
       this->symbolized  = false;
     }
@@ -38,6 +40,7 @@ namespace triton {
     AbstractNode::AbstractNode(const AbstractNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -54,6 +57,11 @@ namespace triton {
 
     enum kind_e AbstractNode::getKind(void) {
       return this->kind;
+    }
+
+
+    triton::uint8 AbstractNode::getOrigin(void) {
+      return this->origin;
     }
 
 
@@ -140,6 +148,16 @@ namespace triton {
     }
 
 
+    void AbstractNode::setOrigin(triton::uint8 origin) {
+      this->origin = origin;
+    }
+
+
+    void AbstractNode::addOrigin(triton::uint8 origin) {
+      this->origin |= origin;
+    }
+
+
     /* ====== assert */
 
 
@@ -153,6 +171,7 @@ namespace triton {
     AssertNode::AssertNode(const AssertNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -215,6 +234,7 @@ namespace triton {
     BvaddNode::BvaddNode(const BvaddNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -280,6 +300,7 @@ namespace triton {
     BvandNode::BvandNode(const BvandNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -346,6 +367,7 @@ namespace triton {
     BvashrNode::BvashrNode(const BvashrNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -442,6 +464,7 @@ namespace triton {
     BvdeclNode::BvdeclNode(const BvdeclNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -516,6 +539,7 @@ namespace triton {
     BvlshrNode::BvlshrNode(const BvlshrNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -581,6 +605,7 @@ namespace triton {
     BvmulNode::BvmulNode(const BvmulNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -646,6 +671,7 @@ namespace triton {
     BvnandNode::BvnandNode(const BvnandNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -710,6 +736,7 @@ namespace triton {
     BvnegNode::BvnegNode(const BvnegNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -772,6 +799,7 @@ namespace triton {
     BvnorNode::BvnorNode(const BvnorNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -836,6 +864,7 @@ namespace triton {
     BvnotNode::BvnotNode(const BvnotNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -898,6 +927,7 @@ namespace triton {
     BvorNode::BvorNode(const BvorNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -971,6 +1001,7 @@ namespace triton {
     BvrolNode::BvrolNode(const BvrolNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -1052,6 +1083,7 @@ namespace triton {
     BvrorNode::BvrorNode(const BvrorNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -1124,6 +1156,7 @@ namespace triton {
     BvsdivNode::BvsdivNode(const BvsdivNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -1202,6 +1235,7 @@ namespace triton {
     BvsgeNode::BvsgeNode(const BvsgeNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -1274,6 +1308,7 @@ namespace triton {
     BvsgtNode::BvsgtNode(const BvsgtNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -1346,6 +1381,7 @@ namespace triton {
     BvshlNode::BvshlNode(const BvshlNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -1411,6 +1447,7 @@ namespace triton {
     BvsleNode::BvsleNode(const BvsleNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -1483,6 +1520,7 @@ namespace triton {
     BvsltNode::BvsltNode(const BvsltNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -1555,6 +1593,7 @@ namespace triton {
     BvsmodNode::BvsmodNode(const BvsmodNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -1631,6 +1670,7 @@ namespace triton {
     BvsremNode::BvsremNode(const BvsremNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -1711,6 +1751,7 @@ namespace triton {
     BvsubNode::BvsubNode(const BvsubNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -1776,6 +1817,7 @@ namespace triton {
     BvudivNode::BvudivNode(const BvudivNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -1845,6 +1887,7 @@ namespace triton {
     BvugeNode::BvugeNode(const BvugeNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -1910,6 +1953,7 @@ namespace triton {
     BvugtNode::BvugtNode(const BvugtNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -1975,6 +2019,7 @@ namespace triton {
     BvuleNode::BvuleNode(const BvuleNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -2040,6 +2085,7 @@ namespace triton {
     BvultNode::BvultNode(const BvultNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -2105,6 +2151,7 @@ namespace triton {
     BvuremNode::BvuremNode(const BvuremNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -2174,6 +2221,7 @@ namespace triton {
     BvxnorNode::BvxnorNode(const BvxnorNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -2239,6 +2287,7 @@ namespace triton {
     BvxorNode::BvxorNode(const BvxorNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -2304,6 +2353,7 @@ namespace triton {
     BvNode::BvNode(const BvNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -2381,6 +2431,7 @@ namespace triton {
     CompoundNode::CompoundNode(const CompoundNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -2459,6 +2510,7 @@ namespace triton {
     ConcatNode::ConcatNode(const ConcatNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -2528,6 +2580,7 @@ namespace triton {
 
     DecimalNode::DecimalNode(const DecimalNode& copy) {
       this->kind       = copy.kind;
+      this->origin     = copy.origin;
       this->value      = copy.value;
       this->size       = copy.size;
       this->eval       = copy.eval;
@@ -2582,6 +2635,7 @@ namespace triton {
     DeclareFunctionNode::DeclareFunctionNode(const DeclareFunctionNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -2650,6 +2704,7 @@ namespace triton {
     DistinctNode::DistinctNode(const DistinctNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -2712,6 +2767,7 @@ namespace triton {
     EqualNode::EqualNode(const EqualNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -2775,6 +2831,7 @@ namespace triton {
     ExtractNode::ExtractNode(const ExtractNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -2853,6 +2910,7 @@ namespace triton {
     IteNode::IteNode(const IteNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -2918,6 +2976,7 @@ namespace triton {
     LandNode::LandNode(const LandNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -2981,6 +3040,7 @@ namespace triton {
     LetNode::LetNode(const LetNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -3045,6 +3105,7 @@ namespace triton {
     LnotNode::LnotNode(const LnotNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -3107,6 +3168,7 @@ namespace triton {
     LorNode::LorNode(const LorNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -3167,6 +3229,7 @@ namespace triton {
 
     ReferenceNode::ReferenceNode(const ReferenceNode& copy) {
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->value       = copy.value;
       this->size        = copy.size;
       this->eval        = copy.eval;
@@ -3228,6 +3291,7 @@ namespace triton {
 
     StringNode::StringNode(const StringNode& copy) {
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->value       = copy.value;
       this->size        = copy.size;
       this->eval        = copy.eval;
@@ -3285,6 +3349,7 @@ namespace triton {
     SxNode::SxNode(const SxNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
@@ -3355,6 +3420,7 @@ namespace triton {
 
     VariableNode::VariableNode(const VariableNode& copy) {
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->value       = copy.value;
       this->size        = copy.size;
       this->eval        = copy.eval;
@@ -3418,6 +3484,7 @@ namespace triton {
     ZxNode::ZxNode(const ZxNode& copy) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
+      this->origin      = copy.origin;
       this->parents     = copy.parents;
       this->size        = copy.size;
       this->symbolized  = copy.symbolized;
