@@ -187,6 +187,10 @@ SHR                          |            | Shift Right Unsigned
 STC                          |            | Set Carry Flag
 STD                          |            | Set Direction Flag
 STMXCSR                      | sse1       | Store MXCSR Register State
+STOSB                        |            | Store byte at address
+STOSD                        |            | Store doubleword at address
+STOSQ                        |            | Store quadword at address
+STOSW                        |            | Store word at address
 SUB                          |            | Subtract
 TEST                         |            | Logical Compare
 UNPCKHPD                     | sse2       | Unpack and Interleave High Packed Double- Precision Floating-Point Values
@@ -371,6 +375,10 @@ namespace triton {
             case ID_INS_STC:            triton::arch::x86::semantics::stc_s(inst);        break;
             case ID_INS_STD:            triton::arch::x86::semantics::std_s(inst);        break;
             case ID_INS_STMXCSR:        triton::arch::x86::semantics::stmxcsr_s(inst);    break;
+            case ID_INS_STOSB:          triton::arch::x86::semantics::stosb_s(inst);      break;
+            case ID_INS_STOSD:          triton::arch::x86::semantics::stosd_s(inst);      break;
+            case ID_INS_STOSQ:          triton::arch::x86::semantics::stosq_s(inst);      break;
+            case ID_INS_STOSW:          triton::arch::x86::semantics::stosw_s(inst);      break;
             case ID_INS_SUB:            triton::arch::x86::semantics::sub_s(inst);        break;
             case ID_INS_TEST:           triton::arch::x86::semantics::test_s(inst);       break;
             case ID_INS_UNPCKHPD:       triton::arch::x86::semantics::unpckhpd_s(inst);   break;
@@ -6545,6 +6553,134 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void stosb_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(index);
+          auto op3 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = op1;
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op3, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op2, triton::ast::bv(BYTE_SIZE, index.getBitSize())),
+                         triton::ast::bvsub(op2, triton::ast::bv(BYTE_SIZE, index.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst, "STOSB operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index, "Index operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst, src);
+          expr2->isTainted = triton::api.taintUnion(index, index);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void stosd_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(index);
+          auto op3 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = op1;
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op3, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op2, triton::ast::bv(DWORD_SIZE, index.getBitSize())),
+                         triton::ast::bvsub(op2, triton::ast::bv(DWORD_SIZE, index.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst, "STOSD operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index, "Index operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst, src);
+          expr2->isTainted = triton::api.taintUnion(index, index);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void stosq_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(index);
+          auto op3 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = op1;
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op3, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op2, triton::ast::bv(QWORD_SIZE, index.getBitSize())),
+                         triton::ast::bvsub(op2, triton::ast::bv(QWORD_SIZE, index.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst, "STOSQ operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index, "Index operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst, src);
+          expr2->isTainted = triton::api.taintUnion(index, index);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void stosw_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(index);
+          auto op3 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = op1;
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op3, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op2, triton::ast::bv(WORD_SIZE, index.getBitSize())),
+                         triton::ast::bvsub(op2, triton::ast::bv(WORD_SIZE, index.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst, "STOSW operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index, "Index operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst, src);
+          expr2->isTainted = triton::api.taintUnion(index, index);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);

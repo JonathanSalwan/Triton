@@ -35,6 +35,18 @@ void check(void)
   asm("mov rcx, 5");
   asm("rep lodsq");
 
+  asm("mov rdi, %0" :: "r"(tab1));
+  asm("mov rcx, 2");
+  asm("rep stosb");
+
+  asm("mov rdi, %0" :: "r"(tab1));
+  asm("mov rcx, 2");
+  asm("rep stosd");
+
+  asm("mov rdi, %0" :: "r"(tab1));
+  asm("mov rcx, 2");
+  asm("rep stosq");
+
   asm("mov rax, -1");
   asm("xor al, 0x99");
   asm("xor ax, 0x99");

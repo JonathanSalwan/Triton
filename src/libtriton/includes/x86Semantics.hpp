@@ -630,6 +630,18 @@ namespace triton {
       //! The STMXCSR semantics.
       void stmxcsr_s(triton::arch::Instruction& inst);
 
+      //! The STOSB semantics.
+      void stosb_s(triton::arch::Instruction& inst);
+
+      //! The STOSD semantics.
+      void stosd_s(triton::arch::Instruction& inst);
+
+      //! The STOSQ semantics.
+      void stosq_s(triton::arch::Instruction& inst);
+
+      //! The STOSW semantics.
+      void stosw_s(triton::arch::Instruction& inst);
+
       //! The SUB semantics.
       void sub_s(triton::arch::Instruction& inst);
 
