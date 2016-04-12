@@ -47,6 +47,18 @@ void check(void)
   asm("mov rcx, 2");
   asm("rep stosq");
 
+  asm("mov rdi, %0" :: "r"(tab1));
+  asm("mov rcx, 2");
+  asm("rep scasb");
+
+  asm("mov rdi, %0" :: "r"(tab1));
+  asm("mov rcx, 2");
+  asm("rep scasd");
+
+  asm("mov rdi, %0" :: "r"(tab1));
+  asm("mov rcx, 2");
+  asm("rep scasq");
+
   asm("mov rax, -1");
   asm("xor al, 0x99");
   asm("xor ax, 0x99");

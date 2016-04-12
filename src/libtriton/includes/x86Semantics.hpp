@@ -567,6 +567,18 @@ namespace triton {
       //! The SBB semantics.
       void sbb_s(triton::arch::Instruction& inst);
 
+      //! The SCASB semantics.
+      void scasb_s(triton::arch::Instruction& inst);
+
+      //! The SCASD semantics.
+      void scasd_s(triton::arch::Instruction& inst);
+
+      //! The SCASQ semantics.
+      void scasq_s(triton::arch::Instruction& inst);
+
+      //! The SCASW semantics.
+      void scasw_s(triton::arch::Instruction& inst);
+
       //! The SETA semantics.
       void seta_s(triton::arch::Instruction& inst);
 

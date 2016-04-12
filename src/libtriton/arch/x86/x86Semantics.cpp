@@ -31,8 +31,8 @@ However, feel free to add your own semantics into the [appropriate file](x86Sema
 
 Mnemonic                     | Extensions | Description
 -----------------------------|------------|----------------------------------------------------
-ADD                          |            | Add
 ADC                          |            | Add with Carry
+ADD                          |            | Add
 AND                          |            | Logical AND
 ANDNPD                       | sse2       | Bitwise Logical AND NOT of Packed Double-Precision Floating-Point Values
 ANDNPS                       | sse1       | Bitwise Logical AND NOT of Packed Single-Precision Floating-Point Values
@@ -83,10 +83,10 @@ JGE                          |            | Jump if not less (Jump if not less)
 JL                           |            | Jump if less
 JLE                          |            | Jump if less or equal
 JMP                          |            | Jump
+JNE                          |            | Jump if not equal
 JNO                          |            | Jump if not overflow
 JNP                          |            | Jump if not parity
 JNS                          |            | Jump if not sign
-JNZ                          |            | Jump if not zero
 JO                           |            | Jump if overflow
 JP                           |            | Jump if parity
 JS                           |            | Jump if sign
@@ -99,6 +99,7 @@ LODSD                        |            | Load doubleword at address
 LODSQ                        |            | Load quadword at address
 LODSW                        |            | Load word at address
 MOV                          |            | Move
+MOVABS                       |            | Move
 MOVAPD                       | sse2       | Move Aligned Packed Double-Precision Floating-Point Values
 MOVAPS                       | sse1       | Move Aligned Packed Single-Precision Floating-Point Values
 MOVD                         | mmx/sse2   | Move Doubleword
@@ -126,6 +127,7 @@ MOVQ2DQ                      | sse2       | Move Quadword from MMX Technology to
 MOVUPD                       | see2       | Move Unaligned Packed Double-Precision Floating- Point Values
 MOVUPS                       | see1       | Move Unaligned Packed Single-Precision Floating- Point Values
 MOVSX                        |            | Move with Sign-Extension
+MOVSXD                       |            | Move with Sign-Extension
 MOVZX                        |            | Move with Zero-Extend
 MUL                          |            | Unsigned Multiply
 NEG                          |            | Two's Complement Negation
@@ -166,6 +168,10 @@ ROR                          |            | Rotate Right
 SAL                          |            | Shift Left
 SAR                          |            | Shift Right Signed
 SBB                          |            | Integer Subtraction with Borrow
+SCASB                        |            | Scan byte at address
+SCASD                        |            | Scan doubleword at address
+SCASQ                        |            | Scan quadword at address
+SCASW                        |            | Scan word at address
 SETA                         |            | Set byte if above
 SETAE                        |            | Set byte if above or equal
 SETB                         |            | Set byte if below
@@ -354,6 +360,10 @@ namespace triton {
             case ID_INS_SAL:            triton::arch::x86::semantics::shl_s(inst);        break;
             case ID_INS_SAR:            triton::arch::x86::semantics::sar_s(inst);        break;
             case ID_INS_SBB:            triton::arch::x86::semantics::sbb_s(inst);        break;
+            case ID_INS_SCASB:          triton::arch::x86::semantics::scasb_s(inst);      break;
+            case ID_INS_SCASD:          triton::arch::x86::semantics::scasd_s(inst);      break;
+            case ID_INS_SCASQ:          triton::arch::x86::semantics::scasq_s(inst);      break;
+            case ID_INS_SCASW:          triton::arch::x86::semantics::scasw_s(inst);      break;
             case ID_INS_SETA:           triton::arch::x86::semantics::seta_s(inst);       break;
             case ID_INS_SETAE:          triton::arch::x86::semantics::setae_s(inst);      break;
             case ID_INS_SETB:           triton::arch::x86::semantics::setb_s(inst);       break;
@@ -5950,6 +5960,170 @@ namespace triton {
           triton::arch::x86::semantics::pf_s(inst, expr, dst);
           triton::arch::x86::semantics::sf_s(inst, expr, dst);
           triton::arch::x86::semantics::zf_s(inst, expr, dst);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void scasb_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op3 = triton::api.buildSymbolicOperand(index);
+          auto op4 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::bvsub(op1, op2);
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op4, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op3, triton::ast::bv(BYTE_SIZE, index.getBitSize())),
+                         triton::ast::bvsub(op3, triton::ast::bv(BYTE_SIZE, index.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "SCASB operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index, "Index operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.isTainted(dst) | triton::api.isTainted(src);
+          expr2->isTainted = triton::api.taintUnion(index, index);
+
+          /* Upate symbolic flags */
+          triton::arch::x86::semantics::af_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::cfSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::ofSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::pf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::sf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::zf_s(inst, expr1, dst, true);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void scasd_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op3 = triton::api.buildSymbolicOperand(index);
+          auto op4 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::bvsub(op1, op2);
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op4, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op3, triton::ast::bv(DWORD_SIZE, index.getBitSize())),
+                         triton::ast::bvsub(op3, triton::ast::bv(DWORD_SIZE, index.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "SCASD operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index, "Index operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.isTainted(dst) | triton::api.isTainted(src);
+          expr2->isTainted = triton::api.taintUnion(index, index);
+
+          /* Upate symbolic flags */
+          triton::arch::x86::semantics::af_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::cfSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::ofSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::pf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::sf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::zf_s(inst, expr1, dst, true);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void scasq_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op3 = triton::api.buildSymbolicOperand(index);
+          auto op4 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::bvsub(op1, op2);
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op4, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op3, triton::ast::bv(QWORD_SIZE, index.getBitSize())),
+                         triton::ast::bvsub(op3, triton::ast::bv(QWORD_SIZE, index.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "SCASQ operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index, "Index operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.isTainted(dst) | triton::api.isTainted(src);
+          expr2->isTainted = triton::api.taintUnion(index, index);
+
+          /* Upate symbolic flags */
+          triton::arch::x86::semantics::af_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::cfSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::ofSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::pf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::sf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::zf_s(inst, expr1, dst, true);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void scasw_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op3 = triton::api.buildSymbolicOperand(index);
+          auto op4 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::bvsub(op1, op2);
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op4, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op3, triton::ast::bv(WORD_SIZE, index.getBitSize())),
+                         triton::ast::bvsub(op3, triton::ast::bv(WORD_SIZE, index.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "SCASW operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index, "Index operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.isTainted(dst) | triton::api.isTainted(src);
+          expr2->isTainted = triton::api.taintUnion(index, index);
+
+          /* Upate symbolic flags */
+          triton::arch::x86::semantics::af_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::cfSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::ofSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::pf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::sf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::zf_s(inst, expr1, dst, true);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
