@@ -14,12 +14,6 @@
 #include <pythonUtils.hpp>
 #include <unix.hpp>
 
-#ifdef __unix__
-  #include <python2.7/Python.h>
-#elif _WIN32
-  #include <Python.h>
-#endif
-
 
 
 /*! \page py_SYSCALL_page SYSCALL

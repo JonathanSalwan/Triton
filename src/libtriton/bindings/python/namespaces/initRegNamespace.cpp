@@ -13,12 +13,6 @@
 #include <pythonObjects.hpp>
 #include <x86Specifications.hpp>
 
-#ifdef __unix__
-  #include <python2.7/Python.h>
-#elif _WIN32
-  #include <Python.h>
-#endif
-
 
 
 /*! \page py_REG_page REG

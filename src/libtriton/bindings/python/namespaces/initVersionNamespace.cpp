@@ -12,12 +12,6 @@
 #include <pythonUtils.hpp>
 #include <version.hpp>
 
-#ifdef __unix__
-  #include <python2.7/Python.h>
-#elif _WIN32
-  #include <Python.h>
-#endif
-
 
 
 /*! \page py_VERSION_page VERSION

@@ -12,16 +12,11 @@
 #include <cpuSize.hpp>
 #include <immediateOperand.hpp>
 #include <memoryOperand.hpp>
+#include <pythonBindings.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
 #include <registerOperand.hpp>
-
-#ifdef __unix__
-  #include <python2.7/Python.h>
-#elif _WIN32
-  #include <Python.h>
-#endif
 
 
 

@@ -12,6 +12,7 @@
 
 #ifdef __unix__
   #include <python2.7/Python.h>
+  #include <python2.7/longintrepr.h>
 #elif _WIN32
   #include <Python.h>
 #endif

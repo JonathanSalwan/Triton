@@ -14,11 +14,7 @@
 #include "tritonTypes.hpp"
 
 #ifdef TRITON_PYTHON_BINDINGS
-  #ifdef __unix__
-    #include <python2.7/Python.h>
-  #elif _WIN32
-    #include <Python.h>
-  #endif
+  #include "pythonBindings.hpp"
 #endif
 
 

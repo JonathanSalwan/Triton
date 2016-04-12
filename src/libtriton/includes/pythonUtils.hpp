@@ -10,13 +10,8 @@
 #ifndef TRITON_PYTHONUTILS_H
 #define TRITON PYTHONUTILS_H
 
+#include "pythonBindings.hpp"
 #include "tritonTypes.hpp"
-
-#ifdef __unix__
-  #include <python2.7/Python.h>
-#elif _WIN32
-  #include <Python.h>
-#endif
 
 
 

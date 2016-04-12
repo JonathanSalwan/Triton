@@ -17,16 +17,11 @@
 #include "instruction.hpp"
 #include "memoryOperand.hpp"
 #include "pathConstraint.hpp"
+#include "pythonBindings.hpp"
 #include "registerOperand.hpp"
 #include "solverModel.hpp"
 #include "symbolicExpression.hpp"
 #include "symbolicVariable.hpp"
-
-#ifdef __unix__
-  #include <python2.7/Python.h>
-#elif _WIN32
-  #include <Python.h>
-#endif
 
 
 
