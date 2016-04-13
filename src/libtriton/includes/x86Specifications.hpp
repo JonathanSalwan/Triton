@@ -483,7 +483,12 @@ namespace triton {
       //! Global set of registers.
       extern RegisterOperand* x86_regs[ID_REG_LAST_ITEM];
 
-      //! The list of prefixes.
+      /*! \brief The list of prefixes.
+       *
+       *  \description
+       *  Note that `REP` and `REPE` have the some opcode. The `REP`
+       *  prefix becomes a `REPE` if the instruction modifies `ZF`.
+       */
       enum prefix_e {
         ID_PREFIX_INVALID = 0,  //!< invalid
         ID_PREFIX_LOCK,         //!< LOCK
