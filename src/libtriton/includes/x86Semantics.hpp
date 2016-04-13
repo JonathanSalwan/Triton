@@ -537,6 +537,18 @@ namespace triton {
       //! The PSRLDQ semantics.
       void psrldq_s(triton::arch::Instruction& inst);
 
+      //! The PSUBB semantics.
+      void psubb_s(triton::arch::Instruction& inst);
+
+      //! The PSUBD semantics.
+      void psubd_s(triton::arch::Instruction& inst);
+
+      //! The PSUBQ semantics.
+      void psubq_s(triton::arch::Instruction& inst);
+
+      //! The PSUBW semantics.
+      void psubw_s(triton::arch::Instruction& inst);
+
       //! The PTEST semantics.
       void ptest_s(triton::arch::Instruction& inst);
 

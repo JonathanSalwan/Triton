@@ -157,6 +157,10 @@ POP                          |            | Pop a Value from the Stack
 POR                          | mmx/sse2   | Bitwise Logical OR
 PSLLDQ                       | sse2       | Shift Double Quadword Left Logical
 PSRLDQ                       | sse2       | Shift Double Quadword Right Logical
+PSUBB                        | mmx/sse2   | Subtract packed byte integers
+PSUBD                        | mmx/sse2   | Subtract packed doubleword integers
+PSUBQ                        | mmx/sse2   | Subtract packed quadword integers
+PSUBW                        | mmx/sse2   | Subtract packed word integers
 PTEST                        | sse4.1     | Logical Compare
 PUNPCKHBW                    | mmx,sse2   | Unpack High Data (Unpack and interleave high-order bytes)
 PUNPCKHDQ                    | mmx,sse2   | Unpack High Data (Unpack and interleave high-order doublewords)
@@ -357,6 +361,10 @@ namespace triton {
             case ID_INS_POR:            triton::arch::x86::semantics::por_s(inst);        break;
             case ID_INS_PSLLDQ:         triton::arch::x86::semantics::pslldq_s(inst);     break;
             case ID_INS_PSRLDQ:         triton::arch::x86::semantics::psrldq_s(inst);     break;
+            case ID_INS_PSUBB:          triton::arch::x86::semantics::psubb_s(inst);      break;
+            case ID_INS_PSUBD:          triton::arch::x86::semantics::psubd_s(inst);      break;
+            case ID_INS_PSUBQ:          triton::arch::x86::semantics::psubq_s(inst);      break;
+            case ID_INS_PSUBW:          triton::arch::x86::semantics::psubw_s(inst);      break;
             case ID_INS_PTEST:          triton::arch::x86::semantics::ptest_s(inst);      break;
             case ID_INS_PUNPCKHBW:      triton::arch::x86::semantics::punpckhbw_s(inst);  break;
             case ID_INS_PUNPCKHDQ:      triton::arch::x86::semantics::punpckhdq_s(inst);  break;
@@ -5675,6 +5683,188 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PSRLDQ operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void psubb_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> packed;
+
+          switch (dst.getBitSize()) {
+
+            /* XMM */
+            case DQWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(127, 120, op1), triton::ast::extract(127, 120, op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(119, 112, op1), triton::ast::extract(119, 112, op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(111, 104, op1), triton::ast::extract(111, 104, op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(103, 96,  op1), triton::ast::extract(103, 96,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(95,  88,  op1), triton::ast::extract(95,  88,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(87,  80,  op1), triton::ast::extract(87,  80,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(79,  72,  op1), triton::ast::extract(79,  72,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(71,  64,  op1), triton::ast::extract(71,  64,  op2)));
+
+            /* MMX */
+            case QWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(63,  56,  op1), triton::ast::extract(63,  56,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(55,  48,  op1), triton::ast::extract(55,  48,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(47,  40,  op1), triton::ast::extract(47,  40,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(39,  32,  op1), triton::ast::extract(39,  32,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(31,  24,  op1), triton::ast::extract(31,  24,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(23,  16,  op1), triton::ast::extract(23,  16,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(15,  8,   op1), triton::ast::extract(15,  8,   op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(7,   0,   op1), triton::ast::extract(7,   0,   op2)));
+              break;
+
+            default:
+              throw std::runtime_error("triton::arch::x86::semantics::psubb_s(): Invalid operand size.");
+
+          }
+
+          auto node = triton::ast::concat(packed);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PSUBB operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void psubd_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> packed;
+
+          switch (dst.getBitSize()) {
+
+            /* XMM */
+            case DQWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(127, 96, op1), triton::ast::extract(127, 96, op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(95,  64, op1), triton::ast::extract(95,  64, op2)));
+
+            /* MMX */
+            case QWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(63,  32, op1), triton::ast::extract(63,  32, op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(31,  0,  op1), triton::ast::extract(31,  0,  op2)));
+              break;
+
+            default:
+              throw std::runtime_error("triton::arch::x86::semantics::psubd_s(): Invalid operand size.");
+
+          }
+
+          auto node = triton::ast::concat(packed);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PSUBD operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void psubq_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> packed;
+
+          switch (dst.getBitSize()) {
+
+            /* XMM */
+            case DQWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(127, 64, op1), triton::ast::extract(127, 64, op2)));
+
+            /* MMX */
+            case QWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(63,  0,  op1), triton::ast::extract(63,  0,  op2)));
+              break;
+
+            default:
+              throw std::runtime_error("triton::arch::x86::semantics::psubq_s(): Invalid operand size.");
+
+          }
+
+          auto node = triton::ast::concat(packed);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PSUBQ operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void psubw_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> packed;
+
+          switch (dst.getBitSize()) {
+
+            /* XMM */
+            case DQWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(127, 112, op1), triton::ast::extract(127, 112, op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(111, 96,  op1), triton::ast::extract(111, 96,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(95,  80,  op1), triton::ast::extract(95,  80,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(79,  64,  op1), triton::ast::extract(79,  64,  op2)));
+
+            /* MMX */
+            case QWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(63,  48,  op1), triton::ast::extract(63,  48,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(47,  32,  op1), triton::ast::extract(47,  32,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(31,  16,  op1), triton::ast::extract(31,  16,  op2)));
+              packed.push_back(triton::ast::bvsub(triton::ast::extract(15,  0,   op1), triton::ast::extract(15,  0,   op2)));
+              break;
+
+            default:
+              throw std::runtime_error("triton::arch::x86::semantics::psubw_s(): Invalid operand size.");
+
+          }
+
+          auto node = triton::ast::concat(packed);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PSUBW operation");
 
           /* Spread taint */
           expr->isTainted = triton::api.taintUnion(dst, src);

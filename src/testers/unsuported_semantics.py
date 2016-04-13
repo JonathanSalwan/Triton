@@ -15,7 +15,13 @@ def cbefore(instruction):
         if mnemonic in unsuportedSemantics:
             unsuportedSemantics[mnemonic] += 1
         else:
+            print instruction
             unsuportedSemantics.update({mnemonic: 1})
+    return
+
+
+def cafter(instruction):
+    resetEngines()
     return
 
 
@@ -35,6 +41,7 @@ if __name__ == '__main__':
     setArchitecture(ARCH.X86_64)
     startAnalysisFromEntry()
     addCallback(cbefore, CALLBACK.BEFORE)
+    addCallback(cafter,  CALLBACK.AFTER)
     addCallback(cfini,   CALLBACK.FINI)
     runProgram()
 

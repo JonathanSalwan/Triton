@@ -566,6 +566,22 @@ void check(void)
   asm("punpcklqdq xmm1, xmm2");
   asm("punpcklqdq xmm2, xmm3");
   asm("punpcklqdq xmm3, xmm4");
+
+  asm("psubb xmm3, xmm4");
+  asm("psubb xmm1, xmm2");
+  asm("psubb xmm2, xmm4");
+
+  asm("psubw xmm3, xmm4");
+  asm("psubw xmm1, xmm2");
+  asm("psubw xmm2, xmm4");
+
+  asm("psubd xmm3, xmm4");
+  asm("psubd xmm1, xmm2");
+  asm("psubd xmm2, xmm4");
+
+  asm("psubq xmm3, xmm4");
+  asm("psubq xmm1, xmm2");
+  asm("psubq xmm2, xmm4");
 }
 
 int main(){
