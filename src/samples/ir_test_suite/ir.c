@@ -582,6 +582,22 @@ void check(void)
   asm("psubq xmm3, xmm4");
   asm("psubq xmm1, xmm2");
   asm("psubq xmm2, xmm4");
+
+  asm("paddb xmm3, xmm4");
+  asm("paddb xmm1, xmm2");
+  asm("paddb xmm2, xmm4");
+
+  asm("paddw xmm3, xmm4");
+  asm("paddw xmm1, xmm2");
+  asm("paddw xmm2, xmm4");
+
+  asm("paddd xmm3, xmm4");
+  asm("paddd xmm1, xmm2");
+  asm("paddd xmm2, xmm4");
+
+  asm("paddq xmm3, xmm4");
+  asm("paddq xmm1, xmm2");
+  asm("paddq xmm2, xmm4");
 }
 
 int main(){

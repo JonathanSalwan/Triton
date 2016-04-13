@@ -144,6 +144,10 @@ NOT                          |            | One's Complement Negation
 OR                           |            | Logical Inclusive OR
 ORPD                         | sse2       | Bitwise Logical OR of Double-Precision Floating-Point Values
 ORPS                         | sse1       | Bitwise Logical OR of Single-Precision Floating-Point Values
+PADDB                        | mmx/sse2   | Add packed byte integers
+PADDD                        | mmx/sse2   | Add packed doubleword integers
+PADDQ                        | mmx/sse2   | Add packed quadword integers
+PADDW                        | mmx/sse2   | Add packed word integers
 PAND                         | mmx/sse2   | Logical AND
 PANDN                        | mmx/sse2   | Logical AND NOT
 PCMPEQB                      | mmx/sse2   | Compare Packed Data for Equal (bytes)
@@ -348,6 +352,10 @@ namespace triton {
             case ID_INS_OR:             triton::arch::x86::semantics::or_s(inst);         break;
             case ID_INS_ORPD:           triton::arch::x86::semantics::orpd_s(inst);       break;
             case ID_INS_ORPS:           triton::arch::x86::semantics::orps_s(inst);       break;
+            case ID_INS_PADDB:          triton::arch::x86::semantics::paddb_s(inst);      break;
+            case ID_INS_PADDD:          triton::arch::x86::semantics::paddd_s(inst);      break;
+            case ID_INS_PADDQ:          triton::arch::x86::semantics::paddq_s(inst);      break;
+            case ID_INS_PADDW:          triton::arch::x86::semantics::paddw_s(inst);      break;
             case ID_INS_PAND:           triton::arch::x86::semantics::pand_s(inst);       break;
             case ID_INS_PANDN:          triton::arch::x86::semantics::pandn_s(inst);      break;
             case ID_INS_PCMPEQB:        triton::arch::x86::semantics::pcmpeqb_s(inst);    break;
@@ -5275,6 +5283,188 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "ORPS operation");
 
           /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void paddb_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> packed;
+
+          switch (dst.getBitSize()) {
+
+            /* XMM */
+            case DQWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(127, 120, op1), triton::ast::extract(127, 120, op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(119, 112, op1), triton::ast::extract(119, 112, op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(111, 104, op1), triton::ast::extract(111, 104, op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(103, 96,  op1), triton::ast::extract(103, 96,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(95,  88,  op1), triton::ast::extract(95,  88,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(87,  80,  op1), triton::ast::extract(87,  80,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(79,  72,  op1), triton::ast::extract(79,  72,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(71,  64,  op1), triton::ast::extract(71,  64,  op2)));
+
+            /* MMX */
+            case QWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(63,  56,  op1), triton::ast::extract(63,  56,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(55,  48,  op1), triton::ast::extract(55,  48,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(47,  40,  op1), triton::ast::extract(47,  40,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(39,  32,  op1), triton::ast::extract(39,  32,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(31,  24,  op1), triton::ast::extract(31,  24,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(23,  16,  op1), triton::ast::extract(23,  16,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(15,  8,   op1), triton::ast::extract(15,  8,   op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(7,   0,   op1), triton::ast::extract(7,   0,   op2)));
+              break;
+
+            default:
+              throw std::runtime_error("triton::arch::x86::semantics::paddb_s(): Invalid operand size.");
+
+          }
+
+          auto node = triton::ast::concat(packed);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PADDB operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void paddd_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> packed;
+
+          switch (dst.getBitSize()) {
+
+            /* XMM */
+            case DQWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(127, 96, op1), triton::ast::extract(127, 96, op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(95,  64, op1), triton::ast::extract(95,  64, op2)));
+
+            /* MMX */
+            case QWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(63,  32, op1), triton::ast::extract(63,  32, op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(31,  0,  op1), triton::ast::extract(31,  0,  op2)));
+              break;
+
+            default:
+              throw std::runtime_error("triton::arch::x86::semantics::paddd_s(): Invalid operand size.");
+
+          }
+
+          auto node = triton::ast::concat(packed);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PADDD operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void paddq_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> packed;
+
+          switch (dst.getBitSize()) {
+
+            /* XMM */
+            case DQWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(127, 64, op1), triton::ast::extract(127, 64, op2)));
+
+            /* MMX */
+            case QWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(63,  0,  op1), triton::ast::extract(63,  0,  op2)));
+              break;
+
+            default:
+              throw std::runtime_error("triton::arch::x86::semantics::paddq_s(): Invalid operand size.");
+
+          }
+
+          auto node = triton::ast::concat(packed);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PADDQ operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void paddw_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> packed;
+
+          switch (dst.getBitSize()) {
+
+            /* XMM */
+            case DQWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(127, 112, op1), triton::ast::extract(127, 112, op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(111, 96,  op1), triton::ast::extract(111, 96,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(95,  80,  op1), triton::ast::extract(95,  80,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(79,  64,  op1), triton::ast::extract(79,  64,  op2)));
+
+            /* MMX */
+            case QWORD_SIZE_BIT:
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(63,  48,  op1), triton::ast::extract(63,  48,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(47,  32,  op1), triton::ast::extract(47,  32,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(31,  16,  op1), triton::ast::extract(31,  16,  op2)));
+              packed.push_back(triton::ast::bvadd(triton::ast::extract(15,  0,   op1), triton::ast::extract(15,  0,   op2)));
+              break;
+
+            default:
+              throw std::runtime_error("triton::arch::x86::semantics::paddw_s(): Invalid operand size.");
+
+          }
+
+          auto node = triton::ast::concat(packed);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PADDW operation");
+
+          /* Spread taint */
           expr->isTainted = triton::api.taintUnion(dst, src);
 
           /* Upate the symbolic control flow */
