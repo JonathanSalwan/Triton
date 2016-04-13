@@ -50,6 +50,7 @@ namespace triton {
         PyDict_SetItemString(triton::bindings::python::prefixesDict, "INVALID", PyLong_FromUint(triton::arch::x86::ID_PREFIX_INVALID));
         PyDict_SetItemString(triton::bindings::python::prefixesDict, "LOCK",    PyLong_FromUint(triton::arch::x86::ID_PREFIX_LOCK));
         PyDict_SetItemString(triton::bindings::python::prefixesDict, "REP",     PyLong_FromUint(triton::arch::x86::ID_PREFIX_REP));
+        PyDict_SetItemString(triton::bindings::python::prefixesDict, "REPE",    PyLong_FromUint(triton::arch::x86::ID_PREFIX_REPE));
         PyDict_SetItemString(triton::bindings::python::prefixesDict, "REPNE",   PyLong_FromUint(triton::arch::x86::ID_PREFIX_REPNE));
       }
 

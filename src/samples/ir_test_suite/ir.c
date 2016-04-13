@@ -59,6 +59,21 @@ void check(void)
   asm("mov rcx, 2");
   asm("rep scasq");
 
+  asm("mov rdi, %0" :: "r"(tab1));
+  asm("mov rsi, %0" :: "r"(tab2));
+  asm("mov rcx, 3");
+  asm("rep cmpsb");
+
+  asm("mov rdi, %0" :: "r"(tab2));
+  asm("mov rsi, %0" :: "r"(tab3));
+  asm("mov rcx, 3");
+  asm("rep cmpsd");
+
+  asm("mov rdi, %0" :: "r"(tab2));
+  asm("mov rsi, %0" :: "r"(tab2));
+  asm("mov rcx, 3");
+  asm("rep cmpsq");
+
   asm("mov rax, -1");
   asm("xor al, 0x99");
   asm("xor ax, 0x99");

@@ -258,6 +258,18 @@ namespace triton {
       //! The CMP semantics.
       void cmp_s(triton::arch::Instruction& inst);
 
+      //! The CMPSB semantics.
+      void cmpsb_s(triton::arch::Instruction& inst);
+
+      //! The CMPSD semantics.
+      void cmpsd_s(triton::arch::Instruction& inst);
+
+      //! The CMPSQ semantics.
+      void cmpsq_s(triton::arch::Instruction& inst);
+
+      //! The CMPSW semantics.
+      void cmpsw_s(triton::arch::Instruction& inst);
+
       //! The CMPXCHG semantics.
       void cmpxchg_s(triton::arch::Instruction& inst);
 

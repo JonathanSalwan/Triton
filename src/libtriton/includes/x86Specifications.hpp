@@ -487,7 +487,8 @@ namespace triton {
       enum prefix_e {
         ID_PREFIX_INVALID = 0,  //!< invalid
         ID_PREFIX_LOCK,         //!< LOCK
-        ID_PREFIX_REP,          //!< REP (Note that REP and REPE have the same opcode)
+        ID_PREFIX_REP,          //!< REP
+        ID_PREFIX_REPE,         //!< REPE
         ID_PREFIX_REPNE,        //!< REPNE
 
         /* Must be the last item */

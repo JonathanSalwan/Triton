@@ -64,6 +64,10 @@ CMOVO                        |            | Move if overflow
 CMOVP                        |            | Move if parity
 CMOVS                        |            | Move if sign
 CMP                          |            | Compare Two Operands
+CMPSB                        |            | Compare byte at address
+CMPSD                        |            | Compare doubleword at address
+CMPSQ                        |            | Compare quadword at address
+CMPSW                        |            | Compare word at address
 CMPXCHG                      |            | Compare and Exchange
 CMPXCHG8B                    |            | Compare and Exchange 8 Bytes
 CQO                          |            | convert qword (rax) to oword (rdx:rax)
@@ -256,6 +260,10 @@ namespace triton {
             case ID_INS_CMOVP:          triton::arch::x86::semantics::cmovp_s(inst);      break;
             case ID_INS_CMOVS:          triton::arch::x86::semantics::cmovs_s(inst);      break;
             case ID_INS_CMP:            triton::arch::x86::semantics::cmp_s(inst);        break;
+            case ID_INS_CMPSB:          triton::arch::x86::semantics::cmpsb_s(inst);      break;
+            case ID_INS_CMPSD:          triton::arch::x86::semantics::cmpsd_s(inst);      break;
+            case ID_INS_CMPSQ:          triton::arch::x86::semantics::cmpsq_s(inst);      break;
+            case ID_INS_CMPSW:          triton::arch::x86::semantics::cmpsw_s(inst);      break;
             case ID_INS_CMPXCHG:        triton::arch::x86::semantics::cmpxchg_s(inst);    break;
             case ID_INS_CMPXCHG8B:      triton::arch::x86::semantics::cmpxchg8b_s(inst);  break;
             case ID_INS_CQO:            triton::arch::x86::semantics::cqo_s(inst);        break;
@@ -493,6 +501,30 @@ namespace triton {
               auto expr2 = triton::api.createSymbolicExpression(inst, node2, pc, "Program Counter");
 
               /* Spread taint for PC */
+              expr1->isTainted = triton::api.taintUnion(counter, counter);
+              expr2->isTainted = triton::api.taintAssignment(pc, counter);
+              break;
+            }
+
+            case triton::arch::x86::ID_PREFIX_REPE: {
+              /* Create the semantics for Counter */
+              auto node1 = triton::ast::bvsub(op1, triton::ast::bv(1, counter.getBitSize()));
+
+              /* Create the semantics for PC */
+              auto node2 = triton::ast::ite(
+                       triton::ast::lor(
+                         triton::ast::equal(node1, triton::ast::bv(0, counter.getBitSize())),
+                         triton::ast::equal(op2, triton::ast::bvfalse())
+                       ),
+                       triton::ast::bv(inst.getAddress() + inst.getOpcodesSize(), pc.getBitSize()),
+                       triton::ast::bv(inst.getAddress(), pc.getBitSize())
+                     );
+
+              /* Create symbolic expression */
+              auto expr1 = triton::api.createSymbolicExpression(inst, node1, counter, "Counter operation");
+              auto expr2 = triton::api.createSymbolicExpression(inst, node2, pc, "Program Counter");
+
+              /* Spread taint */
               expr1->isTainted = triton::api.taintUnion(counter, counter);
               expr2->isTainted = triton::api.taintAssignment(pc, counter);
               break;
@@ -2604,6 +2636,222 @@ namespace triton {
           triton::arch::x86::semantics::pf_s(inst, expr, dst, true);
           triton::arch::x86::semantics::sf_s(inst, expr, dst, true);
           triton::arch::x86::semantics::zf_s(inst, expr, dst, true);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void cmpsb_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+          auto index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* If the REP prefix is defined, convert REP into REPE */
+          if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
+            inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op3 = triton::api.buildSymbolicOperand(index1);
+          auto op4 = triton::api.buildSymbolicOperand(index2);
+          auto op5 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::bvsub(op1, op2);
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op5, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op3, triton::ast::bv(BYTE_SIZE, index1.getBitSize())),
+                         triton::ast::bvsub(op3, triton::ast::bv(BYTE_SIZE, index1.getBitSize()))
+                       );
+          auto node3 = triton::ast::ite(
+                         triton::ast::equal(op5, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op4, triton::ast::bv(BYTE_SIZE, index2.getBitSize())),
+                         triton::ast::bvsub(op4, triton::ast::bv(BYTE_SIZE, index2.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "CMPSB operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index1, "Index (SI) operation");
+          auto expr3 = triton::api.createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.isTainted(dst) | triton::api.isTainted(src);
+          expr2->isTainted = triton::api.taintUnion(index1, index1);
+          expr3->isTainted = triton::api.taintUnion(index2, index2);
+
+          /* Upate symbolic flags */
+          triton::arch::x86::semantics::af_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::cfSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::ofSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::pf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::sf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::zf_s(inst, expr1, dst, true);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void cmpsd_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+          auto index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* If the REP prefix is defined, convert REP into REPE */
+          if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
+            inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op3 = triton::api.buildSymbolicOperand(index1);
+          auto op4 = triton::api.buildSymbolicOperand(index2);
+          auto op5 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::bvsub(op1, op2);
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op5, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op3, triton::ast::bv(DWORD_SIZE, index1.getBitSize())),
+                         triton::ast::bvsub(op3, triton::ast::bv(DWORD_SIZE, index1.getBitSize()))
+                       );
+          auto node3 = triton::ast::ite(
+                         triton::ast::equal(op5, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op4, triton::ast::bv(DWORD_SIZE, index2.getBitSize())),
+                         triton::ast::bvsub(op4, triton::ast::bv(DWORD_SIZE, index2.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "CMPSD operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index1, "Index (SI) operation");
+          auto expr3 = triton::api.createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.isTainted(dst) | triton::api.isTainted(src);
+          expr2->isTainted = triton::api.taintUnion(index1, index1);
+          expr3->isTainted = triton::api.taintUnion(index2, index2);
+
+          /* Upate symbolic flags */
+          triton::arch::x86::semantics::af_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::cfSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::ofSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::pf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::sf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::zf_s(inst, expr1, dst, true);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void cmpsq_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+          auto index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* If the REP prefix is defined, convert REP into REPE */
+          if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
+            inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op3 = triton::api.buildSymbolicOperand(index1);
+          auto op4 = triton::api.buildSymbolicOperand(index2);
+          auto op5 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::bvsub(op1, op2);
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op5, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op3, triton::ast::bv(QWORD_SIZE, index1.getBitSize())),
+                         triton::ast::bvsub(op3, triton::ast::bv(QWORD_SIZE, index1.getBitSize()))
+                       );
+          auto node3 = triton::ast::ite(
+                         triton::ast::equal(op5, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op4, triton::ast::bv(QWORD_SIZE, index2.getBitSize())),
+                         triton::ast::bvsub(op4, triton::ast::bv(QWORD_SIZE, index2.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "CMPSQ operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index1, "Index (SI) operation");
+          auto expr3 = triton::api.createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.isTainted(dst) | triton::api.isTainted(src);
+          expr2->isTainted = triton::api.taintUnion(index1, index1);
+          expr3->isTainted = triton::api.taintUnion(index2, index2);
+
+          /* Upate symbolic flags */
+          triton::arch::x86::semantics::af_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::cfSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::ofSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::pf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::sf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::zf_s(inst, expr1, dst, true);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void cmpsw_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+          auto index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* If the REP prefix is defined, convert REP into REPE */
+          if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
+            inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op3 = triton::api.buildSymbolicOperand(index1);
+          auto op4 = triton::api.buildSymbolicOperand(index2);
+          auto op5 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::bvsub(op1, op2);
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op5, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op3, triton::ast::bv(WORD_SIZE, index1.getBitSize())),
+                         triton::ast::bvsub(op3, triton::ast::bv(WORD_SIZE, index1.getBitSize()))
+                       );
+          auto node3 = triton::ast::ite(
+                         triton::ast::equal(op5, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op4, triton::ast::bv(WORD_SIZE, index2.getBitSize())),
+                         triton::ast::bvsub(op4, triton::ast::bv(WORD_SIZE, index2.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "CMPSW operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index1, "Index (SI) operation");
+          auto expr3 = triton::api.createSymbolicExpression(inst, node3, index2, "Index (DI) operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.isTainted(dst) | triton::api.isTainted(src);
+          expr2->isTainted = triton::api.taintUnion(index1, index1);
+          expr3->isTainted = triton::api.taintUnion(index2, index2);
+
+          /* Upate symbolic flags */
+          triton::arch::x86::semantics::af_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::cfSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::ofSub_s(inst, expr1, dst, op1, op2, true);
+          triton::arch::x86::semantics::pf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::sf_s(inst, expr1, dst, true);
+          triton::arch::x86::semantics::zf_s(inst, expr1, dst, true);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
@@ -5972,6 +6220,10 @@ namespace triton {
           auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
+          /* If the REP prefix is defined, convert REP into REPE */
+          if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
+            inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
+
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
@@ -6012,6 +6264,10 @@ namespace triton {
           auto src    = inst.operands[1];
           auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* If the REP prefix is defined, convert REP into REPE */
+          if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
+            inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(dst);
@@ -6054,6 +6310,10 @@ namespace triton {
           auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
+          /* If the REP prefix is defined, convert REP into REPE */
+          if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
+            inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
+
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(dst);
           auto op2 = triton::api.buildSymbolicOperand(src);
@@ -6094,6 +6354,10 @@ namespace triton {
           auto src    = inst.operands[1];
           auto index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* If the REP prefix is defined, convert REP into REPE */
+          if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
+            inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(dst);
