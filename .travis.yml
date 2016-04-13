@@ -1,5 +1,8 @@
-language:
-  - cpp
+language: cpp
+
+compiler:
+    - gcc
+    - clang
 
 notifications:
   email: false
@@ -7,21 +10,23 @@ notifications:
 sudo: required
 
 cache:
-- apt
-- ccache
+  - apt
+  - ccache
 
 addons:
   apt:
     sources:
-    - ubuntu-toolchain-r-test
-    - boost-latest
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.5
+      - boost-latest
     packages:
-    - gcc-4.9
-    - g++-4.9
-    - ccache
-    - python2-dev
-    - libboost1.55-all-dev
-    - cmake
+      - gcc-4.9
+      - g++-4.9
+      - clang-3.5
+      - ccache
+      - libpython2.7
+      - libboost1.55-all-dev
+      - cmake
 
 env:
   - PYTHON_VERSION=2.7
@@ -31,8 +36,10 @@ before_install:
   - sudo apt-get update -q
   - sudo apt-get install -y libz3-dev
   - sudo apt-get install python-setuptools
-  - export CC="gcc-4.9"
-  - export CXX="g++-4.9"
+  - if [ "$CC" = "gcc" ]; then export CC="gcc-4.9"; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9"; fi
+  - if [ "$CC" = "clang" ]; then export CC="clang-3.5"; fi
+  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.5"; fi
   # Back to /home/travis/build/JonathanSalwan
   - cd ..
   # Install capstone

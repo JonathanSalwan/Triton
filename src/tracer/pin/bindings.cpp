@@ -132,20 +132,20 @@ namespace tracer {
 
         try {
           if (PyMemoryOperand_Check(mem))
-            triton::bindings::python::PyLong_FromUint512(tracer::pintool::context::getCurrentMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem)));
+            return triton::bindings::python::PyLong_FromUint512(tracer::pintool::context::getCurrentMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem)));
           else if (size != nullptr) {
-            triton::bindings::python::PyLong_FromUint512(tracer::pintool::context::getCurrentMemoryValue(triton::bindings::python::PyLong_AsUint(mem), triton::bindings::python::PyLong_AsUint(size)));
+            return triton::bindings::python::PyLong_FromUint512(tracer::pintool::context::getCurrentMemoryValue(triton::bindings::python::PyLong_AsUint(mem), triton::bindings::python::PyLong_AsUint(size)));
           }
           else
-            triton::bindings::python::PyLong_FromUint512(tracer::pintool::context::getCurrentMemoryValue(triton::bindings::python::PyLong_AsUint(mem)));
+            return triton::bindings::python::PyLong_FromUint512(tracer::pintool::context::getCurrentMemoryValue(triton::bindings::python::PyLong_AsUint(mem)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
       }
-      else
-        return PyErr_Format(PyExc_TypeError, "tracer::pintool::getCurrentMemoryValue(): Expected a Memory as first argument.");
+
+      return PyErr_Format(PyExc_TypeError, "tracer::pintool::getCurrentMemoryValue(): Expected a Memory as first argument.");
     }
 
 
