@@ -20,11 +20,11 @@
 \section SMT_Semantics_Supported_description Description
 <hr>
 
-Here is the instructions' list of what **Triton** can converts into \ref py_ast_page.
-These semantics are based on the [Medusa's semantics](https://github.com/wisk/medusa/blob/dev/arch/x86.yaml).
-Please note that our main objective is not to support all semantics right now, we are currently focusing on
-the design of **Triton**'s engines. When engines will be reliable, we will write the last semantics :-).
-However, feel free to add your own semantics into the [appropriate file](x86Semantics_8cpp_source.html).
+Here is the instructions' list of what **Triton** can convert into \ref py_ast_page. Please note that our main
+objective is not to support all semantics right now, we are currently focusing on the design of **Triton**'s
+engines. When engines will be reliable, we will write the last semantics :-). However, feel free to add your
+own semantics into the [appropriate file](x86Semantics_8cpp_source.html). Thanks to `wisk` and his
+[Medusa project](https://github.com/wisk/medusa/blob/dev/arch/x86.yaml) which has been really useful.
 
 \subsection SMT_Semantics_Supported_x86 x86 and x86-64 SMT semantics supported
 
@@ -124,14 +124,18 @@ MOVNTI                       | sse2       | Store Doubleword Using Non-Temporal 
 MOVNTPD                      | sse2       | Store Packed Double-Precision Floating-Point Values Using Non-Temporal Hint
 MOVNTPS                      | sse1       | Store Packed Single-Precision Floating-Point Values Using Non-Temporal Hint
 MOVNTQ                       | sse1       | Store of Quadword Using Non-Temporal Hint
-MOVSHDUP                     | sse3       | Move Packed Single-FP High and Duplicate
-MOVSLDUP                     | sse3       | Move Packed Single-FP Low and Duplicate
 MOVQ                         | mmx/sse2   | Move Quadword
 MOVQ2DQ                      | sse2       | Move Quadword from MMX Technology to XMM Register
-MOVUPD                       | see2       | Move Unaligned Packed Double-Precision Floating- Point Values
-MOVUPS                       | see1       | Move Unaligned Packed Single-Precision Floating- Point Values
+MOVSB                        |            | Move byte at address
+MOVSD                        |            | Move doubleword at address
+MOVSHDUP                     | sse3       | Move Packed Single-FP High and Duplicate
+MOVSLDUP                     | sse3       | Move Packed Single-FP Low and Duplicate
+MOVSQ                        |            | Move quadword at address
+MOVSW                        |            | Move word at address
 MOVSX                        |            | Move with Sign-Extension
 MOVSXD                       |            | Move with Sign-Extension
+MOVUPD                       | see2       | Move Unaligned Packed Double-Precision Floating- Point Values
+MOVUPS                       | see1       | Move Unaligned Packed Single-Precision Floating- Point Values
 MOVZX                        |            | Move with Zero-Extend
 MUL                          |            | Unsigned Multiply
 NEG                          |            | Two's Complement Negation
@@ -320,14 +324,18 @@ namespace triton {
             case ID_INS_MOVNTPD:        triton::arch::x86::semantics::movntpd_s(inst);    break;
             case ID_INS_MOVNTPS:        triton::arch::x86::semantics::movntps_s(inst);    break;
             case ID_INS_MOVNTQ:         triton::arch::x86::semantics::movntq_s(inst);     break;
+            case ID_INS_MOVQ2DQ:        triton::arch::x86::semantics::movq2dq_s(inst);    break;
+            case ID_INS_MOVQ:           triton::arch::x86::semantics::movq_s(inst);       break;
+            case ID_INS_MOVSB:          triton::arch::x86::semantics::movsb_s(inst);      break;
+            case ID_INS_MOVSD:          triton::arch::x86::semantics::movsd_s(inst);      break;
             case ID_INS_MOVSHDUP:       triton::arch::x86::semantics::movshdup_s(inst);   break;
             case ID_INS_MOVSLDUP:       triton::arch::x86::semantics::movsldup_s(inst);   break;
-            case ID_INS_MOVQ:           triton::arch::x86::semantics::movq_s(inst);       break;
-            case ID_INS_MOVQ2DQ:        triton::arch::x86::semantics::movq2dq_s(inst);    break;
-            case ID_INS_MOVUPD:         triton::arch::x86::semantics::movupd_s(inst);     break;
-            case ID_INS_MOVUPS:         triton::arch::x86::semantics::movups_s(inst);     break;
+            case ID_INS_MOVSQ:          triton::arch::x86::semantics::movsq_s(inst);      break;
+            case ID_INS_MOVSW:          triton::arch::x86::semantics::movsw_s(inst);      break;
             case ID_INS_MOVSX:          triton::arch::x86::semantics::movsx_s(inst);      break;
             case ID_INS_MOVSXD:         triton::arch::x86::semantics::movsxd_s(inst);     break;
+            case ID_INS_MOVUPD:         triton::arch::x86::semantics::movupd_s(inst);     break;
+            case ID_INS_MOVUPS:         triton::arch::x86::semantics::movups_s(inst);     break;
             case ID_INS_MOVZX:          triton::arch::x86::semantics::movzx_s(inst);      break;
             case ID_INS_MUL:            triton::arch::x86::semantics::mul_s(inst);        break;
             case ID_INS_NEG:            triton::arch::x86::semantics::neg_s(inst);        break;
@@ -4763,6 +4771,88 @@ namespace triton {
         }
 
 
+        void movsb_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(index1);
+          auto op3 = triton::api.buildSymbolicOperand(index2);
+          auto op4 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = op1;
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op4, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op2, triton::ast::bv(BYTE_SIZE, index1.getBitSize())),
+                         triton::ast::bvsub(op2, triton::ast::bv(BYTE_SIZE, index1.getBitSize()))
+                       );
+          auto node3 = triton::ast::ite(
+                         triton::ast::equal(op4, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op3, triton::ast::bv(BYTE_SIZE, index2.getBitSize())),
+                         triton::ast::bvsub(op3, triton::ast::bv(BYTE_SIZE, index2.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst, "MOVSB operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index1, "Index (DI) operation");
+          auto expr3 = triton::api.createSymbolicExpression(inst, node3, index2, "Index (SI) operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst, src);
+          expr2->isTainted = triton::api.taintUnion(index1, index1);
+          expr3->isTainted = triton::api.taintUnion(index2, index2);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void movsd_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(index1);
+          auto op3 = triton::api.buildSymbolicOperand(index2);
+          auto op4 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = op1;
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op4, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op2, triton::ast::bv(DWORD_SIZE, index1.getBitSize())),
+                         triton::ast::bvsub(op2, triton::ast::bv(DWORD_SIZE, index1.getBitSize()))
+                       );
+          auto node3 = triton::ast::ite(
+                         triton::ast::equal(op4, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op3, triton::ast::bv(DWORD_SIZE, index2.getBitSize())),
+                         triton::ast::bvsub(op3, triton::ast::bv(DWORD_SIZE, index2.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst, "MOVSD operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index1, "Index (DI) operation");
+          auto expr3 = triton::api.createSymbolicExpression(inst, node3, index2, "Index (SI) operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst, src);
+          expr2->isTainted = triton::api.taintUnion(index1, index1);
+          expr3->isTainted = triton::api.taintUnion(index2, index2);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
         void movupd_s(triton::arch::Instruction& inst) {
           auto dst = inst.operands[0];
           auto src = inst.operands[1];
@@ -4793,6 +4883,88 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void movsq_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(index1);
+          auto op3 = triton::api.buildSymbolicOperand(index2);
+          auto op4 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = op1;
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op4, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op2, triton::ast::bv(QWORD_SIZE, index1.getBitSize())),
+                         triton::ast::bvsub(op2, triton::ast::bv(QWORD_SIZE, index1.getBitSize()))
+                       );
+          auto node3 = triton::ast::ite(
+                         triton::ast::equal(op4, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op3, triton::ast::bv(QWORD_SIZE, index2.getBitSize())),
+                         triton::ast::bvsub(op3, triton::ast::bv(QWORD_SIZE, index2.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst, "MOVSQ operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index1, "Index (DI) operation");
+          auto expr3 = triton::api.createSymbolicExpression(inst, node3, index2, "Index (SI) operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst, src);
+          expr2->isTainted = triton::api.taintUnion(index1, index1);
+          expr3->isTainted = triton::api.taintUnion(index2, index2);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void movsw_s(triton::arch::Instruction& inst) {
+          auto dst    = inst.operands[0];
+          auto src    = inst.operands[1];
+          auto index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+          auto index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+          auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(index1);
+          auto op3 = triton::api.buildSymbolicOperand(index2);
+          auto op4 = triton::api.buildSymbolicOperand(df);
+
+          /* Create the semantics */
+          auto node1 = op1;
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(op4, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op2, triton::ast::bv(WORD_SIZE, index1.getBitSize())),
+                         triton::ast::bvsub(op2, triton::ast::bv(WORD_SIZE, index1.getBitSize()))
+                       );
+          auto node3 = triton::ast::ite(
+                         triton::ast::equal(op4, triton::ast::bvfalse()),
+                         triton::ast::bvadd(op3, triton::ast::bv(WORD_SIZE, index2.getBitSize())),
+                         triton::ast::bvsub(op3, triton::ast::bv(WORD_SIZE, index2.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst, "MOVSW operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, index1, "Index (DI) operation");
+          auto expr3 = triton::api.createSymbolicExpression(inst, node3, index2, "Index (SI) operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst, src);
+          expr2->isTainted = triton::api.taintUnion(index1, index1);
+          expr3->isTainted = triton::api.taintUnion(index2, index2);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
