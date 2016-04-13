@@ -32,6 +32,7 @@ According to the CPU architecture, the PREFIX namespace contains all kinds of in
 - **PREFIX.INVALID**<br>
 - **PREFIX.LOCK**<br>
 - **PREFIX.REP**<br>
+- **PREFIX.REPE**<br>
 - **PREFIX.REPNE**<br>
 
 */
