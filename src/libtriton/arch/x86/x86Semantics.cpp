@@ -3290,7 +3290,7 @@ namespace triton {
                   auto expr1 = triton::api.createSymbolicExpression(inst, triton::ast::extract(WORD_SIZE_BIT-1, 0, node), ax, "IMUL operation");
                   auto expr2 = triton::api.createSymbolicExpression(inst, triton::ast::extract(DWORD_SIZE_BIT-1, WORD_SIZE_BIT, node), dx, "IMUL operation");
                   expr1->isTainted = triton::api.taintUnion(ax, src);
-                  expr2->isTainted = triton::api.taintUnion(dx, src);
+                  expr2->isTainted = triton::api.taintUnion(dx, ax);
                   triton::arch::x86::semantics::cfImul_s(inst, expr1, ax, triton::ast::bvmul(op1, op2), node);
                   triton::arch::x86::semantics::ofImul_s(inst, expr1, ax, triton::ast::bvmul(op1, op2), node);
                   break;
@@ -3306,7 +3306,7 @@ namespace triton {
                   auto expr1 = triton::api.createSymbolicExpression(inst, triton::ast::extract(DWORD_SIZE_BIT-1, 0, node), eax, "IMUL operation");
                   auto expr2 = triton::api.createSymbolicExpression(inst, triton::ast::extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, node), edx, "IMUL operation");
                   expr1->isTainted = triton::api.taintUnion(eax, src);
-                  expr2->isTainted = triton::api.taintUnion(edx, src);
+                  expr2->isTainted = triton::api.taintUnion(edx, eax);
                   triton::arch::x86::semantics::cfImul_s(inst, expr1, eax, triton::ast::bvmul(op1, op2), node);
                   triton::arch::x86::semantics::ofImul_s(inst, expr1, eax, triton::ast::bvmul(op1, op2), node);
                   break;
@@ -3322,7 +3322,7 @@ namespace triton {
                   auto expr1 = triton::api.createSymbolicExpression(inst, triton::ast::extract(QWORD_SIZE_BIT-1, 0, node), rax, "IMUL operation");
                   auto expr2 = triton::api.createSymbolicExpression(inst, triton::ast::extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, node), rdx, "IMUL operation");
                   expr1->isTainted = triton::api.taintUnion(rax, src);
-                  expr2->isTainted = triton::api.taintUnion(rdx, src);
+                  expr2->isTainted = triton::api.taintUnion(rdx, rax);
                   triton::arch::x86::semantics::cfImul_s(inst, expr1, rax, triton::ast::bvmul(op1, op2), node);
                   triton::arch::x86::semantics::ofImul_s(inst, expr1, rax, triton::ast::bvmul(op1, op2), node);
                   break;
