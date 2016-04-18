@@ -96,9 +96,6 @@ Returns the next address of the instruction as integer.
 - **getOpcodes(void)**<br>
 Returns the opcodes of the instruction as bytes.
 
-- **getOpcodesSize(void)**<br>
-Returns the opcodes size of the instruction as integer.
-
 - **getOperands(void)**<br>
 Returns the operands of the instruction as list of \ref py_Immediate_page, \ref py_Memory_page or \ref py_Register_page.
 
@@ -107,6 +104,9 @@ Returns the instruction prefix as \ref py_PREFIX_page.
 
 - **getSecondOperand(void)**<br>
 Returns the second operand of the instruction.
+
+- **getSize(void)**<br>
+Returns the size of the instruction as integer.
 
 - **getThirdOperand(void)**<br>
 Returns the third operand of the instruction.
@@ -241,7 +241,7 @@ namespace triton {
       static PyObject* Instruction_getOpcodes(PyObject* self, PyObject* noarg) {
         try {
           const triton::uint8* opcodes = PyInstruction_AsInstruction(self)->getOpcodes();
-          triton::uint32 size          = PyInstruction_AsInstruction(self)->getOpcodesSize();
+          triton::uint32 size          = PyInstruction_AsInstruction(self)->getSize();
           return PyBytes_FromStringAndSize(reinterpret_cast<const char*>(opcodes), size);
         }
         catch (const std::exception& e) {
@@ -250,9 +250,9 @@ namespace triton {
       }
 
 
-      static PyObject* Instruction_getOpcodesSize(PyObject* self, PyObject* noarg) {
+      static PyObject* Instruction_getSize(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyInstruction_AsInstruction(self)->getOpcodesSize());
+          return Py_BuildValue("k", PyInstruction_AsInstruction(self)->getSize());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -612,10 +612,10 @@ namespace triton {
         {"getFirstOperand",           Instruction_getFirstOperand,          METH_NOARGS,     ""},
         {"getNextAddress",            Instruction_getNextAddress,           METH_NOARGS,     ""},
         {"getOpcodes",                Instruction_getOpcodes,               METH_NOARGS,     ""},
-        {"getOpcodesSize",            Instruction_getOpcodesSize,           METH_NOARGS,     ""},
         {"getOperands",               Instruction_getOperands,              METH_NOARGS,     ""},
         {"getPrefix",                 Instruction_getPrefix,                METH_NOARGS,     ""},
         {"getSecondOperand",          Instruction_getSecondOperand,         METH_NOARGS,     ""},
+        {"getSize",                   Instruction_getSize,                  METH_NOARGS,     ""},
         {"getSymbolicExpressions",    Instruction_getSymbolicExpressions,   METH_NOARGS,     ""},
         {"getThirdOperand",           Instruction_getThirdOperand,          METH_NOARGS,     ""},
         {"getThreadId",               Instruction_getThreadId,              METH_NOARGS,     ""},

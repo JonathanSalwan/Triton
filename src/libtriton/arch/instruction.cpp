@@ -22,7 +22,7 @@ namespace triton {
       this->branch          = false;
       this->conditionTaken  = false;
       this->controlFlow     = false;
-      this->opcodesSize     = 0;
+      this->size            = 0;
       this->prefix          = 0;
       this->tid             = 0;
       this->type            = 0;
@@ -50,7 +50,7 @@ namespace triton {
       this->conditionTaken      = other.conditionTaken;
       this->controlFlow         = other.controlFlow;
       this->memoryAccess        = other.memoryAccess;
-      this->opcodesSize         = other.opcodesSize;
+      this->size                = other.size;
       this->operands            = other.operands;
       this->prefix              = other.prefix;
       this->registerState       = other.registerState;
@@ -81,7 +81,7 @@ namespace triton {
 
 
     triton::__uint Instruction::getNextAddress(void) const {
-      return this->address + this->opcodesSize;
+      return this->address + this->size;
     }
 
 
@@ -104,12 +104,12 @@ namespace triton {
       if (size >= sizeof(this->opcodes))
        throw std::runtime_error("Instruction::setOpcodes(): Invalid size (too big).");
       std::memcpy(this->opcodes, opcodes, size);
-      this->opcodesSize = size;
+      this->size = size;
     }
 
 
-    triton::uint32 Instruction::getOpcodesSize(void) const {
-      return this->opcodesSize;
+    triton::uint32 Instruction::getSize(void) const {
+      return this->size;
     }
 
 
@@ -156,8 +156,8 @@ namespace triton {
     }
 
 
-    void Instruction::setOpcodesSize(triton::uint32 size) {
-      this->opcodesSize = size;
+    void Instruction::setSize(triton::uint32 size) {
+      this->size = size;
     }
 
 
@@ -289,7 +289,7 @@ namespace triton {
       this->branch          = false;
       this->conditionTaken  = false;
       this->controlFlow     = false;
-      this->opcodesSize     = 0;
+      this->size            = 0;
       this->tid             = 0;
       this->type            = 0;
 

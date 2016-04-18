@@ -478,7 +478,7 @@ namespace triton {
       size_t                               count = 0;
 
       /* Check if the opcodes and opcodes' size are defined */
-      if (inst.getOpcodes() == nullptr || inst.getOpcodesSize() == 0)
+      if (inst.getOpcodes() == nullptr || inst.getSize() == 0)
         throw std::runtime_error("x86Cpu::disassembly(): Opcodes and opcodesSize must be definied.");
 
       /* Open capstone */
@@ -490,7 +490,7 @@ namespace triton {
       triton::extlibs::capstone::cs_option(handle, triton::extlibs::capstone::CS_OPT_SYNTAX, triton::extlibs::capstone::CS_OPT_SYNTAX_INTEL);
 
       /* Let's disass and build our operands */
-      count = triton::extlibs::capstone::cs_disasm(handle, inst.getOpcodes(), inst.getOpcodesSize(), inst.getAddress(), 0, &insn);
+      count = triton::extlibs::capstone::cs_disasm(handle, inst.getOpcodes(), inst.getSize(), inst.getAddress(), 0, &insn);
       if (count > 0) {
         triton::extlibs::capstone::cs_detail* detail = insn->detail;
         for (triton::uint32 j = 0; j < 1; j++) {
@@ -501,7 +501,7 @@ namespace triton {
           inst.setDisassembly(str.str());
 
           /* Refine the size */
-          inst.setOpcodesSize(insn[j].size);
+          inst.setSize(insn[j].size);
 
           /* Init the instruction's type */
           inst.setType(capstoneInstructionToTritonInstruction(insn[j].id));

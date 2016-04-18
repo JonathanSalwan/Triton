@@ -3985,7 +3985,7 @@ namespace triton {
 
           /* Base with PC */
           if (srcBase.isValid() && (srcBase.getParent().getId() == TRITON_X86_REG_PC.getId()))
-            op3 = triton::ast::bvadd(op3, triton::ast::bv(inst.getOpcodesSize(), leaSize));
+            op3 = triton::ast::bvadd(op3, triton::ast::bv(inst.getSize(), leaSize));
 
           /* Index */
           triton::ast::AbstractNode* op4;
