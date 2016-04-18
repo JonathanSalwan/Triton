@@ -77,6 +77,9 @@ namespace triton {
         //! Destructor.
         ~MemoryOperand();
 
+        //! Initialize the address of the memory.
+        void initAddress(void);
+
         //! Returns the address of the memory.
         triton::__uint getAddress(void) const;
 

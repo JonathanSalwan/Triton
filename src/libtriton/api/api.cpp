@@ -318,7 +318,15 @@ namespace triton {
       this->setLastRegisterValue(it2->second);
     }
 
-    /* Stage 3 - Process the IR */
+    /* Stage 3 - Initialize the target address of memory operands */
+    std::vector<triton::arch::OperandWrapper>::iterator it3;
+    for (it3 = inst.operands.begin(); it3 != inst.operands.end(); it3++) {
+      if (it3->getType() == triton::arch::OP_MEM) {
+        it3->getMemory().initAddress();
+      }
+    }
+
+    /* Stage 4 - Process the IR */
     this->arch.buildSemantics(inst);
   }
 

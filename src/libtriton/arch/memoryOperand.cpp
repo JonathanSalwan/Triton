@@ -60,34 +60,35 @@ namespace triton {
 
 
     triton::__uint MemoryOperand::getAddress(void) const {
-      triton::__uint address = 0;
+      return this->address;
+    }
 
-      /* Return the address if it is already defined */
-      if (this->address)
-        return this->address;
 
-      /* Otherwise, try to compute the address */
-      if (triton::api.isArchitectureValid() && this->getBitSize() >= BYTE_SIZE_BIT) {
-        RegisterOperand base          = this->baseReg;
-        RegisterOperand index         = this->indexReg;
-        triton::__uint baseValue      = 0;
-        triton::__uint indexValue     = 0;
-        triton::__uint scaleValue     = this->scale.getValue();
-        triton::__uint dispValue      = this->displacement.getValue();
-        triton::__uint mask           = -1;
+    void MemoryOperand::initAddress(void) {
+      /* Initialize the address only if it is not already defined */
+      if (!this->address) {
+        /* Otherwise, try to compute the address */
+        if (triton::api.isArchitectureValid() && this->getBitSize() >= BYTE_SIZE_BIT) {
+          RegisterOperand base          = this->baseReg;
+          RegisterOperand index         = this->indexReg;
+          triton::__uint baseValue      = 0;
+          triton::__uint indexValue     = 0;
+          triton::__uint scaleValue     = this->scale.getValue();
+          triton::__uint dispValue      = this->displacement.getValue();
+          triton::__uint mask           = -1;
 
-        if (this->pcRelative)
-          baseValue = this->pcRelative;
-        else if (base.isValid())
-          baseValue = triton::api.getRegisterValue(base).convert_to<triton::__uint>();
+          if (this->pcRelative)
+            baseValue = this->pcRelative;
+          else if (base.isValid())
+            baseValue = triton::api.getRegisterValue(base).convert_to<triton::__uint>();
 
-        if (index.isValid())
-          indexValue = triton::api.getRegisterValue(index).convert_to<triton::__uint>();
+          if (index.isValid())
+            indexValue = triton::api.getRegisterValue(index).convert_to<triton::__uint>();
 
-        address = (((baseValue + (indexValue * scaleValue)) + dispValue) & mask);
+          address = (((baseValue + (indexValue * scaleValue)) + dispValue) & mask);
+          this->address = address;
+        }
       }
-
-      return address;
     }
 
 
