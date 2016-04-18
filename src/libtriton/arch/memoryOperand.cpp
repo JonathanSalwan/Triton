@@ -85,8 +85,7 @@ namespace triton {
           if (index.isValid())
             indexValue = triton::api.getRegisterValue(index).convert_to<triton::__uint>();
 
-          address = (((baseValue + (indexValue * scaleValue)) + dispValue) & mask);
-          this->address = address;
+          this->address = (((baseValue + (indexValue * scaleValue)) + dispValue) & mask);
         }
       }
     }
