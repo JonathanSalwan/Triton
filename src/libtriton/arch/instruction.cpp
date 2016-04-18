@@ -156,6 +156,11 @@ namespace triton {
     }
 
 
+    void Instruction::setOpcodesSize(triton::uint32 size) {
+      this->opcodesSize = size;
+    }
+
+
     void Instruction::setType(triton::uint32 type) {
       this->type = type;
     }

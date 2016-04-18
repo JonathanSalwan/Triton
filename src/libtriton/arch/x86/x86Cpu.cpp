@@ -493,12 +493,15 @@ namespace triton {
       count = triton::extlibs::capstone::cs_disasm(handle, inst.getOpcodes(), inst.getOpcodesSize(), inst.getAddress(), 0, &insn);
       if (count > 0) {
         triton::extlibs::capstone::cs_detail* detail = insn->detail;
-        for (triton::uint32 j = 0; j < count; j++) {
+        for (triton::uint32 j = 0; j < 1; j++) {
 
           /* Init the disassembly */
           std::stringstream str;
           str << insn[j].mnemonic << " " <<  insn[j].op_str;
           inst.setDisassembly(str.str());
+
+          /* Refine the size */
+          inst.setOpcodesSize(insn[j].size);
 
           /* Init the instruction's type */
           inst.setType(capstoneInstructionToTritonInstruction(insn[j].id));

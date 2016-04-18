@@ -143,6 +143,9 @@ namespace triton {
         //! Returns the instruction opcodes' size
         triton::uint32 getOpcodesSize(void) const;
 
+        //! Sets the instruction opcodes' size
+        void setOpcodesSize(triton::uint32 size);
+
         //! Sets the type of the instruction.
         void setType(triton::uint32 type);
 

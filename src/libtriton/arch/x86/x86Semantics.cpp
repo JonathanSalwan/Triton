@@ -516,7 +516,7 @@ namespace triton {
               /* Create the semantics for PC */
               auto node2 = triton::ast::ite(
                        triton::ast::equal(node1, triton::ast::bv(0, counter.getBitSize())),
-                       triton::ast::bv(inst.getAddress() + inst.getOpcodesSize(), pc.getBitSize()),
+                       triton::ast::bv(inst.getNextAddress(), pc.getBitSize()),
                        triton::ast::bv(inst.getAddress(), pc.getBitSize())
                      );
 
@@ -540,7 +540,7 @@ namespace triton {
                          triton::ast::equal(node1, triton::ast::bv(0, counter.getBitSize())),
                          triton::ast::equal(op2, triton::ast::bvfalse())
                        ),
-                       triton::ast::bv(inst.getAddress() + inst.getOpcodesSize(), pc.getBitSize()),
+                       triton::ast::bv(inst.getNextAddress(), pc.getBitSize()),
                        triton::ast::bv(inst.getAddress(), pc.getBitSize())
                      );
 
@@ -564,7 +564,7 @@ namespace triton {
                          triton::ast::equal(node1, triton::ast::bv(0, counter.getBitSize())),
                          triton::ast::equal(op2, triton::ast::bvtrue())
                        ),
-                       triton::ast::bv(inst.getAddress() + inst.getOpcodesSize(), pc.getBitSize()),
+                       triton::ast::bv(inst.getNextAddress(), pc.getBitSize()),
                        triton::ast::bv(inst.getAddress(), pc.getBitSize())
                      );
 
@@ -580,7 +580,7 @@ namespace triton {
 
             default: {
               /* Create the semantics */
-              auto node = triton::ast::bv(inst.getAddress() + inst.getOpcodesSize(), pc.getBitSize());
+              auto node = triton::ast::bv(inst.getNextAddress(), pc.getBitSize());
 
               /* Create symbolic expression */
               auto expr = triton::api.createSymbolicRegisterExpression(inst, node, TRITON_X86_REG_PC, "Program Counter");
