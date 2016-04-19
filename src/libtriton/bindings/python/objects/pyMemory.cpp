@@ -53,6 +53,9 @@ This object is used to represent a memory access operand.
 Returns the target address of the memory access.<br>
 e.g: `0x7fffdd745ae0`
 
+- **getAst(void)**<br>
+Returns the AST of the memory access ast \reg py_AstNode_page.
+
 - **getBaseRegister(void)**<br>
 Returns the base register (if exists) of the  memory access as \ref py_Register_page.<br>
 
@@ -122,6 +125,16 @@ namespace triton {
       static PyObject* MemoryOperand_getAddress(PyObject* self, PyObject* noarg) {
         try {
           return PyLong_FromUint(PyMemoryOperand_AsMemoryOperand(self)->getAddress());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* MemoryOperand_getAst(PyObject* self, PyObject* noarg) {
+        try {
+          return PyAstNode(PyMemoryOperand_AsMemoryOperand(self)->getAst());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -360,6 +373,7 @@ namespace triton {
       //! Memory methods.
       PyMethodDef MemoryOperand_callbacks[] = {
         {"getAddress",        MemoryOperand_getAddress,       METH_NOARGS,      ""},
+        {"getAst",            MemoryOperand_getAst,           METH_NOARGS,      ""},
         {"getBaseRegister",   MemoryOperand_getBaseRegister,  METH_NOARGS,      ""},
         {"getBitSize",        MemoryOperand_getBitSize,       METH_NOARGS,      ""},
         {"getBitvector",      MemoryOperand_getBitvector,     METH_NOARGS,      ""},

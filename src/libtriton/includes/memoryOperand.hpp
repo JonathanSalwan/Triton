@@ -8,6 +8,7 @@
 #ifndef TRITON_MEMORYOPERAND
 #define TRITON_MEMORYOPERAND
 
+#include "ast.hpp"
 #include "bitsVector.hpp"
 #include "cpuSize.hpp"
 #include "immediateOperand.hpp"
@@ -61,6 +62,9 @@ namespace triton {
         //! LEA - If the operand has a scale, this attribute is filled.
         ImmediateOperand scale;
 
+        //! The AST of the memory access.
+        triton::ast::AbstractNode* ast;
+
         //! Copy a MemoryOperand.
         void copy(const MemoryOperand& other);
 
@@ -79,6 +83,9 @@ namespace triton {
 
         //! Initialize the address of the memory.
         void initAddress(void);
+
+        //! Returns the AST of the memory access.
+        triton::ast::AbstractNode* getAst(void) const;
 
         //! Returns the address of the memory.
         triton::__uint getAddress(void) const;
@@ -148,7 +155,6 @@ namespace triton {
 
         //! Copies a MemoryOperand.
         void operator=(const MemoryOperand& other);
-
    };
 
     //! Displays an MemoryOperand.

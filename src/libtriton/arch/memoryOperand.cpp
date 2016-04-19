@@ -18,6 +18,7 @@ namespace triton {
 
     MemoryOperand::MemoryOperand(void) {
       this->address       = 0;
+      this->ast           = nullptr;
       this->concreteValue = 0;
       this->trusted       = false;
       this->pcRelative    = 0;
@@ -26,6 +27,7 @@ namespace triton {
 
     MemoryOperand::MemoryOperand(triton::__uint address, triton::uint32 size /* bytes */, triton::uint512 concreteValue) {
       this->address       = address;
+      this->ast           = nullptr;
       this->concreteValue = concreteValue;
       this->trusted       = true;
       this->pcRelative    = 0;
@@ -64,29 +66,40 @@ namespace triton {
     }
 
 
+    triton::ast::AbstractNode* MemoryOperand::getAst(void) const {
+      return this->ast;
+    }
+
+
     void MemoryOperand::initAddress(void) {
-      /* Initialize the address only if it is not already defined */
-      if (!this->address) {
-        /* Otherwise, try to compute the address */
-        if (triton::api.isArchitectureValid() && this->getBitSize() >= BYTE_SIZE_BIT) {
-          RegisterOperand base          = this->baseReg;
-          RegisterOperand index         = this->indexReg;
-          triton::__uint baseValue      = 0;
-          triton::__uint indexValue     = 0;
-          triton::__uint scaleValue     = this->scale.getValue();
-          triton::__uint dispValue      = this->displacement.getValue();
-          triton::__uint mask           = -1;
+      /* Otherwise, try to compute the address */
+      if (triton::api.isArchitectureValid() && this->getBitSize() >= BYTE_SIZE_BIT) {
+        RegisterOperand base          = this->baseReg;
+        RegisterOperand index         = this->indexReg;
+        triton::__uint baseValue      = (this->pcRelative ? this->pcRelative : (base.isValid() ? triton::api.getRegisterValue(base).convert_to<triton::__uint>() : 0));
+        triton::__uint indexValue     = (index.isValid() ? triton::api.getRegisterValue(index).convert_to<triton::__uint>() : 0);
+        triton::__uint scaleValue     = this->scale.getValue();
+        triton::__uint dispValue      = this->displacement.getValue();
+        triton::__uint mask           = -1;
+        triton::uint32 bitSize        = (index.isValid() ? index.getBitSize() : base.getBitSize());
 
-          if (this->pcRelative)
-            baseValue = this->pcRelative;
-          else if (base.isValid())
-            baseValue = triton::api.getRegisterValue(base).convert_to<triton::__uint>();
+        /* Initialize the AST of the memory access */
+        this->ast = triton::ast::bvadd(
+                      (this->pcRelative ? triton::ast::bv(this->pcRelative, bitSize) : (base.isValid() ? triton::api.buildSymbolicRegisterOperand(base) : triton::ast::bv(0, bitSize))),
+                      triton::ast::bvadd(
+                        triton::ast::bvmul(
+                          (index.isValid() ? triton::api.buildSymbolicRegisterOperand(index) : triton::ast::bv(0, bitSize)),
+                          triton::ast::bv(scaleValue, bitSize)
+                        ),
+                        triton::ast::bv(dispValue, bitSize)
+                      )
+                    );
 
-          if (index.isValid())
-            indexValue = triton::api.getRegisterValue(index).convert_to<triton::__uint>();
-
+        /* Initialize the address only if it is not already defined */
+        if (!this->address) {
           this->address = (((baseValue + (indexValue * scaleValue)) + dispValue) & mask);
         }
+
       }
     }
 
@@ -196,6 +209,7 @@ namespace triton {
 
     void MemoryOperand::copy(const MemoryOperand& other) {
       this->address       = other.address;
+      this->ast           = other.ast;
       this->baseReg       = other.baseReg;
       this->concreteValue = other.concreteValue;
       this->displacement  = other.displacement;
