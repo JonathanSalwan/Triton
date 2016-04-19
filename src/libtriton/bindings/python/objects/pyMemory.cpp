@@ -54,7 +54,7 @@ Returns the target address of the memory access.<br>
 e.g: `0x7fffdd745ae0`
 
 - **getAst(void)**<br>
-Returns the AST of the memory access ast \reg py_AstNode_page.
+Returns the AST of the memory access ast \ref py_AstNode_page.
 
 - **getBaseRegister(void)**<br>
 Returns the base register (if exists) of the  memory access as \ref py_Register_page.<br>
