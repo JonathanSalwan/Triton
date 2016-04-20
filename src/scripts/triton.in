@@ -17,5 +17,5 @@ if [ -z "$2" ]
     exit
 fi
 
-$PIN_BIN_PATH @FLAG_IFEELLUCKY@ -t $PINTOOL_PATH -script $1 -- ${@:2}
+LD_BIND_NOW=1 $PIN_BIN_PATH @FLAG_IFEELLUCKY@ -t $PINTOOL_PATH -script $1 -- ${@:2}
 
