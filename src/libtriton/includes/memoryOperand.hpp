@@ -87,8 +87,8 @@ namespace triton {
         //! Initialize the address of the memory.
         void initAddress(void);
 
-        //! Returns the AST of the memory access.
-        triton::ast::AbstractNode* getAst(void) const;
+        //! Returns the AST of the memory access (LEA).
+        triton::ast::AbstractNode* getLeaAst(void) const;
 
         //! Returns the address of the memory.
         triton::__uint getAddress(void) const;

@@ -24,26 +24,57 @@
 
 This object is used to represent a memory access operand.
 
+\subsection py_Memory_example Example
+
 ~~~~~~~~~~~~~{.py}
->>> from triton import Memory
->>>
+>>> processing(inst)
+>>> print inst
+40000: mov ah, byte ptr [rdx + rcx*2 + 0x100]
+
+>>> op1 = inst.getOperands()[1]
+>>> print op1
+*[0x6135a]:8 bv[7..0]
+
+>>> print op1.getBaseRegister()
+rdx:64 bv[63..0]
+
+>>> print op1.getIndexRegister()
+rcx:64 bv[63..0]
+
+>>> print op1.getScale()
+0x2:8 bv[7..0]
+
+>>> print op1.getDisplacement()
+0x100:8 bv[7..0]
+
+>>> print op1.getLeaAst()
+(bvadd (_ bv397882 64) (bvadd (bvmul (_ bv16 64) (_ bv2 64)) (_ bv256 64)))
+
+>>> print hex(op1.getLeaAst().evaluate())
+0x6135aL
+
+>>> print hex(op1.getAddress())
+0x6135aL
+
+>>> print op1.getSize()
+1
+~~~~~~~~~~~~~
+
+\subsection py_Memory_constructor Constructor
+
+~~~~~~~~~~~~~{.py}
 >>> mem = Memory(0x400f4d3, 8, 0x6162636465666768)
+>>> print mem
+*[0x400f4d3]:64 bv[63..0]
+
 >>> hex(mem.getAddress())
 '0x400f4d3'
+
 >>> mem.getSize()
 8
+
 >>> hex(mem.getConcreteValue())
 '0x6162636465666768L'
-
->>> from struct import pack
->>> pack("<Q", mem.getConcreteValue())
-'hgfedcba'
-
->>> mem = Memory(0x400f4d3, 16)
->>> print mem
-*[0x400f4d3]:128 bv[127..0]
->>> mem.getConcreteValue()
-0L
 ~~~~~~~~~~~~~
 
 \section Memory_py_api Python API - Methods of the Memory class
@@ -52,9 +83,6 @@ This object is used to represent a memory access operand.
 - **getAddress(void)**<br>
 Returns the target address of the memory access.<br>
 e.g: `0x7fffdd745ae0`
-
-- **getAst(void)**<br>
-Returns the AST of the memory access ast \ref py_AstNode_page.
 
 - **getBaseRegister(void)**<br>
 Returns the base register (if exists) of the memory access as \ref py_Register_page.<br>
@@ -76,6 +104,9 @@ Returns the displacement (if exists) of the memory access as \ref py_Immediate_p
 
 - **getIndexRegister(void)**<br>
 Returns the index register (if exists) of the memory access as \ref py_Register_page.<br>
+
+- **getLeaAst(void)**<br>
+Returns the AST of the memory access (LEA) as \ref py_AstNode_page.
 
 - **getScale(void)**<br>
 Returns the scale (if exists) of the  memory access as \ref py_Immediate_page.
@@ -138,9 +169,9 @@ namespace triton {
       }
 
 
-      static PyObject* MemoryOperand_getAst(PyObject* self, PyObject* noarg) {
+      static PyObject* MemoryOperand_getLeaAst(PyObject* self, PyObject* noarg) {
         try {
-          return PyAstNode(PyMemoryOperand_AsMemoryOperand(self)->getAst());
+          return PyAstNode(PyMemoryOperand_AsMemoryOperand(self)->getLeaAst());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -390,13 +421,13 @@ namespace triton {
       //! Memory methods.
       PyMethodDef MemoryOperand_callbacks[] = {
         {"getAddress",          MemoryOperand_getAddress,         METH_NOARGS,      ""},
-        {"getAst",              MemoryOperand_getAst,             METH_NOARGS,      ""},
         {"getBaseRegister",     MemoryOperand_getBaseRegister,    METH_NOARGS,      ""},
         {"getBitSize",          MemoryOperand_getBitSize,         METH_NOARGS,      ""},
         {"getBitvector",        MemoryOperand_getBitvector,       METH_NOARGS,      ""},
         {"getConcreteValue",    MemoryOperand_getConcreteValue,   METH_NOARGS,      ""},
         {"getDisplacement",     MemoryOperand_getDisplacement,    METH_NOARGS,      ""},
         {"getIndexRegister",    MemoryOperand_getIndexRegister,   METH_NOARGS,      ""},
+        {"getLeaAst",           MemoryOperand_getLeaAst,          METH_NOARGS,      ""},
         {"getScale",            MemoryOperand_getScale,           METH_NOARGS,      ""},
         {"getSegmentRegister",  MemoryOperand_getSegmentRegister, METH_NOARGS,      ""},
         {"getSize",             MemoryOperand_getSize,            METH_NOARGS,      ""},

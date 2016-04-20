@@ -78,12 +78,12 @@ def cafter(instruction):
     for op in instruction.getOperands():
         if op.getType() == OPERAND.MEM:
             nativeAddress = op.getAddress()
-            astAddress = op.getAst().evaluate()
+            astAddress = op.getLeaAst().evaluate()
             if nativeAddress != astAddress:
                 good = False
                 print "[%sKO%s] %#x: %s (%smemory error%s)" %(RED, ENDC, instruction.getAddress(), instruction.getDisassembly(), RED, ENDC)
-                print "     Native address : %016x" %(nativeAddress)
-                print "     AST Address    : %016x" %(astAddress)
+                print "     Native address   : %016x" %(nativeAddress)
+                print "     Symbolic address : %016x" %(astAddress)
 
     if len(instruction.getSymbolicExpressions()) == 0:
         print "[%s??%s] %#x: %s" %(BLUE, ENDC, instruction.getAddress(), instruction.getDisassembly())

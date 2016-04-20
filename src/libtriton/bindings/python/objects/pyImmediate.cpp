@@ -23,6 +23,26 @@
 
 This object is used to represent an immediate operand.
 
+\subsection py_Immediate_example Example
+
+~~~~~~~~~~~~~{.py}
+>>> processing(inst)
+>>> print inst
+40000: mov eax, 0x14
+
+>>> op1 = inst.getOperands()[1]
+>>> print op1
+0x14:32 bv[31..0]
+
+>>> print hex(op1.getValue())
+0x14L
+
+>>> print op1.getBitSize()
+32
+~~~~~~~~~~~~~
+
+\subsection py_Immediate_constructor Constructor
+
 ~~~~~~~~~~~~~{.py}
 >>> imm = Immediate(0x1234, CPUSIZE.WORD)
 >>> print imm

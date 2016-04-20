@@ -25,18 +25,42 @@
 
 This object is used to represent a register operand according to the CPU architecture.
 
+\subsection py_Register_example Example
+
 ~~~~~~~~~~~~~{.py}
->>> ah = REG.AH
->>> ah
-<Register at 0x7f8add745ae0>
->>> ah.getName()
+>>> processing(inst)
+>>> print inst
+40000: mov ah, byte ptr [rdx + rcx*2 + 0x100]
+
+>>> op0 = inst.getOperands()[0]
+>>> print op0
+ah:8 bv[15..8]
+
+>>> op0.getName()
 'ah'
->>> ah.getSize()
+
+>>> op0.getSize()
 1
->>> ah.getBitSize()
+
+>>> op0.getBitSize()
 8
->>> ah.getParent().getName()
+
+>>> op0.getParent().getName()
 'rax'
+~~~~~~~~~~~~~
+
+\subsection py_Register_constructor Constructor
+
+~~~~~~~~~~~~~{.py}
+>>> ah = Register(REG.AH, 0x18)
+>>> print ah
+ah:8 bv[15..8]
+
+>>> print ah.getBitSize()
+8
+
+>>> print hex(ah.getConcreteValue())
+0x18L
 ~~~~~~~~~~~~~
 
 \section Register_py_api Python API - Methods of the Register class

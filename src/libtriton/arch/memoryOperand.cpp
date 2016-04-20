@@ -66,7 +66,7 @@ namespace triton {
     }
 
 
-    triton::ast::AbstractNode* MemoryOperand::getAst(void) const {
+    triton::ast::AbstractNode* MemoryOperand::getLeaAst(void) const {
       return this->ast;
     }
 
@@ -83,7 +83,7 @@ namespace triton {
         triton::__uint mask           = -1;
         triton::uint32 bitSize        = (index.isValid() ? index.getBitSize() : base.getBitSize());
 
-        /* Initialize the AST of the memory access */
+        /* Initialize the AST of the memory access (LEA) */
         this->ast = triton::ast::bvadd(
                       (this->pcRelative ? triton::ast::bv(this->pcRelative, bitSize) : (base.isValid() ? triton::api.buildSymbolicRegisterOperand(base) : triton::ast::bv(0, bitSize))),
                       triton::ast::bvadd(
