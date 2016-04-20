@@ -50,7 +50,7 @@ Returns the size (in bytes) of the immediate as integer.<br>
 e.g: `8`
 
 - **getType(void)**<br>
-Returns the type of the immediate as \ref py_OPERAND_page.<br>
+Returns the type of the immediate as \ref py_OPERAND_page. In this case this function returns `OPERAND.IMM`.
 
 - **getValue(void)**<br>
 Returns the immediate value.

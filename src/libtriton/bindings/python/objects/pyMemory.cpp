@@ -88,7 +88,7 @@ Returns the size (in bytes) of the  memory access as integer.<br>
 e.g: `8`
 
 - **getType(void)**<br>
-Returns type of the memory access as \ref py_OPERAND_page.
+Returns type of the memory access as \ref py_OPERAND_page. In this case this function returns `OPERAND.MEM`.
 
 - **isTrusted(void)**<br>
 True if this concrete memory value is trusted and synchronized with the real MMU value.

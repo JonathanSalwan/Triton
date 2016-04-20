@@ -64,7 +64,7 @@ Returns the size (in bytes) of the register as integer.<br>
 e.g: `8`
 
 - **getType(void)**<br>
-Returns type of the register as \ref py_OPERAND_page.<br>
+Returns type of the register as \ref py_OPERAND_page. In this case this function returns `OPERAND.REG`.
 
 - **isValid(void)**<br>
 Returns true if the register is valid.
