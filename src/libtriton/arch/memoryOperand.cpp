@@ -129,6 +129,11 @@ namespace triton {
     }
 
 
+    RegisterOperand& MemoryOperand::getSegmentRegister(void) {
+      return this->segmentReg;
+    }
+
+
     RegisterOperand& MemoryOperand::getBaseRegister(void) {
       return this->baseReg;
     }
@@ -182,22 +187,27 @@ namespace triton {
     }
 
 
-    void MemoryOperand::setBaseRegister(RegisterOperand base) {
+    void MemoryOperand::setSegmentRegister(RegisterOperand& segment) {
+      this->segmentReg = segment;
+    }
+
+
+    void MemoryOperand::setBaseRegister(RegisterOperand& base) {
       this->baseReg = base;
     }
 
 
-    void MemoryOperand::setIndexRegister(RegisterOperand index) {
+    void MemoryOperand::setIndexRegister(RegisterOperand& index) {
       this->indexReg = index;
     }
 
 
-    void MemoryOperand::setDisplacement(ImmediateOperand displacement) {
+    void MemoryOperand::setDisplacement(ImmediateOperand& displacement) {
       this->displacement = displacement;
     }
 
 
-    void MemoryOperand::setScale(ImmediateOperand scale) {
+    void MemoryOperand::setScale(ImmediateOperand& scale) {
       this->scale = scale;
     }
 
@@ -216,9 +226,10 @@ namespace triton {
       this->high          = other.high;
       this->indexReg      = other.indexReg;
       this->low           = other.low;
-      this->scale         = other.scale;
-      this->trusted       = other.trusted;
       this->pcRelative    = other.pcRelative;
+      this->scale         = other.scale;
+      this->segmentReg    = other.segmentReg;
+      this->trusted       = other.trusted;
     }
 
 

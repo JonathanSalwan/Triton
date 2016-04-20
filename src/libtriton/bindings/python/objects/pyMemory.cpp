@@ -57,7 +57,7 @@ e.g: `0x7fffdd745ae0`
 Returns the AST of the memory access ast \ref py_AstNode_page.
 
 - **getBaseRegister(void)**<br>
-Returns the base register (if exists) of the  memory access as \ref py_Register_page.<br>
+Returns the base register (if exists) of the memory access as \ref py_Register_page.<br>
 
 - **getBitSize(void)**<br>
 Returns the size (in bits) of the memory access as integer.<br>
@@ -67,7 +67,9 @@ e.g: `64`
 Returns the bitvector as \ref py_Bitvector_page.
 
 - **getConcreteValue(void)**<br>
-Returns the concrete value as integer. It's basically the content which has been LOADED or STORED.
+Returns the concrete value as integer. It's basically the content which has been LOADED or STORED. Note that getting the
+concrete value does not relfect the real internal memory state. If you want to know the internal state of a memory cell, use
+the `triton::api.getMemoryValue()` function.
 
 - **getDisplacement(void)**<br>
 Returns the displacement (if exists) of the memory access as \ref py_Immediate_page.
@@ -77,6 +79,9 @@ Returns the index register (if exists) of the memory access as \ref py_Register_
 
 - **getScale(void)**<br>
 Returns the scale (if exists) of the  memory access as \ref py_Immediate_page.
+
+- **getSegmentRegister(void)**<br>
+Returns the segment register (if exists) of the memory access as \ref py_Register_page.<br>
 
 - **getSize(void)**<br>
 Returns the size (in bytes) of the  memory access as integer.<br>
@@ -92,7 +97,8 @@ True if this concrete memory value is trusted and synchronized with the real MMU
 Sets the base register of the memory access.
 
 - **setConcreteValue(integer value)**<br>
-Sets a concrete value to this memory access.
+Sets a concrete value to this memory access. Note that by setting the concrete value does not affect the internal memory value.
+If you want to define a concrete value at a memory point, use the `triton::api.setLastMemoryValue()` function.
 
 - **setDisplacement(\ref py_Immediate_page imm)**<br>
 Sets the displacement of the memory access.
@@ -209,6 +215,17 @@ namespace triton {
         try {
           triton::arch::ImmediateOperand imm(PyMemoryOperand_AsMemoryOperand(self)->getScale());
           return PyImmediateOperand(imm);
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* MemoryOperand_getSegmentRegister(PyObject* self, PyObject* noarg) {
+        try {
+          triton::arch::RegisterOperand reg(PyMemoryOperand_AsMemoryOperand(self)->getSegmentRegister());
+          return PyRegisterOperand(reg);
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -372,25 +389,26 @@ namespace triton {
 
       //! Memory methods.
       PyMethodDef MemoryOperand_callbacks[] = {
-        {"getAddress",        MemoryOperand_getAddress,       METH_NOARGS,      ""},
-        {"getAst",            MemoryOperand_getAst,           METH_NOARGS,      ""},
-        {"getBaseRegister",   MemoryOperand_getBaseRegister,  METH_NOARGS,      ""},
-        {"getBitSize",        MemoryOperand_getBitSize,       METH_NOARGS,      ""},
-        {"getBitvector",      MemoryOperand_getBitvector,     METH_NOARGS,      ""},
-        {"getConcreteValue",  MemoryOperand_getConcreteValue, METH_NOARGS,      ""},
-        {"getDisplacement",   MemoryOperand_getDisplacement,  METH_NOARGS,      ""},
-        {"getIndexRegister",  MemoryOperand_getIndexRegister, METH_NOARGS,      ""},
-        {"getScale",          MemoryOperand_getScale,         METH_NOARGS,      ""},
-        {"getSize",           MemoryOperand_getSize,          METH_NOARGS,      ""},
-        {"getType",           MemoryOperand_getType,          METH_NOARGS,      ""},
-        {"isTrusted",         MemoryOperand_isTrusted,        METH_NOARGS,      ""},
-        {"setBaseRegister",   MemoryOperand_setBaseRegister,  METH_O,           ""},
-        {"setConcreteValue",  MemoryOperand_setConcreteValue, METH_O,           ""},
-        {"setDisplacement",   MemoryOperand_setDisplacement,  METH_O,           ""},
-        {"setIndexRegister",  MemoryOperand_setIndexRegister, METH_O,           ""},
-        {"setScale",          MemoryOperand_setScale,         METH_O,           ""},
-        {"setTrust",          MemoryOperand_setTrust,         METH_O,           ""},
-        {nullptr,             nullptr,                        0,                nullptr}
+        {"getAddress",          MemoryOperand_getAddress,         METH_NOARGS,      ""},
+        {"getAst",              MemoryOperand_getAst,             METH_NOARGS,      ""},
+        {"getBaseRegister",     MemoryOperand_getBaseRegister,    METH_NOARGS,      ""},
+        {"getBitSize",          MemoryOperand_getBitSize,         METH_NOARGS,      ""},
+        {"getBitvector",        MemoryOperand_getBitvector,       METH_NOARGS,      ""},
+        {"getConcreteValue",    MemoryOperand_getConcreteValue,   METH_NOARGS,      ""},
+        {"getDisplacement",     MemoryOperand_getDisplacement,    METH_NOARGS,      ""},
+        {"getIndexRegister",    MemoryOperand_getIndexRegister,   METH_NOARGS,      ""},
+        {"getScale",            MemoryOperand_getScale,           METH_NOARGS,      ""},
+        {"getSegmentRegister",  MemoryOperand_getSegmentRegister, METH_NOARGS,      ""},
+        {"getSize",             MemoryOperand_getSize,            METH_NOARGS,      ""},
+        {"getType",             MemoryOperand_getType,            METH_NOARGS,      ""},
+        {"isTrusted",           MemoryOperand_isTrusted,          METH_NOARGS,      ""},
+        {"setBaseRegister",     MemoryOperand_setBaseRegister,    METH_O,           ""},
+        {"setConcreteValue",    MemoryOperand_setConcreteValue,   METH_O,           ""},
+        {"setDisplacement",     MemoryOperand_setDisplacement,    METH_O,           ""},
+        {"setIndexRegister",    MemoryOperand_setIndexRegister,   METH_O,           ""},
+        {"setScale",            MemoryOperand_setScale,           METH_O,           ""},
+        {"setTrust",            MemoryOperand_setTrust,           METH_O,           ""},
+        {nullptr,               nullptr,                          0,                nullptr}
       };
 
 

@@ -842,6 +842,7 @@ namespace triton {
                   mem.setPair(std::make_pair(((op->size * BYTE_SIZE_BIT) - 1), 0));
 
                 /* LEA if exists */
+                triton::arch::RegisterOperand segment(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.segment));
                 triton::arch::RegisterOperand base(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.base));
                 triton::arch::RegisterOperand index(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.index));
                 triton::arch::ImmediateOperand disp(op->mem.disp, op->size);
@@ -851,6 +852,7 @@ namespace triton {
                 if (base == TRITON_X86_REG_PC)
                   mem.setPcRelative(inst.getNextAddress());
 
+                mem.setSegmentRegister(segment);
                 mem.setBaseRegister(base);
                 mem.setIndexRegister(index);
                 mem.setDisplacement(disp);

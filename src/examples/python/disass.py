@@ -129,6 +129,7 @@ code = [
     (0x40019, "\xFF\xD0"),          # call   rax
     (0x4001b, "\xc3"),              # ret
     (0x4001c, "\x80\x00\x01"),      # add    BYTE PTR [rax],0x1
+    (0x4001f, "\x64\x48\x8B\x03"),  # mov    rax,QWORD PTR fs:[rbx]
 ]
 
 
@@ -160,10 +161,11 @@ if __name__ == '__main__':
         for op in inst.getOperands():
             print '    Operand:', op
             if op.getType() == OPERAND.MEM:
-                print '    - base :', op.getBaseRegister()
-                print '    - index:', op.getIndexRegister()
-                print '    - scale:', op.getScale()
-                print '    - disp :', op.getDisplacement()
+                print '    - segment :', op.getSegmentRegister()
+                print '    - base    :', op.getBaseRegister()
+                print '    - index   :', op.getIndexRegister()
+                print '    - scale   :', op.getScale()
+                print '    - disp    :', op.getDisplacement()
             print '    ---------------'
 
         print

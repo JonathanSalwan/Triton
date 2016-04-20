@@ -50,6 +50,9 @@ namespace triton {
         //! Contains the pc relative if it exists.
         triton::__uint pcRelative;
 
+        //! LEA - If the operand has a segment register, this attribute is filled.
+        RegisterOperand segmentReg;
+
         //! LEA - If the operand has a base register, this attribute is filled.
         RegisterOperand baseReg;
 
@@ -111,6 +114,9 @@ namespace triton {
         //! Returns the type of the operand (triton::arch::OP_MEM).
         triton::uint32 getType(void) const;
 
+        //! LEA - Returns the segment register operand.
+        RegisterOperand& getSegmentRegister(void);
+
         //! LEA - Returns the base register operand.
         RegisterOperand& getBaseRegister(void);
 
@@ -141,17 +147,20 @@ namespace triton {
         //! LEA - Sets pc relative.
         void setPcRelative(triton::__uint addr);
 
+        //! LEA - Sets the segment register operand.
+        void setSegmentRegister(RegisterOperand& segment);
+
         //! LEA - Sets the base register operand.
-        void setBaseRegister(RegisterOperand base);
+        void setBaseRegister(RegisterOperand& base);
 
         //! LEA - Sets the index register operand.
-        void setIndexRegister(RegisterOperand index);
+        void setIndexRegister(RegisterOperand& index);
 
         //! LEA - Sets the displacement operand.
-        void setDisplacement(ImmediateOperand displacement);
+        void setDisplacement(ImmediateOperand& displacement);
 
         //! LEA - Sets the scale operand.
-        void setScale(ImmediateOperand scale);
+        void setScale(ImmediateOperand& scale);
 
         //! Copies a MemoryOperand.
         void operator=(const MemoryOperand& other);
