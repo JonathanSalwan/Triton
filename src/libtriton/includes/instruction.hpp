@@ -194,6 +194,9 @@ namespace triton {
         //! Sets flag to define if the condition is taken or not.
         void setConditionTaken(bool flag);
 
+        //! Everything which must be done before the IR processing.
+        void preIRInit(void);
+
         //! Everything which must be done after the IR processing.
         void postIRInit(void);
 

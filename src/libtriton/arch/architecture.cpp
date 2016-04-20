@@ -176,10 +176,10 @@ namespace triton {
 
     void Architecture::buildSemantics(triton::arch::Instruction &inst) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::disassembly(): You must define an architecture.");
+        throw std::runtime_error("Architecture::buildSemantics(): You must define an architecture.");
 
-      /* Clear previous expressions if exist */
-      inst.symbolicExpressions.clear();
+      /* Pre IR processing */
+      inst.preIRInit();
 
       /* If the symbolic and taint engine are disable we skip the processing */
       if (!triton::api.isSymbolicEngineEnabled() && !triton::api.isTaintEngineEnabled())
@@ -192,9 +192,8 @@ namespace triton {
       /* Processing */
       this->cpu->buildSemantics(inst);
 
-      /* Clear unused data */
-      inst.memoryAccess.clear();
-      inst.registerState.clear();
+      /* Post IR processing */
+      inst.postIRInit();
 
       /*
        * If the symbolic engine is disable we delete symbolic

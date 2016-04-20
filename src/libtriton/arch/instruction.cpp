@@ -277,7 +277,14 @@ namespace triton {
     }
 
 
+    void Instruction::preIRInit(void) {
+      /* Clear previous expressions if exist */
+      this->symbolicExpressions.clear();
+    }
+
+
     void Instruction::postIRInit(void) {
+      /* Clear unused data */
       this->memoryAccess.clear();
       this->registerState.clear();
     }
