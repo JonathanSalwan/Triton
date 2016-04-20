@@ -277,6 +277,12 @@ namespace triton {
     }
 
 
+    void Instruction::postIRInit(void) {
+      this->memoryAccess.clear();
+      this->registerState.clear();
+    }
+
+
     void Instruction::reset(void) {
       this->partialReset();
       this->memoryAccess.clear();

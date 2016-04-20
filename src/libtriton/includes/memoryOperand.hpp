@@ -108,7 +108,7 @@ namespace triton {
         //! Returns the size (in bytes) of the memory vector.
         triton::uint32 getSize(void) const;
 
-        //! Returns the type of the operand.
+        //! Returns the type of the operand (triton::arch::OP_MEM).
         triton::uint32 getType(void) const;
 
         //! LEA - Returns the base register operand.

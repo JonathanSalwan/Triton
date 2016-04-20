@@ -194,6 +194,9 @@ namespace triton {
         //! Sets flag to define if the condition is taken or not.
         void setConditionTaken(bool flag);
 
+        //! Everything which must be done after the IR processing.
+        void postIRInit(void);
+
         //! Resets all instruction information.
         void reset(void);
 

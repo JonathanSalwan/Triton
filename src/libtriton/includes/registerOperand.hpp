@@ -112,7 +112,7 @@ namespace triton {
         //! Returns the size (in bytes) of the register.
         triton::uint32 getSize(void) const;
 
-        //! Returns the type of the operand.
+        //! Returns the type of the operand (triton::arch::OP_REG).
         triton::uint32 getType(void) const;
 
         //! Returns the concrete value.
@@ -129,7 +129,6 @@ namespace triton {
 
         //! Sets the concrete value of the register. This method cannot be called on a flag.
         void setConcreteValue(triton::uint512 concreteValue);
-
     };
 
     //! Displays a RegisterOperand.

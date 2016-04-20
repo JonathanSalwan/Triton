@@ -68,7 +68,7 @@ namespace triton {
         //! Returns the size (in bytes) of the immediate vector.
         triton::uint32 getSize(void) const;
 
-        //! Returns the type of the operand.
+        //! Returns the type of the operand (triton::arch::OP_IMM).
         triton::uint32 getType(void) const;
 
         //! Sets the value of the operand.

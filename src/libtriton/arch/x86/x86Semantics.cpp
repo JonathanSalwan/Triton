@@ -435,6 +435,7 @@ namespace triton {
             case ID_INS_XORPD:          triton::arch::x86::semantics::xorpd_s(inst);      break;
             case ID_INS_XORPS:          triton::arch::x86::semantics::xorps_s(inst);      break;
           }
+          inst.postIRInit();
         }
 
 
