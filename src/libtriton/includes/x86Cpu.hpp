@@ -128,6 +128,38 @@ namespace triton {
           triton::uint8 ymm7[QQWORD_SIZE];
           //! Concrete value of mxcsr
           triton::uint8 mxcsr[DWORD_SIZE];
+          //! Concrete value of cr0
+          triton::uint8 cr0[DWORD_SIZE];
+          //! Concrete value of cr1
+          triton::uint8 cr1[DWORD_SIZE];
+          //! Concrete value of cr2
+          triton::uint8 cr2[DWORD_SIZE];
+          //! Concrete value of cr3
+          triton::uint8 cr3[DWORD_SIZE];
+          //! Concrete value of cr4
+          triton::uint8 cr4[DWORD_SIZE];
+          //! Concrete value of cr5
+          triton::uint8 cr5[DWORD_SIZE];
+          //! Concrete value of cr6
+          triton::uint8 cr6[DWORD_SIZE];
+          //! Concrete value of cr7
+          triton::uint8 cr7[DWORD_SIZE];
+          //! Concrete value of cr8
+          triton::uint8 cr8[DWORD_SIZE];
+          //! Concrete value of cr9
+          triton::uint8 cr9[DWORD_SIZE];
+          //! Concrete value of cr10
+          triton::uint8 cr10[DWORD_SIZE];
+          //! Concrete value of cr11
+          triton::uint8 cr11[DWORD_SIZE];
+          //! Concrete value of cr12
+          triton::uint8 cr12[DWORD_SIZE];
+          //! Concrete value of cr13
+          triton::uint8 cr13[DWORD_SIZE];
+          //! Concrete value of cr14
+          triton::uint8 cr14[DWORD_SIZE];
+          //! Concrete value of cr15
+          triton::uint8 cr15[DWORD_SIZE];
           //! Concrete value of CS
           triton::uint8 cs[DWORD_SIZE];
           //! Concrete value of DS
@@ -168,6 +200,9 @@ namespace triton {
 
           //! Returns true if regId is a AVX-256 (YMM) register.
           bool isAVX256(triton::uint32 regId);
+
+          //! Returns true if regId is a control (cr) register.
+          bool isControl(triton::uint32 regId);
 
           //! Returns true if regId is a Segment.
           bool isSegment(triton::uint32 regId);

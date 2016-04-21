@@ -195,6 +195,23 @@ namespace triton {
 
       triton::arch::RegisterOperand x86_reg_mxcsr   = triton::arch::RegisterOperand();
 
+      triton::arch::RegisterOperand x86_reg_cr0    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr1    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr2    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr3    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr4    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr5    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr6    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr7    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr8    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr9    = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr10   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr11   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr12   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr13   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr14   = triton::arch::RegisterOperand();
+      triton::arch::RegisterOperand x86_reg_cr15   = triton::arch::RegisterOperand();
+
       triton::arch::RegisterOperand x86_reg_ie      = triton::arch::RegisterOperand();
       triton::arch::RegisterOperand x86_reg_de      = triton::arch::RegisterOperand();
       triton::arch::RegisterOperand x86_reg_ze      = triton::arch::RegisterOperand();
@@ -377,6 +394,22 @@ namespace triton {
         &TRITON_X86_REG_ZMM30,
         &TRITON_X86_REG_ZMM31,
         &TRITON_X86_REG_MXCSR,
+        &TRITON_X86_REG_CR0,
+        &TRITON_X86_REG_CR1,
+        &TRITON_X86_REG_CR2,
+        &TRITON_X86_REG_CR3,
+        &TRITON_X86_REG_CR4,
+        &TRITON_X86_REG_CR5,
+        &TRITON_X86_REG_CR6,
+        &TRITON_X86_REG_CR7,
+        &TRITON_X86_REG_CR8,
+        &TRITON_X86_REG_CR9,
+        &TRITON_X86_REG_CR10,
+        &TRITON_X86_REG_CR11,
+        &TRITON_X86_REG_CR12,
+        &TRITON_X86_REG_CR13,
+        &TRITON_X86_REG_CR14,
+        &TRITON_X86_REG_CR15,
         &TRITON_X86_REG_IE,
         &TRITON_X86_REG_DE,
         &TRITON_X86_REG_ZE,
@@ -1441,6 +1474,118 @@ namespace triton {
             std::get<3>(ret) = triton::arch::x86::ID_REG_MXCSR;
             break;
 
+          case triton::arch::x86::ID_REG_CR0:
+            std::get<0>(ret) = "cr0";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR0;
+            break;
+
+          case triton::arch::x86::ID_REG_CR1:
+            std::get<0>(ret) = "cr1";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR1;
+            break;
+
+          case triton::arch::x86::ID_REG_CR2:
+            std::get<0>(ret) = "cr2";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR2;
+            break;
+
+          case triton::arch::x86::ID_REG_CR3:
+            std::get<0>(ret) = "cr3";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR3;
+            break;
+
+          case triton::arch::x86::ID_REG_CR4:
+            std::get<0>(ret) = "cr4";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR4;
+            break;
+
+          case triton::arch::x86::ID_REG_CR5:
+            std::get<0>(ret) = "cr5";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR5;
+            break;
+
+          case triton::arch::x86::ID_REG_CR6:
+            std::get<0>(ret) = "cr6";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR6;
+            break;
+
+          case triton::arch::x86::ID_REG_CR7:
+            std::get<0>(ret) = "cr7";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR7;
+            break;
+
+          case triton::arch::x86::ID_REG_CR8:
+            std::get<0>(ret) = "cr8";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR8;
+            break;
+
+          case triton::arch::x86::ID_REG_CR9:
+            std::get<0>(ret) = "cr9";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR9;
+            break;
+
+          case triton::arch::x86::ID_REG_CR10:
+            std::get<0>(ret) = "cr10";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR10;
+            break;
+
+          case triton::arch::x86::ID_REG_CR11:
+            std::get<0>(ret) = "cr11";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR11;
+            break;
+
+          case triton::arch::x86::ID_REG_CR12:
+            std::get<0>(ret) = "cr12";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR12;
+            break;
+
+          case triton::arch::x86::ID_REG_CR13:
+            std::get<0>(ret) = "cr13";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR13;
+            break;
+
+          case triton::arch::x86::ID_REG_CR14:
+            std::get<0>(ret) = "cr14";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR14;
+            break;
+
+          case triton::arch::x86::ID_REG_CR15:
+            std::get<0>(ret) = "cr15";
+            std::get<1>(ret) = (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1;
+            std::get<2>(ret) = 0;
+            std::get<3>(ret) = triton::arch::x86::ID_REG_CR15;
+            break;
+
           case triton::arch::x86::ID_REG_IE:
             std::get<0>(ret) = "ie";
             std::get<1>(ret) = 0;
@@ -2246,6 +2391,70 @@ namespace triton {
 
           case triton::extlibs::capstone::X86_REG_ZMM31:
             tritonId = triton::arch::x86::ID_REG_ZMM31;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR0:
+            tritonId = triton::arch::x86::ID_REG_CR0;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR1:
+            tritonId = triton::arch::x86::ID_REG_CR1;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR2:
+            tritonId = triton::arch::x86::ID_REG_CR2;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR3:
+            tritonId = triton::arch::x86::ID_REG_CR3;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR4:
+            tritonId = triton::arch::x86::ID_REG_CR4;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR5:
+            tritonId = triton::arch::x86::ID_REG_CR5;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR6:
+            tritonId = triton::arch::x86::ID_REG_CR6;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR7:
+            tritonId = triton::arch::x86::ID_REG_CR7;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR8:
+            tritonId = triton::arch::x86::ID_REG_CR8;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR9:
+            tritonId = triton::arch::x86::ID_REG_CR9;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR10:
+            tritonId = triton::arch::x86::ID_REG_CR10;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR11:
+            tritonId = triton::arch::x86::ID_REG_CR11;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR12:
+            tritonId = triton::arch::x86::ID_REG_CR12;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR13:
+            tritonId = triton::arch::x86::ID_REG_CR13;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR14:
+            tritonId = triton::arch::x86::ID_REG_CR14;
+            break;
+
+          case triton::extlibs::capstone::X86_REG_CR15:
+            tritonId = triton::arch::x86::ID_REG_CR15;
             break;
 
           case triton::extlibs::capstone::X86_REG_CS:
