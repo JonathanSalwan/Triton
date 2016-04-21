@@ -125,6 +125,16 @@ namespace triton {
     }
 
 
+    std::list<triton::arch::MemoryOperand>& Instruction::getLoadAccess(void) {
+      return this->loadAccess;
+    }
+
+
+    std::list<triton::arch::MemoryOperand>& Instruction::getStoreAccess(void) {
+      return this->storeAccess;
+    }
+
+
     void Instruction::updateContext(triton::arch::MemoryOperand mem) {
       this->memoryAccess.push_back(mem);
     }

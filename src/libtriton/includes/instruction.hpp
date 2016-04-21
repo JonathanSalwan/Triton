@@ -137,6 +137,12 @@ namespace triton {
         //! Returns the prefix of the instruction.
         triton::uint32 getPrefix(void) const;
 
+        //! Returns the list of load access;
+        std::list<triton::arch::MemoryOperand>& getLoadAccess(void);
+
+        //! Returns the list of store access;
+        std::list<triton::arch::MemoryOperand>& getStoreAccess(void);
+
         //! If there is a concrete value recorded, build the appropriate MemoryOperand. Otherwise, perfrom the analysis based on args.
         triton::arch::MemoryOperand popMemoryAccess(triton::__uint=0, triton::uint32 size=0, triton::uint512 value=0);
 

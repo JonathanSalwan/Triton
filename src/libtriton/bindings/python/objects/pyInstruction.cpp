@@ -90,6 +90,9 @@ Returns the disassembly of the instruction as string.
 - **getFirstOperand(void)**<br>
 Returns the first operand of the instruction.
 
+- **getLoadAccess(void)**<br>
+Returns the list of LOAD access as list of \ref py_Memory_page.
+
 - **getNextAddress(void)**<br>
 Returns the next address of the instruction as integer.
 
@@ -107,6 +110,9 @@ Returns the second operand of the instruction.
 
 - **getSize(void)**<br>
 Returns the size of the instruction as integer.
+
+- **getStoreAccess(void)**<br>
+Returns the list of STORE access as list of \ref py_Memory_page.
 
 - **getThirdOperand(void)**<br>
 Returns the third operand of the instruction.
@@ -228,6 +234,26 @@ namespace triton {
       }
 
 
+      static PyObject* Instruction_getLoadAccess(PyObject* self, PyObject* noarg) {
+        try {
+          PyObject* ret;
+          triton::uint32 index = 0;
+          std::list<triton::arch::MemoryOperand>::iterator it;
+          std::list<triton::arch::MemoryOperand>& loadAccess = PyInstruction_AsInstruction(self)->getLoadAccess();
+
+          ret = xPyList_New(loadAccess.size());
+          for (it = loadAccess.begin(); it != loadAccess.end(); it++) {
+            PyList_SetItem(ret, index++, PyMemoryOperand(*it));
+          }
+
+          return ret;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* Instruction_getNextAddress(PyObject* self, PyObject* noarg) {
         try {
           return PyLong_FromUint(PyInstruction_AsInstruction(self)->getNextAddress());
@@ -253,6 +279,26 @@ namespace triton {
       static PyObject* Instruction_getSize(PyObject* self, PyObject* noarg) {
         try {
           return Py_BuildValue("k", PyInstruction_AsInstruction(self)->getSize());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* Instruction_getStoreAccess(PyObject* self, PyObject* noarg) {
+        try {
+          PyObject* ret;
+          triton::uint32 index = 0;
+          std::list<triton::arch::MemoryOperand>::iterator it;
+          std::list<triton::arch::MemoryOperand>& storeAccess = PyInstruction_AsInstruction(self)->getStoreAccess();
+
+          ret = xPyList_New(storeAccess.size());
+          for (it = storeAccess.begin(); it != storeAccess.end(); it++) {
+            PyList_SetItem(ret, index++, PyMemoryOperand(*it));
+          }
+
+          return ret;
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -610,12 +656,14 @@ namespace triton {
         {"getAddress",                Instruction_getAddress,               METH_NOARGS,     ""},
         {"getDisassembly",            Instruction_getDisassembly,           METH_NOARGS,     ""},
         {"getFirstOperand",           Instruction_getFirstOperand,          METH_NOARGS,     ""},
+        {"getLoadAccess",             Instruction_getLoadAccess,            METH_NOARGS,     ""},
         {"getNextAddress",            Instruction_getNextAddress,           METH_NOARGS,     ""},
         {"getOpcodes",                Instruction_getOpcodes,               METH_NOARGS,     ""},
         {"getOperands",               Instruction_getOperands,              METH_NOARGS,     ""},
         {"getPrefix",                 Instruction_getPrefix,                METH_NOARGS,     ""},
         {"getSecondOperand",          Instruction_getSecondOperand,         METH_NOARGS,     ""},
         {"getSize",                   Instruction_getSize,                  METH_NOARGS,     ""},
+        {"getStoreAccess",            Instruction_getStoreAccess,           METH_NOARGS,     ""},
         {"getSymbolicExpressions",    Instruction_getSymbolicExpressions,   METH_NOARGS,     ""},
         {"getThirdOperand",           Instruction_getThirdOperand,          METH_NOARGS,     ""},
         {"getThreadId",               Instruction_getThreadId,              METH_NOARGS,     ""},
