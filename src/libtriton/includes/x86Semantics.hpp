@@ -600,6 +600,9 @@ namespace triton {
       //! The RCR semantics.
       void rcr_s(triton::arch::Instruction& inst);
 
+      //! The RDTSC semantics.
+      void rdtsc_s(triton::arch::Instruction& inst);
+
       //! The RET semantics.
       void ret_s(triton::arch::Instruction& inst);
 

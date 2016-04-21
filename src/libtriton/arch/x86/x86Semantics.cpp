@@ -178,6 +178,7 @@ PUSH                         |            | Push a Value onto the Stack
 PXOR                         | mmx/sse2   | Logical Exclusive OR
 RCL                          |            | Rotate Left with Carry
 RCR                          |            | Rotate Right with Carry
+RDTSC                        |            | Read Time-Stamp Counter
 RET                          |            | Return from Procedure
 ROL                          |            | Rotate Left
 ROR                          |            | Rotate Right
@@ -386,6 +387,7 @@ namespace triton {
             case ID_INS_PXOR:           triton::arch::x86::semantics::pxor_s(inst);       break;
             case ID_INS_RCL:            triton::arch::x86::semantics::rcl_s(inst);        break;
             case ID_INS_RCR:            triton::arch::x86::semantics::rcr_s(inst);        break;
+            case ID_INS_RDTSC:          triton::arch::x86::semantics::rdtsc_s(inst);      break;
             case ID_INS_RET:            triton::arch::x86::semantics::ret_s(inst);        break;
             case ID_INS_ROL:            triton::arch::x86::semantics::rol_s(inst);        break;
             case ID_INS_ROR:            triton::arch::x86::semantics::ror_s(inst);        break;
@@ -6608,6 +6610,27 @@ namespace triton {
           /* Upate symbolic flags */
           triton::arch::x86::semantics::cfRcl_s(inst, expr1, dst, op2, true); /* Same as RCL */
           triton::arch::x86::semantics::ofRor_s(inst, expr1, dst, op2, true); /* Same as ROR */
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void rdtsc_s(triton::arch::Instruction& inst) {
+          auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
+          auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
+
+          /* Create symbolic operands */
+          auto op1 = triton::ast::bv(0, dst1.getBitSize());
+          auto op2 = triton::ast::bv(triton::api.getSymbolicExpressions().size(), dst2.getBitSize());
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, op1, dst1, "RDTSC operation (EDX)");
+          auto expr2 = triton::api.createSymbolicExpression(inst, op2, dst2, "RDTSC operation (EAX)");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.setTaint(dst1, triton::engines::taint::UNTAINTED);
+          expr2->isTainted = triton::api.setTaint(dst2, triton::engines::taint::UNTAINTED);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
