@@ -25,14 +25,6 @@ namespace triton {
    *  @{
    */
 
-    /*! Enumerates all kinds of origin. Must be a mask number < to 8-bits. */
-    enum origin_e {
-      UNDEFINED_ORIGIN  = 0, /*!< Undefined origin */
-      IMMEDIATE_ORIGIN  = 1, /*!< Immediate origin */
-      MEMORY_ORIGIN     = 2, /*!< Memory origin */
-      REGISTER_ORIGIN   = 4, /*!< Register origin */
-    };
-
     /*! Enumerates all kinds of node. Must be prime numbers. */
     enum kind_e {
       UNDEFINED_NODE = 0,             /*!< Unknown node */

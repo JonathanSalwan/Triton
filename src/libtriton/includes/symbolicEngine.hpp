@@ -173,11 +173,20 @@ namespace triton {
           //! Returns an immediate symbolic operand.
           triton::ast::AbstractNode* buildSymbolicImmediateOperand(triton::arch::ImmediateOperand& imm);
 
+          //! Returns an immediate symbolic operand and defines the immediate as input of the instruction.
+          triton::ast::AbstractNode* buildSymbolicImmediateOperand(triton::arch::Instruction& inst, triton::arch::ImmediateOperand& imm);
+
           //! Returns a symbolic memory operand.
           triton::ast::AbstractNode* buildSymbolicMemoryOperand(triton::arch::MemoryOperand& mem);
 
+          //! Returns a symbolic memory operand and defines the memory as input of the instruction.
+          triton::ast::AbstractNode* buildSymbolicMemoryOperand(triton::arch::Instruction& inst, triton::arch::MemoryOperand& mem);
+
           //! Returns a symbolic register operand.
           triton::ast::AbstractNode* buildSymbolicRegisterOperand(triton::arch::RegisterOperand& reg);
+
+          //! Returns a symbolic register operand and defines the register as input of the instruction.
+          triton::ast::AbstractNode* buildSymbolicRegisterOperand(triton::arch::Instruction& inst, triton::arch::RegisterOperand& reg);
 
           //! Returns the new symbolic memory expression expression and links this expression to the instruction.
           SymbolicExpression* createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::MemoryOperand& mem, std::string comment="");

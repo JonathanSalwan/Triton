@@ -586,8 +586,14 @@ namespace triton {
       /* Returns an immediate symbolic operand */
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicImmediateOperand(triton::arch::ImmediateOperand& imm) {
         triton::ast::AbstractNode* node = triton::ast::bv(imm.getValue(), imm.getBitSize());
-        node->setOrigin(triton::ast::IMMEDIATE_ORIGIN);
         return node;
+      }
+
+
+      /* Returns an immediate symbolic operand and defines the immediate as input of the instruction */
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicImmediateOperand(triton::arch::Instruction& inst, triton::arch::ImmediateOperand& imm) {
+        /* TODO: Link to inst */
+        return this->buildSymbolicImmediateOperand(imm);
       }
 
 
@@ -640,8 +646,16 @@ namespace triton {
             break;
         }
 
-        tmp->setOrigin(triton::ast::MEMORY_ORIGIN);
         return tmp;
+      }
+
+
+      /* Returns a symbolic memory operand and defines the memory as input of the instruction */
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicMemoryOperand(triton::arch::Instruction& inst, triton::arch::MemoryOperand& mem) {
+        triton::ast::AbstractNode* node = this->buildSymbolicMemoryOperand(mem);
+        mem.setConcreteValue(node->evaluate());
+        inst.setLoadAccess(mem);
+        return node;
       }
 
 
@@ -658,14 +672,20 @@ namespace triton {
         else
           op = triton::ast::bv(triton::api.getLastRegisterValue(reg), bvSize);
 
-        op->setOrigin(triton::ast::REGISTER_ORIGIN);
         return op;
+      }
+
+
+      /* Returns a symbolic register operand and defines the register as input of the instruction */
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicRegisterOperand(triton::arch::Instruction& inst, triton::arch::RegisterOperand& reg) {
+        /* TODO: Link to inst */
+        return this->buildSymbolicRegisterOperand(reg);
       }
 
 
       /* Returns the new symbolic memory expression */
       SymbolicExpression* SymbolicEngine::createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::MemoryOperand& mem, std::string comment) {
-        triton::ast::AbstractNode*            tmp;
+        triton::ast::AbstractNode* tmp = nullptr;
         std::list<triton::ast::AbstractNode*> ret;
 
         SymbolicExpression* se   = nullptr;
@@ -673,10 +693,8 @@ namespace triton {
         triton::uint32 writeSize = mem.getSize();
 
         /* Record the aligned memory for a symbolic optimization */
-        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY)) {
-          node->setOrigin(triton::ast::MEMORY_ORIGIN);
+        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
           this->alignedMemoryReference[std::make_pair(address, writeSize)] = node;
-        }
 
         /*
          * As the x86's memory can be accessed without alignment, each byte of the
@@ -695,12 +713,21 @@ namespace triton {
         }
 
         /* If there is only one reference, we return the symbolic expression */
-        if (ret.size() == 1)
+        if (ret.size() == 1) {
+          if (tmp != nullptr)
+            mem.setConcreteValue(tmp->evaluate());
+          inst.setStoreAccess(mem);
           return se;
+        }
 
         /* Otherwise, we return the concatenation of all symbolic expressions */
-        se = this->newSymbolicExpression(triton::ast::concat(ret), triton::engines::symbolic::UNDEF, "Temporary concatenation reference - " + comment);
+        tmp = triton::ast::concat(ret);
+        mem.setConcreteValue(tmp->evaluate());
+
+        se  = this->newSymbolicExpression(tmp, triton::engines::symbolic::UNDEF, "Temporary concatenation reference - " + comment);
         se->setOriginAddress(address);
+
+        inst.setStoreAccess(mem);
         inst.addSymbolicExpression(se);
         return se;
       }

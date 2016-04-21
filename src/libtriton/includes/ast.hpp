@@ -44,9 +44,6 @@ namespace triton {
         //! The kind of the node.
         enum kind_e kind;
 
-        //! The mask of the origin of the node. \sa triton::ast::origin_e.
-        triton::uint8 origin;
-
         //! The childs of the node.
         std::vector<AbstractNode*> childs;
 
@@ -77,9 +74,6 @@ namespace triton {
 
         //! Returns the kind of the node.
         enum kind_e getKind(void);
-
-        //! Returns the origin of the node.
-        triton::uint8 getOrigin(void);
 
         //! Returns the size of the node.
         triton::uint32 getBitvectorSize(void);
@@ -116,12 +110,6 @@ namespace triton {
 
         //! Sets the size of the node.
         void setBitvectorSize(triton::uint32 size);
-
-        //! Sets the origin of the node.
-        void setOrigin(triton::uint8 origin);
-
-        //! Adds an origin to the node.
-        void addOrigin(triton::uint8 origin);
 
         //! Adds a child.
         void addChild(AbstractNode* child);

@@ -542,9 +542,27 @@ namespace triton {
   }
 
 
+  triton::ast::AbstractNode* API::buildSymbolicOperand(triton::arch::Instruction& inst, triton::arch::OperandWrapper& op) {
+    this->checkSymbolic();
+    switch (op.getType()) {
+      case triton::arch::OP_IMM: return this->buildSymbolicImmediateOperand(inst, op.getImmediate());
+      case triton::arch::OP_MEM: return this->buildSymbolicMemoryOperand(inst, op.getMemory());
+      case triton::arch::OP_REG: return this->buildSymbolicRegisterOperand(inst, op.getRegister());
+      default:
+        throw std::runtime_error("API::buildSymbolicOperand(): Invalid operand.");
+    }
+  }
+
+
   triton::ast::AbstractNode* API::buildSymbolicImmediateOperand(triton::arch::ImmediateOperand& imm) {
     this->checkSymbolic();
     return this->sym->buildSymbolicImmediateOperand(imm);
+  }
+
+
+  triton::ast::AbstractNode* API::buildSymbolicImmediateOperand(triton::arch::Instruction& inst, triton::arch::ImmediateOperand& imm) {
+    this->checkSymbolic();
+    return this->sym->buildSymbolicImmediateOperand(inst, imm);
   }
 
 
@@ -554,9 +572,21 @@ namespace triton {
   }
 
 
+  triton::ast::AbstractNode* API::buildSymbolicMemoryOperand(triton::arch::Instruction& inst, triton::arch::MemoryOperand& mem) {
+    this->checkSymbolic();
+    return this->sym->buildSymbolicMemoryOperand(inst, mem);
+  }
+
+
   triton::ast::AbstractNode* API::buildSymbolicRegisterOperand(triton::arch::RegisterOperand& reg) {
     this->checkSymbolic();
     return this->sym->buildSymbolicRegisterOperand(reg);
+  }
+
+
+  triton::ast::AbstractNode* API::buildSymbolicRegisterOperand(triton::arch::Instruction& inst, triton::arch::RegisterOperand& reg) {
+    this->checkSymbolic();
+    return this->sym->buildSymbolicRegisterOperand(inst, reg);
   }
 
 

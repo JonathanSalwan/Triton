@@ -49,11 +49,13 @@ namespace triton {
       this->branch              = other.branch;
       this->conditionTaken      = other.conditionTaken;
       this->controlFlow         = other.controlFlow;
+      this->loadAccess          = other.loadAccess;
       this->memoryAccess        = other.memoryAccess;
-      this->size                = other.size;
       this->operands            = other.operands;
       this->prefix              = other.prefix;
       this->registerState       = other.registerState;
+      this->size                = other.size;
+      this->storeAccess         = other.storeAccess;
       this->symbolicExpressions = other.symbolicExpressions;
       this->tid                 = other.tid;
       this->type                = other.type;
@@ -156,6 +158,16 @@ namespace triton {
     }
 
 
+    void Instruction::setLoadAccess(triton::arch::MemoryOperand mem) {
+      this->loadAccess.push_back(mem);
+    }
+
+
+    void Instruction::setStoreAccess(triton::arch::MemoryOperand mem) {
+      this->storeAccess.push_back(mem);
+    }
+
+
     void Instruction::setSize(triton::uint32 size) {
       this->size = size;
     }
@@ -216,41 +228,16 @@ namespace triton {
     }
 
 
-    bool Instruction::isMemoryRead(triton::ast::AbstractNode* root) {
-      std::vector<triton::ast::AbstractNode*>::iterator child;
-      std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
-
-      /* Iterate on all symbolic expressions */
-      if (root == nullptr) {
-        for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
-          root = (*it)->getAst();
-          if (this->isMemoryRead(root) == true)
-            return true;
-        }
-        return false;
-      }
-
-      /* If the node comes from a memory area return true */
-      if (root->getOrigin() & triton::ast::MEMORY_ORIGIN)
+    bool Instruction::isMemoryRead(void) {
+      if (this->loadAccess.size() >= 1)
         return true;
-
-      /* Iterate on all sub-trees */
-      for (child = root->getChilds().begin(); child != root->getChilds().end(); child++) {
-        if (this->isMemoryRead(*child) == true)
-          return true;
-      }
-
-      /* Nothing found */
       return false;
     }
 
 
     bool Instruction::isMemoryWrite(void) {
-      std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
-      for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
-        if ((*it)->isMemory() == true)
-          return true;
-      }
+      if (this->storeAccess.size() >= 1)
+        return true;
       return false;
     }
 
@@ -306,9 +293,11 @@ namespace triton {
       this->tid             = 0;
       this->type            = 0;
 
-      this->operands.clear();
-      this->symbolicExpressions.clear();
       this->disassembly.clear();
+      this->loadAccess.clear();
+      this->operands.clear();
+      this->storeAccess.clear();
+      this->symbolicExpressions.clear();
 
       std::memset(this->opcodes, 0x00, sizeof(this->opcodes));
     }

@@ -301,14 +301,26 @@ namespace triton {
         //! [**symbolic api**] - Returns a symbolic operand.
         triton::ast::AbstractNode* buildSymbolicOperand(triton::arch::OperandWrapper& op);
 
+        //! [**symbolic api**] - Returns a symbolic operand.
+        triton::ast::AbstractNode* buildSymbolicOperand(triton::arch::Instruction& inst, triton::arch::OperandWrapper& op);
+
         //! [**symbolic api**] - Returns an immediate symbolic operand.
         triton::ast::AbstractNode* buildSymbolicImmediateOperand(triton::arch::ImmediateOperand& imm);
+
+        //! [**symbolic api**] - Returns an immediate symbolic operand.
+        triton::ast::AbstractNode* buildSymbolicImmediateOperand(triton::arch::Instruction& inst, triton::arch::ImmediateOperand& imm);
 
         //! [**symbolic api**] - Returns a symbolic memory operand.
         triton::ast::AbstractNode* buildSymbolicMemoryOperand(triton::arch::MemoryOperand& mem);
 
+        //! [**symbolic api**] - Returns a symbolic memory operand.
+        triton::ast::AbstractNode* buildSymbolicMemoryOperand(triton::arch::Instruction& inst, triton::arch::MemoryOperand& mem);
+
         //! [**symbolic api**] - Returns a symbolic register operand.
         triton::ast::AbstractNode* buildSymbolicRegisterOperand(triton::arch::RegisterOperand& reg);
+
+        //! [**symbolic api**] - Returns a symbolic register operand.
+        triton::ast::AbstractNode* buildSymbolicRegisterOperand(triton::arch::Instruction& inst, triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Returns a new symbolic expression. Note that if there are simplification passes recorded, simplification will be applied.
         triton::engines::symbolic::SymbolicExpression* newSymbolicExpression(triton::ast::AbstractNode* node, std::string comment="");

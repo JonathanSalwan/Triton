@@ -64,6 +64,12 @@ namespace triton {
         //! The prefix of the instruction.
         triton::uint32 prefix;
 
+        //! Implicit and explicit load access. This list is filled at post IR processing.
+        std::list<triton::arch::MemoryOperand> loadAccess;
+
+        //! Implicit and explicit store access. This list is filled at post IR processing.
+        std::list<triton::arch::MemoryOperand> storeAccess;
+
         //! True if this instruction is a branch.
         bool branch;
 
@@ -143,6 +149,12 @@ namespace triton {
         //! Returns the size of the instruction
         triton::uint32 getSize(void) const;
 
+        //! Sets a load access;
+        void setLoadAccess(triton::arch::MemoryOperand mem);
+
+        //! Sets a store access;
+        void setStoreAccess(triton::arch::MemoryOperand mem);
+
         //! Sets the size of the instruction
         void setSize(triton::uint32 size);
 
@@ -177,7 +189,7 @@ namespace triton {
         bool isTainted(void);
 
         //! Returns true if the instruction contains an expression which reads the memory.
-        bool isMemoryRead(triton::ast::AbstractNode* root=nullptr);
+        bool isMemoryRead(void);
 
         //! Returns true if the instruction contains an expression which writes into the memory.
         bool isMemoryWrite(void);

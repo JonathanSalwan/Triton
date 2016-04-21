@@ -442,7 +442,7 @@ namespace triton {
           auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_SP.getParent());
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
           auto op2 = triton::ast::bv(delta, dst.getBitSize());
 
           /* Create the semantics */
@@ -460,7 +460,7 @@ namespace triton {
           auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_SP.getParent());
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
           auto op2 = triton::ast::bv(delta, dst.getBitSize());
 
           /* Create the semantics */
@@ -504,8 +504,8 @@ namespace triton {
           auto zf      = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(counter);
-          auto op2 = triton::api.buildSymbolicOperand(zf);
+          auto op1 = triton::api.buildSymbolicOperand(inst, counter);
+          auto op2 = triton::api.buildSymbolicOperand(inst, zf);
 
           switch (inst.getPrefix()) {
 
@@ -802,7 +802,7 @@ namespace triton {
           if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0)
             node = triton::ast::extract(high, high, triton::ast::reference(parent->getId()));
           else
-            node = triton::api.buildSymbolicOperand(cf);
+            node = triton::api.buildSymbolicOperand(inst, cf);
 
           /* Create the symbolic expression */
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
@@ -830,7 +830,7 @@ namespace triton {
           if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0)
             node = triton::ast::extract(low, low, triton::ast::reference(parent->getId()));
           else
-            node = triton::api.buildSymbolicOperand(cf);
+            node = triton::api.buildSymbolicOperand(inst, cf);
 
           /* Create the symbolic expression */
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
@@ -869,7 +869,7 @@ namespace triton {
             );
           }
           else {
-            node = triton::api.buildSymbolicOperand(cf);
+            node = triton::api.buildSymbolicOperand(inst, cf);
           }
 
           /* Create the symbolic expression */
@@ -894,7 +894,7 @@ namespace triton {
            */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
-                        triton::api.buildSymbolicOperand(cf),
+                        triton::api.buildSymbolicOperand(inst, cf),
                         triton::ast::ite(
                           triton::ast::bvugt(op2, triton::ast::bv(bvSize, bvSize)),
                           triton::ast::extract(0, 0, triton::ast::bvlshr(op1, triton::ast::bvsub(triton::ast::bv(bvSize, bvSize), triton::ast::bv(1, bvSize)))),
@@ -920,7 +920,7 @@ namespace triton {
            */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
-                        triton::api.buildSymbolicOperand(cf),
+                        triton::api.buildSymbolicOperand(inst, cf),
                         triton::ast::extract(0, 0,
                           triton::ast::bvlshr(
                             op1,
@@ -950,7 +950,7 @@ namespace triton {
            */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
-                        triton::api.buildSymbolicOperand(cf),
+                        triton::api.buildSymbolicOperand(inst, cf),
                         triton::ast::extract(0, 0,
                           triton::ast::bvlshr(
                             op1,
@@ -1111,7 +1111,7 @@ namespace triton {
           if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() == 1) {
             node = triton::ast::extract(0, 0,
                       triton::ast::bvxor(
-                        triton::ast::zx(bvSize-1, triton::api.buildSymbolicOperand(cf)),
+                        triton::ast::zx(bvSize-1, triton::api.buildSymbolicOperand(inst, cf)),
                         triton::ast::bvshl(
                           triton::ast::extract(high, low, triton::ast::reference(parent->getId())),
                           triton::ast::bvsub(triton::ast::bv(bvSize, bvSize), triton::ast::bv(1, bvSize))
@@ -1120,7 +1120,7 @@ namespace triton {
                     );
           }
           else {
-            node = triton::api.buildSymbolicOperand(of);
+            node = triton::api.buildSymbolicOperand(inst, of);
           }
 
           /* Create the symbolic expression */
@@ -1163,7 +1163,7 @@ namespace triton {
                    );
           }
           else {
-            node = triton::api.buildSymbolicOperand(of);
+            node = triton::api.buildSymbolicOperand(inst, of);
           }
 
           /* Create the symbolic expression */
@@ -1187,7 +1187,7 @@ namespace triton {
                           triton::ast::bvand(op2, triton::ast::bv(bvSize-1, bvSize)),
                           triton::ast::bv(1, bvSize)),
                         triton::ast::bv(0, 1),
-                        triton::api.buildSymbolicOperand(of)
+                        triton::api.buildSymbolicOperand(inst, of)
                       );
 
           /* Create the symbolic expression */
@@ -1216,7 +1216,7 @@ namespace triton {
                             triton::ast::bvlshr(op1, triton::ast::bvsub(triton::ast::bv(bvSize, bvSize), triton::ast::bv(2, bvSize)))
                           )
                         ),
-                        triton::api.buildSymbolicOperand(of)
+                        triton::api.buildSymbolicOperand(inst, of)
                       );
 
           /* Create the symbolic expression */
@@ -1241,7 +1241,7 @@ namespace triton {
                           triton::ast::bvand(op2, triton::ast::bv(bvSize-1, bvSize)),
                           triton::ast::bv(1, bvSize)),
                         triton::ast::extract(high, high, op1),
-                        triton::api.buildSymbolicOperand(of)
+                        triton::api.buildSymbolicOperand(inst, of)
                       );
 
           /* Create the symbolic expression */
@@ -1332,7 +1332,7 @@ namespace triton {
 
           auto node2 = triton::ast::ite(
                          triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
-                         triton::api.buildSymbolicOperand(pf),
+                         triton::api.buildSymbolicOperand(inst, pf),
                          node1
                        );
 
@@ -1373,7 +1373,7 @@ namespace triton {
            */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
-                        triton::api.buildSymbolicOperand(sf),
+                        triton::api.buildSymbolicOperand(inst, sf),
                         triton::ast::extract(high, high, triton::ast::reference(parent->getId()))
                       );
 
@@ -1444,7 +1444,7 @@ namespace triton {
            */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
-                        triton::api.buildSymbolicOperand(zf),
+                        triton::api.buildSymbolicOperand(inst, zf),
                         triton::ast::ite(
                           triton::ast::equal(
                             triton::ast::extract(high, low, triton::ast::reference(parent->getId())),
@@ -1469,9 +1469,9 @@ namespace triton {
           auto cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(cf);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, cf);
 
           /* Create the semantics */
           auto node = triton::ast::bvadd(triton::ast::bvadd(op1, op2), triton::ast::zx(dst.getBitSize()-1, op3));
@@ -1501,8 +1501,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvadd(op1, op2);
@@ -1531,8 +1531,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvand(op1, op2);
@@ -1560,8 +1560,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvand(triton::ast::bvnot(op1), op2);
@@ -1582,8 +1582,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvand(triton::ast::bvnot(op1), op2);
@@ -1604,8 +1604,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvand(op1, op2);
@@ -1626,8 +1626,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvand(op1, op2);
@@ -1650,8 +1650,8 @@ namespace triton {
           auto bvSize2 = src.getBitSize();
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           triton::ast::AbstractNode* node = nullptr;
@@ -1833,8 +1833,8 @@ namespace triton {
           auto bvSize2 = src.getBitSize();
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           triton::ast::AbstractNode* node = nullptr;
@@ -2013,7 +2013,7 @@ namespace triton {
           auto src = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode *> bytes;
@@ -2059,7 +2059,7 @@ namespace triton {
           auto src        = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics - side effect */
           auto node1 = triton::ast::bv(inst.getNextAddress(), pc.getBitSize());
@@ -2086,7 +2086,7 @@ namespace triton {
           auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
 
           /* Create the semantics */
           auto node = triton::ast::sx(BYTE_SIZE_BIT, triton::ast::extract(BYTE_SIZE_BIT-1, 0, op1));
@@ -2106,7 +2106,7 @@ namespace triton {
           auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
 
           /* Create the semantics */
           auto node = triton::ast::sx(DWORD_SIZE_BIT, triton::ast::extract(DWORD_SIZE_BIT-1, 0, op1));
@@ -2140,7 +2140,7 @@ namespace triton {
           auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
 
           /* Create the semantics */
           auto node = triton::ast::bvnot(op1);
@@ -2163,10 +2163,10 @@ namespace triton {
           auto zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(cf);
-          auto op4 = triton::api.buildSymbolicOperand(zf);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, cf);
+          auto op4 = triton::api.buildSymbolicOperand(inst, zf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvand(triton::ast::bvnot(op3), triton::ast::bvnot(op4)), triton::ast::bvtrue()), op2, op1);
@@ -2193,9 +2193,9 @@ namespace triton {
           auto cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(cf);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, cf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvfalse()), op2, op1);
@@ -2222,9 +2222,9 @@ namespace triton {
           auto cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(cf);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, cf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvtrue()), op2, op1);
@@ -2252,10 +2252,10 @@ namespace triton {
           auto zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(cf);
-          auto op4 = triton::api.buildSymbolicOperand(zf);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, cf);
+          auto op4 = triton::api.buildSymbolicOperand(inst, zf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvor(op3, op4), triton::ast::bvtrue()), op2, op1);
@@ -2282,9 +2282,9 @@ namespace triton {
           auto zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(zf);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, zf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvtrue()), op2, op1);
@@ -2313,11 +2313,11 @@ namespace triton {
           auto zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(sf);
-          auto op4 = triton::api.buildSymbolicOperand(of);
-          auto op5 = triton::api.buildSymbolicOperand(zf);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, sf);
+          auto op4 = triton::api.buildSymbolicOperand(inst, of);
+          auto op5 = triton::api.buildSymbolicOperand(inst, zf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvor(triton::ast::bvxor(op3, op4), op5), triton::ast::bvfalse()), op2, op1);
@@ -2345,10 +2345,10 @@ namespace triton {
           auto of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(sf);
-          auto op4 = triton::api.buildSymbolicOperand(of);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, sf);
+          auto op4 = triton::api.buildSymbolicOperand(inst, of);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, op4), op2, op1);
@@ -2376,10 +2376,10 @@ namespace triton {
           auto of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(sf);
-          auto op4 = triton::api.buildSymbolicOperand(of);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, sf);
+          auto op4 = triton::api.buildSymbolicOperand(inst, of);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvxor(op3, op4), triton::ast::bvtrue()), op2, op1);
@@ -2408,11 +2408,11 @@ namespace triton {
           auto zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(sf);
-          auto op4 = triton::api.buildSymbolicOperand(of);
-          auto op5 = triton::api.buildSymbolicOperand(zf);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, sf);
+          auto op4 = triton::api.buildSymbolicOperand(inst, of);
+          auto op5 = triton::api.buildSymbolicOperand(inst, zf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvor(triton::ast::bvxor(op3, op4), op5), triton::ast::bvtrue()), op2, op1);
@@ -2439,9 +2439,9 @@ namespace triton {
           auto zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(zf);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, zf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvfalse()), op2, op1);
@@ -2468,9 +2468,9 @@ namespace triton {
           auto of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(of);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, of);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvfalse()), op2, op1);
@@ -2497,9 +2497,9 @@ namespace triton {
           auto pf  = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(pf);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, pf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvfalse()), op2, op1);
@@ -2526,9 +2526,9 @@ namespace triton {
           auto sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(sf);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, sf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvfalse()), op2, op1);
@@ -2555,9 +2555,9 @@ namespace triton {
           auto of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(of);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, of);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvtrue()), op2, op1);
@@ -2584,9 +2584,9 @@ namespace triton {
           auto pf  = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(pf);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, pf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvtrue()), op2, op1);
@@ -2613,9 +2613,9 @@ namespace triton {
           auto sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(sf);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, sf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvtrue()), op2, op1);
@@ -2641,8 +2641,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::ast::sx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(src));
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::ast::sx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(inst, src));
 
           /* Create the semantics */
           auto node = triton::ast::bvsub(op1, op2);
@@ -2678,11 +2678,11 @@ namespace triton {
             inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(index1);
-          auto op4 = triton::api.buildSymbolicOperand(index2);
-          auto op5 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, index1);
+          auto op4 = triton::api.buildSymbolicOperand(inst, index2);
+          auto op5 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = triton::ast::bvsub(op1, op2);
@@ -2732,11 +2732,11 @@ namespace triton {
             inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(index1);
-          auto op4 = triton::api.buildSymbolicOperand(index2);
-          auto op5 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, index1);
+          auto op4 = triton::api.buildSymbolicOperand(inst, index2);
+          auto op5 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = triton::ast::bvsub(op1, op2);
@@ -2786,11 +2786,11 @@ namespace triton {
             inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(index1);
-          auto op4 = triton::api.buildSymbolicOperand(index2);
-          auto op5 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, index1);
+          auto op4 = triton::api.buildSymbolicOperand(inst, index2);
+          auto op5 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = triton::ast::bvsub(op1, op2);
@@ -2840,11 +2840,11 @@ namespace triton {
             inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(index1);
-          auto op4 = triton::api.buildSymbolicOperand(index2);
-          auto op5 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, index1);
+          auto op4 = triton::api.buildSymbolicOperand(inst, index2);
+          auto op5 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = triton::ast::bvsub(op1, op2);
@@ -2900,9 +2900,9 @@ namespace triton {
           }
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(accumulator);
-          auto op2 = triton::api.buildSymbolicOperand(src1);
-          auto op3 = triton::api.buildSymbolicOperand(src2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, accumulator);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, src2);
 
           /* Create the semantics */
           auto node1 = triton::ast::bvsub(op1, op2);
@@ -2940,11 +2940,11 @@ namespace triton {
           auto src5 = triton::arch::OperandWrapper(TRITON_X86_REG_EBX);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src1);
-          auto op2 = triton::api.buildSymbolicOperand(src2);
-          auto op3 = triton::api.buildSymbolicOperand(src3);
-          auto op4 = triton::api.buildSymbolicOperand(src4);
-          auto op5 = triton::api.buildSymbolicOperand(src5);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src2);
+          auto op3 = triton::api.buildSymbolicOperand(inst, src3);
+          auto op4 = triton::api.buildSymbolicOperand(inst, src4);
+          auto op5 = triton::api.buildSymbolicOperand(inst, src5);
 
           /* Create the semantics */
           /* CMP8B */
@@ -2980,7 +2980,7 @@ namespace triton {
           auto src = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics - TMP = 128 bitvec (RDX:RAX) */
           auto node1 = triton::ast::sx(QWORD_SIZE_BIT, op1);
@@ -3018,7 +3018,7 @@ namespace triton {
           auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
 
           /* Create the semantics */
           auto node = triton::ast::sx(WORD_SIZE_BIT, triton::ast::extract(WORD_SIZE_BIT-1, 0, op1));
@@ -3038,7 +3038,7 @@ namespace triton {
           auto dst = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
           auto op2 = triton::ast::bv(1, dst.getBitSize());
 
           /* Create the semantics */
@@ -3066,7 +3066,7 @@ namespace triton {
           auto src = inst.operands[0];
 
           /* Create symbolic operands */
-          auto divisor = triton::api.buildSymbolicOperand(src);
+          auto divisor = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           switch (src.getSize()) {
@@ -3074,7 +3074,7 @@ namespace triton {
             case BYTE_SIZE: {
               /* AX */
               auto ax = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
-              auto dividend = triton::api.buildSymbolicOperand(ax);
+              auto dividend = triton::api.buildSymbolicOperand(inst, ax);
               /* res = AX / Source */
               auto result = triton::ast::bvudiv(dividend, triton::ast::zx(BYTE_SIZE_BIT, divisor));
               /* mod = AX % Source */
@@ -3096,7 +3096,7 @@ namespace triton {
               /* DX:AX */
               auto dx = triton::arch::OperandWrapper(TRITON_X86_REG_DX);
               auto ax = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
-              auto dividend = triton::ast::concat(triton::api.buildSymbolicOperand(dx), triton::api.buildSymbolicOperand(ax));
+              auto dividend = triton::ast::concat(triton::api.buildSymbolicOperand(inst, dx), triton::api.buildSymbolicOperand(inst, ax));
               /* res = DX:AX / Source */
               auto result = triton::ast::extract((WORD_SIZE_BIT - 1), 0, triton::ast::bvudiv(dividend, triton::ast::zx(WORD_SIZE_BIT, divisor)));
               /* mod = DX:AX % Source */
@@ -3116,7 +3116,7 @@ namespace triton {
               /* EDX:EAX */
               auto edx = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
               auto eax = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
-              auto dividend = triton::ast::concat(triton::api.buildSymbolicOperand(edx), triton::api.buildSymbolicOperand(eax));
+              auto dividend = triton::ast::concat(triton::api.buildSymbolicOperand(inst, edx), triton::api.buildSymbolicOperand(inst, eax));
               /* res = EDX:EAX / Source */
               auto result = triton::ast::extract((DWORD_SIZE_BIT - 1), 0, triton::ast::bvudiv(dividend, triton::ast::zx(DWORD_SIZE_BIT, divisor)));
               /* mod = EDX:EAX % Source */
@@ -3136,7 +3136,7 @@ namespace triton {
               /* RDX:RAX */
               auto rdx = triton::arch::OperandWrapper(TRITON_X86_REG_RDX);
               auto rax = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
-              auto dividend = triton::ast::concat(triton::api.buildSymbolicOperand(rdx), triton::api.buildSymbolicOperand(rax));
+              auto dividend = triton::ast::concat(triton::api.buildSymbolicOperand(inst, rdx), triton::api.buildSymbolicOperand(inst, rax));
               /* res = RDX:RAX / Source */
               auto result = triton::ast::extract((QWORD_SIZE_BIT - 1), 0, triton::ast::bvudiv(dividend, triton::ast::zx(QWORD_SIZE_BIT, divisor)));
               /* mod = RDX:RAX % Source */
@@ -3163,7 +3163,7 @@ namespace triton {
           auto src = inst.operands[0];
 
           /* Create symbolic operands */
-          auto divisor = triton::api.buildSymbolicOperand(src);
+          auto divisor = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           switch (src.getSize()) {
@@ -3171,7 +3171,7 @@ namespace triton {
             case BYTE_SIZE: {
               /* AX */
               auto ax = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
-              auto dividend = triton::api.buildSymbolicOperand(ax);
+              auto dividend = triton::api.buildSymbolicOperand(inst, ax);
               /* res = AX / Source */
               auto result = triton::ast::bvsdiv(dividend, triton::ast::sx(BYTE_SIZE_BIT, divisor));
               /* mod = AX % Source */
@@ -3193,7 +3193,7 @@ namespace triton {
               /* DX:AX */
               auto dx = triton::arch::OperandWrapper(TRITON_X86_REG_DX);
               auto ax = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
-              auto dividend = triton::ast::concat(triton::api.buildSymbolicOperand(dx), triton::api.buildSymbolicOperand(ax));
+              auto dividend = triton::ast::concat(triton::api.buildSymbolicOperand(inst, dx), triton::api.buildSymbolicOperand(inst, ax));
               /* res = DX:AX / Source */
               auto result = triton::ast::extract((WORD_SIZE_BIT - 1), 0, triton::ast::bvsdiv(dividend, triton::ast::sx(WORD_SIZE_BIT, divisor)));
               /* mod = DX:AX % Source */
@@ -3213,7 +3213,7 @@ namespace triton {
               /* EDX:EAX */
               auto edx = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
               auto eax = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
-              auto dividend = triton::ast::concat(triton::api.buildSymbolicOperand(edx), triton::api.buildSymbolicOperand(eax));
+              auto dividend = triton::ast::concat(triton::api.buildSymbolicOperand(inst, edx), triton::api.buildSymbolicOperand(inst, eax));
               /* res = EDX:EAX / Source */
               auto result = triton::ast::extract((DWORD_SIZE_BIT - 1), 0, triton::ast::bvsdiv(dividend, triton::ast::sx(DWORD_SIZE_BIT, divisor)));
               /* mod = EDX:EAX % Source */
@@ -3233,7 +3233,7 @@ namespace triton {
               /* RDX:RAX */
               auto rdx = triton::arch::OperandWrapper(TRITON_X86_REG_RDX);
               auto rax = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
-              auto dividend = triton::ast::concat(triton::api.buildSymbolicOperand(rdx), triton::api.buildSymbolicOperand(rax));
+              auto dividend = triton::ast::concat(triton::api.buildSymbolicOperand(inst, rdx), triton::api.buildSymbolicOperand(inst, rax));
               /* res = RDX:RAX / Source */
               auto result = triton::ast::extract((QWORD_SIZE_BIT - 1), 0, triton::ast::bvsdiv(dividend, triton::ast::sx(QWORD_SIZE_BIT, divisor)));
               /* mod = RDX:RAX % Source */
@@ -3270,8 +3270,8 @@ namespace triton {
                 case BYTE_SIZE: {
                   auto ax   = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
                   auto al   = triton::arch::OperandWrapper(TRITON_X86_REG_AL);
-                  auto op1  = triton::api.buildSymbolicOperand(al);
-                  auto op2  = triton::api.buildSymbolicOperand(src);
+                  auto op1  = triton::api.buildSymbolicOperand(inst, al);
+                  auto op2  = triton::api.buildSymbolicOperand(inst, src);
                   auto node = triton::ast::bvmul(triton::ast::sx(BYTE_SIZE_BIT, op1), triton::ast::sx(BYTE_SIZE_BIT, op2));
                   auto expr = triton::api.createSymbolicExpression(inst, node, ax, "IMUL operation");
                   expr->isTainted = triton::api.taintUnion(ax, src);
@@ -3284,8 +3284,8 @@ namespace triton {
                 case WORD_SIZE: {
                   auto ax    = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
                   auto dx    = triton::arch::OperandWrapper(TRITON_X86_REG_DX);
-                  auto op1   = triton::api.buildSymbolicOperand(ax);
-                  auto op2   = triton::api.buildSymbolicOperand(src);
+                  auto op1   = triton::api.buildSymbolicOperand(inst, ax);
+                  auto op2   = triton::api.buildSymbolicOperand(inst, src);
                   auto node  = triton::ast::bvmul(triton::ast::sx(WORD_SIZE_BIT, op1), triton::ast::sx(WORD_SIZE_BIT, op2));
                   auto expr1 = triton::api.createSymbolicExpression(inst, triton::ast::extract(WORD_SIZE_BIT-1, 0, node), ax, "IMUL operation");
                   auto expr2 = triton::api.createSymbolicExpression(inst, triton::ast::extract(DWORD_SIZE_BIT-1, WORD_SIZE_BIT, node), dx, "IMUL operation");
@@ -3300,8 +3300,8 @@ namespace triton {
                 case DWORD_SIZE: {
                   auto eax   = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
                   auto edx   = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
-                  auto op1   = triton::api.buildSymbolicOperand(eax);
-                  auto op2   = triton::api.buildSymbolicOperand(src);
+                  auto op1   = triton::api.buildSymbolicOperand(inst, eax);
+                  auto op2   = triton::api.buildSymbolicOperand(inst, src);
                   auto node  = triton::ast::bvmul(triton::ast::sx(DWORD_SIZE_BIT, op1), triton::ast::sx(DWORD_SIZE_BIT, op2));
                   auto expr1 = triton::api.createSymbolicExpression(inst, triton::ast::extract(DWORD_SIZE_BIT-1, 0, node), eax, "IMUL operation");
                   auto expr2 = triton::api.createSymbolicExpression(inst, triton::ast::extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, node), edx, "IMUL operation");
@@ -3316,8 +3316,8 @@ namespace triton {
                 case QWORD_SIZE: {
                   auto rax   = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
                   auto rdx   = triton::arch::OperandWrapper(TRITON_X86_REG_RDX);
-                  auto op1   = triton::api.buildSymbolicOperand(rax);
-                  auto op2   = triton::api.buildSymbolicOperand(src);
+                  auto op1   = triton::api.buildSymbolicOperand(inst, rax);
+                  auto op2   = triton::api.buildSymbolicOperand(inst, src);
                   auto node  = triton::ast::bvmul(triton::ast::sx(QWORD_SIZE_BIT, op1), triton::ast::sx(QWORD_SIZE_BIT, op2));
                   auto expr1 = triton::api.createSymbolicExpression(inst, triton::ast::extract(QWORD_SIZE_BIT-1, 0, node), rax, "IMUL operation");
                   auto expr2 = triton::api.createSymbolicExpression(inst, triton::ast::extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, node), rdx, "IMUL operation");
@@ -3336,8 +3336,8 @@ namespace triton {
             case 2: {
               auto dst  = inst.operands[0];
               auto src  = inst.operands[1];
-              auto op1  = triton::api.buildSymbolicOperand(dst);
-              auto op2  = triton::api.buildSymbolicOperand(src);
+              auto op1  = triton::api.buildSymbolicOperand(inst, dst);
+              auto op2  = triton::api.buildSymbolicOperand(inst, src);
               auto node = triton::ast::bvmul(triton::ast::sx(dst.getBitSize(), op1), triton::ast::sx(src.getBitSize(), op2));
               auto expr = triton::api.createSymbolicExpression(inst, triton::ast::extract(dst.getBitSize()-1, 0, node), dst, "IMUL operation");
               expr->isTainted = triton::api.taintUnion(dst, src);
@@ -3351,8 +3351,8 @@ namespace triton {
               auto dst  = inst.operands[0];
               auto src1 = inst.operands[1];
               auto src2 = inst.operands[2];
-              auto op2  = triton::api.buildSymbolicOperand(src1);
-              auto op3  = triton::api.buildSymbolicOperand(src2);
+              auto op2  = triton::api.buildSymbolicOperand(inst, src1);
+              auto op3  = triton::api.buildSymbolicOperand(inst, src2);
               auto node = triton::ast::bvmul(triton::ast::sx(src1.getBitSize(), op2), triton::ast::sx(src2.getBitSize(), op3));
               auto expr = triton::api.createSymbolicExpression(inst, triton::ast::extract(dst.getBitSize()-1, 0, node), dst, "IMUL operation");
               expr->isTainted = triton::api.taintUnion(dst, src1);
@@ -3373,7 +3373,7 @@ namespace triton {
           auto dst = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
           auto op2 = triton::ast::bv(1, dst.getBitSize());
 
           /* Create the semantics */
@@ -3405,10 +3405,10 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(cf);
-          auto op2 = triton::api.buildSymbolicOperand(zf);
-          auto op3 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op4 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, cf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, zf);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op4 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -3443,9 +3443,9 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(cf);
-          auto op2 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op3 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, cf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvfalse()), op3, op2);
@@ -3472,9 +3472,9 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(cf);
-          auto op2 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op3 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, cf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvtrue()), op3, op2);
@@ -3502,10 +3502,10 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(cf);
-          auto op2 = triton::api.buildSymbolicOperand(zf);
-          auto op3 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op4 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, cf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, zf);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op4 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvor(op1, op2), triton::ast::bvtrue()), op4, op3);
@@ -3534,9 +3534,9 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(zf);
-          auto op2 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op3 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, zf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvtrue()), op3, op2);
@@ -3565,11 +3565,11 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(sf);
-          auto op2 = triton::api.buildSymbolicOperand(of);
-          auto op3 = triton::api.buildSymbolicOperand(zf);
-          auto op4 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op5 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, sf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, of);
+          auto op3 = triton::api.buildSymbolicOperand(inst, zf);
+          auto op4 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op5 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvor(triton::ast::bvxor(op1, op2), op3), triton::ast::bvfalse()), op5, op4);
@@ -3599,10 +3599,10 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(sf);
-          auto op2 = triton::api.buildSymbolicOperand(of);
-          auto op3 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op4 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, sf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, of);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op4 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, op2), op4, op3);
@@ -3631,10 +3631,10 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(sf);
-          auto op2 = triton::api.buildSymbolicOperand(of);
-          auto op3 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op4 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, sf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, of);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op4 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvxor(op1, op2), triton::ast::bvtrue()), op4, op3);
@@ -3664,11 +3664,11 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(sf);
-          auto op2 = triton::api.buildSymbolicOperand(of);
-          auto op3 = triton::api.buildSymbolicOperand(zf);
-          auto op4 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op5 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, sf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, of);
+          auto op3 = triton::api.buildSymbolicOperand(inst, zf);
+          auto op4 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op5 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(triton::ast::bvor(triton::ast::bvxor(op1, op2), op3), triton::ast::bvtrue()), op5, op4);
@@ -3695,7 +3695,7 @@ namespace triton {
           auto src = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = op1;
@@ -3721,9 +3721,9 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(zf);
-          auto op2 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op3 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, zf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvfalse()), op3, op2);
@@ -3750,9 +3750,9 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(of);
-          auto op2 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op3 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, of);
+          auto op2 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvfalse()), op3, op2);
@@ -3779,9 +3779,9 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(pf);
-          auto op2 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op3 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, pf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvfalse()), op3, op2);
@@ -3808,9 +3808,9 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(sf);
-          auto op2 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op3 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, sf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvfalse()), op3, op2);
@@ -3837,9 +3837,9 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(of);
-          auto op2 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op3 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, of);
+          auto op2 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvtrue()), op3, op2);
@@ -3866,9 +3866,9 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(pf);
-          auto op2 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op3 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, pf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvtrue()), op3, op2);
@@ -3895,9 +3895,9 @@ namespace triton {
           auto srcImm2 = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(sf);
-          auto op2 = triton::api.buildSymbolicOperand(srcImm1);
-          auto op3 = triton::api.buildSymbolicOperand(srcImm2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, sf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, srcImm1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcImm2);
 
           /* Create the semantics */
           auto node = triton::ast::ite(triton::ast::equal(op1, triton::ast::bvtrue()), op3, op2);
@@ -3922,7 +3922,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "LDDQU operation");
@@ -3940,7 +3940,7 @@ namespace triton {
           auto src = inst.operands[0];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "LDMXCSR operation");
@@ -3972,14 +3972,14 @@ namespace triton {
           /* Create symbolic operands */
 
           /* Displacement */
-          auto op2 = triton::api.buildSymbolicImmediateOperand(srcDisp);
+          auto op2 = triton::api.buildSymbolicImmediateOperand(inst, srcDisp);
           if (leaSize > srcDisp.getBitSize())
             op2 = triton::ast::zx(leaSize - srcDisp.getBitSize(), op2);
 
           /* Base */
           triton::ast::AbstractNode* op3;
           if (srcBase.isValid())
-            op3 = triton::api.buildSymbolicRegisterOperand(srcBase);
+            op3 = triton::api.buildSymbolicRegisterOperand(inst, srcBase);
           else
             op3 = triton::ast::bv(0, leaSize);
 
@@ -3990,12 +3990,12 @@ namespace triton {
           /* Index */
           triton::ast::AbstractNode* op4;
           if (srcIndex.isValid())
-            op4 = triton::api.buildSymbolicRegisterOperand(srcIndex);
+            op4 = triton::api.buildSymbolicRegisterOperand(inst, srcIndex);
           else
             op4 = triton::ast::bv(0, leaSize);
 
           /* Scale */
-          auto op5 = triton::api.buildSymbolicImmediateOperand(srcScale);
+          auto op5 = triton::api.buildSymbolicImmediateOperand(inst, srcScale);
           if (leaSize > srcScale.getBitSize())
             op5 = triton::ast::zx(leaSize - srcScale.getBitSize(), op5);
 
@@ -4029,7 +4029,7 @@ namespace triton {
           auto sp         = triton::arch::OperandWrapper(stack);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(bp2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, bp2);
 
           /* RSP = RBP */
           auto node1 = op1;
@@ -4041,7 +4041,7 @@ namespace triton {
           expr1->isTainted = triton::api.taintAssignment(sp, bp2);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(bp1);
+          auto op2 = triton::api.buildSymbolicOperand(inst, bp1);
 
           /* RBP = pop() */
           auto node2 = op2;
@@ -4067,9 +4067,9 @@ namespace triton {
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
-          auto op2 = triton::api.buildSymbolicOperand(index);
-          auto op3 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, index);
+          auto op3 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = op1;
@@ -4099,9 +4099,9 @@ namespace triton {
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
-          auto op2 = triton::api.buildSymbolicOperand(index);
-          auto op3 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, index);
+          auto op3 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = op1;
@@ -4131,9 +4131,9 @@ namespace triton {
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
-          auto op2 = triton::api.buildSymbolicOperand(index);
-          auto op3 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, index);
+          auto op3 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = op1;
@@ -4163,9 +4163,9 @@ namespace triton {
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
-          auto op2 = triton::api.buildSymbolicOperand(index);
-          auto op3 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, index);
+          auto op3 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = op1;
@@ -4193,7 +4193,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOV operation");
@@ -4211,7 +4211,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVABS operation");
@@ -4229,7 +4229,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVAPD operation");
@@ -4247,7 +4247,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVAPS operation");
@@ -4265,7 +4265,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           triton::ast::AbstractNode* node = nullptr;
@@ -4303,7 +4303,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::concat(triton::ast::extract(QWORD_SIZE_BIT-1, 0, op2), triton::ast::extract(QWORD_SIZE_BIT-1, 0, op2));
@@ -4324,7 +4324,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::extract(QWORD_SIZE_BIT-1, 0, op2);
@@ -4345,7 +4345,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVDQA operation");
@@ -4363,7 +4363,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVDQU operation");
@@ -4381,8 +4381,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::concat(
@@ -4406,8 +4406,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::concat(
@@ -4431,8 +4431,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::concat(
@@ -4456,8 +4456,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::concat(
@@ -4481,8 +4481,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::concat(
@@ -4506,8 +4506,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::concat(
@@ -4531,7 +4531,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::zx(30,                       /* Destination[2..31] = 0        */
@@ -4557,7 +4557,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> signs;
@@ -4584,7 +4584,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVNTDQ operation");
@@ -4602,7 +4602,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVNTI operation");
@@ -4620,7 +4620,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVNTPD operation");
@@ -4638,7 +4638,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVNTPS operation");
@@ -4656,7 +4656,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVNTQ operation");
@@ -4673,7 +4673,7 @@ namespace triton {
           auto dst = inst.operands[0];
           auto src = inst.operands[1];
 
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> bytes;
@@ -4700,7 +4700,7 @@ namespace triton {
           auto dst = inst.operands[0];
           auto src = inst.operands[1];
 
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> bytes;
@@ -4727,8 +4727,8 @@ namespace triton {
           auto dst = inst.operands[0];
           auto src = inst.operands[1];
 
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           triton::ast::AbstractNode* node = nullptr;
@@ -4771,7 +4771,7 @@ namespace triton {
           auto dst = inst.operands[0];
           auto src = inst.operands[1];
 
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::zx(QWORD_SIZE_BIT, op2);
@@ -4795,10 +4795,10 @@ namespace triton {
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
-          auto op2 = triton::api.buildSymbolicOperand(index1);
-          auto op3 = triton::api.buildSymbolicOperand(index2);
-          auto op4 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, index1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, index2);
+          auto op4 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = op1;
@@ -4836,10 +4836,10 @@ namespace triton {
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
-          auto op2 = triton::api.buildSymbolicOperand(index1);
-          auto op3 = triton::api.buildSymbolicOperand(index2);
-          auto op4 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, index1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, index2);
+          auto op4 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = op1;
@@ -4874,7 +4874,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVUPD operation");
@@ -4892,7 +4892,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVUPS operation");
@@ -4913,10 +4913,10 @@ namespace triton {
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
-          auto op2 = triton::api.buildSymbolicOperand(index1);
-          auto op3 = triton::api.buildSymbolicOperand(index2);
-          auto op4 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, index1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, index2);
+          auto op4 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = op1;
@@ -4954,10 +4954,10 @@ namespace triton {
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
-          auto op2 = triton::api.buildSymbolicOperand(index1);
-          auto op3 = triton::api.buildSymbolicOperand(index2);
-          auto op4 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, index1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, index2);
+          auto op4 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = op1;
@@ -4992,7 +4992,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::sx(dst.getBitSize() - src.getBitSize(), op1);
@@ -5013,7 +5013,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::sx(dst.getBitSize() - src.getBitSize(), op1);
@@ -5034,7 +5034,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::zx(dst.getBitSize() - src.getBitSize(), op1);
@@ -5060,8 +5060,8 @@ namespace triton {
               auto dst  = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
               auto src1 = triton::arch::OperandWrapper(TRITON_X86_REG_AL);
               /* Create symbolic operands */
-              auto op1 = triton::api.buildSymbolicOperand(src1);
-              auto op2 = triton::api.buildSymbolicOperand(src2);
+              auto op1 = triton::api.buildSymbolicOperand(inst, src1);
+              auto op2 = triton::api.buildSymbolicOperand(inst, src2);
               /* Create the semantics */
               auto node = triton::ast::bvmul(triton::ast::zx(BYTE_SIZE_BIT, op1), triton::ast::zx(BYTE_SIZE_BIT, op2));
               /* Create symbolic expression */
@@ -5081,8 +5081,8 @@ namespace triton {
               auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_DX);
               auto src1 = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
               /* Create symbolic operands */
-              auto op1 = triton::api.buildSymbolicOperand(src1);
-              auto op2 = triton::api.buildSymbolicOperand(src2);
+              auto op1 = triton::api.buildSymbolicOperand(inst, src1);
+              auto op2 = triton::api.buildSymbolicOperand(inst, src2);
               /* Create the semantics */
               auto node = triton::ast::bvmul(triton::ast::zx(WORD_SIZE_BIT, op1), triton::ast::zx(WORD_SIZE_BIT, op2));
               /* Create symbolic expression for ax */
@@ -5108,8 +5108,8 @@ namespace triton {
               auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
               auto src1 = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
               /* Create symbolic operands */
-              auto op1 = triton::api.buildSymbolicOperand(src1);
-              auto op2 = triton::api.buildSymbolicOperand(src2);
+              auto op1 = triton::api.buildSymbolicOperand(inst, src1);
+              auto op2 = triton::api.buildSymbolicOperand(inst, src2);
               /* Create the semantics */
               auto node = triton::ast::bvmul(triton::ast::zx(DWORD_SIZE_BIT, op1), triton::ast::zx(DWORD_SIZE_BIT, op2));
               /* Create symbolic expression for eax */
@@ -5135,8 +5135,8 @@ namespace triton {
               auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_RDX);
               auto src1 = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
               /* Create symbolic operands */
-              auto op1 = triton::api.buildSymbolicOperand(src1);
-              auto op2 = triton::api.buildSymbolicOperand(src2);
+              auto op1 = triton::api.buildSymbolicOperand(inst, src1);
+              auto op2 = triton::api.buildSymbolicOperand(inst, src2);
               /* Create the semantics */
               auto node = triton::ast::bvmul(triton::ast::zx(QWORD_SIZE_BIT, op1), triton::ast::zx(QWORD_SIZE_BIT, op2));
               /* Create symbolic expression for eax */
@@ -5167,7 +5167,7 @@ namespace triton {
           auto src = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvneg(op1);
@@ -5201,7 +5201,7 @@ namespace triton {
           auto src = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvnot(op1);
@@ -5222,8 +5222,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvor(op1, op2);
@@ -5251,8 +5251,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvor(op1, op2);
@@ -5273,8 +5273,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvor(op1, op2);
@@ -5295,8 +5295,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> packed;
@@ -5349,8 +5349,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> packed;
@@ -5391,8 +5391,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> packed;
@@ -5431,8 +5431,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> packed;
@@ -5477,8 +5477,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvand(op1, op2);
@@ -5499,8 +5499,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvand(triton::ast::bvnot(op1), op2);
@@ -5521,8 +5521,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode *> pck;
@@ -5556,8 +5556,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode *> pck;
@@ -5591,8 +5591,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode *> pck;
@@ -5626,8 +5626,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode *> pck;
@@ -5661,8 +5661,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode *> pck;
@@ -5696,8 +5696,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode *> pck;
@@ -5731,7 +5731,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode *> mskb;
@@ -5777,7 +5777,7 @@ namespace triton {
           auto src        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = op1;
@@ -5801,8 +5801,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvor(op1, op2);
@@ -5823,8 +5823,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(src));
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(inst, src));
 
           /* Create the semantics */
           auto node = triton::ast::bvshl(
@@ -5855,8 +5855,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(src));
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(inst, src));
 
           /* Create the semantics */
           auto node = triton::ast::bvlshr(
@@ -5887,8 +5887,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> packed;
@@ -5941,8 +5941,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> packed;
@@ -5983,8 +5983,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> packed;
@@ -6023,8 +6023,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> packed;
@@ -6069,8 +6069,8 @@ namespace triton {
           auto src2 = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src1);
-          auto op2 = triton::api.buildSymbolicOperand(src2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src2);
 
           /* Create the semantics */
           auto node1 = triton::ast::bvand(op1, op2);
@@ -6102,8 +6102,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> unpack;
@@ -6164,8 +6164,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> unpack;
@@ -6208,8 +6208,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> unpack;
@@ -6244,8 +6244,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> unpack;
@@ -6294,8 +6294,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> unpack;
@@ -6356,8 +6356,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> unpack;
@@ -6400,8 +6400,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> unpack;
@@ -6436,8 +6436,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> unpack;
@@ -6492,7 +6492,7 @@ namespace triton {
           auto src        = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::zx(dst.getBitSize() - src.getBitSize(), op1);
@@ -6513,8 +6513,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvxor(op1, op2);
@@ -6536,13 +6536,13 @@ namespace triton {
           auto srcCf = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
           /*
            * Note that the SMT2-LIB doesn't support expression as rotate value.
            * The op2 must be the value of the concretization.
            */
           auto op2 = triton::ast::decimal(src.getConcreteValue());
-          auto op3 = triton::api.buildSymbolicOperand(srcCf);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcCf);
 
           /* Create the semantics */
           auto node1 = triton::ast::bvrol(op2, triton::ast::concat(op3, op1));
@@ -6578,13 +6578,13 @@ namespace triton {
           auto srcCf = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
           /*
            * Note that the SMT2-LIB doesn't support expression as rotate value.
            * The op2 must be the value of the concretization.
            */
           auto op2 = triton::ast::decimal(src.getConcreteValue());
-          auto op3 = triton::api.buildSymbolicOperand(srcCf);
+          auto op3 = triton::api.buildSymbolicOperand(inst, srcCf);
 
           /* Create the semantics */
           auto node1 = triton::ast::bvror(op2, triton::ast::concat(op3, op1));
@@ -6621,7 +6621,7 @@ namespace triton {
           auto sp         = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(sp);
+          auto op1 = triton::api.buildSymbolicOperand(inst, sp);
 
           /* Create the semantics */
           auto node = op1;
@@ -6649,7 +6649,7 @@ namespace triton {
           auto src   = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
           /*
            * Note that the SMT2-LIB doesn't support expression as rotate value.
            * The op2 must be the value of the concretization.
@@ -6679,7 +6679,7 @@ namespace triton {
           auto src   = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
           /*
            * Note that the SMT2-LIB doesn't support expression as rotate value.
            * The op2 must be the value of the concretization.
@@ -6709,8 +6709,8 @@ namespace triton {
           auto src   = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(src));
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(inst, src));
 
           /* Create the semantics */
           auto node = triton::ast::bvashr(op1, op2);
@@ -6739,9 +6739,9 @@ namespace triton {
           auto srcCf = triton::arch::OperandWrapper(RegisterOperand(TRITON_X86_REG_CF));
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::ast::zx(src.getBitSize()-1, triton::api.buildSymbolicOperand(srcCf));
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::ast::zx(src.getBitSize()-1, triton::api.buildSymbolicOperand(inst, srcCf));
 
           /* Create the semantics */
           auto node = triton::ast::bvsub(op1, triton::ast::bvadd(op2, op3));
@@ -6777,10 +6777,10 @@ namespace triton {
             inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(index);
-          auto op4 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, index);
+          auto op4 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = triton::ast::bvsub(op1, op2);
@@ -6822,10 +6822,10 @@ namespace triton {
             inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(index);
-          auto op4 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, index);
+          auto op4 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = triton::ast::bvsub(op1, op2);
@@ -6867,10 +6867,10 @@ namespace triton {
             inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(index);
-          auto op4 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, index);
+          auto op4 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = triton::ast::bvsub(op1, op2);
@@ -6912,10 +6912,10 @@ namespace triton {
             inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
-          auto op3 = triton::api.buildSymbolicOperand(index);
-          auto op4 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, index);
+          auto op4 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = triton::ast::bvsub(op1, op2);
@@ -6952,8 +6952,8 @@ namespace triton {
           auto zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(cf);
-          auto op3 = triton::api.buildSymbolicOperand(zf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, cf);
+          auto op3 = triton::api.buildSymbolicOperand(inst, zf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -6990,7 +6990,7 @@ namespace triton {
           auto cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(cf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, cf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7020,7 +7020,7 @@ namespace triton {
           auto cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(cf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, cf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7051,8 +7051,8 @@ namespace triton {
           auto zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(cf);
-          auto op3 = triton::api.buildSymbolicOperand(zf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, cf);
+          auto op3 = triton::api.buildSymbolicOperand(inst, zf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7083,7 +7083,7 @@ namespace triton {
           auto zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(zf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, zf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7115,9 +7115,9 @@ namespace triton {
           auto zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(sf);
-          auto op3 = triton::api.buildSymbolicOperand(of);
-          auto op4 = triton::api.buildSymbolicOperand(zf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, sf);
+          auto op3 = triton::api.buildSymbolicOperand(inst, of);
+          auto op4 = triton::api.buildSymbolicOperand(inst, zf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7150,8 +7150,8 @@ namespace triton {
           auto of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(sf);
-          auto op3 = triton::api.buildSymbolicOperand(of);
+          auto op2 = triton::api.buildSymbolicOperand(inst, sf);
+          auto op3 = triton::api.buildSymbolicOperand(inst, of);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7183,8 +7183,8 @@ namespace triton {
           auto of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(sf);
-          auto op3 = triton::api.buildSymbolicOperand(of);
+          auto op2 = triton::api.buildSymbolicOperand(inst, sf);
+          auto op3 = triton::api.buildSymbolicOperand(inst, of);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7217,9 +7217,9 @@ namespace triton {
           auto zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(sf);
-          auto op3 = triton::api.buildSymbolicOperand(of);
-          auto op4 = triton::api.buildSymbolicOperand(zf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, sf);
+          auto op3 = triton::api.buildSymbolicOperand(inst, of);
+          auto op4 = triton::api.buildSymbolicOperand(inst, zf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7251,7 +7251,7 @@ namespace triton {
           auto zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(zf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, zf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7281,7 +7281,7 @@ namespace triton {
           auto of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(of);
+          auto op2 = triton::api.buildSymbolicOperand(inst, of);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7311,7 +7311,7 @@ namespace triton {
           auto pf  = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(pf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, pf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7341,7 +7341,7 @@ namespace triton {
           auto sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(sf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, sf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7371,7 +7371,7 @@ namespace triton {
           auto of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(of);
+          auto op2 = triton::api.buildSymbolicOperand(inst, of);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7401,7 +7401,7 @@ namespace triton {
           auto pf  = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(pf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, pf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7431,7 +7431,7 @@ namespace triton {
           auto sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(sf);
+          auto op2 = triton::api.buildSymbolicOperand(inst, sf);
 
           /* Create the semantics */
           auto node = triton::ast::ite(
@@ -7461,8 +7461,8 @@ namespace triton {
           auto src   = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(src));
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(inst, src));
 
           /* Create the semantics */
           auto node = triton::ast::bvshl(op1, triton::ast::bvand(op2, triton::ast::bv(dst.getBitSize()-1, dst.getBitSize())));
@@ -7490,8 +7490,8 @@ namespace triton {
           auto src   = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(src));
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(inst, src));
 
           /* Create the semantics */
           auto node = triton::ast::bvlshr(op1, op2);
@@ -7533,7 +7533,7 @@ namespace triton {
           auto src = triton::arch::OperandWrapper(TRITON_X86_REG_MXCSR);
 
           /* Create symbolic operands */
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::extract(DWORD_SIZE_BIT-1, 0, op2);
@@ -7556,9 +7556,9 @@ namespace triton {
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
-          auto op2 = triton::api.buildSymbolicOperand(index);
-          auto op3 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, index);
+          auto op3 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = op1;
@@ -7588,9 +7588,9 @@ namespace triton {
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
-          auto op2 = triton::api.buildSymbolicOperand(index);
-          auto op3 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, index);
+          auto op3 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = op1;
@@ -7620,9 +7620,9 @@ namespace triton {
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
-          auto op2 = triton::api.buildSymbolicOperand(index);
-          auto op3 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, index);
+          auto op3 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = op1;
@@ -7652,9 +7652,9 @@ namespace triton {
           auto df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src);
-          auto op2 = triton::api.buildSymbolicOperand(index);
-          auto op3 = triton::api.buildSymbolicOperand(df);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+          auto op2 = triton::api.buildSymbolicOperand(inst, index);
+          auto op3 = triton::api.buildSymbolicOperand(inst, df);
 
           /* Create the semantics */
           auto node1 = op1;
@@ -7682,8 +7682,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvsub(op1, op2);
@@ -7712,8 +7712,8 @@ namespace triton {
           auto src2 = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src1);
-          auto op2 = triton::api.buildSymbolicOperand(src2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src2);
 
           /* Create the semantics */
           auto node = triton::ast::bvand(op1, op2);
@@ -7741,8 +7741,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::concat(
@@ -7766,8 +7766,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> unpack;
@@ -7795,8 +7795,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::concat(
@@ -7820,8 +7820,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode*> unpack;
@@ -7849,7 +7849,7 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create the semantics */
-          auto node = triton::api.buildSymbolicOperand(src);
+          auto node = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "VMOVDQA operation");
@@ -7867,8 +7867,8 @@ namespace triton {
           auto src2 = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(src1);
-          auto op2 = triton::api.buildSymbolicOperand(src2);
+          auto op1 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src2);
 
           /* Create the semantics */
           auto node1 = triton::ast::bvand(op1, op2);
@@ -7902,8 +7902,8 @@ namespace triton {
           bool srcT = triton::api.isTainted(src);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node1 = op2;
@@ -7918,8 +7918,8 @@ namespace triton {
           expr2->isTainted = triton::api.setTaint(src, dstT);
 
           /* Create symbolic operands */
-          op1 = triton::api.buildSymbolicOperand(dst);
-          op2 = triton::api.buildSymbolicOperand(src);
+          op1 = triton::api.buildSymbolicOperand(inst, dst);
+          op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node3 = triton::ast::bvadd(op1, op2);
@@ -7942,8 +7942,8 @@ namespace triton {
           bool srcT = triton::api.isTainted(src);
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node1 = op2;
@@ -7967,8 +7967,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvxor(op1, op2);
@@ -7996,8 +7996,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvxor(op1, op2);
@@ -8018,8 +8018,8 @@ namespace triton {
           auto src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(dst);
-          auto op2 = triton::api.buildSymbolicOperand(src);
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
           auto node = triton::ast::bvxor(op1, op2);
