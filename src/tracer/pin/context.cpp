@@ -124,6 +124,22 @@ namespace tracer {
             case triton::arch::x86::ID_REG_ZMM30:   return 0; /* Pin doesn't support AVX-512 */
             case triton::arch::x86::ID_REG_ZMM31:   return 0; /* Pin doesn't support AVX-512 */
             case triton::arch::x86::ID_REG_MXCSR:   PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_MXCSR,    reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::x86::ID_REG_CR0:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR1:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR2:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR3:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR4:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR5:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR6:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR7:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR8:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR9:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR10:    return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR11:    return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR12:    return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR13:    return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR14:    return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR15:    return 0; /* Don't care about this register in ring3 */
             case triton::arch::x86::ID_REG_CS:      PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_SEG_CS,   reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_DS:      PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_SEG_DS,   reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_ES:      PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_SEG_ES,   reinterpret_cast<triton::uint8*>(buffer)); break;
@@ -187,6 +203,22 @@ namespace tracer {
             case triton::arch::x86::ID_REG_YMM6:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM6,   reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_YMM7:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM7,   reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_MXCSR:   PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_MXCSR,  reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::x86::ID_REG_CR0:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR1:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR2:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR3:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR4:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR5:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR6:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR7:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR8:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR9:     return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR10:    return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR11:    return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR12:    return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR13:    return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR14:    return 0; /* Don't care about this register in ring3 */
+            case triton::arch::x86::ID_REG_CR15:    return 0; /* Don't care about this register in ring3 */
             case triton::arch::x86::ID_REG_CS:      PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_SEG_CS, reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_DS:      PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_SEG_DS, reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::x86::ID_REG_ES:      PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_SEG_ES, reinterpret_cast<triton::uint8*>(buffer)); break;

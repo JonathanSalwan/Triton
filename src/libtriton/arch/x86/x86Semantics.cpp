@@ -6543,7 +6543,7 @@ namespace triton {
            * Note that the SMT2-LIB doesn't support expression as rotate value.
            * The op2 must be the value of the concretization.
            */
-          auto op2 = triton::ast::decimal(src.getConcreteValue());
+          auto op2 = triton::ast::decimal(triton::api.buildSymbolicOperand(inst, src)->evaluate());
           auto op3 = triton::api.buildSymbolicOperand(inst, srcCf);
 
           /* Create the semantics */
@@ -6585,7 +6585,7 @@ namespace triton {
            * Note that the SMT2-LIB doesn't support expression as rotate value.
            * The op2 must be the value of the concretization.
            */
-          auto op2 = triton::ast::decimal(src.getConcreteValue());
+          auto op2 = triton::ast::decimal(triton::api.buildSymbolicOperand(inst, src)->evaluate());
           auto op3 = triton::api.buildSymbolicOperand(inst, srcCf);
 
           /* Create the semantics */
@@ -6677,7 +6677,7 @@ namespace triton {
            * Note that the SMT2-LIB doesn't support expression as rotate value.
            * The op2 must be the value of the concretization.
            */
-          auto op2 = triton::ast::decimal(src.getConcreteValue());
+          auto op2 = triton::ast::decimal(triton::api.buildSymbolicOperand(inst, src)->evaluate());
 
           /* Create the semantics */
           auto node = triton::ast::bvrol(op2, op1);
@@ -6707,7 +6707,7 @@ namespace triton {
            * Note that the SMT2-LIB doesn't support expression as rotate value.
            * The op2 must be the value of the concretization.
            */
-          auto op2 = triton::ast::decimal(src.getConcreteValue());
+          auto op2 = triton::ast::decimal(triton::api.buildSymbolicOperand(inst, src)->evaluate());
 
           /* Create the semantics */
           auto node = triton::ast::bvror(op2, op1);

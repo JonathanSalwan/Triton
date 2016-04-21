@@ -155,7 +155,7 @@ Enables or disables the taint engine.
 Evaluates an AST via Z3 and returns the symbolic value as integer.
 
 - **getAllRegisters(void)**<br>
-Returns the list of all registers. Each item of this list is a \ref py_REG_page.
+Returns the list of all registers. Each item of this list is a \ref py_Register_page.
 
 - **getArchitecture(void)**<br>
 Returns the architecture which has been initialized as \ref py_ARCH_page.
@@ -191,7 +191,7 @@ Computes and returns a model as a dictionary of {integer symVarId : \ref py_Solv
 Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
 
 - **getParentRegisters(void)**<br>
-Returns the list of parent registers. Each item of this list is a \ref py_REG_page.
+Returns the list of parent registers. Each item of this list is a \ref py_Register_page.
 
 - **getPathConstraints(void)**<br>
 Returns the logical conjunction vector of path constraints as list of \ref py_PathConstraint_page.

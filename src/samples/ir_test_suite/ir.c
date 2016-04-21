@@ -297,12 +297,14 @@ void check(void)
   asm("ror rdx, 4");
   asm("ror rdx, 1");
 
+  asm("mov rdx, 16374");
   asm("xor rcx, rcx");
   asm("mov cl, 3");
   asm("rcl rdx, cl");
   asm("rcl rdx, 4");
   asm("rcl rdx, 1");
 
+  asm("mov rdx, 4191744");
   asm("xor rcx, rcx");
   asm("mov cl, 3");
   asm("rcr rdx, cl");

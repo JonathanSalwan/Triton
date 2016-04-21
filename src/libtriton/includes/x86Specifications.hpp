@@ -213,6 +213,23 @@ namespace triton {
 
       extern RegisterOperand x86_reg_mxcsr;
 
+      extern RegisterOperand x86_reg_cr0;
+      extern RegisterOperand x86_reg_cr1;
+      extern RegisterOperand x86_reg_cr2;
+      extern RegisterOperand x86_reg_cr3;
+      extern RegisterOperand x86_reg_cr4;
+      extern RegisterOperand x86_reg_cr5;
+      extern RegisterOperand x86_reg_cr6;
+      extern RegisterOperand x86_reg_cr7;
+      extern RegisterOperand x86_reg_cr8;
+      extern RegisterOperand x86_reg_cr9;
+      extern RegisterOperand x86_reg_cr10;
+      extern RegisterOperand x86_reg_cr11;
+      extern RegisterOperand x86_reg_cr12;
+      extern RegisterOperand x86_reg_cr13;
+      extern RegisterOperand x86_reg_cr14;
+      extern RegisterOperand x86_reg_cr15;
+
       extern RegisterOperand x86_reg_af;
       extern RegisterOperand x86_reg_cf;
       extern RegisterOperand x86_reg_df;
@@ -438,6 +455,24 @@ namespace triton {
         ID_REG_ZMM29, //!< zmm29
         ID_REG_ZMM30, //!< zmm30
         ID_REG_ZMM31, //!< zmm31
+
+        /* Control */
+        ID_REG_CR0, //!< cr0
+        ID_REG_CR1, //!< cr1
+        ID_REG_CR2, //!< cr2
+        ID_REG_CR3, //!< cr3
+        ID_REG_CR4, //!< cr4
+        ID_REG_CR5, //!< cr5
+        ID_REG_CR6, //!< cr6
+        ID_REG_CR7, //!< cr7
+        ID_REG_CR8, //!< cr8
+        ID_REG_CR9, //!< cr9
+        ID_REG_CR10, //!< cr10
+        ID_REG_CR11, //!< cr11
+        ID_REG_CR12, //!< cr12
+        ID_REG_CR13, //!< cr13
+        ID_REG_CR14, //!< cr14
+        ID_REG_CR15, //!< cr15
 
         /* Flags ID used in the Taint and Symbolic Engines */
         ID_REG_AF, //!< af
@@ -2107,6 +2142,38 @@ namespace triton {
 #define TRITON_X86_REG_ZMM31    triton::arch::x86::x86_reg_zmm31
 //! Temporary MXCSR register.
 #define TRITON_X86_REG_MXCSR    triton::arch::x86::x86_reg_mxcsr
+//! Temporary CR0 register.
+#define TRITON_X86_REG_CR0     triton::arch::x86::x86_reg_cr0
+//! Temporary CR1 register.
+#define TRITON_X86_REG_CR1     triton::arch::x86::x86_reg_cr1
+//! Temporary CR2 register.
+#define TRITON_X86_REG_CR2     triton::arch::x86::x86_reg_cr2
+//! Temporary CR3 register.
+#define TRITON_X86_REG_CR3     triton::arch::x86::x86_reg_cr3
+//! Temporary CR4 register.
+#define TRITON_X86_REG_CR4     triton::arch::x86::x86_reg_cr4
+//! Temporary CR5 register.
+#define TRITON_X86_REG_CR5     triton::arch::x86::x86_reg_cr5
+//! Temporary CR6 register.
+#define TRITON_X86_REG_CR6     triton::arch::x86::x86_reg_cr6
+//! Temporary CR7 register.
+#define TRITON_X86_REG_CR7     triton::arch::x86::x86_reg_cr7
+//! Temporary CR8 register.
+#define TRITON_X86_REG_CR8     triton::arch::x86::x86_reg_cr8
+//! Temporary CR9 register.
+#define TRITON_X86_REG_CR9     triton::arch::x86::x86_reg_cr9
+//! Temporary CR10 register.
+#define TRITON_X86_REG_CR10    triton::arch::x86::x86_reg_cr10
+//! Temporary CR11 register.
+#define TRITON_X86_REG_CR11    triton::arch::x86::x86_reg_cr11
+//! Temporary CR12 register.
+#define TRITON_X86_REG_CR12    triton::arch::x86::x86_reg_cr12
+//! Temporary CR13 register.
+#define TRITON_X86_REG_CR13    triton::arch::x86::x86_reg_cr13
+//! Temporary CR14 register.
+#define TRITON_X86_REG_CR14    triton::arch::x86::x86_reg_cr14
+//! Temporary CR15 register.
+#define TRITON_X86_REG_CR15    triton::arch::x86::x86_reg_cr15
 //! Temporary IE register.
 #define TRITON_X86_REG_IE       triton::arch::x86::x86_reg_ie
 //! Temporary DE register.
