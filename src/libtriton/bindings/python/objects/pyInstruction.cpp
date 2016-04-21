@@ -91,7 +91,7 @@ Returns the disassembly of the instruction as string.
 Returns the first operand of the instruction.
 
 - **getLoadAccess(void)**<br>
-Returns the list of LOAD access as list of \ref py_Memory_page.
+Returns the list of all implicit and explicit LOAD access as list of \ref py_Memory_page.
 
 - **getNextAddress(void)**<br>
 Returns the next address of the instruction as integer.
@@ -112,7 +112,7 @@ Returns the second operand of the instruction.
 Returns the size of the instruction as integer.
 
 - **getStoreAccess(void)**<br>
-Returns the list of STORE access as list of \ref py_Memory_page.
+Returns the list of all implicit and explicit STORE access as list of \ref py_Memory_page.
 
 - **getThirdOperand(void)**<br>
 Returns the third operand of the instruction.
