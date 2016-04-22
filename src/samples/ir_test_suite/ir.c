@@ -587,6 +587,22 @@ void check(void)
   asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
   asm("lddqu xmm4, xmmword ptr [%0]" :: "r"(tab4));
 
+  asm("pshufd xmm1, xmm2, 1");
+  asm("pshufd xmm2, xmm3, 2");
+  asm("pshufd xmm2, xmm3, 3");
+  asm("pshufd xmm1, xmm4, 4");
+  asm("pshufd xmm3, xmm1, 5");
+  asm("pshufd xmm1, xmm2, 0x10");
+  asm("pshufd xmm2, xmm3, 0x20");
+  asm("pshufd xmm2, xmm3, 0x40");
+  asm("pshufd xmm1, xmm4, 0xff");
+  asm("pshufd xmm3, xmm1, 0xaa");
+
+  asm("lddqu xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("lddqu xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("lddqu xmm4, xmmword ptr [%0]" :: "r"(tab4));
+
   asm("ptest xmm1, xmm1");
   asm("ptest xmm2, xmm3");
   asm("ptest xmm3, xmm4");

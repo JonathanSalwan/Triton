@@ -164,6 +164,8 @@ PREFETCHNTA                  | sse1       | Move data from m8 closer to the proc
 PREFETCHT0                   | sse1       | Move data from m8 closer to the processor using T0 hint.
 PREFETCHT1                   | sse1       | Move data from m8 closer to the processor using T1 hint.
 PREFETCHT2                   | sse1       | Move data from m8 closer to the processor using T2 hint.
+PSHUFD                       | sse2       | Shuffle Packed Doublewords
+PSHUFW                       | sse1       | Shuffle Packed Words
 PSLLDQ                       | sse2       | Shift Double Quadword Left Logical
 PSRLDQ                       | sse2       | Shift Double Quadword Right Logical
 PSUBB                        | mmx/sse2   | Subtract packed byte integers
@@ -378,6 +380,8 @@ namespace triton {
             case ID_INS_PREFETCHT0:     triton::arch::x86::semantics::prefetchx_s(inst);    break;
             case ID_INS_PREFETCHT1:     triton::arch::x86::semantics::prefetchx_s(inst);    break;
             case ID_INS_PREFETCHT2:     triton::arch::x86::semantics::prefetchx_s(inst);    break;
+            case ID_INS_PSHUFD:         triton::arch::x86::semantics::pshufd_s(inst);       break;
+            case ID_INS_PSHUFW:         triton::arch::x86::semantics::pshufw_s(inst);       break;
             case ID_INS_PSLLDQ:         triton::arch::x86::semantics::pslldq_s(inst);       break;
             case ID_INS_PSRLDQ:         triton::arch::x86::semantics::psrldq_s(inst);       break;
             case ID_INS_PSUBB:          triton::arch::x86::semantics::psubb_s(inst);        break;
@@ -5874,6 +5878,144 @@ namespace triton {
 
           /* Only specify that the instruction performs an implicit memory read */
           triton::api.buildSymbolicOperand(inst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pshufd_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+          auto ord = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, ord);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> pack;
+          pack.push_back(
+            triton::ast::extract(31, 0,
+              triton::ast::bvlshr(
+                op2,
+                triton::ast::bvmul(
+                  triton::ast::zx(DQWORD_SIZE_BIT-2, triton::ast::extract(7, 6, op3)),
+                  triton::ast::bv(32, DQWORD_SIZE_BIT)
+                )
+              )
+            )
+          );
+          pack.push_back(
+            triton::ast::extract(31, 0,
+              triton::ast::bvlshr(
+                op2,
+                triton::ast::bvmul(
+                  triton::ast::zx(DQWORD_SIZE_BIT-2, triton::ast::extract(5, 4, op3)),
+                  triton::ast::bv(32, DQWORD_SIZE_BIT)
+                )
+              )
+            )
+          );
+          pack.push_back(
+            triton::ast::extract(31, 0,
+              triton::ast::bvlshr(
+                op2,
+                triton::ast::bvmul(
+                  triton::ast::zx(DQWORD_SIZE_BIT-2, triton::ast::extract(3, 2, op3)),
+                  triton::ast::bv(32, DQWORD_SIZE_BIT)
+                )
+              )
+            )
+          );
+          pack.push_back(
+            triton::ast::extract(31, 0,
+              triton::ast::bvlshr(
+                op2,
+                triton::ast::bvmul(
+                  triton::ast::zx(DQWORD_SIZE_BIT-2, triton::ast::extract(1, 0, op3)),
+                  triton::ast::bv(32, DQWORD_SIZE_BIT)
+                )
+              )
+            )
+          );
+
+          auto node = triton::ast::concat(pack);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PSHUFD operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pshufw_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+          auto ord = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, ord);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> pack;
+          pack.push_back(
+            triton::ast::extract(15, 0,
+              triton::ast::bvlshr(
+                op2,
+                triton::ast::bvmul(
+                  triton::ast::zx(QWORD_SIZE_BIT-2, triton::ast::extract(7, 6, op3)),
+                  triton::ast::bv(16, QWORD_SIZE_BIT)
+                )
+              )
+            )
+          );
+          pack.push_back(
+            triton::ast::extract(15, 0,
+              triton::ast::bvlshr(
+                op2,
+                triton::ast::bvmul(
+                  triton::ast::zx(QWORD_SIZE_BIT-2, triton::ast::extract(5, 4, op3)),
+                  triton::ast::bv(16, QWORD_SIZE_BIT)
+                )
+              )
+            )
+          );
+          pack.push_back(
+            triton::ast::extract(15, 0,
+              triton::ast::bvlshr(
+                op2,
+                triton::ast::bvmul(
+                  triton::ast::zx(QWORD_SIZE_BIT-2, triton::ast::extract(3, 2, op3)),
+                  triton::ast::bv(16, QWORD_SIZE_BIT)
+                )
+              )
+            )
+          );
+          pack.push_back(
+            triton::ast::extract(15, 0,
+              triton::ast::bvlshr(
+                op2,
+                triton::ast::bvmul(
+                  triton::ast::zx(QWORD_SIZE_BIT-2, triton::ast::extract(1, 0, op3)),
+                  triton::ast::bv(16, QWORD_SIZE_BIT)
+                )
+              )
+            )
+          );
+
+          auto node = triton::ast::concat(pack);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PSHUFW operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
