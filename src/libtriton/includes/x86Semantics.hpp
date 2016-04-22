@@ -546,6 +546,9 @@ namespace triton {
       //! The POR semantics.
       void por_s(triton::arch::Instruction& inst);
 
+      //! The PREFETCHx semantics.
+      void prefetchx_s(triton::arch::Instruction& inst);
+
       //! The PSLLDQ semantics.
       void pslldq_s(triton::arch::Instruction& inst);
 
