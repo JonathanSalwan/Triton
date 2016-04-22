@@ -507,13 +507,12 @@ namespace triton {
           auto counter = triton::arch::OperandWrapper(TRITON_X86_REG_CX.getParent());
           auto zf      = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
-          /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(inst, counter);
-          auto op2 = triton::api.buildSymbolicOperand(inst, zf);
-
           switch (inst.getPrefix()) {
 
             case triton::arch::x86::ID_PREFIX_REP: {
+              /* Create symbolic operands */
+              auto op1 = triton::api.buildSymbolicOperand(inst, counter);
+
               /* Create the semantics for Counter */
               auto node1 = triton::ast::bvsub(op1, triton::ast::bv(1, counter.getBitSize()));
 
@@ -535,6 +534,10 @@ namespace triton {
             }
 
             case triton::arch::x86::ID_PREFIX_REPE: {
+              /* Create symbolic operands */
+              auto op1 = triton::api.buildSymbolicOperand(inst, counter);
+              auto op2 = triton::api.buildSymbolicOperand(inst, zf);
+
               /* Create the semantics for Counter */
               auto node1 = triton::ast::bvsub(op1, triton::ast::bv(1, counter.getBitSize()));
 
@@ -559,6 +562,10 @@ namespace triton {
             }
 
             case triton::arch::x86::ID_PREFIX_REPNE: {
+              /* Create symbolic operands */
+              auto op1 = triton::api.buildSymbolicOperand(inst, counter);
+              auto op2 = triton::api.buildSymbolicOperand(inst, zf);
+
               /* Create the semantics for Counter */
               auto node1 = triton::ast::bvsub(op1, triton::ast::bv(1, counter.getBitSize()));
 
