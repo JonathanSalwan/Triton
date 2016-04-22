@@ -189,6 +189,9 @@ namespace triton {
       //! The BSWAP semantics.
       void bswap_s(triton::arch::Instruction& inst);
 
+      //! The BT semantics.
+      void bt_s(triton::arch::Instruction& inst);
+
       //! The CALL semantics.
       void call_s(triton::arch::Instruction& inst);
 

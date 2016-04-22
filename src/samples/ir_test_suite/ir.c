@@ -1,4 +1,4 @@
-
+// Test cases for Triton
 // gcc -masm=intel ./ir.c -o ir
 
 void check(void)
@@ -174,6 +174,66 @@ void check(void)
   asm("clc");
   asm("cld");
   asm("cmc");
+
+  asm("mov rbx, 0b00000001");
+  asm("bt rbx, 0");
+  asm("bt rbx, 1");
+  asm("bt rbx, 4");
+  asm("bt rbx, 64");
+  asm("bt rbx, 65");
+  asm("bt rbx, 66");
+  asm("mov rbx, 0b1101010111010110101011010100110101010101110010101010101101011010");
+  asm("bt rbx, 0");
+  asm("bt rbx, 1");
+  asm("bt rbx, 2");
+  asm("bt rbx, 3");
+  asm("bt rbx, 4");
+  asm("bt rbx, 5");
+  asm("bt rbx, 6");
+  asm("bt rbx, 7");
+  asm("bt rbx, 8");
+  asm("bt rbx, 9");
+  asm("bt rbx, 10");
+  asm("bt rbx, 62");
+  asm("bt rbx, 63");
+  asm("bt rbx, 64");
+  asm("bt rbx, 65");
+  asm("bt rbx, 66");
+  asm("bt rbx, 67");
+  asm("bt rbx, 68");
+  asm("bt rbx, 69");
+  asm("bt rbx, 70");
+  asm("bt rbx, 120");
+  asm("bt rbx, 121");
+  asm("bt rbx, 122");
+  asm("bt rbx, 123");
+  asm("bt rbx, 124");
+  asm("bt rbx, 125");
+  asm("bt rbx, 126");
+  asm("bt rbx, 127");
+  asm("bt rbx, 231");
+  asm("bt rbx, 232");
+  asm("bt rbx, 233");
+  asm("bt rbx, 234");
+  asm("bt rbx, 253");
+  asm("bt rbx, 254");
+  asm("bt rbx, 255");
+  asm("mov rax, 8");
+  asm("bt rbx, rax");
+  asm("mov rax, 43");
+  asm("bt rbx, rax");
+  asm("mov rax, 65");
+  asm("bt rbx, rax");
+  asm("mov rax, 125");
+  asm("bt rbx, rax");
+  asm("mov rax, 126");
+  asm("bt rbx, rax");
+  asm("mov rax, 127");
+  asm("bt rbx, rax");
+  asm("mov rax, 128");
+  asm("bt rbx, rax");
+  asm("mov rax, 129");
+  asm("bt rbx, rax");
 
   asm("mov eax, 32");
   asm("cbw");
