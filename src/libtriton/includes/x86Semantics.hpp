@@ -552,6 +552,12 @@ namespace triton {
       //! The PSHUFD semantics.
       void pshufd_s(triton::arch::Instruction& inst);
 
+      //! The PSHUFHW semantics.
+      void pshufhw_s(triton::arch::Instruction& inst);
+
+      //! The PSHUFLW semantics.
+      void pshuflw_s(triton::arch::Instruction& inst);
+
       //! The PSHUFW semantics.
       void pshufw_s(triton::arch::Instruction& inst);
 

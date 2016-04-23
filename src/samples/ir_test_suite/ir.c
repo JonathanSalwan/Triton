@@ -603,6 +603,38 @@ void check(void)
   asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
   asm("lddqu xmm4, xmmword ptr [%0]" :: "r"(tab4));
 
+  asm("pshufhw xmm1, xmm2, 1");
+  asm("pshufhw xmm2, xmm3, 2");
+  asm("pshufhw xmm2, xmm3, 3");
+  asm("pshufhw xmm1, xmm4, 4");
+  asm("pshufhw xmm3, xmm1, 5");
+  asm("pshufhw xmm1, xmm2, 0x10");
+  asm("pshufhw xmm2, xmm3, 0x20");
+  asm("pshufhw xmm2, xmm3, 0x40");
+  asm("pshufhw xmm1, xmm4, 0xff");
+  asm("pshufhw xmm3, xmm1, 0xaa");
+
+  asm("lddqu xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("lddqu xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("lddqu xmm4, xmmword ptr [%0]" :: "r"(tab4));
+
+  asm("pshuflw xmm1, xmm2, 1");
+  asm("pshuflw xmm2, xmm3, 2");
+  asm("pshuflw xmm2, xmm3, 3");
+  asm("pshuflw xmm1, xmm4, 4");
+  asm("pshuflw xmm3, xmm1, 5");
+  asm("pshuflw xmm1, xmm2, 0x10");
+  asm("pshuflw xmm2, xmm3, 0x20");
+  asm("pshuflw xmm2, xmm3, 0x40");
+  asm("pshuflw xmm1, xmm4, 0xff");
+  asm("pshuflw xmm3, xmm1, 0xaa");
+
+  asm("lddqu xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("lddqu xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("lddqu xmm4, xmmword ptr [%0]" :: "r"(tab4));
+
   asm("ptest xmm1, xmm1");
   asm("ptest xmm2, xmm3");
   asm("ptest xmm3, xmm4");
