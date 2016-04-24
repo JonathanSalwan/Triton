@@ -10,7 +10,7 @@
 #ifndef TRITONPYTHONBINDINGS_H
 #define TRITONPYTHONBINDINGS_H
 
-#ifdef __unix__
+#if defined(__unix__) || defined(__APPLE__)
   #include <python2.7/Python.h>
   #include <python2.7/longintrepr.h>
 #elif _WIN32
@@ -57,7 +57,7 @@ namespace triton {
       //! REG python dict.
       extern PyObject* registersDict;
 
-      #ifdef __unix__
+      #if defined(__unix__) || defined(__APPLE__)
       //! SYSCALL python dict.
       extern PyObject* syscallsDict;
       #endif
@@ -104,7 +104,7 @@ namespace triton {
       //! Initializes the SYMEXPR python namespace.
       void initSymExprNamespace(PyObject* symExprDict);
 
-      #ifdef __unix__
+      #if defined(__unix__) || defined(__APPLE__)
       //! Initializes the SYSCALL python namespace.
       void initSyscallNamespace(void);
       #endif

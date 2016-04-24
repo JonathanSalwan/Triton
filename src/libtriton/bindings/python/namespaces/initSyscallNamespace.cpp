@@ -6,7 +6,7 @@
 */
 
 #ifdef TRITON_PYTHON_BINDINGS
-#ifdef __unix__
+#if defined(__unix__) || defined(__APPLE__)
 
 #include <api.hpp>
 #include <architecture.hpp>
@@ -375,10 +375,12 @@ namespace triton {
               PyDict_SetItemString(triton::bindings::python::syscallsDict, triton::os::unix::syscallmap64[i], PyLong_FromUint(i));
             break;
 
+          #if defined(__unix__)
           case triton::arch::ARCH_X86:
             for (triton::uint32 i = 0; i < triton::os::unix::NB_SYSCALL32; ++i)
               PyDict_SetItemString(triton::bindings::python::syscallsDict, triton::os::unix::syscallmap32[i], PyLong_FromUint(i));
             break;
+          #endif
         } /* switch */
       }
 
@@ -386,5 +388,5 @@ namespace triton {
   }; /* bindings namespace */
 }; /* triton namespace */
 
-#endif /* unix */
+#endif /* __unix__ || __APPLE__ */
 #endif /* TRITON_PYTHON_BINDINGS */

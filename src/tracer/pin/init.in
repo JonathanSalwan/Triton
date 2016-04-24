@@ -5,7 +5,7 @@
 **  This program is under the terms of the LGPLv3 License.
 */
 
-#ifdef __unix__
+#if defined(__unix__) || defined(__APPLE__)
   #include <dlfcn.h>
 #endif
 
@@ -182,7 +182,7 @@ namespace tracer {
 
     bool execScript(const char *fileName) {
       FILE* fd = nullptr;
-      #ifdef __unix__
+      #if defined(__unix__) || defined(__APPLE__)
       void* handle = nullptr;
 
       /* On some Linux distro, we must load libpython to successfully load all others modules. See issue #276. */

@@ -4,6 +4,10 @@ compiler:
     - gcc
     - clang
 
+os:
+    - linux
+    - osx
+
 notifications:
   email: false
 
@@ -32,48 +36,58 @@ env:
   - PYTHON_VERSION=2.7
 
 before_install:
-  - sudo add-apt-repository ppa:hvr/z3 -y
-  - sudo apt-get update -q
-  - sudo apt-get install -y libz3-dev
-  - sudo apt-get install python-setuptools
-  - if [ "$CC" = "gcc" ]; then export CC="gcc-4.9"; fi
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9"; fi
-  - if [ "$CC" = "clang" ]; then export CC="clang-3.5"; fi
-  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.5"; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo add-apt-repository ppa:hvr/z3 -y; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update -q; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -y libz3-dev; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install python-setuptools; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install z3; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CC" = "gcc" ]; then export CC="gcc-4.9"; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" = "g++" ]; then export CXX="g++-4.9"; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CC" = "clang" ]; then export CC="clang-3.5"; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" = "clang++" ]; then export CXX="clang++-3.5"; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export CC="clang"; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export CXX="clang++"; fi
   # Back to /home/travis/build/JonathanSalwan
   - cd ..
   # Install capstone
   - git clone https://github.com/aquynh/capstone.git
   - cd capstone
-  - bash ./make.sh
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash ./make.sh; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then ./make.sh; fi
   - sudo make install
   - cd ../
   # Download pin
-  - wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz
-  - tar -xf pin-2.14-71313-gcc.4.4.7-linux.tar.gz
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then tar -xf pin-2.14-71313-gcc.4.4.7-linux.tar.gz; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-clang.4.2-mac.tar.gz; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then tar -xf pin-2.14-71313-clang.4.2-mac.tar.gz; fi
   # Move Triton into pin
-  - mv ./Triton ./pin-2.14-71313-gcc.4.4.7-linux/source/tools/
-  - cd ./pin-2.14-71313-gcc.4.4.7-linux/source/tools/Triton
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then mv ./Triton ./pin-2.14-71313-gcc.4.4.7-linux/source/tools/; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd ./pin-2.14-71313-gcc.4.4.7-linux/source/tools/Triton; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then mv ./Triton ./pin-2.14-71313-clang.4.2-mac/source/tools/; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cd ./pin-2.14-71313-clang.4.2-mac/source/tools/Triton; fi
   # Prepare build
   - mkdir build
   - cd build
 
 script:
-  - cmake -DPINTOOL=yes -DKERNEL4=yes ..
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cmake -DPINTOOL=yes -DKERNEL4=yes ..; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cmake ..; fi
   - sudo make -j2 install
   - cd ..
-  - sudo python ./setup.py install
+  - sudo python2.7 ./setup.py install
 
   # libTriton unit testing
   # Python
-  - python ./src/examples/python/code_coverage_crackme_xor.py
-  - python ./src/examples/python/disass.py
-  - python ./src/examples/python/ir.py
-  - python ./src/examples/python/simplification.py
-  - python ./src/examples/python/symbolic_emulation_1.py
-  - python ./src/examples/python/symbolic_emulation_2.py
-  - python ./src/examples/python/symbolic_emulation_crackme_xor.py
-  - python ./src/testers/check_eval.py
+  - python2.7 ./src/examples/python/code_coverage_crackme_xor.py
+  - python2.7 ./src/examples/python/disass.py
+  - python2.7 ./src/examples/python/ir.py
+  - python2.7 ./src/examples/python/simplification.py
+  - python2.7 ./src/examples/python/symbolic_emulation_1.py
+  - python2.7 ./src/examples/python/symbolic_emulation_2.py
+  - python2.7 ./src/examples/python/symbolic_emulation_crackme_xor.py
+  - python2.7 ./src/testers/check_eval.py
   # C++
   - cd src/examples/cpp
   - make
@@ -85,18 +99,18 @@ script:
   - cd ../../../
 
   # libPintool + libTriton unit testing
-  - sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"
-  - ./triton ./src/testers/check_semantics.py ./src/samples/ir_test_suite/ir
-  - ./triton ./src/examples/pin/ast_dictionaries.py ./src/samples/crackmes/crackme_xor elite
-  - ./triton ./src/examples/pin/blacklist.py ./src/samples/crackmes/crackme_xor a
-  - ./triton ./src/examples/pin/callback_image.py ./src/samples/ir_test_suite/ir
-  - ./triton ./src/examples/pin/callback_routine.py  ./src/samples/vulns/testSuite
-  - ./triton ./src/examples/pin/callback_syscall.py  ./src/samples/crackmes/crackme_xor a
-  - ./triton ./src/examples/pin/crackme_hash_collision.py ./src/samples/crackmes/crackme_hash aaaaa
-  - ./triton ./src/examples/pin/inject_model_with_snapshot.py ./src/samples/crackmes/crackme_xor a
-  - ./triton ./src/examples/pin/ir.py ./src/samples/crackmes/crackme_xor a > /dev/null
-  - ./triton ./src/examples/pin/runtime_memory_tainting.py ./src/samples/crackmes/crackme_xor a
-  - ./triton ./src/examples/pin/runtime_register_modification.py ./src/samples/crackmes/crackme_xor a
-  - ./triton ./src/examples/pin/strlen.py ./src/samples/others/strlen 1
-  - ./triton ./src/examples/pin/sym_only_on_tainted.py ./src/samples/crackmes/crackme_xor a
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/testers/check_semantics.py ./src/samples/ir_test_suite/ir; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/ast_dictionaries.py ./src/samples/crackmes/crackme_xor elite; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/blacklist.py ./src/samples/crackmes/crackme_xor a; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/callback_image.py ./src/samples/ir_test_suite/ir; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/callback_routine.py  ./src/samples/vulns/testSuite; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/callback_syscall.py  ./src/samples/crackmes/crackme_xor a; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/crackme_hash_collision.py ./src/samples/crackmes/crackme_hash aaaaa; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/inject_model_with_snapshot.py ./src/samples/crackmes/crackme_xor a; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/ir.py ./src/samples/crackmes/crackme_xor a > /dev/null; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/runtime_memory_tainting.py ./src/samples/crackmes/crackme_xor a; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/runtime_register_modification.py ./src/samples/crackmes/crackme_xor a; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/strlen.py ./src/samples/others/strlen 1; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/sym_only_on_tainted.py ./src/samples/crackmes/crackme_xor a; fi
 

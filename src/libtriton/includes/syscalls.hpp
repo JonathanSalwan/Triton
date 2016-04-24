@@ -8,7 +8,7 @@
 #ifndef TRITON_SYSCALLS_H
 #define TRITON_SYSCALLS_H
 
-#ifdef __unix__
+#if defined(__unix__) || defined(__APPLE__)
 
   #ifdef __APPLE__
     #include <sys/syscall.h>
@@ -46,14 +46,18 @@ namespace triton {
      *  @{
      */
 
+      #if defined(__unix__)
       //! The number of syscalls 32
       extern const unsigned int NB_SYSCALL32;
+      #endif
 
       //! The number of syscalls 64
       extern const unsigned int NB_SYSCALL64;
 
+      #if defined(__unix__)
       //! The syscall map 32
       extern const char *syscallmap32[];
+      #endif
 
       //! The syscall map 64
       extern const char *syscallmap64[];
@@ -65,5 +69,5 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* __unix__ */
+#endif /* __unix__ || __APPLE__ */
 #endif /* TRITON_SYSCALLS_H */

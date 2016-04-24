@@ -27,7 +27,7 @@ namespace triton {
       PyObject* prefixesDict          = nullptr; /* Must be global because it's updated on-the-fly */
       PyObject* registersDict         = nullptr; /* Must be global because it's updated on-the-fly */
       PyObject* tritonModule          = nullptr; /* Must be global because may be updated on-the-fly */
-      #ifdef __unix__
+      #if defined(__unix__) || defined(__APPLE__)
       PyObject* syscallsDict          = nullptr; /* Must be global because it's updated on-the-fly */
       #endif
 
@@ -114,7 +114,7 @@ namespace triton {
         PyObject* idSymExprClass = xPyClass_New(nullptr, symExprDict, xPyString_FromString("SYMEXPR"));
 
         /* Create the SYSCALL namespace ============================================================== */
-        #ifdef __unix__
+        #if defined(__unix__) || defined(__APPLE__)
         triton::bindings::python::syscallsDict = xPyDict_New();
         PyObject* idSyscallsClass = xPyClass_New(nullptr, triton::bindings::python::syscallsDict, xPyString_FromString("SYSCALL"));
         #endif
@@ -141,7 +141,7 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "REG",                 idRegClass);                /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYMEXPR",             idSymExprClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "VERSION",             idVersionClass);
-        #ifdef __unix__
+        #if defined(__unix__) || defined(__APPLE__)
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL",             idSyscallsClass);           /* Empty: filled on the fly */
         #endif
 

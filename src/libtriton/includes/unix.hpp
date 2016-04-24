@@ -8,7 +8,7 @@
 #ifndef TRITON_UNIX_HPP
 #define TRITON_UNIX_HPP
 
-#ifdef __unix__
+#if defined(__unix__) || defined(__APPLE__)
 
 #include <syscalls.hpp>
 
@@ -37,8 +37,10 @@ namespace triton {
      *  @{
      */
 
+      #if defined(__unix__)
       //! Returns the syscall 32 name from its number.
       const char *syscall32NumberToString(__uint syscallNumber);
+      #endif
 
       //! Returns the syscall name from its number.
       const char *syscall64NumberToString(__uint syscallNumber);
@@ -50,5 +52,5 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* __unix__ */
+#endif /* __unix__ || __APPLE__ */
 #endif /* !TRITON_UNIX_HPP */

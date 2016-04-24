@@ -29,7 +29,7 @@ namespace triton {
      *  \addtogroup extlibs
      *  @{
      */
-      #ifdef __unix__
+      #if defined(__unix__) || defined(__APPLE__)
         #include <capstone/capstone.h>
         #include <capstone/x86.h>
       #elif _WIN32

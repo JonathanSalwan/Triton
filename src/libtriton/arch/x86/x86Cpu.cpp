@@ -355,7 +355,7 @@ namespace triton {
         triton::bindings::python::initCpuSizeNamespace();
         triton::bindings::python::initX86OpcodesNamespace();
         triton::bindings::python::initX86PrefixesNamespace();
-        #ifdef __unix__
+        #if defined(__unix__) || defined(__APPLE__)
           triton::bindings::python::initSyscallNamespace();
         #endif
       #endif
