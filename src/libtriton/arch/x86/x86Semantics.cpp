@@ -157,6 +157,18 @@ PCMPEQW                      | mmx/sse2   | Compare Packed Data for Equal (words
 PCMPGTB                      | mmx/sse2   | Compare Packed Data for Greater Than (bytes)
 PCMPGTD                      | mmx/sse2   | Compare Packed Data for Greater Than (dwords)
 PCMPGTW                      | mmx/sse2   | Compare Packed Data for Greater Than (words)
+PMAXSB                       | sse4.1     | Maximum of Packed Signed Byte Integers
+PMAXSD                       | sse4.1     | Maximum of Packed Signed Doubleword Integers
+PMAXSW                       | sse1       | Maximum of Packed Signed Word Integers
+PMAXUB                       | sse1       | Maximum of Packed Unsigned Byte Integers
+PMAXUD                       | sse4.1     | Maximum of Packed Unsigned Doubleword Integers
+PMAXUW                       | sse4.1     | Maximum of Packed Unsigned Word Integers
+PMINSB                       | sse4.1     | Minimum of Packed Signed Byte Integers
+PMINSD                       | sse4.1     | Minimum of Packed Signed Doubleword Integers
+PMINSW                       | sse1       | Minimum of Packed Signed Word Integers
+PMINUB                       | sse1       | Minimum of Packed Unsigned Byte Integers
+PMINUD                       | sse4.1     | Minimum of Packed Unsigned Doubleword Integers
+PMINUW                       | sse4.1     | Minimum of Packed Unsigned Word Integers
 PMOVMSKB                     | sse1       | Move Byte Mask
 POP                          |            | Pop a Value from the Stack
 POR                          | mmx/sse2   | Bitwise Logical OR
@@ -375,6 +387,18 @@ namespace triton {
             case ID_INS_PCMPGTB:        triton::arch::x86::semantics::pcmpgtb_s(inst);      break;
             case ID_INS_PCMPGTD:        triton::arch::x86::semantics::pcmpgtd_s(inst);      break;
             case ID_INS_PCMPGTW:        triton::arch::x86::semantics::pcmpgtw_s(inst);      break;
+            case ID_INS_PMAXSB:         triton::arch::x86::semantics::pmaxsb_s(inst);       break;
+            case ID_INS_PMAXSD:         triton::arch::x86::semantics::pmaxsd_s(inst);       break;
+            case ID_INS_PMAXSW:         triton::arch::x86::semantics::pmaxsw_s(inst);       break;
+            case ID_INS_PMAXUB:         triton::arch::x86::semantics::pmaxub_s(inst);       break;
+            case ID_INS_PMAXUD:         triton::arch::x86::semantics::pmaxud_s(inst);       break;
+            case ID_INS_PMAXUW:         triton::arch::x86::semantics::pmaxuw_s(inst);       break;
+            case ID_INS_PMINSB:         triton::arch::x86::semantics::pminsb_s(inst);       break;
+            case ID_INS_PMINSD:         triton::arch::x86::semantics::pminsd_s(inst);       break;
+            case ID_INS_PMINSW:         triton::arch::x86::semantics::pminsw_s(inst);       break;
+            case ID_INS_PMINUB:         triton::arch::x86::semantics::pminub_s(inst);       break;
+            case ID_INS_PMINUD:         triton::arch::x86::semantics::pminud_s(inst);       break;
+            case ID_INS_PMINUW:         triton::arch::x86::semantics::pminuw_s(inst);       break;
             case ID_INS_PMOVMSKB:       triton::arch::x86::semantics::pmovmskb_s(inst);     break;
             case ID_INS_POP:            triton::arch::x86::semantics::pop_s(inst);          break;
             case ID_INS_POR:            triton::arch::x86::semantics::por_s(inst);          break;
@@ -5779,6 +5803,426 @@ namespace triton {
 
           /* Apply the taint */
           expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmaxsb_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize(); index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvsle(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::extract(high, low, op2),
+                            triton::ast::extract(high, low, op1))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMAXSB operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmaxsd_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvsle(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::extract(high, low, op2),
+                            triton::ast::extract(high, low, op1))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMAXSD operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmaxsw_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvsle(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::extract(high, low, op2),
+                            triton::ast::extract(high, low, op1))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMAXSW operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmaxub_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize(); index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvule(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::extract(high, low, op2),
+                            triton::ast::extract(high, low, op1))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMAXUB operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmaxud_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvule(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::extract(high, low, op2),
+                            triton::ast::extract(high, low, op1))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMAXUD operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmaxuw_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvule(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::extract(high, low, op2),
+                            triton::ast::extract(high, low, op1))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMAXUW operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pminsb_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize(); index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvsge(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::extract(high, low, op2),
+                            triton::ast::extract(high, low, op1))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMINSB operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pminsd_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvsge(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::extract(high, low, op2),
+                            triton::ast::extract(high, low, op1))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMINSD operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pminsw_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvsge(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::extract(high, low, op2),
+                            triton::ast::extract(high, low, op1))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMINSW operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pminub_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize(); index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvuge(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::extract(high, low, op2),
+                            triton::ast::extract(high, low, op1))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMINUB operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pminud_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvuge(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::extract(high, low, op2),
+                            triton::ast::extract(high, low, op1))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMINUD operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pminuw_s(triton::arch::Instruction& inst) {
+          auto dst = inst.operands[0];
+          auto src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+          for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
+            pck.push_back(triton::ast::ite(
+                            triton::ast::bvuge(
+                              triton::ast::extract(high, low, op1),
+                              triton::ast::extract(high, low, op2)),
+                            triton::ast::extract(high, low, op2),
+                            triton::ast::extract(high, low, op1))
+                         );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMINUW operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);

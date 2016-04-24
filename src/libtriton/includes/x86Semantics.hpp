@@ -537,6 +537,42 @@ namespace triton {
       //! The PCMPGTW semantics.
       void pcmpgtw_s(triton::arch::Instruction& inst);
 
+      //! The PMAXSB semantics.
+      void pmaxsb_s(triton::arch::Instruction& inst);
+
+      //! The PMAXSD semantics.
+      void pmaxsd_s(triton::arch::Instruction& inst);
+
+      //! The PMAXSW semantics.
+      void pmaxsw_s(triton::arch::Instruction& inst);
+
+      //! The PMAXUB semantics.
+      void pmaxub_s(triton::arch::Instruction& inst);
+
+      //! The PMAXUD semantics.
+      void pmaxud_s(triton::arch::Instruction& inst);
+
+      //! The PMAXUW semantics.
+      void pmaxuw_s(triton::arch::Instruction& inst);
+
+      //! The PMINSB semantics.
+      void pminsb_s(triton::arch::Instruction& inst);
+
+      //! The PMINSD semantics.
+      void pminsd_s(triton::arch::Instruction& inst);
+
+      //! The PMINSW semantics.
+      void pminsw_s(triton::arch::Instruction& inst);
+
+      //! The PMINUB semantics.
+      void pminub_s(triton::arch::Instruction& inst);
+
+      //! The PMINUD semantics.
+      void pminud_s(triton::arch::Instruction& inst);
+
+      //! The PMINUW semantics.
+      void pminuw_s(triton::arch::Instruction& inst);
+
       //! The PMOVMSKB semantics.
       void pmovmskb_s(triton::arch::Instruction& inst);
 
