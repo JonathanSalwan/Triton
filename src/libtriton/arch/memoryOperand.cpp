@@ -74,14 +74,16 @@ namespace triton {
     void MemoryOperand::initAddress(void) {
       /* Otherwise, try to compute the address */
       if (triton::api.isArchitectureValid() && this->getBitSize() >= BYTE_SIZE_BIT) {
-        RegisterOperand base          = this->baseReg;
-        RegisterOperand index         = this->indexReg;
+        RegisterOperand& base         = this->baseReg;
+        RegisterOperand& index        = this->indexReg;
+        RegisterOperand& segment      = this->segmentReg;
         triton::__uint baseValue      = (this->pcRelative ? this->pcRelative : (base.isValid() ? triton::api.getRegisterValue(base).convert_to<triton::__uint>() : 0));
         triton::__uint indexValue     = (index.isValid() ? triton::api.getRegisterValue(index).convert_to<triton::__uint>() : 0);
+        triton::__uint segmentValue   = (segment.isValid() ? triton::api.getRegisterValue(segment).convert_to<triton::__uint>() : 0);
         triton::__uint scaleValue     = this->scale.getValue();
         triton::__uint dispValue      = this->displacement.getValue();
         triton::__uint mask           = -1;
-        triton::uint32 bitSize        = (index.isValid() ? index.getBitSize() : base.getBitSize());
+        triton::uint32 bitSize        = (index.isValid() ? index.getBitSize() : base.isValid() ? base.getBitSize() : segment.isValid() ? segment.getBitSize() : triton::api.cpuRegisterBitSize());
 
         /* Initialize the AST of the memory access (LEA) */
         this->ast = triton::ast::bvadd(
@@ -95,9 +97,27 @@ namespace triton {
                       )
                     );
 
+        /*
+         * If the symbolic emulation is enabled, use segments as
+         * base address instead of selector into the GDT.
+         */
+        if (triton::api.isSymbolicEmulationEnabled()) {
+          this->ast = triton::ast::bvadd(
+                        triton::ast::bv(segmentValue, bitSize),
+                        this->ast
+                      );
+        }
+
         /* Initialize the address only if it is not already defined */
         if (!this->address) {
+          /* LEA computation */
           this->address = (((baseValue + (indexValue * scaleValue)) + dispValue) & mask);
+          /*
+           * If the symbolic emulation is enabled, use segments as
+           * base address instead of selector into the GDT.
+           */
+          if (triton::api.isSymbolicEmulationEnabled())
+            this->address += segmentValue;
         }
 
       }
