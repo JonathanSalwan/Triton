@@ -7,19 +7,19 @@
 
 from   setuptools import setup
 import os
-import inspect
+import site
 import shutil
 import platform
 
-package_name        = "triton"
-version             = "0.3"
-package_description = """
+package_name        = 'triton'
+version             = '0.3'
+package_description = '''
 Triton is a dynamic binary analysis (DBA) framework. It provides internal components like a
 Dynamic Symbolic Exuction (DSE) engine, a Taint Engine, AST Semantics representations of the x86 and
 the x86-64 instruction set, SMT simplification passes, a Z3 interface to solve constraints and,
 the last but not least, Python bindings. Based on these components, you are able to build
 program analysis tools, automate reverse engineering and perform software verification.
-""".strip()
+'''.strip()
 
 if platform.system() == 'Linux':
     shutil.copyfile('build/libtriton.so', 'build/triton.so')
@@ -32,15 +32,17 @@ else:
     sys.exit(1)
 
 setup(
-    name             = package_name,
-    version          = version,
-    description      = package_description,
-    license          = "LGPLv3",
-    author           = "Jonathan Salwan",
-    author_email     = "jsalwan@quarkslab.com",
-    url              = "http://triton.quarkslab.com",
-    data_files       = [(os.path.dirname(inspect.getfile(inspect)), ['build/triton.so'])],
-    classifiers      = [
+    name                 = package_name,
+    version              = version,
+    description          = package_description,
+    license              = 'LGPLv3',
+    author               = 'Jonathan Salwan',
+    author_email         = 'jsalwan@quarkslab.com',
+    url                  = 'http://triton.quarkslab.com',
+    zip_safe             = False,
+    include_package_data = True,
+    data_files           = [(site.getsitepackages()[0], ['build/triton.so'])],
+    classifiers          = [
         'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: Developers',
