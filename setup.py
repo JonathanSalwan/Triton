@@ -41,7 +41,7 @@ setup(
     url                  = 'http://triton.quarkslab.com',
     zip_safe             = False,
     include_package_data = True,
-    data_files           = [([path for path in site.getsitepackages() if 'System' not in path][0], ['build/triton.so'])],
+    data_files           = [([path for path in site.getsitepackages() if 'System' not in path][0], ['build/triton.so'])], # NOTE: Must be cleaner than this hack.
     classifiers          = [
         'Development Status :: 4 - Beta',
         'Environment :: Console',
