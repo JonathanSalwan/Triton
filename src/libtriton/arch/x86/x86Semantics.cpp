@@ -172,10 +172,12 @@ PMINUW                       | sse4.1     | Minimum of Packed Unsigned Word Inte
 PMOVMSKB                     | sse1       | Move Byte Mask
 POP                          |            | Pop a Value from the Stack
 POR                          | mmx/sse2   | Bitwise Logical OR
-PREFETCHNTA                  | sse1       | Move data from m8 closer to the processor using NTA hint.
-PREFETCHT0                   | sse1       | Move data from m8 closer to the processor using T0 hint.
-PREFETCHT1                   | sse1       | Move data from m8 closer to the processor using T1 hint.
-PREFETCHT2                   | sse1       | Move data from m8 closer to the processor using T2 hint.
+PREFETCH                     | 3DNow      | Move data from m8 closer to the processor without expecting to write back
+PREFETCHNTA                  | mmx/sse1   | Move data from m8 closer to the processor using NTA hint
+PREFETCHT0                   | mmx/sse1   | Move data from m8 closer to the processor using T0 hint
+PREFETCHT1                   | mmx/sse1   | Move data from m8 closer to the processor using T1 hint
+PREFETCHT2                   | mmx/sse1   | Move data from m8 closer to the processor using T2 hint
+PREFETCHW                    | 3DNow      | Move data from m8 closer to the processor in anticipation of a write
 PSHUFD                       | sse2       | Shuffle Packed Doublewords
 PSHUFHW                      | sse2       | Shuffle Packed High Words
 PSHUFLW                      | sse2       | Shuffle Packed Low Words
@@ -402,10 +404,12 @@ namespace triton {
             case ID_INS_PMOVMSKB:       triton::arch::x86::semantics::pmovmskb_s(inst);     break;
             case ID_INS_POP:            triton::arch::x86::semantics::pop_s(inst);          break;
             case ID_INS_POR:            triton::arch::x86::semantics::por_s(inst);          break;
+            case ID_INS_PREFETCH:       triton::arch::x86::semantics::prefetchx_s(inst);    break;
             case ID_INS_PREFETCHNTA:    triton::arch::x86::semantics::prefetchx_s(inst);    break;
             case ID_INS_PREFETCHT0:     triton::arch::x86::semantics::prefetchx_s(inst);    break;
             case ID_INS_PREFETCHT1:     triton::arch::x86::semantics::prefetchx_s(inst);    break;
             case ID_INS_PREFETCHT2:     triton::arch::x86::semantics::prefetchx_s(inst);    break;
+            case ID_INS_PREFETCHW:      triton::arch::x86::semantics::prefetchx_s(inst);    break;
             case ID_INS_PSHUFD:         triton::arch::x86::semantics::pshufd_s(inst);       break;
             case ID_INS_PSHUFHW:        triton::arch::x86::semantics::pshufhw_s(inst);      break;
             case ID_INS_PSHUFLW:        triton::arch::x86::semantics::pshuflw_s(inst);      break;
