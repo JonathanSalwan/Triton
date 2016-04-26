@@ -1,12 +1,36 @@
 // Test cases for Triton
 // gcc -masm=intel ./ir.c -o ir
 
+void init(int *tab1, int *tab2, int *tab3, int *tab4) {
+  tab1[0] = 0x11111111;
+  tab1[1] = 0x22222222;
+  tab1[2] = 0x33333333;
+  tab1[3] = 0x44444444;
+
+  tab2[0] = 0xd1d1d1d1;
+  tab2[1] = 0xffffffff;
+  tab2[2] = 0x55555555;
+  tab2[3] = 0x44444444;
+
+  tab3[0] = 0xd1d1d1d1;
+  tab3[1] = 0x12345678;
+  tab3[2] = 0x55909055;
+  tab3[3] = 0x44111144;
+
+  tab4[0] = 0x8aaaaaaa;
+  tab4[1] = 0x8bbbbbbb;
+  tab4[2] = 0x12345678;
+  tab4[3] = 0xfedcba98;
+}
+
 void check(void)
 {
-  int tab1[4] = {0x11111111, 0x22222222, 0x33333333, 0x44444444};
-  int tab2[4] = {0xd1d1d1d1, 0xffffffff, 0x55555555, 0x44444444};
-  int tab3[4] = {0xd1d1d1d1, 0x12345678, 0x55909055, 0x44111144};
-  int tab4[4] = {0x8aaaaaaa, 0x8bbbbbbb, 0x12345678, 0xfedcba98};
+  int tab1[4];
+  int tab2[4];
+  int tab3[4];
+  int tab4[4];
+
+  init(tab1, tab2, tab3, tab4);
 
   // Check concat symbolic expression
   asm("mov sil, 0x99");
@@ -99,6 +123,8 @@ void check(void)
   asm("or ah, 0x8");
   asm("or al, byte ptr [rsp+0xf]");
 
+  init(tab1, tab2, tab3, tab4);
+
   asm("mov rax, 0x99");
   asm("mov rbx, 0xaa");
   asm("mov rcx, 0xdd");
@@ -135,6 +161,8 @@ void check(void)
   asm("mov rax, 0x0");
   asm("bsr rbx, rax");
 
+  init(tab1, tab2, tab3, tab4);
+
   asm("mov rax, 0x1111111111111111");
   asm("mov rbx, 0xffffffffffffffff");
   asm("mov rcx, 0x9090909090909090");
@@ -165,11 +193,31 @@ void check(void)
   asm("mov rbx, 0x99");
   asm("cmpxchg ebx, ecx");
 
+  init(tab1, tab2, tab3, tab4);
+
   asm("cmpxchg8b qword ptr [%0]" :: "r"(tab1));
 
   asm("mov edx, dword ptr [%0]" :: "r"(tab1));
   asm("mov eax, dword ptr [%0]" :: "r"(tab1+4));
   asm("cmpxchg8b qword ptr [%0]" :: "r"(tab1));
+
+  asm("cmpxchg16b oword ptr [%0]" :: "r"(tab1));
+
+  asm("mov edx, dword ptr [%0]" :: "r"(tab1));
+  asm("mov eax, dword ptr [%0]" :: "r"(tab1+4));
+  asm("cmpxchg16b oword ptr [%0]" :: "r"(tab1));
+
+  asm("mov edx, dword ptr [%0]" :: "r"(tab1+4));
+  asm("mov eax, dword ptr [%0]" :: "r"(tab1));
+  asm("cmpxchg16b oword ptr [%0]" :: "r"(tab1));
+
+  asm("mov rdx, qword ptr [%0]" :: "r"(tab1));
+  asm("mov rax, qword ptr [%0]" :: "r"(tab1+8));
+  asm("cmpxchg16b oword ptr [%0]" :: "r"(tab1));
+
+  asm("mov rdx, qword ptr [%0]" :: "r"(tab1+8));
+  asm("mov rax, qword ptr [%0]" :: "r"(tab1));
+  asm("cmpxchg16b oword ptr [%0]" :: "r"(tab1));
 
   asm("clc");
   asm("cld");
@@ -370,6 +418,8 @@ void check(void)
   asm("rcr rdx, cl");
   asm("rcr rdx, 4");
   asm("rcr rdx, 1");
+
+  init(tab1, tab2, tab3, tab4);
 
   // SSE
   asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab1));

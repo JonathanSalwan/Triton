@@ -276,6 +276,9 @@ namespace triton {
       //! The CMPXCHG semantics.
       void cmpxchg_s(triton::arch::Instruction& inst);
 
+      //! The CMPXCHG16B semantics.
+      void cmpxchg16b_s(triton::arch::Instruction& inst);
+
       //! The CMPXCHG8B semantics.
       void cmpxchg8b_s(triton::arch::Instruction& inst);
 
