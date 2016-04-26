@@ -192,6 +192,9 @@ namespace triton {
       //! The BT semantics.
       void bt_s(triton::arch::Instruction& inst);
 
+      //! The BTR semantics.
+      void btr_s(triton::arch::Instruction& inst);
+
       //! The BTS semantics.
       void bts_s(triton::arch::Instruction& inst);
 

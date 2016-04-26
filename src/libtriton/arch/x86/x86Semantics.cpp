@@ -42,6 +42,7 @@ BSF                          |            | Bit Scan Forward
 BSR                          |            | Bit Scan Reverse
 BSWAP                        |            | Byte Swap
 BT                           |            | Bit Test
+BTR                          |            | Bit Test and Reset
 BTS                          |            | Bit Test and Set
 CALL                         |            | Call Procedure
 CBW                          |            | Convert byte (al) to word (ax).
@@ -276,6 +277,7 @@ namespace triton {
             case ID_INS_BSR:            triton::arch::x86::semantics::bsr_s(inst);          break;
             case ID_INS_BSWAP:          triton::arch::x86::semantics::bswap_s(inst);        break;
             case ID_INS_BT:             triton::arch::x86::semantics::bt_s(inst);           break;
+            case ID_INS_BTR:            triton::arch::x86::semantics::btr_s(inst);          break;
             case ID_INS_BTS:            triton::arch::x86::semantics::bts_s(inst);          break;
             case ID_INS_CALL:           triton::arch::x86::semantics::call_s(inst);         break;
             case ID_INS_CBW:            triton::arch::x86::semantics::cbw_s(inst);          break;
@@ -2132,6 +2134,57 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = triton::api.taintUnion(dst, src1);
           expr->isTainted = triton::api.taintUnion(dst, src2);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void btr_s(triton::arch::Instruction& inst) {
+          auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+          auto dst2 = inst.operands[0];
+          auto src1 = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst2);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src1);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::extract(0, 0,
+                         triton::ast::bvlshr(
+                           op1,
+                           triton::ast::bvsmod(
+                             op2,
+                             triton::ast::bv(dst2.getBitSize(), dst2.getBitSize())
+                           )
+                         )
+                       );
+          auto node2 = triton::ast::ite(
+                         triton::ast::equal(node1, triton::ast::bvfalse()),
+                         op1,
+                         triton::ast::bvand(
+                           op1,
+                           triton::ast::bvsub(
+                             op1,
+                             triton::ast::bvshl(
+                               triton::ast::bv(1, dst2.getBitSize()),
+                               triton::ast::bvsmod(
+                                 op2,
+                                 triton::ast::bv(dst2.getBitSize(), dst2.getBitSize())
+                               )
+                             )
+                           )
+                         )
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicFlagExpression(inst, node1, TRITON_X86_REG_CF, "BTR carry operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, dst2, "BTR reset operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintUnion(dst1, dst2);
+          expr1->isTainted = triton::api.taintUnion(dst1, src1);
+          expr2->isTainted = triton::api.taintUnion(dst2, dst1);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
