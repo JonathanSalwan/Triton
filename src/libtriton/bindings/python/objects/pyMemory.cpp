@@ -171,6 +171,10 @@ namespace triton {
 
       static PyObject* MemoryOperand_getLeaAst(PyObject* self, PyObject* noarg) {
         try {
+          if (PyMemoryOperand_AsMemoryOperand(self)->getLeaAst() == nullptr) {
+            Py_INCREF(Py_None);
+            return Py_None;
+          }
           return PyAstNode(PyMemoryOperand_AsMemoryOperand(self)->getLeaAst());
         }
         catch (const std::exception& e) {

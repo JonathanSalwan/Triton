@@ -714,7 +714,7 @@ def test_2():
         count += 1
     else:
         print '[KO] REG.RAX.getConcreteValue()'
-        print '\tOutput   : %x' %(cv)
+        print '\tOutput   : 0x%x' %(cv)
         print '\tExpected : 0x0'
         return -1
 
@@ -724,7 +724,7 @@ def test_2():
         count += 1
     else:
         print '[KO] REG.RAX.getConcreteValue()'
-        print '\tOutput   : %x' %(cv)
+        print '\tOutput   : 0x%x' %(cv)
         print '\tExpected : 0x1122334455667788'
         return -1
 
@@ -838,7 +838,7 @@ def test_2():
         count += 1
     else:
         print '[KO] xmm.getConcreteValue()'
-        print '\tOutput   : %x' %(xmm.getConcreteValue())
+        print '\tOutput   : 0x%x' %(xmm.getConcreteValue())
         print '\tExpected : 0x112233445566778899aabbccddeeff00'
         return -1
 
@@ -856,7 +856,7 @@ def test_2():
         count += 1
     else:
         print '[KO] ymm.getConcreteValue()'
-        print '\tOutput   : %x' %(ymm.getConcreteValue())
+        print '\tOutput   : 0x%x' %(ymm.getConcreteValue())
         print '\tExpected : 0x112233445566778899aabbccddeeff00'
         return -1
 
@@ -865,7 +865,7 @@ def test_2():
         count += 1
     else:
         print '[KO] ymm.getConcreteValue()'
-        print '\tOutput   : %x' %(ymm.getConcreteValue())
+        print '\tOutput   : 0x%x' %(ymm.getConcreteValue())
         print '\tExpected : 0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00'
         return -1
 
@@ -883,16 +883,140 @@ def test_2():
         count += 1
     else:
         print '[KO] zmm.getConcreteValue()'
-        print '\tOutput   : %x' %(zmm.getConcreteValue())
+        print '\tOutput   : 0x%x' %(zmm.getConcreteValue())
         print '\tExpected : 0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00'
         return -1
 
     return count
 
 
+def test_3():
+    count = 0
+    setArchitecture(ARCH.X86_64)
+
+    mem = Memory(0x400f4d3, 8, 0x6162636465666768)
+
+    if mem.getAddress() == 0x400f4d3:
+        count += 1
+    else:
+        print '[KO] mem.getAddress()'
+        print '\tOutput   : 0x%x' %(mem.getAddress())
+        print '\tExpected : 0x400f4d3'
+        return -1
+
+    if mem.getBitSize() == 64:
+        count += 1
+    else:
+        print '[KO] mem.getBitSize()'
+        print '\tOutput   : %d' %(mem.getBitSize())
+        print '\tExpected : 64'
+        return -1
+
+    if mem.getSize() == 8:
+        count += 1
+    else:
+        print '[KO] mem.getSize()'
+        print '\tOutput   : %d' %(mem.getSize())
+        print '\tExpected : 8'
+        return -1
+
+    if mem.getConcreteValue() == 0x6162636465666768:
+        count += 1
+    else:
+        print '[KO] mem.getConcreteValue()'
+        print '\tOutput   : 0x%x' %(mem.getConcreteValue())
+        print '\tExpected : 0x6162636465666768'
+        return -1
+
+    if mem.getType() == OPERAND.MEM:
+        count += 1
+    else:
+        print '[KO] mem.getType()'
+        print '\tOutput   : %d' %(mem.getType())
+        print '\tExpected : OPERAND.MEM'
+        return -1
+
+    mem.setConcreteValue(0x1000)
+    if mem.getConcreteValue() == 0x1000:
+        count += 1
+    else:
+        print '[KO] mem.getConcreteValue()'
+        print '\tOutput   : 0x%x' %(mem.getConcreteValue())
+        print '\tExpected : 0x1000'
+        return -1
+
+    if mem.getSize() == 8:
+        count += 1
+    else:
+        print '[KO] mem.getSize()'
+        print '\tOutput   : %d' %(mem.getSize())
+        print '\tExpected : 8'
+        return -1
+
+    if not mem.getBaseRegister().isValid():
+        count += 1
+    else:
+        print '[KO] mem.getBaseRegister()'
+        print '\tOutput   : %s' %(mem.getBaseRegister())
+        print '\tExpected : unknown:1 bv[0..0]'
+        return -1
+
+    if not mem.getIndexRegister().isValid():
+        count += 1
+    else:
+        print '[KO] mem.getIndexRegister()'
+        print '\tOutput   : %s' %(mem.getIndexRegister())
+        print '\tExpected : unknown:1 bv[0..0]'
+        return -1
+
+    if not mem.getSegmentRegister().isValid():
+        count += 1
+    else:
+        print '[KO] mem.getSegmentRegister()'
+        print '\tOutput   : %s' %(mem.getSegmentRegister())
+        print '\tExpected : unknown:1 bv[0..0]'
+        return -1
+
+    if mem.getScale().getValue() == 0:
+        count += 1
+    else:
+        print '[KO] mem.getScale().getValue()'
+        print '\tOutput   : 0x%x' %(mem.getScale().getValue())
+        print '\tExpected : 0x0'
+        return -1
+
+    if mem.getScale().getBitSize() == 1:
+        count += 1
+    else:
+        print '[KO] mem.getScale().getBitSize()'
+        print '\tOutput   : %d' %(mem.getScale().getBitSize())
+        print '\tExpected : 1'
+        return -1
+
+    if mem.getDisplacement().getValue() == 0:
+        count += 1
+    else:
+        print '[KO] mem.getDisplacement().getValue()'
+        print '\tOutput   : 0x%x' %(mem.getDisplacement().getValue())
+        print '\tExpected : 0x0'
+        return -1
+
+    if mem.getLeaAst() is None:
+        count += 1
+    else:
+        print '[KO] mem.getLeaAst()'
+        print '\tOutput   : %s' %(mem.getLeaAst())
+        print '\tExpected : None'
+        return -1
+
+    return count
+
+
+
 units_testing = [
     ("Testing the arithmetic and logic AST interpreter", test_1),
     ("Testing the RegisterOperand class", test_2),
+    ("Testing the MemoryOperand class", test_3),
 ]
 
 
