@@ -815,12 +815,17 @@ namespace triton {
 
       /* Assigns a symbolic expression to a register */
       void SymbolicEngine::assignSymbolicExpressionToRegister(SymbolicExpression *se, triton::arch::RegisterOperand& reg) {
+        triton::ast::AbstractNode* node = se->getAst();
         triton::arch::RegisterOperand parent = reg.getParent();
         triton::uint32 id = parent.getId();
 
         /* We can assign an expression only on parent registers */
         if (reg.getId() != parent.getId())
           throw std::runtime_error("SymbolicEngine::assignSymbolicExpressionToRegister(): We can assign an expression only on parent registers.");
+
+        /* Check if the size of the symbolic expression is equal to the target register */
+        if (node->getBitvectorSize() != reg.getBitSize())
+          throw std::runtime_error("SymbolicEngine::assignSymbolicExpressionToRegister(): The size of the symbolic expression is not equal to the target register.");
 
         se->setKind(triton::engines::symbolic::REG);
         se->setOriginRegister(reg);
@@ -834,9 +839,9 @@ namespace triton {
         triton::__uint address          = mem.getAddress();
         triton::uint32 writeSize        = mem.getSize();
 
-        /* Check if the symbolic expression's size is equal to the memory access */
+        /* Check if the size of the symbolic expression is equal to the memory access */
         if (node->getBitvectorSize() != mem.getBitSize())
-          throw std::runtime_error("SymbolicEngine::assignSymbolicExpressionToMemory(): The symbolic expression's size is not equal to the memory access.");
+          throw std::runtime_error("SymbolicEngine::assignSymbolicExpressionToMemory(): The size of the symbolic expression is not equal to the memory access.");
 
         /*
          * As the x86's memory can be accessed without alignment, each byte of the
