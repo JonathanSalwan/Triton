@@ -193,6 +193,7 @@ namespace triton {
   void API::setArchitecture(triton::uint32 arch) {
     /* Setup and init the targeted architecture */
     this->arch.setArchitecture(arch);
+
     /* remove and re-init previous engines (when setArchitecture() has been called twice) */
     this->removeEngines();
     this->initEngines();
@@ -365,12 +366,19 @@ namespace triton {
 
   void API::removeEngines(void) {
     if(this->isArchitectureValid()) {
+      delete this->astGarbageCollector;
       delete this->astRepresentation;
       delete this->solver;
       delete this->sym;
       delete this->symBackup;
       delete this->taint;
-      delete this->astGarbageCollector;
+
+      this->astGarbageCollector = nullptr;
+      this->astRepresentation   = nullptr;
+      this->solver              = nullptr;
+      this->sym                 = nullptr;
+      this->symBackup           = nullptr;
+      this->taint               = nullptr;
     }
   }
 

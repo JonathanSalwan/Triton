@@ -18,7 +18,7 @@ namespace triton {
   namespace arch {
 
     Architecture::Architecture() {
-      this->arch = ARCH_INVALID;
+      this->arch = triton::arch::ARCH_INVALID;
       this->cpu  = nullptr;
     }
 
@@ -41,7 +41,7 @@ namespace triton {
 
     void Architecture::setArchitecture(triton::uint32 arch) {
       /* Check if the architecture is valid */
-      if (!(arch > ARCH_INVALID && arch < ARCH_LAST_ITEM))
+      if (!(arch > triton::arch::ARCH_INVALID && arch < triton::arch::ARCH_LAST_ITEM))
         throw std::runtime_error("Architecture::setArchitecture(): Invalid architecture.");
 
       /* Setup global variables */
@@ -49,24 +49,24 @@ namespace triton {
 
       /* Allocate and init the good arch */
       switch (this->arch) {
-        case ARCH_X86_64:
+        case triton::arch::ARCH_X86_64:
           #if defined(__i386) || defined(_M_IX86)
             throw std::runtime_error("Architecture::setArchitecture(): You cannot analyze 64-bits code on a 32-bits machine.");
           #endif
           /* remove previous CPU instance (when setArchitecture() has been called twice) */
           delete this->cpu;
           /* init the new instance */
-          this->cpu = new x86::x8664Cpu();
+          this->cpu = new triton::arch::x86::x8664Cpu();
           if (!this->cpu)
             throw std::runtime_error("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();
           break;
 
-        case ARCH_X86:
+        case triton::arch::ARCH_X86:
           /* remove previous CPU instance (when setArchitecture() has been called twice) */
           delete this->cpu;
           /* init the new instance */
-          this->cpu = new x86::x86Cpu();
+          this->cpu = new triton::arch::x86::x86Cpu();
           if (!this->cpu)
             throw std::runtime_error("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();
@@ -83,7 +83,7 @@ namespace triton {
 
 
     bool Architecture::isValid(void) {
-      if (this->arch == ARCH_INVALID)
+      if (this->arch == triton::arch::ARCH_INVALID)
         return false;
       return true;
     }
