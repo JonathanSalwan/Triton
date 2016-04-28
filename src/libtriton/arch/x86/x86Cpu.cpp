@@ -579,10 +579,10 @@ namespace triton {
           inst.setSize(insn[j].size);
 
           /* Init the instruction's type */
-          inst.setType(capstoneInstructionToTritonInstruction(insn[j].id));
+          inst.setType(triton::arch::x86::capstoneInstructionToTritonInstruction(insn[j].id));
 
           /* Init the instruction's prefix */
-          inst.setPrefix(capstonePrefixToTritonPrefix(detail->x86.prefix[0]));
+          inst.setPrefix(triton::arch::x86::capstonePrefixToTritonPrefix(detail->x86.prefix[0]));
 
           /* Init operands */
           for (triton::uint32 n = 0; n < detail->x86.op_count; n++) {
