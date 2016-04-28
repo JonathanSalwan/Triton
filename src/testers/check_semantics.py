@@ -52,7 +52,7 @@ def cafter(instruction):
         if seid == SYMEXPR.UNSET:
             continue
 
-        expr   = getFullAstFromId(seid)
+        expr   = getAstFromId(seid)
         svalue = expr.evaluate()
         #svalue = evaluateAstViaZ3(expr)
 
