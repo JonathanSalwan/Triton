@@ -35,12 +35,6 @@ namespace triton {
      *  @{
      */
 
-      //! Initializes the 32-bits spec.
-      void init32(void);
-
-      //! Initializes the 64-bits spec.
-      void init64(void);
-
       extern RegisterOperand x86_reg_invalid;
 
       extern RegisterOperand x86_reg_rax;
