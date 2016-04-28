@@ -607,6 +607,10 @@ namespace triton {
                 triton::arch::ImmediateOperand disp(op->mem.disp, op->size);
                 triton::arch::ImmediateOperand scale(op->mem.scale, op->size);
 
+                /* Specify that LEA contains a PC relative */
+                if (base == TRITON_X86_REG_PC)
+                  mem.setPcRelative(inst.getNextAddress());
+
                 mem.setSegmentRegister(segment);
                 mem.setBaseRegister(base);
                 mem.setIndexRegister(index);
