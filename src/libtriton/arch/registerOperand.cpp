@@ -198,5 +198,10 @@ namespace triton {
     }
 
 
+    bool operator>(const RegisterOperand& reg1, const RegisterOperand& reg2) {
+      return reg1.getId() > reg2.getId();
+    }
+
+
   }; /* arch namespace */
 }; /* triton namespace */

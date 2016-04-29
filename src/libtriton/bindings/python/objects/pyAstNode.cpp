@@ -268,6 +268,11 @@ namespace triton {
       }
 
 
+      static long AstNode_hash(PyObject* self) {
+        return reinterpret_cast<long>(self);
+      }
+
+
       static PyObject* AstNode_str(PyObject* self) {
         try {
           std::stringstream str;
@@ -526,7 +531,7 @@ namespace triton {
         &AstNode_NumberMethods,                     /* tp_as_number*/
         0,                                          /* tp_as_sequence*/
         0,                                          /* tp_as_mapping*/
-        0,                                          /* tp_hash */
+        (hashfunc)AstNode_hash,                     /* tp_hash */
         0,                                          /* tp_call*/
         (reprfunc)AstNode_str,                      /* tp_str*/
         0,                                          /* tp_getattro*/

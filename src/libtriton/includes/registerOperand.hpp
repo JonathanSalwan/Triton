@@ -143,6 +143,9 @@ namespace triton {
     //! Compares two RegisterOperand (needed for std::map)
     bool operator<(const RegisterOperand& reg1, const RegisterOperand& reg2);
 
+    //! Compares two RegisterOperand (needed for std::map)
+    bool operator>(const RegisterOperand& reg1, const RegisterOperand& reg2);
+
   /*! @} End of arch namespace */
   };
 /*! @} End of triton namespace */

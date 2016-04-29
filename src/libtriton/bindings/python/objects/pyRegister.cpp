@@ -285,7 +285,16 @@ namespace triton {
 
 
       static int RegisterOperand_cmp(RegisterOperand_Object* a, RegisterOperand_Object* b) {
-        return !(*(a->reg) == *(b->reg));
+        if (*(a->reg) == *(b->reg))
+          return 0;
+        if (*(a->reg) > *(b->reg))
+          return 1;
+        return -1;
+      }
+
+
+      static long RegisterOperand_hash(PyObject* self) {
+        return reinterpret_cast<long>(self);
       }
 
 
@@ -335,7 +344,7 @@ namespace triton {
           0,                                          /* tp_as_number*/
           0,                                          /* tp_as_sequence*/
           0,                                          /* tp_as_mapping*/
-          0,                                          /* tp_hash */
+          (hashfunc)RegisterOperand_hash,             /* tp_hash */
           0,                                          /* tp_call*/
           (reprfunc)RegisterOperand_str,              /* tp_str*/
           0,                                          /* tp_getattro*/
