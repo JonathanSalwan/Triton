@@ -1063,11 +1063,177 @@ def test_3():
     return count
 
 
+def test_4():
+    count = 0
+    setArchitecture(ARCH.X86_64)
+
+    imm = Immediate(0x1234, CPUSIZE.WORD)
+
+    if imm.getBitSize() == 16:
+        count += 1
+    else:
+        print '[KO] imm.getBitSize()'
+        print '\tOutput   : %d' %(imm.getBitSize())
+        print '\tExpected : 16'
+        return -1
+
+    if imm.getSize() == 2:
+        count += 1
+    else:
+        print '[KO] imm.getSize()'
+        print '\tOutput   : %d' %(imm.getSize())
+        print '\tExpected : 2'
+        return -1
+
+    if imm.getBitSize() != 32:
+        count += 1
+    else:
+        print '[KO] imm.getBitSize()'
+        print '\tOutput   : %d' %(imm.getBitSize())
+        print '\tExpected : 16'
+        return -1
+
+    if imm.getSize() != 1:
+        count += 1
+    else:
+        print '[KO] imm.getSize()'
+        print '\tOutput   : %d' %(imm.getSize())
+        print '\tExpected : 2'
+        return -1
+
+    if imm.getValue() == 0x1234:
+        count += 1
+    else:
+        print '[KO] imm.getValue()'
+        print '\tOutput   : 0x%x' %(imm.getValue())
+        print '\tExpected : 0x1234'
+        return -1
+
+    if imm.getValue() != 0x0234:
+        count += 1
+    else:
+        print '[KO] imm.getValue()'
+        print '\tOutput   : 0x%x' %(imm.getValue())
+        print '\tExpected : 0x1234'
+        return -1
+
+    if imm.getType() == OPERAND.IMM:
+        count += 1
+    else:
+        print '[KO] imm.getType()'
+        print '\tOutput   : %d' %(imm.getType())
+        print '\tExpected : OPERAND.IMM'
+        return -1
+
+    return count
+
+
+def test_5():
+    count = 0
+    try:
+        setArchitecture(ARCH.X86_64)
+        setArchitecture(ARCH.X86)
+        setArchitecture(ARCH.X86)
+        setArchitecture(ARCH.X86_64)
+        setArchitecture(ARCH.X86)
+        setArchitecture(ARCH.X86)
+        setArchitecture(ARCH.X86_64)
+        setArchitecture(ARCH.X86_64)
+        setArchitecture(ARCH.X86_64)
+        setArchitecture(ARCH.X86)
+        setArchitecture(ARCH.X86)
+        setArchitecture(ARCH.X86_64)
+        count += 1
+    except:
+        print '[KO] Chaining multiple setArchitecture()'
+        print '\tOutput   : <exception>'
+        print '\tExpected : <nothing>'
+        return -1
+
+    setArchitecture(ARCH.X86_64)
+    try:
+        tmp = REG.RAX
+        count += 1
+    except:
+        print '[KO] REG.RAX not found (64-bits)'
+        print '\tOutput   : <exception>'
+        print '\tExpected : <nothing>'
+        return -1
+
+    try:
+        tmp = REG.ZMM1
+        count += 1
+    except:
+        print '[KO] REG.ZMM1 not found (64-bits)'
+        print '\tOutput   : <exception>'
+        print '\tExpected : <nothing>'
+        return -1
+
+    try:
+        tmp = REG.XMM15
+        count += 1
+    except:
+        print '[KO] REG.XMM15 not found (64-bits)'
+        print '\tOutput   : <exception>'
+        print '\tExpected : <nothing>'
+        return -1
+
+    setArchitecture(ARCH.X86)
+    try:
+        tmp = REG.RAX
+        print '[KO] REG.RAX found (32-bits)'
+        print '\tOutput   : <exception>'
+        print '\tExpected : <nothing>'
+        return -1
+    except:
+        count += 1
+
+    try:
+        tmp = REG.ZMM1
+        print '[KO] REG.ZMM1 found (32-bits)'
+        print '\tOutput   : <exception>'
+        print '\tExpected : <nothing>'
+        return -1
+    except:
+        count += 1
+
+    try:
+        tmp = REG.XMM8
+        print '[KO] REG.XMM8 found (32-bits)'
+        print '\tOutput   : <exception>'
+        print '\tExpected : <nothing>'
+        return -1
+    except:
+        count += 1
+
+    try:
+        tmp = REG.XMM15
+        print '[KO] REG.XMM15 found (32-bits)'
+        print '\tOutput   : <exception>'
+        print '\tExpected : <nothing>'
+        return -1
+    except:
+        count += 1
+
+    try:
+        tmp = REG.XMM7
+        count += 1
+    except:
+        print '[KO] REG.XMM7 not found (32-bits)'
+        print '\tOutput   : <exception>'
+        print '\tExpected : <nothing>'
+        return -1
+
+    return count
+
+
 
 units_testing = [
     ("Testing the arithmetic and logic AST interpreter", test_1),
     ("Testing the RegisterOperand class", test_2),
     ("Testing the MemoryOperand class", test_3),
+    ("Testing the ImmediateOperand class", test_4),
+    ("Testing the architectures", test_5),
 ]
 
 
