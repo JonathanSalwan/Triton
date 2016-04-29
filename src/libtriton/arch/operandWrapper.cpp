@@ -153,6 +153,14 @@ namespace triton {
     }
 
 
+    void OperandWrapper::operator=(const OperandWrapper& other) {
+      this->imm  = other.imm;
+      this->mem  = other.mem;
+      this->reg  = other.reg;
+      this->type = other.type;
+    }
+
+
     std::ostream& operator<<(std::ostream& stream, triton::arch::OperandWrapper op) {
       switch (op.getType()) {
         case triton::arch::OP_IMM: stream << op.getImmediate(); break;

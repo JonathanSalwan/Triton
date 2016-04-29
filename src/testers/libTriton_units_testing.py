@@ -1010,7 +1010,7 @@ def test_3():
         return -1
 
     mem.setBaseRegister(REG.RAX)
-    if mem.getBaseRegister() == REG.RAX:
+    if mem.getBaseRegister().getName() == REG.RAX.getName():
         count += 1
     else:
         print '[KO] mem.setBaseRegister() and mem.getBaseRegister()'
@@ -1018,7 +1018,7 @@ def test_3():
         print '\tExpected : True'
         return -1
 
-    if mem.getBaseRegister() != REG.RBX:
+    if mem.getBaseRegister().getName() != REG.RBX.getName():
         count += 1
     else:
         print '[KO] mem.setBaseRegister() and mem.getBaseRegister()'
@@ -1027,7 +1027,7 @@ def test_3():
         return -1
 
     mem.setIndexRegister(REG.RCX)
-    if mem.getIndexRegister() == REG.RCX:
+    if mem.getIndexRegister().getName() == REG.RCX.getName():
         count += 1
     else:
         print '[KO] mem.setIndexRegister() and mem.getIndexRegister()'
@@ -1035,7 +1035,7 @@ def test_3():
         print '\tExpected : True'
         return -1
 
-    if mem.getIndexRegister() != REG.RAX:
+    if mem.getIndexRegister().getName() != REG.RAX.getName():
         count += 1
     else:
         print '[KO] mem.setIndexRegister() and mem.getIndexRegister()'
@@ -1044,7 +1044,7 @@ def test_3():
         return -1
 
     mem.setSegmentRegister(REG.FS)
-    if mem.getSegmentRegister() == REG.FS:
+    if mem.getSegmentRegister().getName() == REG.FS.getName():
         count += 1
     else:
         print '[KO] mem.setSegmentRegister() and mem.getSegmentRegister()'
@@ -1052,7 +1052,7 @@ def test_3():
         print '\tExpected : True'
         return -1
 
-    if mem.getSegmentRegister() != REG.GS:
+    if mem.getSegmentRegister().getName() != REG.GS.getName():
         count += 1
     else:
         print '[KO] mem.setSegmentRegister() and mem.getSegmentRegister()'

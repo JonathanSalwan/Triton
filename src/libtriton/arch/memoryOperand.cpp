@@ -16,7 +16,7 @@
 namespace triton {
   namespace arch {
 
-    MemoryOperand::MemoryOperand(void) {
+    MemoryOperand::MemoryOperand() {
       this->address       = 0;
       this->ast           = nullptr;
       this->concreteValue = 0;

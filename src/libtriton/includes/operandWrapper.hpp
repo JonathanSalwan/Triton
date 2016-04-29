@@ -101,6 +101,9 @@ namespace triton {
 
         //! Returns the abstract concrete value.
         triton::uint512 getConcreteValue(void);
+
+        //! Copies a OperandWrapper.
+        void operator=(const OperandWrapper& other);
     };
 
     //! Displays a OperandWrapper according to the concrete type.

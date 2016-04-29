@@ -60,7 +60,6 @@ namespace triton {
 
         //! Returns the type of the operand (`Imm`, `Mem`, `Reg`).
         virtual triton::uint32 getType(void) const = 0;
-
     };
 
   /*! @} End of arch namespace */
