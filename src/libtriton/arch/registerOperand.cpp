@@ -30,10 +30,11 @@ namespace triton {
 
 
     void RegisterOperand::clear(void) {
-      this->name    = "unknown";
-      this->id      = triton::api.cpuInvalidRegister();
-      this->parent  = triton::api.cpuInvalidRegister();
-      this->trusted = false;
+      this->concreteValue = 0;
+      this->id            = triton::api.cpuInvalidRegister();
+      this->name          = "unknown";
+      this->parent        = triton::api.cpuInvalidRegister();
+      this->trusted       = false;
     }
 
 

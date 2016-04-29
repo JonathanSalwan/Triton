@@ -942,7 +942,7 @@ namespace triton {
                 break;
 
               default:
-                break;
+                throw std::invalid_argument("x8664Cpu::disassembly(): Invalid operand.");
             }
           }
 
