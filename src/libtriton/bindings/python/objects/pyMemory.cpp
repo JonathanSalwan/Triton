@@ -390,6 +390,24 @@ namespace triton {
       }
 
 
+      static PyObject* MemoryOperand_setSegmentRegister(PyObject* self, PyObject* reg) {
+        try {
+          triton::arch::MemoryOperand *mem;
+
+          if (!PyRegisterOperand_Check(reg))
+            return PyErr_Format(PyExc_TypeError, "Memory::setSegmentRegister(): Expected a Register as argument.");
+
+          mem = PyMemoryOperand_AsMemoryOperand(self);
+          mem->setSegmentRegister(*PyRegisterOperand_AsRegisterOperand(reg));
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* MemoryOperand_setTrust(PyObject* self, PyObject* flag) {
         try {
           if (!PyBool_Check(flag))
@@ -442,6 +460,7 @@ namespace triton {
         {"setDisplacement",     MemoryOperand_setDisplacement,    METH_O,           ""},
         {"setIndexRegister",    MemoryOperand_setIndexRegister,   METH_O,           ""},
         {"setScale",            MemoryOperand_setScale,           METH_O,           ""},
+        {"setSegmentRegister",  MemoryOperand_setSegmentRegister, METH_O,           ""},
         {"setTrust",            MemoryOperand_setTrust,           METH_O,           ""},
         {nullptr,               nullptr,                          0,                nullptr}
       };

@@ -1009,6 +1009,57 @@ def test_3():
         print '\tExpected : None'
         return -1
 
+    mem.setBaseRegister(REG.RAX)
+    if mem.getBaseRegister() == REG.RAX:
+        count += 1
+    else:
+        print '[KO] mem.setBaseRegister() and mem.getBaseRegister()'
+        print '\tOutput   : %s' %(mem.getBaseRegister())
+        print '\tExpected : True'
+        return -1
+
+    if mem.getBaseRegister() != REG.RBX:
+        count += 1
+    else:
+        print '[KO] mem.setBaseRegister() and mem.getBaseRegister()'
+        print '\tOutput   : %s' %(mem.getBaseRegister())
+        print '\tExpected : False'
+        return -1
+
+    mem.setIndexRegister(REG.RCX)
+    if mem.getIndexRegister() == REG.RCX:
+        count += 1
+    else:
+        print '[KO] mem.setIndexRegister() and mem.getIndexRegister()'
+        print '\tOutput   : %s' %(mem.getIndexRegister())
+        print '\tExpected : True'
+        return -1
+
+    if mem.getIndexRegister() != REG.RAX:
+        count += 1
+    else:
+        print '[KO] mem.setIndexRegister() and mem.getIndexRegister()'
+        print '\tOutput   : %s' %(mem.getIndexRegister())
+        print '\tExpected : False'
+        return -1
+
+    mem.setSegmentRegister(REG.FS)
+    if mem.getSegmentRegister() == REG.FS:
+        count += 1
+    else:
+        print '[KO] mem.setSegmentRegister() and mem.getSegmentRegister()'
+        print '\tOutput   : %s' %(mem.getSegmentRegister())
+        print '\tExpected : True'
+        return -1
+
+    if mem.getSegmentRegister() != REG.GS:
+        count += 1
+    else:
+        print '[KO] mem.setSegmentRegister() and mem.getSegmentRegister()'
+        print '\tOutput   : %s' %(mem.getSegmentRegister())
+        print '\tExpected : False'
+        return -1
+
     return count
 
 
