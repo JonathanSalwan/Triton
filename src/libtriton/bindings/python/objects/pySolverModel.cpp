@@ -188,7 +188,7 @@ namespace triton {
       };
 
 
-      PyObject* PySolverModel(triton::engines::solver::SolverModel& model) {
+      PyObject* PySolverModel(const triton::engines::solver::SolverModel& model) {
         SolverModel_Object* object;
 
         PyType_Ready(&SolverModel_Type);

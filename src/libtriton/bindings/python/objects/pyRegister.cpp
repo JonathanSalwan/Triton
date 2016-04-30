@@ -358,7 +358,7 @@ namespace triton {
       };
 
 
-      PyObject* PyRegisterOperand(triton::arch::RegisterOperand& reg) {
+      PyObject* PyRegisterOperand(const triton::arch::RegisterOperand& reg) {
         RegisterOperand_Object* object;
 
         PyType_Ready(&RegisterOperand_Type);

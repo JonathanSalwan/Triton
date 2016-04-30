@@ -21,7 +21,7 @@ namespace triton {
                                          triton::__uint kindValue,
                                          triton::__uint id,
                                          triton::uint32 size,
-                                         std::string comment,
+                                         const std::string& comment,
                                          triton::uint512 concreteValue) {
         this->symVarComment          = comment;
         this->symVarId               = id;
@@ -56,7 +56,7 @@ namespace triton {
       }
 
 
-      std::string& SymbolicVariable::getSymVarName(void) {
+      const std::string& SymbolicVariable::getSymVarName(void) const {
         return this->symVarName;
       }
 
@@ -71,12 +71,12 @@ namespace triton {
       }
 
 
-      triton::uint32 SymbolicVariable::getSymVarSize(void) {
+      triton::uint32 SymbolicVariable::getSymVarSize(void) const {
         return this->symVarSize;
       }
 
 
-      std::string& SymbolicVariable::getSymVarComment(void) {
+      const std::string& SymbolicVariable::getSymVarComment(void) const {
         return this->symVarComment;
       }
 
@@ -86,7 +86,7 @@ namespace triton {
       }
 
 
-      void SymbolicVariable::setSymVarComment(std::string comment) {
+      void SymbolicVariable::setSymVarComment(const std::string& comment) {
         this->symVarComment = comment;
       }
 
@@ -100,7 +100,7 @@ namespace triton {
       }
 
 
-      std::ostream& operator<<(std::ostream& stream, SymbolicVariable symVar) {
+      std::ostream& operator<<(std::ostream& stream, const SymbolicVariable& symVar) {
         stream << symVar.getSymVarName() << ":" << symVar.getSymVarSize();
         return stream;
       }

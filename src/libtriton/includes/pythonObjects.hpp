@@ -52,37 +52,37 @@ namespace triton {
       PyObject* PyAstNode(triton::ast::AbstractNode* node);
 
       //! Creates the Bitvector python class.
-      PyObject* PyBitvector(triton::arch::ImmediateOperand& imm);
+      PyObject* PyBitvector(const triton::arch::ImmediateOperand& imm);
 
       //! Creates the Bitvector python class.
-      PyObject* PyBitvector(triton::arch::MemoryOperand& mem);
+      PyObject* PyBitvector(const triton::arch::MemoryOperand& mem);
 
       //! Creates the Bitvector python class.
-      PyObject* PyBitvector(triton::arch::RegisterOperand& reg);
+      PyObject* PyBitvector(const triton::arch::RegisterOperand& reg);
 
       //! Creates the Bitvector python class.
       PyObject* PyBitvector(triton::uint32 high, triton::uint32 low);
 
       //! Creates the Immediate python class.
-      PyObject* PyImmediateOperand(triton::arch::ImmediateOperand& imm);
+      PyObject* PyImmediateOperand(const triton::arch::ImmediateOperand& imm);
 
       //! Creates the Instruction python class.
       PyObject* PyInstruction(void);
 
       //! Creates the Instruction python class.
-      PyObject* PyInstruction(triton::arch::Instruction& inst);
+      PyObject* PyInstruction(const triton::arch::Instruction& inst);
 
       //! Creates the Memory python class.
-      PyObject* PyMemoryOperand(triton::arch::MemoryOperand& mem);
+      PyObject* PyMemoryOperand(const triton::arch::MemoryOperand& mem);
 
       //! Creates the PathConstraint python class.
-      PyObject* PyPathConstraint(triton::engines::symbolic::PathConstraint& pc);
+      PyObject* PyPathConstraint(const triton::engines::symbolic::PathConstraint& pc);
 
       //! Creates the Register python class.
-      PyObject* PyRegisterOperand(triton::arch::RegisterOperand& reg);
+      PyObject* PyRegisterOperand(const triton::arch::RegisterOperand& reg);
 
       //! Creates the SolverModel python class.
-      PyObject* PySolverModel(triton::engines::solver::SolverModel& model);
+      PyObject* PySolverModel(const triton::engines::solver::SolverModel& model);
 
       //! Creates the SymbolicExpression python class.
       PyObject* PySymbolicExpression(triton::engines::symbolic::SymbolicExpression* expr);

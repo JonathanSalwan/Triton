@@ -73,7 +73,7 @@ namespace triton {
     }
 
 
-    void AstGarbageCollector::recordVariableAstNode(std::string& name, triton::ast::AbstractNode* node) {
+    void AstGarbageCollector::recordVariableAstNode(const std::string& name, triton::ast::AbstractNode* node) {
       this->variableNodes[name] = node;
     }
 
@@ -88,7 +88,7 @@ namespace triton {
     }
 
 
-    triton::ast::AbstractNode* AstGarbageCollector::getAstVariableNode(std::string& name) {
+    triton::ast::AbstractNode* AstGarbageCollector::getAstVariableNode(const std::string& name) {
       if (this->variableNodes.find(name) != this->variableNodes.end())
         return this->variableNodes[name];
       return nullptr;

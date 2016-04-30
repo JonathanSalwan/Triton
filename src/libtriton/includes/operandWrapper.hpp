@@ -49,13 +49,13 @@ namespace triton {
         triton::uint32 type;
 
         //! Immediate constructor.
-        OperandWrapper(ImmediateOperand imm);
+        OperandWrapper(const ImmediateOperand& imm);
 
         //! Memory constructor.
-        OperandWrapper(MemoryOperand mem);
+        OperandWrapper(const MemoryOperand& mem);
 
         //! Register constructor.
-        OperandWrapper(RegisterOperand reg);
+        OperandWrapper(const RegisterOperand& reg);
 
         //! Destructor.
         ~OperandWrapper();
@@ -73,13 +73,13 @@ namespace triton {
         RegisterOperand& getRegister(void);
 
         //! Sets the immediate operand.
-        void setImmediate(ImmediateOperand imm);
+        void setImmediate(const ImmediateOperand& imm);
 
         //! Sets the memroy operand.
-        void setMemory(MemoryOperand mem);
+        void setMemory(const MemoryOperand& mem);
 
         //! Sets the register operand.
-        void setRegister(RegisterOperand reg);
+        void setRegister(const RegisterOperand& reg);
 
         //! True if this concrete abstract value is trusted and synchronized with the real CPU/MMU value.
         bool isTrusted(void);
@@ -107,7 +107,7 @@ namespace triton {
     };
 
     //! Displays a OperandWrapper according to the concrete type.
-    std::ostream& operator<<(std::ostream& stream, triton::arch::OperandWrapper op);
+    std::ostream& operator<<(std::ostream& stream, triton::arch::OperandWrapper& op);
 
     //! Displays a OperandWrapper according to the concrete type.
     std::ostream& operator<<(std::ostream& stream, triton::arch::OperandWrapper* op);

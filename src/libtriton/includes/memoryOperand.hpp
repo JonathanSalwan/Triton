@@ -130,10 +130,10 @@ namespace triton {
         ImmediateOperand& getScale(void);
 
         //! True if this concrete memory value is trusted and synchronized with the real MMU value.
-        bool isTrusted(void);
+        bool isTrusted(void) const;
 
         //! True if the memory is not empty.
-        bool isValid(void);
+        bool isValid(void) const;
 
         //! Sets the trust flag.
         void setTrust(bool flag);
@@ -167,7 +167,7 @@ namespace triton {
    };
 
     //! Displays an MemoryOperand.
-    std::ostream& operator<<(std::ostream& stream, MemoryOperand mem);
+    std::ostream& operator<<(std::ostream& stream, const MemoryOperand& mem);
 
     //! Displays an MemoryOperand.
     std::ostream& operator<<(std::ostream& stream, MemoryOperand* mem);

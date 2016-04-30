@@ -79,7 +79,7 @@ namespace triton {
     };
 
     //! Displays an ImmediateOperand.
-    std::ostream& operator<<(std::ostream& stream, ImmediateOperand imm);
+    std::ostream& operator<<(std::ostream& stream, const ImmediateOperand& imm);
 
     //! Displays an ImmediateOperand.
     std::ostream& operator<<(std::ostream& stream, ImmediateOperand* imm);

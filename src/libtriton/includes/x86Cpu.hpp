@@ -185,45 +185,45 @@ namespace triton {
 
           void init(void);
           void clear(void);
-          bool isFlag(triton::uint32 regId);
-          bool isRegister(triton::uint32 regId);
-          bool isRegisterValid(triton::uint32 regId);
+          bool isFlag(triton::uint32 regId) const;
+          bool isRegister(triton::uint32 regId) const;
+          bool isRegisterValid(triton::uint32 regId) const;
 
           //! Returns true if regId is a GRP.
-          bool isGPR(triton::uint32 regId);
+          bool isGPR(triton::uint32 regId) const;
 
           //! Returns true if regId is a MMX register.
-          bool isMMX(triton::uint32 regId);
+          bool isMMX(triton::uint32 regId) const;
 
           //! Returns true if regId is a SSE register.
-          bool isSSE(triton::uint32 regId);
+          bool isSSE(triton::uint32 regId) const;
 
           //! Returns true if regId is a AVX-256 (YMM) register.
-          bool isAVX256(triton::uint32 regId);
+          bool isAVX256(triton::uint32 regId) const;
 
           //! Returns true if regId is a control (cr) register.
-          bool isControl(triton::uint32 regId);
+          bool isControl(triton::uint32 regId) const;
 
           //! Returns true if regId is a Segment.
-          bool isSegment(triton::uint32 regId);
+          bool isSegment(triton::uint32 regId) const;
 
-          std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg);
-          std::set<triton::arch::RegisterOperand*> getAllRegisters(void);
-          std::set<triton::arch::RegisterOperand*> getParentRegisters(void);
-          triton::uint512 getLastMemoryValue(triton::arch::MemoryOperand& mem);
-          std::vector<triton::uint8> getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) ;
-          triton::uint512 getLastRegisterValue(triton::arch::RegisterOperand& reg);
-          triton::uint32 invalidRegister(void);
-          triton::uint32 numberOfRegisters(void);
-          triton::uint32 registerBitSize(void);
-          triton::uint32 registerSize(void);
-          triton::uint8 getLastMemoryValue(triton::__uint addr);
-          void buildSemantics(triton::arch::Instruction &inst);
-          void disassembly(triton::arch::Instruction &inst);
+          std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg) const;
+          std::set<triton::arch::RegisterOperand*> getAllRegisters(void) const;
+          std::set<triton::arch::RegisterOperand*> getParentRegisters(void) const;
+          triton::uint512 getLastMemoryValue(const triton::arch::MemoryOperand& mem) const;
+          std::vector<triton::uint8> getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) const;
+          triton::uint512 getLastRegisterValue(const triton::arch::RegisterOperand& reg) const;
+          triton::uint32 invalidRegister(void) const;
+          triton::uint32 numberOfRegisters(void) const;
+          triton::uint32 registerBitSize(void) const;
+          triton::uint32 registerSize(void) const;
+          triton::uint8 getLastMemoryValue(triton::__uint addr) const;
+          void buildSemantics(triton::arch::Instruction &inst) const;
+          void disassembly(triton::arch::Instruction &inst) const;
           void setLastMemoryValue(triton::__uint addr, triton::uint8 value);
-          void setLastMemoryValue(triton::arch::MemoryOperand& mem);
+          void setLastMemoryValue(const triton::arch::MemoryOperand& mem);
           void setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values);
-          void setLastRegisterValue(triton::arch::RegisterOperand& reg);
+          void setLastRegisterValue(const triton::arch::RegisterOperand& reg);
 
           //! Copies a x86Cpu class.
           void operator=(const x86Cpu& other);

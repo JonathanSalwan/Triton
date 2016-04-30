@@ -238,8 +238,8 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::list<triton::arch::MemoryOperand>::iterator it;
-          std::list<triton::arch::MemoryOperand>& loadAccess = PyInstruction_AsInstruction(self)->getLoadAccess();
+          std::list<triton::arch::MemoryOperand>::const_iterator it;
+          const std::list<triton::arch::MemoryOperand>& loadAccess = PyInstruction_AsInstruction(self)->getLoadAccess();
 
           ret = xPyList_New(loadAccess.size());
           for (it = loadAccess.begin(); it != loadAccess.end(); it++) {
@@ -290,8 +290,8 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::list<triton::arch::MemoryOperand>::iterator it;
-          std::list<triton::arch::MemoryOperand>& storeAccess = PyInstruction_AsInstruction(self)->getStoreAccess();
+          std::list<triton::arch::MemoryOperand>::const_iterator it;
+          const std::list<triton::arch::MemoryOperand>& storeAccess = PyInstruction_AsInstruction(self)->getStoreAccess();
 
           ret = xPyList_New(storeAccess.size());
           for (it = storeAccess.begin(); it != storeAccess.end(); it++) {
@@ -738,7 +738,7 @@ namespace triton {
       }
 
 
-      PyObject* PyInstruction(triton::arch::Instruction& inst) {
+      PyObject* PyInstruction(const triton::arch::Instruction& inst) {
         Instruction_Object* object;
 
         PyType_Ready(&Instruction_Type);

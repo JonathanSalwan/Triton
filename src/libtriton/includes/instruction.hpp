@@ -138,10 +138,10 @@ namespace triton {
         triton::uint32 getPrefix(void) const;
 
         //! Returns the list of load access;
-        std::list<triton::arch::MemoryOperand>& getLoadAccess(void);
+        const std::list<triton::arch::MemoryOperand>& getLoadAccess(void) const;
 
         //! Returns the list of store access;
-        std::list<triton::arch::MemoryOperand>& getStoreAccess(void);
+        const std::list<triton::arch::MemoryOperand>& getStoreAccess(void) const;
 
         //! If there is a concrete value recorded, build the appropriate MemoryOperand. Otherwise, perfrom the analysis based on args.
         triton::arch::MemoryOperand popMemoryAccess(triton::__uint=0, triton::uint32 size=0, triton::uint512 value=0);
@@ -183,25 +183,25 @@ namespace triton {
         void addSymbolicExpression(triton::engines::symbolic::SymbolicExpression* expr);
 
         //! Returns true if this instruction is a branch
-        bool isBranch(void);
+        bool isBranch(void) const;
 
         //! Returns true if this instruction changes the control flow (e.g x86: JMP, JCC, CALL, RET, ...)
-        bool isControlFlow(void);
+        bool isControlFlow(void) const;
 
         //! Returns true if the condition is taken (e.g x86: jcc, cmovcc, setcc, ...).
-        bool isConditionTaken(void);
+        bool isConditionTaken(void) const;
 
         //! Returns true if at least one of its expressions is tainted.
-        bool isTainted(void);
+        bool isTainted(void) const;
 
         //! Returns true if the instruction contains an expression which reads the memory.
-        bool isMemoryRead(void);
+        bool isMemoryRead(void) const;
 
         //! Returns true if the instruction contains an expression which writes into the memory.
-        bool isMemoryWrite(void);
+        bool isMemoryWrite(void) const;
 
         //! Returns true if the instruction has a prefix.
-        bool isPrefixed(void);
+        bool isPrefixed(void) const;
 
         //! Sets flag to define this instruction as branch or not.
         void setBranch(bool flag);
@@ -226,7 +226,7 @@ namespace triton {
     };
 
     //! Displays an Instruction.
-    std::ostream& operator<<(std::ostream& stream, Instruction inst);
+    std::ostream& operator<<(std::ostream& stream, const Instruction& inst);
 
     //! Displays an Instruction.
     std::ostream& operator<<(std::ostream& stream, Instruction* inst);

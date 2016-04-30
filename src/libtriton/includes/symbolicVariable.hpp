@@ -72,7 +72,7 @@ namespace triton {
         public:
 
           //! Constructor.
-          SymbolicVariable(symkind_e kind, triton::__uint kindValue, triton::__uint id, triton::uint32 size, std::string comment, triton::uint512 concreteValue=0);
+          SymbolicVariable(symkind_e kind, triton::__uint kindValue, triton::__uint id, triton::uint32 size, const std::string& comment, triton::uint512 concreteValue=0);
 
           //! Constructor by copy.
           SymbolicVariable(const SymbolicVariable &copy);
@@ -84,10 +84,10 @@ namespace triton {
           symkind_e getSymVarKind(void);
 
           //! Returns the comment of the symbolic variable.
-          std::string& getSymVarComment(void);
+          const std::string& getSymVarComment(void) const;
 
           //! Returns the name of the symbolic variable.
-          std::string& getSymVarName(void);
+          const std::string& getSymVarName(void) const;
 
           //! Returns the id of the symbolic variable. This id is unique.
           triton::__uint getSymVarId(void);
@@ -96,20 +96,20 @@ namespace triton {
           triton::__uint getSymVarKindValue(void);
 
           //! Returns the size (in bits) of the symbolic variable.
-          triton::uint32 getSymVarSize(void);
+          triton::uint32 getSymVarSize(void) const;
 
           //! Returns the concrete value (if exists) of the symbolic variable.
           triton::uint512 getConcreteValue(void);
 
           //! Sets the comment of the symbolic variable.
-          void setSymVarComment(std::string comment);
+          void setSymVarComment(const std::string& comment);
 
           //! Sets the concrete value of the symbolic variable.
           void setSymVarConcreteValue(triton::uint512 value);
       };
 
       //! Displays a symbolic variable.
-      std::ostream& operator<<(std::ostream& stream, SymbolicVariable symVar);
+      std::ostream& operator<<(std::ostream& stream, const SymbolicVariable& symVar);
 
       //! Displays a symbolic variable.
       std::ostream& operator<<(std::ostream& stream, SymbolicVariable* symVar);

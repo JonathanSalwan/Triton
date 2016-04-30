@@ -13,19 +13,19 @@
 namespace triton {
   namespace arch {
 
-    OperandWrapper::OperandWrapper(ImmediateOperand imm) {
+    OperandWrapper::OperandWrapper(const ImmediateOperand& imm) {
       this->imm = imm;
       this->type = triton::arch::OP_IMM;
     }
 
 
-    OperandWrapper::OperandWrapper(MemoryOperand mem) {
+    OperandWrapper::OperandWrapper(const MemoryOperand& mem) {
       this->mem = mem;
       this->type = triton::arch::OP_MEM;
     }
 
 
-    OperandWrapper::OperandWrapper(RegisterOperand reg) {
+    OperandWrapper::OperandWrapper(const RegisterOperand& reg) {
       this->reg = reg;
       this->type = triton::arch::OP_REG;
     };
@@ -55,17 +55,17 @@ namespace triton {
     }
 
 
-    void OperandWrapper::setImmediate(ImmediateOperand imm) {
+    void OperandWrapper::setImmediate(const ImmediateOperand& imm) {
       this->imm = imm;
     }
 
 
-    void OperandWrapper::setMemory(MemoryOperand mem) {
+    void OperandWrapper::setMemory(const MemoryOperand& mem) {
       this->mem = mem;
     }
 
 
-    void OperandWrapper::setRegister(RegisterOperand reg) {
+    void OperandWrapper::setRegister(const RegisterOperand& reg) {
       this->reg = reg;
     }
 
@@ -161,7 +161,7 @@ namespace triton {
     }
 
 
-    std::ostream& operator<<(std::ostream& stream, triton::arch::OperandWrapper op) {
+    std::ostream& operator<<(std::ostream& stream, triton::arch::OperandWrapper& op) {
       switch (op.getType()) {
         case triton::arch::OP_IMM: stream << op.getImmediate(); break;
         case triton::arch::OP_MEM: stream << op.getMemory(); break;

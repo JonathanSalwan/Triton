@@ -80,19 +80,19 @@ namespace triton {
           symkind_e getKind(void);
 
           //! Returns the SMT AST root node of the symbolic expression. This is the semantics.
-          triton::ast::AbstractNode* getAst(void);
+          triton::ast::AbstractNode* getAst(void) const;
 
           //! Returns a new SMT AST root node of the symbolic expression. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
           triton::ast::AbstractNode* getNewAst(void);
 
           //! Returns the comment of the symbolic expression.
-          std::string getComment(void);
+          const std::string& getComment(void) const;
 
           //! Returns the id as string of the symbolic expression according the mode of the AST representation.
-          std::string getFormattedId(void);
+          std::string getFormattedId(void) const;
 
           //! Returns the comment as string of the symbolic expression according the mode of the AST representation.
-          std::string getFormattedComment(void);
+          std::string getFormattedComment(void) const;
 
           //! Returns the origin memory address if `kind` is equal to `triton::engines::symbolic::MEM`, 0 otherwise.
           triton::__uint getOriginAddress(void);
@@ -110,17 +110,17 @@ namespace triton {
           void setOriginAddress(triton::__uint addr);
 
           //! Sets the origin register.
-          void setOriginRegister(triton::arch::RegisterOperand& reg);
+          void setOriginRegister(const triton::arch::RegisterOperand& reg);
 
           //! Constructor.
-          SymbolicExpression(triton::ast::AbstractNode* expr, triton::__uint id, symkind_e kind, std::string comment="");
+          SymbolicExpression(triton::ast::AbstractNode* expr, triton::__uint id, symkind_e kind, const std::string& comment="");
 
           //! Destructor.
           ~SymbolicExpression();
       };
 
       //! Displays a symbolic expression.
-      std::ostream& operator<<(std::ostream& stream, SymbolicExpression symExpr);
+      std::ostream& operator<<(std::ostream& stream, const SymbolicExpression& symExpr);
 
       //! Displays a symbolic expression.
       std::ostream& operator<<(std::ostream& stream, SymbolicExpression* symExpr);

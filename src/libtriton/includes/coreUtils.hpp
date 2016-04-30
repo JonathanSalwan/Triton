@@ -37,7 +37,7 @@ namespace triton {
     void fromUintToBuffer(triton::uint512 value, triton::uint8* buffer);
 
     //! Returns the value located into the buffer.
-    template <typename T> T fromBufferToUint(triton::uint8* buffer);
+    template <typename T> T fromBufferToUint(const triton::uint8* buffer);
 
   /*! @} End of triton namespace */
   };

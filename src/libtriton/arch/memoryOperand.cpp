@@ -174,12 +174,12 @@ namespace triton {
     }
 
 
-    bool MemoryOperand::isTrusted(void) {
+    bool MemoryOperand::isTrusted(void) const {
       return this->trusted;
     }
 
 
-    bool MemoryOperand::isValid(void) {
+    bool MemoryOperand::isValid(void) const {
       if (!this->address && !this->concreteValue && !this->trusted && !this->getLow() && !this->getHigh())
         return false;
       return true;
@@ -253,7 +253,7 @@ namespace triton {
     }
 
 
-    std::ostream& operator<<(std::ostream& stream, MemoryOperand mem) {
+    std::ostream& operator<<(std::ostream& stream, const MemoryOperand& mem) {
       stream << "*[0x" << std::hex << mem.getAddress() << "]:" << std::dec << mem.getBitSize() << " bv[" << mem.getHigh() << ".." << mem.getLow() << "]";
       return stream;
     }
