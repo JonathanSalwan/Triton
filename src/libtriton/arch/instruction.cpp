@@ -125,12 +125,12 @@ namespace triton {
     }
 
 
-    std::list<triton::arch::MemoryOperand>& Instruction::getLoadAccess(void) {
+    const std::list<triton::arch::MemoryOperand>& Instruction::getLoadAccess(void) const {
       return this->loadAccess;
     }
 
 
-    std::list<triton::arch::MemoryOperand>& Instruction::getStoreAccess(void) {
+    const std::list<triton::arch::MemoryOperand>& Instruction::getStoreAccess(void) const {
       return this->storeAccess;
     }
 
@@ -213,23 +213,23 @@ namespace triton {
     }
 
 
-    bool Instruction::isBranch(void) {
+    bool Instruction::isBranch(void) const {
       return this->branch;
     }
 
 
-    bool Instruction::isControlFlow(void) {
+    bool Instruction::isControlFlow(void) const {
       return this->controlFlow;
     }
 
 
-    bool Instruction::isConditionTaken(void) {
+    bool Instruction::isConditionTaken(void) const {
       return this->conditionTaken;
     }
 
 
-    bool Instruction::isTainted(void) {
-      std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
+    bool Instruction::isTainted(void) const {
+      std::vector<triton::engines::symbolic::SymbolicExpression*>::const_iterator it;
       for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
         if ((*it)->isTainted == true)
           return true;
@@ -238,21 +238,21 @@ namespace triton {
     }
 
 
-    bool Instruction::isMemoryRead(void) {
+    bool Instruction::isMemoryRead(void) const {
       if (this->loadAccess.size() >= 1)
         return true;
       return false;
     }
 
 
-    bool Instruction::isMemoryWrite(void) {
+    bool Instruction::isMemoryWrite(void) const {
       if (this->storeAccess.size() >= 1)
         return true;
       return false;
     }
 
 
-    bool Instruction::isPrefixed(void) {
+    bool Instruction::isPrefixed(void) const {
       if (this->prefix)
         return true;
       return false;
@@ -313,7 +313,7 @@ namespace triton {
     }
 
 
-    std::ostream& operator<<(std::ostream& stream, Instruction inst) {
+    std::ostream& operator<<(std::ostream& stream, const Instruction& inst) {
       stream << std::hex << inst.getAddress() << ": " << inst.getDisassembly() << std::dec;
       return stream;
     }

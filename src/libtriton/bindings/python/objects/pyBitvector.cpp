@@ -159,7 +159,7 @@ namespace triton {
       };
 
 
-      PyObject* PyBitvector(triton::arch::ImmediateOperand& imm) {
+      PyObject* PyBitvector(const triton::arch::ImmediateOperand& imm) {
         Bitvector_Object* object;
 
         PyType_Ready(&Bitvector_Type);
@@ -173,7 +173,7 @@ namespace triton {
       }
 
 
-      PyObject* PyBitvector(triton::arch::MemoryOperand& mem) {
+      PyObject* PyBitvector(const triton::arch::MemoryOperand& mem) {
         Bitvector_Object* object;
 
         PyType_Ready(&Bitvector_Type);
@@ -187,7 +187,7 @@ namespace triton {
       }
 
 
-      PyObject* PyBitvector(triton::arch::RegisterOperand& reg) {
+      PyObject* PyBitvector(const triton::arch::RegisterOperand& reg) {
         Bitvector_Object* object;
 
         PyType_Ready(&Bitvector_Type);

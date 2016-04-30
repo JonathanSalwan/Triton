@@ -63,7 +63,7 @@ namespace triton {
         triton::ast::AbstractNode* recordAstNode(triton::ast::AbstractNode* node);
 
         //! Records a variable AST node.
-        void recordVariableAstNode(std::string& name, triton::ast::AbstractNode* node);
+        void recordVariableAstNode(const std::string& name, triton::ast::AbstractNode* node);
 
         //! Returns all allocated nodes.
         std::set<triton::ast::AbstractNode*> getAllocatedAstNodes(void);
@@ -72,7 +72,7 @@ namespace triton {
         std::map<std::string, triton::ast::AbstractNode*> getAstVariableNodes(void);
 
         //! Returns the node of a recorded variable.
-        triton::ast::AbstractNode* getAstVariableNode(std::string& name);
+        triton::ast::AbstractNode* getAstVariableNode(const std::string& name);
 
         //! Sets all allocated nodes.
         void setAllocatedAstNodes(std::set<triton::ast::AbstractNode*> nodes);

@@ -231,7 +231,7 @@ namespace triton {
       };
 
 
-      PyObject* PyImmediateOperand(triton::arch::ImmediateOperand& imm) {
+      PyObject* PyImmediateOperand(const triton::arch::ImmediateOperand& imm) {
         ImmediateOperand_Object* object;
 
         PyType_Ready(&ImmediateOperand_Type);

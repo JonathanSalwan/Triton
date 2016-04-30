@@ -80,16 +80,16 @@ namespace triton {
         RegisterOperand getParent(void) const;
 
         //! Returns true if the register is valid.
-        bool isValid(void);
+        bool isValid(void) const;
 
         //! Returns true if the register is a register.
-        bool isRegister(void);
+        bool isRegister(void) const;
 
         //! Returns true if the register is a flag.
-        bool isFlag(void);
+        bool isFlag(void) const;
 
         //! True if this concrete register value is trusted and synchronized with the real CPU value.
-        bool isTrusted(void);
+        bool isTrusted(void) const;
 
         //! Sets the trust flag.
         void setTrust(bool flag);
@@ -132,7 +132,7 @@ namespace triton {
     };
 
     //! Displays a RegisterOperand.
-    std::ostream& operator<<(std::ostream& stream, RegisterOperand reg);
+    std::ostream& operator<<(std::ostream& stream, const RegisterOperand& reg);
 
     //! Displays a RegisterOperand.
     std::ostream& operator<<(std::ostream& stream, RegisterOperand* reg);

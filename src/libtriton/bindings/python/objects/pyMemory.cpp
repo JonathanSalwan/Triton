@@ -509,7 +509,7 @@ namespace triton {
       };
 
 
-      PyObject* PyMemoryOperand(triton::arch::MemoryOperand& mem) {
+      PyObject* PyMemoryOperand(const triton::arch::MemoryOperand& mem) {
         MemoryOperand_Object* object;
 
         PyType_Ready(&MemoryOperand_Type);

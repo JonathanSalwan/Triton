@@ -50,13 +50,13 @@ namespace triton {
 
         public:
           //! Returns the name of the variable.
-          std::string getName(void);
+          const std::string& getName(void) const;
 
           //! Returns the id of the variable.
-          triton::uint32 getId(void);
+          triton::uint32 getId(void) const;
 
           //! Returns the value of the model.
-          triton::uint512 getValue(void);
+          triton::uint512 getValue(void) const;
 
           //! Copies a SolverModel
           void copy(const SolverModel& other);
@@ -65,7 +65,7 @@ namespace triton {
           SolverModel();
 
           //! Constructor.
-          SolverModel(std::string name, triton::uint512 value);
+          SolverModel(const std::string& name, triton::uint512 value);
 
           //! Constructor by copy.
           SolverModel(const SolverModel& other);
@@ -78,7 +78,7 @@ namespace triton {
       };
 
     //! Display a solver model.
-    std::ostream& operator<<(std::ostream& stream, SolverModel model);
+    std::ostream& operator<<(std::ostream& stream, const SolverModel& model);
 
     //! Display a solver model.
     std::ostream& operator<<(std::ostream& stream, SolverModel* model);

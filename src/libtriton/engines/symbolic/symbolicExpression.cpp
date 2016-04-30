@@ -16,7 +16,7 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicExpression::SymbolicExpression(triton::ast::AbstractNode* node, triton::__uint id, symkind_e kind, std::string comment) : originRegister() {
+      SymbolicExpression::SymbolicExpression(triton::ast::AbstractNode* node, triton::__uint id, symkind_e kind, const std::string& comment) : originRegister() {
         this->comment       = comment;
         this->ast           = node;
         this->id            = id;
@@ -30,7 +30,7 @@ namespace triton {
       }
 
 
-      triton::ast::AbstractNode* SymbolicExpression::getAst(void) {
+      triton::ast::AbstractNode* SymbolicExpression::getAst(void) const {
         if (this->ast == nullptr)
           throw std::runtime_error("SymbolicExpression::getAst(): No AST defined.");
         return this->ast;
@@ -44,7 +44,7 @@ namespace triton {
       }
 
 
-      std::string SymbolicExpression::getComment(void) {
+      const std::string& SymbolicExpression::getComment(void) const {
         return this->comment;
       }
 
@@ -54,7 +54,7 @@ namespace triton {
       }
 
 
-      std::string SymbolicExpression::getFormattedId(void) {
+      std::string SymbolicExpression::getFormattedId(void) const {
         if (triton::api.getAstRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
           return "ref!" + std::to_string(this->id);
 
@@ -66,7 +66,7 @@ namespace triton {
       }
 
 
-      std::string SymbolicExpression::getFormattedComment(void) {
+      std::string SymbolicExpression::getFormattedComment(void) const {
         if (this->getComment().empty())
           return "";
 
@@ -113,7 +113,7 @@ namespace triton {
       }
 
 
-      void SymbolicExpression::setOriginRegister(triton::arch::RegisterOperand& reg) {
+      void SymbolicExpression::setOriginRegister(const triton::arch::RegisterOperand& reg) {
         this->originRegister = reg;
       }
 
@@ -128,7 +128,7 @@ namespace triton {
       }
 
 
-      std::ostream& operator<<(std::ostream& stream, SymbolicExpression symExpr) {
+      std::ostream& operator<<(std::ostream& stream, const SymbolicExpression& symExpr) {
         stream << symExpr.getFormattedId() << " = " << symExpr.getAst();
         if (!symExpr.getComment().empty())
           stream << " " << symExpr.getFormattedComment();

@@ -114,7 +114,7 @@ namespace triton {
       }
 
 
-      std::list<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(triton::ast::AbstractNode *node, triton::uint32 limit) {
+      std::list<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(triton::ast::AbstractNode *node, triton::uint32 limit) const {
         std::list<std::map<triton::uint32, SolverModel>>  ret;
         std::stringstream                                 formula;
         z3::context                                       ctx;
@@ -187,7 +187,7 @@ namespace triton {
       }
 
 
-      std::map<triton::uint32, SolverModel> SolverEngine::getModel(triton::ast::AbstractNode *node) {
+      std::map<triton::uint32, SolverModel> SolverEngine::getModel(triton::ast::AbstractNode *node) const {
         std::map<triton::uint32, SolverModel> ret;
         std::list<std::map<triton::uint32, SolverModel>> allModels;
 
@@ -199,7 +199,7 @@ namespace triton {
       }
 
 
-      triton::uint512 SolverEngine::evaluateAstViaZ3(triton::ast::AbstractNode *node) {
+      triton::uint512 SolverEngine::evaluateAstViaZ3(triton::ast::AbstractNode *node) const {
         if (node == nullptr)
           throw std::runtime_error("SolverEngine::evaluateAstViaZ3(): node cannot be null.");
         triton::ast::TritonToZ3Ast z3ast{};

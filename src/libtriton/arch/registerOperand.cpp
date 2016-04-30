@@ -118,7 +118,7 @@ namespace triton {
     }
 
 
-    bool RegisterOperand::isTrusted(void) {
+    bool RegisterOperand::isTrusted(void) const {
       return this->trusted;
     }
 
@@ -146,17 +146,17 @@ namespace triton {
     }
 
 
-    bool RegisterOperand::isValid(void) {
+    bool RegisterOperand::isValid(void) const {
       return triton::api.isCpuRegisterValid(this->id);
     }
 
 
-    bool RegisterOperand::isRegister(void) {
+    bool RegisterOperand::isRegister(void) const {
       return triton::api.isCpuRegister(this->id);
     }
 
 
-    bool RegisterOperand::isFlag(void) {
+    bool RegisterOperand::isFlag(void) const {
       return triton::api.isCpuFlag(this->id);
     }
 
@@ -177,7 +177,7 @@ namespace triton {
     }
 
 
-    std::ostream& operator<<(std::ostream& stream, RegisterOperand reg) {
+    std::ostream& operator<<(std::ostream& stream, const RegisterOperand& reg) {
       stream << reg.getName() << ":" << reg.getBitSize() << " bv[" << reg.getHigh() << ".." << reg.getLow() << "]";
       return stream;
     }

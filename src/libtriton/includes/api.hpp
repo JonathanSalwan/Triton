@@ -75,13 +75,13 @@ namespace triton {
         /* Architecture API ============================================================================== */
 
         //! [**Architecture api**] - Returns true if the architecture is valid.
-        bool isArchitectureValid(void);
+        bool isArchitectureValid(void) const;
 
         //! [**architecture api**] - Returns the architecture as triton::arch::architecture_e.
         triton::uint32 getArchitecture(void) const;
 
         //! [**architecture api**] - Raises an exception if the architecture is not initialized.
-        void checkArchitecture(void);
+        void checkArchitecture(void) const;
 
         //! [**architecture api**] - Returns the CPU instance.
         triton::arch::cpuInterface* getCpu(void);
@@ -99,71 +99,71 @@ namespace triton {
         /*!
           \param regId the register id.
         */
-        bool isCpuFlag(triton::uint32 regId);
+        bool isCpuFlag(triton::uint32 regId) const;
 
         //! [**architecture api**] - Returns true if the regId is a register.
         /*!
           \param regId the register id.
         */
-        bool isCpuRegister(triton::uint32 regId);
+        bool isCpuRegister(triton::uint32 regId) const;
 
         //! [**architecture api**] - Returns true if the regId is a register or a flag.
         /*!
           \param regId the register id.
         */
-        bool isCpuRegisterValid(triton::uint32 regId);
+        bool isCpuRegisterValid(triton::uint32 regId) const;
 
         //! [**architecture api**] - Returns the max size (in byte) of the CPU register (GPR).
-        triton::uint32 cpuRegisterSize(void);
+        triton::uint32 cpuRegisterSize(void) const;
 
         //! [**architecture api**] - Returns the max size (in bit) of the CPU register (GPR).
-        triton::uint32 cpuRegisterBitSize(void);
+        triton::uint32 cpuRegisterBitSize(void) const;
 
         //! [**architecture api**] - Returns the invalid CPU register id.
-        triton::uint32 cpuInvalidRegister(void);
+        triton::uint32 cpuInvalidRegister(void) const;
 
         //! [**architecture api**] - Returns the number of registers according to the CPU architecture.
-        triton::uint32 cpuNumberOfRegisters(void);
+        triton::uint32 cpuNumberOfRegisters(void) const;
 
         //! [**architecture api**] - Returns all information about the register.
         /*!
           \param reg the register id.
           \return std::tuple<name, b-high, b-low, parentId>
         */
-        std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getCpuRegInformation(triton::uint32 reg);
+        std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getCpuRegInformation(triton::uint32 reg) const;
 
         //! [**architecture api**] - Returns all registers.
-        std::set<triton::arch::RegisterOperand*> getAllRegisters(void);
+        std::set<triton::arch::RegisterOperand*> getAllRegisters(void) const;
 
         //! [**architecture api**] - Returns all parent registers.
-        std::set<triton::arch::RegisterOperand*> getParentRegisters(void);
+        std::set<triton::arch::RegisterOperand*> getParentRegisters(void) const;
 
         //! [**architecture api**] - Returns the last concrete value recorded of a memory access.
-        triton::uint8 getLastMemoryValue(triton::__uint addr);
+        triton::uint8 getLastMemoryValue(triton::__uint addr) const;
 
         //! [**architecture api**] - Returns the last concrete value recorded of a memory access.
-        triton::uint512 getLastMemoryValue(triton::arch::MemoryOperand& mem);
+        triton::uint512 getLastMemoryValue(const triton::arch::MemoryOperand& mem) const;
 
         //! [**architecture api**] - Returns the last concrete values of a memory area.
-        std::vector<triton::uint8> getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size);
+        std::vector<triton::uint8> getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) const;
 
         //! [**architecture api**] - Returns the last concrete value recorded of a register state.
-        triton::uint512 getLastRegisterValue(triton::arch::RegisterOperand& reg);
+        triton::uint512 getLastRegisterValue(const triton::arch::RegisterOperand& reg) const;
 
         //! [**architecture api**] - Sets the last concrete value of a memory access.
         void setLastMemoryValue(triton::__uint addr, triton::uint8 value);
 
         //! [**architecture api**] - Sets the last concrete value of a memory access.
-        void setLastMemoryValue(triton::arch::MemoryOperand& mem);
+        void setLastMemoryValue(const triton::arch::MemoryOperand& mem);
 
         //! [**architecture api**] - Sets the last concrete values of a memory area.
         void setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values);
 
         //! [**architecture api**] - Sets the last concrete value of a register state. You cannot set an isolated flag, if so, use the flags registers like EFLAGS.
-        void setLastRegisterValue(triton::arch::RegisterOperand& reg);
+        void setLastRegisterValue(const triton::arch::RegisterOperand& reg);
 
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa  processing().
-        void disassembly(triton::arch::Instruction &inst);
+        void disassembly(triton::arch::Instruction &inst) const;
 
         //! [**architecture api**] - Builds the instruction semantics. You must define an architecture before. \sa processing().
         void buildSemantics(triton::arch::Instruction &inst);
@@ -189,7 +189,7 @@ namespace triton {
         /* AST Garbage Collector API ===================================================================== */
 
         //! [**AST garbage collector api**] - Raises an exception if the AST garbage collector interface is not initialized.
-        void checkAstGarbageCollector(void);
+        void checkAstGarbageCollector(void) const;
 
         //! [**AST garbage collector api**] - Go through every allocated nodes and free them.
         void freeAllAstNodes(void);
@@ -204,7 +204,7 @@ namespace triton {
         triton::ast::AbstractNode* recordAstNode(triton::ast::AbstractNode* node);
 
         //! [**AST garbage collector api**] - Records a variable AST node.
-        void recordVariableAstNode(std::string& name, triton::ast::AbstractNode* node);
+        void recordVariableAstNode(const std::string& name, triton::ast::AbstractNode* node);
 
         //! [**AST garbage collector api**] - Returns all allocated nodes.
         std::set<triton::ast::AbstractNode*> getAllocatedAstNodes(void);
@@ -213,7 +213,7 @@ namespace triton {
         std::map<std::string, triton::ast::AbstractNode*> getAstVariableNodes(void);
 
         //! [**AST garbage collector api**] - Returns the node of a recorded variable.
-        triton::ast::AbstractNode* getAstVariableNode(std::string& name);
+        triton::ast::AbstractNode* getAstVariableNode(const std::string& name);
 
         //! [**AST garbage collector api**] - Sets all allocated nodes.
         void setAllocatedAstNodes(std::set<triton::ast::AbstractNode*>& nodes);
@@ -226,7 +226,7 @@ namespace triton {
         /* AST Representation API ======================================================================== */
 
         //! [**AST representation api**] - Raises an exception if the AST representation interface is not initialized.
-        void checkAstRepresentation(void);
+        void checkAstRepresentation(void) const;
 
         //! [**AST representation api**] - Display a node according to the AST representation mode.
         std::ostream& printAstRepresentation(std::ostream& stream, triton::ast::AbstractNode* node);
@@ -242,7 +242,7 @@ namespace triton {
         /* Symbolic engine API =========================================================================== */
 
         //! [**symbolic api**] - Raises an exception if the symbolic engine is not initialized.
-        void checkSymbolic(void);
+        void checkSymbolic(void) const;
 
         //! [**symbolic api**] - Returns the instance of the symbolic engine.
         triton::engines::symbolic::SymbolicEngine* getSymbolicEngine(void);
@@ -263,40 +263,40 @@ namespace triton {
         triton::__uint getSymbolicMemoryId(triton::__uint addr);
 
         //! [**symbolic api**] - Returns the symbolic expression id corresponding to the register.
-        triton::__uint getSymbolicRegisterId(triton::arch::RegisterOperand& reg);
+        triton::__uint getSymbolicRegisterId(const triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Returns the symbolic memory value.
         triton::uint8 getSymbolicMemoryValue(triton::__uint address);
 
         //! [**symbolic api**] - Returns the symbolic memory value.
-        triton::uint512 getSymbolicMemoryValue(triton::arch::MemoryOperand& mem);
+        triton::uint512 getSymbolicMemoryValue(const triton::arch::MemoryOperand& mem);
 
         //! [**symbolic api**] - Returns the symbolic values of a memory area.
         std::vector<triton::uint8> getSymbolicMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size);
 
         //! [**symbolic api**] - Returns the symbolic register value.
-        triton::uint512 getSymbolicRegisterValue(triton::arch::RegisterOperand& reg);
+        triton::uint512 getSymbolicRegisterValue(const triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - If emulation enabled, returns `getSymbolicMemoryValue()` otherwise `getLastMemoryValue()`.
         triton::uint8 getMemoryValue(triton::__uint addr);
 
         //! [**symbolic api**] - If emulation enabled, returns `getSymbolicMemoryValue()` otherwise `getLastMemoryValue()`.
-        triton::uint512 getMemoryValue(triton::arch::MemoryOperand& mem);
+        triton::uint512 getMemoryValue(const triton::arch::MemoryOperand& mem);
 
         //! [**symbolic api**] - If emulation enabled, returns `getSymbolicMemoryAreaValue()` otherwise `getLastMemoryAreaValue()`.
         std::vector<triton::uint8> getMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size);
 
         //! [**symbolic api**] - If emulation enabled, returns `getSymbolicRegisterValue()` otherwise `getLastRegisterValue()`.
-        triton::uint512 getRegisterValue(triton::arch::RegisterOperand& reg);
+        triton::uint512 getRegisterValue(const triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
-        triton::engines::symbolic::SymbolicVariable* convertExpressionToSymbolicVariable(triton::__uint exprId, triton::uint32 symVarSize, std::string symVarComment="");
+        triton::engines::symbolic::SymbolicVariable* convertExpressionToSymbolicVariable(triton::__uint exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
 
         //! [**symbolic api**] - Converts a symbolic memory expression to a symbolic variable.
-        triton::engines::symbolic::SymbolicVariable* convertMemoryToSymbolicVariable(triton::arch::MemoryOperand mem, std::string symVarComment="");
+        triton::engines::symbolic::SymbolicVariable* convertMemoryToSymbolicVariable(const triton::arch::MemoryOperand& mem, const std::string& symVarComment="");
 
         //! [**symbolic api**] - Converts a symbolic register expression to a symbolic variable.
-        triton::engines::symbolic::SymbolicVariable* convertRegisterToSymbolicVariable(triton::arch::RegisterOperand reg, std::string symVarComment="");
+        triton::engines::symbolic::SymbolicVariable* convertRegisterToSymbolicVariable(const triton::arch::RegisterOperand& reg, const std::string& symVarComment="");
 
         //! [**symbolic api**] - Returns a symbolic operand.
         triton::ast::AbstractNode* buildSymbolicOperand(triton::arch::OperandWrapper& op);
@@ -305,52 +305,52 @@ namespace triton {
         triton::ast::AbstractNode* buildSymbolicOperand(triton::arch::Instruction& inst, triton::arch::OperandWrapper& op);
 
         //! [**symbolic api**] - Returns an immediate symbolic operand.
-        triton::ast::AbstractNode* buildSymbolicImmediateOperand(triton::arch::ImmediateOperand& imm);
+        triton::ast::AbstractNode* buildSymbolicImmediateOperand(const triton::arch::ImmediateOperand& imm);
 
         //! [**symbolic api**] - Returns an immediate symbolic operand.
         triton::ast::AbstractNode* buildSymbolicImmediateOperand(triton::arch::Instruction& inst, triton::arch::ImmediateOperand& imm);
 
         //! [**symbolic api**] - Returns a symbolic memory operand.
-        triton::ast::AbstractNode* buildSymbolicMemoryOperand(triton::arch::MemoryOperand& mem);
+        triton::ast::AbstractNode* buildSymbolicMemoryOperand(const triton::arch::MemoryOperand& mem);
 
         //! [**symbolic api**] - Returns a symbolic memory operand.
         triton::ast::AbstractNode* buildSymbolicMemoryOperand(triton::arch::Instruction& inst, triton::arch::MemoryOperand& mem);
 
         //! [**symbolic api**] - Returns a symbolic register operand.
-        triton::ast::AbstractNode* buildSymbolicRegisterOperand(triton::arch::RegisterOperand& reg);
+        triton::ast::AbstractNode* buildSymbolicRegisterOperand(const triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Returns a symbolic register operand.
         triton::ast::AbstractNode* buildSymbolicRegisterOperand(triton::arch::Instruction& inst, triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Returns a new symbolic expression. Note that if there are simplification passes recorded, simplification will be applied.
-        triton::engines::symbolic::SymbolicExpression* newSymbolicExpression(triton::ast::AbstractNode* node, std::string comment="");
+        triton::engines::symbolic::SymbolicExpression* newSymbolicExpression(triton::ast::AbstractNode* node, const std::string& comment="");
 
         //! [**symbolic api**] - Returns a new symbolic variable.
-        triton::engines::symbolic::SymbolicVariable* newSymbolicVariable(triton::uint32 varSize, std::string comment="");
+        triton::engines::symbolic::SymbolicVariable* newSymbolicVariable(triton::uint32 varSize, const std::string& comment="");
 
         //! [**symbolic api**] - Removes the symbolic expression corresponding to the id.
         void removeSymbolicExpression(triton::__uint symExprId);
 
         //! [**symbolic api**] - Returns the new symbolic abstract expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::OperandWrapper& dst, std::string comment="");
+        triton::engines::symbolic::SymbolicExpression* createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::OperandWrapper& dst, const std::string& comment="");
 
         //! [**symbolic api**] - Returns the new symbolic memory expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::MemoryOperand& mem, std::string comment="");
+        triton::engines::symbolic::SymbolicExpression* createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::MemoryOperand& mem, const std::string& comment="");
 
         //! [**symbolic api**] - Returns the new symbolic register expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterOperand& reg, std::string comment="");
+        triton::engines::symbolic::SymbolicExpression* createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterOperand& reg, const std::string& comment="");
 
         //! [**symbolic api**] - Returns the new symbolic flag expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterOperand& flag, std::string comment="");
+        triton::engines::symbolic::SymbolicExpression* createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterOperand& flag, const std::string& comment="");
 
         //! [**symbolic api**] - Returns the new symbolic volatile expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicVolatileExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, std::string comment="");
+        triton::engines::symbolic::SymbolicExpression* createSymbolicVolatileExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const std::string& comment="");
 
         //! [**symbolic api**] - Assigns a symbolic expression to a memory.
-        void assignSymbolicExpressionToMemory(triton::engines::symbolic::SymbolicExpression* se, triton::arch::MemoryOperand& mem);
+        void assignSymbolicExpressionToMemory(triton::engines::symbolic::SymbolicExpression* se, const triton::arch::MemoryOperand& mem);
 
         //! [**symbolic api**] - Assigns a symbolic expression to a register.
-        void assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, triton::arch::RegisterOperand& reg);
+        void assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, const triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Records a simplification callback.
         void recordSimplificationCallback(triton::engines::symbolic::sfp cb);
@@ -384,7 +384,7 @@ namespace triton {
         triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromId(triton::__uint symVarId);
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable name.
-        triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromName(std::string& symVarName);
+        triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromName(const std::string& symVarName);
 
         //! [**symbolic api**] - Returns the logical conjunction vector of path constraints.
         std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void);
@@ -437,13 +437,13 @@ namespace triton {
         void concretizeAllRegister(void);
 
         //! [**symbolic api**] - Concretizes a specific symbolic memory reference.
-        void concretizeMemory(triton::arch::MemoryOperand& mem);
+        void concretizeMemory(const triton::arch::MemoryOperand& mem);
 
         //! [**symbolic api**] - Concretizes a specific symbolic memory reference.
         void concretizeMemory(triton::__uint addr);
 
         //! [**symbolic api**] - Concretizes a specific symbolic register reference.
-        void concretizeRegister(triton::arch::RegisterOperand& reg);
+        void concretizeRegister(const triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Returns the partial AST from a symbolic expression id.
         triton::ast::AbstractNode* getAstFromId(triton::__uint symExprId);
@@ -471,7 +471,7 @@ namespace triton {
         /* Solver engine API ============================================================================= */
 
         //! [**solver api**] - Raises an exception if the solver engine is not initialized.
-        void checkSolver(void);
+        void checkSolver(void) const;
 
         //! [**solver api**] - Computes and returns a model from a symbolic constraint.
         /*! \brief map of symbolic variable id -> model
@@ -499,7 +499,7 @@ namespace triton {
         /* Taint engine API ============================================================================== */
 
         //! [**taint api**] - Raises an exception if the taint engine is not initialized.
-        void checkTaint(void);
+        void checkTaint(void) const;
 
         //! [**taint api**] - Returns the instance of the taint engine.
         triton::engines::taint::TaintEngine* getTaintEngine(void);
@@ -524,13 +524,13 @@ namespace triton {
         /*!
           \param mem the memory operand.
         */
-        bool isMemoryTainted(triton::arch::MemoryOperand &mem);
+        bool isMemoryTainted(const triton::arch::MemoryOperand& mem);
 
         //! [**taint api**] - Returns true if the register is tainted.
         /*!
           \param reg the register operand.
         */
-        bool isRegisterTainted(triton::arch::RegisterOperand& reg);
+        bool isRegisterTainted(const triton::arch::RegisterOperand& reg);
 
         //! [**taint api**] - Sets abstract flag of the operand.
         /*!
@@ -547,7 +547,7 @@ namespace triton {
           \param flag TAINTED or !TAINTED
           \return flag
         */
-        bool setTaintMemory(triton::arch::MemoryOperand& mem, bool flag);
+        bool setTaintMemory(const triton::arch::MemoryOperand& mem, bool flag);
 
         //! [**taint api**] - Sets register flag.
         /*!
@@ -555,7 +555,7 @@ namespace triton {
           \param flag TAINTED or !TAINTED
           \return flag
         */
-        bool setTaintRegister(triton::arch::RegisterOperand& reg, bool flag);
+        bool setTaintRegister(const triton::arch::RegisterOperand& reg, bool flag);
 
         //! [**taint api**] - Taints an address.
         /*!
@@ -569,14 +569,14 @@ namespace triton {
           \param mem the memory operand.
           \return triton::engines::taint::TAINTED
         */
-        bool taintMemory(triton::arch::MemoryOperand& mem);
+        bool taintMemory(const triton::arch::MemoryOperand& mem);
 
         //! [**taint api**] - Taints a register.
         /*!
           \param reg the register operand.
           \return triton::engines::taint::TAINTED
         */
-        bool taintRegister(triton::arch::RegisterOperand& reg);
+        bool taintRegister(const triton::arch::RegisterOperand& reg);
 
         //! [**taint api**] - Untaints an address.
         /*!
@@ -590,14 +590,14 @@ namespace triton {
           \param mem the memory operand.
           \return triton::engines::taint::UNTAINTED
         */
-        bool untaintMemory(triton::arch::MemoryOperand& mem);
+        bool untaintMemory(const triton::arch::MemoryOperand& mem);
 
         //! [**taint api**] - Untaints a register.
         /*!
           \param reg the register operand.
           \return triton::engines::taint::UNTAINTED
         */
-        bool untaintRegister(triton::arch::RegisterOperand& reg);
+        bool untaintRegister(const triton::arch::RegisterOperand& reg);
 
         //! [**taint api**] - Abstract union tainting.
         bool taintUnion(triton::arch::OperandWrapper& op1, triton::arch::OperandWrapper& op2);
@@ -610,7 +610,7 @@ namespace triton {
           \param memDst the memory destination.
           \return true if the memDst is TAINTED.
         */
-        bool taintUnionMemoryImmediate(triton::arch::MemoryOperand& memDst);
+        bool taintUnionMemoryImmediate(const triton::arch::MemoryOperand& memDst);
 
         //! [**taint api**] - Taints MemoryMemory with union.
         /*!
@@ -618,7 +618,7 @@ namespace triton {
           \param memSrc the memory source.
           \return true if the memDst or memSrc are TAINTED.
         */
-        bool taintUnionMemoryMemory(triton::arch::MemoryOperand& memDst, triton::arch::MemoryOperand& memSrc);
+        bool taintUnionMemoryMemory(const triton::arch::MemoryOperand& memDst, const triton::arch::MemoryOperand& memSrc);
 
         //! [**taint api**] - Taints MemoryRegister with union.
         /*!
@@ -626,14 +626,14 @@ namespace triton {
           \param regSrc the register source.
           \return true if the memDst or regSrc are TAINTED.
         */
-        bool taintUnionMemoryRegister(triton::arch::MemoryOperand& memDst, triton::arch::RegisterOperand& regSrc);
+        bool taintUnionMemoryRegister(const triton::arch::MemoryOperand& memDst, const triton::arch::RegisterOperand& regSrc);
 
         //! [**taint api**] - Taints RegisterImmediate with union.
         /*!
           \param regDst the register source.
           \return true if the regDst is TAINTED.
         */
-        bool taintUnionRegisterImmediate(triton::arch::RegisterOperand& regDst);
+        bool taintUnionRegisterImmediate(const triton::arch::RegisterOperand& regDst);
 
         //! [**taint api**] - Taints RegisterMemory with union.
         /*!
@@ -641,7 +641,7 @@ namespace triton {
           \param memSrc the memory source.
           \return true if the regDst or memSrc are TAINTED.
         */
-        bool taintUnionRegisterMemory(triton::arch::RegisterOperand& regDst, triton::arch::MemoryOperand& memSrc);
+        bool taintUnionRegisterMemory(const triton::arch::RegisterOperand& regDst, const triton::arch::MemoryOperand& memSrc);
 
         //! [**taint api**] - Taints RegisterRegister with union.
         /*!
@@ -649,14 +649,14 @@ namespace triton {
           \param regSrc the register source.
           \return true if the regDst or regSrc are TAINTED.
         */
-        bool taintUnionRegisterRegister(triton::arch::RegisterOperand& regDst, triton::arch::RegisterOperand& regSrc);
+        bool taintUnionRegisterRegister(const triton::arch::RegisterOperand& regDst, const triton::arch::RegisterOperand& regSrc);
 
         //! [**taint api**] - Taints MemoryImmediate with assignment.
         /*!
           \param memDst the memory destination.
           \return always false.
         */
-        bool taintAssignmentMemoryImmediate(triton::arch::MemoryOperand& memDst);
+        bool taintAssignmentMemoryImmediate(const triton::arch::MemoryOperand& memDst);
 
         //! [**taint api**] - Taints MemoryMemory with assignment.
         /*!
@@ -664,7 +664,7 @@ namespace triton {
           \param memSrc the memory source.
           \return true if the memDst is tainted.
         */
-        bool taintAssignmentMemoryMemory(triton::arch::MemoryOperand& memDst, triton::arch::MemoryOperand& memSrc);
+        bool taintAssignmentMemoryMemory(const triton::arch::MemoryOperand& memDst, const triton::arch::MemoryOperand& memSrc);
 
         //! [**taint api**] - Taints MemoryRegister with assignment.
         /*!
@@ -672,14 +672,14 @@ namespace triton {
           \param regSrc the register source.
           \return true if the memDst is tainted.
         */
-        bool taintAssignmentMemoryRegister(triton::arch::MemoryOperand& memDst, triton::arch::RegisterOperand& regSrc);
+        bool taintAssignmentMemoryRegister(const triton::arch::MemoryOperand& memDst, const triton::arch::RegisterOperand& regSrc);
 
         //! [**taint api**] - Taints RegisterImmediate with assignment.
         /*!
           \param regDst the register destination.
           \return always false.
         */
-        bool taintAssignmentRegisterImmediate(triton::arch::RegisterOperand& regDst);
+        bool taintAssignmentRegisterImmediate(const triton::arch::RegisterOperand& regDst);
 
         //! [**taint api**] - Taints RegisterMemory with assignment.
         /*!
@@ -687,7 +687,7 @@ namespace triton {
           \param memSrc the memory source.
           \return true if the regDst is tainted.
         */
-        bool taintAssignmentRegisterMemory(triton::arch::RegisterOperand& regDst, triton::arch::MemoryOperand& memSrc);
+        bool taintAssignmentRegisterMemory(const triton::arch::RegisterOperand& regDst, const triton::arch::MemoryOperand& memSrc);
 
         //! [**taint api**] - Taints RegisterRegister with assignment.
         /*!
@@ -695,7 +695,7 @@ namespace triton {
           \param regSrc the register source.
           \return true if the regDst is tainted.
         */
-        bool taintAssignmentRegisterRegister(triton::arch::RegisterOperand& regDst, triton::arch::RegisterOperand& regSrc);
+        bool taintAssignmentRegisterRegister(const triton::arch::RegisterOperand& regDst, const triton::arch::RegisterOperand& regSrc);
     };
 
     //! The API can be accessed as everywhere.

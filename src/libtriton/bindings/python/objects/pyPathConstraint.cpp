@@ -194,7 +194,7 @@ namespace triton {
       };
 
 
-      PyObject* PyPathConstraint(triton::engines::symbolic::PathConstraint& pc) {
+      PyObject* PyPathConstraint(const triton::engines::symbolic::PathConstraint& pc) {
         PathConstraint_Object* object;
 
         PyType_Ready(&PathConstraint_Type);

@@ -82,63 +82,63 @@ namespace triton {
     }
 
 
-    bool Architecture::isValid(void) {
+    bool Architecture::isValid(void) const {
       if (this->arch == triton::arch::ARCH_INVALID)
         return false;
       return true;
     }
 
 
-    bool Architecture::isFlag(triton::uint32 regId) {
+    bool Architecture::isFlag(triton::uint32 regId) const {
       if (!this->cpu)
         return false;
       return this->cpu->isFlag(regId);
     }
 
 
-    bool Architecture::isRegister(triton::uint32 regId) {
+    bool Architecture::isRegister(triton::uint32 regId) const {
       if (!this->cpu)
         return false;
       return this->cpu->isRegister(regId);
     }
 
 
-    bool Architecture::isRegisterValid(triton::uint32 regId) {
+    bool Architecture::isRegisterValid(triton::uint32 regId) const {
       if (!this->cpu)
         return false;
       return this->cpu->isRegisterValid(regId);
     }
 
 
-    triton::uint32 Architecture::invalidRegister(void) {
+    triton::uint32 Architecture::invalidRegister(void) const {
       if (!this->cpu)
         return 0;
       return this->cpu->invalidRegister();
     }
 
 
-    triton::uint32 Architecture::numberOfRegisters(void) {
+    triton::uint32 Architecture::numberOfRegisters(void) const {
       if (!this->cpu)
         return 0;
       return this->cpu->numberOfRegisters();
     }
 
 
-    triton::uint32 Architecture::registerSize(void) {
+    triton::uint32 Architecture::registerSize(void) const {
       if (!this->cpu)
         return 0;
       return this->cpu->registerSize();
     }
 
 
-    triton::uint32 Architecture::registerBitSize(void) {
+    triton::uint32 Architecture::registerBitSize(void) const {
       if (!this->cpu)
         return 0;
       return this->cpu->registerBitSize();
     }
 
 
-    std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> Architecture::getRegisterInformation(triton::uint32 reg) {
+    std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> Architecture::getRegisterInformation(triton::uint32 reg) const {
       std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> ret;
 
       std::get<0>(ret) = "unknown"; /* name           */
@@ -153,28 +153,28 @@ namespace triton {
     }
 
 
-    std::set<triton::arch::RegisterOperand*> Architecture::getAllRegisters(void) {
+    std::set<triton::arch::RegisterOperand*> Architecture::getAllRegisters(void) const {
       if (!this->cpu)
         throw std::runtime_error("Architecture::getAllRegisters(): You must define an architecture.");
       return this->cpu->getAllRegisters();
     }
 
 
-    std::set<triton::arch::RegisterOperand*> Architecture::getParentRegisters(void) {
+    std::set<triton::arch::RegisterOperand*> Architecture::getParentRegisters(void) const {
       if (!this->cpu)
         throw std::runtime_error("Architecture::getParentRegisters(): You must define an architecture.");
       return this->cpu->getParentRegisters();
     }
 
 
-    void Architecture::disassembly(triton::arch::Instruction &inst) {
+    void Architecture::disassembly(triton::arch::Instruction &inst) const {
       if (!this->cpu)
         throw std::runtime_error("Architecture::disassembly(): You must define an architecture.");
       this->cpu->disassembly(inst);
     }
 
 
-    void Architecture::buildSemantics(triton::arch::Instruction &inst) {
+    void Architecture::buildSemantics(triton::arch::Instruction &inst) const {
       if (!this->cpu)
         throw std::runtime_error("Architecture::buildSemantics(): You must define an architecture.");
 
@@ -272,28 +272,28 @@ namespace triton {
     }
 
 
-    triton::uint8 Architecture::getLastMemoryValue(triton::__uint addr) {
+    triton::uint8 Architecture::getLastMemoryValue(triton::__uint addr) const {
       if (!this->cpu)
         throw std::runtime_error("Architecture::getLastMemoryValue(): You must define an architecture.");
       return this->cpu->getLastMemoryValue(addr);
     }
 
 
-    triton::uint512 Architecture::getLastMemoryValue(triton::arch::MemoryOperand& mem) {
+    triton::uint512 Architecture::getLastMemoryValue(const triton::arch::MemoryOperand& mem) const {
       if (!this->cpu)
         throw std::runtime_error("Architecture::getLastMemoryValue(): You must define an architecture.");
       return this->cpu->getLastMemoryValue(mem);
     }
 
 
-    std::vector<triton::uint8> Architecture::getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) {
+    std::vector<triton::uint8> Architecture::getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) const {
       if (!this->cpu)
         throw std::runtime_error("Architecture::getLastMemoryAreaValue(): You must define an architecture.");
       return this->cpu->getLastMemoryAreaValue(baseAddr, size);
     }
 
 
-    triton::uint512 Architecture::getLastRegisterValue(triton::arch::RegisterOperand& reg) {
+    triton::uint512 Architecture::getLastRegisterValue(const triton::arch::RegisterOperand& reg) const {
       if (!this->cpu)
         throw std::runtime_error("Architecture::getLastRegisterValue(): You must define an architecture.");
       return this->cpu->getLastRegisterValue(reg);
@@ -307,7 +307,7 @@ namespace triton {
     }
 
 
-    void Architecture::setLastMemoryValue(triton::arch::MemoryOperand& mem) {
+    void Architecture::setLastMemoryValue(const triton::arch::MemoryOperand& mem) {
       if (!this->cpu)
         throw std::runtime_error("Architecture::setLastMemoryValue(): You must define an architecture.");
       this->cpu->setLastMemoryValue(mem);
@@ -321,7 +321,7 @@ namespace triton {
     }
 
 
-    void Architecture::setLastRegisterValue(triton::arch::RegisterOperand& reg) {
+    void Architecture::setLastRegisterValue(const triton::arch::RegisterOperand& reg) {
       if (!this->cpu)
         throw std::runtime_error("Architecture::setLastRegisterValue(): You must define an architecture.");
       this->cpu->setLastRegisterValue(reg);

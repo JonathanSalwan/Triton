@@ -1400,7 +1400,7 @@ namespace triton {
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getMemoryValue(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "getMemoryAreaValue(): Architecture is not defined.");
 
         try {
           vv  = triton::api.getMemoryAreaValue(PyLong_AsUint(addr), PyLong_AsUint(size));
