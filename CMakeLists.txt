@@ -81,11 +81,14 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin"
     endif(${ARCHITECTURE} STREQUAL "i386")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
+option(PINTOOL "Build Triton with Pin tool" OFF)
+
+option(KERNEL4 "Pin will run on a linux's kernel in v4" OFF)
 
 # Use the same ABI as pin
-if(${PINTOOL} MATCHES "yes")
+if(PINTOOL)
     set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
-endif(${PINTOOL} MATCHES "yes")
+endif(PINTOOL)
 
 
 # Specific OSX POLICY
@@ -260,7 +263,7 @@ install (FILES ${LIBTRITON_HEADERS_FILES} DESTINATION ${TRITON_HEADER_INSTALL})
 
 ##################################################################################### CMake libpintool
 
-if(${PINTOOL} MATCHES "yes")
+if(PINTOOL)
     set(PROJECT_PINTOOL "pintool")
     add_definitions(-DTRITON_PINTOOL)
 
@@ -402,9 +405,9 @@ if(${PINTOOL} MATCHES "yes")
 
 
     # Pin flag for kernel 4.x
-    if(${KERNEL4} MATCHES "yes")
+    if(KERNEL4)
         set(FLAG_IFEELLUCKY "-ifeellucky")
-    endif(${KERNEL4} MATCHES "yes")
+    endif(KERNEL4)
 
 
     # Generate Triton pintool script
@@ -421,5 +424,5 @@ if(${PINTOOL} MATCHES "yes")
             IMMEDIATE @ONLY
         )
     endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-endif(${PINTOOL} MATCHES "yes")
+endif(PINTOOL)
 
