@@ -176,7 +176,7 @@ namespace triton {
       }
 
 
-      bool SymbolicSimplification::isZ3SimplificationEnabled(void) {
+      bool SymbolicSimplification::isZ3SimplificationEnabled(void) const {
         return this->z3Enabled;
       }
 
@@ -212,7 +212,7 @@ namespace triton {
       #endif
 
 
-      triton::ast::AbstractNode* SymbolicSimplification::processSimplification(triton::ast::AbstractNode* node, bool z3) {
+      triton::ast::AbstractNode* SymbolicSimplification::processSimplification(triton::ast::AbstractNode* node, bool z3) const {
 
         if (node == nullptr)
           throw std::runtime_error("SymbolicSimplification::processSimplification(): node cannot be null.");
@@ -229,7 +229,7 @@ namespace triton {
           node = tritonAst.convert();
         }
 
-        std::list<triton::engines::symbolic::sfp>::iterator it1;
+        std::list<triton::engines::symbolic::sfp>::const_iterator it1;
         for (it1 = this->simplificationCallbacks.begin(); it1 != this->simplificationCallbacks.end(); it1++) {
           node = (*it1)(node);
           if (node == nullptr)
@@ -237,7 +237,7 @@ namespace triton {
         }
 
         #ifdef TRITON_PYTHON_BINDINGS
-        std::list<PyObject*>::iterator it2;
+        std::list<PyObject*>::const_iterator it2;
         for (it2 = this->pySimplificationCallbacks.begin(); it2 != this->pySimplificationCallbacks.end(); it2++) {
 
           /* Create function args */

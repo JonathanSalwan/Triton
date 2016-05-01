@@ -29,7 +29,7 @@ namespace triton {
       }
 
 
-      bool SymbolicOptimization::isOptimizationEnabled(enum optimization_e opti) {
+      bool SymbolicOptimization::isOptimizationEnabled(enum optimization_e opti) const {
         if (this->enabledOptimizations.find(opti) != this->enabledOptimizations.end())
           return true;
         return false;

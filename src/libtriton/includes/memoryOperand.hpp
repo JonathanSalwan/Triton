@@ -170,7 +170,7 @@ namespace triton {
     std::ostream& operator<<(std::ostream& stream, const MemoryOperand& mem);
 
     //! Displays an MemoryOperand.
-    std::ostream& operator<<(std::ostream& stream, MemoryOperand* mem);
+    std::ostream& operator<<(std::ostream& stream, const MemoryOperand* mem);
 
   /*! @} End of arch namespace */
   };

@@ -81,7 +81,7 @@ namespace triton {
     std::ostream& operator<<(std::ostream& stream, const BitsVector& bv);
 
     //! Displays a BitsVector.
-    std::ostream& operator<<(std::ostream& stream, BitsVector* bv);
+    std::ostream& operator<<(std::ostream& stream, const BitsVector* bv);
 
   /*! @} End of arch namespace */
   };

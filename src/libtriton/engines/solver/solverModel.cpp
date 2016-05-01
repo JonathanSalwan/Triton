@@ -72,7 +72,7 @@ namespace triton {
       }
 
 
-      std::ostream& operator<<(std::ostream& stream, SolverModel* model) {
+      std::ostream& operator<<(std::ostream& stream, const SolverModel* model) {
         stream << *model;
         return stream;
       }

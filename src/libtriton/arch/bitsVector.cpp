@@ -107,7 +107,7 @@ namespace triton {
     }
 
 
-    std::ostream& operator<<(std::ostream& stream, BitsVector* bv) {
+    std::ostream& operator<<(std::ostream& stream, const BitsVector* bv) {
       stream << *bv;
       return stream;
     }

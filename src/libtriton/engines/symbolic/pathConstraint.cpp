@@ -34,12 +34,12 @@ namespace triton {
       }
 
 
-      std::vector<std::tuple<bool, triton::__uint, triton::ast::AbstractNode*>>& PathConstraint::getBranchConstraints(void) {
+      const std::vector<std::tuple<bool, triton::__uint, triton::ast::AbstractNode*>>& PathConstraint::getBranchConstraints(void) const {
         return this->branches;
       }
 
 
-      triton::__uint PathConstraint::getTakenAddress(void) {
+      triton::__uint PathConstraint::getTakenAddress(void) const {
         for (auto it = this->branches.begin(); it != this->branches.end(); it++) {
           if (std::get<0>(*it) == true)
             return std::get<1>(*it);
@@ -48,7 +48,7 @@ namespace triton {
       }
 
 
-      triton::ast::AbstractNode* PathConstraint::getTakenPathConstraintAst(void) {
+      triton::ast::AbstractNode* PathConstraint::getTakenPathConstraintAst(void) const {
         for (auto it = this->branches.begin(); it != this->branches.end(); it++) {
           if (std::get<0>(*it) == true)
             return std::get<2>(*it);
@@ -57,7 +57,7 @@ namespace triton {
       }
 
 
-      bool PathConstraint::isMultipleBranches(void) {
+      bool PathConstraint::isMultipleBranches(void) const {
         if (this->branches.size() == 0)
           throw std::runtime_error("PathConstraint::isMultipleBranches(): Path Constraint is empty.");
         else if (this->branches.size() == 1)

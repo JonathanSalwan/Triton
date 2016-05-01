@@ -51,7 +51,7 @@ namespace triton {
       }
 
 
-      symkind_e SymbolicVariable::getSymVarKind(void) {
+      symkind_e SymbolicVariable::getSymVarKind(void) const {
         return this->symVarKind;
       }
 
@@ -61,12 +61,12 @@ namespace triton {
       }
 
 
-      triton::__uint SymbolicVariable::getSymVarId(void) {
+      triton::__uint SymbolicVariable::getSymVarId(void) const {
         return this->symVarId;
       }
 
 
-      triton::__uint SymbolicVariable::getSymVarKindValue(void) {
+      triton::__uint SymbolicVariable::getSymVarKindValue(void) const {
         return this->symVarKindValue;
       }
 
@@ -81,7 +81,7 @@ namespace triton {
       }
 
 
-      triton::uint512 SymbolicVariable::getConcreteValue(void) {
+      triton::uint512 SymbolicVariable::getConcreteValue(void) const {
         return this->symVarConcreteValue;
       }
 
@@ -106,7 +106,7 @@ namespace triton {
       }
 
 
-      std::ostream& operator<<(std::ostream& stream, SymbolicVariable* symVar) {
+      std::ostream& operator<<(std::ostream& stream, const SymbolicVariable* symVar) {
         stream << *symVar;
         return stream;
       }

@@ -319,7 +319,7 @@ namespace triton {
     }
 
 
-    std::ostream& operator<<(std::ostream& stream, Instruction* inst) {
+    std::ostream& operator<<(std::ostream& stream, const Instruction* inst) {
       stream << *inst;
       return stream;
     }

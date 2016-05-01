@@ -254,16 +254,16 @@ namespace triton {
         void restoreSymbolicEngine(void);
 
         //! [**symbolic api**] - Returns the map of symbolic registers defined.
-        std::map<triton::arch::RegisterOperand, triton::engines::symbolic::SymbolicExpression*> getSymbolicRegisters(void);
+        std::map<triton::arch::RegisterOperand, triton::engines::symbolic::SymbolicExpression*> getSymbolicRegisters(void) const;
 
         //! [**symbolic api**] - Returns the map of symbolic memory defined.
-        std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*> getSymbolicMemory(void);
+        std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*> getSymbolicMemory(void) const;
 
         //! [**symbolic api**] - Returns the symbolic expression id corresponding to the memory address.
-        triton::__uint getSymbolicMemoryId(triton::__uint addr);
+        triton::__uint getSymbolicMemoryId(triton::__uint addr) const;
 
         //! [**symbolic api**] - Returns the symbolic expression id corresponding to the register.
-        triton::__uint getSymbolicRegisterId(const triton::arch::RegisterOperand& reg);
+        triton::__uint getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) const;
 
         //! [**symbolic api**] - Returns the symbolic memory value.
         triton::uint8 getSymbolicMemoryValue(triton::__uint address);
@@ -375,19 +375,19 @@ namespace triton {
         std::map<std::string, triton::uint32> getAstDictionariesStats(void);
 
         //! [**symbolic api**] - Processes all recorded simplifications. Returns the simplified node.
-        triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node, bool z3=false);
+        triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node, bool z3=false) const;
 
         //! [**symbolic api**] - Returns the symbolic expression corresponding to the id.
-        triton::engines::symbolic::SymbolicExpression* getSymbolicExpressionFromId(triton::__uint symExprId);
+        triton::engines::symbolic::SymbolicExpression* getSymbolicExpressionFromId(triton::__uint symExprId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable id.
-        triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromId(triton::__uint symVarId);
+        triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromId(triton::__uint symVarId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable name.
-        triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromName(const std::string& symVarName);
+        triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromName(const std::string& symVarName) const;
 
         //! [**symbolic api**] - Returns the logical conjunction vector of path constraints.
-        std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void);
+        const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
 
         //! [**symbolic api**] - Returns the logical conjunction AST of path constraints.
         triton::ast::AbstractNode* getPathConstraintsAst(void);
@@ -416,16 +416,16 @@ namespace triton {
          * **true**: full symbolic execution (emulation).
          * **false**: concolic execution.
          */
-        bool isSymbolicEmulationEnabled(void);
+        bool isSymbolicEmulationEnabled(void) const;
 
         //! [**symbolic api**] - Returns true if the symbolic execution engine is enabled.
-        bool isSymbolicEngineEnabled(void);
+        bool isSymbolicEngineEnabled(void) const;
 
         //! [**symbolic api**] - Returns true if Triton can use the simplification passes of z3.
-        bool isSymbolicZ3SimplificationEnabled(void);
+        bool isSymbolicZ3SimplificationEnabled(void) const;
 
         //! [**symbolic api**] - Returns true if the symbolic expression ID exists.
-        bool isSymbolicExpressionIdExists(triton::__uint symExprId);
+        bool isSymbolicExpressionIdExists(triton::__uint symExprId) const;
 
         //! [**symbolic api**] - Returns true if the symbolic optimization is enabled.
         bool isSymbolicOptimizationEnabled(enum triton::engines::symbolic::optimization_e opti);
@@ -455,16 +455,16 @@ namespace triton {
         triton::ast::AbstractNode* getFullAstFromId(triton::__uint symExprId);
 
         //! [**symbolic api**] - Returns the list of the tainted symbolic expressions.
-        std::list<triton::engines::symbolic::SymbolicExpression*> getTaintedSymbolicExpressions(void);
+        std::list<triton::engines::symbolic::SymbolicExpression*> getTaintedSymbolicExpressions(void) const;
 
         //! [**symbolic api**] - Returns all symbolic expressions as a map of <SymExprId : SymExpr>
-        std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*>& getSymbolicExpressions(void);
+        const std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*>& getSymbolicExpressions(void) const;
 
         //! [**symbolic api**] - Returns all symbolic variables as a map of <SymVarId : SymVar>
-        std::map<triton::__uint, triton::engines::symbolic::SymbolicVariable*>& getSymbolicVariables(void);
+        const std::map<triton::__uint, triton::engines::symbolic::SymbolicVariable*>& getSymbolicVariables(void) const;
 
         //! [**symbolic api**] - Returns all variable declarations representation.
-        std::string getVariablesDeclaration(void);
+        std::string getVariablesDeclaration(void) const;
 
 
 

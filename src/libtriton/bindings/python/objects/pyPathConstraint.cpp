@@ -90,7 +90,7 @@ namespace triton {
       static PyObject* PathConstraint_getBranchConstraints(PyObject* self, PyObject* noarg) {
         try {
           PyObject* ret = nullptr;
-          std::vector<std::tuple<bool, triton::__uint, triton::ast::AbstractNode*>>& branches = PyPathConstraint_AsPathConstraint(self)->getBranchConstraints();
+          const std::vector<std::tuple<bool, triton::__uint, triton::ast::AbstractNode*>>& branches = PyPathConstraint_AsPathConstraint(self)->getBranchConstraints();
 
           ret = xPyList_New(branches.size());
           for (triton::uint32 index = 0; index != branches.size(); index++) {

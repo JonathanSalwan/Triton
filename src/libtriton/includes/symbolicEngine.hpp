@@ -138,25 +138,25 @@ namespace triton {
           SymbolicVariable* convertRegisterToSymbolicVariable(const triton::arch::RegisterOperand& reg, const std::string& symVarComment="");
 
           //! Returns the symbolic variable corresponding to the symbolic variable id.
-          SymbolicVariable* getSymbolicVariableFromId(triton::__uint symVarId);
+          SymbolicVariable* getSymbolicVariableFromId(triton::__uint symVarId) const;
 
           //! Returns the symbolic variable corresponding to the symbolic variable name.
-          SymbolicVariable* getSymbolicVariableFromName(const std::string& symVarName);
+          SymbolicVariable* getSymbolicVariableFromName(const std::string& symVarName) const;
 
           //! Returns the symbolic expression id corresponding to the memory address.
-          triton::__uint getSymbolicMemoryId(triton::__uint addr);
+          triton::__uint getSymbolicMemoryId(triton::__uint addr) const;
 
           //! Returns the symbolic expression corresponding to the id.
-          SymbolicExpression* getSymbolicExpressionFromId(triton::__uint symExprId);
+          SymbolicExpression* getSymbolicExpressionFromId(triton::__uint symExprId) const;
 
           //! Returns the map of symbolic registers defined.
-          std::map<triton::arch::RegisterOperand, SymbolicExpression*> getSymbolicRegisters(void);
+          std::map<triton::arch::RegisterOperand, SymbolicExpression*> getSymbolicRegisters(void) const;
 
           //! Returns the map of symbolic memory defined.
-          std::map<triton::__uint, SymbolicExpression*> getSymbolicMemory(void);
+          std::map<triton::__uint, SymbolicExpression*> getSymbolicMemory(void) const;
 
           //! Returns the symbolic expression id corresponding to the register.
-          triton::__uint getSymbolicRegisterId(const triton::arch::RegisterOperand& reg);
+          triton::__uint getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) const;
 
           //! Returns the symbolic memory value.
           triton::uint8 getSymbolicMemoryValue(triton::__uint address);
@@ -216,16 +216,16 @@ namespace triton {
           triton::ast::AbstractNode* getFullAst(triton::ast::AbstractNode* node);
 
           //! Returns the list of the tainted symbolic expressions.
-          std::list<SymbolicExpression*> getTaintedSymbolicExpressions(void);
+          std::list<SymbolicExpression*> getTaintedSymbolicExpressions(void) const;
 
           //! Returns all symbolic expressions.
-          std::map<triton::__uint, SymbolicExpression*>& getSymbolicExpressions(void);
+          const std::map<triton::__uint, SymbolicExpression*>& getSymbolicExpressions(void) const;
 
           //! Returns all symbolic variables.
-          std::map<triton::__uint, SymbolicVariable*>& getSymbolicVariables(void);
+          const std::map<triton::__uint, SymbolicVariable*>& getSymbolicVariables(void) const;
 
           //! Returns all variable declarations representation.
-          std::string getVariablesDeclaration(void);
+          std::string getVariablesDeclaration(void) const;
 
           //! Adds a symbolic memory reference.
           void addMemoryReference(triton::__uint mem, triton::__uint id);
@@ -257,13 +257,13 @@ namespace triton {
           void enable(bool flag);
 
           //! Returns true if the we perform a full symbolic emulation.
-          bool isEmulationEnabled(void);
+          bool isEmulationEnabled(void) const;
 
           //! Returns true if the symbolic execution engine is enabled.
-          bool isEnabled(void);
+          bool isEnabled(void) const;
 
           //! Returns true if the symbolic expression ID exists.
-          bool isSymbolicExpressionIdExists(triton::__uint symExprId);
+          bool isSymbolicExpressionIdExists(triton::__uint symExprId) const;
 
           //! Initializes a SymbolicEngine.
           void init(const SymbolicEngine& other);

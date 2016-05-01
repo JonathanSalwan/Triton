@@ -68,22 +68,22 @@ namespace triton {
           bool isTainted;
 
           //! Returns the symbolic expression id.
-          triton::__uint getId(void);
+          triton::__uint getId(void) const;
 
           //! Returns true if the symbolic expression is assigned to a memory. \sa triton::engines::symbolic::symkind_e
-          bool isMemory(void);
+          bool isMemory(void) const;
 
           //! Returns true if the symbolic expression is assigned to a register. \sa triton::engines::symbolic::symkind_e
-          bool isRegister(void);
+          bool isRegister(void) const;
 
           //! Returns the kind of the symbolic expression.
-          symkind_e getKind(void);
+          symkind_e getKind(void) const;
 
           //! Returns the SMT AST root node of the symbolic expression. This is the semantics.
           triton::ast::AbstractNode* getAst(void) const;
 
           //! Returns a new SMT AST root node of the symbolic expression. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
-          triton::ast::AbstractNode* getNewAst(void);
+          triton::ast::AbstractNode* getNewAst(void) const;
 
           //! Returns the comment of the symbolic expression.
           const std::string& getComment(void) const;
@@ -95,10 +95,10 @@ namespace triton {
           std::string getFormattedComment(void) const;
 
           //! Returns the origin memory address if `kind` is equal to `triton::engines::symbolic::MEM`, 0 otherwise.
-          triton::__uint getOriginAddress(void);
+          triton::__uint getOriginAddress(void) const;
 
           //! Returns the origin register if `kind` is equal to `triton::engines::symbolic::REG`, `REG_INVALID` otherwise.
-          triton::arch::RegisterOperand& getOriginRegister(void);
+          const triton::arch::RegisterOperand& getOriginRegister(void) const;
 
           //! Sets a root node.
           void setAst(triton::ast::AbstractNode* node);
@@ -123,7 +123,7 @@ namespace triton {
       std::ostream& operator<<(std::ostream& stream, const SymbolicExpression& symExpr);
 
       //! Displays a symbolic expression.
-      std::ostream& operator<<(std::ostream& stream, SymbolicExpression* symExpr);
+      std::ostream& operator<<(std::ostream& stream, const SymbolicExpression* symExpr);
 
     /*! @} End of symbolic namespace */
     };

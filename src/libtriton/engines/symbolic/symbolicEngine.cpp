@@ -238,8 +238,8 @@ namespace triton {
 
 
       /* Returns the reference memory if it's referenced otherwise returns UNSET */
-      triton::__uint SymbolicEngine::getSymbolicMemoryId(triton::__uint addr) {
-        std::map<triton::__uint, triton::__uint>::iterator it;
+      triton::__uint SymbolicEngine::getSymbolicMemoryId(triton::__uint addr) const {
+        std::map<triton::__uint, triton::__uint>::const_iterator it;
         if ((it = this->memoryReference.find(addr)) != this->memoryReference.end())
           return it->second;
         return triton::engines::symbolic::UNSET;
@@ -247,16 +247,16 @@ namespace triton {
 
 
       /* Returns the symbolic variable otherwise returns nullptr */
-      SymbolicVariable* SymbolicEngine::getSymbolicVariableFromId(triton::__uint symVarId) {
+      SymbolicVariable* SymbolicEngine::getSymbolicVariableFromId(triton::__uint symVarId) const {
         if (this->symbolicVariables.find(symVarId) == this->symbolicVariables.end())
           return nullptr;
-        return this->symbolicVariables[symVarId];
+        return this->symbolicVariables.at(symVarId);
       }
 
 
       /* Returns the symbolic variable otherwise returns nullptr */
-      SymbolicVariable* SymbolicEngine::getSymbolicVariableFromName(const std::string& symVarName) {
-        std::map<triton::__uint, SymbolicVariable*>::iterator it;
+      SymbolicVariable* SymbolicEngine::getSymbolicVariableFromName(const std::string& symVarName) const {
+        std::map<triton::__uint, SymbolicVariable*>::const_iterator it;
 
         for (it = this->symbolicVariables.begin(); it != this->symbolicVariables.end(); it++) {
           if (it->second->getSymVarName() == symVarName)
@@ -267,13 +267,13 @@ namespace triton {
 
 
       /* Returns all symbolic variables */
-      std::map<triton::__uint, SymbolicVariable*>& SymbolicEngine::getSymbolicVariables(void) {
+      const std::map<triton::__uint, SymbolicVariable*>& SymbolicEngine::getSymbolicVariables(void) const {
         return this->symbolicVariables;
       }
 
 
       /* Returns the reg reference or UNSET */
-      triton::__uint SymbolicEngine::getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) {
+      triton::__uint SymbolicEngine::getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) const {
         triton::uint32 parentId = reg.getParent().getId();
         if (!triton::api.isCpuRegisterValid(parentId))
           return triton::engines::symbolic::UNSET;
@@ -371,15 +371,15 @@ namespace triton {
 
 
       /* Gets the symbolic expression pointer from a symbolic id */
-      SymbolicExpression* SymbolicEngine::getSymbolicExpressionFromId(triton::__uint symExprId) {
+      SymbolicExpression* SymbolicEngine::getSymbolicExpressionFromId(triton::__uint symExprId) const {
         if (this->symbolicExpressions.find(symExprId) == this->symbolicExpressions.end())
           throw std::runtime_error("SymbolicEngine::getSymbolicExpressionFromId(): symbolic expression id not found");
-        return this->symbolicExpressions[symExprId];
+        return this->symbolicExpressions.at(symExprId);
       }
 
 
       /* Returns all symbolic expressions */
-      std::map<triton::__uint, SymbolicExpression*>& SymbolicEngine::getSymbolicExpressions(void) {
+      const std::map<triton::__uint, SymbolicExpression*>& SymbolicEngine::getSymbolicExpressions(void) const {
         return this->symbolicExpressions;
       }
 
@@ -402,8 +402,8 @@ namespace triton {
 
 
       /* Returns a list which contains all tainted expressions */
-      std::list<SymbolicExpression*> SymbolicEngine::getTaintedSymbolicExpressions(void) {
-        std::map<triton::__uint, SymbolicExpression*>::iterator it;
+      std::list<SymbolicExpression*> SymbolicEngine::getTaintedSymbolicExpressions(void) const {
+        std::map<triton::__uint, SymbolicExpression*>::const_iterator it;
         std::list<SymbolicExpression*> taintedExprs;
 
         for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
@@ -415,8 +415,8 @@ namespace triton {
 
 
       /* Returns the list of the symbolic variables declared in the trace */
-      std::string SymbolicEngine::getVariablesDeclaration(void) {
-        std::map<triton::__uint, SymbolicVariable*>::iterator it;
+      std::string SymbolicEngine::getVariablesDeclaration(void) const {
+        std::map<triton::__uint, SymbolicVariable*>::const_iterator it;
         std::stringstream stream;
 
         for(it = this->symbolicVariables.begin(); it != this->symbolicVariables.end(); it++)
@@ -427,7 +427,7 @@ namespace triton {
 
 
       /* Returns the map of symbolic registers defined */
-      std::map<triton::arch::RegisterOperand, SymbolicExpression*> SymbolicEngine::getSymbolicRegisters(void) {
+      std::map<triton::arch::RegisterOperand, SymbolicExpression*> SymbolicEngine::getSymbolicRegisters(void) const {
         std::map<triton::arch::RegisterOperand, SymbolicExpression*> ret;
 
         for (triton::uint32 it = 0; it < this->numberOfRegisters; it++) {
@@ -442,9 +442,9 @@ namespace triton {
 
 
       /* Returns the map of symbolic memory defined */
-      std::map<triton::__uint, SymbolicExpression*> SymbolicEngine::getSymbolicMemory(void) {
+      std::map<triton::__uint, SymbolicExpression*> SymbolicEngine::getSymbolicMemory(void) const {
         std::map<triton::__uint, SymbolicExpression*> ret;
-        std::map<triton::__uint, triton::__uint>::iterator it;
+        std::map<triton::__uint, triton::__uint>::const_iterator it;
 
         for (it = this->memoryReference.begin(); it != this->memoryReference.end(); it++)
           ret[it->first] = this->getSymbolicExpressionFromId(it->second);
@@ -860,19 +860,19 @@ namespace triton {
 
 
       /* Returns true if the we perform a full symbolic emulation. */
-      bool SymbolicEngine::isEmulationEnabled(void) {
+      bool SymbolicEngine::isEmulationEnabled(void) const {
         return this->emulationFlag;
       }
 
 
       /* Returns true if the symbolic engine is enable. Otherwise returns false. */
-      bool SymbolicEngine::isEnabled(void) {
+      bool SymbolicEngine::isEnabled(void) const {
         return this->enableFlag;
       }
 
 
       /* Returns true if the symbolic expression ID exists. */
-      bool SymbolicEngine::isSymbolicExpressionIdExists(triton::__uint symExprId) {
+      bool SymbolicEngine::isSymbolicExpressionIdExists(triton::__uint symExprId) const {
         if (this->symbolicExpressions.find(symExprId) != this->symbolicExpressions.end())
           return true;
         return false;

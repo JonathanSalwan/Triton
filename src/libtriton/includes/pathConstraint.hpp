@@ -64,16 +64,16 @@ namespace triton {
           void addBranchConstraint(bool taken, triton::__uint bbAddr, triton::ast::AbstractNode* pc);
 
           //! Returns the branch constraints.
-          std::vector<std::tuple<bool, triton::__uint, triton::ast::AbstractNode*>>& getBranchConstraints(void);
+          const std::vector<std::tuple<bool, triton::__uint, triton::ast::AbstractNode*>>& getBranchConstraints(void) const;
 
           //! Returns the address of the taken branch.
-          triton::__uint getTakenAddress(void);
+          triton::__uint getTakenAddress(void) const;
 
           //! Returns the path constraint AST of the taken branch.
-          triton::ast::AbstractNode* getTakenPathConstraintAst(void);
+          triton::ast::AbstractNode* getTakenPathConstraintAst(void) const;
 
           //! Returns true if it is not a direct jump.
-          bool isMultipleBranches(void);
+          bool isMultipleBranches(void) const;
       };
 
     /*! @} End of symbolic namespace */

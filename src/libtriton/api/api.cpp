@@ -664,25 +664,25 @@ namespace triton {
   }
 
 
-  triton::__uint API::getSymbolicMemoryId(triton::__uint addr) {
+  triton::__uint API::getSymbolicMemoryId(triton::__uint addr) const {
     this->checkSymbolic();
     return this->sym->getSymbolicMemoryId(addr);
   }
 
 
-  std::map<triton::arch::RegisterOperand, triton::engines::symbolic::SymbolicExpression*> API::getSymbolicRegisters(void) {
+  std::map<triton::arch::RegisterOperand, triton::engines::symbolic::SymbolicExpression*> API::getSymbolicRegisters(void) const {
     this->checkSymbolic();
     return this->sym->getSymbolicRegisters();
   }
 
 
-  std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*> API::getSymbolicMemory(void) {
+  std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*> API::getSymbolicMemory(void) const {
     this->checkSymbolic();
     return this->sym->getSymbolicMemory();
   }
 
 
-  triton::__uint API::getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) {
+  triton::__uint API::getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) const {
     this->checkSymbolic();
     return this->sym->getSymbolicRegisterId(reg);
   }
@@ -784,31 +784,31 @@ namespace triton {
   }
 
 
-  triton::ast::AbstractNode* API::processSimplification(triton::ast::AbstractNode* node, bool z3) {
+  triton::ast::AbstractNode* API::processSimplification(triton::ast::AbstractNode* node, bool z3) const {
     this->checkSymbolic();
     return this->sym->processSimplification(node, z3);
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::getSymbolicExpressionFromId(triton::__uint symExprId) {
+  triton::engines::symbolic::SymbolicExpression* API::getSymbolicExpressionFromId(triton::__uint symExprId) const {
     this->checkSymbolic();
     return this->sym->getSymbolicExpressionFromId(symExprId);
   }
 
 
-  triton::engines::symbolic::SymbolicVariable* API::getSymbolicVariableFromId(triton::__uint symVarId) {
+  triton::engines::symbolic::SymbolicVariable* API::getSymbolicVariableFromId(triton::__uint symVarId) const {
     this->checkSymbolic();
     return this->sym->getSymbolicVariableFromId(symVarId);
   }
 
 
-  triton::engines::symbolic::SymbolicVariable* API::getSymbolicVariableFromName(const std::string& symVarName) {
+  triton::engines::symbolic::SymbolicVariable* API::getSymbolicVariableFromName(const std::string& symVarName) const {
     this->checkSymbolic();
     return this->sym->getSymbolicVariableFromName(symVarName);
   }
 
 
-  std::vector<triton::engines::symbolic::PathConstraint>& API::getPathConstraints(void) {
+  const std::vector<triton::engines::symbolic::PathConstraint>& API::getPathConstraints(void) const {
     this->checkSymbolic();
     return this->sym->getPathConstraints();
   }
@@ -856,25 +856,25 @@ namespace triton {
   }
 
 
-  bool API::isSymbolicEmulationEnabled(void) {
+  bool API::isSymbolicEmulationEnabled(void) const {
     this->checkSymbolic();
     return this->sym->isEmulationEnabled();
   }
 
 
-  bool API::isSymbolicEngineEnabled(void) {
+  bool API::isSymbolicEngineEnabled(void) const {
     this->checkSymbolic();
     return this->sym->isEnabled();
   }
 
 
-  bool API::isSymbolicZ3SimplificationEnabled(void) {
+  bool API::isSymbolicZ3SimplificationEnabled(void) const {
     this->checkSymbolic();
     return this->sym->isZ3SimplificationEnabled();
   }
 
 
-  bool API::isSymbolicExpressionIdExists(triton::__uint symExprId) {
+  bool API::isSymbolicExpressionIdExists(triton::__uint symExprId) const {
     this->checkSymbolic();
     return this->sym->isSymbolicExpressionIdExists(symExprId);
   }
@@ -936,25 +936,25 @@ namespace triton {
   }
 
 
-  std::list<triton::engines::symbolic::SymbolicExpression*> API::getTaintedSymbolicExpressions(void) {
+  std::list<triton::engines::symbolic::SymbolicExpression*> API::getTaintedSymbolicExpressions(void) const {
     this->checkSymbolic();
     return this->sym->getTaintedSymbolicExpressions();
   }
 
 
-  std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*>& API::getSymbolicExpressions(void) {
+  const std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*>& API::getSymbolicExpressions(void) const {
     this->checkSymbolic();
     return this->sym->getSymbolicExpressions();
   }
 
 
-  std::map<triton::__uint, triton::engines::symbolic::SymbolicVariable*>& API::getSymbolicVariables(void) {
+  const std::map<triton::__uint, triton::engines::symbolic::SymbolicVariable*>& API::getSymbolicVariables(void) const {
     this->checkSymbolic();
     return this->sym->getSymbolicVariables();
   }
 
 
-  std::string API::getVariablesDeclaration(void) {
+  std::string API::getVariablesDeclaration(void) const {
     this->checkSymbolic();
     return this->sym->getVariablesDeclaration();
   }

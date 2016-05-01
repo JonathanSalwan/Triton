@@ -183,7 +183,7 @@ namespace triton {
     }
 
 
-    std::ostream& operator<<(std::ostream& stream, RegisterOperand* reg) {
+    std::ostream& operator<<(std::ostream& stream, const RegisterOperand* reg) {
       stream << *reg;
       return stream;
     }

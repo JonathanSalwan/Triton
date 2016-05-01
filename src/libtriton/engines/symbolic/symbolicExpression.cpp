@@ -37,7 +37,7 @@ namespace triton {
       }
 
 
-      triton::ast::AbstractNode* SymbolicExpression::getNewAst(void) {
+      triton::ast::AbstractNode* SymbolicExpression::getNewAst(void) const {
         if (this->ast == nullptr)
           throw std::runtime_error("SymbolicExpression::getNewAst(): No AST defined.");
         return triton::ast::newInstance(this->ast);
@@ -49,7 +49,7 @@ namespace triton {
       }
 
 
-      triton::__uint SymbolicExpression::getId(void) {
+      triton::__uint SymbolicExpression::getId(void) const {
         return this->id;
       }
 
@@ -81,17 +81,17 @@ namespace triton {
       }
 
 
-      symkind_e SymbolicExpression::getKind(void) {
+      symkind_e SymbolicExpression::getKind(void) const {
         return this->kind;
       }
 
 
-      triton::__uint SymbolicExpression::getOriginAddress(void) {
+      triton::__uint SymbolicExpression::getOriginAddress(void) const {
         return this->originAddress;
       }
 
 
-      triton::arch::RegisterOperand& SymbolicExpression::getOriginRegister(void) {
+      const triton::arch::RegisterOperand& SymbolicExpression::getOriginRegister(void) const {
         return this->originRegister;
       }
 
@@ -118,12 +118,12 @@ namespace triton {
       }
 
 
-      bool SymbolicExpression::isRegister(void) {
+      bool SymbolicExpression::isRegister(void) const {
         return (this->kind == triton::engines::symbolic::REG);
       }
 
 
-      bool SymbolicExpression::isMemory(void) {
+      bool SymbolicExpression::isMemory(void) const {
         return (this->kind == triton::engines::symbolic::MEM);
       }
 
@@ -136,7 +136,7 @@ namespace triton {
       }
 
 
-      std::ostream& operator<<(std::ostream& stream, SymbolicExpression* symExpr) {
+      std::ostream& operator<<(std::ostream& stream, const SymbolicExpression* symExpr) {
         stream << *symExpr;
         return stream;
       }

@@ -58,13 +58,13 @@ namespace triton {
           ~PathManager();
 
           //! Returns the logical conjunction vector of path constraints.
-          std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void);
+          const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
 
           //! Returns the logical conjunction AST of path constraints.
-          triton::ast::AbstractNode* getPathConstraintsAst(void);
+          triton::ast::AbstractNode* getPathConstraintsAst(void) const;
 
           //! Returns the number of constraints.
-          triton::uint32 getNumberOfPathConstraints(void);
+          triton::uint32 getNumberOfPathConstraints(void) const;
 
           //! Adds a path constraint.
           void addPathConstraint(triton::engines::symbolic::SymbolicExpression* expr);

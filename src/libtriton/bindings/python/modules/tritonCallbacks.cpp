@@ -1536,7 +1536,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getPathConstraintsAst(): Architecture is not defined.");
 
         try {
-          std::vector<triton::engines::symbolic::PathConstraint>& pc = triton::api.getPathConstraints();
+          const std::vector<triton::engines::symbolic::PathConstraint>& pc = triton::api.getPathConstraints();
           ret = xPyList_New(pc.size());
 
           triton::uint32 index = 0;
@@ -1601,8 +1601,8 @@ namespace triton {
 
       static PyObject* triton_getSymbolicExpressions(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*>& expressions = triton::api.getSymbolicExpressions();
-        std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*>::iterator it;
+        const std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*>& expressions = triton::api.getSymbolicExpressions();
+        std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*>::const_iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -1775,8 +1775,8 @@ namespace triton {
 
       static PyObject* triton_getSymbolicVariables(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        std::map<triton::__uint, triton::engines::symbolic::SymbolicVariable*>& variables = triton::api.getSymbolicVariables();
-        std::map<triton::__uint, triton::engines::symbolic::SymbolicVariable*>::iterator it;
+        const std::map<triton::__uint, triton::engines::symbolic::SymbolicVariable*>& variables = triton::api.getSymbolicVariables();
+        std::map<triton::__uint, triton::engines::symbolic::SymbolicVariable*>::const_iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)

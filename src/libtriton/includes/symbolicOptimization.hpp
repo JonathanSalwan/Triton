@@ -58,7 +58,7 @@ namespace triton {
           ~SymbolicOptimization();
 
           //! Returns true if the symbolic optimization is enabled.
-          bool isOptimizationEnabled(enum optimization_e opti);
+          bool isOptimizationEnabled(enum optimization_e opti) const;
 
           //! Enables or disables a symbolic optimization.
           void enableOptimization(enum optimization_e opti, bool flag);

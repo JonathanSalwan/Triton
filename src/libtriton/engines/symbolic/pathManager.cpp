@@ -31,14 +31,14 @@ namespace triton {
 
 
       /* Returns the logical conjunction vector of path constraint */
-      std::vector<triton::engines::symbolic::PathConstraint>& PathManager::getPathConstraints(void) {
+      const std::vector<triton::engines::symbolic::PathConstraint>& PathManager::getPathConstraints(void) const {
         return this->pathConstraints;
       }
 
 
       /* Returns the logical conjunction AST of path constraint */
-      triton::ast::AbstractNode* PathManager::getPathConstraintsAst(void) {
-        std::vector<triton::engines::symbolic::PathConstraint>::iterator it;
+      triton::ast::AbstractNode* PathManager::getPathConstraintsAst(void) const {
+        std::vector<triton::engines::symbolic::PathConstraint>::const_iterator it;
         triton::ast::AbstractNode* node = nullptr;
 
         /* by default PC is T (top) */
@@ -56,7 +56,7 @@ namespace triton {
       }
 
 
-      triton::uint32 PathManager::getNumberOfPathConstraints(void) {
+      triton::uint32 PathManager::getNumberOfPathConstraints(void) const {
         return this->pathConstraints.size();
       }
 

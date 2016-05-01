@@ -81,7 +81,7 @@ namespace triton {
           ~SymbolicVariable();
 
           //! Returns the symbolic variable kind. \sa triton::engines::symbolic::symkind_e.
-          symkind_e getSymVarKind(void);
+          symkind_e getSymVarKind(void) const;
 
           //! Returns the comment of the symbolic variable.
           const std::string& getSymVarComment(void) const;
@@ -90,16 +90,16 @@ namespace triton {
           const std::string& getSymVarName(void) const;
 
           //! Returns the id of the symbolic variable. This id is unique.
-          triton::__uint getSymVarId(void);
+          triton::__uint getSymVarId(void) const;
 
           //! Returns the kind value of the symbolic variable.
-          triton::__uint getSymVarKindValue(void);
+          triton::__uint getSymVarKindValue(void) const;
 
           //! Returns the size (in bits) of the symbolic variable.
           triton::uint32 getSymVarSize(void) const;
 
           //! Returns the concrete value (if exists) of the symbolic variable.
-          triton::uint512 getConcreteValue(void);
+          triton::uint512 getConcreteValue(void) const;
 
           //! Sets the comment of the symbolic variable.
           void setSymVarComment(const std::string& comment);
@@ -112,7 +112,7 @@ namespace triton {
       std::ostream& operator<<(std::ostream& stream, const SymbolicVariable& symVar);
 
       //! Displays a symbolic variable.
-      std::ostream& operator<<(std::ostream& stream, SymbolicVariable* symVar);
+      std::ostream& operator<<(std::ostream& stream, const SymbolicVariable* symVar);
 
     /*! @} End of symbolic namespace */
     };

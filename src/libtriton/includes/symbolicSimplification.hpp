@@ -68,7 +68,7 @@ namespace triton {
           ~SymbolicSimplification();
 
           //! Returns true if Triton can use the simplification passes of z3.
-          bool isZ3SimplificationEnabled(void);
+          bool isZ3SimplificationEnabled(void) const;
 
           //! Enabled, Triton will use the simplification passes of z3 before to call its recorded simplification passes.
           void enableZ3Simplification(bool flag);
@@ -90,7 +90,7 @@ namespace triton {
           #endif
 
           //! Processes all recorded simplifications. Returns the simplified node.
-          triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node, bool z3=false);
+          triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node, bool z3=false) const;
       };
 
     /*! @} End of symbolic namespace */
