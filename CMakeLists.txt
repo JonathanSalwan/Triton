@@ -9,6 +9,11 @@
 cmake_minimum_required(VERSION 2.8)
 project(triton)
 
+# Define cmake options
+option(PINTOOL "Build Triton with the Pin tool as tracer" OFF)
+option(KERNEL4 "Pin will run on a Linux's kernel v4" OFF)
+option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON)
+
 
 # Get and increment the build number
 file(READ ${CMAKE_SOURCE_DIR}/.build_number BUILD_NUMBER)
@@ -45,10 +50,9 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/")
 
 
 # Python bindings option
-add_definitions(-DTRITON_PYTHON_BINDINGS)
-if(${TRITON_PYTHON_BINDINGS} MATCHES "no")
-    remove_definitions(-DTRITON_PYTHON_BINDINGS)
-endif()
+if(PYTHON_BINDINGS)
+    add_definitions(-DTRITON_PYTHON_BINDINGS)
+endif(PYTHON_BINDINGS)
 
 
 # Triton project
@@ -81,9 +85,6 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin"
     endif(${ARCHITECTURE} STREQUAL "i386")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
-option(PINTOOL "Build Triton with Pin tool" OFF)
-
-option(KERNEL4 "Pin will run on a linux's kernel in v4" OFF)
 
 # Use the same ABI as pin
 if(PINTOOL)

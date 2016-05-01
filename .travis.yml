@@ -72,7 +72,7 @@ before_install:
   - cd build
 
 script:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cmake -DPINTOOL=yes -DKERNEL4=yes ..; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cmake -DPINTOOL=on -DKERNEL4=on ..; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cmake ..; fi
   - sudo make -j2 install
   - cd ..

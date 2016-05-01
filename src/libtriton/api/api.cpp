@@ -125,16 +125,16 @@ $ git clone https://github.com/JonathanSalwan/Triton.git
 $ cd Triton
 $ mkdir build
 $ cd build
-$ cmake -DPINTOOL=yes ..
+$ cmake -DPINTOOL=on ..
 $ make
 $ cd ..
 $ ./triton ./src/examples/pin/ir.py /usr/bin/id
 ~~~~~~~~~~~~~
 
-It's not recommended to use the pintool on a kernel `4.x`. The last version of Pin doesn't support very well this branch (`4.x`). Anyway, if you feel lucky, you can compile the Triton pintool with the `-DKERNEL4=yes` flag.
+It's not recommended to use the pintool on a kernel `4.x`. The last version of Pin doesn't support very well this branch (`4.x`). Anyway, if you feel lucky, you can compile the Triton pintool with the `-DKERNEL4=on` flag.
 
 ~~~~~~~~~~~~~{.sh}
-$ cmake -DPINTOOL=yes -DKERNEL4=yes ..
+$ cmake -DPINTOOL=on -DKERNEL4=on ..
 $ make
 ~~~~~~~~~~~~~
 
