@@ -314,7 +314,7 @@ namespace triton {
     }
 
 
-    void Architecture::setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values) {
+    void Architecture::setLastMemoryAreaValue(triton::__uint baseAddr, const std::vector<triton::uint8>& values) {
       if (!this->cpu)
         throw std::runtime_error("Architecture::setLastMemoryAreaValue(): You must define an architecture.");
       this->cpu->setLastMemoryAreaValue(baseAddr, values);

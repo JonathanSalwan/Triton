@@ -288,7 +288,7 @@ namespace triton {
   }
 
 
-  void API::setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values) {
+  void API::setLastMemoryAreaValue(triton::__uint baseAddr, const std::vector<triton::uint8>& values) {
     this->arch.setLastMemoryAreaValue(baseAddr, values);
   }
 

@@ -141,7 +141,7 @@ namespace triton {
         void setLastMemoryValue(const triton::arch::MemoryOperand& mem);
 
         //! Sets the last concrete values of a memory area.
-        void setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values);
+        void setLastMemoryAreaValue(triton::__uint baseAddr, const std::vector<triton::uint8>& values);
 
         //! Sets the last concrete value of a register state.
         void setLastRegisterValue(const triton::arch::RegisterOperand& reg);

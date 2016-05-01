@@ -338,7 +338,7 @@ namespace triton {
           void disassembly(triton::arch::Instruction &inst) const;
           void setLastMemoryValue(triton::__uint addr, triton::uint8 value);
           void setLastMemoryValue(const triton::arch::MemoryOperand& mem);
-          void setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values);
+          void setLastMemoryAreaValue(triton::__uint baseAddr, const std::vector<triton::uint8>& values);
           void setLastRegisterValue(const triton::arch::RegisterOperand& reg);
 
           //! Copies a x8664Cpu class.

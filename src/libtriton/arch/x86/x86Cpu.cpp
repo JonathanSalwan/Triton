@@ -843,7 +843,7 @@ namespace triton {
       }
 
 
-      void x86Cpu::setLastMemoryAreaValue(triton::__uint baseAddr, std::vector<triton::uint8>& values) {
+      void x86Cpu::setLastMemoryAreaValue(triton::__uint baseAddr, const std::vector<triton::uint8>& values) {
         for (triton::uint32 index = 0; index < values.size(); index++) {
           this->memory[baseAddr+index] = values[index];
         }
