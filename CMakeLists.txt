@@ -104,7 +104,7 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 
 # Find boost
-find_package(Boost 1.56.0 REQUIRED)
+find_package(Boost 1.55.0 REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 
