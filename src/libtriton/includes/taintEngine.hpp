@@ -71,7 +71,7 @@ namespace triton {
 
         public:
           //! Returns true if the taint engine is enabled.
-          bool isEnabled(void);
+          bool isEnabled(void) const;
 
           //! Enables or disables the taint engine.
           void enable(bool flag);
@@ -81,19 +81,19 @@ namespace triton {
             \param addr the targeted address.
             \param size the access' size
           */
-          bool isMemoryTainted(triton::__uint addr, triton::uint32 size=1);
+          bool isMemoryTainted(triton::__uint addr, triton::uint32 size=1) const;
 
           //! Returns true if the memory is tainted.
           /*!
             \param mem the memory operand.
           */
-          bool isMemoryTainted(const triton::arch::MemoryOperand& mem);
+          bool isMemoryTainted(const triton::arch::MemoryOperand& mem) const;
 
           //! Returns true if the register is tainted.
           /*!
             \param reg the register operand.
           */
-          bool isRegisterTainted(const triton::arch::RegisterOperand& reg);
+          bool isRegisterTainted(const triton::arch::RegisterOperand& reg) const;
 
           //! Sets memory flag.
           /*!

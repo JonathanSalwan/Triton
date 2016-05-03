@@ -480,7 +480,7 @@ namespace triton {
          * **item1**: symbolic variable id<br>
          * **item2**: model
          */
-        std::map<triton::uint32, triton::engines::solver::SolverModel> getModel(triton::ast::AbstractNode *node);
+        std::map<triton::uint32, triton::engines::solver::SolverModel> getModel(triton::ast::AbstractNode *node) const;
 
         //! [**solver api**] - Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
         /*! \brief list of map of symbolic variable id -> model
@@ -489,10 +489,10 @@ namespace triton {
          * **item1**: symbolic variable id<br>
          * **item2**: model
          */
-        std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(triton::ast::AbstractNode *node, triton::uint32 limit);
+        std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(triton::ast::AbstractNode *node, triton::uint32 limit) const;
 
         //! [**solver api**] - Evaluates an AST via Z3 and returns the symbolic value.
-        triton::uint512 evaluateAstViaZ3(triton::ast::AbstractNode *node);
+        triton::uint512 evaluateAstViaZ3(triton::ast::AbstractNode *node) const;
 
 
 
@@ -508,29 +508,29 @@ namespace triton {
         void enableTaintEngine(bool flag);
 
         //! [**taint api**] - Returns true if the taint engine is enabled.
-        bool isTaintEngineEnabled(void);
+        bool isTaintEngineEnabled(void) const;
 
         //! [**taint api**] - Abstract taint verification.
-        bool isTainted(triton::arch::OperandWrapper& op);
+        bool isTainted(triton::arch::OperandWrapper& op) const;
 
         //! [**taint api**] - Returns true if the addr is tainted.
         /*!
           \param addr the targeted address.
           \param size the access' size
         */
-        bool isMemoryTainted(triton::__uint addr, triton::uint32 size=1);
+        bool isMemoryTainted(triton::__uint addr, triton::uint32 size=1) const;
 
         //! [**taint api**] - Returns true if the memory is tainted.
         /*!
           \param mem the memory operand.
         */
-        bool isMemoryTainted(const triton::arch::MemoryOperand& mem);
+        bool isMemoryTainted(const triton::arch::MemoryOperand& mem) const;
 
         //! [**taint api**] - Returns true if the register is tainted.
         /*!
           \param reg the register operand.
         */
-        bool isRegisterTainted(const triton::arch::RegisterOperand& reg);
+        bool isRegisterTainted(const triton::arch::RegisterOperand& reg) const;
 
         //! [**taint api**] - Sets abstract flag of the operand.
         /*!

@@ -969,19 +969,19 @@ namespace triton {
   }
 
 
-  std::map<triton::uint32, triton::engines::solver::SolverModel> API::getModel(triton::ast::AbstractNode *node) {
+  std::map<triton::uint32, triton::engines::solver::SolverModel> API::getModel(triton::ast::AbstractNode *node) const {
     this->checkSolver();
     return this->solver->getModel(node);
   }
 
 
-  std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> API::getModels(triton::ast::AbstractNode *node, triton::uint32 limit) {
+  std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> API::getModels(triton::ast::AbstractNode *node, triton::uint32 limit) const {
     this->checkSolver();
     return this->solver->getModels(node, limit);
   }
 
 
-  triton::uint512 API::evaluateAstViaZ3(triton::ast::AbstractNode *node) {
+  triton::uint512 API::evaluateAstViaZ3(triton::ast::AbstractNode *node) const {
     this->checkSolver();
     return this->solver->evaluateAstViaZ3(node);
   }
@@ -1008,13 +1008,13 @@ namespace triton {
   }
 
 
-  bool API::isTaintEngineEnabled(void) {
+  bool API::isTaintEngineEnabled(void) const {
     this->checkTaint();
     return this->taint->isEnabled();
   }
 
 
-  bool API::isTainted(triton::arch::OperandWrapper& op) {
+  bool API::isTainted(triton::arch::OperandWrapper& op) const {
     this->checkTaint();
     switch (op.getType()) {
       case triton::arch::OP_IMM: return triton::engines::taint::UNTAINTED;
@@ -1026,19 +1026,19 @@ namespace triton {
   }
 
 
-  bool API::isMemoryTainted(__uint addr, uint32 size) {
+  bool API::isMemoryTainted(__uint addr, uint32 size) const {
     this->checkTaint();
     return this->taint->isMemoryTainted(addr, size);
   }
 
 
-  bool API::isMemoryTainted(const triton::arch::MemoryOperand& mem) {
+  bool API::isMemoryTainted(const triton::arch::MemoryOperand& mem) const {
     this->checkTaint();
     return this->taint->isMemoryTainted(mem);
   }
 
 
-  bool API::isRegisterTainted(const triton::arch::RegisterOperand& reg) {
+  bool API::isRegisterTainted(const triton::arch::RegisterOperand& reg) const {
     this->checkTaint();
     return this->taint->isRegisterTainted(reg);
   }

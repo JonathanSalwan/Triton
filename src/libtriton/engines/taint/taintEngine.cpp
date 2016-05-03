@@ -137,7 +137,7 @@ namespace triton {
       }
 
 
-      bool TaintEngine::isEnabled(void) {
+      bool TaintEngine::isEnabled(void) const {
         return this->enableFlag;
       }
 
@@ -148,7 +148,7 @@ namespace triton {
 
 
       /* Returns true of false if the memory address is currently tainted */
-      bool TaintEngine::isMemoryTainted(const triton::arch::MemoryOperand& mem) {
+      bool TaintEngine::isMemoryTainted(const triton::arch::MemoryOperand& mem) const {
         triton::__uint addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
@@ -161,7 +161,7 @@ namespace triton {
 
 
       /* Returns true of false if the address is currently tainted */
-      bool TaintEngine::isMemoryTainted(triton::__uint addr, triton::uint32 size) {
+      bool TaintEngine::isMemoryTainted(triton::__uint addr, triton::uint32 size) const {
         for (triton::uint32 index = 0; index < size; index++) {
           if (this->taintedAddresses.find(addr+index) != this->taintedAddresses.end())
             return TAINTED;
@@ -171,7 +171,7 @@ namespace triton {
 
 
       /* Returns true of false if the register is currently tainted */
-      bool TaintEngine::isRegisterTainted(const triton::arch::RegisterOperand& reg) {
+      bool TaintEngine::isRegisterTainted(const triton::arch::RegisterOperand& reg) const {
         triton::uint32 parentId = reg.getParent().getId();
         return this->taintedRegisters[parentId];
       }
