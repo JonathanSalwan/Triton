@@ -278,7 +278,7 @@ e.g: `(bvneg expr1)`.
 Returns the ast `triton::ast::bvnor()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvnor expr1 expr2)`.
 
-- **bvnot(AstNode expr1, AstNode expr2)**<br>
+- **bvnot(AstNode expr1)**<br>
 Returns the ast `triton::ast::bvnot()` representation as \ref py_AstNode_page.<br>
 e.g: `(bvnot expr1)`.
 
