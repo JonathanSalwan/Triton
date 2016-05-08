@@ -52,36 +52,36 @@ namespace triton {
     }
 
 
-    enum kind_e AbstractNode::getKind(void) {
+    enum kind_e AbstractNode::getKind(void) const {
       return this->kind;
     }
 
 
-    triton::uint32 AbstractNode::getBitvectorSize(void) {
+    triton::uint32 AbstractNode::getBitvectorSize(void) const {
       return this->size;
     }
 
 
-    triton::uint512 AbstractNode::getBitvectorMask(void) {
+    triton::uint512 AbstractNode::getBitvectorMask(void) const {
       triton::uint512 mask = -1;
       mask = mask >> (512 - this->size);
       return mask;
     }
 
 
-    bool AbstractNode::isSigned(void) {
+    bool AbstractNode::isSigned(void) const {
       if ((this->eval >> (this->size-1)) & 1)
         return true;
       return false;
     }
 
 
-    bool AbstractNode::isSymbolized(void) {
+    bool AbstractNode::isSymbolized(void) const {
       return this->symbolized;
     }
 
 
-    triton::uint512 AbstractNode::evaluate(void) {
+    triton::uint512 AbstractNode::evaluate(void) const {
       return this->eval;
     }
 

@@ -125,13 +125,28 @@ namespace triton {
     }
 
 
-    const std::list<triton::arch::MemoryOperand>& Instruction::getLoadAccess(void) const {
+    const std::set<triton::arch::MemoryOperand>& Instruction::getLoadAccess(void) const {
       return this->loadAccess;
     }
 
 
-    const std::list<triton::arch::MemoryOperand>& Instruction::getStoreAccess(void) const {
+    const std::set<triton::arch::MemoryOperand>& Instruction::getStoreAccess(void) const {
       return this->storeAccess;
+    }
+
+
+    const std::set<triton::arch::RegisterOperand>& Instruction::getReadRegisters(void) const {
+      return this->readRegisters;
+    }
+
+
+    const std::set<triton::arch::RegisterOperand>& Instruction::getWrittenRegisters(void) const {
+      return this->writtenRegisters;
+    }
+
+
+    const std::set<triton::arch::ImmediateOperand>& Instruction::getReadImmediates(void) const {
+      return this->readImmediates;
     }
 
 
@@ -168,13 +183,28 @@ namespace triton {
     }
 
 
-    void Instruction::setLoadAccess(triton::arch::MemoryOperand mem) {
-      this->loadAccess.push_back(mem);
+    void Instruction::setLoadAccess(const triton::arch::MemoryOperand& mem) {
+      this->loadAccess.insert(mem);
     }
 
 
-    void Instruction::setStoreAccess(triton::arch::MemoryOperand mem) {
-      this->storeAccess.push_back(mem);
+    void Instruction::setStoreAccess(const triton::arch::MemoryOperand& mem) {
+      this->storeAccess.insert(mem);
+    }
+
+
+    void Instruction::setReadRegister(const triton::arch::RegisterOperand& reg) {
+      this->readRegisters.insert(reg);
+    }
+
+
+    void Instruction::setWrittenRegister(const triton::arch::RegisterOperand& reg) {
+      this->writtenRegisters.insert(reg);
+    }
+
+
+    void Instruction::setReadImmediate(const triton::arch::ImmediateOperand& imm) {
+      this->readImmediates.insert(imm);
     }
 
 

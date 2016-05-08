@@ -72,6 +72,15 @@ namespace triton {
         //! Returns the register operand.
         RegisterOperand& getRegister(void);
 
+        //! Returns the immediate operand.
+        const ImmediateOperand& getConstImmediate(void) const;
+
+        //! Returns the memroy operand.
+        const MemoryOperand& getConstMemory(void) const;
+
+        //! Returns the register operand.
+        const RegisterOperand& getConstRegister(void) const;
+
         //! Sets the immediate operand.
         void setImmediate(const ImmediateOperand& imm);
 
@@ -82,35 +91,35 @@ namespace triton {
         void setRegister(const RegisterOperand& reg);
 
         //! True if this concrete abstract value is trusted and synchronized with the real CPU/MMU value.
-        bool isTrusted(void);
+        bool isTrusted(void) const;
 
         //! Sets the trust flag.
         void setTrust(bool flag);
 
         //! Returns the abstract size (in bytes) of the operand.
-        triton::uint32 getSize(void);
+        triton::uint32 getSize(void) const;
 
         //! Returns the abstract size (in bits) of the operand.
-        triton::uint32 getBitSize(void);
+        triton::uint32 getBitSize(void) const;
 
         //! Returns the highest bit position of the abstract operand.
-        triton::uint32 getAbstractHigh(void);
+        triton::uint32 getAbstractHigh(void) const;
 
         //! Returns the lower bit position of the abstract operand.
-        triton::uint32 getAbstractLow(void);
+        triton::uint32 getAbstractLow(void) const;
 
         //! Returns the abstract concrete value.
-        triton::uint512 getConcreteValue(void);
+        triton::uint512 getConcreteValue(void) const;
 
         //! Copies a OperandWrapper.
         void operator=(const OperandWrapper& other);
     };
 
     //! Displays a OperandWrapper according to the concrete type.
-    std::ostream& operator<<(std::ostream& stream, triton::arch::OperandWrapper& op);
+    std::ostream& operator<<(std::ostream& stream, const triton::arch::OperandWrapper& op);
 
     //! Displays a OperandWrapper according to the concrete type.
-    std::ostream& operator<<(std::ostream& stream, triton::arch::OperandWrapper* op);
+    std::ostream& operator<<(std::ostream& stream, const triton::arch::OperandWrapper* op);
 
   /*! @} End of arch namespace */
   };

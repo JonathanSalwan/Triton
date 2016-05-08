@@ -49,6 +49,9 @@ namespace triton {
         //! Returns the size of the vector
         triton::uint32 getVectorSize(void) const;
 
+        //! Returns the max possible value of the bitvector.
+        triton::uint512 getMaxValue(void) const;
+
         //! Returns the pair<high, low>
         std::pair<triton::uint32, triton::uint32> getPair(void) const;
 

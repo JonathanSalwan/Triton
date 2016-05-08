@@ -98,5 +98,26 @@ namespace triton {
       return stream;
     }
 
+
+    bool operator==(const ImmediateOperand& imm1, const ImmediateOperand& imm2) {
+      if (imm1.getValue() != imm2.getValue())
+        return false;
+      if (imm1.getSize() != imm2.getSize())
+        return false;
+      return true;
+    }
+
+
+    bool operator!=(const ImmediateOperand& imm1, const ImmediateOperand& imm2) {
+      if (imm1 == imm2)
+        return false;
+      return true;
+    }
+
+
+    bool operator<(const ImmediateOperand& imm1, const ImmediateOperand& imm2) {
+      return imm1.getValue() < imm2.getValue();
+    }
+
   }; /* arch namespace */
 }; /* triton namespace */

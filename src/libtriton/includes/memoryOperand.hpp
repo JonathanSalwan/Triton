@@ -129,6 +129,21 @@ namespace triton {
         //! LEA - Returns the scale operand.
         ImmediateOperand& getScale(void);
 
+        //! LEA - Returns the segment register operand.
+        const RegisterOperand& getConstSegmentRegister(void) const;
+
+        //! LEA - Returns the base register operand.
+        const RegisterOperand& getConstBaseRegister(void) const;
+
+        //! LEA - Returns the index register operand.
+        const RegisterOperand& getConstIndexRegister(void) const;
+
+        //! LEA - Returns the displacement operand.
+        const ImmediateOperand& getConstDisplacement(void) const;
+
+        //! LEA - Returns the scale operand.
+        const ImmediateOperand& getConstScale(void) const;
+
         //! True if this concrete memory value is trusted and synchronized with the real MMU value.
         bool isTrusted(void) const;
 
@@ -171,6 +186,15 @@ namespace triton {
 
     //! Displays an MemoryOperand.
     std::ostream& operator<<(std::ostream& stream, const MemoryOperand* mem);
+
+    //! Compares two MemoryOperand.
+    bool operator==(const MemoryOperand& mem1, const MemoryOperand& mem2);
+
+    //! Compares two MemoryOperand.
+    bool operator!=(const MemoryOperand& mem1, const MemoryOperand& mem2);
+
+    //! Compares two MemoryOperand (needed for std::map)
+    bool operator<(const MemoryOperand& mem1, const MemoryOperand& mem2);
 
   /*! @} End of arch namespace */
   };

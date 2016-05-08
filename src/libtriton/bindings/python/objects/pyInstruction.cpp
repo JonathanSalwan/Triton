@@ -105,6 +105,12 @@ Returns the operands of the instruction as list of \ref py_Immediate_page, \ref 
 - **getPrefix(void)**<br>
 Returns the instruction prefix as \ref py_PREFIX_page.
 
+- **getReadImmediates(void)**<br>
+Returns a list of \ref py_Immediate_page which represents all implicit and explicit input immediates.
+
+- **getReadRegisters(void)**<br>
+Returns a list of \ref py_Register_page which represents all implicit and explicit input registers (flags includes).
+
 - **getSecondOperand(void)**<br>
 Returns the second operand of the instruction.
 
@@ -125,6 +131,9 @@ Returns the thread id of the instruction as integer.
 
 - **getType(void)**<br>
 Returns the type of the instruction as \ref py_OPCODE_page.
+
+- **getWrittenRegisters(void)**<br>
+Returns a list of \ref py_Register_page which represents all implicit and explicit output registers (flags includes).
 
 - **isBranch(void)**<br>
 Returns true if the instruction modifies is a branch (i.e x86: JUMP, JCC).
@@ -238,8 +247,8 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::list<triton::arch::MemoryOperand>::const_iterator it;
-          const std::list<triton::arch::MemoryOperand>& loadAccess = PyInstruction_AsInstruction(self)->getLoadAccess();
+          std::set<triton::arch::MemoryOperand>::const_iterator it;
+          const std::set<triton::arch::MemoryOperand>& loadAccess = PyInstruction_AsInstruction(self)->getLoadAccess();
 
           ret = xPyList_New(loadAccess.size());
           for (it = loadAccess.begin(); it != loadAccess.end(); it++) {
@@ -290,8 +299,8 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::list<triton::arch::MemoryOperand>::const_iterator it;
-          const std::list<triton::arch::MemoryOperand>& storeAccess = PyInstruction_AsInstruction(self)->getStoreAccess();
+          std::set<triton::arch::MemoryOperand>::const_iterator it;
+          const std::set<triton::arch::MemoryOperand>& storeAccess = PyInstruction_AsInstruction(self)->getStoreAccess();
 
           ret = xPyList_New(storeAccess.size());
           for (it = storeAccess.begin(); it != storeAccess.end(); it++) {
@@ -351,6 +360,46 @@ namespace triton {
       static PyObject* Instruction_getPrefix(PyObject* self, PyObject* noarg) {
         try {
           return Py_BuildValue("k", PyInstruction_AsInstruction(self)->getPrefix());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* Instruction_getReadImmediates(PyObject* self, PyObject* noarg) {
+        try {
+          PyObject* ret;
+          triton::uint32 index = 0;
+          std::set<triton::arch::ImmediateOperand>::const_iterator it;
+          const std::set<triton::arch::ImmediateOperand>& readImmediates = PyInstruction_AsInstruction(self)->getReadImmediates();
+
+          ret = xPyList_New(readImmediates.size());
+          for (it = readImmediates.begin(); it != readImmediates.end(); it++) {
+            PyList_SetItem(ret, index++, PyImmediateOperand(*it));
+          }
+
+          return ret;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* Instruction_getReadRegisters(PyObject* self, PyObject* noarg) {
+        try {
+          PyObject* ret;
+          triton::uint32 index = 0;
+          std::set<triton::arch::RegisterOperand>::const_iterator it;
+          const std::set<triton::arch::RegisterOperand>& readRegisters = PyInstruction_AsInstruction(self)->getReadRegisters();
+
+          ret = xPyList_New(readRegisters.size());
+          for (it = readRegisters.begin(); it != readRegisters.end(); it++) {
+            PyList_SetItem(ret, index++, PyRegisterOperand(*it));
+          }
+
+          return ret;
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -463,6 +512,26 @@ namespace triton {
       static PyObject* Instruction_getType(PyObject* self, PyObject* noarg) {
         try {
           return Py_BuildValue("k", PyInstruction_AsInstruction(self)->getType());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* Instruction_getWrittenRegisters(PyObject* self, PyObject* noarg) {
+        try {
+          PyObject* ret;
+          triton::uint32 index = 0;
+          std::set<triton::arch::RegisterOperand>::const_iterator it;
+          const std::set<triton::arch::RegisterOperand>& writtenRegisters = PyInstruction_AsInstruction(self)->getWrittenRegisters();
+
+          ret = xPyList_New(writtenRegisters.size());
+          for (it = writtenRegisters.begin(); it != writtenRegisters.end(); it++) {
+            PyList_SetItem(ret, index++, PyRegisterOperand(*it));
+          }
+
+          return ret;
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -661,6 +730,8 @@ namespace triton {
         {"getOpcodes",                Instruction_getOpcodes,               METH_NOARGS,     ""},
         {"getOperands",               Instruction_getOperands,              METH_NOARGS,     ""},
         {"getPrefix",                 Instruction_getPrefix,                METH_NOARGS,     ""},
+        {"getReadImmediates",         Instruction_getReadImmediates,        METH_NOARGS,     ""},
+        {"getReadRegisters",          Instruction_getReadRegisters,         METH_NOARGS,     ""},
         {"getSecondOperand",          Instruction_getSecondOperand,         METH_NOARGS,     ""},
         {"getSize",                   Instruction_getSize,                  METH_NOARGS,     ""},
         {"getStoreAccess",            Instruction_getStoreAccess,           METH_NOARGS,     ""},
@@ -668,6 +739,7 @@ namespace triton {
         {"getThirdOperand",           Instruction_getThirdOperand,          METH_NOARGS,     ""},
         {"getThreadId",               Instruction_getThreadId,              METH_NOARGS,     ""},
         {"getType",                   Instruction_getType,                  METH_NOARGS,     ""},
+        {"getWrittenRegisters",       Instruction_getWrittenRegisters,      METH_NOARGS,     ""},
         {"isBranch",                  Instruction_isBranch,                 METH_NOARGS,     ""},
         {"isConditionTaken",          Instruction_isConditionTaken,         METH_NOARGS,     ""},
         {"isControlFlow",             Instruction_isControlFlow,            METH_NOARGS,     ""},

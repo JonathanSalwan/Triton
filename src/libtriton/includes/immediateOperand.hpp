@@ -84,6 +84,15 @@ namespace triton {
     //! Displays an ImmediateOperand.
     std::ostream& operator<<(std::ostream& stream, const ImmediateOperand* imm);
 
+    //! Compares two ImmediateOperand.
+    bool operator==(const ImmediateOperand& imm1, const ImmediateOperand& imm2);
+
+    //! Compares two ImmediateOperand.
+    bool operator!=(const ImmediateOperand& imm1, const ImmediateOperand& imm2);
+
+    //! Compares two ImmediateOperand (needed for std::map)
+    bool operator<(const ImmediateOperand& imm1, const ImmediateOperand& imm2);
+
   /*! @} End of arch namespace */
   };
 /*! @} End of triton namespace */

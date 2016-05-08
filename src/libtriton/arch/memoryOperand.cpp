@@ -39,6 +39,9 @@ namespace triton {
         throw std::runtime_error("MemoryOperand::MemoryOperand(): size must be aligned.");
 
       this->setPair(std::make_pair(((size * BYTE_SIZE_BIT) - 1), 0));
+
+      if (concreteValue > this->getMaxValue())
+        throw std::runtime_error("MemoryOperand::MemoryOperand(): You cannot set this concrete value (too big) to this memory access.");
     }
 
 
@@ -174,6 +177,31 @@ namespace triton {
     }
 
 
+    const RegisterOperand& MemoryOperand::getConstSegmentRegister(void) const {
+      return this->segmentReg;
+    }
+
+
+    const RegisterOperand& MemoryOperand::getConstBaseRegister(void) const {
+      return this->baseReg;
+    }
+
+
+    const RegisterOperand& MemoryOperand::getConstIndexRegister(void) const {
+      return this->indexReg;
+    }
+
+
+    const ImmediateOperand& MemoryOperand::getConstDisplacement(void) const {
+      return this->displacement;
+    }
+
+
+    const ImmediateOperand& MemoryOperand::getConstScale(void) const {
+      return this->scale;
+    }
+
+
     bool MemoryOperand::isTrusted(void) const {
       return this->trusted;
     }
@@ -197,6 +225,8 @@ namespace triton {
 
 
     void MemoryOperand::setConcreteValue(triton::uint512 concreteValue) {
+      if (concreteValue > this->getMaxValue())
+        throw std::runtime_error("MemoryOperand::MemoryOperand(): You cannot set this concrete value (too big) to this memory access.");
       this->concreteValue = concreteValue;
       this->trusted       = true;
     }
@@ -262,6 +292,41 @@ namespace triton {
     std::ostream& operator<<(std::ostream& stream, const MemoryOperand* mem) {
       stream << *mem;
       return stream;
+    }
+
+
+    bool operator==(const MemoryOperand& mem1, const MemoryOperand& mem2) {
+      if (mem1.getAddress() != mem2.getAddress())
+        return false;
+      if (mem1.getSize() != mem2.getSize())
+        return false;
+      if (mem1.getConcreteValue() != mem2.getConcreteValue())
+        return false;
+      if (mem1.getConstBaseRegister() != mem2.getConstBaseRegister())
+        return false;
+      if (mem1.getConstIndexRegister() != mem2.getConstIndexRegister())
+        return false;
+      if (mem1.getConstScale() != mem2.getConstScale())
+        return false;
+      if (mem1.getConstDisplacement() != mem2.getConstDisplacement())
+        return false;
+      if (mem1.getConstSegmentRegister() != mem2.getConstSegmentRegister())
+        return false;
+      if (mem1.getPcRelative() != mem2.getPcRelative())
+        return false;
+      return true;
+    }
+
+
+    bool operator!=(const MemoryOperand& mem1, const MemoryOperand& mem2) {
+      if (mem1 == mem2)
+        return false;
+      return true;
+    }
+
+
+    bool operator<(const MemoryOperand& mem1, const MemoryOperand& mem2) {
+      return mem1.getAddress() < mem2.getAddress();
     }
 
   }; /* arch namespace */

@@ -55,6 +55,21 @@ namespace triton {
     }
 
 
+    const ImmediateOperand& OperandWrapper::getConstImmediate(void) const {
+      return this->imm;
+    }
+
+
+    const MemoryOperand& OperandWrapper::getConstMemory(void) const {
+      return this->mem;
+    }
+
+
+    const RegisterOperand& OperandWrapper::getConstRegister(void) const {
+      return this->reg;
+    }
+
+
     void OperandWrapper::setImmediate(const ImmediateOperand& imm) {
       this->imm = imm;
     }
@@ -70,11 +85,11 @@ namespace triton {
     }
 
 
-    triton::uint32 OperandWrapper::getSize(void) {
+    triton::uint32 OperandWrapper::getSize(void) const {
       switch (this->getType()) {
-        case triton::arch::OP_IMM: return this->getImmediate().getSize();
-        case triton::arch::OP_MEM: return this->getMemory().getSize();
-        case triton::arch::OP_REG: return this->getRegister().getSize();
+        case triton::arch::OP_IMM: return this->getConstImmediate().getSize();
+        case triton::arch::OP_MEM: return this->getConstMemory().getSize();
+        case triton::arch::OP_REG: return this->getConstRegister().getSize();
         default:
           throw std::invalid_argument("OperandWrapper::getSize(): Invalid type operand.");
       }
@@ -82,11 +97,11 @@ namespace triton {
     }
 
 
-    triton::uint32 OperandWrapper::getBitSize(void) {
+    triton::uint32 OperandWrapper::getBitSize(void) const {
       switch (this->getType()) {
-        case triton::arch::OP_IMM: return this->getImmediate().getBitSize();
-        case triton::arch::OP_MEM: return this->getMemory().getBitSize();
-        case triton::arch::OP_REG: return this->getRegister().getBitSize();
+        case triton::arch::OP_IMM: return this->getConstImmediate().getBitSize();
+        case triton::arch::OP_MEM: return this->getConstMemory().getBitSize();
+        case triton::arch::OP_REG: return this->getConstRegister().getBitSize();
         default:
           throw std::invalid_argument("OperandWrapper::getBitSize(): Invalid type operand.");
       }
@@ -94,11 +109,11 @@ namespace triton {
     }
 
 
-    triton::uint32 OperandWrapper::getAbstractHigh(void) {
+    triton::uint32 OperandWrapper::getAbstractHigh(void) const {
       switch (this->getType()) {
-        case triton::arch::OP_IMM: return this->getImmediate().getAbstractHigh();
-        case triton::arch::OP_MEM: return this->getMemory().getAbstractHigh();
-        case triton::arch::OP_REG: return this->getRegister().getAbstractHigh();
+        case triton::arch::OP_IMM: return this->getConstImmediate().getAbstractHigh();
+        case triton::arch::OP_MEM: return this->getConstMemory().getAbstractHigh();
+        case triton::arch::OP_REG: return this->getConstRegister().getAbstractHigh();
         default:
           throw std::invalid_argument("OperandWrapper::getHigh(): Invalid type operand.");
       }
@@ -106,11 +121,11 @@ namespace triton {
     }
 
 
-    triton::uint32 OperandWrapper::getAbstractLow(void) {
+    triton::uint32 OperandWrapper::getAbstractLow(void) const {
       switch (this->getType()) {
-        case triton::arch::OP_IMM: return this->getImmediate().getAbstractLow();
-        case triton::arch::OP_MEM: return this->getMemory().getAbstractLow();
-        case triton::arch::OP_REG: return this->getRegister().getAbstractLow();
+        case triton::arch::OP_IMM: return this->getConstImmediate().getAbstractLow();
+        case triton::arch::OP_MEM: return this->getConstMemory().getAbstractLow();
+        case triton::arch::OP_REG: return this->getConstRegister().getAbstractLow();
         default:
           throw std::invalid_argument("OperandWrapper::getLow(): Invalid type operand.");
       }
@@ -118,11 +133,11 @@ namespace triton {
     }
 
 
-    triton::uint512 OperandWrapper::getConcreteValue(void) {
+    triton::uint512 OperandWrapper::getConcreteValue(void) const {
       switch (this->getType()) {
-        case triton::arch::OP_IMM: return this->getImmediate().getValue();
-        case triton::arch::OP_MEM: return this->getMemory().getConcreteValue();
-        case triton::arch::OP_REG: return this->getRegister().getConcreteValue();
+        case triton::arch::OP_IMM: return this->getConstImmediate().getValue();
+        case triton::arch::OP_MEM: return this->getConstMemory().getConcreteValue();
+        case triton::arch::OP_REG: return this->getConstRegister().getConcreteValue();
         default:
           throw std::invalid_argument("OperandWrapper::getConcreteValue(): Invalid type operand.");
       }
@@ -130,11 +145,11 @@ namespace triton {
     }
 
 
-    bool OperandWrapper::isTrusted(void) {
+    bool OperandWrapper::isTrusted(void) const {
       switch (this->getType()) {
         case triton::arch::OP_IMM: return true;
-        case triton::arch::OP_MEM: return this->getMemory().isTrusted();
-        case triton::arch::OP_REG: return this->getRegister().isTrusted();
+        case triton::arch::OP_MEM: return this->getConstMemory().isTrusted();
+        case triton::arch::OP_REG: return this->getConstRegister().isTrusted();
         default:
           throw std::invalid_argument("OperandWrapper::isTrusted(): Invalid type operand.");
       }
@@ -161,11 +176,11 @@ namespace triton {
     }
 
 
-    std::ostream& operator<<(std::ostream& stream, triton::arch::OperandWrapper& op) {
+    std::ostream& operator<<(std::ostream& stream, const triton::arch::OperandWrapper& op) {
       switch (op.getType()) {
-        case triton::arch::OP_IMM: stream << op.getImmediate(); break;
-        case triton::arch::OP_MEM: stream << op.getMemory(); break;
-        case triton::arch::OP_REG: stream << op.getRegister(); break;
+        case triton::arch::OP_IMM: stream << op.getConstImmediate(); break;
+        case triton::arch::OP_MEM: stream << op.getConstMemory(); break;
+        case triton::arch::OP_REG: stream << op.getConstRegister(); break;
         default:
           throw std::invalid_argument("triton::arch::operator<<(OperandWrapper): Invalid type operand.");
       }
@@ -173,7 +188,7 @@ namespace triton {
     }
 
 
-    std::ostream& operator<<(std::ostream &stream, triton::arch::OperandWrapper* op) {
+    std::ostream& operator<<(std::ostream &stream, const triton::arch::OperandWrapper* op) {
       stream << *op;
       return stream;
     }

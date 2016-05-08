@@ -55,6 +55,13 @@ namespace triton {
     }
 
 
+    triton::uint512 BitsVector::getMaxValue(void) const {
+      triton::uint512 max = -1;
+      max = max >> (512 - this->getVectorSize());
+      return max;
+    }
+
+
     void BitsVector::setHigh(triton::uint32 v) {
       this->high = v;
 

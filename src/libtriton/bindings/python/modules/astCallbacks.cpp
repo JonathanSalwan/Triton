@@ -126,8 +126,8 @@ Triton allows you to display your AST via a Python syntax.
 >>> inst = Instruction()
 >>> inst.setOpcodes("\x48\x01\xd8") # add rax, rbx
 >>> inst.setAddress(0x400000)
->>> inst.updateContext(Register(REG.RAX, 0x1122334455667788));
->>> inst.updateContext(Register(REG.RBX, 0x8877665544332211));
+>>> inst.updateContext(Register(REG.RAX, 0x1122334455667788))
+>>> inst.updateContext(Register(REG.RBX, 0x8877665544332211))
 >>> processing(inst)
 
 >>> print inst

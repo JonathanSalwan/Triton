@@ -73,22 +73,22 @@ namespace triton {
         virtual ~AbstractNode();
 
         //! Returns the kind of the node.
-        enum kind_e getKind(void);
+        enum kind_e getKind(void) const;
 
         //! Returns the size of the node.
-        triton::uint32 getBitvectorSize(void);
+        triton::uint32 getBitvectorSize(void) const;
 
         //! Returns the vector mask according the size of the node.
-        triton::uint512 getBitvectorMask(void);
+        triton::uint512 getBitvectorMask(void) const;
 
         //! According to the size of the expression, returns true if the MSB is 1.
-        bool isSigned(void);
+        bool isSigned(void) const;
 
         //! Returns true if the tree contains a symbolic variable.
-        bool isSymbolized(void);
+        bool isSymbolized(void) const;
 
         //! Evaluates the tree.
-        triton::uint512 evaluate(void);
+        triton::uint512 evaluate(void) const;
 
         //! Returns the childs of the node.
         std::vector<AbstractNode*>& getChilds(void);

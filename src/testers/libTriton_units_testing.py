@@ -887,6 +887,80 @@ def test_2():
         print '\tExpected : 0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00'
         return -1
 
+    try:
+        Register(REG.AL, 0xff)
+        count += 1
+    except:
+        print '[KO] Register(REG.AL, 0xff)'
+        print '\tOutput   : <exception>'
+        print '\tExpected : OK'
+        return -1
+
+    try:
+        Register(REG.AL, 0xff + 1)
+        print '[KO] Register(REG.AL, 0xff + 1)'
+        print '\tOutput   : OK'
+        print '\tExpected : <exception>'
+        return -1
+    except:
+        count += 1
+
+    try:
+        Register(REG.AH, 0xff)
+        count += 1
+    except:
+        print '[KO] Register(REG.AH, 0xff)'
+        print '\tOutput   : <exception>'
+        print '\tExpected : OK'
+        return -1
+
+    try:
+        Register(REG.AH, 0xff + 1)
+        print '[KO] Register(REG.AH, 0xff + 1)'
+        print '\tOutput   : OK'
+        print '\tExpected : <exception>'
+        return -1
+    except:
+        count += 1
+
+    try:
+        Register(REG.ZF, 1)
+        count += 1
+    except:
+        print '[KO] Register(REG.ZF, 1)'
+        print '\tOutput   : <exception>'
+        print '\tExpected : OK'
+        return -1
+
+    try:
+        Register(REG.ZF, 2)
+        print '[KO] Register(REG.ZF, 2)'
+        print '\tOutput   : OK'
+        print '\tExpected : <exception>'
+        return -1
+    except:
+        count += 1
+
+    try:
+        al = Register(REG.AL)
+        al.setConcreteValue(0xff)
+        count += 1
+    except:
+        print '[KO] al.setConcreteValue(0xff)'
+        print '\tOutput   : <exception>'
+        print '\tExpected : OK'
+        return -1
+
+    try:
+        al = Register(REG.AL)
+        al.setConcreteValue(0x100)
+        print '[KO] al.setConcreteValue(0x100)'
+        print '\tOutput   : OK'
+        print '\tExpected : <exception>'
+        return -1
+    except:
+        count += 1
+
     return count
 
 

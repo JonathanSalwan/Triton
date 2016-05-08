@@ -57,8 +57,8 @@ namespace triton {
       this->setHigh(std::get<1>(regInfo));
       this->setLow(std::get<2>(regInfo));
 
-      if (concreteValue != 0 && this->isFlag())
-        throw std::runtime_error("RegisterOperand::setup(): You cannot set a concrete value on an isolated flag.");
+      if (concreteValue > this->getMaxValue())
+        throw std::runtime_error("RegisterOperand::setup(): You cannot set this concrete value (too big) to this register.");
 
       this->concreteValue = concreteValue;
     }
@@ -139,8 +139,8 @@ namespace triton {
 
 
     void RegisterOperand::setConcreteValue(triton::uint512 concreteValue) {
-      if (this->isFlag())
-        throw std::runtime_error("RegisterOperand::setConcreteValue(): You cannot set a concrete value on an isolated flag.");
+      if (concreteValue > this->getMaxValue())
+        throw std::runtime_error("RegisterOperand::setConcreteValue(): You cannot set this concrete value (too big) to this register.");
       this->concreteValue = concreteValue;
       this->trusted       = true;
     }
@@ -190,7 +190,18 @@ namespace triton {
 
 
     bool operator==(const RegisterOperand& reg1, const RegisterOperand& reg2) {
-      return reg1.getId() == reg2.getId();
+      if (reg1.getId() != reg2.getId())
+        return false;
+      if (reg1.getConcreteValue() != reg2.getConcreteValue())
+        return false;
+      return true;
+    }
+
+
+    bool operator!=(const RegisterOperand& reg1, const RegisterOperand& reg2) {
+      if (reg1 == reg2)
+        return false;
+      return true;
     }
 
 

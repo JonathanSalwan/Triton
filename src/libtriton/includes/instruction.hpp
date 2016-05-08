@@ -64,11 +64,20 @@ namespace triton {
         //! The prefix of the instruction.
         triton::uint32 prefix;
 
-        //! Implicit and explicit load access. This list is filled at post IR processing.
-        std::list<triton::arch::MemoryOperand> loadAccess;
+        //! Implicit and explicit load access (read).
+        std::set<triton::arch::MemoryOperand> loadAccess;
 
-        //! Implicit and explicit store access. This list is filled at post IR processing.
-        std::list<triton::arch::MemoryOperand> storeAccess;
+        //! Implicit and explicit store access (write).
+        std::set<triton::arch::MemoryOperand> storeAccess;
+
+        //! Implicit and explicit read registers.
+        std::set<triton::arch::RegisterOperand> readRegisters;
+
+        //! Implicit and explicit written registers.
+        std::set<triton::arch::RegisterOperand> writtenRegisters;
+
+        //! Implicit and explicit read immediates.
+        std::set<triton::arch::ImmediateOperand> readImmediates;
 
         //! True if this instruction is a branch.
         bool branch;
@@ -137,11 +146,20 @@ namespace triton {
         //! Returns the prefix of the instruction.
         triton::uint32 getPrefix(void) const;
 
-        //! Returns the list of load access;
-        const std::list<triton::arch::MemoryOperand>& getLoadAccess(void) const;
+        //! Returns the list of all implicit and explicit load access
+        const std::set<triton::arch::MemoryOperand>& getLoadAccess(void) const;
 
-        //! Returns the list of store access;
-        const std::list<triton::arch::MemoryOperand>& getStoreAccess(void) const;
+        //! Returns the list of all implicit and explicit store access
+        const std::set<triton::arch::MemoryOperand>& getStoreAccess(void) const;
+
+        //! Returns the list of all implicit and explicit input (read) registers (flags includes)
+        const std::set<triton::arch::RegisterOperand>& getReadRegisters(void) const;
+
+        //! Returns the list of all implicit and explicit output (written) registers (flags includes)
+        const std::set<triton::arch::RegisterOperand>& getWrittenRegisters(void) const;
+
+        //! Returns the list of read immediates
+        const std::set<triton::arch::ImmediateOperand>& getReadImmediates(void) const;
 
         //! If there is a concrete value recorded, build the appropriate MemoryOperand. Otherwise, perfrom the analysis based on args.
         triton::arch::MemoryOperand popMemoryAccess(triton::__uint=0, triton::uint32 size=0, triton::uint512 value=0);
@@ -152,16 +170,25 @@ namespace triton {
         //! Sets the opcodes of the instruction.
         void setOpcodes(triton::uint8* opcodes, triton::uint32 size);
 
-        //! Returns the size of the instruction
+        //! Returns the size of the instruction.
         triton::uint32 getSize(void) const;
 
-        //! Sets a load access;
-        void setLoadAccess(triton::arch::MemoryOperand mem);
+        //! Sets a load access.
+        void setLoadAccess(const triton::arch::MemoryOperand& mem);
 
-        //! Sets a store access;
-        void setStoreAccess(triton::arch::MemoryOperand mem);
+        //! Sets a store access.
+        void setStoreAccess(const triton::arch::MemoryOperand& mem);
 
-        //! Sets the size of the instruction
+        //! Sets a read register.
+        void setReadRegister(const triton::arch::RegisterOperand& reg);
+
+        //! Sets a written register.
+        void setWrittenRegister(const triton::arch::RegisterOperand& reg);
+
+        //! Sets a read immediate.
+        void setReadImmediate(const triton::arch::ImmediateOperand& imm);
+
+        //! Sets the size of the instruction.
         void setSize(triton::uint32 size);
 
         //! Sets the type of the instruction.

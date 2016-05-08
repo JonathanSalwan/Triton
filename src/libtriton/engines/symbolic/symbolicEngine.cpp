@@ -592,7 +592,7 @@ namespace triton {
 
       /* Returns an immediate symbolic operand and defines the immediate as input of the instruction */
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicImmediateOperand(triton::arch::Instruction& inst, triton::arch::ImmediateOperand& imm) {
-        /* TODO: Link to inst */
+        inst.setReadImmediate(imm);
         return this->buildSymbolicImmediateOperand(imm);
       }
 
@@ -678,8 +678,10 @@ namespace triton {
 
       /* Returns a symbolic register operand and defines the register as input of the instruction */
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicRegisterOperand(triton::arch::Instruction& inst, triton::arch::RegisterOperand& reg) {
-        /* TODO: Link to inst */
-        return this->buildSymbolicRegisterOperand(reg);
+        triton::ast::AbstractNode* node = this->buildSymbolicRegisterOperand(reg);
+        reg.setConcreteValue(node->evaluate());
+        inst.setReadRegister(reg);
+        return node;
       }
 
 
@@ -778,10 +780,12 @@ namespace triton {
             break;
         }
 
+        reg.setConcreteValue(finalExpr->evaluate());
         triton::engines::symbolic::SymbolicExpression* se = this->newSymbolicExpression(finalExpr, triton::engines::symbolic::REG, comment);
         se->setOriginRegister(reg);
         this->assignSymbolicExpressionToRegister(se, parentReg);
         inst.addSymbolicExpression(se);
+        inst.setWrittenRegister(reg);
 
         return se;
       }
@@ -791,10 +795,12 @@ namespace triton {
       SymbolicExpression* SymbolicEngine::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterOperand& flag, const std::string& comment) {
         if (!flag.isFlag())
           throw std::runtime_error("SymbolicEngine::createSymbolicFlagExpression(): The register must be a flag.");
+        flag.setConcreteValue(node->evaluate());
         triton::engines::symbolic::SymbolicExpression *se = this->newSymbolicExpression(node, triton::engines::symbolic::REG, comment);
         se->setOriginRegister(flag);
         this->assignSymbolicExpressionToRegister(se, flag);
         inst.addSymbolicExpression(se);
+        inst.setWrittenRegister(flag);
         return se;
       }
 
