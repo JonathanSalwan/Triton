@@ -780,7 +780,7 @@ namespace triton {
             break;
         }
 
-        reg.setConcreteValue(finalExpr->evaluate());
+        reg.setConcreteValue(node->evaluate());
         triton::engines::symbolic::SymbolicExpression* se = this->newSymbolicExpression(finalExpr, triton::engines::symbolic::REG, comment);
         se->setOriginRegister(reg);
         this->assignSymbolicExpressionToRegister(se, parentReg);
