@@ -190,11 +190,7 @@ namespace triton {
 
 
     bool operator==(const RegisterOperand& reg1, const RegisterOperand& reg2) {
-      if (reg1.getId() != reg2.getId())
-        return false;
-      if (reg1.getConcreteValue() != reg2.getConcreteValue())
-        return false;
-      return true;
+      return (reg1.getId() == reg2.getId());
     }
 
 

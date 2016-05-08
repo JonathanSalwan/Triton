@@ -300,8 +300,6 @@ namespace triton {
         return false;
       if (mem1.getSize() != mem2.getSize())
         return false;
-      if (mem1.getConcreteValue() != mem2.getConcreteValue())
-        return false;
       if (mem1.getConstBaseRegister() != mem2.getConstBaseRegister())
         return false;
       if (mem1.getConstIndexRegister() != mem2.getConstIndexRegister())
