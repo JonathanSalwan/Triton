@@ -1523,11 +1523,11 @@ if __name__ == '__main__':
     for n, f in units_testing:
         ret = f()
         if ret < 0:
-            print '[KO] %s' %(n)
+            print '[KO]\t%s' %(n)
             sys.exit(-1)
         else:
             count += ret
-            print '[OK] %s' %(n)
-    print '[Done] %d tests were been executed successfully :-)' %(count)
+            print '[OK]\t%s' %(n)
+    print '[GOOD]\t%d tests were been executed successfully :-)' %(count)
     sys.exit(0)
 
