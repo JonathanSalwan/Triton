@@ -1204,6 +1204,212 @@ def test_4():
 
 def test_5():
     count = 0
+
+    setArchitecture(ARCH.X86_64)
+    inst = Instruction()
+    inst.setOpcodes("\x48\x01\xd8") # add rax, rbx
+    inst.setAddress(0x400000)
+    inst.updateContext(Register(REG.RAX, 0x1122334455667788))
+    inst.updateContext(Register(REG.RBX, 0x8877665544332211))
+    processing(inst)
+
+    if inst.getAddress() == 0x400000:
+        count += 1
+    else:
+        print '[KO] inst.getAddress()'
+        print '\tOutput   : %d' %(inst.getAddress())
+        print '\tExpected : 0x400000'
+        return -1
+
+    if not len(inst.getLoadAccess()):
+        count += 1
+    else:
+        print '[KO] inst.getLoadAccess()'
+        print '\tOutput   : %s' %(inst.getLoadAccess())
+        print '\tExpected : []'
+        return -1
+
+    if not len(inst.getStoreAccess()):
+        count += 1
+    else:
+        print '[KO] inst.getStoreAccess()'
+        print '\tOutput   : %s' %(inst.getStoreAccess())
+        print '\tExpected : []'
+        return -1
+
+    if len(inst.getReadRegisters()) == 2:
+        count += 1
+    else:
+        print '[KO] inst.getReadRegisters()'
+        print '\tOutput   : %s' %(inst.getReadRegisters())
+        print '\tExpected : [RAX, RBX]'
+        return -1
+
+    if len(inst.getWrittenRegisters()) == 8:
+        count += 1
+    else:
+        print '[KO] inst.getReadRegisters()'
+        print '\tOutput   : %s' %(inst.getWrittenRegisters())
+        print '\tExpected : [RAX, RIP, AF, CF, OF, PF, SF, ZF]'
+        return -1
+
+    if not inst.isTainted():
+        count += 1
+    else:
+        print '[KO] inst.isTainted()'
+        print '\tOutput   : %d' %(inst.isTainted())
+        print '\tExpected : false'
+        return -1
+
+    if not inst.isPrefixed():
+        count += 1
+    else:
+        print '[KO] inst.isPrefixed()'
+        print '\tOutput   : %d' %(inst.isPrefixed())
+        print '\tExpected : false'
+        return -1
+
+    if not inst.isMemoryWrite():
+        count += 1
+    else:
+        print '[KO] inst.isMemoryWrite()'
+        print '\tOutput   : %d' %(inst.isMemoryWrite())
+        print '\tExpected : false'
+        return -1
+
+    if not inst.isMemoryRead():
+        count += 1
+    else:
+        print '[KO] inst.isMemoryRead()'
+        print '\tOutput   : %d' %(inst.isMemoryRead())
+        print '\tExpected : false'
+        return -1
+
+    if not inst.isControlFlow():
+        count += 1
+    else:
+        print '[KO] inst.isControlFlow()'
+        print '\tOutput   : %d' %(inst.isControlFlow())
+        print '\tExpected : false'
+        return -1
+
+    if not inst.isConditionTaken():
+        count += 1
+    else:
+        print '[KO] inst.isConditionTaken()'
+        print '\tOutput   : %d' %(inst.isConditionTaken())
+        print '\tExpected : false'
+        return -1
+
+    if not inst.isBranch():
+        count += 1
+    else:
+        print '[KO] inst.isBranch()'
+        print '\tOutput   : %d' %(inst.isBranch())
+        print '\tExpected : false'
+
+    if inst.getType() == OPCODE.ADD:
+        count += 1
+    else:
+        print '[KO] inst.getType()'
+        print '\tOutput   : %d' %(inst.getType())
+        print '\tExpected : OPCODE.ADD'
+        return -1
+
+    if inst.getThreadId() == 0:
+        count += 1
+    else:
+        print '[KO] inst.getThreadId()'
+        print '\tOutput   : %d' %(inst.getThreadId())
+        print '\tExpected : 0'
+        return -1
+
+    try:
+        inst.getThirdOperand()
+        print '[KO] inst.getThirdOperand()'
+        print '\tOutput   : %s' %(inst.getThirdOperand())
+        print '\tExpected : <exception>'
+        return -1
+    except:
+        count += 1
+
+    if len(inst.getSymbolicExpressions()) == 8:
+        count += 1
+    else:
+        print '[KO] inst.getSymbolicExpressions()'
+        print '\tOutput   : %d' %(inst.getSymbolicExpressions())
+        print '\tExpected : 8 expressions'
+        return -1
+
+    if inst.getSize() == 3:
+        count += 1
+    else:
+        print '[KO] inst.getSize()'
+        print '\tOutput   : %d' %(inst.getSize())
+        print '\tExpected : 3'
+        return -1
+
+    if inst.getFirstOperand().getName() == 'rax':
+        count += 1
+    else:
+        print '[KO] inst.getFirstOperand().getName()'
+        print '\tOutput   : %s' %(inst.getFirstOperand().getName())
+        print '\tExpected : rax'
+        return -1
+
+    if inst.getSecondOperand().getName() == 'rbx':
+        count += 1
+    else:
+        print '[KO] inst.getSecondOperand().getName()'
+        print '\tOutput   : %s' %(inst.getSecondOperand().getName())
+        print '\tExpected : rbx'
+        return -1
+
+    if inst.getDisassembly() == 'add rax, rbx':
+        count += 1
+    else:
+        print '[KO] inst.getDisassembly()'
+        print '\tOutput   : %s' %(inst.getDisassembly())
+        print '\tExpected : add rax, rbx'
+        return -1
+
+    if inst.getNextAddress() == 0x400003:
+        count += 1
+    else:
+        print '[KO] inst.getNextAddress()'
+        print '\tOutput   : 0x%x' %(inst.getNextAddress())
+        print '\tExpected : 0x400003'
+        return -1
+
+    if inst.getOpcodes() == "\x48\x01\xd8":
+        count += 1
+    else:
+        print '[KO] inst.getOpcodes()'
+        print '\tOutput   : %s' %(repr(inst.getOpcodes()))
+        print '\tExpected : \\x48\\x01\\xd8'
+        return -1
+
+    if len(inst.getOperands()) == 2:
+        count += 1
+    else:
+        print '[KO] len(inst.getOperands())'
+        print '\tOutput   : %s' %(len(inst.getOperands()))
+        print '\tExpected : 2'
+        return -1
+
+    if inst.getPrefix() == PREFIX.INVALID:
+        count += 1
+    else:
+        print '[KO] inst.getPrefix()'
+        print '\tOutput   : %d' %(inst.getPrefix())
+        print '\tExpected : PREFIX.INVALID'
+        return -1
+
+    return count
+
+
+def test_6():
+    count = 0
     try:
         setArchitecture(ARCH.X86_64)
         setArchitecture(ARCH.X86)
@@ -1307,7 +1513,8 @@ units_testing = [
     ("Testing the RegisterOperand class", test_2),
     ("Testing the MemoryOperand class", test_3),
     ("Testing the ImmediateOperand class", test_4),
-    ("Testing the architectures", test_5),
+    ("Testing the Instruction class", test_5),
+    ("Testing the architectures", test_6),
 ]
 
 
