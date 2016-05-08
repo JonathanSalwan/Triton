@@ -348,7 +348,6 @@ namespace triton {
         triton::arch::x86::x86_reg_gs     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_GS);
         triton::arch::x86::x86_reg_ss     = triton::arch::RegisterOperand(triton::arch::x86::ID_REG_SS);
 
-
         /* Update python env ======================================================== */
         #ifdef TRITON_PYTHON_BINDINGS
           triton::bindings::python::initRegNamespace();
@@ -608,7 +607,7 @@ namespace triton {
                   triton::arch::ImmediateOperand scale(op->mem.scale, op->size);
 
                   /* Specify that LEA contains a PC relative */
-                  if (base == TRITON_X86_REG_PC)
+                  if (base.getId() == TRITON_X86_REG_PC.getId())
                     mem.setPcRelative(inst.getNextAddress());
 
                   mem.setSegmentRegister(segment);
