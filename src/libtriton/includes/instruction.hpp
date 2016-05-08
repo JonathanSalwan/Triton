@@ -70,13 +70,13 @@ namespace triton {
         //! Implicit and explicit store access (write).
         std::set<triton::arch::MemoryOperand> storeAccess;
 
-        //! Implicit and explicit read registers.
+        //! Implicit and explicit register inputs (read).
         std::set<triton::arch::RegisterOperand> readRegisters;
 
-        //! Implicit and explicit written registers.
+        //! Implicit and explicit register outputs (write).
         std::set<triton::arch::RegisterOperand> writtenRegisters;
 
-        //! Implicit and explicit read immediates.
+        //! Implicit and explicit immediate inputs (read).
         std::set<triton::arch::ImmediateOperand> readImmediates;
 
         //! True if this instruction is a branch.
@@ -152,13 +152,13 @@ namespace triton {
         //! Returns the list of all implicit and explicit store access
         const std::set<triton::arch::MemoryOperand>& getStoreAccess(void) const;
 
-        //! Returns the list of all implicit and explicit input (read) registers (flags includes)
+        //! Returns the list of all implicit and explicit register (flags includes) inputs (read)
         const std::set<triton::arch::RegisterOperand>& getReadRegisters(void) const;
 
-        //! Returns the list of all implicit and explicit output (written) registers (flags includes)
+        //! Returns the list of all implicit and explicit register (flags includes) outputs (write)
         const std::set<triton::arch::RegisterOperand>& getWrittenRegisters(void) const;
 
-        //! Returns the list of read immediates
+        //! Returns the list of all implicit and explicit immediate inputs (read)
         const std::set<triton::arch::ImmediateOperand>& getReadImmediates(void) const;
 
         //! If there is a concrete value recorded, build the appropriate MemoryOperand. Otherwise, perfrom the analysis based on args.

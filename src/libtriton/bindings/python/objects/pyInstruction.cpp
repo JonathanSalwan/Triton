@@ -106,10 +106,10 @@ Returns the operands of the instruction as list of \ref py_Immediate_page, \ref 
 Returns the instruction prefix as \ref py_PREFIX_page.
 
 - **getReadImmediates(void)**<br>
-Returns a list of \ref py_Immediate_page which represents all implicit and explicit input immediates.
+Returns a list of \ref py_Immediate_page which represents all implicit and explicit immediate inputs.
 
 - **getReadRegisters(void)**<br>
-Returns a list of \ref py_Register_page which represents all implicit and explicit input registers (flags includes).
+Returns a list of \ref py_Register_page which represents all implicit and explicit register (flags includes) inputs.
 
 - **getSecondOperand(void)**<br>
 Returns the second operand of the instruction.
@@ -133,7 +133,7 @@ Returns the thread id of the instruction as integer.
 Returns the type of the instruction as \ref py_OPCODE_page.
 
 - **getWrittenRegisters(void)**<br>
-Returns a list of \ref py_Register_page which represents all implicit and explicit output registers (flags includes).
+Returns a list of \ref py_Register_page which represents all implicit and explicit register (flags includes) outputs.
 
 - **isBranch(void)**<br>
 Returns true if the instruction modifies is a branch (i.e x86: JUMP, JCC).
