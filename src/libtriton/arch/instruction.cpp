@@ -336,8 +336,11 @@ namespace triton {
       this->disassembly.clear();
       this->loadAccess.clear();
       this->operands.clear();
+      this->readImmediates.clear();
+      this->readRegisters.clear();
       this->storeAccess.clear();
       this->symbolicExpressions.clear();
+      this->writtenRegisters.clear();
 
       std::memset(this->opcodes, 0x00, sizeof(this->opcodes));
     }
