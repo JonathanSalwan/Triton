@@ -50,7 +50,7 @@ namespace triton {
     }
 
 
-    void AstGarbageCollector::extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root) {
+    void AstGarbageCollector::extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root) const {
       std::vector<triton::ast::AbstractNode*>::const_iterator it;
       uniqueNodes.insert(root);
       for (it = root->getChilds().begin(); it != root->getChilds().end(); it++)
@@ -78,24 +78,24 @@ namespace triton {
     }
 
 
-    std::set<triton::ast::AbstractNode*> AstGarbageCollector::getAllocatedAstNodes(void) {
+    const std::set<triton::ast::AbstractNode*>& AstGarbageCollector::getAllocatedAstNodes(void) const {
       return this->allocatedNodes;
     }
 
 
-    std::map<std::string, triton::ast::AbstractNode*> AstGarbageCollector::getAstVariableNodes(void) {
+    const std::map<std::string, triton::ast::AbstractNode*>& AstGarbageCollector::getAstVariableNodes(void) const {
       return this->variableNodes;
     }
 
 
-    triton::ast::AbstractNode* AstGarbageCollector::getAstVariableNode(const std::string& name) {
+    triton::ast::AbstractNode* AstGarbageCollector::getAstVariableNode(const std::string& name) const {
       if (this->variableNodes.find(name) != this->variableNodes.end())
-        return this->variableNodes[name];
+        return this->variableNodes.at(name);
       return nullptr;
     }
 
 
-    void AstGarbageCollector::setAllocatedAstNodes(std::set<triton::ast::AbstractNode*> nodes) {
+    void AstGarbageCollector::setAllocatedAstNodes(const std::set<triton::ast::AbstractNode*>& nodes) {
         /* Remove unused nodes before the assignation */
       for (std::set<triton::ast::AbstractNode*>::iterator it = this->allocatedNodes.begin(); it != this->allocatedNodes.end(); it++) {
         if (nodes.find(*it) == nodes.end())
@@ -105,7 +105,7 @@ namespace triton {
     }
 
 
-    void AstGarbageCollector::setAstVariableNodes(std::map<std::string, triton::ast::AbstractNode*> nodes) {
+    void AstGarbageCollector::setAstVariableNodes(const std::map<std::string, triton::ast::AbstractNode*>& nodes) {
       this->variableNodes = nodes;
     }
 

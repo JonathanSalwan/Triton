@@ -420,7 +420,7 @@ namespace triton {
   }
 
 
-  void API::extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root) {
+  void API::extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root) const {
     this->checkAstGarbageCollector();
     this->astGarbageCollector->extractUniqueAstNodes(uniqueNodes, root);
   }
@@ -438,31 +438,31 @@ namespace triton {
   }
 
 
-  std::set<triton::ast::AbstractNode*> API::getAllocatedAstNodes(void) {
+  const std::set<triton::ast::AbstractNode*>& API::getAllocatedAstNodes(void) const {
     this->checkAstGarbageCollector();
     return this->astGarbageCollector->getAllocatedAstNodes();
   }
 
 
-  std::map<std::string, triton::ast::AbstractNode*> API::getAstVariableNodes(void) {
+  const std::map<std::string, triton::ast::AbstractNode*>& API::getAstVariableNodes(void) const {
     this->checkAstGarbageCollector();
     return this->astGarbageCollector->getAstVariableNodes();
   }
 
 
-  triton::ast::AbstractNode* API::getAstVariableNode(const std::string& name) {
+  triton::ast::AbstractNode* API::getAstVariableNode(const std::string& name) const {
     this->checkAstGarbageCollector();
     return this->astGarbageCollector->getAstVariableNode(name);
   }
 
 
-  void API::setAllocatedAstNodes(std::set<triton::ast::AbstractNode*>& nodes) {
+  void API::setAllocatedAstNodes(const std::set<triton::ast::AbstractNode*>& nodes) {
     this->checkAstGarbageCollector();
     this->astGarbageCollector->setAllocatedAstNodes(nodes);
   }
 
 
-  void API::setAstVariableNodes(std::map<std::string, triton::ast::AbstractNode*>& nodes) {
+  void API::setAstVariableNodes(const std::map<std::string, triton::ast::AbstractNode*>& nodes) {
     this->checkAstGarbageCollector();
     this->astGarbageCollector->setAstVariableNodes(nodes);
   }

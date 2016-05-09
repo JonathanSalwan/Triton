@@ -57,7 +57,7 @@ namespace triton {
         void freeAstNodes(std::set<triton::ast::AbstractNode*>& nodes);
 
         //! Extracts all unique nodes from a partial AST into the uniqueNodes set.
-        void extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root);
+        void extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root) const;
 
         //! Records the allocated node or returns the same node if it already exists inside the dictionaries.
         triton::ast::AbstractNode* recordAstNode(triton::ast::AbstractNode* node);
@@ -66,19 +66,19 @@ namespace triton {
         void recordVariableAstNode(const std::string& name, triton::ast::AbstractNode* node);
 
         //! Returns all allocated nodes.
-        std::set<triton::ast::AbstractNode*> getAllocatedAstNodes(void);
+        const std::set<triton::ast::AbstractNode*>& getAllocatedAstNodes(void) const;
 
         //! Returns all variable nodes recorded.
-        std::map<std::string, triton::ast::AbstractNode*> getAstVariableNodes(void);
+        const std::map<std::string, triton::ast::AbstractNode*>& getAstVariableNodes(void) const;
 
         //! Returns the node of a recorded variable.
-        triton::ast::AbstractNode* getAstVariableNode(const std::string& name);
+        triton::ast::AbstractNode* getAstVariableNode(const std::string& name) const;
 
         //! Sets all allocated nodes.
-        void setAllocatedAstNodes(std::set<triton::ast::AbstractNode*> nodes);
+        void setAllocatedAstNodes(const std::set<triton::ast::AbstractNode*>& nodes);
 
         //! Sets all variable nodes recorded.
-        void setAstVariableNodes(std::map<std::string, triton::ast::AbstractNode*> nodes);
+        void setAstVariableNodes(const std::map<std::string, triton::ast::AbstractNode*>& nodes);
     };
 
   /*! @} End of ast namespace */
