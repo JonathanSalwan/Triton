@@ -38,7 +38,7 @@ namespace triton {
       }
 
 
-      triton::uint32 AstRepresentation::getMode(void) {
+      triton::uint32 AstRepresentation::getMode(void) const {
         return this->mode;
       }
 

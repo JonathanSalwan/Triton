@@ -483,7 +483,7 @@ namespace triton {
   }
 
 
-  triton::uint32 API::getAstRepresentationMode(void) {
+  triton::uint32 API::getAstRepresentationMode(void) const {
     this->checkAstRepresentation();
     return this->astRepresentation->getMode();
   }

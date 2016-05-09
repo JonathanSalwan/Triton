@@ -65,7 +65,7 @@ namespace triton {
           ~AstRepresentation();
 
           //! Returns the representation mode.
-          triton::uint32 getMode(void);
+          triton::uint32 getMode(void) const;
 
           //! Sets the representation mode.
           void setMode(triton::uint32 mode);
