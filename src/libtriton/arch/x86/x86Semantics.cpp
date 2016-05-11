@@ -7666,8 +7666,11 @@ namespace triton {
           alignAddStack_s(inst, sp.getSize());
 
           /* Create the semantics - side effect */
-          if (inst.operands.size() > 0)
-            alignAddStack_s(inst, inst.operands[0].getImmediate().getValue());
+          if (inst.operands.size() > 0) {
+            auto offset = inst.operands[0].getImmediate();
+            triton::api.buildSymbolicImmediateOperand(inst, offset);
+            alignAddStack_s(inst, offset.getValue());
+          }
 
           /* Create the path constraint */
           triton::api.addPathConstraint(expr);
