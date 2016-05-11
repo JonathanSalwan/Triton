@@ -781,8 +781,8 @@ namespace triton {
         }
 
         reg.setConcreteValue(node->evaluate());
+        parentReg.setConcreteValue(finalExpr->evaluate());
         triton::engines::symbolic::SymbolicExpression* se = this->newSymbolicExpression(finalExpr, triton::engines::symbolic::REG, comment);
-        se->setOriginRegister(reg);
         this->assignSymbolicExpressionToRegister(se, parentReg);
         inst.addSymbolicExpression(se);
         inst.setWrittenRegister(reg);
@@ -797,7 +797,6 @@ namespace triton {
           throw std::runtime_error("SymbolicEngine::createSymbolicFlagExpression(): The register must be a flag.");
         flag.setConcreteValue(node->evaluate());
         triton::engines::symbolic::SymbolicExpression *se = this->newSymbolicExpression(node, triton::engines::symbolic::REG, comment);
-        se->setOriginRegister(flag);
         this->assignSymbolicExpressionToRegister(se, flag);
         inst.addSymbolicExpression(se);
         inst.setWrittenRegister(flag);
