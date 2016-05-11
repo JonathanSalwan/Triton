@@ -24,6 +24,13 @@
 
 The OPTIMIZATION namespace contains all kinds of symbolic optimization.
 
+\section OPTIMIZATION_py_example Example
+<hr>
+
+```python
+>>> enableSymbolicOptimization(OPTIMIZATION.ONLY_ON_TAINTED, True)
+```
+
 \section OPTIMIZATION_py_api Python API - Items of the OPTIMIZATION namespace
 <hr>
 
