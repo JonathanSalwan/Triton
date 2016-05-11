@@ -8,12 +8,14 @@
 #ifndef TRITON_INSTRUCTION_H
 #define TRITON_INSTRUCTION_H
 
-#include <sstream>
-#include <ostream>
-#include <vector>
 #include <list>
 #include <map>
+#include <ostream>
+#include <sstream>
+#include <utility>
+#include <vector>
 
+#include "ast.hpp"
 #include "memoryOperand.hpp"
 #include "operandWrapper.hpp"
 #include "registerOperand.hpp"
@@ -65,19 +67,19 @@ namespace triton {
         triton::uint32 prefix;
 
         //! Implicit and explicit load access (read).
-        std::set<triton::arch::MemoryOperand> loadAccess;
+        std::set<std::pair<triton::arch::MemoryOperand, triton::ast::AbstractNode*>> loadAccess;
 
         //! Implicit and explicit store access (write).
-        std::set<triton::arch::MemoryOperand> storeAccess;
+        std::set<std::pair<triton::arch::MemoryOperand, triton::ast::AbstractNode*>> storeAccess;
 
         //! Implicit and explicit register inputs (read).
-        std::set<triton::arch::RegisterOperand> readRegisters;
+        std::set<std::pair<triton::arch::RegisterOperand, triton::ast::AbstractNode*>> readRegisters;
 
         //! Implicit and explicit register outputs (write).
-        std::set<triton::arch::RegisterOperand> writtenRegisters;
+        std::set<std::pair<triton::arch::RegisterOperand, triton::ast::AbstractNode*>> writtenRegisters;
 
         //! Implicit and explicit immediate inputs (read).
-        std::set<triton::arch::ImmediateOperand> readImmediates;
+        std::set<std::pair<triton::arch::ImmediateOperand, triton::ast::AbstractNode*>> readImmediates;
 
         //! True if this instruction is a branch.
         bool branch;
@@ -147,19 +149,19 @@ namespace triton {
         triton::uint32 getPrefix(void) const;
 
         //! Returns the list of all implicit and explicit load access
-        const std::set<triton::arch::MemoryOperand>& getLoadAccess(void) const;
+        const std::set<std::pair<triton::arch::MemoryOperand, triton::ast::AbstractNode*>>& getLoadAccess(void) const;
 
         //! Returns the list of all implicit and explicit store access
-        const std::set<triton::arch::MemoryOperand>& getStoreAccess(void) const;
+        const std::set<std::pair<triton::arch::MemoryOperand, triton::ast::AbstractNode*>>& getStoreAccess(void) const;
 
         //! Returns the list of all implicit and explicit register (flags includes) inputs (read)
-        const std::set<triton::arch::RegisterOperand>& getReadRegisters(void) const;
+        const std::set<std::pair<triton::arch::RegisterOperand, triton::ast::AbstractNode*>>& getReadRegisters(void) const;
 
         //! Returns the list of all implicit and explicit register (flags includes) outputs (write)
-        const std::set<triton::arch::RegisterOperand>& getWrittenRegisters(void) const;
+        const std::set<std::pair<triton::arch::RegisterOperand, triton::ast::AbstractNode*>>& getWrittenRegisters(void) const;
 
         //! Returns the list of all implicit and explicit immediate inputs (read)
-        const std::set<triton::arch::ImmediateOperand>& getReadImmediates(void) const;
+        const std::set<std::pair<triton::arch::ImmediateOperand, triton::ast::AbstractNode*>>& getReadImmediates(void) const;
 
         //! If there is a concrete value recorded, build the appropriate MemoryOperand. Otherwise, perfrom the analysis based on args.
         triton::arch::MemoryOperand popMemoryAccess(triton::__uint=0, triton::uint32 size=0, triton::uint512 value=0);
@@ -174,19 +176,19 @@ namespace triton {
         triton::uint32 getSize(void) const;
 
         //! Sets a load access.
-        void setLoadAccess(const triton::arch::MemoryOperand& mem);
+        void setLoadAccess(const triton::arch::MemoryOperand& mem, triton::ast::AbstractNode* node);
 
         //! Sets a store access.
-        void setStoreAccess(const triton::arch::MemoryOperand& mem);
+        void setStoreAccess(const triton::arch::MemoryOperand& mem, triton::ast::AbstractNode* node);
 
         //! Sets a read register.
-        void setReadRegister(const triton::arch::RegisterOperand& reg);
+        void setReadRegister(const triton::arch::RegisterOperand& reg, triton::ast::AbstractNode* node);
 
         //! Sets a written register.
-        void setWrittenRegister(const triton::arch::RegisterOperand& reg);
+        void setWrittenRegister(const triton::arch::RegisterOperand& reg, triton::ast::AbstractNode* node);
 
         //! Sets a read immediate.
-        void setReadImmediate(const triton::arch::ImmediateOperand& imm);
+        void setReadImmediate(const triton::arch::ImmediateOperand& imm, triton::ast::AbstractNode* node);
 
         //! Sets the size of the instruction.
         void setSize(triton::uint32 size);

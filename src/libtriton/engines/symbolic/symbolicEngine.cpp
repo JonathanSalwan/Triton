@@ -592,8 +592,9 @@ namespace triton {
 
       /* Returns an immediate symbolic operand and defines the immediate as input of the instruction */
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicImmediateOperand(triton::arch::Instruction& inst, triton::arch::ImmediateOperand& imm) {
-        inst.setReadImmediate(imm);
-        return this->buildSymbolicImmediateOperand(imm);
+        triton::ast::AbstractNode* node = this->buildSymbolicImmediateOperand(imm);
+        inst.setReadImmediate(imm, node);
+        return node;
       }
 
 
@@ -654,7 +655,7 @@ namespace triton {
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicMemoryOperand(triton::arch::Instruction& inst, triton::arch::MemoryOperand& mem) {
         triton::ast::AbstractNode* node = this->buildSymbolicMemoryOperand(mem);
         mem.setConcreteValue(node->evaluate());
-        inst.setLoadAccess(mem);
+        inst.setLoadAccess(mem, node);
         return node;
       }
 
@@ -680,7 +681,7 @@ namespace triton {
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicRegisterOperand(triton::arch::Instruction& inst, triton::arch::RegisterOperand& reg) {
         triton::ast::AbstractNode* node = this->buildSymbolicRegisterOperand(reg);
         reg.setConcreteValue(node->evaluate());
-        inst.setReadRegister(reg);
+        inst.setReadRegister(reg, node);
         return node;
       }
 
@@ -718,7 +719,7 @@ namespace triton {
         if (ret.size() == 1) {
           if (tmp != nullptr)
             mem.setConcreteValue(tmp->evaluate());
-          inst.setStoreAccess(mem);
+          inst.setStoreAccess(mem, tmp);
           return se;
         }
 
@@ -729,7 +730,7 @@ namespace triton {
         se  = this->newSymbolicExpression(tmp, triton::engines::symbolic::UNDEF, "Temporary concatenation reference - " + comment);
         se->setOriginAddress(address);
 
-        inst.setStoreAccess(mem);
+        inst.setStoreAccess(mem, tmp);
         inst.addSymbolicExpression(se);
         return se;
       }
@@ -785,7 +786,7 @@ namespace triton {
         triton::engines::symbolic::SymbolicExpression* se = this->newSymbolicExpression(finalExpr, triton::engines::symbolic::REG, comment);
         this->assignSymbolicExpressionToRegister(se, parentReg);
         inst.addSymbolicExpression(se);
-        inst.setWrittenRegister(reg);
+        inst.setWrittenRegister(reg, node);
 
         return se;
       }
@@ -799,7 +800,7 @@ namespace triton {
         triton::engines::symbolic::SymbolicExpression *se = this->newSymbolicExpression(node, triton::engines::symbolic::REG, comment);
         this->assignSymbolicExpressionToRegister(se, flag);
         inst.addSymbolicExpression(se);
-        inst.setWrittenRegister(flag);
+        inst.setWrittenRegister(flag, node);
         return se;
       }
 

@@ -125,27 +125,27 @@ namespace triton {
     }
 
 
-    const std::set<triton::arch::MemoryOperand>& Instruction::getLoadAccess(void) const {
+    const std::set<std::pair<triton::arch::MemoryOperand, triton::ast::AbstractNode*>>& Instruction::getLoadAccess(void) const {
       return this->loadAccess;
     }
 
 
-    const std::set<triton::arch::MemoryOperand>& Instruction::getStoreAccess(void) const {
+    const std::set<std::pair<triton::arch::MemoryOperand, triton::ast::AbstractNode*>>& Instruction::getStoreAccess(void) const {
       return this->storeAccess;
     }
 
 
-    const std::set<triton::arch::RegisterOperand>& Instruction::getReadRegisters(void) const {
+    const std::set<std::pair<triton::arch::RegisterOperand, triton::ast::AbstractNode*>>& Instruction::getReadRegisters(void) const {
       return this->readRegisters;
     }
 
 
-    const std::set<triton::arch::RegisterOperand>& Instruction::getWrittenRegisters(void) const {
+    const std::set<std::pair<triton::arch::RegisterOperand, triton::ast::AbstractNode*>>& Instruction::getWrittenRegisters(void) const {
       return this->writtenRegisters;
     }
 
 
-    const std::set<triton::arch::ImmediateOperand>& Instruction::getReadImmediates(void) const {
+    const std::set<std::pair<triton::arch::ImmediateOperand, triton::ast::AbstractNode*>>& Instruction::getReadImmediates(void) const {
       return this->readImmediates;
     }
 
@@ -183,28 +183,28 @@ namespace triton {
     }
 
 
-    void Instruction::setLoadAccess(const triton::arch::MemoryOperand& mem) {
-      this->loadAccess.insert(mem);
+    void Instruction::setLoadAccess(const triton::arch::MemoryOperand& mem, triton::ast::AbstractNode* node) {
+      this->loadAccess.insert(std::make_pair(mem, node));
     }
 
 
-    void Instruction::setStoreAccess(const triton::arch::MemoryOperand& mem) {
-      this->storeAccess.insert(mem);
+    void Instruction::setStoreAccess(const triton::arch::MemoryOperand& mem, triton::ast::AbstractNode* node) {
+      this->storeAccess.insert(std::make_pair(mem, node));
     }
 
 
-    void Instruction::setReadRegister(const triton::arch::RegisterOperand& reg) {
-      this->readRegisters.insert(reg);
+    void Instruction::setReadRegister(const triton::arch::RegisterOperand& reg, triton::ast::AbstractNode* node) {
+      this->readRegisters.insert(std::make_pair(reg, node));
     }
 
 
-    void Instruction::setWrittenRegister(const triton::arch::RegisterOperand& reg) {
-      this->writtenRegisters.insert(reg);
+    void Instruction::setWrittenRegister(const triton::arch::RegisterOperand& reg, triton::ast::AbstractNode* node) {
+      this->writtenRegisters.insert(std::make_pair(reg, node));
     }
 
 
-    void Instruction::setReadImmediate(const triton::arch::ImmediateOperand& imm) {
-      this->readImmediates.insert(imm);
+    void Instruction::setReadImmediate(const triton::arch::ImmediateOperand& imm, triton::ast::AbstractNode* node) {
+      this->readImmediates.insert(std::make_pair(imm, node));
     }
 
 
