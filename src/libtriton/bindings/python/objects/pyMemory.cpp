@@ -33,7 +33,7 @@ This object is used to represent a memory access operand.
 
 >>> op1 = inst.getOperands()[1]
 >>> print op1
-*[0x6135a]:8 bv[7..0]
+[@0x6135a]:8 bv[7..0]
 
 >>> print op1.getBaseRegister()
 rdx:64 bv[63..0]
@@ -65,7 +65,7 @@ rcx:64 bv[63..0]
 ~~~~~~~~~~~~~{.py}
 >>> mem = Memory(0x400f4d3, 8, 0x6162636465666768)
 >>> print mem
-*[0x400f4d3]:64 bv[63..0]
+[@0x400f4d3]:64 bv[63..0]
 
 >>> hex(mem.getAddress())
 '0x400f4d3'

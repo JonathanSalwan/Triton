@@ -62,7 +62,7 @@
 ##     Is memory read : False
 ##     Is memory write: True
 ##     ---------------
-##     Operand: *[0x0]:8 bv[7..0]
+##     Operand: [@0x0]:8 bv[7..0]
 ##     - base : rax:64 bv[63..0]
 ##     - index: unknown:1 bv[0..0]
 ##     - scale: 0x1:8 bv[7..0]
@@ -78,7 +78,7 @@
 ##     ---------------
 ##     Operand: rdx:64 bv[63..0]
 ##     ---------------
-##     Operand: *[0x0]:64 bv[63..0]
+##     Operand: [@0x0]:64 bv[63..0]
 ##     - base : rax:64 bv[63..0]
 ##     - index: unknown:1 bv[0..0]
 ##     - scale: 0x1:64 bv[63..0]
@@ -104,7 +104,7 @@
 ##     Is memory read : True
 ##     Is memory write: True
 ##     ---------------
-##     Operand: *[0x0]:8 bv[7..0]
+##     Operand: [@0x0]:8 bv[7..0]
 ##     - base : rax:64 bv[63..0]
 ##     - index: unknown:1 bv[0..0]
 ##     - scale: 0x1:8 bv[7..0]

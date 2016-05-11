@@ -284,7 +284,7 @@ namespace triton {
 
 
     std::ostream& operator<<(std::ostream& stream, const MemoryOperand& mem) {
-      stream << "*[0x" << std::hex << mem.getAddress() << "]:" << std::dec << mem.getBitSize() << " bv[" << mem.getHigh() << ".." << mem.getLow() << "]";
+      stream << "[@0x" << std::hex << mem.getAddress() << "]:" << std::dec << mem.getBitSize() << " bv[" << mem.getHigh() << ".." << mem.getLow() << "]";
       return stream;
     }
 
