@@ -23,20 +23,19 @@
 
 The AST_REPRESENTATION namespace contains all modes of AST representation.
 
-\section AST_REPRESENTATION_py_example Example
-<hr>
+\subsection AST_REPRESENTATION_py_example Example
 
-```python
+~~~~~~~~~~~~~{.py}
 >>> setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
-```
+~~~~~~~~~~~~~
 
 \section AST_REPRESENTATION_py_api Python API - Items of the AST_REPRESENTATION namespace
 <hr>
 
-- **AST_REPRESENTATION.SMT**
+- **AST_REPRESENTATION.SMT**<br>
 Enabled, all prints of AST expressions will be represented into the SMT2-Lib syntax. This is the default mode.
 
-- **AST_REPRESENTATION.PYTHON**
+- **AST_REPRESENTATION.PYTHON**<br>
 Enabled, all prints of AST expressions will be represented into the Python syntax.
 
 
