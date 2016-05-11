@@ -56,11 +56,11 @@ if __name__ == '__main__':
         inst.setAddress(addr)
 
         # optional - Update register state
-        inst.updateContext(Register(REG.RAX, 0x4444444455555555));
-        inst.updateContext(Register(REG.RBX, 0x1111111122222222));
+        inst.updateContext(Register(REG.RAX, 0x4444444455555555))
+        inst.updateContext(Register(REG.RBX, 0x1111111122222222))
 
         # optional - Add memory access <addr, size, content>
-        inst.updateContext(Memory(0x66666666, 4, 0x31323334));
+        inst.updateContext(Memory(0x66666666, 4, 0x31323334))
 
         # Process everything
         processing(inst)
