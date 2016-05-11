@@ -70,9 +70,8 @@ extension from al to `EAX`, then a zero extension from `EAX` to `RAX`.
 \section ast_representation_page AST representation
 <hr>
 
-An abstract representation tree ([AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree)) is a representation of a grammar as tree. Triton uses its own AST
-representation for all symbolic expressions. As all symbolic expressions are built at runtime, an AST is available at each program point. For example,
-let assume this set of instructions:
+An abstract syntax tree ([AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree)) is a representation of a grammar as tree. Triton uses a custom AST
+for its expressions. As all expressions are built at runtime, an AST is available at each program point. For example, let assume this set of instructions:
 
 ~~~~~~~~~~~~~{.asm}
 mov al, 1
@@ -88,7 +87,8 @@ At the line 5, the AST of the `AL` register looks like this:
 
 This AST represents the semantics of the `AL` register at the program point 5 from the program point 1. Note that this AST has been simplified for
 a better comprehension. The real AST contains some `concat` and `extract` as mentioned in the previous chapter. According to the API you can build
-your own AST or to modify an AST given by Triton and perform some modifications and simplifications before sending it to the solver.
+and modify your own AST. Then, you can perform some modifications and simplifications before sending it to the solver.
+
 
 \subsection ast_reference_node_page The AST reference node
 <hr>
