@@ -22,7 +22,6 @@ namespace triton {
         this->id            = id;
         this->isTainted     = false;
         this->kind          = kind;
-        this->originAddress = 0;
       }
 
 
@@ -86,8 +85,8 @@ namespace triton {
       }
 
 
-      triton::__uint SymbolicExpression::getOriginAddress(void) const {
-        return this->originAddress;
+      const triton::arch::MemoryOperand& SymbolicExpression::getOriginMemory(void) const {
+        return this->originMemory;
       }
 
 
@@ -108,8 +107,8 @@ namespace triton {
       }
 
 
-      void SymbolicExpression::setOriginAddress(triton::__uint addr) {
-        this->originAddress = addr;
+      void SymbolicExpression::setOriginMemory(const triton::arch::MemoryOperand& mem) {
+        this->originMemory = mem;
       }
 
 

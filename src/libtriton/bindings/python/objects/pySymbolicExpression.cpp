@@ -99,11 +99,11 @@ e.g: `SYMEXPR.REG`
 - **getNewAst(void)**<br>
 Returns a new SMT AST root node of the symbolic expression as \ref py_AstNode_page. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
 
-- **getOriginAddress(void)**<br>
-Returns the origin memory address if `isMemory()` is equal to `True`, `0` otherwise. This address represents the target assignment.
+- **getOriginMemory(void)**<br>
+Returns the origin memory access as \ref py_Memory_page if `isMemory()` is equal to `True`, invalid memory otherwise. This memory access represents the target assignment. Note that at this level all information about LEA are lost.
 
 - **getOriginRegister(void)**<br>
-Returns the origin register if `isRegister()` is equal `True`, `REG.INVALID` otherwise. This register represents the target assignment.
+Returns the origin register as \ref py_Register_page if `isRegister()` is equal `True`, `REG.INVALID` otherwise. This register represents the target assignment.
 
 - **isMemory(void)**<br>
 Returns true if the expression is assigned to a memory.
@@ -182,9 +182,9 @@ namespace triton {
       }
 
 
-      static PyObject* SymbolicExpression_getOriginAddress(PyObject* self, PyObject* noarg) {
+      static PyObject* SymbolicExpression_getOriginMemory(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint(PySymbolicExpression_AsSymbolicExpression(self)->getOriginAddress());
+          return PyMemoryOperand(PySymbolicExpression_AsSymbolicExpression(self)->getOriginMemory());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -277,7 +277,7 @@ namespace triton {
         {"getId",             SymbolicExpression_getId,             METH_NOARGS,    ""},
         {"getKind",           SymbolicExpression_getKind,           METH_NOARGS,    ""},
         {"getNewAst",         SymbolicExpression_getNewAst,         METH_NOARGS,    ""},
-        {"getOriginAddress",  SymbolicExpression_getOriginAddress,  METH_NOARGS,    ""},
+        {"getOriginMemory",   SymbolicExpression_getOriginMemory,   METH_NOARGS,    ""},
         {"getOriginRegister", SymbolicExpression_getOriginRegister, METH_NOARGS,    ""},
         {"isMemory",          SymbolicExpression_isMemory,          METH_NOARGS,    ""},
         {"isRegister",        SymbolicExpression_isRegister,        METH_NOARGS,    ""},

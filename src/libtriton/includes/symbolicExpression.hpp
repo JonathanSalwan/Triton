@@ -11,6 +11,7 @@
 #include <string>
 
 #include "ast.hpp"
+#include "memoryOperand.hpp"
 #include "registerOperand.hpp"
 #include "symbolicEnums.hpp"
 #include "tritonTypes.hpp"
@@ -57,8 +58,8 @@ namespace triton {
           //! The symbolic expression id. This id is unique.
           triton::__uint id;
 
-          //! The origin memory address if `kind` is equal to `triton::engines::symbolic::MEM`, 0 otherwise.
-          triton::__uint originAddress;
+          //! The origin memory address if `kind` is equal to `triton::engines::symbolic::MEM`, invalid memory otherwise.
+          triton::arch::MemoryOperand originMemory;
 
           //! The origin register if `kind` is equal to `triton::engines::symbolic::REG`, `REG_INVALID` otherwise.
           triton::arch::RegisterOperand originRegister;
@@ -94,8 +95,8 @@ namespace triton {
           //! Returns the comment as string of the symbolic expression according the mode of the AST representation.
           std::string getFormattedComment(void) const;
 
-          //! Returns the origin memory address if `kind` is equal to `triton::engines::symbolic::MEM`, 0 otherwise.
-          triton::__uint getOriginAddress(void) const;
+          //! Returns the origin memory access if `kind` is equal to `triton::engines::symbolic::MEM`, invalid memory otherwise.
+          const triton::arch::MemoryOperand& getOriginMemory(void) const;
 
           //! Returns the origin register if `kind` is equal to `triton::engines::symbolic::REG`, `REG_INVALID` otherwise.
           const triton::arch::RegisterOperand& getOriginRegister(void) const;
@@ -106,8 +107,8 @@ namespace triton {
           //! Sets the kind of the symbolic expression.
           void setKind(symkind_e k);
 
-          //! Sets the origin memory address.
-          void setOriginAddress(triton::__uint addr);
+          //! Sets the origin memory acccess.
+          void setOriginMemory(const triton::arch::MemoryOperand& mem);
 
           //! Sets the origin register.
           void setOriginRegister(const triton::arch::RegisterOperand& reg);

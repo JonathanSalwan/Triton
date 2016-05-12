@@ -65,7 +65,7 @@ e.g: `SymVar_18`
 Sets a comment of the symbolic variable.
 
 - **setConcreteValue(integer value)**<br>
-Sets a concrete value. `value` must be less than 128-bits.
+Sets a concrete value. `value` must be less than 512-bits.
 
 */
 

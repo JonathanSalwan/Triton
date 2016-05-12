@@ -507,13 +507,14 @@ namespace triton {
           memSymId = this->getSymbolicMemoryId(memAddr+index);
           if (memSymId == triton::engines::symbolic::UNSET) {
             se = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Byte reference");
-            se->setOriginAddress(memAddr+index);
+            se->setOriginMemory(triton::arch::MemoryOperand(memAddr+index, BYTE_SIZE, tmp->evaluate()));
           }
           else {
             se = this->getSymbolicExpressionFromId(memSymId);
             tmp->setParent(se->getAst()->getParents());
             se->setAst(tmp);
             tmp->init();
+            se->setOriginMemory(triton::arch::MemoryOperand(memAddr+index, BYTE_SIZE, tmp->evaluate()));
           }
 
           /* Add the new memory reference */
@@ -707,7 +708,7 @@ namespace triton {
           /* Extract each byte of the memory */
           tmp = triton::ast::extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), node);
           se = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Byte reference - " + comment);
-          se->setOriginAddress((address + writeSize) - 1);
+          se->setOriginMemory(triton::arch::MemoryOperand(((address + writeSize) - 1), BYTE_SIZE, tmp->evaluate()));
           ret.push_back(tmp);
           inst.addSymbolicExpression(se);
           /* Assign memory with little endian */
@@ -728,7 +729,7 @@ namespace triton {
         mem.setConcreteValue(tmp->evaluate());
 
         se  = this->newSymbolicExpression(tmp, triton::engines::symbolic::UNDEF, "Temporary concatenation reference - " + comment);
-        se->setOriginAddress(address);
+        se->setOriginMemory(triton::arch::MemoryOperand(address, mem.getSize(), tmp->evaluate()));
 
         inst.setStoreAccess(mem, tmp);
         inst.addSymbolicExpression(se);
@@ -857,7 +858,7 @@ namespace triton {
           /* Extract each byte of the memory */
           triton::ast::AbstractNode* tmp = triton::ast::extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), node);
           SymbolicExpression* byteRef = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Byte reference");
-          byteRef->setOriginAddress((address + writeSize) - 1);
+          byteRef->setOriginMemory(triton::arch::MemoryOperand(((address + writeSize) - 1), BYTE_SIZE, tmp->evaluate()));
           /* Assign memory with little endian */
           this->addMemoryReference((address + writeSize) - 1, byteRef->getId());
           writeSize--;
