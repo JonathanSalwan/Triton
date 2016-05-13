@@ -93,8 +93,8 @@ and modify your own AST. Then, you can perform some modifications and simplifica
 \subsection ast_reference_node_page The AST reference node
 <hr>
 
-To manage easiest the subtree and to keep the SSA form of registers and memory, we have added a `REFERENCE` node which is a "terminate" node of a
-tree but contains a reference to another subtree. Below, an example of one "partial" tree linked with two others subtrees.
+To manage more easily the subtree and to keep the SSA form of registers and memory, we have added a `REFERENCE` node which is a "terminate" node of a
+tree but contains a reference to another subtree. Below, an example of one "partial" tree linked with two other subtrees.
 
 <p align="center"><img width="600" src="http://triton.quarkslab.com/files/smt_ast_ref.svg"/></p>
 
