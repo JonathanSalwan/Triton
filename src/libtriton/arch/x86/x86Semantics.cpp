@@ -75,6 +75,7 @@ CMPSW                        |            | Compare word at address
 CMPXCHG                      |            | Compare and Exchange
 CMPXCHG16B                   |            | Compare and Exchange 16 Bytes
 CMPXCHG8B                    |            | Compare and Exchange 8 Bytes
+CPUID                        |            | CPU Identification
 CQO                          |            | convert qword (rax) to oword (rdx:rax)
 CWDE                         |            | Convert word (ax) to dword (eax).
 DEC                          |            | Decrement by 1
@@ -311,6 +312,7 @@ namespace triton {
             case ID_INS_CMPXCHG:        triton::arch::x86::semantics::cmpxchg_s(inst);      break;
             case ID_INS_CMPXCHG16B:     triton::arch::x86::semantics::cmpxchg16b_s(inst);   break;
             case ID_INS_CMPXCHG8B:      triton::arch::x86::semantics::cmpxchg8b_s(inst);    break;
+            case ID_INS_CPUID:          triton::arch::x86::semantics::cpuid_s(inst);        break;
             case ID_INS_CQO:            triton::arch::x86::semantics::cqo_s(inst);          break;
             case ID_INS_CWDE:           triton::arch::x86::semantics::cwde_s(inst);         break;
             case ID_INS_DEC:            triton::arch::x86::semantics::dec_s(inst);          break;
@@ -3264,6 +3266,139 @@ namespace triton {
 
           /* Upate symbolic flags */
           triton::arch::x86::semantics::zf_s(inst, expr1, src1, true);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void cpuid_s(triton::arch::Instruction& inst) {
+          auto src  = triton::arch::OperandWrapper(TRITON_X86_REG_AX.getParent());
+          auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_AX.getParent());
+          auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_BX.getParent());
+          auto dst3 = triton::arch::OperandWrapper(TRITON_X86_REG_CX.getParent());
+          auto dst4 = triton::arch::OperandWrapper(TRITON_X86_REG_DX.getParent());
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          triton::ast::AbstractNode* node1 = nullptr;
+          triton::ast::AbstractNode* node2 = nullptr;
+          triton::ast::AbstractNode* node3 = nullptr;
+          triton::ast::AbstractNode* node4 = nullptr;
+
+          /* In this case, we concretize the AX option */
+          switch (op1->evaluate().convert_to<triton::uint32>()) {
+            case 0:
+              node1 = triton::ast::bv(0x0000000d, dst1.getBitSize());
+              node2 = triton::ast::bv(0x756e6547, dst2.getBitSize());
+              node3 = triton::ast::bv(0x6c65746e, dst3.getBitSize());
+              node4 = triton::ast::bv(0x49656e69, dst4.getBitSize());
+              break;
+            case 1:
+              node1 = triton::ast::bv(0x000306a9, dst1.getBitSize());
+              node2 = triton::ast::bv(0x02100800, dst2.getBitSize());
+              node3 = triton::ast::bv(0x7fbae3ff, dst3.getBitSize());
+              node4 = triton::ast::bv(0xbfebfbff, dst4.getBitSize());
+              break;
+            case 2:
+              node1 = triton::ast::bv(0x76035a01, dst1.getBitSize());
+              node2 = triton::ast::bv(0x00f0b2ff, dst2.getBitSize());
+              node3 = triton::ast::bv(0x00000000, dst3.getBitSize());
+              node4 = triton::ast::bv(0x00ca0000, dst4.getBitSize());
+              break;
+            case 3:
+              node1 = triton::ast::bv(0x00000000, dst1.getBitSize());
+              node2 = triton::ast::bv(0x00000000, dst2.getBitSize());
+              node3 = triton::ast::bv(0x00000000, dst3.getBitSize());
+              node4 = triton::ast::bv(0x00000000, dst4.getBitSize());
+              break;
+            case 4:
+              node1 = triton::ast::bv(0x1c004121, dst1.getBitSize());
+              node2 = triton::ast::bv(0x01c0003f, dst2.getBitSize());
+              node3 = triton::ast::bv(0x0000003f, dst3.getBitSize());
+              node4 = triton::ast::bv(0x00000000, dst4.getBitSize());
+              break;
+            case 5:
+              node1 = triton::ast::bv(0x00000040, dst1.getBitSize());
+              node2 = triton::ast::bv(0x00000040, dst2.getBitSize());
+              node3 = triton::ast::bv(0x00000003, dst3.getBitSize());
+              node4 = triton::ast::bv(0x00021120, dst4.getBitSize());
+              break;
+            case 0x80000000:
+              node1 = triton::ast::bv(0x80000008, dst1.getBitSize());
+              node2 = triton::ast::bv(0x00000000, dst2.getBitSize());
+              node3 = triton::ast::bv(0x00000000, dst3.getBitSize());
+              node4 = triton::ast::bv(0x00000000, dst4.getBitSize());
+              break;
+            case 0x80000001:
+              node1 = triton::ast::bv(0x00000000, dst1.getBitSize());
+              node2 = triton::ast::bv(0x00000000, dst2.getBitSize());
+              node3 = triton::ast::bv(0x00000001, dst3.getBitSize());
+              node4 = triton::ast::bv(0x28100800, dst4.getBitSize());
+              break;
+            case 0x80000002:
+              node1 = triton::ast::bv(0x20202020, dst1.getBitSize());
+              node2 = triton::ast::bv(0x49202020, dst2.getBitSize());
+              node3 = triton::ast::bv(0x6c65746e, dst3.getBitSize());
+              node4 = triton::ast::bv(0x20295228, dst4.getBitSize());
+              break;
+            case 0x80000003:
+              node1 = triton::ast::bv(0x65726f43, dst1.getBitSize());
+              node2 = triton::ast::bv(0x294d5428, dst2.getBitSize());
+              node3 = triton::ast::bv(0x2d376920, dst3.getBitSize());
+              node4 = triton::ast::bv(0x30323533, dst4.getBitSize());
+              break;
+            case 0x80000004:
+              node1 = triton::ast::bv(0x5043204d, dst1.getBitSize());
+              node2 = triton::ast::bv(0x20402055, dst2.getBitSize());
+              node3 = triton::ast::bv(0x30392e32, dst3.getBitSize());
+              node4 = triton::ast::bv(0x007a4847, dst4.getBitSize());
+              break;
+            case 0x80000005:
+              node1 = triton::ast::bv(0x00000000, dst1.getBitSize());
+              node2 = triton::ast::bv(0x00000000, dst2.getBitSize());
+              node3 = triton::ast::bv(0x00000000, dst3.getBitSize());
+              node4 = triton::ast::bv(0x00000000, dst4.getBitSize());
+              break;
+            case 0x80000006:
+              node1 = triton::ast::bv(0x00000000, dst1.getBitSize());
+              node2 = triton::ast::bv(0x00000000, dst2.getBitSize());
+              node3 = triton::ast::bv(0x01006040, dst3.getBitSize());
+              node4 = triton::ast::bv(0x00000000, dst4.getBitSize());
+              break;
+            case 0x80000007:
+              node1 = triton::ast::bv(0x00000000, dst1.getBitSize());
+              node2 = triton::ast::bv(0x00000000, dst2.getBitSize());
+              node3 = triton::ast::bv(0x00000000, dst3.getBitSize());
+              node4 = triton::ast::bv(0x00000100, dst4.getBitSize());
+              break;
+            case 0x80000008:
+              node1 = triton::ast::bv(0x00003024, dst1.getBitSize());
+              node2 = triton::ast::bv(0x00000000, dst2.getBitSize());
+              node3 = triton::ast::bv(0x00000000, dst3.getBitSize());
+              node4 = triton::ast::bv(0x00000000, dst4.getBitSize());
+              break;
+            default:
+              node1 = triton::ast::bv(0x00000007, dst1.getBitSize());
+              node2 = triton::ast::bv(0x00000340, dst2.getBitSize());
+              node3 = triton::ast::bv(0x00000340, dst3.getBitSize());
+              node4 = triton::ast::bv(0x00000000, dst4.getBitSize());
+              break;
+          }
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst1, "CPUID AX operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, dst2, "CPUID BX operation");
+          auto expr3 = triton::api.createSymbolicExpression(inst, node3, dst3, "CPUID CX operation");
+          auto expr4 = triton::api.createSymbolicExpression(inst, node4, dst4, "CPUID DX operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_AX.getParent(), false);
+          expr2->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_BX.getParent(), false);
+          expr3->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_CX.getParent(), false);
+          expr4->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_DX.getParent(), false);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);

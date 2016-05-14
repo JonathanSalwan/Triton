@@ -291,6 +291,9 @@ namespace triton {
       //! The CMPXCHG8B semantics.
       void cmpxchg8b_s(triton::arch::Instruction& inst);
 
+      //! The CPUID semantics.
+      void cpuid_s(triton::arch::Instruction& inst);
+
       //! The CQO semantics.
       void cqo_s(triton::arch::Instruction& inst);
 
