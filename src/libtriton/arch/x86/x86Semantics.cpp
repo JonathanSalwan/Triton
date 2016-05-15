@@ -176,6 +176,8 @@ PMINUD                       | sse4.1     | Minimum of Packed Unsigned Doublewor
 PMINUW                       | sse4.1     | Minimum of Packed Unsigned Word Integers
 PMOVMSKB                     | sse1       | Move Byte Mask
 POP                          |            | Pop a Value from the Stack
+POPFD                        |            | Pop Stack into EFLAGS Register
+POPFQ                        |            | Pop Stack into RFLAGS Register
 POR                          | mmx/sse2   | Bitwise Logical OR
 PREFETCH                     | 3DNow      | Move data from m8 closer to the processor without expecting to write back
 PREFETCHNTA                  | mmx/sse1   | Move data from m8 closer to the processor using NTA hint
@@ -203,6 +205,8 @@ PUNPCKLDQ                    | mmx,sse2   | Unpack Low Data (Unpack and interlea
 PUNPCKLQDQ                   | sse2       | Unpack Low Data (Unpack and interleave low-order quadwords)
 PUNPCKLWD                    | mmx,sse2   | Unpack Low Data (Unpack and interleave low-order words)
 PUSH                         |            | Push a Value onto the Stack
+PUSHFD                       |            | Push EFLAGS Register onto the Stack
+PUSHFQ                       |            | Push RFLAGS Register onto the Stack
 PXOR                         | mmx/sse2   | Logical Exclusive OR
 RCL                          |            | Rotate Left with Carry
 RCR                          |            | Rotate Right with Carry
@@ -413,6 +417,8 @@ namespace triton {
             case ID_INS_PMINUW:         triton::arch::x86::semantics::pminuw_s(inst);       break;
             case ID_INS_PMOVMSKB:       triton::arch::x86::semantics::pmovmskb_s(inst);     break;
             case ID_INS_POP:            triton::arch::x86::semantics::pop_s(inst);          break;
+            case ID_INS_POPFD:          triton::arch::x86::semantics::popfd_s(inst);        break;
+            case ID_INS_POPFQ:          triton::arch::x86::semantics::popfq_s(inst);        break;
             case ID_INS_POR:            triton::arch::x86::semantics::por_s(inst);          break;
             case ID_INS_PREFETCH:       triton::arch::x86::semantics::prefetchx_s(inst);    break;
             case ID_INS_PREFETCHNTA:    triton::arch::x86::semantics::prefetchx_s(inst);    break;
@@ -440,6 +446,8 @@ namespace triton {
             case ID_INS_PUNPCKLQDQ:     triton::arch::x86::semantics::punpcklqdq_s(inst);   break;
             case ID_INS_PUNPCKLWD:      triton::arch::x86::semantics::punpcklwd_s(inst);    break;
             case ID_INS_PUSH:           triton::arch::x86::semantics::push_s(inst);         break;
+            case ID_INS_PUSHFD:         triton::arch::x86::semantics::pushfd_s(inst);       break;
+            case ID_INS_PUSHFQ:         triton::arch::x86::semantics::pushfq_s(inst);       break;
             case ID_INS_PXOR:           triton::arch::x86::semantics::pxor_s(inst);         break;
             case ID_INS_RCL:            triton::arch::x86::semantics::rcl_s(inst);          break;
             case ID_INS_RCR:            triton::arch::x86::semantics::rcr_s(inst);          break;
@@ -6647,6 +6655,122 @@ namespace triton {
         }
 
 
+        void popfd_s(triton::arch::Instruction& inst) {
+          auto  stack      = TRITON_X86_REG_SP.getParent();
+          auto  stackValue = triton::api.getRegisterValue(stack).convert_to<triton::__uint>();
+          auto  dst1       = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+          auto  dst2       = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
+          auto  dst3       = triton::arch::OperandWrapper(TRITON_X86_REG_AF);
+          auto  dst4       = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+          auto  dst5       = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+          auto  dst6       = triton::arch::OperandWrapper(TRITON_X86_REG_TF);
+          auto  dst7       = triton::arch::OperandWrapper(TRITON_X86_REG_IF);
+          auto  dst8       = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+          auto  dst9       = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+          auto  src        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::extract(0,  0,  op1);
+          auto node2 = triton::ast::extract(2,  2,  op1);
+          auto node3 = triton::ast::extract(4,  4,  op1);
+          auto node4 = triton::ast::extract(6,  6,  op1);
+          auto node5 = triton::ast::extract(7,  7,  op1);
+          auto node6 = triton::ast::extract(8,  8,  op1);
+          auto node7 = triton::ast::extract(9,  9,  op1);
+          auto node8 = triton::ast::extract(10, 10, op1);
+          auto node9 = triton::ast::extract(11, 11, op1);
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicFlagExpression(inst, node1, dst1.getRegister(), "POPFD CF operation");
+          auto expr2 = triton::api.createSymbolicFlagExpression(inst, node2, dst2.getRegister(), "POPFD PF operation");
+          auto expr3 = triton::api.createSymbolicFlagExpression(inst, node3, dst3.getRegister(), "POPFD AF operation");
+          auto expr4 = triton::api.createSymbolicFlagExpression(inst, node4, dst4.getRegister(), "POPFD ZF operation");
+          auto expr5 = triton::api.createSymbolicFlagExpression(inst, node5, dst5.getRegister(), "POPFD SF operation");
+          auto expr6 = triton::api.createSymbolicFlagExpression(inst, node6, dst6.getRegister(), "POPFD TF operation");
+          auto expr7 = triton::api.createSymbolicFlagExpression(inst, node7, dst7.getRegister(), "POPFD IF operation");
+          auto expr8 = triton::api.createSymbolicFlagExpression(inst, node8, dst8.getRegister(), "POPFD DF operation");
+          auto expr9 = triton::api.createSymbolicFlagExpression(inst, node9, dst9.getRegister(), "POPFD OF operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst1, src);
+          expr2->isTainted = triton::api.taintAssignment(dst2, src);
+          expr3->isTainted = triton::api.taintAssignment(dst3, src);
+          expr4->isTainted = triton::api.taintAssignment(dst4, src);
+          expr5->isTainted = triton::api.taintAssignment(dst5, src);
+          expr6->isTainted = triton::api.taintAssignment(dst6, src);
+          expr7->isTainted = triton::api.taintAssignment(dst7, src);
+          expr8->isTainted = triton::api.taintAssignment(dst8, src);
+          expr9->isTainted = triton::api.taintAssignment(dst9, src);
+
+          /* Create the semantics - side effect */
+          alignAddStack_s(inst, src.getSize());
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void popfq_s(triton::arch::Instruction& inst) {
+          auto  stack      = TRITON_X86_REG_SP.getParent();
+          auto  stackValue = triton::api.getRegisterValue(stack).convert_to<triton::__uint>();
+          auto  dst1       = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+          auto  dst2       = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
+          auto  dst3       = triton::arch::OperandWrapper(TRITON_X86_REG_AF);
+          auto  dst4       = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+          auto  dst5       = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+          auto  dst6       = triton::arch::OperandWrapper(TRITON_X86_REG_TF);
+          auto  dst7       = triton::arch::OperandWrapper(TRITON_X86_REG_IF);
+          auto  dst8       = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+          auto  dst9       = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+          auto  src        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::extract(0,  0,  op1);
+          auto node2 = triton::ast::extract(2,  2,  op1);
+          auto node3 = triton::ast::extract(4,  4,  op1);
+          auto node4 = triton::ast::extract(6,  6,  op1);
+          auto node5 = triton::ast::extract(7,  7,  op1);
+          auto node6 = triton::ast::extract(8,  8,  op1);
+          auto node7 = triton::ast::extract(9,  9,  op1);
+          auto node8 = triton::ast::extract(10, 10, op1);
+          auto node9 = triton::ast::extract(11, 11, op1);
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicFlagExpression(inst, node1, dst1.getRegister(), "POPFQ CF operation");
+          auto expr2 = triton::api.createSymbolicFlagExpression(inst, node2, dst2.getRegister(), "POPFQ PF operation");
+          auto expr3 = triton::api.createSymbolicFlagExpression(inst, node3, dst3.getRegister(), "POPFQ AF operation");
+          auto expr4 = triton::api.createSymbolicFlagExpression(inst, node4, dst4.getRegister(), "POPFQ ZF operation");
+          auto expr5 = triton::api.createSymbolicFlagExpression(inst, node5, dst5.getRegister(), "POPFQ SF operation");
+          auto expr6 = triton::api.createSymbolicFlagExpression(inst, node6, dst6.getRegister(), "POPFQ TF operation");
+          auto expr7 = triton::api.createSymbolicFlagExpression(inst, node7, dst7.getRegister(), "POPFQ IF operation");
+          auto expr8 = triton::api.createSymbolicFlagExpression(inst, node8, dst8.getRegister(), "POPFQ DF operation");
+          auto expr9 = triton::api.createSymbolicFlagExpression(inst, node9, dst9.getRegister(), "POPFQ OF operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst1, src);
+          expr2->isTainted = triton::api.taintAssignment(dst2, src);
+          expr3->isTainted = triton::api.taintAssignment(dst3, src);
+          expr4->isTainted = triton::api.taintAssignment(dst4, src);
+          expr5->isTainted = triton::api.taintAssignment(dst5, src);
+          expr6->isTainted = triton::api.taintAssignment(dst6, src);
+          expr7->isTainted = triton::api.taintAssignment(dst7, src);
+          expr8->isTainted = triton::api.taintAssignment(dst8, src);
+          expr9->isTainted = triton::api.taintAssignment(dst9, src);
+
+          /* Create the semantics - side effect */
+          alignAddStack_s(inst, src.getSize());
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
         void por_s(triton::arch::Instruction& inst) {
           auto& dst = inst.operands[0];
           auto& src = inst.operands[1];
@@ -7652,6 +7776,136 @@ namespace triton {
         }
 
 
+        void pushfd_s(triton::arch::Instruction& inst) {
+          auto stack = TRITON_X86_REG_SP.getParent();
+
+          /* Create the semantics - side effect */
+          alignSubStack_s(inst, stack.getSize());
+
+          auto stackValue = triton::api.getRegisterValue(stack).convert_to<triton::__uint>();
+          auto dst        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
+          auto src1       = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+          auto src2       = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
+          auto src3       = triton::arch::OperandWrapper(TRITON_X86_REG_AF);
+          auto src4       = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+          auto src5       = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+          auto src6       = triton::arch::OperandWrapper(TRITON_X86_REG_TF);
+          auto src7       = triton::arch::OperandWrapper(TRITON_X86_REG_IF);
+          auto src8       = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+          auto src9       = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src2);
+          auto op3 = triton::api.buildSymbolicOperand(inst, src3);
+          auto op4 = triton::api.buildSymbolicOperand(inst, src4);
+          auto op5 = triton::api.buildSymbolicOperand(inst, src5);
+          auto op6 = triton::api.buildSymbolicOperand(inst, src6);
+          auto op7 = triton::api.buildSymbolicOperand(inst, src7);
+          auto op8 = triton::api.buildSymbolicOperand(inst, src8);
+          auto op9 = triton::api.buildSymbolicOperand(inst, src9);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> eflags;
+          eflags.push_back(op9);
+          eflags.push_back(op8);
+          eflags.push_back(op7);
+          eflags.push_back(op6);
+          eflags.push_back(op5);
+          eflags.push_back(op4);
+          eflags.push_back(triton::ast::bvfalse()); /* Reserved */
+          eflags.push_back(op3);
+          eflags.push_back(triton::ast::bvfalse()); /* Reserved */
+          eflags.push_back(op2);
+          eflags.push_back(triton::ast::bvfalse()); /* Reserved */
+          eflags.push_back(op1);
+
+          auto node = triton::ast::zx(dst.getBitSize() - eflags.size(), triton::ast::concat(eflags));
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PUSHFD operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src1);
+          expr->isTainted = triton::api.taintUnion(dst, src2);
+          expr->isTainted = triton::api.taintUnion(dst, src3);
+          expr->isTainted = triton::api.taintUnion(dst, src4);
+          expr->isTainted = triton::api.taintUnion(dst, src5);
+          expr->isTainted = triton::api.taintUnion(dst, src6);
+          expr->isTainted = triton::api.taintUnion(dst, src7);
+          expr->isTainted = triton::api.taintUnion(dst, src8);
+          expr->isTainted = triton::api.taintUnion(dst, src9);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pushfq_s(triton::arch::Instruction& inst) {
+          auto stack = TRITON_X86_REG_SP.getParent();
+
+          /* Create the semantics - side effect */
+          alignSubStack_s(inst, stack.getSize());
+
+          auto stackValue = triton::api.getRegisterValue(stack).convert_to<triton::__uint>();
+          auto dst        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
+          auto src1       = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+          auto src2       = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
+          auto src3       = triton::arch::OperandWrapper(TRITON_X86_REG_AF);
+          auto src4       = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+          auto src5       = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+          auto src6       = triton::arch::OperandWrapper(TRITON_X86_REG_TF);
+          auto src7       = triton::arch::OperandWrapper(TRITON_X86_REG_IF);
+          auto src8       = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+          auto src9       = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src2);
+          auto op3 = triton::api.buildSymbolicOperand(inst, src3);
+          auto op4 = triton::api.buildSymbolicOperand(inst, src4);
+          auto op5 = triton::api.buildSymbolicOperand(inst, src5);
+          auto op6 = triton::api.buildSymbolicOperand(inst, src6);
+          auto op7 = triton::api.buildSymbolicOperand(inst, src7);
+          auto op8 = triton::api.buildSymbolicOperand(inst, src8);
+          auto op9 = triton::api.buildSymbolicOperand(inst, src9);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> eflags;
+          eflags.push_back(op9);
+          eflags.push_back(op8);
+          eflags.push_back(op7);
+          eflags.push_back(op6);
+          eflags.push_back(op5);
+          eflags.push_back(op4);
+          eflags.push_back(triton::ast::bvfalse()); /* Reserved */
+          eflags.push_back(op3);
+          eflags.push_back(triton::ast::bvfalse()); /* Reserved */
+          eflags.push_back(op2);
+          eflags.push_back(triton::ast::bvfalse()); /* Reserved */
+          eflags.push_back(op1);
+
+          auto node = triton::ast::zx(dst.getBitSize() - eflags.size(), triton::ast::concat(eflags));
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PUSHFQ operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src1);
+          expr->isTainted = triton::api.taintUnion(dst, src2);
+          expr->isTainted = triton::api.taintUnion(dst, src3);
+          expr->isTainted = triton::api.taintUnion(dst, src4);
+          expr->isTainted = triton::api.taintUnion(dst, src5);
+          expr->isTainted = triton::api.taintUnion(dst, src6);
+          expr->isTainted = triton::api.taintUnion(dst, src7);
+          expr->isTainted = triton::api.taintUnion(dst, src8);
+          expr->isTainted = triton::api.taintUnion(dst, src9);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
         void pxor_s(triton::arch::Instruction& inst) {
           auto& dst = inst.operands[0];
           auto& src = inst.operands[1];
@@ -7767,8 +8021,8 @@ namespace triton {
           auto op2 = triton::ast::bv(triton::api.getSymbolicExpressions().size(), dst2.getBitSize());
 
           /* Create symbolic expression */
-          auto expr1 = triton::api.createSymbolicExpression(inst, op1, dst1, "RDTSC operation (EDX)");
-          auto expr2 = triton::api.createSymbolicExpression(inst, op2, dst2, "RDTSC operation (EAX)");
+          auto expr1 = triton::api.createSymbolicExpression(inst, op1, dst1, "RDTSC EDX operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, op2, dst2, "RDTSC EAX operation");
 
           /* Spread taint */
           expr1->isTainted = triton::api.setTaint(dst1, triton::engines::taint::UNTAINTED);
@@ -9097,6 +9351,14 @@ namespace triton {
 
           /* Spread taint */
           expr3->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate symbolic flags */
+          triton::arch::x86::semantics::af_s(inst, expr3, dst, op1, op2);
+          triton::arch::x86::semantics::cfAdd_s(inst, expr3, dst, op1, op2);
+          triton::arch::x86::semantics::ofAdd_s(inst, expr3, dst, op1, op2);
+          triton::arch::x86::semantics::pf_s(inst, expr3, dst);
+          triton::arch::x86::semantics::sf_s(inst, expr3, dst);
+          triton::arch::x86::semantics::zf_s(inst, expr3, dst);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);

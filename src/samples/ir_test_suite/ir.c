@@ -477,11 +477,21 @@ void check(void)
   asm("add ecx, ebx");
   asm("stc");
 
+  asm("pushfq");
   asm("add ecx, ebx");
+  asm("popfq");
+  asm("pushfq");
   asm("adc eax, ecx");
+  asm("popfq");
+  asm("pushfq");
   asm("inc eax");
+  asm("popfq");
+  asm("pushfq");
   asm("test eax, eax");
+  asm("popfq");
+  asm("pushfq");
   asm("sbb eax, ecx");
+  asm("popfq");
 
   asm("mov rax, 27577336");
   asm("sbb eax, eax");
@@ -491,6 +501,12 @@ void check(void)
   asm("mov ebx, 5");
   asm("cmp ecx, 3");
 
+  asm("pushfq");
+  asm("pushfq");
+  asm("pushfq");
+  asm("popfq");
+  asm("popfq");
+  asm("popfq");
   asm("cmovb eax, ebx");
   asm("cmovl eax, ebx");
   asm("cmovno eax, ebx");
