@@ -176,6 +176,7 @@ PMINUD                       | sse4.1     | Minimum of Packed Unsigned Doublewor
 PMINUW                       | sse4.1     | Minimum of Packed Unsigned Word Integers
 PMOVMSKB                     | sse1       | Move Byte Mask
 POP                          |            | Pop a Value from the Stack
+POPAL/POPAD                  |            | Pop All General-Purpose Registers
 POPFD                        |            | Pop Stack into EFLAGS Register
 POPFQ                        |            | Pop Stack into RFLAGS Register
 POR                          | mmx/sse2   | Bitwise Logical OR
@@ -205,6 +206,7 @@ PUNPCKLDQ                    | mmx,sse2   | Unpack Low Data (Unpack and interlea
 PUNPCKLQDQ                   | sse2       | Unpack Low Data (Unpack and interleave low-order quadwords)
 PUNPCKLWD                    | mmx,sse2   | Unpack Low Data (Unpack and interleave low-order words)
 PUSH                         |            | Push a Value onto the Stack
+PUSHAL/PUSHAD                |            | Push All General-Purpose Registers
 PUSHFD                       |            | Push EFLAGS Register onto the Stack
 PUSHFQ                       |            | Push RFLAGS Register onto the Stack
 PXOR                         | mmx/sse2   | Logical Exclusive OR
@@ -417,6 +419,7 @@ namespace triton {
             case ID_INS_PMINUW:         triton::arch::x86::semantics::pminuw_s(inst);       break;
             case ID_INS_PMOVMSKB:       triton::arch::x86::semantics::pmovmskb_s(inst);     break;
             case ID_INS_POP:            triton::arch::x86::semantics::pop_s(inst);          break;
+            case ID_INS_POPAL:          triton::arch::x86::semantics::popal_s(inst);        break;
             case ID_INS_POPFD:          triton::arch::x86::semantics::popfd_s(inst);        break;
             case ID_INS_POPFQ:          triton::arch::x86::semantics::popfq_s(inst);        break;
             case ID_INS_POR:            triton::arch::x86::semantics::por_s(inst);          break;
@@ -446,6 +449,7 @@ namespace triton {
             case ID_INS_PUNPCKLQDQ:     triton::arch::x86::semantics::punpcklqdq_s(inst);   break;
             case ID_INS_PUNPCKLWD:      triton::arch::x86::semantics::punpcklwd_s(inst);    break;
             case ID_INS_PUSH:           triton::arch::x86::semantics::push_s(inst);         break;
+            case ID_INS_PUSHAL:         triton::arch::x86::semantics::pushal_s(inst);       break;
             case ID_INS_PUSHFD:         triton::arch::x86::semantics::pushfd_s(inst);       break;
             case ID_INS_PUSHFQ:         triton::arch::x86::semantics::pushfq_s(inst);       break;
             case ID_INS_PXOR:           triton::arch::x86::semantics::pxor_s(inst);         break;
@@ -6655,6 +6659,61 @@ namespace triton {
         }
 
 
+        void popal_s(triton::arch::Instruction& inst) {
+          auto stack      = TRITON_X86_REG_SP.getParent();
+          auto stackValue = triton::api.getRegisterValue(stack).convert_to<triton::__uint>();
+          auto dst1       = triton::arch::OperandWrapper(TRITON_X86_REG_EDI);
+          auto dst2       = triton::arch::OperandWrapper(TRITON_X86_REG_ESI);
+          auto dst3       = triton::arch::OperandWrapper(TRITON_X86_REG_EBP);
+          auto dst4       = triton::arch::OperandWrapper(TRITON_X86_REG_ESP);
+          auto dst5       = triton::arch::OperandWrapper(TRITON_X86_REG_EBX);
+          auto dst6       = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
+          auto dst7       = triton::arch::OperandWrapper(TRITON_X86_REG_ECX);
+          auto dst8       = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
+          auto src1       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue+(stack.getSize() * 0), stack.getSize()));
+          auto src2       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue+(stack.getSize() * 1), stack.getSize()));
+          auto src3       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue+(stack.getSize() * 2), stack.getSize()));
+          auto src4       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue+(stack.getSize() * 3), stack.getSize()));
+          auto src5       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue+(stack.getSize() * 4), stack.getSize()));
+          auto src6       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue+(stack.getSize() * 5), stack.getSize()));
+          auto src7       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue+(stack.getSize() * 6), stack.getSize()));
+          auto src8       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue+(stack.getSize() * 7), stack.getSize()));
+
+          /* Create symbolic operands and semantics */
+          auto node1 = triton::api.buildSymbolicOperand(inst, src1);
+          auto node2 = triton::api.buildSymbolicOperand(inst, src2);
+          auto node3 = triton::api.buildSymbolicOperand(inst, src3);
+          auto node4 = triton::api.buildSymbolicOperand(inst, src4);
+          auto node5 = triton::api.buildSymbolicOperand(inst, src5);
+          auto node6 = triton::api.buildSymbolicOperand(inst, src6);
+          auto node7 = triton::api.buildSymbolicOperand(inst, src7);
+          auto node8 = triton::api.buildSymbolicOperand(inst, src8);
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst1, "POPAL EDI operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, dst2, "POPAL ESI operation");
+          auto expr3 = triton::api.createSymbolicExpression(inst, node3, dst3, "POPAL EBP operation");
+          auto expr4 = triton::api.createSymbolicExpression(inst, node4, dst4, "POPAL ESP operation");
+          auto expr5 = triton::api.createSymbolicExpression(inst, node5, dst5, "POPAL EBX operation");
+          auto expr6 = triton::api.createSymbolicExpression(inst, node6, dst6, "POPAL EDX operation");
+          auto expr7 = triton::api.createSymbolicExpression(inst, node7, dst7, "POPAL ECX operation");
+          auto expr8 = triton::api.createSymbolicExpression(inst, node8, dst8, "POPAL EAX operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst1, src1);
+          expr2->isTainted = triton::api.taintAssignment(dst2, src2);
+          expr3->isTainted = triton::api.taintAssignment(dst3, src3);
+          expr4->isTainted = triton::api.taintAssignment(dst4, src4);
+          expr5->isTainted = triton::api.taintAssignment(dst5, src5);
+          expr6->isTainted = triton::api.taintAssignment(dst6, src6);
+          expr7->isTainted = triton::api.taintAssignment(dst7, src7);
+          expr8->isTainted = triton::api.taintAssignment(dst8, src8);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
         void popfd_s(triton::arch::Instruction& inst) {
           auto  stack      = TRITON_X86_REG_SP.getParent();
           auto  stackValue = triton::api.getRegisterValue(stack).convert_to<triton::__uint>();
@@ -7770,6 +7829,72 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pushal_s(triton::arch::Instruction& inst) {
+          auto stack      = TRITON_X86_REG_SP.getParent();
+          auto stackValue = triton::api.getRegisterValue(stack).convert_to<triton::__uint>();
+          auto dst1       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue-(stack.getSize() * 1), stack.getSize()));
+          auto dst2       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue-(stack.getSize() * 2), stack.getSize()));
+          auto dst3       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue-(stack.getSize() * 3), stack.getSize()));
+          auto dst4       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue-(stack.getSize() * 4), stack.getSize()));
+          auto dst5       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue-(stack.getSize() * 5), stack.getSize()));
+          auto dst6       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue-(stack.getSize() * 6), stack.getSize()));
+          auto dst7       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue-(stack.getSize() * 7), stack.getSize()));
+          auto dst8       = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue-(stack.getSize() * 8), stack.getSize()));
+          auto src1       = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
+          auto src2       = triton::arch::OperandWrapper(TRITON_X86_REG_ECX);
+          auto src3       = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
+          auto src4       = triton::arch::OperandWrapper(TRITON_X86_REG_EBX);
+          auto src5       = triton::arch::OperandWrapper(TRITON_X86_REG_ESP);
+          auto src6       = triton::arch::OperandWrapper(TRITON_X86_REG_EBP);
+          auto src7       = triton::arch::OperandWrapper(TRITON_X86_REG_ESI);
+          auto src8       = triton::arch::OperandWrapper(TRITON_X86_REG_EDI);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src2);
+          auto op3 = triton::api.buildSymbolicOperand(inst, src3);
+          auto op4 = triton::api.buildSymbolicOperand(inst, src4);
+          auto op5 = triton::api.buildSymbolicOperand(inst, src5);
+          auto op6 = triton::api.buildSymbolicOperand(inst, src6);
+          auto op7 = triton::api.buildSymbolicOperand(inst, src7);
+          auto op8 = triton::api.buildSymbolicOperand(inst, src8);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::zx(dst1.getBitSize() - src1.getBitSize(), op1);
+          auto node2 = triton::ast::zx(dst2.getBitSize() - src2.getBitSize(), op2);
+          auto node3 = triton::ast::zx(dst3.getBitSize() - src3.getBitSize(), op3);
+          auto node4 = triton::ast::zx(dst4.getBitSize() - src4.getBitSize(), op4);
+          auto node5 = triton::ast::zx(dst5.getBitSize() - src5.getBitSize(), op5);
+          auto node6 = triton::ast::zx(dst6.getBitSize() - src6.getBitSize(), op6);
+          auto node7 = triton::ast::zx(dst7.getBitSize() - src7.getBitSize(), op7);
+          auto node8 = triton::ast::zx(dst8.getBitSize() - src8.getBitSize(), op8);
+
+          /* Create symbolic expression */
+          alignSubStack_s(inst, 32);
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst1, "PUSHAL EAX operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, dst2, "PUSHAL ECX operation");
+          auto expr3 = triton::api.createSymbolicExpression(inst, node3, dst3, "PUSHAL EDX operation");
+          auto expr4 = triton::api.createSymbolicExpression(inst, node4, dst4, "PUSHAL EBX operation");
+          auto expr5 = triton::api.createSymbolicExpression(inst, node5, dst5, "PUSHAL ESP operation");
+          auto expr6 = triton::api.createSymbolicExpression(inst, node6, dst6, "PUSHAL EBP operation");
+          auto expr7 = triton::api.createSymbolicExpression(inst, node7, dst7, "PUSHAL ESI operation");
+          auto expr8 = triton::api.createSymbolicExpression(inst, node8, dst8, "PUSHAL EDI operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst1, src1);
+          expr2->isTainted = triton::api.taintAssignment(dst2, src2);
+          expr3->isTainted = triton::api.taintAssignment(dst3, src3);
+          expr4->isTainted = triton::api.taintAssignment(dst4, src4);
+          expr5->isTainted = triton::api.taintAssignment(dst5, src5);
+          expr6->isTainted = triton::api.taintAssignment(dst6, src6);
+          expr7->isTainted = triton::api.taintAssignment(dst7, src7);
+          expr8->isTainted = triton::api.taintAssignment(dst8, src8);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);

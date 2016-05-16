@@ -594,6 +594,9 @@ namespace triton {
       //! The POP semantics.
       void pop_s(triton::arch::Instruction& inst);
 
+      //! The POPAL semantics.
+      void popal_s(triton::arch::Instruction& inst);
+
       //! The POPFD semantics.
       void popfd_s(triton::arch::Instruction& inst);
 
@@ -665,6 +668,9 @@ namespace triton {
 
       //! The PUSH semantics.
       void push_s(triton::arch::Instruction& inst);
+
+      //! The PUSHAL semantics.
+      void pushal_s(triton::arch::Instruction& inst);
 
       //! The PUSHFD semantics.
       void pushfd_s(triton::arch::Instruction& inst);
