@@ -511,7 +511,7 @@ namespace triton {
         bool isTaintEngineEnabled(void) const;
 
         //! [**taint api**] - Abstract taint verification.
-        bool isTainted(triton::arch::OperandWrapper& op) const;
+        bool isTainted(const triton::arch::OperandWrapper& op) const;
 
         //! [**taint api**] - Returns true if the addr is tainted.
         /*!
@@ -538,7 +538,7 @@ namespace triton {
           \param flag TAINTED or !TAINTED
           \return flag
         */
-        bool setTaint(triton::arch::OperandWrapper& op, bool flag);
+        bool setTaint(const triton::arch::OperandWrapper& op, bool flag);
 
 
         //! [**taint api**] - Sets memory flag.
@@ -600,10 +600,10 @@ namespace triton {
         bool untaintRegister(const triton::arch::RegisterOperand& reg);
 
         //! [**taint api**] - Abstract union tainting.
-        bool taintUnion(triton::arch::OperandWrapper& op1, triton::arch::OperandWrapper& op2);
+        bool taintUnion(const triton::arch::OperandWrapper& op1, const triton::arch::OperandWrapper& op2);
 
         //! [**taint api**] - Abstract assignment tainting.
-        bool taintAssignment(triton::arch::OperandWrapper& op1, triton::arch::OperandWrapper& op2);
+        bool taintAssignment(const triton::arch::OperandWrapper& op1, const triton::arch::OperandWrapper& op2);
 
         //! [**taint api**] - Taints MemoryImmediate with union.
         /*!

@@ -1014,12 +1014,12 @@ namespace triton {
   }
 
 
-  bool API::isTainted(triton::arch::OperandWrapper& op) const {
+  bool API::isTainted(const triton::arch::OperandWrapper& op) const {
     this->checkTaint();
     switch (op.getType()) {
       case triton::arch::OP_IMM: return triton::engines::taint::UNTAINTED;
-      case triton::arch::OP_MEM: return this->isMemoryTainted(op.getMemory());
-      case triton::arch::OP_REG: return this->isRegisterTainted(op.getRegister());
+      case triton::arch::OP_MEM: return this->isMemoryTainted(op.getConstMemory());
+      case triton::arch::OP_REG: return this->isRegisterTainted(op.getConstRegister());
       default:
         throw std::runtime_error("API::isTainted(): Invalid operand.");
     }
@@ -1044,12 +1044,12 @@ namespace triton {
   }
 
 
-  bool API::setTaint(triton::arch::OperandWrapper& op, bool flag) {
+  bool API::setTaint(const triton::arch::OperandWrapper& op, bool flag) {
     this->checkTaint();
     switch (op.getType()) {
       case triton::arch::OP_IMM: return triton::engines::taint::UNTAINTED;
-      case triton::arch::OP_MEM: return this->setTaintMemory(op.getMemory(), flag);
-      case triton::arch::OP_REG: return this->setTaintRegister(op.getRegister(), flag);
+      case triton::arch::OP_MEM: return this->setTaintMemory(op.getConstMemory(), flag);
+      case triton::arch::OP_REG: return this->setTaintRegister(op.getConstRegister(), flag);
       default:
         throw std::runtime_error("API::setTaint(): Invalid operand.");
     }
@@ -1106,53 +1106,53 @@ namespace triton {
   }
 
 
-  bool API::taintUnion(triton::arch::OperandWrapper& op1, triton::arch::OperandWrapper& op2) {
+  bool API::taintUnion(const triton::arch::OperandWrapper& op1, const triton::arch::OperandWrapper& op2) {
     triton::uint32 t1 = op1.getType();
     triton::uint32 t2 = op2.getType();
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_IMM)
-      return this->taintUnionMemoryImmediate(op1.getMemory());
+      return this->taintUnionMemoryImmediate(op1.getConstMemory());
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_MEM)
-      return this->taintUnionMemoryMemory(op1.getMemory(), op2.getMemory());
+      return this->taintUnionMemoryMemory(op1.getConstMemory(), op2.getConstMemory());
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_REG)
-      return this->taintUnionMemoryRegister(op1.getMemory(), op2.getRegister());
+      return this->taintUnionMemoryRegister(op1.getConstMemory(), op2.getConstRegister());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_IMM)
-      return this->taintUnionRegisterImmediate(op1.getRegister());
+      return this->taintUnionRegisterImmediate(op1.getConstRegister());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_MEM)
-      return this->taintUnionRegisterMemory(op1.getRegister(), op2.getMemory());
+      return this->taintUnionRegisterMemory(op1.getConstRegister(), op2.getConstMemory());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_REG)
-      return this->taintUnionRegisterRegister(op1.getRegister(), op2.getRegister());
+      return this->taintUnionRegisterRegister(op1.getConstRegister(), op2.getConstRegister());
 
     throw std::runtime_error("API::taintUnion(): Invalid operands.");
   }
 
 
-  bool API::taintAssignment(triton::arch::OperandWrapper& op1, triton::arch::OperandWrapper& op2) {
+  bool API::taintAssignment(const triton::arch::OperandWrapper& op1, const triton::arch::OperandWrapper& op2) {
     triton::uint32 t1 = op1.getType();
     triton::uint32 t2 = op2.getType();
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_IMM)
-      return this->taintAssignmentMemoryImmediate(op1.getMemory());
+      return this->taintAssignmentMemoryImmediate(op1.getConstMemory());
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_MEM)
-      return this->taintAssignmentMemoryMemory(op1.getMemory(), op2.getMemory());
+      return this->taintAssignmentMemoryMemory(op1.getConstMemory(), op2.getConstMemory());
 
     if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_REG)
-      return this->taintAssignmentMemoryRegister(op1.getMemory(), op2.getRegister());
+      return this->taintAssignmentMemoryRegister(op1.getConstMemory(), op2.getConstRegister());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_IMM)
-      return this->taintAssignmentRegisterImmediate(op1.getRegister());
+      return this->taintAssignmentRegisterImmediate(op1.getConstRegister());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_MEM)
-      return this->taintAssignmentRegisterMemory(op1.getRegister(), op2.getMemory());
+      return this->taintAssignmentRegisterMemory(op1.getConstRegister(), op2.getConstMemory());
 
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_REG)
-      return this->taintAssignmentRegisterRegister(op1.getRegister(), op2.getRegister());
+      return this->taintAssignmentRegisterRegister(op1.getConstRegister(), op2.getConstRegister());
 
     throw std::runtime_error("API::taintAssignment(): Invalid operands.");
   }
