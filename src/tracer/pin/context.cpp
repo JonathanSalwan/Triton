@@ -261,7 +261,7 @@ namespace tracer {
 
       triton::uint512 getCurrentMemoryValue(triton::__uint addr) {
         triton::uint512 value = 0;
-        if (PIN_CheckReadAccess(reinterpret_cast<void*>(addr)) == false)
+        if (PIN_CheckReadAccess(reinterpret_cast<triton::uint8*>(addr)) == false)
           throw std::runtime_error("tracer::pintool::context::getCurrentMemoryValue(): Page not readable.");
         value = *(reinterpret_cast<triton::uint8*>(addr));
         return value;
@@ -271,7 +271,7 @@ namespace tracer {
       triton::uint512 getCurrentMemoryValue(triton::__uint addr, triton::uint32 size) {
         triton::uint512 value = 0;
 
-        if (PIN_CheckReadAccess(reinterpret_cast<void*>(addr)) == false || PIN_CheckReadAccess(reinterpret_cast<void*>(addr+size-1)) == false)
+        if (PIN_CheckReadAccess(reinterpret_cast<triton::uint8*>(addr)) == false || PIN_CheckReadAccess(reinterpret_cast<triton::uint8*>(addr+size-1)) == false)
           throw std::runtime_error("tracer::pintool::context::getCurrentMemoryValue(): Page not readable.");
 
         switch(size) {
@@ -435,8 +435,8 @@ namespace tracer {
         triton::api.concretizeMemory(mem);
 
         /* Inject memory value */
-        for (triton::uint32 i = 0; i <= size; i++) {
-          if (PIN_CheckWriteAccess(reinterpret_cast<void*>((addr+i))) == false)
+        for (triton::uint32 i = 0; i < size; i++) {
+          if (PIN_CheckWriteAccess(reinterpret_cast<triton::uint8*>((addr+i))) == false)
             throw std::runtime_error("tracer::pintool::context::setCurrentMemoryValue(): Page not writable.");
           *((triton::uint8 *)(addr+i)) = (value & 0xff).convert_to<triton::uint8>();
           value >>= 8;
@@ -445,7 +445,7 @@ namespace tracer {
 
 
       void setCurrentMemoryValue(triton::__uint addr, triton::uint8 value) {
-        if (PIN_CheckWriteAccess(reinterpret_cast<void*>(addr)) == false)
+        if (PIN_CheckWriteAccess(reinterpret_cast<triton::uint8*>(addr)) == false)
           throw std::runtime_error("tracer::pintool::context::setCurrentMemoryValue(): Page not writable.");
 
         /* Sync with the libTriton */
