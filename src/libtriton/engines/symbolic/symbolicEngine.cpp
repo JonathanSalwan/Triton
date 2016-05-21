@@ -209,30 +209,30 @@ namespace triton {
         this->alignedMemoryReference.erase(std::make_pair(addr,  DQQWORD_SIZE));
 
         /* Remove overloaded range */
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,    WORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,    DWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,    QWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,    DQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,    QQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,    DQQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,   WORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,   DWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,   QWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,   DQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,   QQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,   DQQWORD_SIZE));
 
-        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,    DWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,    QWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,    DQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,    QQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,    DQQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,   DWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,   QWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,   DQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,   QQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,   DQQWORD_SIZE));
 
-        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,   QWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,   DQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,   QQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,   DQQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,  QWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,  DQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,  QQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,  DQQWORD_SIZE));
 
-        this->alignedMemoryReference.erase(std::make_pair(addr-QWORD_SIZE,   DQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-QWORD_SIZE,   QQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-QWORD_SIZE,   DQQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-QWORD_SIZE,  DQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-QWORD_SIZE,  QQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-QWORD_SIZE,  DQQWORD_SIZE));
 
-        this->alignedMemoryReference.erase(std::make_pair(addr-DQWORD_SIZE,  QQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-DQWORD_SIZE,  DQQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-DQWORD_SIZE, QQWORD_SIZE));
+        this->alignedMemoryReference.erase(std::make_pair(addr-DQWORD_SIZE, DQQWORD_SIZE));
 
         this->alignedMemoryReference.erase(std::make_pair(addr-QQWORD_SIZE, DQQWORD_SIZE));
       }
