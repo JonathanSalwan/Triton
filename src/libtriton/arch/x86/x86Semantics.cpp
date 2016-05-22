@@ -993,7 +993,7 @@ namespace triton {
 
           /*
            * Create the semantic.
-           * cf = (op1 >> ((bvSize - (op2 & bvSize-1)) & 1) if op2 != 0
+           * cf = (op1 >> ((bvSize - op2) & 1) if op2 != 0
            */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
@@ -1003,7 +1003,7 @@ namespace triton {
                             op1,
                             triton::ast::bvsub(
                               triton::ast::bv(bvSize, bvSize),
-                              triton::ast::bvand(op2, triton::ast::bv(bvSize-1, bvSize))
+                              op2
                             )
                           )
                         )
@@ -1023,7 +1023,7 @@ namespace triton {
 
           /*
            * Create the semantic.
-           * cf = ((op1 >> ((op2 & bvSize-1) - 1)) & 1) if op2 != 0
+           * cf = ((op1 >> (op2 - 1)) & 1) if op2 != 0
            */
           auto node = triton::ast::ite(
                         triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
@@ -1032,7 +1032,7 @@ namespace triton {
                           triton::ast::bvlshr(
                             op1,
                             triton::ast::bvsub(
-                              triton::ast::bvand(op2, triton::ast::bv(bvSize-1, bvSize)),
+                              op2,
                               triton::ast::bv(1, bvSize))
                           )
                         )
@@ -1257,11 +1257,11 @@ namespace triton {
 
           /*
            * Create the semantic.
-           * of = 0 if (op2 & bvSize-1) == 1
+           * of = 0 if op2 == 1
            */
           auto node = triton::ast::ite(
                         triton::ast::equal(
-                          triton::ast::bvand(op2, triton::ast::bv(bvSize-1, bvSize)),
+                          op2,
                           triton::ast::bv(1, bvSize)),
                         triton::ast::bv(0, 1),
                         triton::api.buildSymbolicOperand(inst, of)
@@ -1281,11 +1281,11 @@ namespace triton {
 
           /*
            * Create the semantic.
-           * of = bit_cast((op1 >> (bvSize - 1)) ^ (op1 >> (bvSize - 2)), int1(1)); if (op2 & bvSize-1) == 1
+           * of = bit_cast((op1 >> (bvSize - 1)) ^ (op1 >> (bvSize - 2)), int1(1)); if op2 == 1
            */
           auto node = triton::ast::ite(
                         triton::ast::equal(
-                          triton::ast::bvand(op2, triton::ast::bv(bvSize-1, bvSize)),
+                          op2,
                           triton::ast::bv(1, bvSize)),
                         triton::ast::extract(0, 0,
                           triton::ast::bvxor(
@@ -1311,11 +1311,11 @@ namespace triton {
 
           /*
            * Create the semantic.
-           * of = (op1 >> (bvSize - 1) & 1) if (op2 & bvSize-1) == 1
+           * of = (op1 >> (bvSize - 1) & 1) if op2 == 1
            */
           auto node = triton::ast::ite(
                         triton::ast::equal(
-                          triton::ast::bvand(op2, triton::ast::bv(bvSize-1, bvSize)),
+                          op1,
                           triton::ast::bv(1, bvSize)),
                         triton::ast::extract(high, high, op1),
                         triton::api.buildSymbolicOperand(inst, of)
@@ -6738,7 +6738,7 @@ namespace triton {
           auto node4 = triton::ast::extract(6,  6,  op1);
           auto node5 = triton::ast::extract(7,  7,  op1);
           auto node6 = triton::ast::extract(8,  8,  op1);
-          auto node7 = triton::ast::extract(9,  9,  op1);
+          auto node7 = triton::ast::bvtrue(); /* TODO IF and IOPL */
           auto node8 = triton::ast::extract(10, 10, op1);
           auto node9 = triton::ast::extract(11, 11, op1);
 
@@ -6796,7 +6796,7 @@ namespace triton {
           auto node4 = triton::ast::extract(6,  6,  op1);
           auto node5 = triton::ast::extract(7,  7,  op1);
           auto node6 = triton::ast::extract(8,  8,  op1);
-          auto node7 = triton::ast::extract(9,  9,  op1);
+          auto node7 = triton::ast::bvtrue(); /* TODO IF and IOPL */
           auto node8 = triton::ast::extract(10, 10, op1);
           auto node9 = triton::ast::extract(11, 11, op1);
 
@@ -8259,6 +8259,9 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(inst, dst);
           auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(inst, src));
 
+          if (dst.getBitSize() >= DWORD_SIZE_BIT)
+            op2 = triton::ast::bvand(op2, triton::ast::bv(dst.getBitSize() - 1, dst.getBitSize()));
+
           /* Create the semantics */
           auto node = triton::ast::bvashr(op1, op2);
 
@@ -9011,8 +9014,11 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(inst, dst);
           auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(inst, src));
 
+          if (dst.getBitSize() >= DWORD_SIZE_BIT)
+            op2 = triton::ast::bvand(op2, triton::ast::bv(dst.getBitSize() - 1, dst.getBitSize()));
+
           /* Create the semantics */
-          auto node = triton::ast::bvshl(op1, triton::ast::bvand(op2, triton::ast::bv(dst.getBitSize()-1, dst.getBitSize())));
+          auto node = triton::ast::bvshl(op1, op2);
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SHL operation");
@@ -9039,6 +9045,9 @@ namespace triton {
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(inst, dst);
           auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(inst, src));
+
+          if (dst.getBitSize() >= DWORD_SIZE_BIT)
+            op2 = triton::ast::bvand(op2, triton::ast::bv(dst.getBitSize() - 1, dst.getBitSize()));
 
           /* Create the semantics */
           auto node = triton::ast::bvlshr(op1, op2);
