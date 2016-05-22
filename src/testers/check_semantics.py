@@ -96,6 +96,9 @@ def cafter(instruction):
         #time.sleep(2)
         pass
 
+    # Reset everything
+    resetEngines()
+
     return
 
 

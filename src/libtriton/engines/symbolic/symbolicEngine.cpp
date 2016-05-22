@@ -782,7 +782,7 @@ namespace triton {
           case DQWORD_SIZE:
           case QQWORD_SIZE:
           case DQQWORD_SIZE:
-            finalExpr = node;
+            finalExpr = triton::ast::zx(parentReg.getBitSize() - node->getBitvectorSize(), node);
             break;
         }
 

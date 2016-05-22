@@ -1306,18 +1306,17 @@ namespace triton {
 
         void ofShr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
-          auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
           auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
           /*
            * Create the semantic.
-           * of = (op1 >> (bvSize - 1) & 1) if op2 == 1
+           * of = ((op1 >> (bvSize - 1)) & 1) if op2 == 1
            */
           auto node = triton::ast::ite(
                         triton::ast::equal(
-                          op1,
+                          op2,
                           triton::ast::bv(1, bvSize)),
-                        triton::ast::extract(high, high, op1),
+                        triton::ast::extract(0, 0, triton::ast::bvlshr(op1, triton::ast::bvsub(triton::ast::bv(bvSize, bvSize), triton::ast::bv(1, bvSize)))),
                         triton::api.buildSymbolicOperand(inst, of)
                       );
 

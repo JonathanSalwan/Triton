@@ -8,6 +8,12 @@ import sys
 import time
 
 
+def sbefore(instruction):
+    concretizeAllMemory()
+    concretizeAllRegister()
+    return
+
+
 def cafter(instruction):
 
     bad  = list()
@@ -63,5 +69,6 @@ if __name__ == '__main__':
     setupImageWhitelist(['emu-test-x86_64'])
     startAnalysisFromSymbol('main')
     addCallback(cafter,  CALLBACK.AFTER)
+    addCallback(sbefore, CALLBACK.BEFORE_SYMPROC)
     runProgram()
 
