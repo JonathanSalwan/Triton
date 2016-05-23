@@ -32,6 +32,10 @@ def cafter(instruction):
 
         # Check register
         if cvalue != svalue:
+
+            if reg.getName() == 'of' and instruction.getType() in [OPCODE.SHL, OPCODE.SHR, OPCODE.SAR, OPCODE.RCL, OPCODE.RCR, OPCODE.ROL, OPCODE.ROR]:
+                continue
+
             bad.append({
                 'reg':    reg.getName(),
                 'svalue': svalue,
