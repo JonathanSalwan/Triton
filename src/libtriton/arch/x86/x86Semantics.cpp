@@ -1153,7 +1153,7 @@ namespace triton {
            * of = (res & op1) >> (bvSize - 1) & 1
            */
           auto node = triton::ast::extract(0, 0,
-                        triton::ast::bvshl(
+                        triton::ast::bvlshr(
                           triton::ast::bvand(triton::ast::extract(high, low, triton::ast::reference(parent->getId())), op1),
                           triton::ast::bvsub(triton::ast::bv(bvSize, bvSize), triton::ast::bv(1, bvSize))
                         )
