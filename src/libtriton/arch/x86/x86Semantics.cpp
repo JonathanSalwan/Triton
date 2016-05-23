@@ -8258,8 +8258,10 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(inst, dst);
           auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(inst, src));
 
-          if (dst.getBitSize() >= DWORD_SIZE_BIT)
-            op2 = triton::ast::bvand(op2, triton::ast::bv(dst.getBitSize() - 1, dst.getBitSize()));
+          if (dst.getBitSize() == QWORD_SIZE_BIT)
+            op2 = triton::ast::bvand(op2, triton::ast::bv(QWORD_SIZE_BIT-1, dst.getBitSize()));
+          else
+            op2 = triton::ast::bvand(op2, triton::ast::bv(DWORD_SIZE_BIT-1, dst.getBitSize()));
 
           /* Create the semantics */
           auto node = triton::ast::bvashr(op1, op2);
@@ -9013,8 +9015,10 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(inst, dst);
           auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(inst, src));
 
-          if (dst.getBitSize() >= DWORD_SIZE_BIT)
-            op2 = triton::ast::bvand(op2, triton::ast::bv(dst.getBitSize() - 1, dst.getBitSize()));
+          if (dst.getBitSize() == QWORD_SIZE_BIT)
+            op2 = triton::ast::bvand(op2, triton::ast::bv(QWORD_SIZE_BIT-1, dst.getBitSize()));
+          else
+            op2 = triton::ast::bvand(op2, triton::ast::bv(DWORD_SIZE_BIT-1, dst.getBitSize()));
 
           /* Create the semantics */
           auto node = triton::ast::bvshl(op1, op2);
@@ -9045,8 +9049,10 @@ namespace triton {
           auto op1 = triton::api.buildSymbolicOperand(inst, dst);
           auto op2 = triton::ast::zx(dst.getBitSize() - src.getBitSize(), triton::api.buildSymbolicOperand(inst, src));
 
-          if (dst.getBitSize() >= DWORD_SIZE_BIT)
-            op2 = triton::ast::bvand(op2, triton::ast::bv(dst.getBitSize() - 1, dst.getBitSize()));
+          if (dst.getBitSize() == QWORD_SIZE_BIT)
+            op2 = triton::ast::bvand(op2, triton::ast::bv(QWORD_SIZE_BIT-1, dst.getBitSize()));
+          else
+            op2 = triton::ast::bvand(op2, triton::ast::bv(DWORD_SIZE_BIT-1, dst.getBitSize()));
 
           /* Create the semantics */
           auto node = triton::ast::bvlshr(op1, op2);
