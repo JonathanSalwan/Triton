@@ -88,7 +88,10 @@ namespace triton {
       void cfPtest_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, bool vol=false);
 
       //! The CF semantics.
-      void cfRcl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol=false);
+      void cfRcl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::ast::AbstractNode* result, triton::ast::AbstractNode* op2, bool vol=false);
+
+      //! The CF semantics.
+      void cfRcr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* result, triton::ast::AbstractNode* op2, bool vol=false);
 
       //! The CF semantics.
       void cfRol_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol=false);

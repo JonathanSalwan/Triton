@@ -742,7 +742,7 @@ namespace triton {
 
           /*
            * Create the semantic.
-           * cf = extract(bvSize, bvSize, ((op0 & op1) ^ ((op0 ^ op1 ^ parent) & (op0 ^ op1))));
+           * cf = MSB((op0 & op1) ^ ((op0 ^ op1 ^ parent) & (op0 ^ op1)));
            */
           auto node = triton::ast::extract(high, high,
                         triton::ast::bvxor(
@@ -860,14 +860,13 @@ namespace triton {
         }
 
 
-        void cfRcl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
-          auto bvSize = dst.getBitSize();
-          auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
-          auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        void cfRcl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::ast::AbstractNode* result, triton::ast::AbstractNode* op2, bool vol) {
+          auto high = result->getBitvectorSize() - 1;
+          auto cf   = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
           /*
            * Create the semantic.
-           * cf = high(res & 1) if op2 != 0 else undefined
+           * cf = MSB(result) if op2 != 0 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
            * concretization of the op2.
@@ -877,7 +876,35 @@ namespace triton {
             throw std::runtime_error("triton::arch::x86::semantics::cfRcl_s(): op2 must be a DecimalNode node.");
 
           if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0)
-            node = triton::ast::extract(high, high, triton::ast::reference(parent->getId()));
+            node = triton::ast::extract(high, high, result);
+          else
+            node = triton::api.buildSymbolicOperand(inst, cf);
+
+          /* Create the symbolic expression */
+          auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        }
+
+
+        void cfRcr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* result, triton::ast::AbstractNode* op2, bool vol) {
+          auto low = vol ? 0 : dst.getAbstractLow();
+          auto cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+
+          /*
+           * Create the semantic.
+           * cf = LSB(result) if op2 != 0 else undefined
+           * As the second operand can't be symbolized, there is
+           * no symbolic expression available. So, we must use the
+           * concretization of the op2.
+           */
+          triton::ast::AbstractNode* node;
+          if (op2->getKind() != triton::ast::DECIMAL_NODE)
+            throw std::runtime_error("triton::arch::x86::semantics::cfRcr_s(): op2 must be a DecimalNode node.");
+
+          if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0)
+            node = triton::ast::extract(low, low, result);
           else
             node = triton::api.buildSymbolicOperand(inst, cf);
 
@@ -895,7 +922,7 @@ namespace triton {
 
           /*
            * Create the semantic.
-           * cf = (res & 1) if op2 != 0 else undefined
+           * cf = LSB(parent) if op2 != 0 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
            * concretization of the op2.
@@ -924,7 +951,7 @@ namespace triton {
 
           /*
            * Create the semantic.
-           * cf = (res >> bvSize - 1) & 1 if op2 != 0 else undefined
+           * cf = MSB(parent) if op2 != 0 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
            * concretization of the op2.
@@ -1069,7 +1096,7 @@ namespace triton {
 
           /*
            * Create the semantic.
-           * of = high:bool((op1 ^ ~op2) & (op1 ^ regDst))
+           * of = MSB((op1 ^ ~op2) & (op1 ^ regDst))
            */
           auto node = triton::ast::extract(high, high,
                         triton::ast::bvand(
@@ -1158,14 +1185,13 @@ namespace triton {
 
         void ofRol_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
-          auto low    = vol ? 0 : dst.getAbstractLow();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
           auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
           auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
           /*
            * Create the semantic.
-           * of = ((cf ^ (res >> (bvsize - 1))) & 1) if op2 == 1 else undefined
+           * of = MSB(parent) ^ cf if op2 == 1 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
            * concretization of the op2.
@@ -1175,15 +1201,10 @@ namespace triton {
 
           triton::ast::AbstractNode* node;
           if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() == 1) {
-            node = triton::ast::extract(0, 0,
-                      triton::ast::bvxor(
-                        triton::ast::zx(bvSize-1, triton::api.buildSymbolicOperand(inst, cf)),
-                        triton::ast::bvshl(
-                          triton::ast::extract(high, low, triton::ast::reference(parent->getId())),
-                          triton::ast::bvsub(triton::ast::bv(bvSize, bvSize), triton::ast::bv(1, bvSize))
-                        )
-                      )
-                    );
+            node = triton::ast::bvxor(
+                     triton::ast::extract(high, high, triton::ast::reference(parent->getId())),
+                     triton::api.buildSymbolicOperand(inst, cf)
+                   );
           }
           else {
             node = triton::api.buildSymbolicOperand(inst, of);
@@ -1199,13 +1220,12 @@ namespace triton {
 
         void ofRor_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
           auto bvSize = dst.getBitSize();
-          auto low    = vol ? 0 : dst.getAbstractLow();
           auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
           auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
           /*
            * Create the semantic.
-           * of = (((res >> (bvSize - 1)) ^ (res >> (bvSize - 2))) & 1) if op2 == 1 else undefined
+           * of = MSB(parent) ^ MSB-1(parent) if op2 == 1 else undefined
            * As the second operand can't be symbolized, there is
            * no symbolic expression available. So, we must use the
            * concretization of the op2.
@@ -1215,17 +1235,9 @@ namespace triton {
 
           triton::ast::AbstractNode* node;
           if (reinterpret_cast<triton::ast::DecimalNode *>(op2)->getValue() == 1) {
-            node = triton::ast::extract(0, 0,
-                     triton::ast::bvxor(
-                       triton::ast::bvshl(
-                         triton::ast::extract(high, low, triton::ast::reference(parent->getId())),
-                         triton::ast::bvsub(triton::ast::bv(bvSize, bvSize), triton::ast::bv(1, bvSize))
-                       ),
-                       triton::ast::bvshl(
-                         triton::ast::extract(high, low, triton::ast::reference(parent->getId())),
-                         triton::ast::bvsub(triton::ast::bv(bvSize, bvSize), triton::ast::bv(2, bvSize))
-                       )
-                     )
+            node = triton::ast::bvxor(
+                     triton::ast::extract(high, high, triton::ast::reference(parent->getId())),
+                     triton::ast::extract(high-1, high-1, triton::ast::reference(parent->getId()))
                    );
           }
           else {
@@ -8098,7 +8110,7 @@ namespace triton {
           expr2->isTainted = triton::api.taintUnion(dst, srcCf);
 
           /* Upate symbolic flags */
-          triton::arch::x86::semantics::cfRcl_s(inst, expr1, dst, op2);
+          triton::arch::x86::semantics::cfRcl_s(inst, expr2, node1, op2);
           triton::arch::x86::semantics::ofRol_s(inst, expr1, dst, op2); /* Same as ROL */
 
           /* Upate the symbolic control flow */
@@ -8163,7 +8175,7 @@ namespace triton {
           expr2->isTainted = triton::api.taintUnion(dst, srcCf);
 
           /* Upate symbolic flags */
-          triton::arch::x86::semantics::cfRcl_s(inst, expr1, dst, op2); /* Same as RCL */
+          triton::arch::x86::semantics::cfRcr_s(inst, expr2, dst, node1, op2);
           triton::arch::x86::semantics::ofRor_s(inst, expr1, dst, op2); /* Same as ROR */
 
           /* Upate the symbolic control flow */
