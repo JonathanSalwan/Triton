@@ -889,7 +889,7 @@ namespace triton {
 
 
         void cfRcr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* result, triton::ast::AbstractNode* op2, bool vol) {
-          auto low = vol ? 0 : dst.getAbstractLow();
+          auto high = result->getBitvectorSize() - 1;
           auto cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
           /*
@@ -903,10 +903,13 @@ namespace triton {
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
             throw std::runtime_error("triton::arch::x86::semantics::cfRcr_s(): op2 must be a DecimalNode node.");
 
-          if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0)
-            node = triton::ast::extract(low, low, result);
-          else
+          if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0) {
+            /* yes it's should be LSB, but here it's a trick :-) */
+            node = triton::ast::extract(high, high, result);
+          }
+          else {
             node = triton::api.buildSymbolicOperand(inst, cf);
+          }
 
           /* Create the symbolic expression */
           auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
@@ -1238,6 +1241,41 @@ namespace triton {
             node = triton::ast::bvxor(
                      triton::ast::extract(high, high, triton::ast::reference(parent->getId())),
                      triton::ast::extract(high-1, high-1, triton::ast::reference(parent->getId()))
+                   );
+          }
+          else {
+            node = triton::api.buildSymbolicOperand(inst, of);
+          }
+
+          /* Create the symbolic expression */
+          auto expr = triton::api.createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+        }
+
+
+        void ofRcr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
+          auto bvSize = dst.getBitSize();
+          auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+          auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+          auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+
+          /*
+           * Create the semantic.
+           * of = MSB(op1) ^ cf if op2 == 1 else undefined
+           * As the second operand can't be symbolized, there is
+           * no symbolic expression available. So, we must use the
+           * concretization of the op2.
+           */
+          if (op2->getKind() != triton::ast::DECIMAL_NODE)
+            throw std::runtime_error("triton::arch::x86::semantics::ofRcr_s(): op2 must be a DecimalNode node.");
+
+          triton::ast::AbstractNode* node;
+          if (reinterpret_cast<triton::ast::DecimalNode *>(op2)->getValue() == 1) {
+            node = triton::ast::bvxor(
+                     triton::ast::extract(high, high, op1),
+                     triton::api.buildSymbolicOperand(inst, cf)
                    );
           }
           else {
@@ -8111,7 +8149,7 @@ namespace triton {
 
           /* Upate symbolic flags */
           triton::arch::x86::semantics::cfRcl_s(inst, expr2, node1, op2);
-          triton::arch::x86::semantics::ofRol_s(inst, expr1, dst, op2); /* Same as ROL */
+          triton::arch::x86::semantics::ofRol_s(inst, expr2, dst, op2); /* Same as ROL */
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
@@ -8175,8 +8213,8 @@ namespace triton {
           expr2->isTainted = triton::api.taintUnion(dst, srcCf);
 
           /* Upate symbolic flags */
+          triton::arch::x86::semantics::ofRcr_s(inst, expr2, dst, op1, op2); /* OF flag must be setup before */
           triton::arch::x86::semantics::cfRcr_s(inst, expr2, dst, node1, op2);
-          triton::arch::x86::semantics::ofRor_s(inst, expr1, dst, op2); /* Same as ROR */
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
