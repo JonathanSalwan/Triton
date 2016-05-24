@@ -29,6 +29,7 @@ def cafter(instruction):
 
         expr   = getFullAstFromId(seid)
         svalue = expr.evaluate()
+        #svalue = evaluateAstViaZ3(expr)
 
         # Check register
         if cvalue != svalue:
@@ -70,7 +71,7 @@ def cafter(instruction):
 
 if __name__ == '__main__':
     setArchitecture(ARCH.X86_64)
-    setupImageWhitelist(['emu-test-x86_64'])
+    setupImageWhitelist(['qemu-test-x86_64'])
     startAnalysisFromSymbol('main')
     addCallback(cafter,  CALLBACK.AFTER)
     addCallback(sbefore, CALLBACK.BEFORE_SYMPROC)

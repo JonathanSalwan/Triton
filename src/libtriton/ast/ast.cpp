@@ -1664,12 +1664,8 @@ namespace triton {
 
       if (this->childs[1]->evaluate() == 0)
         this->eval = this->childs[0]->evaluate();
-      else {
-        if (op1Signed < 0)
-          this->eval = ((op1Signed % op2Signed).convert_to<triton::uint512>() & this->getBitvectorMask());
-        else
-          this->eval = ((this->childs[0]->evaluate() % this->childs[1]->evaluate()) & this->getBitvectorMask());
-      }
+      else
+        this->eval = ((op1Signed - ((op1Signed / op2Signed) * op2Signed)).convert_to<triton::uint512>() & this->getBitvectorMask());
 
       /* Init childs and spread information */
       for (triton::uint32 index = 0; index < this->childs.size(); index++) {
