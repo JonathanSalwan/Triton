@@ -3187,10 +3187,15 @@ namespace triton {
 
 
         void cmpxchg_s(triton::arch::Instruction& inst) {
-          auto& src1 = inst.operands[0];
-          auto& src2 = inst.operands[1];
+          auto& src1  = inst.operands[0];
+          auto& src2  = inst.operands[1];
+          auto src1p  = inst.operands[0].getRegister().getParent();
+          auto src2p  = inst.operands[1].getRegister().getParent();;
 
+          /* Create the tempory accumulator */
           triton::arch::OperandWrapper accumulator(TRITON_X86_REG_AL);
+          triton::arch::OperandWrapper accumulatorp(TRITON_X86_REG_AL.getParent());
+
           switch (src1.getSize()) {
             case WORD_SIZE:
               accumulator.setRegister(TRITON_X86_REG_AX);
@@ -3204,19 +3209,38 @@ namespace triton {
           }
 
           /* Create symbolic operands */
-          auto op1 = triton::api.buildSymbolicOperand(inst, accumulator);
-          auto op2 = triton::api.buildSymbolicOperand(inst, src1);
-          auto op3 = triton::api.buildSymbolicOperand(inst, src2);
+          auto op1  = triton::api.buildSymbolicOperand(inst, accumulator);
+          auto op2  = triton::api.buildSymbolicOperand(inst, src1);
+          auto op3  = triton::api.buildSymbolicOperand(inst, src2);
+          auto op1p = triton::api.buildSymbolicOperand(accumulatorp);
+          auto op2p = triton::api.buildSymbolicRegisterOperand((src1.getType() == triton::arch::OP_REG ? src1.getRegister().getParent() : accumulatorp.getRegister()));
+          auto op3p = triton::api.buildSymbolicRegisterOperand((src1.getType() == triton::arch::OP_REG ? src2.getRegister().getParent() : accumulatorp.getRegister()));
 
           /* Create the semantics */
-          auto node1 = triton::ast::bvsub(op1, op2);
-          auto node2 = triton::ast::ite(triton::ast::equal(op1, op2), op3, op2);
-          auto node3 = triton::ast::ite(triton::ast::equal(op1, op2), op1, op2);
+          auto nodeq  = triton::ast::equal(op1, op2);
+          auto node1  = triton::ast::bvsub(op1, op2);
+          auto node2  = triton::ast::ite(nodeq, op3, op2);
+          auto node3  = triton::ast::ite(nodeq, op1, op2);
+          auto node2p = triton::ast::ite(nodeq, op3p, op2p);
+          auto node3p = triton::ast::ite(nodeq, op1p, op2p);
 
           /* Create symbolic expression */
           auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "CMP operation");
-          auto expr2 = triton::api.createSymbolicExpression(inst, node2, src1, "XCHG operation");
-          auto expr3 = triton::api.createSymbolicExpression(inst, node3, accumulator, "XCHG operation");
+
+          triton::engines::symbolic::SymbolicExpression* expr2 = nullptr;
+          triton::engines::symbolic::SymbolicExpression* expr3 = nullptr;
+
+          /* Destination */
+          if (nodeq->evaluate() == false && src1.getType() == triton::arch::OP_REG)
+            expr2 = triton::api.createSymbolicRegisterExpression(inst, node2p, src1p, "XCHG operation");
+          else
+            expr2 = triton::api.createSymbolicExpression(inst, node2, src1, "XCHG operation");
+
+          /* Accumulator */
+          if (nodeq->evaluate() == true)
+            expr3 = triton::api.createSymbolicExpression(inst, node3p, accumulatorp, "XCHG operation");
+          else
+            expr3 = triton::api.createSymbolicExpression(inst, node3, accumulator, "XCHG operation");
 
           /* Spread taint */
           expr1->isTainted = triton::api.isTainted(accumulator) | triton::api.isTainted(src1);
