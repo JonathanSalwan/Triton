@@ -312,6 +312,9 @@ namespace triton {
       //! The DIV semantics.
       void div_s(triton::arch::Instruction& inst);
 
+      //! The EXTRACTPS semantics.
+      void extractps_s(triton::arch::Instruction& inst);
+
       //! The IDIV semantics.
       void idiv_s(triton::arch::Instruction& inst);
 

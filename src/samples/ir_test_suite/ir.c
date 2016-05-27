@@ -1924,6 +1924,48 @@ void check(void)
   asm("pmovzxdq xmm5, xmm2");
   asm("pmovzxdq xmm5, xmm3");
   asm("pmovzxdq xmm5, xmm4");
+
+  asm("extractps rax, xmm1, 0");
+  asm("extractps rax, xmm1, 1");
+  asm("extractps rax, xmm1, 2");
+  asm("extractps rax, xmm1, 3");
+  asm("extractps rax, xmm1, 4");
+  asm("extractps rax, xmm2, 0");
+  asm("extractps rax, xmm2, 1");
+  asm("extractps rax, xmm2, 2");
+  asm("extractps rax, xmm2, 3");
+  asm("extractps rax, xmm2, 4");
+  asm("extractps rax, xmm3, 0");
+  asm("extractps rax, xmm3, 1");
+  asm("extractps rax, xmm3, 2");
+  asm("extractps rax, xmm3, 3");
+  asm("extractps rax, xmm3, 4");
+  asm("extractps rax, xmm4, 0");
+  asm("extractps rax, xmm4, 1");
+  asm("extractps rax, xmm4, 2");
+  asm("extractps rax, xmm4, 3");
+  asm("extractps rax, xmm4, 4");
+
+  asm("extractps edx, xmm1, 0");
+  asm("extractps edx, xmm1, 1");
+  asm("extractps edx, xmm1, 2");
+  asm("extractps edx, xmm1, 3");
+  asm("extractps edx, xmm1, 4");
+  asm("extractps edx, xmm2, 0");
+  asm("extractps edx, xmm2, 1");
+  asm("extractps edx, xmm2, 2");
+  asm("extractps edx, xmm2, 3");
+  asm("extractps edx, xmm2, 4");
+  asm("extractps edx, xmm3, 0");
+  asm("extractps edx, xmm3, 1");
+  asm("extractps edx, xmm3, 2");
+  asm("extractps edx, xmm3, 3");
+  asm("extractps edx, xmm3, 4");
+  asm("extractps edx, xmm4, 0");
+  asm("extractps edx, xmm4, 1");
+  asm("extractps edx, xmm4, 2");
+  asm("extractps edx, xmm4, 3");
+  asm("extractps edx, xmm4, 4");
 }
 
 int main(){

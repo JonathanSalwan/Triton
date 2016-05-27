@@ -80,6 +80,7 @@ CQO                          |            | convert qword (rax) to oword (rdx:ra
 CWDE                         |            | Convert word (ax) to dword (eax).
 DEC                          |            | Decrement by 1
 DIV                          |            | Unsigned Divide
+EXTRACTPS                    | sse4.1     | Extract Packed Single Precision Floating-Point Value
 IDIV                         |            | Signed Divide
 IMUL                         |            | Signed Multiply
 INC                          |            | Increment by 1
@@ -335,6 +336,7 @@ namespace triton {
             case ID_INS_CWDE:           triton::arch::x86::semantics::cwde_s(inst);         break;
             case ID_INS_DEC:            triton::arch::x86::semantics::dec_s(inst);          break;
             case ID_INS_DIV:            triton::arch::x86::semantics::div_s(inst);          break;
+            case ID_INS_EXTRACTPS:      triton::arch::x86::semantics::extractps_s(inst);    break;
             case ID_INS_IDIV:           triton::arch::x86::semantics::idiv_s(inst);         break;
             case ID_INS_IMUL:           triton::arch::x86::semantics::imul_s(inst);         break;
             case ID_INS_INC:            triton::arch::x86::semantics::inc_s(inst);          break;
@@ -3705,6 +3707,47 @@ namespace triton {
             }
 
           }
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void extractps_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src1 = inst.operands[1];
+          auto& src2 = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, src2);
+
+          /* Create the semantics */
+          auto node = triton::ast::extract(DWORD_SIZE_BIT-1, 0,
+                        triton::ast::bvlshr(
+                          op2,
+                          triton::ast::bvmul(
+                            triton::ast::zx(126, triton::ast::extract(1, 0, op3)),
+                            triton::ast::bv(DWORD_SIZE_BIT, DQWORD_SIZE_BIT)
+                          )
+                        )
+                      );
+
+          switch (dst.getBitSize()) {
+            case DWORD_SIZE_BIT:
+              break;
+            case QWORD_SIZE_BIT:
+              node = triton::ast::zx(DWORD_SIZE_BIT, node);
+              break;
+            default:
+              throw std::runtime_error("triton::arch::x86::semantics::extractps_s(): Invalid destination operand.");
+          }
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "EXTRACTPS operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src1);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
