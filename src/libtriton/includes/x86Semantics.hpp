@@ -597,6 +597,42 @@ namespace triton {
       //! The PMOVMSKB semantics.
       void pmovmskb_s(triton::arch::Instruction& inst);
 
+      //! The PMOVSXBD semantics.
+      void pmovsxbd_s(triton::arch::Instruction& inst);
+
+      //! The PMOVSXBQ semantics.
+      void pmovsxbq_s(triton::arch::Instruction& inst);
+
+      //! The PMOVSXBW semantics.
+      void pmovsxbw_s(triton::arch::Instruction& inst);
+
+      //! The PMOVSXDQ semantics.
+      void pmovsxdq_s(triton::arch::Instruction& inst);
+
+      //! The PMOVSXWD semantics.
+      void pmovsxwd_s(triton::arch::Instruction& inst);
+
+      //! The PMOVSXWQ semantics.
+      void pmovsxwq_s(triton::arch::Instruction& inst);
+
+      //! The PMOVZXBD semantics.
+      void pmovzxbd_s(triton::arch::Instruction& inst);
+
+      //! The PMOVZXBQ semantics.
+      void pmovzxbq_s(triton::arch::Instruction& inst);
+
+      //! The PMOVZXBW semantics.
+      void pmovzxbw_s(triton::arch::Instruction& inst);
+
+      //! The PMOVZXDQ semantics.
+      void pmovzxdq_s(triton::arch::Instruction& inst);
+
+      //! The PMOVZXWD semantics.
+      void pmovzxwd_s(triton::arch::Instruction& inst);
+
+      //! The PMOVZXWQ semantics.
+      void pmovzxwq_s(triton::arch::Instruction& inst);
+
       //! The POP semantics.
       void pop_s(triton::arch::Instruction& inst);
 

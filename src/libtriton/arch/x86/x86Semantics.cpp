@@ -175,6 +175,18 @@ PMINUB                       | sse1       | Minimum of Packed Unsigned Byte Inte
 PMINUD                       | sse4.1     | Minimum of Packed Unsigned Doubleword Integers
 PMINUW                       | sse4.1     | Minimum of Packed Unsigned Word Integers
 PMOVMSKB                     | sse1       | Move Byte Mask
+PMOVSXBD                     | sse4.1     | Sign Extend 4 Packed Signed 8-bit Integers
+PMOVSXBQ                     | sse4.1     | Sign Extend 2 Packed Signed 8-bit Integers
+PMOVSXBW                     | sse4.1     | Sign Extend 8 Packed Signed 8-bit Integers
+PMOVSXDQ                     | sse4.1     | Sign Extend 2 Packed Signed 32-bit Integers
+PMOVSXWD                     | sse4.1     | Sign Extend 4 Packed Signed 16-bit Integers
+PMOVSXWQ                     | sse4.1     | Sign Extend 2 Packed Signed 16-bit Integers
+PMOVZXBD                     | sse4.1     | Zero Extend 4 Packed Signed 8-bit Integers
+PMOVZXBQ                     | sse4.1     | Zero Extend 2 Packed Signed 8-bit Integers
+PMOVZXBW                     | sse4.1     | Zero Extend 8 Packed Signed 8-bit Integers
+PMOVZXDQ                     | sse4.1     | Zero Extend 2 Packed Signed 32-bit Integers
+PMOVZXWD                     | sse4.1     | Zero Extend 4 Packed Signed 16-bit Integers
+PMOVZXWQ                     | sse4.1     | Zero Extend 2 Packed Signed 16-bit Integers
 POP                          |            | Pop a Value from the Stack
 POPAL/POPAD                  |            | Pop All General-Purpose Registers
 POPFD                        |            | Pop Stack into EFLAGS Register
@@ -418,6 +430,18 @@ namespace triton {
             case ID_INS_PMINUD:         triton::arch::x86::semantics::pminud_s(inst);       break;
             case ID_INS_PMINUW:         triton::arch::x86::semantics::pminuw_s(inst);       break;
             case ID_INS_PMOVMSKB:       triton::arch::x86::semantics::pmovmskb_s(inst);     break;
+            case ID_INS_PMOVSXBD:       triton::arch::x86::semantics::pmovsxbd_s(inst);     break;
+            case ID_INS_PMOVSXBQ:       triton::arch::x86::semantics::pmovsxbq_s(inst);     break;
+            case ID_INS_PMOVSXBW:       triton::arch::x86::semantics::pmovsxbw_s(inst);     break;
+            case ID_INS_PMOVSXDQ:       triton::arch::x86::semantics::pmovsxdq_s(inst);     break;
+            case ID_INS_PMOVSXWD:       triton::arch::x86::semantics::pmovsxwd_s(inst);     break;
+            case ID_INS_PMOVSXWQ:       triton::arch::x86::semantics::pmovsxwq_s(inst);     break;
+            case ID_INS_PMOVZXBD:       triton::arch::x86::semantics::pmovzxbd_s(inst);     break;
+            case ID_INS_PMOVZXBQ:       triton::arch::x86::semantics::pmovzxbq_s(inst);     break;
+            case ID_INS_PMOVZXBW:       triton::arch::x86::semantics::pmovzxbw_s(inst);     break;
+            case ID_INS_PMOVZXDQ:       triton::arch::x86::semantics::pmovzxdq_s(inst);     break;
+            case ID_INS_PMOVZXWD:       triton::arch::x86::semantics::pmovzxwd_s(inst);     break;
+            case ID_INS_PMOVZXWQ:       triton::arch::x86::semantics::pmovzxwq_s(inst);     break;
             case ID_INS_POP:            triton::arch::x86::semantics::pop_s(inst);          break;
             case ID_INS_POPAL:          triton::arch::x86::semantics::popal_s(inst);        break;
             case ID_INS_POPFD:          triton::arch::x86::semantics::popfd_s(inst);        break;
@@ -6684,6 +6708,7 @@ namespace triton {
 
           /* Create the semantics */
           std::list<triton::ast::AbstractNode *> mskb;
+
           switch (src.getSize()) {
             case DQWORD_SIZE:
               mskb.push_back(triton::ast::extract(127, 127, op2));
@@ -6710,6 +6735,338 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMOVMSKB operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmovsxbd_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+
+          pck.push_back(triton::ast::sx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(31, 24, op2)));
+          pck.push_back(triton::ast::sx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(23, 16, op2)));
+          pck.push_back(triton::ast::sx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(15, 8,  op2)));
+          pck.push_back(triton::ast::sx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(7,  0,  op2)));
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMOVSXBD operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmovsxbq_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+
+          pck.push_back(triton::ast::sx(QWORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(15, 8,  op2)));
+          pck.push_back(triton::ast::sx(QWORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(7,  0,  op2)));
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMOVSXBQ operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmovsxbw_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+
+          pck.push_back(triton::ast::sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(63, 56, op2)));
+          pck.push_back(triton::ast::sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(55, 48, op2)));
+          pck.push_back(triton::ast::sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(47, 40, op2)));
+          pck.push_back(triton::ast::sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(39, 32, op2)));
+          pck.push_back(triton::ast::sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(31, 24, op2)));
+          pck.push_back(triton::ast::sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(23, 16, op2)));
+          pck.push_back(triton::ast::sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(15, 8,  op2)));
+          pck.push_back(triton::ast::sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(7,  0,  op2)));
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMOVSXBW operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmovsxdq_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+
+          pck.push_back(triton::ast::sx(QWORD_SIZE_BIT - DWORD_SIZE_BIT, triton::ast::extract(63, 32, op2)));
+          pck.push_back(triton::ast::sx(QWORD_SIZE_BIT - DWORD_SIZE_BIT, triton::ast::extract(31, 0,  op2)));
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMOVSXDQ operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmovsxwd_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+
+          pck.push_back(triton::ast::sx(DWORD_SIZE_BIT - WORD_SIZE_BIT, triton::ast::extract(63, 48, op2)));
+          pck.push_back(triton::ast::sx(DWORD_SIZE_BIT - WORD_SIZE_BIT, triton::ast::extract(47, 32, op2)));
+          pck.push_back(triton::ast::sx(DWORD_SIZE_BIT - WORD_SIZE_BIT, triton::ast::extract(31, 16, op2)));
+          pck.push_back(triton::ast::sx(DWORD_SIZE_BIT - WORD_SIZE_BIT, triton::ast::extract(15, 0,  op2)));
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMOVSXWD operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmovsxwq_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+
+          pck.push_back(triton::ast::sx(QWORD_SIZE_BIT - WORD_SIZE_BIT, triton::ast::extract(31, 16, op2)));
+          pck.push_back(triton::ast::sx(QWORD_SIZE_BIT - WORD_SIZE_BIT, triton::ast::extract(15, 0,  op2)));
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMOVSXWQ operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmovzxbd_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+
+          pck.push_back(triton::ast::zx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(31, 24, op2)));
+          pck.push_back(triton::ast::zx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(23, 16, op2)));
+          pck.push_back(triton::ast::zx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(15, 8,  op2)));
+          pck.push_back(triton::ast::zx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(7,  0,  op2)));
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMOVZXBD operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmovzxbq_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+
+          pck.push_back(triton::ast::zx(QWORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(15, 8,  op2)));
+          pck.push_back(triton::ast::zx(QWORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(7,  0,  op2)));
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMOVZXBQ operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmovzxbw_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+
+          pck.push_back(triton::ast::zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(63, 56, op2)));
+          pck.push_back(triton::ast::zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(55, 48, op2)));
+          pck.push_back(triton::ast::zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(47, 40, op2)));
+          pck.push_back(triton::ast::zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(39, 32, op2)));
+          pck.push_back(triton::ast::zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(31, 24, op2)));
+          pck.push_back(triton::ast::zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(23, 16, op2)));
+          pck.push_back(triton::ast::zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(15, 8,  op2)));
+          pck.push_back(triton::ast::zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, triton::ast::extract(7,  0,  op2)));
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMOVZXBW operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmovzxdq_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+
+          pck.push_back(triton::ast::zx(QWORD_SIZE_BIT - DWORD_SIZE_BIT, triton::ast::extract(63, 32, op2)));
+          pck.push_back(triton::ast::zx(QWORD_SIZE_BIT - DWORD_SIZE_BIT, triton::ast::extract(31, 0,  op2)));
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMOVZXDQ operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmovzxwd_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+
+          pck.push_back(triton::ast::zx(DWORD_SIZE_BIT - WORD_SIZE_BIT, triton::ast::extract(63, 48, op2)));
+          pck.push_back(triton::ast::zx(DWORD_SIZE_BIT - WORD_SIZE_BIT, triton::ast::extract(47, 32, op2)));
+          pck.push_back(triton::ast::zx(DWORD_SIZE_BIT - WORD_SIZE_BIT, triton::ast::extract(31, 16, op2)));
+          pck.push_back(triton::ast::zx(DWORD_SIZE_BIT - WORD_SIZE_BIT, triton::ast::extract(15, 0,  op2)));
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMOVZXWD operation");
+
+          /* Apply the taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pmovzxwq_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode *> pck;
+
+          pck.push_back(triton::ast::zx(QWORD_SIZE_BIT - WORD_SIZE_BIT, triton::ast::extract(31, 16, op2)));
+          pck.push_back(triton::ast::zx(QWORD_SIZE_BIT - WORD_SIZE_BIT, triton::ast::extract(15, 0,  op2)));
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMOVZXWQ operation");
 
           /* Apply the taint */
           expr->isTainted = triton::api.taintAssignment(dst, src);

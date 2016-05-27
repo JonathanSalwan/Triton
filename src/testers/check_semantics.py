@@ -104,8 +104,8 @@ def cafter(instruction):
 
 if __name__ == '__main__':
     setArchitecture(ARCH.X86_64)
-    startAnalysisFromEntry()
-    #startAnalysisFromSymbol('check')
+    #startAnalysisFromEntry()
+    startAnalysisFromSymbol('check')
     addCallback(cafter,  CALLBACK.AFTER)
     addCallback(sbefore, CALLBACK.BEFORE_SYMPROC)
     runProgram()

@@ -1858,6 +1858,72 @@ void check(void)
   asm("paddq xmm3, xmm4");
   asm("paddq xmm1, xmm2");
   asm("paddq xmm2, xmm4");
+
+  init(tab1, tab2, tab3, tab4);
+  asm("lddqu xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("lddqu xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("lddqu xmm4, xmmword ptr [%0]" :: "r"(tab4));
+
+  asm("pmovsxbw xmm5, xmm1");
+  asm("pmovsxbw xmm5, xmm2");
+  asm("pmovsxbw xmm5, xmm3");
+  asm("pmovsxbw xmm5, xmm4");
+
+  asm("pmovzxbw xmm5, xmm1");
+  asm("pmovzxbw xmm5, xmm2");
+  asm("pmovzxbw xmm5, xmm3");
+  asm("pmovzxbw xmm5, xmm4");
+
+  asm("pmovsxbd xmm5, xmm1");
+  asm("pmovsxbd xmm5, xmm2");
+  asm("pmovsxbd xmm5, xmm3");
+  asm("pmovsxbd xmm5, xmm4");
+
+  asm("pmovzxbd xmm5, xmm1");
+  asm("pmovzxbd xmm5, xmm2");
+  asm("pmovzxbd xmm5, xmm3");
+  asm("pmovzxbd xmm5, xmm4");
+
+  asm("pmovsxbq xmm5, xmm1");
+  asm("pmovsxbq xmm5, xmm2");
+  asm("pmovsxbq xmm5, xmm3");
+  asm("pmovsxbq xmm5, xmm4");
+
+  asm("pmovzxbq xmm5, xmm1");
+  asm("pmovzxbq xmm5, xmm2");
+  asm("pmovzxbq xmm5, xmm3");
+  asm("pmovzxbq xmm5, xmm4");
+
+  asm("pmovsxwd xmm5, xmm1");
+  asm("pmovsxwd xmm5, xmm2");
+  asm("pmovsxwd xmm5, xmm3");
+  asm("pmovsxwd xmm5, xmm4");
+
+  asm("pmovzxwd xmm5, xmm1");
+  asm("pmovzxwd xmm5, xmm2");
+  asm("pmovzxwd xmm5, xmm3");
+  asm("pmovzxwd xmm5, xmm4");
+
+  asm("pmovsxwq xmm5, xmm1");
+  asm("pmovsxwq xmm5, xmm2");
+  asm("pmovsxwq xmm5, xmm3");
+  asm("pmovsxwq xmm5, xmm4");
+
+  asm("pmovzxwq xmm5, xmm1");
+  asm("pmovzxwq xmm5, xmm2");
+  asm("pmovzxwq xmm5, xmm3");
+  asm("pmovzxwq xmm5, xmm4");
+
+  asm("pmovsxdq xmm5, xmm1");
+  asm("pmovsxdq xmm5, xmm2");
+  asm("pmovsxdq xmm5, xmm3");
+  asm("pmovsxdq xmm5, xmm4");
+
+  asm("pmovzxdq xmm5, xmm1");
+  asm("pmovzxdq xmm5, xmm2");
+  asm("pmovzxdq xmm5, xmm3");
+  asm("pmovzxdq xmm5, xmm4");
 }
 
 int main(){
