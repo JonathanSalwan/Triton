@@ -2000,6 +2000,28 @@ void check(void)
   asm("pavgw xmm4, xmm2");
   asm("pavgw xmm4, xmm3");
   asm("pavgw xmm4, xmm4");
+
+  init(tab1, tab2, tab3, tab4);
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("vmovdqa xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("vmovdqa xmm4, xmmword ptr [%0]" :: "r"(tab4));
+
+  asm("vpor xmm1, xmm2, xmm3");
+  asm("vpor xmm1, xmm1, xmm2");
+  asm("vpor xmm1, xmm3, xmm4");
+
+  asm("vpxor xmm2, xmm3, xmm3");
+  asm("vpxor xmm2, xmm1, xmm3");
+  asm("vpxor xmm2, xmm1, xmm4");
+
+  asm("vpand xmm3, xmm1, xmm4");
+  asm("vpand xmm3, xmm2, xmm2");
+  asm("vpand xmm3, xmm3, xmm2");
+
+  asm("vpandn xmm4, xmm3, xmm2");
+  asm("vpandn xmm4, xmm2, xmm1");
+  asm("vpandn xmm4, xmm2, xmm3");
 }
 
 int main(){

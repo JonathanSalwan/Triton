@@ -861,11 +861,23 @@ namespace triton {
       //! The UNPCKLPS semantics.
       void unpcklps_s(triton::arch::Instruction& inst);
 
+      //! The VMOVDQA semantics.
+      void vmovdqa_s(triton::arch::Instruction& inst);
+
+      //! The VPAND semantics.
+      void vpand_s(triton::arch::Instruction& inst);
+
+      //! The VPANDN semantics.
+      void vpandn_s(triton::arch::Instruction& inst);
+
+      //! The VPOR semantics.
+      void vpor_s(triton::arch::Instruction& inst);
+
       //! The VPTEST semantics.
       void vptest_s(triton::arch::Instruction& inst);
 
-      //! The VMOVDQA semantics.
-      void vmovdqa_s(triton::arch::Instruction& inst);
+      //! The VPXOR semantics.
+      void vpxor_s(triton::arch::Instruction& inst);
 
       //! The XADD semantics.
       void xadd_s(triton::arch::Instruction& inst);

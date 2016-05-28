@@ -270,7 +270,11 @@ UNPCKHPS                     | sse1       | Unpack and Interleave High Packed Si
 UNPCKLPD                     | sse2       | Unpack and Interleave Low Packed Double-Precision Floating-Point Values
 UNPCKLPS                     | sse1       | Unpack and Interleave Low Packed Single-Precision Floating-Point Values
 VMOVDQA                      | avx        | VEX Move aligned packed integer values
+VPAND                        | avx/avx2   | VEX Logical AND
+VPANDN                       | avx/avx2   | VEX Logical AND NOT
+VPOR                         | avx/avx2   | VEX Logical OR
 VPTEST                       | avx        | VEX Logical Compare
+VPXOR                        | avx/avx2   | VEX Logical XOR
 XADD                         |            | Exchange and Add
 XCHG                         |            | Exchange Register/Memory with Register
 XOR                          |            | Logical Exclusive OR
@@ -528,7 +532,11 @@ namespace triton {
             case ID_INS_UNPCKLPD:       triton::arch::x86::semantics::unpcklpd_s(inst);     break;
             case ID_INS_UNPCKLPS:       triton::arch::x86::semantics::unpcklps_s(inst);     break;
             case ID_INS_VMOVDQA:        triton::arch::x86::semantics::vmovdqa_s(inst);      break;
+            case ID_INS_VPAND:          triton::arch::x86::semantics::vpand_s(inst);        break;
+            case ID_INS_VPANDN:         triton::arch::x86::semantics::vpandn_s(inst);       break;
+            case ID_INS_VPOR:           triton::arch::x86::semantics::vpor_s(inst);         break;
             case ID_INS_VPTEST:         triton::arch::x86::semantics::vptest_s(inst);       break;
+            case ID_INS_VPXOR:          triton::arch::x86::semantics::vpxor_s(inst);        break;
             case ID_INS_XADD:           triton::arch::x86::semantics::xadd_s(inst);         break;
             case ID_INS_XCHG:           triton::arch::x86::semantics::xchg_s(inst);         break;
             case ID_INS_XOR:            triton::arch::x86::semantics::xor_s(inst);          break;
@@ -10084,6 +10092,75 @@ namespace triton {
         }
 
 
+        void vpand_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src1 = inst.operands[1];
+          auto& src2 = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, src2);
+
+          /* Create the semantics */
+          auto node = triton::ast::bvand(op2, op3);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "VPAND operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src1) | triton::api.taintUnion(dst, src2);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void vpandn_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src1 = inst.operands[1];
+          auto& src2 = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, src2);
+
+          /* Create the semantics */
+          auto node = triton::ast::bvand(triton::ast::bvnot(op2), op3);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "VPANDN operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src1) | triton::api.taintUnion(dst, src2);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void vpor_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src1 = inst.operands[1];
+          auto& src2 = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, src2);
+
+          /* Create the semantics */
+          auto node = triton::ast::bvor(op2, op3);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "VPOR operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src1) | triton::api.taintUnion(dst, src2);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
         void vptest_s(triton::arch::Instruction& inst) {
           auto& src1 = inst.operands[0];
           auto& src2 = inst.operands[1];
@@ -10111,6 +10188,29 @@ namespace triton {
           triton::arch::x86::semantics::clearFlag_s(inst, TRITON_X86_REG_PF, "Clears parity flag");
           triton::arch::x86::semantics::clearFlag_s(inst, TRITON_X86_REG_SF, "Clears sign flag");
           triton::arch::x86::semantics::zf_s(inst, expr1, src1, true);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void vpxor_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src1 = inst.operands[1];
+          auto& src2 = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op3 = triton::api.buildSymbolicOperand(inst, src2);
+
+          /* Create the semantics */
+          auto node = triton::ast::bvxor(op2, op3);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "VPXOR operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src1) | triton::api.taintUnion(dst, src2);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);

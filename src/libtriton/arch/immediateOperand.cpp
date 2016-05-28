@@ -24,7 +24,7 @@ namespace triton {
       if (size == 0)
         throw std::runtime_error("ImmediateOperand::ImmediateOperand(): size cannot be zero.");
 
-      if (size != BYTE_SIZE && size != WORD_SIZE && size != DWORD_SIZE && size != QWORD_SIZE && size != DQWORD_SIZE)
+      if (size != BYTE_SIZE && size != WORD_SIZE && size != DWORD_SIZE && size != QWORD_SIZE && size != DQWORD_SIZE && size != QQWORD_SIZE && size != DQQWORD_SIZE)
         throw std::runtime_error("ImmediateOperand::ImmediateOperand(): size must be aligned.");
 
       this->setPair(std::make_pair(((size * BYTE_SIZE_BIT) - 1), 0));
