@@ -1966,6 +1966,40 @@ void check(void)
   asm("extractps edx, xmm4, 2");
   asm("extractps edx, xmm4, 3");
   asm("extractps edx, xmm4, 4");
+
+  asm("pavgb xmm1, xmm1");
+  asm("pavgb xmm1, xmm2");
+  asm("pavgb xmm1, xmm3");
+  asm("pavgb xmm1, xmm4");
+  asm("pavgb xmm2, xmm1");
+  asm("pavgb xmm2, xmm2");
+  asm("pavgb xmm2, xmm3");
+  asm("pavgb xmm2, xmm4");
+  asm("pavgb xmm3, xmm1");
+  asm("pavgb xmm3, xmm2");
+  asm("pavgb xmm3, xmm3");
+  asm("pavgb xmm3, xmm4");
+  asm("pavgb xmm4, xmm1");
+  asm("pavgb xmm4, xmm2");
+  asm("pavgb xmm4, xmm3");
+  asm("pavgb xmm4, xmm4");
+
+  asm("pavgw xmm1, xmm1");
+  asm("pavgw xmm1, xmm2");
+  asm("pavgw xmm1, xmm3");
+  asm("pavgw xmm1, xmm4");
+  asm("pavgw xmm2, xmm1");
+  asm("pavgw xmm2, xmm2");
+  asm("pavgw xmm2, xmm3");
+  asm("pavgw xmm2, xmm4");
+  asm("pavgw xmm3, xmm1");
+  asm("pavgw xmm3, xmm2");
+  asm("pavgw xmm3, xmm3");
+  asm("pavgw xmm3, xmm4");
+  asm("pavgw xmm4, xmm1");
+  asm("pavgw xmm4, xmm2");
+  asm("pavgw xmm4, xmm3");
+  asm("pavgw xmm4, xmm4");
 }
 
 int main(){

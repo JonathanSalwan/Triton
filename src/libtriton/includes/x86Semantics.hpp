@@ -543,6 +543,12 @@ namespace triton {
       //! The PANDN semantics.
       void pandn_s(triton::arch::Instruction& inst);
 
+      //! The PAVGB semantics.
+      void pavgb_s(triton::arch::Instruction& inst);
+
+      //! The PAVGW semantics.
+      void pavgw_s(triton::arch::Instruction& inst);
+
       //! The PCMPEQB semantics.
       void pcmpeqb_s(triton::arch::Instruction& inst);
 

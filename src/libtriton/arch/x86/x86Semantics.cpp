@@ -157,6 +157,8 @@ PADDQ                        | mmx/sse2   | Add packed quadword integers
 PADDW                        | mmx/sse2   | Add packed word integers
 PAND                         | mmx/sse2   | Logical AND
 PANDN                        | mmx/sse2   | Logical AND NOT
+PAVGB                        | sse1       | Average Packed Unsigned Byte Integers
+PAVGW                        | sse1       | Average Packed Unsigned Word Integers
 PCMPEQB                      | mmx/sse2   | Compare Packed Data for Equal (bytes)
 PCMPEQD                      | mmx/sse2   | Compare Packed Data for Equal (dwords)
 PCMPEQW                      | mmx/sse2   | Compare Packed Data for Equal (words)
@@ -413,6 +415,8 @@ namespace triton {
             case ID_INS_PADDW:          triton::arch::x86::semantics::paddw_s(inst);        break;
             case ID_INS_PAND:           triton::arch::x86::semantics::pand_s(inst);         break;
             case ID_INS_PANDN:          triton::arch::x86::semantics::pandn_s(inst);        break;
+            case ID_INS_PAVGB:          triton::arch::x86::semantics::pavgb_s(inst);        break;
+            case ID_INS_PAVGW:          triton::arch::x86::semantics::pavgw_s(inst);        break;
             case ID_INS_PCMPEQB:        triton::arch::x86::semantics::pcmpeqb_s(inst);      break;
             case ID_INS_PCMPEQD:        triton::arch::x86::semantics::pcmpeqd_s(inst);      break;
             case ID_INS_PCMPEQW:        triton::arch::x86::semantics::pcmpeqw_s(inst);      break;
@@ -6103,6 +6107,92 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PANDN operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pavgb_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> pck;
+
+          for (triton::uint32 index = 0; index < dst.getSize(); index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
+            pck.push_back(
+              triton::ast::extract(BYTE_SIZE_BIT-1, 0,
+                triton::ast::bvlshr(
+                  triton::ast::bvadd(
+                    triton::ast::bvadd(
+                      triton::ast::zx(1, triton::ast::extract(high, low, op1)),
+                      triton::ast::zx(1, triton::ast::extract(high, low, op2))
+                    ),
+                    triton::ast::bv(1, BYTE_SIZE_BIT+1)
+                  ),
+                  triton::ast::bv(1, BYTE_SIZE_BIT+1)
+                )
+              )
+            );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PAVGB operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, src);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pavgw_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> pck;
+
+          for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
+            uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
+            uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
+            pck.push_back(
+              triton::ast::extract(WORD_SIZE_BIT-1, 0,
+                triton::ast::bvlshr(
+                  triton::ast::bvadd(
+                    triton::ast::bvadd(
+                      triton::ast::zx(1, triton::ast::extract(high, low, op1)),
+                      triton::ast::zx(1, triton::ast::extract(high, low, op2))
+                    ),
+                    triton::ast::bv(1, WORD_SIZE_BIT+1)
+                  ),
+                  triton::ast::bv(1, WORD_SIZE_BIT+1)
+                )
+              )
+            );
+          }
+
+          auto node = triton::ast::concat(pck);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PAVGW operation");
 
           /* Spread taint */
           expr->isTainted = triton::api.taintUnion(dst, src);
