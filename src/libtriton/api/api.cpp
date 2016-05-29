@@ -131,7 +131,8 @@ $ cd ..
 $ ./triton ./src/examples/pin/ir.py /usr/bin/id
 ~~~~~~~~~~~~~
 
-It's not recommended to use the pintool on a kernel `4.x`. The last version of Pin doesn't support very well this branch (`4.x`). Anyway, if you feel lucky, you can compile the Triton pintool with the `-DKERNEL4=on` flag.
+It's not recommended to use the pintool on a kernel `4.x`. The last version of Pin doesn't support very well
+this branch (`4.x`). Anyway, if you feel lucky, you can compile the Triton pintool with the `-DKERNEL4=on` flag.
 
 ~~~~~~~~~~~~~{.sh}
 $ cmake -DPINTOOL=on -DKERNEL4=on ..
@@ -1026,7 +1027,7 @@ namespace triton {
   }
 
 
-  bool API::isMemoryTainted(__uint addr, uint32 size) const {
+  bool API::isMemoryTainted(triton::__uint addr, uint32 size) const {
     this->checkTaint();
     return this->taint->isMemoryTainted(addr, size);
   }
@@ -1070,7 +1071,7 @@ namespace triton {
   }
 
 
-  bool API::taintMemory(__uint addr) {
+  bool API::taintMemory(triton::__uint addr) {
     this->checkTaint();
     return this->taint->taintMemory(addr);
   }
@@ -1088,7 +1089,7 @@ namespace triton {
   }
 
 
-  bool API::untaintMemory(__uint addr) {
+  bool API::untaintMemory(triton::__uint addr) {
     this->checkTaint();
     return this->taint->untaintMemory(addr);
   }

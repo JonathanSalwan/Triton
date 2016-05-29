@@ -1296,8 +1296,7 @@ namespace triton {
 
 
         void ofRcr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
-          auto bvSize = dst.getBitSize();
-          auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+          auto high   = dst.getBitSize()-1;
           auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
           auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
@@ -8761,7 +8760,7 @@ namespace triton {
           expr2->isTainted = triton::api.taintUnion(dst, srcCf);
 
           /* Upate symbolic flags */
-          triton::arch::x86::semantics::ofRcr_s(inst, expr2, dst, op1, op2); /* OF flag must be setup before */
+          triton::arch::x86::semantics::ofRcr_s(inst, expr2, dst, op1, op2); /* OF must be set before CF */
           triton::arch::x86::semantics::cfRcr_s(inst, expr2, dst, node1, op2);
 
           /* Upate the symbolic control flow */

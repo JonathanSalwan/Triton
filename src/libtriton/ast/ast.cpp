@@ -2805,7 +2805,7 @@ namespace triton {
       this->size = ((high - low) + 1);
       this->eval = ((this->childs[2]->evaluate() >> low) & this->getBitvectorMask());
 
-      if (this->size > this->childs[2]->getBitvectorSize())
+      if (this->size > this->childs[2]->getBitvectorSize() || high > this->childs[2]->getBitvectorSize())
         throw std::runtime_error("ExtractNode::init(): The size of the extraction is higher than the child expression.");
 
       /* Init childs and spread information */
