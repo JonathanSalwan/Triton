@@ -2022,6 +2022,17 @@ void check(void)
   asm("vpandn xmm4, xmm3, xmm2");
   asm("vpandn xmm4, xmm2, xmm1");
   asm("vpandn xmm4, xmm2, xmm3");
+
+  asm("vpshufd xmm1, xmm2, 1");
+  asm("vpshufd xmm2, xmm3, 2");
+  asm("vpshufd xmm2, xmm3, 3");
+  asm("vpshufd xmm1, xmm4, 4");
+  asm("vpshufd xmm3, xmm1, 5");
+  asm("vpshufd xmm1, xmm2, 0x10");
+  asm("vpshufd xmm2, xmm3, 0x20");
+  asm("vpshufd xmm2, xmm3, 0x40");
+  asm("vpshufd xmm1, xmm4, 0xff");
+  asm("vpshufd xmm3, xmm1, 0xaa");
 }
 
 int main(){

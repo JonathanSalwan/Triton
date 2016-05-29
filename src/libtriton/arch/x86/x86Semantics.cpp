@@ -273,6 +273,7 @@ VMOVDQA                      | avx        | VEX Move aligned packed integer valu
 VPAND                        | avx/avx2   | VEX Logical AND
 VPANDN                       | avx/avx2   | VEX Logical AND NOT
 VPOR                         | avx/avx2   | VEX Logical OR
+VPSHUFD                      | avx/avx2   | VEX Shuffle Packed Doublewords
 VPTEST                       | avx        | VEX Logical Compare
 VPXOR                        | avx/avx2   | VEX Logical XOR
 XADD                         |            | Exchange and Add
@@ -536,6 +537,7 @@ namespace triton {
             case ID_INS_VPANDN:         triton::arch::x86::semantics::vpandn_s(inst);       break;
             case ID_INS_VPOR:           triton::arch::x86::semantics::vpor_s(inst);         break;
             case ID_INS_VPTEST:         triton::arch::x86::semantics::vptest_s(inst);       break;
+            case ID_INS_VPSHUFD:        triton::arch::x86::semantics::vpshufd_s(inst);      break;
             case ID_INS_VPXOR:          triton::arch::x86::semantics::vpxor_s(inst);        break;
             case ID_INS_XADD:           triton::arch::x86::semantics::xadd_s(inst);         break;
             case ID_INS_XCHG:           triton::arch::x86::semantics::xchg_s(inst);         break;
@@ -1962,7 +1964,7 @@ namespace triton {
                      );
               break;
             default:
-              throw std::runtime_error("Error: triton::arch::x86::semantics::bsf_s(): Invalid operand size.");
+              throw std::runtime_error("triton::arch::x86::semantics::bsf_s(): Invalid operand size.");
           }
 
           /* Create symbolic expression */
@@ -2145,7 +2147,7 @@ namespace triton {
                      );
               break;
             default:
-              throw std::runtime_error("Error: triton::arch::x86::semantics::bsr_s(): Invalid operand size.");
+              throw std::runtime_error("triton::arch::x86::semantics::bsr_s(): Invalid operand size.");
           }
 
           /* Create symbolic expression */
@@ -2184,7 +2186,7 @@ namespace triton {
               bytes.push_front(triton::ast::extract(7,  0, op1));
               break;
             default:
-              throw std::runtime_error("Error: triton::arch::x86::semantics::bswap_s(): Invalid operand size.");
+              throw std::runtime_error("triton::arch::x86::semantics::bswap_s(): Invalid operand size.");
           }
 
           auto node = triton::ast::concat(bytes);
@@ -7509,7 +7511,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PSHUFD operation");
 
           /* Spread taint */
-          expr->isTainted = triton::api.taintUnion(dst, src);
+          expr->isTainted = triton::api.taintAssignment(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
@@ -7581,7 +7583,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PSHUFHW operation");
 
           /* Spread taint */
-          expr->isTainted = triton::api.taintUnion(dst, src);
+          expr->isTainted = triton::api.taintAssignment(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
@@ -7653,7 +7655,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PSHUFLW operation");
 
           /* Spread taint */
-          expr->isTainted = triton::api.taintUnion(dst, src);
+          expr->isTainted = triton::api.taintAssignment(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
@@ -7722,7 +7724,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PSHUFW operation");
 
           /* Spread taint */
-          expr->isTainted = triton::api.taintUnion(dst, src);
+          expr->isTainted = triton::api.taintAssignment(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
@@ -10155,6 +10157,133 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = triton::api.taintAssignment(dst, src1) | triton::api.taintUnion(dst, src2);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void vpshufd_s(triton::arch::Instruction& inst) {
+          auto& dst               = inst.operands[0];
+          auto& src               = inst.operands[1];
+          auto& ord               = inst.operands[2];
+          triton::uint32 dstSize  = dst.getBitSize();
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, ord);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> pack;
+
+          switch (dstSize) {
+
+            /* YMM */
+            case QQWORD_SIZE_BIT:
+              pack.push_back(
+                triton::ast::extract(31, 0,
+                  triton::ast::bvlshr(
+                    op2,
+                    triton::ast::bvmul(
+                      triton::ast::zx(dstSize-2, triton::ast::extract(7, 6, op3)),
+                      triton::ast::bv(32, dstSize)
+                    )
+                  )
+                )
+              );
+              pack.push_back(
+                triton::ast::extract(31, 0,
+                  triton::ast::bvlshr(
+                    op2,
+                    triton::ast::bvmul(
+                      triton::ast::zx(dstSize-2, triton::ast::extract(5, 4, op3)),
+                      triton::ast::bv(32, dstSize)
+                    )
+                  )
+                )
+              );
+              pack.push_back(
+                triton::ast::extract(31, 0,
+                  triton::ast::bvlshr(
+                    op2,
+                    triton::ast::bvmul(
+                      triton::ast::zx(dstSize-2, triton::ast::extract(3, 2, op3)),
+                      triton::ast::bv(32, dstSize)
+                    )
+                  )
+                )
+              );
+              pack.push_back(
+                triton::ast::extract(31, 0,
+                  triton::ast::bvlshr(
+                    op2,
+                    triton::ast::bvmul(
+                      triton::ast::zx(dstSize-2, triton::ast::extract(1, 0, op3)),
+                      triton::ast::bv(32, dstSize)
+                    )
+                  )
+                )
+              );
+
+            /* XMM */
+            case DQWORD_SIZE_BIT:
+              pack.push_back(
+                triton::ast::extract(31, 0,
+                  triton::ast::bvlshr(
+                    op2,
+                    triton::ast::bvmul(
+                      triton::ast::zx(dstSize-2, triton::ast::extract(7, 6, op3)),
+                      triton::ast::bv(32, dstSize)
+                    )
+                  )
+                )
+              );
+              pack.push_back(
+                triton::ast::extract(31, 0,
+                  triton::ast::bvlshr(
+                    op2,
+                    triton::ast::bvmul(
+                      triton::ast::zx(dstSize-2, triton::ast::extract(5, 4, op3)),
+                      triton::ast::bv(32, dstSize)
+                    )
+                  )
+                )
+              );
+              pack.push_back(
+                triton::ast::extract(31, 0,
+                  triton::ast::bvlshr(
+                    op2,
+                    triton::ast::bvmul(
+                      triton::ast::zx(dstSize-2, triton::ast::extract(3, 2, op3)),
+                      triton::ast::bv(32, dstSize)
+                    )
+                  )
+                )
+              );
+              pack.push_back(
+                triton::ast::extract(31, 0,
+                  triton::ast::bvlshr(
+                    op2,
+                    triton::ast::bvmul(
+                      triton::ast::zx(dstSize-2, triton::ast::extract(1, 0, op3)),
+                      triton::ast::bv(32, dstSize)
+                    )
+                  )
+                )
+              );
+              break;
+
+            default:
+              throw std::runtime_error("Error: triton::arch::x86::semantics::vpshufd_s(): Invalid operand size.");
+          }
+
+          auto node = triton::ast::concat(pack);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "VPSHUFD operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintAssignment(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);

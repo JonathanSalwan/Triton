@@ -873,6 +873,9 @@ namespace triton {
       //! The VPOR semantics.
       void vpor_s(triton::arch::Instruction& inst);
 
+      //! The VPSHUFD semantics.
+      void vpshufd_s(triton::arch::Instruction& inst);
+
       //! The VPTEST semantics.
       void vptest_s(triton::arch::Instruction& inst);
 
