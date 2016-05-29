@@ -2492,13 +2492,11 @@ namespace triton {
 
           switch (dst.getBitSize()) {
             case QWORD_SIZE_BIT:
-              node = triton::ast::bvand(op1, triton::ast::bv(0xfffffffffffffff7, dst.getBitSize()));
+              node = triton::ast::bvand(op1, triton::ast::bv(0xfffffffffffffff7, QWORD_SIZE_BIT));
               break;
-
             case DWORD_SIZE_BIT:
-              node = triton::ast::bvand(op1, triton::ast::bv(0xfffffff7, dst.getBitSize()));
+              node = triton::ast::bvand(op1, triton::ast::bv(0xfffffff7, DWORD_SIZE_BIT));
               break;
-
             default:
               throw std::runtime_error("triton::arch::x86::semantics::clts_s(): Invalid operand size.");
           }
