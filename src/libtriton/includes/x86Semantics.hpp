@@ -222,6 +222,9 @@ namespace triton {
       //! The CLD semantics.
       void cld_s(triton::arch::Instruction& inst);
 
+      //! The CLTS semantics.
+      void clts_s(triton::arch::Instruction& inst);
+
       //! The CMC semantics.
       void cmc_s(triton::arch::Instruction& inst);
 

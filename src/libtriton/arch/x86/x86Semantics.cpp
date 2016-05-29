@@ -46,10 +46,11 @@ BTC                          |            | Bit Test and Complement
 BTR                          |            | Bit Test and Reset
 BTS                          |            | Bit Test and Set
 CALL                         |            | Call Procedure
-CBW                          |            | Convert byte (al) to word (ax).
-CDQE                         |            | Convert dword (eax) to qword (rax).
+CBW                          |            | Convert byte (al) to word (ax)
+CDQE                         |            | Convert dword (eax) to qword (rax)
 CLC                          |            | Clear Carry Flag
 CLD                          |            | Clear Direction Flag
+CLTS                         |            | Clear Task-Switched Flag in CR0
 CMC                          |            | Complement Carry Flag
 CMOVA                        |            | Move if not below
 CMOVAE                       |            | Move if not below or equal
@@ -77,7 +78,7 @@ CMPXCHG16B                   |            | Compare and Exchange 16 Bytes
 CMPXCHG8B                    |            | Compare and Exchange 8 Bytes
 CPUID                        |            | CPU Identification
 CQO                          |            | convert qword (rax) to oword (rdx:rax)
-CWDE                         |            | Convert word (ax) to dword (eax).
+CWDE                         |            | Convert word (ax) to dword (eax)
 DEC                          |            | Decrement by 1
 DIV                          |            | Unsigned Divide
 EXTRACTPS                    | sse4.1     | Extract Packed Single Precision Floating-Point Value
@@ -313,6 +314,7 @@ namespace triton {
             case ID_INS_CDQE:           triton::arch::x86::semantics::cdqe_s(inst);         break;
             case ID_INS_CLC:            triton::arch::x86::semantics::clc_s(inst);          break;
             case ID_INS_CLD:            triton::arch::x86::semantics::cld_s(inst);          break;
+            case ID_INS_CLTS:           triton::arch::x86::semantics::clts_s(inst);         break;
             case ID_INS_CMC:            triton::arch::x86::semantics::cmc_s(inst);          break;
             case ID_INS_CMOVA:          triton::arch::x86::semantics::cmova_s(inst);        break;
             case ID_INS_CMOVAE:         triton::arch::x86::semantics::cmovae_s(inst);       break;
@@ -2474,6 +2476,39 @@ namespace triton {
 
         void cld_s(triton::arch::Instruction& inst) {
           triton::arch::x86::semantics::clearFlag_s(inst, TRITON_X86_REG_DF, "Clears direction flag");
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void clts_s(triton::arch::Instruction& inst) {
+          auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_CR0);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+
+          /* Create the semantics */
+          triton::ast::AbstractNode* node = nullptr;
+
+          switch (dst.getBitSize()) {
+            case QWORD_SIZE_BIT:
+              node = triton::ast::bvand(op1, triton::ast::bv(0xfffffffffffffff7, dst.getBitSize()));
+              break;
+
+            case DWORD_SIZE_BIT:
+              node = triton::ast::bvand(op1, triton::ast::bv(0xfffffff7, dst.getBitSize()));
+              break;
+
+            default:
+              throw std::runtime_error("triton::arch::x86::semantics::clts_s(): Invalid operand size.");
+          }
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CLTS operation");
+
+          /* Spread taint */
+          expr->isTainted = triton::api.taintUnion(dst, dst);
+
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
         }
