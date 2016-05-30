@@ -67,7 +67,7 @@ namespace triton {
         //! Constructor.
         RegisterOperand();
 
-        //! Constructor. You cannot set a concreteValue on a flag.
+        //! Constructor.
         RegisterOperand(triton::uint32 reg, triton::uint512 concreteValue=0);
 
         //! Constructor by copy.
@@ -127,7 +127,7 @@ namespace triton {
         //! Sets the parent id of the register.
         void setParent(triton::uint32 reg);
 
-        //! Sets the concrete value of the register. This method cannot be called on a flag.
+        //! Sets the concrete value of the register.
         void setConcreteValue(triton::uint512 concreteValue);
     };
 

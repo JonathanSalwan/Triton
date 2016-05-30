@@ -230,8 +230,6 @@ namespace triton {
 
 
     void Instruction::updateContext(triton::arch::RegisterOperand reg) {
-      if (reg.isFlag())
-        throw std::runtime_error("Instruction::updateContext(): You cannot update the context on an isolated flag.");
       this->registerState[reg.getId()] = reg;
     }
 

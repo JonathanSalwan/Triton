@@ -305,7 +305,7 @@ Sets the last concrete value of a memory access.
 Sets the last concrete value of a memory access.
 
 - **setLastRegisterValue(\ref py_REG_page reg)**<br>
-Sets the last concrete value of a register state. You cannot set an isolated flag, if so, use the flags registers like EFLAGS.
+Sets the last concrete value of a register state.
 
 - **setTaintMemory(\ref py_Memory_page mem, bool flag)**<br>
 Sets the targeted memory as tainted or not.

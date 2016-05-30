@@ -170,7 +170,7 @@ Updates the context of the instruction by adding a concrete value for a **LOAD**
 concrete value, this value will be computed symbolically - **Only LOAD** accesses are necessary.
 
 - **updateContext(\ref py_Register_page regCtx)**<br>
-Updates the context of the instruction by adding a concrete value for a specific register. Be careful you cannot update the context on a flag.
+Updates the context of the instruction by adding a concrete value for a specific register.
 
 */
 
@@ -703,8 +703,6 @@ namespace triton {
 
           else if (PyRegisterOperand_Check(ctx)) {
             regCtx = PyRegisterOperand_AsRegisterOperand(ctx);
-            if (regCtx->isFlag())
-              return PyErr_Format(PyExc_TypeError, "Instruction::updateContext(): You cannot update the context on an isolated flag.");
             inst->updateContext(*regCtx);
           }
 

@@ -1539,6 +1539,1345 @@ def test_6():
     return count
 
 
+def test_7():
+    count = 0
+
+    setArchitecture(ARCH.X86_64)
+
+    setLastRegisterValue(Register(REG.ZF, 1))
+
+    if getRegisterValue(REG.ZF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.AF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.IF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.CF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.DF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.PF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.SF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.OF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.TF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 0'
+        return -1
+
+    setLastRegisterValue(Register(REG.AF, 1))
+
+    if getRegisterValue(REG.ZF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.AF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.IF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.CF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.DF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.PF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.SF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.OF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.TF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 0'
+        return -1
+
+    setLastRegisterValue(Register(REG.CF, 1))
+
+    if getRegisterValue(REG.ZF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.AF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.IF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.CF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.DF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.PF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.SF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.OF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.TF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 0'
+        return -1
+
+    setLastRegisterValue(Register(REG.IF, 1))
+
+    if getRegisterValue(REG.ZF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.AF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.IF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.CF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.DF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.PF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.SF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.OF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.TF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 0'
+        return -1
+
+    setLastRegisterValue(Register(REG.DF, 1))
+
+    if getRegisterValue(REG.ZF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.AF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.IF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.CF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.DF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.PF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.SF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.OF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.TF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 0'
+        return -1
+
+    setLastRegisterValue(Register(REG.PF, 1))
+
+    if getRegisterValue(REG.ZF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.AF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.IF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.CF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.DF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.PF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.SF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.OF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.TF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 0'
+        return -1
+
+    setLastRegisterValue(Register(REG.SF, 1))
+
+    if getRegisterValue(REG.ZF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.AF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.IF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.CF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.DF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.PF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.SF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.OF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.TF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 0'
+        return -1
+
+    setLastRegisterValue(Register(REG.OF, 1))
+
+    if getRegisterValue(REG.ZF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.AF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.IF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.CF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.DF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.PF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.SF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.OF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.TF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 0'
+        return -1
+
+    setLastRegisterValue(Register(REG.TF, 1))
+
+    if getRegisterValue(REG.ZF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.AF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.IF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.CF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.DF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.PF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.SF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.OF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.TF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 1'
+        return -1
+
+    setLastRegisterValue(Register(REG.ZF, 0))
+
+    if getRegisterValue(REG.ZF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.AF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.IF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.CF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.DF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.PF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.SF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.OF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.TF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 1'
+        return -1
+
+    setLastRegisterValue(Register(REG.AF, 0))
+
+    if getRegisterValue(REG.ZF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.AF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.IF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.CF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.DF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.PF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.SF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.OF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.TF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 1'
+        return -1
+
+    setLastRegisterValue(Register(REG.CF, 0))
+
+    if getRegisterValue(REG.ZF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.AF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.IF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.CF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.DF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.PF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.SF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.OF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.TF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 1'
+        return -1
+
+    setLastRegisterValue(Register(REG.IF, 0))
+
+    if getRegisterValue(REG.ZF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.AF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.IF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.CF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.DF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.PF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.SF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.OF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.TF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 1'
+        return -1
+
+    setLastRegisterValue(Register(REG.DF, 0))
+
+    if getRegisterValue(REG.ZF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.AF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.IF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.CF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.DF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.PF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.SF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.OF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.TF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 1'
+        return -1
+
+    setLastRegisterValue(Register(REG.PF, 0))
+
+    if getRegisterValue(REG.ZF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.AF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.IF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.CF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.DF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.PF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.SF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.OF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.TF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 1'
+        return -1
+
+    setLastRegisterValue(Register(REG.SF, 0))
+
+    if getRegisterValue(REG.ZF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.AF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.IF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.CF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.DF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.PF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.SF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.OF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 1'
+        return -1
+
+    if getRegisterValue(REG.TF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 1'
+        return -1
+
+    setLastRegisterValue(Register(REG.OF, 0))
+
+    if getRegisterValue(REG.ZF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.AF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.IF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.CF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.DF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.PF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.SF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.OF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.TF) == 1:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 1'
+        return -1
+
+    setLastRegisterValue(Register(REG.TF, 0))
+
+    if getRegisterValue(REG.ZF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.AF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.IF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.CF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.DF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.PF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.SF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.OF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '\tExpected : 0'
+        return -1
+
+    if getRegisterValue(REG.TF) == 0:
+        count += 1
+    else:
+        print '[KO] getRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '\tExpected : 0'
+        return -1
+
+    return count
+
 
 units_testing = [
     ("Testing the arithmetic and logic AST interpreter", test_1),
@@ -1547,6 +2886,7 @@ units_testing = [
     ("Testing the ImmediateOperand class", test_4),
     ("Testing the Instruction class", test_5),
     ("Testing the architectures", test_6),
+    ("Testing the concrete flag values", test_7),
 ]
 
 

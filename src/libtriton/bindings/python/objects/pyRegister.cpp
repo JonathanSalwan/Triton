@@ -103,7 +103,7 @@ Returns true if the register is a register.
 True if this concrete register value is trusted and synchronized with the real CPU value.
 
 - **setConcreteValue(integer value)**<br>
-Sets a concrete value to this register. You cannot set a concrete value on a flag.
+Sets a concrete value to this register.
 
 - **setTrust(bool flag)**<br>
 Sets the trust flag.
@@ -251,10 +251,8 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "Register::setConcretevalue(): Expected an integer as argument.");
 
           reg = PyRegisterOperand_AsRegisterOperand(self);
-          if (reg->isFlag())
-            return PyErr_Format(PyExc_TypeError, "Register::setConcreteValue(): You cannot set a concrete value on a flag.");
-
           reg->setConcreteValue(PyLong_AsUint512(value));
+
           Py_INCREF(Py_None);
           return Py_None;
         }

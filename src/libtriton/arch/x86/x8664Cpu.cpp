@@ -1268,9 +1268,6 @@ namespace triton {
       void x8664Cpu::setLastRegisterValue(const triton::arch::RegisterOperand& reg) {
         triton::uint512 value = reg.getConcreteValue();
 
-        if (reg.isFlag())
-          throw std::invalid_argument("x8664Cpu::setLastRegisterValue(): You cannot set an isolated flag. Use the flags register EFLAGS.");
-
         switch (reg.getId()) {
           case triton::arch::x86::ID_REG_RAX: (*((triton::uint64*)(this->rax)))  = value.convert_to<triton::uint64>(); break;
           case triton::arch::x86::ID_REG_EAX: (*((triton::uint32*)(this->rax)))  = value.convert_to<triton::uint32>(); break;
@@ -1321,6 +1318,61 @@ namespace triton {
           case triton::arch::x86::ID_REG_IP:  (*((triton::uint16*)(this->rip))) = value.convert_to<triton::uint16>(); break;
 
           case triton::arch::x86::ID_REG_EFLAGS: (*((triton::uint64*)(this->eflags))) = value.convert_to<triton::uint64>(); break;
+
+          case triton::arch::x86::ID_REG_CF: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000000000001 : b & 0b1111111111111110;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_PF: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000000000100 : b & 0b1111111111111011;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_AF: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000000010000 : b & 0b1111111111101111;
+            break;
+          }
+
+
+          case triton::arch::x86::ID_REG_ZF: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000001000000 : b & 0b1111111110111111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_SF: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000010000000 : b & 0b1111111101111111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_TF: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000100000000 : b & 0b1111111011111111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_IF: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000001000000000 : b & 0b1111110111111111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_DF: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000010000000000 : b & 0b1111101111111111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_OF: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000100000000000 : b & 0b1111011111111111;
+            break;
+          }
 
           case triton::arch::x86::ID_REG_R8:  (*((triton::uint64*)(this->r8))) = value.convert_to<triton::uint64>(); break;
           case triton::arch::x86::ID_REG_R8D: (*((triton::uint32*)(this->r8))) = value.convert_to<triton::uint32>(); break;
@@ -1439,6 +1491,102 @@ namespace triton {
           case triton::arch::x86::ID_REG_ZMM31: triton::utils::fromUintToBuffer(value, this->zmm31); break;
 
           case triton::arch::x86::ID_REG_MXCSR: (*((triton::uint64*)(this->mxcsr))) = value.convert_to<triton::uint64>(); break;
+
+          case triton::arch::x86::ID_REG_IE: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000000000001 : b & 0b1111111111111110;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_DE: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000000000010 : b & 0b1111111111111101;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_ZE: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000000000100 : b & 0b1111111111111011;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_OE: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000000001000 : b & 0b1111111111110111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_UE: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000000010000 : b & 0b1111111111101111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_PE: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000000100000 : b & 0b1111111111011111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_DAZ: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000001000000 : b & 0b1111111110111111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_IM: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000010000000 : b & 0b1111111101111111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_DM: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000000100000000 : b & 0b1111111011111111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_ZM: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000001000000000 : b & 0b1111110111111111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_OM: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000010000000000 : b & 0b1111101111111111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_UM: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0000100000000000 : b & 0b1111011111111111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_PM: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0001000000000000 : b & 0b1110111111111111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_RL: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0010000000000000 : b & 0b1101111111111111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_RH: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b0100000000000000 : b & 0b1011111111111111;
+            break;
+          }
+
+          case triton::arch::x86::ID_REG_FZ: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = value.convert_to<bool>() ? b | 0b1000000000000000 : b & 0b0111111111111111;
+            break;
+          }
 
           case triton::arch::x86::ID_REG_CR0:  (*((triton::uint64*)(this->cr0)))  = value.convert_to<triton::uint64>(); break;
           case triton::arch::x86::ID_REG_CR1:  (*((triton::uint64*)(this->cr1)))  = value.convert_to<triton::uint64>(); break;
