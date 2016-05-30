@@ -717,6 +717,9 @@ namespace triton {
           inst.addSymbolicExpression(se);
           /* Assign memory with little endian */
           this->addMemoryReference((address + writeSize) - 1, se->getId());
+          /* Synchronize the concrete state */
+          triton::api.setLastMemoryValue((address + writeSize) - 1, tmp->evaluate().convert_to<triton::uint8>());
+          /* continue */
           writeSize--;
         }
 
@@ -841,6 +844,9 @@ namespace triton {
         se->setKind(triton::engines::symbolic::REG);
         se->setOriginRegister(reg);
         this->symbolicReg[id] = se->getId();
+
+        /* Synchronize the concrete state */
+        triton::api.setLastRegisterValue(reg);
       }
 
 
