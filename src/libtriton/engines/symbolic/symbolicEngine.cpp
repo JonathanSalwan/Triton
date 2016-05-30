@@ -260,7 +260,7 @@ namespace triton {
         std::map<triton::__uint, SymbolicVariable*>::const_iterator it;
 
         for (it = this->symbolicVariables.begin(); it != this->symbolicVariables.end(); it++) {
-          if (it->second->getSymVarName() == symVarName)
+          if (it->second->getName() == symVarName)
             return it->second;
         }
         return nullptr;
@@ -421,7 +421,7 @@ namespace triton {
         std::stringstream stream;
 
         for(it = this->symbolicVariables.begin(); it != this->symbolicVariables.end(); it++)
-          stream << triton::ast::declareFunction(it->second->getSymVarName(), triton::ast::bvdecl(it->second->getSymVarSize()));
+          stream << triton::ast::declareFunction(it->second->getName(), triton::ast::bvdecl(it->second->getSize()));
 
         return stream.str();
       }
@@ -468,7 +468,7 @@ namespace triton {
 
         symVar = this->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, symVarSize, symVarComment);
         if (expression->getAst())
-            symVar->setSymVarConcreteValue(expression->getAst()->evaluate());
+            symVar->setConcreteValue(expression->getAst()->evaluate());
 
         tmp = triton::ast::variable(*symVar);
         tmp->setParent(expression->getAst()->getParents());
@@ -494,7 +494,7 @@ namespace triton {
         /* First we create a symbolic variable */
         symVar = this->newSymbolicVariable(triton::engines::symbolic::MEM, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
         /* Setup the concrete value to the symbolic variable */
-        symVar->setSymVarConcreteValue(cv);
+        symVar->setConcreteValue(cv);
         /* Create the AST node */
         triton::ast::AbstractNode* symVarNode = triton::ast::variable(*symVar);
 
@@ -544,7 +544,7 @@ namespace triton {
           /* Create the symbolic variable */
           symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parentId, symVarSize, symVarComment);
           /* Setup the concrete value to the symbolic variable */
-          symVar->setSymVarConcreteValue(cv);
+          symVar->setConcreteValue(cv);
           /* Create the AST node */
           triton::ast::AbstractNode* tmp = triton::ast::variable(*symVar);
           /* Create the symbolic expression */
@@ -559,7 +559,7 @@ namespace triton {
           /* Create the symbolic variable */
           symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parentId, symVarSize, symVarComment);
           /* Setup the concrete value to the symbolic variable */
-          symVar->setSymVarConcreteValue(cv);
+          symVar->setConcreteValue(cv);
           /* Create the AST node */
           triton::ast::AbstractNode* tmp = triton::ast::variable(*symVar);
           /* Set the AST node */

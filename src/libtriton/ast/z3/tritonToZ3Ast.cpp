@@ -463,22 +463,22 @@ namespace triton {
       if (symVar == nullptr)
         throw std::runtime_error("TritonToZ3Ast::VariableNode(): Can't get the symbolic variable (nullptr).");
 
-      if (symVar->getSymVarSize() > QWORD_SIZE_BIT)
+      if (symVar->getSize() > QWORD_SIZE_BIT)
         throw std::runtime_error("TritonToZ3Ast::VariableNode(): Size above 64 bits is not supported yet.");
 
       /* If the conversion is used to evaluate a node, we concretize symbolic variables */
       if (this->isEval) {
-        if (symVar->getSymVarKind() == triton::engines::symbolic::MEM) {
-          triton::uint32 memSize   = symVar->getSymVarSize();
+        if (symVar->getKind() == triton::engines::symbolic::MEM) {
+          triton::uint32 memSize   = symVar->getSize();
           triton::uint512 memValue = symVar->getConcreteValue();
           std::string memStrValue(memValue);
           z3::expr newexpr = this->result.getContext().bv_val(memStrValue.c_str(), memSize);
           this->result.setExpr(newexpr);
         }
-        else if (symVar->getSymVarKind() == triton::engines::symbolic::REG) {
+        else if (symVar->getKind() == triton::engines::symbolic::REG) {
           triton::uint512 regValue = symVar->getConcreteValue();
           std::string regStrValue(regValue);
-          z3::expr newexpr = this->result.getContext().bv_val(regStrValue.c_str(), symVar->getSymVarSize());
+          z3::expr newexpr = this->result.getContext().bv_val(regStrValue.c_str(), symVar->getSize());
           this->result.setExpr(newexpr);
         }
         else
@@ -486,8 +486,8 @@ namespace triton {
       }
       /* Otherwise, we keep the symbolic variables for a real conversion */
       else {
-        //z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_const(this->result.getContext(), Z3_mk_string_symbol(this->result.getContext(), symVar->getSymVarName().c_str()), Z3_mk_bv_sort(this->result.getContext(), symVar->getSymVarSize())));
-        z3::expr newexpr = this->result.getContext().bv_const(symVar->getSymVarName().c_str(), symVar->getSymVarSize());
+        //z3::expr newexpr = to_expr(this->result.getContext(), Z3_mk_const(this->result.getContext(), Z3_mk_string_symbol(this->result.getContext(), symVar->getName().c_str()), Z3_mk_bv_sort(this->result.getContext(), symVar->getSize())));
+        z3::expr newexpr = this->result.getContext().bv_const(symVar->getName().c_str(), symVar->getSize());
         this->result.setExpr(newexpr);
       }
     }

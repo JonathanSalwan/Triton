@@ -23,27 +23,27 @@ namespace triton {
                                          triton::uint32 size,
                                          const std::string& comment,
                                          triton::uint512 concreteValue) {
-        this->symVarComment          = comment;
-        this->symVarId               = id;
-        this->symVarKind             = kind;
-        this->symVarKindValue        = kindValue;
-        this->symVarName             = TRITON_SYMVAR_NAME + std::to_string(id);
-        this->symVarSize             = size;
-        this->symVarConcreteValue    = concreteValue;
+        this->comment          = comment;
+        this->id               = id;
+        this->kind             = kind;
+        this->kindValue        = kindValue;
+        this->name             = TRITON_SYMVAR_NAME + std::to_string(id);
+        this->size             = size;
+        this->concreteValue    = concreteValue;
 
-        if (this->symVarSize > MAX_BITS_SUPPORTED)
+        if (this->size > MAX_BITS_SUPPORTED)
           throw std::runtime_error("SymbolicVariable::SymbolicVariable(): Size connot be greater than MAX_BITS_SUPPORTED.");
       }
 
 
       SymbolicVariable::SymbolicVariable(const SymbolicVariable &copy) {
-        this->symVarComment          = copy.symVarComment;
-        this->symVarId               = copy.symVarId;
-        this->symVarKind             = copy.symVarKind;
-        this->symVarKindValue        = copy.symVarKindValue;
-        this->symVarName             = copy.symVarName;
-        this->symVarSize             = copy.symVarSize;
-        this->symVarConcreteValue    = copy.symVarConcreteValue;
+        this->comment          = copy.comment;
+        this->id               = copy.id;
+        this->kind             = copy.kind;
+        this->kindValue        = copy.kindValue;
+        this->name             = copy.name;
+        this->size             = copy.size;
+        this->concreteValue    = copy.concreteValue;
       }
 
 
@@ -51,57 +51,57 @@ namespace triton {
       }
 
 
-      symkind_e SymbolicVariable::getSymVarKind(void) const {
-        return this->symVarKind;
+      symkind_e SymbolicVariable::getKind(void) const {
+        return this->kind;
       }
 
 
-      const std::string& SymbolicVariable::getSymVarName(void) const {
-        return this->symVarName;
+      const std::string& SymbolicVariable::getName(void) const {
+        return this->name;
       }
 
 
-      triton::__uint SymbolicVariable::getSymVarId(void) const {
-        return this->symVarId;
+      triton::__uint SymbolicVariable::getId(void) const {
+        return this->id;
       }
 
 
-      triton::__uint SymbolicVariable::getSymVarKindValue(void) const {
-        return this->symVarKindValue;
+      triton::__uint SymbolicVariable::getKindValue(void) const {
+        return this->kindValue;
       }
 
 
-      triton::uint32 SymbolicVariable::getSymVarSize(void) const {
-        return this->symVarSize;
+      triton::uint32 SymbolicVariable::getSize(void) const {
+        return this->size;
       }
 
 
-      const std::string& SymbolicVariable::getSymVarComment(void) const {
-        return this->symVarComment;
+      const std::string& SymbolicVariable::getComment(void) const {
+        return this->comment;
       }
 
 
       triton::uint512 SymbolicVariable::getConcreteValue(void) const {
-        return this->symVarConcreteValue;
+        return this->concreteValue;
       }
 
 
-      void SymbolicVariable::setSymVarComment(const std::string& comment) {
-        this->symVarComment = comment;
+      void SymbolicVariable::setComment(const std::string& comment) {
+        this->comment = comment;
       }
 
 
-      void SymbolicVariable::setSymVarConcreteValue(triton::uint512 value) {
-        triton::ast::AbstractNode* node = triton::api.getAstVariableNode(this->getSymVarName());
+      void SymbolicVariable::setConcreteValue(triton::uint512 value) {
+        triton::ast::AbstractNode* node = triton::api.getAstVariableNode(this->getName());
 
-        this->symVarConcreteValue = value;
+        this->concreteValue = value;
         if (node)
           node->init();
       }
 
 
       std::ostream& operator<<(std::ostream& stream, const SymbolicVariable& symVar) {
-        stream << symVar.getSymVarName() << ":" << symVar.getSymVarSize();
+        stream << symVar.getName() << ":" << symVar.getSize();
         return stream;
       }
 

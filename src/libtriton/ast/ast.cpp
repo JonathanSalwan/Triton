@@ -3344,7 +3344,7 @@ namespace triton {
 
     VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar) {
       this->kind  = VARIABLE_NODE;
-      this->value = symVar.getSymVarName();
+      this->value = symVar.getName();
       this->init();
     }
 
@@ -3368,7 +3368,7 @@ namespace triton {
 
       symVar = triton::api.getSymbolicVariableFromName(this->value);
       if (symVar) {
-        this->size        = symVar->getSymVarSize();
+        this->size        = symVar->getSize();
         this->eval        = (symVar->getConcreteValue() & this->getBitvectorMask());
         this->symbolized  = true;
       }
@@ -3973,7 +3973,7 @@ namespace triton {
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");
       ret = triton::api.recordAstNode(node);
-      triton::api.recordVariableAstNode(symVar.getSymVarName(), ret);
+      triton::api.recordVariableAstNode(symVar.getName(), ret);
       return ret;
     }
 

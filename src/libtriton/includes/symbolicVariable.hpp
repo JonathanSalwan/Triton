@@ -45,29 +45,29 @@ namespace triton {
         protected:
 
           //! The symbolic variable kind. \sa triton::engines::symbolic::symkind_e
-          symkind_e symVarKind;
+          symkind_e kind;
 
           //! The comment of the symbolic variable.
-          std::string symVarComment;
+          std::string comment;
 
           //! The name of the symbolic variable. \sa TRITON_SYMVAR_NAME
-          std::string symVarName;
+          std::string name;
 
           //! The id of the symbolic variable. This id is unique.
-          triton::__uint symVarId;
+          triton::__uint id;
 
           //! The kind value of the symbolic variable.
           /*!
             \brief If the symbolic varialbe is a triton::engines::symbolic::REG, this value contains the register ID.
             \biref If the symbolic varialbe is a triton::engines::symbolic::MEM, this value contains the memory access' address.
           */
-          triton::__uint symVarKindValue;
+          triton::__uint kindValue;
 
           //! The size (in bits) of the symbolic variable.
-          triton::uint32 symVarSize;
+          triton::uint32 size;
 
           //! The concrete value of the symbolic variable.
-          triton::uint512 symVarConcreteValue;
+          triton::uint512 concreteValue;
 
         public:
 
@@ -81,31 +81,31 @@ namespace triton {
           ~SymbolicVariable();
 
           //! Returns the symbolic variable kind. \sa triton::engines::symbolic::symkind_e.
-          symkind_e getSymVarKind(void) const;
+          symkind_e getKind(void) const;
 
           //! Returns the comment of the symbolic variable.
-          const std::string& getSymVarComment(void) const;
+          const std::string& getComment(void) const;
 
           //! Returns the name of the symbolic variable.
-          const std::string& getSymVarName(void) const;
+          const std::string& getName(void) const;
 
           //! Returns the id of the symbolic variable. This id is unique.
-          triton::__uint getSymVarId(void) const;
+          triton::__uint getId(void) const;
 
           //! Returns the kind value of the symbolic variable.
-          triton::__uint getSymVarKindValue(void) const;
+          triton::__uint getKindValue(void) const;
 
           //! Returns the size (in bits) of the symbolic variable.
-          triton::uint32 getSymVarSize(void) const;
+          triton::uint32 getSize(void) const;
 
           //! Returns the concrete value (if exists) of the symbolic variable.
           triton::uint512 getConcreteValue(void) const;
 
           //! Sets the comment of the symbolic variable.
-          void setSymVarComment(const std::string& comment);
+          void setComment(const std::string& comment);
 
           //! Sets the concrete value of the symbolic variable.
-          void setSymVarConcreteValue(triton::uint512 value);
+          void setConcreteValue(triton::uint512 value);
       };
 
       //! Displays a symbolic variable.
