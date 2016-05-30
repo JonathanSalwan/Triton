@@ -87,6 +87,9 @@ namespace triton {
         if (size == 0)
           throw std::runtime_error("PathManager::addPathConstraint(): The PC node size cannot be zero.");
 
+        if (pc->getKind() == triton::ast::ZX_NODE)
+          pc = pc->getChilds()[1];
+
         /* Multiple branches */
         if (pc->getKind() == triton::ast::ITE_NODE) {
           triton::__uint bb1 = pc->getChilds()[1]->evaluate().convert_to<triton::__uint>();
