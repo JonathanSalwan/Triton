@@ -501,6 +501,28 @@ void check(void)
   asm("mov ebx, 5");
   asm("cmp ecx, 3");
 
+  asm("mov ah, 0xff");
+  asm("sahf");
+  asm("lahf");
+  asm("mov ah, 0x00");
+  asm("sahf");
+  asm("lahf");
+  asm("mov ah, 0x11");
+  asm("sahf");
+  asm("lahf");
+  asm("mov ah, 0x22");
+  asm("sahf");
+  asm("lahf");
+  asm("mov ah, 0x33");
+  asm("sahf");
+  asm("lahf");
+  asm("mov ah, 0x44");
+  asm("sahf");
+  asm("lahf");
+  asm("mov ah, 0x55");
+  asm("sahf");
+  asm("lahf");
+
   asm("pushfq");
   asm("pushfq");
   asm("pushfq");

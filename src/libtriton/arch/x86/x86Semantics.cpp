@@ -102,6 +102,7 @@ JNS                          |            | Jump if not sign
 JO                           |            | Jump if overflow
 JP                           |            | Jump if parity
 JS                           |            | Jump if sign
+LAHF                         |            | Load Status Flags into AH Register
 LDDQU                        | sse3       | Load Unaligned Integer 128 Bits
 LDMXCSR                      | sse1       | Load MXCSR Register
 LEA                          |            | Load Effective Address
@@ -232,6 +233,7 @@ RDTSC                        |            | Read Time-Stamp Counter
 RET                          |            | Return from Procedure
 ROL                          |            | Rotate Left
 ROR                          |            | Rotate Right
+SAHF                         |            | Store AH into Flags
 SAL                          |            | Shift Left
 SAR                          |            | Shift Right Signed
 SBB                          |            | Integer Subtraction with Borrow
@@ -366,6 +368,7 @@ namespace triton {
             case ID_INS_JO:             triton::arch::x86::semantics::jo_s(inst);           break;
             case ID_INS_JP:             triton::arch::x86::semantics::jp_s(inst);           break;
             case ID_INS_JS:             triton::arch::x86::semantics::js_s(inst);           break;
+            case ID_INS_LAHF:           triton::arch::x86::semantics::lahf_s(inst);         break;
             case ID_INS_LDDQU:          triton::arch::x86::semantics::lddqu_s(inst);        break;
             case ID_INS_LDMXCSR:        triton::arch::x86::semantics::ldmxcsr_s(inst);      break;
             case ID_INS_LEA:            triton::arch::x86::semantics::lea_s(inst);          break;
@@ -496,6 +499,7 @@ namespace triton {
             case ID_INS_RET:            triton::arch::x86::semantics::ret_s(inst);          break;
             case ID_INS_ROL:            triton::arch::x86::semantics::rol_s(inst);          break;
             case ID_INS_ROR:            triton::arch::x86::semantics::ror_s(inst);          break;
+            case ID_INS_SAHF:           triton::arch::x86::semantics::sahf_s(inst);         break;
             case ID_INS_SAL:            triton::arch::x86::semantics::shl_s(inst);          break;
             case ID_INS_SAR:            triton::arch::x86::semantics::sar_s(inst);          break;
             case ID_INS_SBB:            triton::arch::x86::semantics::sbb_s(inst);          break;
@@ -4555,6 +4559,50 @@ namespace triton {
 
           /* Create the path constraint */
           triton::api.addPathConstraint(expr);
+        }
+
+
+        void lahf_s(triton::arch::Instruction& inst) {
+          auto dst  = triton::arch::OperandWrapper(TRITON_X86_REG_AH);
+          auto src1 = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+          auto src2 = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+          auto src3 = triton::arch::OperandWrapper(TRITON_X86_REG_AF);
+          auto src4 = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
+          auto src5 = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src2);
+          auto op3 = triton::api.buildSymbolicOperand(inst, src3);
+          auto op4 = triton::api.buildSymbolicOperand(inst, src4);
+          auto op5 = triton::api.buildSymbolicOperand(inst, src5);
+
+          /* Create the semantics */
+          std::list<triton::ast::AbstractNode*> flags;
+
+          flags.push_back(op1);
+          flags.push_back(op2);
+          flags.push_back(triton::ast::bvfalse());
+          flags.push_back(op3);
+          flags.push_back(triton::ast::bvfalse());
+          flags.push_back(op4);
+          flags.push_back(triton::ast::bvtrue());
+          flags.push_back(op5);
+
+          auto node = triton::ast::concat(flags);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "LAHF operation");
+
+          /* Spread taint */
+          triton::api.taintUnion(dst, src1);
+          triton::api.taintUnion(dst, src2);
+          triton::api.taintUnion(dst, src3);
+          triton::api.taintUnion(dst, src4);
+          expr->isTainted = triton::api.taintUnion(dst, src5);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
         }
 
 
@@ -8947,6 +8995,43 @@ namespace triton {
           /* Upate symbolic flags */
           triton::arch::x86::semantics::cfRor_s(inst, expr, dst, op2);
           triton::arch::x86::semantics::ofRor_s(inst, expr, dst, op2);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void sahf_s(triton::arch::Instruction& inst) {
+          auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+          auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+          auto dst3 = triton::arch::OperandWrapper(TRITON_X86_REG_AF);
+          auto dst4 = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
+          auto dst5 = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+          auto src  = triton::arch::OperandWrapper(TRITON_X86_REG_AH);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::extract(7, 7, op1);
+          auto node2 = triton::ast::extract(6, 6, op1);
+          auto node3 = triton::ast::extract(4, 4, op1);
+          auto node4 = triton::ast::extract(2, 2, op1);
+          auto node5 = triton::ast::extract(0, 0, op1);
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicFlagExpression(inst, node1, dst1.getRegister(), "SAHF SF operation");
+          auto expr2 = triton::api.createSymbolicFlagExpression(inst, node2, dst2.getRegister(), "SAHF ZF operation");
+          auto expr3 = triton::api.createSymbolicFlagExpression(inst, node3, dst3.getRegister(), "SAHF AF operation");
+          auto expr4 = triton::api.createSymbolicFlagExpression(inst, node4, dst4.getRegister(), "SAHF PF operation");
+          auto expr5 = triton::api.createSymbolicFlagExpression(inst, node5, dst5.getRegister(), "SAHF CF operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst1, src);
+          expr2->isTainted = triton::api.taintAssignment(dst2, src);
+          expr3->isTainted = triton::api.taintAssignment(dst3, src);
+          expr4->isTainted = triton::api.taintAssignment(dst4, src);
+          expr5->isTainted = triton::api.taintAssignment(dst5, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);

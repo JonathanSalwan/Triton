@@ -378,6 +378,9 @@ namespace triton {
       //! The JS semantics.
       void js_s(triton::arch::Instruction& inst);
 
+      //! The LAHF semantics.
+      void lahf_s(triton::arch::Instruction& inst);
+
       //! The LDDQU semantics.
       void lddqu_s(triton::arch::Instruction& inst);
 
@@ -752,6 +755,9 @@ namespace triton {
 
       //! The ROR semantics.
       void ror_s(triton::arch::Instruction& inst);
+
+      //! The SAHF semantics.
+      void sahf_s(triton::arch::Instruction& inst);
 
       //! The SAR semantics.
       void sar_s(triton::arch::Instruction& inst);
