@@ -10059,6 +10059,27 @@ namespace triton {
 
 
         void syscall_s(triton::arch::Instruction& inst) {
+          auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_RCX);
+          auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_R11);
+          auto src1 = triton::arch::OperandWrapper(TRITON_X86_REG_RIP);
+          auto src2 = triton::arch::OperandWrapper(TRITON_X86_REG_EFLAGS);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, src1);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src2);
+
+          /* Create the semantics */
+          auto node1 = triton::ast::bvadd(op1, triton::ast::bv(inst.getSize(), src1.getBitSize()));
+          auto node2 = op2;
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicExpression(inst, node1, dst1, "SYSCALL RCX operation");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, dst2, "SYSCALL R11 operation");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.taintAssignment(dst1, src1);
+          expr2->isTainted = triton::api.taintAssignment(dst2, src2);
+
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
         }
