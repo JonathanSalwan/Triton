@@ -855,6 +855,9 @@ namespace triton {
       //! The SUB semantics.
       void sub_s(triton::arch::Instruction& inst);
 
+      //! The SYSCALL semantics.
+      void syscall_s(triton::arch::Instruction& inst);
+
       //! The TEST semantics.
       void test_s(triton::arch::Instruction& inst);
 

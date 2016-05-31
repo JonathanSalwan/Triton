@@ -267,6 +267,7 @@ STOSD                        |            | Store doubleword at address
 STOSQ                        |            | Store quadword at address
 STOSW                        |            | Store word at address
 SUB                          |            | Subtract
+SYSCALL                      |            | Fast System Call
 TEST                         |            | Logical Compare
 UNPCKHPD                     | sse2       | Unpack and Interleave High Packed Double- Precision Floating-Point Values
 UNPCKHPS                     | sse1       | Unpack and Interleave High Packed Single-Precision Floating-Point Values
@@ -533,6 +534,7 @@ namespace triton {
             case ID_INS_STOSQ:          triton::arch::x86::semantics::stosq_s(inst);        break;
             case ID_INS_STOSW:          triton::arch::x86::semantics::stosw_s(inst);        break;
             case ID_INS_SUB:            triton::arch::x86::semantics::sub_s(inst);          break;
+            case ID_INS_SYSCALL:        triton::arch::x86::semantics::syscall_s(inst);      break;
             case ID_INS_TEST:           triton::arch::x86::semantics::test_s(inst);         break;
             case ID_INS_UNPCKHPD:       triton::arch::x86::semantics::unpckhpd_s(inst);     break;
             case ID_INS_UNPCKHPS:       triton::arch::x86::semantics::unpckhps_s(inst);     break;
@@ -10051,6 +10053,12 @@ namespace triton {
           triton::arch::x86::semantics::sf_s(inst, expr, dst);
           triton::arch::x86::semantics::zf_s(inst, expr, dst);
 
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void syscall_s(triton::arch::Instruction& inst) {
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
         }
