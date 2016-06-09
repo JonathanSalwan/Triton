@@ -465,6 +465,22 @@ void check(void)
 
   asm("mov eax, 32");
   asm("cbw");
+  asm("mov ax, 0x32");
+  asm("cwd");
+  asm("mov ax, 0x8000");
+  asm("cwd");
+  asm("mov ax, 0x8001");
+  asm("cwd");
+  asm("mov eax, 0x32");
+  asm("cdq");
+  asm("mov eax, 0x8000");
+  asm("cdq");
+  asm("mov eax, 0x8001");
+  asm("cdq");
+  asm("mov eax, 0x800000");
+  asm("cdq");
+  asm("mov eax, 0x800001");
+  asm("cdq");
 
   asm("mov ecx, 1");
   asm("mov ebx, eax");

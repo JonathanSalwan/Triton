@@ -47,6 +47,7 @@ BTR                          |            | Bit Test and Reset
 BTS                          |            | Bit Test and Set
 CALL                         |            | Call Procedure
 CBW                          |            | Convert byte (al) to word (ax)
+CDQ                          |            | Convert dword (eax) to qword (edx:eax)
 CDQE                         |            | Convert dword (eax) to qword (rax)
 CLC                          |            | Clear Carry Flag
 CLD                          |            | Clear Direction Flag
@@ -78,6 +79,7 @@ CMPXCHG16B                   |            | Compare and Exchange 16 Bytes
 CMPXCHG8B                    |            | Compare and Exchange 8 Bytes
 CPUID                        |            | CPU Identification
 CQO                          |            | convert qword (rax) to oword (rdx:rax)
+CWD                          |            | Convert word (ax) to dword (dx:ax)
 CWDE                         |            | Convert word (ax) to dword (eax)
 DEC                          |            | Decrement by 1
 DIV                          |            | Unsigned Divide
@@ -314,6 +316,7 @@ namespace triton {
             case ID_INS_BTS:            triton::arch::x86::semantics::bts_s(inst);          break;
             case ID_INS_CALL:           triton::arch::x86::semantics::call_s(inst);         break;
             case ID_INS_CBW:            triton::arch::x86::semantics::cbw_s(inst);          break;
+            case ID_INS_CDQ:            triton::arch::x86::semantics::cdq_s(inst);          break;
             case ID_INS_CDQE:           triton::arch::x86::semantics::cdqe_s(inst);         break;
             case ID_INS_CLC:            triton::arch::x86::semantics::clc_s(inst);          break;
             case ID_INS_CLD:            triton::arch::x86::semantics::cld_s(inst);          break;
@@ -345,6 +348,7 @@ namespace triton {
             case ID_INS_CMPXCHG8B:      triton::arch::x86::semantics::cmpxchg8b_s(inst);    break;
             case ID_INS_CPUID:          triton::arch::x86::semantics::cpuid_s(inst);        break;
             case ID_INS_CQO:            triton::arch::x86::semantics::cqo_s(inst);          break;
+            case ID_INS_CWD:            triton::arch::x86::semantics::cwd_s(inst);          break;
             case ID_INS_CWDE:           triton::arch::x86::semantics::cwde_s(inst);         break;
             case ID_INS_DEC:            triton::arch::x86::semantics::dec_s(inst);          break;
             case ID_INS_DIV:            triton::arch::x86::semantics::div_s(inst);          break;
@@ -2453,6 +2457,45 @@ namespace triton {
         }
 
 
+        void cdq_s(triton::arch::Instruction& inst) {
+          auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
+          auto src = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics - TMP = 64 bitvec (EDX:EAX) */
+          auto node1 = triton::ast::sx(DWORD_SIZE_BIT, op1);
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "Temporary variable");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.isRegisterTainted(TRITON_X86_REG_EDX) | triton::api.isRegisterTainted(TRITON_X86_REG_EAX);
+
+          /* Create the semantics - EAX = TMP[31...0] */
+          auto node2 = triton::ast::extract(DWORD_SIZE_BIT-1, 0, triton::ast::reference(expr1->getId()));
+
+          /* Create symbolic expression */
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, src, "CDQ EAX operation");
+
+          /* Spread taint */
+          expr2->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_EAX, expr1->isTainted);
+
+          /* Create the semantics - EDX = TMP[63...32] */
+          auto node3 = triton::ast::extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, triton::ast::reference(expr1->getId()));
+
+          /* Create symbolic expression */
+          auto expr3 = triton::api.createSymbolicExpression(inst, node3, dst, "CDQ EDX operation");
+
+          /* Spread taint */
+          expr3->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_EDX, expr1->isTainted);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
         void cdqe_s(triton::arch::Instruction& inst) {
           auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
 
@@ -3601,7 +3644,7 @@ namespace triton {
           auto node2 = triton::ast::extract(QWORD_SIZE_BIT-1, 0, triton::ast::reference(expr1->getId()));
 
           /* Create symbolic expression */
-          auto expr2 = triton::api.createSymbolicExpression(inst, node2, src, "CQO operation - RAX");
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, src, "CQO RAX operation");
 
           /* Spread taint */
           expr2->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_RAX, expr1->isTainted);
@@ -3610,10 +3653,49 @@ namespace triton {
           auto node3 = triton::ast::extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, triton::ast::reference(expr1->getId()));
 
           /* Create symbolic expression */
-          auto expr3 = triton::api.createSymbolicExpression(inst, node3, dst, "CQO operation - RDX");
+          auto expr3 = triton::api.createSymbolicExpression(inst, node3, dst, "CQO RDX operation");
 
           /* Spread taint */
           expr3->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_RDX, expr1->isTainted);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void cwd_s(triton::arch::Instruction& inst) {
+          auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_DX);
+          auto src = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, src);
+
+          /* Create the semantics - TMP = 32 bitvec (DX:AX) */
+          auto node1 = triton::ast::sx(WORD_SIZE_BIT, op1);
+
+          /* Create symbolic expression */
+          auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "Temporary variable");
+
+          /* Spread taint */
+          expr1->isTainted = triton::api.isRegisterTainted(TRITON_X86_REG_DX) | triton::api.isRegisterTainted(TRITON_X86_REG_AX);
+
+          /* Create the semantics - AX = TMP[15...0] */
+          auto node2 = triton::ast::extract(WORD_SIZE_BIT-1, 0, triton::ast::reference(expr1->getId()));
+
+          /* Create symbolic expression */
+          auto expr2 = triton::api.createSymbolicExpression(inst, node2, src, "CWD AX operation");
+
+          /* Spread taint */
+          expr2->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_AX, expr1->isTainted);
+
+          /* Create the semantics - DX = TMP[31...16] */
+          auto node3 = triton::ast::extract(DWORD_SIZE_BIT-1, WORD_SIZE_BIT, triton::ast::reference(expr1->getId()));
+
+          /* Create symbolic expression */
+          auto expr3 = triton::api.createSymbolicExpression(inst, node3, dst, "CWD DX operation");
+
+          /* Spread taint */
+          expr3->isTainted = triton::api.setTaintRegister(TRITON_X86_REG_DX, expr1->isTainted);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);

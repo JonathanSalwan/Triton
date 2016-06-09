@@ -213,6 +213,9 @@ namespace triton {
       //! The CBW semantics.
       void cbw_s(triton::arch::Instruction& inst);
 
+      //! The CDQ semantics.
+      void cdq_s(triton::arch::Instruction& inst);
+
       //! The CDQE semantics.
       void cdqe_s(triton::arch::Instruction& inst);
 
@@ -305,6 +308,9 @@ namespace triton {
 
       //! The CQO semantics.
       void cqo_s(triton::arch::Instruction& inst);
+
+      //! The CWD semantics.
+      void cwd_s(triton::arch::Instruction& inst);
 
       //! The CWDE semantics.
       void cwde_s(triton::arch::Instruction& inst);
