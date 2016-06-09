@@ -117,10 +117,10 @@ namespace triton {
         std::set<triton::arch::RegisterOperand*> getParentRegisters(void) const;
 
         //! Disassembles the instruction according to the architecture.
-        void disassembly(triton::arch::Instruction &inst) const;
+        void disassembly(triton::arch::Instruction& inst) const;
 
         //! Builds the instruction semantics according to the architecture.
-        void buildSemantics(triton::arch::Instruction &inst) const;
+        void buildSemantics(triton::arch::Instruction& inst) const;
 
         //! Returns the last concrete value recorded of a memory access.
         triton::uint8 getLastMemoryValue(triton::__uint addr) const;

@@ -163,17 +163,17 @@ namespace triton {
         void setLastRegisterValue(const triton::arch::RegisterOperand& reg);
 
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa  processing().
-        void disassembly(triton::arch::Instruction &inst) const;
+        void disassembly(triton::arch::Instruction& inst) const;
 
         //! [**architecture api**] - Builds the instruction semantics. You must define an architecture before. \sa processing().
-        void buildSemantics(triton::arch::Instruction &inst);
+        void buildSemantics(triton::arch::Instruction& inst);
 
 
 
         /* Processing API ================================================================================ */
 
         //! [**proccesing api**] - The main function. This function processes everything (engine, IR, optimization, state, ...) from a given instruction.
-        void processing(triton::arch::Instruction &inst);
+        void processing(triton::arch::Instruction& inst);
 
         //! [**proccesing api**] - Initialize everything.
         void initEngines(void);

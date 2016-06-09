@@ -200,13 +200,13 @@ namespace triton {
         void setPrefix(triton::uint32 prefix);
 
         //! Sets the disassembly of the instruction.
-        void setDisassembly(std::string str);
+        void setDisassembly(const std::string& str);
 
         //! Records an instruction context for a memory access.
-        void updateContext(MemoryOperand mem);
+        void updateContext(const triton::arch::MemoryOperand& mem);
 
         //! Records an instruction context for a register state.
-        void updateContext(RegisterOperand reg);
+        void updateContext(const triton::arch::RegisterOperand& reg);
 
         //! Adds a symbolic expression
         void addSymbolicExpression(triton::engines::symbolic::SymbolicExpression* expr);

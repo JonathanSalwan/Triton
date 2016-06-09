@@ -150,7 +150,7 @@ namespace triton {
     }
 
 
-    void Instruction::updateContext(triton::arch::MemoryOperand mem) {
+    void Instruction::updateContext(const triton::arch::MemoryOperand& mem) {
       this->memoryAccess.push_back(mem);
     }
 
@@ -223,13 +223,13 @@ namespace triton {
     }
 
 
-    void Instruction::setDisassembly(std::string str) {
+    void Instruction::setDisassembly(const std::string& str) {
       this->disassembly.clear();
       this->disassembly.str(str);
     }
 
 
-    void Instruction::updateContext(triton::arch::RegisterOperand reg) {
+    void Instruction::updateContext(const triton::arch::RegisterOperand& reg) {
       this->registerState[reg.getId()] = reg;
     }
 

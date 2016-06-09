@@ -167,14 +167,14 @@ namespace triton {
     }
 
 
-    void Architecture::disassembly(triton::arch::Instruction &inst) const {
+    void Architecture::disassembly(triton::arch::Instruction& inst) const {
       if (!this->cpu)
         throw std::runtime_error("Architecture::disassembly(): You must define an architecture.");
       this->cpu->disassembly(inst);
     }
 
 
-    void Architecture::buildSemantics(triton::arch::Instruction &inst) const {
+    void Architecture::buildSemantics(triton::arch::Instruction& inst) const {
       if (!this->cpu)
         throw std::runtime_error("Architecture::buildSemantics(): You must define an architecture.");
 

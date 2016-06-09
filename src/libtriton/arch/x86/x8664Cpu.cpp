@@ -863,7 +863,7 @@ namespace triton {
       }
 
 
-      void x8664Cpu::disassembly(triton::arch::Instruction &inst) const {
+      void x8664Cpu::disassembly(triton::arch::Instruction& inst) const {
         triton::extlibs::capstone::csh       handle;
         triton::extlibs::capstone::cs_insn*  insn;
         size_t                               count = 0;
@@ -969,7 +969,7 @@ namespace triton {
       }
 
 
-      void x8664Cpu::buildSemantics(triton::arch::Instruction &inst) const {
+      void x8664Cpu::buildSemantics(triton::arch::Instruction& inst) const {
         if (!inst.getType())
           throw std::runtime_error("x8664Cpu::buildSemantics(): You must disassemble the instruction before.");
         triton::arch::x86::semantics::build(inst);

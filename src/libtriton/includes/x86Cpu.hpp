@@ -218,8 +218,8 @@ namespace triton {
           triton::uint32 registerBitSize(void) const;
           triton::uint32 registerSize(void) const;
           triton::uint8 getLastMemoryValue(triton::__uint addr) const;
-          void buildSemantics(triton::arch::Instruction &inst) const;
-          void disassembly(triton::arch::Instruction &inst) const;
+          void buildSemantics(triton::arch::Instruction& inst) const;
+          void disassembly(triton::arch::Instruction& inst) const;
           void setLastMemoryValue(triton::__uint addr, triton::uint8 value);
           void setLastMemoryValue(const triton::arch::MemoryOperand& mem);
           void setLastMemoryAreaValue(triton::__uint baseAddr, const std::vector<triton::uint8>& values);
