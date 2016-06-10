@@ -96,10 +96,10 @@ endif(PINTOOL)
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     if(POLICY CMP0025)
         cmake_policy(SET CMP0025 OLD) # report Apple's Clang as just Clang
-    endif()
+    endif(POLICY CMP0025)
     if(POLICY CMP0042)
         cmake_policy(SET CMP0042 NEW) # MACOSX_RPATH
-    endif()
+    endif(POLICY CMP0042)
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 
@@ -109,24 +109,30 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 
 # Find Python 2.7
-find_package(PythonLibs 2.7 REQUIRED)
+if (NOT PYTHON_INCLUDE_DIRS AND NOT PYTHON_LIBRARIES)
+    find_package(PythonLibs 2.7 REQUIRED)
+endif (NOT PYTHON_INCLUDE_DIRS AND NOT PYTHON_LIBRARIES)
 include_directories(${PYTHON_INCLUDE_DIRS})
 
 
 # Find Z3
-find_package(Z3 REQUIRED)
+if (NOT Z3_INCLUDE_DIRS)
+    find_package(Z3 REQUIRED)
+    if (NOT Z3_FOUND)
+        message(FATAL_ERROR "Z3 not found")
+    endif (NOT Z3_FOUND)
+endif (NOT Z3_INCLUDE_DIRS)
 include_directories(${Z3_INCLUDE_DIRS})
-if (NOT Z3_FOUND)
-    message(FATAL_ERROR "Z3 not found")
-endif()
 
 
 # Find Capstone
-find_package(CAPSTONE REQUIRED)
+if (NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
+    find_package(CAPSTONE REQUIRED)
+    if (NOT CAPSTONE_FOUND)
+        message(FATAL_ERROR "Capstone not found")
+    endif (NOT CAPSTONE_FOUND)
+endif (NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
 include_directories(${CAPSTONE_INCLUDE_DIRS})
-if (NOT CAPSTONE_FOUND)
-    message(FATAL_ERROR "Capstone not found")
-endif()
 
 
 # Add Triton includes
