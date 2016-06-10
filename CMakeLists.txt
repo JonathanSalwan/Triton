@@ -256,6 +256,16 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 install (TARGETS ${PROJECT_LIBTRITON} DESTINATION ${TRITON_LIB_INSTALL})
 install (FILES ${LIBTRITON_HEADERS_FILES} DESTINATION ${TRITON_HEADER_INSTALL})
+configure_file(
+    ${CMAKE_SOURCE_DIR}/setup.py.in
+    ${CMAKE_BINARY_DIR}/setup.py
+    IMMEDIATE @ONLY
+)
+
+find_program(PYTHON_BINARY "python")
+if (UNIX)
+  install(CODE "execute_process(COMMAND ${PYTHON_BINARY} ${CMAKE_BINARY_DIR}/setup.py install)")
+endif()
 
 
 
