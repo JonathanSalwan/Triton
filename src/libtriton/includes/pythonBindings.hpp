@@ -15,6 +15,7 @@
   #include <python2.7/longintrepr.h>
 #elif _WIN32
   #include <Python.h>
+  #include <longintrepr.h>
 #endif
 
 
