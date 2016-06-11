@@ -10,6 +10,8 @@
 
 #if defined(__unix__) || defined(__APPLE__)
 
+  #include "tritonExport.hpp"
+
   #ifdef __APPLE__
     #include <sys/syscall.h>
   #else
@@ -48,19 +50,19 @@ namespace triton {
 
       #if defined(__unix__)
       //! The number of syscalls 32
-      extern const unsigned int NB_SYSCALL32;
+      extern TRITON_EXPORT const unsigned int NB_SYSCALL32;
       #endif
 
       //! The number of syscalls 64
-      extern const unsigned int NB_SYSCALL64;
+      extern TRITON_EXPORT const unsigned int NB_SYSCALL64;
 
       #if defined(__unix__)
       //! The syscall map 32
-      extern const char *syscallmap32[];
+      extern TRITON_EXPORT const char* syscallmap32[];
       #endif
 
       //! The syscall map 64
-      extern const char *syscallmap64[];
+      extern TRITON_EXPORT const char* syscallmap64[];
 
     /*! @} End of unix namespace */
     };

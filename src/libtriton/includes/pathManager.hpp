@@ -12,6 +12,7 @@
 
 #include "pathConstraint.hpp"
 #include "symbolicExpression.hpp"
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -41,7 +42,7 @@ namespace triton {
 
       /*! \class PathManager
           \brief The path manager class. */
-      class PathManager {
+      class TRITON_EXPORT PathManager {
         protected:
           //! \brief The logical conjunction vector of path constraints.
           std::vector<triton::engines::symbolic::PathConstraint> pathConstraints;

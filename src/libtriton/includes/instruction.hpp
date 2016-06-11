@@ -20,6 +20,7 @@
 #include "operandWrapper.hpp"
 #include "registerOperand.hpp"
 #include "symbolicExpression.hpp"
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -42,7 +43,7 @@ namespace triton {
     /*! \class Instruction
      *  \brief This class is used when to represent an instruction
      */
-    class Instruction {
+    class TRITON_EXPORT Instruction {
 
       protected:
         //! The thread id of the instruction.
@@ -255,10 +256,10 @@ namespace triton {
     };
 
     //! Displays an Instruction.
-    std::ostream& operator<<(std::ostream& stream, const Instruction& inst);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const Instruction& inst);
 
     //! Displays an Instruction.
-    std::ostream& operator<<(std::ostream& stream, const Instruction* inst);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const Instruction* inst);
 
   /*! @} End of arch namespace */
   };

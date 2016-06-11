@@ -17,6 +17,7 @@
 #include "instruction.hpp"
 #include "memoryOperand.hpp"
 #include "registerOperand.hpp"
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 #include "x86Semantics.hpp"
 
@@ -46,7 +47,7 @@ namespace triton {
 
       //! \class x86Cpu
       /*! \brief This class is used to describe the x86 (32-bits) spec. */
-      class x86Cpu : public cpuInterface {
+      class TRITON_EXPORT x86Cpu : public cpuInterface {
 
         protected:
 

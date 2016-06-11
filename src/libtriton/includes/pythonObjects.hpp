@@ -22,6 +22,7 @@
 #include "solverModel.hpp"
 #include "symbolicExpression.hpp"
 #include "symbolicVariable.hpp"
+#include "tritonExport.hpp"
 
 
 
@@ -49,46 +50,46 @@ namespace triton {
      */
 
       //! Creates the AstNode python class.
-      PyObject* PyAstNode(triton::ast::AbstractNode* node);
+      TRITON_EXPORT PyObject* PyAstNode(triton::ast::AbstractNode* node);
 
       //! Creates the Bitvector python class.
-      PyObject* PyBitvector(const triton::arch::ImmediateOperand& imm);
+      TRITON_EXPORT PyObject* PyBitvector(const triton::arch::ImmediateOperand& imm);
 
       //! Creates the Bitvector python class.
-      PyObject* PyBitvector(const triton::arch::MemoryOperand& mem);
+      TRITON_EXPORT PyObject* PyBitvector(const triton::arch::MemoryOperand& mem);
 
       //! Creates the Bitvector python class.
-      PyObject* PyBitvector(const triton::arch::RegisterOperand& reg);
+      TRITON_EXPORT PyObject* PyBitvector(const triton::arch::RegisterOperand& reg);
 
       //! Creates the Bitvector python class.
-      PyObject* PyBitvector(triton::uint32 high, triton::uint32 low);
+      TRITON_EXPORT PyObject* PyBitvector(triton::uint32 high, triton::uint32 low);
 
       //! Creates the Immediate python class.
-      PyObject* PyImmediateOperand(const triton::arch::ImmediateOperand& imm);
+      TRITON_EXPORT PyObject* PyImmediateOperand(const triton::arch::ImmediateOperand& imm);
 
       //! Creates the Instruction python class.
-      PyObject* PyInstruction(void);
+      TRITON_EXPORT PyObject* PyInstruction(void);
 
       //! Creates the Instruction python class.
-      PyObject* PyInstruction(const triton::arch::Instruction& inst);
+      TRITON_EXPORT PyObject* PyInstruction(const triton::arch::Instruction& inst);
 
       //! Creates the Memory python class.
-      PyObject* PyMemoryOperand(const triton::arch::MemoryOperand& mem);
+      TRITON_EXPORT PyObject* PyMemoryOperand(const triton::arch::MemoryOperand& mem);
 
       //! Creates the PathConstraint python class.
-      PyObject* PyPathConstraint(const triton::engines::symbolic::PathConstraint& pc);
+      TRITON_EXPORT PyObject* PyPathConstraint(const triton::engines::symbolic::PathConstraint& pc);
 
       //! Creates the Register python class.
-      PyObject* PyRegisterOperand(const triton::arch::RegisterOperand& reg);
+      TRITON_EXPORT PyObject* PyRegisterOperand(const triton::arch::RegisterOperand& reg);
 
       //! Creates the SolverModel python class.
-      PyObject* PySolverModel(const triton::engines::solver::SolverModel& model);
+      TRITON_EXPORT PyObject* PySolverModel(const triton::engines::solver::SolverModel& model);
 
       //! Creates the SymbolicExpression python class.
-      PyObject* PySymbolicExpression(triton::engines::symbolic::SymbolicExpression* expr);
+      TRITON_EXPORT PyObject* PySymbolicExpression(triton::engines::symbolic::SymbolicExpression* expr);
 
       //! Creates the SymbolicVariable python class.
-      PyObject* PySymbolicVariable(triton::engines::symbolic::SymbolicVariable* symVar);
+      TRITON_EXPORT PyObject* PySymbolicVariable(triton::engines::symbolic::SymbolicVariable* symVar);
 
       /* AstNode ======================================================== */
 

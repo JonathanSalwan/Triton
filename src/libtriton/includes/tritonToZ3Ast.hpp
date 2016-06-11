@@ -13,6 +13,7 @@
 #include "ast.hpp"
 #include "astVisitor.hpp"
 #include "z3Result.hpp"
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -34,7 +35,7 @@ namespace triton {
 
     //! \class TritonToZ3Ast
     /*! \brief Converts a Triton's AST to Z3's AST. */
-    class TritonToZ3Ast : public AstVisitor {
+    class TRITON_EXPORT TritonToZ3Ast : public AstVisitor {
 
       private:
         //! This flag define if the conversion is used to evaluated a node or not.

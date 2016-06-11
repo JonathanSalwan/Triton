@@ -9,7 +9,9 @@
 #define TRITON_Z3TOTRITONAST_H
 
 #include <z3++.h>
+
 #include "ast.hpp"
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -30,8 +32,8 @@ namespace triton {
    */
 
     //! \class Z3ToTritonAst
-    /*! \brief Converts a Z3's AST to a Triton's AST. */
-    class Z3ToTritonAst {
+    //! \brief Converts a Z3's AST to a Triton's AST.
+    class TRITON_EXPORT Z3ToTritonAst {
       protected:
         //! Z3's context
         z3::context context;

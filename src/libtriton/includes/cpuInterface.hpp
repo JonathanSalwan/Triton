@@ -15,6 +15,7 @@
 #include "instruction.hpp"
 #include "memoryOperand.hpp"
 #include "registerOperand.hpp"
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -37,7 +38,7 @@ namespace triton {
 
   /*! \interface cpuInterface
       \brief This interface is used as abstract CPU interface. All CPU must use this interface. */
-  class cpuInterface  {
+  class TRITON_EXPORT cpuInterface  {
     public:
       //! Constructor.
       virtual ~cpuInterface(){};

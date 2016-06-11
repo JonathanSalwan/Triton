@@ -14,6 +14,7 @@
 
 #include "memoryOperand.hpp"
 #include "registerOperand.hpp"
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -49,7 +50,7 @@ namespace triton {
 
       /*! \class TaintEngine
           \brief The taint engine class. */
-      class TaintEngine {
+      class TRITON_EXPORT TaintEngine {
 
         protected:
 

@@ -12,6 +12,7 @@
 #include "memoryOperand.hpp"
 #include "operandInterface.hpp"
 #include "registerOperand.hpp"
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -34,7 +35,7 @@ namespace triton {
     /*! \interface OperandWrapper
      *  \brief This class is used as operand wrapper.
      */
-    class OperandWrapper {
+    class TRITON_EXPORT OperandWrapper {
       public:
         //! If the operand is an immediate, this attribute is filled.
         ImmediateOperand imm;
@@ -116,10 +117,10 @@ namespace triton {
     };
 
     //! Displays a OperandWrapper according to the concrete type.
-    std::ostream& operator<<(std::ostream& stream, const triton::arch::OperandWrapper& op);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const triton::arch::OperandWrapper& op);
 
     //! Displays a OperandWrapper according to the concrete type.
-    std::ostream& operator<<(std::ostream& stream, const triton::arch::OperandWrapper* op);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const triton::arch::OperandWrapper* op);
 
   /*! @} End of arch namespace */
   };

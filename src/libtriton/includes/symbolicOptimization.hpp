@@ -11,6 +11,7 @@
 #include <set>
 
 #include "symbolicEnums.hpp"
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 #ifdef TRITON_PYTHON_BINDINGS
@@ -44,7 +45,7 @@ namespace triton {
 
       //! \class SymbolicOptimization
       /*! \brief The symbolic simplification class */
-      class SymbolicOptimization {
+      class TRITON_EXPORT SymbolicOptimization {
 
         protected:
           //! The set of enabled optimization

@@ -17,6 +17,7 @@
 
 #include "ast.hpp"
 #include "solverModel.hpp"
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -44,7 +45,7 @@ namespace triton {
 
       //! \class SolverEngine
       /*! \brief The solver engine class. */
-      class SolverEngine
+      class TRITON_EXPORT SolverEngine
       {
         public:
           //! Computes and returns a model from a symbolic constraint.

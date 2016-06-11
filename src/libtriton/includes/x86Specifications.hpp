@@ -9,6 +9,7 @@
 #define TRITON_X86SPECIFICATIONS_H
 
 #include "registerOperand.hpp"
+#include "tritonExport.hpp"
 
 
 
@@ -35,241 +36,241 @@ namespace triton {
      *  @{
      */
 
-      extern RegisterOperand x86_reg_invalid;
+      extern TRITON_EXPORT RegisterOperand x86_reg_invalid;
 
-      extern RegisterOperand x86_reg_rax;
-      extern RegisterOperand x86_reg_eax;
-      extern RegisterOperand x86_reg_ax;
-      extern RegisterOperand x86_reg_ah;
-      extern RegisterOperand x86_reg_al;
+      extern TRITON_EXPORT RegisterOperand x86_reg_rax;
+      extern TRITON_EXPORT RegisterOperand x86_reg_eax;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ax;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ah;
+      extern TRITON_EXPORT RegisterOperand x86_reg_al;
 
-      extern RegisterOperand x86_reg_rbx;
-      extern RegisterOperand x86_reg_ebx;
-      extern RegisterOperand x86_reg_bx;
-      extern RegisterOperand x86_reg_bh;
-      extern RegisterOperand x86_reg_bl;
+      extern TRITON_EXPORT RegisterOperand x86_reg_rbx;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ebx;
+      extern TRITON_EXPORT RegisterOperand x86_reg_bx;
+      extern TRITON_EXPORT RegisterOperand x86_reg_bh;
+      extern TRITON_EXPORT RegisterOperand x86_reg_bl;
 
-      extern RegisterOperand x86_reg_rcx;
-      extern RegisterOperand x86_reg_ecx;
-      extern RegisterOperand x86_reg_cx;
-      extern RegisterOperand x86_reg_ch;
-      extern RegisterOperand x86_reg_cl;
+      extern TRITON_EXPORT RegisterOperand x86_reg_rcx;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ecx;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cx;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ch;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cl;
 
-      extern RegisterOperand x86_reg_rdx;
-      extern RegisterOperand x86_reg_edx;
-      extern RegisterOperand x86_reg_dx;
-      extern RegisterOperand x86_reg_dh;
-      extern RegisterOperand x86_reg_dl;
+      extern TRITON_EXPORT RegisterOperand x86_reg_rdx;
+      extern TRITON_EXPORT RegisterOperand x86_reg_edx;
+      extern TRITON_EXPORT RegisterOperand x86_reg_dx;
+      extern TRITON_EXPORT RegisterOperand x86_reg_dh;
+      extern TRITON_EXPORT RegisterOperand x86_reg_dl;
 
-      extern RegisterOperand x86_reg_rdi;
-      extern RegisterOperand x86_reg_edi;
-      extern RegisterOperand x86_reg_di;
-      extern RegisterOperand x86_reg_dil;
+      extern TRITON_EXPORT RegisterOperand x86_reg_rdi;
+      extern TRITON_EXPORT RegisterOperand x86_reg_edi;
+      extern TRITON_EXPORT RegisterOperand x86_reg_di;
+      extern TRITON_EXPORT RegisterOperand x86_reg_dil;
 
-      extern RegisterOperand x86_reg_rsi;
-      extern RegisterOperand x86_reg_esi;
-      extern RegisterOperand x86_reg_si;
-      extern RegisterOperand x86_reg_sil;
+      extern TRITON_EXPORT RegisterOperand x86_reg_rsi;
+      extern TRITON_EXPORT RegisterOperand x86_reg_esi;
+      extern TRITON_EXPORT RegisterOperand x86_reg_si;
+      extern TRITON_EXPORT RegisterOperand x86_reg_sil;
 
-      extern RegisterOperand x86_reg_rsp;
-      extern RegisterOperand x86_reg_esp;
-      extern RegisterOperand x86_reg_sp;
-      extern RegisterOperand x86_reg_spl;
-      extern RegisterOperand x86_reg_stack;
+      extern TRITON_EXPORT RegisterOperand x86_reg_rsp;
+      extern TRITON_EXPORT RegisterOperand x86_reg_esp;
+      extern TRITON_EXPORT RegisterOperand x86_reg_sp;
+      extern TRITON_EXPORT RegisterOperand x86_reg_spl;
+      extern TRITON_EXPORT RegisterOperand x86_reg_stack;
 
-      extern RegisterOperand x86_reg_rbp;
-      extern RegisterOperand x86_reg_ebp;
-      extern RegisterOperand x86_reg_bp;
-      extern RegisterOperand x86_reg_bpl;
+      extern TRITON_EXPORT RegisterOperand x86_reg_rbp;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ebp;
+      extern TRITON_EXPORT RegisterOperand x86_reg_bp;
+      extern TRITON_EXPORT RegisterOperand x86_reg_bpl;
 
-      extern RegisterOperand x86_reg_rip;
-      extern RegisterOperand x86_reg_eip;
-      extern RegisterOperand x86_reg_ip;
-      extern RegisterOperand x86_reg_pc;
+      extern TRITON_EXPORT RegisterOperand x86_reg_rip;
+      extern TRITON_EXPORT RegisterOperand x86_reg_eip;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ip;
+      extern TRITON_EXPORT RegisterOperand x86_reg_pc;
 
-      extern RegisterOperand x86_reg_eflags;
+      extern TRITON_EXPORT RegisterOperand x86_reg_eflags;
 
-      extern RegisterOperand x86_reg_r8;
-      extern RegisterOperand x86_reg_r8d;
-      extern RegisterOperand x86_reg_r8w;
-      extern RegisterOperand x86_reg_r8b;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r8;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r8d;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r8w;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r8b;
 
-      extern RegisterOperand x86_reg_r9;
-      extern RegisterOperand x86_reg_r9d;
-      extern RegisterOperand x86_reg_r9w;
-      extern RegisterOperand x86_reg_r9b;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r9;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r9d;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r9w;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r9b;
 
-      extern RegisterOperand x86_reg_r10;
-      extern RegisterOperand x86_reg_r10d;
-      extern RegisterOperand x86_reg_r10w;
-      extern RegisterOperand x86_reg_r10b;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r10;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r10d;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r10w;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r10b;
 
-      extern RegisterOperand x86_reg_r11;
-      extern RegisterOperand x86_reg_r11d;
-      extern RegisterOperand x86_reg_r11w;
-      extern RegisterOperand x86_reg_r11b;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r11;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r11d;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r11w;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r11b;
 
-      extern RegisterOperand x86_reg_r12;
-      extern RegisterOperand x86_reg_r12d;
-      extern RegisterOperand x86_reg_r12w;
-      extern RegisterOperand x86_reg_r12b;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r12;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r12d;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r12w;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r12b;
 
-      extern RegisterOperand x86_reg_r13;
-      extern RegisterOperand x86_reg_r13d;
-      extern RegisterOperand x86_reg_r13w;
-      extern RegisterOperand x86_reg_r13b;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r13;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r13d;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r13w;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r13b;
 
-      extern RegisterOperand x86_reg_r14;
-      extern RegisterOperand x86_reg_r14d;
-      extern RegisterOperand x86_reg_r14w;
-      extern RegisterOperand x86_reg_r14b;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r14;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r14d;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r14w;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r14b;
 
-      extern RegisterOperand x86_reg_r15;
-      extern RegisterOperand x86_reg_r15d;
-      extern RegisterOperand x86_reg_r15w;
-      extern RegisterOperand x86_reg_r15b;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r15;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r15d;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r15w;
+      extern TRITON_EXPORT RegisterOperand x86_reg_r15b;
 
-      extern RegisterOperand x86_reg_mm0;
-      extern RegisterOperand x86_reg_mm1;
-      extern RegisterOperand x86_reg_mm2;
-      extern RegisterOperand x86_reg_mm3;
-      extern RegisterOperand x86_reg_mm4;
-      extern RegisterOperand x86_reg_mm5;
-      extern RegisterOperand x86_reg_mm6;
-      extern RegisterOperand x86_reg_mm7;
+      extern TRITON_EXPORT RegisterOperand x86_reg_mm0;
+      extern TRITON_EXPORT RegisterOperand x86_reg_mm1;
+      extern TRITON_EXPORT RegisterOperand x86_reg_mm2;
+      extern TRITON_EXPORT RegisterOperand x86_reg_mm3;
+      extern TRITON_EXPORT RegisterOperand x86_reg_mm4;
+      extern TRITON_EXPORT RegisterOperand x86_reg_mm5;
+      extern TRITON_EXPORT RegisterOperand x86_reg_mm6;
+      extern TRITON_EXPORT RegisterOperand x86_reg_mm7;
 
-      extern RegisterOperand x86_reg_xmm0;
-      extern RegisterOperand x86_reg_xmm1;
-      extern RegisterOperand x86_reg_xmm2;
-      extern RegisterOperand x86_reg_xmm3;
-      extern RegisterOperand x86_reg_xmm4;
-      extern RegisterOperand x86_reg_xmm5;
-      extern RegisterOperand x86_reg_xmm6;
-      extern RegisterOperand x86_reg_xmm7;
-      extern RegisterOperand x86_reg_xmm8;
-      extern RegisterOperand x86_reg_xmm9;
-      extern RegisterOperand x86_reg_xmm10;
-      extern RegisterOperand x86_reg_xmm11;
-      extern RegisterOperand x86_reg_xmm12;
-      extern RegisterOperand x86_reg_xmm13;
-      extern RegisterOperand x86_reg_xmm14;
-      extern RegisterOperand x86_reg_xmm15;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm0;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm1;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm2;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm3;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm4;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm5;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm6;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm7;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm8;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm9;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm10;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm11;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm12;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm13;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm14;
+      extern TRITON_EXPORT RegisterOperand x86_reg_xmm15;
 
-      extern RegisterOperand x86_reg_ymm0;
-      extern RegisterOperand x86_reg_ymm1;
-      extern RegisterOperand x86_reg_ymm2;
-      extern RegisterOperand x86_reg_ymm3;
-      extern RegisterOperand x86_reg_ymm4;
-      extern RegisterOperand x86_reg_ymm5;
-      extern RegisterOperand x86_reg_ymm6;
-      extern RegisterOperand x86_reg_ymm7;
-      extern RegisterOperand x86_reg_ymm8;
-      extern RegisterOperand x86_reg_ymm9;
-      extern RegisterOperand x86_reg_ymm10;
-      extern RegisterOperand x86_reg_ymm11;
-      extern RegisterOperand x86_reg_ymm12;
-      extern RegisterOperand x86_reg_ymm13;
-      extern RegisterOperand x86_reg_ymm14;
-      extern RegisterOperand x86_reg_ymm15;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm0;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm1;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm2;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm3;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm4;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm5;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm6;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm7;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm8;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm9;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm10;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm11;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm12;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm13;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm14;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ymm15;
 
-      extern RegisterOperand x86_reg_zmm0;
-      extern RegisterOperand x86_reg_zmm1;
-      extern RegisterOperand x86_reg_zmm2;
-      extern RegisterOperand x86_reg_zmm3;
-      extern RegisterOperand x86_reg_zmm4;
-      extern RegisterOperand x86_reg_zmm5;
-      extern RegisterOperand x86_reg_zmm6;
-      extern RegisterOperand x86_reg_zmm7;
-      extern RegisterOperand x86_reg_zmm8;
-      extern RegisterOperand x86_reg_zmm9;
-      extern RegisterOperand x86_reg_zmm10;
-      extern RegisterOperand x86_reg_zmm11;
-      extern RegisterOperand x86_reg_zmm12;
-      extern RegisterOperand x86_reg_zmm13;
-      extern RegisterOperand x86_reg_zmm14;
-      extern RegisterOperand x86_reg_zmm15;
-      extern RegisterOperand x86_reg_zmm16;
-      extern RegisterOperand x86_reg_zmm17;
-      extern RegisterOperand x86_reg_zmm18;
-      extern RegisterOperand x86_reg_zmm19;
-      extern RegisterOperand x86_reg_zmm20;
-      extern RegisterOperand x86_reg_zmm21;
-      extern RegisterOperand x86_reg_zmm22;
-      extern RegisterOperand x86_reg_zmm23;
-      extern RegisterOperand x86_reg_zmm24;
-      extern RegisterOperand x86_reg_zmm25;
-      extern RegisterOperand x86_reg_zmm26;
-      extern RegisterOperand x86_reg_zmm27;
-      extern RegisterOperand x86_reg_zmm28;
-      extern RegisterOperand x86_reg_zmm29;
-      extern RegisterOperand x86_reg_zmm30;
-      extern RegisterOperand x86_reg_zmm31;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm0;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm1;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm2;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm3;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm4;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm5;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm6;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm7;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm8;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm9;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm10;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm11;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm12;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm13;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm14;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm15;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm16;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm17;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm18;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm19;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm20;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm21;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm22;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm23;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm24;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm25;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm26;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm27;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm28;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm29;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm30;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zmm31;
 
-      extern RegisterOperand x86_reg_mxcsr;
+      extern TRITON_EXPORT RegisterOperand x86_reg_mxcsr;
 
-      extern RegisterOperand x86_reg_cr0;
-      extern RegisterOperand x86_reg_cr1;
-      extern RegisterOperand x86_reg_cr2;
-      extern RegisterOperand x86_reg_cr3;
-      extern RegisterOperand x86_reg_cr4;
-      extern RegisterOperand x86_reg_cr5;
-      extern RegisterOperand x86_reg_cr6;
-      extern RegisterOperand x86_reg_cr7;
-      extern RegisterOperand x86_reg_cr8;
-      extern RegisterOperand x86_reg_cr9;
-      extern RegisterOperand x86_reg_cr10;
-      extern RegisterOperand x86_reg_cr11;
-      extern RegisterOperand x86_reg_cr12;
-      extern RegisterOperand x86_reg_cr13;
-      extern RegisterOperand x86_reg_cr14;
-      extern RegisterOperand x86_reg_cr15;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr0;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr1;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr2;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr3;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr4;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr5;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr6;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr7;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr8;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr9;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr10;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr11;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr12;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr13;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr14;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cr15;
 
-      extern RegisterOperand x86_reg_af;
-      extern RegisterOperand x86_reg_cf;
-      extern RegisterOperand x86_reg_df;
-      extern RegisterOperand x86_reg_if;
-      extern RegisterOperand x86_reg_of;
-      extern RegisterOperand x86_reg_pf;
-      extern RegisterOperand x86_reg_sf;
-      extern RegisterOperand x86_reg_tf;
-      extern RegisterOperand x86_reg_zf;
+      extern TRITON_EXPORT RegisterOperand x86_reg_af;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cf;
+      extern TRITON_EXPORT RegisterOperand x86_reg_df;
+      extern TRITON_EXPORT RegisterOperand x86_reg_if;
+      extern TRITON_EXPORT RegisterOperand x86_reg_of;
+      extern TRITON_EXPORT RegisterOperand x86_reg_pf;
+      extern TRITON_EXPORT RegisterOperand x86_reg_sf;
+      extern TRITON_EXPORT RegisterOperand x86_reg_tf;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zf;
 
-      extern RegisterOperand x86_reg_ie;
-      extern RegisterOperand x86_reg_de;
-      extern RegisterOperand x86_reg_ze;
-      extern RegisterOperand x86_reg_oe;
-      extern RegisterOperand x86_reg_ue;
-      extern RegisterOperand x86_reg_pe;
-      extern RegisterOperand x86_reg_daz;
-      extern RegisterOperand x86_reg_im;
-      extern RegisterOperand x86_reg_dm;
-      extern RegisterOperand x86_reg_zm;
-      extern RegisterOperand x86_reg_om;
-      extern RegisterOperand x86_reg_um;
-      extern RegisterOperand x86_reg_pm;
-      extern RegisterOperand x86_reg_rl;
-      extern RegisterOperand x86_reg_rh;
-      extern RegisterOperand x86_reg_fz;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ie;
+      extern TRITON_EXPORT RegisterOperand x86_reg_de;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ze;
+      extern TRITON_EXPORT RegisterOperand x86_reg_oe;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ue;
+      extern TRITON_EXPORT RegisterOperand x86_reg_pe;
+      extern TRITON_EXPORT RegisterOperand x86_reg_daz;
+      extern TRITON_EXPORT RegisterOperand x86_reg_im;
+      extern TRITON_EXPORT RegisterOperand x86_reg_dm;
+      extern TRITON_EXPORT RegisterOperand x86_reg_zm;
+      extern TRITON_EXPORT RegisterOperand x86_reg_om;
+      extern TRITON_EXPORT RegisterOperand x86_reg_um;
+      extern TRITON_EXPORT RegisterOperand x86_reg_pm;
+      extern TRITON_EXPORT RegisterOperand x86_reg_rl;
+      extern TRITON_EXPORT RegisterOperand x86_reg_rh;
+      extern TRITON_EXPORT RegisterOperand x86_reg_fz;
 
-      extern RegisterOperand x86_reg_cs;
-      extern RegisterOperand x86_reg_ds;
-      extern RegisterOperand x86_reg_es;
-      extern RegisterOperand x86_reg_fs;
-      extern RegisterOperand x86_reg_gs;
-      extern RegisterOperand x86_reg_ss;
+      extern TRITON_EXPORT RegisterOperand x86_reg_cs;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ds;
+      extern TRITON_EXPORT RegisterOperand x86_reg_es;
+      extern TRITON_EXPORT RegisterOperand x86_reg_fs;
+      extern TRITON_EXPORT RegisterOperand x86_reg_gs;
+      extern TRITON_EXPORT RegisterOperand x86_reg_ss;
 
 
       //! Returns all information about the register from its ID.
-      std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> registerIdToRegisterInformation(triton::uint32 reg);
+      TRITON_EXPORT std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> registerIdToRegisterInformation(triton::uint32 reg);
 
       //! Converts a capstone's register id to a triton's register id.
-      triton::uint32 capstoneRegisterToTritonRegister(triton::uint32 id);
+      TRITON_EXPORT triton::uint32 capstoneRegisterToTritonRegister(triton::uint32 id);
 
       //! Converts a capstone's instruction id to a triton's instruction id.
-      triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id);
+      TRITON_EXPORT triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id);
 
       //! Converts a capstone's prefix id to a triton's prefix id.
-      triton::uint32 capstonePrefixToTritonPrefix(triton::uint32 id);
+      TRITON_EXPORT triton::uint32 capstonePrefixToTritonPrefix(triton::uint32 id);
 
 
       //! The list of registers.
@@ -510,7 +511,7 @@ namespace triton {
       };
 
       //! Global set of registers.
-      extern RegisterOperand* x86_regs[ID_REG_LAST_ITEM];
+      extern TRITON_EXPORT RegisterOperand* x86_regs[ID_REG_LAST_ITEM];
 
       /*! \brief The list of prefixes.
        *

@@ -8,6 +8,7 @@
 #ifndef TRITON_OPERANDINTERFACE_H
 #define TRITON_OPERANDINTERFACE_H
 
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -38,7 +39,7 @@ namespace triton {
     /*! \interface OperandInterface
      *  \brief This interface is used for instruction operands.
      */
-    class OperandInterface {
+    class TRITON_EXPORT OperandInterface {
 
       public:
         //! Destructor.

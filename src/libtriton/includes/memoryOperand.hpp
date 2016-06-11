@@ -14,6 +14,7 @@
 #include "immediateOperand.hpp"
 #include "operandInterface.hpp"
 #include "registerOperand.hpp"
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -35,7 +36,7 @@ namespace triton {
     /*! \class MemoryOperand
      *  \brief This class is used when an instruction has a memory operand.
      */
-    class MemoryOperand : public BitsVector, public OperandInterface {
+    class TRITON_EXPORT MemoryOperand : public BitsVector, public OperandInterface {
 
       protected:
         //! The memory' address.
@@ -182,19 +183,19 @@ namespace triton {
    };
 
     //! Displays an MemoryOperand.
-    std::ostream& operator<<(std::ostream& stream, const MemoryOperand& mem);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const MemoryOperand& mem);
 
     //! Displays an MemoryOperand.
-    std::ostream& operator<<(std::ostream& stream, const MemoryOperand* mem);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const MemoryOperand* mem);
 
     //! Compares two MemoryOperand.
-    bool operator==(const MemoryOperand& mem1, const MemoryOperand& mem2);
+    TRITON_EXPORT bool operator==(const MemoryOperand& mem1, const MemoryOperand& mem2);
 
     //! Compares two MemoryOperand.
-    bool operator!=(const MemoryOperand& mem1, const MemoryOperand& mem2);
+    TRITON_EXPORT bool operator!=(const MemoryOperand& mem1, const MemoryOperand& mem2);
 
     //! Compares two MemoryOperand (needed for std::map)
-    bool operator<(const MemoryOperand& mem1, const MemoryOperand& mem2);
+    TRITON_EXPORT bool operator<(const MemoryOperand& mem1, const MemoryOperand& mem2);
 
   /*! @} End of arch namespace */
   };

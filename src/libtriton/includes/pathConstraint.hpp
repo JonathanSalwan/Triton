@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "ast.hpp"
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -41,7 +42,7 @@ namespace triton {
 
       /*! \class PathConstraint
           \brief The path constraint class. */
-      class PathConstraint {
+      class TRITON_EXPORT PathConstraint {
         protected:
           /*!
            *  \brief The branches constraints

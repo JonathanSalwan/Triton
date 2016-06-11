@@ -13,6 +13,7 @@
 
 #include "ast.hpp"
 #include "symbolicEnums.hpp"
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -34,7 +35,7 @@ namespace triton {
 
     //! \class AstGarbageCollector
     /*! \brief The AST garbage collector class */
-    class AstGarbageCollector {
+    class TRITON_EXPORT AstGarbageCollector {
       protected:
         //! This container contains all allocated nodes.
         std::set<triton::ast::AbstractNode*> allocatedNodes;

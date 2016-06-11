@@ -9,6 +9,8 @@
 #define TRITON_BITSVECTOR_H
 
 #include <utility>
+
+#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -31,7 +33,7 @@ namespace triton {
     /*! \class BitsVector
      *  \brief This class is used to deal with registers and memory as bits vector.
      */
-    class BitsVector {
+    class TRITON_EXPORT BitsVector {
       protected:
         //! The highest bit of the bitvector
         triton::uint32 high;
@@ -81,10 +83,10 @@ namespace triton {
     };
 
     //! Displays a BitsVector.
-    std::ostream& operator<<(std::ostream& stream, const BitsVector& bv);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const BitsVector& bv);
 
     //! Displays a BitsVector.
-    std::ostream& operator<<(std::ostream& stream, const BitsVector* bv);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const BitsVector* bv);
 
   /*! @} End of arch namespace */
   };
