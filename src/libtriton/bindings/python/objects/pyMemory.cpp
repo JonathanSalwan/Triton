@@ -412,7 +412,14 @@ namespace triton {
         try {
           if (!PyBool_Check(flag))
             return PyErr_Format(PyExc_TypeError, "Memory::setTrust(): Expected a boolean as argument.");
+          #ifdef _MSC_VER
+            #pragma warning(push)
+            #pragma warning(disable: 4800)
+          #endif
           PyMemoryOperand_AsMemoryOperand(self)->setTrust(PyObject_IsTrue(flag));
+          #ifdef _MSC_VER
+            #pragma warning(pop)
+          #endif
           Py_INCREF(Py_None);
           return Py_None;
         }
