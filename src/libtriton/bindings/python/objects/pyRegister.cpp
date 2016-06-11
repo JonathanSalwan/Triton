@@ -266,7 +266,7 @@ namespace triton {
         try {
           if (!PyBool_Check(flag))
             return PyErr_Format(PyExc_TypeError, "Register::setTrust(): Expected a boolean as argument.");
-          PyRegisterOperand_AsRegisterOperand(self)->setTrust(PyLong_AsUint(flag));
+          PyRegisterOperand_AsRegisterOperand(self)->setTrust(PyObject_IsTrue(flag));
           Py_INCREF(Py_None);
           return Py_None;
         }

@@ -173,16 +173,25 @@ namespace triton {
       /* Returns true of false if the register is currently tainted */
       bool TaintEngine::isRegisterTainted(const triton::arch::RegisterOperand& reg) const {
         triton::uint32 parentId = reg.getParent().getId();
-        return this->taintedRegisters[parentId];
+
+        if (this->taintedRegisters[parentId])
+          return true;
+
+        return false;
       }
 
 
       /* Taint the register */
       bool TaintEngine::taintRegister(const triton::arch::RegisterOperand& reg) {
         triton::uint32 parentId = reg.getParent().getId();
+
         if (this->isEnabled())
           this->taintedRegisters[parentId] = TAINTED;
-        return this->taintedRegisters[parentId];
+
+        if (this->taintedRegisters[parentId])
+          return true;
+
+        return false;
       }
 
 
@@ -204,18 +213,28 @@ namespace triton {
       /* Set the taint on register */
       bool TaintEngine::setTaintRegister(const triton::arch::RegisterOperand& reg, bool flag) {
         triton::uint32 parentId = reg.getParent().getId();
+
         if (this->isEnabled())
           this->taintedRegisters[parentId] = flag;
-        return this->taintedRegisters[parentId];
+
+        if (this->taintedRegisters[parentId])
+          return true;
+
+        return false;
       }
 
 
       /* Untaint the register */
       bool TaintEngine::untaintRegister(const triton::arch::RegisterOperand& reg) {
         triton::uint32 parentId = reg.getParent().getId();
+
         if (this->isEnabled())
           this->taintedRegisters[parentId] = !TAINTED;
-        return this->taintedRegisters[parentId];
+
+        if (this->taintedRegisters[parentId])
+          return true;
+
+        return false;
       }
 
 
