@@ -11,7 +11,6 @@
 #include <list>
 
 #include "ast.hpp"
-#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 #ifdef TRITON_PYTHON_BINDINGS
@@ -47,7 +46,7 @@ namespace triton {
 
       //! \class SymbolicSimplification
       /*! \brief The symbolic simplification class */
-      class TRITON_EXPORT SymbolicSimplification {
+      class SymbolicSimplification {
 
         protected:
           //! Flag to define if we can use z3 to simplify expressions. Default: false.

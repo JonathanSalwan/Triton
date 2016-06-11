@@ -22,7 +22,6 @@
 #include "symbolicOptimization.hpp"
 #include "symbolicSimplification.hpp"
 #include "symbolicVariable.hpp"
-#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -52,7 +51,7 @@ namespace triton {
 
       //! \class SymbolicEngine
       /*! \brief The symbolic engine class. */
-      class TRITON_EXPORT SymbolicEngine
+      class SymbolicEngine
         : public triton::ast::AstDictionaries,
           public triton::engines::symbolic::SymbolicOptimization,
           public triton::engines::symbolic::SymbolicSimplification,

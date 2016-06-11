@@ -8,7 +8,6 @@
 #ifndef TRITON_CORE_UTIL_H
 #define TRITON_CORE_UTIL_H
 
-#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -29,16 +28,16 @@ namespace triton {
    */
 
     //! Inject the value into the buffer. Make sure that the `buffer` contains at least 16 allocated bytes.
-    void TRITON_EXPORT fromUintToBuffer(triton::uint128 value, triton::uint8* buffer);
+    void fromUintToBuffer(triton::uint128 value, triton::uint8* buffer);
 
     //! Inject the value into the buffer. Make sure that the `buffer` contains at least 32 allocated bytes.
-    void TRITON_EXPORT fromUintToBuffer(triton::uint256 value, triton::uint8* buffer);
+    void fromUintToBuffer(triton::uint256 value, triton::uint8* buffer);
 
     //! Inject the value into the buffer. Make sure that the `buffer` contains at least 64 allocated bytes.
-    void TRITON_EXPORT fromUintToBuffer(triton::uint512 value, triton::uint8* buffer);
+    void fromUintToBuffer(triton::uint512 value, triton::uint8* buffer);
 
     //! Returns the value located into the buffer.
-    template <typename T> TRITON_EXPORT T fromBufferToUint(const triton::uint8* buffer);
+    template <typename T> T fromBufferToUint(const triton::uint8* buffer);
 
   /*! @} End of triton namespace */
   };

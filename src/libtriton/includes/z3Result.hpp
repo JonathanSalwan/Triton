@@ -9,8 +9,6 @@
 #define TRITON_Z3RESULT_H
 
 #include <z3++.h>
-
-#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -32,7 +30,7 @@ namespace triton {
 
     //! \class Z3Result
     /*! \brief The result class. */
-    class TRITON_EXPORT Z3Result {
+    class Z3Result {
       protected:
         //! The context.
         z3::context context;

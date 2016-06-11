@@ -17,7 +17,6 @@
 #include "instruction.hpp"
 #include "memoryOperand.hpp"
 #include "registerOperand.hpp"
-#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 #include "x86Semantics.hpp"
 
@@ -48,7 +47,7 @@ namespace triton {
 
       //! \class x8664Cpu
       /*! \brief This class is used to describe the x86 (64-bits) spec. */
-      class TRITON_EXPORT x8664Cpu : public cpuInterface {
+      class x8664Cpu : public cpuInterface {
 
         protected:
 

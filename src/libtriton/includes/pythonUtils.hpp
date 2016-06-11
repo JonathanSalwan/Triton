@@ -11,7 +11,6 @@
 #define TRITON PYTHONUTILS_H
 
 #include "pythonBindings.hpp"
-#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -40,28 +39,28 @@ namespace triton {
      */
 
       //! Returns a triton::__uint from a pyObject.
-      TRITON_EXPORT triton::__uint PyLong_AsUint(PyObject* obj);
+      triton::__uint PyLong_AsUint(PyObject* obj);
 
       //! Returns a triton::uint128 from a pyObject.
-      TRITON_EXPORT triton::uint128 PyLong_AsUint128(PyObject* obj);
+      triton::uint128 PyLong_AsUint128(PyObject* obj);
 
       //! Returns a triton::uint256 from a pyObject.
-      TRITON_EXPORT triton::uint256 PyLong_AsUint256(PyObject* obj);
+      triton::uint256 PyLong_AsUint256(PyObject* obj);
 
       //! Returns a triton::uint512 from a pyObject.
-      TRITON_EXPORT triton::uint512 PyLong_AsUint512(PyObject* obj);
+      triton::uint512 PyLong_AsUint512(PyObject* obj);
 
       //! Returns a pyObject from a triton::__uint.
-      TRITON_EXPORT PyObject* PyLong_FromUint(triton::__uint value);
+      PyObject* PyLong_FromUint(triton::__uint value);
 
       //! Returns a pyObject from a triton::uint128.
-      TRITON_EXPORT PyObject* PyLong_FromUint128(triton::uint128 value);
+      PyObject* PyLong_FromUint128(triton::uint128 value);
 
       //! Returns a pyObject from a triton::uint256.
-      TRITON_EXPORT PyObject* PyLong_FromUint256(triton::uint256 value);
+      PyObject* PyLong_FromUint256(triton::uint256 value);
 
       //! Returns a pyObject from a triton::uint512.
-      TRITON_EXPORT PyObject* PyLong_FromUint512(triton::uint512 value);
+      PyObject* PyLong_FromUint512(triton::uint512 value);
 
     /*! @} End of python namespace */
     };

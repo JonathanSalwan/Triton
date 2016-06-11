@@ -10,7 +10,6 @@
 
 #include "bitsVector.hpp"
 #include "operandInterface.hpp"
-#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -32,7 +31,7 @@ namespace triton {
     /*! \class ImmediateOperand
      *  \brief This class is used when an instruction has an immediate operand.
      */
-    class TRITON_EXPORT ImmediateOperand : public BitsVector, public OperandInterface {
+    class ImmediateOperand : public BitsVector, public OperandInterface {
 
       protected:
         //! The value of the operand.
@@ -80,19 +79,19 @@ namespace triton {
     };
 
     //! Displays an ImmediateOperand.
-    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const ImmediateOperand& imm);
+    std::ostream& operator<<(std::ostream& stream, const ImmediateOperand& imm);
 
     //! Displays an ImmediateOperand.
-    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const ImmediateOperand* imm);
+    std::ostream& operator<<(std::ostream& stream, const ImmediateOperand* imm);
 
     //! Compares two ImmediateOperand.
-    TRITON_EXPORT bool operator==(const ImmediateOperand& imm1, const ImmediateOperand& imm2);
+    bool operator==(const ImmediateOperand& imm1, const ImmediateOperand& imm2);
 
     //! Compares two ImmediateOperand.
-    TRITON_EXPORT bool operator!=(const ImmediateOperand& imm1, const ImmediateOperand& imm2);
+    bool operator!=(const ImmediateOperand& imm1, const ImmediateOperand& imm2);
 
     //! Compares two ImmediateOperand (needed for std::map)
-    TRITON_EXPORT bool operator<(const ImmediateOperand& imm1, const ImmediateOperand& imm2);
+    bool operator<(const ImmediateOperand& imm1, const ImmediateOperand& imm2);
 
   /*! @} End of arch namespace */
   };

@@ -20,7 +20,6 @@
 #include "solverEngine.hpp"
 #include "symbolicEngine.hpp"
 #include "taintEngine.hpp"
-#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 #ifdef TRITON_PYTHON_BINDINGS
@@ -38,7 +37,7 @@ namespace triton {
 
     /*! \class API
      *  \brief This is the master class and must be used as C++ API. */
-    class TRITON_EXPORT API {
+    class API {
 
       protected:
         //! The architecture entry.
@@ -700,7 +699,7 @@ namespace triton {
     };
 
     //! The API can be accessed as everywhere.
-    extern TRITON_EXPORT API api;
+    extern API api;
 
 /*! @} End of triton namespace */
 };

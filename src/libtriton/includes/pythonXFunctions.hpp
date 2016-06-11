@@ -11,7 +11,6 @@
 #define TRITONXPYFUNCTION_H
 
 #include "pythonBindings.hpp"
-#include "tritonExport.hpp"
 
 
 
@@ -39,19 +38,19 @@ namespace triton {
      */
 
       //! Creates a PyClass and raises an exception if it fails.
-      TRITON_EXPORT PyObject* xPyClass_New(PyObject* b, PyObject* d, PyObject* n);
+      PyObject* xPyClass_New(PyObject* b, PyObject* d, PyObject* n);
 
       //! Creates a PyDict and raises an exception if it fails.
-      TRITON_EXPORT PyObject* xPyDict_New(void);
+      PyObject* xPyDict_New(void);
 
       //! Creates a PyList and raises an exception if it fails.
-      TRITON_EXPORT PyObject* xPyList_New(Py_ssize_t len);
+      PyObject* xPyList_New(Py_ssize_t len);
 
       //! Creates a PyString and raises an exception if it fails.
-      TRITON_EXPORT PyObject* xPyString_FromString(const char* v);
+      PyObject* xPyString_FromString(const char *v);
 
       //! Creates a PyTuple and raises an exception if it fails.
-      TRITON_EXPORT PyObject* xPyTuple_New(Py_ssize_t len);
+      PyObject* xPyTuple_New(Py_ssize_t len);
 
     /*! @} End of python namespace */
     };

@@ -10,8 +10,7 @@
 
 #if defined(__unix__) || defined(__APPLE__)
 
-#include "syscalls.hpp"
-#include "tritonExport.hpp"
+#include <syscalls.hpp>
 
 
 
@@ -40,11 +39,11 @@ namespace triton {
 
       #if defined(__unix__)
       //! Returns the syscall 32 name from its number.
-      TRITON_EXPORT const char* syscall32NumberToString(__uint syscallNumber);
+      const char *syscall32NumberToString(__uint syscallNumber);
       #endif
 
       //! Returns the syscall name from its number.
-      TRITON_EXPORT const char* syscall64NumberToString(__uint syscallNumber);
+      const char *syscall64NumberToString(__uint syscallNumber);
 
     /*! @} End of unix namespace */
     };

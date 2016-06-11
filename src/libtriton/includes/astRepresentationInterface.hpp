@@ -9,9 +9,7 @@
 #define TRITON_ASTREPRESENTATIONINTERFACE_HPP
 
 #include <iostream>
-
 #include "ast.hpp"
-#include "tritonExport.hpp"
 
 
 
@@ -38,17 +36,19 @@ namespace triton {
      *  @{
      */
 
+
       /*!
        *  \interface AstRepresentationInterface
        *  \brief The AST representation interface.
        */
-      class TRITON_EXPORT AstRepresentationInterface {
+      class AstRepresentationInterface {
         public:
           //! Constructor.
           virtual ~AstRepresentationInterface(){};
           //! Entry point of print.
           virtual std::ostream& print(std::ostream& stream, triton::ast::AbstractNode* node) = 0;
       };
+
 
     /*! @} End of representations namespace */
     };

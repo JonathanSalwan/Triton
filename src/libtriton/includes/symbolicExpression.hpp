@@ -14,7 +14,6 @@
 #include "memoryOperand.hpp"
 #include "registerOperand.hpp"
 #include "symbolicEnums.hpp"
-#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -44,7 +43,7 @@ namespace triton {
 
       //! \class SymbolicExpression
       /*! \brief The symbolic expression class */
-      class TRITON_EXPORT SymbolicExpression {
+      class SymbolicExpression {
 
         protected:
           //! The kind of the symbolic expression.
@@ -122,10 +121,10 @@ namespace triton {
       };
 
       //! Displays a symbolic expression.
-      TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const SymbolicExpression& symExpr);
+      std::ostream& operator<<(std::ostream& stream, const SymbolicExpression& symExpr);
 
       //! Displays a symbolic expression.
-      TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const SymbolicExpression* symExpr);
+      std::ostream& operator<<(std::ostream& stream, const SymbolicExpression* symExpr);
 
     /*! @} End of symbolic namespace */
     };

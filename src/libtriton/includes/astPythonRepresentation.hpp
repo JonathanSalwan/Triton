@@ -9,10 +9,8 @@
 #define TRITON_ASTPYTHONREPRESENTATION_HPP
 
 #include <iostream>
-
 #include "astRepresentationInterface.hpp"
 #include "ast.hpp"
-#include "tritonExport.hpp"
 
 
 
@@ -40,7 +38,7 @@ namespace triton {
      */
 
       //! Python representation.
-      class TRITON_EXPORT AstPythonRepresentation : public AstRepresentationInterface {
+      class AstPythonRepresentation : public AstRepresentationInterface {
         public:
           //! Constructor.
           AstPythonRepresentation();

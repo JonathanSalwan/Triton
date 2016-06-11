@@ -8,8 +8,6 @@
 #ifndef TRITON_ASTVISITOR_H
 #define TRITON_ASTVISITOR_H
 
-#include "tritonExport.hpp"
-
 
 
 //! \module The Triton namespace
@@ -78,8 +76,8 @@ namespace triton {
     class ZxNode;
 
     //! \interface AstVisitor
-    //! \brief This interface is used to go through the ast AST.
-    class TRITON_EXPORT AstVisitor {
+    /*! \brief This interface is used to go through the ast AST. */
+    class AstVisitor {
 
       public:
         AstVisitor(){};

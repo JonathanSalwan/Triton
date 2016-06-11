@@ -14,7 +14,6 @@
 #include "bitsVector.hpp"
 #include "cpuSize.hpp"
 #include "operandInterface.hpp"
-#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -37,7 +36,7 @@ namespace triton {
     /*! \class RegisterOperand
      *  \brief This class is used when an instruction has a register operand.
      */
-    class TRITON_EXPORT RegisterOperand : public BitsVector, public OperandInterface {
+    class RegisterOperand : public BitsVector, public OperandInterface {
 
       protected:
         //! The name of the register.
@@ -133,19 +132,19 @@ namespace triton {
     };
 
     //! Displays a RegisterOperand.
-    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const RegisterOperand& reg);
+    std::ostream& operator<<(std::ostream& stream, const RegisterOperand& reg);
 
     //! Displays a RegisterOperand.
-    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const RegisterOperand* reg);
+    std::ostream& operator<<(std::ostream& stream, const RegisterOperand* reg);
 
     //! Compares two RegisterOperand.
-    TRITON_EXPORT bool operator==(const RegisterOperand& reg1, const RegisterOperand& reg2);
+    bool operator==(const RegisterOperand& reg1, const RegisterOperand& reg2);
 
     //! Compares two RegisterOperand.
-    TRITON_EXPORT bool operator!=(const RegisterOperand& reg1, const RegisterOperand& reg2);
+    bool operator!=(const RegisterOperand& reg1, const RegisterOperand& reg2);
 
     //! Compares two RegisterOperand (needed for std::map)
-    TRITON_EXPORT bool operator<(const RegisterOperand& reg1, const RegisterOperand& reg2);
+    bool operator<(const RegisterOperand& reg1, const RegisterOperand& reg2);
 
   /*! @} End of arch namespace */
   };

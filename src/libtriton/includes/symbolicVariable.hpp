@@ -11,7 +11,6 @@
 #include <string>
 
 #include "symbolicEnums.hpp"
-#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -41,7 +40,7 @@ namespace triton {
 
       /*! \class SymbolicVariable
           \brief The symbolic variable class. */
-      class TRITON_EXPORT SymbolicVariable {
+      class SymbolicVariable {
 
         protected:
 
@@ -110,10 +109,10 @@ namespace triton {
       };
 
       //! Displays a symbolic variable.
-      TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const SymbolicVariable& symVar);
+      std::ostream& operator<<(std::ostream& stream, const SymbolicVariable& symVar);
 
       //! Displays a symbolic variable.
-      TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const SymbolicVariable* symVar);
+      std::ostream& operator<<(std::ostream& stream, const SymbolicVariable* symVar);
 
     /*! @} End of symbolic namespace */
     };

@@ -9,12 +9,10 @@
 #define TRITON_ASTREPRESENTATION_H
 
 #include <iostream>
-
 #include "astPythonRepresentation.hpp"
 #include "astRepresentationInterface.hpp"
 #include "astSmtRepresentation.hpp"
 #include "ast.hpp"
-#include "tritonExport.hpp"
 
 
 
@@ -50,7 +48,7 @@ namespace triton {
 
 
       //! Pseudo code of SMT AST.
-      class TRITON_EXPORT AstRepresentation {
+      class AstRepresentation {
         protected:
           //! The representation mode.
           triton::uint32 mode;

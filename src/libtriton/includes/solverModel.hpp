@@ -9,8 +9,6 @@
 #define TRITON_SOLVERMODEL_H
 
 #include <string>
-
-#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -38,7 +36,7 @@ namespace triton {
 
       //! \class SolverModel
       /*! \brief This class is used to represent a constraint model solved. */
-      class TRITON_EXPORT SolverModel
+      class SolverModel
       {
         protected:
           //! The name of the variable.
@@ -80,10 +78,10 @@ namespace triton {
       };
 
     //! Display a solver model.
-    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const SolverModel& model);
+    std::ostream& operator<<(std::ostream& stream, const SolverModel& model);
 
     //! Display a solver model.
-    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const SolverModel* model);
+    std::ostream& operator<<(std::ostream& stream, const SolverModel* model);
 
     /*! @} End of solver namespace */
     };

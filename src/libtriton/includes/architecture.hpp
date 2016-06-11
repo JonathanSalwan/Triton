@@ -15,7 +15,6 @@
 #include "instruction.hpp"
 #include "memoryOperand.hpp"
 #include "registerOperand.hpp"
-#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -45,7 +44,7 @@ namespace triton {
 
     /*! \class Architecture
      *  \brief The abstract architecture class. */
-    class TRITON_EXPORT Architecture {
+    class Architecture {
 
       protected:
         //! The kind of architecture.

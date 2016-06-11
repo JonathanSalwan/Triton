@@ -9,10 +9,8 @@
 #define TRITON_ASTSMTREPRESENTATION_HPP
 
 #include <iostream>
-
 #include "astRepresentationInterface.hpp"
 #include "ast.hpp"
-#include "tritonExport.hpp"
 
 
 
@@ -40,7 +38,7 @@ namespace triton {
      */
 
       //! SMT representation.
-      class TRITON_EXPORT AstSmtRepresentation : public AstRepresentationInterface {
+      class AstSmtRepresentation : public AstRepresentationInterface {
         public:
           //! Constructor.
           AstSmtRepresentation();
@@ -198,6 +196,7 @@ namespace triton {
           //! Displays the node according to the representation mode.
           std::ostream& print(std::ostream& stream, triton::ast::ZxNode* node);
       };
+
 
     /*! @} End of representations namespace */
     };

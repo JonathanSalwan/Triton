@@ -11,7 +11,6 @@
 #include <list>
 
 #include "ast.hpp"
-#include "tritonExport.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -33,7 +32,7 @@ namespace triton {
 
     //! \class AstDictionaries
     /*! \brief The AST dictionaries class */
-    class TRITON_EXPORT AstDictionaries {
+    class AstDictionaries {
 
       protected:
         //! Total of allocated nodes.
