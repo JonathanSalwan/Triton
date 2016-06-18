@@ -1,0 +1,56 @@
+version: 1.0.{build}
+
+branches:
+  only:
+  - next
+
+configuration:
+  - Release
+  - Debug
+
+platform:
+  - Win32
+  - x64
+
+clone_folder: c:\projects\triton
+
+environment:
+  BOOST_ROOT: C:\Libraries\boost_1_59_0
+
+install:
+  - cmd: git submodule update --init --recursive
+
+before_build:
+  - cmd: cd c:\projects\triton
+  - cmd: mkdir build
+  - cmd: cd build
+  - cmd: echo Downloading z3...
+  - ps: Start-FileDownload 'https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/z3-4.4.1-x86-win.zip'
+  - cmd: 7z e z3-4.4.1-x86-win.zip
+  - ps: Start-FileDownload 'https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/z3-4.4.1-x64-win.zip'
+  - cmd: 7z e z3-4.4.1-x64-win.zip
+  - cmd: echo Downloading capstone...
+  - ps: Start-FileDownload 'https://github.com/aquynh/capstone/archive/3.0.4.zip'
+  - cmd: 7z e 3.0.4.zip
+  - cmd: echo Running cmake...
+  - cmd: if "%platform%"=="Win32" cmake .. -G "Visual Studio 14 2015" -DPYTHON_INCLUDE_DIRS="" -DPYTHON_LIBRARIES=""
+  - cmd: if "%platform%"=="x64" cmake .. -G "Visual Studio 14 2015 Win64" -DPYTHON_INCLUDE_DIRS="" -DPYTHON_LIBRARIES=""
+  - cmd: chdir
+
+build:
+  project: c:\projects\triton\build\triton.sln
+
+# this happens in the build directory: c:\projects\triton\build
+after_build:
+  - cmd: if "%platform%"=="Win32" if "%configuration%"=="Release" 7z a -t7z ..\triton.x86.release.7z ..\bin\%configuration%\triton*
+  - cmd: if "%platform%"=="Win32" if "%configuration%"=="Debug" 7z a -t7z ..\triton.x86.debug.7z ..\bin\%configuration%\triton*
+  - cmd: if "%platform%"=="x64" if "%configuration%"=="Release" 7z a -t7z ..\triton.x64.release.7z ..\bin\%configuration%\triton*
+  - cmd: if "%platform%"=="x64" if "%configuration%"=="Debug" 7z a -t7z ..\triton.x64.release.7z ..\bin\%configuration%\triton*
+  - cmd: chdir
+
+artifacts:
+  - path: triton.*.7z
+
+# debug
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
