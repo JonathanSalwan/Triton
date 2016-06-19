@@ -24,16 +24,22 @@ program analysis tools, automate reverse engineering and perform software verifi
 if platform.system() == 'Linux':
     TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/libtriton.so'
     TRITON_MODULE  = '@CMAKE_BINARY_DIR@/triton.so'
+    TRITON_MODULES = [TRITON_MODULE]
     shutil.copyfile(TRITON_LIBRARY, TRITON_MODULE)
 
 elif platform.system() == 'Darwin':
     TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/libtriton.dylib'
     TRITON_MODULE  = '@CMAKE_BINARY_DIR@/triton.so'
+    TRITON_MODULES = [TRITON_MODULE]
     shutil.copyfile(TRITON_LIBRARY, TRITON_MODULE)
 
 elif platform.system() == 'Windows':
-    TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/Release/triton.dll'
-    TRITON_MODULE  = '@CMAKE_BINARY_DIR@/Release/triton.pyd'
+    Z3_LIBS_PATH   = '@Z3_LIBRARIES@'
+    TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/Release/triton.dll'.replace('/', '\\')
+    TRITON_MODULE  = '@CMAKE_BINARY_DIR@/Release/triton.pyd'.replace('/', '\\')
+    TRITON_MODULES = [TRITON_MODULE]
+    for lib in Z3_LIBS_PATH.split(';'):
+        TRITON_MODULES.append(lib)
     shutil.copyfile(TRITON_LIBRARY, TRITON_MODULE)
 
 else:
@@ -50,7 +56,7 @@ setup(
     url                  = 'http://triton.quarkslab.com',
     zip_safe             = False,
     include_package_data = True,
-    data_files           = [([path for path in site.getsitepackages() if 'System' not in path][0], [TRITON_MODULE])], # NOTE: Must be cleaner than this hack.
+    data_files           = [([path for path in site.getsitepackages() if 'System' not in path][0], TRITON_MODULES)], # NOTE: Must be cleaner than this hack.
     classifiers          = [
         'Development Status :: 4 - Beta',
         'Environment :: Console',
