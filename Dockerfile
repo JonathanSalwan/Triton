@@ -27,5 +27,5 @@ RUN cd /opt && curl -o pin.tgz -L http://software.intel.com/sites/landingpage/pi
 #     make install && cd .. && python setup.py install
 RUN cd /opt/pin-2.14-71313-gcc.4.4.7-linux/source/tools/ && \
    curl -o master.zip -L https://github.com/JonathanSalwan/Triton/archive/master.zip && unzip master.zip && cd Triton-master/ && mkdir build && cd build && \
-   cmake -G "Unix Makefiles" -DPINTOOL=on -DKERNEL4=on .. && make install && cd .. && python setup.py install
+   cmake -G "Unix Makefiles" -DPINTOOL=on -DKERNEL4=on .. && make install && cd ..
 ENTRYPOINT /bin/bash
