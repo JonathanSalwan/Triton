@@ -39,7 +39,7 @@ before_build:
   - cmd: cd ..\..
   - cmd: echo Running cmake...
   - cmd: if "%platform%"=="Win32" cmake .. -G "Visual Studio 14 2015" -DCAPSTONE_LIBRARIES="c:\projects\triton\build\capstone-3.0.4\msvc\capstone_static\%configuration%\capstone.lib" -DCAPSTONE_INCLUDE_DIRS="c:\projects\triton\build\capstone-3.0.4\include" -DZ3_INCLUDE_DIRS="c:\projects\triton\build\z3-4.4.1-x86-win\include" -DZ3_LIBRARIES="c:\projects\triton\build\z3-4.4.1-x86-win\bin\*.lib" -DPYTHON_INCLUDE_DIRS="C:\Python27\include" -DPYTHON_LIBRARIES="C:\Python27\libs\*.lib"
-  - cmd: if "%platform%"=="x64" cmake .. -G "Visual Studio 14 2015 Win64" -DCAPSTONE_LIBRARIES="c:\projects\triton\build\capstone-3.0.4\msvc\capstone_static\%configuration%\capstone.lib" -DCAPSTONE_INCLUDE_DIRS="c:\projects\triton\build\capstone-3.0.4\include" -DZ3_INCLUDE_DIRS="c:\projects\triton\build\z3-4.4.1-x64-win\include" -DZ3_LIBRARIES="c:\projects\triton\build\z3-4.4.1-x64-win\bin\*.lib" -DPYTHON_INCLUDE_DIRS="C:\Python27-x64\include" -DPYTHON_LIBRARIES="C:\Python27-x64\libs\*.lib"
+  - cmd: if "%platform%"=="x64" cmake .. -G "Visual Studio 14 2015 Win64" -DCAPSTONE_LIBRARIES="c:\projects\triton\build\capstone-3.0.4\msvc\capstone_static\x64\%configuration%\capstone.lib" -DCAPSTONE_INCLUDE_DIRS="c:\projects\triton\build\capstone-3.0.4\include" -DZ3_INCLUDE_DIRS="c:\projects\triton\build\z3-4.4.1-x64-win\include" -DZ3_LIBRARIES="c:\projects\triton\build\z3-4.4.1-x64-win\bin\*.lib" -DPYTHON_INCLUDE_DIRS="C:\Python27-x64\include" -DPYTHON_LIBRARIES="C:\Python27-x64\libs\*.lib"
   - cmd: chdir
 
 build:
