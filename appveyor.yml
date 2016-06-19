@@ -6,10 +6,10 @@ branches:
 
 configuration:
   - Release
-  - Debug
+  # - Debug
 
 platform:
-  - Win32
+  # - Win32
   - x64
 
 clone_folder: c:\projects\triton
@@ -26,12 +26,12 @@ before_build:
   - cmd: cd build
   - cmd: echo Downloading z3...
   - ps: Start-FileDownload 'https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/z3-4.4.1-x86-win.zip'
-  - cmd: 7z e z3-4.4.1-x86-win.zip
+  - cmd: 7z x z3-4.4.1-x86-win.zip
   - ps: Start-FileDownload 'https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/z3-4.4.1-x64-win.zip'
-  - cmd: 7z e z3-4.4.1-x64-win.zip
+  - cmd: 7z x z3-4.4.1-x64-win.zip
   - cmd: echo Downloading capstone...
   - ps: Start-FileDownload 'https://github.com/aquynh/capstone/archive/3.0.4.zip'
-  - cmd: 7z e 3.0.4.zip
+  - cmd: 7z x 3.0.4.zip
   - cmd: echo Running cmake...
   - cmd: if "%platform%"=="Win32" cmake .. -G "Visual Studio 14 2015" -DPYTHON_INCLUDE_DIRS="" -DPYTHON_LIBRARIES=""
   - cmd: if "%platform%"=="x64" cmake .. -G "Visual Studio 14 2015 Win64" -DPYTHON_INCLUDE_DIRS="" -DPYTHON_LIBRARIES=""
