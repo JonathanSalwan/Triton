@@ -32,8 +32,8 @@ elif platform.system() == 'Darwin':
     shutil.copyfile(TRITON_LIBRARY, TRITON_MODULE)
 
 elif platform.system() == 'Windows':
-    TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/triton.dll'
-    TRITON_MODULE  = '@CMAKE_BINARY_DIR@/triton.pyd'
+    TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/Release/triton.dll'
+    TRITON_MODULE  = '@CMAKE_BINARY_DIR@/Release/triton.pyd'
     shutil.copyfile(TRITON_LIBRARY, TRITON_MODULE)
 
 else:
