@@ -35,8 +35,8 @@ This object is used to represent a symbolic expression.
 
 >>> inst.setOpcodes(opcodes)
 >>> inst.setAddress(0x400000)
->>> inst.updateContext(Register(REG.RAX, 12345));
->>> inst.updateContext(Register(REG.RDX, 67890));
+>>> inst.updateContext(Register(REG.RAX, 12345))
+>>> inst.updateContext(Register(REG.RDX, 67890))
 
 >>> processing(inst)
 
