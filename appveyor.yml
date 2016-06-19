@@ -33,9 +33,7 @@ before_build:
   - cmd: cd capstone-3.0.4
   - cmd: mkdir build
   - cmd: cd build
-  - cmd: if "%platform%"=="Win32" cmake .. -G "Visual Studio 14 2015"
-  - cmd: if "%platform%"=="x64" cmake .. -G "Visual Studio 14 2015 Win64"
-  - cmd: msbuild ..\msvc\capstone_static\capstone_static.vcxproj /p:Configuration=%configuration% /p:Platform=%platform%
+  - cmd: msbuild ..\msvc\capstone.sln /p:Configuration=%configuration% /p:Platform=%platform%
   - cmd: cd ..\..
   - cmd: echo Running cmake...
   - cmd: if "%platform%"=="Win32" cmake .. -G "Visual Studio 14 2015" -DCAPSTONE_LIBRARIES="c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib" -DCAPSTONE_INCLUDE_DIRS="c:\projects\triton\build\capstone-3.0.4\include" -DZ3_INCLUDE_DIRS="c:\projects\triton\build\z3-4.4.1-x86-win\include" -DZ3_LIBRARIES="c:\projects\triton\build\z3-4.4.1-x86-win\bin\*.lib" -DPYTHON_INCLUDE_DIRS="C:\Python27\include" -DPYTHON_LIBRARIES="C:\Python27\libs\*.lib"
