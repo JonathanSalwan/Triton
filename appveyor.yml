@@ -25,9 +25,9 @@ before_build:
   - cmd: mkdir build
   - cmd: cd build
   - cmd: echo Downloading z3...
-  - ps: if "%platform%"=="Win32" Start-FileDownload 'https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/z3-4.4.1-x86-win.zip'
+  - ps: Start-FileDownload 'https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/z3-4.4.1-x86-win.zip'
   - cmd: if "%platform%"=="Win32" 7z x z3-4.4.1-x86-win.zip
-  - ps: if "%platform%"=="x64" Start-FileDownload 'https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/z3-4.4.1-x64-win.zip'
+  - ps: Start-FileDownload 'https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/z3-4.4.1-x64-win.zip'
   - cmd: if "%platform%"=="x64" 7z x z3-4.4.1-x64-win.zip
   - cmd: echo Downloading capstone...
   - ps: Start-FileDownload 'https://github.com/aquynh/capstone/archive/3.0.4.zip'
