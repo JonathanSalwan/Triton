@@ -50,7 +50,7 @@ after_build:
 # Adding libz3 in the artefact as the Z3 .zip doesn't include something we could statically link to triton.
 # XXX: We could build z3 ourselves and generate a static .lib though.
   - cmd: cd %configuration%
-  - cmd: copy z3-4.4.1-x64-win\bin\libz3.dll libz3.dll
+  - cmd: copy ..\z3-4.4.1-x64-win\bin\libz3.dll libz3.dll
   - cmd: move triton.dll triton.pyd
   - cmd: if "%platform%"=="Win32" if "%configuration%"=="Release" 7z a -t7z ..\..\triton.x86.release.7z *
   - cmd: if "%platform%"=="Win32" if "%configuration%"=="Debug" 7z a -t7z ..\..\triton.x86.debug.7z *
