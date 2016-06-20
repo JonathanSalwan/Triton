@@ -6,10 +6,11 @@ branches:
 
 configuration:
   - Release
-  - Debug
+# XXX: LNK1104: cannot open file 'python27_d.lib'
+  # - Debug
 
 platform:
-  # - Win32
+  - Win32
   - x64
 
 clone_folder: c:\projects\triton
