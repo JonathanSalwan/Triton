@@ -47,15 +47,23 @@ build:
 
 # this happens in the build directory: c:\projects\triton\build
 after_build:
-  - cmd: if "%platform%"=="Win32" if "%configuration%"=="Release" 7z a -t7z ..\triton.x86.release.7z %configuration%\triton*
-  - cmd: if "%platform%"=="Win32" if "%configuration%"=="Debug" 7z a -t7z ..\triton.x86.debug.7z %configuration%\triton*
-  - cmd: if "%platform%"=="x64" if "%configuration%"=="Release" 7z a -t7z ..\triton.x64.release.7z %configuration%\triton*
-  - cmd: if "%platform%"=="x64" if "%configuration%"=="Debug" 7z a -t7z ..\triton.x64.debug.7z %configuration%\triton*
+# Adding libz3 in the artefact as the Z3 .zip doesn't include something we could statically link to triton.
+# XXX: We could build z3 ourselves and generate a static .lib though.
+  - cmd: copy z3-4.4.1-x64-win\bin\libz3.dll %configuration%\libz3.dll
+  - cmd: move triton.dll triton.pyd
+  - cmd: if "%platform%"=="Win32" if "%configuration%"=="Release" 7z a -t7z ..\triton.x86.release.7z %configuration%\*
+  - cmd: if "%platform%"=="Win32" if "%configuration%"=="Debug" 7z a -t7z ..\triton.x86.debug.7z %configuration%\*
+  - cmd: if "%platform%"=="x64" if "%configuration%"=="Release" 7z a -t7z ..\triton.x64.release.7z %configuration%\*
+  - cmd: if "%platform%"=="x64" if "%configuration%"=="Debug" 7z a -t7z ..\triton.x64.debug.7z %configuration%\*
+# XXX: Hm, I'm pretty sure there's a better way to run the tests in AppVeyor, need to read the docs
+  - cmd: if "%platform%"=="Win32" C:\Python27\python.exe ..\src\testers\libTriton_units_testing.py
+  - cmd: if "%platform%"=="x64" C:\Python27-x64\python.exe ..\src\testers\libTriton_units_testing.py
   - cmd: chdir
+
 
 artifacts:
   - path: triton.*.7z
 
 # debug
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+# on_finish:
+#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
