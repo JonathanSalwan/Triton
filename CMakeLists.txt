@@ -119,8 +119,10 @@ include_directories("${Boost_INCLUDE_DIRS}")
 # Find Python 2.7
 if(NOT DEFINED ENV{PYTHON_INCLUDE_DIRS} AND NOT DEFINED ENV{PYTHON_LIBRARIES})
     find_package(PythonLibs 2.7 REQUIRED)
+    include_directories(${PYTHON_INCLUDE_DIRS})
+else()
+    include_directories("$ENV{PYTHON_INCLUDE_DIRS}")
 endif()
-include_directories("$ENV{PYTHON_INCLUDE_DIRS}")
 
 
 # Find Z3
@@ -129,9 +131,10 @@ if(NOT DEFINED ENV{Z3_INCLUDE_DIRS})
     if(NOT Z3_FOUND)
         message(FATAL_ERROR "Z3 not found")
     endif(NOT Z3_FOUND)
+    include_directories(${Z3_INCLUDE_DIRS})
+else()
+    include_directories("$ENV{Z3_INCLUDE_DIRS}")
 endif()
-include_directories("$ENV{Z3_INCLUDE_DIRS}")
-
 
 # Find Capstone
 if(NOT DEFINED ENV{CAPSTONE_INCLUDE_DIRS} AND NOT DEFINED ENV{CAPSTONE_LIBRARIES})
@@ -139,8 +142,10 @@ if(NOT DEFINED ENV{CAPSTONE_INCLUDE_DIRS} AND NOT DEFINED ENV{CAPSTONE_LIBRARIES
     if(NOT CAPSTONE_FOUND)
         message(FATAL_ERROR "Capstone not found")
     endif(NOT CAPSTONE_FOUND)
+    include_directories(${CAPSTONE_INCLUDE_DIRS})
+else()
+    include_directories("$ENV{CAPSTONE_INCLUDE_DIRS}")
 endif()
-include_directories("$ENV{CAPSTONE_INCLUDE_DIRS}")
 
 
 # Add Triton includes
