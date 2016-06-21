@@ -90,7 +90,7 @@ endif()
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     if(${ARCHITECTURE} STREQUAL "i386")
         set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -m32")
-    endif(${ARCHITECTURE} STREQUAL "i386")
+    endif()
 endif()
 
 
@@ -104,10 +104,10 @@ endif()
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     if(POLICY CMP0025)
         cmake_policy(SET CMP0025 OLD) # report Apple's Clang as just Clang
-    endif(POLICY CMP0025)
+    endif()
     if(POLICY CMP0042)
         cmake_policy(SET CMP0042 NEW) # MACOSX_RPATH
-    endif(POLICY CMP0042)
+    endif()
 endif()
 
 
@@ -119,33 +119,37 @@ include_directories("${Boost_INCLUDE_DIRS}")
 # Find Python 2.7
 if(NOT DEFINED ENV{PYTHON_INCLUDE_DIRS} AND NOT DEFINED ENV{PYTHON_LIBRARIES})
     find_package(PythonLibs 2.7 REQUIRED)
-    include_directories(${PYTHON_INCLUDE_DIRS})
 else()
-    include_directories("$ENV{PYTHON_INCLUDE_DIRS}")
+    set(PYTHON_INCLUDE_DIRS "$ENV{PYTHON_INCLUDE_DIRS}")
+    set(PYTHON_LIBRARIES "$ENV{PYTHON_LIBRARIES}")
 endif()
+include_directories(${PYTHON_INCLUDE_DIRS})
 
 
 # Find Z3
-if(NOT DEFINED ENV{Z3_INCLUDE_DIRS})
+if(NOT DEFINED ENV{Z3_INCLUDE_DIRS} AND NOT DEFINED ENV{Z3_LIBRARIES})
     find_package(Z3 REQUIRED)
     if(NOT Z3_FOUND)
         message(FATAL_ERROR "Z3 not found")
-    endif(NOT Z3_FOUND)
-    include_directories(${Z3_INCLUDE_DIRS})
+    endif()
 else()
-    include_directories("$ENV{Z3_INCLUDE_DIRS}")
+    set(Z3_INCLUDE_DIRS "$ENV{Z3_INCLUDE_DIRS}")
+    set(Z3_LIBRARIES "$ENV{Z3_LIBRARIES}")
 endif()
+include_directories(${Z3_INCLUDE_DIRS})
+
 
 # Find Capstone
 if(NOT DEFINED ENV{CAPSTONE_INCLUDE_DIRS} AND NOT DEFINED ENV{CAPSTONE_LIBRARIES})
     find_package(CAPSTONE REQUIRED)
     if(NOT CAPSTONE_FOUND)
         message(FATAL_ERROR "Capstone not found")
-    endif(NOT CAPSTONE_FOUND)
-    include_directories(${CAPSTONE_INCLUDE_DIRS})
+    endif()
 else()
-    include_directories("$ENV{CAPSTONE_INCLUDE_DIRS}")
+    set(CAPSTONE_INCLUDE_DIRS "$ENV{CAPSTONE_INCLUDE_DIRS}")
+    set(CAPSTONE_LIBRARIES "$ENV{CAPSTONE_LIBRARIES}")
 endif()
+include_directories(${CAPSTONE_INCLUDE_DIRS})
 
 
 # Add Triton includes
