@@ -16,7 +16,23 @@ platform:
 clone_folder: c:\projects\triton
 
 environment:
-  BOOST_ROOT: C:\Libraries\boost_1_59_0
+  BOOST_ROOT: c:\Libraries\boost_1_59_0
+  CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-3.0.4\include
+
+  matrix:
+    - platform: Win32
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x86-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x86-win\bin\*.lib
+      PYTHON_INCLUDE_DIRS: c:\Python27\include
+      PYTHON_LIBRARIES: c:\Python27\libs\*.lib
+
+    - platform: x64
+      CAPSTONE_LIBRARIES:c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x64-win\bin\*.lib
+      PYTHON_INCLUDE_DIRS: c:\Python27-x64\include
+      PYTHON_LIBRARIES: c:\Python27-x64\libs\*.lib
 
 before_build:
   - cmd: cd c:\projects\triton
@@ -39,8 +55,8 @@ before_build:
 # The switch /p:PlatformToolset allows you to override the toolset version specified in the solution/project files :-)
   - cmd: msbuild capstone-3.0.4\msvc\capstone.sln /p:Configuration=%configuration% /p:Platform=%platform% /p:PlatformToolset=v140 /t:capstone_static /m
   - cmd: echo Running cmake...
-  - cmd: if "%platform%"=="Win32" cmake .. -G "Visual Studio 14 2015" -DCAPSTONE_LIBRARIES="c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib" -DCAPSTONE_INCLUDE_DIRS="c:\projects\triton\build\capstone-3.0.4\include" -DZ3_INCLUDE_DIRS="c:\projects\triton\build\z3-4.4.1-x86-win\include" -DZ3_LIBRARIES="c:\projects\triton\build\z3-4.4.1-x86-win\bin\*.lib" -DPYTHON_INCLUDE_DIRS="C:\Python27\include" -DPYTHON_LIBRARIES="C:\Python27\libs\*.lib"
-  - cmd: if "%platform%"=="x64" cmake .. -G "Visual Studio 14 2015 Win64" -DCAPSTONE_LIBRARIES="c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib" -DCAPSTONE_INCLUDE_DIRS="c:\projects\triton\build\capstone-3.0.4\include" -DZ3_INCLUDE_DIRS="c:\projects\triton\build\z3-4.4.1-x64-win\include" -DZ3_LIBRARIES="c:\projects\triton\build\z3-4.4.1-x64-win\bin\*.lib" -DPYTHON_INCLUDE_DIRS="C:\Python27-x64\include" -DPYTHON_LIBRARIES="C:\Python27-x64\libs\*.lib"
+  - cmd: if "%platform%"=="Win32" cmake .. -G "Visual Studio 14 2015"
+  - cmd: if "%platform%"=="x64" cmake .. -G "Visual Studio 14 2015 Win64"
   - cmd: chdir
 
 build:
@@ -53,7 +69,6 @@ after_build:
   - cmd: cd %configuration%
   - cmd: if "%platform%"=="x64" copy ..\z3-4.4.1-x64-win\bin\libz3.dll libz3.dll
   - cmd: if "%platform%"=="Win32" copy ..\z3-4.4.1-x86-win\bin\libz3.dll libz3.dll
-
   - cmd: move triton.dll triton.pyd
   - cmd: if "%platform%"=="Win32" if "%configuration%"=="Release" 7z a -t7z ..\..\triton.x86.release.7z *
   - cmd: if "%platform%"=="Win32" if "%configuration%"=="Debug" 7z a -t7z ..\..\triton.x86.debug.7z *
