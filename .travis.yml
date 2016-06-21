@@ -76,7 +76,6 @@ script:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cmake ..; fi
   - sudo make -j2 install
   - cd ..
-  - sudo python2.7 ./setup.py install
 
   # libTriton unit testing
   # Python

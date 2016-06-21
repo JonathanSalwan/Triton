@@ -13,6 +13,7 @@ project(triton)
 option(PINTOOL "Build Triton with the Pin tool as tracer" OFF)
 option(KERNEL4 "Pin will run on a Linux's kernel v4" OFF)
 option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON)
+option(STATICLIB "Build a static library" OFF)
 
 
 # Get and increment the build number
@@ -32,6 +33,13 @@ if(${TARGET} MATCHES "ia32")
     set(ARCHITECTURE i386)
 endif()
 
+
+# Define if the library will be STATIC or DYNAMIC
+if(STATICLIB)
+    set(LIBTRITON_KIND_LINK STATIC)
+else(STATICLIB)
+    set(LIBTRITON_KIND_LINK SHARED)
+endif(STATICLIB)
 
 # Triton version
 set(VERSION_MAJOR 0)
@@ -109,29 +117,29 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 
 # Find Python 2.7
-if (NOT PYTHON_INCLUDE_DIRS AND NOT PYTHON_LIBRARIES)
+if(NOT PYTHON_INCLUDE_DIRS AND NOT PYTHON_LIBRARIES)
     find_package(PythonLibs 2.7 REQUIRED)
-endif (NOT PYTHON_INCLUDE_DIRS AND NOT PYTHON_LIBRARIES)
+endif(NOT PYTHON_INCLUDE_DIRS AND NOT PYTHON_LIBRARIES)
 include_directories(${PYTHON_INCLUDE_DIRS})
 
 
 # Find Z3
-if (NOT Z3_INCLUDE_DIRS)
+if(NOT Z3_INCLUDE_DIRS)
     find_package(Z3 REQUIRED)
-    if (NOT Z3_FOUND)
+    if(NOT Z3_FOUND)
         message(FATAL_ERROR "Z3 not found")
-    endif (NOT Z3_FOUND)
-endif (NOT Z3_INCLUDE_DIRS)
+    endif(NOT Z3_FOUND)
+endif(NOT Z3_INCLUDE_DIRS)
 include_directories(${Z3_INCLUDE_DIRS})
 
 
 # Find Capstone
-if (NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
+if(NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
     find_package(CAPSTONE REQUIRED)
-    if (NOT CAPSTONE_FOUND)
+    if(NOT CAPSTONE_FOUND)
         message(FATAL_ERROR "Capstone not found")
-    endif (NOT CAPSTONE_FOUND)
-endif (NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
+    endif(NOT CAPSTONE_FOUND)
+endif(NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
 include_directories(${CAPSTONE_INCLUDE_DIRS})
 
 
@@ -222,15 +230,8 @@ file(
 )
 
 
-# Build the SHARED library for *NIX and STATIC for Windows
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    add_library(${PROJECT_LIBTRITON} SHARED ${LIBTRITON_SOURCE_FILES})
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    add_library(${PROJECT_LIBTRITON} SHARED ${LIBTRITON_SOURCE_FILES})
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-
+# Define library's properties
+add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES})
 set_target_properties(${PROJECT_LIBTRITON} PROPERTIES COMPILE_FLAGS ${LIBTRITON_CXX_FLAGS})
 
 
@@ -262,6 +263,20 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 install (TARGETS ${PROJECT_LIBTRITON} DESTINATION ${TRITON_LIB_INSTALL})
 install (FILES ${LIBTRITON_HEADERS_FILES} DESTINATION ${TRITON_HEADER_INSTALL})
+
+
+# Install Python bindings
+if (PYTHON_BINDINGS)
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/src/scripts/setup.py.in
+        ${CMAKE_BINARY_DIR}/setup.py
+        IMMEDIATE @ONLY
+    )
+    find_program(PYTHON_BINARY "python")
+    if (UNIX)
+      install (CODE "execute_process(COMMAND ${PYTHON_BINARY} ${CMAKE_BINARY_DIR}/setup.py install)")
+    endif (UNIX)
+endif (PYTHON_BINDINGS)
 
 
 
@@ -432,4 +447,3 @@ if(PINTOOL)
         )
     endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif(PINTOOL)
-
