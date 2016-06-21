@@ -28,7 +28,7 @@ environment:
       PYTHON_LIBRARIES: c:\Python27\libs\*.lib
 
     - platform: x64
-      CAPSTONE_LIBRARIES:c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x64-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x64-win\bin\*.lib
       PYTHON_INCLUDE_DIRS: c:\Python27-x64\include
