@@ -307,7 +307,7 @@ namespace triton {
 
       /* compound representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::CompoundNode* node) {
-        for (triton::uint32 index = 0; index < node->getChilds().size(); index++)
+        for (triton::usize index = 0; index < node->getChilds().size(); index++)
           stream << node->getChilds()[index];
         return stream;
       }
@@ -316,13 +316,13 @@ namespace triton {
       /* concat representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ConcatNode* node) {
         std::vector<triton::ast::AbstractNode*> childs = node->getChilds();
-        triton::uint32 size = childs.size();
+        triton::usize size = childs.size();
 
         if (size < 2)
           throw std::length_error("AstSmtRepresentation::print(ConcatNode): Exprs must contain at least two expressions.");
 
         stream << "(concat";
-        for (triton::uint32 index = 0; index < size; index++)
+        for (triton::usize index = 0; index < size; index++)
           stream << " " << childs[index];
         stream << ")";
 

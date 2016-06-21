@@ -309,7 +309,7 @@ namespace triton {
 
       /* compound representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::CompoundNode* node) {
-        for (triton::uint32 index = 0; index < node->getChilds().size(); index++)
+        for (triton::usize index = 0; index < node->getChilds().size(); index++)
           stream << node->getChilds()[index] << std::endl;
         return stream;
       }
@@ -317,12 +317,12 @@ namespace triton {
 
       /* concat representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::ConcatNode* node) {
-        triton::uint32 size = node->getChilds().size();
+        triton::usize size = node->getChilds().size();
 
-        for (triton::uint32 index = 0; index < size; index++)
+        for (triton::usize index = 0; index < size; index++)
           stream << "(";
 
-        for (triton::uint32 index = 0; index < size-1; index++)
+        for (triton::usize index = 0; index < size-1; index++)
           stream << node->getChilds()[index] << ") << " << node->getChilds()[index+1]->getBitvectorSize() << " | ";
 
         stream << node->getChilds()[size-1] << ")";
