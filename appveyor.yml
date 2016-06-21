@@ -57,12 +57,11 @@ build:
 
 # This happens in the build directory: c:\projects\triton\build
 after_build:
+# XXX: Hm, I'm pretty sure there's a better way to run the tests in AppVeyor, need to read the docs
 # Install the modules in the Python environment while we are in the build directory
   - cmd: if "%platform%"=="Win32" C:\Python27\python.exe setup.py install
   - cmd: if "%platform%"=="x64" C:\Python27-x64\python.exe setup.py install
   - cmd: cd %configuration%
-# XXX: We could build z3 ourselves and generate a static .lib though.
-# Adding libz3 in the artefact as the Z3 .zip doesn't include something we could statically link to triton.
   - cmd: if "%platform%"=="Win32" copy ..\z3-4.4.1-x86-win\bin\libz3.dll libz3.dll
   - cmd: if "%platform%"=="x64" copy ..\z3-4.4.1-x64-win\bin\libz3.dll libz3.dll
   - cmd: move triton.dll triton.pyd
@@ -70,8 +69,7 @@ after_build:
   - cmd: if "%platform%"=="Win32" if "%configuration%"=="Debug" 7z a -t7z ..\..\triton.x86.debug.7z *
   - cmd: if "%platform%"=="x64" if "%configuration%"=="Release" 7z a -t7z ..\..\triton.x64.release.7z *
   - cmd: if "%platform%"=="x64" if "%configuration%"=="Debug" 7z a -t7z ..\..\triton.x64.debug.7z *
-# XXX: Hm, I'm pretty sure there's a better way to run the tests in AppVeyor, need to read the docs
-# XXX: X86_64 isn't define when compiling the Win32 version 
+# XXX: X86_64 isn't defined when compiling the Win32 version 
 #  - cmd: if "%platform%"=="Win32" C:\Python27\python.exe libTriton_units_testing.py
   - cmd: if "%platform%"=="x64" C:\Python27-x64\python.exe ..\..\src\testers\libTriton_units_testing.py
   - cmd: chdir
