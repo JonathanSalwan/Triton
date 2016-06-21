@@ -8,6 +8,7 @@
 #ifndef TRITONTYPES_H
 #define TRITONTYPES_H
 
+#include <cstdint>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
@@ -20,48 +21,50 @@ namespace triton {
  *  @{
  */
 
-    //! unisgned char
-    typedef unsigned char uint8;
+    //! unisgned 8-bits
+    typedef std::uint8_t uint8;
 
-    //! unisgned short
-    typedef unsigned short uint16;
+    //! unisgned 16-bits
+    typedef std::uint16_t uint16;
 
-    //! unisgned int
-    typedef unsigned int uint32;
+    //! unisgned 32-bits
+    typedef std::uint32_t uint32;
 
-    //! unisgned long long
-    typedef unsigned long long uint64;
+    //! unisgned 64-bits
+    typedef std::uint64_t uint64;
 
-    //! uint128_t
+    //! unsigned 128-bits
     typedef boost::multiprecision::uint128_t uint128;
 
-    //! uint256_t
+    //! unsigned 256-bits
     typedef boost::multiprecision::uint256_t uint256;
 
-    //! uint512_t
+    //! unsigned 512-bits
     typedef boost::multiprecision::uint512_t uint512;
 
-    //! signed char
-    typedef signed char sint8;
+    //! signed 8-bits
+    typedef std::int8_t sint8;
 
-    //! signed short
-    typedef signed short sint16;
+    //! signed 16-bits
+    typedef std::int16_t sint16;
 
-    //! signed int
-    typedef signed int sint32;
+    //! signed 32-bits
+    typedef std::int32_t sint32;
 
-    //! signed long long
-    typedef signed long long sint64;
+    //! signed 64-bits
+    typedef std::int64_t sint64;
 
-    //! int128_t
+    //! signed 128-bits
     typedef boost::multiprecision::int128_t sint128;
 
-    //! int256_t
+    //! signed 256-bits
     typedef boost::multiprecision::int256_t sint256;
 
-    //! int512_t
+    //! signed 512-bits
     typedef boost::multiprecision::int512_t sint512;
 
+    //! unsigned MAX_INT 32 or 64 bits according to the CPU.
+    typedef std::size_t usize;
 
     #if defined(__x86_64__) || defined(_M_X64)
     //! unsigned long long if the arch is 64-bits.
