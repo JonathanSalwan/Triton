@@ -154,7 +154,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin"
     if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
         FILE(GLOB_RECURSE syscalls32_table_files /usr/include/*unistd_32.h)
         FILE(GLOB_RECURSE syscalls64_table_files /usr/include/*unistd_64.h)
-    endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    endif()
 
     if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
         FILE(
@@ -162,7 +162,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin"
             syscalls64_table_files
             /usr/include/sys/syscall.h
         )
-    endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    endif()
 
     LIST(GET syscalls64_table_files 0 syscalls64_table_file)
     # If the unistd_64.h or syscall.h is not found, we exit
@@ -181,7 +181,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin"
     if(NOT EXISTS "${CMAKE_SOURCE_DIR}/src/libtriton/os/unix/syscalls64.cpp")
         message(FATAL_ERROR "./src/libtriton/os/unix/syscalls64.cpp is missing, please check the INSTALL file")
     endif()
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+endif()
 
 
 # Syscall 32 is only available for linux users

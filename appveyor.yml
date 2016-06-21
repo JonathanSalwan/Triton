@@ -12,8 +12,9 @@ configuration:
 clone_folder: c:\projects\triton
 
 environment:
-  # boost / python are automatically found by the find_package's
+  # python is automatically found by the find_package's
   CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-3.0.4\include
+  BOOST_ROOT: c:\Libraries\boost_1_59_0
 
   matrix:
     - platform: Win32
