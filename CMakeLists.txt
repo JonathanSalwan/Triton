@@ -25,9 +25,9 @@ file(WRITE ${CMAKE_SOURCE_DIR}/.build_number ${NEW_BUILD_NUMBER})
 # Get architecture
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(ARCHITECTURE amd64)
-else(CMAKE_SIZEOF_VOID_P EQUAL 8)
+else()
     set(ARCHITECTURE i386)
-endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+endif()
 
 if(${TARGET} MATCHES "ia32")
     set(ARCHITECTURE i386)
@@ -37,9 +37,9 @@ endif()
 # Define if the library will be STATIC or DYNAMIC
 if(STATICLIB)
     set(LIBTRITON_KIND_LINK STATIC)
-else(STATICLIB)
+else()
     set(LIBTRITON_KIND_LINK SHARED)
-endif(STATICLIB)
+endif()
 
 # Triton version
 set(VERSION_MAJOR 0)
@@ -60,7 +60,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/")
 # Python bindings option
 if(PYTHON_BINDINGS)
     add_definitions(-DTRITON_PYTHON_BINDINGS)
-endif(PYTHON_BINDINGS)
+endif()
 
 
 # Triton project
@@ -72,7 +72,7 @@ set(PROJECT_LIBTRITON "triton")
 # To fix old python version bug http://bugs.python.org/issue21958
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     set(LIBTRITON_CXX_FLAGS "-DHAVE_ROUND /MT")
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+endif()
 
 
 # Global UNIX CXX Flags
@@ -83,7 +83,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
     set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -O3 -g3 -ggdb3")
     set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -fno-stack-protector -fomit-frame-pointer -fno-strict-aliasing")
     set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -fPIC -std=c++11")
-endif(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+endif()
 
 
 # 32-bits
@@ -91,13 +91,13 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin"
     if(${ARCHITECTURE} STREQUAL "i386")
         set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -m32")
     endif(${ARCHITECTURE} STREQUAL "i386")
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+endif()
 
 
 # Use the same ABI as pin
 if(PINTOOL)
     set(LIBTRITON_CXX_FLAGS "${LIBTRITON_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
-endif(PINTOOL)
+endif()
 
 
 # Specific OSX POLICY
@@ -108,7 +108,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     if(POLICY CMP0042)
         cmake_policy(SET CMP0042 NEW) # MACOSX_RPATH
     endif(POLICY CMP0042)
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+endif()
 
 
 # Find boost
@@ -117,30 +117,30 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 
 # Find Python 2.7
-if(NOT PYTHON_INCLUDE_DIRS AND NOT PYTHON_LIBRARIES)
+if(NOT DEFINED $ENV{PYTHON_INCLUDE_DIRS} AND NOT DEFINED $ENV{PYTHON_LIBRARIES})
     find_package(PythonLibs 2.7 REQUIRED)
-endif(NOT PYTHON_INCLUDE_DIRS AND NOT PYTHON_LIBRARIES)
-include_directories(${PYTHON_INCLUDE_DIRS})
+endif()
+include_directories($ENV{PYTHON_INCLUDE_DIRS})
 
 
 # Find Z3
-if(NOT Z3_INCLUDE_DIRS)
+if(NOT DEFINED $ENV{Z3_INCLUDE_DIRS})
     find_package(Z3 REQUIRED)
     if(NOT Z3_FOUND)
         message(FATAL_ERROR "Z3 not found")
     endif(NOT Z3_FOUND)
-endif(NOT Z3_INCLUDE_DIRS)
-include_directories(${Z3_INCLUDE_DIRS})
+endif()
+include_directories($ENV{Z3_INCLUDE_DIRS})
 
 
 # Find Capstone
-if(NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
+if(NOT DEFINED $ENV{CAPSTONE_INCLUDE_DIRS} AND NOT DEFINED $ENV{CAPSTONE_LIBRARIES})
     find_package(CAPSTONE REQUIRED)
     if(NOT CAPSTONE_FOUND)
         message(FATAL_ERROR "Capstone not found")
     endif(NOT CAPSTONE_FOUND)
-endif(NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
-include_directories(${CAPSTONE_INCLUDE_DIRS})
+endif()
+include_directories($ENV{CAPSTONE_INCLUDE_DIRS})
 
 
 # Add Triton includes
@@ -166,7 +166,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin"
 
     LIST(GET syscalls64_table_files 0 syscalls64_table_file)
     # If the unistd_64.h or syscall.h is not found, we exit
-    if (NOT EXISTS ${syscalls64_table_file})
+    if(NOT EXISTS ${syscalls64_table_file})
         message(FATAL_ERROR "unistd_64.h or syscall.h is missing, please check the INSTALL file")
     endif()
 
@@ -178,7 +178,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin"
     )
 
     # If the syscalls64.cpp has not been created, we exit
-    if (NOT EXISTS "${CMAKE_SOURCE_DIR}/src/libtriton/os/unix/syscalls64.cpp")
+    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/src/libtriton/os/unix/syscalls64.cpp")
         message(FATAL_ERROR "./src/libtriton/os/unix/syscalls64.cpp is missing, please check the INSTALL file")
     endif()
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -188,7 +188,7 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darw
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     LIST(GET syscalls32_table_files 0 syscalls32_table_file)
     # If the unistd_32.h is not found, we exit
-    if (NOT EXISTS ${syscalls32_table_file})
+    if(NOT EXISTS ${syscalls32_table_file})
         message(FATAL_ERROR "unistd_32.h is missing, please check the INSTALL file")
     endif()
 
@@ -200,10 +200,10 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     )
 
     # If the syscalls32.cpp has not been created, we exit
-    if (NOT EXISTS "${CMAKE_SOURCE_DIR}/src/libtriton/os/unix/syscalls32.cpp")
+    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/src/libtriton/os/unix/syscalls32.cpp")
         message(FATAL_ERROR "./src/libtriton/os/unix/syscalls32.cpp is missing, please check the INSTALL file")
     endif()
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+endif()
 
 
 # We generate the version numbers information
@@ -249,34 +249,34 @@ target_link_libraries(
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(TRITON_HEADER_INSTALL /usr/include/triton)
     set(TRITON_LIB_INSTALL /lib)
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(TRITON_HEADER_INSTALL /usr/local/include/triton)
     set(TRITON_LIB_INSTALL /usr/local/lib)
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     set(TRITON_HEADER_INSTALL C:\\Triton\\include\\triton)
     set(TRITON_LIB_INSTALL C:\\Triton\\lib)
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+endif()
 
 install (TARGETS ${PROJECT_LIBTRITON} DESTINATION ${TRITON_LIB_INSTALL})
 install (FILES ${LIBTRITON_HEADERS_FILES} DESTINATION ${TRITON_HEADER_INSTALL})
 
 
 # Install Python bindings
-if (PYTHON_BINDINGS)
+if(PYTHON_BINDINGS)
     configure_file(
         ${CMAKE_SOURCE_DIR}/src/scripts/setup.py.in
         ${CMAKE_BINARY_DIR}/setup.py
         IMMEDIATE @ONLY
     )
     find_program(PYTHON_BINARY "python")
-    if (UNIX)
+    if(UNIX)
       install (CODE "execute_process(COMMAND ${PYTHON_BINARY} ${CMAKE_BINARY_DIR}/setup.py install)")
-    endif (UNIX)
-endif (PYTHON_BINDINGS)
+    endif()
+endif()
 
 
 

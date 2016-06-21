@@ -20,15 +20,11 @@ environment:
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x86-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x86-win\bin\*.lib
-      PYTHON_INCLUDE_DIRS: c:\Python27\include
-      PYTHON_LIBRARIES: c:\Python27\libs\*.lib
 
     - platform: x64
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x64-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x64-win\bin\*.lib
-      PYTHON_INCLUDE_DIRS: c:\Python27-x64\include
-      PYTHON_LIBRARIES: c:\Python27-x64\libs\*.lib
 
 before_build:
   - cmd: cd c:\projects\triton
@@ -75,7 +71,7 @@ after_build:
   - cmd: copy triton.pyd ..\..\src\testers\
   - cmd: cd ..\..\src\testers\
 # XXX: Hm, I'm pretty sure there's a better way to run the tests in AppVeyor, need to read the docs
-# XXX: x64 tests don't work on x86 
+# XXX: X86_64 isn't define when compiling the Win32 version 
 #  - cmd: if "%platform%"=="Win32" C:\Python27\python.exe libTriton_units_testing.py
   - cmd: if "%platform%"=="x64" C:\Python27-x64\python.exe libTriton_units_testing.py
   - cmd: chdir
