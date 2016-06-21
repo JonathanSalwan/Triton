@@ -33,8 +33,8 @@ elif platform.system() == 'Darwin':
 
 elif platform.system() == 'Windows':
     Z3_LIB_PATH    = r'@Z3_LIBRARIES@'.replace('.lib', '.dll')
-    TRITON_LIBRARY = r'@CMAKE_BINARY_DIR@\Release\triton.dll'
-    TRITON_MODULE  = r'@CMAKE_BINARY_DIR@\Release\triton.pyd'
+    TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/Release/triton.dll'.replace('/', '//')
+    TRITON_MODULE  = '@CMAKE_BINARY_DIR@/Release/triton.pyd'.replace('/', '//')
     TRITON_MODULES = [TRITON_MODULE, Z3_LIB_PATH]
 
 else:
