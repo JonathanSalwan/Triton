@@ -16,55 +16,12 @@ namespace triton {
       this->allocatedNodes        = 0;
       this->allocatedDictionaries = 0;
 
-      this->dictionaries[triton::ast::ASSERT_NODE]             = &this->assertDictionary;
-      this->dictionaries[triton::ast::BVADD_NODE]              = &this->bvaddDictionary;
-      this->dictionaries[triton::ast::BVAND_NODE]              = &this->bvandDictionary;
-      this->dictionaries[triton::ast::BVASHR_NODE]             = &this->bvashrDictionary;
-      this->dictionaries[triton::ast::BVDECL_NODE]             = &this->bvdeclDictionary;
-      this->dictionaries[triton::ast::BVLSHR_NODE]             = &this->bvlshrDictionary;
-      this->dictionaries[triton::ast::BVMUL_NODE]              = &this->bvmulDictionary;
-      this->dictionaries[triton::ast::BVNAND_NODE]             = &this->bvnandDictionary;
-      this->dictionaries[triton::ast::BVNEG_NODE]              = &this->bvnegDictionary;
-      this->dictionaries[triton::ast::BVNOR_NODE]              = &this->bvnorDictionary;
-      this->dictionaries[triton::ast::BVNOT_NODE]              = &this->bvnotDictionary;
-      this->dictionaries[triton::ast::BVOR_NODE]               = &this->bvorDictionary;
-      this->dictionaries[triton::ast::BVROL_NODE]              = &this->bvrolDictionary;
-      this->dictionaries[triton::ast::BVROR_NODE]              = &this->bvrorDictionary;
-      this->dictionaries[triton::ast::BVSDIV_NODE]             = &this->bvsdivDictionary;
-      this->dictionaries[triton::ast::BVSGE_NODE]              = &this->bvsgeDictionary;
-      this->dictionaries[triton::ast::BVSGT_NODE]              = &this->bvsgtDictionary;
-      this->dictionaries[triton::ast::BVSHL_NODE]              = &this->bvshlDictionary;
-      this->dictionaries[triton::ast::BVSLE_NODE]              = &this->bvsleDictionary;
-      this->dictionaries[triton::ast::BVSLT_NODE]              = &this->bvsltDictionary;
-      this->dictionaries[triton::ast::BVSMOD_NODE]             = &this->bvsmodDictionary;
-      this->dictionaries[triton::ast::BVSREM_NODE]             = &this->bvsremDictionary;
-      this->dictionaries[triton::ast::BVSUB_NODE]              = &this->bvsubDictionary;
-      this->dictionaries[triton::ast::BVUDIV_NODE]             = &this->bvudivDictionary;
-      this->dictionaries[triton::ast::BVUGE_NODE]              = &this->bvugeDictionary;
-      this->dictionaries[triton::ast::BVUGT_NODE]              = &this->bvugtDictionary;
-      this->dictionaries[triton::ast::BVULE_NODE]              = &this->bvuleDictionary;
-      this->dictionaries[triton::ast::BVULT_NODE]              = &this->bvultDictionary;
-      this->dictionaries[triton::ast::BVUREM_NODE]             = &this->bvuremDictionary;
-      this->dictionaries[triton::ast::BVXNOR_NODE]             = &this->bvxnorDictionary;
-      this->dictionaries[triton::ast::BVXOR_NODE]              = &this->bvxorDictionary;
-      this->dictionaries[triton::ast::BV_NODE]                 = &this->bvDictionary;
-      this->dictionaries[triton::ast::COMPOUND_NODE]           = &this->compoundDictionary;
-      this->dictionaries[triton::ast::CONCAT_NODE]             = &this->concatDictionary;
-      this->dictionaries[triton::ast::DECIMAL_NODE]            = &this->decimalDictionary;
-      this->dictionaries[triton::ast::DECLARE_FUNCTION_NODE]   = &this->declareFunctionDictionary;
-      this->dictionaries[triton::ast::DISTINCT_NODE]           = &this->distinctDictionary;
-      this->dictionaries[triton::ast::EQUAL_NODE]              = &this->equalDictionary;
-      this->dictionaries[triton::ast::EXTRACT_NODE]            = &this->extractDictionary;
-      this->dictionaries[triton::ast::ITE_NODE]                = &this->iteDictionary;
-      this->dictionaries[triton::ast::LAND_NODE]               = &this->landDictionary;
-      this->dictionaries[triton::ast::LET_NODE]                = &this->letDictionary;
-      this->dictionaries[triton::ast::LNOT_NODE]               = &this->lnotDictionary;
-      this->dictionaries[triton::ast::LOR_NODE]                = &this->lorDictionary;
-      this->dictionaries[triton::ast::REFERENCE_NODE]          = &this->referenceDictionary;
-      this->dictionaries[triton::ast::STRING_NODE]             = &this->stringDictionary;
-      this->dictionaries[triton::ast::SX_NODE]                 = &this->sxDictionary;
-      this->dictionaries[triton::ast::VARIABLE_NODE]           = &this->variableDictionary;
-      this->dictionaries[triton::ast::ZX_NODE]                 = &this->zxDictionary;
+      this->linkDictionaries();
+    }
+
+
+    AstDictionaries::AstDictionaries(const AstDictionaries& copy) {
+      this->copy(copy);
     }
 
 
@@ -170,6 +127,117 @@ namespace triton {
     }
 
 
+    void AstDictionaries::copy(const AstDictionaries& other) {
+      this->allocatedNodes              = other.allocatedNodes;
+      this->allocatedDictionaries       = other.allocatedDictionaries;
+
+      this->assertDictionary            = other.assertDictionary;
+      this->bvaddDictionary             = other.bvaddDictionary;
+      this->bvandDictionary             = other.bvandDictionary;
+      this->bvashrDictionary            = other.bvashrDictionary;
+      this->bvdeclDictionary            = other.bvdeclDictionary;
+      this->bvlshrDictionary            = other.bvlshrDictionary;
+      this->bvmulDictionary             = other.bvmulDictionary;
+      this->bvnandDictionary            = other.bvnandDictionary;
+      this->bvnegDictionary             = other.bvnegDictionary;
+      this->bvnorDictionary             = other.bvnorDictionary;
+      this->bvnotDictionary             = other.bvnotDictionary;
+      this->bvorDictionary              = other.bvorDictionary;
+      this->bvrolDictionary             = other.bvrolDictionary;
+      this->bvrorDictionary             = other.bvrorDictionary;
+      this->bvsdivDictionary            = other.bvsdivDictionary;
+      this->bvsgeDictionary             = other.bvsgeDictionary;
+      this->bvsgtDictionary             = other.bvsgtDictionary;
+      this->bvshlDictionary             = other.bvshlDictionary;
+      this->bvsleDictionary             = other.bvsleDictionary;
+      this->bvsltDictionary             = other.bvsltDictionary;
+      this->bvsmodDictionary            = other.bvsmodDictionary;
+      this->bvsremDictionary            = other.bvsremDictionary;
+      this->bvsubDictionary             = other.bvsubDictionary;
+      this->bvudivDictionary            = other.bvudivDictionary;
+      this->bvugeDictionary             = other.bvugeDictionary;
+      this->bvugtDictionary             = other.bvugtDictionary;
+      this->bvuleDictionary             = other.bvuleDictionary;
+      this->bvultDictionary             = other.bvultDictionary;
+      this->bvuremDictionary            = other.bvuremDictionary;
+      this->bvxnorDictionary            = other.bvxnorDictionary;
+      this->bvxorDictionary             = other.bvxorDictionary;
+      this->bvDictionary                = other.bvDictionary;
+      this->compoundDictionary          = other.compoundDictionary;
+      this->concatDictionary            = other.concatDictionary;
+      this->decimalDictionary           = other.decimalDictionary;
+      this->declareFunctionDictionary   = other.declareFunctionDictionary;
+      this->distinctDictionary          = other.distinctDictionary;
+      this->equalDictionary             = other.equalDictionary;
+      this->extractDictionary           = other.extractDictionary;
+      this->iteDictionary               = other.iteDictionary;
+      this->landDictionary              = other.landDictionary;
+      this->letDictionary               = other.letDictionary;
+      this->lnotDictionary              = other.lnotDictionary;
+      this->lorDictionary               = other.lorDictionary;
+      this->referenceDictionary         = other.referenceDictionary;
+      this->stringDictionary            = other.stringDictionary;
+      this->sxDictionary                = other.sxDictionary;
+      this->variableDictionary          = other.variableDictionary;
+      this->zxDictionary                = other.zxDictionary;
+
+      this->linkDictionaries();
+    }
+
+
+    void AstDictionaries::linkDictionaries(void) {
+      this->dictionaries[triton::ast::ASSERT_NODE]             = &this->assertDictionary;
+      this->dictionaries[triton::ast::BVADD_NODE]              = &this->bvaddDictionary;
+      this->dictionaries[triton::ast::BVAND_NODE]              = &this->bvandDictionary;
+      this->dictionaries[triton::ast::BVASHR_NODE]             = &this->bvashrDictionary;
+      this->dictionaries[triton::ast::BVDECL_NODE]             = &this->bvdeclDictionary;
+      this->dictionaries[triton::ast::BVLSHR_NODE]             = &this->bvlshrDictionary;
+      this->dictionaries[triton::ast::BVMUL_NODE]              = &this->bvmulDictionary;
+      this->dictionaries[triton::ast::BVNAND_NODE]             = &this->bvnandDictionary;
+      this->dictionaries[triton::ast::BVNEG_NODE]              = &this->bvnegDictionary;
+      this->dictionaries[triton::ast::BVNOR_NODE]              = &this->bvnorDictionary;
+      this->dictionaries[triton::ast::BVNOT_NODE]              = &this->bvnotDictionary;
+      this->dictionaries[triton::ast::BVOR_NODE]               = &this->bvorDictionary;
+      this->dictionaries[triton::ast::BVROL_NODE]              = &this->bvrolDictionary;
+      this->dictionaries[triton::ast::BVROR_NODE]              = &this->bvrorDictionary;
+      this->dictionaries[triton::ast::BVSDIV_NODE]             = &this->bvsdivDictionary;
+      this->dictionaries[triton::ast::BVSGE_NODE]              = &this->bvsgeDictionary;
+      this->dictionaries[triton::ast::BVSGT_NODE]              = &this->bvsgtDictionary;
+      this->dictionaries[triton::ast::BVSHL_NODE]              = &this->bvshlDictionary;
+      this->dictionaries[triton::ast::BVSLE_NODE]              = &this->bvsleDictionary;
+      this->dictionaries[triton::ast::BVSLT_NODE]              = &this->bvsltDictionary;
+      this->dictionaries[triton::ast::BVSMOD_NODE]             = &this->bvsmodDictionary;
+      this->dictionaries[triton::ast::BVSREM_NODE]             = &this->bvsremDictionary;
+      this->dictionaries[triton::ast::BVSUB_NODE]              = &this->bvsubDictionary;
+      this->dictionaries[triton::ast::BVUDIV_NODE]             = &this->bvudivDictionary;
+      this->dictionaries[triton::ast::BVUGE_NODE]              = &this->bvugeDictionary;
+      this->dictionaries[triton::ast::BVUGT_NODE]              = &this->bvugtDictionary;
+      this->dictionaries[triton::ast::BVULE_NODE]              = &this->bvuleDictionary;
+      this->dictionaries[triton::ast::BVULT_NODE]              = &this->bvultDictionary;
+      this->dictionaries[triton::ast::BVUREM_NODE]             = &this->bvuremDictionary;
+      this->dictionaries[triton::ast::BVXNOR_NODE]             = &this->bvxnorDictionary;
+      this->dictionaries[triton::ast::BVXOR_NODE]              = &this->bvxorDictionary;
+      this->dictionaries[triton::ast::BV_NODE]                 = &this->bvDictionary;
+      this->dictionaries[triton::ast::COMPOUND_NODE]           = &this->compoundDictionary;
+      this->dictionaries[triton::ast::CONCAT_NODE]             = &this->concatDictionary;
+      this->dictionaries[triton::ast::DECIMAL_NODE]            = &this->decimalDictionary;
+      this->dictionaries[triton::ast::DECLARE_FUNCTION_NODE]   = &this->declareFunctionDictionary;
+      this->dictionaries[triton::ast::DISTINCT_NODE]           = &this->distinctDictionary;
+      this->dictionaries[triton::ast::EQUAL_NODE]              = &this->equalDictionary;
+      this->dictionaries[triton::ast::EXTRACT_NODE]            = &this->extractDictionary;
+      this->dictionaries[triton::ast::ITE_NODE]                = &this->iteDictionary;
+      this->dictionaries[triton::ast::LAND_NODE]               = &this->landDictionary;
+      this->dictionaries[triton::ast::LET_NODE]                = &this->letDictionary;
+      this->dictionaries[triton::ast::LNOT_NODE]               = &this->lnotDictionary;
+      this->dictionaries[triton::ast::LOR_NODE]                = &this->lorDictionary;
+      this->dictionaries[triton::ast::REFERENCE_NODE]          = &this->referenceDictionary;
+      this->dictionaries[triton::ast::STRING_NODE]             = &this->stringDictionary;
+      this->dictionaries[triton::ast::SX_NODE]                 = &this->sxDictionary;
+      this->dictionaries[triton::ast::VARIABLE_NODE]           = &this->variableDictionary;
+      this->dictionaries[triton::ast::ZX_NODE]                 = &this->zxDictionary;
+    }
+
+
     triton::ast::AbstractNode* AstDictionaries::browseAstDictionaries(triton::ast::AbstractNode* node) {
       this->allocatedNodes++;
       triton::uint32 kind = node->getKind();
@@ -238,8 +306,8 @@ namespace triton {
     }
 
 
-    std::map<std::string, triton::uint32> AstDictionaries::getAstDictionariesStats(void) {
-      std::map<std::string, triton::uint32> stats;
+    std::map<std::string, triton::usize> AstDictionaries::getAstDictionariesStats(void) {
+      std::map<std::string, triton::usize> stats;
       stats["assert"]                 = this->assertDictionary.size();
       stats["bvadd"]                  = this->bvaddDictionary.size();
       stats["bvand"]                  = this->bvandDictionary.size();
@@ -292,6 +360,11 @@ namespace triton {
       stats["allocatedDictionaries"]  = this->allocatedDictionaries;
       stats["allocatedNodes"]         = this->allocatedNodes;
       return stats;
+    }
+
+
+    void AstDictionaries::operator=(const AstDictionaries& other) {
+      this->copy(other);
     }
 
   }; /* ast namespace */

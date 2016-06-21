@@ -64,8 +64,14 @@ namespace triton {
           //! Constructor.
           SymbolicSimplification();
 
+          //! Constructor.
+          SymbolicSimplification(const SymbolicSimplification& copy);
+
           //! Destructor.
           ~SymbolicSimplification();
+
+          //! Copies a SymbolicSimplification.
+          void copy(const SymbolicSimplification& other);
 
           //! Returns true if Triton can use the simplification passes of z3.
           bool isZ3SimplificationEnabled(void) const;
@@ -91,6 +97,9 @@ namespace triton {
 
           //! Processes all recorded simplifications. Returns the simplified node.
           triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node, bool z3=false) const;
+
+          //! Copies a SymbolicSimplification.
+          void operator=(const SymbolicSimplification& other);
       };
 
     /*! @} End of symbolic namespace */

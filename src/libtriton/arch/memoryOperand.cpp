@@ -45,7 +45,7 @@ namespace triton {
     }
 
 
-    MemoryOperand::MemoryOperand(const MemoryOperand& other) {
+    MemoryOperand::MemoryOperand(const MemoryOperand& other) : BitsVector(other) {
       this->copy(other);
     }
 
@@ -263,6 +263,7 @@ namespace triton {
 
 
     void MemoryOperand::operator=(const MemoryOperand &other) {
+      BitsVector::operator=(other);
       this->copy(other);
     }
 
@@ -273,9 +274,7 @@ namespace triton {
       this->baseReg       = other.baseReg;
       this->concreteValue = other.concreteValue;
       this->displacement  = other.displacement;
-      this->high          = other.high;
       this->indexReg      = other.indexReg;
-      this->low           = other.low;
       this->pcRelative    = other.pcRelative;
       this->scale         = other.scale;
       this->segmentReg    = other.segmentReg;

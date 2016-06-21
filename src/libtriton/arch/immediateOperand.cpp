@@ -31,7 +31,7 @@ namespace triton {
     }
 
 
-    ImmediateOperand::ImmediateOperand(const ImmediateOperand& other) {
+    ImmediateOperand::ImmediateOperand(const ImmediateOperand& other) : BitsVector(other) {
       this->copy(other);
     }
 
@@ -76,13 +76,12 @@ namespace triton {
 
 
     void ImmediateOperand::operator=(const ImmediateOperand& other) {
+      BitsVector::operator=(other);
       this->copy(other);
     }
 
 
     void ImmediateOperand::copy(const ImmediateOperand& other) {
-      this->high  = other.high;
-      this->low   = other.low;
       this->value = other.value;
     }
 

@@ -1369,8 +1369,8 @@ namespace triton {
 
       static PyObject* triton_getAstDictionariesStats(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        std::map<std::string, triton::uint32> stats;
-        std::map<std::string, triton::uint32>::iterator it;
+        std::map<std::string, triton::usize> stats;
+        std::map<std::string, triton::usize>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -1380,7 +1380,7 @@ namespace triton {
           stats = triton::api.getAstDictionariesStats();
           ret   = xPyDict_New();
           for (it = stats.begin(); it != stats.end(); it++)
-            PyDict_SetItem(ret, PyString_FromString(it->first.c_str()), PyLong_FromUint(it->second));
+            PyDict_SetItem(ret, PyString_FromString(it->first.c_str()), PyLong_FromUsize(it->second));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

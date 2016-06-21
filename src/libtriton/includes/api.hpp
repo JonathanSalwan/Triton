@@ -372,7 +372,7 @@ namespace triton {
         triton::ast::AbstractNode* browseAstDictionaries(triton::ast::AbstractNode* node);
 
         //! [**symbolic api**] - Returns all stats about AST Dictionaries.
-        std::map<std::string, triton::uint32> getAstDictionariesStats(void);
+        std::map<std::string, triton::usize> getAstDictionariesStats(void);
 
         //! [**symbolic api**] - Processes all recorded simplifications. Returns the simplified node.
         triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node, bool z3=false) const;

@@ -779,7 +779,7 @@ namespace triton {
   }
 
 
-  std::map<std::string, triton::uint32> API::getAstDictionariesStats(void) {
+  std::map<std::string, triton::usize> API::getAstDictionariesStats(void) {
     this->checkSymbolic();
     return this->sym->getAstDictionariesStats();
   }

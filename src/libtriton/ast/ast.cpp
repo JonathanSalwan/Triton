@@ -150,16 +150,7 @@ namespace triton {
     }
 
 
-    AssertNode::AssertNode(const AssertNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    AssertNode::AssertNode(const AssertNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -212,16 +203,7 @@ namespace triton {
     }
 
 
-    BvaddNode::BvaddNode(const BvaddNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvaddNode::BvaddNode(const BvaddNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -277,16 +259,7 @@ namespace triton {
     }
 
 
-    BvandNode::BvandNode(const BvandNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvandNode::BvandNode(const BvandNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -343,16 +316,7 @@ namespace triton {
     }
 
 
-    BvashrNode::BvashrNode(const BvashrNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvashrNode::BvashrNode(const BvashrNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -439,16 +403,7 @@ namespace triton {
     }
 
 
-    BvdeclNode::BvdeclNode(const BvdeclNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvdeclNode::BvdeclNode(const BvdeclNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -513,16 +468,7 @@ namespace triton {
     }
 
 
-    BvlshrNode::BvlshrNode(const BvlshrNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvlshrNode::BvlshrNode(const BvlshrNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -578,16 +524,7 @@ namespace triton {
     }
 
 
-    BvmulNode::BvmulNode(const BvmulNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvmulNode::BvmulNode(const BvmulNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -643,16 +580,7 @@ namespace triton {
     }
 
 
-    BvnandNode::BvnandNode(const BvnandNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvnandNode::BvnandNode(const BvnandNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -707,16 +635,7 @@ namespace triton {
     }
 
 
-    BvnegNode::BvnegNode(const BvnegNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvnegNode::BvnegNode(const BvnegNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -769,16 +688,7 @@ namespace triton {
     }
 
 
-    BvnorNode::BvnorNode(const BvnorNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvnorNode::BvnorNode(const BvnorNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -833,16 +743,7 @@ namespace triton {
     }
 
 
-    BvnotNode::BvnotNode(const BvnotNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvnotNode::BvnotNode(const BvnotNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -895,16 +796,7 @@ namespace triton {
     }
 
 
-    BvorNode::BvorNode(const BvorNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvorNode::BvorNode(const BvorNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -968,16 +860,7 @@ namespace triton {
     }
 
 
-    BvrolNode::BvrolNode(const BvrolNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvrolNode::BvrolNode(const BvrolNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -1049,16 +932,7 @@ namespace triton {
     }
 
 
-    BvrorNode::BvrorNode(const BvrorNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvrorNode::BvrorNode(const BvrorNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -1121,16 +995,7 @@ namespace triton {
     }
 
 
-    BvsdivNode::BvsdivNode(const BvsdivNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvsdivNode::BvsdivNode(const BvsdivNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -1199,16 +1064,7 @@ namespace triton {
     }
 
 
-    BvsgeNode::BvsgeNode(const BvsgeNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvsgeNode::BvsgeNode(const BvsgeNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -1271,16 +1127,7 @@ namespace triton {
     }
 
 
-    BvsgtNode::BvsgtNode(const BvsgtNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvsgtNode::BvsgtNode(const BvsgtNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -1343,16 +1190,7 @@ namespace triton {
     }
 
 
-    BvshlNode::BvshlNode(const BvshlNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvshlNode::BvshlNode(const BvshlNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -1408,16 +1246,7 @@ namespace triton {
     }
 
 
-    BvsleNode::BvsleNode(const BvsleNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvsleNode::BvsleNode(const BvsleNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -1480,16 +1309,7 @@ namespace triton {
     }
 
 
-    BvsltNode::BvsltNode(const BvsltNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvsltNode::BvsltNode(const BvsltNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -1552,16 +1372,7 @@ namespace triton {
     }
 
 
-    BvsmodNode::BvsmodNode(const BvsmodNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvsmodNode::BvsmodNode(const BvsmodNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -1628,16 +1439,7 @@ namespace triton {
     }
 
 
-    BvsremNode::BvsremNode(const BvsremNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvsremNode::BvsremNode(const BvsremNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -1704,16 +1506,7 @@ namespace triton {
     }
 
 
-    BvsubNode::BvsubNode(const BvsubNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvsubNode::BvsubNode(const BvsubNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -1769,16 +1562,7 @@ namespace triton {
     }
 
 
-    BvudivNode::BvudivNode(const BvudivNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvudivNode::BvudivNode(const BvudivNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -1838,16 +1622,7 @@ namespace triton {
     }
 
 
-    BvugeNode::BvugeNode(const BvugeNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvugeNode::BvugeNode(const BvugeNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -1903,16 +1678,7 @@ namespace triton {
     }
 
 
-    BvugtNode::BvugtNode(const BvugtNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvugtNode::BvugtNode(const BvugtNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -1968,16 +1734,7 @@ namespace triton {
     }
 
 
-    BvuleNode::BvuleNode(const BvuleNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvuleNode::BvuleNode(const BvuleNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -2033,16 +1790,7 @@ namespace triton {
     }
 
 
-    BvultNode::BvultNode(const BvultNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvultNode::BvultNode(const BvultNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -2098,16 +1846,7 @@ namespace triton {
     }
 
 
-    BvuremNode::BvuremNode(const BvuremNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvuremNode::BvuremNode(const BvuremNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -2167,16 +1906,7 @@ namespace triton {
     }
 
 
-    BvxnorNode::BvxnorNode(const BvxnorNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvxnorNode::BvxnorNode(const BvxnorNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -2232,16 +1962,7 @@ namespace triton {
     }
 
 
-    BvxorNode::BvxorNode(const BvxorNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvxorNode::BvxorNode(const BvxorNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -2297,16 +2018,7 @@ namespace triton {
     }
 
 
-    BvNode::BvNode(const BvNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    BvNode::BvNode(const BvNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -2374,16 +2086,7 @@ namespace triton {
     }
 
 
-    CompoundNode::CompoundNode(const CompoundNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    CompoundNode::CompoundNode(const CompoundNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -2452,16 +2155,7 @@ namespace triton {
     }
 
 
-    ConcatNode::ConcatNode(const ConcatNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    ConcatNode::ConcatNode(const ConcatNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -2522,13 +2216,8 @@ namespace triton {
     }
 
 
-    DecimalNode::DecimalNode(const DecimalNode& copy) {
-      this->kind       = copy.kind;
-      this->value      = copy.value;
-      this->size       = copy.size;
-      this->eval       = copy.eval;
-      this->parents    = copy.parents;
-      this->symbolized = copy.symbolized;
+    DecimalNode::DecimalNode(const DecimalNode& copy) : AbstractNode(copy) {
+      this->value = copy.value;
     }
 
 
@@ -2575,16 +2264,7 @@ namespace triton {
     }
 
 
-    DeclareFunctionNode::DeclareFunctionNode(const DeclareFunctionNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    DeclareFunctionNode::DeclareFunctionNode(const DeclareFunctionNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -2643,16 +2323,7 @@ namespace triton {
     }
 
 
-    DistinctNode::DistinctNode(const DistinctNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    DistinctNode::DistinctNode(const DistinctNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -2705,16 +2376,7 @@ namespace triton {
     }
 
 
-    EqualNode::EqualNode(const EqualNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    EqualNode::EqualNode(const EqualNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -2768,16 +2430,7 @@ namespace triton {
     }
 
 
-    ExtractNode::ExtractNode(const ExtractNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    ExtractNode::ExtractNode(const ExtractNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -2846,16 +2499,7 @@ namespace triton {
     }
 
 
-    IteNode::IteNode(const IteNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    IteNode::IteNode(const IteNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -2911,16 +2555,7 @@ namespace triton {
     }
 
 
-    LandNode::LandNode(const LandNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    LandNode::LandNode(const LandNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -2974,16 +2609,7 @@ namespace triton {
     }
 
 
-    LetNode::LetNode(const LetNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    LetNode::LetNode(const LetNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -3038,16 +2664,7 @@ namespace triton {
     }
 
 
-    LnotNode::LnotNode(const LnotNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    LnotNode::LnotNode(const LnotNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -3100,16 +2717,7 @@ namespace triton {
     }
 
 
-    LorNode::LorNode(const LorNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    LorNode::LorNode(const LorNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -3161,13 +2769,8 @@ namespace triton {
     }
 
 
-    ReferenceNode::ReferenceNode(const ReferenceNode& copy) {
-      this->kind        = copy.kind;
-      this->value       = copy.value;
-      this->size        = copy.size;
-      this->eval        = copy.eval;
-      this->parents     = copy.parents;
-      this->symbolized  = copy.symbolized;
+    ReferenceNode::ReferenceNode(const ReferenceNode& copy) : AbstractNode(copy) {
+      this->value = copy.value;
     }
 
 
@@ -3222,13 +2825,8 @@ namespace triton {
     }
 
 
-    StringNode::StringNode(const StringNode& copy) {
-      this->kind        = copy.kind;
-      this->value       = copy.value;
-      this->size        = copy.size;
-      this->eval        = copy.eval;
-      this->parents     = copy.parents;
-      this->symbolized  = copy.symbolized;
+    StringNode::StringNode(const StringNode& copy) : AbstractNode(copy) {
+      this->value = copy.value;
     }
 
 
@@ -3278,16 +2876,7 @@ namespace triton {
     }
 
 
-    SxNode::SxNode(const SxNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    SxNode::SxNode(const SxNode& copy) : AbstractNode(copy) {
     }
 
 
@@ -3349,13 +2938,8 @@ namespace triton {
     }
 
 
-    VariableNode::VariableNode(const VariableNode& copy) {
-      this->kind        = copy.kind;
-      this->value       = copy.value;
-      this->size        = copy.size;
-      this->eval        = copy.eval;
-      this->parents     = copy.parents;
-      this->symbolized  = copy.symbolized;
+    VariableNode::VariableNode(const VariableNode& copy) : AbstractNode(copy) {
+      this->value = copy.value;
     }
 
 
@@ -3411,16 +2995,7 @@ namespace triton {
     }
 
 
-    ZxNode::ZxNode(const ZxNode& copy) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
-
-      /* Copy childs */
-      for (triton::uint32 index = 0; index < copy.childs.size(); index++)
-        this->childs.push_back(triton::ast::newInstance(copy.childs[index]));
+    ZxNode::ZxNode(const ZxNode& copy) : AbstractNode(copy) {
     }
 
 

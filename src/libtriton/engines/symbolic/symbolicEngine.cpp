@@ -12,10 +12,6 @@
 #include <coreUtils.hpp>
 #include <symbolicEngine.hpp>
 
-#ifdef TRITON_PYTHON_BINDINGS
-  #include <pythonBindings.hpp>
-#endif
-
 
 
 /*! \page engine_DSE_page Dynamic Symbolic Execution
@@ -103,26 +99,28 @@ namespace triton {
         this->alignedMemoryReference      = other.alignedMemoryReference;
         this->emulationFlag               = other.emulationFlag;
         this->enableFlag                  = other.enableFlag;
-        this->enabledOptimizations        = other.enabledOptimizations;
         this->memoryReference             = other.memoryReference;
-        this->pathConstraints             = other.pathConstraints;
-        this->simplificationCallbacks     = other.simplificationCallbacks;
         this->symbolicExpressions         = other.symbolicExpressions;
         this->symbolicVariables           = other.symbolicVariables;
         this->uniqueSymExprId             = other.uniqueSymExprId;
         this->uniqueSymVarId              = other.uniqueSymVarId;
-        #ifdef TRITON_PYTHON_BINDINGS
-        this->pySimplificationCallbacks   = other.pySimplificationCallbacks;
-        #endif
       }
 
 
-      SymbolicEngine::SymbolicEngine(const SymbolicEngine& copy) {
+      SymbolicEngine::SymbolicEngine(const SymbolicEngine& copy)
+        : triton::ast::AstDictionaries(copy),
+          triton::engines::symbolic::SymbolicOptimization(copy),
+          triton::engines::symbolic::SymbolicSimplification(copy),
+          triton::engines::symbolic::PathManager(copy) {
         this->init(copy);
       }
 
 
       void SymbolicEngine::operator=(const SymbolicEngine& other) {
+        triton::ast::AstDictionaries::operator=(other);
+        triton::engines::symbolic::SymbolicOptimization::operator=(other);
+        triton::engines::symbolic::SymbolicSimplification::operator=(other);
+        triton::engines::symbolic::PathManager::operator=(other);
         delete[] this->symbolicReg;
         this->init(other);
       }

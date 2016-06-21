@@ -41,6 +41,9 @@ namespace triton {
       //! Returns a triton::__uint from a pyObject.
       triton::__uint PyLong_AsUint(PyObject* obj);
 
+      //! Returns a triton::usize from a pyObject.
+      triton::usize PyLong_AsUsize(PyObject* obj);
+
       //! Returns a triton::uint128 from a pyObject.
       triton::uint128 PyLong_AsUint128(PyObject* obj);
 
@@ -52,6 +55,9 @@ namespace triton {
 
       //! Returns a pyObject from a triton::__uint.
       PyObject* PyLong_FromUint(triton::__uint value);
+
+      //! Returns a pyObject from a triton::usize.
+      PyObject* PyLong_FromUsize(triton::usize value);
 
       //! Returns a pyObject from a triton::uint128.
       PyObject* PyLong_FromUint128(triton::uint128 value);

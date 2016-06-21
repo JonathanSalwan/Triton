@@ -64,7 +64,7 @@ namespace triton {
     }
 
 
-    RegisterOperand::RegisterOperand(const RegisterOperand& other) {
+    RegisterOperand::RegisterOperand(const RegisterOperand& other) : BitsVector(other) {
       this->copy(other);
     }
 
@@ -162,15 +162,14 @@ namespace triton {
 
 
     void RegisterOperand::operator=(const RegisterOperand& other) {
+      BitsVector::operator=(other);
       this->copy(other);
     }
 
 
     void RegisterOperand::copy(const RegisterOperand& other) {
       this->concreteValue = other.concreteValue;
-      this->high          = other.high;
       this->id            = other.id;
-      this->low           = other.low;
       this->name          = other.name;
       this->parent        = other.parent;
       this->trusted       = other.trusted;

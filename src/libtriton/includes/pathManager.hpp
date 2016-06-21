@@ -52,10 +52,13 @@ namespace triton {
           PathManager();
 
           //! Constructor by copy.
-          PathManager(const PathManager &copy);
+          PathManager(const PathManager& copy);
 
           //! Destructore.
           ~PathManager();
+
+          //! Copies a PathManager.
+          void copy(const PathManager& other);
 
           //! Returns the logical conjunction vector of path constraints.
           const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
@@ -71,6 +74,9 @@ namespace triton {
 
           //! Clears the logical conjunction vector of path constraints.
           void clearPathConstraints(void);
+
+          //! Copies a PathManager.
+          void operator=(const PathManager& other);
       };
 
     /*! @} End of symbolic namespace */

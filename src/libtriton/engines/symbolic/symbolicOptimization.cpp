@@ -25,7 +25,17 @@ namespace triton {
       }
 
 
+      SymbolicOptimization::SymbolicOptimization(const SymbolicOptimization& copy) {
+        this->copy(copy);
+      }
+
+
       SymbolicOptimization::~SymbolicOptimization() {
+      }
+
+
+      void SymbolicOptimization::copy(const SymbolicOptimization& other) {
+        this->enabledOptimizations = other.enabledOptimizations;
       }
 
 
@@ -41,6 +51,11 @@ namespace triton {
           this->enabledOptimizations.insert(opti);
         else
           this->enabledOptimizations.erase(opti);
+      }
+
+
+      void SymbolicOptimization::operator=(const SymbolicOptimization& other) {
+        this->copy(other);
       }
 
     }; /* symbolic namespace */

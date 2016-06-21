@@ -49,6 +49,36 @@ namespace triton {
       }
 
 
+      triton::usize PyLong_AsUsize(PyObject* vv) {
+        PyLongObject* v;
+        triton::usize x, prev;
+        Py_ssize_t i;
+
+        if (vv == NULL || !PyLong_Check(vv)) {
+          if (vv != NULL && PyInt_Check(vv)) {
+              triton::usize val = PyInt_AsLong(vv);
+              return val;
+          }
+          throw std::runtime_error("triton::bindings::python::PyLong_AsUsize(): Bad internal call.");
+        }
+
+        v = reinterpret_cast<PyLongObject*>(vv);
+        i = Py_SIZE(v);
+        x = 0;
+        if (i < 0)
+          throw std::runtime_error("triton::bindings::python::PyLong_AsUsize(): Cannot convert negative value to unsigned long.");
+
+        while (--i >= 0) {
+            prev = x;
+            x = (x << PyLong_SHIFT) | v->ob_digit[i];
+            if ((x >> PyLong_SHIFT) != prev)
+                throw std::runtime_error("triton::bindings::python::PyLong_AsUsize(): long int too large to convert.");
+        }
+
+        return x;
+      }
+
+
       triton::uint128 PyLong_AsUint128(PyObject* vv) {
         PyLongObject* v;
         triton::uint128 x, prev;
@@ -143,6 +173,31 @@ namespace triton {
       PyObject* PyLong_FromUint(triton::__uint value) {
         PyLongObject* v;
         triton::__uint t;
+        int ndigits = 0;
+
+        /* Count the number of Python digits. */
+        t = value;
+        while (t) {
+          ++ndigits;
+          t >>= PyLong_SHIFT;
+        }
+
+        v = _PyLong_New(ndigits);
+        digit* p = v->ob_digit;
+        Py_SIZE(v) = ndigits;
+        while (value) {
+          *p++ = static_cast<digit>(value & PyLong_MASK);
+          value >>= PyLong_SHIFT;
+        }
+
+        return (PyObject*)v;
+      }
+
+
+      /* Returns a PyObject from a {32,64}-bits integer */
+      PyObject* PyLong_FromUint(triton::usize value) {
+        PyLongObject* v;
+        triton::usize t;
         int ndigits = 0;
 
         /* Count the number of Python digits. */

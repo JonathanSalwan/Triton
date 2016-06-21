@@ -172,7 +172,21 @@ namespace triton {
       }
 
 
+      SymbolicSimplification::SymbolicSimplification(const SymbolicSimplification& copy) {
+        this->copy(copy);
+      }
+
+
       SymbolicSimplification::~SymbolicSimplification() {
+      }
+
+
+      void SymbolicSimplification::copy(const SymbolicSimplification& other) {
+        this->z3Enabled                 = other.z3Enabled;
+        this->simplificationCallbacks   = other.simplificationCallbacks;
+        #ifdef TRITON_PYTHON_BINDINGS
+        this->pySimplificationCallbacks = other.pySimplificationCallbacks;
+        #endif
       }
 
 
@@ -266,6 +280,10 @@ namespace triton {
         return node;
       }
 
+
+      void SymbolicSimplification::operator=(const SymbolicSimplification& other) {
+        this->copy(other);
+      }
 
     }; /* symbolic namespace */
   }; /* engines namespace */

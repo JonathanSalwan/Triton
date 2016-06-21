@@ -36,10 +36,10 @@ namespace triton {
 
       protected:
         //! Total of allocated nodes.
-        triton::uint32 allocatedNodes;
+        triton::usize allocatedNodes;
 
         //! Total of allocated dictionaries.
-        triton::uint32 allocatedDictionaries;
+        triton::usize allocatedDictionaries;
 
         //! Assert Dictionary
         std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*> assertDictionary;
@@ -195,14 +195,26 @@ namespace triton {
         //! Constructor.
         AstDictionaries();
 
+        //! Constructor.
+        AstDictionaries(const AstDictionaries& copy);
+
         //! Destructor.
         ~AstDictionaries();
+
+        //! Copies a AstDictionaries.
+        void copy(const AstDictionaries& other);
+
+        //! Links all sub dictionaries to the root one.
+        void linkDictionaries(void);
 
         //! Browses into dictionaries.
         triton::ast::AbstractNode* browseAstDictionaries(triton::ast::AbstractNode* node);
 
         //! Returns stats about dictionaries.
-        std::map<std::string, triton::uint32> getAstDictionariesStats(void);
+        std::map<std::string, triton::usize> getAstDictionariesStats(void);
+
+        //! Copies a AstDictionaries.
+        void operator=(const AstDictionaries& other);
     };
 
   /*! @} End of ast namespace */

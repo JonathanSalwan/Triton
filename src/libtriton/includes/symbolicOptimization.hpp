@@ -54,14 +54,23 @@ namespace triton {
           //! Constructor.
           SymbolicOptimization();
 
+          //! Constructor.
+          SymbolicOptimization(const SymbolicOptimization& copy);
+
           //! Destructor.
           ~SymbolicOptimization();
+
+          //! Copies a SymbolicOptimization.
+          void copy(const SymbolicOptimization& other);
 
           //! Returns true if the symbolic optimization is enabled.
           bool isOptimizationEnabled(enum optimization_e opti) const;
 
           //! Enables or disables a symbolic optimization.
           void enableOptimization(enum optimization_e opti, bool flag);
+
+          //! Copies a SymbolicOptimization.
+          void operator=(const SymbolicOptimization& other);
       };
 
     /*! @} End of symbolic namespace */
