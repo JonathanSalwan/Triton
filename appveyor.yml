@@ -20,12 +20,12 @@ environment:
     - platform: Win32
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x86-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x86-win\bin\*.lib
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x86-win\bin\libz3.lib
 
     - platform: x64
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x64-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x64-win\bin\*.lib
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x64-win\bin\libz3.lib
 
 before_build:
   - cmd: cd c:\projects\triton
@@ -55,26 +55,25 @@ before_build:
 build:
   project: c:\projects\triton\build\triton.sln
 
-# this happens in the build directory: c:\projects\triton\build
+# This happens in the build directory: c:\projects\triton\build
 after_build:
-# Adding libz3 in the artefact as the Z3 .zip doesn't include something we could statically link to triton.
-# XXX: We could build z3 ourselves and generate a static .lib though.
+# Install the modules in the Python environment while we are in the build directory
+  - cmd: if "%platform%"=="Win32" C:\Python27\python.exe setup.py install
+  - cmd: if "%platform%"=="x64" C:\Python27-x64\python.exe setup.py install
   - cmd: cd %configuration%
-  - cmd: if "%platform%"=="x64" copy ..\z3-4.4.1-x64-win\bin\libz3.dll libz3.dll
+# XXX: We could build z3 ourselves and generate a static .lib though.
+# Adding libz3 in the artefact as the Z3 .zip doesn't include something we could statically link to triton.
   - cmd: if "%platform%"=="Win32" copy ..\z3-4.4.1-x86-win\bin\libz3.dll libz3.dll
+  - cmd: if "%platform%"=="x64" copy ..\z3-4.4.1-x64-win\bin\libz3.dll libz3.dll
   - cmd: move triton.dll triton.pyd
   - cmd: if "%platform%"=="Win32" if "%configuration%"=="Release" 7z a -t7z ..\..\triton.x86.release.7z *
   - cmd: if "%platform%"=="Win32" if "%configuration%"=="Debug" 7z a -t7z ..\..\triton.x86.debug.7z *
   - cmd: if "%platform%"=="x64" if "%configuration%"=="Release" 7z a -t7z ..\..\triton.x64.release.7z *
   - cmd: if "%platform%"=="x64" if "%configuration%"=="Debug" 7z a -t7z ..\..\triton.x64.debug.7z *
-# XXX: prefer PYTHONPATH?
-  - cmd: copy libz3.dll ..\..\src\testers\
-  - cmd: copy triton.pyd ..\..\src\testers\
-  - cmd: cd ..\..\src\testers\
 # XXX: Hm, I'm pretty sure there's a better way to run the tests in AppVeyor, need to read the docs
 # XXX: X86_64 isn't define when compiling the Win32 version 
 #  - cmd: if "%platform%"=="Win32" C:\Python27\python.exe libTriton_units_testing.py
-  - cmd: if "%platform%"=="x64" C:\Python27-x64\python.exe libTriton_units_testing.py
+  - cmd: if "%platform%"=="x64" C:\Python27-x64\python.exe ..\..\src\testers\libTriton_units_testing.py
   - cmd: chdir
 
 artifacts:

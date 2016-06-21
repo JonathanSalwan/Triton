@@ -34,7 +34,7 @@ elif platform.system() == 'Darwin':
     shutil.copyfile(TRITON_LIBRARY, TRITON_MODULE)
 
 elif platform.system() == 'Windows':
-    Z3_LIB_PATH    = '@Z3_LIBRARIES@'.replace('/', '\\').replace('*.lib', 'libz3.dll')
+    Z3_LIB_PATH    = '@Z3_LIBRARIES@'.replace('/', '\\').replace('.lib', '.dll')
     TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/Release/triton.dll'.replace('/', '\\')
     TRITON_MODULE  = '@CMAKE_BINARY_DIR@/Release/triton.pyd'.replace('/', '\\')
     TRITON_MODULES = [TRITON_MODULE, Z3_LIB_PATH]
