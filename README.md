@@ -15,7 +15,7 @@ A full documentation is available on our [doxygen page](http://triton.quarkslab.
 <p>
   <a href="https://travis-ci.org/JonathanSalwan/Triton/branches"><img src="https://img.shields.io/travis/jonathansalwan/triton/master.svg?style=flat-square&label=unix%20build"></a>
   &nbsp;
-  <a href="https://ci.appveyor.com/project/JonathanSalwan/triton"><img src="https://img.shields.io/appveyor/ci/jonathansalwan/triton.svg?style=flat-square&label=windows%20build"></a>
+  <a href="https://ci.appveyor.com/project/JonathanSalwan/triton"><img src="https://img.shields.io/appveyor/ci/jonathansalwan/triton/master.svg?style=flat-square&label=windows%20build"></a>
 </p>
 
 ### Quick start
