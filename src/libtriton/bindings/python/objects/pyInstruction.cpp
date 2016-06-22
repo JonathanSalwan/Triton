@@ -211,7 +211,7 @@ namespace triton {
       static PyObject* Instruction_getFirstOperand(PyObject* self, PyObject* noarg) {
         try {
           triton::arch::Instruction*      inst;
-          triton::uint32                  opSize;
+          triton::usize                   opSize;
           PyObject*                       obj = nullptr;
 
           inst     = PyInstruction_AsInstruction(self);
@@ -327,14 +327,14 @@ namespace triton {
           triton::arch::MemoryOperand     mem;
           triton::arch::RegisterOperand   reg;
           triton::arch::Instruction*      inst;
-          triton::uint32                  opSize;
+          triton::usize                   opSize;
           PyObject*                       operands;
 
           inst     = PyInstruction_AsInstruction(self);
           opSize   = inst->operands.size();
           operands = xPyList_New(opSize);
 
-          for (triton::uint32 index = 0; index < opSize; index++) {
+          for (triton::usize index = 0; index < opSize; index++) {
             PyObject* obj = nullptr;
 
             if (inst->operands[index].getType() == triton::arch::OP_IMM) {
@@ -422,7 +422,7 @@ namespace triton {
       static PyObject* Instruction_getSecondOperand(PyObject* self, PyObject* noarg) {
         try {
           triton::arch::Instruction*      inst;
-          triton::uint32                  opSize;
+          triton::usize                   opSize;
           PyObject*                       obj = nullptr;
 
           inst     = PyInstruction_AsInstruction(self);
@@ -453,17 +453,18 @@ namespace triton {
         }
       }
 
+
       static PyObject* Instruction_getSymbolicExpressions(PyObject* self, PyObject* noarg) {
         try {
           triton::arch::Instruction*  inst;
-          triton::uint32              exprSize;
+          triton::usize               exprSize;
           PyObject*                   symExprs;
 
           inst     = PyInstruction_AsInstruction(self);
           exprSize = inst->symbolicExpressions.size();
           symExprs = xPyList_New(exprSize);
 
-          for (triton::uint32 index = 0; index < exprSize; index++) {
+          for (triton::usize index = 0; index < exprSize; index++) {
             PyObject* obj = nullptr;
             obj = PySymbolicExpression(inst->symbolicExpressions[index]);
             PyList_SetItem(symExprs, index, obj);
@@ -476,10 +477,11 @@ namespace triton {
         }
       }
 
+
       static PyObject* Instruction_getThirdOperand(PyObject* self, PyObject* noarg) {
         try {
           triton::arch::Instruction*      inst;
-          triton::uint32                  opSize;
+          triton::usize                   opSize;
           PyObject*                       obj = nullptr;
 
           inst     = PyInstruction_AsInstruction(self);
@@ -660,7 +662,10 @@ namespace triton {
           if (PyBytes_Size(opc) >= 32)
             return PyErr_Format(PyExc_TypeError, "Instruction::setOpcodes(): Invalid size (too big).");
 
-          PyInstruction_AsInstruction(self)->setOpcodes(reinterpret_cast<triton::uint8*>(PyBytes_AsString(opc)), PyBytes_Size(opc));
+          triton::uint8* opcodes = reinterpret_cast<triton::uint8*>(PyBytes_AsString(opc));
+          triton::uint32 size    = static_cast<triton::uint32>(PyBytes_Size(opc));
+
+          PyInstruction_AsInstruction(self)->setOpcodes(opcodes, size);
           Py_INCREF(Py_None);
           return Py_None;
         }
