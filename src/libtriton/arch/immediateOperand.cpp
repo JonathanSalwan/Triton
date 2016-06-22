@@ -18,7 +18,7 @@ namespace triton {
     }
 
 
-    ImmediateOperand::ImmediateOperand(triton::__uint value, triton::uint32 size /* bytes */) {
+    ImmediateOperand::ImmediateOperand(triton::uint64 value, triton::uint32 size /* bytes */) {
       this->value = value;
 
       if (size == 0)
@@ -40,12 +40,12 @@ namespace triton {
     }
 
 
-    triton::__uint ImmediateOperand::getValue(void) const {
+    triton::uint64 ImmediateOperand::getValue(void) const {
       return this->value;
     }
 
 
-    void ImmediateOperand::setValue(triton::__uint v) {
+    void ImmediateOperand::setValue(triton::uint64 v) {
       this->value = v;
     }
 

@@ -35,7 +35,7 @@ namespace triton {
 
       protected:
         //! The value of the operand.
-        triton::__uint value;
+        triton::uint64 value;
 
         //! Copy an ImmediateOperand.
         void copy(const ImmediateOperand& other);
@@ -45,7 +45,7 @@ namespace triton {
         ImmediateOperand();
 
         //! Constructor.
-        ImmediateOperand(triton::__uint value, triton::uint32 size /* bytes*/);
+        ImmediateOperand(triton::uint64 value, triton::uint32 size /* bytes*/);
 
         //! Constructor by copy.
         ImmediateOperand(const ImmediateOperand& other);
@@ -54,7 +54,7 @@ namespace triton {
         ~ImmediateOperand();
 
         //! Returns the value of the operand.
-        triton::__uint getValue(void) const;
+        triton::uint64 getValue(void) const;
 
         //! Returns the highest bit. \sa BitsVector::getHigh()
         triton::uint32 getAbstractHigh(void) const;
@@ -72,7 +72,7 @@ namespace triton {
         triton::uint32 getType(void) const;
 
         //! Sets the value of the operand.
-        void setValue(triton::__uint v);
+        void setValue(triton::uint64 v);
 
         //! Copy an ImmediateOperand.
         void operator=(const ImmediateOperand& other);
