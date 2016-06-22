@@ -1,8 +1,9 @@
-version: 1.0.{build}
+version: 0.3.{build}
 
 branches:
   only:
   - master
+  - /dev-.*/
 
 configuration:
   - Release
@@ -77,6 +78,3 @@ after_build:
 artifacts:
   - path: triton.*.7z
 
-# debug
-# on_finish:
-#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
