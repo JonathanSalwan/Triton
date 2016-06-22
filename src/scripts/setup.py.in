@@ -25,24 +25,23 @@ if platform.system() == 'Linux':
     TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/libtriton.so'
     TRITON_MODULE  = '@CMAKE_BINARY_DIR@/triton.so'
     TRITON_MODULES = [TRITON_MODULE]
-    shutil.copyfile(TRITON_LIBRARY, TRITON_MODULE)
 
 elif platform.system() == 'Darwin':
     TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/libtriton.dylib'
     TRITON_MODULE  = '@CMAKE_BINARY_DIR@/triton.so'
     TRITON_MODULES = [TRITON_MODULE]
-    shutil.copyfile(TRITON_LIBRARY, TRITON_MODULE)
 
 elif platform.system() == 'Windows':
-    Z3_LIB_PATH    = '@Z3_LIBRARIES@'.replace('/', '\\').replace('*.lib', 'libz3.dll')
+    Z3_LIB_PATH    = r'@Z3_LIBRARIES@'.replace('.lib', '.dll')
     TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/Release/triton.dll'.replace('/', '\\')
     TRITON_MODULE  = '@CMAKE_BINARY_DIR@/Release/triton.pyd'.replace('/', '\\')
     TRITON_MODULES = [TRITON_MODULE, Z3_LIB_PATH]
-    shutil.copyfile(TRITON_LIBRARY, TRITON_MODULE)
 
 else:
     print '[+] Invalid platform - Send us a pull request :)'
     sys.exit(1)
+
+shutil.copyfile(TRITON_LIBRARY, TRITON_MODULE)
 
 setup(
     name                 = package_name,

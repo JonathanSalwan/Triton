@@ -1,0 +1,82 @@
+version: 1.0.{build}
+
+branches:
+  only:
+  - master
+
+configuration:
+  - Release
+# XXX: LNK1104: cannot open file 'python27_d.lib'
+  # - Debug
+
+clone_folder: c:\projects\triton
+
+environment:
+  # python is automatically found by the find_package's
+  CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-3.0.4\include
+  BOOST_ROOT: c:\Libraries\boost_1_59_0
+
+  matrix:
+    - platform: Win32
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x86-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x86-win\bin\libz3.lib
+
+    - platform: x64
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x64-win\bin\libz3.lib
+
+before_build:
+  - cmd: cd c:\projects\triton
+  - cmd: mkdir build
+  - cmd: cd build
+  - cmd: echo Downloading z3...
+  - cmd: if "%platform%"=="Win32" curl -fsSL -o z3-4.4.1-x86-win.zip 'https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/z3-4.4.1-x86-win.zip'
+  - cmd: if "%platform%"=="Win32" 7z x z3-4.4.1-x86-win.zip
+  - cmd: if "%platform%"=="x64" curl -fsSL -o z3-4.4.1-x64-win.zip 'https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/z3-4.4.1-x64-win.zip'
+  - cmd: if "%platform%"=="x64" 7z x z3-4.4.1-x64-win.zip
+  - cmd: echo Downloading capstone...
+  - cmd: curl -fsSL -o 3.0.4.zip 'https://github.com/aquynh/capstone/archive/3.0.4.zip'
+  - cmd: 7z x 3.0.4.zip
+  - cmd: echo Building capstone...
+# This is required because capstone's slns/vcxprojs file have been made with an old version of MSVC which is not a problem in itself,
+# the issue will show up when trying to link capstone.lib (generated with an old toolset) into triton that is generated with the new toolset.
+# This result in annoying linking errors (sprintf/and similar functions don't get resolved) - we could also link legacy_stdio_definitions.lib to triton
+# but I would rather build everything I can with the same toolset:
+#   http://stackoverflow.com/questions/32418766/c-unresolved-external-symbol-sprintf-and-sscanf-in-visual-studio-2015
+# The switch /p:PlatformToolset allows you to override the toolset version specified in the solution/project files :-)
+  - cmd: msbuild capstone-3.0.4\msvc\capstone.sln /p:Configuration=%configuration% /p:Platform=%platform% /p:PlatformToolset=v140 /t:capstone_static /m
+  - cmd: echo Running cmake...
+  - cmd: if "%platform%"=="Win32" cmake .. -G "Visual Studio 14 2015"
+  - cmd: if "%platform%"=="x64" cmake .. -G "Visual Studio 14 2015 Win64"
+  - cmd: chdir
+
+build:
+  project: c:\projects\triton\build\triton.sln
+
+# This happens in the build directory: c:\projects\triton\build
+after_build:
+# XXX: Hm, I'm pretty sure there's a better way to run the tests in AppVeyor, need to read the docs
+# Install the modules in the Python environment while we are in the build directory
+  - cmd: if "%platform%"=="Win32" C:\Python27\python.exe setup.py install
+  - cmd: if "%platform%"=="x64" C:\Python27-x64\python.exe setup.py install
+  - cmd: cd %configuration%
+  - cmd: if "%platform%"=="Win32" copy ..\z3-4.4.1-x86-win\bin\libz3.dll libz3.dll
+  - cmd: if "%platform%"=="x64" copy ..\z3-4.4.1-x64-win\bin\libz3.dll libz3.dll
+  - cmd: move triton.dll triton.pyd
+  - cmd: if "%platform%"=="Win32" if "%configuration%"=="Release" 7z a -t7z ..\..\triton.x86.release.7z *
+  - cmd: if "%platform%"=="Win32" if "%configuration%"=="Debug" 7z a -t7z ..\..\triton.x86.debug.7z *
+  - cmd: if "%platform%"=="x64" if "%configuration%"=="Release" 7z a -t7z ..\..\triton.x64.release.7z *
+  - cmd: if "%platform%"=="x64" if "%configuration%"=="Debug" 7z a -t7z ..\..\triton.x64.debug.7z *
+# XXX: X86_64 isn't defined when compiling the Win32 version 
+#  - cmd: if "%platform%"=="Win32" C:\Python27\python.exe libTriton_units_testing.py
+  - cmd: if "%platform%"=="x64" C:\Python27-x64\python.exe ..\..\src\testers\libTriton_units_testing.py
+  - cmd: chdir
+
+artifacts:
+  - path: triton.*.7z
+
+# debug
+# on_finish:
+#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
