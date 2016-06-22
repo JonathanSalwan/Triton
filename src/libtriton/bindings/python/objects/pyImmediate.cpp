@@ -106,7 +106,7 @@ namespace triton {
 
       static PyObject* ImmediateOperand_getBitSize(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyImmediateOperand_AsImmediateOperand(self)->getBitSize());
+          return PyLong_FromUint32(PyImmediateOperand_AsImmediateOperand(self)->getBitSize());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -116,7 +116,7 @@ namespace triton {
 
       static PyObject* ImmediateOperand_getSize(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyImmediateOperand_AsImmediateOperand(self)->getSize());
+          return PyLong_FromUint32(PyImmediateOperand_AsImmediateOperand(self)->getSize());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -126,7 +126,7 @@ namespace triton {
 
       static PyObject* ImmediateOperand_getType(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyImmediateOperand_AsImmediateOperand(self)->getType());
+          return PyLong_FromUint32(PyImmediateOperand_AsImmediateOperand(self)->getType());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -136,7 +136,7 @@ namespace triton {
 
       static PyObject* ImmediateOperand_getValue(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint(PyImmediateOperand_AsImmediateOperand(self)->getValue());
+          return PyLong_FromUint64(PyImmediateOperand_AsImmediateOperand(self)->getValue());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -148,7 +148,7 @@ namespace triton {
         try {
           if (!PyLong_Check(value) && !PyInt_Check(value))
             return PyErr_Format(PyExc_TypeError, "setValue(): expected an integer as argument");
-          PyImmediateOperand_AsImmediateOperand(self)->setValue(PyLong_AsUint(value));
+          PyImmediateOperand_AsImmediateOperand(self)->setValue(PyLong_AsUint64(value));
           Py_INCREF(Py_None);
           return Py_None;
         }
