@@ -103,6 +103,9 @@ To be able to compile Triton, you must install these libraries before:
  [libcapstone](http://www.capstone-engine.org/)                                | >= 3.0
  [Pin](https://software.intel.com/en-us/articles/pintool-downloads) (optional) | 71313
 
+<hr>
+\subsection unix_install_sec Linux and OSX Installation
+
 Once libraries installed, you can use `cmake` to build the `libTriton`.
 
 ~~~~~~~~~~~~~{.sh}
@@ -138,6 +141,30 @@ this branch (`4.x`). Anyway, if you feel lucky, you can compile the Triton pinto
 $ cmake -DPINTOOL=on -DKERNEL4=on ..
 $ make
 ~~~~~~~~~~~~~
+
+**Note**: The pintool only works on Linux.
+
+<hr>
+\subsection windows_install_sec Windows Installation
+
+Once libraries installed, you can use `cmake` to generate the `.sln` of the `libTriton`.
+
+~~~~~~~~~~~~~{.sh}
+> git clone https://github.com/JonathanSalwan/Triton.git
+> cd Triton
+> mkdir build
+> cd build
+> cmake -G "Visual Studio 14 2015 Win64" \
+  -DBOOST_ROOT="C:/Users/jonathan/Works/Tools/boost_1_61_0" \
+  -DPYTHON_INCLUDE_DIRS="C:/Python27/include" \
+  -DPYTHON_LIBRARIES="C:/Python27/libs/python27.lib" \
+  -DZ3_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/z3-4.4.1-x64-win/include" \
+  -DZ3_LIBRARIES="C:/Users/jonathan/Works/Tools/z3-4.4.1-x64-win/bin/libz3.lib" \
+  -DCAPSTONE_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/capstone-3.0.4-win64/include" \
+  -DCAPSTONE_LIBRARIES="C:/Users/jonathan/Works/Tools/capstone-3.0.4-win64/capstone.lib" ..
+~~~~~~~~~~~~~
+
+If you want to directly download precompiled libraries, check out the [AppVeyor's artefacts](https://ci.appveyor.com/project/JonathanSalwan/triton/history).
 
 */
 

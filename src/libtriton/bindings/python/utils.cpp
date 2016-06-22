@@ -195,7 +195,7 @@ namespace triton {
 
 
       /* Returns a PyObject from a {32,64}-bits integer */
-      PyObject* PyLong_FromUint(triton::usize value) {
+      PyObject* PyLong_FromUsize(triton::usize value) {
         PyLongObject* v;
         triton::usize t;
         int ndigits = 0;

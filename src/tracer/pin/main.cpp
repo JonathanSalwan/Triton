@@ -155,8 +155,8 @@ This project is shippied with a pintool as tracer. Basically, you can add callba
 start and stop analysis at specific points, select what images are jitted or not, interact with the Triton API and many more... All information about the pintool API
 is describe at this following page \ref pintool_py_api. Below, some examples.
 
-\subsection Tracer_pintool_example_1 Example - Display IR
 <hr>
+\subsection Tracer_pintool_example_1 Example - Display IR
 
 ~~~~~~~~~~~~~{.py}
 #!/usr/bin/env python2
@@ -190,8 +190,8 @@ if __name__ == '__main__':
     runProgram()
 ~~~~~~~~~~~~~
 
-\subsection Tracer_pintool_example_2 Example - Runtime Memory Tainting
 <hr>
+\subsection Tracer_pintool_example_2 Example - Runtime Memory Tainting
 
 ~~~~~~~~~~~~~{.py}
 from triton  import *
@@ -236,8 +236,8 @@ if __name__ == '__main__':
     runProgram()
 ~~~~~~~~~~~~~
 
-\subsection Tracer_pintool_example_3 Example - Runtime Register Modification
 <hr>
+\subsection Tracer_pintool_example_3 Example - Runtime Register Modification
 
 ~~~~~~~~~~~~~{.py}
 #!/usr/bin/env python2
@@ -281,8 +281,8 @@ if __name__ == '__main__':
     runProgram()
 ~~~~~~~~~~~~~
 
-\subsection Tracer_pintool_example_4 Example - Blacklist images
 <hr>
+\subsection Tracer_pintool_example_4 Example - Blacklist images
 
 ~~~~~~~~~~~~~{.py}
 from triton  import *
@@ -306,8 +306,8 @@ if __name__ == '__main__':
     runProgram()
 ~~~~~~~~~~~~~
 
-\subsection Tracer_pintool_example_5 Example - Callback on image
 <hr>
+\subsection Tracer_pintool_example_5 Example - Callback on image
 
 ~~~~~~~~~~~~~{.py}
 from triton  import *
@@ -352,8 +352,8 @@ if __name__ == '__main__':
     runProgram()
 ~~~~~~~~~~~~~
 
-\subsection Tracer_pintool_example_6 Example - Callback on routine
 <hr>
+\subsection Tracer_pintool_example_6 Example - Callback on routine
 
 ~~~~~~~~~~~~~{.py}
 from triton  import *
@@ -396,8 +396,8 @@ if __name__ == '__main__':
     runProgram()
 ~~~~~~~~~~~~~
 
-\subsection Tracer_pintool_example_7 Example - Callback on signals
 <hr>
+\subsection Tracer_pintool_example_7 Example - Callback on signals
 
 ~~~~~~~~~~~~~{.py}
 from triton  import *
@@ -479,8 +479,8 @@ if __name__ == '__main__':
     runProgram()
 ~~~~~~~~~~~~~
 
-\subsection Tracer_pintool_example_8 Example - Callback on syscalls
 <hr>
+\subsection Tracer_pintool_example_8 Example - Callback on syscalls
 
 ~~~~~~~~~~~~~{.py}
 from triton  import *
