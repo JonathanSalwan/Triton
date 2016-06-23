@@ -38,6 +38,9 @@ namespace triton {
      *  @{
      */
 
+      //! Returns a bool from a pyObject.
+      bool PyLong_AsBool(PyObject* obj);
+
       //! Returns a triton::__uint from a pyObject.
       triton::__uint PyLong_AsUint(PyObject* obj);
 

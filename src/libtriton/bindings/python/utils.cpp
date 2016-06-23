@@ -19,6 +19,11 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+      bool PyLong_AsBool(PyObject* obj) {
+        return (PyObject_IsTrue(obj) != 0);
+      }
+
+
       triton::__uint PyLong_AsUint(PyObject* vv) {
         PyLongObject* v;
         triton::__uint x, prev;

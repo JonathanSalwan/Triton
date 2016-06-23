@@ -7038,7 +7038,10 @@ namespace triton {
               mskb.push_back(triton::ast::extract(7,   7,   op2));
           }
 
-          auto node = triton::ast::zx(dst.getBitSize() - mskb.size(), triton::ast::concat(mskb));
+          auto node = triton::ast::zx(
+                        dst.getBitSize() - static_cast<triton::uint32>(mskb.size()),
+                        triton::ast::concat(mskb)
+                      );
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PMOVMSKB operation");
@@ -8695,7 +8698,10 @@ namespace triton {
           eflags.push_back(triton::ast::bvfalse()); /* Reserved */
           eflags.push_back(op1);
 
-          auto node = triton::ast::zx(dst.getBitSize() - eflags.size(), triton::ast::concat(eflags));
+          auto node = triton::ast::zx(
+                        dst.getBitSize() - static_cast<triton::uint32>(eflags.size()),
+                        triton::ast::concat(eflags)
+                      );
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PUSHFD operation");
@@ -8760,7 +8766,10 @@ namespace triton {
           eflags.push_back(triton::ast::bvfalse()); /* Reserved */
           eflags.push_back(op1);
 
-          auto node = triton::ast::zx(dst.getBitSize() - eflags.size(), triton::ast::concat(eflags));
+          auto node = triton::ast::zx(
+                        dst.getBitSize() - static_cast<triton::uint32>(eflags.size()),
+                        triton::ast::concat(eflags)
+                      );
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "PUSHFQ operation");
