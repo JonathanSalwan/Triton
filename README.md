@@ -4,8 +4,10 @@
 engine, a Taint Engine, AST representations of the x86 and the x86-64 instructions set semantics, SMT simplification
 passes, a SMT Solver Interface and, the last but not least, Python bindings.
 
-<p align="center"><img src="http://triton.quarkslab.com/files/triton_v03_architecture.svg"/></p>
-<p align="center"><img width="50%" src="http://triton.quarkslab.com/files/triton_multi_os.svg"/></p>
+<p align="center">
+    <img src="http://triton.quarkslab.com/files/triton_v03_architecture.svg"/></br>
+    <img src="http://triton.quarkslab.com/files/triton_multi_os.svg"/>
+</p>
 
 Based on these components, you are able to build program analysis tools, automate reverse engineering and perform software verification.
 As **Triton** is still a young project, please, **don't blame us** if it is not yet reliable. [Open issues](https://github.com/JonathanSalwan/Triton/issues) or
