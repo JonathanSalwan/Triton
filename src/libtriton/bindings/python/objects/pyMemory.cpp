@@ -161,7 +161,7 @@ namespace triton {
 
       static PyObject* MemoryOperand_getAddress(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint(PyMemoryOperand_AsMemoryOperand(self)->getAddress());
+          return PyLong_FromUint64(PyMemoryOperand_AsMemoryOperand(self)->getAddress());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

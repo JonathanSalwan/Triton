@@ -47,7 +47,7 @@ namespace triton {
            *  \brief The branches constraints
            *  \description Vector of `<flag, target bb addr, pc>`, `flag` is set to true if the branch is taken according the pc.
            */
-          std::vector<std::tuple<bool, triton::__uint, triton::ast::AbstractNode*>> branches;
+          std::vector<std::tuple<bool, triton::uint64, triton::ast::AbstractNode*>> branches;
 
 
         public:
@@ -61,13 +61,13 @@ namespace triton {
           ~PathConstraint();
 
           //! Adds a branch to the path constraint.
-          void addBranchConstraint(bool taken, triton::__uint bbAddr, triton::ast::AbstractNode* pc);
+          void addBranchConstraint(bool taken, triton::uint64 bbAddr, triton::ast::AbstractNode* pc);
 
           //! Returns the branch constraints.
-          const std::vector<std::tuple<bool, triton::__uint, triton::ast::AbstractNode*>>& getBranchConstraints(void) const;
+          const std::vector<std::tuple<bool, triton::uint64, triton::ast::AbstractNode*>>& getBranchConstraints(void) const;
 
           //! Returns the address of the taken branch.
-          triton::__uint getTakenAddress(void) const;
+          triton::uint64 getTakenAddress(void) const;
 
           //! Returns the path constraint AST of the taken branch.
           triton::ast::AbstractNode* getTakenPathConstraintAst(void) const;

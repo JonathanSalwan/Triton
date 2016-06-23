@@ -1000,6 +1000,16 @@ def test_3():
     count = 0
     setArchitecture(ARCH.X86_64)
 
+    mem = Memory(0x1122334455667788, 8, 0x6162636465666768)
+
+    if mem.getAddress() == 0x1122334455667788:
+        count += 1
+    else:
+        print '[KO] mem.getAddress()'
+        print '\tOutput   : 0x%x' %(mem.getAddress())
+        print '\tExpected : 0x1122334455667788'
+        return -1
+
     mem = Memory(0x400f4d3, 8, 0x6162636465666768)
 
     if mem.getAddress() == 0x400f4d3:

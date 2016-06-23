@@ -174,7 +174,7 @@ namespace triton {
         std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*> lorDictionary;
 
         //! Reference Dictionary
-        std::map<triton::uint512, triton::ast::AbstractNode*> referenceDictionary;
+        std::map<triton::usize, triton::ast::AbstractNode*> referenceDictionary;
 
         //! String Dictionary
         std::map<std::string, triton::ast::AbstractNode*> stringDictionary;

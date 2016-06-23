@@ -139,25 +139,25 @@ namespace triton {
         std::set<triton::arch::RegisterOperand*> getParentRegisters(void) const;
 
         //! [**architecture api**] - Returns the last concrete value recorded of a memory access.
-        triton::uint8 getLastMemoryValue(triton::__uint addr) const;
+        triton::uint8 getLastMemoryValue(triton::uint64 addr) const;
 
         //! [**architecture api**] - Returns the last concrete value recorded of a memory access.
         triton::uint512 getLastMemoryValue(const triton::arch::MemoryOperand& mem) const;
 
         //! [**architecture api**] - Returns the last concrete values of a memory area.
-        std::vector<triton::uint8> getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) const;
+        std::vector<triton::uint8> getLastMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size) const;
 
         //! [**architecture api**] - Returns the last concrete value recorded of a register state.
         triton::uint512 getLastRegisterValue(const triton::arch::RegisterOperand& reg) const;
 
         //! [**architecture api**] - Sets the last concrete value of a memory access.
-        void setLastMemoryValue(triton::__uint addr, triton::uint8 value);
+        void setLastMemoryValue(triton::uint64 addr, triton::uint8 value);
 
         //! [**architecture api**] - Sets the last concrete value of a memory access.
         void setLastMemoryValue(const triton::arch::MemoryOperand& mem);
 
         //! [**architecture api**] - Sets the last concrete values of a memory area.
-        void setLastMemoryAreaValue(triton::__uint baseAddr, const std::vector<triton::uint8>& values);
+        void setLastMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
 
         //! [**architecture api**] - Sets the last concrete value of a register state.
         void setLastRegisterValue(const triton::arch::RegisterOperand& reg);
@@ -256,41 +256,41 @@ namespace triton {
         //! [**symbolic api**] - Returns the map of symbolic registers defined.
         std::map<triton::arch::RegisterOperand, triton::engines::symbolic::SymbolicExpression*> getSymbolicRegisters(void) const;
 
-        //! [**symbolic api**] - Returns the map of symbolic memory defined.
-        std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*> getSymbolicMemory(void) const;
+        //! [**symbolic api**] - Returns the map (<Addr : SymExpr>) of symbolic memory defined.
+        std::map<triton::uint64, triton::engines::symbolic::SymbolicExpression*> getSymbolicMemory(void) const;
 
         //! [**symbolic api**] - Returns the symbolic expression id corresponding to the memory address.
-        triton::__uint getSymbolicMemoryId(triton::__uint addr) const;
+        triton::usize getSymbolicMemoryId(triton::uint64 addr) const;
 
         //! [**symbolic api**] - Returns the symbolic expression id corresponding to the register.
-        triton::__uint getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) const;
+        triton::usize getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) const;
 
         //! [**symbolic api**] - Returns the symbolic memory value.
-        triton::uint8 getSymbolicMemoryValue(triton::__uint address);
+        triton::uint8 getSymbolicMemoryValue(triton::uint64 address);
 
         //! [**symbolic api**] - Returns the symbolic memory value.
         triton::uint512 getSymbolicMemoryValue(const triton::arch::MemoryOperand& mem);
 
         //! [**symbolic api**] - Returns the symbolic values of a memory area.
-        std::vector<triton::uint8> getSymbolicMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size);
+        std::vector<triton::uint8> getSymbolicMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size);
 
         //! [**symbolic api**] - Returns the symbolic register value.
         triton::uint512 getSymbolicRegisterValue(const triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - If emulation enabled, returns `getSymbolicMemoryValue()` otherwise `getLastMemoryValue()`.
-        triton::uint8 getMemoryValue(triton::__uint addr);
+        triton::uint8 getMemoryValue(triton::uint64 addr);
 
         //! [**symbolic api**] - If emulation enabled, returns `getSymbolicMemoryValue()` otherwise `getLastMemoryValue()`.
         triton::uint512 getMemoryValue(const triton::arch::MemoryOperand& mem);
 
         //! [**symbolic api**] - If emulation enabled, returns `getSymbolicMemoryAreaValue()` otherwise `getLastMemoryAreaValue()`.
-        std::vector<triton::uint8> getMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size);
+        std::vector<triton::uint8> getMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size);
 
         //! [**symbolic api**] - If emulation enabled, returns `getSymbolicRegisterValue()` otherwise `getLastRegisterValue()`.
         triton::uint512 getRegisterValue(const triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
-        triton::engines::symbolic::SymbolicVariable* convertExpressionToSymbolicVariable(triton::__uint exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
+        triton::engines::symbolic::SymbolicVariable* convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
 
         //! [**symbolic api**] - Converts a symbolic memory expression to a symbolic variable.
         triton::engines::symbolic::SymbolicVariable* convertMemoryToSymbolicVariable(const triton::arch::MemoryOperand& mem, const std::string& symVarComment="");
@@ -329,7 +329,7 @@ namespace triton {
         triton::engines::symbolic::SymbolicVariable* newSymbolicVariable(triton::uint32 varSize, const std::string& comment="");
 
         //! [**symbolic api**] - Removes the symbolic expression corresponding to the id.
-        void removeSymbolicExpression(triton::__uint symExprId);
+        void removeSymbolicExpression(triton::usize symExprId);
 
         //! [**symbolic api**] - Returns the new symbolic abstract expression and links this expression to the instruction.
         triton::engines::symbolic::SymbolicExpression* createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::OperandWrapper& dst, const std::string& comment="");
@@ -378,10 +378,10 @@ namespace triton {
         triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node, bool z3=false) const;
 
         //! [**symbolic api**] - Returns the symbolic expression corresponding to the id.
-        triton::engines::symbolic::SymbolicExpression* getSymbolicExpressionFromId(triton::__uint symExprId) const;
+        triton::engines::symbolic::SymbolicExpression* getSymbolicExpressionFromId(triton::usize symExprId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable id.
-        triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromId(triton::__uint symVarId) const;
+        triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromId(triton::usize symVarId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable name.
         triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromName(const std::string& symVarName) const;
@@ -425,7 +425,7 @@ namespace triton {
         bool isSymbolicZ3SimplificationEnabled(void) const;
 
         //! [**symbolic api**] - Returns true if the symbolic expression ID exists.
-        bool isSymbolicExpressionIdExists(triton::__uint symExprId) const;
+        bool isSymbolicExpressionIdExists(triton::usize symExprId) const;
 
         //! [**symbolic api**] - Returns true if the symbolic optimization is enabled.
         bool isSymbolicOptimizationEnabled(enum triton::engines::symbolic::optimization_e opti);
@@ -440,28 +440,28 @@ namespace triton {
         void concretizeMemory(const triton::arch::MemoryOperand& mem);
 
         //! [**symbolic api**] - Concretizes a specific symbolic memory reference.
-        void concretizeMemory(triton::__uint addr);
+        void concretizeMemory(triton::uint64 addr);
 
         //! [**symbolic api**] - Concretizes a specific symbolic register reference.
         void concretizeRegister(const triton::arch::RegisterOperand& reg);
 
         //! [**symbolic api**] - Returns the partial AST from a symbolic expression id.
-        triton::ast::AbstractNode* getAstFromId(triton::__uint symExprId);
+        triton::ast::AbstractNode* getAstFromId(triton::usize symExprId);
 
         //! [**symbolic api**] - Returns the full AST of a root node.
         triton::ast::AbstractNode* getFullAst(triton::ast::AbstractNode* node);
 
         //! [**symbolic api**] - Returns the full AST from a symbolic expression id.
-        triton::ast::AbstractNode* getFullAstFromId(triton::__uint symExprId);
+        triton::ast::AbstractNode* getFullAstFromId(triton::usize symExprId);
 
         //! [**symbolic api**] - Returns the list of the tainted symbolic expressions.
         std::list<triton::engines::symbolic::SymbolicExpression*> getTaintedSymbolicExpressions(void) const;
 
         //! [**symbolic api**] - Returns all symbolic expressions as a map of <SymExprId : SymExpr>
-        const std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*>& getSymbolicExpressions(void) const;
+        const std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*>& getSymbolicExpressions(void) const;
 
         //! [**symbolic api**] - Returns all symbolic variables as a map of <SymVarId : SymVar>
-        const std::map<triton::__uint, triton::engines::symbolic::SymbolicVariable*>& getSymbolicVariables(void) const;
+        const std::map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& getSymbolicVariables(void) const;
 
         //! [**symbolic api**] - Returns all variable declarations representation.
         std::string getVariablesDeclaration(void) const;
@@ -518,7 +518,7 @@ namespace triton {
           \param addr the targeted address.
           \param size the access' size
         */
-        bool isMemoryTainted(triton::__uint addr, triton::uint32 size=1) const;
+        bool isMemoryTainted(triton::uint64 addr, triton::uint32 size=1) const;
 
         //! [**taint api**] - Returns true if the memory is tainted.
         /*!
@@ -562,7 +562,7 @@ namespace triton {
           \param addr the targeted address.
           \return triton::engines::taint::TAINTED
         */
-        bool taintMemory(triton::__uint addr);
+        bool taintMemory(triton::uint64 addr);
 
         //! [**taint api**] - Taints a memory.
         /*!
@@ -583,7 +583,7 @@ namespace triton {
           \param addr the targeted address.
           \return triton::engines::taint::UNTAINTED
         */
-        bool untaintMemory(triton::__uint addr);
+        bool untaintMemory(triton::uint64 addr);
 
         //! [**taint api**] - Untaints a memory.
         /*!

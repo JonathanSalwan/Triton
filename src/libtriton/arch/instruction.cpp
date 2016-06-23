@@ -77,17 +77,17 @@ namespace triton {
     }
 
 
-    triton::__uint Instruction::getAddress(void) const {
+    triton::uint64 Instruction::getAddress(void) const {
       return this->address;
     }
 
 
-    triton::__uint Instruction::getNextAddress(void) const {
+    triton::uint64 Instruction::getNextAddress(void) const {
       return this->address + this->size;
     }
 
 
-    void Instruction::setAddress(triton::__uint addr) {
+    void Instruction::setAddress(triton::uint64 addr) {
       this->address = addr;
     }
 
@@ -155,7 +155,7 @@ namespace triton {
     }
 
 
-    triton::arch::MemoryOperand Instruction::popMemoryAccess(triton::__uint addr, triton::uint32 size, triton::uint512 value) {
+    triton::arch::MemoryOperand Instruction::popMemoryAccess(triton::uint64 addr, triton::uint32 size, triton::uint512 value) {
       /* The default value is zero */
       triton::arch::MemoryOperand mem;
 

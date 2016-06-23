@@ -149,7 +149,7 @@ namespace triton {
 
       /* Returns true of false if the memory address is currently tainted */
       bool TaintEngine::isMemoryTainted(const triton::arch::MemoryOperand& mem) const {
-        triton::__uint addr = mem.getAddress();
+        triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
         for (triton::uint32 index = 0; index < size; index++) {
@@ -161,7 +161,7 @@ namespace triton {
 
 
       /* Returns true of false if the address is currently tainted */
-      bool TaintEngine::isMemoryTainted(triton::__uint addr, triton::uint32 size) const {
+      bool TaintEngine::isMemoryTainted(triton::uint64 addr, triton::uint32 size) const {
         for (triton::uint32 index = 0; index < size; index++) {
           if (this->taintedAddresses.find(addr+index) != this->taintedAddresses.end())
             return TAINTED;
@@ -240,7 +240,7 @@ namespace triton {
 
       /* Taint the memory */
       bool TaintEngine::taintMemory(const triton::arch::MemoryOperand& mem) {
-        triton::__uint addr = mem.getAddress();
+        triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
         if (!this->isEnabled())
@@ -254,7 +254,7 @@ namespace triton {
 
 
       /* Taint the address */
-      bool TaintEngine::taintMemory(triton::__uint addr) {
+      bool TaintEngine::taintMemory(triton::uint64 addr) {
         if (this->isEnabled())
           this->taintedAddresses[addr] = TAINTED;
         return this->taintedAddresses[addr];
@@ -263,7 +263,7 @@ namespace triton {
 
       /* Untaint the memory */
       bool TaintEngine::untaintMemory(const triton::arch::MemoryOperand& mem) {
-        triton::__uint addr = mem.getAddress();
+        triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
         if (!this->isEnabled())
@@ -277,7 +277,7 @@ namespace triton {
 
 
       /* Untaint the address */
-      bool TaintEngine::untaintMemory(triton::__uint addr) {
+      bool TaintEngine::untaintMemory(triton::uint64 addr) {
         if (!this->isEnabled())
           return this->isMemoryTainted(addr);
         this->taintedAddresses.erase(addr);
@@ -340,8 +340,8 @@ namespace triton {
       bool TaintEngine::assignmentMemoryMemory(const triton::arch::MemoryOperand& memDst, const triton::arch::MemoryOperand& memSrc) {
         bool isTainted          = !TAINTED;
         triton::uint32 readSize = memSrc.getSize();
-        triton::__uint addrSrc  = memSrc.getAddress();
-        triton::__uint addrDst  = memDst.getAddress();
+        triton::uint64 addrSrc  = memSrc.getAddress();
+        triton::uint64 addrDst  = memDst.getAddress();
 
         if (!this->isEnabled())
           return this->isMemoryTainted(memDst);
@@ -422,8 +422,8 @@ namespace triton {
       bool TaintEngine::unionMemoryMemory(const triton::arch::MemoryOperand& memDst, const triton::arch::MemoryOperand& memSrc) {
         bool tainted             = !TAINTED;
         triton::uint32 writeSize = memDst.getSize();
-        triton::__uint addrDst   = memDst.getAddress();
-        triton::__uint addrSrc   = memSrc.getAddress();
+        triton::uint64 addrDst   = memDst.getAddress();
+        triton::uint64 addrSrc   = memSrc.getAddress();
 
         if (!this->isEnabled())
           return this->isMemoryTainted(memDst);

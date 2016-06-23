@@ -57,7 +57,7 @@ namespace triton {
           bool enableFlag;
 
           //! The map of tainted address.
-          std::map<triton::__uint, bool> taintedAddresses;
+          std::map<triton::uint64, bool> taintedAddresses;
 
           //! The number of register according to the CPU.
           triton::uint32 numberOfRegisters;
@@ -81,7 +81,7 @@ namespace triton {
             \param addr the targeted address.
             \param size the access' size
           */
-          bool isMemoryTainted(triton::__uint addr, triton::uint32 size=1) const;
+          bool isMemoryTainted(triton::uint64 addr, triton::uint32 size=1) const;
 
           //! Returns true if the memory is tainted.
           /*!
@@ -113,7 +113,7 @@ namespace triton {
           /*!
             \param addr the targeted address.
           */
-          bool taintMemory(triton::__uint addr);
+          bool taintMemory(triton::uint64 addr);
 
           //! Taints a memory.
           /*!
@@ -131,7 +131,7 @@ namespace triton {
           /*!
             \param addr the targeted address.
           */
-          bool untaintMemory(triton::__uint addr);
+          bool untaintMemory(triton::uint64 addr);
 
           //! Untaints a memory.
           /*!

@@ -74,10 +74,10 @@ namespace triton {
           triton::uint32 numberOfRegisters;
 
           //! Symbolic expressions id.
-          triton::__uint uniqueSymExprId;
+          triton::usize uniqueSymExprId;
 
           //! Symbolic variables id.
-          triton::__uint uniqueSymVarId;
+          triton::usize uniqueSymVarId;
 
           /*! \brief The map of symbolic variables
            *
@@ -85,7 +85,7 @@ namespace triton {
            * **item1**: variable id<br>
            * **item2**: symbolic variable
            */
-          std::map<triton::__uint, SymbolicVariable*> symbolicVariables;
+          std::map<triton::usize, SymbolicVariable*> symbolicVariables;
 
           /*! \brief The map of symbolic expressions
            *
@@ -93,7 +93,7 @@ namespace triton {
            * **item1**: symbolic reference id<br>
            * **item2**: symbolic expression
            */
-          std::map<triton::__uint, SymbolicExpression*> symbolicExpressions;
+          std::map<triton::usize, SymbolicExpression*> symbolicExpressions;
 
           /*! \brief map of address -> symbolic expression
            *
@@ -101,7 +101,7 @@ namespace triton {
            * **item1**: memory address<br>
            * **item2**: symbolic reference id
            */
-          std::map<triton::__uint, triton::__uint> memoryReference;
+          std::map<triton::uint64, triton::usize> memoryReference;
 
           /*! \brief map of <address:size> -> symbolic expression.
            *
@@ -109,27 +109,27 @@ namespace triton {
            * **item1**: <addr:size><br>
            * **item2**: symbolic reference id
            */
-          std::map<std::pair<triton::__uint, triton::uint32>, triton::ast::AbstractNode*> alignedMemoryReference;
+          std::map<std::pair<triton::uint64, triton::uint32>, triton::ast::AbstractNode*> alignedMemoryReference;
 
         public:
 
           //! Symbolic register state.
-          triton::__uint* symbolicReg;
+          triton::usize* symbolicReg;
 
           //! Creates a new symbolic expression.
           SymbolicExpression* newSymbolicExpression(triton::ast::AbstractNode* node, symkind_e kind, const std::string& comment="");
 
           //! Removes the symbolic expression corresponding to the id.
-          void removeSymbolicExpression(triton::__uint symExprId);
+          void removeSymbolicExpression(triton::usize symExprId);
 
           //! Removes aligned entry.
-          void removeAlignedMemory(triton::__uint addr);
+          void removeAlignedMemory(triton::uint64 addr);
 
           //! Adds a symbolic variable.
-          SymbolicVariable* newSymbolicVariable(symkind_e kind, triton::__uint kindValue, triton::uint32 size, const std::string& comment="");
+          SymbolicVariable* newSymbolicVariable(symkind_e kind, triton::uint64 kindValue, triton::uint32 size, const std::string& comment="");
 
           //! Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
-          SymbolicVariable* convertExpressionToSymbolicVariable(triton::__uint exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
+          SymbolicVariable* convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
 
           //! Converts a symbolic memory expression to a symbolic variable.
           SymbolicVariable* convertMemoryToSymbolicVariable(const triton::arch::MemoryOperand& mem, const std::string& symVarComment="");
@@ -138,34 +138,34 @@ namespace triton {
           SymbolicVariable* convertRegisterToSymbolicVariable(const triton::arch::RegisterOperand& reg, const std::string& symVarComment="");
 
           //! Returns the symbolic variable corresponding to the symbolic variable id.
-          SymbolicVariable* getSymbolicVariableFromId(triton::__uint symVarId) const;
+          SymbolicVariable* getSymbolicVariableFromId(triton::usize symVarId) const;
 
           //! Returns the symbolic variable corresponding to the symbolic variable name.
           SymbolicVariable* getSymbolicVariableFromName(const std::string& symVarName) const;
 
           //! Returns the symbolic expression id corresponding to the memory address.
-          triton::__uint getSymbolicMemoryId(triton::__uint addr) const;
+          triton::usize getSymbolicMemoryId(triton::uint64 addr) const;
 
           //! Returns the symbolic expression corresponding to the id.
-          SymbolicExpression* getSymbolicExpressionFromId(triton::__uint symExprId) const;
+          SymbolicExpression* getSymbolicExpressionFromId(triton::usize symExprId) const;
 
           //! Returns the map of symbolic registers defined.
           std::map<triton::arch::RegisterOperand, SymbolicExpression*> getSymbolicRegisters(void) const;
 
-          //! Returns the map of symbolic memory defined.
-          std::map<triton::__uint, SymbolicExpression*> getSymbolicMemory(void) const;
+          //! Returns the map (addr:expr) of all symbolic memory defined.
+          std::map<triton::uint64, SymbolicExpression*> getSymbolicMemory(void) const;
 
           //! Returns the symbolic expression id corresponding to the register.
-          triton::__uint getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) const;
+          triton::usize getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) const;
 
           //! Returns the symbolic memory value.
-          triton::uint8 getSymbolicMemoryValue(triton::__uint address);
+          triton::uint8 getSymbolicMemoryValue(triton::uint64 address);
 
           //! Returns the symbolic memory value.
           triton::uint512 getSymbolicMemoryValue(const triton::arch::MemoryOperand& mem);
 
           //! Returns the symbolic values of a memory area.
-          std::vector<triton::uint8> getSymbolicMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size);
+          std::vector<triton::uint8> getSymbolicMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size);
 
           //! Returns the symbolic register value.
           triton::uint512 getSymbolicRegisterValue(const triton::arch::RegisterOperand& reg);
@@ -201,10 +201,10 @@ namespace triton {
           SymbolicExpression* createSymbolicVolatileExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const std::string& comment="");
 
           //! Returns an unique symbolic expression id.
-          triton::__uint getUniqueSymExprId(void);
+          triton::usize getUniqueSymExprId(void);
 
           //! Returns an unique symbolic variable id.
-          triton::__uint getUniqueSymVarId(void);
+          triton::usize getUniqueSymVarId(void);
 
           //! Assigns a symbolic expression to a register.
           void assignSymbolicExpressionToRegister(SymbolicExpression *se, const triton::arch::RegisterOperand& reg);
@@ -219,16 +219,16 @@ namespace triton {
           std::list<SymbolicExpression*> getTaintedSymbolicExpressions(void) const;
 
           //! Returns all symbolic expressions.
-          const std::map<triton::__uint, SymbolicExpression*>& getSymbolicExpressions(void) const;
+          const std::map<triton::usize, SymbolicExpression*>& getSymbolicExpressions(void) const;
 
           //! Returns all symbolic variables.
-          const std::map<triton::__uint, SymbolicVariable*>& getSymbolicVariables(void) const;
+          const std::map<triton::usize, SymbolicVariable*>& getSymbolicVariables(void) const;
 
           //! Returns all variable declarations representation.
           std::string getVariablesDeclaration(void) const;
 
           //! Adds a symbolic memory reference.
-          void addMemoryReference(triton::__uint mem, triton::__uint id);
+          void addMemoryReference(triton::uint64 mem, triton::usize id);
 
           //! Concretizes all symbolic memory references.
           void concretizeAllMemory(void);
@@ -240,7 +240,7 @@ namespace triton {
           void concretizeMemory(const triton::arch::MemoryOperand& mem);
 
           //! Concretizes a specific symbolic memory reference.
-          void concretizeMemory(triton::__uint addr);
+          void concretizeMemory(triton::uint64 addr);
 
           //! Concretizes a specific symbolic register reference.
           void concretizeRegister(const triton::arch::RegisterOperand& reg);
@@ -263,7 +263,7 @@ namespace triton {
           bool isEnabled(void) const;
 
           //! Returns true if the symbolic expression ID exists.
-          bool isSymbolicExpressionIdExists(triton::__uint symExprId) const;
+          bool isSymbolicExpressionIdExists(triton::usize symExprId) const;
 
           //! Initializes a SymbolicEngine.
           void init(const SymbolicEngine& other);

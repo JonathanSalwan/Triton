@@ -39,7 +39,7 @@ namespace triton {
 
       protected:
         //! The memory' address.
-        triton::__uint address;
+        triton::uint64 address;
 
         //! The concrete value (content of the access)
         triton::uint512 concreteValue;
@@ -48,7 +48,7 @@ namespace triton {
         bool trusted;
 
         //! Contains the pc relative if it exists.
-        triton::__uint pcRelative;
+        triton::uint64 pcRelative;
 
         //! LEA - If the operand has a segment register, this attribute is filled.
         RegisterOperand segmentReg;
@@ -76,7 +76,7 @@ namespace triton {
         MemoryOperand();
 
         //! Constructor.
-        MemoryOperand(triton::__uint address, triton::uint32 size /* bytes */, triton::uint512 concreteValue=0);
+        MemoryOperand(triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue=0);
 
         //! Constructor by copy.
         MemoryOperand(const MemoryOperand& other);
@@ -91,7 +91,7 @@ namespace triton {
         triton::ast::AbstractNode* getLeaAst(void) const;
 
         //! Returns the address of the memory.
-        triton::__uint getAddress(void) const;
+        triton::uint64 getAddress(void) const;
 
         //! Returns the highest bit of the memory vector. \saa BitsVector::getHigh()
         triton::uint32 getAbstractHigh(void) const;
@@ -106,7 +106,7 @@ namespace triton {
         triton::uint512 getConcreteValue(void) const;
 
         //! LEA - Gets pc relative.
-        triton::__uint getPcRelative(void) const;
+        triton::uint64 getPcRelative(void) const;
 
         //! Returns the size (in bytes) of the memory vector.
         triton::uint32 getSize(void) const;
@@ -154,13 +154,13 @@ namespace triton {
         void setTrust(bool flag);
 
         //! Sets the address of the memory access.
-        void setAddress(triton::__uint addr);
+        void setAddress(triton::uint64 addr);
 
         //! Sets the concrete value of the memory access.
         void setConcreteValue(triton::uint512 concreteValue);
 
         //! LEA - Sets pc relative.
-        void setPcRelative(triton::__uint addr);
+        void setPcRelative(triton::uint64 addr);
 
         //! LEA - Sets the segment register operand.
         void setSegmentRegister(RegisterOperand& segment);

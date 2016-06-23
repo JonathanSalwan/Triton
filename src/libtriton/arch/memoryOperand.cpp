@@ -25,7 +25,7 @@ namespace triton {
     }
 
 
-    MemoryOperand::MemoryOperand(triton::__uint address, triton::uint32 size /* bytes */, triton::uint512 concreteValue) {
+    MemoryOperand::MemoryOperand(triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue) {
       this->address       = address;
       this->ast           = nullptr;
       this->concreteValue = concreteValue;
@@ -64,7 +64,7 @@ namespace triton {
     }
 
 
-    triton::__uint MemoryOperand::getAddress(void) const {
+    triton::uint64 MemoryOperand::getAddress(void) const {
       return this->address;
     }
 
@@ -80,12 +80,12 @@ namespace triton {
         RegisterOperand& base         = this->baseReg;
         RegisterOperand& index        = this->indexReg;
         RegisterOperand& segment      = this->segmentReg;
-        triton::__uint baseValue      = (this->pcRelative ? this->pcRelative : (base.isValid() ? triton::api.getRegisterValue(base).convert_to<triton::__uint>() : 0));
-        triton::__uint indexValue     = (index.isValid() ? triton::api.getRegisterValue(index).convert_to<triton::__uint>() : 0);
-        triton::__uint segmentValue   = (segment.isValid() ? triton::api.getRegisterValue(segment).convert_to<triton::__uint>() : 0);
-        triton::__uint scaleValue     = this->scale.getValue();
-        triton::__uint dispValue      = this->displacement.getValue();
-        triton::__uint mask           = -1;
+        triton::uint64 baseValue      = (this->pcRelative ? this->pcRelative : (base.isValid() ? triton::api.getRegisterValue(base).convert_to<triton::uint64>() : 0));
+        triton::uint64 indexValue     = (index.isValid() ? triton::api.getRegisterValue(index).convert_to<triton::uint64>() : 0);
+        triton::uint64 segmentValue   = (segment.isValid() ? triton::api.getRegisterValue(segment).convert_to<triton::uint64>() : 0);
+        triton::uint64 scaleValue     = this->scale.getValue();
+        triton::uint64 dispValue      = this->displacement.getValue();
+        triton::uint64 mask           = -1;
         triton::uint32 bitSize        = (index.isValid() ? index.getBitSize() : base.isValid() ? base.getBitSize() : segment.isValid() ? segment.getBitSize() : triton::api.cpuRegisterBitSize());
 
         /* Initialize the AST of the memory access (LEA) */
@@ -137,7 +137,7 @@ namespace triton {
     }
 
 
-    triton::__uint MemoryOperand::getPcRelative(void) const {
+    triton::uint64 MemoryOperand::getPcRelative(void) const {
       return this->pcRelative;
     }
 
@@ -219,7 +219,7 @@ namespace triton {
     }
 
 
-    void MemoryOperand::setAddress(triton::__uint addr) {
+    void MemoryOperand::setAddress(triton::uint64 addr) {
       this->address = addr;
     }
 
@@ -232,7 +232,7 @@ namespace triton {
     }
 
 
-    void MemoryOperand::setPcRelative(triton::__uint addr) {
+    void MemoryOperand::setPcRelative(triton::uint64 addr) {
       this->pcRelative = addr;
     }
 

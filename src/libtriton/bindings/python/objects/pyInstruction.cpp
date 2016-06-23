@@ -190,7 +190,7 @@ namespace triton {
 
       static PyObject* Instruction_getAddress(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint(PyInstruction_AsInstruction(self)->getAddress());
+          return PyLong_FromUint64(PyInstruction_AsInstruction(self)->getAddress());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -268,7 +268,7 @@ namespace triton {
 
       static PyObject* Instruction_getNextAddress(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint(PyInstruction_AsInstruction(self)->getNextAddress());
+          return PyLong_FromUint64(PyInstruction_AsInstruction(self)->getNextAddress());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -644,7 +644,7 @@ namespace triton {
         try {
           if (!PyLong_Check(addr) && !PyInt_Check(addr))
             return PyErr_Format(PyExc_TypeError, "Instruction::setAddress(): Expected an integer as argument.");
-          PyInstruction_AsInstruction(self)->setAddress(PyLong_AsUint(addr));
+          PyInstruction_AsInstruction(self)->setAddress(PyLong_AsUint64(addr));
           Py_INCREF(Py_None);
           return Py_None;
         }
@@ -680,7 +680,7 @@ namespace triton {
           if (!PyLong_Check(tid) && !PyInt_Check(tid))
             return PyErr_Format(PyExc_TypeError, "Instruction::setThreadId(): Expected an integer as argument.");
 
-          PyInstruction_AsInstruction(self)->setThreadId(PyLong_AsUint(tid));
+          PyInstruction_AsInstruction(self)->setThreadId(PyLong_AsUint32(tid));
           Py_INCREF(Py_None);
           return Py_None;
         }

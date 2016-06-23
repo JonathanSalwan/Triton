@@ -668,17 +668,17 @@ namespace triton {
     //! Reference node
     class ReferenceNode : public AbstractNode {
       protected:
-        triton::__uint value;
+        triton::usize value;
 
       public:
-        ReferenceNode(triton::__uint value);
+        ReferenceNode(triton::usize value);
         ReferenceNode(const ReferenceNode& copy);
         ~ReferenceNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
 
-        triton::__uint getValue(void);
+        triton::usize getValue(void);
     };
 
 
@@ -896,7 +896,7 @@ namespace triton {
     AbstractNode* lor(AbstractNode* expr1, AbstractNode* expr2);
 
     //! ast C++ api - reference node builder
-    AbstractNode* reference(triton::__uint value);
+    AbstractNode* reference(triton::usize value);
 
     //! ast C++ api - assert node builder
     AbstractNode* assert_(AbstractNode* expr);

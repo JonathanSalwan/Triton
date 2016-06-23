@@ -284,7 +284,7 @@ namespace triton {
   }
 
 
-  triton::uint8 API::getLastMemoryValue(triton::__uint addr) const {
+  triton::uint8 API::getLastMemoryValue(triton::uint64 addr) const {
     return this->arch.getLastMemoryValue(addr);
   }
 
@@ -294,7 +294,7 @@ namespace triton {
   }
 
 
-  std::vector<triton::uint8> API::getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) const {
+  std::vector<triton::uint8> API::getLastMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size) const {
     return this->arch.getLastMemoryAreaValue(baseAddr, size);
   }
 
@@ -304,7 +304,7 @@ namespace triton {
   }
 
 
-  void API::setLastMemoryValue(triton::__uint addr, triton::uint8 value) {
+  void API::setLastMemoryValue(triton::uint64 addr, triton::uint8 value) {
     this->arch.setLastMemoryValue(addr, value);
   }
 
@@ -314,7 +314,7 @@ namespace triton {
   }
 
 
-  void API::setLastMemoryAreaValue(triton::__uint baseAddr, const std::vector<triton::uint8>& values) {
+  void API::setLastMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
     this->arch.setLastMemoryAreaValue(baseAddr, values);
   }
 
@@ -546,7 +546,7 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SymbolicVariable* API::convertExpressionToSymbolicVariable(triton::__uint exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
+  triton::engines::symbolic::SymbolicVariable* API::convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
     this->checkSymbolic();
     return this->sym->convertExpressionToSymbolicVariable(exprId, symVarSize, symVarComment);
   }
@@ -636,7 +636,7 @@ namespace triton {
   }
 
 
-  void API::removeSymbolicExpression(triton::__uint symExprId) {
+  void API::removeSymbolicExpression(triton::usize symExprId) {
     this->checkSymbolic();
     return this->sym->removeSymbolicExpression(symExprId);
   }
@@ -690,7 +690,7 @@ namespace triton {
   }
 
 
-  triton::__uint API::getSymbolicMemoryId(triton::__uint addr) const {
+  triton::usize API::getSymbolicMemoryId(triton::uint64 addr) const {
     this->checkSymbolic();
     return this->sym->getSymbolicMemoryId(addr);
   }
@@ -702,19 +702,19 @@ namespace triton {
   }
 
 
-  std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*> API::getSymbolicMemory(void) const {
+  std::map<triton::uint64, triton::engines::symbolic::SymbolicExpression*> API::getSymbolicMemory(void) const {
     this->checkSymbolic();
     return this->sym->getSymbolicMemory();
   }
 
 
-  triton::__uint API::getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) const {
+  triton::usize API::getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) const {
     this->checkSymbolic();
     return this->sym->getSymbolicRegisterId(reg);
   }
 
 
-  triton::uint8 API::getSymbolicMemoryValue(triton::__uint address) {
+  triton::uint8 API::getSymbolicMemoryValue(triton::uint64 address) {
     this->checkSymbolic();
     return this->sym->getSymbolicMemoryValue(address);
   }
@@ -726,13 +726,13 @@ namespace triton {
   }
 
 
-  std::vector<triton::uint8> API::getSymbolicMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) {
+  std::vector<triton::uint8> API::getSymbolicMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size) {
     this->checkSymbolic();
     return this->sym->getSymbolicMemoryAreaValue(baseAddr, size);
   }
 
 
-  triton::uint8 API::getMemoryValue(triton::__uint addr) {
+  triton::uint8 API::getMemoryValue(triton::uint64 addr) {
     this->checkSymbolic();
     if (this->isSymbolicEmulationEnabled())
       return this->getSymbolicMemoryValue(addr);
@@ -748,7 +748,7 @@ namespace triton {
   }
 
 
-  std::vector<triton::uint8> API::getMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) {
+  std::vector<triton::uint8> API::getMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size) {
     this->checkSymbolic();
     if (this->isSymbolicEmulationEnabled())
       return this->getSymbolicMemoryAreaValue(baseAddr, size);
@@ -816,13 +816,13 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::getSymbolicExpressionFromId(triton::__uint symExprId) const {
+  triton::engines::symbolic::SymbolicExpression* API::getSymbolicExpressionFromId(triton::usize symExprId) const {
     this->checkSymbolic();
     return this->sym->getSymbolicExpressionFromId(symExprId);
   }
 
 
-  triton::engines::symbolic::SymbolicVariable* API::getSymbolicVariableFromId(triton::__uint symVarId) const {
+  triton::engines::symbolic::SymbolicVariable* API::getSymbolicVariableFromId(triton::usize symVarId) const {
     this->checkSymbolic();
     return this->sym->getSymbolicVariableFromId(symVarId);
   }
@@ -900,7 +900,7 @@ namespace triton {
   }
 
 
-  bool API::isSymbolicExpressionIdExists(triton::__uint symExprId) const {
+  bool API::isSymbolicExpressionIdExists(triton::usize symExprId) const {
     this->checkSymbolic();
     return this->sym->isSymbolicExpressionIdExists(symExprId);
   }
@@ -930,7 +930,7 @@ namespace triton {
   }
 
 
-  void API::concretizeMemory(triton::__uint addr) {
+  void API::concretizeMemory(triton::uint64 addr) {
     this->checkSymbolic();
     this->sym->concretizeMemory(addr);
   }
@@ -948,14 +948,14 @@ namespace triton {
   }
 
 
-  triton::ast::AbstractNode* API::getAstFromId(triton::__uint symExprId) {
+  triton::ast::AbstractNode* API::getAstFromId(triton::usize symExprId) {
     this->checkSymbolic();
     triton::engines::symbolic::SymbolicExpression* symExpr = this->getSymbolicExpressionFromId(symExprId);
     return symExpr->getAst();
   }
 
 
-  triton::ast::AbstractNode* API::getFullAstFromId(triton::__uint symExprId) {
+  triton::ast::AbstractNode* API::getFullAstFromId(triton::usize symExprId) {
     this->checkSymbolic();
     triton::ast::AbstractNode* partialAst = this->getAstFromId(symExprId);
     return this->getFullAst(partialAst);
@@ -968,13 +968,13 @@ namespace triton {
   }
 
 
-  const std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*>& API::getSymbolicExpressions(void) const {
+  const std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*>& API::getSymbolicExpressions(void) const {
     this->checkSymbolic();
     return this->sym->getSymbolicExpressions();
   }
 
 
-  const std::map<triton::__uint, triton::engines::symbolic::SymbolicVariable*>& API::getSymbolicVariables(void) const {
+  const std::map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& API::getSymbolicVariables(void) const {
     this->checkSymbolic();
     return this->sym->getSymbolicVariables();
   }
@@ -1052,7 +1052,7 @@ namespace triton {
   }
 
 
-  bool API::isMemoryTainted(triton::__uint addr, uint32 size) const {
+  bool API::isMemoryTainted(triton::uint64 addr, uint32 size) const {
     this->checkTaint();
     return this->taint->isMemoryTainted(addr, size);
   }
@@ -1096,7 +1096,7 @@ namespace triton {
   }
 
 
-  bool API::taintMemory(triton::__uint addr) {
+  bool API::taintMemory(triton::uint64 addr) {
     this->checkTaint();
     return this->taint->taintMemory(addr);
   }
@@ -1114,7 +1114,7 @@ namespace triton {
   }
 
 
-  bool API::untaintMemory(triton::__uint addr) {
+  bool API::untaintMemory(triton::uint64 addr) {
     this->checkTaint();
     return this->taint->untaintMemory(addr);
   }
@@ -1188,14 +1188,14 @@ namespace triton {
     this->checkTaint();
 
     bool flag = triton::engines::taint::UNTAINTED;
-    triton::__uint memAddrDst = memDst.getAddress();
+    triton::uint64 memAddrDst = memDst.getAddress();
     triton::uint32 writeSize  = memDst.getSize();
 
     flag = this->taint->unionMemoryImmediate(memDst);
 
     /* Taint each byte of reference expression */
     for (triton::uint32 i = 0; i != writeSize; i++) {
-      triton::__uint byteId = this->getSymbolicMemoryId(memAddrDst + i);
+      triton::usize byteId = this->getSymbolicMemoryId(memAddrDst + i);
       if (byteId == triton::engines::symbolic::UNSET)
         continue;
       triton::engines::symbolic::SymbolicExpression* byte = this->getSymbolicExpressionFromId(byteId);
@@ -1210,15 +1210,15 @@ namespace triton {
     this->checkTaint();
 
     bool flag = triton::engines::taint::UNTAINTED;
-    triton::__uint memAddrDst = memDst.getAddress();
-    triton::__uint memAddrSrc = memSrc.getAddress();
+    triton::uint64 memAddrDst = memDst.getAddress();
+    triton::uint64 memAddrSrc = memSrc.getAddress();
     triton::uint32 writeSize  = memDst.getSize();
 
     flag = this->taint->unionMemoryMemory(memDst, memSrc);
 
     /* Taint each byte of reference expression */
     for (triton::uint32 i = 0; i != writeSize; i++) {
-      triton::__uint byteId = this->getSymbolicMemoryId(memAddrDst + i);
+      triton::usize byteId = this->getSymbolicMemoryId(memAddrDst + i);
       if (byteId == triton::engines::symbolic::UNSET)
         continue;
       triton::engines::symbolic::SymbolicExpression* byte = this->getSymbolicExpressionFromId(byteId);
@@ -1233,14 +1233,14 @@ namespace triton {
     this->checkTaint();
 
     bool flag = triton::engines::taint::UNTAINTED;
-    triton::__uint memAddrDst = memDst.getAddress();
+    triton::uint64 memAddrDst = memDst.getAddress();
     triton::uint32 writeSize  = memDst.getSize();
 
     flag = this->taint->unionMemoryRegister(memDst, regSrc);
 
     /* Taint each byte of reference expression */
     for (triton::uint32 i = 0; i != writeSize; i++) {
-      triton::__uint byteId = this->getSymbolicMemoryId(memAddrDst + i);
+      triton::usize byteId = this->getSymbolicMemoryId(memAddrDst + i);
       if (byteId == triton::engines::symbolic::UNSET)
         continue;
       triton::engines::symbolic::SymbolicExpression* byte = this->getSymbolicExpressionFromId(byteId);
@@ -1273,14 +1273,14 @@ namespace triton {
     this->checkTaint();
 
     bool flag = triton::engines::taint::UNTAINTED;
-    triton::__uint memAddrDst = memDst.getAddress();
+    triton::uint64 memAddrDst = memDst.getAddress();
     triton::uint32 writeSize  = memDst.getSize();
 
     flag = this->taint->assignmentMemoryImmediate(memDst);
 
     /* Taint each byte of reference expression */
     for (triton::uint32 i = 0; i != writeSize; i++) {
-      triton::__uint byteId = this->getSymbolicMemoryId(memAddrDst + i);
+      triton::usize byteId = this->getSymbolicMemoryId(memAddrDst + i);
       if (byteId == triton::engines::symbolic::UNSET)
         continue;
       triton::engines::symbolic::SymbolicExpression* byte = this->getSymbolicExpressionFromId(byteId);
@@ -1295,15 +1295,15 @@ namespace triton {
     this->checkTaint();
 
     bool flag = triton::engines::taint::UNTAINTED;
-    triton::__uint memAddrDst = memDst.getAddress();
-    triton::__uint memAddrSrc = memSrc.getAddress();
+    triton::uint64 memAddrDst = memDst.getAddress();
+    triton::uint64 memAddrSrc = memSrc.getAddress();
     triton::uint32 writeSize  = memDst.getSize();
 
     flag = this->taint->assignmentMemoryMemory(memDst, memSrc);
 
     /* Taint each byte of reference expression */
     for (triton::uint32 i = 0; i != writeSize; i++) {
-      triton::__uint byteId = this->getSymbolicMemoryId(memAddrDst + i);
+      triton::usize byteId = this->getSymbolicMemoryId(memAddrDst + i);
       if (byteId == triton::engines::symbolic::UNSET)
         continue;
       triton::engines::symbolic::SymbolicExpression* byte = this->getSymbolicExpressionFromId(byteId);
@@ -1318,14 +1318,14 @@ namespace triton {
     this->checkTaint();
 
     bool flag = triton::engines::taint::UNTAINTED;
-    triton::__uint memAddrDst = memDst.getAddress();
+    triton::uint64 memAddrDst = memDst.getAddress();
     triton::uint32 writeSize  = memDst.getSize();
 
     flag = this->taint->assignmentMemoryRegister(memDst, regSrc);
 
     /* Taint each byte of reference expression */
     for (triton::uint32 i = 0; i != writeSize; i++) {
-      triton::__uint byteId = this->getSymbolicMemoryId(memAddrDst + i);
+      triton::usize byteId = this->getSymbolicMemoryId(memAddrDst + i);
       if (byteId == triton::engines::symbolic::UNSET)
         continue;
       triton::engines::symbolic::SymbolicExpression* byte = this->getSymbolicExpressionFromId(byteId);

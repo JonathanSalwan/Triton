@@ -70,7 +70,7 @@ namespace triton {
       void PathManager::addPathConstraint(triton::engines::symbolic::SymbolicExpression* expr) {
         triton::ast::AbstractNode* pc = nullptr;
         triton::engines::symbolic::PathConstraint pco;
-        triton::__uint targetBb = 0;
+        triton::uint64 targetBb = 0;
         triton::uint32 size = 0;
 
         pc = expr->getAst();
@@ -86,7 +86,7 @@ namespace triton {
           return;
 
         /* Basic block taken */
-        targetBb = pc->evaluate().convert_to<triton::__uint>();
+        targetBb = pc->evaluate().convert_to<triton::uint64>();
         size     = pc->getBitvectorSize();
 
         if (size == 0)
@@ -97,8 +97,8 @@ namespace triton {
 
         /* Multiple branches */
         if (pc->getKind() == triton::ast::ITE_NODE) {
-          triton::__uint bb1 = pc->getChilds()[1]->evaluate().convert_to<triton::__uint>();
-          triton::__uint bb2 = pc->getChilds()[2]->evaluate().convert_to<triton::__uint>();
+          triton::uint64 bb1 = pc->getChilds()[1]->evaluate().convert_to<triton::uint64>();
+          triton::uint64 bb2 = pc->getChilds()[2]->evaluate().convert_to<triton::uint64>();
 
           triton::ast::AbstractNode* bb1pc = (bb1 == targetBb) ? triton::ast::equal(pc, triton::ast::bv(targetBb, size)) :
                                                                  triton::ast::lnot(triton::ast::equal(pc, triton::ast::bv(targetBb, size)));

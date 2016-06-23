@@ -2762,7 +2762,7 @@ namespace triton {
     /* ====== Reference node */
 
 
-    ReferenceNode::ReferenceNode(triton::__uint value) {
+    ReferenceNode::ReferenceNode(triton::usize value) {
       this->kind  = REFERENCE_NODE;
       this->value = value;
       this->init();
@@ -2799,7 +2799,7 @@ namespace triton {
     }
 
 
-    triton::__uint ReferenceNode::getValue(void) {
+    triton::usize ReferenceNode::getValue(void) {
       return this->value;
     }
 
@@ -3518,7 +3518,7 @@ namespace triton {
     }
 
 
-    AbstractNode* reference(triton::__uint value) {
+    AbstractNode* reference(triton::usize value) {
       AbstractNode* node = new ReferenceNode(value);
       if (node == nullptr)
         throw std::runtime_error("Node builders - Not enough memory");

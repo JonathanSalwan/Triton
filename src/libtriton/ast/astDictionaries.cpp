@@ -257,7 +257,7 @@ namespace triton {
 
         case triton::ast::REFERENCE_NODE: {
           auto value       = static_cast<triton::ast::ReferenceNode*>(node)->getValue();
-          auto dictionary  = static_cast<std::map<triton::uint512, triton::ast::AbstractNode*>*>((this->dictionaries[kind]));
+          auto dictionary  = static_cast<std::map<triton::usize, triton::ast::AbstractNode*>*>((this->dictionaries[kind]));
           if (dictionary->find(value) != dictionary->end()) {
             delete node;
             return (*dictionary)[value];

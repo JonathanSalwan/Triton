@@ -49,7 +49,7 @@ namespace triton {
         triton::uint32 tid;
 
         //! The address of the instruction.
-        triton::__uint address;
+        triton::uint64 address;
 
         //! The disassembly of the instruction.
         std::stringstream disassembly;
@@ -128,13 +128,13 @@ namespace triton {
         void setThreadId(triton::uint32 tid);
 
         //! Returns the address of the instruction.
-        triton::__uint getAddress(void) const;
+        triton::uint64 getAddress(void) const;
 
         //! Returns the next address of the instruction.
-        triton::__uint getNextAddress(void) const;
+        triton::uint64 getNextAddress(void) const;
 
         //! Sets the address of the instruction.
-        void setAddress(triton::__uint addr);
+        void setAddress(triton::uint64 addr);
 
         //! Returns the disassembly of the instruction.
         std::string getDisassembly(void) const;
@@ -164,7 +164,7 @@ namespace triton {
         const std::set<std::pair<triton::arch::ImmediateOperand, triton::ast::AbstractNode*>>& getReadImmediates(void) const;
 
         //! If there is a concrete value recorded, build the appropriate MemoryOperand. Otherwise, perfrom the analysis based on args.
-        triton::arch::MemoryOperand popMemoryAccess(triton::__uint=0, triton::uint32 size=0, triton::uint512 value=0);
+        triton::arch::MemoryOperand popMemoryAccess(triton::uint64=0, triton::uint32 size=0, triton::uint512 value=0);
 
         //! Returns the register state which has been recorded.
         triton::arch::RegisterOperand getRegisterState(triton::uint32 regId);

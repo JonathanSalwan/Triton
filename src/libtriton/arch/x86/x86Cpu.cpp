@@ -658,7 +658,7 @@ namespace triton {
       }
 
 
-      triton::uint8 x86Cpu::getLastMemoryValue(triton::__uint addr) const {
+      triton::uint8 x86Cpu::getLastMemoryValue(triton::uint64 addr) const {
         if (this->memory.find(addr) == this->memory.end())
           return 0x00;
         return this->memory.at(addr);
@@ -667,7 +667,7 @@ namespace triton {
 
       triton::uint512 x86Cpu::getLastMemoryValue(const triton::arch::MemoryOperand& mem) const {
         triton::uint512 ret = 0;
-        triton::__uint addr = mem.getAddress();
+        triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
         if (size == 0 || size > DQQWORD_SIZE)
@@ -680,7 +680,7 @@ namespace triton {
       }
 
 
-      std::vector<triton::uint8> x86Cpu::getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) const {
+      std::vector<triton::uint8> x86Cpu::getLastMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size) const {
         std::vector<triton::uint8> area;
 
         for (triton::uint32 index = 0; index < size; index++)
@@ -822,13 +822,13 @@ namespace triton {
       }
 
 
-      void x86Cpu::setLastMemoryValue(triton::__uint addr, triton::uint8 value) {
+      void x86Cpu::setLastMemoryValue(triton::uint64 addr, triton::uint8 value) {
         this->memory[addr] = value;
       }
 
 
       void x86Cpu::setLastMemoryValue(const triton::arch::MemoryOperand& mem) {
-        triton::__uint addr = mem.getAddress();
+        triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
         triton::uint512 cv  = mem.getConcreteValue();
 
@@ -842,7 +842,7 @@ namespace triton {
       }
 
 
-      void x86Cpu::setLastMemoryAreaValue(triton::__uint baseAddr, const std::vector<triton::uint8>& values) {
+      void x86Cpu::setLastMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
         for (triton::uint32 index = 0; index < values.size(); index++) {
           this->memory[baseAddr+index] = values[index];
         }

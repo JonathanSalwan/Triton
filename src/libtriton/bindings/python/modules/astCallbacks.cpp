@@ -462,7 +462,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bv(): expected an integer as second argument");
 
         try {
-          return PyAstNode(triton::ast::bv(PyLong_AsUint512(op1), PyLong_AsUint(op2)));
+          return PyAstNode(triton::ast::bv(PyLong_AsUint512(op1), PyLong_AsUint32(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -541,7 +541,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvdecl(): expected an integer as argument");
 
         try {
-          return PyAstNode(triton::ast::bvdecl(PyLong_AsUint(size)));
+          return PyAstNode(triton::ast::bvdecl(PyLong_AsUint32(size)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -709,7 +709,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvror(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvror(PyLong_AsUint(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(triton::ast::bvror(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -731,7 +731,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvrol(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvrol(PyLong_AsUint(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(triton::ast::bvrol(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1248,7 +1248,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "extract(): expected a AstNode as third argument");
 
         try {
-          return PyAstNode(triton::ast::extract(PyLong_AsUint(op1), PyLong_AsUint(op2), PyAstNode_AsAstNode(op3)));
+          return PyAstNode(triton::ast::extract(PyLong_AsUint32(op1), PyLong_AsUint32(op2), PyAstNode_AsAstNode(op3)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1369,11 +1369,11 @@ namespace triton {
         if (!PyInt_Check(exprId) && !PyLong_Check(exprId))
           return PyErr_Format(PyExc_TypeError, "reference(): expected an integer as argument");
 
-        if (!triton::api.isSymbolicExpressionIdExists(PyLong_AsUint(exprId)))
+        if (!triton::api.isSymbolicExpressionIdExists(PyLong_AsUsize(exprId)))
           return PyErr_Format(PyExc_TypeError, "reference(): symbolic expression id not found");
 
         try {
-          return PyAstNode(triton::ast::reference(PyLong_AsUint(exprId)));
+          return PyAstNode(triton::ast::reference(PyLong_AsUsize(exprId)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1408,7 +1408,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "sx(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::sx(PyLong_AsUint(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(triton::ast::sx(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1443,7 +1443,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "zx(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::zx(PyLong_AsUint(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(triton::ast::zx(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

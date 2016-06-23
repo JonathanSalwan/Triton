@@ -131,9 +131,9 @@ namespace triton {
           PyObject* childs;
           triton::ast::AbstractNode *node = PyAstNode_AsAstNode(self);
 
-          triton::__uint size = node->getChilds().size();
+          triton::usize size = node->getChilds().size();
           childs = xPyList_New(size);
-          for (triton::__uint index = 0; index < size; index++)
+          for (triton::usize index = 0; index < size; index++)
             PyList_SetItem(childs, index, PyAstNode(node->getChilds()[index]));
 
           return childs;
@@ -188,7 +188,7 @@ namespace triton {
             return PyLong_FromUint512(reinterpret_cast<triton::ast::DecimalNode *>(node)->getValue());
 
           else if (node->getKind() == triton::ast::REFERENCE_NODE)
-            return PyLong_FromUint(reinterpret_cast<triton::ast::ReferenceNode *>(node)->getValue());
+            return PyLong_FromUsize(reinterpret_cast<triton::ast::ReferenceNode *>(node)->getValue());
 
           else if (node->getKind() == triton::ast::STRING_NODE)
             return Py_BuildValue("s", reinterpret_cast<triton::ast::StringNode *>(node)->getValue().c_str());
@@ -232,7 +232,7 @@ namespace triton {
         try {
           PyObject* index = nullptr;
           PyObject* node = nullptr;
-          triton::__uint i;
+          triton::uint32 idx;
           triton::ast::AbstractNode *dst, *src;
 
           PyArg_ParseTuple(args, "|OO", &index, &node);
@@ -243,10 +243,10 @@ namespace triton {
           if (node == nullptr || !PyAstNode_Check(node))
             return PyErr_Format(PyExc_TypeError, "AstNode::setChild(): Expected a AstNode as second argument.");
 
-          i = PyLong_AsUint(index);
+          idx = PyLong_AsUint32(index);
           src = PyAstNode_AsAstNode(node);
           dst = PyAstNode_AsAstNode(self);
-          dst->setChild(i, src);
+          dst->setChild(idx, src);
           dst->init();
 
           Py_RETURN_TRUE;
@@ -439,7 +439,7 @@ namespace triton {
       static int AstNode_coerce(PyObject** self, PyObject** other) {
         if (PyLong_Check(*other) || PyInt_Check(*other)) {
           triton::uint512 value = PyLong_AsUint512(*other);
-          triton::__uint size   = PyAstNode_AsAstNode(*self)->getBitvectorSize();
+          triton::uint32 size   = PyAstNode_AsAstNode(*self)->getBitvectorSize();
           if (size) {
             *other = PyAstNode(triton::ast::bv(value, size));
             Py_INCREF(*self);

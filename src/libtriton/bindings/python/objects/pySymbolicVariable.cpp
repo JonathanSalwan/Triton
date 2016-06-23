@@ -84,7 +84,7 @@ namespace triton {
 
       static PyObject* SymbolicVariable_getKind(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PySymbolicVariable_AsSymbolicVariable(self)->getKind());
+          return PyLong_FromUint32(PySymbolicVariable_AsSymbolicVariable(self)->getKind());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -104,7 +104,7 @@ namespace triton {
 
       static PyObject* SymbolicVariable_getId(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PySymbolicVariable_AsSymbolicVariable(self)->getId());
+          return PyLong_FromUsize(PySymbolicVariable_AsSymbolicVariable(self)->getId());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -114,7 +114,7 @@ namespace triton {
 
       static PyObject* SymbolicVariable_getKindValue(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint(PySymbolicVariable_AsSymbolicVariable(self)->getKindValue());
+          return PyLong_FromUint64(PySymbolicVariable_AsSymbolicVariable(self)->getKindValue());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -124,7 +124,7 @@ namespace triton {
 
       static PyObject* SymbolicVariable_getBitSize(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PySymbolicVariable_AsSymbolicVariable(self)->getSize());
+          return PyLong_FromUint32(PySymbolicVariable_AsSymbolicVariable(self)->getSize());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

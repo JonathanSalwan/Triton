@@ -123,25 +123,25 @@ namespace triton {
         void buildSemantics(triton::arch::Instruction& inst) const;
 
         //! Returns the last concrete value recorded of a memory access.
-        triton::uint8 getLastMemoryValue(triton::__uint addr) const;
+        triton::uint8 getLastMemoryValue(triton::uint64 addr) const;
 
         //! Returns the last concrete value recorded of a memory access.
         triton::uint512 getLastMemoryValue(const triton::arch::MemoryOperand& mem) const;
 
         //! Returns the last concrete values of a memory area.
-        std::vector<triton::uint8> getLastMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) const;
+        std::vector<triton::uint8> getLastMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size) const;
 
         //! Returns the last concrete value recorded of a register state.
         triton::uint512 getLastRegisterValue(const triton::arch::RegisterOperand& reg) const;
 
         //! Sets the last concrete value of a memory access.
-        void setLastMemoryValue(triton::__uint addr, triton::uint8 value);
+        void setLastMemoryValue(triton::uint64 addr, triton::uint8 value);
 
         //! Sets the last concrete value of a memory access.
         void setLastMemoryValue(const triton::arch::MemoryOperand& mem);
 
         //! Sets the last concrete values of a memory area.
-        void setLastMemoryAreaValue(triton::__uint baseAddr, const std::vector<triton::uint8>& values);
+        void setLastMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
 
         //! Sets the last concrete value of a register state.
         void setLastRegisterValue(const triton::arch::RegisterOperand& reg);

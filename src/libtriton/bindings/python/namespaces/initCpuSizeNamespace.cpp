@@ -89,22 +89,22 @@ namespace triton {
 
         PyDict_Clear(triton::bindings::python::cpuSizeDict);
 
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "BYTE",        PyLong_FromUint(BYTE_SIZE));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "BYTE_BIT",    PyLong_FromUint(BYTE_SIZE_BIT));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "WORD",        PyLong_FromUint(WORD_SIZE));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "WORD_BIT",    PyLong_FromUint(WORD_SIZE_BIT));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DWORD",       PyLong_FromUint(DWORD_SIZE));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DWORD_BIT",   PyLong_FromUint(DWORD_SIZE_BIT));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "QWORD",       PyLong_FromUint(QWORD_SIZE));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "QWORD_BIT",   PyLong_FromUint(QWORD_SIZE_BIT));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DQWORD",      PyLong_FromUint(DQWORD_SIZE));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DQWORD_BIT",  PyLong_FromUint(DQWORD_SIZE_BIT));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "QQWORD",      PyLong_FromUint(QQWORD_SIZE));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "QQWORD_BIT",  PyLong_FromUint(QQWORD_SIZE_BIT));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DQQWORD",     PyLong_FromUint(DQQWORD_SIZE));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DQQWORD_BIT", PyLong_FromUint(DQQWORD_SIZE_BIT));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "REG",         PyLong_FromUint(triton::api.cpuRegisterSize()));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "REG_BIT",     PyLong_FromUint(triton::api.cpuRegisterBitSize()));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "BYTE",        PyLong_FromUint32(BYTE_SIZE));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "BYTE_BIT",    PyLong_FromUint32(BYTE_SIZE_BIT));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "WORD",        PyLong_FromUint32(WORD_SIZE));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "WORD_BIT",    PyLong_FromUint32(WORD_SIZE_BIT));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DWORD",       PyLong_FromUint32(DWORD_SIZE));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DWORD_BIT",   PyLong_FromUint32(DWORD_SIZE_BIT));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "QWORD",       PyLong_FromUint32(QWORD_SIZE));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "QWORD_BIT",   PyLong_FromUint32(QWORD_SIZE_BIT));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DQWORD",      PyLong_FromUint32(DQWORD_SIZE));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DQWORD_BIT",  PyLong_FromUint32(DQWORD_SIZE_BIT));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "QQWORD",      PyLong_FromUint32(QQWORD_SIZE));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "QQWORD_BIT",  PyLong_FromUint32(QQWORD_SIZE_BIT));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DQQWORD",     PyLong_FromUint32(DQQWORD_SIZE));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DQQWORD_BIT", PyLong_FromUint32(DQQWORD_SIZE_BIT));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "REG",         PyLong_FromUint32(triton::api.cpuRegisterSize()));
+        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "REG_BIT",     PyLong_FromUint32(triton::api.cpuRegisterBitSize()));
       }
 
     }; /* python namespace */

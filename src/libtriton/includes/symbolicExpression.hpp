@@ -56,7 +56,7 @@ namespace triton {
           std::string comment;
 
           //! The symbolic expression id. This id is unique.
-          triton::__uint id;
+          triton::usize id;
 
           //! The origin memory address if `kind` is equal to `triton::engines::symbolic::MEM`, invalid memory otherwise.
           triton::arch::MemoryOperand originMemory;
@@ -69,7 +69,7 @@ namespace triton {
           bool isTainted;
 
           //! Returns the symbolic expression id.
-          triton::__uint getId(void) const;
+          triton::usize getId(void) const;
 
           //! Returns true if the symbolic expression is assigned to a memory. \sa triton::engines::symbolic::symkind_e
           bool isMemory(void) const;
@@ -114,7 +114,7 @@ namespace triton {
           void setOriginRegister(const triton::arch::RegisterOperand& reg);
 
           //! Constructor.
-          SymbolicExpression(triton::ast::AbstractNode* expr, triton::__uint id, symkind_e kind, const std::string& comment="");
+          SymbolicExpression(triton::ast::AbstractNode* expr, triton::usize id, symkind_e kind, const std::string& comment="");
 
           //! Destructor.
           ~SymbolicExpression();

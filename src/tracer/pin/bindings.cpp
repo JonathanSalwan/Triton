@@ -37,37 +37,37 @@ namespace tracer {
       if (flag == nullptr || (!PyLong_Check(flag) && !PyInt_Check(flag)))
         return PyErr_Format(PyExc_TypeError, "tracer::pintool::addCallback(): Expected an CALLBACK (integer) as second argument.");
 
-      if (triton::bindings::python::PyLong_AsUint(flag) == tracer::pintool::options::CB_BEFORE)
+      if (triton::bindings::python::PyLong_AsUint32(flag) == tracer::pintool::options::CB_BEFORE)
         tracer::pintool::options::callbackBefore = function;
 
-      else if ((triton::bindings::python::PyLong_AsUint(flag) == tracer::pintool::options::CB_BEFORE_SYMPROC))
+      else if ((triton::bindings::python::PyLong_AsUint32(flag) == tracer::pintool::options::CB_BEFORE_SYMPROC))
         tracer::pintool::options::callbackBeforeIRProc = function;
 
-      else if ((triton::bindings::python::PyLong_AsUint(flag) == tracer::pintool::options::CB_AFTER))
+      else if ((triton::bindings::python::PyLong_AsUint32(flag) == tracer::pintool::options::CB_AFTER))
         tracer::pintool::options::callbackAfter = function;
 
-      else if ((triton::bindings::python::PyLong_AsUint(flag) == tracer::pintool::options::CB_FINI))
+      else if ((triton::bindings::python::PyLong_AsUint32(flag) == tracer::pintool::options::CB_FINI))
         tracer::pintool::options::callbackFini = function;
 
-      else if ((triton::bindings::python::PyLong_AsUint(flag) == tracer::pintool::options::CB_SIGNALS))
+      else if ((triton::bindings::python::PyLong_AsUint32(flag) == tracer::pintool::options::CB_SIGNALS))
         tracer::pintool::options::callbackSignals = function;
 
-      else if ((triton::bindings::python::PyLong_AsUint(flag) == tracer::pintool::options::CB_SYSCALL_ENTRY))
+      else if ((triton::bindings::python::PyLong_AsUint32(flag) == tracer::pintool::options::CB_SYSCALL_ENTRY))
         tracer::pintool::options::callbackSyscallEntry = function;
 
-      else if ((triton::bindings::python::PyLong_AsUint(flag) == tracer::pintool::options::CB_SYSCALL_EXIT))
+      else if ((triton::bindings::python::PyLong_AsUint32(flag) == tracer::pintool::options::CB_SYSCALL_EXIT))
         tracer::pintool::options::callbackSyscallExit = function;
 
-      else if (triton::bindings::python::PyLong_AsUint(flag) == tracer::pintool::options::CB_IMAGE_LOAD)
+      else if (triton::bindings::python::PyLong_AsUint32(flag) == tracer::pintool::options::CB_IMAGE_LOAD)
         tracer::pintool::options::callbackImageLoad = function;
 
-      else if ((triton::bindings::python::PyLong_AsUint(flag) == tracer::pintool::options::CB_ROUTINE_ENTRY)) {
+      else if ((triton::bindings::python::PyLong_AsUint32(flag) == tracer::pintool::options::CB_ROUTINE_ENTRY)) {
         if (routine == nullptr || !PyString_Check(routine))
           return PyErr_Format(PyExc_TypeError, "tracer::pintool::addCallback(): Expected a routine name (string) as third argument.");
         tracer::pintool::options::callbackRoutineEntry.insert(std::pair<const char*,PyObject*>(PyString_AsString(routine), function));
       }
 
-      else if ((triton::bindings::python::PyLong_AsUint(flag) == tracer::pintool::options::CB_ROUTINE_EXIT)) {
+      else if ((triton::bindings::python::PyLong_AsUint32(flag) == tracer::pintool::options::CB_ROUTINE_EXIT)) {
         if (routine == nullptr || !PyString_Check(routine))
           return PyErr_Format(PyExc_TypeError, "tracer::pintool::addCallback(): Expected a routine name (string) as third argument.");
         tracer::pintool::options::callbackRoutineExit.insert(std::pair<const char*,PyObject*>(PyString_AsString(routine), function));
@@ -134,7 +134,7 @@ namespace tracer {
           if (PyMemoryOperand_Check(mem))
             return triton::bindings::python::PyLong_FromUint512(tracer::pintool::context::getCurrentMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem)));
           else if (size != nullptr) {
-            return triton::bindings::python::PyLong_FromUint512(tracer::pintool::context::getCurrentMemoryValue(triton::bindings::python::PyLong_AsUint(mem), triton::bindings::python::PyLong_AsUint(size)));
+            return triton::bindings::python::PyLong_FromUint512(tracer::pintool::context::getCurrentMemoryValue(triton::bindings::python::PyLong_AsUint(mem), triton::bindings::python::PyLong_AsUint32(size)));
           }
           else
             return triton::bindings::python::PyLong_FromUint512(tracer::pintool::context::getCurrentMemoryValue(triton::bindings::python::PyLong_AsUint(mem)));
@@ -196,23 +196,23 @@ namespace tracer {
       if (num == nullptr || (!PyLong_Check(num) && !PyInt_Check(num)))
         return PyErr_Format(PyExc_TypeError, "tracer::pintool::getSyscallArgument(): Expected an id (integer) as second argument.");
 
-      LEVEL_CORE::SYSCALL_STANDARD standard = static_cast<LEVEL_CORE::SYSCALL_STANDARD>(triton::bindings::python::PyLong_AsUint(std));
-      ret = PIN_GetSyscallArgument(tracer::pintool::context::lastContext, standard, triton::bindings::python::PyLong_AsUint(num));
+      LEVEL_CORE::SYSCALL_STANDARD standard = static_cast<LEVEL_CORE::SYSCALL_STANDARD>(triton::bindings::python::PyLong_AsUint32(std));
+      ret = PIN_GetSyscallArgument(tracer::pintool::context::lastContext, standard, triton::bindings::python::PyLong_AsUint32(num));
 
       return triton::bindings::python::PyLong_FromUint(ret);
     }
 
 
     static PyObject* pintool_getSyscallNumber(PyObject* self, PyObject* std) {
-      triton::__uint syscallNumber;
+      triton::uint32 syscallNumber;
 
       if (!PyLong_Check(std) && !PyInt_Check(std))
         return PyErr_Format(PyExc_TypeError, "tracer::pintool::getSyscallNumber(): Expected an id (integer) as argument.");
 
-      LEVEL_CORE::SYSCALL_STANDARD standard = static_cast<LEVEL_CORE::SYSCALL_STANDARD>(triton::bindings::python::PyLong_AsUint(std));
+      LEVEL_CORE::SYSCALL_STANDARD standard = static_cast<LEVEL_CORE::SYSCALL_STANDARD>(triton::bindings::python::PyLong_AsUint32(std));
       syscallNumber = PIN_GetSyscallNumber(tracer::pintool::context::lastContext, standard);
 
-      return triton::bindings::python::PyLong_FromUint(syscallNumber);
+      return triton::bindings::python::PyLong_FromUint32(syscallNumber);
     }
 
 
@@ -222,7 +222,7 @@ namespace tracer {
       if (!PyLong_Check(std) && !PyInt_Check(std))
         return PyErr_Format(PyExc_TypeError, "tracer::pintool::getSyscallReturn(): Expected an id (integer) as argument.");
 
-      LEVEL_CORE::SYSCALL_STANDARD standard = static_cast<LEVEL_CORE::SYSCALL_STANDARD>(triton::bindings::python::PyLong_AsUint(std));
+      LEVEL_CORE::SYSCALL_STANDARD standard = static_cast<LEVEL_CORE::SYSCALL_STANDARD>(triton::bindings::python::PyLong_AsUint32(std));
       ret = PIN_GetSyscallReturn(tracer::pintool::context::lastContext, standard);
 
       return triton::bindings::python::PyLong_FromUint(ret);

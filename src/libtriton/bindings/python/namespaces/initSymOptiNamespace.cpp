@@ -57,11 +57,11 @@ namespace triton {
     namespace python {
 
       void initSymOptiNamespace(PyObject* symOptiDict) {
-        PyDict_SetItemString(symOptiDict, "ALIGNED_MEMORY",         PyLong_FromUint(triton::engines::symbolic::ALIGNED_MEMORY));
-        PyDict_SetItemString(symOptiDict, "AST_DICTIONARIES",       PyLong_FromUint(triton::engines::symbolic::AST_DICTIONARIES));
-        PyDict_SetItemString(symOptiDict, "ONLY_ON_SYMBOLIZED",     PyLong_FromUint(triton::engines::symbolic::ONLY_ON_SYMBOLIZED));
-        PyDict_SetItemString(symOptiDict, "ONLY_ON_TAINTED",        PyLong_FromUint(triton::engines::symbolic::ONLY_ON_TAINTED));
-        PyDict_SetItemString(symOptiDict, "PC_TRACKING_SYMBOLIC",   PyLong_FromUint(triton::engines::symbolic::PC_TRACKING_SYMBOLIC));
+        PyDict_SetItemString(symOptiDict, "ALIGNED_MEMORY",         PyLong_FromUint32(triton::engines::symbolic::ALIGNED_MEMORY));
+        PyDict_SetItemString(symOptiDict, "AST_DICTIONARIES",       PyLong_FromUint32(triton::engines::symbolic::AST_DICTIONARIES));
+        PyDict_SetItemString(symOptiDict, "ONLY_ON_SYMBOLIZED",     PyLong_FromUint32(triton::engines::symbolic::ONLY_ON_SYMBOLIZED));
+        PyDict_SetItemString(symOptiDict, "ONLY_ON_TAINTED",        PyLong_FromUint32(triton::engines::symbolic::ONLY_ON_TAINTED));
+        PyDict_SetItemString(symOptiDict, "PC_TRACKING_SYMBOLIC",   PyLong_FromUint32(triton::engines::symbolic::PC_TRACKING_SYMBOLIC));
       }
 
     }; /* python namespace */

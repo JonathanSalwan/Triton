@@ -531,7 +531,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "Bitvector(): Expects an integer as second argument.");
 
         try {
-          return PyBitvector(PyLong_AsUint(high), PyLong_AsUint(low));
+          return PyBitvector(PyLong_AsUint32(high), PyLong_AsUint32(low));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -555,7 +555,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "Immediate(): Expects an integer as second argument.");
 
         try {
-          triton::arch::ImmediateOperand imm(PyLong_AsUint(value), PyLong_AsUint(size));
+          triton::arch::ImmediateOperand imm(PyLong_AsUint64(value), PyLong_AsUint32(size));
           return PyImmediateOperand(imm);
         }
         catch (const std::exception& e) {
@@ -594,7 +594,7 @@ namespace triton {
           cv = PyLong_AsUint512(concreteValue);
 
         try {
-          triton::arch::MemoryOperand mem(PyLong_AsUint(address), PyLong_AsUint(size), cv);
+          triton::arch::MemoryOperand mem(PyLong_AsUint64(address), PyLong_AsUint32(size), cv);
           return PyMemoryOperand(mem);
         }
         catch (const std::exception& e) {
@@ -807,7 +807,7 @@ namespace triton {
         /* If mem is an address */
         if (PyLong_Check(mem) || PyInt_Check(mem)) {
           try {
-            triton::api.concretizeMemory(PyLong_AsUint(mem));
+            triton::api.concretizeMemory(PyLong_AsUint64(mem));
           }
           catch (const std::exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -880,7 +880,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         try {
-          return PySymbolicVariable(triton::api.convertExpressionToSymbolicVariable(PyLong_AsUint(exprId), PyLong_AsUint(symVarSize), ccomment));
+          return PySymbolicVariable(triton::api.convertExpressionToSymbolicVariable(PyLong_AsUsize(exprId), PyLong_AsUint32(symVarSize), ccomment));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1155,14 +1155,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "enableSymbolicEmulation(): Expects an boolean as argument.");
 
         try {
-          #ifdef _MSC_VER
-            #pragma warning(push)
-            #pragma warning(disable: 4800)
-          #endif
           triton::api.enableSymbolicEmulation(PyObject_IsTrue(flag));
-          #ifdef _MSC_VER
-            #pragma warning(pop)
-          #endif
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1182,14 +1175,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "enableSymbolicEngine(): Expects an boolean as argument.");
 
         try {
-          #ifdef _MSC_VER
-            #pragma warning(push)
-            #pragma warning(disable: 4800)
-          #endif
           triton::api.enableSymbolicEngine(PyObject_IsTrue(flag));
-          #ifdef _MSC_VER
-            #pragma warning(pop)
-          #endif
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1218,14 +1204,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "enableSymbolicOptimization(): Expects an boolean flag as second argument.");
 
         try {
-          #ifdef _MSC_VER
-            #pragma warning(push)
-            #pragma warning(disable: 4800)
-          #endif
-          triton::api.enableSymbolicOptimization(static_cast<enum triton::engines::symbolic::optimization_e>(PyLong_AsUint(opti)), PyObject_IsTrue(flag));
-          #ifdef _MSC_VER
-            #pragma warning(pop)
-          #endif
+          triton::api.enableSymbolicOptimization(static_cast<enum triton::engines::symbolic::optimization_e>(PyLong_AsUint32(opti)), PyObject_IsTrue(flag));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1245,14 +1224,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "enableSymbolicZ3Simplification(): Expects a boolean as argument.");
 
         try {
-          #ifdef _MSC_VER
-            #pragma warning(push)
-            #pragma warning(disable: 4800)
-          #endif
           triton::api.enableSymbolicZ3Simplification(PyObject_IsTrue(flag));
-          #ifdef _MSC_VER
-            #pragma warning(pop)
-          #endif
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1272,14 +1244,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "enableTaintEngine(): Expects an boolean as argument.");
 
         try {
-          #ifdef _MSC_VER
-            #pragma warning(push)
-            #pragma warning(disable: 4800)
-          #endif
           triton::api.enableTaintEngine(PyObject_IsTrue(flag));
-          #ifdef _MSC_VER
-            #pragma warning(pop)
-          #endif
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1338,7 +1303,7 @@ namespace triton {
 
 
       static PyObject* triton_getArchitecture(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint(triton::api.getArchitecture());
+        return PyLong_FromUint32(triton::api.getArchitecture());
       }
 
 
@@ -1351,7 +1316,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getAstFromId(): Expects an integer as argument.");
 
         try {
-          return PyAstNode(triton::api.getAstFromId(PyLong_AsUint(symExprId)));
+          return PyAstNode(triton::api.getAstFromId(PyLong_AsUsize(symExprId)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1363,7 +1328,7 @@ namespace triton {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getAstRepresentationMode(): Architecture is not defined.");
-        return PyLong_FromUint(triton::api.getAstRepresentationMode());
+        return PyLong_FromUint32(triton::api.getAstRepresentationMode());
       }
 
 
@@ -1416,7 +1381,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getFullAstFromId(): Expects an integer as argument.");
 
         try {
-          return PyAstNode(triton::api.getFullAstFromId(PyLong_AsUint(symExprId)));
+          return PyAstNode(triton::api.getFullAstFromId(PyLong_AsUsize(symExprId)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1438,10 +1403,10 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getMemoryAreaValue(): Architecture is not defined.");
 
         try {
-          vv  = triton::api.getMemoryAreaValue(PyLong_AsUint(addr), PyLong_AsUint(size));
+          vv  = triton::api.getMemoryAreaValue(PyLong_AsUint64(addr), PyLong_AsUint32(size));
           ret = xPyList_New(vv.size());
           for (triton::uint32 index = 0; index < vv.size(); index++)
-            PyList_SetItem(ret, index, PyLong_FromUint(vv[index]));
+            PyList_SetItem(ret, index, PyLong_FromUint32(vv[index]));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1458,7 +1423,7 @@ namespace triton {
 
         try {
           if (PyLong_Check(mem) || PyInt_Check(mem))
-              return PyLong_FromUint512(triton::api.getMemoryValue(PyLong_AsUint(mem)));
+              return PyLong_FromUint512(triton::api.getMemoryValue(PyLong_AsUint64(mem)));
           else if (PyMemoryOperand_Check(mem))
               return PyLong_FromUint512(triton::api.getMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem)));
           else
@@ -1486,7 +1451,7 @@ namespace triton {
           ret = xPyDict_New();
           model = triton::api.getModel(PyAstNode_AsAstNode(node));
           for (it = model.begin(); it != model.end(); it++) {
-            PyDict_SetItem(ret, PyLong_FromUint(it->first), PySolverModel(it->second));
+            PyDict_SetItem(ret, PyLong_FromUint32(it->first), PySolverModel(it->second));
           }
         }
         catch (const std::exception& e) {
@@ -1519,13 +1484,13 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getModels(): Expects an integer as second argument.");
 
         try {
-          models = triton::api.getModels(PyAstNode_AsAstNode(node), PyLong_AsUint(limit));
+          models = triton::api.getModels(PyAstNode_AsAstNode(node), PyLong_AsUint32(limit));
           ret = xPyList_New(models.size());
           for (it = models.begin(); it != models.end(); it++) {
             PyObject* mdict = xPyDict_New();
             std::map<triton::uint32, triton::engines::solver::SolverModel> model = *it;
             for (auto it2 = model.begin(); it2 != model.end(); it2++) {
-              PyDict_SetItem(mdict, PyLong_FromUint(it2->first), PySolverModel(it2->second));
+              PyDict_SetItem(mdict, PyLong_FromUint32(it2->first), PySolverModel(it2->second));
             }
             if (model.size() > 0)
               PyList_SetItem(ret, index++, mdict);
@@ -1626,7 +1591,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getSymbolicExpressionFromId(): Expects an integer as argument.");
 
         try {
-          return PySymbolicExpression(triton::api.getSymbolicExpressionFromId(PyLong_AsUint(symExprId)));
+          return PySymbolicExpression(triton::api.getSymbolicExpressionFromId(PyLong_AsUsize(symExprId)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1636,8 +1601,8 @@ namespace triton {
 
       static PyObject* triton_getSymbolicExpressions(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        const std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*>& expressions = triton::api.getSymbolicExpressions();
-        std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*>::const_iterator it;
+        const std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*>& expressions = triton::api.getSymbolicExpressions();
+        std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*>::const_iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -1646,7 +1611,7 @@ namespace triton {
         try {
           ret = xPyDict_New();
           for (it = expressions.begin(); it != expressions.end(); it++)
-            PyDict_SetItem(ret, PyLong_FromUint(it->first), PySymbolicExpression(it->second));
+            PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1658,8 +1623,8 @@ namespace triton {
 
       static PyObject* triton_getSymbolicMemory(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*> regs = triton::api.getSymbolicMemory();
-        std::map<triton::__uint, triton::engines::symbolic::SymbolicExpression*>::iterator it;
+        std::map<triton::uint64, triton::engines::symbolic::SymbolicExpression*> regs = triton::api.getSymbolicMemory();
+        std::map<triton::uint64, triton::engines::symbolic::SymbolicExpression*>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -1668,7 +1633,7 @@ namespace triton {
         try {
           ret = xPyDict_New();
           for (it = regs.begin(); it != regs.end(); it++) {
-            PyDict_SetItem(ret, PyLong_FromUint(it->first), PySymbolicExpression(it->second));
+            PyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
           }
         }
         catch (const std::exception& e) {
@@ -1688,7 +1653,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getSymbolicMemoryId(): Expects an integer as argument.");
 
         try {
-          return PyLong_FromUint(triton::api.getSymbolicMemoryId(PyLong_AsUint(addr)));
+          return PyLong_FromUsize(triton::api.getSymbolicMemoryId(PyLong_AsUint64(addr)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1706,7 +1671,7 @@ namespace triton {
 
         try {
           if (PyLong_Check(mem) || PyInt_Check(mem))
-            return PyLong_FromUint512(triton::api.getSymbolicMemoryValue(PyLong_AsUint(mem)));
+            return PyLong_FromUint512(triton::api.getSymbolicMemoryValue(PyLong_AsUint64(mem)));
           return PyLong_FromUint512(triton::api.getSymbolicMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem)));
         }
         catch (const std::exception& e) {
@@ -1748,7 +1713,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterId(): Expects a REG as argument.");
 
         try {
-          return PyLong_FromUint(triton::api.getSymbolicRegisterId(*PyRegisterOperand_AsRegisterOperand(reg)));
+          return PyLong_FromUsize(triton::api.getSymbolicRegisterId(*PyRegisterOperand_AsRegisterOperand(reg)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1782,7 +1747,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getSymbolicVariableFromId(): Expects an integer as argument.");
 
         try {
-          return PySymbolicVariable(triton::api.getSymbolicVariableFromId(PyLong_AsUint(symVarId)));
+          return PySymbolicVariable(triton::api.getSymbolicVariableFromId(PyLong_AsUsize(symVarId)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1810,8 +1775,8 @@ namespace triton {
 
       static PyObject* triton_getSymbolicVariables(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        const std::map<triton::__uint, triton::engines::symbolic::SymbolicVariable*>& variables = triton::api.getSymbolicVariables();
-        std::map<triton::__uint, triton::engines::symbolic::SymbolicVariable*>::const_iterator it;
+        const std::map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& variables = triton::api.getSymbolicVariables();
+        std::map<triton::usize, triton::engines::symbolic::SymbolicVariable*>::const_iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -1820,7 +1785,7 @@ namespace triton {
         try {
           ret = xPyDict_New();
           for (it = variables.begin(); it != variables.end(); it++)
-            PyDict_SetItem(ret, PyLong_FromUint(it->first), PySymbolicVariable(it->second));
+            PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicVariable(it->second));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1875,7 +1840,7 @@ namespace triton {
         }
 
         else if (PyLong_Check(mem) || PyInt_Check(mem)) {
-          if (triton::api.isMemoryTainted(PyLong_AsUint(mem)) == true)
+          if (triton::api.isMemoryTainted(PyLong_AsUint64(mem)) == true)
             Py_RETURN_TRUE;
         }
 
@@ -1927,7 +1892,7 @@ namespace triton {
         if (!PyInt_Check(symExprId) && !PyLong_Check(symExprId))
           return PyErr_Format(PyExc_TypeError, "isSymbolicExpressionIdExists(): Expects an integer as argument.");
 
-        if (triton::api.isSymbolicExpressionIdExists(PyLong_AsUint(symExprId)) == true)
+        if (triton::api.isSymbolicExpressionIdExists(PyLong_AsUsize(symExprId)) == true)
           Py_RETURN_TRUE;
         Py_RETURN_FALSE;
       }
@@ -1940,7 +1905,7 @@ namespace triton {
         if (!PyInt_Check(opti) && !PyLong_Check(opti))
           return PyErr_Format(PyExc_TypeError, "isSymbolicOptimizationEnabled(): Expects an OPTIMIZATION as argument.");
 
-        if (triton::api.isSymbolicOptimizationEnabled(static_cast<enum triton::engines::symbolic::optimization_e>(PyLong_AsUint(opti))) == true)
+        if (triton::api.isSymbolicOptimizationEnabled(static_cast<enum triton::engines::symbolic::optimization_e>(PyLong_AsUint32(opti))) == true)
           Py_RETURN_TRUE;
         Py_RETURN_FALSE;
       }
@@ -2018,7 +1983,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         try {
-          return PySymbolicVariable(triton::api.newSymbolicVariable(PyLong_AsUint(size), ccomment));
+          return PySymbolicVariable(triton::api.newSymbolicVariable(PyLong_AsUint32(size), ccomment));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2108,7 +2073,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "setArchitecture(): Expects an ARCH as argument.");
 
         try {
-          triton::api.setArchitecture(PyLong_AsUint(arg));
+          triton::api.setArchitecture(PyLong_AsUint32(arg));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2124,7 +2089,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "setArcsetAstRepresentationMode(): Expects an AST_REPRESENTATION as argument.");
 
         try {
-          triton::api.setAstRepresentationMode(PyLong_AsUint(arg));
+          triton::api.setAstRepresentationMode(PyLong_AsUint32(arg));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2156,14 +2121,14 @@ namespace triton {
         for (Py_ssize_t i = 0; i < PyList_Size(values); i++) {
           PyObject* item = PyList_GetItem(values, i);
 
-          if ((!PyLong_Check(item) && !PyInt_Check(item)) || PyLong_AsUint(item) > 0xff)
+          if ((!PyLong_Check(item) && !PyInt_Check(item)) || PyLong_AsUint32(item) > 0xff)
             return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Each item of the list must be a 8-bits integer.");
 
-          vv.push_back(PyLong_AsUint(item));
+          vv.push_back(static_cast<triton::uint8>(PyLong_AsUint32(item) & 0xff));
         }
 
         try {
-          triton::api.setLastMemoryAreaValue(PyLong_AsUint(baseAddr), vv);
+          triton::api.setLastMemoryAreaValue(PyLong_AsUint64(baseAddr), vv);
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2190,14 +2155,14 @@ namespace triton {
           if (value == nullptr || (!PyLong_Check(value) && !PyInt_Check(value)))
             return PyErr_Format(PyExc_TypeError, "setLastMemoryValue(): Expects a value as second argument.");
 
-          triton::__uint addr = PyLong_AsUint(mem);
-          triton::__uint cvalue = PyLong_AsUint(value);
+          triton::uint64 addr   = PyLong_AsUint64(mem);
+          triton::uint32 cvalue = PyLong_AsUint32(value);
 
           if (cvalue > 0xff)
             return PyErr_Format(PyExc_TypeError, "setLastMemoryValue(): Value must be on 8 bits.");
 
           try {
-            triton::api.setLastMemoryValue(addr, cvalue);
+            triton::api.setLastMemoryValue(addr, static_cast<triton::uint8>(cvalue & 0xff));
           }
           catch (const std::exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2264,16 +2229,9 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "setTaintMemory(): Expects a boolean as second argument.");
 
         try {
-          #ifdef _MSC_VER
-            #pragma warning(push)
-            #pragma warning(disable: 4800)
-          #endif
           if (triton::api.setTaintMemory(*PyMemoryOperand_AsMemoryOperand(mem), PyObject_IsTrue(flag)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
-          #ifdef _MSC_VER
-            #pragma warning(pop)
-          #endif
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2299,16 +2257,9 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "setTaintRegister(): Expects a boolean as second argument.");
 
         try {
-          #ifdef _MSC_VER
-            #pragma warning(push)
-            #pragma warning(disable: 4800)
-          #endif
           if (triton::api.setTaintRegister(*PyRegisterOperand_AsRegisterOperand(reg), PyObject_IsTrue(flag)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
-          #ifdef _MSC_VER
-            #pragma warning(pop)
-          #endif
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2334,17 +2285,10 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "simplify(): Expects a boolean as second argument.");
 
         if (z3Flag == nullptr)
-          z3Flag = PyLong_FromUint(false);
+          z3Flag = PyLong_FromUint32(false);
 
         try {
-          #ifdef _MSC_VER
-            #pragma warning(push)
-            #pragma warning(disable: 4800)
-          #endif
           return PyAstNode(triton::api.processSimplification(PyAstNode_AsAstNode(node), PyObject_IsTrue(z3Flag)));
-          #ifdef _MSC_VER
-            #pragma warning(pop)
-          #endif
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2514,7 +2458,7 @@ namespace triton {
           }
 
           else if (PyLong_Check(mem) || PyInt_Check(mem)) {
-            if (triton::api.taintMemory(PyLong_AsUint(mem)) == true)
+            if (triton::api.taintMemory(PyLong_AsUint64(mem)) == true)
               Py_RETURN_TRUE;
           }
 
@@ -2709,7 +2653,7 @@ namespace triton {
           }
 
           else if (PyLong_Check(mem) || PyInt_Check(mem)) {
-            if (triton::api.untaintMemory(PyLong_AsUint(mem)) == true)
+            if (triton::api.untaintMemory(PyLong_AsUint64(mem)) == true)
               Py_RETURN_TRUE;
           }
 

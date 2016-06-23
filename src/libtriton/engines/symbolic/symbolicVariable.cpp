@@ -18,8 +18,8 @@ namespace triton {
     namespace symbolic {
 
       SymbolicVariable::SymbolicVariable(symkind_e kind,
-                                         triton::__uint kindValue,
-                                         triton::__uint id,
+                                         triton::uint64 kindValue,
+                                         triton::usize id,
                                          triton::uint32 size,
                                          const std::string& comment,
                                          triton::uint512 concreteValue) {
@@ -61,12 +61,12 @@ namespace triton {
       }
 
 
-      triton::__uint SymbolicVariable::getId(void) const {
+      triton::usize SymbolicVariable::getId(void) const {
         return this->id;
       }
 
 
-      triton::__uint SymbolicVariable::getKindValue(void) const {
+      triton::uint64 SymbolicVariable::getKindValue(void) const {
         return this->kindValue;
       }
 

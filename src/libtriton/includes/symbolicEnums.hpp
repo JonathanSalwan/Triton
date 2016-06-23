@@ -42,7 +42,7 @@ namespace triton {
      */
 
       //! Defines an UNSET symbolic expression.
-      const triton::__uint UNSET = -1;
+      const triton::usize UNSET = static_cast<triton::usize>(-1);
 
       //! Enumerates all kinds of symbolic variable.
       enum symkind_e {

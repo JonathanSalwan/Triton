@@ -54,14 +54,14 @@ namespace triton {
           std::string name;
 
           //! The id of the symbolic variable. This id is unique.
-          triton::__uint id;
+          triton::usize id;
 
           //! The kind value of the symbolic variable.
           /*!
             \brief If the symbolic varialbe is a triton::engines::symbolic::REG, this value contains the register ID.
             \biref If the symbolic varialbe is a triton::engines::symbolic::MEM, this value contains the memory access' address.
           */
-          triton::__uint kindValue;
+          triton::uint64 kindValue;
 
           //! The size (in bits) of the symbolic variable.
           triton::uint32 size;
@@ -72,7 +72,7 @@ namespace triton {
         public:
 
           //! Constructor.
-          SymbolicVariable(symkind_e kind, triton::__uint kindValue, triton::__uint id, triton::uint32 size, const std::string& comment, triton::uint512 concreteValue=0);
+          SymbolicVariable(symkind_e kind, triton::uint64 kindValue, triton::usize id, triton::uint32 size, const std::string& comment, triton::uint512 concreteValue=0);
 
           //! Constructor by copy.
           SymbolicVariable(const SymbolicVariable &copy);
@@ -90,10 +90,10 @@ namespace triton {
           const std::string& getName(void) const;
 
           //! Returns the id of the symbolic variable. This id is unique.
-          triton::__uint getId(void) const;
+          triton::usize getId(void) const;
 
           //! Returns the kind value of the symbolic variable.
-          triton::__uint getKindValue(void) const;
+          triton::uint64 getKindValue(void) const;
 
           //! Returns the size (in bits) of the symbolic variable.
           triton::uint32 getSize(void) const;

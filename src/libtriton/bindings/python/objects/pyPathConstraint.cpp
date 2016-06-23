@@ -90,13 +90,13 @@ namespace triton {
       static PyObject* PathConstraint_getBranchConstraints(PyObject* self, PyObject* noarg) {
         try {
           PyObject* ret = nullptr;
-          const std::vector<std::tuple<bool, triton::__uint, triton::ast::AbstractNode*>>& branches = PyPathConstraint_AsPathConstraint(self)->getBranchConstraints();
+          const std::vector<std::tuple<bool, triton::uint64, triton::ast::AbstractNode*>>& branches = PyPathConstraint_AsPathConstraint(self)->getBranchConstraints();
 
           ret = xPyList_New(branches.size());
-          for (triton::uint32 index = 0; index != branches.size(); index++) {
+          for (triton::usize index = 0; index != branches.size(); index++) {
             PyObject* dict = xPyDict_New();
             PyDict_SetItem(dict, PyString_FromString("taken"),      PyBool_FromLong(std::get<0>(branches[index])));
-            PyDict_SetItem(dict, PyString_FromString("target"),     PyLong_FromUint(std::get<1>(branches[index])));
+            PyDict_SetItem(dict, PyString_FromString("target"),     PyLong_FromUint64(std::get<1>(branches[index])));
             PyDict_SetItem(dict, PyString_FromString("constraint"), PyAstNode(std::get<2>(branches[index])));
             PyList_SetItem(ret, index, dict);
           }
@@ -111,7 +111,7 @@ namespace triton {
 
       static PyObject* PathConstraint_getTakenAddress(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint(PyPathConstraint_AsPathConstraint(self)->getTakenAddress());
+          return PyLong_FromUint64(PyPathConstraint_AsPathConstraint(self)->getTakenAddress());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

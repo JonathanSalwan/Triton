@@ -74,7 +74,7 @@ namespace triton {
         triton::api.checkArchitecture();
 
         this->numberOfRegisters = triton::api.cpuNumberOfRegisters();
-        this->symbolicReg = new triton::__uint[this->numberOfRegisters]();
+        this->symbolicReg = new triton::usize[this->numberOfRegisters]();
 
         /* Init all symbolic registers/flags to UNSET (init state) */
         for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
@@ -91,7 +91,7 @@ namespace triton {
         triton::api.checkArchitecture();
 
         this->numberOfRegisters = other.numberOfRegisters;
-        this->symbolicReg = new triton::__uint[this->numberOfRegisters]();
+        this->symbolicReg = new triton::usize[this->numberOfRegisters]();
 
         for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
           this->symbolicReg[i] = other.symbolicReg[i];
@@ -127,8 +127,8 @@ namespace triton {
 
 
       SymbolicEngine::~SymbolicEngine() {
-        std::map<triton::__uint, SymbolicExpression*>::iterator it1 = this->symbolicExpressions.begin();
-        std::map<triton::__uint, SymbolicVariable*>::iterator it2 = this->symbolicVariables.begin();
+        std::map<triton::usize, SymbolicExpression*>::iterator it1 = this->symbolicExpressions.begin();
+        std::map<triton::usize, SymbolicVariable*>::iterator it2 = this->symbolicVariables.begin();
 
         /* Delete all symbolic expressions */
         for (; it1 != this->symbolicExpressions.end(); ++it1)
@@ -169,7 +169,7 @@ namespace triton {
        * before symbolic processing.
        */
       void SymbolicEngine::concretizeMemory(const triton::arch::MemoryOperand& mem) {
-        triton::__uint addr = mem.getAddress();
+        triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
         for (triton::uint32 index = 0; index < size; index++)
           this->concretizeMemory(addr+index);
@@ -181,7 +181,7 @@ namespace triton {
        * assignment will be over the concretization. This method must be called
        * before symbolic processing.
        */
-      void SymbolicEngine::concretizeMemory(triton::__uint addr) {
+      void SymbolicEngine::concretizeMemory(triton::uint64 addr) {
         this->memoryReference.erase(addr);
         if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
           this->removeAlignedMemory(addr);
@@ -196,7 +196,7 @@ namespace triton {
 
 
       /* Remove aligned memory */
-      void SymbolicEngine::removeAlignedMemory(triton::__uint addr) {
+      void SymbolicEngine::removeAlignedMemory(triton::uint64 addr) {
         /* Remove address with several sizes */
         this->alignedMemoryReference.erase(std::make_pair(addr,  BYTE_SIZE));
         this->alignedMemoryReference.erase(std::make_pair(addr,  WORD_SIZE));
@@ -237,8 +237,8 @@ namespace triton {
 
 
       /* Returns the reference memory if it's referenced otherwise returns UNSET */
-      triton::__uint SymbolicEngine::getSymbolicMemoryId(triton::__uint addr) const {
-        std::map<triton::__uint, triton::__uint>::const_iterator it;
+      triton::usize SymbolicEngine::getSymbolicMemoryId(triton::uint64 addr) const {
+        std::map<triton::uint64, triton::usize>::const_iterator it;
         if ((it = this->memoryReference.find(addr)) != this->memoryReference.end())
           return it->second;
         return triton::engines::symbolic::UNSET;
@@ -246,7 +246,7 @@ namespace triton {
 
 
       /* Returns the symbolic variable otherwise returns nullptr */
-      SymbolicVariable* SymbolicEngine::getSymbolicVariableFromId(triton::__uint symVarId) const {
+      SymbolicVariable* SymbolicEngine::getSymbolicVariableFromId(triton::usize symVarId) const {
         if (this->symbolicVariables.find(symVarId) == this->symbolicVariables.end())
           return nullptr;
         return this->symbolicVariables.at(symVarId);
@@ -255,7 +255,7 @@ namespace triton {
 
       /* Returns the symbolic variable otherwise returns nullptr */
       SymbolicVariable* SymbolicEngine::getSymbolicVariableFromName(const std::string& symVarName) const {
-        std::map<triton::__uint, SymbolicVariable*>::const_iterator it;
+        std::map<triton::usize, SymbolicVariable*>::const_iterator it;
 
         for (it = this->symbolicVariables.begin(); it != this->symbolicVariables.end(); it++) {
           if (it->second->getName() == symVarName)
@@ -266,13 +266,13 @@ namespace triton {
 
 
       /* Returns all symbolic variables */
-      const std::map<triton::__uint, SymbolicVariable*>& SymbolicEngine::getSymbolicVariables(void) const {
+      const std::map<triton::usize, SymbolicVariable*>& SymbolicEngine::getSymbolicVariables(void) const {
         return this->symbolicVariables;
       }
 
 
       /* Returns the reg reference or UNSET */
-      triton::__uint SymbolicEngine::getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) const {
+      triton::usize SymbolicEngine::getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) const {
         triton::uint32 parentId = reg.getParent().getId();
         if (!triton::api.isCpuRegisterValid(parentId))
           return triton::engines::symbolic::UNSET;
@@ -281,7 +281,7 @@ namespace triton {
 
 
       /* Returns the symbolic address value */
-      triton::uint8 SymbolicEngine::getSymbolicMemoryValue(triton::__uint address) {
+      triton::uint8 SymbolicEngine::getSymbolicMemoryValue(triton::uint64 address) {
         triton::arch::MemoryOperand mem(address, BYTE_SIZE, 0);
         return this->getSymbolicMemoryValue(mem).convert_to<triton::uint8>();
       }
@@ -295,7 +295,7 @@ namespace triton {
 
 
       /* Returns the symbolic values of a memory area */
-      std::vector<triton::uint8> SymbolicEngine::getSymbolicMemoryAreaValue(triton::__uint baseAddr, triton::uint32 size) {
+      std::vector<triton::uint8> SymbolicEngine::getSymbolicMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size) {
         std::vector<triton::uint8> area;
 
         for (triton::uint32 index = 0; index < size; index++)
@@ -315,7 +315,7 @@ namespace triton {
       /* Creates a new symbolic expression */
       /* Get an unique id.
        * Mainly used when a new symbolic expression is created */
-      triton::__uint SymbolicEngine::getUniqueSymExprId(void) {
+      triton::usize SymbolicEngine::getUniqueSymExprId(void) {
         return this->uniqueSymExprId++;
       }
 
@@ -323,14 +323,14 @@ namespace triton {
       /* Creates a new symbolic variable */
       /* Get an unique id.
        * Mainly used when a new symbolic variable is created */
-      triton::__uint SymbolicEngine::getUniqueSymVarId(void) {
+      triton::usize SymbolicEngine::getUniqueSymVarId(void) {
         return this->uniqueSymVarId++;
       }
 
 
       /* Creates a new symbolic expression with comment */
       SymbolicExpression* SymbolicEngine::newSymbolicExpression(triton::ast::AbstractNode* node, triton::engines::symbolic::symkind_e kind, const std::string& comment) {
-        triton::__uint id = this->getUniqueSymExprId();
+        triton::usize id = this->getUniqueSymExprId();
         node = this->processSimplification(node);
         SymbolicExpression* expr = new SymbolicExpression(node, id, kind, comment);
         if (expr == nullptr)
@@ -341,8 +341,8 @@ namespace triton {
 
 
       /* Removes the symbolic expression corresponding to the id */
-      void SymbolicEngine::removeSymbolicExpression(triton::__uint symExprId) {
-        std::map<triton::__uint, triton::__uint>::iterator it;
+      void SymbolicEngine::removeSymbolicExpression(triton::usize symExprId) {
+        std::map<triton::uint64, triton::usize>::iterator it;
 
         if (this->symbolicExpressions.find(symExprId) != this->symbolicExpressions.end()) {
           /* Delete and remove the pointer */
@@ -370,7 +370,7 @@ namespace triton {
 
 
       /* Gets the symbolic expression pointer from a symbolic id */
-      SymbolicExpression* SymbolicEngine::getSymbolicExpressionFromId(triton::__uint symExprId) const {
+      SymbolicExpression* SymbolicEngine::getSymbolicExpressionFromId(triton::usize symExprId) const {
         if (this->symbolicExpressions.find(symExprId) == this->symbolicExpressions.end())
           throw std::runtime_error("SymbolicEngine::getSymbolicExpressionFromId(): symbolic expression id not found");
         return this->symbolicExpressions.at(symExprId);
@@ -378,7 +378,7 @@ namespace triton {
 
 
       /* Returns all symbolic expressions */
-      const std::map<triton::__uint, SymbolicExpression*>& SymbolicEngine::getSymbolicExpressions(void) const {
+      const std::map<triton::usize, SymbolicExpression*>& SymbolicEngine::getSymbolicExpressions(void) const {
         return this->symbolicExpressions;
       }
 
@@ -389,7 +389,7 @@ namespace triton {
 
         for (triton::uint32 index = 0; index < childs.size(); index++) {
           if (childs[index]->getKind() == triton::ast::REFERENCE_NODE) {
-            triton::__uint id = reinterpret_cast<triton::ast::ReferenceNode*>(childs[index])->getValue();
+            triton::usize id = reinterpret_cast<triton::ast::ReferenceNode*>(childs[index])->getValue();
             triton::ast::AbstractNode* ref = this->getSymbolicExpressionFromId(id)->getAst();
             childs[index] = ref;
           }
@@ -402,7 +402,7 @@ namespace triton {
 
       /* Returns a list which contains all tainted expressions */
       std::list<SymbolicExpression*> SymbolicEngine::getTaintedSymbolicExpressions(void) const {
-        std::map<triton::__uint, SymbolicExpression*>::const_iterator it;
+        std::map<triton::usize, SymbolicExpression*>::const_iterator it;
         std::list<SymbolicExpression*> taintedExprs;
 
         for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
@@ -415,7 +415,7 @@ namespace triton {
 
       /* Returns the list of the symbolic variables declared in the trace */
       std::string SymbolicEngine::getVariablesDeclaration(void) const {
-        std::map<triton::__uint, SymbolicVariable*>::const_iterator it;
+        std::map<triton::usize, SymbolicVariable*>::const_iterator it;
         std::stringstream stream;
 
         for(it = this->symbolicVariables.begin(); it != this->symbolicVariables.end(); it++)
@@ -441,9 +441,9 @@ namespace triton {
 
 
       /* Returns the map of symbolic memory defined */
-      std::map<triton::__uint, SymbolicExpression*> SymbolicEngine::getSymbolicMemory(void) const {
-        std::map<triton::__uint, SymbolicExpression*> ret;
-        std::map<triton::__uint, triton::__uint>::const_iterator it;
+      std::map<triton::uint64, SymbolicExpression*> SymbolicEngine::getSymbolicMemory(void) const {
+        std::map<triton::uint64, SymbolicExpression*> ret;
+        std::map<triton::uint64, triton::usize>::const_iterator it;
 
         for (it = this->memoryReference.begin(); it != this->memoryReference.end(); it++)
           ret[it->first] = this->getSymbolicExpressionFromId(it->second);
@@ -459,7 +459,7 @@ namespace triton {
        * convertExpressionToSymbolicVariable(43, 8)
        * #43 = SymVar_4
        */
-      SymbolicVariable* SymbolicEngine::convertExpressionToSymbolicVariable(triton::__uint exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
+      SymbolicVariable* SymbolicEngine::convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
         triton::ast::AbstractNode* tmp  = nullptr;
         SymbolicVariable* symVar = nullptr;
         SymbolicExpression* expression = this->getSymbolicExpressionFromId(exprId);
@@ -482,8 +482,8 @@ namespace triton {
         triton::ast::AbstractNode* tmp  = nullptr;
         SymbolicExpression* se          = nullptr;
         SymbolicVariable* symVar        = nullptr;
-        triton::__uint memSymId         = triton::engines::symbolic::UNSET;
-        triton::__uint memAddr          = mem.getAddress();
+        triton::usize memSymId          = triton::engines::symbolic::UNSET;
+        triton::uint64 memAddr          = mem.getAddress();
         triton::uint32 symVarSize       = mem.getSize();
         triton::uint512 cv              = mem.getConcreteValue() ? mem.getConcreteValue() : triton::api.getLastMemoryValue(mem);
 
@@ -529,7 +529,7 @@ namespace triton {
       SymbolicVariable* SymbolicEngine::convertRegisterToSymbolicVariable(const triton::arch::RegisterOperand& reg, const std::string& symVarComment) {
         SymbolicVariable* symVar        = nullptr;
         SymbolicExpression* expression  = nullptr;
-        triton::__uint regSymId         = triton::engines::symbolic::UNSET;
+        triton::usize regSymId          = triton::engines::symbolic::UNSET;
         triton::uint32 parentId         = reg.getParent().getId();
         triton::uint32 symVarSize       = reg.getBitSize();
         triton::uint512 cv              = reg.getConcreteValue() ? reg.getConcreteValue() : triton::api.getLastRegisterValue(reg);
@@ -571,8 +571,8 @@ namespace triton {
 
 
       /* Adds a new symbolic variable */
-      SymbolicVariable* SymbolicEngine::newSymbolicVariable(triton::engines::symbolic::symkind_e kind, triton::__uint kindValue, triton::uint32 size, const std::string& comment) {
-        triton::__uint uniqueId  = this->getUniqueSymVarId();
+      SymbolicVariable* SymbolicEngine::newSymbolicVariable(triton::engines::symbolic::symkind_e kind, triton::uint64 kindValue, triton::uint32 size, const std::string& comment) {
+        triton::usize uniqueId  = this->getUniqueSymVarId();
         SymbolicVariable* symVar = new SymbolicVariable(kind, kindValue, uniqueId, size, comment);
 
         if (symVar == nullptr)
@@ -603,9 +603,9 @@ namespace triton {
         std::list<triton::ast::AbstractNode*> opVec;
 
         triton::ast::AbstractNode* tmp            = nullptr;
-        triton::__uint address                    = mem.getAddress();
+        triton::uint64 address                    = mem.getAddress();
         triton::uint32 size                       = mem.getSize();
-        triton::__uint symMem                     = triton::engines::symbolic::UNSET;
+        triton::usize symMem                      = triton::engines::symbolic::UNSET;
         triton::uint8 concreteValue[DQQWORD_SIZE] = {0};
         triton::uint512 value                     = triton::api.getLastMemoryValue(mem);
 
@@ -664,7 +664,7 @@ namespace triton {
       /* Returns a symbolic register operand */
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicRegisterOperand(const triton::arch::RegisterOperand& reg) {
         triton::ast::AbstractNode* op = nullptr;
-        triton::__uint symReg         = this->getSymbolicRegisterId(reg);
+        triton::usize symReg          = this->getSymbolicRegisterId(reg);
         triton::uint32 bvSize         = reg.getBitSize();
         triton::uint32 high           = reg.getHigh();
         triton::uint32 low            = reg.getLow();
@@ -693,7 +693,7 @@ namespace triton {
         std::list<triton::ast::AbstractNode*> ret;
 
         SymbolicExpression* se   = nullptr;
-        triton::__uint address   = mem.getAddress();
+        triton::uint64 address   = mem.getAddress();
         triton::uint32 writeSize = mem.getSize();
 
         /* Record the aligned memory for a symbolic optimization */
@@ -820,7 +820,7 @@ namespace triton {
 
 
       /* Adds and assign a new memory reference */
-      void SymbolicEngine::addMemoryReference(triton::__uint mem, triton::__uint id) {
+      void SymbolicEngine::addMemoryReference(triton::uint64 mem, triton::usize id) {
         this->memoryReference[mem] = id;
       }
 
@@ -851,7 +851,7 @@ namespace triton {
       /* Assigns a symbolic expression to a memory */
       void SymbolicEngine::assignSymbolicExpressionToMemory(SymbolicExpression *se, const triton::arch::MemoryOperand& mem) {
         triton::ast::AbstractNode* node = se->getAst();
-        triton::__uint address          = mem.getAddress();
+        triton::uint64 address          = mem.getAddress();
         triton::uint32 writeSize        = mem.getSize();
 
         /* Check if the size of the symbolic expression is equal to the memory access */
@@ -887,7 +887,7 @@ namespace triton {
 
 
       /* Returns true if the symbolic expression ID exists. */
-      bool SymbolicEngine::isSymbolicExpressionIdExists(triton::__uint symExprId) const {
+      bool SymbolicEngine::isSymbolicExpressionIdExists(triton::usize symExprId) const {
         if (this->symbolicExpressions.find(symExprId) != this->symbolicExpressions.end())
           return true;
         return false;

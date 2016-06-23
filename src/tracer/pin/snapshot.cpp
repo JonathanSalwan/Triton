@@ -104,8 +104,8 @@ namespace tracer {
         /* 2 - Delete unused expressions */
         auto currentExpressions     = triton::api.getSymbolicExpressions();
         auto snapshotExpressions    = this->snapshotSymEngine->getSymbolicExpressions();
-        triton::__uint currentSize  = currentExpressions.size();
-        triton::__uint snapshotSize = snapshotExpressions.size();
+        triton::usize currentSize   = currentExpressions.size();
+        triton::usize snapshotSize  = snapshotExpressions.size();
         for (auto i = currentExpressions.begin(); i != currentExpressions.end(); ++i) {
           if (snapshotExpressions.find(i->first) == snapshotExpressions.end())
             delete currentExpressions[i->first];
