@@ -61,7 +61,7 @@ namespace triton {
       }
 
 
-      triton::uint32 PathManager::getNumberOfPathConstraints(void) const {
+      triton::usize PathManager::getNumberOfPathConstraints(void) const {
         return this->pathConstraints.size();
       }
 

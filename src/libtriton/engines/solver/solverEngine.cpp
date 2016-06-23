@@ -102,7 +102,7 @@ namespace triton {
         for (triton::uint32 i = 0; i < args.size(); i++)
           array.push_back(args[i]);
 
-        return to_expr(args.ctx(), Z3_mk_or(args.ctx(), array.size(), &(array[0])));
+        return to_expr(args.ctx(), Z3_mk_or(args.ctx(), static_cast<triton::uint32>(array.size()), &(array[0])));
       }
 
 

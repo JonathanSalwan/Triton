@@ -67,7 +67,7 @@ namespace triton {
           triton::ast::AbstractNode* getPathConstraintsAst(void) const;
 
           //! Returns the number of constraints.
-          triton::uint32 getNumberOfPathConstraints(void) const;
+          triton::usize getNumberOfPathConstraints(void) const;
 
           //! Adds a path constraint.
           void addPathConstraint(triton::engines::symbolic::SymbolicExpression* expr);

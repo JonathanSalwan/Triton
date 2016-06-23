@@ -2295,7 +2295,7 @@ namespace triton {
           z3Flag = PyLong_FromUint32(false);
 
         try {
-          bflag = static_cast<bool>(PyObject_IsTrue(flag));
+          bflag = static_cast<bool>(PyObject_IsTrue(z3Flag));
           return PyAstNode(triton::api.processSimplification(PyAstNode_AsAstNode(node), bflag));
         }
         catch (const std::exception& e) {
