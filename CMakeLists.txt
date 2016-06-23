@@ -290,6 +290,11 @@ if(PYTHON_BINDINGS)
         ${CMAKE_BINARY_DIR}/setup.py
         IMMEDIATE @ONLY
     )
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/src/scripts/libTriton_units_testing.py.in
+        ${CMAKE_SOURCE_DIR}/src/testers/libTriton_units_testing.py
+        IMMEDIATE @ONLY
+    )
     find_program(PYTHON_BINARY "python")
     if(UNIX)
       install (CODE "execute_process(COMMAND ${PYTHON_BINARY} ${CMAKE_BINARY_DIR}/setup.py install)")
