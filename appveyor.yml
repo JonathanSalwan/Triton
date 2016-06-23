@@ -70,7 +70,7 @@ after_build:
   - cmd: if "%platform%"=="Win32" if "%configuration%"=="Debug" 7z a -t7z ..\..\triton.x86.debug.7z *
   - cmd: if "%platform%"=="x64" if "%configuration%"=="Release" 7z a -t7z ..\..\triton.x64.release.7z *
   - cmd: if "%platform%"=="x64" if "%configuration%"=="Debug" 7z a -t7z ..\..\triton.x64.debug.7z *
-  - cmd: if "%platform%"=="Win32" C:\Python27\python.exe libTriton_units_testing.py
+  - cmd: if "%platform%"=="Win32" C:\Python27\python.exe ..\..\src\testers\libTriton_units_testing.py
   - cmd: if "%platform%"=="x64" C:\Python27-x64\python.exe ..\..\src\testers\libTriton_units_testing.py
   - cmd: chdir
 
