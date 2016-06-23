@@ -8979,7 +8979,7 @@ namespace triton {
           if (inst.operands.size() > 0) {
             auto offset = inst.operands[0].getImmediate();
             triton::api.buildSymbolicImmediateOperand(inst, offset);
-            alignAddStack_s(inst, offset.getValue());
+            alignAddStack_s(inst, static_cast<triton::uint32>(offset.getValue()));
           }
 
           /* Create the path constraint */

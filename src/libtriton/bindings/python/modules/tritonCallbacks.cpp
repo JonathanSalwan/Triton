@@ -1155,7 +1155,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "enableSymbolicEmulation(): Expects an boolean as argument.");
 
         try {
-          triton::api.enableSymbolicEmulation(PyObject_IsTrue(flag));
+          triton::api.enableSymbolicEmulation(static_cast<bool>(PyObject_IsTrue(flag)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1175,7 +1175,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "enableSymbolicEngine(): Expects an boolean as argument.");
 
         try {
-          triton::api.enableSymbolicEngine(PyObject_IsTrue(flag));
+          triton::api.enableSymbolicEngine(static_cast<bool>(PyObject_IsTrue(flag)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1189,6 +1189,7 @@ namespace triton {
       static PyObject* triton_enableSymbolicOptimization(PyObject* self, PyObject* args) {
         PyObject* opti = nullptr;
         PyObject* flag = nullptr;
+        bool bflag     = false;
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &opti, &flag);
@@ -1204,7 +1205,8 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "enableSymbolicOptimization(): Expects an boolean flag as second argument.");
 
         try {
-          triton::api.enableSymbolicOptimization(static_cast<enum triton::engines::symbolic::optimization_e>(PyLong_AsUint32(opti)), PyObject_IsTrue(flag));
+          bflag = static_cast<bool>(PyObject_IsTrue(flag));
+          triton::api.enableSymbolicOptimization(static_cast<enum triton::engines::symbolic::optimization_e>(PyLong_AsUint32(opti)), bflag);
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1224,7 +1226,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "enableSymbolicZ3Simplification(): Expects a boolean as argument.");
 
         try {
-          triton::api.enableSymbolicZ3Simplification(PyObject_IsTrue(flag));
+          triton::api.enableSymbolicZ3Simplification(static_cast<bool>(PyObject_IsTrue(flag)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1244,7 +1246,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "enableTaintEngine(): Expects an boolean as argument.");
 
         try {
-          triton::api.enableTaintEngine(PyObject_IsTrue(flag));
+          triton::api.enableTaintEngine(static_cast<bool>(PyObject_IsTrue(flag)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2214,6 +2216,7 @@ namespace triton {
       static PyObject* triton_setTaintMemory(PyObject* self, PyObject* args) {
         PyObject* mem    = nullptr;
         PyObject* flag   = nullptr;
+        bool bflag       = false;
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &mem, &flag);
@@ -2229,7 +2232,8 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "setTaintMemory(): Expects a boolean as second argument.");
 
         try {
-          if (triton::api.setTaintMemory(*PyMemoryOperand_AsMemoryOperand(mem), PyObject_IsTrue(flag)) == true)
+          bflag = static_cast<bool>(PyObject_IsTrue(flag));
+          if (triton::api.setTaintMemory(*PyMemoryOperand_AsMemoryOperand(mem), bflag) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -2242,6 +2246,7 @@ namespace triton {
       static PyObject* triton_setTaintRegister(PyObject* self, PyObject* args) {
         PyObject* reg    = nullptr;
         PyObject* flag   = nullptr;
+        bool bflag       = false;
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &reg, &flag);
@@ -2257,7 +2262,8 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "setTaintRegister(): Expects a boolean as second argument.");
 
         try {
-          if (triton::api.setTaintRegister(*PyRegisterOperand_AsRegisterOperand(reg), PyObject_IsTrue(flag)) == true)
+          bflag = static_cast<bool>(PyObject_IsTrue(flag));
+          if (triton::api.setTaintRegister(*PyRegisterOperand_AsRegisterOperand(reg), bflag) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -2270,6 +2276,7 @@ namespace triton {
       static PyObject* triton_simplify(PyObject* self, PyObject* args) {
         PyObject* node        = nullptr;
         PyObject* z3Flag      = nullptr;
+        bool bflag            = false;
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &node, &z3Flag);
@@ -2288,7 +2295,8 @@ namespace triton {
           z3Flag = PyLong_FromUint32(false);
 
         try {
-          return PyAstNode(triton::api.processSimplification(PyAstNode_AsAstNode(node), PyObject_IsTrue(z3Flag)));
+          bflag = static_cast<bool>(PyObject_IsTrue(flag));
+          return PyAstNode(triton::api.processSimplification(PyAstNode_AsAstNode(node), bflag));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
