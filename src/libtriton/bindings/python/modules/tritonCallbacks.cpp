@@ -1797,7 +1797,7 @@ namespace triton {
 
       static PyObject* triton_getTaintedSymbolicExpressions(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        triton::uint32 size = 0, index = 0;
+        triton::usize size = 0, index = 0;
         std::list<triton::engines::symbolic::SymbolicExpression*> expressions;
         std::list<triton::engines::symbolic::SymbolicExpression*>::iterator it;
 
