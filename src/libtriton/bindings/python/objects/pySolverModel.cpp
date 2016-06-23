@@ -90,7 +90,7 @@ namespace triton {
 
       static PyObject* SolverModel_getId(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PySolverModel_AsSolverModel(self)->getId());
+          return PyLong_FromUint32(PySolverModel_AsSolverModel(self)->getId());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

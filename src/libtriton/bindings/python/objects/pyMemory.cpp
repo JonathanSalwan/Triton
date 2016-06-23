@@ -196,7 +196,7 @@ namespace triton {
 
       static PyObject* MemoryOperand_getBitSize(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyMemoryOperand_AsMemoryOperand(self)->getBitSize());
+          return PyLong_FromUint32(PyMemoryOperand_AsMemoryOperand(self)->getBitSize());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -270,7 +270,7 @@ namespace triton {
 
       static PyObject* MemoryOperand_getSize(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyMemoryOperand_AsMemoryOperand(self)->getSize());
+          return PyLong_FromUint32(PyMemoryOperand_AsMemoryOperand(self)->getSize());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -280,7 +280,7 @@ namespace triton {
 
       static PyObject* MemoryOperand_getType(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyMemoryOperand_AsMemoryOperand(self)->getType());
+          return PyLong_FromUint32(PyMemoryOperand_AsMemoryOperand(self)->getType());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

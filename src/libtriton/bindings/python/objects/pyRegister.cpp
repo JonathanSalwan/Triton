@@ -126,7 +126,7 @@ namespace triton {
 
       static PyObject* RegisterOperand_getBitSize(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyRegisterOperand_AsRegisterOperand(self)->getBitSize());
+          return PyLong_FromUint32(PyRegisterOperand_AsRegisterOperand(self)->getBitSize());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -177,7 +177,7 @@ namespace triton {
 
       static PyObject* RegisterOperand_getSize(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyRegisterOperand_AsRegisterOperand(self)->getSize());
+          return PyLong_FromUint32(PyRegisterOperand_AsRegisterOperand(self)->getSize());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -187,7 +187,7 @@ namespace triton {
 
       static PyObject* RegisterOperand_getType(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyRegisterOperand_AsRegisterOperand(self)->getType());
+          return PyLong_FromUint32(PyRegisterOperand_AsRegisterOperand(self)->getType());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

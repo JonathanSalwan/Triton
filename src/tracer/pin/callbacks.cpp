@@ -131,7 +131,7 @@ namespace tracer {
            * threadId and sig are sent to the callback. */
           PyObject* args = triton::bindings::python::xPyTuple_New(2);
           PyTuple_SetItem(args, 0, triton::bindings::python::PyLong_FromUint32(threadId));
-          PyTuple_SetItem(args, 1, Py_BuildValue("i", sig));
+          PyTuple_SetItem(args, 1, triton::bindings::python::PyLong_FromUint32(sig));
           if (PyObject_CallObject(tracer::pintool::options::callbackSignals, args) == nullptr) {
             PyErr_Print();
             exit(1);

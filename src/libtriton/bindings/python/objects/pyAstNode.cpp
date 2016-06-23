@@ -118,7 +118,7 @@ namespace triton {
 
       static PyObject* AstNode_getBitvectorSize(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyAstNode_AsAstNode(self)->getBitvectorSize());
+          return PyLong_FromUint32(PyAstNode_AsAstNode(self)->getBitvectorSize());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -156,7 +156,7 @@ namespace triton {
 
       static PyObject* AstNode_getKind(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyAstNode_AsAstNode(self)->getKind());
+          return PyLong_FromUint32(PyAstNode_AsAstNode(self)->getKind());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

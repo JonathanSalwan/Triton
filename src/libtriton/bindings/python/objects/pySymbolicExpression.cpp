@@ -154,7 +154,7 @@ namespace triton {
 
       static PyObject* SymbolicExpression_getId(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PySymbolicExpression_AsSymbolicExpression(self)->getId());
+          return PyLong_FromUsize(PySymbolicExpression_AsSymbolicExpression(self)->getId());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -164,7 +164,7 @@ namespace triton {
 
       static PyObject* SymbolicExpression_getKind(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PySymbolicExpression_AsSymbolicExpression(self)->getKind());
+          return PyLong_FromUint32(PySymbolicExpression_AsSymbolicExpression(self)->getKind());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

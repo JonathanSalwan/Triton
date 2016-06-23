@@ -50,9 +50,9 @@ namespace triton {
       /* Allocate and init the good arch */
       switch (this->arch) {
         case triton::arch::ARCH_X86_64:
-          #if defined(__i386) || defined(_M_IX86)
-            throw std::runtime_error("Architecture::setArchitecture(): You cannot analyze 64-bits code on a 32-bits machine.");
-          #endif
+          //#if defined(__i386) || defined(_M_IX86)
+          //  throw std::runtime_error("Architecture::setArchitecture(): You cannot analyze 64-bits code on a 32-bits machine.");
+          //#endif
           /* remove previous CPU instance (when setArchitecture() has been called twice) */
           delete this->cpu;
           /* init the new instance */

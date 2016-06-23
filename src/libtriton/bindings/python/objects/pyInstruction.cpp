@@ -290,7 +290,7 @@ namespace triton {
 
       static PyObject* Instruction_getSize(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyInstruction_AsInstruction(self)->getSize());
+          return PyLong_FromUint32(PyInstruction_AsInstruction(self)->getSize());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -365,7 +365,7 @@ namespace triton {
 
       static PyObject* Instruction_getPrefix(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyInstruction_AsInstruction(self)->getPrefix());
+          return PyLong_FromUint32(PyInstruction_AsInstruction(self)->getPrefix());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -515,7 +515,7 @@ namespace triton {
 
       static PyObject* Instruction_getThreadId(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyInstruction_AsInstruction(self)->getThreadId());
+          return PyLong_FromUint32(PyInstruction_AsInstruction(self)->getThreadId());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -525,7 +525,7 @@ namespace triton {
 
       static PyObject* Instruction_getType(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyInstruction_AsInstruction(self)->getType());
+          return PyLong_FromUint32(PyInstruction_AsInstruction(self)->getType());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

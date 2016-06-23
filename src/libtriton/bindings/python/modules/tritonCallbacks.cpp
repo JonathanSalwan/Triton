@@ -949,17 +949,17 @@ namespace triton {
 
 
       static PyObject* triton_cpuInvalidRegister(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", triton::api.cpuInvalidRegister());
+        return PyLong_FromUint32(triton::api.cpuInvalidRegister());
       }
 
 
       static PyObject* triton_cpuRegisterBitSize(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", triton::api.cpuRegisterBitSize());
+        return PyLong_FromUint32(triton::api.cpuRegisterBitSize());
       }
 
 
       static PyObject* triton_cpuRegisterSize(PyObject* self, PyObject* noarg) {
-        return Py_BuildValue("k", triton::api.cpuRegisterSize());
+        return PyLong_FromUint32(triton::api.cpuRegisterSize());
       }
 
 

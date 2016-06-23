@@ -62,7 +62,7 @@ namespace triton {
 
       static PyObject* Bitvector_getHigh(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyBitvector_AsHigh(self));
+          return PyLong_FromUint32(PyBitvector_AsHigh(self));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -72,7 +72,7 @@ namespace triton {
 
       static PyObject* Bitvector_getLow(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("k", PyBitvector_AsLow(self));
+          return PyLong_FromUint32(PyBitvector_AsLow(self));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -83,7 +83,7 @@ namespace triton {
       static PyObject* Bitvector_getVectorSize(PyObject* self, PyObject* noarg) {
         try {
           triton::uint32 vectorSize = ((PyBitvector_AsHigh(self) - PyBitvector_AsLow(self)) + 1);
-          return Py_BuildValue("k", vectorSize);
+          return PyLong_FromUint32(vectorSize);
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
