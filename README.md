@@ -6,7 +6,7 @@ passes, a SMT Solver Interface and, the last but not least, Python bindings.
 
 <p align="center">
     <img src="http://triton.quarkslab.com/files/triton_v03_architecture.svg"/></br>
-    <img src="http://triton.quarkslab.com/files/triton_multi_os.svg"/>
+    <img src="http://triton.quarkslab.com/files/triton_multi_os.png"/>
 </p>
 
 Based on these components, you are able to build program analysis tools, automate reverse engineering and perform software verification.
