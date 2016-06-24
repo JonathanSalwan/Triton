@@ -2892,89 +2892,44 @@ def test_7():
     return count
 
 
-def test_8():
-    count = 0
-
-    setArchitecture(ARCH.X86_64)
-    enableSymbolicEmulation(True)
-    count += 1
-    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
-    count += 1
-
-    fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
-    data = eval(fd.read())
-    fd.close()
-
-    regs = data[0]
-    mems = data[1]
-
+def test_8_setup_reg(regs):
     setLastRegisterValue(Register(REG.RAX,    regs['rax']))
-    count += 1
     setLastRegisterValue(Register(REG.RBX,    regs['rbx']))
-    count += 1
     setLastRegisterValue(Register(REG.RCX,    regs['rcx']))
-    count += 1
     setLastRegisterValue(Register(REG.RDX,    regs['rdx']))
-    count += 1
     setLastRegisterValue(Register(REG.RDI,    regs['rdi']))
-    count += 1
     setLastRegisterValue(Register(REG.RSI,    regs['rsi']))
-    count += 1
     setLastRegisterValue(Register(REG.RBP,    regs['rbp']))
-    count += 1
     setLastRegisterValue(Register(REG.RSP,    regs['rsp']))
-    count += 1
     setLastRegisterValue(Register(REG.RIP,    regs['rip']))
-    count += 1
     setLastRegisterValue(Register(REG.R8,     regs['r8']))
-    count += 1
     setLastRegisterValue(Register(REG.R9,     regs['r9']))
-    count += 1
     setLastRegisterValue(Register(REG.R10,    regs['r10']))
-    count += 1
     setLastRegisterValue(Register(REG.R11,    regs['r11']))
-    count += 1
     setLastRegisterValue(Register(REG.R12,    regs['r12']))
-    count += 1
     setLastRegisterValue(Register(REG.R13,    regs['r13']))
-    count += 1
     setLastRegisterValue(Register(REG.R14,    regs['r14']))
-    count += 1
     setLastRegisterValue(Register(REG.EFLAGS, regs['eflags']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM0,   regs['xmm0']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM1,   regs['xmm1']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM2,   regs['xmm2']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM3,   regs['xmm3']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM4,   regs['xmm4']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM5,   regs['xmm5']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM6,   regs['xmm6']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM7,   regs['xmm7']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM8,   regs['xmm8']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM9,   regs['xmm9']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM10,  regs['xmm10']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM11,  regs['xmm11']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM12,  regs['xmm12']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM13,  regs['xmm13']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM14,  regs['xmm14']))
-    count += 1
     setLastRegisterValue(Register(REG.XMM15,  regs['xmm15']))
-    count += 1
+    return
 
+
+def test_8_setup_mem(mems):
     for mem in mems:
         start = mem['start']
         end   = mem['end']
@@ -2982,20 +2937,20 @@ def test_8():
             for byte in mem['memory']:
                 setLastMemoryValue(Memory(start, 1, ord(byte)))
                 start += 1
-        count += 1
+    return
+
+
+def test_8_emulate(concretize=False):
+    count = 0
 
     pc = getRegisterValue(REG.RIP)
-    count += 1
-
     while True:
         opcodes = array.array('B', getMemoryAreaValue(pc, 20)).tostring()
-        count += 1
 
         instruction = Instruction()
         instruction.setOpcodes(opcodes)
         instruction.setAddress(pc)
         processing(instruction)
-        count += 1
 
         # Check if triton doesn't supports this instruction
         if not len(instruction.getSymbolicExpressions()):
@@ -3003,9 +2958,14 @@ def test_8():
             print '\tOutput   : <invalid expressions>'
             print '\tExpected : <valid expressions>'
             return -1
+        else:
+            count += 1
 
         pc = buildSymbolicRegister(REG.RIP).evaluate()
-        count += 1
+
+        if concretize == True:
+            concretizeAllMemory()
+            concretizeAllRegister()
 
         # End of the emulation
         if pc == 0x409A18:
@@ -3057,11 +3017,136 @@ def test_8():
 
             # Everything is good
             break
+    return count
+
+
+def test_8_1():
+    count = 0
+
+    setArchitecture(ARCH.X86_64)
+    enableSymbolicEmulation(True)
+
+    fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
+    data = eval(fd.read())
+    fd.close()
+
+    regs = data[0]
+    mems = data[1]
+
+    test_8_setup_reg(regs)
+    test_8_setup_mem(mems)
+
+    ret = test_8_emulate()
+    if ret == -1:
+        return -1
+    else:
+        count += ret
 
     return count
 
 
+def test_8_2():
+    count = 0
 
+    setArchitecture(ARCH.X86_64)
+    enableSymbolicEmulation(True)
+    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
+
+    fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
+    data = eval(fd.read())
+    fd.close()
+
+    regs = data[0]
+    mems = data[1]
+
+    test_8_setup_reg(regs)
+    test_8_setup_mem(mems)
+
+    ret = test_8_emulate()
+    if ret == -1:
+        return -1
+    else:
+        count += ret
+
+    return count
+
+
+def test_8_3():
+    count = 0
+
+    setArchitecture(ARCH.X86_64)
+    enableSymbolicEmulation(True)
+    enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
+
+    fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
+    data = eval(fd.read())
+    fd.close()
+
+    regs = data[0]
+    mems = data[1]
+
+    test_8_setup_reg(regs)
+    test_8_setup_mem(mems)
+
+    ret = test_8_emulate()
+    if ret == -1:
+        return -1
+    else:
+        count += ret
+
+    return count
+
+
+def test_8_4():
+    count = 0
+
+    setArchitecture(ARCH.X86_64)
+    enableSymbolicEmulation(True)
+    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
+    enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
+
+    fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
+    data = eval(fd.read())
+    fd.close()
+
+    regs = data[0]
+    mems = data[1]
+
+    test_8_setup_reg(regs)
+    test_8_setup_mem(mems)
+
+    ret = test_8_emulate()
+    if ret == -1:
+        return -1
+    else:
+        count += ret
+
+    return count
+
+def test_8_5():
+    count = 0
+
+    setArchitecture(ARCH.X86_64)
+    enableSymbolicEmulation(True)
+    enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
+
+    fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
+    data = eval(fd.read())
+    fd.close()
+
+    regs = data[0]
+    mems = data[1]
+
+    test_8_setup_reg(regs)
+    test_8_setup_mem(mems)
+
+    ret = test_8_emulate(concretize=True)
+    if ret == -1:
+        return -1
+    else:
+        count += ret
+
+    return count
 
 
 units_testing = [
@@ -3072,7 +3157,11 @@ units_testing = [
     ("Testing the Instruction class", test_5),
     ("Testing the architectures", test_6),
     ("Testing the concrete flag values", test_7),
-    ("Testing the symbolic emulation engine", test_8),
+    ("Testing the symbolic emulation engine without optimization", test_8_1),
+    ("Testing the symbolic emulation engine with the ALIGNED_MEMORY optimization", test_8_2),
+    ("Testing the symbolic emulation engine with the AST_DICTIONARIES optimization", test_8_3),
+    ("Testing the symbolic emulation engine with the ALIGNED_MEMORY and AST_DICTIONARIES optimizations", test_8_4),
+    ("Testing the symbolic emulation engine with the AST_DICTIONARIES optimization and concretization", test_8_5),
 ]
 
 
@@ -3081,11 +3170,11 @@ if __name__ == '__main__':
     for n, f in units_testing:
         ret = f()
         if ret < 0:
-            print '[KO]\t%s' %(n)
             sys.exit(-1)
         else:
             count += ret
-            print '[OK]\t%s' %(n)
-    print '[GOOD]\t%d tests were been executed successfully :-)' %(count)
+            print '[OK] %s' %(n)
+    print
+    print '[GOOD]\t%s tests were been executed successfully :-)' %('{0:,}'.format(count))
     sys.exit(0)
 
