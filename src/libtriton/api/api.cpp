@@ -179,8 +179,8 @@ namespace triton {
     this->astGarbageCollector = nullptr;
     this->astRepresentation   = nullptr;
     this->solver              = nullptr;
-    this->sym                 = nullptr;
-    this->symBackup           = nullptr;
+    this->symbolic            = nullptr;
+    this->symbolicBackup      = nullptr;
     this->taint               = nullptr;
   }
 
@@ -368,12 +368,12 @@ namespace triton {
     if (!this->taint)
       throw std::invalid_argument("API::initEngines(): No enough memory.");
 
-    this->sym = new triton::engines::symbolic::SymbolicEngine();
-    if (!this->sym)
+    this->symbolic = new triton::engines::symbolic::SymbolicEngine();
+    if (!this->symbolic)
       throw std::invalid_argument("API::initEngines(): No enough memory.");
 
-    this->symBackup = new triton::engines::symbolic::SymbolicEngine();
-    if (!this->symBackup)
+    this->symbolicBackup = new triton::engines::symbolic::SymbolicEngine();
+    if (!this->symbolicBackup)
       throw std::invalid_argument("API::initEngines(): No enough memory.");
 
     this->solver = new triton::engines::solver::SolverEngine();
@@ -395,15 +395,15 @@ namespace triton {
       delete this->astGarbageCollector;
       delete this->astRepresentation;
       delete this->solver;
-      delete this->sym;
-      delete this->symBackup;
+      delete this->symbolic;
+      delete this->symbolicBackup;
       delete this->taint;
 
       this->astGarbageCollector = nullptr;
       this->astRepresentation   = nullptr;
       this->solver              = nullptr;
-      this->sym                 = nullptr;
-      this->symBackup           = nullptr;
+      this->symbolic            = nullptr;
+      this->symbolicBackup      = nullptr;
       this->taint               = nullptr;
     }
   }
@@ -525,42 +525,42 @@ namespace triton {
   /* Symbolic Engine API ============================================================================ */
 
   void API::checkSymbolic(void) const {
-    if (!this->sym || !this->symBackup)
+    if (!this->symbolic || !this->symbolicBackup)
       throw std::runtime_error("API::checkSymbolic(): Symbolic engine is undefined.");
   }
 
 
   void API::backupSymbolicEngine(void) {
-    *this->symBackup = *this->sym;
+    *this->symbolicBackup = *this->symbolic;
   }
 
 
   void API::restoreSymbolicEngine(void) {
-    *this->sym = *this->symBackup;
+    *this->symbolic = *this->symbolicBackup;
   }
 
 
   triton::engines::symbolic::SymbolicEngine* API::getSymbolicEngine(void) {
     this->checkSymbolic();
-    return this->sym;
+    return this->symbolic;
   }
 
 
   triton::engines::symbolic::SymbolicVariable* API::convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
     this->checkSymbolic();
-    return this->sym->convertExpressionToSymbolicVariable(exprId, symVarSize, symVarComment);
+    return this->symbolic->convertExpressionToSymbolicVariable(exprId, symVarSize, symVarComment);
   }
 
 
   triton::engines::symbolic::SymbolicVariable* API::convertMemoryToSymbolicVariable(const triton::arch::MemoryOperand& mem, const std::string& symVarComment) {
     this->checkSymbolic();
-    return this->sym->convertMemoryToSymbolicVariable(mem, symVarComment);
+    return this->symbolic->convertMemoryToSymbolicVariable(mem, symVarComment);
   }
 
 
   triton::engines::symbolic::SymbolicVariable* API::convertRegisterToSymbolicVariable(const triton::arch::RegisterOperand& reg, const std::string& symVarComment) {
     this->checkSymbolic();
-    return this->sym->convertRegisterToSymbolicVariable(reg, symVarComment);
+    return this->symbolic->convertRegisterToSymbolicVariable(reg, symVarComment);
   }
 
 
@@ -590,55 +590,55 @@ namespace triton {
 
   triton::ast::AbstractNode* API::buildSymbolicImmediateOperand(const triton::arch::ImmediateOperand& imm) {
     this->checkSymbolic();
-    return this->sym->buildSymbolicImmediateOperand(imm);
+    return this->symbolic->buildSymbolicImmediateOperand(imm);
   }
 
 
   triton::ast::AbstractNode* API::buildSymbolicImmediateOperand(triton::arch::Instruction& inst, triton::arch::ImmediateOperand& imm) {
     this->checkSymbolic();
-    return this->sym->buildSymbolicImmediateOperand(inst, imm);
+    return this->symbolic->buildSymbolicImmediateOperand(inst, imm);
   }
 
 
   triton::ast::AbstractNode* API::buildSymbolicMemoryOperand(const triton::arch::MemoryOperand& mem) {
     this->checkSymbolic();
-    return this->sym->buildSymbolicMemoryOperand(mem);
+    return this->symbolic->buildSymbolicMemoryOperand(mem);
   }
 
 
   triton::ast::AbstractNode* API::buildSymbolicMemoryOperand(triton::arch::Instruction& inst, triton::arch::MemoryOperand& mem) {
     this->checkSymbolic();
-    return this->sym->buildSymbolicMemoryOperand(inst, mem);
+    return this->symbolic->buildSymbolicMemoryOperand(inst, mem);
   }
 
 
   triton::ast::AbstractNode* API::buildSymbolicRegisterOperand(const triton::arch::RegisterOperand& reg) {
     this->checkSymbolic();
-    return this->sym->buildSymbolicRegisterOperand(reg);
+    return this->symbolic->buildSymbolicRegisterOperand(reg);
   }
 
 
   triton::ast::AbstractNode* API::buildSymbolicRegisterOperand(triton::arch::Instruction& inst, triton::arch::RegisterOperand& reg) {
     this->checkSymbolic();
-    return this->sym->buildSymbolicRegisterOperand(inst, reg);
+    return this->symbolic->buildSymbolicRegisterOperand(inst, reg);
   }
 
 
   triton::engines::symbolic::SymbolicExpression* API::newSymbolicExpression(triton::ast::AbstractNode* node, const std::string& comment) {
     this->checkSymbolic();
-    return this->sym->newSymbolicExpression(node, triton::engines::symbolic::UNDEF, comment);
+    return this->symbolic->newSymbolicExpression(node, triton::engines::symbolic::UNDEF, comment);
   }
 
 
   triton::engines::symbolic::SymbolicVariable* API::newSymbolicVariable(triton::uint32 varSize, const std::string& comment) {
     this->checkSymbolic();
-    return this->sym->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, varSize, comment);
+    return this->symbolic->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, varSize, comment);
   }
 
 
   void API::removeSymbolicExpression(triton::usize symExprId) {
     this->checkSymbolic();
-    return this->sym->removeSymbolicExpression(symExprId);
+    return this->symbolic->removeSymbolicExpression(symExprId);
   }
 
 
@@ -656,79 +656,79 @@ namespace triton {
 
   triton::engines::symbolic::SymbolicExpression* API::createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::MemoryOperand& mem, const std::string& comment) {
     this->checkSymbolic();
-    return this->sym->createSymbolicMemoryExpression(inst, node, mem, comment);
+    return this->symbolic->createSymbolicMemoryExpression(inst, node, mem, comment);
   }
 
 
   triton::engines::symbolic::SymbolicExpression* API::createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterOperand& reg, const std::string& comment) {
     this->checkSymbolic();
-    return this->sym->createSymbolicRegisterExpression(inst, node, reg, comment);
+    return this->symbolic->createSymbolicRegisterExpression(inst, node, reg, comment);
   }
 
 
   triton::engines::symbolic::SymbolicExpression* API::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterOperand& flag, const std::string& comment) {
     this->checkSymbolic();
-    return this->sym->createSymbolicFlagExpression(inst, node, flag, comment);
+    return this->symbolic->createSymbolicFlagExpression(inst, node, flag, comment);
   }
 
 
   triton::engines::symbolic::SymbolicExpression* API::createSymbolicVolatileExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const std::string& comment) {
     this->checkSymbolic();
-    return this->sym->createSymbolicVolatileExpression(inst, node, comment);
+    return this->symbolic->createSymbolicVolatileExpression(inst, node, comment);
   }
 
 
   void API::assignSymbolicExpressionToMemory(triton::engines::symbolic::SymbolicExpression* se, const triton::arch::MemoryOperand& mem) {
     this->checkSymbolic();
-    this->sym->assignSymbolicExpressionToMemory(se, mem);
+    this->symbolic->assignSymbolicExpressionToMemory(se, mem);
   }
 
 
   void API::assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, const triton::arch::RegisterOperand& reg) {
     this->checkSymbolic();
-    this->sym->assignSymbolicExpressionToRegister(se, reg);
+    this->symbolic->assignSymbolicExpressionToRegister(se, reg);
   }
 
 
   triton::usize API::getSymbolicMemoryId(triton::uint64 addr) const {
     this->checkSymbolic();
-    return this->sym->getSymbolicMemoryId(addr);
+    return this->symbolic->getSymbolicMemoryId(addr);
   }
 
 
   std::map<triton::arch::RegisterOperand, triton::engines::symbolic::SymbolicExpression*> API::getSymbolicRegisters(void) const {
     this->checkSymbolic();
-    return this->sym->getSymbolicRegisters();
+    return this->symbolic->getSymbolicRegisters();
   }
 
 
   std::map<triton::uint64, triton::engines::symbolic::SymbolicExpression*> API::getSymbolicMemory(void) const {
     this->checkSymbolic();
-    return this->sym->getSymbolicMemory();
+    return this->symbolic->getSymbolicMemory();
   }
 
 
   triton::usize API::getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) const {
     this->checkSymbolic();
-    return this->sym->getSymbolicRegisterId(reg);
+    return this->symbolic->getSymbolicRegisterId(reg);
   }
 
 
   triton::uint8 API::getSymbolicMemoryValue(triton::uint64 address) {
     this->checkSymbolic();
-    return this->sym->getSymbolicMemoryValue(address);
+    return this->symbolic->getSymbolicMemoryValue(address);
   }
 
 
   triton::uint512 API::getSymbolicMemoryValue(const triton::arch::MemoryOperand& mem) {
     this->checkSymbolic();
-    return this->sym->getSymbolicMemoryValue(mem);
+    return this->symbolic->getSymbolicMemoryValue(mem);
   }
 
 
   std::vector<triton::uint8> API::getSymbolicMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size) {
     this->checkSymbolic();
-    return this->sym->getSymbolicMemoryAreaValue(baseAddr, size);
+    return this->symbolic->getSymbolicMemoryAreaValue(baseAddr, size);
   }
 
 
@@ -766,185 +766,185 @@ namespace triton {
 
   triton::uint512 API::getSymbolicRegisterValue(const triton::arch::RegisterOperand& reg) {
     this->checkSymbolic();
-    return this->sym->getSymbolicRegisterValue(reg);
+    return this->symbolic->getSymbolicRegisterValue(reg);
   }
 
 
   void API::recordSimplificationCallback(triton::engines::symbolic::sfp cb) {
     this->checkSymbolic();
-    return this->sym->recordSimplificationCallback(cb);
+    return this->symbolic->recordSimplificationCallback(cb);
   }
 
 
   #ifdef TRITON_PYTHON_BINDINGS
   void API::recordSimplificationCallback(PyObject* cb) {
     this->checkSymbolic();
-    return this->sym->recordSimplificationCallback(cb);
+    return this->symbolic->recordSimplificationCallback(cb);
   }
   #endif
 
 
   void API::removeSimplificationCallback(triton::engines::symbolic::sfp cb) {
     this->checkSymbolic();
-    return this->sym->removeSimplificationCallback(cb);
+    return this->symbolic->removeSimplificationCallback(cb);
   }
 
 
   #ifdef TRITON_PYTHON_BINDINGS
   void API::removeSimplificationCallback(PyObject* cb) {
     this->checkSymbolic();
-    return this->sym->removeSimplificationCallback(cb);
+    return this->symbolic->removeSimplificationCallback(cb);
   }
   #endif
 
 
   triton::ast::AbstractNode* API::browseAstDictionaries(triton::ast::AbstractNode* node) {
     this->checkSymbolic();
-    return this->sym->browseAstDictionaries(node);
+    return this->symbolic->browseAstDictionaries(node);
   }
 
 
   std::map<std::string, triton::usize> API::getAstDictionariesStats(void) {
     this->checkSymbolic();
-    return this->sym->getAstDictionariesStats();
+    return this->symbolic->getAstDictionariesStats();
   }
 
 
   triton::ast::AbstractNode* API::processSimplification(triton::ast::AbstractNode* node, bool z3) const {
     this->checkSymbolic();
-    return this->sym->processSimplification(node, z3);
+    return this->symbolic->processSimplification(node, z3);
   }
 
 
   triton::engines::symbolic::SymbolicExpression* API::getSymbolicExpressionFromId(triton::usize symExprId) const {
     this->checkSymbolic();
-    return this->sym->getSymbolicExpressionFromId(symExprId);
+    return this->symbolic->getSymbolicExpressionFromId(symExprId);
   }
 
 
   triton::engines::symbolic::SymbolicVariable* API::getSymbolicVariableFromId(triton::usize symVarId) const {
     this->checkSymbolic();
-    return this->sym->getSymbolicVariableFromId(symVarId);
+    return this->symbolic->getSymbolicVariableFromId(symVarId);
   }
 
 
   triton::engines::symbolic::SymbolicVariable* API::getSymbolicVariableFromName(const std::string& symVarName) const {
     this->checkSymbolic();
-    return this->sym->getSymbolicVariableFromName(symVarName);
+    return this->symbolic->getSymbolicVariableFromName(symVarName);
   }
 
 
   const std::vector<triton::engines::symbolic::PathConstraint>& API::getPathConstraints(void) const {
     this->checkSymbolic();
-    return this->sym->getPathConstraints();
+    return this->symbolic->getPathConstraints();
   }
 
 
   triton::ast::AbstractNode* API::getPathConstraintsAst(void) {
     this->checkSymbolic();
-    return this->sym->getPathConstraintsAst();
+    return this->symbolic->getPathConstraintsAst();
   }
 
 
   void API::addPathConstraint(triton::engines::symbolic::SymbolicExpression* expr) {
     this->checkSymbolic();
-    this->sym->addPathConstraint(expr);
+    this->symbolic->addPathConstraint(expr);
   }
 
 
   void API::clearPathConstraints(void) {
     this->checkSymbolic();
-    this->sym->clearPathConstraints();
+    this->symbolic->clearPathConstraints();
   }
 
 
   void API::enableSymbolicEngine(bool flag) {
     this->checkSymbolic();
-    this->sym->enable(flag);
+    this->symbolic->enable(flag);
   }
 
 
   void API::enableSymbolicEmulation(bool flag) {
     this->checkSymbolic();
-    this->sym->emulation(flag);
+    this->symbolic->emulation(flag);
   }
 
 
   void API::enableSymbolicZ3Simplification(bool flag) {
     this->checkSymbolic();
-    this->sym->enableZ3Simplification(flag);
+    this->symbolic->enableZ3Simplification(flag);
   }
 
 
   void API::enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti, bool flag) {
     this->checkSymbolic();
-    this->sym->enableOptimization(opti, flag);
+    this->symbolic->enableOptimization(opti, flag);
   }
 
 
   bool API::isSymbolicEmulationEnabled(void) const {
     this->checkSymbolic();
-    return this->sym->isEmulationEnabled();
+    return this->symbolic->isEmulationEnabled();
   }
 
 
   bool API::isSymbolicEngineEnabled(void) const {
     this->checkSymbolic();
-    return this->sym->isEnabled();
+    return this->symbolic->isEnabled();
   }
 
 
   bool API::isSymbolicZ3SimplificationEnabled(void) const {
     this->checkSymbolic();
-    return this->sym->isZ3SimplificationEnabled();
+    return this->symbolic->isZ3SimplificationEnabled();
   }
 
 
   bool API::isSymbolicExpressionIdExists(triton::usize symExprId) const {
     this->checkSymbolic();
-    return this->sym->isSymbolicExpressionIdExists(symExprId);
+    return this->symbolic->isSymbolicExpressionIdExists(symExprId);
   }
 
 
   bool API::isSymbolicOptimizationEnabled(enum triton::engines::symbolic::optimization_e opti) {
     this->checkSymbolic();
-    return this->sym->isOptimizationEnabled(opti);
+    return this->symbolic->isOptimizationEnabled(opti);
   }
 
 
   void API::concretizeAllMemory(void) {
     this->checkSymbolic();
-    this->sym->concretizeAllMemory();
+    this->symbolic->concretizeAllMemory();
   }
 
 
   void API::concretizeAllRegister(void) {
     this->checkSymbolic();
-    this->sym->concretizeAllRegister();
+    this->symbolic->concretizeAllRegister();
   }
 
 
   void API::concretizeMemory(const triton::arch::MemoryOperand& mem) {
     this->checkSymbolic();
-    this->sym->concretizeMemory(mem);
+    this->symbolic->concretizeMemory(mem);
   }
 
 
   void API::concretizeMemory(triton::uint64 addr) {
     this->checkSymbolic();
-    this->sym->concretizeMemory(addr);
+    this->symbolic->concretizeMemory(addr);
   }
 
 
   void API::concretizeRegister(const triton::arch::RegisterOperand& reg) {
     this->checkSymbolic();
-    this->sym->concretizeRegister(reg);
+    this->symbolic->concretizeRegister(reg);
   }
 
 
   triton::ast::AbstractNode* API::getFullAst(triton::ast::AbstractNode* node) {
     this->checkSymbolic();
-    return this->sym->getFullAst(node);
+    return this->symbolic->getFullAst(node);
   }
 
 
@@ -964,25 +964,25 @@ namespace triton {
 
   std::list<triton::engines::symbolic::SymbolicExpression*> API::getTaintedSymbolicExpressions(void) const {
     this->checkSymbolic();
-    return this->sym->getTaintedSymbolicExpressions();
+    return this->symbolic->getTaintedSymbolicExpressions();
   }
 
 
   const std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*>& API::getSymbolicExpressions(void) const {
     this->checkSymbolic();
-    return this->sym->getSymbolicExpressions();
+    return this->symbolic->getSymbolicExpressions();
   }
 
 
   const std::map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& API::getSymbolicVariables(void) const {
     this->checkSymbolic();
-    return this->sym->getSymbolicVariables();
+    return this->symbolic->getSymbolicVariables();
   }
 
 
   std::string API::getVariablesDeclaration(void) const {
     this->checkSymbolic();
-    return this->sym->getVariablesDeclaration();
+    return this->symbolic->getVariablesDeclaration();
   }
 
 

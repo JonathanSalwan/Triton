@@ -47,10 +47,10 @@ namespace triton {
         triton::engines::taint::TaintEngine* taint;
 
         //! The symbolic engine.
-        triton::engines::symbolic::SymbolicEngine* sym;
+        triton::engines::symbolic::SymbolicEngine* symbolic;
 
         //! The backuped symbolic engine. Some optimizations need to perform an undo. This instance is used for that.
-        triton::engines::symbolic::SymbolicEngine* symBackup;
+        triton::engines::symbolic::SymbolicEngine* symbolicBackup;
 
         //! The solver engine.
         triton::engines::solver::SolverEngine* solver;
