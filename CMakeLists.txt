@@ -404,13 +404,6 @@ if(PINTOOL)
     endif()
 
 
-    # To prevent error c2872 ambiguous symbol in Windows we need to change the (U?INT\d+?) variables to PIN_(U?INT\d+?) in PIN.
-    # We wrote a python script to do it for you.
-    if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-        execute_process(COMMAND python ${CMAKE_SOURCE_DIR}/src/scripts/replace_UINT_PIN.py ${PIN_ROOT})
-    endif()
-
-
     # Pintool source files
     configure_file(
         ${CMAKE_SOURCE_DIR}/src/tracer/pin/init.in
