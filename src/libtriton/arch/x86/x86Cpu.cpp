@@ -549,7 +549,7 @@ namespace triton {
       void x86Cpu::disassembly(triton::arch::Instruction& inst) const {
         triton::extlibs::capstone::csh       handle;
         triton::extlibs::capstone::cs_insn*  insn;
-        size_t                               count = 0;
+        triton::usize                        count = 0;
 
         /* Check if the opcodes and opcodes' size are defined */
         if (inst.getOpcodes() == nullptr || inst.getSize() == 0)

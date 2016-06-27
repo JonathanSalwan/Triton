@@ -19,7 +19,6 @@ namespace triton {
 
 
     ImmediateOperand::ImmediateOperand(triton::uint64 value, triton::uint32 size /* bytes */) {
-
       if (size == 0)
         throw std::runtime_error("ImmediateOperand::ImmediateOperand(): size cannot be zero.");
 
@@ -28,13 +27,13 @@ namespace triton {
 
       switch (size) {
         case BYTE_SIZE:
-          this->value = (triton::uint8) value;
+          this->value = static_cast<triton::uint8>(value);
           break;
         case WORD_SIZE:
-          this->value = (triton::uint16) value;
+          this->value = static_cast<triton::uint16>(value);
           break;
         case DWORD_SIZE:
-          this->value = (triton::uint32) value;
+          this->value = static_cast<triton::uint32>(value);
           break;
         default:
           this->value = value;

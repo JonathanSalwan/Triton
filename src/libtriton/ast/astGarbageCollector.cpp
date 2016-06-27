@@ -96,7 +96,7 @@ namespace triton {
 
 
     void AstGarbageCollector::setAllocatedAstNodes(const std::set<triton::ast::AbstractNode*>& nodes) {
-        /* Remove unused nodes before the assignation */
+      /* Remove unused nodes before the assignation */
       for (std::set<triton::ast::AbstractNode*>::iterator it = this->allocatedNodes.begin(); it != this->allocatedNodes.end(); it++) {
         if (nodes.find(*it) == nodes.end())
           delete *it;
