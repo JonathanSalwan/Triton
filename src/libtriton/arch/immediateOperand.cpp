@@ -19,13 +19,26 @@ namespace triton {
 
 
     ImmediateOperand::ImmediateOperand(triton::uint64 value, triton::uint32 size /* bytes */) {
-      this->value = value;
 
       if (size == 0)
         throw std::runtime_error("ImmediateOperand::ImmediateOperand(): size cannot be zero.");
 
       if (size != BYTE_SIZE && size != WORD_SIZE && size != DWORD_SIZE && size != QWORD_SIZE && size != DQWORD_SIZE && size != QQWORD_SIZE && size != DQQWORD_SIZE)
         throw std::runtime_error("ImmediateOperand::ImmediateOperand(): size must be aligned.");
+
+      switch (size) {
+        case BYTE_SIZE:
+          this->value = (triton::uint8) value;
+          break;
+        case WORD_SIZE:
+          this->value = (triton::uint16) value;
+          break;
+        case DWORD_SIZE:
+          this->value = (triton::uint32) value;
+          break;
+        default:
+          this->value = value;
+      }
 
       this->setPair(std::make_pair(((size * BYTE_SIZE_BIT) - 1), 0));
     }
