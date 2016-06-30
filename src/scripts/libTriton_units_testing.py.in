@@ -1244,6 +1244,46 @@ def test_4():
         print '\tExpected : OPERAND.IMM'
         return -1
 
+    imm = Immediate(-4, CPUSIZE.BYTE)
+
+    if imm.getValue() == 0xfc:
+        count += 1
+    else:
+        print '[KO] imm.getValue()'
+        print '\tOutput   : 0x%x' %(imm.getValue())
+        print '\tExpected : 0xfc'
+        return -1
+
+    imm = Immediate(-4, CPUSIZE.WORD)
+
+    if imm.getValue() == 0xfffc:
+        count += 1
+    else:
+        print '[KO] imm.getValue()'
+        print '\tOutput   : 0x%x' %(imm.getValue())
+        print '\tExpected : 0xfffc'
+        return -1
+
+    imm = Immediate(-4, CPUSIZE.DWORD)
+
+    if imm.getValue() == 0xfffffffc:
+        count += 1
+    else:
+        print '[KO] imm.getValue()'
+        print '\tOutput   : 0x%x' %(imm.getValue())
+        print '\tExpected : 0xfffffffc'
+        return -1
+
+    imm = Immediate(-4, CPUSIZE.QWORD)
+
+    if imm.getValue() == 0xfffffffffffffffc:
+        count += 1
+    else:
+        print '[KO] imm.getValue()'
+        print '\tOutput   : 0x%x' %(imm.getValue())
+        print '\tExpected : 0xfffffffffffffffc'
+        return -1
+
     return count
 
 

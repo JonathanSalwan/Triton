@@ -35,13 +35,13 @@ This namespace come from the `pintool` module. The CALLBACK namespace contains a
 <hr>
 
 - **CALLBACK.AFTER**<br>
-Defines a callback after the instruction processing. At this point, the instruction has been executed. This callback receives the \py_Instruction_page class as argument.
+Defines a callback after the instruction processing. At this point, the instruction has been executed. This callback receives the \ref py_Instruction_page class as argument.
 
 - **CALLBACK.BEFORE**<br>
-Defines a callback before the instruction processing. At this point, the IR and data flow were been setup. This callback receives the \py_Instruction_page class as argument.
+Defines a callback before the instruction processing. At this point, the IR and data flow were been setup. This callback receives the \ref py_Instruction_page class as argument.
 
 - **CALLBACK.BEFORE_SYMPROC**<br>
-Defines a callback before the symbolic processing. Mainly used to setup and control the data flow as well as the taint spread. This callback receives the \py_Instruction_page class as argument.
+Defines a callback before the symbolic processing. Mainly used to setup and control the data flow as well as the taint spread. This callback receives the \ref py_Instruction_page class as argument.
 
 - **CALLBACK.FINI**<br>
 Defines a callback at the end of the execution. This callback receives any argument.
