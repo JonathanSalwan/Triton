@@ -1608,91 +1608,91 @@ namespace triton {
             break;
 
           case triton::arch::x86::ID_REG_OE:
-            std::get<0>(ret) = "OE";
+            std::get<0>(ret) = "oe";
             std::get<1>(ret) = 0;
             std::get<2>(ret) = 0;
             std::get<3>(ret) = triton::arch::x86::ID_REG_OE;
             break;
 
           case triton::arch::x86::ID_REG_UE:
-            std::get<0>(ret) = "UE";
+            std::get<0>(ret) = "ue";
             std::get<1>(ret) = 0;
             std::get<2>(ret) = 0;
             std::get<3>(ret) = triton::arch::x86::ID_REG_UE;
             break;
 
           case triton::arch::x86::ID_REG_PE:
-            std::get<0>(ret) = "PE";
+            std::get<0>(ret) = "pe";
             std::get<1>(ret) = 0;
             std::get<2>(ret) = 0;
             std::get<3>(ret) = triton::arch::x86::ID_REG_PE;
             break;
 
           case triton::arch::x86::ID_REG_DAZ:
-            std::get<0>(ret) = "DA";
+            std::get<0>(ret) = "da";
             std::get<1>(ret) = 0;
             std::get<2>(ret) = 0;
             std::get<3>(ret) = triton::arch::x86::ID_REG_DAZ;
             break;
 
           case triton::arch::x86::ID_REG_IM:
-            std::get<0>(ret) = "IM";
+            std::get<0>(ret) = "im";
             std::get<1>(ret) = 0;
             std::get<2>(ret) = 0;
             std::get<3>(ret) = triton::arch::x86::ID_REG_IM;
             break;
 
           case triton::arch::x86::ID_REG_DM:
-            std::get<0>(ret) = "DM";
+            std::get<0>(ret) = "dm";
             std::get<1>(ret) = 0;
             std::get<2>(ret) = 0;
             std::get<3>(ret) = triton::arch::x86::ID_REG_DM;
             break;
 
           case triton::arch::x86::ID_REG_ZM:
-            std::get<0>(ret) = "ZM";
+            std::get<0>(ret) = "zm";
             std::get<1>(ret) = 0;
             std::get<2>(ret) = 0;
             std::get<3>(ret) = triton::arch::x86::ID_REG_ZM;
             break;
 
           case triton::arch::x86::ID_REG_OM:
-            std::get<0>(ret) = "OM";
+            std::get<0>(ret) = "om";
             std::get<1>(ret) = 0;
             std::get<2>(ret) = 0;
             std::get<3>(ret) = triton::arch::x86::ID_REG_OM;
             break;
 
           case triton::arch::x86::ID_REG_UM:
-            std::get<0>(ret) = "UM";
+            std::get<0>(ret) = "um";
             std::get<1>(ret) = 0;
             std::get<2>(ret) = 0;
             std::get<3>(ret) = triton::arch::x86::ID_REG_UM;
             break;
 
           case triton::arch::x86::ID_REG_PM:
-            std::get<0>(ret) = "PM";
+            std::get<0>(ret) = "pm";
             std::get<1>(ret) = 0;
             std::get<2>(ret) = 0;
             std::get<3>(ret) = triton::arch::x86::ID_REG_PM;
             break;
 
           case triton::arch::x86::ID_REG_RL:
-            std::get<0>(ret) = "RL";
+            std::get<0>(ret) = "rl";
             std::get<1>(ret) = 0;
             std::get<2>(ret) = 0;
             std::get<3>(ret) = triton::arch::x86::ID_REG_RL;
             break;
 
           case triton::arch::x86::ID_REG_RH:
-            std::get<0>(ret) = "RH";
+            std::get<0>(ret) = "rh";
             std::get<1>(ret) = 0;
             std::get<2>(ret) = 0;
             std::get<3>(ret) = triton::arch::x86::ID_REG_RH;
             break;
 
           case triton::arch::x86::ID_REG_FZ:
-            std::get<0>(ret) = "FZ";
+            std::get<0>(ret) = "fz";
             std::get<1>(ret) = 0;
             std::get<2>(ret) = 0;
             std::get<3>(ret) = triton::arch::x86::ID_REG_FZ;

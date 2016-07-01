@@ -37,6 +37,14 @@ int main(int ac, const char **av) {
   std::cout << "Parent      : " << TRITON_X86_REG_AH.getParent().getName() << std::endl;
   std::cout << "operator<<  : " << TRITON_X86_REG_AH << std::endl;
 
+  std::cout << "----------------------------" << std::endl;
+
+  auto reg = api.getAllRegisters();
+  for (auto it = reg.begin(); it != reg.end(); it++) {
+    RegisterOperand r = **it;
+    std::cout << r << std::endl;
+  }
+
   return 0;
 }
 
