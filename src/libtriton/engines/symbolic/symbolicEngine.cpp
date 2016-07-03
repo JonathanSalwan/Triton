@@ -295,10 +295,10 @@ namespace triton {
 
 
       /* Returns the symbolic values of a memory area */
-      std::vector<triton::uint8> SymbolicEngine::getSymbolicMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size) {
+      std::vector<triton::uint8> SymbolicEngine::getSymbolicMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) {
         std::vector<triton::uint8> area;
 
-        for (triton::uint32 index = 0; index < size; index++)
+        for (triton::usize index = 0; index < size; index++)
           area.push_back(this->getSymbolicMemoryValue(baseAddr+index));
 
         return area;
