@@ -2998,7 +2998,7 @@ def test_8_emulate(concretize=False):
         else:
             count += 1
 
-        pc = buildSymbolicRegister(REG.RIP).evaluate()
+        pc = getRegisterValue(REG.RIP)
 
         if concretize == True:
             concretizeAllMemory()
