@@ -2972,11 +2972,8 @@ def test_8_setup_reg(regs):
 def test_8_setup_mem(mems):
     for mem in mems:
         start = mem['start']
-        end   = mem['end']
-        if mem['memory']:
-            for byte in mem['memory']:
-                setLastMemoryValue(Memory(start, 1, ord(byte)))
-                start += 1
+        if mem['memory'] is not None:
+            setLastMemoryAreaValue(start, bytearray(mem['memory']))
     return
 
 
@@ -2985,7 +2982,7 @@ def test_8_emulate(concretize=False):
 
     pc = getRegisterValue(REG.RIP)
     while True:
-        opcodes = array.array('B', getMemoryAreaValue(pc, 20)).tostring()
+        opcodes = getMemoryAreaValue(pc, 20)
 
         instruction = Instruction()
         instruction.setOpcodes(opcodes)

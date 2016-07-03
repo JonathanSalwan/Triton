@@ -327,7 +327,7 @@ namespace triton {
           std::set<triton::arch::RegisterOperand*> getAllRegisters(void) const;
           std::set<triton::arch::RegisterOperand*> getParentRegisters(void) const;
           triton::uint512 getLastMemoryValue(const triton::arch::MemoryOperand& mem) const;
-          std::vector<triton::uint8> getLastMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size) const;
+          std::vector<triton::uint8> getLastMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const;
           triton::uint512 getLastRegisterValue(const triton::arch::RegisterOperand& reg) const;
           triton::uint32 invalidRegister(void) const;
           triton::uint32 numberOfRegisters(void) const;
@@ -339,6 +339,7 @@ namespace triton {
           void setLastMemoryValue(triton::uint64 addr, triton::uint8 value);
           void setLastMemoryValue(const triton::arch::MemoryOperand& mem);
           void setLastMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
+          void setLastMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
           void setLastRegisterValue(const triton::arch::RegisterOperand& reg);
 
           //! Copies a x8664Cpu class.

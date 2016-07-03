@@ -998,10 +998,10 @@ namespace triton {
       }
 
 
-      std::vector<triton::uint8> x8664Cpu::getLastMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size) const {
+      std::vector<triton::uint8> x8664Cpu::getLastMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const {
         std::vector<triton::uint8> area;
 
-        for (triton::uint32 index = 0; index < size; index++)
+        for (triton::usize index = 0; index < size; index++)
           area.push_back(this->getLastMemoryValue(baseAddr+index));
 
         return area;
@@ -1259,8 +1259,15 @@ namespace triton {
 
 
       void x8664Cpu::setLastMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
-        for (triton::uint32 index = 0; index < values.size(); index++) {
+        for (triton::usize index = 0; index < values.size(); index++) {
           this->memory[baseAddr+index] = values[index];
+        }
+      }
+
+
+      void x8664Cpu::setLastMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
+        for (triton::usize index = 0; index < size; index++) {
+          this->memory[baseAddr+index] = area[index];
         }
       }
 

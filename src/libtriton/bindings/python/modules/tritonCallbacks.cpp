@@ -176,7 +176,7 @@ Returns the full AST of a root node as \ref py_AstNode_page.
 Returns the full AST as \ref py_AstNode_page from a symbolic expression id.
 
 - **getMemoryAreaValue(integer baseAddr, integer size)**<br>
-If the emulation is enabled, returns the emulated value otherwise returns the last concrete values of a memory area as a list of integer.
+If the emulation is enabled, returns the emulated value otherwise returns the last concrete values of a memory area as a bytes array.
 
 - **getMemoryValue(intger addr)**<br>
 If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of the memory access.
@@ -296,6 +296,9 @@ Initializes an architecture. This function must be called before any call to the
 Sets the AST representation mode.
 
 - **setLastMemoryAreaValue(integer baseAddr, [integer,])**<br>
+Sets the last concrete values of a memory area.
+
+- **setLastMemoryAreaValue(integer baseAddr, bytes opcodes)**<br>
 Sets the last concrete values of a memory area.
 
 - **setLastMemoryValue(integer addr, integer value)**<br>
@@ -1391,9 +1394,10 @@ namespace triton {
 
       static PyObject* triton_getMemoryAreaValue(PyObject* self, PyObject* args) {
         std::vector<triton::uint8> vv;
-        PyObject* ret  = nullptr;
-        PyObject* addr = nullptr;
-        PyObject* size = nullptr;
+        triton::uint8*  area = nullptr;
+        PyObject*       ret  = nullptr;
+        PyObject*       addr = nullptr;
+        PyObject*       size = nullptr;
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &addr, &size);
@@ -1403,10 +1407,16 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getMemoryAreaValue(): Architecture is not defined.");
 
         try {
-          vv  = triton::api.getMemoryAreaValue(PyLong_AsUint64(addr), PyLong_AsUint32(size));
-          ret = xPyList_New(vv.size());
-          for (triton::uint32 index = 0; index < vv.size(); index++)
-            PyList_SetItem(ret, index, PyLong_FromUint32(vv[index]));
+          vv   = triton::api.getMemoryAreaValue(PyLong_AsUint64(addr), PyLong_AsUsize(size));
+          area = new triton::uint8[vv.size()];
+
+          for (triton::usize index = 0; index < vv.size(); index++)
+            area[index] = vv[index];
+
+          ret = PyBytes_FromStringAndSize(reinterpret_cast<const char*>(area), vv.size());
+          delete[] area;
+          return ret;
+
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2115,24 +2125,57 @@ namespace triton {
         if (baseAddr == nullptr || (!PyLong_Check(baseAddr) && !PyInt_Check(baseAddr)))
           return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Expects an integer as first argument.");
 
-        if (values == nullptr || !PyList_Check(values))
-          return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Expects a list as second argument.");
+        if (values == nullptr)
+          return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Expects a list or a bytes array as second argument.");
 
-        for (Py_ssize_t i = 0; i < PyList_Size(values); i++) {
-          PyObject* item = PyList_GetItem(values, i);
+        // Python object: List
+        if (PyList_Check(values)) {
+          for (Py_ssize_t i = 0; i < PyList_Size(values); i++) {
+            PyObject* item = PyList_GetItem(values, i);
 
-          if ((!PyLong_Check(item) && !PyInt_Check(item)) || PyLong_AsUint32(item) > 0xff)
-            return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Each item of the list must be a 8-bits integer.");
+            if ((!PyLong_Check(item) && !PyInt_Check(item)) || PyLong_AsUint32(item) > 0xff)
+              return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Each item of the list must be a 8-bits integer.");
 
-          vv.push_back(static_cast<triton::uint8>(PyLong_AsUint32(item) & 0xff));
+            vv.push_back(static_cast<triton::uint8>(PyLong_AsUint32(item) & 0xff));
+          }
+
+          try {
+            triton::api.setLastMemoryAreaValue(PyLong_AsUint64(baseAddr), vv);
+          }
+          catch (const std::exception& e) {
+            return PyErr_Format(PyExc_TypeError, "%s", e.what());
+          }
         }
 
-        try {
-          triton::api.setLastMemoryAreaValue(PyLong_AsUint64(baseAddr), vv);
+        // Python object: Bytes
+        else if (PyBytes_Check(values)) {
+          triton::uint8* area = reinterpret_cast<triton::uint8*>(PyBytes_AsString(values));
+          triton::usize  size = static_cast<triton::usize>(PyBytes_Size(values));
+
+          try {
+            triton::api.setLastMemoryAreaValue(PyLong_AsUint64(baseAddr), area, size);
+          }
+          catch (const std::exception& e) {
+            return PyErr_Format(PyExc_TypeError, "%s", e.what());
+          }
         }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+
+        // Python object: ByteArray
+        else if (PyByteArray_Check(values)) {
+          triton::uint8* area = reinterpret_cast<triton::uint8*>(PyByteArray_AsString(values));
+          triton::usize  size = static_cast<triton::usize>(PyByteArray_Size(values));
+
+          try {
+            triton::api.setLastMemoryAreaValue(PyLong_AsUint64(baseAddr), area, size);
+          }
+          catch (const std::exception& e) {
+            return PyErr_Format(PyExc_TypeError, "%s", e.what());
+          }
         }
+
+        // Invalid Python object
+        else
+          return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Expects a list or a bytes array as second argument.");
 
         Py_INCREF(Py_None);
         return Py_None;

@@ -50,9 +50,6 @@ namespace triton {
       /* Allocate and init the good arch */
       switch (this->arch) {
         case triton::arch::ARCH_X86_64:
-          //#if defined(__i386) || defined(_M_IX86)
-          //  throw std::runtime_error("Architecture::setArchitecture(): You cannot analyze 64-bits code on a 32-bits machine.");
-          //#endif
           /* remove previous CPU instance (when setArchitecture() has been called twice) */
           delete this->cpu;
           /* init the new instance */
@@ -286,7 +283,7 @@ namespace triton {
     }
 
 
-    std::vector<triton::uint8> Architecture::getLastMemoryAreaValue(triton::uint64 baseAddr, triton::uint32 size) const {
+    std::vector<triton::uint8> Architecture::getLastMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const {
       if (!this->cpu)
         throw std::runtime_error("Architecture::getLastMemoryAreaValue(): You must define an architecture.");
       return this->cpu->getLastMemoryAreaValue(baseAddr, size);
@@ -318,6 +315,13 @@ namespace triton {
       if (!this->cpu)
         throw std::runtime_error("Architecture::setLastMemoryAreaValue(): You must define an architecture.");
       this->cpu->setLastMemoryAreaValue(baseAddr, values);
+    }
+
+
+    void Architecture::setLastMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
+      if (!this->cpu)
+        throw std::runtime_error("Architecture::setLastMemoryAreaValue(): You must define an architecture.");
+      this->cpu->setLastMemoryAreaValue(baseAddr, area, size);
     }
 
 
