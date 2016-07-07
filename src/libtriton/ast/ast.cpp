@@ -2860,7 +2860,7 @@ namespace triton {
       triton::uint512 h = this->kind;
       triton::uint32 index = 1;
       for (std::string::iterator it=this->value.begin(); it != this->value.end(); it++)
-        h = h * triton::ast::pow(*it, index++);
+        h = h ^ triton::ast::pow(*it, index++);
       return triton::ast::rotl(h, deep);
     }
 
@@ -2978,8 +2978,8 @@ namespace triton {
     triton::uint512 VariableNode::hash(triton::uint32 deep) {
       triton::uint512 h = this->kind;
       triton::uint32 index = 1;
-      for (std::string::iterator it=this->value.begin(); it != this->value.end(); it++)
-        h = h * triton::ast::pow(*it, index++);
+      for (std::string::iterator it = this->value.begin(); it != this->value.end(); it++)
+        h = h ^ triton::ast::pow(*it, index++);
       return triton::ast::rotl(h, deep);
     }
 
@@ -3081,8 +3081,9 @@ namespace triton {
   namespace ast {
 
     triton::uint512 pow(triton::uint512 hash, triton::uint32 n) {
+      triton::uint512 mask = -1;
       for (triton::uint32 i = 0; i < n; i++)
-        hash = hash * hash;
+        hash = ((hash * hash) & mask);
       return hash;
     }
 
