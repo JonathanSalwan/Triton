@@ -161,5 +161,5 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_BITSVECTOR_H */
+#endif /* TRITON_ARCHITECTURE_H */
 
