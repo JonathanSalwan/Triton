@@ -143,8 +143,6 @@ namespace triton {
         return this->memoryMapping;
       }
 
-
-
     }; /* elf namespace */
   }; /* format namespace */
 }; /* triton namespace */

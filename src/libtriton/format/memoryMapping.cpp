@@ -64,7 +64,7 @@ namespace triton {
     }
 
 
-    triton::usize MemoryMapping::getSize(void) const {
+    triton::uint64 MemoryMapping::getSize(void) const {
       return this->size;
     }
 
@@ -79,7 +79,7 @@ namespace triton {
     }
 
 
-    void MemoryMapping::setSize(triton::usize size) {
+    void MemoryMapping::setSize(triton::uint64 size) {
       this->size = size;
     }
 

@@ -31,10 +31,17 @@ namespace triton {
      *  \brief The memory mapping class. */
     class MemoryMapping {
       protected:
+        //! The binary file.
         const triton::uint8* binary;
+
+        //! The offset of the area into the binary file.
         triton::uint64 offset;
+
+        //! The virtual address where the area must be mapped into the memory.
         triton::uint64 virtualAddress;
-        triton::usize size;
+
+        //! The size of the area.
+        triton::uint64 size;
 
       public:
         //! Constructor.
@@ -62,7 +69,7 @@ namespace triton {
         const triton::uint8* getMemoryArea(void) const;
 
         //! Returns the size.
-        triton::usize getSize(void) const;
+        triton::uint64 getSize(void) const;
 
         //! Sets the offset.
         void setOffset(triton::uint64 offset);
@@ -71,7 +78,7 @@ namespace triton {
         void setVirtualAddress(triton::uint64 virtualAddress);
 
         //! Sets the size.
-        void setSize(triton::usize size);
+        void setSize(triton::uint64 size);
     };
 
   /*! @} End of format namespace */

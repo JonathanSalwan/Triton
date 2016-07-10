@@ -86,7 +86,7 @@ namespace triton {
 
         // Only support little-endian
         if (this->getEIData() != triton::format::elf::ELFDATA2LSB)
-            throw std::runtime_error("ELFHeader::parse(): Unsupported EI_DATA.");
+            throw std::runtime_error("ELFHeader::parse(): Unsupported endianness (EI_DATA).");
 
         switch (this->getEIClass()) {
           case triton::format::elf::ELFCLASS32:
