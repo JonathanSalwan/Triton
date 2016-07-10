@@ -701,8 +701,8 @@ namespace triton {
                   triton::arch::RegisterOperand segment(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.segment));
                   triton::arch::RegisterOperand base(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.base));
                   triton::arch::RegisterOperand index(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.index));
-                  triton::arch::ImmediateOperand disp(op->mem.disp, op->size);
-                  triton::arch::ImmediateOperand scale(op->mem.scale, op->size);
+                  triton::arch::ImmediateOperand disp(op->mem.disp, base.isValid() ? base.getSize() : index.isValid() ? index.getSize() : op->size);
+                  triton::arch::ImmediateOperand scale(op->mem.scale, base.isValid() ? base.getSize() : index.isValid() ? index.getSize() : op->size);
 
                   /* Specify that LEA contains a PC relative */
                   if (base.getId() == TRITON_X86_REG_PC.getId())
