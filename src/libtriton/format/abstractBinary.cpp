@@ -22,6 +22,13 @@ namespace triton {
     }
 
 
+    AbstractBinary::AbstractBinary(const std::string& path) {
+      this->format = triton::format::BINARY_INVALID;
+      this->binary = nullptr;
+      this->loadBinary(path);
+    }
+
+
     AbstractBinary::~AbstractBinary() {
       delete this->binary;
     }
@@ -98,6 +105,13 @@ namespace triton {
 
     triton::format::BinaryInterface* AbstractBinary::getBinary(void) {
       return this->binary;
+    }
+
+
+    triton::format::elf::ELF* AbstractBinary::getElf(void) {
+      if (this->format != triton::format::BINARY_ELF)
+        throw std::runtime_error("AbstractBinary::getElf(): The abstract binary is not an ELF.");
+      return reinterpret_cast<triton::format::elf::ELF*>(this->binary);
     }
 
 

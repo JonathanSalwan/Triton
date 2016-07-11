@@ -95,6 +95,7 @@ script:
   - ./ir.bin
   - ./simplification.bin
   - ./constraint.bin
+  - ./parsing_elf.bin ../../samples/crackmes/crackme_xor
   - cd ../../../
 
   # libPintool + libTriton unit testing

@@ -11,6 +11,7 @@
 #include <iostream>
 
 #include "binaryInterface.hpp"
+#include "elf.hpp"
 #include "memoryMapping.hpp"
 #include "tritonTypes.hpp"
 
@@ -65,6 +66,9 @@ namespace triton {
         //! Constructor.
         AbstractBinary();
 
+        //! Constructor.
+        AbstractBinary(const std::string& path);
+
         //! Destructor.
         ~AbstractBinary();
 
@@ -76,6 +80,9 @@ namespace triton {
 
         //! Returns the abstract binary.
         triton::format::BinaryInterface* getBinary(void);
+
+        //! Returns the ELF instance only if the AbstractBinary::format is equal to triton::format::BINARY_ELF otherwise raise an excepton.
+        triton::format::elf::ELF* getElf(void);
 
         //! Returns the path file of the loaded binary.
         const std::string& getPath(void) const;
