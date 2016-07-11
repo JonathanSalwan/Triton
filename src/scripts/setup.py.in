@@ -2,7 +2,7 @@
 ## -*- coding: utf-8 -*-
 ##
 ## Copyright (C) - Triton
-## This program is under the terms of the LGPLv3 License.
+## This program is under the terms of the BSD License.
 ##
 
 from   setuptools import setup
@@ -47,7 +47,7 @@ setup(
     name                 = package_name,
     version              = version,
     description          = package_description,
-    license              = 'LGPLv3',
+    license              = 'BSD',
     author               = 'Jonathan Salwan',
     author_email         = 'jsalwan@quarkslab.com',
     url                  = 'http://triton.quarkslab.com',
@@ -59,8 +59,9 @@ setup(
         'Environment :: Console',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
+        'License :: OSI Approved :: BSD License',
         'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: C++',
         'Programming Language :: Python :: 2.7',

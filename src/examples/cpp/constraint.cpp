@@ -1,7 +1,7 @@
 /*
 ** Copyright (C) - Triton
 **
-** This program is under the terms of the LGPLv3 License.
+** This program is under the terms of the BSD License.
 **
 ** Output:
 ** RAX expr: (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64))
