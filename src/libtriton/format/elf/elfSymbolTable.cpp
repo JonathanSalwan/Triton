@@ -52,7 +52,7 @@ namespace triton {
       }
 
 
-      void ELFSymbolTable::parse(const triton::uint8* raw, triton::uint8 EIClass) {
+      triton::uint32 ELFSymbolTable::parse(const triton::uint8* raw, triton::uint8 EIClass) {
         triton::format::elf::Elf32_Sym_t sym32;
         triton::format::elf::Elf64_Sym_t sym64;
 
@@ -65,7 +65,7 @@ namespace triton {
             this->shndx   = sym32.st_shndx;
             this->value   = sym32.st_value;
             this->size    = sym32.st_size;
-            break;
+            return sizeof(triton::format::elf::Elf32_Sym_t);
 
           case triton::format::elf::ELFCLASS64:
             memcpy(&sym64, raw, sizeof(triton::format::elf::Elf64_Sym_t));
@@ -75,11 +75,12 @@ namespace triton {
             this->shndx   = sym64.st_shndx;
             this->value   = sym64.st_value;
             this->size    = sym64.st_size;
-            break;
+            return sizeof(triton::format::elf::Elf64_Sym_t);
 
           default:
             throw std::runtime_error("ELFSymbolTable::parse(): Invalid EI_CLASS.");
         }
+        return 0;
       }
 
 

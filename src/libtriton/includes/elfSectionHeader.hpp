@@ -150,8 +150,8 @@ namespace triton {
           //! Copies an ELFSectionHeader.
           void operator=(const ELFSectionHeader& copy);
 
-          //! Parses the ELF Program Header
-          void parse(const triton::uint8* raw, triton::uint8 EIClass);
+          //! Parses the ELF Program Header. Returns the number of bytes read.
+          triton::uint32 parse(const triton::uint8* raw, triton::uint8 EIClass);
 
           //! Returns the section index name.
           triton::uint32 getIdxname(void) const;

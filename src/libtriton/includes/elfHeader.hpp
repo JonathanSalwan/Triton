@@ -169,8 +169,8 @@ namespace triton {
           //! Copies an ELFHeader.
           void operator=(const ELFHeader& copy);
 
-          //! Parses the ELF Header
-          void parse(const triton::uint8* raw);
+          //! Parses the ELF Header. Returns the number of bytes read.
+          triton::uint32 parse(const triton::uint8* raw);
 
           //! Returns the architecture size of this binary (ELFCLASS32, ELFCLASS64 or ELFCLASSNONE).
           triton::uint8 getEIClass(void) const;

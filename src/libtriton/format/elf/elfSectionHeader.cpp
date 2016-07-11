@@ -64,7 +64,7 @@ namespace triton {
       }
 
 
-      void ELFSectionHeader::parse(const triton::uint8* raw, triton::uint8 EIClass) {
+      triton::uint32 ELFSectionHeader::parse(const triton::uint8* raw, triton::uint8 EIClass) {
         triton::format::elf::Elf32_Shdr_t shdr32;
         triton::format::elf::Elf64_Shdr_t shdr64;
 
@@ -81,7 +81,7 @@ namespace triton {
             this->info      = shdr32.sh_info;
             this->addralign = shdr32.sh_addralign;
             this->entsize   = shdr32.sh_entsize;
-            break;
+            return sizeof(triton::format::elf::Elf32_Shdr_t);
 
           case triton::format::elf::ELFCLASS64:
             memcpy(&shdr64, raw, sizeof(triton::format::elf::Elf64_Shdr_t));
@@ -95,11 +95,12 @@ namespace triton {
             this->info      = shdr64.sh_info;
             this->addralign = shdr64.sh_addralign;
             this->entsize   = shdr64.sh_entsize;
-            break;
+            return sizeof(triton::format::elf::Elf64_Shdr_t);
 
           default:
             throw std::runtime_error("ELFSectionHeader::parse(): Invalid EI_CLASS.");
         }
+        return 0;
       }
 
 

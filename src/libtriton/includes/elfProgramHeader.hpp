@@ -122,8 +122,8 @@ namespace triton {
           //! Copies an ELFProgramHeader.
           void operator=(const ELFProgramHeader& copy);
 
-          //! Parses the ELF Program Header
-          void parse(const triton::uint8* raw, triton::uint8 EIClass);
+          //! Parses the ELF Program Header. Returns the number of bytes read.
+          triton::uint32 parse(const triton::uint8* raw, triton::uint8 EIClass);
 
           //! Returns the type.
           triton::uint32 getType(void) const;

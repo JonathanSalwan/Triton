@@ -56,7 +56,7 @@ namespace triton {
       }
 
 
-      void ELFProgramHeader::parse(const triton::uint8* raw, triton::uint8 EIClass) {
+      triton::uint32 ELFProgramHeader::parse(const triton::uint8* raw, triton::uint8 EIClass) {
         triton::format::elf::Elf32_Phdr_t phdr32;
         triton::format::elf::Elf64_Phdr_t phdr64;
 
@@ -71,7 +71,7 @@ namespace triton {
             this->filesz  = phdr32.p_filesz;
             this->memsz   = phdr32.p_memsz;
             this->align   = phdr32.p_align;
-            break;
+            return sizeof(triton::format::elf::Elf32_Phdr_t);
 
           case triton::format::elf::ELFCLASS64:
             memcpy(&phdr64, raw, sizeof(triton::format::elf::Elf64_Phdr_t));
@@ -83,11 +83,12 @@ namespace triton {
             this->filesz  = phdr64.p_filesz;
             this->memsz   = phdr64.p_memsz;
             this->align   = phdr64.p_align;
-            break;
+            return sizeof(triton::format::elf::Elf64_Phdr_t);
 
           default:
             throw std::runtime_error("ELFProgramHeader::parse(): Invalid EI_CLASS.");
         }
+        return 0;
       }
 
 
