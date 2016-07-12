@@ -336,7 +336,12 @@ namespace triton {
 
         for (triton::uint32 read = 0; read < jmprelTabSize;) {
           triton::format::elf::ELFRelocationTable jmprel;
-          read += jmprel.parseRela(this->raw + jmprelTabOffset + read, this->header.getEIClass());
+          if (this->header.getEIClass() == triton::format::elf::ELFCLASS32)
+            read += jmprel.parseRel(this->raw + jmprelTabOffset + read, this->header.getEIClass());
+          else if (this->header.getEIClass() == triton::format::elf::ELFCLASS64)
+            read += jmprel.parseRela(this->raw + jmprelTabOffset + read, this->header.getEIClass());
+          else
+            throw std::runtime_error("ELF::initJmprelTable(): Invalid EI_CLASS.");
           this->relocationsTable.push_back(jmprel);
         }
       }
