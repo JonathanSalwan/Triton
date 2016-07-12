@@ -21,14 +21,14 @@
 #include "x86Semantics.hpp"
 
 
-//! \module The Triton namespace
+//! The Triton namespace
 namespace triton {
 /*!
  *  \addtogroup triton
  *  @{
  */
 
-  //! \module The Architecture namespace
+  //! The Architecture namespace
   namespace arch {
   /*!
    *  \ingroup triton
@@ -36,7 +36,7 @@ namespace triton {
    *  @{
    */
 
-    //! \module The x86 namespace
+    //! The x86 namespace
     namespace x86 {
     /*!
      *  \ingroup arch

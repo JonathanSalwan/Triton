@@ -12,14 +12,14 @@
 
 
 
-//! \module The Triton namespace
+//! The Triton namespace
 namespace triton {
 /*!
  *  \addtogroup triton
  *  @{
  */
 
-  //! \module The Architecture namespace
+  //! The Architecture namespace
   namespace arch {
   /*!
    *  \ingroup triton
@@ -27,7 +27,7 @@ namespace triton {
    *  @{
    */
 
-    //! \module The x86 namespace
+    //! The x86 namespace
     namespace x86 {
     /*!
      *  \ingroup arch
@@ -35,7 +35,7 @@ namespace triton {
      *  @{
      */
 
-    //! \module The semantics namespace
+    //! The semantics namespace
     namespace semantics {
     /*!
      *  \ingroup x86

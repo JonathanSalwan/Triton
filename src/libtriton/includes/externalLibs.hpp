@@ -10,20 +10,20 @@
 
 
 
-//! \module The Triton namespace
+//! The Triton namespace
 namespace triton {
 /*!
  *  \addtogroup triton
  *  @{
  */
-  //! \module The external libraries namespace
+  //! The external libraries namespace
   namespace extlibs {
   /*!
    *  \addtogroup triton
    *  @{
    */
 
-    //! \module The Capstone library namespace
+    //! The Capstone library namespace
     namespace capstone {
     /*!
      *  \addtogroup extlibs

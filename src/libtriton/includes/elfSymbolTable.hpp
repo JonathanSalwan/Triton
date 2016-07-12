@@ -13,14 +13,14 @@
 
 
 
-//! \module The Triton namespace
+//! The Triton namespace
 namespace triton {
 /*!
  *  \addtogroup triton
  *  @{
  */
 
-  //! \module The Format namespace
+  //! The Format namespace
   namespace format {
   /*!
    *  \ingroup triton
@@ -28,7 +28,7 @@ namespace triton {
    *  @{
    */
 
-    //! \module The ELF format namespace
+    //! The ELF format namespace
     namespace elf {
     /*!
      *  \ingroup format

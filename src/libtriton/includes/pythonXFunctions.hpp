@@ -14,14 +14,14 @@
 
 
 
-//! \module The Triton namespace
+//! The Triton namespace
 namespace triton {
 /*!
  *  \addtogroup triton
  *  @{
  */
 
-  //! \module The Bindings namespace
+  //! The Bindings namespace
   namespace bindings {
   /*!
    *  \ingroup triton
@@ -29,7 +29,7 @@ namespace triton {
    *  @{
    */
 
-    //! \module The Python namespace
+    //! The Python namespace
     namespace python {
     /*!
      *  \ingroup bindings

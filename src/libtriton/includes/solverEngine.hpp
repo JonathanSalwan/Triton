@@ -21,20 +21,20 @@
 
 
 
-//! \module The Triton namespace
+//! The Triton namespace
 namespace triton {
 /*!
  *  \addtogroup triton
  *  @{
  */
-  //! \module The Engines namespace
+  //! The Engines namespace
   namespace engines {
   /*!
    *  \ingroup triton
    *  \addtogroup engines
    *  @{
    */
-    //! \module The Solver namespace
+    //! The Solver namespace
     namespace solver {
     /*!
      *  \ingroup engines

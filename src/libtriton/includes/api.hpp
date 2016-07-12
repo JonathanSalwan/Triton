@@ -28,7 +28,7 @@
 
 
 
-//! \module The Triton namespace
+//! The Triton namespace
 namespace triton {
 /*!
  *  \addtogroup triton
@@ -36,7 +36,7 @@ namespace triton {
  */
 
     /*! \class API
-     *  \brief This is the master class and must be used as C++ API. */
+     *  \brief This is used as C++ API. */
     class API {
 
       protected:
@@ -62,12 +62,10 @@ namespace triton {
         triton::ast::representations::AstRepresentation* astRepresentation;
 
       public:
-
-        /* Constructor and destructor of the API ========================================================= */
-        //! Constructor.
+        //! Constructor of the API.
         API();
 
-        //! Destructor.
+        //! Destructor of the API.
         ~API();
 
 

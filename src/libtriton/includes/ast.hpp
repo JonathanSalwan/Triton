@@ -23,14 +23,14 @@
 
 
 
-//! \module The Triton namespace
+//! The Triton namespace
 namespace triton {
 /*!
  *  \addtogroup triton
  *  @{
  */
 
-  //! \module The AST namespace
+  //! The AST namespace
   namespace ast {
   /*!
    *  \ingroup triton
@@ -95,7 +95,9 @@ namespace triton {
 
         /*!
          * \brief Returns the parents of node or an empty set if there is still no parent defined.
-         * \brief Note that if there is the `AST_DICTIONARIES` optimization enabled, this feature will probably not represent the real tree of your expression.
+         *
+         * Note that if there is the `AST_DICTIONARIES` optimization enabled, this feature will
+         * probably not represent the real tree of your expression.
          */
         std::set<AbstractNode*>& getParents(void);
 
@@ -128,7 +130,7 @@ namespace triton {
     };
 
 
-    //! (assert <expr1>) node
+    //! `(assert <expr1>)` node
     class AssertNode : public AbstractNode {
       public:
         AssertNode(AbstractNode* expr);
@@ -140,7 +142,7 @@ namespace triton {
     };
 
 
-    //! (bvadd <expr1> <expr2>) node
+    //! `(bvadd <expr1> <expr2>)` node
     class BvaddNode : public AbstractNode {
       public:
         BvaddNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -152,7 +154,7 @@ namespace triton {
     };
 
 
-    //! (bvand <expr1> <expr2>) node
+    //! `(bvand <expr1> <expr2>)` node
     class BvandNode : public AbstractNode {
       public:
         BvandNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -164,7 +166,7 @@ namespace triton {
     };
 
 
-    //! (bvashr <expr1> <expr2>) node
+    //! `(bvashr <expr1> <expr2>)` node
     class BvashrNode : public AbstractNode {
       public:
         BvashrNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -176,7 +178,7 @@ namespace triton {
     };
 
 
-    //! (_ BitVec x) node
+    //! `(_ BitVec x)` node
     class BvdeclNode : public AbstractNode {
       public:
         BvdeclNode(triton::uint32 size);
@@ -188,7 +190,7 @@ namespace triton {
     };
 
 
-    //! (bvlshr <expr1> <expr2>) node
+    //! `(bvlshr <expr1> <expr2>)` node
     class BvlshrNode : public AbstractNode {
       public:
         BvlshrNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -200,7 +202,7 @@ namespace triton {
     };
 
 
-    //! (bvmul <expr1> <expr2>) node
+    //! `(bvmul <expr1> <expr2>)` node
     class BvmulNode : public AbstractNode {
       public:
         BvmulNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -212,7 +214,7 @@ namespace triton {
     };
 
 
-    //! (bvnand <expr1> <expr2>) node
+    //! `(bvnand <expr1> <expr2>)` node
     class BvnandNode : public AbstractNode {
       public:
         BvnandNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -224,7 +226,7 @@ namespace triton {
     };
 
 
-    //! (bvneg <expr>) node
+    //! `(bvneg <expr>)` node
     class BvnegNode : public AbstractNode {
       public:
         BvnegNode(AbstractNode* expr);
@@ -236,7 +238,7 @@ namespace triton {
     };
 
 
-    //! (bvnor <expr1> <expr2>) node
+    //! `(bvnor <expr1> <expr2>)` node
     class BvnorNode : public AbstractNode {
       public:
         BvnorNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -248,7 +250,7 @@ namespace triton {
     };
 
 
-    //! (bvnot <expr>) node
+    //! `(bvnot <expr>)` node
     class BvnotNode : public AbstractNode {
       public:
         BvnotNode(AbstractNode* expr1);
@@ -260,7 +262,7 @@ namespace triton {
     };
 
 
-    //! (bvor <expr1> <expr2>) node
+    //! `(bvor <expr1> <expr2>)` node
     class BvorNode : public AbstractNode {
       public:
         BvorNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -272,7 +274,7 @@ namespace triton {
     };
 
 
-    //! ((_ rotate_left rot) expr) node
+    //! `((_ rotate_left rot) <expr>)` node
     class BvrolNode : public AbstractNode {
       public:
         BvrolNode(triton::uint32 rot, AbstractNode* expr);
@@ -285,7 +287,7 @@ namespace triton {
     };
 
 
-    //! ((_ rotate_right rot) expr) node
+    //! `((_ rotate_right rot) <expr>)` node
     class BvrorNode : public AbstractNode {
       public:
         BvrorNode(triton::uint32 rot, AbstractNode* expr);
@@ -298,7 +300,7 @@ namespace triton {
     };
 
 
-    //! (bvsdiv <expr1> <expr2>) node
+    //! `(bvsdiv <expr1> <expr2>)` node
     class BvsdivNode : public AbstractNode {
       public:
         BvsdivNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -310,7 +312,7 @@ namespace triton {
     };
 
 
-    //! (bvsge <expr1> <expr2>) node
+    //! `(bvsge <expr1> <expr2>)` node
     class BvsgeNode : public AbstractNode {
       public:
         BvsgeNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -322,7 +324,7 @@ namespace triton {
     };
 
 
-    //! (bvsgt <expr1> <expr2>) node
+    //! `(bvsgt <expr1> <expr2>)` node
     class BvsgtNode : public AbstractNode {
       public:
         BvsgtNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -334,7 +336,7 @@ namespace triton {
     };
 
 
-    //! (bvshl <expr1> <expr2>) node
+    //! `(bvshl <expr1> <expr2>)` node
     class BvshlNode : public AbstractNode {
       public:
         BvshlNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -346,7 +348,7 @@ namespace triton {
     };
 
 
-    //! (bvsle <expr1> <expr2>) node
+    //! `(bvsle <expr1> <expr2>)` node
     class BvsleNode : public AbstractNode {
       public:
         BvsleNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -358,7 +360,7 @@ namespace triton {
     };
 
 
-    //! (bvslt <expr1> <expr2>) node
+    //! `(bvslt <expr1> <expr2>)` node
     class BvsltNode : public AbstractNode {
       public:
         BvsltNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -370,7 +372,7 @@ namespace triton {
     };
 
 
-    //! (bvsmod <expr1> <expr2>) node
+    //! `(bvsmod <expr1> <expr2>)` node
     class BvsmodNode : public AbstractNode {
       public:
         BvsmodNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -382,7 +384,7 @@ namespace triton {
     };
 
 
-    //! (bvsrem <expr1> <expr2>) node
+    //! `(bvsrem <expr1> <expr2>)` node
     class BvsremNode : public AbstractNode {
       public:
         BvsremNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -394,7 +396,7 @@ namespace triton {
     };
 
 
-    //! (bvsub <expr1> <expr2>) node
+    //! `(bvsub <expr1> <expr2>)` node
     class BvsubNode : public AbstractNode {
       public:
         BvsubNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -406,7 +408,7 @@ namespace triton {
     };
 
 
-    //! (bvudiv <expr1> <expr2>) node
+    //! `(bvudiv <expr1> <expr2>)` node
     class BvudivNode : public AbstractNode {
       public:
         BvudivNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -418,7 +420,7 @@ namespace triton {
     };
 
 
-    //! (bvuge <expr1> <expr2>) node
+    //! `(bvuge <expr1> <expr2>)` node
     class BvugeNode : public AbstractNode {
       public:
         BvugeNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -430,7 +432,7 @@ namespace triton {
     };
 
 
-    //! (bvugt <expr1> <expr2>) node
+    //! `(bvugt <expr1> <expr2>)` node
     class BvugtNode : public AbstractNode {
       public:
         BvugtNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -442,7 +444,7 @@ namespace triton {
     };
 
 
-    //! (bvule <expr1> <expr2>) node
+    //! `(bvule <expr1> <expr2>)` node
     class BvuleNode : public AbstractNode {
       public:
         BvuleNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -454,7 +456,7 @@ namespace triton {
     };
 
 
-    //! (bvult <expr1> <expr2>) node
+    //! `(bvult <expr1> <expr2>)` node
     class BvultNode : public AbstractNode {
       public:
         BvultNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -466,7 +468,7 @@ namespace triton {
     };
 
 
-    //! (bvurem <expr1> <expr2>) node
+    //! `(bvurem <expr1> <expr2>)` node
     class BvuremNode : public AbstractNode {
       public:
         BvuremNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -478,7 +480,7 @@ namespace triton {
     };
 
 
-    //! (bvxnor <expr1> <expr2>) node
+    //! `(bvxnor <expr1> <expr2>)` node
     class BvxnorNode : public AbstractNode {
       public:
         BvxnorNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -490,7 +492,7 @@ namespace triton {
     };
 
 
-    //! (bvxor <expr1> <expr2>) node
+    //! `(bvxor <expr1> <expr2>)` node
     class BvxorNode : public AbstractNode {
       public:
         BvxorNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -502,7 +504,7 @@ namespace triton {
     };
 
 
-    //! (_ bv<value> <size>) node
+    //! `(_ bv<value> <size>)` node
     class BvNode : public AbstractNode {
       public:
         BvNode(triton::uint512 value, triton::uint32 size);
@@ -526,7 +528,7 @@ namespace triton {
     };
 
 
-    //! (concat <expr1> <expr2> ...) node
+    //! `(concat <expr1> <expr2> ...)` node
     class ConcatNode : public AbstractNode {
       public:
         ConcatNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -557,7 +559,7 @@ namespace triton {
     };
 
 
-    //! (declare-fun <name> () bvDecl) node
+    //! `(declare-fun <name> () bvDecl)` node
     class DeclareFunctionNode : public AbstractNode {
       public:
         DeclareFunctionNode(std::string name, AbstractNode* bvDecl);
@@ -569,7 +571,7 @@ namespace triton {
     };
 
 
-    //! (distinct <expr1> <expr2> ...) node
+    //! `(distinct <expr1> <expr2> ...)` node
     class DistinctNode : public AbstractNode {
       public:
         DistinctNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -581,7 +583,7 @@ namespace triton {
     };
 
 
-    //! (= <expr1> <expr2> ...) node
+    //! `(= <expr1> <expr2> ...)` node
     class EqualNode : public AbstractNode {
       public:
         EqualNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -593,7 +595,7 @@ namespace triton {
     };
 
 
-    //! ((_ extract <high> <low>) <expr>) node
+    //! `((_ extract <high> <low>) <expr>)` node
     class ExtractNode : public AbstractNode {
       public:
         ExtractNode(triton::uint32 high, triton::uint32 low, AbstractNode* expr);
@@ -605,7 +607,7 @@ namespace triton {
     };
 
 
-    //! (ite ifExpr thenExpr elseExpr)
+    //! `(ite <ifExpr> <thenExpr> <elseExpr>)`
     class IteNode : public AbstractNode {
       public:
         IteNode(AbstractNode* ifExpr, AbstractNode* thenExpr, AbstractNode* elseExpr);
@@ -617,7 +619,7 @@ namespace triton {
     };
 
 
-    //! (and <expr1> <expr2>)
+    //! `(and <expr1> <expr2>)`
     class LandNode : public AbstractNode {
       public:
         LandNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -629,7 +631,7 @@ namespace triton {
     };
 
 
-    //! (let ((<alias> <expr2>)) <expr3>)
+    //! `(let ((<alias> <expr2>)) <expr3>)`
     class LetNode : public AbstractNode {
       public:
         LetNode(std::string alias, AbstractNode* expr2, AbstractNode* expr3);
@@ -641,7 +643,7 @@ namespace triton {
     };
 
 
-    //! (lnot <expr>)
+    //! `(lnot <expr>)`
     class LnotNode : public AbstractNode {
       public:
         LnotNode(AbstractNode* expr);
@@ -653,7 +655,7 @@ namespace triton {
     };
 
 
-    //! (or <expr1> <expr2>)
+    //! `(or <expr1> <expr2>)`
     class LorNode : public AbstractNode {
       public:
         LorNode(AbstractNode* expr1, AbstractNode* expr2);
@@ -699,7 +701,7 @@ namespace triton {
     };
 
 
-    //! ((_ sign_extend sizeExt) <expr>) node
+    //! `((_ sign_extend sizeExt) <expr>)` node
     class SxNode : public AbstractNode {
       public:
         SxNode(triton::uint32 sizeExt, AbstractNode* expr);
@@ -728,7 +730,7 @@ namespace triton {
     };
 
 
-    //! ((_ zero_extend sizeExt) <expr>) node
+    //! `((_ zero_extend sizeExt) <expr>)` node
     class ZxNode : public AbstractNode {
       public:
         ZxNode(triton::uint32 sizeExt, AbstractNode* expr);

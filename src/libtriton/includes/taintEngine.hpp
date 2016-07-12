@@ -18,14 +18,14 @@
 
 
 
-//! \module The Triton namespace
+//! The Triton namespace
 namespace triton {
 /*!
  *  \addtogroup triton
  *  @{
  */
 
-  //! \module The Engines namespace
+  //! The Engines namespace
   namespace engines {
   /*!
    *  \ingroup triton
@@ -33,7 +33,7 @@ namespace triton {
    *  @{
    */
 
-    //! \module The Taint namespace
+    //! The Taint namespace
     namespace taint {
     /*!
      *  \ingroup engines

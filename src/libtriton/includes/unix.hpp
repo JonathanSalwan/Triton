@@ -14,14 +14,14 @@
 
 
 
-//! \module The Triton namespace
+//! The Triton namespace
 namespace triton {
 /*!
  *  \addtogroup triton
  *  @{
  */
 
-  //! \module The Operating System namespace
+  //! The Operating System namespace
   namespace os {
   /*!
    *  \ingroup triton
@@ -29,7 +29,7 @@ namespace triton {
    *  @{
    */
 
-    //! \module The Unix namespace
+    //! The Unix namespace
     namespace unix {
     /*!
      *  \ingroup os

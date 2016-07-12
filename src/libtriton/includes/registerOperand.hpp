@@ -18,14 +18,14 @@
 
 
 
-//! \module The Triton namespace
+//! The Triton namespace
 namespace triton {
 /*!
  *  \addtogroup triton
  *  @{
  */
 
-  //! \module The Triton namespace
+  //! The Triton namespace
   namespace arch {
   /*!
    *  \ingroup triton

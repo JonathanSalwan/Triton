@@ -17,14 +17,14 @@
 #include "tritonTypes.hpp"
 
 
-//! \module The Triton namespace
+//! The Triton namespace
 namespace triton {
 /*!
  *  \addtogroup triton
  *  @{
  */
 
-  //! \module The Triton namespace
+  //! The Triton namespace
   namespace arch {
   /*!
    *  \ingroup triton
@@ -93,7 +93,7 @@ namespace triton {
         //! Returns the address of the memory.
         triton::uint64 getAddress(void) const;
 
-        //! Returns the highest bit of the memory vector. \saa BitsVector::getHigh()
+        //! Returns the highest bit of the memory vector. \sa BitsVector::getHigh()
         triton::uint32 getAbstractHigh(void) const;
 
         //! Returns the lower bit of the memory vector. \sa BitsVector::getLow()

@@ -12,14 +12,14 @@
 
 
 
-//! \module The Triton namespace
+//! The Triton namespace
 namespace triton {
 /*!
  *  \addtogroup triton
  *  @{
  */
 
-  //! \module The Utils namespace
+  //! The Utils namespace
   namespace utils {
   /*!
    *  \ingroup triton

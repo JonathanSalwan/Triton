@@ -16,14 +16,14 @@
 
 
 
-//! \module The Tracer namespace
+//! The Tracer namespace
 namespace tracer {
 /*!
  *  \addtogroup tracer
  *  @{
  */
 
-  //! \module The pintool namespace
+  //! The Pintool namespace
   namespace pintool {
   /*!
    *  \ingroup tracer
@@ -31,7 +31,7 @@ namespace tracer {
    *  @{
    */
 
-    //! \module The context namespace
+    //! The Context namespace
     namespace context {
     /*!
      *  \ingroup pintool

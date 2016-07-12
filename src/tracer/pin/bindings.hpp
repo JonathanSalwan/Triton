@@ -25,14 +25,14 @@
 #include "utils.hpp"
 
 
-//! \module The Tracer namespace
+//! The Tracer namespace
 namespace tracer {
 /*!
  *  \addtogroup tracer
  *  @{
  */
 
-  //! \module The pintool namespace
+  //! The Pintool namespace
   namespace pintool {
   /*!
    *  \ingroup tracer
@@ -55,7 +55,7 @@ namespace tracer {
     //! The initialization of the Pin's Python env.
     void initBindings(void);
 
-    //! \module The options namespace
+    //! The Options namespace
     namespace options {
     /*!
      *  \ingroup pintool
@@ -137,7 +137,7 @@ namespace tracer {
     /*! @} End of options namespace */
     };
 
-    //! \module The callbacks namespace
+    //! The Callbacks namespace
     namespace callbacks {
     /*!
      *  \ingroup pintool

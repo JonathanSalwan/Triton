@@ -16,14 +16,14 @@
 
 
 
-//! \module The Triton namespace
+//! The Triton namespace
 namespace triton {
 /*!
  *  \addtogroup triton
  *  @{
  */
 
-  //! \module The AST namespace
+  //! The AST namespace
   namespace ast {
   /*!
    *  \ingroup triton
@@ -31,7 +31,7 @@ namespace triton {
    *  @{
    */
 
-    //! \module The Representations namespace
+    //! The Representations namespace
     namespace representations {
     /*!
      *  \ingroup ast
