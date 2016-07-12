@@ -26,8 +26,11 @@ namespace triton {
         this->initMemoryMapping();
         this->initDynamicTable();
         this->initSharedLibraries();
-        this->initSymbolsTableViaProgramHeaders(); // .dyntab
-        this->initSymbolsTableViaSectionHeaders(); // .symtab
+        this->initSymbolsTableViaProgramHeaders();  // .dyntab
+        this->initSymbolsTableViaSectionHeaders();  // .symtab
+        this->initRelTable();                       // DT_REL
+        this->initRelaTable();                      // DT_RELA
+        this->initJmprelTable();                    // DT_JMPREL
       }
 
 
@@ -231,10 +234,8 @@ namespace triton {
           if (this->totalSize < read)
             break;
 
-          if (*(this->raw + strTabOffset + sym.getIdxname())) {
-            sym.setName(this->raw + strTabOffset + sym.getIdxname());
-            this->symbolsTable[sym.getName()] = sym;
-          }
+          sym.setName(this->raw + strTabOffset + sym.getIdxname());
+          this->symbolsTable.push_back(sym);
         }
       }
 
@@ -272,10 +273,71 @@ namespace triton {
           if (this->totalSize < strTabOffset + sym.getIdxname())
             continue;
 
-          if (*(this->raw + strTabOffset + sym.getIdxname())) {
-            sym.setName(this->raw + strTabOffset + sym.getIdxname());
-            this->symbolsTable[sym.getName()] = sym;
-          }
+          sym.setName(this->raw + strTabOffset + sym.getIdxname());
+          this->symbolsTable.push_back(sym);
+        }
+      }
+
+
+      void ELF::initRelTable(void) {
+        triton::uint64 relTabOffset = 0;
+        triton::uint64 relTabSize   = 0;
+
+        // Parse DT_REL table.
+        relTabOffset = this->getOffsetFromDTValue(triton::format::elf::DT_REL);
+        if (!relTabOffset || this->totalSize < relTabOffset)
+          return;
+
+        relTabSize = this->getDTValue(triton::format::elf::DT_RELSZ);
+        if (!relTabSize || this->totalSize < relTabOffset + relTabSize)
+          return;
+
+        for (triton::uint32 read = 0; read < relTabSize;) {
+          triton::format::elf::ELFRelocationTable rel;
+          read += rel.parseRel(this->raw + relTabOffset + read, this->header.getEIClass());
+          this->relocationsTable.push_back(rel);
+        }
+      }
+
+
+      void ELF::initRelaTable(void) {
+        triton::uint64 relaTabOffset = 0;
+        triton::uint64 relaTabSize   = 0;
+
+        // Parse DT_RELA table.
+        relaTabOffset = this->getOffsetFromDTValue(triton::format::elf::DT_RELA);
+        if (!relaTabOffset || this->totalSize < relaTabOffset)
+          return;
+
+        relaTabSize = this->getDTValue(triton::format::elf::DT_RELASZ);
+        if (!relaTabSize || this->totalSize < relaTabOffset + relaTabSize)
+          return;
+
+        for (triton::uint32 read = 0; read < relaTabSize;) {
+          triton::format::elf::ELFRelocationTable rela;
+          read += rela.parseRela(this->raw + relaTabOffset + read, this->header.getEIClass());
+          this->relocationsTable.push_back(rela);
+        }
+      }
+
+
+      void ELF::initJmprelTable(void) {
+        triton::uint64 jmprelTabOffset = 0;
+        triton::uint64 jmprelTabSize   = 0;
+
+        // Parse DT_JMPREL table.
+        jmprelTabOffset = this->getOffsetFromDTValue(triton::format::elf::DT_JMPREL);
+        if (!jmprelTabOffset || this->totalSize < jmprelTabOffset)
+          return;
+
+        jmprelTabSize = this->getDTValue(triton::format::elf::DT_PLTRELSZ);
+        if (!jmprelTabSize || this->totalSize < jmprelTabOffset + jmprelTabSize)
+          return;
+
+        for (triton::uint32 read = 0; read < jmprelTabSize;) {
+          triton::format::elf::ELFRelocationTable jmprel;
+          read += jmprel.parseRela(this->raw + jmprelTabOffset + read, this->header.getEIClass());
+          this->relocationsTable.push_back(jmprel);
         }
       }
 
@@ -337,17 +399,22 @@ namespace triton {
       }
 
 
-      const std::list<triton::format::elf::ELFDynamicTable>& ELF::getDynamicTable(void) const {
+      const std::vector<triton::format::elf::ELFDynamicTable>& ELF::getDynamicTable(void) const {
         return this->dynamicTable;
       }
 
 
-      const std::map<std::string, triton::format::elf::ELFSymbolTable>& ELF::getSymbolsTable(void) const {
+      const std::vector<triton::format::elf::ELFSymbolTable>& ELF::getSymbolsTable(void) const {
         return this->symbolsTable;
       }
 
 
-      const std::list<std::string>& ELF::getSharedLibraries(void) const {
+      const std::vector<triton::format::elf::ELFRelocationTable>& ELF::getRelocationTable(void) const {
+        return this->relocationsTable;
+      }
+
+
+      const std::vector<std::string>& ELF::getSharedLibraries(void) const {
         return this->sharedLibraries;
       }
 

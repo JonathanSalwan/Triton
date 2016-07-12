@@ -258,12 +258,33 @@ int main(int ac, const char *av[]) {
   std::cout << std::setw(30) << "Name";
   std::cout << std::endl;
   for (auto it = elf->getSymbolsTable().begin(); it != elf->getSymbolsTable().end(); it++) {
-    std::cout << std::setw(10) << static_cast<unsigned int>(it->second.getInfo());
-    std::cout << std::setw(10) << static_cast<unsigned int>(it->second.getOther());
-    std::cout << std::setw(10) << it->second.getShndx();
-    std::cout << std::setw(10) << it->second.getValue();
-    std::cout << std::setw(10) << it->second.getSize();
-    std::cout << std::setw(30) << it->second.getName();
+    std::cout << std::setw(10) << static_cast<unsigned int>(it->getInfo());
+    std::cout << std::setw(10) << static_cast<unsigned int>(it->getOther());
+    std::cout << std::setw(10) << it->getShndx();
+    std::cout << std::setw(10) << it->getValue();
+    std::cout << std::setw(10) << it->getSize();
+    std::cout << std::setw(30) << it->getName();
+    std::cout << std::endl;
+  }
+  std::cout << "--------------------------------------------------------------------------------" << std::endl;
+  std::cout << std::endl;
+
+  std::cout << "--------------------------------------------------------------------------------" << std::endl;
+  std::cout << "Relocation Table" << std::endl;
+  std::cout << "--------------------------------------------------------------------------------" << std::endl;
+  std::cout << std::hex;
+  std::cout << std::setw(10) << "Offset";
+  std::cout << std::setw(15) << "Info";
+  std::cout << std::setw(10) << "Addend";
+  std::cout << std::setw(10) << "Type";
+  std::cout << std::setw(15) << "Symbol index";
+  std::cout << std::endl;
+  for (auto it = elf->getRelocationTable().begin(); it != elf->getRelocationTable().end(); it++) {
+    std::cout << std::setw(10) << it->getOffset();
+    std::cout << std::setw(15) << it->getInfo();
+    std::cout << std::setw(10) << it->getAddend();
+    std::cout << std::setw(10) << it->getType();
+    std::cout << std::setw(15) << std::dec << it->getSymidx() << std::hex;
     std::cout << std::endl;
   }
   std::cout << "--------------------------------------------------------------------------------" << std::endl;

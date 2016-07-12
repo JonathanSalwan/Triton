@@ -9,8 +9,6 @@
 #define TRITON_ELF_H
 
 #include <iostream>
-#include <list>
-#include <map>
 #include <vector>
 
 #include "binaryInterface.hpp"
@@ -18,6 +16,7 @@
 #include "elfEnums.hpp"
 #include "elfHeader.hpp"
 #include "elfProgramHeader.hpp"
+#include "elfRelocationTable.hpp"
 #include "elfSectionHeader.hpp"
 #include "elfSymbolTable.hpp"
 #include "memoryMapping.hpp"
@@ -71,13 +70,16 @@ namespace triton {
           std::vector<triton::format::elf::ELFSectionHeader> sectionHeaders;
 
           //! The dynamic table.
-          std::list<triton::format::elf::ELFDynamicTable> dynamicTable;
+          std::vector<triton::format::elf::ELFDynamicTable> dynamicTable;
 
-          //! The symbols table as map of `<symbolName:symbolClass>`.
-          std::map<std::string, triton::format::elf::ELFSymbolTable> symbolsTable;
+          //! The symbols table.
+          std::vector<triton::format::elf::ELFSymbolTable> symbolsTable;
+
+          //! The relocations table.
+          std::vector<triton::format::elf::ELFRelocationTable> relocationsTable;
 
           //! The shared libraries dependency.
-          std::list<std::string> sharedLibraries;
+          std::vector<std::string> sharedLibraries;
 
           /*!
            * \description The list of memory areas which may be mapped into the Triton memory.
@@ -100,11 +102,20 @@ namespace triton {
           //! Init the list of shared libraries dependency.
           void initSharedLibraries(void);
 
+          //! Init the symbols table via the program headers.
+          void initSymbolsTableViaProgramHeaders(void);
+
           //! Init the symbols table via the section headers.
           void initSymbolsTableViaSectionHeaders(void);
 
-          //! Init the symbols table via the program headers.
-          void initSymbolsTableViaProgramHeaders(void);
+          //! Init the relocations table (DT_REL).
+          void initRelTable(void);
+
+          //! Init the relocations table (DT_RELA).
+          void initRelaTable(void);
+
+          //! Init the relocations table (DT_JMPREL).
+          void initJmprelTable(void);
 
           //! Returns the offset in the file corresponding to the virtual address.
           triton::uint64 getOffsetFromAddress(triton::uint64 vaddr);
@@ -135,13 +146,16 @@ namespace triton {
           const std::vector<triton::format::elf::ELFSectionHeader>& getSectionHeaders(void) const;
 
           //! Returns Dynamic Table.
-          const std::list<triton::format::elf::ELFDynamicTable>& getDynamicTable(void) const;
+          const std::vector<triton::format::elf::ELFDynamicTable>& getDynamicTable(void) const;
 
-          //! Returns Symbols Table as map of `<symbolName:symbolClass>`.
-          const std::map<std::string, triton::format::elf::ELFSymbolTable>& getSymbolsTable(void) const;
+          //! Returns Symbols Table.
+          const std::vector<triton::format::elf::ELFSymbolTable>& getSymbolsTable(void) const;
+
+          //! Returns Relocations Table.
+          const std::vector<triton::format::elf::ELFRelocationTable>& getRelocationTable(void) const;
 
           //! Returns the list of shared libraries dependency.
-          const std::list<std::string>& getSharedLibraries(void) const;
+          const std::vector<std::string>& getSharedLibraries(void) const;
 
           //! Returns all memory areas which may be mapped.
           const std::list<triton::format::MemoryMapping>& getMemoryMapping(void) const;
