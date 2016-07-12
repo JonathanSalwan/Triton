@@ -84,7 +84,7 @@ namespace triton {
         void checkArchitecture(void) const;
 
         //! [**architecture api**] - Returns the CPU instance.
-        triton::arch::cpuInterface* getCpu(void);
+        triton::arch::CpuInterface* getCpu(void);
 
         //! [**architecture api**] - Setup an architecture.
         /*!
@@ -165,11 +165,14 @@ namespace triton {
         //! [**architecture api**] - Sets the last concrete value of a register state.
         void setLastRegisterValue(const triton::arch::RegisterOperand& reg);
 
-        //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa  processing().
-        void disassembly(triton::arch::Instruction& inst) const;
+        //! [**architecture api**] - Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getLastMemoryValue() and getLastMemoryAreaValue().
+        bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
+
+        //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa processing().
+        void disassembly(triton::arch::Instruction& inst);
 
         //! [**architecture api**] - Builds the instruction semantics. You must define an architecture before. \sa processing().
-        void buildSemantics(triton::arch::Instruction& inst);
+        void buildSemantics(triton::arch::Instruction& inst) const;
 
 
 

@@ -244,6 +244,9 @@ Returns the list of all tainted \ref py_SymbolicExpression_page.
 - **isArchitectureValid(void)**<br>
 Returns true if the architecture is valid.
 
+- **isMemoryMapped(integer baseAddr, integer size=1)**<br>
+Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation.
+
 - **isMemoryTainted(integer addr)**<br>
 Returns true if the address is tainted.
 
@@ -1839,6 +1842,39 @@ namespace triton {
       }
 
 
+      static PyObject* triton_isMemoryMapped(PyObject* self, PyObject* args) {
+        PyObject* baseAddr        = nullptr;
+        PyObject* size            = nullptr;
+        triton::uint64 c_baseAddr = 0;
+        triton::usize c_size      = 1;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &baseAddr, &size);
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "isMemoryMapped(): Architecture is not defined.");
+
+        if (baseAddr == nullptr || (!PyLong_Check(baseAddr) && !PyInt_Check(baseAddr)))
+          return PyErr_Format(PyExc_TypeError, "isMemoryMapped(): Expects a base address (integer) as first argument.");
+
+        if (size != nullptr && !PyLong_Check(size) && !PyInt_Check(size))
+          return PyErr_Format(PyExc_TypeError, "isMemoryMapped(): Expects a size (integer) as second argument.");
+
+        try {
+          c_baseAddr = PyLong_AsUint64(baseAddr);
+          if (size != nullptr)
+            c_size = PyLong_AsUsize(size);
+          if (triton::api.isMemoryMapped(c_baseAddr, c_size) == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* triton_isMemoryTainted(PyObject* self, PyObject* mem) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -2791,6 +2827,7 @@ namespace triton {
         {"getSymbolicVariables",                (PyCFunction)triton_getSymbolicVariables,                   METH_NOARGS,        ""},
         {"getTaintedSymbolicExpressions",       (PyCFunction)triton_getTaintedSymbolicExpressions,          METH_NOARGS,        ""},
         {"isArchitectureValid",                 (PyCFunction)triton_isArchitectureValid,                    METH_NOARGS,        ""},
+        {"isMemoryMapped",                      (PyCFunction)triton_isMemoryMapped,                         METH_VARARGS,       ""},
         {"isMemoryTainted",                     (PyCFunction)triton_isMemoryTainted,                        METH_O,             ""},
         {"isRegisterTainted",                   (PyCFunction)triton_isRegisterTainted,                      METH_O,             ""},
         {"isSymbolicEmulationEnabled",          (PyCFunction)triton_isSymbolicEmulationEnabled,             METH_NOARGS,        ""},

@@ -33,7 +33,7 @@ namespace triton {
     }
 
 
-    triton::arch::cpuInterface* Architecture::getCpu(void) {
+    triton::arch::CpuInterface* Architecture::getCpu(void) {
       if (!this->cpu)
         throw std::runtime_error("Architecture::getCpu(): CPU undefined.");
       return this->cpu;
@@ -330,6 +330,13 @@ namespace triton {
       if (!this->cpu)
         throw std::runtime_error("Architecture::setLastRegisterValue(): You must define an architecture.");
       this->cpu->setLastRegisterValue(reg);
+    }
+
+
+    bool Architecture::isMemoryMapped(triton::uint64 baseAddr, triton::usize size) {
+      if (!this->cpu)
+        throw std::runtime_error("Architecture::isMemoryMapped(): You must define an architecture.");
+      return this->cpu->isMemoryMapped(baseAddr, size);
     }
 
   }; /* arch namespace */

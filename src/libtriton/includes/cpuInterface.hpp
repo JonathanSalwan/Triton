@@ -35,12 +35,12 @@ namespace triton {
    */
 
 
-    /*! \interface cpuInterface
+    /*! \interface CpuInterface
         \brief This interface is used as abstract CPU interface. All CPU must use this interface. */
-    class cpuInterface  {
+    class CpuInterface  {
       public:
         //! Destructor.
-        virtual ~cpuInterface(){};
+        virtual ~CpuInterface(){};
 
         //! The first function called when the a CPU is initialized.
         virtual void init(void) = 0;
@@ -123,6 +123,9 @@ namespace triton {
 
         //! Sets the last concrete value of a register state.
         virtual void setLastRegisterValue(const triton::arch::RegisterOperand& reg) = 0;
+
+        //! Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation.
+        virtual bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1) = 0;
     };
 
   /*! @} End of arch namespace */

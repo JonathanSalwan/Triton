@@ -209,7 +209,7 @@ namespace triton {
   }
 
 
-  triton::arch::cpuInterface* API::getCpu(void) {
+  triton::arch::CpuInterface* API::getCpu(void) {
     if (!this->isArchitectureValid())
       throw std::runtime_error("API::checkArchitecture(): You must define an architecture.");
     return this->arch.getCpu();
@@ -329,36 +329,39 @@ namespace triton {
   }
 
 
-  void API::disassembly(triton::arch::Instruction& inst) const {
-    this->checkArchitecture();
-    this->arch.disassembly(inst);
+  bool API::isMemoryMapped(triton::uint64 baseAddr, triton::usize size) {
+    return this->arch.isMemoryMapped(baseAddr, size);
   }
 
 
-  void API::buildSemantics(triton::arch::Instruction& inst) {
+  void API::disassembly(triton::arch::Instruction& inst) {
     this->checkArchitecture();
+    this->arch.disassembly(inst);
 
-    /* Stage 1 - Update the context memory */
+    /* Update the context memory attached to the instruction */
     std::list<triton::arch::MemoryOperand>::iterator it1;
     for (it1 = inst.memoryAccess.begin(); it1 != inst.memoryAccess.end(); it1++) {
       this->setLastMemoryValue(*it1);
     }
 
-    /* Stage 2 - Update the context register */
+    /* Update the context register attached to the register */
     std::map<triton::uint32, triton::arch::RegisterOperand>::iterator it2;
     for (it2 = inst.registerState.begin(); it2 != inst.registerState.end(); it2++) {
       this->setLastRegisterValue(it2->second);
     }
 
-    /* Stage 3 - Initialize the target address of memory operands */
+    /* Initialize the target address of memory operands */
     std::vector<triton::arch::OperandWrapper>::iterator it3;
     for (it3 = inst.operands.begin(); it3 != inst.operands.end(); it3++) {
       if (it3->getType() == triton::arch::OP_MEM) {
         it3->getMemory().initAddress();
       }
     }
+  }
 
-    /* Stage 4 - Process the IR */
+
+  void API::buildSemantics(triton::arch::Instruction& inst) const {
+    this->checkArchitecture();
     this->arch.buildSemantics(inst);
   }
 

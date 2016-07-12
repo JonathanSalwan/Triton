@@ -46,7 +46,7 @@ namespace triton {
 
       //! \class x86Cpu
       /*! \brief This class is used to describe the x86 (32-bits) spec. */
-      class x86Cpu : public cpuInterface {
+      class x86Cpu : public CpuInterface {
 
         protected:
 
@@ -225,6 +225,7 @@ namespace triton {
           void setLastMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
           void setLastMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
           void setLastRegisterValue(const triton::arch::RegisterOperand& reg);
+          bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
 
           //! Copies a x86Cpu class.
           void operator=(const x86Cpu& other);

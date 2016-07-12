@@ -1063,6 +1063,15 @@ namespace triton {
         }
       }
 
+
+      bool x86Cpu::isMemoryMapped(triton::uint64 baseAddr, triton::usize size) {
+        for (triton::usize index = 0; index < size; index++) {
+          if (this->memory.find(baseAddr + index) == this->memory.end())
+            return false;
+        }
+        return true;
+      }
+
     }; /* x86 namespace */
   }; /* arch namespace */
 }; /* triton namespace */

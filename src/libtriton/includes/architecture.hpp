@@ -51,7 +51,7 @@ namespace triton {
         triton::uint32 arch;
 
         //! Instance to the real CPU class.
-        triton::arch::cpuInterface* cpu;
+        triton::arch::CpuInterface* cpu;
 
       public:
 
@@ -80,7 +80,7 @@ namespace triton {
         triton::uint32 getArchitecture(void) const;
 
         //! Returns the CPU
-        triton::arch::cpuInterface* getCpu(void);
+        triton::arch::CpuInterface* getCpu(void);
 
         //! Returns the invalid CPU register id.
         triton::uint32 invalidRegister(void) const;
@@ -148,6 +148,9 @@ namespace triton {
 
         //! Sets the last concrete value of a register state.
         void setLastRegisterValue(const triton::arch::RegisterOperand& reg);
+
+        //! Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getLastMemoryValue() and getLastMemoryAreaValue().
+        bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
 
         //! Constructor.
         Architecture();
