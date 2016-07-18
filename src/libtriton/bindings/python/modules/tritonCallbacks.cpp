@@ -367,6 +367,9 @@ Taints `regDst` from `memSrc` with an union - `regDst` is tainted if `regDst` or
 - <b>taintUnionRegisterRegister(\ref py_REG_page regDst, \ref py_REG_page regSrc)</b><br>
 Taints `regDst` from `regSrc` with an union - `regDst` is tainted if `regDst` or `regSrc` are tainted.
 
+- **unmapMemory(integer baseAddr, integer size=1)**<br>
+Removes the range `[baseAddr:size]` from the internal memory representation.
+
 - **untaintMemory(intger addr)**<br>
 Untaints an address.
 
@@ -2720,6 +2723,40 @@ namespace triton {
       }
 
 
+      static PyObject* triton_unmapMemory(PyObject* self, PyObject* args) {
+        PyObject* baseAddr        = nullptr;
+        PyObject* size            = nullptr;
+        triton::uint64 c_baseAddr = 0;
+        triton::usize c_size      = 1;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &baseAddr, &size);
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "unmapMemory(): Architecture is not defined.");
+
+        if (baseAddr == nullptr || (!PyLong_Check(baseAddr) && !PyInt_Check(baseAddr)))
+          return PyErr_Format(PyExc_TypeError, "unmapMemory(): Expects a base address (integer) as first argument.");
+
+        if (size != nullptr && !PyLong_Check(size) && !PyInt_Check(size))
+          return PyErr_Format(PyExc_TypeError, "unmapMemory(): Expects a size (integer) as second argument.");
+
+        try {
+          c_baseAddr = PyLong_AsUint64(baseAddr);
+          if (size != nullptr)
+            c_size = PyLong_AsUsize(size);
+          triton::api.unmapMemory(c_baseAddr, c_size);
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* triton_untaintMemory(PyObject* self, PyObject* mem) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -2864,6 +2901,7 @@ namespace triton {
         {"taintUnionRegisterImmediate",         (PyCFunction)triton_taintUnionRegisterImmediate,            METH_O,             ""},
         {"taintUnionRegisterMemory",            (PyCFunction)triton_taintUnionRegisterMemory,               METH_VARARGS,       ""},
         {"taintUnionRegisterRegister",          (PyCFunction)triton_taintUnionRegisterRegister,             METH_VARARGS,       ""},
+        {"unmapMemory",                         (PyCFunction)triton_unmapMemory,                            METH_VARARGS,       ""},
         {"untaintMemory",                       (PyCFunction)triton_untaintMemory,                          METH_O,             ""},
         {"untaintRegister",                     (PyCFunction)triton_untaintRegister,                        METH_O,             ""},
         {nullptr,                               nullptr,                                                    0,                  nullptr}

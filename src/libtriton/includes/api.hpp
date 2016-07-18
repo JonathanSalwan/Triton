@@ -166,6 +166,9 @@ namespace triton {
         //! [**architecture api**] - Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getLastMemoryValue() and getLastMemoryAreaValue().
         bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
 
+        //! [**architecture api**] - Removes the range `[baseAddr:size]` from the internal memory representation.
+        void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
+
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa processing().
         void disassembly(triton::arch::Instruction& inst) const;
 

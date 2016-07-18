@@ -1390,6 +1390,14 @@ namespace triton {
         return true;
       }
 
+
+      void x8664Cpu::unmapMemory(triton::uint64 baseAddr, triton::usize size) {
+        for (triton::usize index = 0; index < size; index++) {
+          if (this->memory.find(baseAddr + index) != this->memory.end())
+            this->memory.erase(baseAddr + index);
+        }
+      }
+
     }; /* x86 namespace */
   }; /* arch namespace */
 }; /* triton namespace */

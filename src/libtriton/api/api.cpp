@@ -334,6 +334,11 @@ namespace triton {
   }
 
 
+  void API::unmapMemory(triton::uint64 baseAddr, triton::usize size) {
+    this->arch.unmapMemory(baseAddr, size);
+  }
+
+
   void API::disassembly(triton::arch::Instruction& inst) const {
     this->checkArchitecture();
     this->arch.disassembly(inst);

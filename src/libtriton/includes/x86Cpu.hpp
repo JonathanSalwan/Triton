@@ -226,6 +226,7 @@ namespace triton {
           void setLastMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
           void setLastRegisterValue(const triton::arch::RegisterOperand& reg);
           bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
+          void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
 
           //! Copies a x86Cpu class.
           void operator=(const x86Cpu& other);

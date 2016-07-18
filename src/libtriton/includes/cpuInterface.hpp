@@ -124,8 +124,11 @@ namespace triton {
         //! Sets the last concrete value of a register state.
         virtual void setLastRegisterValue(const triton::arch::RegisterOperand& reg) = 0;
 
-        //! Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation.
+        //! Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getLastMemoryValue() and getLastMemoryAreaValue().
         virtual bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1) = 0;
+
+        //! Removes the range `[baseAddr:size]` from the internal memory representation. \sa isMemoryMapped().
+        virtual void unmapMemory(triton::uint64 baseAddr, triton::usize size=1) = 0;
     };
 
   /*! @} End of arch namespace */

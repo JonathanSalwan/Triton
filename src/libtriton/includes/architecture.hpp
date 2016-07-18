@@ -152,6 +152,9 @@ namespace triton {
         //! Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getLastMemoryValue() and getLastMemoryAreaValue().
         bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
 
+        //! Removes the range `[baseAddr:size]` from the internal memory representation. \sa isMemoryMapped().
+        void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
+
         //! Constructor.
         Architecture();
 

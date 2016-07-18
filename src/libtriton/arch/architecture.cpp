@@ -339,6 +339,13 @@ namespace triton {
       return this->cpu->isMemoryMapped(baseAddr, size);
     }
 
+
+    void Architecture::unmapMemory(triton::uint64 baseAddr, triton::usize size) {
+      if (!this->cpu)
+        throw std::runtime_error("Architecture::unmapMemory(): You must define an architecture.");
+      this->cpu->unmapMemory(baseAddr, size);
+    }
+
   }; /* arch namespace */
 }; /* triton namespace */
 
