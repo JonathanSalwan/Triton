@@ -74,19 +74,70 @@ namespace triton {
     }
 
 
+    triton::uint64 MemoryOperand::getBaseValue(void) {
+      if (this->pcRelative)
+        return this->pcRelative;
+
+      else if (this->baseReg.isValid())
+        return triton::api.getRegisterValue(this->baseReg).convert_to<triton::uint64>();
+
+      return 0;
+    }
+
+
+    triton::uint64 MemoryOperand::getIndexValue(void) {
+      if (this->indexReg.isValid())
+        return triton::api.getRegisterValue(this->indexReg).convert_to<triton::uint64>();
+      return 0;
+    }
+
+
+    triton::uint64 MemoryOperand::getSegmentValue(void) {
+      if (this->segmentReg.isValid())
+        return triton::api.getRegisterValue(this->segmentReg).convert_to<triton::uint64>();
+      return 0;
+    }
+
+
+    triton::uint64 MemoryOperand::getScaleValue(void) {
+      return this->scale.getValue();
+    }
+
+
+    triton::uint64 MemoryOperand::getDisplacementValue(void) {
+      return this->displacement.getValue();
+    }
+
+
+    triton::uint64 MemoryOperand::getAccessMask(void) {
+      triton::uint64 mask = -1;
+      return (mask >> (QWORD_SIZE_BIT - triton::api.cpuRegisterBitSize()));
+    }
+
+
+    triton::uint32 MemoryOperand::getAccessSize(void) {
+      if (this->indexReg.isValid())
+        return this->indexReg.getBitSize();
+
+      else if (this->baseReg.isValid())
+        return this->baseReg.getBitSize();
+
+      else if (this->segmentReg.isValid())
+        return this->segmentReg.getBitSize();
+
+      return triton::api.cpuRegisterBitSize();
+    }
+
+
     void MemoryOperand::initAddress(void) {
       /* Otherwise, try to compute the address */
       if (triton::api.isArchitectureValid() && this->getBitSize() >= BYTE_SIZE_BIT) {
         RegisterOperand& base         = this->baseReg;
         RegisterOperand& index        = this->indexReg;
-        RegisterOperand& segment      = this->segmentReg;
-        triton::uint64 baseValue      = (this->pcRelative ? this->pcRelative : (base.isValid() ? triton::api.getRegisterValue(base).convert_to<triton::uint64>() : 0));
-        triton::uint64 indexValue     = (index.isValid() ? triton::api.getRegisterValue(index).convert_to<triton::uint64>() : 0);
-        triton::uint64 segmentValue   = (segment.isValid() ? triton::api.getRegisterValue(segment).convert_to<triton::uint64>() : 0);
-        triton::uint64 scaleValue     = this->scale.getValue();
-        triton::uint64 dispValue      = this->displacement.getValue();
-        triton::uint64 mask           = -1;
-        triton::uint32 bitSize        = (index.isValid() ? index.getBitSize() : base.isValid() ? base.getBitSize() : segment.isValid() ? segment.getBitSize() : triton::api.cpuRegisterBitSize());
+        triton::uint64 segmentValue   = this->getSegmentValue();
+        triton::uint64 scaleValue     = this->getScaleValue();
+        triton::uint64 dispValue      = this->getDisplacementValue();
+        triton::uint32 bitSize        = this->getAccessSize();
 
         /* Initialize the AST of the memory access (LEA) */
         this->ast = triton::ast::bvadd(
@@ -100,29 +151,13 @@ namespace triton {
                       )
                     );
 
-        /*
-         * If the symbolic emulation is enabled, use segments as
-         * base address instead of selector into the GDT.
-         */
-        if (triton::api.isSymbolicEmulationEnabled()) {
-          this->ast = triton::ast::bvadd(
-                        triton::ast::bv(segmentValue, bitSize),
-                        this->ast
-                      );
-        }
+        /* Use segments as base address instead of selector into the GDT. */
+        if (segmentValue)
+          this->ast = triton::ast::bvadd(triton::ast::bv(segmentValue, bitSize), this->ast);
 
         /* Initialize the address only if it is not already defined */
-        if (!this->address) {
-          /* LEA computation */
-          this->address = (((baseValue + (indexValue * scaleValue)) + dispValue) & mask);
-          /*
-           * If the symbolic emulation is enabled, use segments as
-           * base address instead of selector into the GDT.
-           */
-          if (triton::api.isSymbolicEmulationEnabled())
-            this->address += segmentValue;
-        }
-
+        if (!this->address)
+          this->address = this->ast->evaluate().convert_to<triton::uint64>();
       }
     }
 

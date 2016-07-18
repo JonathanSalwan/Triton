@@ -112,7 +112,8 @@ Returns the AST of the memory access (LEA) as \ref py_AstNode_page.
 Returns the scale (if exists) of the  memory access as \ref py_Immediate_page.
 
 - **getSegmentRegister(void)**<br>
-Returns the segment register (if exists) of the memory access as \ref py_Register_page.<br>
+Returns the segment register (if exists) of the memory access as \ref py_Register_page. Note that to be user-friendly, the
+segment register is used as base register and not as a selector into the GDT.<br>
 
 - **getSize(void)**<br>
 Returns the size (in bytes) of the  memory access as integer.<br>

@@ -334,34 +334,35 @@ namespace triton {
   }
 
 
-  void API::disassembly(triton::arch::Instruction& inst) {
+  void API::disassembly(triton::arch::Instruction& inst) const {
     this->checkArchitecture();
     this->arch.disassembly(inst);
+  }
 
-    /* Update the context memory attached to the instruction */
+
+  void API::buildSemantics(triton::arch::Instruction& inst) {
+    this->checkArchitecture();
+
+    /* Stage 1 - Update the context memory */
     std::list<triton::arch::MemoryOperand>::iterator it1;
     for (it1 = inst.memoryAccess.begin(); it1 != inst.memoryAccess.end(); it1++) {
       this->setLastMemoryValue(*it1);
     }
 
-    /* Update the context register attached to the register */
+    /* Stage 2 - Update the context register */
     std::map<triton::uint32, triton::arch::RegisterOperand>::iterator it2;
     for (it2 = inst.registerState.begin(); it2 != inst.registerState.end(); it2++) {
       this->setLastRegisterValue(it2->second);
     }
 
-    /* Initialize the target address of memory operands */
+    /* Stage 3 - Initialize the target address of memory operands */
     std::vector<triton::arch::OperandWrapper>::iterator it3;
     for (it3 = inst.operands.begin(); it3 != inst.operands.end(); it3++) {
       if (it3->getType() == triton::arch::OP_MEM) {
         it3->getMemory().initAddress();
       }
     }
-  }
 
-
-  void API::buildSemantics(triton::arch::Instruction& inst) const {
-    this->checkArchitecture();
     this->arch.buildSemantics(inst);
   }
 

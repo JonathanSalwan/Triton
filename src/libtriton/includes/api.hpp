@@ -167,10 +167,10 @@ namespace triton {
         bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
 
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa processing().
-        void disassembly(triton::arch::Instruction& inst);
+        void disassembly(triton::arch::Instruction& inst) const;
 
         //! [**architecture api**] - Builds the instruction semantics. You must define an architecture before. \sa processing().
-        void buildSemantics(triton::arch::Instruction& inst) const;
+        void buildSemantics(triton::arch::Instruction& inst);
 
 
 

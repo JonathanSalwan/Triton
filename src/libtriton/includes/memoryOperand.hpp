@@ -71,6 +71,28 @@ namespace triton {
         //! Copy a MemoryOperand.
         void copy(const MemoryOperand& other);
 
+      private:
+        //! LEA - Returns the base register value.
+        triton::uint64 getBaseValue(void);
+
+        //! LEA - Returns the index register value.
+        triton::uint64 getIndexValue(void);
+
+        //! LEA - Returns the segment register value.
+        triton::uint64 getSegmentValue(void);
+
+        //! LEA - Returns the scale immediate value.
+        triton::uint64 getScaleValue(void);
+
+        //! LEA - Returns the displacement immediate value.
+        triton::uint64 getDisplacementValue(void);
+
+        //! LEA - Returns the mask of the memory access based on the CPU architecture.
+        triton::uint64 getAccessMask(void);
+
+        //! LEA - Returns the size of the memory access.
+        triton::uint32 getAccessSize(void);
+
       public:
         //! Constructor.
         MemoryOperand();
