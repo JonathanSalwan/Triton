@@ -470,7 +470,7 @@ namespace triton {
         void checkSolver(void) const;
 
         /*!
-         * brief [**solver api**] - Computes and returns a model from a symbolic constraint.
+         * \brief [**solver api**] - Computes and returns a model from a symbolic constraint.
          *
          * \description
          * **item1**: symbolic variable id<br>
