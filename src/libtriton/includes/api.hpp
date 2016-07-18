@@ -75,7 +75,7 @@ namespace triton {
         //! [**Architecture api**] - Returns true if the architecture is valid.
         bool isArchitectureValid(void) const;
 
-        //! [**architecture api**] - Returns the architecture as triton::arch::architecture_e.
+        //! [**architecture api**] - Returns the architecture as triton::arch::architectures_e.
         triton::uint32 getArchitecture(void) const;
 
         //! [**architecture api**] - Raises an exception if the architecture is not initialized.
@@ -84,31 +84,19 @@ namespace triton {
         //! [**architecture api**] - Returns the CPU instance.
         triton::arch::CpuInterface* getCpu(void);
 
-        //! [**architecture api**] - Setup an architecture.
-        /*!
-          \param arch the architecture.
-        */
+        //! [**architecture api**] - Setup an architecture. \sa triton::arch::architectures_e.
         void setArchitecture(triton::uint32 arch);
 
         //! [**architecture api**] - Clears the architecture states (registers and memory).
         void clearArchitecture(void);
 
-        //! [**architecture api**] - Returns true if the regId is a flag.
-        /*!
-          \param regId the register id.
-        */
+        //! [**architecture api**] - Returns true if the register id is a flag. \sa triton::arch::x86::registers_e.
         bool isCpuFlag(triton::uint32 regId) const;
 
-        //! [**architecture api**] - Returns true if the regId is a register.
-        /*!
-          \param regId the register id.
-        */
+        //! [**architecture api**] - Returns true if the regId is a register. \sa triton::arch::x86::registers_e.
         bool isCpuRegister(triton::uint32 regId) const;
 
-        //! [**architecture api**] - Returns true if the regId is a register or a flag.
-        /*!
-          \param regId the register id.
-        */
+        //! [**architecture api**] - Returns true if the regId is a register or a flag. \sa triton::arch::x86::registers_e.
         bool isCpuRegisterValid(triton::uint32 regId) const;
 
         //! [**architecture api**] - Returns the max size (in byte) of the CPU register (GPR).
@@ -117,23 +105,23 @@ namespace triton {
         //! [**architecture api**] - Returns the max size (in bit) of the CPU register (GPR).
         triton::uint32 cpuRegisterBitSize(void) const;
 
-        //! [**architecture api**] - Returns the invalid CPU register id.
+        //! [**architecture api**] - Returns the invalid CPU register id. \sa triton::arch::x86::registers_e::ID_REG_INVALID.
         triton::uint32 cpuInvalidRegister(void) const;
 
         //! [**architecture api**] - Returns the number of registers according to the CPU architecture.
         triton::uint32 cpuNumberOfRegisters(void) const;
 
-        //! [**architecture api**] - Returns all information about the register.
         /*!
-          \param reg the register id.
-          \return std::tuple<name, b-high, b-low, parentId>
-        */
+         * \brief [**architecture api**] - Returns all information about the register.
+         * \param reg the register id.
+         * \return std::tuple<name, b-high, b-low, parentId>
+         */
         std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getCpuRegInformation(triton::uint32 reg) const;
 
-        //! [**architecture api**] - Returns all registers.
+        //! [**architecture api**] - Returns all registers. \sa triton::arch::x86::registers_e.
         std::set<triton::arch::RegisterOperand*> getAllRegisters(void) const;
 
-        //! [**architecture api**] - Returns all parent registers.
+        //! [**architecture api**] - Returns all parent registers. \sa triton::arch::x86::registers_e.
         std::set<triton::arch::RegisterOperand*> getParentRegisters(void) const;
 
         //! [**architecture api**] - Returns the last concrete value recorded of a memory access.
@@ -166,7 +154,7 @@ namespace triton {
         //! [**architecture api**] - Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getLastMemoryValue() and getLastMemoryAreaValue().
         bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
 
-        //! [**architecture api**] - Removes the range `[baseAddr:size]` from the internal memory representation.
+        //! [**architecture api**] - Removes the range `[baseAddr:size]` from the internal memory representation. \sa isMemoryMapped().
         void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
 
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa processing().
@@ -417,7 +405,8 @@ namespace triton {
         //! [**symbolic api**] - Enables or disables a symbolic optimization.
         void enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti, bool flag);
 
-        /*! \brief [**symbolic api**] - Returns true if we perform a full symbolic emulation.
+        /*!
+         * \brief [**symbolic api**] - Returns true if we perform a full symbolic emulation.
          *
          * \description
          * **true**: full symbolic execution (emulation).
@@ -480,8 +469,8 @@ namespace triton {
         //! [**solver api**] - Raises an exception if the solver engine is not initialized.
         void checkSolver(void) const;
 
-        //! [**solver api**] - Computes and returns a model from a symbolic constraint.
-        /*! \brief map of symbolic variable id -> model
+        /*!
+         * brief [**solver api**] - Computes and returns a model from a symbolic constraint.
          *
          * \description
          * **item1**: symbolic variable id<br>
@@ -489,8 +478,8 @@ namespace triton {
          */
         std::map<triton::uint32, triton::engines::solver::SolverModel> getModel(triton::ast::AbstractNode *node) const;
 
-        //! [**solver api**] - Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
-        /*! \brief list of map of symbolic variable id -> model
+        /*!
+         * \brief [**solver api**] - Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
          *
          * \description
          * **item1**: symbolic variable id<br>
@@ -520,90 +509,41 @@ namespace triton {
         //! [**taint api**] - Abstract taint verification.
         bool isTainted(const triton::arch::OperandWrapper& op) const;
 
-        //! [**taint api**] - Returns true if the addr is tainted.
-        /*!
-          \param addr the targeted address.
-          \param size the access' size
-        */
+        //! [**taint api**] - Returns true if the address:size is tainted.
         bool isMemoryTainted(triton::uint64 addr, triton::uint32 size=1) const;
 
         //! [**taint api**] - Returns true if the memory is tainted.
-        /*!
-          \param mem the memory operand.
-        */
         bool isMemoryTainted(const triton::arch::MemoryOperand& mem) const;
 
         //! [**taint api**] - Returns true if the register is tainted.
-        /*!
-          \param reg the register operand.
-        */
         bool isRegisterTainted(const triton::arch::RegisterOperand& reg) const;
 
-        //! [**taint api**] - Sets abstract flag of the operand.
-        /*!
-          \param op the abstract operand.
-          \param flag TAINTED or !TAINTED
-          \return flag
-        */
+        //! [**taint api**] - Sets the flag (taint) to an abstract operand (Register or Memory).
         bool setTaint(const triton::arch::OperandWrapper& op, bool flag);
 
 
-        //! [**taint api**] - Sets memory flag.
-        /*!
-          \param mem the memory operand.
-          \param flag TAINTED or !TAINTED
-          \return flag
-        */
+        //! [**taint api**] - Sets the flag (taint) to a memory.
         bool setTaintMemory(const triton::arch::MemoryOperand& mem, bool flag);
 
-        //! [**taint api**] - Sets register flag.
-        /*!
-          \param reg the register operand.
-          \param flag TAINTED or !TAINTED
-          \return flag
-        */
+        //! [**taint api**] - Sets the flag (taint) to a register.
         bool setTaintRegister(const triton::arch::RegisterOperand& reg, bool flag);
 
         //! [**taint api**] - Taints an address.
-        /*!
-          \param addr the targeted address.
-          \return triton::engines::taint::TAINTED
-        */
         bool taintMemory(triton::uint64 addr);
 
         //! [**taint api**] - Taints a memory.
-        /*!
-          \param mem the memory operand.
-          \return triton::engines::taint::TAINTED
-        */
         bool taintMemory(const triton::arch::MemoryOperand& mem);
 
         //! [**taint api**] - Taints a register.
-        /*!
-          \param reg the register operand.
-          \return triton::engines::taint::TAINTED
-        */
         bool taintRegister(const triton::arch::RegisterOperand& reg);
 
         //! [**taint api**] - Untaints an address.
-        /*!
-          \param addr the targeted address.
-          \return triton::engines::taint::UNTAINTED
-        */
         bool untaintMemory(triton::uint64 addr);
 
         //! [**taint api**] - Untaints a memory.
-        /*!
-          \param mem the memory operand.
-          \return triton::engines::taint::UNTAINTED
-        */
         bool untaintMemory(const triton::arch::MemoryOperand& mem);
 
         //! [**taint api**] - Untaints a register.
-        /*!
-          \param reg the register operand.
-          \return triton::engines::taint::UNTAINTED
-        */
         bool untaintRegister(const triton::arch::RegisterOperand& reg);
 
         //! [**taint api**] - Abstract union tainting.
