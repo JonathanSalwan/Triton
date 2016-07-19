@@ -471,251 +471,333 @@ namespace tracer {
         triton::uint8 buffer[DQQWORD_SIZE] = {0};
 
         #if defined(__x86_64__) || defined(_M_X64)
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_RAX, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_RAX, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_RBX, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_RBX, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_RCX, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_RCX, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_RDX, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_RDX, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_RDI, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_RDI, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_RSI, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_RSI, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_RBP, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_RBP, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_RSP, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_RSP, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_RIP, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_RIP, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_RFLAGS, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_EFLAGS, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_R8, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_R8, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_R9, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_R9, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_R10, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_R10, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_R11, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_R11, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_R12, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_R12, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_R13, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_R13, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_R14, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_R14, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_R15, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_R15, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM0, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM0, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM1, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM1, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM2, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM2, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM3, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM3, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM4, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM4, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM5, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM5, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM6, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM6, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM7, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM7, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM8, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM8, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM9, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM9, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM10, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM10, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM11, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM11, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM12, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM12, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM13, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM13, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM14, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM14, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM15, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM15, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM0, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM0, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM1, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM1, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM2, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM2, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM3, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM3, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM4, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM4, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM5, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM5, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM6, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM6, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM7, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM7, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM8, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM8, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM9, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM9, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM10, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM10, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM11, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM11, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM12, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM12, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM13, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM13, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM14, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM14, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM15, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM15, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_MXCSR, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MXCSR, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_SEG_FS_BASE, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_FS, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_SEG_GS_BASE, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_GS, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
         #endif
 
         #if defined(__i386) || defined(_M_IX86)
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_EAX, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_EAX, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_EBX, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_EBX, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_ECX, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ECX, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_EDX, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_EDX, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_EDI, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_EDI, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_ESI, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ESI, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_EBP, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_EBP, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_ESP, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_ESP, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_EIP, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_EIP, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_EFLAGS, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_EFLAGS, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM0, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM0, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM1, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM1, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM2, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM2, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM3, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM3, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM4, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM4, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM5, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM5, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM6, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM6, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_XMM7, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_XMM7, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM0, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM0, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM1, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM1, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM2, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM2, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM3, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM3, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM4, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM4, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM5, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM5, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM6, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM6, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_YMM7, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_YMM7, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_MXCSR, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_MXCSR, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_SEG_FS_BASE, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_FS, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
 
+          memset(buffer, 0x00, sizeof(buffer));
           PIN_GetContextRegval(ctx, LEVEL_BASE::REG_SEG_GS_BASE, reinterpret_cast<triton::uint8 *>(buffer));
           inst->updateContext(triton::arch::RegisterOperand(triton::arch::x86::ID_REG_GS, triton::utils::fromBufferToUint<triton::uint512>(buffer)));
         #endif
