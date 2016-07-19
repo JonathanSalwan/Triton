@@ -284,48 +284,48 @@ namespace triton {
   }
 
 
-  triton::uint8 API::getLastMemoryValue(triton::uint64 addr) const {
-    return this->arch.getLastMemoryValue(addr);
+  triton::uint8 API::getConcreteMemoryValue(triton::uint64 addr) const {
+    return this->arch.getConcreteMemoryValue(addr);
   }
 
 
-  triton::uint512 API::getLastMemoryValue(const triton::arch::MemoryOperand& mem) const {
-    return this->arch.getLastMemoryValue(mem);
+  triton::uint512 API::getConcreteMemoryValue(const triton::arch::MemoryOperand& mem) const {
+    return this->arch.getConcreteMemoryValue(mem);
   }
 
 
-  std::vector<triton::uint8> API::getLastMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const {
-    return this->arch.getLastMemoryAreaValue(baseAddr, size);
+  std::vector<triton::uint8> API::getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const {
+    return this->arch.getConcreteMemoryAreaValue(baseAddr, size);
   }
 
 
-  triton::uint512 API::getLastRegisterValue(const triton::arch::RegisterOperand& reg) const {
-    return this->arch.getLastRegisterValue(reg);
+  triton::uint512 API::getConcreteRegisterValue(const triton::arch::RegisterOperand& reg) const {
+    return this->arch.getConcreteRegisterValue(reg);
   }
 
 
-  void API::setLastMemoryValue(triton::uint64 addr, triton::uint8 value) {
-    this->arch.setLastMemoryValue(addr, value);
+  void API::setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value) {
+    this->arch.setConcreteMemoryValue(addr, value);
   }
 
 
-  void API::setLastMemoryValue(const triton::arch::MemoryOperand& mem) {
-    this->arch.setLastMemoryValue(mem);
+  void API::setConcreteMemoryValue(const triton::arch::MemoryOperand& mem) {
+    this->arch.setConcreteMemoryValue(mem);
   }
 
 
-  void API::setLastMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
-    this->arch.setLastMemoryAreaValue(baseAddr, values);
+  void API::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
+    this->arch.setConcreteMemoryAreaValue(baseAddr, values);
   }
 
 
-  void API::setLastMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
-    this->arch.setLastMemoryAreaValue(baseAddr, area, size);
+  void API::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
+    this->arch.setConcreteMemoryAreaValue(baseAddr, area, size);
   }
 
 
-  void API::setLastRegisterValue(const triton::arch::RegisterOperand& reg) {
-    this->arch.setLastRegisterValue(reg);
+  void API::setConcreteRegisterValue(const triton::arch::RegisterOperand& reg) {
+    this->arch.setConcreteRegisterValue(reg);
   }
 
 
@@ -351,13 +351,13 @@ namespace triton {
     /* Stage 1 - Update the context memory */
     std::list<triton::arch::MemoryOperand>::iterator it1;
     for (it1 = inst.memoryAccess.begin(); it1 != inst.memoryAccess.end(); it1++) {
-      this->setLastMemoryValue(*it1);
+      this->setConcreteMemoryValue(*it1);
     }
 
     /* Stage 2 - Update the context register */
     std::map<triton::uint32, triton::arch::RegisterOperand>::iterator it2;
     for (it2 = inst.registerState.begin(); it2 != inst.registerState.end(); it2++) {
-      this->setLastRegisterValue(it2->second);
+      this->setConcreteRegisterValue(it2->second);
     }
 
     /* Stage 3 - Initialize the target address of memory operands */
@@ -746,38 +746,6 @@ namespace triton {
   }
 
 
-  triton::uint8 API::getMemoryValue(triton::uint64 addr) {
-    this->checkSymbolic();
-    if (this->isSymbolicEmulationEnabled())
-      return this->getSymbolicMemoryValue(addr);
-    return this->getLastMemoryValue(addr);
-  }
-
-
-  triton::uint512 API::getMemoryValue(const triton::arch::MemoryOperand& mem) {
-    this->checkSymbolic();
-    if (this->isSymbolicEmulationEnabled())
-      return this->getSymbolicMemoryValue(mem);
-    return this->getLastMemoryValue(mem);
-  }
-
-
-  std::vector<triton::uint8> API::getMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) {
-    this->checkSymbolic();
-    if (this->isSymbolicEmulationEnabled())
-      return this->getSymbolicMemoryAreaValue(baseAddr, size);
-    return this->getLastMemoryAreaValue(baseAddr, size);
-  }
-
-
-  triton::uint512 API::getRegisterValue(const triton::arch::RegisterOperand& reg) {
-    this->checkSymbolic();
-    if (this->isSymbolicEmulationEnabled())
-      return this->getSymbolicRegisterValue(reg);
-    return this->getLastRegisterValue(reg);
-  }
-
-
   triton::uint512 API::getSymbolicRegisterValue(const triton::arch::RegisterOperand& reg) {
     this->checkSymbolic();
     return this->symbolic->getSymbolicRegisterValue(reg);
@@ -878,12 +846,6 @@ namespace triton {
   }
 
 
-  void API::enableSymbolicEmulation(bool flag) {
-    this->checkSymbolic();
-    this->symbolic->emulation(flag);
-  }
-
-
   void API::enableSymbolicZ3Simplification(bool flag) {
     this->checkSymbolic();
     this->symbolic->enableZ3Simplification(flag);
@@ -893,12 +855,6 @@ namespace triton {
   void API::enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti, bool flag) {
     this->checkSymbolic();
     this->symbolic->enableOptimization(opti, flag);
-  }
-
-
-  bool API::isSymbolicEmulationEnabled(void) const {
-    this->checkSymbolic();
-    return this->symbolic->isEmulationEnabled();
   }
 
 

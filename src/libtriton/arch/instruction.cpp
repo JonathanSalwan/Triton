@@ -166,7 +166,7 @@ namespace triton {
       /* If there is a memory access recorded, we use it */
       if (this->memoryAccess.size() > 0) {
         mem = this->memoryAccess.front();
-        triton::api.setLastMemoryValue(mem);
+        triton::api.setConcreteMemoryValue(mem);
         this->memoryAccess.pop_front();
       }
 

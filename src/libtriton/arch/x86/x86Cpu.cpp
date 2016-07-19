@@ -635,39 +635,39 @@ namespace triton {
       }
 
 
-      triton::uint8 x86Cpu::getLastMemoryValue(triton::uint64 addr) const {
+      triton::uint8 x86Cpu::getConcreteMemoryValue(triton::uint64 addr) const {
         if (this->memory.find(addr) == this->memory.end())
           return 0x00;
         return this->memory.at(addr);
       }
 
 
-      triton::uint512 x86Cpu::getLastMemoryValue(const triton::arch::MemoryOperand& mem) const {
+      triton::uint512 x86Cpu::getConcreteMemoryValue(const triton::arch::MemoryOperand& mem) const {
         triton::uint512 ret = 0;
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
         if (size == 0 || size > DQQWORD_SIZE)
-          throw std::invalid_argument("x86Cpu::getLastMemoryValue(): Invalid size memory.");
+          throw std::invalid_argument("x86Cpu::getConcreteMemoryValue(): Invalid size memory.");
 
         for (triton::sint32 i = size-1; i >= 0; i--)
-          ret = ((ret << BYTE_SIZE_BIT) | this->getLastMemoryValue(addr+i));
+          ret = ((ret << BYTE_SIZE_BIT) | this->getConcreteMemoryValue(addr+i));
 
         return ret;
       }
 
 
-      std::vector<triton::uint8> x86Cpu::getLastMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const {
+      std::vector<triton::uint8> x86Cpu::getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const {
         std::vector<triton::uint8> area;
 
         for (triton::usize index = 0; index < size; index++)
-          area.push_back(this->getLastMemoryValue(baseAddr+index));
+          area.push_back(this->getConcreteMemoryValue(baseAddr+index));
 
         return area;
       }
 
 
-      triton::uint512 x86Cpu::getLastRegisterValue(const triton::arch::RegisterOperand& reg) const {
+      triton::uint512 x86Cpu::getConcreteRegisterValue(const triton::arch::RegisterOperand& reg) const {
         triton::uint512 value = 0;
         switch (reg.getId()) {
           case triton::arch::x86::ID_REG_EAX: return (*((triton::uint32*)(this->eax)));
@@ -792,25 +792,25 @@ namespace triton {
           case triton::arch::x86::ID_REG_SS: return (*((triton::uint32*)(this->ss)));
 
           default:
-            throw std::invalid_argument("x86Cpu::getLastRegisterValue(): Invalid register.");
+            throw std::invalid_argument("x86Cpu::getConcreteRegisterValue(): Invalid register.");
         }
 
         return value;
       }
 
 
-      void x86Cpu::setLastMemoryValue(triton::uint64 addr, triton::uint8 value) {
+      void x86Cpu::setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value) {
         this->memory[addr] = value;
       }
 
 
-      void x86Cpu::setLastMemoryValue(const triton::arch::MemoryOperand& mem) {
+      void x86Cpu::setConcreteMemoryValue(const triton::arch::MemoryOperand& mem) {
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
         triton::uint512 cv  = mem.getConcreteValue();
 
         if (size == 0 || size > DQQWORD_SIZE)
-          throw std::invalid_argument("x86Cpu::setLastMemoryValue(): Invalid size memory.");
+          throw std::invalid_argument("x86Cpu::setConcreteMemoryValue(): Invalid size memory.");
 
         for (triton::uint32 i = 0; i < size; i++) {
           this->memory[addr+i] = (cv & 0xff).convert_to<triton::uint8>();
@@ -819,21 +819,21 @@ namespace triton {
       }
 
 
-      void x86Cpu::setLastMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
+      void x86Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
         for (triton::usize index = 0; index < values.size(); index++) {
           this->memory[baseAddr+index] = values[index];
         }
       }
 
 
-      void x86Cpu::setLastMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
+      void x86Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
         for (triton::usize index = 0; index < size; index++) {
           this->memory[baseAddr+index] = area[index];
         }
       }
 
 
-      void x86Cpu::setLastRegisterValue(const triton::arch::RegisterOperand& reg) {
+      void x86Cpu::setConcreteRegisterValue(const triton::arch::RegisterOperand& reg) {
         triton::uint512 value = reg.getConcreteValue();
 
         switch (reg.getId()) {
@@ -1059,7 +1059,7 @@ namespace triton {
           case triton::arch::x86::ID_REG_SS:  (*((triton::uint32*)(this->ss))) = value.convert_to<triton::uint32>(); break;
 
           default:
-            throw std::invalid_argument("x86Cpu:setLastRegisterValue() - Invalid register.");
+            throw std::invalid_argument("x86Cpu:setConcreteRegisterValue() - Invalid register.");
         }
       }
 

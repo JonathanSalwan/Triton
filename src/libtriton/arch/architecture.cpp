@@ -270,66 +270,66 @@ namespace triton {
     }
 
 
-    triton::uint8 Architecture::getLastMemoryValue(triton::uint64 addr) const {
+    triton::uint8 Architecture::getConcreteMemoryValue(triton::uint64 addr) const {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getLastMemoryValue(): You must define an architecture.");
-      return this->cpu->getLastMemoryValue(addr);
+        throw std::runtime_error("Architecture::getConcreteMemoryValue(): You must define an architecture.");
+      return this->cpu->getConcreteMemoryValue(addr);
     }
 
 
-    triton::uint512 Architecture::getLastMemoryValue(const triton::arch::MemoryOperand& mem) const {
+    triton::uint512 Architecture::getConcreteMemoryValue(const triton::arch::MemoryOperand& mem) const {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getLastMemoryValue(): You must define an architecture.");
-      return this->cpu->getLastMemoryValue(mem);
+        throw std::runtime_error("Architecture::getConcreteMemoryValue(): You must define an architecture.");
+      return this->cpu->getConcreteMemoryValue(mem);
     }
 
 
-    std::vector<triton::uint8> Architecture::getLastMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const {
+    std::vector<triton::uint8> Architecture::getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getLastMemoryAreaValue(): You must define an architecture.");
-      return this->cpu->getLastMemoryAreaValue(baseAddr, size);
+        throw std::runtime_error("Architecture::getConcreteMemoryAreaValue(): You must define an architecture.");
+      return this->cpu->getConcreteMemoryAreaValue(baseAddr, size);
     }
 
 
-    triton::uint512 Architecture::getLastRegisterValue(const triton::arch::RegisterOperand& reg) const {
+    triton::uint512 Architecture::getConcreteRegisterValue(const triton::arch::RegisterOperand& reg) const {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getLastRegisterValue(): You must define an architecture.");
-      return this->cpu->getLastRegisterValue(reg);
+        throw std::runtime_error("Architecture::getConcreteRegisterValue(): You must define an architecture.");
+      return this->cpu->getConcreteRegisterValue(reg);
     }
 
 
-    void Architecture::setLastMemoryValue(triton::uint64 addr, triton::uint8 value) {
+    void Architecture::setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::setLastMemoryValue(): You must define an architecture.");
-      this->cpu->setLastMemoryValue(addr, value);
+        throw std::runtime_error("Architecture::setConcreteMemoryValue(): You must define an architecture.");
+      this->cpu->setConcreteMemoryValue(addr, value);
     }
 
 
-    void Architecture::setLastMemoryValue(const triton::arch::MemoryOperand& mem) {
+    void Architecture::setConcreteMemoryValue(const triton::arch::MemoryOperand& mem) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::setLastMemoryValue(): You must define an architecture.");
-      this->cpu->setLastMemoryValue(mem);
+        throw std::runtime_error("Architecture::setConcreteMemoryValue(): You must define an architecture.");
+      this->cpu->setConcreteMemoryValue(mem);
     }
 
 
-    void Architecture::setLastMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
+    void Architecture::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::setLastMemoryAreaValue(): You must define an architecture.");
-      this->cpu->setLastMemoryAreaValue(baseAddr, values);
+        throw std::runtime_error("Architecture::setConcreteMemoryAreaValue(): You must define an architecture.");
+      this->cpu->setConcreteMemoryAreaValue(baseAddr, values);
     }
 
 
-    void Architecture::setLastMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
+    void Architecture::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::setLastMemoryAreaValue(): You must define an architecture.");
-      this->cpu->setLastMemoryAreaValue(baseAddr, area, size);
+        throw std::runtime_error("Architecture::setConcreteMemoryAreaValue(): You must define an architecture.");
+      this->cpu->setConcreteMemoryAreaValue(baseAddr, area, size);
     }
 
 
-    void Architecture::setLastRegisterValue(const triton::arch::RegisterOperand& reg) {
+    void Architecture::setConcreteRegisterValue(const triton::arch::RegisterOperand& reg) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::setLastRegisterValue(): You must define an architecture.");
-      this->cpu->setLastRegisterValue(reg);
+        throw std::runtime_error("Architecture::setConcreteRegisterValue(): You must define an architecture.");
+      this->cpu->setConcreteRegisterValue(reg);
     }
 
 

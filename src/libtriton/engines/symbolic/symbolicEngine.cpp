@@ -80,7 +80,6 @@ namespace triton {
         for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
           this->symbolicReg[i] = triton::engines::symbolic::UNSET;
 
-        this->emulationFlag   = false;
         this->enableFlag      = true;
         this->uniqueSymExprId = 0;
         this->uniqueSymVarId  = 0;
@@ -97,7 +96,6 @@ namespace triton {
           this->symbolicReg[i] = other.symbolicReg[i];
 
         this->alignedMemoryReference      = other.alignedMemoryReference;
-        this->emulationFlag               = other.emulationFlag;
         this->enableFlag                  = other.enableFlag;
         this->memoryReference             = other.memoryReference;
         this->symbolicExpressions         = other.symbolicExpressions;
@@ -485,7 +483,7 @@ namespace triton {
         triton::usize memSymId          = triton::engines::symbolic::UNSET;
         triton::uint64 memAddr          = mem.getAddress();
         triton::uint32 symVarSize       = mem.getSize();
-        triton::uint512 cv              = mem.getConcreteValue() ? mem.getConcreteValue() : triton::api.getLastMemoryValue(mem);
+        triton::uint512 cv              = mem.getConcreteValue() ? mem.getConcreteValue() : triton::api.getConcreteMemoryValue(mem);
 
         memSymId = this->getSymbolicMemoryId(memAddr);
 
@@ -532,7 +530,7 @@ namespace triton {
         triton::usize regSymId          = triton::engines::symbolic::UNSET;
         triton::uint32 parentId         = reg.getParent().getId();
         triton::uint32 symVarSize       = reg.getBitSize();
-        triton::uint512 cv              = reg.getConcreteValue() ? reg.getConcreteValue() : triton::api.getLastRegisterValue(reg);
+        triton::uint512 cv              = reg.getConcreteValue() ? reg.getConcreteValue() : triton::api.getConcreteRegisterValue(reg);
 
         if (!triton::api.isCpuRegisterValid(parentId))
           throw std::runtime_error("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");
@@ -607,7 +605,7 @@ namespace triton {
         triton::uint32 size                       = mem.getSize();
         triton::usize symMem                      = triton::engines::symbolic::UNSET;
         triton::uint8 concreteValue[DQQWORD_SIZE] = {0};
-        triton::uint512 value                     = triton::api.getLastMemoryValue(mem);
+        triton::uint512 value                     = triton::api.getConcreteMemoryValue(mem);
 
         triton::utils::fromUintToBuffer(value, concreteValue);
 
@@ -672,7 +670,7 @@ namespace triton {
         if (symReg != triton::engines::symbolic::UNSET)
           op = triton::ast::extract(high, low, triton::ast::reference(symReg));
         else
-          op = triton::ast::bv(triton::api.getLastRegisterValue(reg), bvSize);
+          op = triton::ast::bv(triton::api.getConcreteRegisterValue(reg), bvSize);
 
         return op;
       }
@@ -716,7 +714,7 @@ namespace triton {
           /* Assign memory with little endian */
           this->addMemoryReference((address + writeSize) - 1, se->getId());
           /* Synchronize the concrete state */
-          triton::api.setLastMemoryValue((address + writeSize) - 1, tmp->evaluate().convert_to<triton::uint8>());
+          triton::api.setConcreteMemoryValue((address + writeSize) - 1, tmp->evaluate().convert_to<triton::uint8>());
           /* continue */
           writeSize--;
         }
@@ -844,7 +842,7 @@ namespace triton {
         this->symbolicReg[id] = se->getId();
 
         /* Synchronize the concrete state */
-        triton::api.setLastRegisterValue(reg);
+        triton::api.setConcreteRegisterValue(reg);
       }
 
 
@@ -874,12 +872,6 @@ namespace triton {
       }
 
 
-      /* Returns true if the we perform a full symbolic emulation. */
-      bool SymbolicEngine::isEmulationEnabled(void) const {
-        return this->emulationFlag;
-      }
-
-
       /* Returns true if the symbolic engine is enable. Otherwise returns false. */
       bool SymbolicEngine::isEnabled(void) const {
         return this->enableFlag;
@@ -891,12 +883,6 @@ namespace triton {
         if (this->symbolicExpressions.find(symExprId) != this->symbolicExpressions.end())
           return true;
         return false;
-      }
-
-
-      /* Enables or disables the symbolic emulation. */
-      void SymbolicEngine::emulation(bool flag) {
-        this->emulationFlag = flag;
       }
 
 

@@ -97,7 +97,7 @@ Returns the bitvector as \ref py_Bitvector_page.
 - **getConcreteValue(void)**<br>
 Returns the concrete value as integer. It's basically the content which has been LOADED or STORED. Note that getting the
 concrete value does not relfect the real internal memory state. If you want to know the internal state of a memory cell, use
-the `triton::api.getMemoryValue()` function.
+the `triton::api.getConcreteMemoryValue()` function.
 
 - **getDisplacement(void)**<br>
 Returns the displacement (if exists) of the memory access as \ref py_Immediate_page.
@@ -130,7 +130,7 @@ Sets the base register of the memory access.
 
 - **setConcreteValue(integer value)**<br>
 Sets a concrete value to this memory access. Note that by setting the concrete value does not affect the internal memory value.
-If you want to define a concrete value at a memory point, use the `triton::api.setLastMemoryValue()` function.
+If you want to define a concrete value at a specific memory cells, use the `triton::api.setConcreteMemoryValue()` function.
 
 - **setDisplacement(\ref py_Immediate_page imm)**<br>
 Sets the displacement of the memory access.

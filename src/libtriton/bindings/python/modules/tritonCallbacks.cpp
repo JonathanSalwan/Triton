@@ -136,9 +136,6 @@ Returns the new symbolic volatile expression as \ref py_SymbolicExpression_page 
 - **disassembly(\ref py_Instruction_page inst)**<br>
 Disassembles the instruction and setup operands. You must define an architecture before.
 
-- **enableSymbolicEmulation(bool flag)**<br>
-Enables or disables the symbolic emulation. Set `true` for a full symbolic execution (emulation) or `false` for a concolic execution.
-
 - **enableSymbolicEngine(bool flag)**<br>
 Enables or disables the symbolic execution engine.
 
@@ -160,29 +157,32 @@ Returns the list of all registers. Each item of this list is a \ref py_Register_
 - **getArchitecture(void)**<br>
 Returns the architecture which has been initialized as \ref py_ARCH_page.
 
-- **getAstRepresentationMode(void)**<br>
-Returns the AST representation mode as \ref py_AST_REPRESENTATION_page.
+- **getAstDictionariesStats(void)**<br>
+Returns a dictionary which contains all information about number of nodes allocated via AST dictionaries.
 
 - **getAstFromId(integer symExprId)**<br>
 Returns the partial AST as \ref py_AstNode_page from a symbolic expression id.
 
-- **getAstDictionariesStats(void)**<br>
-Returns a dictionary which contains all information about number of nodes allocated via AST dictionaries.
+- **getAstRepresentationMode(void)**<br>
+Returns the AST representation mode as \ref py_AST_REPRESENTATION_page.
+
+- **getConcreteMemoryAreaValue(integer baseAddr, integer size)**<br>
+Returns the concrete value of a memory area.
+
+- **getConcreteMemoryValue(intger addr)**<br>
+Returns the concrete value of a memory cell.
+
+- **getConcreteMemoryValue(\ref py_Memory_page mem)**<br>
+Returns the concrete value of memory cells.
+
+- **getConcreteRegisterValue(\ref py_REG_page reg)**<br>
+Returns the concrete value of a register.
 
 - **getFullAst(\ref py_AstNode_page node)**<br>
 Returns the full AST of a root node as \ref py_AstNode_page.
 
 - **getFullAstFromId(integer symExprId)**<br>
 Returns the full AST as \ref py_AstNode_page from a symbolic expression id.
-
-- **getMemoryAreaValue(integer baseAddr, integer size)**<br>
-If the emulation is enabled, returns the emulated value otherwise returns the last concrete values of a memory area as a bytes array.
-
-- **getMemoryValue(intger addr)**<br>
-If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of the memory access.
-
-- **getMemoryValue(\ref py_Memory_page mem)**<br>
-If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of the memory access.
 
 - **getModel(\ref py_AstNode_page node)**<br>
 Computes and returns a model as a dictionary of {integer symVarId : \ref py_SolverModel_page model} from a symbolic constraint.
@@ -198,9 +198,6 @@ Returns the logical conjunction vector of path constraints as list of \ref py_Pa
 
 - **getPathConstraintsAst(void)**<br>
 Returns the logical conjunction AST of path constraints as \ref py_AstNode_page.
-
-- **getRegisterValue(\ref py_REG_page reg)**<br>
-If the emulation is enabled, returns the emulated value otherwise returns the last concrete value recorded of the register.
 
 - **getSymbolicExpressionFromId(intger symExprId)**<br>
 Returns the symbolic expression as \ref py_SymbolicExpression_page corresponding to the id.
@@ -256,9 +253,6 @@ Returns true if the memory is tainted.
 - **isRegisterTainted(\ref py_REG_page reg)**<br>
 Returns true if the register is tainted.
 
-- **isSymbolicEmulationEnabled(void)**<br>
-Returns true if Triton performs a full symbolic execution (emulation).
-
 - **isSymbolicEngineEnabled(void)**<br>
 Returns true if the symbolic execution engine is enabled.
 
@@ -298,20 +292,20 @@ Initializes an architecture. This function must be called before any call to the
 - **setAstRepresentationMode(\ref py_AST_REPRESENTATION_page mode)**<br>
 Sets the AST representation mode.
 
-- **setLastMemoryAreaValue(integer baseAddr, [integer,])**<br>
-Sets the last concrete values of a memory area.
+- **setConcreteMemoryAreaValue(integer baseAddr, [integer,])**<br>
+Sets the concrete value of a memory area. Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- **setLastMemoryAreaValue(integer baseAddr, bytes opcodes)**<br>
-Sets the last concrete values of a memory area.
+- **setConcreteMemoryAreaValue(integer baseAddr, bytes opcodes)**<br>
+Sets the concrete value of a memory area. Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- **setLastMemoryValue(integer addr, integer value)**<br>
-Sets the last concrete value of a memory access.
+- **setConcreteMemoryValue(integer addr, integer value)**<br>
+Sets the concrete value of a memory cell. Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- **setLastMemoryValue(\ref py_Memory_page mem)**<br>
-Sets the last concrete value of a memory access.
+- **setConcreteMemoryValue(\ref py_Memory_page mem)**<br>
+Sets the concrete value of memory cells. Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- **setLastRegisterValue(\ref py_REG_page reg)**<br>
-Sets the last concrete value of a register state.
+- **setConcreteRegisterValue(\ref py_REG_page reg)**<br>
+Sets the concrete value of a register. Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
 
 - **setTaintMemory(\ref py_Memory_page mem, bool flag)**<br>
 Sets the targeted memory as tainted or not.
@@ -470,7 +464,7 @@ Restores the last snpahost taken. Check the `tracer::pintool::Snapshot::takeSnap
 Starts the binary instrumentation over Pin.
 
 - **setCurrentMemoryValue(\ref py_Memory_page mem)**<br>
-Sets the current memory value from a \ref py_Memory_page. `triton::arch::MemoryOperand::getConcreteValue()` is used to define the value.
+Sets the current memory value from a \ref py_Memory_page.
 
 - **setCurrentMemoryValue(\ref py_Memory_page mem, integer value)**<br>
 Sets the current memory value from a \ref py_Memory_page.
@@ -479,7 +473,7 @@ Sets the current memory value from a \ref py_Memory_page.
 Sets the current memory value from an address.
 
 - **setCurrentRegisterValue(\ref py_Register_page reg)**<br>
-Sets the current register value from a \ref py_Register_page. `triton::arch::RegisterOperand::getConcreteValue()` is used to define the value. This method can only be called into a `BEFORE_SYMPROC` and `AFTER` callback. This method also synchronizes the Triton's register.
+Sets the current register value from a \ref py_Register_page. This method can only be called into a `BEFORE_SYMPROC` and `AFTER` callback. This method also synchronizes the Triton's register.
 
 - **setCurrentRegisterValue(\ref py_Register_page reg, integer value)**<br>
 Sets the current register value from a \ref py_Register_page. This method can only be called into a `BEFORE_SYMPROC` and `AFTER` callback. This method also synchronizes the Triton's register.
@@ -1155,26 +1149,6 @@ namespace triton {
       }
 
 
-      static PyObject* triton_enableSymbolicEmulation(PyObject* self, PyObject* flag) {
-        /* Check if the architecture is definied */
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "enableSymbolicEmulation(): Architecture is not defined.");
-
-        if (!PyBool_Check(flag))
-          return PyErr_Format(PyExc_TypeError, "enableSymbolicEmulation(): Expects an boolean as argument.");
-
-        try {
-          triton::api.enableSymbolicEmulation(PyLong_AsBool(flag));
-        }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        Py_INCREF(Py_None);
-        return Py_None;
-      }
-
-
       static PyObject* triton_enableSymbolicEngine(PyObject* self, PyObject* flag) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -1316,6 +1290,29 @@ namespace triton {
       }
 
 
+      static PyObject* triton_getAstDictionariesStats(PyObject* self, PyObject* noarg) {
+        PyObject* ret = nullptr;
+        std::map<std::string, triton::usize> stats;
+        std::map<std::string, triton::usize>::iterator it;
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getAstDictionariesStats(): Architecture is not defined.");
+
+        try {
+          stats = triton::api.getAstDictionariesStats();
+          ret   = xPyDict_New();
+          for (it = stats.begin(); it != stats.end(); it++)
+            PyDict_SetItem(ret, PyString_FromString(it->first.c_str()), PyLong_FromUsize(it->second));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return ret;
+      }
+
+
       static PyObject* triton_getAstFromId(PyObject* self, PyObject* symExprId) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -1341,26 +1338,73 @@ namespace triton {
       }
 
 
-      static PyObject* triton_getAstDictionariesStats(PyObject* self, PyObject* noarg) {
-        PyObject* ret = nullptr;
-        std::map<std::string, triton::usize> stats;
-        std::map<std::string, triton::usize>::iterator it;
+      static PyObject* triton_getConcreteMemoryAreaValue(PyObject* self, PyObject* args) {
+        std::vector<triton::uint8> vv;
+        triton::uint8*  area = nullptr;
+        PyObject*       ret  = nullptr;
+        PyObject*       addr = nullptr;
+        PyObject*       size = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &addr, &size);
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getAstDictionariesStats(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "getConcreteMemoryAreaValue(): Architecture is not defined.");
 
         try {
-          stats = triton::api.getAstDictionariesStats();
-          ret   = xPyDict_New();
-          for (it = stats.begin(); it != stats.end(); it++)
-            PyDict_SetItem(ret, PyString_FromString(it->first.c_str()), PyLong_FromUsize(it->second));
+          vv   = triton::api.getConcreteMemoryAreaValue(PyLong_AsUint64(addr), PyLong_AsUsize(size));
+          area = new triton::uint8[vv.size()];
+
+          for (triton::usize index = 0; index < vv.size(); index++)
+            area[index] = vv[index];
+
+          ret = PyBytes_FromStringAndSize(reinterpret_cast<const char*>(area), vv.size());
+          delete[] area;
+          return ret;
+
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
         return ret;
+      }
+
+
+      static PyObject* triton_getConcreteMemoryValue(PyObject* self, PyObject* mem) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getConcreteMemoryValue(): Architecture is not defined.");
+
+        try {
+          if (PyLong_Check(mem) || PyInt_Check(mem))
+              return PyLong_FromUint512(triton::api.getConcreteMemoryValue(PyLong_AsUint64(mem)));
+          else if (PyMemoryOperand_Check(mem))
+              return PyLong_FromUint512(triton::api.getConcreteMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem)));
+          else
+            return PyErr_Format(PyExc_TypeError, "getConcreteMemoryValue(): Expects a Memory or an integer as argument.");
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* triton_getConcreteRegisterValue(PyObject* self, PyObject* reg) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getConcreteRegisterValue(): Architecture is not defined.");
+
+        if (!PyRegisterOperand_Check(reg))
+          return PyErr_Format(PyExc_TypeError, "getConcreteRegisterValue(): Expects a REG as argument.");
+
+        try {
+          return PyLong_FromUint512(triton::api.getConcreteRegisterValue(*PyRegisterOperand_AsRegisterOperand(reg)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1391,59 +1435,6 @@ namespace triton {
 
         try {
           return PyAstNode(triton::api.getFullAstFromId(PyLong_AsUsize(symExprId)));
-        }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* triton_getMemoryAreaValue(PyObject* self, PyObject* args) {
-        std::vector<triton::uint8> vv;
-        triton::uint8*  area = nullptr;
-        PyObject*       ret  = nullptr;
-        PyObject*       addr = nullptr;
-        PyObject*       size = nullptr;
-
-        /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &addr, &size);
-
-        /* Check if the architecture is definied */
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getMemoryAreaValue(): Architecture is not defined.");
-
-        try {
-          vv   = triton::api.getMemoryAreaValue(PyLong_AsUint64(addr), PyLong_AsUsize(size));
-          area = new triton::uint8[vv.size()];
-
-          for (triton::usize index = 0; index < vv.size(); index++)
-            area[index] = vv[index];
-
-          ret = PyBytes_FromStringAndSize(reinterpret_cast<const char*>(area), vv.size());
-          delete[] area;
-          return ret;
-
-        }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        return ret;
-      }
-
-
-      static PyObject* triton_getMemoryValue(PyObject* self, PyObject* mem) {
-        /* Check if the architecture is definied */
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getMemoryValue(): Architecture is not defined.");
-
-        try {
-          if (PyLong_Check(mem) || PyInt_Check(mem))
-              return PyLong_FromUint512(triton::api.getMemoryValue(PyLong_AsUint64(mem)));
-          else if (PyMemoryOperand_Check(mem))
-              return PyLong_FromUint512(triton::api.getMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem)));
-          else
-            return PyErr_Format(PyExc_TypeError, "getMemoryValue(): Expects a Memory or an integer as argument.");
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1574,23 +1565,6 @@ namespace triton {
 
         try {
           return PyAstNode(triton::api.getPathConstraintsAst());
-        }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* triton_getRegisterValue(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getRegisterValue(): Architecture is not defined.");
-
-        if (!PyRegisterOperand_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "getRegisterValue(): Expects a REG as argument.");
-
-        try {
-          return PyLong_FromUint512(triton::api.getRegisterValue(*PyRegisterOperand_AsRegisterOperand(reg)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1914,16 +1888,6 @@ namespace triton {
       }
 
 
-      static PyObject* triton_isSymbolicEmulationEnabled(PyObject* self, PyObject* noarg) {
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isSymbolicEmulationEnabled(): Architecture is not defined.");
-
-        if (triton::api.isSymbolicEmulationEnabled() == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
-      }
-
-
       static PyObject* triton_isSymbolicEngineEnabled(PyObject* self, PyObject* noarg) {
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "isSymbolicEngineEnabled(): Architecture is not defined.");
@@ -2149,7 +2113,7 @@ namespace triton {
       }
 
 
-      static PyObject* triton_setLastMemoryAreaValue(PyObject* self, PyObject* args) {
+      static PyObject* triton_setConcreteMemoryAreaValue(PyObject* self, PyObject* args) {
         std::vector<triton::uint8> vv;
         PyObject* baseAddr  = nullptr;
         PyObject* values    = nullptr;
@@ -2159,13 +2123,13 @@ namespace triton {
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "setConcreteMemoryAreaValue(): Architecture is not defined.");
 
         if (baseAddr == nullptr || (!PyLong_Check(baseAddr) && !PyInt_Check(baseAddr)))
-          return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Expects an integer as first argument.");
+          return PyErr_Format(PyExc_TypeError, "setConcreteMemoryAreaValue(): Expects an integer as first argument.");
 
         if (values == nullptr)
-          return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Expects a list or a bytes array as second argument.");
+          return PyErr_Format(PyExc_TypeError, "setConcreteMemoryAreaValue(): Expects a list or a bytes array as second argument.");
 
         // Python object: List
         if (PyList_Check(values)) {
@@ -2173,13 +2137,13 @@ namespace triton {
             PyObject* item = PyList_GetItem(values, i);
 
             if ((!PyLong_Check(item) && !PyInt_Check(item)) || PyLong_AsUint32(item) > 0xff)
-              return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Each item of the list must be a 8-bits integer.");
+              return PyErr_Format(PyExc_TypeError, "setConcreteMemoryAreaValue(): Each item of the list must be a 8-bits integer.");
 
             vv.push_back(static_cast<triton::uint8>(PyLong_AsUint32(item) & 0xff));
           }
 
           try {
-            triton::api.setLastMemoryAreaValue(PyLong_AsUint64(baseAddr), vv);
+            triton::api.setConcreteMemoryAreaValue(PyLong_AsUint64(baseAddr), vv);
           }
           catch (const std::exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2192,7 +2156,7 @@ namespace triton {
           triton::usize  size = static_cast<triton::usize>(PyBytes_Size(values));
 
           try {
-            triton::api.setLastMemoryAreaValue(PyLong_AsUint64(baseAddr), area, size);
+            triton::api.setConcreteMemoryAreaValue(PyLong_AsUint64(baseAddr), area, size);
           }
           catch (const std::exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2205,7 +2169,7 @@ namespace triton {
           triton::usize  size = static_cast<triton::usize>(PyByteArray_Size(values));
 
           try {
-            triton::api.setLastMemoryAreaValue(PyLong_AsUint64(baseAddr), area, size);
+            triton::api.setConcreteMemoryAreaValue(PyLong_AsUint64(baseAddr), area, size);
           }
           catch (const std::exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2214,14 +2178,14 @@ namespace triton {
 
         // Invalid Python object
         else
-          return PyErr_Format(PyExc_TypeError, "setLastMemoryAreaValue(): Expects a list or a bytes array as second argument.");
+          return PyErr_Format(PyExc_TypeError, "setConcreteMemoryAreaValue(): Expects a list or a bytes array as second argument.");
 
         Py_INCREF(Py_None);
         return Py_None;
       }
 
 
-      static PyObject* triton_setLastMemoryValue(PyObject* self, PyObject* args) {
+      static PyObject* triton_setConcreteMemoryValue(PyObject* self, PyObject* args) {
         PyObject* mem    = nullptr;
         PyObject* value  = nullptr;
 
@@ -2230,21 +2194,21 @@ namespace triton {
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "setLastMemoryValue(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "setConcreteMemoryValue(): Architecture is not defined.");
 
-        /* setLastMemoryValue(integer, integer) */
+        /* setConcreteMemoryValue(integer, integer) */
         if (mem != nullptr && (PyLong_Check(mem) || PyInt_Check(mem))) {
           if (value == nullptr || (!PyLong_Check(value) && !PyInt_Check(value)))
-            return PyErr_Format(PyExc_TypeError, "setLastMemoryValue(): Expects a value as second argument.");
+            return PyErr_Format(PyExc_TypeError, "setConcreteMemoryValue(): Expects a value as second argument.");
 
           triton::uint64 addr   = PyLong_AsUint64(mem);
           triton::uint32 cvalue = PyLong_AsUint32(value);
 
           if (cvalue > 0xff)
-            return PyErr_Format(PyExc_TypeError, "setLastMemoryValue(): Value must be on 8 bits.");
+            return PyErr_Format(PyExc_TypeError, "setConcreteMemoryValue(): Value must be on 8 bits.");
 
           try {
-            triton::api.setLastMemoryValue(addr, static_cast<triton::uint8>(cvalue & 0xff));
+            triton::api.setConcreteMemoryValue(addr, static_cast<triton::uint8>(cvalue & 0xff));
           }
           catch (const std::exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2252,12 +2216,12 @@ namespace triton {
 
         }
 
-        /* setLastMemoryValue(MemoryOperand) */
+        /* setConcreteMemoryValue(MemoryOperand) */
         else if (mem != nullptr && PyMemoryOperand_Check(mem)) {
           if (value != nullptr)
-            return PyErr_Format(PyExc_TypeError, "setLastMemoryValue(): Expects no second argument.");
+            return PyErr_Format(PyExc_TypeError, "setConcreteMemoryValue(): Expects no second argument.");
           try {
-            triton::api.setLastMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem));
+            triton::api.setConcreteMemoryValue(*PyMemoryOperand_AsMemoryOperand(mem));
           }
           catch (const std::exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2266,23 +2230,23 @@ namespace triton {
 
         /* Invalid */
         else
-          return PyErr_Format(PyExc_TypeError, "setLastMemoryValue(): Expects a Memory or an integer as first argument.");
+          return PyErr_Format(PyExc_TypeError, "setConcreteMemoryValue(): Expects a Memory or an integer as first argument.");
 
         Py_INCREF(Py_None);
         return Py_None;
       }
 
 
-      static PyObject* triton_setLastRegisterValue(PyObject* self, PyObject* reg) {
+      static PyObject* triton_setConcreteRegisterValue(PyObject* self, PyObject* reg) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "setLastRegisterValue(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "setConcreteRegisterValue(): Architecture is not defined.");
 
         if (!PyRegisterOperand_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "setLastRegisterValue(): Expects a REG as first argument.");
+          return PyErr_Format(PyExc_TypeError, "setConcreteRegisterValue(): Expects a REG as first argument.");
 
         try {
-          triton::api.setLastRegisterValue(*PyRegisterOperand_AsRegisterOperand(reg));
+          triton::api.setConcreteRegisterValue(*PyRegisterOperand_AsRegisterOperand(reg));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2830,7 +2794,6 @@ namespace triton {
         {"createSymbolicRegisterExpression",    (PyCFunction)triton_createSymbolicRegisterExpression,       METH_VARARGS,       ""},
         {"createSymbolicVolatileExpression",    (PyCFunction)triton_createSymbolicVolatileExpression,       METH_VARARGS,       ""},
         {"disassembly",                         (PyCFunction)triton_disassembly,                            METH_O,             ""},
-        {"enableSymbolicEmulation",             (PyCFunction)triton_enableSymbolicEmulation,                METH_O,             ""},
         {"enableSymbolicEngine",                (PyCFunction)triton_enableSymbolicEngine,                   METH_O,             ""},
         {"enableSymbolicOptimization",          (PyCFunction)triton_enableSymbolicOptimization,             METH_VARARGS,       ""},
         {"enableSymbolicZ3Simplification",      (PyCFunction)triton_enableSymbolicZ3Simplification,         METH_O,             ""},
@@ -2838,19 +2801,19 @@ namespace triton {
         {"evaluateAstViaZ3",                    (PyCFunction)triton_evaluateAstViaZ3,                       METH_O,             ""},
         {"getAllRegisters",                     (PyCFunction)triton_getAllRegisters,                        METH_NOARGS,        ""},
         {"getArchitecture",                     (PyCFunction)triton_getArchitecture,                        METH_NOARGS,        ""},
+        {"getAstDictionariesStats",             (PyCFunction)triton_getAstDictionariesStats,                METH_NOARGS,        ""},
         {"getAstFromId",                        (PyCFunction)triton_getAstFromId,                           METH_O,             ""},
         {"getAstRepresentationMode",            (PyCFunction)triton_getAstRepresentationMode,               METH_NOARGS,        ""},
-        {"getAstDictionariesStats",             (PyCFunction)triton_getAstDictionariesStats,                METH_NOARGS,        ""},
+        {"getConcreteMemoryAreaValue",          (PyCFunction)triton_getConcreteMemoryAreaValue,             METH_VARARGS,       ""},
+        {"getConcreteMemoryValue",              (PyCFunction)triton_getConcreteMemoryValue,                 METH_O,             ""},
+        {"getConcreteRegisterValue",            (PyCFunction)triton_getConcreteRegisterValue,               METH_O,             ""},
         {"getFullAst",                          (PyCFunction)triton_getFullAst,                             METH_O,             ""},
         {"getFullAstFromId",                    (PyCFunction)triton_getFullAstFromId,                       METH_O,             ""},
-        {"getMemoryAreaValue",                  (PyCFunction)triton_getMemoryAreaValue,                     METH_VARARGS,       ""},
-        {"getMemoryValue",                      (PyCFunction)triton_getMemoryValue,                         METH_O,             ""},
         {"getModel",                            (PyCFunction)triton_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)triton_getModels,                              METH_VARARGS,       ""},
         {"getParentRegisters",                  (PyCFunction)triton_getParentRegisters,                     METH_NOARGS,        ""},
         {"getPathConstraints",                  (PyCFunction)triton_getPathConstraints,                     METH_NOARGS,        ""},
         {"getPathConstraintsAst",               (PyCFunction)triton_getPathConstraintsAst,                  METH_NOARGS,        ""},
-        {"getRegisterValue",                    (PyCFunction)triton_getRegisterValue,                       METH_O,             ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)triton_getSymbolicExpressionFromId,            METH_O,             ""},
         {"getSymbolicExpressions",              (PyCFunction)triton_getSymbolicExpressions,                 METH_NOARGS,        ""},
         {"getSymbolicMemory",                   (PyCFunction)triton_getSymbolicMemory,                      METH_NOARGS,        ""},
@@ -2867,7 +2830,6 @@ namespace triton {
         {"isMemoryMapped",                      (PyCFunction)triton_isMemoryMapped,                         METH_VARARGS,       ""},
         {"isMemoryTainted",                     (PyCFunction)triton_isMemoryTainted,                        METH_O,             ""},
         {"isRegisterTainted",                   (PyCFunction)triton_isRegisterTainted,                      METH_O,             ""},
-        {"isSymbolicEmulationEnabled",          (PyCFunction)triton_isSymbolicEmulationEnabled,             METH_NOARGS,        ""},
         {"isSymbolicEngineEnabled",             (PyCFunction)triton_isSymbolicEngineEnabled,                METH_NOARGS,        ""},
         {"isSymbolicExpressionIdExists",        (PyCFunction)triton_isSymbolicExpressionIdExists,           METH_O,             ""},
         {"isSymbolicOptimizationEnabled",       (PyCFunction)triton_isSymbolicOptimizationEnabled,          METH_O,             ""},
@@ -2881,9 +2843,9 @@ namespace triton {
         {"resetEngines",                        (PyCFunction)triton_resetEngines,                           METH_NOARGS,        ""},
         {"setArchitecture",                     (PyCFunction)triton_setArchitecture,                        METH_O,             ""},
         {"setAstRepresentationMode",            (PyCFunction)triton_setAstRepresentationMode,               METH_O,             ""},
-        {"setLastMemoryAreaValue",              (PyCFunction)triton_setLastMemoryAreaValue,                 METH_VARARGS,       ""},
-        {"setLastMemoryValue",                  (PyCFunction)triton_setLastMemoryValue,                     METH_VARARGS,       ""},
-        {"setLastRegisterValue",                (PyCFunction)triton_setLastRegisterValue,                   METH_O,             ""},
+        {"setConcreteMemoryAreaValue",          (PyCFunction)triton_setConcreteMemoryAreaValue,             METH_VARARGS,       ""},
+        {"setConcreteMemoryValue",              (PyCFunction)triton_setConcreteMemoryValue,                 METH_VARARGS,       ""},
+        {"setConcreteRegisterValue",            (PyCFunction)triton_setConcreteRegisterValue,               METH_O,             ""},
         {"setTaintMemory",                      (PyCFunction)triton_setTaintMemory,                         METH_VARARGS,       ""},
         {"setTaintRegister",                    (PyCFunction)triton_setTaintRegister,                       METH_VARARGS,       ""},
         {"simplify",                            (PyCFunction)triton_simplify,                               METH_VARARGS,       ""},

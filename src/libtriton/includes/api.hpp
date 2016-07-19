@@ -124,34 +124,54 @@ namespace triton {
         //! [**architecture api**] - Returns all parent registers. \sa triton::arch::x86::registers_e.
         std::set<triton::arch::RegisterOperand*> getParentRegisters(void) const;
 
-        //! [**architecture api**] - Returns the last concrete value recorded of a memory access.
-        triton::uint8 getLastMemoryValue(triton::uint64 addr) const;
+        //! [**architecture api**] - Returns the concrete value of a memory cell.
+        triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const;
 
-        //! [**architecture api**] - Returns the last concrete value recorded of a memory access.
-        triton::uint512 getLastMemoryValue(const triton::arch::MemoryOperand& mem) const;
+        //! [**architecture api**] - Returns the concrete value of memory cells.
+        triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryOperand& mem) const;
 
-        //! [**architecture api**] - Returns the last concrete values of a memory area.
-        std::vector<triton::uint8> getLastMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const;
+        //! [**architecture api**] - Returns the concrete value of a memory area.
+        std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const;
 
-        //! [**architecture api**] - Returns the last concrete value recorded of a register state.
-        triton::uint512 getLastRegisterValue(const triton::arch::RegisterOperand& reg) const;
+        //! [**architecture api**] - Returns the concrete value of a register.
+        triton::uint512 getConcreteRegisterValue(const triton::arch::RegisterOperand& reg) const;
 
-        //! [**architecture api**] - Sets the last concrete value of a memory access.
-        void setLastMemoryValue(triton::uint64 addr, triton::uint8 value);
+        /*!
+         * \brief [**architecture api**] - Sets the concrete value of a memory cell.
+         *
+         * \description Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+         */
+        void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
 
-        //! [**architecture api**] - Sets the last concrete value of a memory access.
-        void setLastMemoryValue(const triton::arch::MemoryOperand& mem);
+        /*!
+         * \brief [**architecture api**] - Sets the concrete value of memory cells.
+         *
+         * \description Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+         */
+        void setConcreteMemoryValue(const triton::arch::MemoryOperand& mem);
 
-        //! [**architecture api**] - Sets the last concrete values of a memory area.
-        void setLastMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
+        /*!
+         * \brief [**architecture api**] - Sets the concrete value of a memory area.
+         *
+         * \description Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+         */
+        void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
 
-        //! [**architecture api**] - Sets the last concrete values of a memory area.
-        void setLastMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
+        /*!
+         * \brief [**architecture api**] - Sets the concrete value of a memory area.
+         *
+         * \description Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+         */
+        void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
 
-        //! [**architecture api**] - Sets the last concrete value of a register state.
-        void setLastRegisterValue(const triton::arch::RegisterOperand& reg);
+        /*!
+         * \brief [**architecture api**] - Sets the concrete value of a register.
+         *
+         * \description Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+         */
+        void setConcreteRegisterValue(const triton::arch::RegisterOperand& reg);
 
-        //! [**architecture api**] - Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getLastMemoryValue() and getLastMemoryAreaValue().
+        //! [**architecture api**] - Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getConcreteMemoryValue() and getConcreteMemoryAreaValue().
         bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
 
         //! [**architecture api**] - Removes the range `[baseAddr:size]` from the internal memory representation. \sa isMemoryMapped().
@@ -272,18 +292,6 @@ namespace triton {
         //! [**symbolic api**] - Returns the symbolic register value.
         triton::uint512 getSymbolicRegisterValue(const triton::arch::RegisterOperand& reg);
 
-        //! [**symbolic api**] - If emulation enabled, returns `getSymbolicMemoryValue()` otherwise `getLastMemoryValue()`.
-        triton::uint8 getMemoryValue(triton::uint64 addr);
-
-        //! [**symbolic api**] - If emulation enabled, returns `getSymbolicMemoryValue()` otherwise `getLastMemoryValue()`.
-        triton::uint512 getMemoryValue(const triton::arch::MemoryOperand& mem);
-
-        //! [**symbolic api**] - If emulation enabled, returns `getSymbolicMemoryAreaValue()` otherwise `getLastMemoryAreaValue()`.
-        std::vector<triton::uint8> getMemoryAreaValue(triton::uint64 baseAddr, triton::usize size);
-
-        //! [**symbolic api**] - If emulation enabled, returns `getSymbolicRegisterValue()` otherwise `getLastRegisterValue()`.
-        triton::uint512 getRegisterValue(const triton::arch::RegisterOperand& reg);
-
         //! [**symbolic api**] - Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
         triton::engines::symbolic::SymbolicVariable* convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
 
@@ -396,23 +404,11 @@ namespace triton {
         //! [**symbolic api**] - Enables or disables the symbolic execution engine.
         void enableSymbolicEngine(bool flag);
 
-        //! [**symbolic api**] - Enables or disables the symbolic emulation.
-        void enableSymbolicEmulation(bool flag);
-
         //! [**symbolic api**] - Enabled, Triton will use the simplification passes of z3 before to call its recorded simplification passes.
         void enableSymbolicZ3Simplification(bool flag);
 
         //! [**symbolic api**] - Enables or disables a symbolic optimization.
         void enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti, bool flag);
-
-        /*!
-         * \brief [**symbolic api**] - Returns true if we perform a full symbolic emulation.
-         *
-         * \description
-         * **true**: full symbolic execution (emulation).
-         * **false**: concolic execution.
-         */
-        bool isSymbolicEmulationEnabled(void) const;
 
         //! [**symbolic api**] - Returns true if the symbolic execution engine is enabled.
         bool isSymbolicEngineEnabled(void) const;

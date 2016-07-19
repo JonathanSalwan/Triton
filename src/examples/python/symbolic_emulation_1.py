@@ -78,9 +78,6 @@ if __name__ == '__main__':
     # Set the architecture
     setArchitecture(ARCH.X86_64)
 
-    # Define that we perform emulation
-    enableSymbolicEmulation(True)
-
     for (addr, opcodes) in code:
         # Build an instruction
         inst = Instruction()
@@ -109,10 +106,10 @@ if __name__ == '__main__':
     write = inst.getOperands()[0].getAddress()
     print 'Instruction :', inst.getDisassembly()
     print 'Write at    :', hex(write)
-    print 'Content     :', hex(getMemoryValue(Memory(write+4, CPUSIZE.DWORD)))
-    print 'RAX value   :', hex(getRegisterValue(REG.RAX))
-    print 'RSI value   :', hex(getRegisterValue(REG.RSI))
-    print 'RDI value   :', hex(getRegisterValue(REG.RDI))
+    print 'Content     :', hex(getConcreteMemoryValue(Memory(write+4, CPUSIZE.DWORD)))
+    print 'RAX value   :', hex(getConcreteRegisterValue(REG.RAX))
+    print 'RSI value   :', hex(getConcreteRegisterValue(REG.RSI))
+    print 'RDI value   :', hex(getConcreteRegisterValue(REG.RDI))
 
 
     print

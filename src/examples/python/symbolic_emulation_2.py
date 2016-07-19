@@ -66,8 +66,8 @@ def run(ip):
 
 # This function initializes the context memory.
 def initContext():
-    setLastRegisterValue(Register(REG.RSP, 0x7fffffff))
-    setLastRegisterValue(Register(REG.RBP, 0x99999999))
+    setConcreteRegisterValue(Register(REG.RSP, 0x7fffffff))
+    setConcreteRegisterValue(Register(REG.RBP, 0x99999999))
     return
 
 
@@ -76,9 +76,6 @@ if __name__ == '__main__':
 
     # Set the architecture
     setArchitecture(ARCH.X86_64)
-
-    # Define that we will perform an emulation
-    enableSymbolicEmulation(True)
 
     # Symbolic optimization
     enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)

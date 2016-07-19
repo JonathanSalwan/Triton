@@ -106,25 +106,25 @@ def initContext():
     # Define the address of the serial pointer. The address of the serial pointer
     # must be the same that the one hardcoded into the targeted function. However,
     # the serial pointer (here 0x900000) is arbitrary.
-    setLastMemoryValue(0x601040, 0x00)
-    setLastMemoryValue(0x601041, 0x00)
-    setLastMemoryValue(0x601042, 0x90)
+    setConcreteMemoryValue(0x601040, 0x00)
+    setConcreteMemoryValue(0x601041, 0x00)
+    setConcreteMemoryValue(0x601042, 0x90)
 
     # Define the serial context. We store the serial content located on our arbitrary
     # serial pointer (0x900000).
-    setLastMemoryValue(0x900000, 0x31)
-    setLastMemoryValue(0x900001, 0x3e)
-    setLastMemoryValue(0x900002, 0x3d)
-    setLastMemoryValue(0x900003, 0x26)
-    setLastMemoryValue(0x900004, 0x31)
+    setConcreteMemoryValue(0x900000, 0x31)
+    setConcreteMemoryValue(0x900001, 0x3e)
+    setConcreteMemoryValue(0x900002, 0x3d)
+    setConcreteMemoryValue(0x900003, 0x26)
+    setConcreteMemoryValue(0x900004, 0x31)
 
     # Point RDI on our buffer. The address of our buffer is arbitrary. We just need
     # to point the RDI register on it as first argument of our targeted function.
-    setLastRegisterValue(Register(REG.RDI, 0x1000))
+    setConcreteRegisterValue(Register(REG.RDI, 0x1000))
 
     # Setup stack on an abitrary address.
-    setLastRegisterValue(Register(REG.RSP, 0x7fffffff))
-    setLastRegisterValue(Register(REG.RBP, 0x7fffffff))
+    setConcreteRegisterValue(Register(REG.RSP, 0x7fffffff))
+    setConcreteRegisterValue(Register(REG.RBP, 0x7fffffff))
     return
 
 
@@ -183,9 +183,6 @@ if __name__ == '__main__':
 
     # Set the architecture
     setArchitecture(ARCH.X86_64)
-
-    # Define that we will perform an emulation
-    enableSymbolicEmulation(True)
 
     # Symbolic optimization
     enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)

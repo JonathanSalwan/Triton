@@ -62,14 +62,6 @@ namespace triton {
           //! Enable / Disable flag.
           bool enableFlag;
 
-          /*! \brief Defines if we use a symbolic emulation.
-           *
-           * \description
-           * **true**: full symbolic execution (emulation).
-           * **false**: concolic execution.
-           */
-          bool emulationFlag;
-
           //! Number of registers
           triton::uint32 numberOfRegisters;
 
@@ -245,19 +237,8 @@ namespace triton {
           //! Concretizes a specific symbolic register reference.
           void concretizeRegister(const triton::arch::RegisterOperand& reg);
 
-          /*! \brief Enables or disables the symbolic emulation.
-           *
-           * \description
-           * **true**: full symbolic execution (emulation).
-           * **false**: concolic execution.
-           */
-          void emulation(bool flag);
-
           //! Enables or disables the symbolic execution engine.
           void enable(bool flag);
-
-          //! Returns true if the we perform a full symbolic emulation.
-          bool isEmulationEnabled(void) const;
 
           //! Returns true if the symbolic execution engine is enabled.
           bool isEnabled(void) const;

@@ -50,9 +50,6 @@ if __name__ == '__main__':
     # Set the architecture
     setArchitecture(ARCH.X86_64)
 
-    # Define that we perform emulation
-    enableSymbolicEmulation(True)
-
     # Symbolic optimization
     enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
 
@@ -60,30 +57,30 @@ if __name__ == '__main__':
     pc = 0x40056d
 
     # Define our input context
-    setLastMemoryValue(0x1000, ord('e'))
-    setLastMemoryValue(0x1001, ord('l'))
-    setLastMemoryValue(0x1002, ord('i'))
-    setLastMemoryValue(0x1003, ord('t'))
-    setLastMemoryValue(0x1004, ord('e'))
+    setConcreteMemoryValue(0x1000, ord('e'))
+    setConcreteMemoryValue(0x1001, ord('l'))
+    setConcreteMemoryValue(0x1002, ord('i'))
+    setConcreteMemoryValue(0x1003, ord('t'))
+    setConcreteMemoryValue(0x1004, ord('e'))
 
     # Define the serial pointer
-    setLastMemoryValue(0x601040, 0x00)
-    setLastMemoryValue(0x601041, 0x00)
-    setLastMemoryValue(0x601042, 0x90)
+    setConcreteMemoryValue(0x601040, 0x00)
+    setConcreteMemoryValue(0x601041, 0x00)
+    setConcreteMemoryValue(0x601042, 0x90)
 
     # Define the serial context
-    setLastMemoryValue(0x900000, 0x31)
-    setLastMemoryValue(0x900001, 0x3e)
-    setLastMemoryValue(0x900002, 0x3d)
-    setLastMemoryValue(0x900003, 0x26)
-    setLastMemoryValue(0x900004, 0x31)
+    setConcreteMemoryValue(0x900000, 0x31)
+    setConcreteMemoryValue(0x900001, 0x3e)
+    setConcreteMemoryValue(0x900002, 0x3d)
+    setConcreteMemoryValue(0x900003, 0x26)
+    setConcreteMemoryValue(0x900004, 0x31)
 
     # point rdi on our buffer
-    setLastRegisterValue(Register(REG.RDI, 0x1000))
+    setConcreteRegisterValue(Register(REG.RDI, 0x1000))
 
     # Setup stack
-    setLastRegisterValue(Register(REG.RSP, 0x7fffffff))
-    setLastRegisterValue(Register(REG.RBP, 0x7fffffff))
+    setConcreteRegisterValue(Register(REG.RSP, 0x7fffffff))
+    setConcreteRegisterValue(Register(REG.RBP, 0x7fffffff))
 
     while pc in function:
 

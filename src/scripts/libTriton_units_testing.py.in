@@ -1597,1335 +1597,1335 @@ def test_7():
 
     setArchitecture(ARCH.X86_64)
 
-    setLastRegisterValue(Register(REG.ZF, 1))
+    setConcreteRegisterValue(Register(REG.ZF, 1))
 
-    if getRegisterValue(REG.ZF) == 1:
+    if getConcreteRegisterValue(REG.ZF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.AF) == 0:
+    if getConcreteRegisterValue(REG.AF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.IF) == 0:
+    if getConcreteRegisterValue(REG.IF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.CF) == 0:
+    if getConcreteRegisterValue(REG.CF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.DF) == 0:
+    if getConcreteRegisterValue(REG.DF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.PF) == 0:
+    if getConcreteRegisterValue(REG.PF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.SF) == 0:
+    if getConcreteRegisterValue(REG.SF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.OF) == 0:
+    if getConcreteRegisterValue(REG.OF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.TF) == 0:
+    if getConcreteRegisterValue(REG.TF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 0'
         return -1
 
-    setLastRegisterValue(Register(REG.AF, 1))
+    setConcreteRegisterValue(Register(REG.AF, 1))
 
-    if getRegisterValue(REG.ZF) == 1:
+    if getConcreteRegisterValue(REG.ZF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.AF) == 1:
+    if getConcreteRegisterValue(REG.AF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.IF) == 0:
+    if getConcreteRegisterValue(REG.IF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.CF) == 0:
+    if getConcreteRegisterValue(REG.CF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.DF) == 0:
+    if getConcreteRegisterValue(REG.DF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.PF) == 0:
+    if getConcreteRegisterValue(REG.PF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.SF) == 0:
+    if getConcreteRegisterValue(REG.SF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.OF) == 0:
+    if getConcreteRegisterValue(REG.OF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.TF) == 0:
+    if getConcreteRegisterValue(REG.TF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 0'
         return -1
 
-    setLastRegisterValue(Register(REG.CF, 1))
+    setConcreteRegisterValue(Register(REG.CF, 1))
 
-    if getRegisterValue(REG.ZF) == 1:
+    if getConcreteRegisterValue(REG.ZF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.AF) == 1:
+    if getConcreteRegisterValue(REG.AF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.IF) == 0:
+    if getConcreteRegisterValue(REG.IF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.CF) == 1:
+    if getConcreteRegisterValue(REG.CF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.DF) == 0:
+    if getConcreteRegisterValue(REG.DF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.PF) == 0:
+    if getConcreteRegisterValue(REG.PF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.SF) == 0:
+    if getConcreteRegisterValue(REG.SF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.OF) == 0:
+    if getConcreteRegisterValue(REG.OF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.TF) == 0:
+    if getConcreteRegisterValue(REG.TF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 0'
         return -1
 
-    setLastRegisterValue(Register(REG.IF, 1))
+    setConcreteRegisterValue(Register(REG.IF, 1))
 
-    if getRegisterValue(REG.ZF) == 1:
+    if getConcreteRegisterValue(REG.ZF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.AF) == 1:
+    if getConcreteRegisterValue(REG.AF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.IF) == 1:
+    if getConcreteRegisterValue(REG.IF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.CF) == 1:
+    if getConcreteRegisterValue(REG.CF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.DF) == 0:
+    if getConcreteRegisterValue(REG.DF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.PF) == 0:
+    if getConcreteRegisterValue(REG.PF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.SF) == 0:
+    if getConcreteRegisterValue(REG.SF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.OF) == 0:
+    if getConcreteRegisterValue(REG.OF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.TF) == 0:
+    if getConcreteRegisterValue(REG.TF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 0'
         return -1
 
-    setLastRegisterValue(Register(REG.DF, 1))
+    setConcreteRegisterValue(Register(REG.DF, 1))
 
-    if getRegisterValue(REG.ZF) == 1:
+    if getConcreteRegisterValue(REG.ZF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.AF) == 1:
+    if getConcreteRegisterValue(REG.AF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.IF) == 1:
+    if getConcreteRegisterValue(REG.IF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.CF) == 1:
+    if getConcreteRegisterValue(REG.CF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.DF) == 1:
+    if getConcreteRegisterValue(REG.DF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.PF) == 0:
+    if getConcreteRegisterValue(REG.PF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.SF) == 0:
+    if getConcreteRegisterValue(REG.SF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.OF) == 0:
+    if getConcreteRegisterValue(REG.OF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.TF) == 0:
+    if getConcreteRegisterValue(REG.TF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 0'
         return -1
 
-    setLastRegisterValue(Register(REG.PF, 1))
+    setConcreteRegisterValue(Register(REG.PF, 1))
 
-    if getRegisterValue(REG.ZF) == 1:
+    if getConcreteRegisterValue(REG.ZF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.AF) == 1:
+    if getConcreteRegisterValue(REG.AF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.IF) == 1:
+    if getConcreteRegisterValue(REG.IF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.CF) == 1:
+    if getConcreteRegisterValue(REG.CF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.DF) == 1:
+    if getConcreteRegisterValue(REG.DF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.PF) == 1:
+    if getConcreteRegisterValue(REG.PF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.SF) == 0:
+    if getConcreteRegisterValue(REG.SF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.OF) == 0:
+    if getConcreteRegisterValue(REG.OF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.TF) == 0:
+    if getConcreteRegisterValue(REG.TF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 0'
         return -1
 
-    setLastRegisterValue(Register(REG.SF, 1))
+    setConcreteRegisterValue(Register(REG.SF, 1))
 
-    if getRegisterValue(REG.ZF) == 1:
+    if getConcreteRegisterValue(REG.ZF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.AF) == 1:
+    if getConcreteRegisterValue(REG.AF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.IF) == 1:
+    if getConcreteRegisterValue(REG.IF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.CF) == 1:
+    if getConcreteRegisterValue(REG.CF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.DF) == 1:
+    if getConcreteRegisterValue(REG.DF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.PF) == 1:
+    if getConcreteRegisterValue(REG.PF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.SF) == 1:
+    if getConcreteRegisterValue(REG.SF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.OF) == 0:
+    if getConcreteRegisterValue(REG.OF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.TF) == 0:
+    if getConcreteRegisterValue(REG.TF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 0'
         return -1
 
-    setLastRegisterValue(Register(REG.OF, 1))
+    setConcreteRegisterValue(Register(REG.OF, 1))
 
-    if getRegisterValue(REG.ZF) == 1:
+    if getConcreteRegisterValue(REG.ZF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.AF) == 1:
+    if getConcreteRegisterValue(REG.AF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.IF) == 1:
+    if getConcreteRegisterValue(REG.IF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.CF) == 1:
+    if getConcreteRegisterValue(REG.CF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.DF) == 1:
+    if getConcreteRegisterValue(REG.DF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.PF) == 1:
+    if getConcreteRegisterValue(REG.PF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.SF) == 1:
+    if getConcreteRegisterValue(REG.SF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.OF) == 1:
+    if getConcreteRegisterValue(REG.OF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.TF) == 0:
+    if getConcreteRegisterValue(REG.TF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 0'
         return -1
 
-    setLastRegisterValue(Register(REG.TF, 1))
+    setConcreteRegisterValue(Register(REG.TF, 1))
 
-    if getRegisterValue(REG.ZF) == 1:
+    if getConcreteRegisterValue(REG.ZF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.AF) == 1:
+    if getConcreteRegisterValue(REG.AF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.IF) == 1:
+    if getConcreteRegisterValue(REG.IF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.CF) == 1:
+    if getConcreteRegisterValue(REG.CF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.DF) == 1:
+    if getConcreteRegisterValue(REG.DF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.PF) == 1:
+    if getConcreteRegisterValue(REG.PF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.SF) == 1:
+    if getConcreteRegisterValue(REG.SF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.OF) == 1:
+    if getConcreteRegisterValue(REG.OF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.TF) == 1:
+    if getConcreteRegisterValue(REG.TF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 1'
         return -1
 
-    setLastRegisterValue(Register(REG.ZF, 0))
+    setConcreteRegisterValue(Register(REG.ZF, 0))
 
-    if getRegisterValue(REG.ZF) == 0:
+    if getConcreteRegisterValue(REG.ZF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.AF) == 1:
+    if getConcreteRegisterValue(REG.AF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.IF) == 1:
+    if getConcreteRegisterValue(REG.IF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.CF) == 1:
+    if getConcreteRegisterValue(REG.CF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.DF) == 1:
+    if getConcreteRegisterValue(REG.DF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.PF) == 1:
+    if getConcreteRegisterValue(REG.PF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.SF) == 1:
+    if getConcreteRegisterValue(REG.SF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.OF) == 1:
+    if getConcreteRegisterValue(REG.OF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.TF) == 1:
+    if getConcreteRegisterValue(REG.TF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 1'
         return -1
 
-    setLastRegisterValue(Register(REG.AF, 0))
+    setConcreteRegisterValue(Register(REG.AF, 0))
 
-    if getRegisterValue(REG.ZF) == 0:
+    if getConcreteRegisterValue(REG.ZF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.AF) == 0:
+    if getConcreteRegisterValue(REG.AF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.IF) == 1:
+    if getConcreteRegisterValue(REG.IF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.CF) == 1:
+    if getConcreteRegisterValue(REG.CF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.DF) == 1:
+    if getConcreteRegisterValue(REG.DF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.PF) == 1:
+    if getConcreteRegisterValue(REG.PF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.SF) == 1:
+    if getConcreteRegisterValue(REG.SF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.OF) == 1:
+    if getConcreteRegisterValue(REG.OF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.TF) == 1:
+    if getConcreteRegisterValue(REG.TF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 1'
         return -1
 
-    setLastRegisterValue(Register(REG.CF, 0))
+    setConcreteRegisterValue(Register(REG.CF, 0))
 
-    if getRegisterValue(REG.ZF) == 0:
+    if getConcreteRegisterValue(REG.ZF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.AF) == 0:
+    if getConcreteRegisterValue(REG.AF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.IF) == 1:
+    if getConcreteRegisterValue(REG.IF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.CF) == 0:
+    if getConcreteRegisterValue(REG.CF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.DF) == 1:
+    if getConcreteRegisterValue(REG.DF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.PF) == 1:
+    if getConcreteRegisterValue(REG.PF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.SF) == 1:
+    if getConcreteRegisterValue(REG.SF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.OF) == 1:
+    if getConcreteRegisterValue(REG.OF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.TF) == 1:
+    if getConcreteRegisterValue(REG.TF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 1'
         return -1
 
-    setLastRegisterValue(Register(REG.IF, 0))
+    setConcreteRegisterValue(Register(REG.IF, 0))
 
-    if getRegisterValue(REG.ZF) == 0:
+    if getConcreteRegisterValue(REG.ZF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.AF) == 0:
+    if getConcreteRegisterValue(REG.AF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.IF) == 0:
+    if getConcreteRegisterValue(REG.IF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.CF) == 0:
+    if getConcreteRegisterValue(REG.CF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.DF) == 1:
+    if getConcreteRegisterValue(REG.DF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.PF) == 1:
+    if getConcreteRegisterValue(REG.PF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.SF) == 1:
+    if getConcreteRegisterValue(REG.SF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.OF) == 1:
+    if getConcreteRegisterValue(REG.OF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.TF) == 1:
+    if getConcreteRegisterValue(REG.TF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 1'
         return -1
 
-    setLastRegisterValue(Register(REG.DF, 0))
+    setConcreteRegisterValue(Register(REG.DF, 0))
 
-    if getRegisterValue(REG.ZF) == 0:
+    if getConcreteRegisterValue(REG.ZF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.AF) == 0:
+    if getConcreteRegisterValue(REG.AF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.IF) == 0:
+    if getConcreteRegisterValue(REG.IF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.CF) == 0:
+    if getConcreteRegisterValue(REG.CF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.DF) == 0:
+    if getConcreteRegisterValue(REG.DF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.PF) == 1:
+    if getConcreteRegisterValue(REG.PF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.SF) == 1:
+    if getConcreteRegisterValue(REG.SF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.OF) == 1:
+    if getConcreteRegisterValue(REG.OF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.TF) == 1:
+    if getConcreteRegisterValue(REG.TF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 1'
         return -1
 
-    setLastRegisterValue(Register(REG.PF, 0))
+    setConcreteRegisterValue(Register(REG.PF, 0))
 
-    if getRegisterValue(REG.ZF) == 0:
+    if getConcreteRegisterValue(REG.ZF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.AF) == 0:
+    if getConcreteRegisterValue(REG.AF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.IF) == 0:
+    if getConcreteRegisterValue(REG.IF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.CF) == 0:
+    if getConcreteRegisterValue(REG.CF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.DF) == 0:
+    if getConcreteRegisterValue(REG.DF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.PF) == 0:
+    if getConcreteRegisterValue(REG.PF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.SF) == 1:
+    if getConcreteRegisterValue(REG.SF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.OF) == 1:
+    if getConcreteRegisterValue(REG.OF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.TF) == 1:
+    if getConcreteRegisterValue(REG.TF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 1'
         return -1
 
-    setLastRegisterValue(Register(REG.SF, 0))
+    setConcreteRegisterValue(Register(REG.SF, 0))
 
-    if getRegisterValue(REG.ZF) == 0:
+    if getConcreteRegisterValue(REG.ZF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.AF) == 0:
+    if getConcreteRegisterValue(REG.AF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.IF) == 0:
+    if getConcreteRegisterValue(REG.IF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.CF) == 0:
+    if getConcreteRegisterValue(REG.CF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.DF) == 0:
+    if getConcreteRegisterValue(REG.DF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.PF) == 0:
+    if getConcreteRegisterValue(REG.PF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.SF) == 0:
+    if getConcreteRegisterValue(REG.SF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.OF) == 1:
+    if getConcreteRegisterValue(REG.OF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 1'
         return -1
 
-    if getRegisterValue(REG.TF) == 1:
+    if getConcreteRegisterValue(REG.TF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 1'
         return -1
 
-    setLastRegisterValue(Register(REG.OF, 0))
+    setConcreteRegisterValue(Register(REG.OF, 0))
 
-    if getRegisterValue(REG.ZF) == 0:
+    if getConcreteRegisterValue(REG.ZF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.AF) == 0:
+    if getConcreteRegisterValue(REG.AF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.IF) == 0:
+    if getConcreteRegisterValue(REG.IF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.CF) == 0:
+    if getConcreteRegisterValue(REG.CF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.DF) == 0:
+    if getConcreteRegisterValue(REG.DF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.PF) == 0:
+    if getConcreteRegisterValue(REG.PF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.SF) == 0:
+    if getConcreteRegisterValue(REG.SF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.OF) == 0:
+    if getConcreteRegisterValue(REG.OF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.TF) == 1:
+    if getConcreteRegisterValue(REG.TF) == 1:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 1'
         return -1
 
-    setLastRegisterValue(Register(REG.TF, 0))
+    setConcreteRegisterValue(Register(REG.TF, 0))
 
-    if getRegisterValue(REG.ZF) == 0:
+    if getConcreteRegisterValue(REG.ZF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.ZF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.ZF))
+        print '[KO] getConcreteRegisterValue(REG.ZF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.ZF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.AF) == 0:
+    if getConcreteRegisterValue(REG.AF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.AF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.AF))
+        print '[KO] getConcreteRegisterValue(REG.AF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.AF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.IF) == 0:
+    if getConcreteRegisterValue(REG.IF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.IF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.IF))
+        print '[KO] getConcreteRegisterValue(REG.IF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.IF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.CF) == 0:
+    if getConcreteRegisterValue(REG.CF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.CF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.CF))
+        print '[KO] getConcreteRegisterValue(REG.CF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.CF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.DF) == 0:
+    if getConcreteRegisterValue(REG.DF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.DF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.DF))
+        print '[KO] getConcreteRegisterValue(REG.DF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.DF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.PF) == 0:
+    if getConcreteRegisterValue(REG.PF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.PF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.PF))
+        print '[KO] getConcreteRegisterValue(REG.PF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.PF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.SF) == 0:
+    if getConcreteRegisterValue(REG.SF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.SF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.SF))
+        print '[KO] getConcreteRegisterValue(REG.SF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.SF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.OF) == 0:
+    if getConcreteRegisterValue(REG.OF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.OF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.OF))
+        print '[KO] getConcreteRegisterValue(REG.OF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.OF))
         print '\tExpected : 0'
         return -1
 
-    if getRegisterValue(REG.TF) == 0:
+    if getConcreteRegisterValue(REG.TF) == 0:
         count += 1
     else:
-        print '[KO] getRegisterValue(REG.TF)'
-        print '\tOutput   : %d' %(getRegisterValue(REG.TF))
+        print '[KO] getConcreteRegisterValue(REG.TF)'
+        print '\tOutput   : %d' %(getConcreteRegisterValue(REG.TF))
         print '\tExpected : 0'
         return -1
 
@@ -2933,39 +2933,39 @@ def test_7():
 
 
 def test_8_setup_reg(regs):
-    setLastRegisterValue(Register(REG.RAX,    regs['rax']))
-    setLastRegisterValue(Register(REG.RBX,    regs['rbx']))
-    setLastRegisterValue(Register(REG.RCX,    regs['rcx']))
-    setLastRegisterValue(Register(REG.RDX,    regs['rdx']))
-    setLastRegisterValue(Register(REG.RDI,    regs['rdi']))
-    setLastRegisterValue(Register(REG.RSI,    regs['rsi']))
-    setLastRegisterValue(Register(REG.RBP,    regs['rbp']))
-    setLastRegisterValue(Register(REG.RSP,    regs['rsp']))
-    setLastRegisterValue(Register(REG.RIP,    regs['rip']))
-    setLastRegisterValue(Register(REG.R8,     regs['r8']))
-    setLastRegisterValue(Register(REG.R9,     regs['r9']))
-    setLastRegisterValue(Register(REG.R10,    regs['r10']))
-    setLastRegisterValue(Register(REG.R11,    regs['r11']))
-    setLastRegisterValue(Register(REG.R12,    regs['r12']))
-    setLastRegisterValue(Register(REG.R13,    regs['r13']))
-    setLastRegisterValue(Register(REG.R14,    regs['r14']))
-    setLastRegisterValue(Register(REG.EFLAGS, regs['eflags']))
-    setLastRegisterValue(Register(REG.XMM0,   regs['xmm0']))
-    setLastRegisterValue(Register(REG.XMM1,   regs['xmm1']))
-    setLastRegisterValue(Register(REG.XMM2,   regs['xmm2']))
-    setLastRegisterValue(Register(REG.XMM3,   regs['xmm3']))
-    setLastRegisterValue(Register(REG.XMM4,   regs['xmm4']))
-    setLastRegisterValue(Register(REG.XMM5,   regs['xmm5']))
-    setLastRegisterValue(Register(REG.XMM6,   regs['xmm6']))
-    setLastRegisterValue(Register(REG.XMM7,   regs['xmm7']))
-    setLastRegisterValue(Register(REG.XMM8,   regs['xmm8']))
-    setLastRegisterValue(Register(REG.XMM9,   regs['xmm9']))
-    setLastRegisterValue(Register(REG.XMM10,  regs['xmm10']))
-    setLastRegisterValue(Register(REG.XMM11,  regs['xmm11']))
-    setLastRegisterValue(Register(REG.XMM12,  regs['xmm12']))
-    setLastRegisterValue(Register(REG.XMM13,  regs['xmm13']))
-    setLastRegisterValue(Register(REG.XMM14,  regs['xmm14']))
-    setLastRegisterValue(Register(REG.XMM15,  regs['xmm15']))
+    setConcreteRegisterValue(Register(REG.RAX,    regs['rax']))
+    setConcreteRegisterValue(Register(REG.RBX,    regs['rbx']))
+    setConcreteRegisterValue(Register(REG.RCX,    regs['rcx']))
+    setConcreteRegisterValue(Register(REG.RDX,    regs['rdx']))
+    setConcreteRegisterValue(Register(REG.RDI,    regs['rdi']))
+    setConcreteRegisterValue(Register(REG.RSI,    regs['rsi']))
+    setConcreteRegisterValue(Register(REG.RBP,    regs['rbp']))
+    setConcreteRegisterValue(Register(REG.RSP,    regs['rsp']))
+    setConcreteRegisterValue(Register(REG.RIP,    regs['rip']))
+    setConcreteRegisterValue(Register(REG.R8,     regs['r8']))
+    setConcreteRegisterValue(Register(REG.R9,     regs['r9']))
+    setConcreteRegisterValue(Register(REG.R10,    regs['r10']))
+    setConcreteRegisterValue(Register(REG.R11,    regs['r11']))
+    setConcreteRegisterValue(Register(REG.R12,    regs['r12']))
+    setConcreteRegisterValue(Register(REG.R13,    regs['r13']))
+    setConcreteRegisterValue(Register(REG.R14,    regs['r14']))
+    setConcreteRegisterValue(Register(REG.EFLAGS, regs['eflags']))
+    setConcreteRegisterValue(Register(REG.XMM0,   regs['xmm0']))
+    setConcreteRegisterValue(Register(REG.XMM1,   regs['xmm1']))
+    setConcreteRegisterValue(Register(REG.XMM2,   regs['xmm2']))
+    setConcreteRegisterValue(Register(REG.XMM3,   regs['xmm3']))
+    setConcreteRegisterValue(Register(REG.XMM4,   regs['xmm4']))
+    setConcreteRegisterValue(Register(REG.XMM5,   regs['xmm5']))
+    setConcreteRegisterValue(Register(REG.XMM6,   regs['xmm6']))
+    setConcreteRegisterValue(Register(REG.XMM7,   regs['xmm7']))
+    setConcreteRegisterValue(Register(REG.XMM8,   regs['xmm8']))
+    setConcreteRegisterValue(Register(REG.XMM9,   regs['xmm9']))
+    setConcreteRegisterValue(Register(REG.XMM10,  regs['xmm10']))
+    setConcreteRegisterValue(Register(REG.XMM11,  regs['xmm11']))
+    setConcreteRegisterValue(Register(REG.XMM12,  regs['xmm12']))
+    setConcreteRegisterValue(Register(REG.XMM13,  regs['xmm13']))
+    setConcreteRegisterValue(Register(REG.XMM14,  regs['xmm14']))
+    setConcreteRegisterValue(Register(REG.XMM15,  regs['xmm15']))
     return
 
 
@@ -2973,16 +2973,16 @@ def test_8_setup_mem(mems):
     for mem in mems:
         start = mem['start']
         if mem['memory'] is not None:
-            setLastMemoryAreaValue(start, bytearray(mem['memory']))
+            setConcreteMemoryAreaValue(start, bytearray(mem['memory']))
     return
 
 
 def test_8_emulate(concretize=False):
     count = 0
 
-    pc = getRegisterValue(REG.RIP)
+    pc = getConcreteRegisterValue(REG.RIP)
     while True:
-        opcodes = getMemoryAreaValue(pc, 20)
+        opcodes = getConcreteMemoryAreaValue(pc, 20)
 
         instruction = Instruction()
         instruction.setOpcodes(opcodes)
@@ -2998,7 +2998,7 @@ def test_8_emulate(concretize=False):
         else:
             count += 1
 
-        pc = getRegisterValue(REG.RIP)
+        pc = getConcreteRegisterValue(REG.RIP)
 
         if concretize == True:
             concretizeAllMemory()
@@ -3006,14 +3006,14 @@ def test_8_emulate(concretize=False):
 
         # End of the emulation
         if pc == 0x409A18:
-            rax = getRegisterValue(REG.RAX)
-            rbx = getRegisterValue(REG.RBX)
-            rcx = getRegisterValue(REG.RCX)
-            rdx = getRegisterValue(REG.RDX)
-            rsi = getRegisterValue(REG.RSI)
+            rax = getConcreteRegisterValue(REG.RAX)
+            rbx = getConcreteRegisterValue(REG.RBX)
+            rcx = getConcreteRegisterValue(REG.RCX)
+            rdx = getConcreteRegisterValue(REG.RDX)
+            rsi = getConcreteRegisterValue(REG.RSI)
 
             if rax != 0:
-                print '[KO] Emulation of emu_1.dump: getRegisterValue(REG.RAX)'
+                print '[KO] Emulation of emu_1.dump: getConcreteRegisterValue(REG.RAX)'
                 print '\tOutput   : %x' %(rax)
                 print '\tExpected : 0x0'
                 return -1
@@ -3021,7 +3021,7 @@ def test_8_emulate(concretize=False):
                 count += 1
 
             if rbx != 0:
-                print '[KO] Emulation of emu_1.dump: getRegisterValue(REG.RBX)'
+                print '[KO] Emulation of emu_1.dump: getConcreteRegisterValue(REG.RBX)'
                 print '\tOutput   : %x' %(rbx)
                 print '\tExpected : 0x0'
                 return -1
@@ -3029,7 +3029,7 @@ def test_8_emulate(concretize=False):
                 count += 1
 
             if rcx != 0:
-                print '[KO] Emulation of emu_1.dump: getRegisterValue(REG.RCX)'
+                print '[KO] Emulation of emu_1.dump: getConcreteRegisterValue(REG.RCX)'
                 print '\tOutput   : %x' %(rcx)
                 print '\tExpected : 0x0'
                 return -1
@@ -3037,7 +3037,7 @@ def test_8_emulate(concretize=False):
                 count += 1
 
             if rdx != 0x4d2:
-                print '[KO] Emulation of emu_1.dump: getRegisterValue(REG.RDX)'
+                print '[KO] Emulation of emu_1.dump: getConcreteRegisterValue(REG.RDX)'
                 print '\tOutput   : %x' %(rdx)
                 print '\tExpected : 0x4d2'
                 return -1
@@ -3045,7 +3045,7 @@ def test_8_emulate(concretize=False):
                 count += 1
 
             if rsi != 0x3669000000000000:
-                print '[KO] Emulation of emu_1.dump: getRegisterValue(REG.RSI)'
+                print '[KO] Emulation of emu_1.dump: getConcreteRegisterValue(REG.RSI)'
                 print '\tOutput   : %x' %(rsi)
                 print '\tExpected : 0x3669000000000000'
                 return -1
@@ -3061,7 +3061,6 @@ def test_8_1():
     count = 0
 
     setArchitecture(ARCH.X86_64)
-    enableSymbolicEmulation(True)
 
     fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
     data = eval(fd.read())
@@ -3086,7 +3085,6 @@ def test_8_2():
     count = 0
 
     setArchitecture(ARCH.X86_64)
-    enableSymbolicEmulation(True)
     enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
 
     fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
@@ -3112,7 +3110,6 @@ def test_8_3():
     count = 0
 
     setArchitecture(ARCH.X86_64)
-    enableSymbolicEmulation(True)
     enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
 
     fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
@@ -3138,7 +3135,6 @@ def test_8_4():
     count = 0
 
     setArchitecture(ARCH.X86_64)
-    enableSymbolicEmulation(True)
     enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
     enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
 
@@ -3164,7 +3160,6 @@ def test_8_5():
     count = 0
 
     setArchitecture(ARCH.X86_64)
-    enableSymbolicEmulation(True)
     enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
 
     fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')

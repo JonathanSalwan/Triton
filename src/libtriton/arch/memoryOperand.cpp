@@ -79,7 +79,7 @@ namespace triton {
         return this->pcRelative;
 
       else if (this->baseReg.isValid())
-        return triton::api.getRegisterValue(this->baseReg).convert_to<triton::uint64>();
+        return triton::api.getConcreteRegisterValue(this->baseReg).convert_to<triton::uint64>();
 
       return 0;
     }
@@ -87,14 +87,14 @@ namespace triton {
 
     triton::uint64 MemoryOperand::getIndexValue(void) {
       if (this->indexReg.isValid())
-        return triton::api.getRegisterValue(this->indexReg).convert_to<triton::uint64>();
+        return triton::api.getConcreteRegisterValue(this->indexReg).convert_to<triton::uint64>();
       return 0;
     }
 
 
     triton::uint64 MemoryOperand::getSegmentValue(void) {
       if (this->segmentReg.isValid())
-        return triton::api.getRegisterValue(this->segmentReg).convert_to<triton::uint64>();
+        return triton::api.getConcreteRegisterValue(this->segmentReg).convert_to<triton::uint64>();
       return 0;
     }
 

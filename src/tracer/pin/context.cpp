@@ -247,10 +247,10 @@ namespace tracer {
 
         value = triton::utils::fromBufferToUint<triton::uint512>(buffer);
         syncReg.setConcreteValue(value);
-        triton::api.setLastRegisterValue(syncReg);
+        triton::api.setConcreteRegisterValue(syncReg);
 
         /* Returns the good casted value */
-        return triton::api.getLastRegisterValue(reg);
+        return triton::api.getConcreteRegisterValue(reg);
       }
 
 
@@ -408,7 +408,7 @@ namespace tracer {
         /* Sync with the libTriton */
         triton::arch::RegisterOperand syncReg(reg);
         syncReg.setConcreteValue(value);
-        triton::api.setLastRegisterValue(syncReg);
+        triton::api.setConcreteRegisterValue(syncReg);
 
         /* We must concretize the register because the last symbolic value is now false */
         triton::api.concretizeRegister(reg);
@@ -429,7 +429,7 @@ namespace tracer {
 
         /* Sync with the libTriton */
         mem.setConcreteValue(value);
-        triton::api.setLastMemoryValue(mem);
+        triton::api.setConcreteMemoryValue(mem);
 
         /* We must concretize the memory because the last symbolic value is now false */
         triton::api.concretizeMemory(mem);
@@ -449,7 +449,7 @@ namespace tracer {
           throw std::runtime_error("tracer::pintool::context::setCurrentMemoryValue(): Page not writable.");
 
         /* Sync with the libTriton */
-        triton::api.setLastMemoryValue(addr, value);
+        triton::api.setConcreteMemoryValue(addr, value);
 
         /* We must concretize the memory because the last symbolic value is now false */
         triton::api.concretizeMemory(addr);
