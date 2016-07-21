@@ -148,7 +148,7 @@ def getNewInput():
             branches = pc.getBranchConstraints()
             for branch in branches:
                 # Get the constraint of the branch which has been not taken
-                if branch['taken'] == False:
+                if branch['isTaken'] == False:
                     # Ask for a model
                     models = getModel(assert_(land(previousConstraints, branch['constraint'])))
                     seed   = dict()

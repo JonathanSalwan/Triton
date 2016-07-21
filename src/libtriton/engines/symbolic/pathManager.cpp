@@ -67,11 +67,12 @@ namespace triton {
 
 
       /* Add a path constraint */
-      void PathManager::addPathConstraint(triton::engines::symbolic::SymbolicExpression* expr) {
-        triton::ast::AbstractNode* pc = nullptr;
+      void PathManager::addPathConstraint(const triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* expr) {
         triton::engines::symbolic::PathConstraint pco;
-        triton::uint64 targetBb = 0;
-        triton::uint32 size = 0;
+        triton::ast::AbstractNode* pc = nullptr;
+        triton::uint64 srcAddr        = 0;
+        triton::uint64 dstAddr        = 0;
+        triton::uint32 size           = 0;
 
         pc = expr->getAst();
         if (pc == nullptr)
@@ -86,8 +87,9 @@ namespace triton {
           return;
 
         /* Basic block taken */
-        targetBb = pc->evaluate().convert_to<triton::uint64>();
-        size     = pc->getBitvectorSize();
+        srcAddr = inst.getAddress();
+        dstAddr = pc->evaluate().convert_to<triton::uint64>();
+        size    = pc->getBitvectorSize();
 
         if (size == 0)
           throw std::runtime_error("PathManager::addPathConstraint(): The PC node size cannot be zero.");
@@ -100,21 +102,21 @@ namespace triton {
           triton::uint64 bb1 = pc->getChilds()[1]->evaluate().convert_to<triton::uint64>();
           triton::uint64 bb2 = pc->getChilds()[2]->evaluate().convert_to<triton::uint64>();
 
-          triton::ast::AbstractNode* bb1pc = (bb1 == targetBb) ? triton::ast::equal(pc, triton::ast::bv(targetBb, size)) :
-                                                                 triton::ast::lnot(triton::ast::equal(pc, triton::ast::bv(targetBb, size)));
+          triton::ast::AbstractNode* bb1pc = (bb1 == dstAddr) ? triton::ast::equal(pc, triton::ast::bv(dstAddr, size)) :
+                                                                triton::ast::lnot(triton::ast::equal(pc, triton::ast::bv(dstAddr, size)));
 
-          triton::ast::AbstractNode* bb2pc = (bb2 == targetBb) ? triton::ast::equal(pc, triton::ast::bv(targetBb, size)) :
-                                                                 triton::ast::lnot(triton::ast::equal(pc, triton::ast::bv(targetBb, size)));
+          triton::ast::AbstractNode* bb2pc = (bb2 == dstAddr) ? triton::ast::equal(pc, triton::ast::bv(dstAddr, size)) :
+                                                                triton::ast::lnot(triton::ast::equal(pc, triton::ast::bv(dstAddr, size)));
 
-          pco.addBranchConstraint(bb1 == targetBb, bb1, bb1pc);
-          pco.addBranchConstraint(bb2 == targetBb, bb2, bb2pc);
+          pco.addBranchConstraint(bb1 == dstAddr, srcAddr, bb1, bb1pc);
+          pco.addBranchConstraint(bb2 == dstAddr, srcAddr, bb2, bb2pc);
 
           this->pathConstraints.push_back(pco);
         }
 
         /* Direct branch */
         else {
-          pco.addBranchConstraint(true, targetBb, triton::ast::equal(pc, triton::ast::bv(targetBb, size)));
+          pco.addBranchConstraint(true, srcAddr, dstAddr, triton::ast::equal(pc, triton::ast::bv(dstAddr, size)));
           this->pathConstraints.push_back(pco);
         }
 

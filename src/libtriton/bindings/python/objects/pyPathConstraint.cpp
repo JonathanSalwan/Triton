@@ -60,7 +60,10 @@ B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
 <hr>
 
 - **getBranchConstraints(void)**<br>
-Returns the branch constraints as list of dictionary `{taken, target, constraint}`.
+Returns the branch constraints as list of dictionary `{isTaken, srcAddr, dstAddr, constraint}`. The source address is the location
+of the branch instruction and the destination address is the destination of the jump. E.g: `"0x11223344: jne 0x55667788"`, 0x11223344
+is the source address and 0x55667788 is the destination if and only if the branch is taken, otherwise the destination is the next
+instruction address.
 
 - **getTakenAddress(void)**<br>
 Returns the address of the taken branch as integer.
@@ -90,14 +93,15 @@ namespace triton {
       static PyObject* PathConstraint_getBranchConstraints(PyObject* self, PyObject* noarg) {
         try {
           PyObject* ret = nullptr;
-          const std::vector<std::tuple<bool, triton::uint64, triton::ast::AbstractNode*>>& branches = PyPathConstraint_AsPathConstraint(self)->getBranchConstraints();
+          const std::vector<std::tuple<bool, triton::uint64, triton::uint64, triton::ast::AbstractNode*>>& branches = PyPathConstraint_AsPathConstraint(self)->getBranchConstraints();
 
           ret = xPyList_New(branches.size());
           for (triton::usize index = 0; index != branches.size(); index++) {
             PyObject* dict = xPyDict_New();
-            PyDict_SetItem(dict, PyString_FromString("taken"),      PyBool_FromLong(std::get<0>(branches[index])));
-            PyDict_SetItem(dict, PyString_FromString("target"),     PyLong_FromUint64(std::get<1>(branches[index])));
-            PyDict_SetItem(dict, PyString_FromString("constraint"), PyAstNode(std::get<2>(branches[index])));
+            PyDict_SetItem(dict, PyString_FromString("isTaken"),    PyBool_FromLong(std::get<0>(branches[index])));
+            PyDict_SetItem(dict, PyString_FromString("srcAddr"),    PyLong_FromUint64(std::get<1>(branches[index])));
+            PyDict_SetItem(dict, PyString_FromString("dstAddr"),    PyLong_FromUint64(std::get<2>(branches[index])));
+            PyDict_SetItem(dict, PyString_FromString("constraint"), PyAstNode(std::get<3>(branches[index])));
             PyList_SetItem(ret, index, dict);
           }
 

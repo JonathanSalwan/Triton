@@ -27,14 +27,14 @@ namespace triton {
       }
 
 
-      void PathConstraint::addBranchConstraint(bool taken, triton::uint64 bbAddr, triton::ast::AbstractNode* pc) {
+      void PathConstraint::addBranchConstraint(bool taken, triton::uint64 srcAddr, triton::uint64 dstAddr, triton::ast::AbstractNode* pc) {
         if (pc == nullptr)
           throw std::runtime_error("PathConstraint::addBranchConstraint(): The PC node cannot be null.");
-        this->branches.push_back(std::make_tuple(taken, bbAddr, pc));
+        this->branches.push_back(std::make_tuple(taken, srcAddr, dstAddr, pc));
       }
 
 
-      const std::vector<std::tuple<bool, triton::uint64, triton::ast::AbstractNode*>>& PathConstraint::getBranchConstraints(void) const {
+      const std::vector<std::tuple<bool, triton::uint64, triton::uint64, triton::ast::AbstractNode*>>& PathConstraint::getBranchConstraints(void) const {
         return this->branches;
       }
 
@@ -42,7 +42,7 @@ namespace triton {
       triton::uint64 PathConstraint::getTakenAddress(void) const {
         for (auto it = this->branches.begin(); it != this->branches.end(); it++) {
           if (std::get<0>(*it) == true)
-            return std::get<1>(*it);
+            return std::get<2>(*it);
         }
         throw std::runtime_error("PathConstraint::getTakenAddress(): Something wrong, no branch taken.");
       }
@@ -51,7 +51,7 @@ namespace triton {
       triton::ast::AbstractNode* PathConstraint::getTakenPathConstraintAst(void) const {
         for (auto it = this->branches.begin(); it != this->branches.end(); it++) {
           if (std::get<0>(*it) == true)
-            return std::get<2>(*it);
+            return std::get<3>(*it);
         }
         throw std::runtime_error("PathConstraint::getTakenPathConstraintAst(): Something wrong, no branch taken.");
       }

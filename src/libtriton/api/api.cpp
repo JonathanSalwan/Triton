@@ -828,9 +828,9 @@ namespace triton {
   }
 
 
-  void API::addPathConstraint(triton::engines::symbolic::SymbolicExpression* expr) {
+  void API::addPathConstraint(const triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* expr) {
     this->checkSymbolic();
-    this->symbolic->addPathConstraint(expr);
+    this->symbolic->addPathConstraint(inst, expr);
   }
 
 

@@ -44,10 +44,13 @@ namespace triton {
       class PathConstraint {
         protected:
           /*!
-           *  \brief The branches constraints
-           *  \description Vector of `<flag, target bb addr, pc>`, `flag` is set to true if the branch is taken according the pc.
+           * \brief The branches constraints
+           * \description Vector of `<flag, source addr, dst addr, pc>`, `flag` is set to true if the branch is taken according the pc.
+           * The source address is the location of the branch instruction and the destination address is the destination of the jump.
+           * E.g: `"0x11223344: jne 0x55667788"`, 0x11223344 is the source address and 0x55667788 is the destination if and only if the
+           * branch is taken, otherwise the destination is the next instruction address.
            */
-          std::vector<std::tuple<bool, triton::uint64, triton::ast::AbstractNode*>> branches;
+          std::vector<std::tuple<bool, triton::uint64, triton::uint64, triton::ast::AbstractNode*>> branches;
 
 
         public:
@@ -61,10 +64,10 @@ namespace triton {
           ~PathConstraint();
 
           //! Adds a branch to the path constraint.
-          void addBranchConstraint(bool taken, triton::uint64 bbAddr, triton::ast::AbstractNode* pc);
+          void addBranchConstraint(bool taken, triton::uint64 srdAddr, triton::uint64 dstAddr, triton::ast::AbstractNode* pc);
 
           //! Returns the branch constraints.
-          const std::vector<std::tuple<bool, triton::uint64, triton::ast::AbstractNode*>>& getBranchConstraints(void) const;
+          const std::vector<std::tuple<bool, triton::uint64, triton::uint64, triton::ast::AbstractNode*>>& getBranchConstraints(void) const;
 
           //! Returns the address of the taken branch.
           triton::uint64 getTakenAddress(void) const;
