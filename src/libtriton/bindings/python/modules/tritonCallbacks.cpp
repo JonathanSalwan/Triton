@@ -293,19 +293,24 @@ Initializes an architecture. This function must be called before any call to the
 Sets the AST representation mode.
 
 - **setConcreteMemoryAreaValue(integer baseAddr, [integer,])**<br>
-Sets the concrete value of a memory area. Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+Sets the concrete value of a memory area. Note that by setting a concrete value will probably imply a desynchronization with
+the symbolic state (if it exists). You should probably use the concretize functions after this.
 
 - **setConcreteMemoryAreaValue(integer baseAddr, bytes opcodes)**<br>
-Sets the concrete value of a memory area. Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+Sets the concrete value of a memory area. Note that by setting a concrete value will probably imply a desynchronization with
+the symbolic state (if it exists). You should probably use the concretize functions after this.
 
 - **setConcreteMemoryValue(integer addr, integer value)**<br>
-Sets the concrete value of a memory cell. Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+Sets the concrete value of a memory cell. Note that by setting a concrete value will probably imply a desynchronization with
+the symbolic state (if it exists). You should probably use the concretize functions after this.
 
 - **setConcreteMemoryValue(\ref py_Memory_page mem)**<br>
-Sets the concrete value of memory cells. Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+Sets the concrete value of memory cells. Note that by setting a concrete value will probably imply a desynchronization with
+the symbolic state (if it exists). You should probably use the concretize functions after this.
 
 - **setConcreteRegisterValue(\ref py_REG_page reg)**<br>
-Sets the concrete value of a register. Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+Sets the concrete value of a register. Note that by setting a concrete value will probably imply a desynchronization with
+the symbolic state (if it exists). You should probably use the concretize functions after this.
 
 - **setTaintMemory(\ref py_Memory_page mem, bool flag)**<br>
 Sets the targeted memory as tainted or not.
@@ -314,7 +319,8 @@ Sets the targeted memory as tainted or not.
 Sets the targeted register as tainted or not.
 
 - **simplify(\ref py_AstNode_page node, bool z3=False)**<br>
-Calls all simplification callbacks recorded and returns the simplified node as \ref py_AstNode_page. If the `z3` flag is set to True, Triton will use z3 to simplify the given `node` before to call recorded callbacks.
+Calls all simplification callbacks recorded and returns the simplified node as \ref py_AstNode_page. If the `z3` flag is
+set to True, Triton will use z3 to simplify the given `node` before to call recorded callbacks.
 
 - <b>taintAssignmentMemoryImmediate(\ref py_Memory_page memDst)</b><br>
 Taints `memDst` with an assignment - `memDst` is untained.
@@ -391,7 +397,8 @@ Untaints a register.
 \section pintool_py_api Python API - Methods and namespaces of the pintool
 <hr>
 
-This project is shipped with a Pin \ref Tracer_page which can be compile with the `cmake` flag `-DPINTOOL=on`. Then, the pintool must be used like this:
+This project is shipped with a Pin \ref Tracer_page which can be compile with the `cmake` flag `-DPINTOOL=on`.
+Then, the pintool must be used like this:
 
 
 ~~~~~~~~~~~~~{.sh}
@@ -409,7 +416,8 @@ Your script must contains the pintool and triton imports.
 \subsection pintool_py_api_methods Methods
 
 - <b>addCallback(function, \ref py_CALLBACK_page type)</b><br>
-Adds a callback before and after several cases. All code executed into a callback function are executed during the instrumentation.
+Adds a callback before and after several cases. All code executed into a callback function are executed during the
+instrumentation.
 
 - **checkReadAccess(integer addr)**<br>
 Checks whether the memory page which contains this address has a read access protection. Returns true or false.
@@ -418,11 +426,13 @@ Checks whether the memory page which contains this address has a read access pro
 Checks whether the memory page which contains this address has a write access protection. Returns true or false.
 
 - **detachProcess(void)**<br>
-Detachs the pintool from the targeted process. The control flow is returned to the original uninstrumented code and the application is natively executed.
+Detachs the pintool from the targeted process. The control flow is returned to the original uninstrumented code and
+the application is natively executed.
 
 - **disableSnapshot(void)**<br>
-Disables the snapshot engine. When you have done with the `tracer::pintool::Snapshot::restoreSnapshot()` function, you may use this function to improve performance. Then, the
-snapshot engine will be enable at the next `tracer::pintool::Snapshot::takeSnapshot()` call.
+Disables the snapshot engine. When you have done with the `tracer::pintool::Snapshot::restoreSnapshot()` function,
+you may use this function to improve performance. Then, the snapshot engine will be enable at the next
+`tracer::pintool::Snapshot::takeSnapshot()` call.
 
 - **getCurrentMemoryValue(\ref py_Memory_page mem)**<br>
 Returns the memory value from a \ref py_Memory_page.
@@ -451,14 +461,16 @@ Returns the syscall number of the system call which is executed in the current c
 current instruction is a syscall. This function is mainly used in a `SYSCALL_ENTRY` \ref py_CALLBACK_page.
 
 - **getSyscallReturn(\ref py_STANDARD_page std)**<br>
-Returns the result of the syscall. It is a user's responsibility to make sure that the current context represents the state of a system call after its execution.
-This function is mainly used in a `SYSCALL_EXIT` \ref py_CALLBACK_page.
+Returns the result of the syscall. It is a user's responsibility to make sure that the current context represents
+the state of a system call after its execution. This function is mainly used in a `SYSCALL_EXIT` \ref py_CALLBACK_page.
 
 - **isSnapshotEnabled(void)**<br>
 Returns true if the snapshot engine is enabled.
 
 - **restoreSnapshot(void)**<br>
-Restores the last snpahost taken. Check the `tracer::pintool::Snapshot::takeSnapshot()` function. Note that this function have to execute a new context registers, so `RIP` will be modified and your callback stopped (checkout the [Pin API](https://software.intel.com/sites/landingpage/pintool/docs/71313/Pin/html/group__CONTEXT__API.html#g4e6408c641479c22918a888d95ca1930)).
+Restores the last snpahost taken. Check the `tracer::pintool::Snapshot::takeSnapshot()` function. Note that this function
+have to execute a new context registers, so `RIP` will be modified and your callback stopped
+(checkout the [Pin API](https://software.intel.com/sites/landingpage/pintool/docs/71313/Pin/html/group__CONTEXT__API.html#g4e6408c641479c22918a888d95ca1930)).
 
 - **runProgram(void)**<br>
 Starts the binary instrumentation over Pin.
@@ -473,16 +485,19 @@ Sets the current memory value from a \ref py_Memory_page.
 Sets the current memory value from an address.
 
 - **setCurrentRegisterValue(\ref py_Register_page reg)**<br>
-Sets the current register value from a \ref py_Register_page. This method can only be called into a `BEFORE_SYMPROC` and `AFTER` callback. This method also synchronizes the Triton's register.
+Sets the current register value from a \ref py_Register_page. This method can only be called into a `BEFORE_SYMPROC`
+and `AFTER` callback. This method also synchronizes the Triton's register.
 
 - **setCurrentRegisterValue(\ref py_Register_page reg, integer value)**<br>
-Sets the current register value from a \ref py_Register_page. This method can only be called into a `BEFORE_SYMPROC` and `AFTER` callback. This method also synchronizes the Triton's register.
+Sets the current register value from a \ref py_Register_page. This method can only be called into a `BEFORE_SYMPROC`
+and `AFTER` callback. This method also synchronizes the Triton's register.
 
 - **setupImageBlacklist([""])**<br>
 Setups a blacklist of image names, it means that these images will not be instrumented and executed natively.
 
 - **setupImageWhitelist([""])**<br>
-Setups a whitelist of image names, it means that these images will be instrumented and all other images will be executed natively.
+Setups a whitelist of image names, it means that these images will be instrumented and all other images will be
+executed natively.
 
 - **startAnalysisFromAddress(integer addr)**<br>
 Starts the instrumentation at a specific address.
