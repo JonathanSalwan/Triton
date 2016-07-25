@@ -4795,11 +4795,12 @@ namespace triton {
 
 
         void leave_s(triton::arch::Instruction& inst) {
-          auto stack      = TRITON_X86_REG_SP.getParent();
-          auto stackValue = triton::api.getConcreteRegisterValue(stack).convert_to<triton::uint64>();
-          auto bp1        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
-          auto bp2        = triton::arch::OperandWrapper(TRITON_X86_REG_BP.getParent());
-          auto sp         = triton::arch::OperandWrapper(stack);
+          auto stack     = TRITON_X86_REG_SP.getParent();
+          auto base      = TRITON_X86_REG_BP.getParent();
+          auto baseValue = triton::api.getConcreteRegisterValue(base).convert_to<triton::uint64>();
+          auto bp1       = triton::arch::OperandWrapper(inst.popMemoryAccess(baseValue, base.getSize()));
+          auto bp2       = triton::arch::OperandWrapper(TRITON_X86_REG_BP.getParent());
+          auto sp        = triton::arch::OperandWrapper(stack);
 
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(inst, bp2);
