@@ -64,7 +64,7 @@ SymVar_0 = 287454020
 <hr>
 
 - **getId(void)**<br>
-Returns the if of the model as integer. This id is the same that the variable id.
+Returns the id of the model as integer. This id is the same that the variable id.
 
 - **getName(void)**<br>
 Returns the name of the model as string. This name is the same that the variable name.
