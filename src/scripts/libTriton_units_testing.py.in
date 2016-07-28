@@ -3271,7 +3271,7 @@ units_testing = [
     ("Testing the symbolic emulation engine with the AST_DICTIONARIES optimization", test_8_3),
     ("Testing the symbolic emulation engine with the ALIGNED_MEMORY and AST_DICTIONARIES optimizations", test_8_4),
     ("Testing the symbolic emulation engine with the AST_DICTIONARIES optimization and concretization", test_8_5),
-    ("Testing the LEA semantics", test_9),
+    ("Testing the LOAD access semantics", test_9),
 ]
 
 
