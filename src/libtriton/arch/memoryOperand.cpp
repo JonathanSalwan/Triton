@@ -122,8 +122,8 @@ namespace triton {
       else if (this->baseReg.isValid())
         return this->baseReg.getBitSize();
 
-      else if (this->segmentReg.isValid())
-        return this->segmentReg.getBitSize();
+      else if (this->displacement.getBitSize())
+        return this->displacement.getBitSize();
 
       return triton::api.cpuRegisterBitSize();
     }
@@ -152,8 +152,12 @@ namespace triton {
                     );
 
         /* Use segments as base address instead of selector into the GDT. */
-        if (segmentValue)
-          this->ast = triton::ast::bvadd(triton::ast::bv(segmentValue, bitSize), this->ast);
+        if (segmentValue) {
+          this->ast = triton::ast::bvadd(
+                        triton::ast::bv(segmentValue, this->segmentReg.getBitSize()),
+                        triton::ast::sx((this->segmentReg.getBitSize() - bitSize), this->ast)
+                      );
+        }
 
         /* Initialize the address only if it is not already defined */
         if (!this->address)

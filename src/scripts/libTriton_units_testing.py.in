@@ -3181,6 +3181,83 @@ def test_8_5():
     return count
 
 
+def test_9():
+    count = 0
+
+    setArchitecture(ARCH.X86_64)
+
+    inst = Instruction()
+    # mov eax, DWORD PTR fs:0xffffffffffffdf98
+    inst.setOpcodes("\x64\x8B\x04\x25\x98\xDF\xFF\xFF")
+    inst.setAddress(0x400000)
+
+    setConcreteRegisterValue(Register(REG.FS, 0x7fffda8ab700))
+    processing(inst)
+
+    if not inst.getLoadAccess():
+        print '[KO] inst.getLoadAccess()'
+        print '\tOutput   : %d' %(len(inst.getLoadAccess()))
+        print '\tExpected : 1'
+        return -1
+    else:
+        count += 1
+
+    load, load_ast = inst.getLoadAccess()[0]
+    if load.getAddress() != 0x7fffda8a9698:
+        print '[KO] load.getAddress()'
+        print '\tOutput   : 0x%x' %(load.getAddress())
+        print '\tExpected : 0x7fffda8a9698'
+        return -1
+    else:
+        count += 1
+
+    if load.getBitSize() != 32:
+        print '[KO] load.getBitSize()'
+        print '\tOutput   : %d' %(load.getBitSize())
+        print '\tExpected : 32'
+        return -1
+    else:
+        count += 1
+
+    setArchitecture(ARCH.X86_64)
+
+    inst = Instruction()
+    # mov rax, QWORD PTR fs:[rax]
+    inst.setOpcodes("\x64\x48\x8B\x00")
+    inst.setAddress(0x400000)
+
+    setConcreteRegisterValue(Register(REG.FS, 0x7fffda8ab700))
+    setConcreteRegisterValue(Register(REG.RAX, 0xffffffffffffdf90))
+    processing(inst)
+
+    if not inst.getLoadAccess():
+        print '[KO] inst.getLoadAccess()'
+        print '\tOutput   : %d' %(len(inst.getLoadAccess()))
+        print '\tExpected : 1'
+        return -1
+    else:
+        count += 1
+
+    load, load_ast = inst.getLoadAccess()[0]
+    if load.getAddress() != 0x7fffda8a9690:
+        print '[KO] load.getAddress()'
+        print '\tOutput   : 0x%x' %(load.getAddress())
+        print '\tExpected : 0x7fffda8a9690'
+        return -1
+    else:
+        count += 1
+
+    if load.getBitSize() != 64:
+        print '[KO] load.getBitSize()'
+        print '\tOutput   : %d' %(load.getBitSize())
+        print '\tExpected : 64'
+        return -1
+    else:
+        count += 1
+
+    return count
+
+
 units_testing = [
     ("Testing the arithmetic and logic AST interpreter", test_1),
     ("Testing the RegisterOperand class", test_2),
@@ -3194,6 +3271,7 @@ units_testing = [
     ("Testing the symbolic emulation engine with the AST_DICTIONARIES optimization", test_8_3),
     ("Testing the symbolic emulation engine with the ALIGNED_MEMORY and AST_DICTIONARIES optimizations", test_8_4),
     ("Testing the symbolic emulation engine with the AST_DICTIONARIES optimization and concretization", test_8_5),
+    ("Testing the LEA semantics", test_9),
 ]
 
 
