@@ -5,10 +5,10 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
 #include <cstring>
 
 #include <api.hpp>
+#include <exceptions.hpp>
 #include <immediateOperand.hpp>
 #include <instruction.hpp>
 
@@ -104,7 +104,7 @@ namespace triton {
 
     void Instruction::setOpcodes(triton::uint8* opcodes, triton::uint32 size) {
       if (size >= sizeof(this->opcodes))
-       throw std::runtime_error("Instruction::setOpcodes(): Invalid size (too big).");
+       throw triton::exceptions::Instruction("Instruction::setOpcodes(): Invalid size (too big).");
       std::memcpy(this->opcodes, opcodes, size);
       this->size = size;
     }
@@ -236,7 +236,7 @@ namespace triton {
 
     void Instruction::addSymbolicExpression(triton::engines::symbolic::SymbolicExpression* expr) {
       if (expr == nullptr)
-        throw std::runtime_error("Instruction::addSymbolicExpression(): Cannot add a null expression.");
+        throw triton::exceptions::Instruction("Instruction::addSymbolicExpression(): Cannot add a null expression.");
       this->symbolicExpressions.push_back(expr);
     }
 

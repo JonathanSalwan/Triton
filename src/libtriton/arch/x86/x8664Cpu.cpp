@@ -10,6 +10,7 @@
 #include <architecture.hpp>
 #include <coreUtils.hpp>
 #include <cpuSize.hpp>
+#include <exceptions.hpp>
 #include <externalLibs.hpp>
 #include <immediateOperand.hpp>
 #include <x8664Cpu.hpp>
@@ -651,11 +652,11 @@ namespace triton {
 
         /* Check if the opcodes and opcodes' size are defined */
         if (inst.getOpcodes() == nullptr || inst.getSize() == 0)
-          throw std::runtime_error("x8664Cpu::disassembly(): Opcodes and opcodesSize must be definied.");
+          throw triton::exceptions::Disassembly("x8664Cpu::disassembly(): Opcodes and opcodesSize must be definied.");
 
         /* Open capstone */
         if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_X86, triton::extlibs::capstone::CS_MODE_64, &handle) != triton::extlibs::capstone::CS_ERR_OK)
-          throw std::runtime_error("x8664Cpu::disassembly(): Cannot open capstone.");
+          throw triton::exceptions::Disassembly("x8664Cpu::disassembly(): Cannot open capstone.");
 
         /* Init capstone's options */
         triton::extlibs::capstone::cs_option(handle, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
@@ -723,7 +724,7 @@ namespace triton {
                   break;
 
                 default:
-                  throw std::invalid_argument("x8664Cpu::disassembly(): Invalid operand.");
+                  throw triton::exceptions::Disassembly("x8664Cpu::disassembly(): Invalid operand.");
               }
             }
 
@@ -743,7 +744,7 @@ namespace triton {
           triton::extlibs::capstone::cs_free(insn, count);
         }
         else
-          throw std::runtime_error("x8664Cpu::disassembly(): Failed to disassemble the given code.");
+          throw triton::exceptions::Disassembly("x8664Cpu::disassembly(): Failed to disassemble the given code.");
 
         triton::extlibs::capstone::cs_close(&handle);
         return;
@@ -752,7 +753,7 @@ namespace triton {
 
       void x8664Cpu::buildSemantics(triton::arch::Instruction& inst) const {
         if (!inst.getType())
-          throw std::runtime_error("x8664Cpu::buildSemantics(): You must disassemble the instruction before.");
+          throw triton::exceptions::CPU("x8664Cpu::buildSemantics(): You must disassemble the instruction before.");
         triton::arch::x86::semantics::build(inst);
       }
 
@@ -770,7 +771,7 @@ namespace triton {
         triton::uint32 size = mem.getSize();
 
         if (size == 0 || size > DQQWORD_SIZE)
-          throw std::invalid_argument("x8664Cpu::getConcreteMemoryValue(): Invalid size memory.");
+          throw triton::exceptions::CPU("x8664Cpu::getConcreteMemoryValue(): Invalid size memory.");
 
         for (triton::sint32 i = size-1; i >= 0; i--)
           ret = ((ret << BYTE_SIZE_BIT) | this->getConcreteMemoryValue(addr+i));
@@ -1012,7 +1013,7 @@ namespace triton {
           case triton::arch::x86::ID_REG_SS: return (*((triton::uint64*)(this->ss)));
 
           default:
-            throw std::invalid_argument("x8664Cpu::getConcreteRegisterValue(): Invalid register.");
+            throw triton::exceptions::CPU("x8664Cpu::getConcreteRegisterValue(): Invalid register.");
         }
 
         return value;
@@ -1030,7 +1031,7 @@ namespace triton {
         triton::uint512 cv  = mem.getConcreteValue();
 
         if (size == 0 || size > DQQWORD_SIZE)
-          throw std::invalid_argument("x8664Cpu::setConcreteMemoryValue(): Invalid size memory.");
+          throw triton::exceptions::CPU("x8664Cpu::setConcreteMemoryValue(): Invalid size memory.");
 
         for (triton::uint32 i = 0; i < size; i++) {
           this->memory[addr+i] = (cv & 0xff).convert_to<triton::uint8>();
@@ -1377,7 +1378,7 @@ namespace triton {
           case triton::arch::x86::ID_REG_SS:  (*((triton::uint64*)(this->ss))) = value.convert_to<triton::uint64>(); break;
 
           default:
-            throw std::invalid_argument("x8664Cpu:setConcreteRegisterValue(): Invalid register.");
+            throw triton::exceptions::CPU("x8664Cpu:setConcreteRegisterValue(): Invalid register.");
         }
       }
 

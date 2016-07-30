@@ -5,7 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
+#include <exceptions.hpp>
 #include <memoryMapping.hpp>
 
 
@@ -20,7 +20,7 @@ namespace triton {
       this->size            = 0;
 
       if (!this->binary)
-        throw std::runtime_error("MemoryMapping::MemoryMapping(): The binary pointer cannot be null");
+        throw triton::exceptions::Format("MemoryMapping::MemoryMapping(): The binary pointer cannot be null");
     }
 
 

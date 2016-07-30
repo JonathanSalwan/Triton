@@ -5,9 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
-
 #include <api.hpp>
+#include <exceptions.hpp>
 #include <pathManager.hpp>
 #include <symbolicEnums.hpp>
 
@@ -76,7 +75,7 @@ namespace triton {
 
         pc = expr->getAst();
         if (pc == nullptr)
-          throw std::runtime_error("PathManager::addPathConstraint(): The PC node cannot be null.");
+          throw triton::exceptions::PathManager("PathManager::addPathConstraint(): The PC node cannot be null.");
 
         /* If PC_TRACKING_SYMBOLIC is enabled, Triton will track path constraints only if they are symbolized. */
         if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::PC_TRACKING_SYMBOLIC) && !pc->isSymbolized())
@@ -92,7 +91,7 @@ namespace triton {
         size    = pc->getBitvectorSize();
 
         if (size == 0)
-          throw std::runtime_error("PathManager::addPathConstraint(): The PC node size cannot be zero.");
+          throw triton::exceptions::PathManager("PathManager::addPathConstraint(): The PC node size cannot be zero.");
 
         if (pc->getKind() == triton::ast::ZX_NODE)
           pc = pc->getChilds()[1];

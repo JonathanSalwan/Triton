@@ -5,10 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
-
 #include <api.hpp>
 #include <astPythonRepresentation.hpp>
+#include <exceptions.hpp>
 
 
 
@@ -77,7 +76,7 @@ namespace triton {
           case VARIABLE_NODE:             return this->print(stream, reinterpret_cast<triton::ast::VariableNode*>(node)); break;
           case ZX_NODE:                   return this->print(stream, reinterpret_cast<triton::ast::ZxNode*>(node)); break;
           default:
-            throw std::invalid_argument("AstPythonRepresentation::print(AbstractNode): Invalid kind node.");
+            throw triton::exceptions::ASTRepresentation("AstPythonRepresentation::print(AbstractNode): Invalid kind node.");
         }
         return stream;
       }

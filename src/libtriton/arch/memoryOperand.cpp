@@ -5,10 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
-
 #include <api.hpp>
 #include <cpuSize.hpp>
+#include <exceptions.hpp>
 #include <memoryOperand.hpp>
 
 
@@ -33,15 +32,15 @@ namespace triton {
       this->pcRelative    = 0;
 
       if (size == 0)
-        throw std::runtime_error("MemoryOperand::MemoryOperand(): size cannot be zero.");
+        throw triton::exceptions::MemoryOperand("MemoryOperand::MemoryOperand(): size cannot be zero.");
 
       if (size != BYTE_SIZE && size != WORD_SIZE && size != DWORD_SIZE && size != QWORD_SIZE && size != DQWORD_SIZE && size != QQWORD_SIZE && size != DQQWORD_SIZE)
-        throw std::runtime_error("MemoryOperand::MemoryOperand(): size must be aligned.");
+        throw triton::exceptions::MemoryOperand("MemoryOperand::MemoryOperand(): size must be aligned.");
 
       this->setPair(std::make_pair(((size * BYTE_SIZE_BIT) - 1), 0));
 
       if (concreteValue > this->getMaxValue())
-        throw std::runtime_error("MemoryOperand::MemoryOperand(): You cannot set this concrete value (too big) to this memory access.");
+        throw triton::exceptions::MemoryOperand("MemoryOperand::MemoryOperand(): You cannot set this concrete value (too big) to this memory access.");
     }
 
 
@@ -265,7 +264,7 @@ namespace triton {
 
     void MemoryOperand::setConcreteValue(triton::uint512 concreteValue) {
       if (concreteValue > this->getMaxValue())
-        throw std::runtime_error("MemoryOperand::MemoryOperand(): You cannot set this concrete value (too big) to this memory access.");
+        throw triton::exceptions::MemoryOperand("MemoryOperand::MemoryOperand(): You cannot set this concrete value (too big) to this memory access.");
       this->concreteValue = concreteValue;
       this->trusted       = true;
     }

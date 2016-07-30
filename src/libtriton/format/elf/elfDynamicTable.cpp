@@ -6,9 +6,9 @@
 */
 
 #include <cstdio>
-#include <stdexcept>
 
 #include <elfDynamicTable.hpp>
+#include <exceptions.hpp>
 
 
 
@@ -56,7 +56,7 @@ namespace triton {
             return sizeof(triton::format::elf::Elf64_Dyn_t);
 
           default:
-            throw std::runtime_error("ELFDynamicTable::parse(): Invalid EI_CLASS.");
+            throw triton::exceptions::ELF("ELFDynamicTable::parse(): Invalid EI_CLASS.");
         }
         return 0;
       }

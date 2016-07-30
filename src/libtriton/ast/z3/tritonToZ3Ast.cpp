@@ -5,10 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
-
 #include <api.hpp>
 #include <cpuSize.hpp>
+#include <exceptions.hpp>
 #include <symbolicExpression.hpp>
 #include <symbolicVariable.hpp>
 #include <tritonToZ3Ast.hpp>
@@ -39,7 +38,7 @@ namespace triton {
 
 
     void TritonToZ3Ast::operator()(triton::ast::AssertNode& e) {
-      throw std::runtime_error("TritonToZ3Ast::AssertNode(): Not implemented.");
+      throw triton::exceptions::ASTTranslations("TritonToZ3Ast::AssertNode(): Not implemented.");
     }
 
 
@@ -71,7 +70,7 @@ namespace triton {
 
 
     void TritonToZ3Ast::operator()(triton::ast::BvdeclNode& e) {
-      throw std::runtime_error("TritonToZ3Ast::BvdeclNode(): Not implemented.");
+      throw triton::exceptions::ASTTranslations("TritonToZ3Ast::BvdeclNode(): Not implemented.");
     }
 
 
@@ -320,7 +319,7 @@ namespace triton {
 
 
     void TritonToZ3Ast::operator()(triton::ast::CompoundNode& e) {
-      throw std::runtime_error("TritonToZ3Ast::CompoundNode(): Not implemented.");
+      throw triton::exceptions::ASTTranslations("TritonToZ3Ast::CompoundNode(): Not implemented.");
     }
 
 
@@ -350,7 +349,7 @@ namespace triton {
 
 
     void TritonToZ3Ast::operator()(triton::ast::DeclareFunctionNode& e) {
-      throw std::runtime_error("TritonToZ3Ast::DeclareFunctionNode(): Not implemented.");
+      throw triton::exceptions::ASTTranslations("TritonToZ3Ast::DeclareFunctionNode(): Not implemented.");
     }
 
 
@@ -435,7 +434,7 @@ namespace triton {
     void TritonToZ3Ast::operator()(triton::ast::ReferenceNode& e) {
       triton::engines::symbolic::SymbolicExpression* refNode = triton::api.getSymbolicExpressionFromId(e.getValue());
       if (refNode == nullptr)
-        throw std::runtime_error("TritonToZ3Ast::ReferenceNode(): Reference node not found.");
+        throw triton::exceptions::ASTTranslations("TritonToZ3Ast::ReferenceNode(): Reference node not found.");
       Z3Result op1 = this->eval(*(refNode->getAst()));
       this->result.setExpr(op1.getExpr());
     }
@@ -443,7 +442,7 @@ namespace triton {
 
     void TritonToZ3Ast::operator()(triton::ast::StringNode& e) {
       if (this->symbols.find(e.getValue()) == this->symbols.end())
-        throw std::runtime_error("TritonToZ3Ast::StringNode(): Symbols not found.");
+        throw triton::exceptions::ASTTranslations("TritonToZ3Ast::StringNode(): Symbols not found.");
       Z3Result op1 = this->eval(*(this->symbols[e.getValue()]));
       this->result.setExpr(op1.getExpr());
     }
@@ -464,10 +463,10 @@ namespace triton {
       triton::engines::symbolic::SymbolicVariable* symVar = triton::api.getSymbolicVariableFromName(varName);
 
       if (symVar == nullptr)
-        throw std::runtime_error("TritonToZ3Ast::VariableNode(): Can't get the symbolic variable (nullptr).");
+        throw triton::exceptions::ASTTranslations("TritonToZ3Ast::VariableNode(): Can't get the symbolic variable (nullptr).");
 
       if (symVar->getSize() > QWORD_SIZE_BIT)
-        throw std::runtime_error("TritonToZ3Ast::VariableNode(): Size above 64 bits is not supported yet.");
+        throw triton::exceptions::ASTTranslations("TritonToZ3Ast::VariableNode(): Size above 64 bits is not supported yet.");
 
       /* If the conversion is used to evaluate a node, we concretize symbolic variables */
       if (this->isEval) {
@@ -485,7 +484,7 @@ namespace triton {
           this->result.setExpr(newexpr);
         }
         else
-          throw std::runtime_error("TritonToZ3Ast::VariableNode(): UNSET.");
+          throw triton::exceptions::ASTTranslations("TritonToZ3Ast::VariableNode(): UNSET.");
       }
       /* Otherwise, we keep the symbolic variables for a real conversion */
       else {

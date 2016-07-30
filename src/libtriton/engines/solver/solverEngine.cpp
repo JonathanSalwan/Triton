@@ -5,10 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
-
 #include <api.hpp>
 #include <ast.hpp>
+#include <exceptions.hpp>
 #include <tritonToZ3Ast.hpp>
 #include <z3Result.hpp>
 #include <solverEngine.hpp>
@@ -122,7 +121,7 @@ namespace triton {
         triton::uint32                                    representationMode = triton::api.getAstRepresentationMode();
 
         if (node == nullptr)
-          throw std::runtime_error("SolverEngine::getModels(): node cannot be null.");
+          throw triton::exceptions::SolverEngine("SolverEngine::getModels(): node cannot be null.");
 
         /* Switch into the SMT mode */
         triton::api.setAstRepresentationMode(triton::ast::representations::SMT_REPRESENTATION);
@@ -201,7 +200,7 @@ namespace triton {
 
       triton::uint512 SolverEngine::evaluateAstViaZ3(triton::ast::AbstractNode *node) const {
         if (node == nullptr)
-          throw std::runtime_error("SolverEngine::evaluateAstViaZ3(): node cannot be null.");
+          throw triton::exceptions::SolverEngine("SolverEngine::evaluateAstViaZ3(): node cannot be null.");
         triton::ast::TritonToZ3Ast z3ast{};
         triton::ast::Z3Result result = z3ast.eval(*node);
         triton::uint512 nbResult{result.getStringValue()};

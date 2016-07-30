@@ -5,9 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
-
 #include <api.hpp>
+#include <exceptions.hpp>
 #include <taintEngine.hpp>
 
 
@@ -98,7 +97,7 @@ namespace triton {
         this->enableFlag  = true;
 
         if (!this->taintedRegisters)
-          throw std::invalid_argument("TaintEngine::TaintEngine(): No enough memory.");
+          throw triton::exceptions::TaintEngine("TaintEngine::TaintEngine(): No enough memory.");
 
         for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
           this->taintedRegisters[i] = !TAINTED;
@@ -112,7 +111,7 @@ namespace triton {
         this->enableFlag  = other.enableFlag;
 
         if (!this->taintedRegisters)
-          throw std::invalid_argument("TaintEngine::TaintEngine(): No enough memory.");
+          throw triton::exceptions::TaintEngine("TaintEngine::TaintEngine(): No enough memory.");
 
         for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
           this->taintedRegisters[i] = other.taintedRegisters[i];

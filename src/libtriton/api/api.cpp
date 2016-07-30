@@ -5,11 +5,11 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
 #include <map>
 #include <list>
 
 #include <api.hpp>
+#include <exceptions.hpp>
 
 
 
@@ -205,13 +205,13 @@ namespace triton {
 
   void API::checkArchitecture(void) const {
     if (!this->isArchitectureValid())
-      throw std::runtime_error("API::checkArchitecture(): You must define an architecture.");
+      throw triton::exceptions::API("API::checkArchitecture(): You must define an architecture.");
   }
 
 
   triton::arch::CpuInterface* API::getCpu(void) {
     if (!this->isArchitectureValid())
-      throw std::runtime_error("API::checkArchitecture(): You must define an architecture.");
+      throw triton::exceptions::API("API::checkArchitecture(): You must define an architecture.");
     return this->arch.getCpu();
   }
 
@@ -380,27 +380,27 @@ namespace triton {
 
     this->taint = new triton::engines::taint::TaintEngine();
     if (!this->taint)
-      throw std::invalid_argument("API::initEngines(): No enough memory.");
+      throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
     this->symbolic = new triton::engines::symbolic::SymbolicEngine();
     if (!this->symbolic)
-      throw std::invalid_argument("API::initEngines(): No enough memory.");
+      throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
     this->symbolicBackup = new triton::engines::symbolic::SymbolicEngine();
     if (!this->symbolicBackup)
-      throw std::invalid_argument("API::initEngines(): No enough memory.");
+      throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
     this->solver = new triton::engines::solver::SolverEngine();
     if (!this->solver)
-      throw std::invalid_argument("API::initEngines(): No enough memory.");
+      throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
     this->astGarbageCollector = new triton::ast::AstGarbageCollector();
     if (!this->astGarbageCollector)
-      throw std::invalid_argument("API::initEngines(): No enough memory.");
+      throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
     this->astRepresentation = new triton::ast::representations::AstRepresentation();
     if (!this->astRepresentation)
-      throw std::invalid_argument("API::initEngines(): No enough memory.");
+      throw triton::exceptions::API("API::initEngines(): No enough memory.");
   }
 
 
@@ -444,7 +444,7 @@ namespace triton {
 
   void API::checkAstGarbageCollector(void) const {
     if (!this->astGarbageCollector)
-      throw std::runtime_error("API::checkAstGarbageCollector(): AST garbage collector is undefined.");
+      throw triton::exceptions::API("API::checkAstGarbageCollector(): AST garbage collector is undefined.");
   }
 
 
@@ -513,7 +513,7 @@ namespace triton {
 
   void API::checkAstRepresentation(void) const {
     if (!this->astRepresentation)
-      throw std::runtime_error("API::checkAstRepresentation(): AST representation interface is undefined.");
+      throw triton::exceptions::API("API::checkAstRepresentation(): AST representation interface is undefined.");
   }
 
 
@@ -540,7 +540,7 @@ namespace triton {
 
   void API::checkSymbolic(void) const {
     if (!this->symbolic || !this->symbolicBackup)
-      throw std::runtime_error("API::checkSymbolic(): Symbolic engine is undefined.");
+      throw triton::exceptions::API("API::checkSymbolic(): Symbolic engine is undefined.");
   }
 
 
@@ -585,7 +585,7 @@ namespace triton {
       case triton::arch::OP_MEM: return this->buildSymbolicMemoryOperand(op.getMemory());
       case triton::arch::OP_REG: return this->buildSymbolicRegisterOperand(op.getRegister());
       default:
-        throw std::runtime_error("API::buildSymbolicOperand(): Invalid operand.");
+        throw triton::exceptions::API("API::buildSymbolicOperand(): Invalid operand.");
     }
   }
 
@@ -597,7 +597,7 @@ namespace triton {
       case triton::arch::OP_MEM: return this->buildSymbolicMemoryOperand(inst, op.getMemory());
       case triton::arch::OP_REG: return this->buildSymbolicRegisterOperand(inst, op.getRegister());
       default:
-        throw std::runtime_error("API::buildSymbolicOperand(): Invalid operand.");
+        throw triton::exceptions::API("API::buildSymbolicOperand(): Invalid operand.");
     }
   }
 
@@ -662,7 +662,7 @@ namespace triton {
       case triton::arch::OP_MEM: return this->createSymbolicMemoryExpression(inst, node, dst.getMemory(), comment);
       case triton::arch::OP_REG: return this->createSymbolicRegisterExpression(inst, node, dst.getRegister(), comment);
       default:
-        throw std::runtime_error("API::buildSymbolicOperand(): Invalid operand.");
+        throw triton::exceptions::API("API::buildSymbolicOperand(): Invalid operand.");
     }
     return nullptr;
   }
@@ -961,7 +961,7 @@ namespace triton {
 
   void API::checkSolver(void) const {
     if (!this->solver)
-      throw std::runtime_error("API::checkSolver(): Solver engine is undefined.");
+      throw triton::exceptions::API("API::checkSolver(): Solver engine is undefined.");
   }
 
 
@@ -988,7 +988,7 @@ namespace triton {
 
   void API::checkTaint(void) const {
     if (!this->taint)
-      throw std::runtime_error("API::checkTaint(): Taint engine is undefined.");
+      throw triton::exceptions::API("API::checkTaint(): Taint engine is undefined.");
   }
 
 
@@ -1017,7 +1017,7 @@ namespace triton {
       case triton::arch::OP_MEM: return this->isMemoryTainted(op.getConstMemory());
       case triton::arch::OP_REG: return this->isRegisterTainted(op.getConstRegister());
       default:
-        throw std::runtime_error("API::isTainted(): Invalid operand.");
+        throw triton::exceptions::API("API::isTainted(): Invalid operand.");
     }
   }
 
@@ -1047,7 +1047,7 @@ namespace triton {
       case triton::arch::OP_MEM: return this->setTaintMemory(op.getConstMemory(), flag);
       case triton::arch::OP_REG: return this->setTaintRegister(op.getConstRegister(), flag);
       default:
-        throw std::runtime_error("API::setTaint(): Invalid operand.");
+        throw triton::exceptions::API("API::setTaint(): Invalid operand.");
     }
   }
 
@@ -1124,7 +1124,7 @@ namespace triton {
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_REG)
       return this->taintUnionRegisterRegister(op1.getConstRegister(), op2.getConstRegister());
 
-    throw std::runtime_error("API::taintUnion(): Invalid operands.");
+    throw triton::exceptions::API("API::taintUnion(): Invalid operands.");
   }
 
 
@@ -1150,7 +1150,7 @@ namespace triton {
     if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_REG)
       return this->taintAssignmentRegisterRegister(op1.getConstRegister(), op2.getConstRegister());
 
-    throw std::runtime_error("API::taintAssignment(): Invalid operands.");
+    throw triton::exceptions::API("API::taintAssignment(): Invalid operands.");
   }
 
 

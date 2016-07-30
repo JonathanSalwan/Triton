@@ -6,9 +6,9 @@
 */
 
 #include <cstdio>
-#include <stdexcept>
 
 #include <elfSymbolTable.hpp>
+#include <exceptions.hpp>
 
 
 
@@ -78,7 +78,7 @@ namespace triton {
             return sizeof(triton::format::elf::Elf64_Sym_t);
 
           default:
-            throw std::runtime_error("ELFSymbolTable::parse(): Invalid EI_CLASS.");
+            throw triton::exceptions::ELF("ELFSymbolTable::parse(): Invalid EI_CLASS.");
         }
         return 0;
       }

@@ -9,6 +9,7 @@
 
 #include <api.hpp>
 #include <ast.hpp>
+#include <exceptions.hpp>
 #include <tritonToZ3Ast.hpp>
 #include <z3Result.hpp>
 
@@ -119,10 +120,10 @@ namespace triton {
 
     void AbstractNode::setChild(triton::uint32 index, AbstractNode* child) {
       if (index >= this->childs.size())
-        throw std::runtime_error("AbstractNode::setChild(): Invalid index.");
+        throw triton::exceptions::AST("AbstractNode::setChild(): Invalid index.");
 
       if (child == nullptr)
-        throw std::runtime_error("AbstractNode::setChild(): child cannot be null.");
+        throw triton::exceptions::AST("AbstractNode::setChild(): child cannot be null.");
 
       /* Setup the parent of the child */
       child->setParent(this);
@@ -160,7 +161,7 @@ namespace triton {
 
     void AssertNode::init(void) {
       if (this->childs.size() < 1)
-        throw std::runtime_error("AssertNode::init(): Must take at least one child.");
+        throw triton::exceptions::AST("AssertNode::init(): Must take at least one child.");
 
       /* Init attributes */
       this->size = 1;
@@ -213,10 +214,10 @@ namespace triton {
 
     void BvaddNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvaddNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvaddNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvaddNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvaddNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -269,10 +270,10 @@ namespace triton {
 
     void BvandNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvandNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvandNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvandNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvandNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -330,10 +331,10 @@ namespace triton {
       triton::uint512 value = 0;
 
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvashrNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvashrNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvashrNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvashrNode::init(): Must take two nodes of same size.");
 
       value = this->childs[0]->evaluate();
       shift = this->childs[1]->evaluate().convert_to<triton::uint32>();
@@ -415,17 +416,17 @@ namespace triton {
       triton::uint32 size = 0;
 
       if (this->childs.size() < 1)
-        throw std::runtime_error("BvdeclNode::init(): Must take at least one child.");
+        throw triton::exceptions::AST("BvdeclNode::init(): Must take at least one child.");
 
       if (this->childs[0]->getKind() != DECIMAL_NODE)
-        throw std::runtime_error("BvdeclNode::init(): Child must be a DECIMAL_NODE.");
+        throw triton::exceptions::AST("BvdeclNode::init(): Child must be a DECIMAL_NODE.");
 
       size = reinterpret_cast<DecimalNode*>(this->childs[0])->getValue().convert_to<triton::uint32>();
       if (!size)
-        throw std::runtime_error("BvdeclNode::init(): Size connot be equal to zero.");
+        throw triton::exceptions::AST("BvdeclNode::init(): Size connot be equal to zero.");
 
       if (size > MAX_BITS_SUPPORTED)
-        throw std::runtime_error("BvdeclNode::init(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw triton::exceptions::AST("BvdeclNode::init(): Size connot be greater than MAX_BITS_SUPPORTED.");
 
       /* Init attributes */
       this->size = size;
@@ -478,10 +479,10 @@ namespace triton {
 
     void BvlshrNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvlshrNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvlshrNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvlshrNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvlshrNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -534,10 +535,10 @@ namespace triton {
 
     void BvmulNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvmulNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvmulNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvmulNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvmulNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -590,10 +591,10 @@ namespace triton {
 
     void BvnandNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvnandNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvnandNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvnandNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvnandNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -645,7 +646,7 @@ namespace triton {
 
     void BvnegNode::init(void) {
       if (this->childs.size() < 1)
-        throw std::runtime_error("BvnegNode::init(): Must take at least one child.");
+        throw triton::exceptions::AST("BvnegNode::init(): Must take at least one child.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -698,10 +699,10 @@ namespace triton {
 
     void BvnorNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvnorNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvnorNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvnorNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvnorNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -753,7 +754,7 @@ namespace triton {
 
     void BvnotNode::init(void) {
       if (this->childs.size() < 1)
-        throw std::runtime_error("BvnotNode::init(): Must take at least one child.");
+        throw triton::exceptions::AST("BvnotNode::init(): Must take at least one child.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -806,10 +807,10 @@ namespace triton {
 
     void BvorNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvorNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvorNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[0]->getBitvectorSize())
-        throw std::runtime_error("BvorNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvorNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -874,10 +875,10 @@ namespace triton {
       triton::uint512 value = 0;
 
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvrolNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvrolNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getKind() != DECIMAL_NODE)
-        throw std::runtime_error("BvrolNode::init(): rot must be a DECIMAL_NODE.");
+        throw triton::exceptions::AST("BvrolNode::init(): rot must be a DECIMAL_NODE.");
 
       rot   = reinterpret_cast<DecimalNode*>(this->childs[0])->getValue().convert_to<triton::uint32>();
       value = this->childs[1]->evaluate();
@@ -945,10 +946,10 @@ namespace triton {
       triton::uint512 value = 0;
 
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvrorNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvrorNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getKind() != DECIMAL_NODE)
-        throw std::runtime_error("BvrorNode::init(): rot must be a DECIMAL_NODE.");
+        throw triton::exceptions::AST("BvrorNode::init(): rot must be a DECIMAL_NODE.");
 
       rot   = reinterpret_cast<DecimalNode*>(this->childs[0])->getValue().convert_to<triton::uint32>();
       value = this->childs[1]->evaluate();
@@ -1008,10 +1009,10 @@ namespace triton {
       triton::sint512 op2Signed = 0;
 
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvsdivNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvsdivNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvsdivNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvsdivNode::init(): Must take two nodes of same size.");
 
       /* Sign extend */
       op1Signed = triton::ast::modularSignExtend(this->childs[0]);
@@ -1077,10 +1078,10 @@ namespace triton {
       triton::sint512 op2Signed = 0;
 
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvsgeNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvsgeNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvsgeNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvsgeNode::init(): Must take two nodes of same size.");
 
       /* Sign extend */
       op1Signed = triton::ast::modularSignExtend(this->childs[0]);
@@ -1140,10 +1141,10 @@ namespace triton {
       triton::sint512 op2Signed = 0;
 
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvsgtNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvsgtNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvsgtNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvsgtNode::init(): Must take two nodes of same size.");
 
       /* Sign extend */
       op1Signed = triton::ast::modularSignExtend(this->childs[0]);
@@ -1200,10 +1201,10 @@ namespace triton {
 
     void BvshlNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvshlNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvshlNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvshlNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvshlNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -1259,10 +1260,10 @@ namespace triton {
       triton::sint512 op2Signed = 0;
 
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvsleNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvsleNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvsleNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvsleNode::init(): Must take two nodes of same size.");
 
       /* Sign extend */
       op1Signed = triton::ast::modularSignExtend(this->childs[0]);
@@ -1322,10 +1323,10 @@ namespace triton {
       triton::sint512 op2Signed = 0;
 
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvsltNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvsltNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvsltNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvsltNode::init(): Must take two nodes of same size.");
 
       /* Sign extend */
       op1Signed = triton::ast::modularSignExtend(this->childs[0]);
@@ -1385,10 +1386,10 @@ namespace triton {
       triton::sint512 op2Signed = 0;
 
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvsmodNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvsmodNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvsmodNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvsmodNode::init(): Must take two nodes of same size.");
 
       /* Sign extend */
       op1Signed = triton::ast::modularSignExtend(this->childs[0]);
@@ -1452,10 +1453,10 @@ namespace triton {
       triton::sint512 op2Signed = 0;
 
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvsremNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvsremNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvsremNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvsremNode::init(): Must take two nodes of same size.");
 
       /* Sign extend */
       op1Signed = triton::ast::modularSignExtend(this->childs[0]);
@@ -1516,10 +1517,10 @@ namespace triton {
 
     void BvsubNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvsubNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvsubNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvsubNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvsubNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -1572,10 +1573,10 @@ namespace triton {
 
     void BvudivNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvudivNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvudivNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvudivNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvudivNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -1632,10 +1633,10 @@ namespace triton {
 
     void BvugeNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvugeNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvugeNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvugeNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvugeNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = 1;
@@ -1688,10 +1689,10 @@ namespace triton {
 
     void BvugtNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvugtNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvugtNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvugtNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvugtNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = 1;
@@ -1744,10 +1745,10 @@ namespace triton {
 
     void BvuleNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvuleNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvuleNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvuleNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvuleNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = 1;
@@ -1800,10 +1801,10 @@ namespace triton {
 
     void BvultNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvultNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvultNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvultNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvultNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = 1;
@@ -1856,10 +1857,10 @@ namespace triton {
 
     void BvuremNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvuremNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvuremNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvuremNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvuremNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -1916,10 +1917,10 @@ namespace triton {
 
     void BvxnorNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvxnorNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvxnorNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvxnorNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvxnorNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -1972,10 +1973,10 @@ namespace triton {
 
     void BvxorNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvxorNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvxorNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getBitvectorSize() != this->childs[1]->getBitvectorSize())
-        throw std::runtime_error("BvxorNode::init(): Must take two nodes of same size.");
+        throw triton::exceptions::AST("BvxorNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = this->childs[0]->getBitvectorSize();
@@ -2031,19 +2032,19 @@ namespace triton {
       triton::uint32 size   = 0;
 
       if (this->childs.size() < 2)
-        throw std::runtime_error("BvNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("BvNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getKind() != DECIMAL_NODE || this->childs[1]->getKind() != DECIMAL_NODE)
-        throw std::runtime_error("BvNode::init(): Size and value must be a DECIMAL_NODE.");
+        throw triton::exceptions::AST("BvNode::init(): Size and value must be a DECIMAL_NODE.");
 
       value = reinterpret_cast<DecimalNode*>(this->childs[0])->getValue();
       size  = reinterpret_cast<DecimalNode*>(this->childs[1])->getValue().convert_to<triton::uint32>();
 
       if (!size)
-        throw std::runtime_error("BvNode::init(): Size connot be equal to zero.");
+        throw triton::exceptions::AST("BvNode::init(): Size connot be equal to zero.");
 
       if (size > MAX_BITS_SUPPORTED)
-        throw std::runtime_error("BvNode::init(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw triton::exceptions::AST("BvNode::init(): Size connot be greater than MAX_BITS_SUPPORTED.");
 
       /* Init attributes */
       this->size = size;
@@ -2096,7 +2097,7 @@ namespace triton {
 
     void CompoundNode::init(void) {
       if (this->childs.size() < 1)
-        throw std::runtime_error("CompoundNode::init(): Must take at least one child.");
+        throw triton::exceptions::AST("CompoundNode::init(): Must take at least one child.");
 
       /* Init attributes */
       this->size = 0;
@@ -2165,7 +2166,7 @@ namespace triton {
 
     void ConcatNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("ConcatNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("ConcatNode::init(): Must take at least two childs.");
 
       /* Init attributes */
       this->size = 0;
@@ -2174,7 +2175,7 @@ namespace triton {
       }
 
       if (this->size > MAX_BITS_SUPPORTED)
-        throw std::runtime_error("ConcatNode::init(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw triton::exceptions::AST("ConcatNode::init(): Size connot be greater than MAX_BITS_SUPPORTED.");
 
       this->eval = this->childs[0]->evaluate();
       for (triton::uint32 index = 0; index < this->childs.size()-1; index++)
@@ -2274,13 +2275,13 @@ namespace triton {
 
     void DeclareFunctionNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("DeclareFunctionNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("DeclareFunctionNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getKind() != STRING_NODE)
-        throw std::runtime_error("DeclareFunctionNode::init(): The first argument must be a STRING_NODE.");
+        throw triton::exceptions::AST("DeclareFunctionNode::init(): The first argument must be a STRING_NODE.");
 
       if (this->childs[1]->getKind() != BVDECL_NODE)
-        throw std::runtime_error("DeclareFunctionNode::init(): The second argument must be a BVDECL_NODE.");
+        throw triton::exceptions::AST("DeclareFunctionNode::init(): The second argument must be a BVDECL_NODE.");
 
       /* Init attributes */
       this->size = this->childs[1]->getBitvectorSize();
@@ -2333,7 +2334,7 @@ namespace triton {
 
     void DistinctNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("DistinctNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("DistinctNode::init(): Must take at least two childs.");
 
       /* Init attributes */
       this->size = 1;
@@ -2386,7 +2387,7 @@ namespace triton {
 
     void EqualNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("EqualNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("EqualNode::init(): Must take at least two childs.");
 
       /* Init attributes */
       this->size = 1;
@@ -2443,23 +2444,23 @@ namespace triton {
       triton::uint32 low  = 0;
 
       if (this->childs.size() < 3)
-        throw std::runtime_error("ExtractNode::init(): Must take at least three childs.");
+        throw triton::exceptions::AST("ExtractNode::init(): Must take at least three childs.");
 
       if (this->childs[0]->getKind() != DECIMAL_NODE || this->childs[1]->getKind() != DECIMAL_NODE)
-        throw std::runtime_error("ExtractNode::init(): The highest and lower bit must be a DECIMAL_NODE.");
+        throw triton::exceptions::AST("ExtractNode::init(): The highest and lower bit must be a DECIMAL_NODE.");
 
       high = reinterpret_cast<DecimalNode*>(this->childs[0])->getValue().convert_to<triton::uint32>();
       low  = reinterpret_cast<DecimalNode*>(this->childs[1])->getValue().convert_to<triton::uint32>();
 
       if (low > high)
-        throw std::runtime_error("ExtractNode::init(): The high bit must be greater than the low bit.");
+        throw triton::exceptions::AST("ExtractNode::init(): The high bit must be greater than the low bit.");
 
       /* Init attributes */
       this->size = ((high - low) + 1);
       this->eval = ((this->childs[2]->evaluate() >> low) & this->getBitvectorMask());
 
       if (this->size > this->childs[2]->getBitvectorSize() || high >= this->childs[2]->getBitvectorSize())
-        throw std::runtime_error("ExtractNode::init(): The size of the extraction is higher than the child expression.");
+        throw triton::exceptions::AST("ExtractNode::init(): The size of the extraction is higher than the child expression.");
 
       /* Init childs and spread information */
       for (triton::uint32 index = 0; index < this->childs.size(); index++) {
@@ -2509,10 +2510,10 @@ namespace triton {
 
     void IteNode::init(void) {
       if (this->childs.size() < 3)
-        throw std::runtime_error("IteNode::init(): Must take at least three childs.");
+        throw triton::exceptions::AST("IteNode::init(): Must take at least three childs.");
 
       if (this->childs[1]->getBitvectorSize() != this->childs[2]->getBitvectorSize())
-        throw std::runtime_error("IteNode::init(): Must take two nodes of same size as 'then' and 'else' branches.");
+        throw triton::exceptions::AST("IteNode::init(): Must take two nodes of same size as 'then' and 'else' branches.");
 
       /* Init attributes */
       this->size = this->childs[1]->getBitvectorSize();
@@ -2565,7 +2566,7 @@ namespace triton {
 
     void LandNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("LandNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("LandNode::init(): Must take at least two childs.");
 
       /* Init attributes */
       this->size = 1;
@@ -2619,10 +2620,10 @@ namespace triton {
 
     void LetNode::init(void) {
       if (this->childs.size() < 3)
-        throw std::runtime_error("LetNode::init(): Must take at least three childs.");
+        throw triton::exceptions::AST("LetNode::init(): Must take at least three childs.");
 
       if (this->childs[0]->getKind() != STRING_NODE)
-        throw std::runtime_error("LetNode::init(): The alias node must be a STRING_NODE.");
+        throw triton::exceptions::AST("LetNode::init(): The alias node must be a STRING_NODE.");
 
       /* Init attributes */
       this->size = this->childs[2]->getBitvectorSize();
@@ -2674,7 +2675,7 @@ namespace triton {
 
     void LnotNode::init(void) {
       if (this->childs.size() < 1)
-        throw std::runtime_error("LnotNode::init(): Must take at least one child.");
+        throw triton::exceptions::AST("LnotNode::init(): Must take at least one child.");
 
       /* Init attributes */
       this->size = 1;
@@ -2727,7 +2728,7 @@ namespace triton {
 
     void LorNode::init(void) {
       if (this->childs.size() < 2)
-        throw std::runtime_error("LorNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("LorNode::init(): Must take at least two childs.");
 
       /* Init attributes */
       this->size = 1;
@@ -2888,17 +2889,17 @@ namespace triton {
       triton::uint32 sizeExt = 0;
 
       if (this->childs.size() < 2)
-        throw std::runtime_error("SxNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("SxNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getKind() != DECIMAL_NODE)
-        throw std::runtime_error("SxNode::init(): The sizeExt must be a DECIMAL_NODE.");
+        throw triton::exceptions::AST("SxNode::init(): The sizeExt must be a DECIMAL_NODE.");
 
       sizeExt = reinterpret_cast<DecimalNode*>(this->childs[0])->getValue().convert_to<triton::uint32>();
 
       /* Init attributes */
       this->size = sizeExt + this->childs[1]->getBitvectorSize();
       if (size > MAX_BITS_SUPPORTED)
-        throw std::runtime_error("SxNode::SxNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw triton::exceptions::AST("SxNode::SxNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
 
       this->eval = ((((this->childs[1]->evaluate() >> (this->childs[1]->getBitvectorSize()-1)) == 0) ? this->childs[1]->evaluate() : (this->childs[1]->evaluate() | ~(this->childs[1]->getBitvectorMask()))) & this->getBitvectorMask());
 
@@ -2957,7 +2958,7 @@ namespace triton {
         this->symbolized  = true;
       }
       else
-        throw std::runtime_error("VariableNode::init(): Variable not found.");
+        throw triton::exceptions::AST("VariableNode::init(): Variable not found.");
 
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
@@ -3007,17 +3008,17 @@ namespace triton {
       triton::uint32 sizeExt = 0;
 
       if (this->childs.size() < 2)
-        throw std::runtime_error("ZxNode::init(): Must take at least two childs.");
+        throw triton::exceptions::AST("ZxNode::init(): Must take at least two childs.");
 
       if (this->childs[0]->getKind() != DECIMAL_NODE)
-        throw std::runtime_error("ZxNode::init(): The sizeExt must be a DECIMAL_NODE.");
+        throw triton::exceptions::AST("ZxNode::init(): The sizeExt must be a DECIMAL_NODE.");
 
       sizeExt = reinterpret_cast<DecimalNode*>(this->childs[0])->getValue().convert_to<triton::uint32>();
 
       /* Init attributes */
       this->size = sizeExt + this->childs[1]->getBitvectorSize();
       if (size > MAX_BITS_SUPPORTED)
-        throw std::runtime_error("ZxNode::init(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw triton::exceptions::AST("ZxNode::init(): Size connot be greater than MAX_BITS_SUPPORTED.");
 
       this->eval = (this->childs[1]->evaluate() & this->getBitvectorMask());
 
@@ -3122,7 +3123,7 @@ namespace triton {
     AbstractNode* assert_(AbstractNode* expr) {
       AbstractNode* node = new AssertNode(expr);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3130,7 +3131,7 @@ namespace triton {
     AbstractNode* bv(triton::uint512 value, triton::uint32 size) {
       AbstractNode* node = new BvNode(value, size);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3138,7 +3139,7 @@ namespace triton {
     AbstractNode* bvadd(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvaddNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3146,7 +3147,7 @@ namespace triton {
     AbstractNode* bvand(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvandNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3154,7 +3155,7 @@ namespace triton {
     AbstractNode* bvashr(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvashrNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3162,7 +3163,7 @@ namespace triton {
     AbstractNode* bvdecl(triton::uint32 size) {
       AbstractNode* node = new BvdeclNode(size);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3170,7 +3171,7 @@ namespace triton {
     AbstractNode* bvfalse(void) {
       AbstractNode* node = new BvNode(0, 1);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3178,7 +3179,7 @@ namespace triton {
     AbstractNode* bvlshr(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvlshrNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3186,7 +3187,7 @@ namespace triton {
     AbstractNode* bvmul(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvmulNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3194,7 +3195,7 @@ namespace triton {
     AbstractNode* bvnand(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvnandNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3202,7 +3203,7 @@ namespace triton {
     AbstractNode* bvneg(AbstractNode* expr) {
       AbstractNode* node = new BvnegNode(expr);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3210,7 +3211,7 @@ namespace triton {
     AbstractNode* bvnor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvnorNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3218,7 +3219,7 @@ namespace triton {
     AbstractNode* bvnot(AbstractNode* expr) {
       AbstractNode* node = new BvnotNode(expr);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3226,7 +3227,7 @@ namespace triton {
     AbstractNode* bvor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvorNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3234,7 +3235,7 @@ namespace triton {
     AbstractNode* bvrol(triton::uint32 rot, AbstractNode* expr) {
       AbstractNode* node = new BvrolNode(rot, expr);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3242,7 +3243,7 @@ namespace triton {
     AbstractNode* bvrol(AbstractNode* rot, AbstractNode* expr) {
       AbstractNode* node = new BvrolNode(rot, expr);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3250,7 +3251,7 @@ namespace triton {
     AbstractNode* bvror(triton::uint32 rot, AbstractNode* expr) {
       AbstractNode* node = new BvrorNode(rot, expr);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3258,7 +3259,7 @@ namespace triton {
     AbstractNode* bvror(AbstractNode* rot, AbstractNode* expr) {
       AbstractNode* node = new BvrorNode(rot, expr);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3266,7 +3267,7 @@ namespace triton {
     AbstractNode* bvsdiv(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvsdivNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3274,7 +3275,7 @@ namespace triton {
     AbstractNode* bvsge(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvsgeNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3282,7 +3283,7 @@ namespace triton {
     AbstractNode* bvsgt(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvsgtNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3290,7 +3291,7 @@ namespace triton {
     AbstractNode* bvshl(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvshlNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3298,7 +3299,7 @@ namespace triton {
     AbstractNode* bvsle(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvsleNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3306,7 +3307,7 @@ namespace triton {
     AbstractNode* bvslt(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvsltNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3314,7 +3315,7 @@ namespace triton {
     AbstractNode* bvsmod(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvsmodNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3322,7 +3323,7 @@ namespace triton {
     AbstractNode* bvsrem(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvsremNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3330,7 +3331,7 @@ namespace triton {
     AbstractNode* bvsub(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvsubNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3338,7 +3339,7 @@ namespace triton {
     AbstractNode* bvtrue(void) {
       AbstractNode* node = new BvNode(1, 1);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3346,7 +3347,7 @@ namespace triton {
     AbstractNode* bvudiv(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvudivNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3354,7 +3355,7 @@ namespace triton {
     AbstractNode* bvuge(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvugeNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3362,7 +3363,7 @@ namespace triton {
     AbstractNode* bvugt(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvugtNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3370,7 +3371,7 @@ namespace triton {
     AbstractNode* bvule(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvuleNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3378,7 +3379,7 @@ namespace triton {
     AbstractNode* bvult(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvultNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3386,7 +3387,7 @@ namespace triton {
     AbstractNode* bvurem(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvuremNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3394,7 +3395,7 @@ namespace triton {
      AbstractNode* bvxnor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvxnorNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3402,7 +3403,7 @@ namespace triton {
     AbstractNode* bvxor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new BvxorNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3410,7 +3411,7 @@ namespace triton {
     AbstractNode* compound(std::vector<AbstractNode*> exprs) {
       AbstractNode* node = new CompoundNode(exprs);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3418,7 +3419,7 @@ namespace triton {
     AbstractNode* concat(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new ConcatNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3426,7 +3427,7 @@ namespace triton {
     AbstractNode* concat(std::vector<AbstractNode*> exprs) {
       AbstractNode* node = new ConcatNode(exprs);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3434,7 +3435,7 @@ namespace triton {
     AbstractNode* concat(std::list<AbstractNode*> exprs) {
       AbstractNode* node = new ConcatNode(exprs);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3442,7 +3443,7 @@ namespace triton {
     AbstractNode* decimal(triton::uint512 value) {
       AbstractNode* node = new DecimalNode(value);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3450,7 +3451,7 @@ namespace triton {
     AbstractNode* declareFunction(std::string name, AbstractNode* bvDecl) {
       AbstractNode* node = new DeclareFunctionNode(name, bvDecl);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3458,7 +3459,7 @@ namespace triton {
     AbstractNode* distinct(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new DistinctNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3466,7 +3467,7 @@ namespace triton {
     AbstractNode* equal(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new EqualNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3474,7 +3475,7 @@ namespace triton {
     AbstractNode* extract(triton::uint32 high, triton::uint32 low, AbstractNode* expr) {
       AbstractNode* node = new ExtractNode(high, low, expr);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3482,7 +3483,7 @@ namespace triton {
     AbstractNode* ite(AbstractNode* ifExpr, AbstractNode* thenExpr, AbstractNode* elseExpr) {
       AbstractNode* node = new IteNode(ifExpr, thenExpr, elseExpr);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3490,7 +3491,7 @@ namespace triton {
     AbstractNode* land(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new LandNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3498,7 +3499,7 @@ namespace triton {
     AbstractNode* let(std::string alias, AbstractNode* expr2, AbstractNode* expr3) {
       AbstractNode* node = new LetNode(alias, expr2, expr3);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3506,7 +3507,7 @@ namespace triton {
     AbstractNode* lnot(AbstractNode* expr) {
       AbstractNode* node = new LnotNode(expr);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3514,7 +3515,7 @@ namespace triton {
     AbstractNode* lor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new LorNode(expr1, expr2);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3522,7 +3523,7 @@ namespace triton {
     AbstractNode* reference(triton::usize value) {
       AbstractNode* node = new ReferenceNode(value);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3530,7 +3531,7 @@ namespace triton {
     AbstractNode* string(std::string value) {
       AbstractNode* node = new StringNode(value);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3538,7 +3539,7 @@ namespace triton {
     AbstractNode* sx(triton::uint32 sizeExt, AbstractNode* expr) {
       AbstractNode* node = new SxNode(sizeExt, expr);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3547,7 +3548,7 @@ namespace triton {
       AbstractNode* ret  = nullptr;
       AbstractNode* node = new VariableNode(symVar);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       ret = triton::api.recordAstNode(node);
       triton::api.recordVariableAstNode(symVar.getName(), ret);
       return ret;
@@ -3557,7 +3558,7 @@ namespace triton {
     AbstractNode* zx(triton::uint32 sizeExt, AbstractNode* expr) {
       AbstractNode* node = new ZxNode(sizeExt, expr);
       if (node == nullptr)
-        throw std::runtime_error("Node builders - Not enough memory");
+        throw triton::exceptions::AST("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
@@ -3615,10 +3616,10 @@ namespace triton {
         case VARIABLE_NODE:             newNode = new VariableNode(*reinterpret_cast<VariableNode*>(node)); break;
         case ZX_NODE:                   newNode = new ZxNode(*reinterpret_cast<ZxNode*>(node)); break;
         default:
-          throw std::invalid_argument("triton::ast::newInstance(): Invalid kind node.");
+          throw triton::exceptions::AST("triton::ast::newInstance(): Invalid kind node.");
       }
       if (newNode == nullptr)
-        throw std::invalid_argument("triton::ast::newInstance(): No enough memory.");
+        throw triton::exceptions::AST("triton::ast::newInstance(): No enough memory.");
       return newNode;
     }
 

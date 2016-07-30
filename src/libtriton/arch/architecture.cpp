@@ -5,10 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
-
 #include <api.hpp>
 #include <architecture.hpp>
+#include <exceptions.hpp>
 #include <x8664Cpu.hpp>
 #include <x86Cpu.hpp>
 
@@ -35,7 +34,7 @@ namespace triton {
 
     triton::arch::CpuInterface* Architecture::getCpu(void) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getCpu(): CPU undefined.");
+        throw triton::exceptions::Architecture("Architecture::getCpu(): CPU undefined.");
       return this->cpu;
     }
 
@@ -43,7 +42,7 @@ namespace triton {
     void Architecture::setArchitecture(triton::uint32 arch) {
       /* Check if the architecture is valid */
       if (!(arch > triton::arch::ARCH_INVALID && arch < triton::arch::ARCH_LAST_ITEM))
-        throw std::runtime_error("Architecture::setArchitecture(): Invalid architecture.");
+        throw triton::exceptions::Architecture("Architecture::setArchitecture(): Invalid architecture.");
 
       /* Setup global variables */
       this->arch = arch;
@@ -56,7 +55,7 @@ namespace triton {
           /* init the new instance */
           this->cpu = new triton::arch::x86::x8664Cpu();
           if (!this->cpu)
-            throw std::runtime_error("Architecture::setArchitecture(): Not enough memory.");
+            throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();
           break;
 
@@ -66,7 +65,7 @@ namespace triton {
           /* init the new instance */
           this->cpu = new triton::arch::x86::x86Cpu();
           if (!this->cpu)
-            throw std::runtime_error("Architecture::setArchitecture(): Not enough memory.");
+            throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();
           break;
       }
@@ -75,7 +74,7 @@ namespace triton {
 
     void Architecture::clearArchitecture(void) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::clearArchitecture(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::clearArchitecture(): You must define an architecture.");
       this->cpu->clear();
     }
 
@@ -153,28 +152,28 @@ namespace triton {
 
     std::set<triton::arch::RegisterOperand*> Architecture::getAllRegisters(void) const {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getAllRegisters(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::getAllRegisters(): You must define an architecture.");
       return this->cpu->getAllRegisters();
     }
 
 
     std::set<triton::arch::RegisterOperand*> Architecture::getParentRegisters(void) const {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getParentRegisters(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::getParentRegisters(): You must define an architecture.");
       return this->cpu->getParentRegisters();
     }
 
 
     void Architecture::disassembly(triton::arch::Instruction& inst) const {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::disassembly(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::disassembly(): You must define an architecture.");
       this->cpu->disassembly(inst);
     }
 
 
     void Architecture::buildSemantics(triton::arch::Instruction& inst) const {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::buildSemantics(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::buildSemantics(): You must define an architecture.");
 
       /* Pre IR processing */
       inst.preIRInit();
@@ -272,77 +271,77 @@ namespace triton {
 
     triton::uint8 Architecture::getConcreteMemoryValue(triton::uint64 addr) const {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getConcreteMemoryValue(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::getConcreteMemoryValue(): You must define an architecture.");
       return this->cpu->getConcreteMemoryValue(addr);
     }
 
 
     triton::uint512 Architecture::getConcreteMemoryValue(const triton::arch::MemoryOperand& mem) const {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getConcreteMemoryValue(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::getConcreteMemoryValue(): You must define an architecture.");
       return this->cpu->getConcreteMemoryValue(mem);
     }
 
 
     std::vector<triton::uint8> Architecture::getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getConcreteMemoryAreaValue(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::getConcreteMemoryAreaValue(): You must define an architecture.");
       return this->cpu->getConcreteMemoryAreaValue(baseAddr, size);
     }
 
 
     triton::uint512 Architecture::getConcreteRegisterValue(const triton::arch::RegisterOperand& reg) const {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::getConcreteRegisterValue(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::getConcreteRegisterValue(): You must define an architecture.");
       return this->cpu->getConcreteRegisterValue(reg);
     }
 
 
     void Architecture::setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::setConcreteMemoryValue(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::setConcreteMemoryValue(): You must define an architecture.");
       this->cpu->setConcreteMemoryValue(addr, value);
     }
 
 
     void Architecture::setConcreteMemoryValue(const triton::arch::MemoryOperand& mem) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::setConcreteMemoryValue(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::setConcreteMemoryValue(): You must define an architecture.");
       this->cpu->setConcreteMemoryValue(mem);
     }
 
 
     void Architecture::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::setConcreteMemoryAreaValue(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::setConcreteMemoryAreaValue(): You must define an architecture.");
       this->cpu->setConcreteMemoryAreaValue(baseAddr, values);
     }
 
 
     void Architecture::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::setConcreteMemoryAreaValue(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::setConcreteMemoryAreaValue(): You must define an architecture.");
       this->cpu->setConcreteMemoryAreaValue(baseAddr, area, size);
     }
 
 
     void Architecture::setConcreteRegisterValue(const triton::arch::RegisterOperand& reg) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::setConcreteRegisterValue(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::setConcreteRegisterValue(): You must define an architecture.");
       this->cpu->setConcreteRegisterValue(reg);
     }
 
 
     bool Architecture::isMemoryMapped(triton::uint64 baseAddr, triton::usize size) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::isMemoryMapped(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::isMemoryMapped(): You must define an architecture.");
       return this->cpu->isMemoryMapped(baseAddr, size);
     }
 
 
     void Architecture::unmapMemory(triton::uint64 baseAddr, triton::usize size) {
       if (!this->cpu)
-        throw std::runtime_error("Architecture::unmapMemory(): You must define an architecture.");
+        throw triton::exceptions::Architecture("Architecture::unmapMemory(): You must define an architecture.");
       this->cpu->unmapMemory(baseAddr, size);
     }
 

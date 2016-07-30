@@ -7,6 +7,7 @@
 
 #include <api.hpp>
 #include <cpuSize.hpp>
+#include <exceptions.hpp>
 #include <x86Semantics.hpp>
 #include <x86Specifications.hpp>
 
@@ -925,7 +926,7 @@ namespace triton {
            */
           triton::ast::AbstractNode* node;
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::cfRcl_s(): op2 must be a DecimalNode node.");
+            throw triton::exceptions::Semantics("triton::arch::x86::semantics::cfRcl_s(): op2 must be a DecimalNode node.");
 
           if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0)
             node = triton::ast::extract(high, high, result);
@@ -953,7 +954,7 @@ namespace triton {
            */
           triton::ast::AbstractNode* node;
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::cfRcr_s(): op2 must be a DecimalNode node.");
+            throw triton::exceptions::Semantics("triton::arch::x86::semantics::cfRcr_s(): op2 must be a DecimalNode node.");
 
           if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0) {
             /* yes it's should be LSB, but here it's a trick :-) */
@@ -984,7 +985,7 @@ namespace triton {
            */
           triton::ast::AbstractNode* node;
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::cfRol_s(): op2 must be a DecimalNode node.");
+            throw triton::exceptions::Semantics("triton::arch::x86::semantics::cfRol_s(): op2 must be a DecimalNode node.");
 
           if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0)
             node = triton::ast::extract(low, low, triton::ast::reference(parent->getId()));
@@ -1012,7 +1013,7 @@ namespace triton {
            * concretization of the op2.
            */
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::cfRor_s(): op2 must be a DecimalNode node.");
+            throw triton::exceptions::Semantics("triton::arch::x86::semantics::cfRor_s(): op2 must be a DecimalNode node.");
 
           triton::ast::AbstractNode* node;
           if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0)
@@ -1252,7 +1253,7 @@ namespace triton {
            * concretization of the op2.
            */
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::ofRol_s(): op2 must be a DecimalNode node.");
+            throw triton::exceptions::Semantics("triton::arch::x86::semantics::ofRol_s(): op2 must be a DecimalNode node.");
 
           triton::ast::AbstractNode* node;
           if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() == 1) {
@@ -1286,7 +1287,7 @@ namespace triton {
            * concretization of the op2.
            */
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::ofRor_s(): op2 must be a DecimalNode node.");
+            throw triton::exceptions::Semantics("triton::arch::x86::semantics::ofRor_s(): op2 must be a DecimalNode node.");
 
           triton::ast::AbstractNode* node;
           if (reinterpret_cast<triton::ast::DecimalNode *>(op2)->getValue() == 1) {
@@ -1320,7 +1321,7 @@ namespace triton {
            * concretization of the op2.
            */
           if (op2->getKind() != triton::ast::DECIMAL_NODE)
-            throw std::runtime_error("triton::arch::x86::semantics::ofRcr_s(): op2 must be a DecimalNode node.");
+            throw triton::exceptions::Semantics("triton::arch::x86::semantics::ofRcr_s(): op2 must be a DecimalNode node.");
 
           triton::ast::AbstractNode* node;
           if (reinterpret_cast<triton::ast::DecimalNode *>(op2)->getValue() == 1) {
@@ -1975,7 +1976,7 @@ namespace triton {
                      );
               break;
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::bsf_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::bsf_s(): Invalid operand size.");
           }
 
           /* Create symbolic expression */
@@ -2158,7 +2159,7 @@ namespace triton {
                      );
               break;
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::bsr_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::bsr_s(): Invalid operand size.");
           }
 
           /* Create symbolic expression */
@@ -2197,7 +2198,7 @@ namespace triton {
               bytes.push_front(triton::ast::extract(7,  0, op1));
               break;
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::bswap_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::bswap_s(): Invalid operand size.");
           }
 
           auto node = triton::ast::concat(bytes);
@@ -2547,7 +2548,7 @@ namespace triton {
               node = triton::ast::bvand(op1, triton::ast::bv(0xfffffff7, DWORD_SIZE_BIT));
               break;
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::clts_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::clts_s(): Invalid operand size.");
           }
 
           /* Create symbolic expression */
@@ -3874,7 +3875,7 @@ namespace triton {
               node = triton::ast::zx(DWORD_SIZE_BIT, node);
               break;
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::extractps_s(): Invalid destination operand.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::extractps_s(): Invalid destination operand.");
           }
 
           /* Create symbolic expression */
@@ -5529,7 +5530,7 @@ namespace triton {
 
           /* Invalid operation */
           else
-            throw std::runtime_error("triton::arch::x86::semantics::movq_s(): Invalid operation.");
+            throw triton::exceptions::Semantics("triton::arch::x86::semantics::movq_s(): Invalid operation.");
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVQ operation");
@@ -6102,7 +6103,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::paddb_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::paddb_s(): Invalid operand size.");
 
           }
 
@@ -6144,7 +6145,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::paddd_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::paddd_s(): Invalid operand size.");
 
           }
 
@@ -6184,7 +6185,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::paddq_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::paddq_s(): Invalid operand size.");
 
           }
 
@@ -6230,7 +6231,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::paddw_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::paddw_s(): Invalid operand size.");
 
           }
 
@@ -8000,7 +8001,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::psubb_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::psubb_s(): Invalid operand size.");
 
           }
 
@@ -8042,7 +8043,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::psubd_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::psubd_s(): Invalid operand size.");
 
           }
 
@@ -8082,7 +8083,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::psubq_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::psubq_s(): Invalid operand size.");
 
           }
 
@@ -8128,7 +8129,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::psubw_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::psubw_s(): Invalid operand size.");
 
           }
 
@@ -8224,7 +8225,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::punpckhbw_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::punpckhbw_s(): Invalid operand size.");
           }
 
           auto node = triton::ast::concat(unpack);
@@ -8268,7 +8269,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::punpckhdq_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::punpckhdq_s(): Invalid operand size.");
           }
 
           auto node = triton::ast::concat(unpack);
@@ -8304,7 +8305,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::punpckhqdq_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::punpckhqdq_s(): Invalid operand size.");
           }
 
           auto node = triton::ast::concat(unpack);
@@ -8354,7 +8355,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::punpckhwd_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::punpckhwd_s(): Invalid operand size.");
           }
 
           auto node = triton::ast::concat(unpack);
@@ -8416,7 +8417,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::punpcklbw_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::punpcklbw_s(): Invalid operand size.");
           }
 
           auto node = triton::ast::concat(unpack);
@@ -8460,7 +8461,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::punpckldq_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::punpckldq_s(): Invalid operand size.");
           }
 
           auto node = triton::ast::concat(unpack);
@@ -8496,7 +8497,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::punpcklqdq_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::punpcklqdq_s(): Invalid operand size.");
           }
 
           auto node = triton::ast::concat(unpack);
@@ -8546,7 +8547,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::punpcklwd_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::punpcklwd_s(): Invalid operand size.");
           }
 
           auto node = triton::ast::concat(unpack);
@@ -8842,7 +8843,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::rcl_s(): Invalid destination size");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::rcl_s(): Invalid destination size");
           }
 
           /* Create symbolic operands */
@@ -8907,7 +8908,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::rcr_s(): Invalid destination size");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::rcr_s(): Invalid destination size");
           }
 
           /* Create symbolic operands */
@@ -9021,7 +9022,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::rol_s(): Invalid destination size");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::rol_s(): Invalid destination size");
           }
 
           /* Create symbolic operands */
@@ -9070,7 +9071,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("triton::arch::x86::semantics::ror_s(): Invalid destination size");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::ror_s(): Invalid destination size");
           }
 
           /* Create symbolic operands */
@@ -10512,7 +10513,7 @@ namespace triton {
               break;
 
             default:
-              throw std::runtime_error("Error: triton::arch::x86::semantics::vpshufd_s(): Invalid operand size.");
+              throw triton::exceptions::Semantics("triton::arch::x86::semantics::vpshufd_s(): Invalid operand size.");
           }
 
           auto node = triton::ast::concat(pack);

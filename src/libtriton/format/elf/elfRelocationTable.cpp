@@ -6,9 +6,9 @@
 */
 
 #include <cstdio>
-#include <stdexcept>
 
 #include <elfRelocationTable.hpp>
+#include <exceptions.hpp>
 
 
 
@@ -76,7 +76,7 @@ namespace triton {
             return sizeof(triton::format::elf::Elf64_Rel_t);
 
           default:
-            throw std::runtime_error("ELFRelocationTable::parseRel(): Invalid EI_CLASS.");
+            throw triton::exceptions::ELF("ELFRelocationTable::parseRel(): Invalid EI_CLASS.");
         }
         return 0;
       }
@@ -108,7 +108,7 @@ namespace triton {
             return sizeof(triton::format::elf::Elf64_Rela_t);
 
           default:
-            throw std::runtime_error("ELFRelocationTable::parseRela(): Invalid EI_CLASS.");
+            throw triton::exceptions::ELF("ELFRelocationTable::parseRela(): Invalid EI_CLASS.");
         }
         return 0;
       }

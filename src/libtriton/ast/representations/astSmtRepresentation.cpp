@@ -5,8 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
 #include <astSmtRepresentation.hpp>
+#include <exceptions.hpp>
 
 
 
@@ -75,7 +75,7 @@ namespace triton {
           case VARIABLE_NODE:             return this->print(stream, reinterpret_cast<triton::ast::VariableNode*>(node)); break;
           case ZX_NODE:                   return this->print(stream, reinterpret_cast<triton::ast::ZxNode*>(node)); break;
           default:
-            throw std::invalid_argument("AstSmtRepresentation::print(AbstractNode): Invalid kind node.");
+            throw triton::exceptions::ASTRepresentation("AstSmtRepresentation::print(AbstractNode): Invalid kind node.");
         }
         return stream;
       }
@@ -319,7 +319,7 @@ namespace triton {
         triton::usize size = childs.size();
 
         if (size < 2)
-          throw std::length_error("AstSmtRepresentation::print(ConcatNode): Exprs must contain at least two expressions.");
+          throw triton::exceptions::ASTRepresentation("AstSmtRepresentation::print(ConcatNode): Exprs must contain at least two expressions.");
 
         stream << "(concat";
         for (triton::usize index = 0; index < size; index++)

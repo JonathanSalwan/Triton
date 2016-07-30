@@ -5,8 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
-
+#include <exceptions.hpp>
 #include <tritonToZ3Ast.hpp>
 #include <z3Result.hpp>
 #include <z3ToTritonAst.hpp>
@@ -208,7 +207,7 @@ namespace triton {
       #ifdef TRITON_PYTHON_BINDINGS
       void SymbolicSimplification::recordSimplificationCallback(PyObject* cb) {
         if (!PyCallable_Check(cb))
-          throw std::runtime_error("SymbolicSimplification::recordSimplificationCallback(): Expects a function callback as argument.");
+          throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::recordSimplificationCallback(): Expects a function callback as argument.");
         this->pySimplificationCallbacks.push_back(cb);
       }
       #endif
@@ -229,7 +228,7 @@ namespace triton {
       triton::ast::AbstractNode* SymbolicSimplification::processSimplification(triton::ast::AbstractNode* node, bool z3) const {
 
         if (node == nullptr)
-          throw std::runtime_error("SymbolicSimplification::processSimplification(): node cannot be null.");
+          throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::processSimplification(): node cannot be null.");
 
         /* Check if we can use z3 to simplify the expression before using our own rules */
         if (this->z3Enabled | z3) {
@@ -247,7 +246,7 @@ namespace triton {
         for (it1 = this->simplificationCallbacks.begin(); it1 != this->simplificationCallbacks.end(); it1++) {
           node = (*it1)(node);
           if (node == nullptr)
-            throw std::runtime_error("SymbolicSimplification::processSimplification(): You cannot return a nullptr node.");
+            throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::processSimplification(): You cannot return a nullptr node.");
         }
 
         #ifdef TRITON_PYTHON_BINDINGS
@@ -264,12 +263,12 @@ namespace triton {
           /* Check the call */
           if (ret == nullptr) {
             PyErr_Print();
-            throw std::runtime_error("SymbolicSimplification::processSimplification(): Fail to call the python callback.");
+            throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::processSimplification(): Fail to call the python callback.");
           }
 
           /* Check if the callback has returned a AbstractNode */
           if (!PyAstNode_Check(ret))
-            throw std::runtime_error("SymbolicSimplification::processSimplification(): You must return a AstNode object.");
+            throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::processSimplification(): You must return a AstNode object.");
 
           /* Update node */
           node = PyAstNode_AsAstNode(ret);

@@ -6,9 +6,9 @@
 */
 
 #include <cstdio>
-#include <stdexcept>
 
 #include <elf.hpp>
+#include <exceptions.hpp>
 
 
 
@@ -45,7 +45,7 @@ namespace triton {
         // Open the file
         fd = fopen(this->path.c_str(), "rb");
         if (fd == nullptr)
-          throw std::runtime_error("ELF::open(): Cannot open the binary file.");
+          throw triton::exceptions::ELF("ELF::open(): Cannot open the binary file.");
 
         // Get the binary size
         fseek(fd, 0, SEEK_END);
@@ -54,11 +54,11 @@ namespace triton {
 
         this->raw = new triton::uint8[this->totalSize];
         if(!this->raw)
-          throw std::runtime_error("ELF::open(): Not enough memory.");
+          throw triton::exceptions::ELF("ELF::open(): Not enough memory.");
 
         // Read only the magic number
         if (fread(this->raw, 1, this->totalSize, fd) != this->totalSize)
-          throw std::runtime_error("ELF::open(): Cannot read the file binary.");
+          throw triton::exceptions::ELF("ELF::open(): Cannot read the file binary.");
 
         // Close the file
         fclose(fd);
@@ -78,7 +78,7 @@ namespace triton {
 
         // Parse the ELF Header
         if (this->totalSize < this->header.getMaxHeaderSize())
-          throw std::runtime_error("ELF::parse(): The ELF Header of the binary file is corrupted.");
+          throw triton::exceptions::ELF("ELF::parse(): The ELF Header of the binary file is corrupted.");
 
         this->header.parse(this->raw);
 
@@ -341,7 +341,7 @@ namespace triton {
           else if (this->header.getEIClass() == triton::format::elf::ELFCLASS64)
             read += jmprel.parseRela(this->raw + jmprelTabOffset + read, this->header.getEIClass());
           else
-            throw std::runtime_error("ELF::initJmprelTable(): Invalid EI_CLASS.");
+            throw triton::exceptions::ELF("ELF::initJmprelTable(): Invalid EI_CLASS.");
           this->relocationsTable.push_back(jmprel);
         }
       }

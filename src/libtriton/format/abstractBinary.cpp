@@ -6,10 +6,10 @@
 */
 
 #include <cstdio>
-#include <stdexcept>
 
 #include <abstractBinary.hpp>
 #include <elf.hpp>
+#include <exceptions.hpp>
 
 
 
@@ -47,7 +47,7 @@ namespace triton {
       // Open the file
       fd = fopen(path.c_str(), "rb");
       if (fd == nullptr)
-        throw std::runtime_error("AbstractBinary::loadBinary(): Cannot open the binary file.");
+        throw triton::exceptions::Format("AbstractBinary::loadBinary(): Cannot open the binary file.");
 
       // Get the binary size
       fseek(fd, 0, SEEK_END);
@@ -55,11 +55,11 @@ namespace triton {
       rewind(fd);
 
       if (size < sizeof(raw))
-        throw std::runtime_error("AbstractBinary::loadBinary(): The binary file is too small.");
+        throw triton::exceptions::Format("AbstractBinary::loadBinary(): The binary file is too small.");
 
       // Read only the magic number
       if (fread(raw, 1, sizeof(raw), fd) != sizeof(raw))
-        throw std::runtime_error("AbstractBinary::loadBinary(): Cannot read the file binary.");
+        throw triton::exceptions::Format("AbstractBinary::loadBinary(): Cannot read the file binary.");
 
       // Close the file
       fclose(fd);
@@ -91,14 +91,14 @@ namespace triton {
           delete this->binary;
           this->binary = new triton::format::elf::ELF(path);
           if (!this->binary)
-            throw std::runtime_error("AbstractBinary::parseBinary(): Not enough memory.");
+            throw triton::exceptions::Format("AbstractBinary::parseBinary(): Not enough memory.");
           break;
 
         // TODO
         case triton::format::BINARY_MACHO:
         case triton::format::BINARY_PE:
         default:
-          throw std::runtime_error("AbstractBinary::parseBinary(): Unsupported binary format.");
+          throw triton::exceptions::Format("AbstractBinary::parseBinary(): Unsupported binary format.");
       }
     }
 
@@ -110,21 +110,21 @@ namespace triton {
 
     triton::format::elf::ELF* AbstractBinary::getElf(void) {
       if (this->format != triton::format::BINARY_ELF)
-        throw std::runtime_error("AbstractBinary::getElf(): The abstract binary is not an ELF.");
+        throw triton::exceptions::Format("AbstractBinary::getElf(): The abstract binary is not an ELF.");
       return reinterpret_cast<triton::format::elf::ELF*>(this->binary);
     }
 
 
     const std::string& AbstractBinary::getPath(void) const {
       if (!this->binary)
-        throw std::runtime_error("AbstractBinary::getPath(): You must load the binary before.");
+        throw triton::exceptions::Format("AbstractBinary::getPath(): You must load the binary before.");
       return this->binary->getPath();
     }
 
 
     const std::list<triton::format::MemoryMapping>& AbstractBinary::getMemoryMapping(void) const {
       if (!this->binary)
-        throw std::runtime_error("AbstractBinary::getMemoryMapping(): You must load the binary before.");
+        throw triton::exceptions::Format("AbstractBinary::getMemoryMapping(): You must load the binary before.");
       return this->binary->getMemoryMapping();
     }
 

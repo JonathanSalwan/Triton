@@ -5,9 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
-
 #include <api.hpp>
+#include <exceptions.hpp>
 #include <cpuSize.hpp>
 #include <symbolicVariable.hpp>
 
@@ -32,7 +31,7 @@ namespace triton {
         this->concreteValue    = concreteValue;
 
         if (this->size > MAX_BITS_SUPPORTED)
-          throw std::runtime_error("SymbolicVariable::SymbolicVariable(): Size connot be greater than MAX_BITS_SUPPORTED.");
+          throw triton::exceptions::SymbolicVariable("SymbolicVariable::SymbolicVariable(): Size connot be greater than MAX_BITS_SUPPORTED.");
       }
 
 

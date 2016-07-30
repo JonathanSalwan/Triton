@@ -6,9 +6,9 @@
 */
 
 #include <cstring>
-#include <stdexcept>
 
 #include <api.hpp>
+#include <exceptions.hpp>
 #include <coreUtils.hpp>
 #include <symbolicEngine.hpp>
 
@@ -332,7 +332,7 @@ namespace triton {
         node = this->processSimplification(node);
         SymbolicExpression* expr = new SymbolicExpression(node, id, kind, comment);
         if (expr == nullptr)
-          throw std::runtime_error("SymbolicEngine::newSymbolicExpression(): not enough memory");
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::newSymbolicExpression(): not enough memory");
         this->symbolicExpressions[id] = expr;
         return expr;
       }
@@ -370,7 +370,7 @@ namespace triton {
       /* Gets the symbolic expression pointer from a symbolic id */
       SymbolicExpression* SymbolicEngine::getSymbolicExpressionFromId(triton::usize symExprId) const {
         if (this->symbolicExpressions.find(symExprId) == this->symbolicExpressions.end())
-          throw std::runtime_error("SymbolicEngine::getSymbolicExpressionFromId(): symbolic expression id not found");
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicExpressionFromId(): symbolic expression id not found");
         return this->symbolicExpressions.at(symExprId);
       }
 
@@ -533,7 +533,7 @@ namespace triton {
         triton::uint512 cv              = reg.getConcreteValue() ? reg.getConcreteValue() : triton::api.getConcreteRegisterValue(reg);
 
         if (!triton::api.isCpuRegisterValid(parentId))
-          throw std::runtime_error("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");
 
         regSymId = this->getSymbolicRegisterId(reg);
         if (regSymId == triton::engines::symbolic::UNSET) {
@@ -574,7 +574,7 @@ namespace triton {
         SymbolicVariable* symVar = new SymbolicVariable(kind, kindValue, uniqueId, size, comment);
 
         if (symVar == nullptr)
-          throw std::runtime_error("SymbolicEngine::newSymbolicVariable(): Cannot allocate a new symbolic variable");
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::newSymbolicVariable(): Cannot allocate a new symbolic variable");
 
         this->symbolicVariables[uniqueId] = symVar;
         return symVar;
@@ -748,7 +748,7 @@ namespace triton {
         triton::arch::RegisterOperand parentReg   = reg.getParent();
 
         if (reg.isFlag())
-          throw std::runtime_error("SymbolicEngine::createSymbolicRegisterExpression(): The register cannot be a flag.");
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicRegisterExpression(): The register cannot be a flag.");
 
         if (regSize == BYTE_SIZE || regSize == WORD_SIZE)
           origReg = this->buildSymbolicRegisterOperand(parentReg);
@@ -799,7 +799,7 @@ namespace triton {
       /* Returns the new symbolic flag expression */
       SymbolicExpression* SymbolicEngine::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterOperand& flag, const std::string& comment) {
         if (!flag.isFlag())
-          throw std::runtime_error("SymbolicEngine::createSymbolicFlagExpression(): The register must be a flag.");
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicFlagExpression(): The register must be a flag.");
         flag.setConcreteValue(node->evaluate());
         triton::engines::symbolic::SymbolicExpression *se = this->newSymbolicExpression(node, triton::engines::symbolic::REG, comment);
         this->assignSymbolicExpressionToRegister(se, flag);
@@ -831,11 +831,11 @@ namespace triton {
 
         /* We can assign an expression only on parent registers */
         if (reg.getId() != parent.getId())
-          throw std::runtime_error("SymbolicEngine::assignSymbolicExpressionToRegister(): We can assign an expression only on parent registers.");
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::assignSymbolicExpressionToRegister(): We can assign an expression only on parent registers.");
 
         /* Check if the size of the symbolic expression is equal to the target register */
         if (node->getBitvectorSize() != reg.getBitSize())
-          throw std::runtime_error("SymbolicEngine::assignSymbolicExpressionToRegister(): The size of the symbolic expression is not equal to the target register.");
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::assignSymbolicExpressionToRegister(): The size of the symbolic expression is not equal to the target register.");
 
         se->setKind(triton::engines::symbolic::REG);
         se->setOriginRegister(reg);
@@ -854,7 +854,7 @@ namespace triton {
 
         /* Check if the size of the symbolic expression is equal to the memory access */
         if (node->getBitvectorSize() != mem.getBitSize())
-          throw std::runtime_error("SymbolicEngine::assignSymbolicExpressionToMemory(): The size of the symbolic expression is not equal to the memory access.");
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::assignSymbolicExpressionToMemory(): The size of the symbolic expression is not equal to the memory access.");
 
         /*
          * As the x86's memory can be accessed without alignment, each byte of the

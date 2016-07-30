@@ -5,9 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
-
 #include <api.hpp>
+#include <exceptions.hpp>
 #include <registerOperand.hpp>
 
 
@@ -58,7 +57,7 @@ namespace triton {
       this->setLow(std::get<2>(regInfo));
 
       if (concreteValue > this->getMaxValue())
-        throw std::runtime_error("RegisterOperand::setup(): You cannot set this concrete value (too big) to this register.");
+        throw triton::exceptions::RegisterOperand("RegisterOperand::setup(): You cannot set this concrete value (too big) to this register.");
 
       this->concreteValue = concreteValue;
     }
@@ -140,7 +139,7 @@ namespace triton {
 
     void RegisterOperand::setConcreteValue(triton::uint512 concreteValue) {
       if (concreteValue > this->getMaxValue())
-        throw std::runtime_error("RegisterOperand::setConcreteValue(): You cannot set this concrete value (too big) to this register.");
+        throw triton::exceptions::RegisterOperand("RegisterOperand::setConcreteValue(): You cannot set this concrete value (too big) to this register.");
       this->concreteValue = concreteValue;
       this->trusted       = true;
     }

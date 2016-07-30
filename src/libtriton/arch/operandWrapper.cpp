@@ -5,7 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
+#include <exceptions.hpp>
 #include <operandWrapper.hpp>
 
 
@@ -91,7 +91,7 @@ namespace triton {
         case triton::arch::OP_MEM: return this->getConstMemory().getSize();
         case triton::arch::OP_REG: return this->getConstRegister().getSize();
         default:
-          throw std::invalid_argument("OperandWrapper::getSize(): Invalid type operand.");
+          throw triton::exceptions::OperandWrapper("OperandWrapper::getSize(): Invalid type operand.");
       }
       return 0;
     }
@@ -103,7 +103,7 @@ namespace triton {
         case triton::arch::OP_MEM: return this->getConstMemory().getBitSize();
         case triton::arch::OP_REG: return this->getConstRegister().getBitSize();
         default:
-          throw std::invalid_argument("OperandWrapper::getBitSize(): Invalid type operand.");
+          throw triton::exceptions::OperandWrapper("OperandWrapper::getBitSize(): Invalid type operand.");
       }
       return 0;
     }
@@ -115,7 +115,7 @@ namespace triton {
         case triton::arch::OP_MEM: return this->getConstMemory().getAbstractHigh();
         case triton::arch::OP_REG: return this->getConstRegister().getAbstractHigh();
         default:
-          throw std::invalid_argument("OperandWrapper::getHigh(): Invalid type operand.");
+          throw triton::exceptions::OperandWrapper("OperandWrapper::getHigh(): Invalid type operand.");
       }
       return 0;
     }
@@ -127,7 +127,7 @@ namespace triton {
         case triton::arch::OP_MEM: return this->getConstMemory().getAbstractLow();
         case triton::arch::OP_REG: return this->getConstRegister().getAbstractLow();
         default:
-          throw std::invalid_argument("OperandWrapper::getLow(): Invalid type operand.");
+          throw triton::exceptions::OperandWrapper("OperandWrapper::getLow(): Invalid type operand.");
       }
       return 0;
     }
@@ -139,7 +139,7 @@ namespace triton {
         case triton::arch::OP_MEM: return this->getConstMemory().getConcreteValue();
         case triton::arch::OP_REG: return this->getConstRegister().getConcreteValue();
         default:
-          throw std::invalid_argument("OperandWrapper::getConcreteValue(): Invalid type operand.");
+          throw triton::exceptions::OperandWrapper("OperandWrapper::getConcreteValue(): Invalid type operand.");
       }
       return 0;
     }
@@ -151,7 +151,7 @@ namespace triton {
         case triton::arch::OP_MEM: return this->getConstMemory().isTrusted();
         case triton::arch::OP_REG: return this->getConstRegister().isTrusted();
         default:
-          throw std::invalid_argument("OperandWrapper::isTrusted(): Invalid type operand.");
+          throw triton::exceptions::OperandWrapper("OperandWrapper::isTrusted(): Invalid type operand.");
       }
       return false;
     }
@@ -163,7 +163,7 @@ namespace triton {
         case triton::arch::OP_MEM: this->getMemory().setTrust(flag); break;
         case triton::arch::OP_REG: this->getRegister().setTrust(flag); break;
         default:
-          throw std::invalid_argument("OperandWrapper::setTrust(): Invalid type operand.");
+          throw triton::exceptions::OperandWrapper("OperandWrapper::setTrust(): Invalid type operand.");
       }
     }
 
@@ -182,7 +182,7 @@ namespace triton {
         case triton::arch::OP_MEM: stream << op.getConstMemory(); break;
         case triton::arch::OP_REG: stream << op.getConstRegister(); break;
         default:
-          throw std::invalid_argument("triton::arch::operator<<(OperandWrapper): Invalid type operand.");
+          throw triton::exceptions::OperandWrapper("triton::arch::operator<<(OperandWrapper): Invalid type operand.");
       }
       return stream;
     }

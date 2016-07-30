@@ -5,7 +5,6 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
 #include <symbolicOptimization.hpp>
 
 #ifdef TRITON_PYTHON_BINDINGS

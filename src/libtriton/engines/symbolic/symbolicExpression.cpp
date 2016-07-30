@@ -5,8 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <stdexcept>
 #include <api.hpp>
+#include <exceptions.hpp>
 #include <astRepresentation.hpp>
 #include <symbolicExpression.hpp>
 
@@ -31,14 +31,14 @@ namespace triton {
 
       triton::ast::AbstractNode* SymbolicExpression::getAst(void) const {
         if (this->ast == nullptr)
-          throw std::runtime_error("SymbolicExpression::getAst(): No AST defined.");
+          throw triton::exceptions::SymbolicExpression("SymbolicExpression::getAst(): No AST defined.");
         return this->ast;
       }
 
 
       triton::ast::AbstractNode* SymbolicExpression::getNewAst(void) const {
         if (this->ast == nullptr)
-          throw std::runtime_error("SymbolicExpression::getNewAst(): No AST defined.");
+          throw triton::exceptions::SymbolicExpression("SymbolicExpression::getNewAst(): No AST defined.");
         return triton::ast::newInstance(this->ast);
       }
 
@@ -61,7 +61,7 @@ namespace triton {
           return "ref_" + std::to_string(this->id);
 
         else
-          throw std::runtime_error("SymbolicExpression::getFormattedId(): Invalid AST representation mode.");
+          throw triton::exceptions::SymbolicExpression("SymbolicExpression::getFormattedId(): Invalid AST representation mode.");
       }
 
 
@@ -76,7 +76,7 @@ namespace triton {
           return "# " + this->getComment();
 
         else
-          throw std::runtime_error("SymbolicExpression::getFormattedComment(): Invalid AST representation mode.");
+          throw triton::exceptions::SymbolicExpression("SymbolicExpression::getFormattedComment(): Invalid AST representation mode.");
       }
 
 

@@ -6,9 +6,9 @@
 */
 
 #include <cstdio>
-#include <stdexcept>
 
 #include <elfHeader.hpp>
+#include <exceptions.hpp>
 
 
 
@@ -86,7 +86,7 @@ namespace triton {
 
         // Only support little-endian
         if (this->getEIData() != triton::format::elf::ELFDATA2LSB)
-            throw std::runtime_error("ELFHeader::parse(): Unsupported endianness (EI_DATA).");
+            throw triton::exceptions::ELF("ELFHeader::parse(): Unsupported endianness (EI_DATA).");
 
         switch (this->getEIClass()) {
           case triton::format::elf::ELFCLASS32:
@@ -124,7 +124,7 @@ namespace triton {
             return sizeof(triton::format::elf::Elf64_Ehdr_t);
 
           default:
-            throw std::runtime_error("ELFHeader::parse(): Invalid EI_CLASS.");
+            throw triton::exceptions::ELF("ELFHeader::parse(): Invalid EI_CLASS.");
         }
         return 0;
       }

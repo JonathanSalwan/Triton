@@ -6,9 +6,9 @@
 */
 
 #include <cstdio>
-#include <stdexcept>
 
 #include <elfProgramHeader.hpp>
+#include <exceptions.hpp>
 
 
 
@@ -86,7 +86,7 @@ namespace triton {
             return sizeof(triton::format::elf::Elf64_Phdr_t);
 
           default:
-            throw std::runtime_error("ELFProgramHeader::parse(): Invalid EI_CLASS.");
+            throw triton::exceptions::ELF("ELFProgramHeader::parse(): Invalid EI_CLASS.");
         }
         return 0;
       }
