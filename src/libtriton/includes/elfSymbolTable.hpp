@@ -56,7 +56,7 @@ namespace triton {
         triton::uint64 st_size;
       } Elf64_Sym_t;
 
-      /*! \class ELFSymbolTable
+      /*! \class ElfSymbolTable
        *  \brief The ELF symbol table class. */
       class ElfSymbolTable {
 

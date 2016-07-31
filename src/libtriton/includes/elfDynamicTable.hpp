@@ -48,7 +48,7 @@ namespace triton {
         triton::uint64 d_val;
       } Elf64_Dyn_t;
 
-      /*! \class ELFDynamicTable
+      /*! \class ElfDynamicTable
        *  \brief The ELF dynamic table class. */
       class ElfDynamicTable {
 
