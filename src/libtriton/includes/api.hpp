@@ -268,7 +268,7 @@ namespace triton {
         //! [**callbacks api**] - Raises an exception if the Callbacks interface is not initialized.
         void checkCallbacks(void) const;
 
-        //! [**callbacks api**] - Adds an unmapped memory hit callback.
+        //! [**callbacks api**] - Adds a memory hit callback.
         void addCallback(triton::callbacks::memoryHitCallback cb);
 
         //! [**callbacks api**] - Adds a symbolic simplification callback.
@@ -279,7 +279,7 @@ namespace triton {
         void addCallback(triton::callbacks::callback_e kind, PyObject* function);
         #endif
 
-        //! [**callbacks api**] - Deletes an unmapped memory hit callback.
+        //! [**callbacks api**] - Deletes a memory hit callback.
         void deleteCallback(triton::callbacks::memoryHitCallback cb);
 
         //! [**callbacks api**] - Deletes a symbolic simplification callback.

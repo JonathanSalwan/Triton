@@ -40,10 +40,10 @@ namespace triton {
       SYMBOLIC_SIMPLIFICATION,  /*!< Symbolic simplification callback */
     };
 
-    /*! \brief The prototype of a unmapped memory hit callback.
+    /*! \brief The prototype of a memory hit callback.
      *
-     * \description The `address` argument is the memory address which is read but unmapped.
-     * Callbacks will be called before all read of unmapped memory.
+     * \description The `address` argument is the memory address which will be read.
+     * Callbacks will be called before all read of memory values.
      */
     typedef void (*memoryHitCallback)(triton::uint64 address);
 
@@ -59,14 +59,14 @@ namespace triton {
     class Callbacks {
       protected:
         #ifdef TRITON_PYTHON_BINDINGS
-        //! [python] Callbacks for all unmapped memory hits.
+        //! [python] Callbacks for all memory hits.
         std::list<PyObject*> pyMemoryHitCallbacks;
 
         //! [python] Callbacks for all symbolic simplifications.
         std::list<PyObject*> pySymbolicSimplificationCallbacks;
         #endif
 
-        //! [c++] Callbacks for all unmapped memory hits.
+        //! [c++] Callbacks for all memory hits.
         std::list<triton::callbacks::memoryHitCallback> memoryHitCallbacks;
 
         //! [c++] Callbacks for all symbolic simplifications.
@@ -91,7 +91,7 @@ namespace triton {
         //! Copies a Callbacks class
         void operator=(const Callbacks& copy);
 
-        //! Adds an unmapped memory hit callback.
+        //! Adds a memory hit callback.
         void addCallback(triton::callbacks::memoryHitCallback cb);
 
         //! Adds a symbolic simplification callback.
@@ -102,7 +102,7 @@ namespace triton {
         void addCallback(triton::callbacks::callback_e kind, PyObject* function);
         #endif
 
-        //! Deletes an unmapped memory hit callback.
+        //! Deletes a memory hit callback.
         void deleteCallback(triton::callbacks::memoryHitCallback cb);
 
         //! Deletes a symbolic simplification callback.
