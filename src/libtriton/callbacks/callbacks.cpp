@@ -136,8 +136,10 @@ namespace triton {
             PyObject* ret = PyObject_CallObject(*it2, args);
 
             /* Check the call */
-            if (ret == nullptr)
+            if (ret == nullptr) {
+              PyErr_Print();
               throw triton::exceptions::Callbacks("Callbacks::processCallbacks(SYMBOLIC_SIMPLIFICATION): Fail to call the python callback.");
+            }
 
             /* Check if the callback has returned a AbstractNode */
             if (!PyAstNode_Check(ret))
@@ -181,11 +183,13 @@ namespace triton {
             PyObject* ret = PyObject_CallObject(*it2, args);
 
             /* Check the call */
-            if (ret == nullptr)
+            if (ret == nullptr) {
+              PyErr_Print();
               throw triton::exceptions::Callbacks("Callbacks::processCallbacks(UNMAPPED_MEMORY_HIT): Fail to call the python callback.");
+            }
 
             /* Check if the callback has returned an integer */
-            if (!PyLong_Check(ret) || !PyInt_Check(ret))
+            if (!PyLong_Check(ret) && !PyInt_Check(ret))
               throw triton::exceptions::Callbacks("Callbacks::processCallbacks(UNMAPPED_MEMORY_HIT): You must return a Integer object.");
 
             value = static_cast<triton::uint8>(triton::bindings::python::PyLong_AsUint32(ret) & 0xff);
