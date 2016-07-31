@@ -146,7 +146,7 @@ namespace triton {
        * will be over the concretization. This method must be called before symbolic
        * processing.
        */
-      void SymbolicEngine::concretizeRegister(const triton::arch::RegisterOperand& reg) {
+      void SymbolicEngine::concretizeRegister(const triton::arch::Register& reg) {
         triton::uint32 parentId = reg.getParent().getId();
         if (!triton::api.isCpuRegisterValid(parentId))
           return;
@@ -166,7 +166,7 @@ namespace triton {
        * assignment will be over the concretization. This method must be called
        * before symbolic processing.
        */
-      void SymbolicEngine::concretizeMemory(const triton::arch::MemoryOperand& mem) {
+      void SymbolicEngine::concretizeMemory(const triton::arch::MemoryAccess& mem) {
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
         for (triton::uint32 index = 0; index < size; index++)
@@ -270,7 +270,7 @@ namespace triton {
 
 
       /* Returns the reg reference or UNSET */
-      triton::usize SymbolicEngine::getSymbolicRegisterId(const triton::arch::RegisterOperand& reg) const {
+      triton::usize SymbolicEngine::getSymbolicRegisterId(const triton::arch::Register& reg) const {
         triton::uint32 parentId = reg.getParent().getId();
         if (!triton::api.isCpuRegisterValid(parentId))
           return triton::engines::symbolic::UNSET;
@@ -280,14 +280,14 @@ namespace triton {
 
       /* Returns the symbolic address value */
       triton::uint8 SymbolicEngine::getSymbolicMemoryValue(triton::uint64 address) {
-        triton::arch::MemoryOperand mem(address, BYTE_SIZE, 0);
+        triton::arch::MemoryAccess mem(address, BYTE_SIZE, 0);
         return this->getSymbolicMemoryValue(mem).convert_to<triton::uint8>();
       }
 
 
       /* Returns the symbolic memory value */
-      triton::uint512 SymbolicEngine::getSymbolicMemoryValue(const triton::arch::MemoryOperand& mem) {
-        triton::ast::AbstractNode* node = this->buildSymbolicMemoryOperand(mem);
+      triton::uint512 SymbolicEngine::getSymbolicMemoryValue(const triton::arch::MemoryAccess& mem) {
+        triton::ast::AbstractNode* node = this->buildSymbolicMemory(mem);
         return node->evaluate();
       }
 
@@ -304,8 +304,8 @@ namespace triton {
 
 
       /* Returns the symbolic register value */
-      triton::uint512 SymbolicEngine::getSymbolicRegisterValue(const triton::arch::RegisterOperand& reg) {
-        triton::ast::AbstractNode* node = this->buildSymbolicRegisterOperand(reg);
+      triton::uint512 SymbolicEngine::getSymbolicRegisterValue(const triton::arch::Register& reg) {
+        triton::ast::AbstractNode* node = this->buildSymbolicRegister(reg);
         return node->evaluate();
       }
 
@@ -424,12 +424,12 @@ namespace triton {
 
 
       /* Returns the map of symbolic registers defined */
-      std::map<triton::arch::RegisterOperand, SymbolicExpression*> SymbolicEngine::getSymbolicRegisters(void) const {
-        std::map<triton::arch::RegisterOperand, SymbolicExpression*> ret;
+      std::map<triton::arch::Register, SymbolicExpression*> SymbolicEngine::getSymbolicRegisters(void) const {
+        std::map<triton::arch::Register, SymbolicExpression*> ret;
 
         for (triton::uint32 it = 0; it < this->numberOfRegisters; it++) {
           if (this->symbolicReg[it] != triton::engines::symbolic::UNSET) {
-            triton::arch::RegisterOperand reg(it);
+            triton::arch::Register reg(it);
             ret[reg] = this->getSymbolicExpressionFromId(this->symbolicReg[it]);
           }
         }
@@ -476,7 +476,7 @@ namespace triton {
 
 
       /* The memory size is used to define the symbolic variable's size. */
-      SymbolicVariable* SymbolicEngine::convertMemoryToSymbolicVariable(const triton::arch::MemoryOperand& mem, const std::string& symVarComment) {
+      SymbolicVariable* SymbolicEngine::convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment) {
         triton::ast::AbstractNode* tmp  = nullptr;
         SymbolicExpression* se          = nullptr;
         SymbolicVariable* symVar        = nullptr;
@@ -504,14 +504,14 @@ namespace triton {
           memSymId = this->getSymbolicMemoryId(memAddr+index);
           if (memSymId == triton::engines::symbolic::UNSET) {
             se = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Byte reference");
-            se->setOriginMemory(triton::arch::MemoryOperand(memAddr+index, BYTE_SIZE, tmp->evaluate()));
+            se->setOriginMemory(triton::arch::MemoryAccess(memAddr+index, BYTE_SIZE, tmp->evaluate()));
           }
           else {
             se = this->getSymbolicExpressionFromId(memSymId);
             tmp->setParent(se->getAst()->getParents());
             se->setAst(tmp);
             tmp->init();
-            se->setOriginMemory(triton::arch::MemoryOperand(memAddr+index, BYTE_SIZE, tmp->evaluate()));
+            se->setOriginMemory(triton::arch::MemoryAccess(memAddr+index, BYTE_SIZE, tmp->evaluate()));
           }
 
           /* Add the new memory reference */
@@ -524,7 +524,7 @@ namespace triton {
       }
 
 
-      SymbolicVariable* SymbolicEngine::convertRegisterToSymbolicVariable(const triton::arch::RegisterOperand& reg, const std::string& symVarComment) {
+      SymbolicVariable* SymbolicEngine::convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment) {
         SymbolicVariable* symVar        = nullptr;
         SymbolicExpression* expression  = nullptr;
         triton::usize regSymId          = triton::engines::symbolic::UNSET;
@@ -581,23 +581,23 @@ namespace triton {
       }
 
 
-      /* Returns an immediate symbolic operand */
-      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicImmediateOperand(const triton::arch::ImmediateOperand& imm) {
+      /* Returns a symbolic immediate */
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicImmediate(const triton::arch::Immediate& imm) {
         triton::ast::AbstractNode* node = triton::ast::bv(imm.getValue(), imm.getBitSize());
         return node;
       }
 
 
-      /* Returns an immediate symbolic operand and defines the immediate as input of the instruction */
-      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicImmediateOperand(triton::arch::Instruction& inst, triton::arch::ImmediateOperand& imm) {
-        triton::ast::AbstractNode* node = this->buildSymbolicImmediateOperand(imm);
+      /* Returns a symbolic immediate and defines the immediate as input of the instruction */
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicImmediate(triton::arch::Instruction& inst, triton::arch::Immediate& imm) {
+        triton::ast::AbstractNode* node = this->buildSymbolicImmediate(imm);
         inst.setReadImmediate(imm, node);
         return node;
       }
 
 
-      /* Returns a symbolic memory operand */
-      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicMemoryOperand(const triton::arch::MemoryOperand& mem) {
+      /* Returns a symbolic memory */
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicMemory(const triton::arch::MemoryAccess& mem) {
         std::list<triton::ast::AbstractNode*> opVec;
 
         triton::ast::AbstractNode* tmp            = nullptr;
@@ -650,17 +650,17 @@ namespace triton {
       }
 
 
-      /* Returns a symbolic memory operand and defines the memory as input of the instruction */
-      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicMemoryOperand(triton::arch::Instruction& inst, triton::arch::MemoryOperand& mem) {
-        triton::ast::AbstractNode* node = this->buildSymbolicMemoryOperand(mem);
+      /* Returns a symbolic memory and defines the memory as input of the instruction */
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicMemory(triton::arch::Instruction& inst, triton::arch::MemoryAccess& mem) {
+        triton::ast::AbstractNode* node = this->buildSymbolicMemory(mem);
         mem.setConcreteValue(node->evaluate());
         inst.setLoadAccess(mem, node);
         return node;
       }
 
 
-      /* Returns a symbolic register operand */
-      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicRegisterOperand(const triton::arch::RegisterOperand& reg) {
+      /* Returns a symbolic register */
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicRegister(const triton::arch::Register& reg) {
         triton::ast::AbstractNode* op = nullptr;
         triton::usize symReg          = this->getSymbolicRegisterId(reg);
         triton::uint32 bvSize         = reg.getBitSize();
@@ -676,9 +676,9 @@ namespace triton {
       }
 
 
-      /* Returns a symbolic register operand and defines the register as input of the instruction */
-      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicRegisterOperand(triton::arch::Instruction& inst, triton::arch::RegisterOperand& reg) {
-        triton::ast::AbstractNode* node = this->buildSymbolicRegisterOperand(reg);
+      /* Returns a symbolic register and defines the register as input of the instruction */
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicRegister(triton::arch::Instruction& inst, triton::arch::Register& reg) {
+        triton::ast::AbstractNode* node = this->buildSymbolicRegister(reg);
         reg.setConcreteValue(node->evaluate());
         inst.setReadRegister(reg, node);
         return node;
@@ -686,7 +686,7 @@ namespace triton {
 
 
       /* Returns the new symbolic memory expression */
-      SymbolicExpression* SymbolicEngine::createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::MemoryOperand& mem, const std::string& comment) {
+      SymbolicExpression* SymbolicEngine::createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::MemoryAccess& mem, const std::string& comment) {
         triton::ast::AbstractNode* tmp = nullptr;
         std::list<triton::ast::AbstractNode*> ret;
 
@@ -708,7 +708,7 @@ namespace triton {
           /* Extract each byte of the memory */
           tmp = triton::ast::extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), node);
           se = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Byte reference - " + comment);
-          se->setOriginMemory(triton::arch::MemoryOperand(((address + writeSize) - 1), BYTE_SIZE, tmp->evaluate()));
+          se->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), BYTE_SIZE, tmp->evaluate()));
           ret.push_back(tmp);
           inst.addSymbolicExpression(se);
           /* Assign memory with little endian */
@@ -732,7 +732,7 @@ namespace triton {
         mem.setConcreteValue(tmp->evaluate());
 
         se  = this->newSymbolicExpression(tmp, triton::engines::symbolic::UNDEF, "Temporary concatenation reference - " + comment);
-        se->setOriginMemory(triton::arch::MemoryOperand(address, mem.getSize(), tmp->evaluate()));
+        se->setOriginMemory(triton::arch::MemoryAccess(address, mem.getSize(), tmp->evaluate()));
 
         inst.setStoreAccess(mem, tmp);
         inst.addSymbolicExpression(se);
@@ -741,17 +741,17 @@ namespace triton {
 
 
       /* Returns the new symbolic register expression */
-      SymbolicExpression* SymbolicEngine::createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterOperand& reg, const std::string& comment) {
+      SymbolicExpression* SymbolicEngine::createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::Register& reg, const std::string& comment) {
         triton::ast::AbstractNode* finalExpr      = nullptr;
         triton::ast::AbstractNode* origReg        = nullptr;
         triton::uint32 regSize                    = reg.getSize();
-        triton::arch::RegisterOperand parentReg   = reg.getParent();
+        triton::arch::Register parentReg          = reg.getParent();
 
         if (reg.isFlag())
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicRegisterExpression(): The register cannot be a flag.");
 
         if (regSize == BYTE_SIZE || regSize == WORD_SIZE)
-          origReg = this->buildSymbolicRegisterOperand(parentReg);
+          origReg = this->buildSymbolicRegister(parentReg);
 
         switch (regSize) {
           case BYTE_SIZE:
@@ -797,7 +797,7 @@ namespace triton {
 
 
       /* Returns the new symbolic flag expression */
-      SymbolicExpression* SymbolicEngine::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterOperand& flag, const std::string& comment) {
+      SymbolicExpression* SymbolicEngine::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::Register& flag, const std::string& comment) {
         if (!flag.isFlag())
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicFlagExpression(): The register must be a flag.");
         flag.setConcreteValue(node->evaluate());
@@ -824,10 +824,10 @@ namespace triton {
 
 
       /* Assigns a symbolic expression to a register */
-      void SymbolicEngine::assignSymbolicExpressionToRegister(SymbolicExpression *se, const triton::arch::RegisterOperand& reg) {
+      void SymbolicEngine::assignSymbolicExpressionToRegister(SymbolicExpression *se, const triton::arch::Register& reg) {
         triton::ast::AbstractNode* node = se->getAst();
-        triton::arch::RegisterOperand parent = reg.getParent();
-        triton::uint32 id = parent.getId();
+        triton::arch::Register parent   = reg.getParent();
+        triton::uint32 id               = parent.getId();
 
         /* We can assign an expression only on parent registers */
         if (reg.getId() != parent.getId())
@@ -847,7 +847,7 @@ namespace triton {
 
 
       /* Assigns a symbolic expression to a memory */
-      void SymbolicEngine::assignSymbolicExpressionToMemory(SymbolicExpression *se, const triton::arch::MemoryOperand& mem) {
+      void SymbolicEngine::assignSymbolicExpressionToMemory(SymbolicExpression *se, const triton::arch::MemoryAccess& mem) {
         triton::ast::AbstractNode* node = se->getAst();
         triton::uint64 address          = mem.getAddress();
         triton::uint32 writeSize        = mem.getSize();
@@ -864,7 +864,7 @@ namespace triton {
           /* Extract each byte of the memory */
           triton::ast::AbstractNode* tmp = triton::ast::extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), node);
           SymbolicExpression* byteRef = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Byte reference");
-          byteRef->setOriginMemory(triton::arch::MemoryOperand(((address + writeSize) - 1), BYTE_SIZE, tmp->evaluate()));
+          byteRef->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), BYTE_SIZE, tmp->evaluate()));
           /* Assign memory with little endian */
           this->addMemoryReference((address + writeSize) - 1, byteRef->getId());
           writeSize--;

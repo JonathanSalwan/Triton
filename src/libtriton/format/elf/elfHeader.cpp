@@ -16,7 +16,7 @@ namespace triton {
   namespace format {
     namespace elf {
 
-      ELFHeader::ELFHeader() {
+      ElfHeader::ElfHeader() {
         this->type      = 0;
         this->machine   = 0;
         this->version   = 0;
@@ -35,7 +35,7 @@ namespace triton {
       }
 
 
-      ELFHeader::ELFHeader(const ELFHeader& copy) {
+      ElfHeader::ElfHeader(const ElfHeader& copy) {
         this->type      = copy.type;
         this->machine   = copy.machine;
         this->version   = copy.version;
@@ -54,11 +54,11 @@ namespace triton {
       }
 
 
-      ELFHeader::~ELFHeader() {
+      ElfHeader::~ElfHeader() {
       }
 
 
-      void ELFHeader::operator=(const ELFHeader& copy) {
+      void ElfHeader::operator=(const ElfHeader& copy) {
         this->type      = copy.type;
         this->machine   = copy.machine;
         this->version   = copy.version;
@@ -77,7 +77,7 @@ namespace triton {
       }
 
 
-      triton::uint32 ELFHeader::parse(const triton::uint8* raw) {
+      triton::uint32 ElfHeader::parse(const triton::uint8* raw) {
         triton::format::elf::Elf32_Ehdr_t ehdr32;
         triton::format::elf::Elf64_Ehdr_t ehdr64;
 
@@ -86,7 +86,7 @@ namespace triton {
 
         // Only support little-endian
         if (this->getEIData() != triton::format::elf::ELFDATA2LSB)
-            throw triton::exceptions::ELF("ELFHeader::parse(): Unsupported endianness (EI_DATA).");
+            throw triton::exceptions::Elf("ElfHeader::parse(): Unsupported endianness (EI_DATA).");
 
         switch (this->getEIClass()) {
           case triton::format::elf::ELFCLASS32:
@@ -124,88 +124,88 @@ namespace triton {
             return sizeof(triton::format::elf::Elf64_Ehdr_t);
 
           default:
-            throw triton::exceptions::ELF("ELFHeader::parse(): Invalid EI_CLASS.");
+            throw triton::exceptions::Elf("ElfHeader::parse(): Invalid EI_CLASS.");
         }
         return 0;
       }
 
 
-      triton::uint8 ELFHeader::getEIClass(void) const {
+      triton::uint8 ElfHeader::getEIClass(void) const {
         return this->ident[4];
       }
 
 
-      triton::uint8 ELFHeader::getEIData(void) const {
+      triton::uint8 ElfHeader::getEIData(void) const {
         return this->ident[5];
       }
 
 
-      triton::uint16 ELFHeader::getType(void) const {
+      triton::uint16 ElfHeader::getType(void) const {
         return this->type;
       }
 
 
-      triton::uint16 ELFHeader::getMachine(void) const {
+      triton::uint16 ElfHeader::getMachine(void) const {
         return this->machine;
       }
 
 
-      triton::uint32 ELFHeader::getVersion(void) const {
+      triton::uint32 ElfHeader::getVersion(void) const {
         return this->version;
       }
 
 
-      triton::uint64 ELFHeader::getEntry(void) const {
+      triton::uint64 ElfHeader::getEntry(void) const {
         return this->entry;
       }
 
 
-      triton::uint64 ELFHeader::getPhoff(void) const {
+      triton::uint64 ElfHeader::getPhoff(void) const {
         return this->phoff;
       }
 
 
-      triton::uint64 ELFHeader::getShoff(void) const {
+      triton::uint64 ElfHeader::getShoff(void) const {
         return this->shoff;
       }
 
 
-      triton::uint32 ELFHeader::getFlags(void) const {
+      triton::uint32 ElfHeader::getFlags(void) const {
         return this->flags;
       }
 
 
-      triton::uint16 ELFHeader::getEhsize(void) const {
+      triton::uint16 ElfHeader::getEhsize(void) const {
         return this->ehsize;
       }
 
 
-      triton::uint16 ELFHeader::getPhentsize(void) const {
+      triton::uint16 ElfHeader::getPhentsize(void) const {
         return this->phentsize;
       }
 
 
-      triton::uint16 ELFHeader::getPhnum(void) const {
+      triton::uint16 ElfHeader::getPhnum(void) const {
         return this->phnum;
       }
 
 
-      triton::uint16 ELFHeader::getShentsize(void) const {
+      triton::uint16 ElfHeader::getShentsize(void) const {
         return this->shentsize;
       }
 
 
-      triton::uint16 ELFHeader::getShnum(void) const {
+      triton::uint16 ElfHeader::getShnum(void) const {
         return this->shnum;
       }
 
 
-      triton::uint16 ELFHeader::getShstrndx(void) const {
+      triton::uint16 ElfHeader::getShstrndx(void) const {
         return this->shstrndx;
       }
 
 
-      triton::uint32 ELFHeader::getMaxHeaderSize() const {
+      triton::uint32 ElfHeader::getMaxHeaderSize() const {
         return sizeof(struct triton::format::elf::Elf64_Ehdr);
       }
 

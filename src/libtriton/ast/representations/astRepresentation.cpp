@@ -24,10 +24,10 @@ namespace triton {
         this->representations[triton::ast::representations::PYTHON_REPRESENTATION] = new triton::ast::representations::AstPythonRepresentation();
 
         if (this->representations[triton::ast::representations::SMT_REPRESENTATION] == nullptr)
-          throw triton::exceptions::ASTRepresentation("AstRepresentation::AstRepresentation(): Cannot allocate a new representation instance.");
+          throw triton::exceptions::AstRepresentation("AstRepresentation::AstRepresentation(): Cannot allocate a new representation instance.");
 
         if (this->representations[triton::ast::representations::PYTHON_REPRESENTATION] == nullptr)
-          throw triton::exceptions::ASTRepresentation("AstRepresentation::AstRepresentation(): Cannot allocate a new representation instance.");
+          throw triton::exceptions::AstRepresentation("AstRepresentation::AstRepresentation(): Cannot allocate a new representation instance.");
       }
 
 
@@ -44,7 +44,7 @@ namespace triton {
 
       void AstRepresentation::setMode(triton::uint32 mode) {
         if (mode >= triton::ast::representations::LAST_REPRESENTATION)
-          throw triton::exceptions::ASTRepresentation("AstRepresentation::setMode(): Invalid representation mode.");
+          throw triton::exceptions::AstRepresentation("AstRepresentation::setMode(): Invalid representation mode.");
         this->mode = mode;
       }
 

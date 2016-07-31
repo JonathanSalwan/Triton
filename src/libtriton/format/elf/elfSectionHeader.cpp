@@ -16,7 +16,7 @@ namespace triton {
   namespace format {
     namespace elf {
 
-      ELFSectionHeader::ELFSectionHeader() {
+      ElfSectionHeader::ElfSectionHeader() {
         this->idxname   = 0;
         this->type      = 0;
         this->flags     = 0;
@@ -30,7 +30,7 @@ namespace triton {
       }
 
 
-      ELFSectionHeader::ELFSectionHeader(const ELFSectionHeader& copy) {
+      ElfSectionHeader::ElfSectionHeader(const ElfSectionHeader& copy) {
         this->idxname   = copy.idxname;
         this->name      = copy.name;
         this->type      = copy.type;
@@ -45,11 +45,11 @@ namespace triton {
       }
 
 
-      ELFSectionHeader::~ELFSectionHeader() {
+      ElfSectionHeader::~ElfSectionHeader() {
       }
 
 
-      void ELFSectionHeader::operator=(const ELFSectionHeader& copy) {
+      void ElfSectionHeader::operator=(const ElfSectionHeader& copy) {
         this->idxname   = copy.idxname;
         this->name      = copy.name;
         this->type      = copy.type;
@@ -64,7 +64,7 @@ namespace triton {
       }
 
 
-      triton::uint32 ELFSectionHeader::parse(const triton::uint8* raw, triton::uint8 EIClass) {
+      triton::uint32 ElfSectionHeader::parse(const triton::uint8* raw, triton::uint8 EIClass) {
         triton::format::elf::Elf32_Shdr_t shdr32;
         triton::format::elf::Elf64_Shdr_t shdr64;
 
@@ -98,73 +98,73 @@ namespace triton {
             return sizeof(triton::format::elf::Elf64_Shdr_t);
 
           default:
-            throw triton::exceptions::ELF("ELFSectionHeader::parse(): Invalid EI_CLASS.");
+            throw triton::exceptions::Elf("ElfSectionHeader::parse(): Invalid EI_CLASS.");
         }
         return 0;
       }
 
 
-      triton::uint32 ELFSectionHeader::getIdxname(void) const {
+      triton::uint32 ElfSectionHeader::getIdxname(void) const {
         return this->idxname;
       }
 
 
-      const std::string& ELFSectionHeader::getName(void) const {
+      const std::string& ElfSectionHeader::getName(void) const {
         return this->name;
       }
 
 
-      void ELFSectionHeader::setName(const triton::uint8 *str) {
+      void ElfSectionHeader::setName(const triton::uint8 *str) {
         this->setName(std::string(reinterpret_cast<const char*>(str)));
       }
 
 
-      void ELFSectionHeader::setName(const std::string& name) {
+      void ElfSectionHeader::setName(const std::string& name) {
         this->name = name;
       }
 
 
-      triton::uint32 ELFSectionHeader::getType(void) const {
+      triton::uint32 ElfSectionHeader::getType(void) const {
         return this->type;
       }
 
 
-      triton::uint64 ELFSectionHeader::getFlags(void) const {
+      triton::uint64 ElfSectionHeader::getFlags(void) const {
         return this->flags;
       }
 
 
-      triton::uint64 ELFSectionHeader::getAddr(void) const {
+      triton::uint64 ElfSectionHeader::getAddr(void) const {
         return this->addr;
       }
 
 
-      triton::uint64 ELFSectionHeader::getOffset(void) const {
+      triton::uint64 ElfSectionHeader::getOffset(void) const {
         return this->offset;
       }
 
 
-      triton::uint64 ELFSectionHeader::getSize(void) const {
+      triton::uint64 ElfSectionHeader::getSize(void) const {
         return this->size;
       }
 
 
-      triton::uint32 ELFSectionHeader::getLink(void) const {
+      triton::uint32 ElfSectionHeader::getLink(void) const {
         return this->link;
       }
 
 
-      triton::uint32 ELFSectionHeader::getInfo(void) const {
+      triton::uint32 ElfSectionHeader::getInfo(void) const {
         return this->info;
       }
 
 
-      triton::uint64 ELFSectionHeader::getAddralign(void) const {
+      triton::uint64 ElfSectionHeader::getAddralign(void) const {
         return this->addralign;
       }
 
 
-      triton::uint64 ELFSectionHeader::getEntsize(void) const {
+      triton::uint64 ElfSectionHeader::getEntsize(void) const {
         return this->entsize;
       }
 

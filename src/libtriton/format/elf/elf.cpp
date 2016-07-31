@@ -16,7 +16,7 @@ namespace triton {
   namespace format {
     namespace elf {
 
-      ELF::ELF(const std::string& path) {
+      Elf::Elf(const std::string& path) {
         this->path      = path;
         this->raw       = nullptr;
         this->totalSize = 0;
@@ -34,18 +34,18 @@ namespace triton {
       }
 
 
-      ELF::~ELF() {
+      Elf::~Elf() {
         delete[] this->raw;
       }
 
 
-      void ELF::open(void) {
+      void Elf::open(void) {
         FILE* fd = nullptr;
 
         // Open the file
         fd = fopen(this->path.c_str(), "rb");
         if (fd == nullptr)
-          throw triton::exceptions::ELF("ELF::open(): Cannot open the binary file.");
+          throw triton::exceptions::Elf("Elf::open(): Cannot open the binary file.");
 
         // Get the binary size
         fseek(fd, 0, SEEK_END);
@@ -54,18 +54,18 @@ namespace triton {
 
         this->raw = new triton::uint8[this->totalSize];
         if(!this->raw)
-          throw triton::exceptions::ELF("ELF::open(): Not enough memory.");
+          throw triton::exceptions::Elf("Elf::open(): Not enough memory.");
 
         // Read only the magic number
         if (fread(this->raw, 1, this->totalSize, fd) != this->totalSize)
-          throw triton::exceptions::ELF("ELF::open(): Cannot read the file binary.");
+          throw triton::exceptions::Elf("Elf::open(): Cannot read the file binary.");
 
         // Close the file
         fclose(fd);
       }
 
 
-      bool ELF::parse(void) {
+      bool Elf::parse(void) {
         triton::uint8  EIClass  = triton::format::elf::ELFCLASSNONE;
         triton::uint64 phOffset = 0;
         triton::uint16 phNum    = 0;
@@ -78,7 +78,7 @@ namespace triton {
 
         // Parse the ELF Header
         if (this->totalSize < this->header.getMaxHeaderSize())
-          throw triton::exceptions::ELF("ELF::parse(): The ELF Header of the binary file is corrupted.");
+          throw triton::exceptions::Elf("Elf::parse(): The ELF Header of the binary file is corrupted.");
 
         this->header.parse(this->raw);
 
@@ -89,12 +89,12 @@ namespace triton {
         phSize   = this->header.getPhentsize();
 
         if (this->totalSize < (phOffset + (phNum * phSize))) {
-          std::cerr << "Warning ELF::parse(): Some ELF Program Headers of the binary file are corrupted." << std::endl;
+          std::cerr << "Warning Elf::parse(): Some ELF Program Headers of the binary file are corrupted." << std::endl;
           return false;
         }
 
         for (triton::uint16 entry = 0; entry < phNum; entry++) {
-          triton::format::elf::ELFProgramHeader phdr;
+          triton::format::elf::ElfProgramHeader phdr;
           phdr.parse((this->raw + (phOffset + (entry * phSize))), EIClass);
           this->programHeaders.push_back(phdr);
         }
@@ -108,12 +108,12 @@ namespace triton {
           return false;
 
         if (this->totalSize < (shOffset + (shNum * shSize))) {
-          std::cerr << "Warning ELF::parse(): Some ELF Section Headers of the binary file are corrupted." << std::endl;
+          std::cerr << "Warning Elf::parse(): Some ELF Section Headers of the binary file are corrupted." << std::endl;
           return false;
         }
 
         for (triton::uint16 entry = 0; entry < shNum; entry++) {
-          triton::format::elf::ELFSectionHeader shdr;
+          triton::format::elf::ElfSectionHeader shdr;
           shdr.parse((this->raw + (shOffset + (entry * shSize))), EIClass);
           this->sectionHeaders.push_back(shdr);
         }
@@ -122,7 +122,7 @@ namespace triton {
         shstrndx = this->header.getShstrndx();
         if (shstrndx != triton::format::elf::SHN_XINDEX) {
           if (shstrndx >= this->sectionHeaders.size()) {
-            std::cerr << "Warning ELF::parse(): The string table index (shstrndx) of the binary file is corrupted." << std::endl;
+            std::cerr << "Warning Elf::parse(): The string table index (shstrndx) of the binary file is corrupted." << std::endl;
             return false;
           }
 
@@ -136,12 +136,12 @@ namespace triton {
       }
 
 
-      void ELF::initMemoryMapping(void) {
+      void Elf::initMemoryMapping(void) {
         for (auto it = this->programHeaders.begin(); it != this->programHeaders.end(); it++) {
           triton::format::MemoryMapping area(this->raw);
 
           if (this->totalSize < (it->getOffset() + it->getFilesz())) {
-            std::cerr << "Warning ELF::initMemoryMapping(): Some ELF Program Headers of the binary file are corrupted." << std::endl;
+            std::cerr << "Warning Elf::initMemoryMapping(): Some ELF Program Headers of the binary file are corrupted." << std::endl;
             continue;
           }
 
@@ -154,7 +154,7 @@ namespace triton {
       }
 
 
-      void ELF::initDynamicTable(void) {
+      void Elf::initDynamicTable(void) {
         triton::uint64 dynOffset = 0;
         triton::uint64 dynSize   = 0;
 
@@ -167,25 +167,25 @@ namespace triton {
         }
 
         if (!dynOffset || this->totalSize < dynOffset + dynSize) {
-          std::cerr << "Warning ELF::initDynamicTable(): The Dynamic Table offset of the binary file is corrupted." << std::endl;
+          std::cerr << "Warning Elf::initDynamicTable(): The Dynamic Table offset of the binary file is corrupted." << std::endl;
           return;
         }
 
         // Parse Dynamic Table.
         for (triton::uint32 read = 0; read < dynSize;) {
-          triton::format::elf::ELFDynamicTable dyn;
+          triton::format::elf::ElfDynamicTable dyn;
           read += dyn.parse(this->raw + dynOffset + read, this->header.getEIClass());
           this->dynamicTable.push_back(dyn);
         }
       }
 
 
-      void ELF::initSharedLibraries(void) {
+      void Elf::initSharedLibraries(void) {
         triton::uint64 strTabOffset = 0;
 
         strTabOffset = this->getOffsetFromDTValue(triton::format::elf::DT_STRTAB);
         if (!strTabOffset || this->totalSize < strTabOffset) {
-          std::cerr << "Warning ELF::initSharedLibraries(): The String Table offset of the binary file is corrupted." << std::endl;
+          std::cerr << "Warning Elf::initSharedLibraries(): The String Table offset of the binary file is corrupted." << std::endl;
           return;
         }
 
@@ -197,7 +197,7 @@ namespace triton {
       }
 
 
-      void ELF::initSymbolsTableViaProgramHeaders(void) {
+      void Elf::initSymbolsTableViaProgramHeaders(void) {
         triton::uint64 strTabOffset = 0;
         triton::uint64 strTabSize   = 0;
         triton::uint64 symTabOffset = 0;
@@ -205,24 +205,24 @@ namespace triton {
 
         strTabOffset = this->getOffsetFromDTValue(triton::format::elf::DT_STRTAB);
         if (!strTabOffset || this->totalSize < strTabOffset) {
-          std::cerr << "Warning ELF::initSymbolsTableViaProgramHeaders(): The String Table offset of the binary file is corrupted." << std::endl;
+          std::cerr << "Warning Elf::initSymbolsTableViaProgramHeaders(): The String Table offset of the binary file is corrupted." << std::endl;
           return;
         }
 
         strTabSize = this->getDTValue(triton::format::elf::DT_STRSZ);
         if (!strTabSize || this->totalSize < strTabOffset + strTabSize) {
-          std::cerr << "Warning ELF::initSymbolsTableViaProgramHeaders(): The String Table offset of the binary file is corrupted." << std::endl;
+          std::cerr << "Warning Elf::initSymbolsTableViaProgramHeaders(): The String Table offset of the binary file is corrupted." << std::endl;
           return;
         }
 
         symTabOffset = this->getOffsetFromDTValue(triton::format::elf::DT_SYMTAB);
         if (!symTabOffset || this->totalSize < symTabOffset) {
-          std::cerr << "Warning ELF::initSymbolsTableViaProgramHeaders(): The Symbol Table offset of the binary file is corrupted." << std::endl;
+          std::cerr << "Warning Elf::initSymbolsTableViaProgramHeaders(): The Symbol Table offset of the binary file is corrupted." << std::endl;
           return;
         }
 
         while (true) {
-          triton::format::elf::ELFSymbolTable sym;
+          triton::format::elf::ElfSymbolTable sym;
           read += sym.parse(this->raw + symTabOffset + read, this->header.getEIClass());
 
           if (sym.getOther() != triton::format::elf::STV_DEFAULT)
@@ -240,7 +240,7 @@ namespace triton {
       }
 
 
-      void ELF::initSymbolsTableViaSectionHeaders(void) {
+      void Elf::initSymbolsTableViaSectionHeaders(void) {
         triton::uint64 strTabOffset = 0;
         triton::uint64 symTabOffset = 0;
         triton::uint64 symTabSize   = 0;
@@ -267,7 +267,7 @@ namespace triton {
 
         // Parse Symbol Table.
         for (triton::uint32 read = 0; read < symTabSize;) {
-          triton::format::elf::ELFSymbolTable sym;
+          triton::format::elf::ElfSymbolTable sym;
 
           read += sym.parse(this->raw + symTabOffset + read, this->header.getEIClass());
           if (this->totalSize < strTabOffset + sym.getIdxname())
@@ -279,7 +279,7 @@ namespace triton {
       }
 
 
-      void ELF::initRelTable(void) {
+      void Elf::initRelTable(void) {
         triton::uint64 relTabOffset = 0;
         triton::uint64 relTabSize   = 0;
 
@@ -293,14 +293,14 @@ namespace triton {
           return;
 
         for (triton::uint32 read = 0; read < relTabSize;) {
-          triton::format::elf::ELFRelocationTable rel;
+          triton::format::elf::ElfRelocationTable rel;
           read += rel.parseRel(this->raw + relTabOffset + read, this->header.getEIClass());
           this->relocationsTable.push_back(rel);
         }
       }
 
 
-      void ELF::initRelaTable(void) {
+      void Elf::initRelaTable(void) {
         triton::uint64 relaTabOffset = 0;
         triton::uint64 relaTabSize   = 0;
 
@@ -314,14 +314,14 @@ namespace triton {
           return;
 
         for (triton::uint32 read = 0; read < relaTabSize;) {
-          triton::format::elf::ELFRelocationTable rela;
+          triton::format::elf::ElfRelocationTable rela;
           read += rela.parseRela(this->raw + relaTabOffset + read, this->header.getEIClass());
           this->relocationsTable.push_back(rela);
         }
       }
 
 
-      void ELF::initJmprelTable(void) {
+      void Elf::initJmprelTable(void) {
         triton::uint64 jmprelTabOffset = 0;
         triton::uint64 jmprelTabSize   = 0;
 
@@ -335,19 +335,19 @@ namespace triton {
           return;
 
         for (triton::uint32 read = 0; read < jmprelTabSize;) {
-          triton::format::elf::ELFRelocationTable jmprel;
+          triton::format::elf::ElfRelocationTable jmprel;
           if (this->header.getEIClass() == triton::format::elf::ELFCLASS32)
             read += jmprel.parseRel(this->raw + jmprelTabOffset + read, this->header.getEIClass());
           else if (this->header.getEIClass() == triton::format::elf::ELFCLASS64)
             read += jmprel.parseRela(this->raw + jmprelTabOffset + read, this->header.getEIClass());
           else
-            throw triton::exceptions::ELF("ELF::initJmprelTable(): Invalid EI_CLASS.");
+            throw triton::exceptions::Elf("Elf::initJmprelTable(): Invalid EI_CLASS.");
           this->relocationsTable.push_back(jmprel);
         }
       }
 
 
-      triton::uint64 ELF::getOffsetFromAddress(triton::uint64 vaddr) {
+      triton::uint64 Elf::getOffsetFromAddress(triton::uint64 vaddr) {
         for (auto it = this->programHeaders.begin(); it != this->programHeaders.end(); it++) {
           if (it->getType() == triton::format::elf::PT_LOAD) {
             if (vaddr >= it->getVaddr() && vaddr < (it->getVaddr() + it->getFilesz())) {
@@ -359,7 +359,7 @@ namespace triton {
       }
 
 
-      triton::uint64 ELF::getOffsetFromDTValue(triton::format::elf::elf_e dt) {
+      triton::uint64 Elf::getOffsetFromDTValue(triton::format::elf::elf_e dt) {
         triton::uint64 offset = 0;
         triton::uint64 vaddr  = 0;
 
@@ -374,7 +374,7 @@ namespace triton {
       }
 
 
-      triton::uint64 ELF::getDTValue(triton::format::elf::elf_e dt) {
+      triton::uint64 Elf::getDTValue(triton::format::elf::elf_e dt) {
         for (auto it = this->dynamicTable.begin(); it != this->dynamicTable.end(); it++) {
           if (it->getTag() == dt) {
             return it->getValue();
@@ -384,47 +384,47 @@ namespace triton {
       }
 
 
-      const std::string& ELF::getPath(void) const {
+      const std::string& Elf::getPath(void) const {
         return this->path;
       }
 
 
-      const triton::format::elf::ELFHeader& ELF::getHeader(void) const {
+      const triton::format::elf::ElfHeader& Elf::getHeader(void) const {
         return this->header;
       }
 
 
-      const std::vector<triton::format::elf::ELFProgramHeader>& ELF::getProgramHeaders(void) const {
+      const std::vector<triton::format::elf::ElfProgramHeader>& Elf::getProgramHeaders(void) const {
         return this->programHeaders;
       }
 
 
-      const std::vector<triton::format::elf::ELFSectionHeader>& ELF::getSectionHeaders(void) const {
+      const std::vector<triton::format::elf::ElfSectionHeader>& Elf::getSectionHeaders(void) const {
         return this->sectionHeaders;
       }
 
 
-      const std::vector<triton::format::elf::ELFDynamicTable>& ELF::getDynamicTable(void) const {
+      const std::vector<triton::format::elf::ElfDynamicTable>& Elf::getDynamicTable(void) const {
         return this->dynamicTable;
       }
 
 
-      const std::vector<triton::format::elf::ELFSymbolTable>& ELF::getSymbolsTable(void) const {
+      const std::vector<triton::format::elf::ElfSymbolTable>& Elf::getSymbolsTable(void) const {
         return this->symbolsTable;
       }
 
 
-      const std::vector<triton::format::elf::ELFRelocationTable>& ELF::getRelocationTable(void) const {
+      const std::vector<triton::format::elf::ElfRelocationTable>& Elf::getRelocationTable(void) const {
         return this->relocationsTable;
       }
 
 
-      const std::vector<std::string>& ELF::getSharedLibraries(void) const {
+      const std::vector<std::string>& Elf::getSharedLibraries(void) const {
         return this->sharedLibraries;
       }
 
 
-      const std::list<triton::format::MemoryMapping>& ELF::getMemoryMapping(void) const {
+      const std::list<triton::format::MemoryMapping>& Elf::getMemoryMapping(void) const {
         return this->memoryMapping;
       }
 

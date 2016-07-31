@@ -100,7 +100,7 @@ e.g: `SYMEXPR.REG`
 Returns a new SMT AST root node of the symbolic expression as \ref py_AstNode_page. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
 
 - **getOriginMemory(void)**<br>
-Returns the origin memory access as \ref py_Memory_page if `isMemory()` is equal to `True`, invalid memory otherwise. This memory access represents the target assignment. Note that at this level all information about LEA are lost.
+Returns the origin memory access as \ref py_MemoryAccess_page if `isMemory()` is equal to `True`, invalid memory otherwise. This memory access represents the target assignment. Note that at this level all information about LEA are lost.
 
 - **getOriginRegister(void)**<br>
 Returns the origin register as \ref py_Register_page if `isRegister()` is equal `True`, `REG.INVALID` otherwise. This register represents the target assignment.
@@ -184,7 +184,7 @@ namespace triton {
 
       static PyObject* SymbolicExpression_getOriginMemory(PyObject* self, PyObject* noarg) {
         try {
-          return PyMemoryOperand(PySymbolicExpression_AsSymbolicExpression(self)->getOriginMemory());
+          return PyMemoryAccess(PySymbolicExpression_AsSymbolicExpression(self)->getOriginMemory());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -194,7 +194,7 @@ namespace triton {
 
       static PyObject* SymbolicExpression_getOriginRegister(PyObject* self, PyObject* noarg) {
         try {
-          return PyRegisterOperand(PySymbolicExpression_AsSymbolicExpression(self)->getOriginRegister());
+          return PyRegister(PySymbolicExpression_AsSymbolicExpression(self)->getOriginRegister());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

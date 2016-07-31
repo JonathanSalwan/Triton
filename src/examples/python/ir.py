@@ -70,7 +70,7 @@ if __name__ == '__main__':
         inst.updateContext(Register(REG.RBX,  67890));
 
         # optional - Add memory access <addr, size, content>
-        inst.updateContext(Memory(0x66666666, 8, 0x31003200330034));
+        inst.updateContext(MemoryAccess(0x66666666, 8, 0x31003200330034));
 
         # Process everything
         processing(inst)

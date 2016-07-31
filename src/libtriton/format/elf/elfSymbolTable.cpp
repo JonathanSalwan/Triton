@@ -16,7 +16,7 @@ namespace triton {
   namespace format {
     namespace elf {
 
-      ELFSymbolTable::ELFSymbolTable() {
+      ElfSymbolTable::ElfSymbolTable() {
         this->idxname = 0;
         this->info    = 0;
         this->other   = 0;
@@ -26,7 +26,7 @@ namespace triton {
       }
 
 
-      ELFSymbolTable::ELFSymbolTable(const ELFSymbolTable& copy) {
+      ElfSymbolTable::ElfSymbolTable(const ElfSymbolTable& copy) {
         this->idxname = copy.idxname;
         this->name    = copy.name;
         this->info    = copy.info;
@@ -37,11 +37,11 @@ namespace triton {
       }
 
 
-      ELFSymbolTable::~ELFSymbolTable() {
+      ElfSymbolTable::~ElfSymbolTable() {
       }
 
 
-      void ELFSymbolTable::operator=(const ELFSymbolTable& copy) {
+      void ElfSymbolTable::operator=(const ElfSymbolTable& copy) {
         this->idxname = copy.idxname;
         this->name    = copy.name;
         this->info    = copy.info;
@@ -52,7 +52,7 @@ namespace triton {
       }
 
 
-      triton::uint32 ELFSymbolTable::parse(const triton::uint8* raw, triton::uint8 EIClass) {
+      triton::uint32 ElfSymbolTable::parse(const triton::uint8* raw, triton::uint8 EIClass) {
         triton::format::elf::Elf32_Sym_t sym32;
         triton::format::elf::Elf64_Sym_t sym64;
 
@@ -78,53 +78,53 @@ namespace triton {
             return sizeof(triton::format::elf::Elf64_Sym_t);
 
           default:
-            throw triton::exceptions::ELF("ELFSymbolTable::parse(): Invalid EI_CLASS.");
+            throw triton::exceptions::Elf("ElfSymbolTable::parse(): Invalid EI_CLASS.");
         }
         return 0;
       }
 
 
-      triton::uint32 ELFSymbolTable::getIdxname(void) const {
+      triton::uint32 ElfSymbolTable::getIdxname(void) const {
         return this->idxname;
       }
 
 
-      const std::string& ELFSymbolTable::getName(void) const {
+      const std::string& ElfSymbolTable::getName(void) const {
         return this->name;
       }
 
 
-      void ELFSymbolTable::setName(const triton::uint8 *str) {
+      void ElfSymbolTable::setName(const triton::uint8 *str) {
         this->setName(std::string(reinterpret_cast<const char*>(str)));
       }
 
 
-      void ELFSymbolTable::setName(const std::string& name) {
+      void ElfSymbolTable::setName(const std::string& name) {
         this->name = name;
       }
 
 
-      triton::uint8 ELFSymbolTable::getInfo(void) const {
+      triton::uint8 ElfSymbolTable::getInfo(void) const {
         return this->info;
       }
 
 
-      triton::uint8 ELFSymbolTable::getOther(void) const {
+      triton::uint8 ElfSymbolTable::getOther(void) const {
         return this->other;
       }
 
 
-      triton::uint16 ELFSymbolTable::getShndx(void) const {
+      triton::uint16 ElfSymbolTable::getShndx(void) const {
         return this->shndx;
       }
 
 
-      triton::uint64 ELFSymbolTable::getValue(void) const {
+      triton::uint64 ElfSymbolTable::getValue(void) const {
         return this->value;
       }
 
 
-      triton::uint64 ELFSymbolTable::getSize(void) const {
+      triton::uint64 ElfSymbolTable::getSize(void) const {
         return this->size;
       }
 

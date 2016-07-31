@@ -174,8 +174,8 @@ def symbolizeInputs(seed):
     concretizeAllRegister()
     concretizeAllMemory()
     for address, value in seed.items():
-        convertMemoryToSymbolicVariable(Memory(address, CPUSIZE.BYTE, value))
-        convertMemoryToSymbolicVariable(Memory(address+1, CPUSIZE.BYTE))
+        convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE, value))
+        convertMemoryToSymbolicVariable(MemoryAccess(address+1, CPUSIZE.BYTE))
     return
 
 

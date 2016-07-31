@@ -16,7 +16,7 @@ namespace triton {
   namespace format {
     namespace elf {
 
-      ELFRelocationTable::ELFRelocationTable() {
+      ElfRelocationTable::ElfRelocationTable() {
         this->addendFlag = false;
         this->offset     = 0;
         this->info       = 0;
@@ -26,7 +26,7 @@ namespace triton {
       }
 
 
-      ELFRelocationTable::ELFRelocationTable(const ELFRelocationTable& copy) {
+      ElfRelocationTable::ElfRelocationTable(const ElfRelocationTable& copy) {
         this->addendFlag = copy.addendFlag;
         this->offset     = copy.offset;
         this->info       = copy.info;
@@ -36,11 +36,11 @@ namespace triton {
       }
 
 
-      ELFRelocationTable::~ELFRelocationTable() {
+      ElfRelocationTable::~ElfRelocationTable() {
       }
 
 
-      void ELFRelocationTable::operator=(const ELFRelocationTable& copy) {
+      void ElfRelocationTable::operator=(const ElfRelocationTable& copy) {
         this->addendFlag = copy.addendFlag;
         this->offset     = copy.offset;
         this->info       = copy.info;
@@ -50,7 +50,7 @@ namespace triton {
       }
 
 
-      triton::uint32 ELFRelocationTable::parseRel(const triton::uint8* raw, triton::uint8 EIClass) {
+      triton::uint32 ElfRelocationTable::parseRel(const triton::uint8* raw, triton::uint8 EIClass) {
         triton::format::elf::Elf32_Rel_t rel32;
         triton::format::elf::Elf64_Rel_t rel64;
 
@@ -76,13 +76,13 @@ namespace triton {
             return sizeof(triton::format::elf::Elf64_Rel_t);
 
           default:
-            throw triton::exceptions::ELF("ELFRelocationTable::parseRel(): Invalid EI_CLASS.");
+            throw triton::exceptions::Elf("ElfRelocationTable::parseRel(): Invalid EI_CLASS.");
         }
         return 0;
       }
 
 
-      triton::uint32 ELFRelocationTable::parseRela(const triton::uint8* raw, triton::uint8 EIClass) {
+      triton::uint32 ElfRelocationTable::parseRela(const triton::uint8* raw, triton::uint8 EIClass) {
         triton::format::elf::Elf32_Rela_t rela32;
         triton::format::elf::Elf64_Rela_t rela64;
 
@@ -108,38 +108,38 @@ namespace triton {
             return sizeof(triton::format::elf::Elf64_Rela_t);
 
           default:
-            throw triton::exceptions::ELF("ELFRelocationTable::parseRela(): Invalid EI_CLASS.");
+            throw triton::exceptions::Elf("ElfRelocationTable::parseRela(): Invalid EI_CLASS.");
         }
         return 0;
       }
 
 
-      bool ELFRelocationTable::isAddend(void) const {
+      bool ElfRelocationTable::isAddend(void) const {
         return this->addendFlag;
       }
 
 
-      triton::uint64 ELFRelocationTable::getOffset(void) const {
+      triton::uint64 ElfRelocationTable::getOffset(void) const {
         return this->offset;
       }
 
 
-      triton::uint64 ELFRelocationTable::getInfo(void) const {
+      triton::uint64 ElfRelocationTable::getInfo(void) const {
         return this->info;
       }
 
 
-      triton::sint64 ELFRelocationTable::getAddend(void) const {
+      triton::sint64 ElfRelocationTable::getAddend(void) const {
         return this->addend;
       }
 
 
-      triton::uint64 ELFRelocationTable::getType(void) const {
+      triton::uint64 ElfRelocationTable::getType(void) const {
         return this->type;
       }
 
 
-      triton::uint64 ELFRelocationTable::getSymidx(void) const {
+      triton::uint64 ElfRelocationTable::getSymidx(void) const {
         return this->symidx;
       }
 

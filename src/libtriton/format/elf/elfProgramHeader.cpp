@@ -16,7 +16,7 @@ namespace triton {
   namespace format {
     namespace elf {
 
-      ELFProgramHeader::ELFProgramHeader() {
+      ElfProgramHeader::ElfProgramHeader() {
         this->type    = 0;
         this->flags   = 0;
         this->offset  = 0;
@@ -28,7 +28,7 @@ namespace triton {
       }
 
 
-      ELFProgramHeader::ELFProgramHeader(const ELFProgramHeader& copy) {
+      ElfProgramHeader::ElfProgramHeader(const ElfProgramHeader& copy) {
         this->type    = copy.type;
         this->flags   = copy.flags;
         this->offset  = copy.offset;
@@ -40,11 +40,11 @@ namespace triton {
       }
 
 
-      ELFProgramHeader::~ELFProgramHeader() {
+      ElfProgramHeader::~ElfProgramHeader() {
       }
 
 
-      void ELFProgramHeader::operator=(const ELFProgramHeader& copy) {
+      void ElfProgramHeader::operator=(const ElfProgramHeader& copy) {
         this->type    = copy.type;
         this->flags   = copy.flags;
         this->offset  = copy.offset;
@@ -56,7 +56,7 @@ namespace triton {
       }
 
 
-      triton::uint32 ELFProgramHeader::parse(const triton::uint8* raw, triton::uint8 EIClass) {
+      triton::uint32 ElfProgramHeader::parse(const triton::uint8* raw, triton::uint8 EIClass) {
         triton::format::elf::Elf32_Phdr_t phdr32;
         triton::format::elf::Elf64_Phdr_t phdr64;
 
@@ -86,48 +86,48 @@ namespace triton {
             return sizeof(triton::format::elf::Elf64_Phdr_t);
 
           default:
-            throw triton::exceptions::ELF("ELFProgramHeader::parse(): Invalid EI_CLASS.");
+            throw triton::exceptions::Elf("ElfProgramHeader::parse(): Invalid EI_CLASS.");
         }
         return 0;
       }
 
 
-      triton::uint32 ELFProgramHeader::getType(void) const {
+      triton::uint32 ElfProgramHeader::getType(void) const {
         return this->type;
       }
 
 
-      triton::uint32 ELFProgramHeader::getFlags(void) const {
+      triton::uint32 ElfProgramHeader::getFlags(void) const {
         return this->flags;
       }
 
 
-      triton::uint64 ELFProgramHeader::getOffset(void) const {
+      triton::uint64 ElfProgramHeader::getOffset(void) const {
         return this->offset;
       }
 
 
-      triton::uint64 ELFProgramHeader::getVaddr(void) const {
+      triton::uint64 ElfProgramHeader::getVaddr(void) const {
         return this->vaddr;
       }
 
 
-      triton::uint64 ELFProgramHeader::getPaddr(void) const {
+      triton::uint64 ElfProgramHeader::getPaddr(void) const {
         return this->paddr;
       }
 
 
-      triton::uint64 ELFProgramHeader::getFilesz(void) const {
+      triton::uint64 ElfProgramHeader::getFilesz(void) const {
         return this->filesz;
       }
 
 
-      triton::uint64 ELFProgramHeader::getMemsz(void) const {
+      triton::uint64 ElfProgramHeader::getMemsz(void) const {
         return this->memsz;
       }
 
 
-      triton::uint64 ELFProgramHeader::getAlign(void) const {
+      triton::uint64 ElfProgramHeader::getAlign(void) const {
         return this->align;
       }
 

@@ -21,7 +21,7 @@
 \section py_Bitvector_description Description
 <hr>
 
-This object is used to represent a bitvector. Mainly used by \ref py_Register_page and \ref py_Memory_page.
+This object is used to represent a bitvector. Mainly used by \ref py_Register_page and \ref py_MemoryAccess_page.
 
 ~~~~~~~~~~~~~{.py}
 >>> ah = REG.AH
@@ -118,26 +118,26 @@ namespace triton {
 
       PyTypeObject Bitvector_Type = {
         PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size*/
-        "Bitvector",                                /* tp_name*/
-        sizeof(Bitvector_Object),                   /* tp_basicsize*/
-        0,                                          /* tp_itemsize*/
-        (destructor)Bitvector_dealloc,              /* tp_dealloc*/
-        (printfunc)Bitvector_print,                 /* tp_print*/
-        0,                                          /* tp_getattr*/
-        0,                                          /* tp_setattr*/
-        0,                                          /* tp_compare*/
-        0,                                          /* tp_repr*/
-        0,                                          /* tp_as_number*/
-        0,                                          /* tp_as_sequence*/
-        0,                                          /* tp_as_mapping*/
+        0,                                          /* ob_size */
+        "Bitvector",                                /* tp_name */
+        sizeof(Bitvector_Object),                   /* tp_basicsize */
+        0,                                          /* tp_itemsize */
+        (destructor)Bitvector_dealloc,              /* tp_dealloc */
+        (printfunc)Bitvector_print,                 /* tp_print */
+        0,                                          /* tp_getattr */
+        0,                                          /* tp_setattr */
+        0,                                          /* tp_compare */
+        0,                                          /* tp_repr */
+        0,                                          /* tp_as_number */
+        0,                                          /* tp_as_sequence */
+        0,                                          /* tp_as_mapping */
         0,                                          /* tp_hash */
-        0,                                          /* tp_call*/
-        (reprfunc)Bitvector_str,                    /* tp_str*/
-        0,                                          /* tp_getattro*/
-        0,                                          /* tp_setattro*/
-        0,                                          /* tp_as_buffer*/
-        Py_TPFLAGS_DEFAULT,                         /* tp_flags*/
+        0,                                          /* tp_call */
+        (reprfunc)Bitvector_str,                    /* tp_str */
+        0,                                          /* tp_getattro */
+        0,                                          /* tp_setattro */
+        0,                                          /* tp_as_buffer */
+        Py_TPFLAGS_DEFAULT,                         /* tp_flags */
         "Bitvector objects",                        /* tp_doc */
         0,                                          /* tp_traverse */
         0,                                          /* tp_clear */
@@ -168,7 +168,7 @@ namespace triton {
       };
 
 
-      PyObject* PyBitvector(const triton::arch::ImmediateOperand& imm) {
+      PyObject* PyBitvector(const triton::arch::Immediate& imm) {
         Bitvector_Object* object;
 
         PyType_Ready(&Bitvector_Type);
@@ -182,7 +182,7 @@ namespace triton {
       }
 
 
-      PyObject* PyBitvector(const triton::arch::MemoryOperand& mem) {
+      PyObject* PyBitvector(const triton::arch::MemoryAccess& mem) {
         Bitvector_Object* object;
 
         PyType_Ready(&Bitvector_Type);
@@ -196,7 +196,7 @@ namespace triton {
       }
 
 
-      PyObject* PyBitvector(const triton::arch::RegisterOperand& reg) {
+      PyObject* PyBitvector(const triton::arch::Register& reg) {
         Bitvector_Object* object;
 
         PyType_Ready(&Bitvector_Type);

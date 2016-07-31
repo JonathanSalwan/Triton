@@ -106,7 +106,7 @@ if __name__ == '__main__':
     write = inst.getOperands()[0].getAddress()
     print 'Instruction :', inst.getDisassembly()
     print 'Write at    :', hex(write)
-    print 'Content     :', hex(getConcreteMemoryValue(Memory(write+4, CPUSIZE.DWORD)))
+    print 'Content     :', hex(getConcreteMemoryValue(MemoryAccess(write+4, CPUSIZE.DWORD)))
     print 'RAX value   :', hex(getConcreteRegisterValue(REG.RAX))
     print 'RSI value   :', hex(getConcreteRegisterValue(REG.RSI))
     print 'RDI value   :', hex(getConcreteRegisterValue(REG.RDI))
@@ -128,7 +128,7 @@ if __name__ == '__main__':
     print 'Craft symbolic stuffs'
     print '~~~~~~~~~~~~~~~~~~~~~'
     ah  = buildSymbolicRegister(REG.AH)
-    mem = buildSymbolicMemory(Memory(0x11248, 4))
+    mem = buildSymbolicMemory(MemoryAccess(0x11248, 4))
     print 'Memory at 0x11248 :', mem
     print 'Compute memory    :', hex(mem.evaluate())
     print 'Register AH       :', ah

@@ -50,7 +50,7 @@ namespace triton {
 
       /*! \class ELFDynamicTable
        *  \brief The ELF dynamic table class. */
-      class ELFDynamicTable {
+      class ElfDynamicTable {
 
         protected:
         /*!
@@ -65,16 +65,16 @@ namespace triton {
 
         public:
           //! Constructor.
-          ELFDynamicTable();
+          ElfDynamicTable();
 
           //! Constructor by copy.
-          ELFDynamicTable(const ELFDynamicTable& copy);
+          ElfDynamicTable(const ElfDynamicTable& copy);
 
           //! Destructor.
-          ~ELFDynamicTable();
+          ~ElfDynamicTable();
 
-          //! Copies an ELFDynamicTable.
-          void operator=(const ELFDynamicTable& copy);
+          //! Copies an ElfDynamicTable.
+          void operator=(const ElfDynamicTable& copy);
 
           //! Parses the ELF Dynamic Table. Returns the number of bytes read.
           triton::uint32 parse(const triton::uint8* raw, triton::uint8 EIClass);

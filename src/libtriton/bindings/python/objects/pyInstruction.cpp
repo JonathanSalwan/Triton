@@ -60,7 +60,7 @@ if __name__ == '__main__':
         inst.updateContext(Register(REG.RBX, 0x1111111122222222))
 
         # optional - Add memory access <addr, size, content>
-        inst.updateContext(Memory(0x66666666, 4, 0x31323334))
+        inst.updateContext(MemoryAccess(0x66666666, 4, 0x31323334))
 
         # Process everything
         processing(inst)
@@ -91,7 +91,7 @@ Returns the disassembly of the instruction as string.
 Returns the first operand of the instruction.
 
 - **getLoadAccess(void)**<br>
-Returns the list of all implicit and explicit LOAD access as list of tuple <\ref py_Memory_page, \ref py_AstNode_page>.
+Returns the list of all implicit and explicit LOAD access as list of tuple <\ref py_MemoryAccess_page, \ref py_AstNode_page>.
 
 - **getNextAddress(void)**<br>
 Returns the next address of the instruction as integer.
@@ -100,7 +100,7 @@ Returns the next address of the instruction as integer.
 Returns the opcodes of the instruction as bytes.
 
 - **getOperands(void)**<br>
-Returns the operands of the instruction as list of \ref py_Immediate_page, \ref py_Memory_page or \ref py_Register_page.
+Returns the operands of the instruction as list of \ref py_Immediate_page, \ref py_MemoryAccess_page or \ref py_Register_page.
 
 - **getPrefix(void)**<br>
 Returns the instruction prefix as \ref py_PREFIX_page.
@@ -118,7 +118,7 @@ Returns the second operand of the instruction.
 Returns the size of the instruction as integer.
 
 - **getStoreAccess(void)**<br>
-Returns the list of all implicit and explicit STORE access as list of tuple <\ref py_Memory_page, \ref py_AstNode_page>.
+Returns the list of all implicit and explicit STORE access as list of tuple <\ref py_MemoryAccess_page, \ref py_AstNode_page>.
 
 - **getThirdOperand(void)**<br>
 Returns the third operand of the instruction.
@@ -165,7 +165,7 @@ Sets the opcodes of the instruction.
 - **setThreadId(integer tid)**<br>
 Sets the thread id of the instruction.
 
-- **updateContext(\ref py_Memory_page memCtx)**<br>
+- **updateContext(\ref py_MemoryAccess_page memCtx)**<br>
 Updates the context of the instruction by adding a concrete value for a **LOAD** memory access. Please note that you don't have to define a **STORE**
 concrete value, this value will be computed symbolically - **Only LOAD** accesses are necessary.
 
@@ -224,15 +224,15 @@ namespace triton {
 
           if (inst->operands[0].getType() == triton::arch::OP_IMM) {
             auto imm = inst->operands[0].getImmediate();
-            obj = PyImmediateOperand(imm);
+            obj = PyImmediate(imm);
           }
           else if (inst->operands[0].getType() == triton::arch::OP_MEM) {
             auto mem = inst->operands[0].getMemory();
-            obj = PyMemoryOperand(mem);
+            obj = PyMemoryAccess(mem);
           }
           else if (inst->operands[0].getType() == triton::arch::OP_REG) {
             auto reg = inst->operands[0].getRegister();
-            obj = PyRegisterOperand(reg);
+            obj = PyRegister(reg);
           }
 
           return obj;
@@ -247,13 +247,13 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::MemoryOperand, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::MemoryOperand, triton::ast::AbstractNode*>>& loadAccess = PyInstruction_AsInstruction(self)->getLoadAccess();
+          std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>::const_iterator it;
+          const std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& loadAccess = PyInstruction_AsInstruction(self)->getLoadAccess();
 
           ret = xPyList_New(loadAccess.size());
           for (it = loadAccess.begin(); it != loadAccess.end(); it++) {
             PyObject* item = xPyTuple_New(2);
-            PyTuple_SetItem(item, 0, PyMemoryOperand(std::get<0>(*it)));
+            PyTuple_SetItem(item, 0, PyMemoryAccess(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
             PyList_SetItem(ret, index++, item);
           }
@@ -302,13 +302,13 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::MemoryOperand, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::MemoryOperand, triton::ast::AbstractNode*>>& storeAccess = PyInstruction_AsInstruction(self)->getStoreAccess();
+          std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>::const_iterator it;
+          const std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& storeAccess = PyInstruction_AsInstruction(self)->getStoreAccess();
 
           ret = xPyList_New(storeAccess.size());
           for (it = storeAccess.begin(); it != storeAccess.end(); it++) {
             PyObject* item = xPyTuple_New(2);
-            PyTuple_SetItem(item, 0, PyMemoryOperand(std::get<0>(*it)));
+            PyTuple_SetItem(item, 0, PyMemoryAccess(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
             PyList_SetItem(ret, index++, item);
           }
@@ -323,9 +323,9 @@ namespace triton {
 
       static PyObject* Instruction_getOperands(PyObject* self, PyObject* noarg) {
         try {
-          triton::arch::ImmediateOperand  imm;
-          triton::arch::MemoryOperand     mem;
-          triton::arch::RegisterOperand   reg;
+          triton::arch::Immediate         imm;
+          triton::arch::MemoryAccess      mem;
+          triton::arch::Register          reg;
           triton::arch::Instruction*      inst;
           triton::usize                   opSize;
           PyObject*                       operands;
@@ -339,15 +339,15 @@ namespace triton {
 
             if (inst->operands[index].getType() == triton::arch::OP_IMM) {
               imm = inst->operands[index].getImmediate();
-              obj = PyImmediateOperand(imm);
+              obj = PyImmediate(imm);
             }
             else if (inst->operands[index].getType() == triton::arch::OP_MEM) {
               mem = inst->operands[index].getMemory();
-              obj = PyMemoryOperand(mem);
+              obj = PyMemoryAccess(mem);
             }
             else if (inst->operands[index].getType() == triton::arch::OP_REG) {
               reg = inst->operands[index].getRegister();
-              obj = PyRegisterOperand(reg);
+              obj = PyRegister(reg);
             }
             else
               continue;
@@ -377,13 +377,13 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::ImmediateOperand, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::ImmediateOperand, triton::ast::AbstractNode*>>& readImmediates = PyInstruction_AsInstruction(self)->getReadImmediates();
+          std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>::const_iterator it;
+          const std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& readImmediates = PyInstruction_AsInstruction(self)->getReadImmediates();
 
           ret = xPyList_New(readImmediates.size());
           for (it = readImmediates.begin(); it != readImmediates.end(); it++) {
             PyObject* item = xPyTuple_New(2);
-            PyTuple_SetItem(item, 0, PyImmediateOperand(std::get<0>(*it)));
+            PyTuple_SetItem(item, 0, PyImmediate(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
             PyList_SetItem(ret, index++, item);
           }
@@ -400,13 +400,13 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::RegisterOperand, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::RegisterOperand, triton::ast::AbstractNode*>>& readRegisters = PyInstruction_AsInstruction(self)->getReadRegisters();
+          std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>::const_iterator it;
+          const std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& readRegisters = PyInstruction_AsInstruction(self)->getReadRegisters();
 
           ret = xPyList_New(readRegisters.size());
           for (it = readRegisters.begin(); it != readRegisters.end(); it++) {
             PyObject* item = xPyTuple_New(2);
-            PyTuple_SetItem(item, 0, PyRegisterOperand(std::get<0>(*it)));
+            PyTuple_SetItem(item, 0, PyRegister(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
             PyList_SetItem(ret, index++, item);
           }
@@ -435,15 +435,15 @@ namespace triton {
 
           if (inst->operands[1].getType() == triton::arch::OP_IMM) {
             auto imm = inst->operands[1].getImmediate();
-            obj = PyImmediateOperand(imm);
+            obj = PyImmediate(imm);
           }
           else if (inst->operands[1].getType() == triton::arch::OP_MEM) {
             auto mem = inst->operands[1].getMemory();
-            obj = PyMemoryOperand(mem);
+            obj = PyMemoryAccess(mem);
           }
           else if (inst->operands[1].getType() == triton::arch::OP_REG) {
             auto reg = inst->operands[1].getRegister();
-            obj = PyRegisterOperand(reg);
+            obj = PyRegister(reg);
           }
 
           return obj;
@@ -494,15 +494,15 @@ namespace triton {
 
           if (inst->operands[2].getType() == triton::arch::OP_IMM) {
             auto imm = inst->operands[2].getImmediate();
-            obj = PyImmediateOperand(imm);
+            obj = PyImmediate(imm);
           }
           else if (inst->operands[2].getType() == triton::arch::OP_MEM) {
             auto mem = inst->operands[2].getMemory();
-            obj = PyMemoryOperand(mem);
+            obj = PyMemoryAccess(mem);
           }
           else if (inst->operands[2].getType() == triton::arch::OP_REG) {
             auto reg = inst->operands[2].getRegister();
-            obj = PyRegisterOperand(reg);
+            obj = PyRegister(reg);
           }
 
           return obj;
@@ -537,13 +537,13 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::RegisterOperand, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::RegisterOperand, triton::ast::AbstractNode*>>& writtenRegisters = PyInstruction_AsInstruction(self)->getWrittenRegisters();
+          std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>::const_iterator it;
+          const std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& writtenRegisters = PyInstruction_AsInstruction(self)->getWrittenRegisters();
 
           ret = xPyList_New(writtenRegisters.size());
           for (it = writtenRegisters.begin(); it != writtenRegisters.end(); it++) {
             PyObject* item = xPyTuple_New(2);
-            PyTuple_SetItem(item, 0, PyRegisterOperand(std::get<0>(*it)));
+            PyTuple_SetItem(item, 0, PyRegister(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
             PyList_SetItem(ret, index++, item);
           }
@@ -692,22 +692,22 @@ namespace triton {
 
       static PyObject* Instruction_updateContext(PyObject* self, PyObject* ctx) {
         try {
-          triton::arch::Instruction*     inst;
-          triton::arch::MemoryOperand*   memCtx;
-          triton::arch::RegisterOperand* regCtx;
+          triton::arch::Instruction*      inst;
+          triton::arch::MemoryAccess*     memCtx;
+          triton::arch::Register*         regCtx;
 
-          if (!PyMemoryOperand_Check(ctx) && !PyRegisterOperand_Check(ctx))
+          if (!PyMemoryAccess_Check(ctx) && !PyRegister_Check(ctx))
             return PyErr_Format(PyExc_TypeError, "Instruction::updateContext(): Expected a Memory or Register as argument.");
 
           inst = PyInstruction_AsInstruction(self);
 
-          if (PyMemoryOperand_Check(ctx)) {
-            memCtx = PyMemoryOperand_AsMemoryOperand(ctx);
+          if (PyMemoryAccess_Check(ctx)) {
+            memCtx = PyMemoryAccess_AsMemoryAccess(ctx);
             inst->updateContext(*memCtx);
           }
 
-          else if (PyRegisterOperand_Check(ctx)) {
-            regCtx = PyRegisterOperand_AsRegisterOperand(ctx);
+          else if (PyRegister_Check(ctx)) {
+            regCtx = PyRegister_AsRegister(ctx);
             inst->updateContext(*regCtx);
           }
 
@@ -775,26 +775,26 @@ namespace triton {
 
       PyTypeObject Instruction_Type = {
         PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size*/
-        "Instruction",                              /* tp_name*/
-        sizeof(Instruction_Object),                 /* tp_basicsize*/
-        0,                                          /* tp_itemsize*/
-        (destructor)Instruction_dealloc,            /* tp_dealloc*/
-        (printfunc)Instruction_print,               /* tp_print*/
-        0,                                          /* tp_getattr*/
-        0,                                          /* tp_setattr*/
-        0,                                          /* tp_compare*/
-        0,                                          /* tp_repr*/
-        0,                                          /* tp_as_number*/
-        0,                                          /* tp_as_sequence*/
-        0,                                          /* tp_as_mapping*/
+        0,                                          /* ob_size */
+        "Instruction",                              /* tp_name */
+        sizeof(Instruction_Object),                 /* tp_basicsize */
+        0,                                          /* tp_itemsize */
+        (destructor)Instruction_dealloc,            /* tp_dealloc */
+        (printfunc)Instruction_print,               /* tp_print */
+        0,                                          /* tp_getattr */
+        0,                                          /* tp_setattr */
+        0,                                          /* tp_compare */
+        0,                                          /* tp_repr */
+        0,                                          /* tp_as_number */
+        0,                                          /* tp_as_sequence */
+        0,                                          /* tp_as_mapping */
         0,                                          /* tp_hash */
-        0,                                          /* tp_call*/
-        (reprfunc)Instruction_str,                  /* tp_str*/
-        0,                                          /* tp_getattro*/
-        0,                                          /* tp_setattro*/
-        0,                                          /* tp_as_buffer*/
-        Py_TPFLAGS_DEFAULT,                         /* tp_flags*/
+        0,                                          /* tp_call */
+        (reprfunc)Instruction_str,                  /* tp_str */
+        0,                                          /* tp_getattro */
+        0,                                          /* tp_setattro */
+        0,                                          /* tp_as_buffer */
+        Py_TPFLAGS_DEFAULT,                         /* tp_flags */
         "Instruction objects",                      /* tp_doc */
         0,                                          /* tp_traverse */
         0,                                          /* tp_clear */

@@ -13,19 +13,19 @@
 namespace triton {
   namespace arch {
 
-    OperandWrapper::OperandWrapper(const ImmediateOperand& imm) {
+    OperandWrapper::OperandWrapper(const triton::arch::Immediate& imm) {
       this->imm = imm;
       this->type = triton::arch::OP_IMM;
     }
 
 
-    OperandWrapper::OperandWrapper(const MemoryOperand& mem) {
+    OperandWrapper::OperandWrapper(const triton::arch::MemoryAccess& mem) {
       this->mem = mem;
       this->type = triton::arch::OP_MEM;
     }
 
 
-    OperandWrapper::OperandWrapper(const RegisterOperand& reg) {
+    OperandWrapper::OperandWrapper(const triton::arch::Register& reg) {
       this->reg = reg;
       this->type = triton::arch::OP_REG;
     };
@@ -40,47 +40,47 @@ namespace triton {
     }
 
 
-    ImmediateOperand& OperandWrapper::getImmediate(void) {
+    triton::arch::Immediate& OperandWrapper::getImmediate(void) {
       return this->imm;
     }
 
 
-    MemoryOperand& OperandWrapper::getMemory(void) {
+    triton::arch::MemoryAccess& OperandWrapper::getMemory(void) {
       return this->mem;
     }
 
 
-    RegisterOperand& OperandWrapper::getRegister(void) {
+    triton::arch::Register& OperandWrapper::getRegister(void) {
       return this->reg;
     }
 
 
-    const ImmediateOperand& OperandWrapper::getConstImmediate(void) const {
+    const triton::arch::Immediate& OperandWrapper::getConstImmediate(void) const {
       return this->imm;
     }
 
 
-    const MemoryOperand& OperandWrapper::getConstMemory(void) const {
+    const triton::arch::MemoryAccess& OperandWrapper::getConstMemory(void) const {
       return this->mem;
     }
 
 
-    const RegisterOperand& OperandWrapper::getConstRegister(void) const {
+    const triton::arch::Register& OperandWrapper::getConstRegister(void) const {
       return this->reg;
     }
 
 
-    void OperandWrapper::setImmediate(const ImmediateOperand& imm) {
+    void OperandWrapper::setImmediate(const triton::arch::Immediate& imm) {
       this->imm = imm;
     }
 
 
-    void OperandWrapper::setMemory(const MemoryOperand& mem) {
+    void OperandWrapper::setMemory(const triton::arch::MemoryAccess& mem) {
       this->mem = mem;
     }
 
 
-    void OperandWrapper::setRegister(const RegisterOperand& reg) {
+    void OperandWrapper::setRegister(const triton::arch::Register& reg) {
       this->reg = reg;
     }
 

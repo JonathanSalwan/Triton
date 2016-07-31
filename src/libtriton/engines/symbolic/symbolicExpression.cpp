@@ -85,12 +85,12 @@ namespace triton {
       }
 
 
-      const triton::arch::MemoryOperand& SymbolicExpression::getOriginMemory(void) const {
+      const triton::arch::MemoryAccess& SymbolicExpression::getOriginMemory(void) const {
         return this->originMemory;
       }
 
 
-      const triton::arch::RegisterOperand& SymbolicExpression::getOriginRegister(void) const {
+      const triton::arch::Register& SymbolicExpression::getOriginRegister(void) const {
         return this->originRegister;
       }
 
@@ -107,12 +107,12 @@ namespace triton {
       }
 
 
-      void SymbolicExpression::setOriginMemory(const triton::arch::MemoryOperand& mem) {
+      void SymbolicExpression::setOriginMemory(const triton::arch::MemoryAccess& mem) {
         this->originMemory = mem;
       }
 
 
-      void SymbolicExpression::setOriginRegister(const triton::arch::RegisterOperand& reg) {
+      void SymbolicExpression::setOriginRegister(const triton::arch::Register& reg) {
         this->originRegister = reg;
       }
 

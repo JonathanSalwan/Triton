@@ -227,39 +227,39 @@ namespace triton {
     };
 
 
-    /*! \class ImmediateOperand
-     *  \brief The exception class used by immediate operands. */
-    class ImmediateOperand : public triton::exceptions::Architecture {
+    /*! \class Immediate
+     *  \brief The exception class used by immediates. */
+    class Immediate : public triton::exceptions::Architecture {
       public:
         //! Constructor.
-        ImmediateOperand(const char* message) : triton::exceptions::Architecture(message) {};
+        Immediate(const char* message) : triton::exceptions::Architecture(message) {};
 
         //! Constructor.
-        ImmediateOperand(const std::string& message) : triton::exceptions::Architecture(message) {};
+        Immediate(const std::string& message) : triton::exceptions::Architecture(message) {};
     };
 
 
-    /*! \class RegisterOperand
+    /*! \class Register
      *  \brief The exception class used by register operands. */
-    class RegisterOperand : public triton::exceptions::Architecture {
+    class Register : public triton::exceptions::Architecture {
       public:
         //! Constructor.
-        RegisterOperand(const char* message) : triton::exceptions::Architecture(message) {};
+        Register(const char* message) : triton::exceptions::Architecture(message) {};
 
         //! Constructor.
-        RegisterOperand(const std::string& message) : triton::exceptions::Architecture(message) {};
+        Register(const std::string& message) : triton::exceptions::Architecture(message) {};
     };
 
 
-    /*! \class MemoryOperand
-     *  \brief The exception class used by memory operands. */
-    class MemoryOperand : public triton::exceptions::Architecture {
+    /*! \class MemoryAccess
+     *  \brief The exception class used by memory access. */
+    class MemoryAccess : public triton::exceptions::Architecture {
       public:
         //! Constructor.
-        MemoryOperand(const char* message) : triton::exceptions::Architecture(message) {};
+        MemoryAccess(const char* message) : triton::exceptions::Architecture(message) {};
 
         //! Constructor.
-        MemoryOperand(const std::string& message) : triton::exceptions::Architecture(message) {};
+        MemoryAccess(const std::string& message) : triton::exceptions::Architecture(message) {};
     };
 
 
@@ -287,75 +287,75 @@ namespace triton {
     };
 
 
-    /*! \class CPU
+    /*! \class Cpu
      *  \brief The exception class used by all CPUs. */
-    class CPU : public triton::exceptions::Architecture {
+    class Cpu : public triton::exceptions::Architecture {
       public:
         //! Constructor.
-        CPU(const char* message) : triton::exceptions::Architecture(message) {};
+        Cpu(const char* message) : triton::exceptions::Architecture(message) {};
 
         //! Constructor.
-        CPU(const std::string& message) : triton::exceptions::Architecture(message) {};
+        Cpu(const std::string& message) : triton::exceptions::Architecture(message) {};
     };
 
 
     /*! \class Disassembly
      *  \brief The exception class used by the disassembler. */
-    class Disassembly : public triton::exceptions::CPU {
+    class Disassembly : public triton::exceptions::Cpu {
       public:
         //! Constructor.
-        Disassembly(const char* message) : triton::exceptions::CPU(message) {};
+        Disassembly(const char* message) : triton::exceptions::Cpu(message) {};
 
         //! Constructor.
-        Disassembly(const std::string& message) : triton::exceptions::CPU(message) {};
+        Disassembly(const std::string& message) : triton::exceptions::Cpu(message) {};
     };
 
 
     /*! \class Semantics
      *  \brief The exception class used by all semantics. */
-    class Semantics : public triton::exceptions::CPU {
+    class Semantics : public triton::exceptions::Cpu {
       public:
         //! Constructor.
-        Semantics(const char* message) : triton::exceptions::CPU(message) {};
+        Semantics(const char* message) : triton::exceptions::Cpu(message) {};
 
         //! Constructor.
-        Semantics(const std::string& message) : triton::exceptions::CPU(message) {};
+        Semantics(const std::string& message) : triton::exceptions::Cpu(message) {};
     };
 
 
-    /*! \class AST
+    /*! \class Ast
      *  \brief The exception class used by all AST nodes. */
-    class AST : public triton::exceptions::Exception {
+    class Ast : public triton::exceptions::Exception {
       public:
         //! Constructor.
-        AST(const char* message) : triton::exceptions::Exception(message) {};
+        Ast(const char* message) : triton::exceptions::Exception(message) {};
 
         //! Constructor.
-        AST(const std::string& message) : triton::exceptions::Exception(message) {};
+        Ast(const std::string& message) : triton::exceptions::Exception(message) {};
     };
 
 
-    /*! \class ASTRepresentation
+    /*! \class AstRepresentation
      *  \brief The exception class used by all AST node representations. */
-    class ASTRepresentation : public triton::exceptions::AST {
+    class AstRepresentation : public triton::exceptions::Ast {
       public:
         //! Constructor.
-        ASTRepresentation(const char* message) : triton::exceptions::AST(message) {};
+        AstRepresentation(const char* message) : triton::exceptions::Ast(message) {};
 
         //! Constructor.
-        ASTRepresentation(const std::string& message) : triton::exceptions::AST(message) {};
+        AstRepresentation(const std::string& message) : triton::exceptions::Ast(message) {};
     };
 
 
-    /*! \class ASTTranslations
+    /*! \class AstTranslations
      *  \brief The exception class used by all AST translations (`z3 <-> triton`). */
-    class ASTTranslations : public triton::exceptions::AST {
+    class AstTranslations : public triton::exceptions::Ast {
       public:
         //! Constructor.
-        ASTTranslations(const char* message) : triton::exceptions::AST(message) {};
+        AstTranslations(const char* message) : triton::exceptions::Ast(message) {};
 
         //! Constructor.
-        ASTTranslations(const std::string& message) : triton::exceptions::AST(message) {};
+        AstTranslations(const std::string& message) : triton::exceptions::Ast(message) {};
     };
 
 
@@ -383,15 +383,15 @@ namespace triton {
     };
 
 
-    /*! \class ELF
+    /*! \class Elf
      *  \brief The exception class used by the ELF format. */
-    class ELF : public triton::exceptions::Format {
+    class Elf : public triton::exceptions::Format {
       public:
         //! Constructor.
-        ELF(const char* message) : triton::exceptions::Format(message) {};
+        Elf(const char* message) : triton::exceptions::Format(message) {};
 
         //! Constructor.
-        ELF(const std::string& message) : triton::exceptions::Format(message) {};
+        Elf(const std::string& message) : triton::exceptions::Format(message) {};
     };
 
   /*! @} End of exceptions namespace */

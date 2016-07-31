@@ -47,9 +47,9 @@ namespace triton {
      *  @{
      */
 
-      /*! \class ELF
+      /*! \class Elf
        *  \brief The ELF format class. */
-      class ELF : public BinaryInterface {
+      class Elf : public BinaryInterface {
         protected:
           //! Path file of the binary.
           std::string path;
@@ -61,22 +61,22 @@ namespace triton {
           triton::uint8* raw;
 
           //! The ELF Header
-          triton::format::elf::ELFHeader header;
+          triton::format::elf::ElfHeader header;
 
           //! The Program Headers
-          std::vector<triton::format::elf::ELFProgramHeader> programHeaders;
+          std::vector<triton::format::elf::ElfProgramHeader> programHeaders;
 
           //! The Section Headers
-          std::vector<triton::format::elf::ELFSectionHeader> sectionHeaders;
+          std::vector<triton::format::elf::ElfSectionHeader> sectionHeaders;
 
           //! The dynamic table.
-          std::vector<triton::format::elf::ELFDynamicTable> dynamicTable;
+          std::vector<triton::format::elf::ElfDynamicTable> dynamicTable;
 
           //! The symbols table.
-          std::vector<triton::format::elf::ELFSymbolTable> symbolsTable;
+          std::vector<triton::format::elf::ElfSymbolTable> symbolsTable;
 
           //! The relocations table.
-          std::vector<triton::format::elf::ELFRelocationTable> relocationsTable;
+          std::vector<triton::format::elf::ElfRelocationTable> relocationsTable;
 
           //! The shared libraries dependency.
           std::vector<std::string> sharedLibraries;
@@ -128,31 +128,31 @@ namespace triton {
 
         public:
           //! Constructor.
-          ELF(const std::string& path);
+          Elf(const std::string& path);
 
           //! Destructor.
-          ~ELF();
+          ~Elf();
 
           //! Returns the path file of the binary.
           const std::string& getPath(void) const;
 
           //! Returns ELF Headers.
-          const triton::format::elf::ELFHeader& getHeader(void) const;
+          const triton::format::elf::ElfHeader& getHeader(void) const;
 
           //! Returns Program Headers.
-          const std::vector<triton::format::elf::ELFProgramHeader>& getProgramHeaders(void) const;
+          const std::vector<triton::format::elf::ElfProgramHeader>& getProgramHeaders(void) const;
 
           //! Returns Section Headers.
-          const std::vector<triton::format::elf::ELFSectionHeader>& getSectionHeaders(void) const;
+          const std::vector<triton::format::elf::ElfSectionHeader>& getSectionHeaders(void) const;
 
           //! Returns Dynamic Table.
-          const std::vector<triton::format::elf::ELFDynamicTable>& getDynamicTable(void) const;
+          const std::vector<triton::format::elf::ElfDynamicTable>& getDynamicTable(void) const;
 
           //! Returns Symbols Table.
-          const std::vector<triton::format::elf::ELFSymbolTable>& getSymbolsTable(void) const;
+          const std::vector<triton::format::elf::ElfSymbolTable>& getSymbolsTable(void) const;
 
           //! Returns Relocations Table.
-          const std::vector<triton::format::elf::ELFRelocationTable>& getRelocationTable(void) const;
+          const std::vector<triton::format::elf::ElfRelocationTable>& getRelocationTable(void) const;
 
           //! Returns the list of shared libraries dependency.
           const std::vector<std::string>& getSharedLibraries(void) const;

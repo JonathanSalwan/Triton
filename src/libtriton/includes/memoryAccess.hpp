@@ -5,13 +5,13 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifndef TRITON_MEMORYOPERAND
-#define TRITON_MEMORYOPERAND
+#ifndef TRITON_MEMORYACCESS
+#define TRITON_MEMORYACCESS
 
 #include "ast.hpp"
 #include "bitsVector.hpp"
 #include "cpuSize.hpp"
-#include "immediateOperand.hpp"
+#include "immediate.hpp"
 #include "operandInterface.hpp"
 #include "registerOperand.hpp"
 #include "tritonTypes.hpp"
@@ -32,10 +32,10 @@ namespace triton {
    *  @{
    */
 
-    /*! \class MemoryOperand
-     *  \brief This class is used when an instruction has a memory operand.
+    /*! \class MemoryAccess
+     *  \brief This class is used to represent a memory access.
      */
-    class MemoryOperand : public BitsVector, public OperandInterface {
+    class MemoryAccess : public BitsVector, public OperandInterface {
 
       protected:
         //! The memory' address.
@@ -51,25 +51,25 @@ namespace triton {
         triton::uint64 pcRelative;
 
         //! LEA - If the operand has a segment register, this attribute is filled.
-        RegisterOperand segmentReg;
+        triton::arch::Register segmentReg;
 
         //! LEA - If the operand has a base register, this attribute is filled.
-        RegisterOperand baseReg;
+        triton::arch::Register baseReg;
 
         //! LEA - If the operand has an index register, this attribute is filled.
-        RegisterOperand indexReg;
+        triton::arch::Register indexReg;
 
         //! LEA - If the operand has a displacement, this attribute is filled.
-        ImmediateOperand displacement;
+        triton::arch::Immediate displacement;
 
         //! LEA - If the operand has a scale, this attribute is filled.
-        ImmediateOperand scale;
+        triton::arch::Immediate scale;
 
         //! The AST of the memory access.
         triton::ast::AbstractNode* ast;
 
-        //! Copy a MemoryOperand.
-        void copy(const MemoryOperand& other);
+        //! Copy a MemoryAccess.
+        void copy(const MemoryAccess& other);
 
       private:
         //! LEA - Returns the base register value.
@@ -95,16 +95,16 @@ namespace triton {
 
       public:
         //! Constructor.
-        MemoryOperand();
+        MemoryAccess();
 
         //! Constructor.
-        MemoryOperand(triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue=0);
+        MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue=0);
 
         //! Constructor by copy.
-        MemoryOperand(const MemoryOperand& other);
+        MemoryAccess(const MemoryAccess& other);
 
         //! Destructor.
-        ~MemoryOperand();
+        ~MemoryAccess();
 
         //! Initialize the address of the memory.
         void initAddress(void);
@@ -137,34 +137,34 @@ namespace triton {
         triton::uint32 getType(void) const;
 
         //! LEA - Returns the segment register operand.
-        RegisterOperand& getSegmentRegister(void);
+        triton::arch::Register& getSegmentRegister(void);
 
         //! LEA - Returns the base register operand.
-        RegisterOperand& getBaseRegister(void);
+        triton::arch::Register& getBaseRegister(void);
 
         //! LEA - Returns the index register operand.
-        RegisterOperand& getIndexRegister(void);
+        triton::arch::Register& getIndexRegister(void);
 
         //! LEA - Returns the displacement operand.
-        ImmediateOperand& getDisplacement(void);
+        triton::arch::Immediate& getDisplacement(void);
 
         //! LEA - Returns the scale operand.
-        ImmediateOperand& getScale(void);
+        triton::arch::Immediate& getScale(void);
 
         //! LEA - Returns the segment register operand.
-        const RegisterOperand& getConstSegmentRegister(void) const;
+        const triton::arch::Register& getConstSegmentRegister(void) const;
 
         //! LEA - Returns the base register operand.
-        const RegisterOperand& getConstBaseRegister(void) const;
+        const triton::arch::Register& getConstBaseRegister(void) const;
 
         //! LEA - Returns the index register operand.
-        const RegisterOperand& getConstIndexRegister(void) const;
+        const triton::arch::Register& getConstIndexRegister(void) const;
 
         //! LEA - Returns the displacement operand.
-        const ImmediateOperand& getConstDisplacement(void) const;
+        const triton::arch::Immediate& getConstDisplacement(void) const;
 
         //! LEA - Returns the scale operand.
-        const ImmediateOperand& getConstScale(void) const;
+        const triton::arch::Immediate& getConstScale(void) const;
 
         //! True if this concrete memory value is trusted and synchronized with the real MMU value.
         bool isTrusted(void) const;
@@ -185,43 +185,42 @@ namespace triton {
         void setPcRelative(triton::uint64 addr);
 
         //! LEA - Sets the segment register operand.
-        void setSegmentRegister(RegisterOperand& segment);
+        void setSegmentRegister(triton::arch::Register& segment);
 
         //! LEA - Sets the base register operand.
-        void setBaseRegister(RegisterOperand& base);
+        void setBaseRegister(triton::arch::Register& base);
 
         //! LEA - Sets the index register operand.
-        void setIndexRegister(RegisterOperand& index);
+        void setIndexRegister(triton::arch::Register& index);
 
         //! LEA - Sets the displacement operand.
-        void setDisplacement(ImmediateOperand& displacement);
+        void setDisplacement(triton::arch::Immediate& displacement);
 
         //! LEA - Sets the scale operand.
-        void setScale(ImmediateOperand& scale);
+        void setScale(triton::arch::Immediate& scale);
 
-        //! Copies a MemoryOperand.
-        void operator=(const MemoryOperand& other);
+        //! Copies a MemoryAccess.
+        void operator=(const MemoryAccess& other);
    };
 
-    //! Displays an MemoryOperand.
-    std::ostream& operator<<(std::ostream& stream, const MemoryOperand& mem);
+    //! Displays an MemoryAccess.
+    std::ostream& operator<<(std::ostream& stream, const MemoryAccess& mem);
 
-    //! Displays an MemoryOperand.
-    std::ostream& operator<<(std::ostream& stream, const MemoryOperand* mem);
+    //! Displays an MemoryAccess.
+    std::ostream& operator<<(std::ostream& stream, const MemoryAccess* mem);
 
-    //! Compares two MemoryOperand.
-    bool operator==(const MemoryOperand& mem1, const MemoryOperand& mem2);
+    //! Compares two MemoryAccess.
+    bool operator==(const MemoryAccess& mem1, const MemoryAccess& mem2);
 
-    //! Compares two MemoryOperand.
-    bool operator!=(const MemoryOperand& mem1, const MemoryOperand& mem2);
+    //! Compares two MemoryAccess.
+    bool operator!=(const MemoryAccess& mem1, const MemoryAccess& mem2);
 
-    //! Compares two MemoryOperand (needed for std::map)
-    bool operator<(const MemoryOperand& mem1, const MemoryOperand& mem2);
+    //! Compares two MemoryAccess (needed for std::map)
+    bool operator<(const MemoryAccess& mem1, const MemoryAccess& mem2);
 
   /*! @} End of arch namespace */
   };
 /*! @} End of triton namespace */
 };
 
-#endif     /* !MEMORYOPERAND */
-
+#endif /* TRITON_MEMORYACCESS */

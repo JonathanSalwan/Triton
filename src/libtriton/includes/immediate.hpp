@@ -5,8 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifndef TRITON_IMMEDIATEOPERAND_H
-#define TRITON_IMMEDIATEOPERAND_H
+#ifndef TRITON_IMMEDIATE_H
+#define TRITON_IMMEDIATE_H
 
 #include "bitsVector.hpp"
 #include "operandInterface.hpp"
@@ -28,30 +28,30 @@ namespace triton {
    *  @{
    */
 
-    /*! \class ImmediateOperand
-     *  \brief This class is used when an instruction has an immediate operand.
+    /*! \class Immediate
+     *  \brief This class is used to represent an immediate.
      */
-    class ImmediateOperand : public BitsVector, public OperandInterface {
+    class Immediate : public BitsVector, public OperandInterface {
 
       protected:
         //! The value of the operand.
         triton::uint64 value;
 
-        //! Copy an ImmediateOperand.
-        void copy(const ImmediateOperand& other);
+        //! Copy an Immediate.
+        void copy(const Immediate& other);
 
       public:
         //! Constructor.
-        ImmediateOperand();
+        Immediate();
 
         //! Constructor.
-        ImmediateOperand(triton::uint64 value, triton::uint32 size /* bytes*/);
+        Immediate(triton::uint64 value, triton::uint32 size /* bytes*/);
 
         //! Constructor by copy.
-        ImmediateOperand(const ImmediateOperand& other);
+        Immediate(const Immediate& other);
 
         //! Destructor.
-        ~ImmediateOperand();
+        ~Immediate();
 
         //! Returns the value of the operand.
         triton::uint64 getValue(void) const;
@@ -74,29 +74,28 @@ namespace triton {
         //! Sets the value of the operand.
         void setValue(triton::uint64 v);
 
-        //! Copy an ImmediateOperand.
-        void operator=(const ImmediateOperand& other);
+        //! Copy an Immediate.
+        void operator=(const Immediate& other);
     };
 
-    //! Displays an ImmediateOperand.
-    std::ostream& operator<<(std::ostream& stream, const ImmediateOperand& imm);
+    //! Displays an Immediate.
+    std::ostream& operator<<(std::ostream& stream, const Immediate& imm);
 
-    //! Displays an ImmediateOperand.
-    std::ostream& operator<<(std::ostream& stream, const ImmediateOperand* imm);
+    //! Displays an Immediate.
+    std::ostream& operator<<(std::ostream& stream, const Immediate* imm);
 
-    //! Compares two ImmediateOperand.
-    bool operator==(const ImmediateOperand& imm1, const ImmediateOperand& imm2);
+    //! Compares two Immediate.
+    bool operator==(const Immediate& imm1, const Immediate& imm2);
 
-    //! Compares two ImmediateOperand.
-    bool operator!=(const ImmediateOperand& imm1, const ImmediateOperand& imm2);
+    //! Compares two Immediate.
+    bool operator!=(const Immediate& imm1, const Immediate& imm2);
 
-    //! Compares two ImmediateOperand (needed for std::map)
-    bool operator<(const ImmediateOperand& imm1, const ImmediateOperand& imm2);
+    //! Compares two Immediate (needed for std::map)
+    bool operator<(const Immediate& imm1, const Immediate& imm2);
 
   /*! @} End of arch namespace */
   };
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_IMMEDIATEOPERAND_H */
-
+#endif /* TRITON_IMMEDIATE_H */

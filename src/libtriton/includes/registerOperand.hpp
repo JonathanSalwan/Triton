@@ -33,10 +33,10 @@ namespace triton {
    *  @{
    */
 
-    /*! \class RegisterOperand
+    /*! \class Register
      *  \brief This class is used when an instruction has a register operand.
      */
-    class RegisterOperand : public BitsVector, public OperandInterface {
+    class Register : public BitsVector, public OperandInterface {
 
       protected:
         //! The name of the register.
@@ -54,8 +54,8 @@ namespace triton {
         //! True if this concrete register value is trusted and synchronized with the real CPU value.
         bool trusted;
 
-        //! Copies a RegisterOperand.
-        void copy(const RegisterOperand& other);
+        //! Copies a Register.
+        void copy(const Register& other);
 
         //! Setup everything.
         void setup(triton::uint32 reg, triton::uint512 concreteValue);
@@ -65,19 +65,19 @@ namespace triton {
 
       public:
         //! Constructor.
-        RegisterOperand();
+        Register();
 
         //! Constructor.
-        RegisterOperand(triton::uint32 reg, triton::uint512 concreteValue=0);
+        Register(triton::uint32 reg, triton::uint512 concreteValue=0);
 
         //! Constructor by copy.
-        RegisterOperand(const RegisterOperand& other);
+        Register(const Register& other);
 
         //! Destructor.
-        ~RegisterOperand();
+        ~Register();
 
         //! Returns the parent id of the register.
-        RegisterOperand getParent(void) const;
+        Register getParent(void) const;
 
         //! Returns true if the register is valid.
         bool isValid(void) const;
@@ -118,8 +118,8 @@ namespace triton {
         //! Returns the concrete value.
         triton::uint512 getConcreteValue(void) const;
 
-        //! Copies a RegisterOperand.
-        void operator=(const RegisterOperand& other);
+        //! Copies a Register.
+        void operator=(const Register& other);
 
         //! Sets the id of the register.
         void setId(triton::uint32 reg);
@@ -131,20 +131,20 @@ namespace triton {
         void setConcreteValue(triton::uint512 concreteValue);
     };
 
-    //! Displays a RegisterOperand.
-    std::ostream& operator<<(std::ostream& stream, const RegisterOperand& reg);
+    //! Displays a Register.
+    std::ostream& operator<<(std::ostream& stream, const Register& reg);
 
-    //! Displays a RegisterOperand.
-    std::ostream& operator<<(std::ostream& stream, const RegisterOperand* reg);
+    //! Displays a Register.
+    std::ostream& operator<<(std::ostream& stream, const Register* reg);
 
-    //! Compares two RegisterOperand.
-    bool operator==(const RegisterOperand& reg1, const RegisterOperand& reg2);
+    //! Compares two Register.
+    bool operator==(const Register& reg1, const Register& reg2);
 
-    //! Compares two RegisterOperand.
-    bool operator!=(const RegisterOperand& reg1, const RegisterOperand& reg2);
+    //! Compares two Register.
+    bool operator!=(const Register& reg1, const Register& reg2);
 
-    //! Compares two RegisterOperand (needed for std::map)
-    bool operator<(const RegisterOperand& reg1, const RegisterOperand& reg2);
+    //! Compares two Register (needed for std::map)
+    bool operator<(const Register& reg1, const Register& reg2);
 
   /*! @} End of arch namespace */
   };

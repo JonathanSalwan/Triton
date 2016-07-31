@@ -117,7 +117,7 @@ if __name__ == '__main__':
                 address = access['addr']
                 data    = access['data']
                 value   = struct.unpack(unpack_size[len(data)], data)[0]
-                inst.updateContext(Memory(address, len(data), value))
+                inst.updateContext(MemoryAccess(address, len(data), value))
 
         # Write after read
         for access in accesses:
@@ -125,7 +125,7 @@ if __name__ == '__main__':
                 address = access['addr']
                 data    = access['data']
                 value   = struct.unpack(unpack_size[len(data)], data)[0]
-                inst.updateContext(Memory(address, len(data), value))
+                inst.updateContext(MemoryAccess(address, len(data), value))
 
         # Process everything (build IR, spread taint, perform simplification, ...)
         processing(inst)
@@ -651,7 +651,7 @@ namespace tracer {
       /* Mutex */
       PIN_LockClient();
       triton::uint512 value = tracer::pintool::context::getCurrentMemoryValue(addr, size);
-      tritonInst->updateContext(triton::arch::MemoryOperand(addr, size, value));
+      tritonInst->updateContext(triton::arch::MemoryAccess(addr, size, value));
       /* Mutex */
       PIN_UnlockClient();
     }

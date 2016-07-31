@@ -64,7 +64,7 @@ def tainting(threadId):
         while offset != TAINTING_SIZE:
             taintMemory(argv + offset)
             concreteValue = getCurrentMemoryValue(argv + offset)
-            convertMemoryToSymbolicVariable(Memory(argv + offset, CPUSIZE.BYTE, concreteValue))
+            convertMemoryToSymbolicVariable(MemoryAccess(argv + offset, CPUSIZE.BYTE, concreteValue))
             offset += 1
         print '[+] %02d bytes tainted from the argv[%d] (%#x) pointer' %(offset, rdi-1, argv)
         rdi -= 1

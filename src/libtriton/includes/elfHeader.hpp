@@ -72,9 +72,9 @@ namespace triton {
         triton::uint16 e_shstrndx;
       } Elf64_Ehdr_t;
 
-      /*! \class ELFHeader
+      /*! \class ElfHeader
        *  \brief The ELF Header class. */
-      class ELFHeader {
+      class ElfHeader {
 
         protected:
           /*!
@@ -145,7 +145,7 @@ namespace triton {
 
           /*!
            *  \description This member holds the number of entries in the section header table. Thus the product
-           *  of ELFHeader::shentsize and ELFHeader::shnum gives the section header table's size in bytes.
+           *  of ElfHeader::shentsize and ElfHeader::shnum gives the section header table's size in bytes.
            */
           triton::uint16 shnum;
 
@@ -158,16 +158,16 @@ namespace triton {
 
         public:
           //! Constructor.
-          ELFHeader();
+          ElfHeader();
 
           //! Constructor by copy.
-          ELFHeader(const ELFHeader& copy);
+          ElfHeader(const ElfHeader& copy);
 
           //! Destructor.
-          ~ELFHeader();
+          ~ElfHeader();
 
-          //! Copies an ELFHeader.
-          void operator=(const ELFHeader& copy);
+          //! Copies an ElfHeader.
+          void operator=(const ElfHeader& copy);
 
           //! Parses the ELF Header. Returns the number of bytes read.
           triton::uint32 parse(const triton::uint8* raw);

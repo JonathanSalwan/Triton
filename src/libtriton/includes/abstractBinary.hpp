@@ -82,7 +82,7 @@ namespace triton {
         triton::format::BinaryInterface* getBinary(void);
 
         //! Returns the ELF instance only if the AbstractBinary::format is equal to triton::format::BINARY_ELF otherwise raise an excepton.
-        triton::format::elf::ELF* getElf(void);
+        triton::format::elf::Elf* getElf(void);
 
         //! Returns the path file of the loaded binary.
         const std::string& getPath(void) const;

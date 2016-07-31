@@ -58,7 +58,7 @@ namespace triton {
 
       /*! \class ELFSymbolTable
        *  \brief The ELF symbol table class. */
-      class ELFSymbolTable {
+      class ElfSymbolTable {
 
         protected:
         /*!
@@ -69,7 +69,7 @@ namespace triton {
         triton::uint32 idxname;
 
         /*!
-         * \description This member specifies the name of the symbol as string based on the ELFSymbolTable::idxname.
+         * \description This member specifies the name of the symbol as string based on the ElfSymbolTable::idxname.
          */
         std::string name;
 
@@ -107,16 +107,16 @@ namespace triton {
 
         public:
           //! Constructor.
-          ELFSymbolTable();
+          ElfSymbolTable();
 
           //! Constructor by copy.
-          ELFSymbolTable(const ELFSymbolTable& copy);
+          ElfSymbolTable(const ElfSymbolTable& copy);
 
           //! Destructor.
-          ~ELFSymbolTable();
+          ~ElfSymbolTable();
 
-          //! Copies an ELFSymbolTable.
-          void operator=(const ELFSymbolTable& copy);
+          //! Copies an ElfSymbolTable.
+          void operator=(const ElfSymbolTable& copy);
 
           //! Parses the ELF Symbol Table. Returns the number of bytes read.
           triton::uint32 parse(const triton::uint8* raw, triton::uint8 EIClass);

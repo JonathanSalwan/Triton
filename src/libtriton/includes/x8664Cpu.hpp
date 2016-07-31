@@ -15,7 +15,7 @@
 
 #include "cpuInterface.hpp"
 #include "instruction.hpp"
-#include "memoryOperand.hpp"
+#include "memoryAccess.hpp"
 #include "registerOperand.hpp"
 #include "tritonTypes.hpp"
 #include "x86Semantics.hpp"
@@ -324,11 +324,11 @@ namespace triton {
           bool isSegment(triton::uint32 regId) const;
 
           std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg) const;
-          std::set<triton::arch::RegisterOperand*> getAllRegisters(void) const;
-          std::set<triton::arch::RegisterOperand*> getParentRegisters(void) const;
-          triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryOperand& mem) const;
+          std::set<triton::arch::Register*> getAllRegisters(void) const;
+          std::set<triton::arch::Register*> getParentRegisters(void) const;
+          triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem) const;
           std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const;
-          triton::uint512 getConcreteRegisterValue(const triton::arch::RegisterOperand& reg) const;
+          triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg) const;
           triton::uint32 invalidRegister(void) const;
           triton::uint32 numberOfRegisters(void) const;
           triton::uint32 registerBitSize(void) const;
@@ -337,10 +337,10 @@ namespace triton {
           void buildSemantics(triton::arch::Instruction& inst) const;
           void disassembly(triton::arch::Instruction& inst) const;
           void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
-          void setConcreteMemoryValue(const triton::arch::MemoryOperand& mem);
+          void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem);
           void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
           void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
-          void setConcreteRegisterValue(const triton::arch::RegisterOperand& reg);
+          void setConcreteRegisterValue(const triton::arch::Register& reg);
           bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
           void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
 

@@ -89,7 +89,7 @@ namespace triton {
       switch (this->format) {
         case triton::format::BINARY_ELF:
           delete this->binary;
-          this->binary = new triton::format::elf::ELF(path);
+          this->binary = new triton::format::elf::Elf(path);
           if (!this->binary)
             throw triton::exceptions::Format("AbstractBinary::parseBinary(): Not enough memory.");
           break;
@@ -108,10 +108,10 @@ namespace triton {
     }
 
 
-    triton::format::elf::ELF* AbstractBinary::getElf(void) {
+    triton::format::elf::Elf* AbstractBinary::getElf(void) {
       if (this->format != triton::format::BINARY_ELF)
         throw triton::exceptions::Format("AbstractBinary::getElf(): The abstract binary is not an ELF.");
-      return reinterpret_cast<triton::format::elf::ELF*>(this->binary);
+      return reinterpret_cast<triton::format::elf::Elf*>(this->binary);
     }
 
 

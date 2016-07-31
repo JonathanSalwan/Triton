@@ -41,7 +41,7 @@ int main(int ac, const char **av) {
 
   auto reg = api.getAllRegisters();
   for (auto it = reg.begin(); it != reg.end(); it++) {
-    RegisterOperand r = **it;
+    Register r = **it;
     std::cout << r << std::endl;
   }
 

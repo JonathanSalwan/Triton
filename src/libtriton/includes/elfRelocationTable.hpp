@@ -62,9 +62,9 @@ namespace triton {
         triton::sint64 r_addend;
       } Elf64_Rela_t;
 
-      /*! \class ELFRelocationTable
+      /*! \class ElfRelocationTable
        *  \brief The ELF symbol table class. */
-      class ELFRelocationTable {
+      class ElfRelocationTable {
 
         protected:
           //! Defines if this class is a DT_RELA or a DT_REL.
@@ -94,29 +94,29 @@ namespace triton {
           triton::sint64 addend;
 
           /*!
-           * \description According to the ELFRelocationTable::info value, this field contains the
+           * \description According to the ElfRelocationTable::info value, this field contains the
            * type of the relocation.
            */
           triton::uint64 type;
 
           /*!
-           * \description According to the ELFRelocationTable::info value, this field contains the
+           * \description According to the ElfRelocationTable::info value, this field contains the
            * index of the corresponding symbol.
            */
           triton::uint64 symidx;
 
         public:
           //! Constructor.
-          ELFRelocationTable();
+          ElfRelocationTable();
 
           //! Constructor by copy.
-          ELFRelocationTable(const ELFRelocationTable& copy);
+          ElfRelocationTable(const ElfRelocationTable& copy);
 
           //! Destructor.
-          ~ELFRelocationTable();
+          ~ElfRelocationTable();
 
-          //! Copies an ELFRelocationTable.
-          void operator=(const ELFRelocationTable& copy);
+          //! Copies an ElfRelocationTable.
+          void operator=(const ElfRelocationTable& copy);
 
           //! Parses the ELF Relocation Table (without addend). Returns the number of bytes read.
           triton::uint32 parseRel(const triton::uint8* raw, triton::uint8 EIClass);

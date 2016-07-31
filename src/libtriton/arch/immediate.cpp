@@ -7,24 +7,24 @@
 
 #include <cpuSize.hpp>
 #include <exceptions.hpp>
-#include <immediateOperand.hpp>
+#include <immediate.hpp>
 
 
 
 namespace triton {
   namespace arch {
 
-    ImmediateOperand::ImmediateOperand() {
+    Immediate::Immediate() {
       this->value = 0;
     }
 
 
-    ImmediateOperand::ImmediateOperand(triton::uint64 value, triton::uint32 size /* bytes */) {
+    Immediate::Immediate(triton::uint64 value, triton::uint32 size /* bytes */) {
       if (size == 0)
-        throw triton::exceptions::ImmediateOperand("ImmediateOperand::ImmediateOperand(): size cannot be zero.");
+        throw triton::exceptions::Immediate("Immediate::Immediate(): size cannot be zero.");
 
       if (size != BYTE_SIZE && size != WORD_SIZE && size != DWORD_SIZE && size != QWORD_SIZE && size != DQWORD_SIZE && size != QQWORD_SIZE && size != DQQWORD_SIZE)
-        throw triton::exceptions::ImmediateOperand("ImmediateOperand::ImmediateOperand(): size must be aligned.");
+        throw triton::exceptions::Immediate("Immediate::Immediate(): size must be aligned.");
 
       switch (size) {
         case BYTE_SIZE:
@@ -44,74 +44,74 @@ namespace triton {
     }
 
 
-    ImmediateOperand::ImmediateOperand(const ImmediateOperand& other) : BitsVector(other) {
+    Immediate::Immediate(const Immediate& other) : BitsVector(other) {
       this->copy(other);
     }
 
 
-    ImmediateOperand::~ImmediateOperand() {
+    Immediate::~Immediate() {
     }
 
 
-    triton::uint64 ImmediateOperand::getValue(void) const {
+    triton::uint64 Immediate::getValue(void) const {
       return this->value;
     }
 
 
-    void ImmediateOperand::setValue(triton::uint64 v) {
+    void Immediate::setValue(triton::uint64 v) {
       this->value = v;
     }
 
 
-    triton::uint32 ImmediateOperand::getAbstractLow(void) const {
+    triton::uint32 Immediate::getAbstractLow(void) const {
       return this->getLow();
     }
 
 
-    triton::uint32 ImmediateOperand::getAbstractHigh(void) const {
+    triton::uint32 Immediate::getAbstractHigh(void) const {
       return this->getHigh();
     }
 
 
-    triton::uint32 ImmediateOperand::getSize(void) const {
+    triton::uint32 Immediate::getSize(void) const {
       return this->getVectorSize() / BYTE_SIZE_BIT;
     }
 
 
-    triton::uint32 ImmediateOperand::getBitSize(void) const {
+    triton::uint32 Immediate::getBitSize(void) const {
       return this->getVectorSize();
     }
 
 
-    triton::uint32 ImmediateOperand::getType(void) const {
+    triton::uint32 Immediate::getType(void) const {
       return triton::arch::OP_IMM;
     }
 
 
-    void ImmediateOperand::operator=(const ImmediateOperand& other) {
+    void Immediate::operator=(const Immediate& other) {
       BitsVector::operator=(other);
       this->copy(other);
     }
 
 
-    void ImmediateOperand::copy(const ImmediateOperand& other) {
+    void Immediate::copy(const Immediate& other) {
       this->value = other.value;
     }
 
 
-    std::ostream& operator<<(std::ostream& stream, const ImmediateOperand& imm) {
+    std::ostream& operator<<(std::ostream& stream, const Immediate& imm) {
       stream << "0x" << std::hex << imm.getValue() << ":" << std::dec << imm.getBitSize() << " bv[" << imm.getHigh() << ".." << imm.getLow() << "]";
       return stream;
     }
 
 
-    std::ostream& operator<<(std::ostream& stream, const ImmediateOperand* imm) {
+    std::ostream& operator<<(std::ostream& stream, const Immediate* imm) {
       stream << *imm;
       return stream;
     }
 
 
-    bool operator==(const ImmediateOperand& imm1, const ImmediateOperand& imm2) {
+    bool operator==(const Immediate& imm1, const Immediate& imm2) {
       if (imm1.getValue() != imm2.getValue())
         return false;
       if (imm1.getSize() != imm2.getSize())
@@ -120,14 +120,14 @@ namespace triton {
     }
 
 
-    bool operator!=(const ImmediateOperand& imm1, const ImmediateOperand& imm2) {
+    bool operator!=(const Immediate& imm1, const Immediate& imm2) {
       if (imm1 == imm2)
         return false;
       return true;
     }
 
 
-    bool operator<(const ImmediateOperand& imm1, const ImmediateOperand& imm2) {
+    bool operator<(const Immediate& imm1, const Immediate& imm2) {
       return imm1.getValue() < imm2.getValue();
     }
 

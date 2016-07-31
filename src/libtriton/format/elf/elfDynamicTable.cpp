@@ -16,29 +16,29 @@ namespace triton {
   namespace format {
     namespace elf {
 
-      ELFDynamicTable::ELFDynamicTable() {
+      ElfDynamicTable::ElfDynamicTable() {
         this->tag   = 0;
         this->value = 0;
       }
 
 
-      ELFDynamicTable::ELFDynamicTable(const ELFDynamicTable& copy) {
+      ElfDynamicTable::ElfDynamicTable(const ElfDynamicTable& copy) {
         this->tag   = copy.tag;
         this->value = copy.value;
       }
 
 
-      ELFDynamicTable::~ELFDynamicTable() {
+      ElfDynamicTable::~ElfDynamicTable() {
       }
 
 
-      void ELFDynamicTable::operator=(const ELFDynamicTable& copy) {
+      void ElfDynamicTable::operator=(const ElfDynamicTable& copy) {
         this->tag   = copy.tag;
         this->value = copy.value;
       }
 
 
-      triton::uint32 ELFDynamicTable::parse(const triton::uint8* raw, triton::uint8 EIClass) {
+      triton::uint32 ElfDynamicTable::parse(const triton::uint8* raw, triton::uint8 EIClass) {
         triton::format::elf::Elf32_Dyn_t dyn32;
         triton::format::elf::Elf64_Dyn_t dyn64;
 
@@ -56,18 +56,18 @@ namespace triton {
             return sizeof(triton::format::elf::Elf64_Dyn_t);
 
           default:
-            throw triton::exceptions::ELF("ELFDynamicTable::parse(): Invalid EI_CLASS.");
+            throw triton::exceptions::Elf("ElfDynamicTable::parse(): Invalid EI_CLASS.");
         }
         return 0;
       }
 
 
-      triton::sint64 ELFDynamicTable::getTag(void) const {
+      triton::sint64 ElfDynamicTable::getTag(void) const {
         return this->tag;
       }
 
 
-      triton::uint64 ELFDynamicTable::getValue(void) const {
+      triton::uint64 ElfDynamicTable::getValue(void) const {
         return this->value;
       }
 

@@ -13,7 +13,7 @@
 
 #include "cpuInterface.hpp"
 #include "instruction.hpp"
-#include "memoryOperand.hpp"
+#include "memoryAccess.hpp"
 #include "registerOperand.hpp"
 #include "tritonTypes.hpp"
 
@@ -111,10 +111,10 @@ namespace triton {
         std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg) const;
 
         //! Returns all registers.
-        std::set<triton::arch::RegisterOperand*> getAllRegisters(void) const;
+        std::set<triton::arch::Register*> getAllRegisters(void) const;
 
         //! Returns all parent registers.
-        std::set<triton::arch::RegisterOperand*> getParentRegisters(void) const;
+        std::set<triton::arch::Register*> getParentRegisters(void) const;
 
         //! Disassembles the instruction according to the architecture.
         void disassembly(triton::arch::Instruction& inst) const;
@@ -126,48 +126,53 @@ namespace triton {
         triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const;
 
         //! Returns the concrete value of memory cells.
-        triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryOperand& mem) const;
+        triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem) const;
 
         //! Returns the concrete value of a memory area.
         std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const;
 
         //! Returns the concrete value of a register.
-        triton::uint512 getConcreteRegisterValue(const triton::arch::RegisterOperand& reg) const;
+        triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg) const;
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory cell.
          *
-         * \description Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+         * \description Note that by setting a concrete value will probably imply a desynchronization
+         * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
         void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of memory cells.
          *
-         * \description Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+         * \description Note that by setting a concrete value will probably imply a desynchronization
+         * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
-        void setConcreteMemoryValue(const triton::arch::MemoryOperand& mem);
+        void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem);
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory area.
          *
-         * \description Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+         * \description Note that by setting a concrete value will probably imply a desynchronization
+         * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
         void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory area.
          *
-         * \description Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+         * \description Note that by setting a concrete value will probably imply a desynchronization
+         * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
         void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a register.
          *
-         * \description Note that by setting a concrete value will probably imply a desynchronization with the symbolic state (if it exists). You should probably use the concretize functions after this.
+         * \description Note that by setting a concrete value will probably imply a desynchronization
+         * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
-        void setConcreteRegisterValue(const triton::arch::RegisterOperand& reg);
+        void setConcreteRegisterValue(const triton::arch::Register& reg);
 
         //! Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getConcreteMemoryValue() and getConcreteMemoryAreaValue().
         bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);

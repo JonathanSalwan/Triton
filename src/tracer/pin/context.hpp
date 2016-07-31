@@ -45,11 +45,11 @@ namespace tracer {
       //! True if the context must be executed.
       extern bool mustBeExecuted;
 
-      //! Returns the current register value from a RegisterOperand.
-      triton::uint512 getCurrentRegisterValue(triton::arch::RegisterOperand& reg);
+      //! Returns the current register value from a Register.
+      triton::uint512 getCurrentRegisterValue(triton::arch::Register& reg);
 
-      //! Returns the current memory value from a MemoryOperand.
-      triton::uint512 getCurrentMemoryValue(triton::arch::MemoryOperand& mem);
+      //! Returns the current memory value from a MemoryAccess.
+      triton::uint512 getCurrentMemoryValue(triton::arch::MemoryAccess& mem);
 
       //! Returns the current memory value from an address.
       triton::uint512 getCurrentMemoryValue(triton::__uint addr);
@@ -57,17 +57,17 @@ namespace tracer {
       //! Returns the current memory value from an address with a specified readable size.
       triton::uint512 getCurrentMemoryValue(triton::__uint addr, triton::uint32 size);
 
-      //! Sets the current register value from a RegisterOperand. `triton::arch::RegisterOperand::getConcreteValue()` is used to define the value.
-      void setCurrentRegisterValue(triton::arch::RegisterOperand& reg);
+      //! Sets the current register value from a Register. `triton::arch::Register::getConcreteValue()` is used to define the value.
+      void setCurrentRegisterValue(triton::arch::Register& reg);
 
-      //! Sets the current register value from a RegisterOperand.
-      void setCurrentRegisterValue(triton::arch::RegisterOperand& reg, triton::uint512 value);
+      //! Sets the current register value from a Register.
+      void setCurrentRegisterValue(triton::arch::Register& reg, triton::uint512 value);
 
-      //! Sets the current memory value from a MemoryOperand. `triton::arch::MemoryOperand::getConcreteValue()` is used to define the value.
-      void setCurrentMemoryValue(triton::arch::MemoryOperand& mem);
+      //! Sets the current memory value from a MemoryAccess. `triton::arch::MemoryAccess::getConcreteValue()` is used to define the value.
+      void setCurrentMemoryValue(triton::arch::MemoryAccess& mem);
 
-      //! Sets the current memory value from a MemoryOperand.
-      void setCurrentMemoryValue(triton::arch::MemoryOperand& mem, triton::uint512 value);
+      //! Sets the current memory value from a MemoryAccess.
+      void setCurrentMemoryValue(triton::arch::MemoryAccess& mem, triton::uint512 value);
 
       //! Sets the current memory value from an address.
       void setCurrentMemoryValue(triton::__uint addr, triton::uint8 value);

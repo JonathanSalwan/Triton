@@ -64,9 +64,9 @@ namespace triton {
         triton::uint64 sh_entsize;
       } Elf64_Shdr_t;
 
-      /*! \class ELFSectionHeader
+      /*! \class ElfSectionHeader
        *  \brief The ELF Section Header class. */
-      class ELFSectionHeader {
+      class ElfSectionHeader {
 
         protected:
         /*!
@@ -76,7 +76,7 @@ namespace triton {
         triton::uint32 idxname;
 
         /*!
-         * \description This member specifies the name of the section as string based on the ELFSectionHeader::idxname.
+         * \description This member specifies the name of the section as string based on the ElfSectionHeader::idxname.
          */
         std::string name;
 
@@ -87,7 +87,7 @@ namespace triton {
 
         /*!
          * \description Sections support one-bit flags that describe miscellaneous attributes.
-         * If a flag bit is set in ELFSectionHeader::flags, the attribute is "on" for the section.
+         * If a flag bit is set in ElfSectionHeader::flags, the attribute is "on" for the section.
          * Otherwise, the attribute is "off" or does not apply. Undefined attributes are set to zero.
          */
         triton::uint64 flags;
@@ -125,7 +125,7 @@ namespace triton {
         /*!
          * \description Some sections have address alignment constraints. If a section holds a doubleword, the system must
          * ensure doubleword alignment for the entire section. That is, the value of sh_addr must be congruent to zero,
-         * modulo the value of ELFSectionHeader::addralign. Only zero and positive integral powers of two are allowed. Values
+         * modulo the value of ElfSectionHeader::addralign. Only zero and positive integral powers of two are allowed. Values
          * of zero or one mean the section has no alignment constraints.
          */
         triton::uint64 addralign;
@@ -139,16 +139,16 @@ namespace triton {
 
         public:
           //! Constructor.
-          ELFSectionHeader();
+          ElfSectionHeader();
 
           //! Constructor by copy.
-          ELFSectionHeader(const ELFSectionHeader& copy);
+          ElfSectionHeader(const ElfSectionHeader& copy);
 
           //! Destructor.
-          ~ELFSectionHeader();
+          ~ElfSectionHeader();
 
-          //! Copies an ELFSectionHeader.
-          void operator=(const ELFSectionHeader& copy);
+          //! Copies an ElfSectionHeader.
+          void operator=(const ElfSectionHeader& copy);
 
           //! Parses the ELF Program Header. Returns the number of bytes read.
           triton::uint32 parse(const triton::uint8* raw, triton::uint8 EIClass);

@@ -60,9 +60,9 @@ namespace triton {
         triton::uint64 p_align;
       } Elf64_Phdr_t;
 
-      /*! \class ELFProgramHeader
+      /*! \class ElfProgramHeader
        *  \brief The ELF Program Header class. */
-      class ELFProgramHeader {
+      class ElfProgramHeader {
 
         protected:
           /*!
@@ -111,16 +111,16 @@ namespace triton {
 
         public:
           //! Constructor.
-          ELFProgramHeader();
+          ElfProgramHeader();
 
           //! Constructor by copy.
-          ELFProgramHeader(const ELFProgramHeader& copy);
+          ElfProgramHeader(const ElfProgramHeader& copy);
 
           //! Destructor.
-          ~ELFProgramHeader();
+          ~ElfProgramHeader();
 
-          //! Copies an ELFProgramHeader.
-          void operator=(const ELFProgramHeader& copy);
+          //! Copies an ElfProgramHeader.
+          void operator=(const ElfProgramHeader& copy);
 
           //! Parses the ELF Program Header. Returns the number of bytes read.
           triton::uint32 parse(const triton::uint8* raw, triton::uint8 EIClass);

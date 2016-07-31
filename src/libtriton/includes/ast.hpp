@@ -750,172 +750,172 @@ namespace triton {
     bool operator==(AbstractNode& node1, AbstractNode& node2);
 
 
-    //! ast C++ api - bv node builder
+    //! AST C++ API - bv node builder
     AbstractNode* bv(triton::uint512 value, triton::uint32 size);
 
-    //! ast C++ api - bvadd node builder
+    //! AST C++ API - bvadd node builder
     AbstractNode* bvadd(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvand node builder
+    //! AST C++ API - bvand node builder
     AbstractNode* bvand(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvashr node builder
+    //! AST C++ API - bvashr node builder
     AbstractNode* bvashr(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvdecl node builder
+    //! AST C++ API - bvdecl node builder
     AbstractNode* bvdecl(triton::uint32 size);
 
-    //! ast C++ api - bvfalse node builder
+    //! AST C++ API - bvfalse node builder
     AbstractNode* bvfalse(void);
 
-    //! ast C++ api - bvlshr node builder
+    //! AST C++ API - bvlshr node builder
     AbstractNode* bvlshr(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvmul node builder
+    //! AST C++ API - bvmul node builder
     AbstractNode* bvmul(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvnand node builder
+    //! AST C++ API - bvnand node builder
     AbstractNode* bvnand(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvneg node builder
+    //! AST C++ API - bvneg node builder
     AbstractNode* bvneg(AbstractNode* expr);
 
-    //! ast C++ api - bvnor node builder
+    //! AST C++ API - bvnor node builder
     AbstractNode* bvnor(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvnot node builder
+    //! AST C++ API - bvnot node builder
     AbstractNode* bvnot(AbstractNode* expr);
 
-    //! ast C++ api - bvor node builder
+    //! AST C++ API - bvor node builder
     AbstractNode* bvor(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvrol node builder
+    //! AST C++ API - bvrol node builder
     AbstractNode* bvrol(triton::uint32 rot, AbstractNode* expr);
 
-    //! ast C++ api - bvrol node builder
+    //! AST C++ API - bvrol node builder
     AbstractNode* bvrol(AbstractNode* rot, AbstractNode* expr);
 
-    //! ast C++ api - bvror node builder
+    //! AST C++ API - bvror node builder
     AbstractNode* bvror(triton::uint32 rot, AbstractNode* expr);
 
-    //! ast C++ api - bvror node builder
+    //! AST C++ API - bvror node builder
     AbstractNode* bvror(AbstractNode* rot, AbstractNode* expr);
 
-    //! ast C++ api - bvsdiv node builder
+    //! AST C++ API - bvsdiv node builder
     AbstractNode* bvsdiv(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvsge node builder
+    //! AST C++ API - bvsge node builder
     AbstractNode* bvsge(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvsgt node builder
+    //! AST C++ API - bvsgt node builder
     AbstractNode* bvsgt(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvshl node builder
+    //! AST C++ API - bvshl node builder
     AbstractNode* bvshl(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvsle node builder
+    //! AST C++ API - bvsle node builder
     AbstractNode* bvsle(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvslt node builder
+    //! AST C++ API - bvslt node builder
     AbstractNode* bvslt(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvsmod node builder
+    //! AST C++ API - bvsmod node builder
     AbstractNode* bvsmod(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvsrem node builder
+    //! AST C++ API - bvsrem node builder
     AbstractNode* bvsrem(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvsub node builder
+    //! AST C++ API - bvsub node builder
     AbstractNode* bvsub(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvtrue node builder
+    //! AST C++ API - bvtrue node builder
     AbstractNode* bvtrue(void);
 
-    //! ast C++ api - bvudiv node builder
+    //! AST C++ API - bvudiv node builder
     AbstractNode* bvudiv(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvuge node builder
+    //! AST C++ API - bvuge node builder
     AbstractNode* bvuge(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvugt node builder
+    //! AST C++ API - bvugt node builder
     AbstractNode* bvugt(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvule node builder
+    //! AST C++ API - bvule node builder
     AbstractNode* bvule(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvult node builder
+    //! AST C++ API - bvult node builder
     AbstractNode* bvult(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvurem node builder
+    //! AST C++ API - bvurem node builder
     AbstractNode* bvurem(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvxnor node builder
+    //! AST C++ API - bvxnor node builder
     AbstractNode* bvxnor(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - bvxor node builder
+    //! AST C++ API - bvxor node builder
     AbstractNode* bvxor(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - compound node builder
+    //! AST C++ API - compound node builder
     AbstractNode* compound(std::vector<AbstractNode* > exprs);
 
-    //! ast C++ api - concat node builder
+    //! AST C++ API - concat node builder
     AbstractNode* concat(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - concat node builder
+    //! AST C++ API - concat node builder
     AbstractNode* concat(std::vector<AbstractNode* > exprs);
 
-    //! ast C++ api - concat node builder
+    //! AST C++ API - concat node builder
     AbstractNode* concat(std::list<AbstractNode* > exprs);
 
-    //! ast C++ api - decimal node builder
+    //! AST C++ API - decimal node builder
     AbstractNode* decimal(triton::uint512 value);
 
-    //! ast C++ api - declare node builder
+    //! AST C++ API - declare node builder
     AbstractNode* declareFunction(std::string name, AbstractNode* bvDecl);
 
-    //! ast C++ api - distinct node builder
+    //! AST C++ API - distinct node builder
     AbstractNode* distinct(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - equal node builder
+    //! AST C++ API - equal node builder
     AbstractNode* equal(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - extract node builder
+    //! AST C++ API - extract node builder
     AbstractNode* extract(triton::uint32 high, triton::uint32 low, AbstractNode* expr);
 
-    //! ast C++ api - ite node builder
+    //! AST C++ API - ite node builder
     AbstractNode* ite(AbstractNode* ifExpr, AbstractNode* thenExpr, AbstractNode* elseExpr);
 
-    //! ast C++ api - land node builder
+    //! AST C++ API - land node builder
     AbstractNode* land(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - let node builder
+    //! AST C++ API - let node builder
     AbstractNode* let(std::string alias, AbstractNode* expr2, AbstractNode* expr3);
 
-    //! ast C++ api - lnot node builder
+    //! AST C++ API - lnot node builder
     AbstractNode* lnot(AbstractNode* expr);
 
-    //! ast C++ api - lor node builder
+    //! AST C++ API - lor node builder
     AbstractNode* lor(AbstractNode* expr1, AbstractNode* expr2);
 
-    //! ast C++ api - reference node builder
+    //! AST C++ API - reference node builder
     AbstractNode* reference(triton::usize value);
 
-    //! ast C++ api - assert node builder
+    //! AST C++ API - assert node builder
     AbstractNode* assert_(AbstractNode* expr);
 
-    //! ast C++ api - string node builder
+    //! AST C++ API - string node builder
     AbstractNode* string(std::string value);
 
-    //! ast C++ api - sx node builder
+    //! AST C++ API - sx node builder
     AbstractNode* sx(triton::uint32 sizeExt, AbstractNode* expr);
 
-    //! ast C++ api - variable node builder
+    //! AST C++ API - variable node builder
     AbstractNode* variable(triton::engines::symbolic::SymbolicVariable& symVar);
 
-    //! ast C++ api - zx node builder
+    //! AST C++ API - zx node builder
     AbstractNode* zx(triton::uint32 sizeExt, AbstractNode* expr);
 
-    //! ast C++ api - Duplicates the AST
+    //! AST C++ API - Duplicates the AST
     AbstractNode* newInstance(AbstractNode* node);
 
     //! Custom pow function for hash routine.
@@ -934,4 +934,3 @@ namespace triton {
 
 
 #endif /* TRITON_AST_H */
-

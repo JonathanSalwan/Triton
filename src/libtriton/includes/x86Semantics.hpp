@@ -58,10 +58,10 @@ namespace triton {
       void alignSubStack_s(triton::arch::Instruction& inst, triton::uint32 delta);
 
       //! Clears a flag.
-      void clearFlag_s(triton::arch::Instruction& inst, triton::arch::RegisterOperand& flag, std::string comment="");
+      void clearFlag_s(triton::arch::Instruction& inst, triton::arch::Register& flag, std::string comment="");
 
       //! Sets a flag.
-      void setFlag_s(triton::arch::Instruction& inst, triton::arch::RegisterOperand& flag, std::string comment="");
+      void setFlag_s(triton::arch::Instruction& inst, triton::arch::Register& flag, std::string comment="");
 
       //! Control flow semantics. Used to represent IP.
       void controlFlow_s(triton::arch::Instruction& inst);

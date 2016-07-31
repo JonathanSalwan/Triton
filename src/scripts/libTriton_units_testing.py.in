@@ -1003,7 +1003,7 @@ def test_3():
     count = 0
     setArchitecture(ARCH.X86_64)
 
-    mem = Memory(0x1122334455667788, 8, 0x6162636465666768)
+    mem = MemoryAccess(0x1122334455667788, 8, 0x6162636465666768)
 
     if mem.getAddress() == 0x1122334455667788:
         count += 1
@@ -1013,7 +1013,7 @@ def test_3():
         print '\tExpected : 0x1122334455667788'
         return -1
 
-    mem = Memory(0x400f4d3, 8, 0x6162636465666768)
+    mem = MemoryAccess(0x400f4d3, 8, 0x6162636465666768)
 
     if mem.getAddress() == 0x400f4d3:
         count += 1
@@ -3260,9 +3260,9 @@ def test_9():
 
 units_testing = [
     ("Testing the arithmetic and logic AST interpreter", test_1),
-    ("Testing the RegisterOperand class", test_2),
-    ("Testing the MemoryOperand class", test_3),
-    ("Testing the ImmediateOperand class", test_4),
+    ("Testing the Register class", test_2),
+    ("Testing the MemoryAccess class", test_3),
+    ("Testing the Immediate class", test_4),
     ("Testing the Instruction class", test_5),
     ("Testing the architectures", test_6),
     ("Testing the concrete flag values", test_7),

@@ -150,14 +150,14 @@ namespace triton {
     }
 
 
-    std::set<triton::arch::RegisterOperand*> Architecture::getAllRegisters(void) const {
+    std::set<triton::arch::Register*> Architecture::getAllRegisters(void) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getAllRegisters(): You must define an architecture.");
       return this->cpu->getAllRegisters();
     }
 
 
-    std::set<triton::arch::RegisterOperand*> Architecture::getParentRegisters(void) const {
+    std::set<triton::arch::Register*> Architecture::getParentRegisters(void) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getParentRegisters(): You must define an architecture.");
       return this->cpu->getParentRegisters();
@@ -276,7 +276,7 @@ namespace triton {
     }
 
 
-    triton::uint512 Architecture::getConcreteMemoryValue(const triton::arch::MemoryOperand& mem) const {
+    triton::uint512 Architecture::getConcreteMemoryValue(const triton::arch::MemoryAccess& mem) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getConcreteMemoryValue(): You must define an architecture.");
       return this->cpu->getConcreteMemoryValue(mem);
@@ -290,7 +290,7 @@ namespace triton {
     }
 
 
-    triton::uint512 Architecture::getConcreteRegisterValue(const triton::arch::RegisterOperand& reg) const {
+    triton::uint512 Architecture::getConcreteRegisterValue(const triton::arch::Register& reg) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getConcreteRegisterValue(): You must define an architecture.");
       return this->cpu->getConcreteRegisterValue(reg);
@@ -304,7 +304,7 @@ namespace triton {
     }
 
 
-    void Architecture::setConcreteMemoryValue(const triton::arch::MemoryOperand& mem) {
+    void Architecture::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem) {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::setConcreteMemoryValue(): You must define an architecture.");
       this->cpu->setConcreteMemoryValue(mem);
@@ -325,7 +325,7 @@ namespace triton {
     }
 
 
-    void Architecture::setConcreteRegisterValue(const triton::arch::RegisterOperand& reg) {
+    void Architecture::setConcreteRegisterValue(const triton::arch::Register& reg) {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::setConcreteRegisterValue(): You must define an architecture.");
       this->cpu->setConcreteRegisterValue(reg);

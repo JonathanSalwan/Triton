@@ -12,7 +12,7 @@
 #include <sstream>
 #include <stdint.h>
 
-#include "memoryOperand.hpp"
+#include "memoryAccess.hpp"
 #include "registerOperand.hpp"
 #include "tritonTypes.hpp"
 
@@ -85,29 +85,29 @@ namespace triton {
 
           //! Returns true if the memory is tainted.
           /*!
-            \param mem the memory operand.
+            \param mem the memory access.
           */
-          bool isMemoryTainted(const triton::arch::MemoryOperand& mem) const;
+          bool isMemoryTainted(const triton::arch::MemoryAccess& mem) const;
 
           //! Returns true if the register is tainted.
           /*!
             \param reg the register operand.
           */
-          bool isRegisterTainted(const triton::arch::RegisterOperand& reg) const;
+          bool isRegisterTainted(const triton::arch::Register& reg) const;
 
           //! Sets memory flag.
           /*!
-            \param mem the memory operand.
+            \param mem the memory access.
             \param flag TAINTED or !TAINTED
           */
-          bool setTaintMemory(const triton::arch::MemoryOperand& mem, bool flag);
+          bool setTaintMemory(const triton::arch::MemoryAccess& mem, bool flag);
 
           //! Sets register flag.
           /*!
             \param reg the register operand.
             \param flag TAINTED or !TAINTED
           */
-          bool setTaintRegister(const triton::arch::RegisterOperand& reg, bool flag);
+          bool setTaintRegister(const triton::arch::Register& reg, bool flag);
 
           //! Taints an address.
           /*!
@@ -117,15 +117,15 @@ namespace triton {
 
           //! Taints a memory.
           /*!
-            \param mem the memory operand.
+            \param mem the memory access.
           */
-          bool taintMemory(const triton::arch::MemoryOperand& mem);
+          bool taintMemory(const triton::arch::MemoryAccess& mem);
 
           //! Taints a register.
           /*!
             \param reg the register operand.
           */
-          bool taintRegister(const triton::arch::RegisterOperand& reg);
+          bool taintRegister(const triton::arch::Register& reg);
 
           //! Untaints an address.
           /*!
@@ -135,22 +135,22 @@ namespace triton {
 
           //! Untaints a memory.
           /*!
-            \param mem the memory operand.
+            \param mem the memory access.
           */
-          bool untaintMemory(const triton::arch::MemoryOperand& mem);
+          bool untaintMemory(const triton::arch::MemoryAccess& mem);
 
           //! Untaints a register.
           /*!
             \param reg the register operand.
           */
-          bool untaintRegister(const triton::arch::RegisterOperand& reg);
+          bool untaintRegister(const triton::arch::Register& reg);
 
           //! Taints MemoryImmediate with union.
           /*!
             \param memDst the memory destination.
             \return true if the memDst is TAINTED.
           */
-          bool unionMemoryImmediate(const triton::arch::MemoryOperand& memDst);
+          bool unionMemoryImmediate(const triton::arch::MemoryAccess& memDst);
 
           //! Taints MemoryMemory with union.
           /*!
@@ -158,7 +158,7 @@ namespace triton {
             \param memSrc the memory source.
             \return true if the memDst or memSrc are TAINTED.
           */
-          bool unionMemoryMemory(const triton::arch::MemoryOperand& memDst, const triton::arch::MemoryOperand& memSrc);
+          bool unionMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
 
           //! Taints MemoryRegister with union.
           /*!
@@ -166,14 +166,14 @@ namespace triton {
             \param regSrc the register source.
             \return true if the memDst or regSrc are TAINTED.
           */
-          bool unionMemoryRegister(const triton::arch::MemoryOperand& memDst, const triton::arch::RegisterOperand& regSrc);
+          bool unionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
 
           //! Taints RegisterImmediate with union.
           /*!
             \param regDst the register source.
             \return true if the regDst is TAINTED.
           */
-          bool unionRegisterImmediate(const triton::arch::RegisterOperand& regDst);
+          bool unionRegisterImmediate(const triton::arch::Register& regDst);
 
           //! Taints RegisterMemory with union.
           /*!
@@ -181,7 +181,7 @@ namespace triton {
             \param memSrc the memory source.
             \return true if the regDst or memSrc are TAINTED.
           */
-          bool unionRegisterMemory(const triton::arch::RegisterOperand& regDst, const triton::arch::MemoryOperand& memSrc);
+          bool unionRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
 
           //! Taints RegisterRegister with union.
           /*!
@@ -189,14 +189,14 @@ namespace triton {
             \param regSrc the register source.
             \return true if the regDst or regSrc are TAINTED.
           */
-          bool unionRegisterRegister(const triton::arch::RegisterOperand& regDst, const triton::arch::RegisterOperand& regSrc);
+          bool unionRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
 
           //! Taints MemoryImmediate with assignment.
           /*!
             \param memDst the memory destination.
             \return always false.
           */
-          bool assignmentMemoryImmediate(const triton::arch::MemoryOperand& memDst);
+          bool assignmentMemoryImmediate(const triton::arch::MemoryAccess& memDst);
 
           //! Taints MemoryMemory with assignment.
           /*!
@@ -204,7 +204,7 @@ namespace triton {
             \param memSrc the memory source.
             \return true if the memDst is tainted.
           */
-          bool assignmentMemoryMemory(const triton::arch::MemoryOperand& memDst, const triton::arch::MemoryOperand& memSrc);
+          bool assignmentMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
 
           //! Taints MemoryRegister with assignment.
           /*!
@@ -212,14 +212,14 @@ namespace triton {
             \param regSrc the register source.
             \return true if the memDst is tainted.
           */
-          bool assignmentMemoryRegister(const triton::arch::MemoryOperand& memDst, const triton::arch::RegisterOperand& regSrc);
+          bool assignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
 
           //! Taints RegisterImmediate with assignment.
           /*!
             \param regDst the register destination.
             \return always false.
           */
-          bool assignmentRegisterImmediate(const triton::arch::RegisterOperand& regDst);
+          bool assignmentRegisterImmediate(const triton::arch::Register& regDst);
 
           //! Taints RegisterMemory with assignment.
           /*!
@@ -227,7 +227,7 @@ namespace triton {
             \param memSrc the memory source.
             \return true if the regDst is tainted.
           */
-          bool assignmentRegisterMemory(const triton::arch::RegisterOperand& regDst, const triton::arch::MemoryOperand& memSrc);
+          bool assignmentRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
 
           //! Taints RegisterRegister with assignment.
           /*!
@@ -235,7 +235,7 @@ namespace triton {
             \param regSrc the register source.
             \return true if the regDst is tainted.
           */
-          bool assignmentRegisterRegister(const triton::arch::RegisterOperand& regDst, const triton::arch::RegisterOperand& regSrc);
+          bool assignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
 
           //! Copies a TaintEngine.
           void operator=(const TaintEngine& other);
