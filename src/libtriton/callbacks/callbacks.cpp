@@ -66,10 +66,10 @@ namespace triton {
     void Callbacks::addCallback(triton::callbacks::callback_e kind, PyObject* function) {
       switch (kind) {
         case MEMORY_HIT:
-            this->pyMemoryHitCallbacks.push_back(function);
+          this->pyMemoryHitCallbacks.push_back(function);
           break;
         case SYMBOLIC_SIMPLIFICATION:
-            this->pySymbolicSimplificationCallbacks.push_back(function);
+          this->pySymbolicSimplificationCallbacks.push_back(function);
           break;
         default:
           throw triton::exceptions::Callbacks("Callbacks::addCallback(): Invalid kind of callback.");
@@ -97,10 +97,10 @@ namespace triton {
     void Callbacks::deleteCallback(triton::callbacks::callback_e kind, PyObject* function) {
       switch (kind) {
         case MEMORY_HIT:
-            this->pyMemoryHitCallbacks.remove(function);
+          this->pyMemoryHitCallbacks.remove(function);
           break;
         case SYMBOLIC_SIMPLIFICATION:
-            this->pySymbolicSimplificationCallbacks.remove(function);
+          this->pySymbolicSimplificationCallbacks.remove(function);
           break;
         default:
           throw triton::exceptions::Callbacks("Callbacks::deleteCallback(): Invalid kind of callback.");
@@ -189,6 +189,7 @@ namespace triton {
             Py_DECREF(args);
           }
           #endif
+          break;
         }
         default:
           throw triton::exceptions::Callbacks("Callbacks::processCallbacks(): Invalid kind of callback for this C++ polymorphism.");
