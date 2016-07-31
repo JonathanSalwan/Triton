@@ -269,7 +269,7 @@ namespace triton {
         void checkCallbacks(void) const;
 
         //! [**callbacks api**] - Adds an unmapped memory hit callback.
-        void addCallback(triton::callbacks::unmappedMemoryHitCallback cb);
+        void addCallback(triton::callbacks::memoryHitCallback cb);
 
         //! [**callbacks api**] - Adds a symbolic simplification callback.
         void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
@@ -280,7 +280,7 @@ namespace triton {
         #endif
 
         //! [**callbacks api**] - Deletes an unmapped memory hit callback.
-        void deleteCallback(triton::callbacks::unmappedMemoryHitCallback cb);
+        void deleteCallback(triton::callbacks::memoryHitCallback cb);
 
         //! [**callbacks api**] - Deletes a symbolic simplification callback.
         void deleteCallback(triton::callbacks::symbolicSimplificationCallback cb);

@@ -26,12 +26,12 @@ namespace triton {
 
     Callbacks::Callbacks(const Callbacks& copy) {
       #ifdef TRITON_PYTHON_BINDINGS
-      this->pyUnmappedMemoryHitCallbacks        = copy.pyUnmappedMemoryHitCallbacks;
-      this->pySymbolicSimplificationCallbacks   = copy.pySymbolicSimplificationCallbacks;
+      this->pyMemoryHitCallbacks              = copy.pyMemoryHitCallbacks;
+      this->pySymbolicSimplificationCallbacks = copy.pySymbolicSimplificationCallbacks;
       #endif
-      this->unmappedMemoryHitCallbacks          = copy.unmappedMemoryHitCallbacks;
-      this->symbolicSimplificationCallbacks     = copy.symbolicSimplificationCallbacks;
-      this->isDefined                           = copy.isDefined;
+      this->memoryHitCallbacks                = copy.memoryHitCallbacks;
+      this->symbolicSimplificationCallbacks   = copy.symbolicSimplificationCallbacks;
+      this->isDefined                         = copy.isDefined;
     }
 
 
@@ -41,17 +41,17 @@ namespace triton {
 
     void Callbacks::operator=(const Callbacks& copy) {
       #ifdef TRITON_PYTHON_BINDINGS
-      this->pyUnmappedMemoryHitCallbacks        = copy.pyUnmappedMemoryHitCallbacks;
-      this->pySymbolicSimplificationCallbacks   = copy.pySymbolicSimplificationCallbacks;
+      this->pyMemoryHitCallbacks              = copy.pyMemoryHitCallbacks;
+      this->pySymbolicSimplificationCallbacks = copy.pySymbolicSimplificationCallbacks;
       #endif
-      this->unmappedMemoryHitCallbacks          = copy.unmappedMemoryHitCallbacks;
-      this->symbolicSimplificationCallbacks     = copy.symbolicSimplificationCallbacks;
-      this->isDefined                           = copy.isDefined;
+      this->memoryHitCallbacks                = copy.memoryHitCallbacks;
+      this->symbolicSimplificationCallbacks   = copy.symbolicSimplificationCallbacks;
+      this->isDefined                         = copy.isDefined;
     }
 
 
-    void Callbacks::addCallback(triton::callbacks::unmappedMemoryHitCallback cb) {
-      this->unmappedMemoryHitCallbacks.push_back(cb);
+    void Callbacks::addCallback(triton::callbacks::memoryHitCallback cb) {
+      this->memoryHitCallbacks.push_back(cb);
       this->isDefined = true;
     }
 
@@ -65,8 +65,8 @@ namespace triton {
     #ifdef TRITON_PYTHON_BINDINGS
     void Callbacks::addCallback(triton::callbacks::callback_e kind, PyObject* function) {
       switch (kind) {
-        case UNMAPPED_MEMORY_HIT:
-            this->pyUnmappedMemoryHitCallbacks.push_back(function);
+        case MEMORY_HIT:
+            this->pyMemoryHitCallbacks.push_back(function);
           break;
         case SYMBOLIC_SIMPLIFICATION:
             this->pySymbolicSimplificationCallbacks.push_back(function);
@@ -79,8 +79,8 @@ namespace triton {
     #endif
 
 
-    void Callbacks::deleteCallback(triton::callbacks::unmappedMemoryHitCallback cb) {
-      this->unmappedMemoryHitCallbacks.remove(cb);
+    void Callbacks::deleteCallback(triton::callbacks::memoryHitCallback cb) {
+      this->memoryHitCallbacks.remove(cb);
       if (this->countCallbacks() == 0)
         this->isDefined = false;
     }
@@ -96,8 +96,8 @@ namespace triton {
     #ifdef TRITON_PYTHON_BINDINGS
     void Callbacks::deleteCallback(triton::callbacks::callback_e kind, PyObject* function) {
       switch (kind) {
-        case UNMAPPED_MEMORY_HIT:
-            this->pyUnmappedMemoryHitCallbacks.remove(function);
+        case MEMORY_HIT:
+            this->pyMemoryHitCallbacks.remove(function);
           break;
         case SYMBOLIC_SIMPLIFICATION:
             this->pySymbolicSimplificationCallbacks.remove(function);
@@ -162,16 +162,16 @@ namespace triton {
 
     void Callbacks::processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address) const {
       switch (kind) {
-        case triton::callbacks::UNMAPPED_MEMORY_HIT: {
+        case triton::callbacks::MEMORY_HIT: {
           // C++ callbacks
-          std::list<triton::callbacks::unmappedMemoryHitCallback>::const_iterator it1;
-          for (it1 = this->unmappedMemoryHitCallbacks.begin(); it1 != this->unmappedMemoryHitCallbacks.end(); it1++)
+          std::list<triton::callbacks::memoryHitCallback>::const_iterator it1;
+          for (it1 = this->memoryHitCallbacks.begin(); it1 != this->memoryHitCallbacks.end(); it1++)
             (*it1)(address);
 
           #ifdef TRITON_PYTHON_BINDINGS
           // Python callbacks
           std::list<PyObject*>::const_iterator it2;
-          for (it2 = this->pyUnmappedMemoryHitCallbacks.begin(); it2 != this->pyUnmappedMemoryHitCallbacks.end(); it2++) {
+          for (it2 = this->pyMemoryHitCallbacks.begin(); it2 != this->pyMemoryHitCallbacks.end(); it2++) {
 
             /* Create function args */
             PyObject* args = triton::bindings::python::xPyTuple_New(1);
@@ -183,7 +183,7 @@ namespace triton {
             /* Check the call */
             if (ret == nullptr) {
               PyErr_Print();
-              throw triton::exceptions::Callbacks("Callbacks::processCallbacks(UNMAPPED_MEMORY_HIT): Fail to call the python callback.");
+              throw triton::exceptions::Callbacks("Callbacks::processCallbacks(MEMORY_HIT): Fail to call the python callback.");
             }
 
             Py_DECREF(args);
@@ -199,10 +199,10 @@ namespace triton {
     triton::uint32 Callbacks::countCallbacks(void) const {
       triton::uint32 count = 0;
 
-      count += this->unmappedMemoryHitCallbacks.size();
+      count += this->memoryHitCallbacks.size();
       count += this->symbolicSimplificationCallbacks.size();
       #ifdef TRITON_PYTHON_BINDINGS
-      count += this->pyUnmappedMemoryHitCallbacks.size();
+      count += this->pyMemoryHitCallbacks.size();
       count += this->pySymbolicSimplificationCallbacks.size();
       #endif
 

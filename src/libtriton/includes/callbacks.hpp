@@ -36,7 +36,7 @@ namespace triton {
 
     /*! Enumerates all kinds callbacks. */
     enum callback_e {
-      UNMAPPED_MEMORY_HIT,      /*!< Unmapped memory hits callback */
+      MEMORY_HIT,               /*!< Memory hits callback */
       SYMBOLIC_SIMPLIFICATION,  /*!< Symbolic simplification callback */
     };
 
@@ -45,7 +45,7 @@ namespace triton {
      * \description The `address` argument is the memory address which is read but unmapped.
      * Callbacks will be called before all read of unmapped memory.
      */
-    typedef void (*unmappedMemoryHitCallback)(triton::uint64 address);
+    typedef void (*memoryHitCallback)(triton::uint64 address);
 
     /*! \brief The prototype of a symbolic simplification callback.
      *
@@ -60,14 +60,14 @@ namespace triton {
       protected:
         #ifdef TRITON_PYTHON_BINDINGS
         //! [python] Callbacks for all unmapped memory hits.
-        std::list<PyObject*> pyUnmappedMemoryHitCallbacks;
+        std::list<PyObject*> pyMemoryHitCallbacks;
 
         //! [python] Callbacks for all symbolic simplifications.
         std::list<PyObject*> pySymbolicSimplificationCallbacks;
         #endif
 
         //! [c++] Callbacks for all unmapped memory hits.
-        std::list<triton::callbacks::unmappedMemoryHitCallback> unmappedMemoryHitCallbacks;
+        std::list<triton::callbacks::memoryHitCallback> memoryHitCallbacks;
 
         //! [c++] Callbacks for all symbolic simplifications.
         std::list<triton::callbacks::symbolicSimplificationCallback> symbolicSimplificationCallbacks;
@@ -92,7 +92,7 @@ namespace triton {
         void operator=(const Callbacks& copy);
 
         //! Adds an unmapped memory hit callback.
-        void addCallback(triton::callbacks::unmappedMemoryHitCallback cb);
+        void addCallback(triton::callbacks::memoryHitCallback cb);
 
         //! Adds a symbolic simplification callback.
         void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
@@ -103,7 +103,7 @@ namespace triton {
         #endif
 
         //! Deletes an unmapped memory hit callback.
-        void deleteCallback(triton::callbacks::unmappedMemoryHitCallback cb);
+        void deleteCallback(triton::callbacks::memoryHitCallback cb);
 
         //! Deletes a symbolic simplification callback.
         void deleteCallback(triton::callbacks::symbolicSimplificationCallback cb);

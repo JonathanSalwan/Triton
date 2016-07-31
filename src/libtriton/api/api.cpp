@@ -551,7 +551,7 @@ namespace triton {
   }
 
 
-  void API::addCallback(triton::callbacks::unmappedMemoryHitCallback cb) {
+  void API::addCallback(triton::callbacks::memoryHitCallback cb) {
     this->checkCallbacks();
     this->callbacks->addCallback(cb);
   }
@@ -571,7 +571,7 @@ namespace triton {
   #endif
 
 
-  void API::deleteCallback(triton::callbacks::unmappedMemoryHitCallback cb) {
+  void API::deleteCallback(triton::callbacks::memoryHitCallback cb) {
     this->checkCallbacks();
     this->callbacks->deleteCallback(cb);
   }
