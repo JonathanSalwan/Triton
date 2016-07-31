@@ -160,15 +160,13 @@ namespace triton {
     }
 
 
-    triton::uint8 Callbacks::processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address) const {
+    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address) const {
       switch (kind) {
         case triton::callbacks::UNMAPPED_MEMORY_HIT: {
-          triton::uint8 value = 0;
-
           // C++ callbacks
           std::list<triton::callbacks::unmappedMemoryHitCallback>::const_iterator it1;
           for (it1 = this->unmappedMemoryHitCallbacks.begin(); it1 != this->unmappedMemoryHitCallbacks.end(); it1++)
-            value = (*it1)(address);
+            (*it1)(address);
 
           #ifdef TRITON_PYTHON_BINDINGS
           // Python callbacks
@@ -188,15 +186,9 @@ namespace triton {
               throw triton::exceptions::Callbacks("Callbacks::processCallbacks(UNMAPPED_MEMORY_HIT): Fail to call the python callback.");
             }
 
-            /* Check if the callback has returned an integer */
-            if (!PyLong_Check(ret) && !PyInt_Check(ret))
-              throw triton::exceptions::Callbacks("Callbacks::processCallbacks(UNMAPPED_MEMORY_HIT): You must return a Integer object.");
-
-            value = static_cast<triton::uint8>(triton::bindings::python::PyLong_AsUint32(ret) & 0xff);
             Py_DECREF(args);
           }
           #endif
-          return value;
         }
         default:
           throw triton::exceptions::Callbacks("Callbacks::processCallbacks(): Invalid kind of callback for this C++ polymorphism.");

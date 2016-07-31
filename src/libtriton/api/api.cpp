@@ -591,7 +591,7 @@ namespace triton {
   #endif
 
 
-  triton::ast::AbstractNode* API::processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) {
+  triton::ast::AbstractNode* API::processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) const {
     this->checkCallbacks();
     if (this->callbacks->isDefined)
       return this->callbacks->processCallbacks(kind, node);
@@ -599,11 +599,10 @@ namespace triton {
   }
 
 
-  triton::uint8 API::processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address) {
+  void API::processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address) const {
     this->checkCallbacks();
     if (this->callbacks->isDefined)
-      return this->callbacks->processCallbacks(kind, address);
-    return 0;
+      this->callbacks->processCallbacks(kind, address);
   }
 
 

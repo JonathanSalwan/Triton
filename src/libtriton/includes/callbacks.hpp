@@ -45,7 +45,7 @@ namespace triton {
      * \description The `address` argument is the memory address which is read but unmapped.
      * Callbacks will be called before all read of unmapped memory.
      */
-    typedef triton::uint8 (*unmappedMemoryHitCallback)(triton::uint64 address);
+    typedef void (*unmappedMemoryHitCallback)(triton::uint64 address);
 
     /*! \brief The prototype of a symbolic simplification callback.
      *
@@ -117,7 +117,7 @@ namespace triton {
         triton::ast::AbstractNode* processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) const;
 
         //! Processes callbacks according to the kind and the C++ polymorphism.
-        triton::uint8 processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address) const;
+        void processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address) const;
     };
 
   /*! @} End of callbacks namespace */

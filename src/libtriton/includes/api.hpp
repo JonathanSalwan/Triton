@@ -291,10 +291,10 @@ namespace triton {
         #endif
 
         //! [**callbacks api**] - Processes callbacks according to the kind and the C++ polymorphism.
-        triton::ast::AbstractNode* processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node);
+        triton::ast::AbstractNode* processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) const;
 
         //! [**callbacks api**] - Processes callbacks according to the kind and the C++ polymorphism.
-        triton::uint8 processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address);
+        void processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address) const;
 
 
 

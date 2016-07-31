@@ -639,8 +639,11 @@ namespace triton {
 
 
       triton::uint8 x86Cpu::getConcreteMemoryValue(triton::uint64 addr) const {
+        triton::api.processCallbacks(triton::callbacks::UNMAPPED_MEMORY_HIT, addr);
+
         if (this->memory.find(addr) == this->memory.end())
-          return triton::api.processCallbacks(triton::callbacks::UNMAPPED_MEMORY_HIT, addr);
+          return 0x00;
+
         return this->memory.at(addr);
       }
 
