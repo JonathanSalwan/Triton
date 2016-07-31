@@ -824,34 +824,6 @@ namespace triton {
   }
 
 
-  void API::recordSimplificationCallback(triton::engines::symbolic::sfp cb) {
-    this->checkSymbolic();
-    return this->symbolic->recordSimplificationCallback(cb);
-  }
-
-
-  #ifdef TRITON_PYTHON_BINDINGS
-  void API::recordSimplificationCallback(PyObject* cb) {
-    this->checkSymbolic();
-    return this->symbolic->recordSimplificationCallback(cb);
-  }
-  #endif
-
-
-  void API::removeSimplificationCallback(triton::engines::symbolic::sfp cb) {
-    this->checkSymbolic();
-    return this->symbolic->removeSimplificationCallback(cb);
-  }
-
-
-  #ifdef TRITON_PYTHON_BINDINGS
-  void API::removeSimplificationCallback(PyObject* cb) {
-    this->checkSymbolic();
-    return this->symbolic->removeSimplificationCallback(cb);
-  }
-  #endif
-
-
   triton::ast::AbstractNode* API::browseAstDictionaries(triton::ast::AbstractNode* node) {
     this->checkSymbolic();
     return this->symbolic->browseAstDictionaries(node);

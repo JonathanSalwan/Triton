@@ -6,12 +6,7 @@
 ** Output
 **
 ** 400017: xor rax, rax
-**         SymExpr 0: (_ bv1 1) ; XOR operation
-**         SymExpr 1: (_ bv1 1) ; Clears carry flag
-**         SymExpr 2: (_ bv1 1) ; Clears overflow flag
-**         SymExpr 3: (_ bv1 1) ; Parity flag
-**         SymExpr 4: (_ bv1 1) ; Sign flag
-**         SymExpr 5: (_ bv1 1) ; Zero flag
+**         SymExpr 0: ref!0 = (_ bv0 64) ; XOR operation
 */
 
 
@@ -38,6 +33,10 @@ struct op trace[] = {
 /* if (bvxor x x) -> (_ bv0 x_size) */
 ast::AbstractNode* xor_simplification(ast::AbstractNode* node) {
 
+  if (node->getKind() == ast::ZX_NODE) {
+    node = node->getChilds()[1];
+  }
+
   if (node->getKind() == ast::BVXOR_NODE) {
     if (*(node->getChilds()[0]) == *(node->getChilds()[1]))
       return ast::bv(0, node->getBitvectorSize());
@@ -53,7 +52,7 @@ int main(int ac, const char **av) {
   api.setArchitecture(ARCH_X86_64);
 
   /* Record a simplification callback */
-  api.recordSimplificationCallback(xor_simplification);
+  api.addCallback(xor_simplification);
 
   for (unsigned int i = 0; trace[i].inst; i++) {
     /* Build an instruction */

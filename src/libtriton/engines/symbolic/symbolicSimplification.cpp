@@ -5,16 +5,13 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <api.hpp>
+#include <callbacks.hpp>
 #include <exceptions.hpp>
+#include <symbolicSimplification.hpp>
 #include <tritonToZ3Ast.hpp>
 #include <z3Result.hpp>
 #include <z3ToTritonAst.hpp>
-#include <symbolicSimplification.hpp>
-
-#ifdef TRITON_PYTHON_BINDINGS
-  #include <pythonObjects.hpp>
-  #include <pythonXFunctions.hpp>
-#endif
 
 
 
@@ -31,11 +28,11 @@ or a volatile symbolic expression.
 <p align="center"><img src="http://triton.quarkslab.com/files/simplification.png"/></p>
 
 The record of a simplification pass is really straightforward. You have to record your simplification
-callback using the triton::API::recordSimplificationCallback() function. Your simplification callback
+callback using the triton::API::addCallback() function. Your simplification callback
 must takes as unique parameter a pointer of triton::ast::AbstractNode and returns a pointer of
 triton::ast::AbstractNode. Then, your callback will be called before every symbolic assignment.
 Note that you can record several simplification callbacks or remove a specific callback using the
-triton::API::removeSimplificationCallback() function.
+triton::API::deleteCallback() function.
 
 \subsection SMT_simplification_triton Simplification via Triton's rules
 <hr>
@@ -57,7 +54,7 @@ triton::ast::AbstractNode* xor_simplification(triton::ast::AbstractNode* node) {
 int main(int ac, const char *av[]) {
   ...
   // Record a simplification callback
-  api.recordSimplificationCallback(xor_simplification);
+  api.addCallback(xor_simplification);
   ...
 }
 ~~~~~~~~~~~~~
@@ -105,7 +102,7 @@ if __name__ == "__main__":
     setArchitecture(ARCH.X86_64)
 
     # Record simplifications
-    recordSimplificationCallback(xor_bitwise)
+    addCallback(SYMBOLIC_SIMPLIFICATION, xor_bitwise)
 
     a = bv(1, 8)
     b = bv(2, 8)
@@ -118,7 +115,8 @@ if __name__ == "__main__":
 \subsection SMT_simplification_z3 Simplification via Z3
 <hr>
 
-As Triton is able to convert a Triton's AST to a Z3's AST and vice versa, you can benefit to the power of Z3 to simplify your expression, then, come back to a Triton's AST and apply your own rules.
+As Triton is able to convert a Triton's AST to a Z3's AST and vice versa, you can benefit to the power of Z3
+to simplify your expression, then, come back to a Triton's AST and apply your own rules.
 
 ~~~~~~~~~~~~~{.py}
 >>> enableSymbolicZ3Simplification(True)
@@ -138,8 +136,9 @@ As Triton is able to convert a Triton's AST to a Z3's AST and vice versa, you ca
 (bvmul (_ bv95 8) SymVar_0)
 ~~~~~~~~~~~~~
 
-Note that applying a SMT simplification doesn't means that your expression will be more readable by an humain. For example, if we perform a simplification of a bitwise operation (as described in the
-previous section), the new expression is not really useful for an humain.
+Note that applying a SMT simplification doesn't means that your expression will be more readable by an humain.
+For example, if we perform a simplification of a bitwise operation (as described in the previous section), the
+new expression is not really useful for an humain.
 
 ~~~~~~~~~~~~~{.py}
 >>> a = variable(var)
@@ -154,7 +153,8 @@ previous section), the new expression is not really useful for an humain.
 (concat ((_ extract 7 2) SymVar_0) (bvnot ((_ extract 1 1) SymVar_0)) ((_ extract 0 0) SymVar_0))
 ~~~~~~~~~~~~~
 
-As you can see, Z3 tries to apply a bit-to-bit simplification. That's why, Triton allows you to deal with both, Z3's simplification passes and your own rules.
+As you can see, Z3 tries to apply a bit-to-bit simplification. That's why, Triton allows you to deal with both,
+Z3's simplification passes and your own rules.
 
 */
 
@@ -181,11 +181,7 @@ namespace triton {
 
 
       void SymbolicSimplification::copy(const SymbolicSimplification& other) {
-        this->z3Enabled                 = other.z3Enabled;
-        this->simplificationCallbacks   = other.simplificationCallbacks;
-        #ifdef TRITON_PYTHON_BINDINGS
-        this->pySimplificationCallbacks = other.pySimplificationCallbacks;
-        #endif
+        this->z3Enabled = other.z3Enabled;
       }
 
 
@@ -197,32 +193,6 @@ namespace triton {
       void SymbolicSimplification::enableZ3Simplification(bool flag) {
         this->z3Enabled = flag;
       }
-
-
-      void SymbolicSimplification::recordSimplificationCallback(triton::engines::symbolic::sfp cb) {
-        this->simplificationCallbacks.push_back(cb);
-      }
-
-
-      #ifdef TRITON_PYTHON_BINDINGS
-      void SymbolicSimplification::recordSimplificationCallback(PyObject* cb) {
-        if (!PyCallable_Check(cb))
-          throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::recordSimplificationCallback(): Expects a function callback as argument.");
-        this->pySimplificationCallbacks.push_back(cb);
-      }
-      #endif
-
-
-      void SymbolicSimplification::removeSimplificationCallback(triton::engines::symbolic::sfp cb) {
-        this->simplificationCallbacks.remove(cb);
-      }
-
-
-      #ifdef TRITON_PYTHON_BINDINGS
-      void SymbolicSimplification::removeSimplificationCallback(PyObject* cb) {
-        this->pySimplificationCallbacks.remove(cb);
-      }
-      #endif
 
 
       triton::ast::AbstractNode* SymbolicSimplification::processSimplification(triton::ast::AbstractNode* node, bool z3) const {
@@ -242,39 +212,8 @@ namespace triton {
           node = tritonAst.convert();
         }
 
-        std::list<triton::engines::symbolic::sfp>::const_iterator it1;
-        for (it1 = this->simplificationCallbacks.begin(); it1 != this->simplificationCallbacks.end(); it1++) {
-          node = (*it1)(node);
-          if (node == nullptr)
-            throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::processSimplification(): You cannot return a nullptr node.");
-        }
-
-        #ifdef TRITON_PYTHON_BINDINGS
-        std::list<PyObject*>::const_iterator it2;
-        for (it2 = this->pySimplificationCallbacks.begin(); it2 != this->pySimplificationCallbacks.end(); it2++) {
-
-          /* Create function args */
-          PyObject* args = triton::bindings::python::xPyTuple_New(1);
-          PyTuple_SetItem(args, 0, triton::bindings::python::PyAstNode(node));
-
-          /* Call the callback */
-          PyObject* ret = PyObject_CallObject(*it2, args);
-
-          /* Check the call */
-          if (ret == nullptr) {
-            PyErr_Print();
-            throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::processSimplification(): Fail to call the python callback.");
-          }
-
-          /* Check if the callback has returned a AbstractNode */
-          if (!PyAstNode_Check(ret))
-            throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::processSimplification(): You must return a AstNode object.");
-
-          /* Update node */
-          node = PyAstNode_AsAstNode(ret);
-          Py_DECREF(args);
-        }
-        #endif
+        /* process recorded callback about symbolic simplifications */
+        node = triton::api.processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, node);
 
         return node;
       }

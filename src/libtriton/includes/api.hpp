@@ -265,35 +265,35 @@ namespace triton {
 
         /* Callbacks API ================================================================================= */
 
-        //! [**Callbacks api**] - Raises an exception if the Callbacks interface is not initialized.
+        //! [**callbacks api**] - Raises an exception if the Callbacks interface is not initialized.
         void checkCallbacks(void) const;
 
-        //! [**Callbacks api**] - Adds a memory hit callback.
+        //! [**callbacks api**] - Adds an unmapped memory hit callback.
         void addCallback(triton::callbacks::unmappedMemoryHitCallback cb);
 
-        //! [**Callbacks api**] - Adds a symbolic simplification callback.
+        //! [**callbacks api**] - Adds a symbolic simplification callback.
         void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
         #ifdef TRITON_PYTHON_BINDINGS
-        //! [**Callbacks api**] - Adds a python callback.
+        //! [**callbacks api**] - Adds a python callback.
         void addCallback(triton::callbacks::callback_e kind, PyObject* function);
         #endif
 
-        //! [**Callbacks api**] - Deletes a memory hit callback.
+        //! [**callbacks api**] - Deletes an unmapped memory hit callback.
         void deleteCallback(triton::callbacks::unmappedMemoryHitCallback cb);
 
-        //! [**Callbacks api**] - Deletes a symbolic simplification callback.
+        //! [**callbacks api**] - Deletes a symbolic simplification callback.
         void deleteCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
         #ifdef TRITON_PYTHON_BINDINGS
-        //! [**Callbacks api**] - Deletes a python callback.
+        //! [**callbacks api**] - Deletes a python callback.
         void deleteCallback(triton::callbacks::callback_e kind, PyObject* function);
         #endif
 
-        //! [**Callbacks api**] - Processes callbacks according to the kind and the C++ polymorphism.
+        //! [**callbacks api**] - Processes callbacks according to the kind and the C++ polymorphism.
         triton::ast::AbstractNode* processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node);
 
-        //! [**Callbacks api**] - Processes callbacks according to the kind and the C++ polymorphism.
+        //! [**callbacks api**] - Processes callbacks according to the kind and the C++ polymorphism.
         triton::uint8 processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address);
 
 
@@ -398,22 +398,6 @@ namespace triton {
 
         //! [**symbolic api**] - Assigns a symbolic expression to a register.
         void assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, const triton::arch::Register& reg);
-
-        //! [**symbolic api**] - Records a simplification callback.
-        void recordSimplificationCallback(triton::engines::symbolic::sfp cb);
-
-        #ifdef TRITON_PYTHON_BINDINGS
-        //! [**symbolic api**] - Records a python simplification callback.
-        void recordSimplificationCallback(PyObject* cb);
-        #endif
-
-        //! [**symbolic api**] - Removes a simplification callback.
-        void removeSimplificationCallback(triton::engines::symbolic::sfp cb);
-
-        #ifdef TRITON_PYTHON_BINDINGS
-        //! [**symbolic api**] - Removes a python simplification callback.
-        void removeSimplificationCallback(PyObject* cb);
-        #endif
 
         //! [**symbolic api**] - Browses AST Dictionaries if the optimization `AST_DICTIONARIES` is enabled.
         triton::ast::AbstractNode* browseAstDictionaries(triton::ast::AbstractNode* node);
