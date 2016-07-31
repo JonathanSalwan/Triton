@@ -56,11 +56,12 @@ namespace triton {
           //! The id of the symbolic variable. This id is unique.
           triton::usize id;
 
-          //! The kind value of the symbolic variable.
-          /*!
-            \brief If the symbolic varialbe is a triton::engines::symbolic::REG, this value contains the register ID.
-            \biref If the symbolic varialbe is a triton::engines::symbolic::MEM, this value contains the memory access' address.
-          */
+          /*! \brief The kind value of the symbolic variable.
+           *
+           * \description If the symbolic varialbe is a triton::engines::symbolic::REG, this value contains the register ID.
+           * Otherwise, if the symbolic varialbe is a triton::engines::symbolic::MEM, this value contains the address of the
+           * memory access.
+           */
           triton::uint64 kindValue;
 
           //! The size (in bits) of the symbolic variable.
