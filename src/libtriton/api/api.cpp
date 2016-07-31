@@ -178,6 +178,7 @@ namespace triton {
     this->arch                = arch::Architecture();
     this->astGarbageCollector = nullptr;
     this->astRepresentation   = nullptr;
+    this->callbacks           = nullptr;
     this->solver              = nullptr;
     this->symbolic            = nullptr;
     this->symbolicBackup      = nullptr;
@@ -401,6 +402,10 @@ namespace triton {
     this->astRepresentation = new triton::ast::representations::AstRepresentation();
     if (!this->astRepresentation)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
+
+    this->callbacks = new triton::callbacks::Callbacks();
+    if (!this->callbacks)
+      throw triton::exceptions::API("API::initEngines(): No enough memory.");
   }
 
 
@@ -408,6 +413,7 @@ namespace triton {
     if(this->isArchitectureValid()) {
       delete this->astGarbageCollector;
       delete this->astRepresentation;
+      delete this->callbacks;
       delete this->solver;
       delete this->symbolic;
       delete this->symbolicBackup;
@@ -415,6 +421,7 @@ namespace triton {
 
       this->astGarbageCollector = nullptr;
       this->astRepresentation   = nullptr;
+      this->callbacks           = nullptr;
       this->solver              = nullptr;
       this->symbolic            = nullptr;
       this->symbolicBackup      = nullptr;
@@ -532,6 +539,71 @@ namespace triton {
   void API::setAstRepresentationMode(triton::uint32 mode) {
     this->checkAstRepresentation();
     this->astRepresentation->setMode(mode);
+  }
+
+
+
+  /* Callbacks API ================================================================================= */
+
+  void API::checkCallbacks(void) const {
+    if (!this->callbacks)
+      throw triton::exceptions::API("API::checkCallbacks(): Callbacks interface is undefined.");
+  }
+
+
+  void API::addCallback(triton::callbacks::unmappedMemoryHitCallback cb) {
+    this->checkCallbacks();
+    this->callbacks->addCallback(cb);
+  }
+
+
+  void API::addCallback(triton::callbacks::symbolicSimplificationCallback cb) {
+    this->checkCallbacks();
+    this->callbacks->addCallback(cb);
+  }
+
+
+  #ifdef TRITON_PYTHON_BINDINGS
+  void API::addCallback(triton::callbacks::callback_e kind, PyObject* function) {
+    this->checkCallbacks();
+    this->callbacks->addCallback(kind, function);
+  }
+  #endif
+
+
+  void API::deleteCallback(triton::callbacks::unmappedMemoryHitCallback cb) {
+    this->checkCallbacks();
+    this->callbacks->deleteCallback(cb);
+  }
+
+
+  void API::deleteCallback(triton::callbacks::symbolicSimplificationCallback cb) {
+    this->checkCallbacks();
+    this->callbacks->deleteCallback(cb);
+  }
+
+
+  #ifdef TRITON_PYTHON_BINDINGS
+  void API::deleteCallback(triton::callbacks::callback_e kind, PyObject* function) {
+    this->checkCallbacks();
+    this->callbacks->deleteCallback(kind, function);
+  }
+  #endif
+
+
+  triton::ast::AbstractNode* API::processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) {
+    this->checkCallbacks();
+    if (this->callbacks->isDefined)
+      return this->callbacks->processCallbacks(kind, node);
+    return node;
+  }
+
+
+  triton::uint8 API::processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address) {
+    this->checkCallbacks();
+    if (this->callbacks->isDefined)
+      return this->callbacks->processCallbacks(kind, address);
+    return 0;
   }
 
 

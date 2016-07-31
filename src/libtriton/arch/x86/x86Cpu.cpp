@@ -7,7 +7,9 @@
 
 #include <cstring>
 
+#include <api.hpp>
 #include <architecture.hpp>
+#include <callbacks.hpp>
 #include <coreUtils.hpp>
 #include <cpuSize.hpp>
 #include <exceptions.hpp>
@@ -638,7 +640,7 @@ namespace triton {
 
       triton::uint8 x86Cpu::getConcreteMemoryValue(triton::uint64 addr) const {
         if (this->memory.find(addr) == this->memory.end())
-          return 0x00;
+          return triton::api.processCallbacks(triton::callbacks::UNMAPPED_MEMORY_HIT, addr);
         return this->memory.at(addr);
       }
 

@@ -11,6 +11,7 @@
 #include "architecture.hpp"
 #include "astGarbageCollector.hpp"
 #include "astRepresentation.hpp"
+#include "callbacks.hpp"
 #include "immediate.hpp"
 #include "instruction.hpp"
 #include "memoryAccess.hpp"
@@ -60,6 +61,9 @@ namespace triton {
 
         //! The AST representation interface.
         triton::ast::representations::AstRepresentation* astRepresentation;
+
+        //! The Callbacks interface.
+        triton::callbacks::Callbacks* callbacks;
 
       public:
         //! Constructor of the API.
@@ -256,6 +260,41 @@ namespace triton {
 
         //! [**AST representation api**] - Sets the AST representation mode.
         void setAstRepresentationMode(triton::uint32 mode);
+
+
+
+        /* Callbacks API ================================================================================= */
+
+        //! [**Callbacks api**] - Raises an exception if the Callbacks interface is not initialized.
+        void checkCallbacks(void) const;
+
+        //! [**Callbacks api**] - Adds a memory hit callback.
+        void addCallback(triton::callbacks::unmappedMemoryHitCallback cb);
+
+        //! [**Callbacks api**] - Adds a symbolic simplification callback.
+        void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
+
+        #ifdef TRITON_PYTHON_BINDINGS
+        //! [**Callbacks api**] - Adds a python callback.
+        void addCallback(triton::callbacks::callback_e kind, PyObject* function);
+        #endif
+
+        //! [**Callbacks api**] - Deletes a memory hit callback.
+        void deleteCallback(triton::callbacks::unmappedMemoryHitCallback cb);
+
+        //! [**Callbacks api**] - Deletes a symbolic simplification callback.
+        void deleteCallback(triton::callbacks::symbolicSimplificationCallback cb);
+
+        #ifdef TRITON_PYTHON_BINDINGS
+        //! [**Callbacks api**] - Deletes a python callback.
+        void deleteCallback(triton::callbacks::callback_e kind, PyObject* function);
+        #endif
+
+        //! [**Callbacks api**] - Processes callbacks according to the kind and the C++ polymorphism.
+        triton::ast::AbstractNode* processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node);
+
+        //! [**Callbacks api**] - Processes callbacks according to the kind and the C++ polymorphism.
+        triton::uint8 processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address);
 
 
 

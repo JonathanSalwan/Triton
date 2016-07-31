@@ -394,6 +394,18 @@ namespace triton {
         Elf(const std::string& message) : triton::exceptions::Format(message) {};
     };
 
+
+    /*! \class Callbacks
+     *  \brief The exception class used by callbacks. */
+    class Callbacks : public triton::exceptions::Exception {
+      public:
+        //! Constructor.
+        Callbacks(const char* message) : triton::exceptions::Exception(message) {};
+
+        //! Constructor.
+        Callbacks(const std::string& message) : triton::exceptions::Exception(message) {};
+    };
+
   /*! @} End of exceptions namespace */
   };
 /*! @} End of exceptions namespace */
