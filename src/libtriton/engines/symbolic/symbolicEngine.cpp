@@ -382,7 +382,7 @@ namespace triton {
 
 
       /* Returns the full symbolic expression backtracked. */
-      triton::ast::AbstractNode* SymbolicEngine::getFullAst(triton::ast::AbstractNode* node) {
+      triton::ast::AbstractNode* SymbolicEngine::getFullAst(triton::ast::AbstractNode* node, std::set<triton::usize>& processed) {
         std::vector<triton::ast::AbstractNode*>& childs = node->getChilds();
 
         for (triton::uint32 index = 0; index < childs.size(); index++) {
@@ -390,8 +390,11 @@ namespace triton {
             triton::usize id = reinterpret_cast<triton::ast::ReferenceNode*>(childs[index])->getValue();
             triton::ast::AbstractNode* ref = this->getSymbolicExpressionFromId(id)->getAst();
             childs[index] = ref;
+            if (processed.find(id) != processed.end())
+              continue;
+            processed.insert(id);
           }
-          this->getFullAst(childs[index]);
+          this->getFullAst(childs[index], processed);
         }
 
         return node;

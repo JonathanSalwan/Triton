@@ -205,7 +205,7 @@ namespace triton {
           void assignSymbolicExpressionToMemory(SymbolicExpression *se, const triton::arch::MemoryAccess& mem);
 
           //! Returns the full AST of a root node.
-          triton::ast::AbstractNode* getFullAst(triton::ast::AbstractNode* node);
+          triton::ast::AbstractNode* getFullAst(triton::ast::AbstractNode* node, std::set<triton::usize>& processed);
 
           //! Returns the list of the tainted symbolic expressions.
           std::list<SymbolicExpression*> getTaintedSymbolicExpressions(void) const;

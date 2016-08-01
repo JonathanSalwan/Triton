@@ -957,7 +957,8 @@ namespace triton {
 
   triton::ast::AbstractNode* API::getFullAst(triton::ast::AbstractNode* node) {
     this->checkSymbolic();
-    return this->symbolic->getFullAst(node);
+    std::set<triton::usize> processed;
+    return this->symbolic->getFullAst(node, processed);
   }
 
 

@@ -115,7 +115,7 @@ namespace triton {
 
       std::list<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(triton::ast::AbstractNode *node, triton::uint32 limit) const {
         std::list<std::map<triton::uint32, SolverModel>>  ret;
-        std::stringstream                                 formula;
+        std::ostringstream                                formula;
         z3::context                                       ctx;
         z3::solver                                        solver(ctx);
         triton::uint32                                    representationMode = triton::api.getAstRepresentationMode();
@@ -127,7 +127,7 @@ namespace triton {
         triton::api.setAstRepresentationMode(triton::ast::representations::SMT_REPRESENTATION);
 
         /* First, set the QF_AUFBV flag  */
-        formula << "(set-logic QF_AUFBV)";
+        formula << "(set-logic QF_BV)";
 
         /* Then, delcare all symbolic variables */
         formula << triton::api.getVariablesDeclaration();
