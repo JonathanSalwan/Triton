@@ -23,8 +23,8 @@
 \section ast_description Description
 <hr>
 
-Triton converts the x86 and the x86-64 instruction set semantics into AST representations which allows you to perform precise analysis and allow you to build and to
-modify your own symbolic expressions.
+Triton converts the x86 and the x86-64 instruction set semantics into AST representations which allows
+you to perform precise analysis and allows you to build and to modify your own symbolic expressions.
 
 ~~~~~~~~~~~~~{.py}
 >>> from triton import ast
