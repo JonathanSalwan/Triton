@@ -100,9 +100,9 @@ if __name__ == '__main__':
     # Start the symbolic analysis from the 'check' function
     startAnalysisFromSymbol('check')
 
-    addCallback(cafter,  CALLBACK.AFTER)
-    addCallback(csym,    CALLBACK.BEFORE_SYMPROC)
-    addCallback(fini,    CALLBACK.FINI)
+    insertCall(cafter,  INSERT_POINT.AFTER)
+    insertCall(csym,    INSERT_POINT.BEFORE_SYMPROC)
+    insertCall(fini,    INSERT_POINT.FINI)
 
     # Run the instrumentation - Never returns
     runProgram()

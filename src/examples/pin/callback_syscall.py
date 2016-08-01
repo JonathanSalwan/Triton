@@ -25,7 +25,7 @@ if __name__ == '__main__':
     # Start the symbolic analysis from the Entry point
     startAnalysisFromEntry()
 
-    addCallback(my_callback_syscall_entry, CALLBACK.SYSCALL_ENTRY)
+    insertCall(my_callback_syscall_entry, INSERT_POINT.SYSCALL_ENTRY)
 
     # Run the instrumentation - Never returns
     runProgram()

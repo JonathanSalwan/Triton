@@ -22,47 +22,52 @@
 
 
 
-/*! \page py_CALLBACK_page CALLBACK
-    \brief [**python api**] All information about the CALLBACK python namespace.
+/*! \page py_INSERT_POINT_page INSERT_POINT
+    \brief [**python api**] All information about the INSERT_POINT python namespace.
 
 \tableofcontents
-\section CALLBACK_py_description Description
+\section INSERT_POINT_py_description Description
 <hr>
 
-This namespace come from the `pintool` module. The CALLBACK namespace contains all kinds of callback.
+This namespace come from the `pintool` module. The INSERT_POINT namespace contains all kinds of insert points.
+An insert point is used to define callbacks at specific points during the execution.
 
-\section CALLBACK_py_api Python API - Items of the CALLBACK namespace
+\section INSERT_POINT_py_api Python API - Items of the INSERT_POINT namespace
 <hr>
 
-- **CALLBACK.AFTER**<br>
-Defines a callback after the instruction processing. At this point, the instruction has been executed. This callback receives the \ref py_Instruction_page class as argument.
+- **INSERT_POINT.AFTER**<br>
+Defines an insert point after the instruction processing. At this point, the instruction has been executed. The callback
+receives the \ref py_Instruction_page class as argument.
 
-- **CALLBACK.BEFORE**<br>
-Defines a callback before the instruction processing. At this point, the IR and data flow were been setup. This callback receives the \ref py_Instruction_page class as argument.
+- **INSERT_POINT.BEFORE**<br>
+Defines an insert point before the instruction processing. At this point, the IR and data flow were been setup. The callback
+receives the \ref py_Instruction_page class as argument.
 
-- **CALLBACK.BEFORE_SYMPROC**<br>
-Defines a callback before the symbolic processing. Mainly used to setup and control the data flow as well as the taint spread. This callback receives the \ref py_Instruction_page class as argument.
+- **INSERT_POINT.BEFORE_SYMPROC**<br>
+Defines an insert point before the symbolic processing. Mainly used to setup and control the data flow as well as the taint spread.
+The callback receives the \ref py_Instruction_page class as argument.
 
-- **CALLBACK.FINI**<br>
-Defines a callback at the end of the execution. This callback receives any argument.
+- **INSERT_POINT.FINI**<br>
+Defines an insert point at the end of the execution. The callback receives any argument.
 
-- **CALLBACK.ROUTINE_ENTRY**<br>
-Defines a callback at the entry of a specified routine. This callback receives a `ThreadId` as unique argument.
+- **INSERT_POINT.ROUTINE_ENTRY**<br>
+Defines an insert point at the entry of a specified routine. The callback receives a `ThreadId` as unique argument.
 
-- **CALLBACK.ROUTINE_EXIT**<br>
-Defines a callback at the exit of a specified routine. This callback receives a `ThreadId` as unique argument.
+- **INSERT_POINT.ROUTINE_EXIT**<br>
+Defines an insert point at the exit of a specified routine. The callback receives a `ThreadId` as unique argument.
 
-- **CALLBACK.IMAGE_LOAD**<br>
-Defines a callback when a new image is loaded. This callback receives an `imagePath` as first argument, an `imageBase` as second argument and an `imageSize` as third argument.
+- **INSERT_POINT.IMAGE_LOAD**<br>
+Defines an insert point when a new image is loaded. The callback receives an `imagePath` as first argument, an `imageBase` as second
+argument and an `imageSize` as third argument.
 
-- **CALLBACK.SIGNALS**<br>
-Defines a callback when a signal occurs. This callback receives a `ThreadId` as first argument and a `signalId` as second argument.
+- **INSERT_POINT.SIGNALS**<br>
+Defines an insert point when a signal occurs. The callback receives a `ThreadId` as first argument and a `signalId` as second argument.
 
-- **CALLBACK.SYSCALL_ENTRY**<br>
-Defines a callback before each syscall processing. This callback receives a `ThreadId` as first argument and the \ref py_STANDARD_page as second argument.
+- **INSERT_POINT.SYSCALL_ENTRY**<br>
+Defines an insert point before each syscall processing. The callback receives a `ThreadId` as first argument and the \ref py_STANDARD_page as second argument.
 
-- **CALLBACK.SYSCALL_EXIT**<br>
-Defines a callback after each syscall processing. This callback receives a `ThreadId` as first argument and the \ref py_STANDARD_page as second argument.
+- **INSERT_POINT.SYSCALL_EXIT**<br>
+Defines an insert point after each syscall processing. The callback receives a `ThreadId` as first argument and the \ref py_STANDARD_page as second argument.
 
 */
 
@@ -132,11 +137,11 @@ namespace tracer {
 
       /* ======================= */
 
-      /* Create the CALLBACK class */
-      PyObject *idCallbackClassName = triton::bindings::python::xPyString_FromString("CALLBACK");
+      /* Create the INSERT_POINT class */
+      PyObject *idCallbackClassName = triton::bindings::python::xPyString_FromString("INSERT_POINT");
       PyObject *idCallbackClassDict = triton::bindings::python::xPyDict_New();
 
-      /* Add callback ref into the CALLBACK class namespace */
+      /* Add callback ref into the INSERT_POINT class namespace */
       PyDict_SetItemString(idCallbackClassDict, "AFTER",            triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_AFTER));
       PyDict_SetItemString(idCallbackClassDict, "BEFORE",           triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_BEFORE));
       PyDict_SetItemString(idCallbackClassDict, "BEFORE_SYMPROC",   triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_BEFORE_SYMPROC));
@@ -148,7 +153,7 @@ namespace tracer {
       PyDict_SetItemString(idCallbackClassDict, "SYSCALL_EXIT",     triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_SYSCALL_EXIT));
       PyDict_SetItemString(idCallbackClassDict, "IMAGE_LOAD",       triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_IMAGE_LOAD));
 
-      /* Create the CALLBACK class */
+      /* Create the INSERT_POINT class */
       PyObject *idCallbackClass = triton::bindings::python::xPyClass_New(nullptr, idCallbackClassDict, idCallbackClassName);
 
       /* ======================= */
@@ -175,7 +180,7 @@ namespace tracer {
       /* ======================= */
 
       /* Add namespace into the pintool module */
-      PyModule_AddObject(pintoolModule, "CALLBACK", idCallbackClass);
+      PyModule_AddObject(pintoolModule, "INSERT_POINT", idCallbackClass);
       PyModule_AddObject(pintoolModule, "STANDARD", idStandardClass);
     }
 

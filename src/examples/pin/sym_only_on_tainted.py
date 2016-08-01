@@ -35,8 +35,8 @@ if __name__ == '__main__':
     enableSymbolicOptimization(OPTIMIZATION.ONLY_ON_TAINTED, True)
 
     # Add callback
-    addCallback(cb_ir, CALLBACK.BEFORE_SYMPROC)
-    addCallback(cb_before, CALLBACK.BEFORE)
+    insertCall(cb_ir,       INSERT_POINT.BEFORE_SYMPROC)
+    insertCall(cb_before,   INSERT_POINT.BEFORE)
 
     # Run Program
     runProgram()

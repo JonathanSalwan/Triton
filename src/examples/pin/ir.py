@@ -23,7 +23,7 @@ if __name__ == '__main__':
     startAnalysisFromEntry()
 
     # Add callback
-    addCallback(mycb, CALLBACK.BEFORE)
+    insertCall(mycb, INSERT_POINT.BEFORE)
 
     # Run Program
     runProgram()

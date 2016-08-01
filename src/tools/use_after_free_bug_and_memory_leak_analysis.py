@@ -163,11 +163,11 @@ if __name__ == '__main__':
     startAnalysisFromEntry()
 
     # Add a callback.
-    addCallback(mallocEntry, CALLBACK.ROUTINE_ENTRY, 'malloc')
-    addCallback(mallocExit,  CALLBACK.ROUTINE_EXIT, 'malloc')
-    addCallback(freeEntry,   CALLBACK.ROUTINE_ENTRY, 'free')
-    addCallback(trace,       CALLBACK.AFTER)
-    addCallback(fini,        CALLBACK.FINI)
+    insertCall(mallocEntry, INSERT_POINT.ROUTINE_ENTRY, 'malloc')
+    insertCall(mallocExit,  INSERT_POINT.ROUTINE_EXIT,  'malloc')
+    insertCall(freeEntry,   INSERT_POINT.ROUTINE_ENTRY, 'free')
+    insertCall(trace,       INSERT_POINT.AFTER)
+    insertCall(fini,        INSERT_POINT.FINI)
 
     # Run the instrumentation - Never returns
     runProgram()

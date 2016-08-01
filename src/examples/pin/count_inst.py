@@ -16,7 +16,7 @@ def fini():
 if __name__ == '__main__':
     setArchitecture(ARCH.X86_64)
     startAnalysisFromEntry()
-    addCallback(mycb, CALLBACK.BEFORE)
-    addCallback(fini, CALLBACK.FINI)
+    insertCall(mycb, INSERT_POINT.BEFORE)
+    insertCall(fini, INSERT_POINT.FINI)
     runProgram()
 

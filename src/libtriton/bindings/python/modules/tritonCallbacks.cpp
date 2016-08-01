@@ -415,10 +415,6 @@ Your script must contains the pintool and triton imports.
 
 \subsection pintool_py_api_methods Methods
 
-- <b>addCallback(function, \ref py_CALLBACK_page type)</b><br>
-Adds a callback before and after several cases. All code executed into a callback function are executed during the
-instrumentation.
-
 - **checkReadAccess(integer addr)**<br>
 Checks whether the memory page which contains this address has a read access protection. Returns true or false.
 
@@ -454,15 +450,19 @@ Returns the routine name from a given address. Returns an empty string if not fo
 
 - **getSyscallArgument(\ref py_STANDARD_page std, integer argNum)**<br>
 Returns the argument value of the system call which is executed in the current context. It is a user's responsibility to make sure that the
-current instruction is a syscall. This function is mainly used in a `SYSCALL_ENTRY` \ref py_CALLBACK_page.
+current instruction is a syscall. This function is mainly used in a `SYSCALL_ENTRY` \ref py_INSERT_POINT_page.
 
 - **getSyscallNumber(\ref py_STANDARD_page std)**<br>
 Returns the syscall number of the system call which is executed in the current context. It is a user's responsibility to make sure that the
-current instruction is a syscall. This function is mainly used in a `SYSCALL_ENTRY` \ref py_CALLBACK_page.
+current instruction is a syscall. This function is mainly used in a `SYSCALL_ENTRY` \ref py_INSERT_POINT_page.
 
 - **getSyscallReturn(\ref py_STANDARD_page std)**<br>
 Returns the result of the syscall. It is a user's responsibility to make sure that the current context represents
-the state of a system call after its execution. This function is mainly used in a `SYSCALL_EXIT` \ref py_CALLBACK_page.
+the state of a system call after its execution. This function is mainly used in a `SYSCALL_EXIT` \ref py_INSERT_POINT_page.
+
+- <b>insertCall(function, \ref py_INSERT_POINT_page type)</b><br>
+Adds a callback before and after several cases. All code executed into a callback function are executed during the
+instrumentation.
 
 - **isSnapshotEnabled(void)**<br>
 Returns true if the snapshot engine is enabled.
@@ -522,7 +522,7 @@ Creates a snaphost at this program point.
 
 \subsection pintool_py_api_namespaces Namespaces
 
-- \ref py_CALLBACK_page
+- \ref py_INSERT_POINT_page
 - \ref py_STANDARD_page
 
 */

@@ -226,9 +226,9 @@ class TritonExecution(object):
 
         startAnalysisFromAddress(entryPoint)
 
-        addCallback(TritonExecution.mainAnalysis,   CALLBACK.ROUTINE_ENTRY, "main") # Called when we are in main's beginning
-        addCallback(TritonExecution.cbefore,        CALLBACK.BEFORE)
-        addCallback(TritonExecution.fini,           CALLBACK.FINI)
+        insertCall(TritonExecution.mainAnalysis,   INSERT_POINT.ROUTINE_ENTRY, "main") # Called when we are in main's beginning
+        insertCall(TritonExecution.cbefore,        INSERT_POINT.BEFORE)
+        insertCall(TritonExecution.fini,           INSERT_POINT.FINI)
         runProgram()
 
 

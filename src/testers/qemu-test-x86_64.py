@@ -73,7 +73,7 @@ if __name__ == '__main__':
     setArchitecture(ARCH.X86_64)
     setupImageWhitelist(['qemu-test-x86_64'])
     startAnalysisFromSymbol('main')
-    addCallback(cafter,  CALLBACK.AFTER)
-    addCallback(sbefore, CALLBACK.BEFORE_SYMPROC)
+    insertCall(cafter,  INSERT_POINT.AFTER)
+    insertCall(sbefore, INSERT_POINT.BEFORE_SYMPROC)
     runProgram()
 

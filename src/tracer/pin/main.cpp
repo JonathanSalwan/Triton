@@ -184,7 +184,7 @@ if __name__ == '__main__':
     startAnalysisFromEntry()
 
     # Add callback
-    addCallback(mycb, CALLBACK.BEFORE)
+    insertCall(mycb, INSERT_POINT.BEFORE)
 
     # Run Program
     runProgram()
@@ -229,8 +229,8 @@ if __name__ == '__main__':
     # Start the symbolic analysis from the 'check' function
     startAnalysisFromSymbol('check')
 
-    addCallback(cbeforeSymProc, CALLBACK.BEFORE_SYMPROC)
-    addCallback(cafter, CALLBACK.AFTER)
+    insertCall(cbeforeSymProc, INSERT_POINT.BEFORE_SYMPROC)
+    insertCall(cafter, INSERT_POINT.AFTER)
 
     # Run the instrumentation - Never returns
     runProgram()
@@ -276,8 +276,8 @@ if __name__ == '__main__':
     setArchitecture(ARCH.X86_64)
     setupImageWhitelist(['crackme'])
     startAnalysisFromSymbol('main')
-    addCallback(cb1, CALLBACK.BEFORE_SYMPROC)
-    addCallback(cb2, CALLBACK.BEFORE)
+    insertCall(cb1, INSERT_POINT.BEFORE_SYMPROC)
+    insertCall(cb2, INSERT_POINT.BEFORE)
     runProgram()
 ~~~~~~~~~~~~~
 
@@ -302,7 +302,7 @@ if __name__ == '__main__':
     setupImageBlacklist(["libc", "ld-linux"])
 
     startAnalysisFromSymbol('main')
-    addCallback(mycb, CALLBACK.BEFORE)
+    insertCall(mycb, INSERT_POINT.BEFORE)
     runProgram()
 ~~~~~~~~~~~~~
 
@@ -346,7 +346,7 @@ if __name__ == '__main__':
     startAnalysisFromEntry()
 
     # Add a callback.
-    addCallback(image, CALLBACK.IMAGE_LOAD)
+    insertCall(image, INSERT_POINT.IMAGE_LOAD)
 
     # Run the instrumentation - Never returns
     runProgram()
@@ -389,8 +389,8 @@ if __name__ == '__main__':
     startAnalysisFromEntry()
 
     # Add a callback.
-    addCallback(mallocEntry, CALLBACK.ROUTINE_ENTRY, "malloc")
-    addCallback(mallocExit, CALLBACK.ROUTINE_EXIT, "malloc")
+    insertCall(mallocEntry, INSERT_POINT.ROUTINE_ENTRY, "malloc")
+    insertCall(mallocExit, INSERT_POINT.ROUTINE_EXIT, "malloc")
 
     # Run the instrumentation - Never returns
     runProgram()
@@ -473,7 +473,7 @@ if __name__ == '__main__':
     startAnalysisFromEntry()
 
     # Add a callback.
-    addCallback(signals, CALLBACK.SIGNALS)
+    insertCall(signals, INSERT_POINT.SIGNALS)
 
     # Run the instrumentation - Never returns
     runProgram()
@@ -509,7 +509,7 @@ if __name__ == '__main__':
     # Start the symbolic analysis from the Entry point
     startAnalysisFromEntry()
 
-    addCallback(my_callback_syscall_entry, CALLBACK.SYSCALL_ENTRY)
+    insertCall(my_callback_syscall_entry, INSERT_POINT.SYSCALL_ENTRY)
 
     # Run the instrumentation - Never returns
     runProgram()
@@ -987,7 +987,7 @@ namespace tracer {
             IARG_END);
 
           /* Callback after */
-          /* Syscall after context must be catcher with CALLBACK.SYSCALL_EXIT */
+          /* Syscall after context must be catcher with INSERT_POINT.SYSCALL_EXIT */
           if (INS_IsSyscall(ins) == false) {
             IPOINT where = IPOINT_AFTER;
             if (INS_HasFallThrough(ins) == false)

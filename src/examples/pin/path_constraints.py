@@ -113,8 +113,8 @@ if __name__ == '__main__':
     setupImageWhitelist(['crackme_xor'])
 
     # Add callbacks
-    addCallback(tainting, CALLBACK.ROUTINE_ENTRY, 'main')
-    addCallback(fini,     CALLBACK.FINI)
+    insertCall(tainting, INSERT_POINT.ROUTINE_ENTRY, 'main')
+    insertCall(fini,     INSERT_POINT.FINI)
 
     # Run the instrumentation - Never returns
     runProgram()

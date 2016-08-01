@@ -78,8 +78,8 @@ if __name__ == '__main__':
     startAnalysisFromSymbol('main')
 
     # Add callbacks
-    addCallback(tainting, CALLBACK.ROUTINE_ENTRY, 'main')
-    addCallback(before,   CALLBACK.BEFORE_SYMPROC)
+    insertCall(tainting, INSERT_POINT.ROUTINE_ENTRY, 'main')
+    insertCall(before,   INSERT_POINT.BEFORE_SYMPROC)
 
     # Run the instrumentation - Never returns
     runProgram()

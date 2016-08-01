@@ -71,6 +71,6 @@ if __name__ == '__main__':
     setupImageBlacklist(["libc", "ld-linux"])
 
     startAnalysisFromSymbol('main')
-    addCallback(mycb, CALLBACK.BEFORE)
+    insertCall(mycb, INSERT_POINT.BEFORE)
     runProgram()
 

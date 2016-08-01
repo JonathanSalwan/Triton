@@ -72,7 +72,7 @@ if __name__ == '__main__':
     startAnalysisFromEntry()
 
     # Add a callback.
-    addCallback(signals, CALLBACK.SIGNALS)
+    insertCall(signals, INSERT_POINT.SIGNALS)
 
     # Run the instrumentation - Never returns
     runProgram()

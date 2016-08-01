@@ -35,7 +35,7 @@ if __name__ == '__main__':
     enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
 
     # Add callbacks
-    addCallback(cb_fini, CALLBACK.FINI)
+    insertCall(cb_fini, INSERT_POINT.FINI)
 
     # Run Program
     runProgram()

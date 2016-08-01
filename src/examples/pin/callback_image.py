@@ -35,7 +35,7 @@ if __name__ == '__main__':
     startAnalysisFromEntry()
 
     # Add a callback.
-    addCallback(image, CALLBACK.IMAGE_LOAD)
+    insertCall(image, INSERT_POINT.IMAGE_LOAD)
 
     # Run the instrumentation - Never returns
     runProgram()

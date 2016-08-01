@@ -34,7 +34,7 @@ if __name__ == '__main__':
     setArchitecture(ARCH.X86_64)
     setupImageWhitelist(['crackme'])
     startAnalysisFromSymbol('main')
-    addCallback(cb1, CALLBACK.BEFORE_SYMPROC)
-    addCallback(cb2, CALLBACK.BEFORE)
+    insertCall(cb1, INSERT_POINT.BEFORE_SYMPROC)
+    insertCall(cb2, INSERT_POINT.BEFORE)
     runProgram()
 

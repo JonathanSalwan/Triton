@@ -40,8 +40,8 @@ def cfini():
 if __name__ == '__main__':
     setArchitecture(ARCH.X86_64)
     startAnalysisFromEntry()
-    addCallback(cbefore, CALLBACK.BEFORE)
-    addCallback(cafter,  CALLBACK.AFTER)
-    addCallback(cfini,   CALLBACK.FINI)
+    insertCall(cbefore, INSERT_POINT.BEFORE)
+    insertCall(cafter,  INSERT_POINT.AFTER)
+    insertCall(cfini,   INSERT_POINT.FINI)
     runProgram()
 

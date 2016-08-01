@@ -109,9 +109,9 @@ if __name__ == '__main__':
     setupImageWhitelist(["formatString"])
 
     # Add a callback.
-    addCallback(printfAnalysis, CALLBACK.ROUTINE_ENTRY, 'printf')
-    addCallback(mainAnalysis,   CALLBACK.ROUTINE_ENTRY, 'main')
-    addCallback(trace,          CALLBACK.AFTER)
+    insertCall(printfAnalysis, INSERT_POINT.ROUTINE_ENTRY, 'printf')
+    insertCall(mainAnalysis,   INSERT_POINT.ROUTINE_ENTRY, 'main')
+    insertCall(trace,          INSERT_POINT.AFTER)
 
     # Run the instrumentation - Never returns
     runProgram()
