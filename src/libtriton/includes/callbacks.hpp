@@ -49,7 +49,7 @@ namespace triton {
 
     /*! \brief The prototype of a symbolic simplification callback.
      *
-     * \description The callback takes as uniq argument an AbstractNode and must return a valid AbstractNode.
+     * \description The callback takes as uniq argument an triton::ast::AbstractNode and must return a valid triton::ast::AbstractNode.
      * The returned node is used as assignment. See also the page about \ref SMT_simplification_page.
      */
     typedef triton::ast::AbstractNode* (*symbolicSimplificationCallback)(triton::ast::AbstractNode* node);
