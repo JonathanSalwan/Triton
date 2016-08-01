@@ -461,7 +461,7 @@ Returns the result of the syscall. It is a user's responsibility to make sure th
 the state of a system call after its execution. This function is mainly used in a `SYSCALL_EXIT` \ref py_INSERT_POINT_page.
 
 - <b>insertCall(function, \ref py_INSERT_POINT_page type)</b><br>
-Adds a callback before and after several cases. All code executed into a callback function are executed during the
+Inserts a call before and after several cases. All code executed into a callback function are executed during the
 instrumentation.
 
 - **isSnapshotEnabled(void)**<br>
