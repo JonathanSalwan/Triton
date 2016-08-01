@@ -74,8 +74,8 @@ if __name__ == "__main__":
     setArchitecture(ARCH.X86_64)
 
     # Record simplifications
-    recordSimplificationCallback(xor_1)
-    recordSimplificationCallback(xor_2)
+    addCallback(xor_1, CALLBACK.SYMBOLIC_SIMPLIFICATION)
+    addCallback(xor_2, CALLBACK.SYMBOLIC_SIMPLIFICATION)
 
     a = bv(1, 8)
     b = bv(2, 8)

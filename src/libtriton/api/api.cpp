@@ -564,29 +564,29 @@ namespace triton {
 
 
   #ifdef TRITON_PYTHON_BINDINGS
-  void API::addCallback(triton::callbacks::callback_e kind, PyObject* function) {
+  void API::addCallback(PyObject* function, triton::callbacks::callback_e kind) {
     this->checkCallbacks();
-    this->callbacks->addCallback(kind, function);
+    this->callbacks->addCallback(function, kind);
   }
   #endif
 
 
-  void API::deleteCallback(triton::callbacks::memoryHitCallback cb) {
+  void API::removeCallback(triton::callbacks::memoryHitCallback cb) {
     this->checkCallbacks();
-    this->callbacks->deleteCallback(cb);
+    this->callbacks->removeCallback(cb);
   }
 
 
-  void API::deleteCallback(triton::callbacks::symbolicSimplificationCallback cb) {
+  void API::removeCallback(triton::callbacks::symbolicSimplificationCallback cb) {
     this->checkCallbacks();
-    this->callbacks->deleteCallback(cb);
+    this->callbacks->removeCallback(cb);
   }
 
 
   #ifdef TRITON_PYTHON_BINDINGS
-  void API::deleteCallback(triton::callbacks::callback_e kind, PyObject* function) {
+  void API::removeCallback(PyObject* function, triton::callbacks::callback_e kind) {
     this->checkCallbacks();
-    this->callbacks->deleteCallback(kind, function);
+    this->callbacks->removeCallback(function, kind);
   }
   #endif
 

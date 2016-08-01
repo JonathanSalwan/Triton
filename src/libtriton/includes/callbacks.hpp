@@ -99,18 +99,18 @@ namespace triton {
 
         #ifdef TRITON_PYTHON_BINDINGS
         //! Adds a python callback.
-        void addCallback(triton::callbacks::callback_e kind, PyObject* function);
+        void addCallback(PyObject* function, triton::callbacks::callback_e kind);
         #endif
 
         //! Deletes a memory hit callback.
-        void deleteCallback(triton::callbacks::memoryHitCallback cb);
+        void removeCallback(triton::callbacks::memoryHitCallback cb);
 
         //! Deletes a symbolic simplification callback.
-        void deleteCallback(triton::callbacks::symbolicSimplificationCallback cb);
+        void removeCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
         #ifdef TRITON_PYTHON_BINDINGS
         //! Deletes a python callback.
-        void deleteCallback(triton::callbacks::callback_e kind, PyObject* function);
+        void removeCallback(PyObject* function, triton::callbacks::callback_e kind);
         #endif
 
         //! Processes callbacks according to the kind and the C++ polymorphism.

@@ -63,6 +63,9 @@ If you want to use the libTriton without Python bindings, recompile the project 
 
 \subsection triton_py_api_methods Methods
 
+- <b>addCallback(function cb, \ref py_CALLBACK_page kind)</b><br>
+Adds a callback at specific internal points. Your callback will be called each time the point is reached.
+
 - <b>assignSymbolicExpressionToMemory(\ref py_SymbolicExpression_page symExpr, \ref py_MemoryAccess_page mem)</b><br>
 Assigns a \ref py_SymbolicExpression_page to a \ref py_MemoryAccess_page area. **Be careful**, use this function only if you know what you are doing.
 The symbolic expression (`symExpr`) must be aligned to the memory access.
@@ -277,11 +280,8 @@ Returns a new symbolic variable.
 - **processing(\ref py_Instruction_page inst)**<br>
 The main function. This function processes everything (engine, IR, optimization, state, ...) from a given instruction.
 
-- **recordSimplificationCallback(function cb)**<br>
-Records a simplification callback. The callback will be called before every symbolic assignments.
-
-- **removeSimplificationCallback(function cb)**<br>
-Removes a simplification callback.
+- <b>removeCallback(function cb, \ref py_CALLBACK_page kind)</b><br>
+Removes a recorded callback.
 
 - **resetEngines(void)**<br>
 Resets everything.
@@ -650,6 +650,35 @@ namespace triton {
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
+      }
+
+
+      static PyObject* triton_addCallback(PyObject* self, PyObject* args) {
+        PyObject* function = nullptr;
+        PyObject* mode     = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &function, &mode);
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "addCallback(): Architecture is not defined.");
+
+        if (function == nullptr || !PyCallable_Check(function))
+          return PyErr_Format(PyExc_TypeError, "addCallback(): Expects a function as first argument.");
+
+        if (mode == nullptr || (!PyLong_Check(mode) && !PyInt_Check(mode)))
+          return PyErr_Format(PyExc_TypeError, "addCallback(): Expects a CALLBACK as second argument.");
+
+        try {
+          triton::api.addCallback(function, static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode)));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
       }
 
 
@@ -2040,38 +2069,25 @@ namespace triton {
       }
 
 
-      // TODO: Must be into the addCallback() method
-      static PyObject* triton_recordSimplificationCallback(PyObject* self, PyObject* cb) {
+      static PyObject* triton_removeCallback(PyObject* self, PyObject* args) {
+        PyObject* function = nullptr;
+        PyObject* mode     = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &function, &mode);
+
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "recordSimplificationCallback(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "removeCallback(): Architecture is not defined.");
 
-        if (!PyCallable_Check(cb))
-          return PyErr_Format(PyExc_TypeError, "recordSimplificationCallback(): Expects a callback function as argument.");
+        if (function == nullptr || !PyCallable_Check(function))
+          return PyErr_Format(PyExc_TypeError, "removeCallback(): Expects a function as first argument.");
 
-        try {
-          triton::api.addCallback(triton::callbacks::SYMBOLIC_SIMPLIFICATION, cb);
-        }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        Py_INCREF(Py_None);
-        return Py_None;
-      }
-
-
-      // TODO: Must be into the deleteCallback() method
-      static PyObject* triton_removeSimplificationCallback(PyObject* self, PyObject* cb) {
-        /* Check if the architecture is definied */
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "removeSimplificationCallback(): Architecture is not defined.");
-
-        if (!PyCallable_Check(cb))
-          return PyErr_Format(PyExc_TypeError, "removeSimplificationCallback(): Expects a callback function as argument.");
+        if (mode == nullptr || (!PyLong_Check(mode) && !PyInt_Check(mode)))
+          return PyErr_Format(PyExc_TypeError, "removeCallback(): Expects a CALLBACK as second argument.");
 
         try {
-          triton::api.deleteCallback(triton::callbacks::SYMBOLIC_SIMPLIFICATION, cb);
+          triton::api.removeCallback(function, static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode)));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2790,6 +2806,7 @@ namespace triton {
         {"Instruction",                         (PyCFunction)triton_Instruction,                            METH_NOARGS,        ""},
         {"MemoryAccess",                        (PyCFunction)triton_MemoryAccess,                           METH_VARARGS,       ""},
         {"Register",                            (PyCFunction)triton_Register,                               METH_VARARGS,       ""},
+        {"addCallback",                         (PyCFunction)triton_addCallback,                            METH_VARARGS,       ""},
         {"assignSymbolicExpressionToMemory",    (PyCFunction)triton_assignSymbolicExpressionToMemory,       METH_VARARGS,       ""},
         {"assignSymbolicExpressionToRegister",  (PyCFunction)triton_assignSymbolicExpressionToRegister,     METH_VARARGS,       ""},
         {"buildSemantics",                      (PyCFunction)triton_buildSemantics,                         METH_O,             ""},
@@ -2856,8 +2873,7 @@ namespace triton {
         {"newSymbolicExpression",               (PyCFunction)triton_newSymbolicExpression,                  METH_VARARGS,       ""},
         {"newSymbolicVariable",                 (PyCFunction)triton_newSymbolicVariable,                    METH_VARARGS,       ""},
         {"processing",                          (PyCFunction)triton_processing,                             METH_O,             ""},
-        {"recordSimplificationCallback",        (PyCFunction)triton_recordSimplificationCallback,           METH_O,             ""},
-        {"removeSimplificationCallback",        (PyCFunction)triton_removeSimplificationCallback,           METH_O,             ""},
+        {"removeCallback",                      (PyCFunction)triton_removeCallback,                         METH_VARARGS,       ""},
         {"resetEngines",                        (PyCFunction)triton_resetEngines,                           METH_NOARGS,        ""},
         {"setArchitecture",                     (PyCFunction)triton_setArchitecture,                        METH_O,             ""},
         {"setAstRepresentationMode",            (PyCFunction)triton_setAstRepresentationMode,               METH_O,             ""},

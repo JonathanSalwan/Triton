@@ -32,7 +32,7 @@ callback using the triton::API::addCallback() function. Your simplification call
 must takes as unique parameter a pointer of triton::ast::AbstractNode and returns a pointer of
 triton::ast::AbstractNode. Then, your callback will be called before every symbolic assignment.
 Note that you can record several simplification callbacks or remove a specific callback using the
-triton::API::deleteCallback() function.
+triton::API::removeCallback() function.
 
 \subsection SMT_simplification_triton Simplification via Triton's rules
 <hr>

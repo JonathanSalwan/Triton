@@ -63,7 +63,7 @@ namespace triton {
 
 
     #ifdef TRITON_PYTHON_BINDINGS
-    void Callbacks::addCallback(triton::callbacks::callback_e kind, PyObject* function) {
+    void Callbacks::addCallback(PyObject* function, triton::callbacks::callback_e kind) {
       switch (kind) {
         case MEMORY_HIT:
           this->pyMemoryHitCallbacks.push_back(function);
@@ -79,14 +79,14 @@ namespace triton {
     #endif
 
 
-    void Callbacks::deleteCallback(triton::callbacks::memoryHitCallback cb) {
+    void Callbacks::removeCallback(triton::callbacks::memoryHitCallback cb) {
       this->memoryHitCallbacks.remove(cb);
       if (this->countCallbacks() == 0)
         this->isDefined = false;
     }
 
 
-    void Callbacks::deleteCallback(triton::callbacks::symbolicSimplificationCallback cb) {
+    void Callbacks::removeCallback(triton::callbacks::symbolicSimplificationCallback cb) {
       this->symbolicSimplificationCallbacks.remove(cb);
       if (this->countCallbacks() == 0)
         this->isDefined = false;
@@ -94,7 +94,7 @@ namespace triton {
 
 
     #ifdef TRITON_PYTHON_BINDINGS
-    void Callbacks::deleteCallback(triton::callbacks::callback_e kind, PyObject* function) {
+    void Callbacks::removeCallback(PyObject* function, triton::callbacks::callback_e kind) {
       switch (kind) {
         case MEMORY_HIT:
           this->pyMemoryHitCallbacks.remove(function);
@@ -103,7 +103,7 @@ namespace triton {
           this->pySymbolicSimplificationCallbacks.remove(function);
           break;
         default:
-          throw triton::exceptions::Callbacks("Callbacks::deleteCallback(): Invalid kind of callback.");
+          throw triton::exceptions::Callbacks("Callbacks::removeCallback(): Invalid kind of callback.");
       };
 
       if (this->countCallbacks() == 0)
