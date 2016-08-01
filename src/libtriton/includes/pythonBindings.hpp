@@ -84,6 +84,9 @@ namespace triton {
       //! Initializes the AST_REPRESENTATION python namespace.
       void initAstRepresentationNamespace(PyObject* astRepresentationDict);
 
+      //! Initializes the CALLBACK python namespace.
+      void initCallbackNamespace(PyObject* callbackDict);
+
       //! Initializes the CPUSIZE python namespace.
       void initCpuSizeNamespace(void);
 

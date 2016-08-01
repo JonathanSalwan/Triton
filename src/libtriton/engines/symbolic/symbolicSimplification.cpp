@@ -102,7 +102,7 @@ if __name__ == "__main__":
     setArchitecture(ARCH.X86_64)
 
     # Record simplifications
-    addCallback(SYMBOLIC_SIMPLIFICATION, xor_bitwise)
+    addCallback(xor_bitwise, SYMBOLIC_SIMPLIFICATION)
 
     a = bv(1, 8)
     b = bv(2, 8)

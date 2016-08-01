@@ -75,6 +75,12 @@ namespace triton {
         initAstRepresentationNamespace(astRepresentationDict);
         PyObject* idAstRepresentationDictClass = xPyClass_New(nullptr, astRepresentationDict, xPyString_FromString("AST_REPRESENTATION"));
 
+        /* Create the CALLBACK namespace ============================================================= */
+
+        PyObject* callbackDict = xPyDict_New();
+        initCallbackNamespace(callbackDict);
+        PyObject* idCallbackDictClass = xPyClass_New(nullptr, callbackDict, xPyString_FromString("CALLBACK"));
+
         /* Create the CPUSIZE namespace ============================================================== */
 
         triton::bindings::python::cpuSizeDict = xPyDict_New();
@@ -133,6 +139,7 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "ARCH",                idArchDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "AST_NODE",            idAstNodeDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "AST_REPRESENTATION",  idAstRepresentationDictClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "CALLBACK",            idCallbackDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "CPUSIZE",             idCpuSizeClass);            /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPCODE",              idOpcodesClass);            /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPERAND",             idOperandClass);

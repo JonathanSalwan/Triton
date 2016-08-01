@@ -385,6 +385,7 @@ Untaints a register.
 - \ref py_ARCH_page
 - \ref py_AST_NODE_page
 - \ref py_AST_REPRESENTATION_page
+- \ref py_CALLBACK_page
 - \ref py_CPUSIZE_page
 - \ref py_OPCODE_page
 - \ref py_OPERAND_page

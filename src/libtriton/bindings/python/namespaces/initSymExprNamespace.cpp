@@ -7,7 +7,6 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <operandInterface.hpp>
 #include <pythonBindings.hpp>
 #include <pythonUtils.hpp>
 #include <symbolicExpression.hpp>

@@ -42,15 +42,15 @@ namespace triton {
 
     /*! \brief The prototype of a memory hit callback.
      *
-     * \description The `address` argument is the memory address which will be read.
-     * Callbacks will be called before all read of memory values.
+     * \description The callback takes as uniq argument an address which representes the memory
+     * cell hit. Callbacks will be called each time that a memory cell will be hit.
      */
     typedef void (*memoryHitCallback)(triton::uint64 address);
 
     /*! \brief The prototype of a symbolic simplification callback.
      *
-     * \description Take a node as input and return a new node. Callbacks will be called before all
-     * symbolic assignments. It's the returned node which will be assigned.
+     * \description The callback takes as uniq argument an AbstractNode and must return a valid AbstractNode.
+     * The returned node is used as assignment. See also the page about \ref SMT_simplification_page.
      */
     typedef triton::ast::AbstractNode* (*symbolicSimplificationCallback)(triton::ast::AbstractNode* node);
 
