@@ -13,6 +13,13 @@
 
 #include "ast.hpp"
 #include "bitsVector.hpp"
+#include "elf.hpp"
+#include "elfDynamicTable.hpp"
+#include "elfHeader.hpp"
+#include "elfProgramHeader.hpp"
+#include "elfRelocationTable.hpp"
+#include "elfSectionHeader.hpp"
+#include "elfSymbolTable.hpp"
 #include "immediate.hpp"
 #include "instruction.hpp"
 #include "memoryAccess.hpp"
@@ -62,6 +69,27 @@ namespace triton {
 
       //! Creates the Bitvector python class.
       PyObject* PyBitvector(triton::uint32 high, triton::uint32 low);
+
+      //! Creates the Elf python class.
+      PyObject* PyElf(const std::string& elf);
+
+      //! Creates the ElfDynamicTable python class.
+      PyObject* PyElfDynamicTable(const triton::format::elf::ElfDynamicTable& dyn);
+
+      //! Creates the ElfHeader python class.
+      PyObject* PyElfHeader(const triton::format::elf::ElfHeader& header);
+
+      //! Creates the ElfProgramHeader python class.
+      PyObject* PyElfProgramHeader(const triton::format::elf::ElfProgramHeader& phdr);
+
+      //! Creates the ElfRelocationTable python class.
+      PyObject* PyElfRelocationTable(const triton::format::elf::ElfRelocationTable& rel);
+
+      //! Creates the ElfSectionHeader python class.
+      PyObject* PyElfSectionHeader(const triton::format::elf::ElfSectionHeader& shdr);
+
+      //! Creates the ElfSymbolTable python class.
+      PyObject* PyElfSymbolTable(const triton::format::elf::ElfSymbolTable& sym);
 
       //! Creates the Immediate python class.
       PyObject* PyImmediate(const triton::arch::Immediate& imm);
@@ -113,7 +141,84 @@ namespace triton {
       //! pyBitvector type.
       extern PyTypeObject Bitvector_Type;
 
-      /* Immediate =============================================== */
+      /* Elf  =========================================================== */
+
+      //! pyElf object.
+      typedef struct {
+        PyObject_HEAD
+        triton::format::elf::Elf* elf;
+      } Elf_Object;
+
+      //! pyElf type.
+      extern PyTypeObject Elf_Type;
+
+      /* ElfDynamicTable  =============================================== */
+
+      //! pyElfDynamicTable object.
+      typedef struct {
+        PyObject_HEAD
+        triton::format::elf::ElfDynamicTable* dyn;
+      } ElfDynamicTable_Object;
+
+      //! pyElfDynamicTable type.
+      extern PyTypeObject ElfDynamicTable_Type;
+
+      /* ElfHeader  ===================================================== */
+
+      //! pyElfHeader object.
+      typedef struct {
+        PyObject_HEAD
+        triton::format::elf::ElfHeader* header;
+      } ElfHeader_Object;
+
+      //! pyElfHeader type.
+      extern PyTypeObject ElfHeader_Type;
+
+      /* ElfProgramHeader  ============================================== */
+
+      //! pyElfProgramHeader object.
+      typedef struct {
+        PyObject_HEAD
+        triton::format::elf::ElfProgramHeader* phdr;
+      } ElfProgramHeader_Object;
+
+      //! pyElfProgramHeader type.
+      extern PyTypeObject ElfProgramHeader_Type;
+
+      /* ElfRelocationTable  =========================================== */
+
+      //! pyElfRelocationTable object.
+      typedef struct {
+        PyObject_HEAD
+        triton::format::elf::ElfRelocationTable* rel;
+      } ElfRelocationTable_Object;
+
+      //! pyElfRelocationTable type.
+      extern PyTypeObject ElfRelocationTable_Type;
+
+      /* ElfSectionHeader  ============================================== */
+
+      //! pyElfSectionHeader object.
+      typedef struct {
+        PyObject_HEAD
+        triton::format::elf::ElfSectionHeader* shdr;
+      } ElfSectionHeader_Object;
+
+      //! pyElfSectionHeader type.
+      extern PyTypeObject ElfSectionHeader_Type;
+
+      /* ElfSymbolTable  ================================================ */
+
+      //! pyElfSymbolTable object.
+      typedef struct {
+        PyObject_HEAD
+        triton::format::elf::ElfSymbolTable* sym;
+      } ElfSymbolTable_Object;
+
+      //! pyElfSymbolTable type.
+      extern PyTypeObject ElfSymbolTable_Type;
+
+      /* Immediate ====================================================== */
 
       //! pyImmediate object.
       typedef struct {
@@ -135,7 +240,7 @@ namespace triton {
       //! pyInstruction type.
       extern PyTypeObject Instruction_Type;
 
-      /* MemoryAccess ================================================== */
+      /* MemoryAccess =================================================== */
 
       //! pyMemory object.
       typedef struct {
@@ -157,7 +262,7 @@ namespace triton {
       //! pyPathConstraint type.
       extern PyTypeObject PathConstraint_Type;
 
-      /* Register ================================================ */
+      /* Register ======================================================= */
 
       //! pyRegister object.
       typedef struct {
@@ -221,13 +326,55 @@ namespace triton {
 /*! Returns the triton::arch::BitsVector::low. */
 #define PyBitvector_AsLow(v)  (((triton::bindings::python::Bitvector_Object*)(v))->low)
 
-/*! Checks if the pyObject is an triton::arch::Immediate. */
+/*! Checks if the pyObject is a triton::format::efl::Elf. */
+#define PyElf_Check(v) ((v)->ob_type == &triton::bindings::python::Elf_Type)
+
+/*! Returns the triton::format::elf::Elf. */
+#define PyElf_AsElf(v) (((triton::bindings::python::Elf_Object*)(v))->elf)
+
+/*! Checks if the pyObject is a triton::format::efl::ElfDynamicTable. */
+#define PyElfDynamicTable_Check(v) ((v)->ob_type == &triton::bindings::python::ElfDynamicTable_Type)
+
+/*! Returns the triton::format::elf::ElfDynamicTable. */
+#define PyElfDynamicTable_AsElfDynamicTable(v) (((triton::bindings::python::ElfDynamicTable_Object*)(v))->dyn)
+
+/*! Checks if the pyObject is a triton::format::efl::ElfHeader. */
+#define PyElfHeader_Check(v) ((v)->ob_type == &triton::bindings::python::ElfHeader_Type)
+
+/*! Returns the triton::format::elf::ElfHeader. */
+#define PyElfHeader_AsElfHeader(v) (((triton::bindings::python::ElfHeader_Object*)(v))->header)
+
+/*! Checks if the pyObject is a triton::format::efl::ElfProgramHeader. */
+#define PyElfProgramHeader_Check(v) ((v)->ob_type == &triton::bindings::python::ElfProgramHeader_Type)
+
+/*! Returns the triton::format::elf::ElfProgramHeader. */
+#define PyElfProgramHeader_AsElfProgramHeader(v) (((triton::bindings::python::ElfProgramHeader_Object*)(v))->phdr)
+
+/*! Checks if the pyObject is a triton::format::efl::ElfRelocationTable. */
+#define PyElfRelocationTable_Check(v) ((v)->ob_type == &triton::bindings::python::ElfRelocationTable_Type)
+
+/*! Returns the triton::format::elf::ElfRelocationTable. */
+#define PyElfRelocationTable_AsElfRelocationTable(v) (((triton::bindings::python::ElfRelocationTable_Object*)(v))->rel)
+
+/*! Checks if the pyObject is a triton::format::efl::ElfSectionHeader. */
+#define PyElfSectionHeader_Check(v) ((v)->ob_type == &triton::bindings::python::ElfSectionHeader_Type)
+
+/*! Returns the triton::format::elf::ElfSectionHeader. */
+#define PyElfSectionHeader_AsElfSectionHeader(v) (((triton::bindings::python::ElfSectionHeader_Object*)(v))->shdr)
+
+/*! Checks if the pyObject is a triton::format::efl::ElfSymbolTable. */
+#define PyElfSymbolTable_Check(v) ((v)->ob_type == &triton::bindings::python::ElfSymbolTable_Type)
+
+/*! Returns the triton::format::elf::ElfSymbolTable. */
+#define PyElfSymbolTable_AsElfSymbolTable(v) (((triton::bindings::python::ElfSymbolTable_Object*)(v))->sym)
+
+/*! Checks if the pyObject is a triton::arch::Immediate. */
 #define PyImmediate_Check(v) ((v)->ob_type == &triton::bindings::python::Immediate_Type)
 
 /*! Returns the triton::arch::Immediate. */
 #define PyImmediate_AsImmediate(v) (((triton::bindings::python::Immediate_Object*)(v))->imm)
 
-/*! Checks if the pyObject is an triton::arch::Instruction. */
+/*! Checks if the pyObject is a triton::arch::Instruction. */
 #define PyInstruction_Check(v) ((v)->ob_type == &triton::bindings::python::Instruction_Type)
 
 /*! Returns the triton::arch::Instruction. */
@@ -274,4 +421,3 @@ namespace triton {
 
 #endif /* TRITON_PYOBJECT_H */
 #endif /* TRITON_PYTHON_BINDINGS */
-

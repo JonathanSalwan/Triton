@@ -86,6 +86,12 @@ namespace triton {
         triton::bindings::python::cpuSizeDict = xPyDict_New();
         PyObject* idCpuSizeClass = xPyClass_New(nullptr, triton::bindings::python::cpuSizeDict, xPyString_FromString("CPUSIZE"));
 
+        /* Create the ELF namespace ================================================================== */
+
+        PyObject* elfDict = xPyDict_New();
+        initElfNamespace(elfDict);
+        PyObject* idElfDictClass = xPyClass_New(nullptr, elfDict, xPyString_FromString("ELF"));
+
         /* Create the OPCODE namespace =============================================================== */
 
         triton::bindings::python::opcodesDict = xPyDict_New();
@@ -140,6 +146,7 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "AST_NODE",            idAstNodeDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "AST_REPRESENTATION",  idAstRepresentationDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "CALLBACK",            idCallbackDictClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "ELF",                 idElfDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "CPUSIZE",             idCpuSizeClass);            /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPCODE",              idOpcodesClass);            /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPERAND",             idOperandClass);

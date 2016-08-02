@@ -7,8 +7,6 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <z3++.h>
-
 #include <ast.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>

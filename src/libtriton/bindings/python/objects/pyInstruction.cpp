@@ -7,7 +7,7 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <api.hpp>
+#include <instruction.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>

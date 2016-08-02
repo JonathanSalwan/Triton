@@ -136,7 +136,7 @@ namespace triton {
           //! Returns the path file of the binary.
           const std::string& getPath(void) const;
 
-          //! Returns ELF Headers.
+          //! Returns the ELF Header.
           const triton::format::elf::ElfHeader& getHeader(void) const;
 
           //! Returns Program Headers.
@@ -157,7 +157,7 @@ namespace triton {
           //! Returns the list of shared libraries dependency.
           const std::vector<std::string>& getSharedLibraries(void) const;
 
-          //! Returns all memory areas which may be mapped.
+          //! Returns all memory areas which then may be mapped via triton::API::setConcreteMemoryAreaValue.
           const std::list<triton::format::MemoryMapping>& getMemoryMapping(void) const;
       };
 

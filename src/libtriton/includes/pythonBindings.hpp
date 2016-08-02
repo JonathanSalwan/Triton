@@ -90,8 +90,8 @@ namespace triton {
       //! Initializes the CPUSIZE python namespace.
       void initCpuSizeNamespace(void);
 
-      //! Initializes the REG python namespace.
-      void initRegNamespace(void);
+      //! Initializes the ELF python namespace.
+      void initElfNamespace(PyObject* elfDict);
 
       //! Initializes the OPCODE python namespace.
       void initX86OpcodesNamespace(void);
@@ -101,6 +101,9 @@ namespace triton {
 
       //! Initializes the OPERAND python namespace.
       void initOperandNamespace(PyObject* operandDict);
+
+      //! Initializes the REG python namespace.
+      void initRegNamespace(void);
 
       //! Initializes the OPTIMIZATION python namespace.
       void initSymOptiNamespace(PyObject* symOptiDict);
