@@ -1,7 +1,6 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
 ##
-##  This program is under the terms of the BSD License.
 ##  Jonathan Salwan - 2016-08-01
 ##
 ##  Description: Solution of the baby-re challenge from the Defcon Quals 2016.

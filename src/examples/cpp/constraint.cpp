@@ -1,15 +1,12 @@
 /*
-** Copyright (C) - Triton
-**
-** This program is under the terms of the BSD License.
-**
 ** Output:
-** RAX expr: (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64))
-** constraint: (assert (= (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64)) (_ bv0 64)))
-** Model:
-**   - Variable id  : 0
-**   - Variable name: SymVar_0
-**   - Value        : 11223344
+**
+**  RAX expr: (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64))
+**  constraint: (assert (= (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64)) (_ bv0 64)))
+**  Model:
+**    - Variable id  : 0
+**    - Variable name: SymVar_0
+**    - Value        : 11223344
 **
 */
 

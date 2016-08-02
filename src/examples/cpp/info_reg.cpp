@@ -1,18 +1,14 @@
 /*
-** Copyright (C) - Triton
-**
-** This program is under the terms of the BSD License.
-**
 ** Output:
 **
-** $ ./info_reg.bin
-** Name        : ah
-** Size byte   : 1
-** Size bit    : 8
-** Highed bit  : 15
-** Lower  bit  : 8
-** Parent      : rax
-** operator<<  : ah:8 bitsvector[15..8]
+**  $ ./info_reg.bin
+**  Name        : ah
+**  Size byte   : 1
+**  Size bit    : 8
+**  Highed bit  : 15
+**  Lower  bit  : 8
+**  Parent      : rax
+**  operator<<  : ah:8 bitsvector[15..8]
 */
 
 #include <iostream>

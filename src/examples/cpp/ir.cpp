@@ -1,10 +1,3 @@
-/*
-** Copyright (C) - Triton
-**
-** This program is under the terms of the BSD License.
-**
-*/
-
 
 #include <iostream>
 #include <triton/api.hpp>

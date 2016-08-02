@@ -1,12 +1,8 @@
 /*
-** Copyright (C) - Triton
-**
-** This program is under the terms of the BSD License.
-**
 ** Output
 **
-** 400017: xor rax, rax
-**         SymExpr 0: ref!0 = (_ bv0 64) ; XOR operation
+**  400017: xor rax, rax
+**          SymExpr 0: ref!0 = (_ bv0 64) ; XOR operation
 */
 
 

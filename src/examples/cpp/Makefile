@@ -1,9 +1,3 @@
-##
-## Copyright (C) - Triton
-##
-## This program is under the terms of the BSD License.
-##
-
 all: examples
 
 examples:
