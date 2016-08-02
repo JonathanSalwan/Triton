@@ -73,7 +73,7 @@ namespace triton {
         std::list<triton::callbacks::symbolicSimplificationCallback> symbolicSimplificationCallbacks;
 
         //! Returns the number of callbacks recorded.
-        triton::uint32 countCallbacks(void) const;
+        triton::usize countCallbacks(void) const;
 
       public:
         //! True if there is at least one callback defined.

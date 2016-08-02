@@ -197,8 +197,8 @@ namespace triton {
     }
 
 
-    triton::uint32 Callbacks::countCallbacks(void) const {
-      triton::uint32 count = 0;
+    triton::usize Callbacks::countCallbacks(void) const {
+      triton::usize count = 0;
 
       count += this->memoryHitCallbacks.size();
       count += this->symbolicSimplificationCallbacks.size();
