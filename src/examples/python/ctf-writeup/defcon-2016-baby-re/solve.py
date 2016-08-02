@@ -254,11 +254,11 @@ def initialize():
     # Define the target architecture
     setArchitecture(ARCH.X86_64)
 
-    # Define a symbolic optimization
+    # Define symbolic optimizations
     enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
     enableSymbolicOptimization(OPTIMIZATION.ONLY_ON_SYMBOLIZED, True)
 
-    # Define an internal callback to setup a caching memory system.
+    # Define internal callbacks.
     addCallback(memoryCaching,   CALLBACK.MEMORY_HIT)
     addCallback(constantFolding, CALLBACK.SYMBOLIC_SIMPLIFICATION)
 
