@@ -97,6 +97,9 @@ e.g: `/usr/bin/gdb`
 - **getProgramHeaders(void)**<br>
 Returns program headers as list of \ref py_ElfProgramHeader_page.
 
+- **getRaw(void)**<br>
+Returns the raw binary as bytes.
+
 - **getRelocationTable(void)**<br>
 Returns relocations table entries as list of \ref py_ElfRelocationTable_page.
 
@@ -106,6 +109,9 @@ Returns section headers as list of \ref py_ElfSectionHeader_page.
 - **getSharedLibraries(void)**<br>
 Returns the list of shared libraries dependency as list of string.<br>
 e.g: `["libc.so.6", "libncurses.so.5"]`
+
+- **getSize(void)**<br>
+Returns the binary size.
 
 - **getSymbolsTable(void)**<br>
 Returns symbols table entries as list of \ref py_ElfSymbolTable_page.
@@ -182,6 +188,18 @@ namespace triton {
       }
 
 
+      static PyObject* Elf_getRaw(PyObject* self, PyObject* noarg) {
+        try {
+          const triton::uint8* raw = PyElf_AsElf(self)->getRaw();
+          triton::uint32 size      = PyElf_AsElf(self)->getSize();
+          return PyBytes_FromStringAndSize(reinterpret_cast<const char*>(raw), size);
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* Elf_getRelocationTable(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
 
@@ -236,6 +254,16 @@ namespace triton {
       }
 
 
+      static PyObject* Elf_getSize(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint64(PyElf_AsElf(self)->getSize());
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* Elf_getSymbolsTable(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
 
@@ -260,9 +288,11 @@ namespace triton {
         {"getHeader",             Elf_getHeader,            METH_NOARGS,     ""},
         {"getPath",               Elf_getPath,              METH_NOARGS,     ""},
         {"getProgramHeaders",     Elf_getProgramHeaders,    METH_NOARGS,     ""},
+        {"getRaw",                Elf_getRaw,               METH_NOARGS,     ""},
         {"getRelocationTable",    Elf_getRelocationTable,   METH_NOARGS,     ""},
         {"getSectionHeaders",     Elf_getSectionHeaders,    METH_NOARGS,     ""},
         {"getSharedLibraries",    Elf_getSharedLibraries,   METH_NOARGS,     ""},
+        {"getSize",               Elf_getSize,              METH_NOARGS,     ""},
         {"getSymbolsTable",       Elf_getSymbolsTable,      METH_NOARGS,     ""},
         {nullptr,                 nullptr,                  0,               nullptr}
       };

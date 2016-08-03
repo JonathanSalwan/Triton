@@ -347,7 +347,7 @@ namespace triton {
       }
 
 
-      triton::uint64 Elf::getOffsetFromAddress(triton::uint64 vaddr) {
+      triton::uint64 Elf::getOffsetFromAddress(triton::uint64 vaddr) const {
         for (auto it = this->programHeaders.begin(); it != this->programHeaders.end(); it++) {
           if (it->getType() == triton::format::elf::PT_LOAD) {
             if (vaddr >= it->getVaddr() && vaddr < (it->getVaddr() + it->getFilesz())) {
@@ -359,7 +359,7 @@ namespace triton {
       }
 
 
-      triton::uint64 Elf::getOffsetFromDTValue(triton::format::elf::elf_e dt) {
+      triton::uint64 Elf::getOffsetFromDTValue(triton::format::elf::elf_e dt) const {
         triton::uint64 offset = 0;
         triton::uint64 vaddr  = 0;
 
@@ -374,13 +374,23 @@ namespace triton {
       }
 
 
-      triton::uint64 Elf::getDTValue(triton::format::elf::elf_e dt) {
+      triton::uint64 Elf::getDTValue(triton::format::elf::elf_e dt) const {
         for (auto it = this->dynamicTable.begin(); it != this->dynamicTable.end(); it++) {
           if (it->getTag() == dt) {
             return it->getValue();
           }
         }
         return 0;
+      }
+
+
+      const triton::uint8* Elf::getRaw(void) const {
+        return this->raw;
+      }
+
+
+      triton::uint64 Elf::getSize(void) const {
+        return this->totalSize;
       }
 
 

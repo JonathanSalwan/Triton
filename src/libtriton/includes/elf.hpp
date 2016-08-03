@@ -118,13 +118,13 @@ namespace triton {
           void initJmprelTable(void);
 
           //! Returns the offset in the file corresponding to the virtual address.
-          triton::uint64 getOffsetFromAddress(triton::uint64 vaddr);
+          triton::uint64 getOffsetFromAddress(triton::uint64 vaddr) const;
 
           //! Returns the offset in the file corresponding to the Dynamic Table (DT) item.
-          triton::uint64 getOffsetFromDTValue(triton::format::elf::elf_e dt);
+          triton::uint64 getOffsetFromDTValue(triton::format::elf::elf_e dt) const;
 
           //! Returns the value of a Dynamic Table (DT) item.
-          triton::uint64 getDTValue(triton::format::elf::elf_e dt);
+          triton::uint64 getDTValue(triton::format::elf::elf_e dt) const;
 
         public:
           //! Constructor.
@@ -132,6 +132,12 @@ namespace triton {
 
           //! Destructor.
           ~Elf();
+
+          //! Returns the raw binary.
+          const triton::uint8* getRaw(void) const;
+
+          //! Returns the binary size.
+          triton::uint64 getSize(void) const;
 
           //! Returns the path file of the binary.
           const std::string& getPath(void) const;
