@@ -13,7 +13,7 @@
 #include "cpuSize.hpp"
 #include "immediate.hpp"
 #include "operandInterface.hpp"
-#include "registerOperand.hpp"
+#include "register.hpp"
 #include "tritonTypes.hpp"
 
 

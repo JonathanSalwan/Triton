@@ -9,6 +9,7 @@
 #define TRITON_API_H
 
 #include "architecture.hpp"
+#include "ast.hpp"
 #include "astGarbageCollector.hpp"
 #include "astRepresentation.hpp"
 #include "callbacks.hpp"
@@ -16,8 +17,7 @@
 #include "instruction.hpp"
 #include "memoryAccess.hpp"
 #include "operandWrapper.hpp"
-#include "registerOperand.hpp"
-#include "ast.hpp"
+#include "register.hpp"
 #include "solverEngine.hpp"
 #include "symbolicEngine.hpp"
 #include "taintEngine.hpp"

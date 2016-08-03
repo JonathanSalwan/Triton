@@ -25,7 +25,7 @@
 #include "memoryAccess.hpp"
 #include "pathConstraint.hpp"
 #include "pythonBindings.hpp"
-#include "registerOperand.hpp"
+#include "register.hpp"
 #include "solverModel.hpp"
 #include "symbolicExpression.hpp"
 #include "symbolicVariable.hpp"

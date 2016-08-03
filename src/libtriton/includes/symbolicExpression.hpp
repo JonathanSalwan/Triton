@@ -12,7 +12,7 @@
 
 #include "ast.hpp"
 #include "memoryAccess.hpp"
-#include "registerOperand.hpp"
+#include "register.hpp"
 #include "symbolicEnums.hpp"
 #include "tritonTypes.hpp"
 

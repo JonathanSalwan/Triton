@@ -16,7 +16,7 @@
 #include "astDictionaries.hpp"
 #include "memoryAccess.hpp"
 #include "pathManager.hpp"
-#include "registerOperand.hpp"
+#include "register.hpp"
 #include "symbolicEnums.hpp"
 #include "symbolicExpression.hpp"
 #include "symbolicOptimization.hpp"

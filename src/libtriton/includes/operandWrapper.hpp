@@ -11,7 +11,7 @@
 #include "immediate.hpp"
 #include "memoryAccess.hpp"
 #include "operandInterface.hpp"
-#include "registerOperand.hpp"
+#include "register.hpp"
 #include "tritonTypes.hpp"
 
 

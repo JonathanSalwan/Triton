@@ -18,7 +18,7 @@
 #include "ast.hpp"
 #include "memoryAccess.hpp"
 #include "operandWrapper.hpp"
-#include "registerOperand.hpp"
+#include "register.hpp"
 #include "symbolicExpression.hpp"
 #include "tritonTypes.hpp"
 

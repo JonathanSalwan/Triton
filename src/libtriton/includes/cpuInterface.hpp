@@ -14,7 +14,7 @@
 
 #include "instruction.hpp"
 #include "memoryAccess.hpp"
-#include "registerOperand.hpp"
+#include "register.hpp"
 #include "tritonTypes.hpp"
 
 

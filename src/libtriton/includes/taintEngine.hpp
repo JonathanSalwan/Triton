@@ -13,7 +13,7 @@
 #include <stdint.h>
 
 #include "memoryAccess.hpp"
-#include "registerOperand.hpp"
+#include "register.hpp"
 #include "tritonTypes.hpp"
 
 

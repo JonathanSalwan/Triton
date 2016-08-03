@@ -8,7 +8,7 @@
 #ifndef TRITON_X86SPECIFICATIONS_H
 #define TRITON_X86SPECIFICATIONS_H
 
-#include "registerOperand.hpp"
+#include "register.hpp"
 
 
 
