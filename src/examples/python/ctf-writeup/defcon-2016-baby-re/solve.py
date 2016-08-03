@@ -6,7 +6,8 @@
 ##  Description: Solution of the baby-re challenge from the Defcon Quals 2016.
 ##  In this solution, we fully emulate the CheckSolution() function and we solve
 ##  each branch to go through the good path. The emulation start from a memory
-##  dump (baby-re.dump) which has been done via gdb at the CheckSolution() prologue.
+##  dump (baby-re.dump) which has been done via peda-gdb (see gdb-peda-fulldump.patch)
+##  at the CheckSolution() prologue.
 ##
 ##  Output:
 ##
