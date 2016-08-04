@@ -389,7 +389,7 @@ namespace triton {
       }
 
 
-      triton::uint64 Elf::getSize(void) const {
+      triton::usize Elf::getSize(void) const {
         return this->totalSize;
       }
 

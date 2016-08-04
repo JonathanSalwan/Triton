@@ -137,7 +137,7 @@ namespace triton {
           const triton::uint8* getRaw(void) const;
 
           //! Returns the binary size.
-          triton::uint64 getSize(void) const;
+          triton::usize getSize(void) const;
 
           //! Returns the path file of the binary.
           const std::string& getPath(void) const;

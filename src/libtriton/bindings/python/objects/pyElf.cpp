@@ -191,7 +191,7 @@ namespace triton {
       static PyObject* Elf_getRaw(PyObject* self, PyObject* noarg) {
         try {
           const triton::uint8* raw = PyElf_AsElf(self)->getRaw();
-          triton::uint32 size      = PyElf_AsElf(self)->getSize();
+          triton::usize size       = PyElf_AsElf(self)->getSize();
           return PyBytes_FromStringAndSize(reinterpret_cast<const char*>(raw), size);
         }
         catch (const std::exception& e) {
@@ -256,7 +256,7 @@ namespace triton {
 
       static PyObject* Elf_getSize(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint64(PyElf_AsElf(self)->getSize());
+          return PyLong_FromUsize(PyElf_AsElf(self)->getSize());
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
