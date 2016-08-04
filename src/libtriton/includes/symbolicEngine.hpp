@@ -115,7 +115,7 @@ namespace triton {
           void removeSymbolicExpression(triton::usize symExprId);
 
           //! Removes aligned entry.
-          void removeAlignedMemory(triton::uint64 addr);
+          void removeAlignedMemory(triton::uint64 addr, triton::uint32 size);
 
           //! Adds a symbolic variable.
           SymbolicVariable* newSymbolicVariable(symkind_e kind, triton::uint64 kindValue, triton::uint32 size, const std::string& comment="");

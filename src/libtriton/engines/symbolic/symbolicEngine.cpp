@@ -182,7 +182,7 @@ namespace triton {
       void SymbolicEngine::concretizeMemory(triton::uint64 addr) {
         this->memoryReference.erase(addr);
         if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
-          this->removeAlignedMemory(addr);
+          this->removeAlignedMemory(addr, BYTE_SIZE);
       }
 
 
@@ -194,43 +194,33 @@ namespace triton {
 
 
       /* Remove aligned memory */
-      void SymbolicEngine::removeAlignedMemory(triton::uint64 addr) {
-        /* Remove address with several sizes */
-        this->alignedMemoryReference.erase(std::make_pair(addr,  BYTE_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr,  WORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr,  DWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr,  QWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr,  DQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr,  QQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr,  DQQWORD_SIZE));
+      void SymbolicEngine::removeAlignedMemory(triton::uint64 addr, triton::uint32 size) {
+        /* Remove overloaded positive ranges */
+        for (triton::uint32 index = 0; index < size; index++) {
+          this->alignedMemoryReference.erase(std::make_pair(addr+index, BYTE_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(addr+index, WORD_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(addr+index, DWORD_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(addr+index, QWORD_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(addr+index, DQWORD_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(addr+index, QQWORD_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(addr+index, DQQWORD_SIZE));
+        }
 
-        /* Remove overloaded range */
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,   WORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,   DWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,   QWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,   DQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,   QQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-BYTE_SIZE,   DQQWORD_SIZE));
-
-        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,   DWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,   QWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,   DQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,   QQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-WORD_SIZE,   DQQWORD_SIZE));
-
-        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,  QWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,  DQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,  QQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-DWORD_SIZE,  DQQWORD_SIZE));
-
-        this->alignedMemoryReference.erase(std::make_pair(addr-QWORD_SIZE,  DQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-QWORD_SIZE,  QQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-QWORD_SIZE,  DQQWORD_SIZE));
-
-        this->alignedMemoryReference.erase(std::make_pair(addr-DQWORD_SIZE, QQWORD_SIZE));
-        this->alignedMemoryReference.erase(std::make_pair(addr-DQWORD_SIZE, DQQWORD_SIZE));
-
-        this->alignedMemoryReference.erase(std::make_pair(addr-QQWORD_SIZE, DQQWORD_SIZE));
+        /* Remove overloaded negative ranges */
+        for (triton::uint32 index = 1; index < DQQWORD_SIZE; index++) {
+          if (index < WORD_SIZE)
+            this->alignedMemoryReference.erase(std::make_pair(addr-index, WORD_SIZE));
+          if (index < DWORD_SIZE)
+            this->alignedMemoryReference.erase(std::make_pair(addr-index, DWORD_SIZE));
+          if (index < QWORD_SIZE)
+            this->alignedMemoryReference.erase(std::make_pair(addr-index, QWORD_SIZE));
+          if (index < DQWORD_SIZE)
+            this->alignedMemoryReference.erase(std::make_pair(addr-index, DQWORD_SIZE));
+          if (index < QQWORD_SIZE)
+            this->alignedMemoryReference.erase(std::make_pair(addr-index, QQWORD_SIZE));
+          if (index < DQQWORD_SIZE)
+            this->alignedMemoryReference.erase(std::make_pair(addr-index, DQQWORD_SIZE));
+        }
       }
 
 
@@ -520,7 +510,7 @@ namespace triton {
           /* Add the new memory reference */
           this->addMemoryReference(memAddr+index, se->getId());
           if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
-            removeAlignedMemory(memAddr+index);
+            removeAlignedMemory(memAddr+index, BYTE_SIZE);
         }
 
         return symVar;
@@ -699,7 +689,7 @@ namespace triton {
 
         /* Record the aligned memory for a symbolic optimization */
         if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY)) {
-          this->removeAlignedMemory(address);
+          this->removeAlignedMemory(address, writeSize);
           this->alignedMemoryReference[std::make_pair(address, writeSize)] = node;
         }
 
