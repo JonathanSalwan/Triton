@@ -267,8 +267,10 @@ namespace triton {
       PyObject* PySymbolicVariable(triton::engines::symbolic::SymbolicVariable* symVar) {
         SymbolicVariable_Object* object;
 
-        if (symVar == nullptr)
-          return PyErr_Format(PyExc_TypeError, "PySymbolicVariable(): symVar cannot be null.");
+        if (symVar == nullptr) {
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
 
         PyType_Ready(&SymbolicVariable_Type);
         object = PyObject_NEW(SymbolicVariable_Object, &SymbolicVariable_Type);

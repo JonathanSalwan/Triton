@@ -564,8 +564,10 @@ namespace triton {
       PyObject* PyAstNode(triton::ast::AbstractNode* node) {
         AstNode_Object* object;
 
-        if (node == nullptr)
-          return PyErr_Format(PyExc_TypeError, "PyAstNode(): The node cannot be null.");
+        if (node == nullptr) {
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
 
         PyType_Ready(&AstNode_Type);
         object = PyObject_NEW(AstNode_Object, &AstNode_Type);

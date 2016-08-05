@@ -341,8 +341,10 @@ namespace triton {
       PyObject* PySymbolicExpression(triton::engines::symbolic::SymbolicExpression* symExpr) {
         SymbolicExpression_Object* object;
 
-        if (symExpr == nullptr)
-          return PyErr_Format(PyExc_TypeError, "PySymbolicExpression(): symExpr cannot be null.");
+        if (symExpr == nullptr) {
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
 
         PyType_Ready(&SymbolicExpression_Type);
         object = PyObject_NEW(SymbolicExpression_Object, &SymbolicExpression_Type);
