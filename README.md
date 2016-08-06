@@ -25,7 +25,7 @@ A full documentation is available on our [doxygen page](http://triton.quarkslab.
 
 * [Description](http://triton.quarkslab.com/documentation/doxygen/#description_sec)
 * [Installation](http://triton.quarkslab.com/documentation/doxygen/#install_sec)
-* [Examples](http://triton.quarkslab.com/documentation/doxygen/Tracer_page.html#Tracer_pintool)
+* [Examples](https://github.com/JonathanSalwan/Triton/tree/master/src/examples)
 * [Presentations and Publications](http://triton.quarkslab.com/documentation/doxygen/#publications_sec)
 
 ### Internal documentation
