@@ -77,6 +77,9 @@ namespace triton {
           //! Returns true if the symbolic expression is assigned to a register. \sa triton::engines::symbolic::symkind_e
           bool isRegister(void) const;
 
+          //! Returns true if the expression contains a symbolic variable.
+          bool isSymbolized(void) const;
+
           //! Returns the kind of the symbolic expression.
           symkind_e getKind(void) const;
 

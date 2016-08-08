@@ -153,6 +153,9 @@ Returns true if the instruction contains an expression which writes into the mem
 - **isPrefixed(void)**<br>
 Returns true if the instruction has a prefix.
 
+- **isSymbolized(void)**<br>
+Returns true if at least one of its \ref py_SymbolicExpression_page contains a symbolic variable.
+
 - **isTainted(void)**<br>
 Returns true if at least one of its \ref py_SymbolicExpression_page is tainted.
 
@@ -628,6 +631,18 @@ namespace triton {
       }
 
 
+      static PyObject* Instruction_isSymbolized(PyObject* self, PyObject* noarg) {
+        try {
+          if (PyInstruction_AsInstruction(self)->isSymbolized() == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* Instruction_isTainted(PyObject* self, PyObject* noarg) {
         try {
           if (PyInstruction_AsInstruction(self)->isTainted() == true)
@@ -764,6 +779,7 @@ namespace triton {
         {"isMemoryRead",              Instruction_isMemoryRead,             METH_NOARGS,     ""},
         {"isMemoryWrite",             Instruction_isMemoryWrite,            METH_NOARGS,     ""},
         {"isPrefixed",                Instruction_isPrefixed,               METH_NOARGS,     ""},
+        {"isSymbolized",              Instruction_isSymbolized,             METH_NOARGS,     ""},
         {"isTainted",                 Instruction_isTainted,                METH_NOARGS,     ""},
         {"setAddress",                Instruction_setAddress,               METH_O,          ""},
         {"setOpcodes",                Instruction_setOpcodes,               METH_O,          ""},

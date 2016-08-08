@@ -127,6 +127,13 @@ namespace triton {
       }
 
 
+      bool SymbolicExpression::isSymbolized(void) const {
+        if (this->ast == nullptr)
+          return false;
+        return this->ast->isSymbolized();
+      }
+
+
       std::ostream& operator<<(std::ostream& stream, const SymbolicExpression& symExpr) {
         stream << symExpr.getFormattedId() << " = " << symExpr.getAst();
         if (!symExpr.getComment().empty())

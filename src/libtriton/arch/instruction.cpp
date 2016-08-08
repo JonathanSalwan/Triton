@@ -266,6 +266,16 @@ namespace triton {
     }
 
 
+    bool Instruction::isSymbolized(void) const {
+      std::vector<triton::engines::symbolic::SymbolicExpression*>::const_iterator it;
+      for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
+        if ((*it)->isSymbolized() == true)
+          return true;
+      }
+      return false;
+    }
+
+
     bool Instruction::isMemoryRead(void) const {
       if (this->loadAccess.size() >= 1)
         return true;

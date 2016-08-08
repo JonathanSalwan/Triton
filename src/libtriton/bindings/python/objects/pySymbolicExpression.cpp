@@ -110,6 +110,9 @@ Returns true if the expression is assigned to a memory.
 - **isRegister(void)**<br>
 Returns true if the expression is assigned to a register.
 
+- **isSymbolized(void)**<br>
+Returns true if the expression contains a symbolic variable.
+
 - **isTainted(void)**<br>
 Returns true if the expression is tainted.
 
@@ -225,6 +228,18 @@ namespace triton {
       }
 
 
+      static PyObject* SymbolicExpression_isSymbolized(PyObject* self, PyObject* noarg) {
+        try {
+          if (PySymbolicExpression_AsSymbolicExpression(self)->isSymbolized() == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* SymbolicExpression_isTainted(PyObject* self, PyObject* noarg) {
         try {
           if (PySymbolicExpression_AsSymbolicExpression(self)->isTainted == true)
@@ -280,6 +295,7 @@ namespace triton {
         {"getOriginRegister", SymbolicExpression_getOriginRegister, METH_NOARGS,    ""},
         {"isMemory",          SymbolicExpression_isMemory,          METH_NOARGS,    ""},
         {"isRegister",        SymbolicExpression_isRegister,        METH_NOARGS,    ""},
+        {"isSymbolized",      SymbolicExpression_isSymbolized,      METH_NOARGS,    ""},
         {"isTainted",         SymbolicExpression_isTainted,         METH_NOARGS,    ""},
         {"setAst",            SymbolicExpression_setAst,            METH_O,         ""},
         {nullptr,             nullptr,                              0,              nullptr}

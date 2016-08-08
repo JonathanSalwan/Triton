@@ -223,6 +223,9 @@ namespace triton {
         //! Returns true if at least one of its expressions is tainted.
         bool isTainted(void) const;
 
+        //! Returns true if at least one of its expressions contains a symbolic variable.
+        bool isSymbolized(void) const;
+
         //! Returns true if the instruction contains an expression which reads the memory.
         bool isMemoryRead(void) const;
 
