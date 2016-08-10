@@ -849,6 +849,12 @@ namespace triton {
         if (node->getBitvectorSize() != mem.getBitSize())
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::assignSymbolicExpressionToMemory(): The size of the symbolic expression is not equal to the memory access.");
 
+        /* Record the aligned memory for a symbolic optimization */
+        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY)) {
+          this->removeAlignedMemory(address, writeSize);
+          this->alignedMemoryReference[std::make_pair(address, writeSize)] = node;
+        }
+
         /*
          * As the x86's memory can be accessed without alignment, each byte of the
          * memory must be assigned to an unique reference.
