@@ -4085,7 +4085,7 @@ namespace triton {
               auto  op3  = triton::api.buildSymbolicOperand(inst, src2);
               auto  node = triton::ast::bvmul(triton::ast::sx(src1.getBitSize(), op2), triton::ast::sx(src2.getBitSize(), op3));
               auto  expr = triton::api.createSymbolicExpression(inst, triton::ast::extract(dst.getBitSize()-1, 0, node), dst, "IMUL operation");
-              expr->isTainted = triton::api.taintUnion(dst, src1);
+              expr->isTainted = triton::api.taintAssignment(dst, src1);
               expr->isTainted = triton::api.taintUnion(dst, src2);
               triton::arch::x86::semantics::cfImul_s(inst, expr, dst, triton::ast::bvmul(op2, op3), node);
               triton::arch::x86::semantics::ofImul_s(inst, expr, dst, triton::ast::bvmul(op2, op3), node);
