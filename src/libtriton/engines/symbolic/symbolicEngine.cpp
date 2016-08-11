@@ -193,33 +193,56 @@ namespace triton {
       }
 
 
-      /* Remove aligned memory */
-      void SymbolicEngine::removeAlignedMemory(triton::uint64 addr, triton::uint32 size) {
+      /* Gets an aligned entry. */
+      triton::ast::AbstractNode* SymbolicEngine::getAlignedMemory(triton::uint64 address, triton::uint32 size) {
+        if (this->isAlignedMemory(address, size))
+          return this->alignedMemoryReference[std::make_pair(address, size)];
+        return nullptr;
+      }
+
+
+      /* Checks if the aligned memory is recored. */
+      bool SymbolicEngine::isAlignedMemory(triton::uint64 address, triton::uint32 size) {
+        if (this->alignedMemoryReference.find(std::make_pair(address, size)) != this->alignedMemoryReference.end())
+          return true;
+        return false;
+      }
+
+
+      /* Adds an aligned memory */
+      void SymbolicEngine::addAlignedMemory(triton::uint64 address, triton::uint32 size, triton::ast::AbstractNode* node) {
+        this->removeAlignedMemory(address, size);
+        this->alignedMemoryReference[std::make_pair(address, size)] = node;
+      }
+
+
+      /* Removes an aligned memory */
+      void SymbolicEngine::removeAlignedMemory(triton::uint64 address, triton::uint32 size) {
         /* Remove overloaded positive ranges */
         for (triton::uint32 index = 0; index < size; index++) {
-          this->alignedMemoryReference.erase(std::make_pair(addr+index, BYTE_SIZE));
-          this->alignedMemoryReference.erase(std::make_pair(addr+index, WORD_SIZE));
-          this->alignedMemoryReference.erase(std::make_pair(addr+index, DWORD_SIZE));
-          this->alignedMemoryReference.erase(std::make_pair(addr+index, QWORD_SIZE));
-          this->alignedMemoryReference.erase(std::make_pair(addr+index, DQWORD_SIZE));
-          this->alignedMemoryReference.erase(std::make_pair(addr+index, QQWORD_SIZE));
-          this->alignedMemoryReference.erase(std::make_pair(addr+index, DQQWORD_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, BYTE_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, WORD_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, DWORD_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, QWORD_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, DQWORD_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, QQWORD_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, DQQWORD_SIZE));
         }
 
         /* Remove overloaded negative ranges */
         for (triton::uint32 index = 1; index < DQQWORD_SIZE; index++) {
           if (index < WORD_SIZE)
-            this->alignedMemoryReference.erase(std::make_pair(addr-index, WORD_SIZE));
+            this->alignedMemoryReference.erase(std::make_pair(address-index, WORD_SIZE));
           if (index < DWORD_SIZE)
-            this->alignedMemoryReference.erase(std::make_pair(addr-index, DWORD_SIZE));
+            this->alignedMemoryReference.erase(std::make_pair(address-index, DWORD_SIZE));
           if (index < QWORD_SIZE)
-            this->alignedMemoryReference.erase(std::make_pair(addr-index, QWORD_SIZE));
+            this->alignedMemoryReference.erase(std::make_pair(address-index, QWORD_SIZE));
           if (index < DQWORD_SIZE)
-            this->alignedMemoryReference.erase(std::make_pair(addr-index, DQWORD_SIZE));
+            this->alignedMemoryReference.erase(std::make_pair(address-index, DQWORD_SIZE));
           if (index < QQWORD_SIZE)
-            this->alignedMemoryReference.erase(std::make_pair(addr-index, QQWORD_SIZE));
+            this->alignedMemoryReference.erase(std::make_pair(address-index, QQWORD_SIZE));
           if (index < DQQWORD_SIZE)
-            this->alignedMemoryReference.erase(std::make_pair(addr-index, DQQWORD_SIZE));
+            this->alignedMemoryReference.erase(std::make_pair(address-index, DQQWORD_SIZE));
         }
       }
 
@@ -606,11 +629,8 @@ namespace triton {
          * Symbolic optimization
          * If the memory access is aligned, don't split the memory.
          */
-        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY)) {
-          if (this->alignedMemoryReference.find(std::make_pair(address, size)) != this->alignedMemoryReference.end()) {
-            return this->alignedMemoryReference[std::make_pair(address, size)];
-          }
-        }
+        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY) && this->isAlignedMemory(address, size))
+          return this->getAlignedMemory(address, size);
 
         while (size) {
           symMem = this->getSymbolicMemoryId(address + size - 1);
@@ -688,10 +708,8 @@ namespace triton {
         triton::uint32 writeSize = mem.getSize();
 
         /* Record the aligned memory for a symbolic optimization */
-        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY)) {
-          this->removeAlignedMemory(address, writeSize);
-          this->alignedMemoryReference[std::make_pair(address, writeSize)] = node;
-        }
+        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
+          this->addAlignedMemory(address, writeSize, node);
 
         /*
          * As the x86's memory can be accessed without alignment, each byte of the
@@ -850,10 +868,8 @@ namespace triton {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::assignSymbolicExpressionToMemory(): The size of the symbolic expression is not equal to the memory access.");
 
         /* Record the aligned memory for a symbolic optimization */
-        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY)) {
-          this->removeAlignedMemory(address, writeSize);
-          this->alignedMemoryReference[std::make_pair(address, writeSize)] = node;
-        }
+        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
+          this->addAlignedMemory(address, writeSize, node);
 
         /*
          * As the x86's memory can be accessed without alignment, each byte of the
