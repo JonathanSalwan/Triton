@@ -51,11 +51,11 @@ namespace triton {
 
       /* Semantics ============================================================================= */
 
-      //! Align add stack.
-      void alignAddStack_s(triton::arch::Instruction& inst, triton::uint32 delta);
+      //! Aligns the stack (add). Returns the new stack value.
+      triton::uint64 alignAddStack_s(triton::arch::Instruction& inst, triton::uint32 delta);
 
-      //! Align sub stack.
-      void alignSubStack_s(triton::arch::Instruction& inst, triton::uint32 delta);
+      //! Aligns the stack (sub). Returns the new stack value.
+      triton::uint64 alignSubStack_s(triton::arch::Instruction& inst, triton::uint32 delta);
 
       //! Clears a flag.
       void clearFlag_s(triton::arch::Instruction& inst, triton::arch::Register& flag, std::string comment="");

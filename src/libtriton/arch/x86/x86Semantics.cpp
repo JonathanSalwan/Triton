@@ -561,7 +561,7 @@ namespace triton {
         }
 
 
-        void alignAddStack_s(triton::arch::Instruction& inst, triton::uint32 delta) {
+        triton::uint64 alignAddStack_s(triton::arch::Instruction& inst, triton::uint32 delta) {
           auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_SP.getParent());
 
           /* Create symbolic operands */
@@ -576,10 +576,13 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = triton::api.taintUnion(dst, dst);
+
+          /* Return the new stack value */
+          return node->evaluate().convert_to<triton::uint64>();
         }
 
 
-        void alignSubStack_s(triton::arch::Instruction& inst, triton::uint32 delta) {
+        triton::uint64 alignSubStack_s(triton::arch::Instruction& inst, triton::uint32 delta) {
           auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_SP.getParent());
 
           /* Create symbolic operands */
@@ -594,6 +597,9 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = triton::api.taintUnion(dst, dst);
+
+          /* Return the new stack value */
+          return node->evaluate().convert_to<triton::uint64>();
         }
 
 
@@ -2407,9 +2413,7 @@ namespace triton {
           auto stack = TRITON_X86_REG_SP.getParent();
 
           /* Create the semantics - side effect */
-          alignSubStack_s(inst, stack.getSize());
-
-          auto  stackValue = triton::api.getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+          auto  stackValue = alignSubStack_s(inst, stack.getSize());
           auto  pc         = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
           auto  sp         = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
           auto& src        = inst.operands[0];
@@ -8567,9 +8571,7 @@ namespace triton {
           auto stack = TRITON_X86_REG_SP.getParent();
 
           /* Create the semantics - side effect */
-          alignSubStack_s(inst, stack.getSize());
-
-          auto  stackValue = triton::api.getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+          auto  stackValue = alignSubStack_s(inst, stack.getSize());
           auto  dst        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
           auto& src        = inst.operands[0];
 
@@ -8660,9 +8662,7 @@ namespace triton {
           auto stack = TRITON_X86_REG_SP.getParent();
 
           /* Create the semantics - side effect */
-          alignSubStack_s(inst, stack.getSize());
-
-          auto stackValue = triton::api.getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+          auto stackValue = alignSubStack_s(inst, stack.getSize());
           auto dst        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
           auto src1       = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
           auto src2       = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
@@ -8728,9 +8728,7 @@ namespace triton {
           auto stack = TRITON_X86_REG_SP.getParent();
 
           /* Create the semantics - side effect */
-          alignSubStack_s(inst, stack.getSize());
-
-          auto stackValue = triton::api.getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+          auto stackValue = alignSubStack_s(inst, stack.getSize());
           auto dst        = triton::arch::OperandWrapper(inst.popMemoryAccess(stackValue, stack.getSize()));
           auto src1       = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
           auto src2       = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
