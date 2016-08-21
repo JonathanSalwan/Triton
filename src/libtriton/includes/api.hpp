@@ -268,13 +268,13 @@ namespace triton {
         //! [**callbacks api**] - Raises an exception if the Callbacks interface is not initialized.
         void checkCallbacks(void) const;
 
-        //! [**callbacks api**] - Adds a memory LOAD callback.
-        void addCallback(triton::callbacks::memoryLoadCallback cb);
+        //! [**callbacks api**] - Adds a GET_CONCRETE_MEMORY_VALUE callback.
+        void addCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
 
-        //! [**callbacks api**] - Adds a register GET callback.
-        void addCallback(triton::callbacks::registerGetCallback cb);
+        //! [**callbacks api**] - Adds a GET_CONCRETE_REGISTER_VALUE callback.
+        void addCallback(triton::callbacks::getConcreteRegisterValueCallback cb);
 
-        //! [**callbacks api**] - Adds a symbolic simplification callback.
+        //! [**callbacks api**] - Adds a SYMBOLIC_SIMPLIFICATION callback.
         void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
         #ifdef TRITON_PYTHON_BINDINGS
@@ -282,17 +282,17 @@ namespace triton {
         void addCallback(PyObject* function, triton::callbacks::callback_e kind);
         #endif
 
-        //! [**callbacks api**] - Deletes a memory LOAD callback.
-        void removeCallback(triton::callbacks::memoryLoadCallback cb);
+        //! [**callbacks api**] - Deletes a GET_CONCRETE_MEMORY_VALUE callback.
+        void removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
 
-        //! [**callbacks api**] - Deletes a register GET callback.
-        void removeCallback(triton::callbacks::registerGetCallback cb);
+        //! [**callbacks api**] - Deletes a GET_CONCRETE_REGISTER_VALUE callback.
+        void removeCallback(triton::callbacks::getConcreteRegisterValueCallback cb);
 
-        //! [**callbacks api**] - Deletes a symbolic simplification callback.
+        //! [**callbacks api**] - Deletes a SYMBOLIC_SIMPLIFICATION callback.
         void removeCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
         #ifdef TRITON_PYTHON_BINDINGS
-        //! [**callbacks api**] - Deletes a python callback.
+        //! [**callbacks api**] - Deletes a python callback according to its kind.
         void removeCallback(PyObject* function, triton::callbacks::callback_e kind);
         #endif
 

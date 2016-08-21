@@ -775,7 +775,7 @@ namespace triton {
         if (size == 0 || size > DQQWORD_SIZE)
           throw triton::exceptions::Cpu("x8664Cpu::getConcreteMemoryValue(): Invalid size memory.");
 
-        triton::api.processCallbacks(triton::callbacks::MEMORY_LOAD, mem);
+        triton::api.processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, mem);
 
         for (triton::sint32 i = size-1; i >= 0; i--)
           ret = ((ret << BYTE_SIZE_BIT) | this->getConcreteMemoryValue(addr+i));
@@ -788,7 +788,7 @@ namespace triton {
         std::vector<triton::uint8> area;
 
         for (triton::usize index = 0; index < size; index++) {
-          triton::api.processCallbacks(triton::callbacks::MEMORY_LOAD, MemoryAccess(baseAddr+index, BYTE_SIZE));
+          triton::api.processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, MemoryAccess(baseAddr+index, BYTE_SIZE));
           area.push_back(this->getConcreteMemoryValue(baseAddr+index));
         }
 
@@ -799,7 +799,7 @@ namespace triton {
       triton::uint512 x8664Cpu::getConcreteRegisterValue(const triton::arch::Register& reg) const {
         triton::uint512 value = 0;
 
-        triton::api.processCallbacks(triton::callbacks::REGISTER_GET, reg);
+        triton::api.processCallbacks(triton::callbacks::GET_CONCRETE_REGISTER_VALUE, reg);
 
         switch (reg.getId()) {
           case triton::arch::x86::ID_REG_RAX: return (*((triton::uint64*)(this->rax)));
