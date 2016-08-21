@@ -724,27 +724,34 @@ namespace triton {
           inst.addSymbolicExpression(se);
           /* Assign memory with little endian */
           this->addMemoryReference((address + writeSize) - 1, se->getId());
-          /* Synchronize the concrete state */
-          triton::api.setConcreteMemoryValue((address + writeSize) - 1, tmp->evaluate().convert_to<triton::uint8>());
           /* continue */
           writeSize--;
         }
 
         /* If there is only one reference, we return the symbolic expression */
         if (ret.size() == 1) {
-          if (tmp != nullptr)
-            mem.setConcreteValue(tmp->evaluate());
+          /* Synchronize the memory operand */
+          mem.setConcreteValue(tmp->evaluate());
+          /* Synchronize the concrete state */
+          triton::api.setConcreteMemoryValue(mem);
+          /* Define the memory store */
           inst.setStoreAccess(mem, tmp);
           return se;
         }
 
         /* Otherwise, we return the concatenation of all symbolic expressions */
         tmp = triton::ast::concat(ret);
+
+        /* Synchronize the memory operand */
         mem.setConcreteValue(tmp->evaluate());
+
+        /* Synchronize the concrete state */
+        triton::api.setConcreteMemoryValue(mem);
 
         se  = this->newSymbolicExpression(tmp, triton::engines::symbolic::UNDEF, "Temporary concatenation reference - " + comment);
         se->setOriginMemory(triton::arch::MemoryAccess(address, mem.getSize(), tmp->evaluate()));
 
+        /* Define the memory store */
         inst.setStoreAccess(mem, tmp);
         inst.addSymbolicExpression(se);
         return se;

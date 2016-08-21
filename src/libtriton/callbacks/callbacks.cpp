@@ -26,10 +26,12 @@ namespace triton {
 
     Callbacks::Callbacks(const Callbacks& copy) {
       #ifdef TRITON_PYTHON_BINDINGS
-      this->pyMemoryHitCallbacks              = copy.pyMemoryHitCallbacks;
+      this->pyMemoryLoadCallbacks             = copy.pyMemoryLoadCallbacks;
+      this->pyRegisterGetCallbacks            = copy.pyRegisterGetCallbacks;
       this->pySymbolicSimplificationCallbacks = copy.pySymbolicSimplificationCallbacks;
       #endif
-      this->memoryHitCallbacks                = copy.memoryHitCallbacks;
+      this->memoryLoadCallbacks               = copy.memoryLoadCallbacks;
+      this->registerGetCallbacks              = copy.registerGetCallbacks;
       this->symbolicSimplificationCallbacks   = copy.symbolicSimplificationCallbacks;
       this->isDefined                         = copy.isDefined;
     }
@@ -41,17 +43,25 @@ namespace triton {
 
     void Callbacks::operator=(const Callbacks& copy) {
       #ifdef TRITON_PYTHON_BINDINGS
-      this->pyMemoryHitCallbacks              = copy.pyMemoryHitCallbacks;
+      this->pyMemoryLoadCallbacks             = copy.pyMemoryLoadCallbacks;
+      this->pyRegisterGetCallbacks            = copy.pyRegisterGetCallbacks;
       this->pySymbolicSimplificationCallbacks = copy.pySymbolicSimplificationCallbacks;
       #endif
-      this->memoryHitCallbacks                = copy.memoryHitCallbacks;
+      this->memoryLoadCallbacks               = copy.memoryLoadCallbacks;
+      this->registerGetCallbacks              = copy.registerGetCallbacks;
       this->symbolicSimplificationCallbacks   = copy.symbolicSimplificationCallbacks;
       this->isDefined                         = copy.isDefined;
     }
 
 
-    void Callbacks::addCallback(triton::callbacks::memoryHitCallback cb) {
-      this->memoryHitCallbacks.push_back(cb);
+    void Callbacks::addCallback(triton::callbacks::memoryLoadCallback cb) {
+      this->memoryLoadCallbacks.push_back(cb);
+      this->isDefined = true;
+    }
+
+
+    void Callbacks::addCallback(triton::callbacks::registerGetCallback cb) {
+      this->registerGetCallbacks.push_back(cb);
       this->isDefined = true;
     }
 
@@ -65,8 +75,11 @@ namespace triton {
     #ifdef TRITON_PYTHON_BINDINGS
     void Callbacks::addCallback(PyObject* function, triton::callbacks::callback_e kind) {
       switch (kind) {
-        case MEMORY_HIT:
-          this->pyMemoryHitCallbacks.push_back(function);
+        case MEMORY_LOAD:
+          this->pyMemoryLoadCallbacks.push_back(function);
+          break;
+        case REGISTER_GET:
+          this->pyRegisterGetCallbacks.push_back(function);
           break;
         case SYMBOLIC_SIMPLIFICATION:
           this->pySymbolicSimplificationCallbacks.push_back(function);
@@ -79,8 +92,15 @@ namespace triton {
     #endif
 
 
-    void Callbacks::removeCallback(triton::callbacks::memoryHitCallback cb) {
-      this->memoryHitCallbacks.remove(cb);
+    void Callbacks::removeCallback(triton::callbacks::memoryLoadCallback cb) {
+      this->memoryLoadCallbacks.remove(cb);
+      if (this->countCallbacks() == 0)
+        this->isDefined = false;
+    }
+
+
+    void Callbacks::removeCallback(triton::callbacks::registerGetCallback cb) {
+      this->registerGetCallbacks.remove(cb);
       if (this->countCallbacks() == 0)
         this->isDefined = false;
     }
@@ -96,8 +116,11 @@ namespace triton {
     #ifdef TRITON_PYTHON_BINDINGS
     void Callbacks::removeCallback(PyObject* function, triton::callbacks::callback_e kind) {
       switch (kind) {
-        case MEMORY_HIT:
-          this->pyMemoryHitCallbacks.remove(function);
+        case MEMORY_LOAD:
+          this->pyMemoryLoadCallbacks.remove(function);
+          break;
+        case REGISTER_GET:
+          this->pyRegisterGetCallbacks.remove(function);
           break;
         case SYMBOLIC_SIMPLIFICATION:
           this->pySymbolicSimplificationCallbacks.remove(function);
@@ -160,22 +183,23 @@ namespace triton {
     }
 
 
-    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address) const {
+    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const {
       switch (kind) {
-        case triton::callbacks::MEMORY_HIT: {
+        case triton::callbacks::MEMORY_LOAD: {
           // C++ callbacks
-          std::list<triton::callbacks::memoryHitCallback>::const_iterator it1;
-          for (it1 = this->memoryHitCallbacks.begin(); it1 != this->memoryHitCallbacks.end(); it1++)
-            (*it1)(address);
+          std::list<triton::callbacks::memoryLoadCallback>::const_iterator it1;
+          for (it1 = this->memoryLoadCallbacks.begin(); it1 != this->memoryLoadCallbacks.end(); it1++)
+            (*it1)(mem.getAddress(), mem.getSize());
 
           #ifdef TRITON_PYTHON_BINDINGS
           // Python callbacks
           std::list<PyObject*>::const_iterator it2;
-          for (it2 = this->pyMemoryHitCallbacks.begin(); it2 != this->pyMemoryHitCallbacks.end(); it2++) {
+          for (it2 = this->pyMemoryLoadCallbacks.begin(); it2 != this->pyMemoryLoadCallbacks.end(); it2++) {
 
             /* Create function args */
-            PyObject* args = triton::bindings::python::xPyTuple_New(1);
-            PyTuple_SetItem(args, 0, triton::bindings::python::PyLong_FromUint64(address));
+            PyObject* args = triton::bindings::python::xPyTuple_New(2);
+            PyTuple_SetItem(args, 0, triton::bindings::python::PyLong_FromUint64(mem.getAddress()));
+            PyTuple_SetItem(args, 1, triton::bindings::python::PyLong_FromUint32(mem.getSize()));
 
             /* Call the callback */
             PyObject* ret = PyObject_CallObject(*it2, args);
@@ -183,7 +207,7 @@ namespace triton {
             /* Check the call */
             if (ret == nullptr) {
               PyErr_Print();
-              throw triton::exceptions::Callbacks("Callbacks::processCallbacks(MEMORY_HIT): Fail to call the python callback.");
+              throw triton::exceptions::Callbacks("Callbacks::processCallbacks(MEMORY_LOAD): Fail to call the python callback.");
             }
 
             Py_DECREF(args);
@@ -191,6 +215,45 @@ namespace triton {
           #endif
           break;
         }
+
+        default:
+          throw triton::exceptions::Callbacks("Callbacks::processCallbacks(): Invalid kind of callback for this C++ polymorphism.");
+      };
+    }
+
+
+    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) const {
+      switch (kind) {
+        case triton::callbacks::REGISTER_GET: {
+          // C++ callbacks
+          std::list<triton::callbacks::registerGetCallback>::const_iterator it1;
+          for (it1 = this->registerGetCallbacks.begin(); it1 != this->registerGetCallbacks.end(); it1++)
+            (*it1)(reg);
+
+          #ifdef TRITON_PYTHON_BINDINGS
+          // Python callbacks
+          std::list<PyObject*>::const_iterator it2;
+          for (it2 = this->pyRegisterGetCallbacks.begin(); it2 != this->pyRegisterGetCallbacks.end(); it2++) {
+
+            /* Create function args */
+            PyObject* args = triton::bindings::python::xPyTuple_New(1);
+            PyTuple_SetItem(args, 0, triton::bindings::python::PyRegister(reg));
+
+            /* Call the callback */
+            PyObject* ret = PyObject_CallObject(*it2, args);
+
+            /* Check the call */
+            if (ret == nullptr) {
+              PyErr_Print();
+              throw triton::exceptions::Callbacks("Callbacks::processCallbacks(REGISTER_GET): Fail to call the python callback.");
+            }
+
+            Py_DECREF(args);
+          }
+          #endif
+          break;
+        }
+
         default:
           throw triton::exceptions::Callbacks("Callbacks::processCallbacks(): Invalid kind of callback for this C++ polymorphism.");
       };
@@ -200,10 +263,12 @@ namespace triton {
     triton::usize Callbacks::countCallbacks(void) const {
       triton::usize count = 0;
 
-      count += this->memoryHitCallbacks.size();
+      count += this->memoryLoadCallbacks.size();
+      count += this->registerGetCallbacks.size();
       count += this->symbolicSimplificationCallbacks.size();
       #ifdef TRITON_PYTHON_BINDINGS
-      count += this->pyMemoryHitCallbacks.size();
+      count += this->pyMemoryLoadCallbacks.size();
+      count += this->pyRegisterGetCallbacks.size();
       count += this->pySymbolicSimplificationCallbacks.size();
       #endif
 

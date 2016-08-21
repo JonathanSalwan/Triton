@@ -268,8 +268,11 @@ namespace triton {
         //! [**callbacks api**] - Raises an exception if the Callbacks interface is not initialized.
         void checkCallbacks(void) const;
 
-        //! [**callbacks api**] - Adds a memory hit callback.
-        void addCallback(triton::callbacks::memoryHitCallback cb);
+        //! [**callbacks api**] - Adds a memory LOAD callback.
+        void addCallback(triton::callbacks::memoryLoadCallback cb);
+
+        //! [**callbacks api**] - Adds a register GET callback.
+        void addCallback(triton::callbacks::registerGetCallback cb);
 
         //! [**callbacks api**] - Adds a symbolic simplification callback.
         void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
@@ -279,8 +282,11 @@ namespace triton {
         void addCallback(PyObject* function, triton::callbacks::callback_e kind);
         #endif
 
-        //! [**callbacks api**] - Deletes a memory hit callback.
-        void removeCallback(triton::callbacks::memoryHitCallback cb);
+        //! [**callbacks api**] - Deletes a memory LOAD callback.
+        void removeCallback(triton::callbacks::memoryLoadCallback cb);
+
+        //! [**callbacks api**] - Deletes a register GET callback.
+        void removeCallback(triton::callbacks::registerGetCallback cb);
 
         //! [**callbacks api**] - Deletes a symbolic simplification callback.
         void removeCallback(triton::callbacks::symbolicSimplificationCallback cb);
@@ -294,7 +300,10 @@ namespace triton {
         triton::ast::AbstractNode* processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) const;
 
         //! [**callbacks api**] - Processes callbacks according to the kind and the C++ polymorphism.
-        void processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address) const;
+        void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const;
+
+        //! [**callbacks api**] - Processes callbacks according to the kind and the C++ polymorphism.
+        void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) const;
 
 
 
