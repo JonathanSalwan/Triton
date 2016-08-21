@@ -38,31 +38,29 @@ namespace triton {
 
     /*! Enumerates all kinds callbacks. */
     enum callback_e {
-      MEMORY_LOAD,              /*!< Memory load callback */
-      REGISTER_GET,             /*!< Register get callback */
-      SYMBOLIC_SIMPLIFICATION,  /*!< Symbolic simplification callback */
+      GET_CONCRETE_MEMORY_VALUE,    /*!< Get concrete memory value callback */
+      GET_CONCRETE_REGISTER_VALUE,  /*!< Get concrete register value callback */
+      SYMBOLIC_SIMPLIFICATION,      /*!< Symbolic simplification callback */
     };
 
-    /*! \brief The prototype of a memory load callback.
+    /*! \brief The prototype of a GET_CONCRETE_MEMORY_VALUE callback.
      *
-     * \description The callback takes as arguments an address which representes the memory
-     * cell loaded and his size. Callbacks will be called each time that a memory cell will
-     * be loaded.
+     * \description The callback takes as unique argument a memory access. Callbacks will
+     * be called each time that the Triton library will need a concrete memory value.
      */
-    typedef void (*memoryLoadCallback)(triton::uint64 address, triton::uint32 size);
+    typedef void (*getConcreteMemoryValueCallback)(const triton::arch::MemoryAccess& mem);
 
-    /*! \brief The prototype of a register GET callback.
+    /*! \brief The prototype of a GET_CONCRETE_REGISTER_VALUE callback.
      *
-     * \description The callback takes as unique argument a triton::arch::Register which represents
-     * the register which will be read (GET). Callbacks will be called each time that a concrete register
-     * will be read.
+     * \description The callback takes as unique argument a register. Callbacks will be
+     * called each time that the Triton library will need a concrete register value.
      */
-    typedef void (*registerGetCallback)(const triton::arch::Register& reg);
+    typedef void (*getConcreteRegisterValueCallback)(const triton::arch::Register& reg);
 
-    /*! \brief The prototype of a symbolic simplification callback.
+    /*! \brief The prototype of a SYMBOLIC_SIMPLIFICATION callback.
      *
-     * \description The callback takes as uniq argument an triton::ast::AbstractNode and must return a valid triton::ast::AbstractNode.
-     * The returned node is used as assignment. See also the page about \ref SMT_simplification_page.
+     * \description The callback takes as uniq argument a triton::ast::AbstractNode and must return a valid triton::ast::AbstractNode.
+     * The returned node is used as assignment. See also the page about \ref SMT_simplification_page for more information.
      */
     typedef triton::ast::AbstractNode* (*symbolicSimplificationCallback)(triton::ast::AbstractNode* node);
 
@@ -71,21 +69,21 @@ namespace triton {
     class Callbacks {
       protected:
         #ifdef TRITON_PYTHON_BINDINGS
-        //! [python] Callbacks for all memory LOADS.
-        std::list<PyObject*> pyMemoryLoadCallbacks;
+        //! [python] Callbacks for all concrete memory needs.
+        std::list<PyObject*> pyGetConcreteMemoryValueCallbacks;
 
-        //! [python] Callbacks for all register GETS.
-        std::list<PyObject*> pyRegisterGetCallbacks;
+        //! [python] Callbacks for all concrete register needs.
+        std::list<PyObject*> pyGetConcreteRegisterValueCallbacks;
 
         //! [python] Callbacks for all symbolic simplifications.
         std::list<PyObject*> pySymbolicSimplificationCallbacks;
         #endif
 
-        //! [c++] Callbacks for all memory LOADS.
-        std::list<triton::callbacks::memoryLoadCallback> memoryLoadCallbacks;
+        //! [c++] Callbacks for all concrete memory needs.
+        std::list<triton::callbacks::getConcreteMemoryValueCallback> getConcreteMemoryValueCallbacks;
 
-        //! [c++] Callbacks for all register GETS.
-        std::list<triton::callbacks::registerGetCallback> registerGetCallbacks;
+        //! [c++] Callbacks for all concrete register needs.
+        std::list<triton::callbacks::getConcreteRegisterValueCallback> getConcreteRegisterValueCallbacks;
 
         //! [c++] Callbacks for all symbolic simplifications.
         std::list<triton::callbacks::symbolicSimplificationCallback> symbolicSimplificationCallbacks;
@@ -109,13 +107,13 @@ namespace triton {
         //! Copies a Callbacks class
         void operator=(const Callbacks& copy);
 
-        //! Adds a memory LOAD callback.
-        void addCallback(triton::callbacks::memoryLoadCallback cb);
+        //! Adds a GET_CONCRETE_MEMORY_VALUE callback.
+        void addCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
 
-        //! Adds a register GET callback.
-        void addCallback(triton::callbacks::registerGetCallback cb);
+        //! Adds a GET_CONCRETE_REGISTER_VALUE callback.
+        void addCallback(triton::callbacks::getConcreteRegisterValueCallback cb);
 
-        //! Adds a symbolic simplification callback.
+        //! Adds a SYMBOLIC_SIMPLIFICATION callback.
         void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
         #ifdef TRITON_PYTHON_BINDINGS
@@ -123,17 +121,17 @@ namespace triton {
         void addCallback(PyObject* function, triton::callbacks::callback_e kind);
         #endif
 
-        //! Deletes a memory LOAD callback.
-        void removeCallback(triton::callbacks::memoryLoadCallback cb);
+        //! Deletes a GET_CONCRETE_MEMORY_VALUE callback.
+        void removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
 
-        //! Deletes a register GET callback.
-        void removeCallback(triton::callbacks::registerGetCallback cb);
+        //! Deletes a GET_CONCRETE_REGISTER_VALUE callback.
+        void removeCallback(triton::callbacks::getConcreteRegisterValueCallback cb);
 
-        //! Deletes a symbolic simplification callback.
+        //! Deletes a SYMBOLIC_SIMPLIFICATION callback.
         void removeCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
         #ifdef TRITON_PYTHON_BINDINGS
-        //! Deletes a python callback.
+        //! Deletes a python callback according to its kind.
         void removeCallback(PyObject* function, triton::callbacks::callback_e kind);
         #endif
 

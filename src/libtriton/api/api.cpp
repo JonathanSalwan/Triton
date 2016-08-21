@@ -551,13 +551,13 @@ namespace triton {
   }
 
 
-  void API::addCallback(triton::callbacks::memoryLoadCallback cb) {
+  void API::addCallback(triton::callbacks::getConcreteMemoryValueCallback cb) {
     this->checkCallbacks();
     this->callbacks->addCallback(cb);
   }
 
 
-  void API::addCallback(triton::callbacks::registerGetCallback cb) {
+  void API::addCallback(triton::callbacks::getConcreteRegisterValueCallback cb) {
     this->checkCallbacks();
     this->callbacks->addCallback(cb);
   }
@@ -577,13 +577,13 @@ namespace triton {
   #endif
 
 
-  void API::removeCallback(triton::callbacks::memoryLoadCallback cb) {
+  void API::removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb) {
     this->checkCallbacks();
     this->callbacks->removeCallback(cb);
   }
 
 
-  void API::removeCallback(triton::callbacks::registerGetCallback cb) {
+  void API::removeCallback(triton::callbacks::getConcreteRegisterValueCallback cb) {
     this->checkCallbacks();
     this->callbacks->removeCallback(cb);
   }
