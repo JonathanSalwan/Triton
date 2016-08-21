@@ -48,14 +48,14 @@ namespace triton {
      * \description The callback takes as unique argument a memory access. Callbacks will
      * be called each time that the Triton library will need a concrete memory value.
      */
-    typedef void (*getConcreteMemoryValueCallback)(const triton::arch::MemoryAccess& mem);
+    typedef void (*getConcreteMemoryValueCallback)(triton::arch::MemoryAccess& mem);
 
     /*! \brief The prototype of a GET_CONCRETE_REGISTER_VALUE callback.
      *
      * \description The callback takes as unique argument a register. Callbacks will be
      * called each time that the Triton library will need a concrete register value.
      */
-    typedef void (*getConcreteRegisterValueCallback)(const triton::arch::Register& reg);
+    typedef void (*getConcreteRegisterValueCallback)(triton::arch::Register& reg);
 
     /*! \brief The prototype of a SYMBOLIC_SIMPLIFICATION callback.
      *
