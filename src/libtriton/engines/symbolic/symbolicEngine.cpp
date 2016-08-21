@@ -616,10 +616,14 @@ namespace triton {
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicMemory(const triton::arch::MemoryAccess& mem) {
         std::list<triton::ast::AbstractNode*> opVec;
 
-        triton::ast::AbstractNode* tmp = nullptr;
-        triton::uint64 address         = mem.getAddress();
-        triton::uint32 size            = mem.getSize();
-        triton::usize symMem           = triton::engines::symbolic::UNSET;
+        triton::ast::AbstractNode* tmp            = nullptr;
+        triton::uint64 address                    = mem.getAddress();
+        triton::uint32 size                       = mem.getSize();
+        triton::usize symMem                      = triton::engines::symbolic::UNSET;
+        triton::uint8 concreteValue[DQQWORD_SIZE] = {0};
+        triton::uint512 value                     = triton::api.getConcreteMemoryValue(mem);
+
+        triton::utils::fromUintToBuffer(value, concreteValue);
 
         /*
          * Symbolic optimization
@@ -638,9 +642,7 @@ namespace triton {
           }
           /* Otherwise, use the concerte value */
           else {
-            triton::arch::MemoryAccess memoryCell = triton::arch::MemoryAccess(address + size - 1, BYTE_SIZE_BIT);
-            triton::uint8 memoryCellValue = triton::api.getConcreteMemoryValue(memoryCell).convert_to<triton::uint8>();
-            tmp = triton::ast::bv(memoryCellValue, BYTE_SIZE_BIT);
+            tmp = triton::ast::bv(concreteValue[size - 1], BYTE_SIZE_BIT);
             opVec.push_back(triton::ast::extract((BYTE_SIZE_BIT - 1), 0, tmp));
           }
           size--;
