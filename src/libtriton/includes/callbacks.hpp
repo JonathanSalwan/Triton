@@ -11,6 +11,8 @@
 #include <list>
 
 #include "ast.hpp"
+#include "register.hpp"
+#include "memoryAccess.hpp"
 #include "tritonTypes.hpp"
 
 #ifdef TRITON_PYTHON_BINDINGS
@@ -36,16 +38,26 @@ namespace triton {
 
     /*! Enumerates all kinds callbacks. */
     enum callback_e {
-      MEMORY_HIT,               /*!< Memory hits callback */
+      MEMORY_LOAD,              /*!< Memory load callback */
+      REGISTER_GET,             /*!< Register get callback */
       SYMBOLIC_SIMPLIFICATION,  /*!< Symbolic simplification callback */
     };
 
-    /*! \brief The prototype of a memory hit callback.
+    /*! \brief The prototype of a memory load callback.
      *
-     * \description The callback takes as uniq argument an address which representes the memory
-     * cell hit. Callbacks will be called each time that a memory cell will be hit.
+     * \description The callback takes as arguments an address which representes the memory
+     * cell loaded and his size. Callbacks will be called each time that a memory cell will
+     * be loaded.
      */
-    typedef void (*memoryHitCallback)(triton::uint64 address);
+    typedef void (*memoryLoadCallback)(triton::uint64 address, triton::uint32 size);
+
+    /*! \brief The prototype of a register GET callback.
+     *
+     * \description The callback takes as unique argument a triton::arch::Register which represents
+     * the register which will be read (GET). Callbacks will be called each time that a concrete register
+     * will be read.
+     */
+    typedef void (*registerGetCallback)(const triton::arch::Register& reg);
 
     /*! \brief The prototype of a symbolic simplification callback.
      *
@@ -59,15 +71,21 @@ namespace triton {
     class Callbacks {
       protected:
         #ifdef TRITON_PYTHON_BINDINGS
-        //! [python] Callbacks for all memory hits.
-        std::list<PyObject*> pyMemoryHitCallbacks;
+        //! [python] Callbacks for all memory LOADS.
+        std::list<PyObject*> pyMemoryLoadCallbacks;
+
+        //! [python] Callbacks for all register GETS.
+        std::list<PyObject*> pyRegisterGetCallbacks;
 
         //! [python] Callbacks for all symbolic simplifications.
         std::list<PyObject*> pySymbolicSimplificationCallbacks;
         #endif
 
-        //! [c++] Callbacks for all memory hits.
-        std::list<triton::callbacks::memoryHitCallback> memoryHitCallbacks;
+        //! [c++] Callbacks for all memory LOADS.
+        std::list<triton::callbacks::memoryLoadCallback> memoryLoadCallbacks;
+
+        //! [c++] Callbacks for all register GETS.
+        std::list<triton::callbacks::registerGetCallback> registerGetCallbacks;
 
         //! [c++] Callbacks for all symbolic simplifications.
         std::list<triton::callbacks::symbolicSimplificationCallback> symbolicSimplificationCallbacks;
@@ -91,8 +109,11 @@ namespace triton {
         //! Copies a Callbacks class
         void operator=(const Callbacks& copy);
 
-        //! Adds a memory hit callback.
-        void addCallback(triton::callbacks::memoryHitCallback cb);
+        //! Adds a memory LOAD callback.
+        void addCallback(triton::callbacks::memoryLoadCallback cb);
+
+        //! Adds a register GET callback.
+        void addCallback(triton::callbacks::registerGetCallback cb);
 
         //! Adds a symbolic simplification callback.
         void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
@@ -102,8 +123,11 @@ namespace triton {
         void addCallback(PyObject* function, triton::callbacks::callback_e kind);
         #endif
 
-        //! Deletes a memory hit callback.
-        void removeCallback(triton::callbacks::memoryHitCallback cb);
+        //! Deletes a memory LOAD callback.
+        void removeCallback(triton::callbacks::memoryLoadCallback cb);
+
+        //! Deletes a register GET callback.
+        void removeCallback(triton::callbacks::registerGetCallback cb);
 
         //! Deletes a symbolic simplification callback.
         void removeCallback(triton::callbacks::symbolicSimplificationCallback cb);
@@ -117,7 +141,10 @@ namespace triton {
         triton::ast::AbstractNode* processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) const;
 
         //! Processes callbacks according to the kind and the C++ polymorphism.
-        void processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address) const;
+        void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const;
+
+        //! Processes callbacks according to the kind and the C++ polymorphism.
+        void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) const;
     };
 
   /*! @} End of callbacks namespace */

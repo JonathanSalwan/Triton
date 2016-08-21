@@ -551,7 +551,13 @@ namespace triton {
   }
 
 
-  void API::addCallback(triton::callbacks::memoryHitCallback cb) {
+  void API::addCallback(triton::callbacks::memoryLoadCallback cb) {
+    this->checkCallbacks();
+    this->callbacks->addCallback(cb);
+  }
+
+
+  void API::addCallback(triton::callbacks::registerGetCallback cb) {
     this->checkCallbacks();
     this->callbacks->addCallback(cb);
   }
@@ -571,7 +577,13 @@ namespace triton {
   #endif
 
 
-  void API::removeCallback(triton::callbacks::memoryHitCallback cb) {
+  void API::removeCallback(triton::callbacks::memoryLoadCallback cb) {
+    this->checkCallbacks();
+    this->callbacks->removeCallback(cb);
+  }
+
+
+  void API::removeCallback(triton::callbacks::registerGetCallback cb) {
     this->checkCallbacks();
     this->callbacks->removeCallback(cb);
   }
@@ -599,10 +611,17 @@ namespace triton {
   }
 
 
-  void API::processCallbacks(triton::callbacks::callback_e kind, triton::uint64 address) const {
+  void API::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const {
     this->checkCallbacks();
     if (this->callbacks->isDefined)
-      this->callbacks->processCallbacks(kind, address);
+      this->callbacks->processCallbacks(kind, mem);
+  }
+
+
+  void API::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) const {
+    this->checkCallbacks();
+    if (this->callbacks->isDefined)
+      this->callbacks->processCallbacks(kind, reg);
   }
 
 
