@@ -189,7 +189,7 @@ namespace triton {
           // C++ callbacks
           std::list<triton::callbacks::getConcreteMemoryValueCallback>::const_iterator it1;
           for (it1 = this->getConcreteMemoryValueCallbacks.begin(); it1 != this->getConcreteMemoryValueCallbacks.end(); it1++)
-            (*it1)(mem);
+            (*it1)(const_cast<triton::arch::MemoryAccess&>(mem));
 
           #ifdef TRITON_PYTHON_BINDINGS
           // Python callbacks
@@ -227,7 +227,7 @@ namespace triton {
           // C++ callbacks
           std::list<triton::callbacks::getConcreteRegisterValueCallback>::const_iterator it1;
           for (it1 = this->getConcreteRegisterValueCallbacks.begin(); it1 != this->getConcreteRegisterValueCallbacks.end(); it1++)
-            (*it1)(reg);
+            (*it1)(const_cast<triton::arch::Register&>(reg));
 
           #ifdef TRITON_PYTHON_BINDINGS
           // Python callbacks
