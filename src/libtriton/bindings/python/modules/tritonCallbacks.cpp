@@ -287,6 +287,9 @@ Returns a new symbolic variable.
 - **processing(\ref py_Instruction_page inst)**<br>
 The main function. This function processes everything (engine, IR, optimization, state, ...) from a given instruction.
 
+- <b>removeAllCallbacks(void)</b><br>
+Removes all recorded callbacks.
+
 - <b>removeCallback(function cb, \ref py_CALLBACK_page kind)</b><br>
 Removes a recorded callback.
 
@@ -2091,6 +2094,19 @@ namespace triton {
       }
 
 
+      static PyObject* triton_removeAllCallbacks(PyObject* self, PyObject* noarg) {
+        try {
+          triton::api.removeAllCallbacks();
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* triton_removeCallback(PyObject* self, PyObject* args) {
         PyObject* function = nullptr;
         PyObject* mode     = nullptr;
@@ -2896,6 +2912,7 @@ namespace triton {
         {"newSymbolicExpression",               (PyCFunction)triton_newSymbolicExpression,                  METH_VARARGS,       ""},
         {"newSymbolicVariable",                 (PyCFunction)triton_newSymbolicVariable,                    METH_VARARGS,       ""},
         {"processing",                          (PyCFunction)triton_processing,                             METH_O,             ""},
+        {"removeAllCallbacks",                  (PyCFunction)triton_removeAllCallbacks,                     METH_NOARGS,        ""},
         {"removeCallback",                      (PyCFunction)triton_removeCallback,                         METH_VARARGS,       ""},
         {"resetEngines",                        (PyCFunction)triton_resetEngines,                           METH_NOARGS,        ""},
         {"setArchitecture",                     (PyCFunction)triton_setArchitecture,                        METH_O,             ""},

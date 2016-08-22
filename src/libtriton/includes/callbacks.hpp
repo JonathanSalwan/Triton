@@ -121,6 +121,9 @@ namespace triton {
         void addCallback(PyObject* function, triton::callbacks::callback_e kind);
         #endif
 
+        //! Removes all recorded callbacks.
+        void removeAllCallbacks(void);
+
         //! Deletes a GET_CONCRETE_MEMORY_VALUE callback.
         void removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
 

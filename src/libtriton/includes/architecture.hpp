@@ -126,13 +126,13 @@ namespace triton {
         triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const;
 
         //! Returns the concrete value of memory cells.
-        triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem) const;
+        triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks=true) const;
 
         //! Returns the concrete value of a memory area.
-        std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const;
+        std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;
 
         //! Returns the concrete value of a register.
-        triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg) const;
+        triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const;
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory cell.

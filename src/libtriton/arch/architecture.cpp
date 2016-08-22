@@ -271,24 +271,24 @@ namespace triton {
     }
 
 
-    triton::uint512 Architecture::getConcreteMemoryValue(const triton::arch::MemoryAccess& mem) const {
+    triton::uint512 Architecture::getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getConcreteMemoryValue(): You must define an architecture.");
-      return this->cpu->getConcreteMemoryValue(mem);
+      return this->cpu->getConcreteMemoryValue(mem, execCallbacks);
     }
 
 
-    std::vector<triton::uint8> Architecture::getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const {
+    std::vector<triton::uint8> Architecture::getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getConcreteMemoryAreaValue(): You must define an architecture.");
-      return this->cpu->getConcreteMemoryAreaValue(baseAddr, size);
+      return this->cpu->getConcreteMemoryAreaValue(baseAddr, size, execCallbacks);
     }
 
 
-    triton::uint512 Architecture::getConcreteRegisterValue(const triton::arch::Register& reg) const {
+    triton::uint512 Architecture::getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getConcreteRegisterValue(): You must define an architecture.");
-      return this->cpu->getConcreteRegisterValue(reg);
+      return this->cpu->getConcreteRegisterValue(reg, execCallbacks);
     }
 
 

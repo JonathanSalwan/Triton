@@ -210,9 +210,9 @@ namespace triton {
           std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg) const;
           std::set<triton::arch::Register*> getAllRegisters(void) const;
           std::set<triton::arch::Register*> getParentRegisters(void) const;
-          triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem) const;
-          std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const;
-          triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg) const;
+          triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks=true) const;
+          std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;
+          triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const;
           triton::uint32 invalidRegister(void) const;
           triton::uint32 numberOfRegisters(void) const;
           triton::uint32 registerBitSize(void) const;
