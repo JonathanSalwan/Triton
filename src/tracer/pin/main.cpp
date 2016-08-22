@@ -544,7 +544,6 @@ namespace tracer {
 
     /* Callback before instruction processing */
     static void callbackBefore(triton::arch::Instruction* tritonInst, triton::uint8* addr, triton::uint32 size, CONTEXT* ctx, THREADID threadId) {
-
       /* Some configurations must be applied before processing */
       tracer::pintool::callbacks::preProcessing(tritonInst, threadId);
 
@@ -563,9 +562,6 @@ namespace tracer {
       tritonInst->setOpcodes(addr, size);
       tritonInst->setAddress(reinterpret_cast<triton::__uint>(addr));
       tritonInst->setThreadId(reinterpret_cast<triton::uint32>(threadId));
-
-      /* Setup the concrete context */
-      tracer::pintool::context::setupContextRegister(tritonInst, ctx);
 
       /* Disassemble the instruction */
       triton::api.disassembly(*tritonInst);
@@ -613,7 +609,6 @@ namespace tracer {
 
     /* Callback after instruction processing */
     static void callbackAfter(triton::arch::Instruction* tritonInst, CONTEXT* ctx, THREADID threadId) {
-
       if (!tracer::pintool::analysisTrigger.getState() || threadId != tracer::pintool::options::targetThreadId)
       /* Analysis locked */
         return;
@@ -641,17 +636,6 @@ namespace tracer {
       if (tracer::pintool::snapshot.mustBeRestored() == true)
         tracer::pintool::snapshot.restoreSnapshot(ctx);
 
-      /* Mutex */
-      PIN_UnlockClient();
-    }
-
-
-    /* Save the memory access into the Triton instruction */
-    static void saveMemoryAccess(triton::arch::Instruction* tritonInst, triton::__uint addr, triton::uint32 size) {
-      /* Mutex */
-      PIN_LockClient();
-      triton::uint512 value = tracer::pintool::context::getCurrentMemoryValue(addr, size);
-      tritonInst->updateContext(triton::arch::MemoryAccess(addr, size, value));
       /* Mutex */
       PIN_UnlockClient();
     }
@@ -949,33 +933,6 @@ namespace tracer {
 
           /* Prepare the Triton's instruction */
           triton::arch::Instruction* tritonInst = new triton::arch::Instruction();
-
-          /* Save memory read1 informations */
-          if (INS_IsMemoryRead(ins)) {
-            INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)saveMemoryAccess,
-              IARG_PTR, tritonInst,
-              IARG_MEMORYREAD_EA,
-              IARG_MEMORYREAD_SIZE,
-              IARG_END);
-          }
-
-          /* Save memory read2 informations */
-          if (INS_HasMemoryRead2(ins)) {
-            INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)saveMemoryAccess,
-              IARG_PTR, tritonInst,
-              IARG_MEMORYREAD2_EA,
-              IARG_MEMORYREAD_SIZE,
-              IARG_END);
-          }
-
-          /* Save memory write informations */
-          if (INS_IsMemoryWrite(ins)) {
-            INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)saveMemoryAccess,
-              IARG_PTR, tritonInst,
-              IARG_MEMORYWRITE_EA,
-              IARG_MEMORYWRITE_SIZE,
-              IARG_END);
-          }
 
           /* Callback before */
           INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)callbackBefore,

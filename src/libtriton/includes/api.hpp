@@ -63,7 +63,7 @@ namespace triton {
         triton::ast::representations::AstRepresentation* astRepresentation;
 
         //! The Callbacks interface.
-        triton::callbacks::Callbacks* callbacks;
+        triton::callbacks::Callbacks callbacks;
 
       public:
         //! Constructor of the API.
@@ -132,13 +132,13 @@ namespace triton {
         triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const;
 
         //! [**architecture api**] - Returns the concrete value of memory cells.
-        triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem) const;
+        triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks=true) const;
 
         //! [**architecture api**] - Returns the concrete value of a memory area.
-        std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const;
+        std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;
 
         //! [**architecture api**] - Returns the concrete value of a register.
-        triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg) const;
+        triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const;
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory cell.
@@ -265,9 +265,6 @@ namespace triton {
 
         /* Callbacks API ================================================================================= */
 
-        //! [**callbacks api**] - Raises an exception if the Callbacks interface is not initialized.
-        void checkCallbacks(void) const;
-
         //! [**callbacks api**] - Adds a GET_CONCRETE_MEMORY_VALUE callback.
         void addCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
 
@@ -281,6 +278,9 @@ namespace triton {
         //! [**callbacks api**] - Adds a python callback.
         void addCallback(PyObject* function, triton::callbacks::callback_e kind);
         #endif
+
+        //! [**callbacks api**] - Removes all recorded callbacks.
+        void removeAllCallbacks(void);
 
         //! [**callbacks api**] - Deletes a GET_CONCRETE_MEMORY_VALUE callback.
         void removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb);

@@ -175,10 +175,11 @@ namespace triton {
 
 
   API::API() {
-    this->arch                = arch::Architecture();
+    this->arch                = triton::arch::Architecture();
+    this->callbacks           = triton::callbacks::Callbacks();
+
     this->astGarbageCollector = nullptr;
     this->astRepresentation   = nullptr;
-    this->callbacks           = nullptr;
     this->solver              = nullptr;
     this->symbolic            = nullptr;
     this->symbolicBackup      = nullptr;
@@ -224,6 +225,7 @@ namespace triton {
     /* remove and re-init previous engines (when setArchitecture() has been called twice) */
     this->removeEngines();
     this->initEngines();
+    this->removeAllCallbacks();
   }
 
 
@@ -290,18 +292,18 @@ namespace triton {
   }
 
 
-  triton::uint512 API::getConcreteMemoryValue(const triton::arch::MemoryAccess& mem) const {
-    return this->arch.getConcreteMemoryValue(mem);
+  triton::uint512 API::getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks) const {
+    return this->arch.getConcreteMemoryValue(mem, execCallbacks);
   }
 
 
-  std::vector<triton::uint8> API::getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) const {
-    return this->arch.getConcreteMemoryAreaValue(baseAddr, size);
+  std::vector<triton::uint8> API::getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks) const {
+    return this->arch.getConcreteMemoryAreaValue(baseAddr, size, execCallbacks);
   }
 
 
-  triton::uint512 API::getConcreteRegisterValue(const triton::arch::Register& reg) const {
-    return this->arch.getConcreteRegisterValue(reg);
+  triton::uint512 API::getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks) const {
+    return this->arch.getConcreteRegisterValue(reg, execCallbacks);
   }
 
 
@@ -402,18 +404,13 @@ namespace triton {
     this->astRepresentation = new triton::ast::representations::AstRepresentation();
     if (!this->astRepresentation)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
-
-    this->callbacks = new triton::callbacks::Callbacks();
-    if (!this->callbacks)
-      throw triton::exceptions::API("API::initEngines(): No enough memory.");
   }
 
 
   void API::removeEngines(void) {
-    if(this->isArchitectureValid()) {
+    if (this->isArchitectureValid()) {
       delete this->astGarbageCollector;
       delete this->astRepresentation;
-      delete this->callbacks;
       delete this->solver;
       delete this->symbolic;
       delete this->symbolicBackup;
@@ -421,7 +418,6 @@ namespace triton {
 
       this->astGarbageCollector = nullptr;
       this->astRepresentation   = nullptr;
-      this->callbacks           = nullptr;
       this->solver              = nullptr;
       this->symbolic            = nullptr;
       this->symbolicBackup      = nullptr;
@@ -431,7 +427,7 @@ namespace triton {
 
 
   void API::resetEngines(void) {
-    if(this->isArchitectureValid()) {
+    if (this->isArchitectureValid()) {
       this->removeEngines();
       this->initEngines();
       this->clearArchitecture();
@@ -545,83 +541,71 @@ namespace triton {
 
   /* Callbacks API ================================================================================= */
 
-  void API::checkCallbacks(void) const {
-    if (!this->callbacks)
-      throw triton::exceptions::API("API::checkCallbacks(): Callbacks interface is undefined.");
-  }
-
-
   void API::addCallback(triton::callbacks::getConcreteMemoryValueCallback cb) {
-    this->checkCallbacks();
-    this->callbacks->addCallback(cb);
+    this->callbacks.addCallback(cb);
   }
 
 
   void API::addCallback(triton::callbacks::getConcreteRegisterValueCallback cb) {
-    this->checkCallbacks();
-    this->callbacks->addCallback(cb);
+    this->callbacks.addCallback(cb);
   }
 
 
   void API::addCallback(triton::callbacks::symbolicSimplificationCallback cb) {
-    this->checkCallbacks();
-    this->callbacks->addCallback(cb);
+    this->callbacks.addCallback(cb);
   }
 
 
   #ifdef TRITON_PYTHON_BINDINGS
   void API::addCallback(PyObject* function, triton::callbacks::callback_e kind) {
-    this->checkCallbacks();
-    this->callbacks->addCallback(function, kind);
+    this->callbacks.addCallback(function, kind);
   }
   #endif
 
 
+  void API::removeAllCallbacks(void) {
+    this->callbacks.removeAllCallbacks();
+  }
+
+
   void API::removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb) {
-    this->checkCallbacks();
-    this->callbacks->removeCallback(cb);
+    this->callbacks.removeCallback(cb);
   }
 
 
   void API::removeCallback(triton::callbacks::getConcreteRegisterValueCallback cb) {
-    this->checkCallbacks();
-    this->callbacks->removeCallback(cb);
+    this->callbacks.removeCallback(cb);
   }
 
 
   void API::removeCallback(triton::callbacks::symbolicSimplificationCallback cb) {
-    this->checkCallbacks();
-    this->callbacks->removeCallback(cb);
+    this->callbacks.removeCallback(cb);
   }
 
 
   #ifdef TRITON_PYTHON_BINDINGS
   void API::removeCallback(PyObject* function, triton::callbacks::callback_e kind) {
-    this->checkCallbacks();
-    this->callbacks->removeCallback(function, kind);
+    this->callbacks.removeCallback(function, kind);
   }
   #endif
 
 
   triton::ast::AbstractNode* API::processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) const {
-    this->checkCallbacks();
-    if (this->callbacks->isDefined)
-      return this->callbacks->processCallbacks(kind, node);
+    if (this->callbacks.isDefined)
+      return this->callbacks.processCallbacks(kind, node);
     return node;
   }
 
 
   void API::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const {
-    this->checkCallbacks();
-    if (this->callbacks->isDefined)
-      this->callbacks->processCallbacks(kind, mem);
+    if (this->callbacks.isDefined)
+      this->callbacks.processCallbacks(kind, mem);
   }
 
 
   void API::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) const {
-    this->checkCallbacks();
-    if (this->callbacks->isDefined)
-      this->callbacks->processCallbacks(kind, reg);
+    if (this->callbacks.isDefined)
+      this->callbacks.processCallbacks(kind, reg);
   }
 
 
@@ -1387,4 +1371,3 @@ namespace triton {
   }
 
 }; /* triton namespace */
-

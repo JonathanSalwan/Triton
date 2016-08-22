@@ -92,6 +92,18 @@ namespace triton {
     #endif
 
 
+    void Callbacks::removeAllCallbacks(void) {
+      this->getConcreteMemoryValueCallbacks.clear();
+      this->getConcreteRegisterValueCallbacks.clear();
+      this->symbolicSimplificationCallbacks.clear();
+      #ifdef TRITON_PYTHON_BINDINGS
+      this->pyGetConcreteMemoryValueCallbacks.clear();
+      this->pyGetConcreteRegisterValueCallbacks.clear();
+      this->pySymbolicSimplificationCallbacks.clear();
+      #endif
+    }
+
+
     void Callbacks::removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb) {
       this->getConcreteMemoryValueCallbacks.remove(cb);
       if (this->countCallbacks() == 0)

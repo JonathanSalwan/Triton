@@ -75,8 +75,11 @@ namespace tracer {
       //! Executes the new context.
       void executeContext(void);
 
-      //! Setups the context register from Pin to Triton.
-      void setupContextRegister(triton::arch::Instruction* inst, CONTEXT* ctx);
+      //! Callback to provide concrete memory values only if Triton needs them - cf #376
+      void needConcreteMemoryValue(triton::arch::MemoryAccess& mem);
+
+      //! Callback to provide concrete register values only if Triton needs them - cf #376
+      void needConcreteRegisterValue(triton::arch::Register& reg);
 
     /*! @} End of context namespace */
     };

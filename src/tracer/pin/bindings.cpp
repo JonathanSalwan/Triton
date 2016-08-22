@@ -249,6 +249,9 @@ namespace tracer {
         return PyErr_Format(PyExc_TypeError, "tracer::pintool::runProgram(): Architecture is not defined.");
       /* Never returns - Rock 'n roll baby \o/ */
       try {
+        /* Provide concrete values only if Triton needs them - cf #376 */
+        triton::api.addCallback(tracer::pintool::context::needConcreteMemoryValue);
+        triton::api.addCallback(tracer::pintool::context::needConcreteRegisterValue);
         PIN_StartProgram();
       }
       catch (const std::exception& e) {
