@@ -3416,8 +3416,7 @@ namespace triton {
 
           /* Spread taint */
           expr1->isTainted = triton::api.isTainted(src1) | triton::api.isTainted(src2) | triton::api.isTainted(src3);
-          expr2->isTainted = triton::api.taintAssignment(src1, src2);
-          expr2->isTainted = triton::api.taintUnion(src1, src3);
+          expr2->isTainted = triton::api.setTaint(src1, triton::api.isTainted(src2) | triton::api.isTainted(src3));
           expr3->isTainted = triton::api.taintAssignment(src2, src1);
           expr4->isTainted = triton::api.taintAssignment(src3, src1);
 
@@ -3483,8 +3482,7 @@ namespace triton {
 
           /* Spread taint */
           expr1->isTainted = triton::api.isTainted(src1) | triton::api.isTainted(src2) | triton::api.isTainted(src3);
-          expr2->isTainted = triton::api.taintAssignment(src1, src2);
-          expr2->isTainted = triton::api.taintUnion(src1, src3);
+          expr2->isTainted = triton::api.setTaint(src1, triton::api.isTainted(src2) | triton::api.isTainted(src3));
           expr3->isTainted = triton::api.taintAssignment(src2, src1);
           expr4->isTainted = triton::api.taintAssignment(src3, src1);
 
@@ -4089,8 +4087,7 @@ namespace triton {
               auto  op3  = triton::api.buildSymbolicOperand(inst, src2);
               auto  node = triton::ast::bvmul(triton::ast::sx(src1.getBitSize(), op2), triton::ast::sx(src2.getBitSize(), op3));
               auto  expr = triton::api.createSymbolicExpression(inst, triton::ast::extract(dst.getBitSize()-1, 0, node), dst, "IMUL operation");
-              expr->isTainted = triton::api.taintAssignment(dst, src1);
-              expr->isTainted = triton::api.taintUnion(dst, src2);
+              expr->isTainted = triton::api.setTaint(dst, triton::api.isTainted(src1) | triton::api.isTainted(src2));
               triton::arch::x86::semantics::cfImul_s(inst, expr, dst, triton::ast::bvmul(op2, op3), node);
               triton::arch::x86::semantics::ofImul_s(inst, expr, dst, triton::ast::bvmul(op2, op3), node);
               break;
@@ -4791,8 +4788,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicRegisterExpression(inst, node, dst, "LEA operation");
 
           /* Spread taint */
-          expr->isTainted = triton::api.taintAssignmentRegisterRegister(dst, srcBase);
-          expr->isTainted = triton::api.taintUnionRegisterRegister(dst, srcIndex);
+          expr->isTainted = triton::api.setTaint(dst, triton::api.isTainted(srcBase) | triton::api.isTainted(srcIndex));
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
