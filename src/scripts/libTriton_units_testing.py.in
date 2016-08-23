@@ -3258,6 +3258,28 @@ def test_9():
     return count
 
 
+def test_10():
+    count = 0
+
+    setArchitecture(ARCH.X86)
+
+    taintRegister(REG.EAX)
+    inst = Instruction()
+    # lea eax,[esi+eax*1]
+    inst.setOpcodes("\x8D\x04\x06")
+    processing(inst)
+
+    if not isRegisterTainted(REG.EAX):
+        print '[KO] isRegisterTainted(REG.EAX)'
+        print '\tOutput   : %s' %(repr(isRegisterTainted(REG.EAX)))
+        print '\tExpected : true'
+        return -1
+    else:
+        count += 1
+
+    return count
+
+
 units_testing = [
     ("Testing the arithmetic and logic AST interpreter", test_1),
     ("Testing the Register class", test_2),
@@ -3272,6 +3294,7 @@ units_testing = [
     ("Testing the symbolic emulation engine with the ALIGNED_MEMORY and AST_DICTIONARIES optimizations", test_8_4),
     ("Testing the symbolic emulation engine with the AST_DICTIONARIES optimization and concretization", test_8_5),
     ("Testing the LOAD access semantics", test_9),
+    ("Testing the taint engine", test_10),
 ]
 
 
