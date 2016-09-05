@@ -155,25 +155,6 @@ namespace triton {
     }
 
 
-    triton::arch::MemoryAccess Instruction::popMemoryAccess(triton::uint64 addr, triton::uint32 size, triton::uint512 value) {
-      /* The default value is zero */
-      triton::arch::MemoryAccess mem;
-
-      /* If there is a default value specified, we use it */
-      if (size)
-        mem = triton::arch::MemoryAccess(addr, size, value);
-
-      /* If there is a memory access recorded, we use it */
-      if (this->memoryAccess.size() > 0) {
-        mem = this->memoryAccess.front();
-        triton::api.setConcreteMemoryValue(mem);
-        this->memoryAccess.pop_front();
-      }
-
-      return mem;
-    }
-
-
     /* If there is a concrete value recorded, build the appropriate Register. Otherwise, perfrom the analysis on zero. */
     triton::arch::Register Instruction::getRegisterState(triton::uint32 regId) {
       triton::arch::Register reg(regId);

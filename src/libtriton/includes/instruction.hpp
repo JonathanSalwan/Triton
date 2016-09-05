@@ -163,9 +163,6 @@ namespace triton {
         //! Returns the list of all implicit and explicit immediate inputs (read)
         const std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& getReadImmediates(void) const;
 
-        //! If there is a concrete value recorded, build the appropriate MemoryAccess. Otherwise, perfrom the analysis based on args.
-        triton::arch::MemoryAccess popMemoryAccess(triton::uint64=0, triton::uint32 size=0, triton::uint512 value=0);
-
         //! Returns the register state which has been recorded.
         triton::arch::Register getRegisterState(triton::uint32 regId);
 

@@ -467,13 +467,6 @@ namespace tracer {
       }
 
 
-      void needConcreteMemoryValue(triton::arch::MemoryAccess& mem) {
-        triton::uint512 value = tracer::pintool::context::getCurrentMemoryValue(mem);
-        mem.setConcreteValue(value);
-        triton::api.setConcreteMemoryValue(mem);
-      }
-
-
       void needConcreteRegisterValue(triton::arch::Register& reg) {
         triton::uint512 value = tracer::pintool::context::getCurrentRegisterValue(reg);
         reg.setConcreteValue(value);
