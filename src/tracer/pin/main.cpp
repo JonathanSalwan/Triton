@@ -646,7 +646,7 @@ namespace tracer {
       /* Mutex */
       PIN_LockClient();
       triton::uint512 value = tracer::pintool::context::getCurrentMemoryValue(addr, size);
-      tritonInst->updateContext(triton::arch::MemoryAccess(addr, size, value));
+      triton::api.setConcreteMemoryValue(triton::arch::MemoryAccess(addr, size, value));
       /* Mutex */
       PIN_UnlockClient();
     }
@@ -960,15 +960,6 @@ namespace tracer {
               IARG_PTR, tritonInst,
               IARG_MEMORYREAD2_EA,
               IARG_MEMORYREAD_SIZE,
-              IARG_END);
-          }
-
-          /* Save memory write informations */
-          if (INS_IsMemoryWrite(ins)) {
-            INS_InsertCall(ins, IPOINT_BEFORE, (AFUNPTR)saveMemoryAccess,
-              IARG_PTR, tritonInst,
-              IARG_MEMORYWRITE_EA,
-              IARG_MEMORYWRITE_SIZE,
               IARG_END);
           }
 

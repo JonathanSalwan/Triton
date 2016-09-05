@@ -694,11 +694,10 @@ namespace triton {
                   break;
 
                 case triton::extlibs::capstone::X86_OP_MEM: {
-                  triton::arch::MemoryAccess mem = inst.popMemoryAccess();
+                  triton::arch::MemoryAccess mem;
 
-                  /* Set the size if the memory is not valid */
-                  if (!mem.isValid())
-                    mem.setPair(std::make_pair(((op->size * BYTE_SIZE_BIT) - 1), 0));
+                  /* Set the size of the memory access */
+                  mem.setPair(std::make_pair(((op->size * BYTE_SIZE_BIT) - 1), 0));
 
                   /* LEA if exists */
                   triton::arch::Register segment(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.segment));
