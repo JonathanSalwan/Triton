@@ -51,7 +51,7 @@ namespace triton {
         //! The address of the instruction.
         triton::uint64 address;
 
-        //! The disassembly of the instruction.
+        //! The disassembly of the instruction. This field is set at the disassembly level.
         std::stringstream disassembly;
 
         //! The opcodes of the instruction.
@@ -60,35 +60,38 @@ namespace triton {
         //! The size of the instruction.
         triton::uint32 size;
 
-        //! The type of the instruction.
+        //! The type of the instruction. This field is set at the disassembly level.
         triton::uint32 type;
 
-        //! The prefix of the instruction.
+        //! The prefix of the instruction. This field is set at the disassembly level.
         triton::uint32 prefix;
 
-        //! Implicit and explicit load access (read).
+        //! Implicit and explicit load access (read). This field is set at the semantics level.
         std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> loadAccess;
 
-        //! Implicit and explicit store access (write).
+        //! Implicit and explicit store access (write). This field is set at the semantics level.
         std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> storeAccess;
 
-        //! Implicit and explicit register inputs (read).
+        //! Implicit and explicit register inputs (read). This field is set at the semantics level.
         std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>> readRegisters;
 
-        //! Implicit and explicit register outputs (write).
+        //! Implicit and explicit register outputs (write). This field is set at the semantics level.
         std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>> writtenRegisters;
 
-        //! Implicit and explicit immediate inputs (read).
+        //! Implicit and explicit immediate inputs (read). This field is set at the semantics level.
         std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>> readImmediates;
 
-        //! True if this instruction is a branch.
+        //! True if this instruction is a branch. This field is set at the disassembly level.
         bool branch;
 
-        //! True if this instruction changes the control flow.
+        //! True if this instruction changes the control flow. This field is set at the disassembly level.
         bool controlFlow;
 
-        //! True if the condition is taken (i.g x86: jcc, cmocc, setcc, ...).
+        //! True if the condition is taken (i.g x86: jcc, cmocc, setcc, ...). This field is set at the semantics level.
         bool conditionTaken;
+
+        //! True if this instruction is tainted. This field is set at the semantics level.
+        bool tainted;
 
         //! Copies an Instruction
         void copy(const Instruction& other);
@@ -198,6 +201,9 @@ namespace triton {
 
         //! Sets the disassembly of the instruction.
         void setDisassembly(const std::string& str);
+
+        //! Sets the taint of the instruction based on its expressions.
+        void setTaint(void);
 
         //! Records an instruction context for a memory access.
         void updateContext(const triton::arch::MemoryAccess& mem);

@@ -22,8 +22,9 @@ namespace triton {
       this->branch          = false;
       this->conditionTaken  = false;
       this->controlFlow     = false;
-      this->size            = 0;
       this->prefix          = 0;
+      this->size            = 0;
+      this->tainted         = false;
       this->tid             = 0;
       this->type            = 0;
       std::memset(this->opcodes, 0x00, sizeof(this->opcodes));
@@ -57,6 +58,7 @@ namespace triton {
       this->size                = other.size;
       this->storeAccess         = other.storeAccess;
       this->symbolicExpressions = other.symbolicExpressions;
+      this->tainted             = other.tainted;
       this->tid                 = other.tid;
       this->type                = other.type;
 
@@ -210,6 +212,17 @@ namespace triton {
     }
 
 
+    void Instruction::setTaint(void) {
+      std::vector<triton::engines::symbolic::SymbolicExpression*>::const_iterator it;
+      for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
+        if ((*it)->isTainted == true) {
+          this->tainted = true;
+          break;
+        }
+      }
+    }
+
+
     void Instruction::updateContext(const triton::arch::Register& reg) {
       this->registerState[reg.getId()] = reg;
     }
@@ -238,12 +251,7 @@ namespace triton {
 
 
     bool Instruction::isTainted(void) const {
-      std::vector<triton::engines::symbolic::SymbolicExpression*>::const_iterator it;
-      for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
-        if ((*it)->isTainted == true)
-          return true;
-      }
-      return false;
+      return this->tainted;
     }
 
 
@@ -303,6 +311,9 @@ namespace triton {
       /* Clear unused data */
       this->memoryAccess.clear();
       this->registerState.clear();
+
+      /* Set the taint */
+      this->setTaint();
     }
 
 
@@ -319,6 +330,7 @@ namespace triton {
       this->conditionTaken  = false;
       this->controlFlow     = false;
       this->size            = 0;
+      this->tainted         = false;
       this->tid             = 0;
       this->type            = 0;
 
