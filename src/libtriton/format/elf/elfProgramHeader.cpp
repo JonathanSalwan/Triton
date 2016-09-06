@@ -62,7 +62,7 @@ namespace triton {
 
         switch (EIClass) {
           case triton::format::elf::ELFCLASS32:
-            memcpy(&phdr32, raw, sizeof(triton::format::elf::Elf32_Phdr_t));
+            std::memcpy(&phdr32, raw, sizeof(triton::format::elf::Elf32_Phdr_t));
             this->type    = phdr32.p_type;
             this->flags   = phdr32.p_flags;
             this->offset  = phdr32.p_offset;
@@ -74,7 +74,7 @@ namespace triton {
             return sizeof(triton::format::elf::Elf32_Phdr_t);
 
           case triton::format::elf::ELFCLASS64:
-            memcpy(&phdr64, raw, sizeof(triton::format::elf::Elf64_Phdr_t));
+            std::memcpy(&phdr64, raw, sizeof(triton::format::elf::Elf64_Phdr_t));
             this->type    = phdr64.p_type;
             this->flags   = phdr64.p_flags;
             this->offset  = phdr64.p_offset;

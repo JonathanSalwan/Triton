@@ -31,7 +31,7 @@ namespace triton {
         this->shnum     = 0;
         this->shstrndx  = 0;
 
-        memset(this->ident, 0x00, sizeof(this->ident));
+        std::memset(this->ident, 0x00, sizeof(this->ident));
       }
 
 
@@ -50,7 +50,7 @@ namespace triton {
         this->shnum     = copy.shnum;
         this->shstrndx  = copy.shstrndx;
 
-        memcpy(this->ident, copy.ident, sizeof(this->ident));
+        std::memcpy(this->ident, copy.ident, sizeof(this->ident));
       }
 
 
@@ -73,7 +73,7 @@ namespace triton {
         this->shnum     = copy.shnum;
         this->shstrndx  = copy.shstrndx;
 
-        memcpy(this->ident, copy.ident, sizeof(this->ident));
+        std::memcpy(this->ident, copy.ident, sizeof(this->ident));
       }
 
 
@@ -82,7 +82,7 @@ namespace triton {
         triton::format::elf::Elf64_Ehdr_t ehdr64;
 
         // Copy the ident field
-        memcpy(this->ident, raw, sizeof(this->ident));
+        std::memcpy(this->ident, raw, sizeof(this->ident));
 
         // Only support little-endian
         if (this->getEIData() != triton::format::elf::ELFDATA2LSB)
@@ -90,7 +90,7 @@ namespace triton {
 
         switch (this->getEIClass()) {
           case triton::format::elf::ELFCLASS32:
-            memcpy(&ehdr32, raw, sizeof(triton::format::elf::Elf32_Ehdr_t));
+            std::memcpy(&ehdr32, raw, sizeof(triton::format::elf::Elf32_Ehdr_t));
             this->type      = ehdr32.e_type;
             this->machine   = ehdr32.e_machine;
             this->version   = ehdr32.e_version;
@@ -107,7 +107,7 @@ namespace triton {
             return sizeof(triton::format::elf::Elf32_Ehdr_t);
 
           case triton::format::elf::ELFCLASS64:
-            memcpy(&ehdr64, raw, sizeof(triton::format::elf::Elf64_Ehdr_t));
+            std::memcpy(&ehdr64, raw, sizeof(triton::format::elf::Elf64_Ehdr_t));
             this->type      = ehdr64.e_type;
             this->machine   = ehdr64.e_machine;
             this->version   = ehdr64.e_version;

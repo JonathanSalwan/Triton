@@ -56,7 +56,7 @@ namespace triton {
 
         switch (EIClass) {
           case triton::format::elf::ELFCLASS32:
-            memcpy(&rel32, raw, sizeof(triton::format::elf::Elf32_Rel_t));
+            std::memcpy(&rel32, raw, sizeof(triton::format::elf::Elf32_Rel_t));
             this->addendFlag = false;
             this->offset     = rel32.r_offset;
             this->info       = rel32.r_info;
@@ -66,7 +66,7 @@ namespace triton {
             return sizeof(triton::format::elf::Elf32_Rel_t);
 
           case triton::format::elf::ELFCLASS64:
-            memcpy(&rel64, raw, sizeof(triton::format::elf::Elf64_Rel_t));
+            std::memcpy(&rel64, raw, sizeof(triton::format::elf::Elf64_Rel_t));
             this->addendFlag = false;
             this->offset     = rel64.r_offset;
             this->info       = rel64.r_info;
@@ -88,7 +88,7 @@ namespace triton {
 
         switch (EIClass) {
           case triton::format::elf::ELFCLASS32:
-            memcpy(&rela32, raw, sizeof(triton::format::elf::Elf32_Rela_t));
+            std::memcpy(&rela32, raw, sizeof(triton::format::elf::Elf32_Rela_t));
             this->addendFlag = true;
             this->offset     = rela32.r_offset;
             this->info       = rela32.r_info;
@@ -98,7 +98,7 @@ namespace triton {
             return sizeof(triton::format::elf::Elf32_Rela_t);
 
           case triton::format::elf::ELFCLASS64:
-            memcpy(&rela64, raw, sizeof(triton::format::elf::Elf64_Rela_t));
+            std::memcpy(&rela64, raw, sizeof(triton::format::elf::Elf64_Rela_t));
             this->addendFlag = true;
             this->offset     = rela64.r_offset;
             this->info       = rela64.r_info;
