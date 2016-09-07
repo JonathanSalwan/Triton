@@ -44,13 +44,13 @@ namespace triton {
 
         switch (EIClass) {
           case triton::format::elf::ELFCLASS32:
-            memcpy(&dyn32, raw, sizeof(triton::format::elf::Elf32_Dyn_t));
+            std::memcpy(&dyn32, raw, sizeof(triton::format::elf::Elf32_Dyn_t));
             this->tag   = dyn32.d_tag;
             this->value = dyn32.d_val;
             return sizeof(triton::format::elf::Elf32_Dyn_t);
 
           case triton::format::elf::ELFCLASS64:
-            memcpy(&dyn64, raw, sizeof(triton::format::elf::Elf64_Dyn_t));
+            std::memcpy(&dyn64, raw, sizeof(triton::format::elf::Elf64_Dyn_t));
             this->tag   = dyn64.d_tag;
             this->value = dyn64.d_val;
             return sizeof(triton::format::elf::Elf64_Dyn_t);

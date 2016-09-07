@@ -70,7 +70,7 @@ namespace triton {
 
         switch (EIClass) {
           case triton::format::elf::ELFCLASS32:
-            memcpy(&shdr32, raw, sizeof(triton::format::elf::Elf32_Shdr_t));
+            std::memcpy(&shdr32, raw, sizeof(triton::format::elf::Elf32_Shdr_t));
             this->idxname   = shdr32.sh_name;
             this->type      = shdr32.sh_type;
             this->flags     = shdr32.sh_flags;
@@ -84,7 +84,7 @@ namespace triton {
             return sizeof(triton::format::elf::Elf32_Shdr_t);
 
           case triton::format::elf::ELFCLASS64:
-            memcpy(&shdr64, raw, sizeof(triton::format::elf::Elf64_Shdr_t));
+            std::memcpy(&shdr64, raw, sizeof(triton::format::elf::Elf64_Shdr_t));
             this->idxname   = shdr64.sh_name;
             this->type      = shdr64.sh_type;
             this->flags     = shdr64.sh_flags;

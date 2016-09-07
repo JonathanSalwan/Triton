@@ -58,7 +58,7 @@ namespace triton {
 
         switch (EIClass) {
           case triton::format::elf::ELFCLASS32:
-            memcpy(&sym32, raw, sizeof(triton::format::elf::Elf32_Sym_t));
+            std::memcpy(&sym32, raw, sizeof(triton::format::elf::Elf32_Sym_t));
             this->idxname = sym32.st_name;
             this->info    = sym32.st_info;
             this->other   = sym32.st_other;
@@ -68,7 +68,7 @@ namespace triton {
             return sizeof(triton::format::elf::Elf32_Sym_t);
 
           case triton::format::elf::ELFCLASS64:
-            memcpy(&sym64, raw, sizeof(triton::format::elf::Elf64_Sym_t));
+            std::memcpy(&sym64, raw, sizeof(triton::format::elf::Elf64_Sym_t));
             this->idxname = sym64.st_name;
             this->info    = sym64.st_info;
             this->other   = sym64.st_other;
