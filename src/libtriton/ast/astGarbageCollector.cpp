@@ -35,6 +35,11 @@ namespace triton {
 
     void AstGarbageCollector::freeAstNodes(std::set<triton::ast::AbstractNode*>& nodes) {
       std::set<triton::ast::AbstractNode*>::iterator it;
+
+      /* Do not delete AST nodes if the AST_DICTIONARIES optimization is enabled */
+      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES))
+        return;
+
       for (it = nodes.begin(); it != nodes.end(); it++) {
         /* Remove the node from the global set */
         this->allocatedNodes.erase(*it);
@@ -46,6 +51,7 @@ namespace triton {
         /* Delete the node */
         delete *it;
       }
+
       nodes.clear();
     }
 
