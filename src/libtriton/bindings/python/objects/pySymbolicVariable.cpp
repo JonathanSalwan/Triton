@@ -52,7 +52,7 @@ e.g: `SYMEXPR.REG`
 
 - **getKindValue(void)**<br>
 Returns the kind value according to the \ref py_SYMEXPR_page.<br>
-If `getKind()` returns triton::engines::symbolic::REG, so `getKindValue()` returns the if of the register.<br>
+If `getKind()` returns triton::engines::symbolic::REG, so `getKindValue()` returns the id of the register.<br>
 Otherwise, if `getKind()` returns triton::engines::symbolic::MEM, so `getKindValue()` returns the address of the memory access.<br>
 Then, if `getKind()` returns triton::engines::symbolic::UNDEF, so `getKindValue()` returns `0`.
 
