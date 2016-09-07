@@ -214,6 +214,9 @@ namespace triton {
         //! Adds a symbolic expression
         void addSymbolicExpression(triton::engines::symbolic::SymbolicExpression* expr);
 
+        //! Removes all symbolic expressions.
+        void removeSymbolicExpressions(void);
+
         //! Returns true if this instruction is a branch
         bool isBranch(void) const;
 

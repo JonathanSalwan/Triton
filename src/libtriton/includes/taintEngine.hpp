@@ -8,9 +8,7 @@
 #ifndef TRITON_TAINTENGINE_H
 #define TRITON_TAINTENGINE_H
 
-#include <map>
-#include <sstream>
-#include <stdint.h>
+#include <set>
 
 #include "memoryAccess.hpp"
 #include "register.hpp"
@@ -53,20 +51,17 @@ namespace triton {
 
         protected:
 
-          //! Enable / Disable flag.
+          //! Defines if the taint engine is enabled or disabled.
           bool enableFlag;
 
-          //! The map of tainted address.
-          std::map<triton::uint64, bool> taintedAddresses;
+          //! The set of tainted addresses.
+          std::set<triton::uint64> taintedMemory;
 
-          //! The number of register according to the CPU.
-          triton::uint32 numberOfRegisters;
-
-          //! Tainted registers. Currently this is an over approximation of the taint but a byte granularity can be used.
-          triton::uint8  *taintedRegisters;
+          //! The set of tainted registers. Currently it is an over approximation of the taint.
+          std::set<triton::arch::Register> taintedRegisters;
 
           //! Copies a TaintEngine.
-          void init(const TaintEngine& other);
+          void copy(const TaintEngine& other);
 
 
         public:
@@ -75,6 +70,12 @@ namespace triton {
 
           //! Enables or disables the taint engine.
           void enable(bool flag);
+
+          //! Returns the tainted addresses.
+          const std::set<triton::uint64>& getTaintedMemory(void) const;
+
+          //! Returns the tainted registers.
+          const std::set<triton::arch::Register>& getTaintedRegisters(void) const;
 
           //! Returns true if the addr is tainted.
           /*!
@@ -112,36 +113,42 @@ namespace triton {
           //! Taints an address.
           /*!
             \param addr the targeted address.
+            \return TAINTED if the address has been tainted correctly. Otherwise it returns the last defined state.
           */
           bool taintMemory(triton::uint64 addr);
 
           //! Taints a memory.
           /*!
             \param mem the memory access.
+            \return TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
           */
           bool taintMemory(const triton::arch::MemoryAccess& mem);
 
           //! Taints a register.
           /*!
             \param reg the register operand.
+            \return TAINTED if the register has been tainted correctly. Otherwise it returns the last defined state.
           */
           bool taintRegister(const triton::arch::Register& reg);
 
           //! Untaints an address.
           /*!
             \param addr the targeted address.
+            \return !TAINTED if the address has been untainted correctly. Otherwise it returns the last defined state.
           */
           bool untaintMemory(triton::uint64 addr);
 
           //! Untaints a memory.
           /*!
             \param mem the memory access.
+            \return !TAINTED if the memory has been untainted correctly. Otherwise it returns the last defined state.
           */
           bool untaintMemory(const triton::arch::MemoryAccess& mem);
 
           //! Untaints a register.
           /*!
             \param reg the register operand.
+            \return !TAINTED if the register has been untainted correctly. Otherwise it returns the last defined state.
           */
           bool untaintRegister(const triton::arch::Register& reg);
 

@@ -245,6 +245,12 @@ Returns the symbolic variable as \ref py_SymbolicVariable_page corresponding to 
 - **getSymbolicVariables(void)**<br>
 Returns all symbolic variable as a dictionary of {integer SymVarId : \ref py_SymbolicVariable_page var}.
 
+- **getTaintedMemory(void)**<br>
+Returns the list of all tainted addresses as integer.
+
+- **getTaintedRegisters(void)**<br>
+Returns the list of all tainted registers as \ref py_Register_page.
+
 - **getTaintedSymbolicExpressions(void)**<br>
 Returns the list of all tainted \ref py_SymbolicExpression_page.
 
@@ -1855,6 +1861,60 @@ namespace triton {
       }
 
 
+      static PyObject* triton_getTaintedMemory(PyObject* self, PyObject* noarg) {
+        PyObject* ret = nullptr;
+        triton::usize size = 0, index = 0;
+        std::set<triton::uint64> addresses;
+        std::set<triton::uint64>::iterator it;
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getTaintedMemory(): Architecture is not defined.");
+
+        try {
+          addresses = triton::api.getTaintedMemory();
+          size = addresses.size();
+          ret = xPyList_New(size);
+          for (it = addresses.begin(); it != addresses.end(); it++) {
+            PyList_SetItem(ret, index, PyLong_FromUint64(*it));
+            index++;
+          }
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return ret;
+      }
+
+
+      static PyObject* triton_getTaintedRegisters(PyObject* self, PyObject* noarg) {
+        PyObject* ret = nullptr;
+        triton::usize size = 0, index = 0;
+        std::set<triton::arch::Register> registers;
+        std::set<triton::arch::Register>::iterator it;
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getTaintedRegisters(): Architecture is not defined.");
+
+        try {
+          registers = triton::api.getTaintedRegisters();
+          size = registers.size();
+          ret = xPyList_New(size);
+          for (it = registers.begin(); it != registers.end(); it++) {
+            PyList_SetItem(ret, index, PyRegister(*it));
+            index++;
+          }
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return ret;
+      }
+
+
       static PyObject* triton_getTaintedSymbolicExpressions(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
         triton::usize size = 0, index = 0;
@@ -2899,6 +2959,8 @@ namespace triton {
         {"getSymbolicVariableFromId",           (PyCFunction)triton_getSymbolicVariableFromId,              METH_O,             ""},
         {"getSymbolicVariableFromName",         (PyCFunction)triton_getSymbolicVariableFromName,            METH_O,             ""},
         {"getSymbolicVariables",                (PyCFunction)triton_getSymbolicVariables,                   METH_NOARGS,        ""},
+        {"getTaintedMemory",                    (PyCFunction)triton_getTaintedMemory,                       METH_NOARGS,        ""},
+        {"getTaintedRegisters",                 (PyCFunction)triton_getTaintedRegisters,                    METH_NOARGS,        ""},
         {"getTaintedSymbolicExpressions",       (PyCFunction)triton_getTaintedSymbolicExpressions,          METH_NOARGS,        ""},
         {"isArchitectureValid",                 (PyCFunction)triton_isArchitectureValid,                    METH_NOARGS,        ""},
         {"isMemoryMapped",                      (PyCFunction)triton_isMemoryMapped,                         METH_VARARGS,       ""},

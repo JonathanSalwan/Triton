@@ -27,6 +27,7 @@ namespace triton {
       this->tainted         = false;
       this->tid             = 0;
       this->type            = 0;
+
       std::memset(this->opcodes, 0x00, sizeof(this->opcodes));
     }
 
@@ -235,6 +236,20 @@ namespace triton {
     }
 
 
+    void Instruction::removeSymbolicExpressions(void) {
+      std::set<triton::ast::AbstractNode*> uniqueNodes;
+      std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
+
+      for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
+        triton::api.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
+        triton::api.removeSymbolicExpression((*it)->getId());
+      }
+
+      triton::api.freeAstNodes(uniqueNodes);
+      this->symbolicExpressions.clear();
+    }
+
+
     bool Instruction::isBranch(void) const {
       return this->branch;
     }
@@ -304,16 +319,61 @@ namespace triton {
     void Instruction::preIRInit(void) {
       /* Clear previous expressions if exist */
       this->symbolicExpressions.clear();
+
+      /* Backup the symbolic engine in the case where only the taint is available. */
+      if (!triton::api.isSymbolicEngineEnabled())
+        triton::api.backupSymbolicEngine();
     }
 
 
     void Instruction::postIRInit(void) {
+      std::set<triton::ast::AbstractNode*> uniqueNodes;
+      std::vector<triton::engines::symbolic::SymbolicExpression*> newVector;
+      std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
+
       /* Clear unused data */
       this->memoryAccess.clear();
       this->registerState.clear();
 
       /* Set the taint */
       this->setTaint();
+
+      /*
+       * If the symbolic engine is disable we delete symbolic
+       * expressions and AST nodes. Note that if the taint engine
+       * is enable we must compute semanitcs to spread the taint.
+       */
+      if (!triton::api.isSymbolicEngineEnabled()) {
+        this->removeSymbolicExpressions();
+        triton::api.restoreSymbolicEngine();
+      }
+
+      /*
+       * If the symbolic engine is defined to process symbolic
+       * execution only on tainted instructions, we delete all
+       * expressions untainted and their AST nodes.
+       */
+      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ONLY_ON_TAINTED) && !this->isTainted()) {
+        this->removeSymbolicExpressions();
+      }
+
+      /*
+       * If the symbolic engine is defined to process symbolic
+       * execution only on symbolized expressions, we delete all
+       * concrete expressions and their AST nodes.
+       */
+      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ONLY_ON_SYMBOLIZED)) {
+        for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
+          if ((*it)->getAst()->isSymbolized() == false) {
+            triton::api.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
+            triton::api.removeSymbolicExpression((*it)->getId());
+          }
+          else
+            newVector.push_back(*it);
+        }
+        triton::api.freeAstNodes(uniqueNodes);
+        this->symbolicExpressions = newVector;
+      }
     }
 
 

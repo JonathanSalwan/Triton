@@ -178,89 +178,11 @@ namespace triton {
       /* Pre IR processing */
       inst.preIRInit();
 
-      /* If the symbolic and taint engine are disable we skip the processing */
-      if (!triton::api.isSymbolicEngineEnabled() && !triton::api.isTaintEngineEnabled())
-        return;
-
-      /* Backup the symbolic engine in the case where only taint is available. */
-      if (!triton::api.isSymbolicEngineEnabled())
-        triton::api.backupSymbolicEngine();
-
       /* Processing */
       this->cpu->buildSemantics(inst);
 
       /* Post IR processing */
       inst.postIRInit();
-
-      /*
-       * If the symbolic engine is disable we delete symbolic
-       * expressions and AST nodes. Note that if the taint engine
-       * is enable we must compute semanitcs to spread the taint.
-       */
-      if (!triton::api.isSymbolicEngineEnabled()) {
-        std::set<triton::ast::AbstractNode*> uniqueNodes;
-        std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
-        for (it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
-          triton::api.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
-          triton::api.removeSymbolicExpression((*it)->getId());
-        }
-
-        if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES)) {
-          /* Remove node only if AST_DICTIONARIES is disabled */
-          triton::api.freeAstNodes(uniqueNodes);
-        }
-
-        inst.symbolicExpressions.clear();
-        triton::api.restoreSymbolicEngine();
-      }
-
-      /*
-       * If the symbolic engine is defined to process symbolic
-       * execution only on tainted instructions, we delete all
-       * expressions untainted and their AST nodes.
-       */
-      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ONLY_ON_TAINTED) && !inst.isTainted()) {
-        std::set<triton::ast::AbstractNode*> uniqueNodes;
-        std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
-        for (it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
-          triton::api.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
-          triton::api.removeSymbolicExpression((*it)->getId());
-        }
-
-        if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES)) {
-          /* Remove node only if AST_DICTIONARIES is disabled */
-          triton::api.freeAstNodes(uniqueNodes);
-        }
-
-        inst.symbolicExpressions.clear();
-      }
-
-      /*
-       * If the symbolic engine is defined to process symbolic
-       * execution only on symbolized expressions, we delete all
-       * concrete expressions and their AST nodes.
-       */
-      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ONLY_ON_SYMBOLIZED)) {
-        std::set<triton::ast::AbstractNode*> uniqueNodes;
-        std::vector<triton::engines::symbolic::SymbolicExpression*> newVector;
-        std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
-        for (it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
-          if ((*it)->getAst()->isSymbolized() == false) {
-            triton::api.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
-            triton::api.removeSymbolicExpression((*it)->getId());
-          }
-          else
-            newVector.push_back(*it);
-        }
-
-        if (!triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES)) {
-          /* Remove node only if AST_DICTIONARIES is disabled */
-          triton::api.freeAstNodes(uniqueNodes);
-        }
-
-        inst.symbolicExpressions = newVector;
-      }
-
     }
 
 

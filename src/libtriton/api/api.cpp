@@ -1045,6 +1045,18 @@ namespace triton {
   }
 
 
+  const std::set<triton::uint64>& API::getTaintedMemory(void) const {
+    this->checkTaint();
+    return this->taint->getTaintedMemory();
+  }
+
+
+  const std::set<triton::arch::Register>& API::getTaintedRegisters(void) const {
+    this->checkTaint();
+    return this->taint->getTaintedRegisters();
+  }
+
+
   void API::enableTaintEngine(bool flag) {
     this->checkTaint();
     this->taint->enable(flag);
