@@ -59,8 +59,11 @@ namespace triton {
 
         protected:
 
-          //! Enable / Disable flag.
+          //! Defines if the engine is enable or disable.
           bool enableFlag;
+
+          //! Defines if this engine is used as a backup.
+          bool backupFlag;
 
           //! Number of registers
           triton::uint32 numberOfRegisters;
@@ -252,17 +255,20 @@ namespace triton {
           //! Returns true if the symbolic execution engine is enabled.
           bool isEnabled(void) const;
 
+          //! Returns true if this symbolic engine is used as backup.
+          bool isBackup(void) const;
+
           //! Returns true if the symbolic expression ID exists.
           bool isSymbolicExpressionIdExists(triton::usize symExprId) const;
 
-          //! Initializes a SymbolicEngine.
-          void init(const SymbolicEngine& other);
+          //! Copies and initializes a SymbolicEngine.
+          void copy(const SymbolicEngine& other);
 
           //! Copies a SymbolicEngine.
           void operator=(const SymbolicEngine& other);
 
-          //! Constructor.
-          SymbolicEngine();
+          //! Constructor. If you use this class as backup or copy you should define the `isBackup` flag as true.
+          SymbolicEngine(bool isBackup=false);
 
           //! Constructor by copy.
           SymbolicEngine(const SymbolicEngine& copy);

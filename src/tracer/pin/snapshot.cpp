@@ -101,39 +101,19 @@ namespace tracer {
         }
         this->memory.clear();
 
-        /* 2 - Delete unused expressions */
-        auto currentExpressions     = triton::api.getSymbolicExpressions();
-        auto snapshotExpressions    = this->snapshotSymEngine->getSymbolicExpressions();
-        triton::usize currentSize   = currentExpressions.size();
-        triton::usize snapshotSize  = snapshotExpressions.size();
-        for (auto i = currentExpressions.begin(); i != currentExpressions.end(); ++i) {
-          if (snapshotExpressions.find(i->first) == snapshotExpressions.end())
-            delete currentExpressions[i->first];
-        }
-
-        /* 3 - Delete unused variables */
-        auto currentSymbolicVars   = triton::api.getSymbolicVariables();
-        auto snapshotSymbolicVars  = this->snapshotSymEngine->getSymbolicVariables();
-        currentSize                = currentSymbolicVars.size();
-        snapshotSize               = snapshotSymbolicVars.size();
-        for (auto i = currentSymbolicVars.begin(); i != currentSymbolicVars.end(); ++i) {
-          if (snapshotSymbolicVars.find(i->first) == snapshotSymbolicVars.end())
-            delete currentSymbolicVars[i->first];
-        }
-
-        /* 4 - Restore current symbolic engine state */
+        /* 2 - Restore current symbolic engine state */
         *triton::api.getSymbolicEngine() = *this->snapshotSymEngine;
 
-        /* 5 - Restore current taint engine state */
+        /* 3 - Restore current taint engine state */
         *triton::api.getTaintEngine() = *this->snapshotTaintEngine;
 
-        /* 6 - Restore current AST node state */
+        /* 4 - Restore current AST node state */
         triton::api.setAllocatedAstNodes(this->nodesList);
 
-        /* 7 - Restore current variables map state */
+        /* 5 - Restore current variables map state */
         triton::api.setAstVariableNodes(this->variablesMap);
 
-        /* 8 - Restore the Triton CPU state */
+        /* 6 - Restore the Triton CPU state */
         #if defined(__x86_64__) || defined(_M_X64)
         *reinterpret_cast<triton::arch::x86::x8664Cpu*>(triton::api.getCpu()) = *this->cpu;
         #endif
@@ -141,7 +121,7 @@ namespace tracer {
         *reinterpret_cast<triton::arch::x86::x86Cpu*>(triton::api.getCpu()) = *this->cpu;
         #endif
 
-        /* 9 - Restore Pin registers context */
+        /* 7 - Restore Pin registers context */
         PIN_SaveContext(&this->pinCtx, ctx);
 
         this->mustBeRestore = false;
