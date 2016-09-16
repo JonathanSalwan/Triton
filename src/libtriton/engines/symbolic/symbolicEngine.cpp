@@ -125,6 +125,21 @@ namespace triton {
         triton::engines::symbolic::SymbolicOptimization::operator=(other);
         triton::engines::symbolic::SymbolicSimplification::operator=(other);
         triton::engines::symbolic::PathManager::operator=(other);
+
+        /* Delete unused expressions */
+        std::map<triton::usize, SymbolicExpression*>::iterator it1;
+        for (it1 = this->symbolicExpressions.begin(); it1 != this->symbolicExpressions.end(); it1++) {
+          if (other.symbolicExpressions.find(it1->first) == other.symbolicExpressions.end())
+            delete this->symbolicExpressions[it1->first];
+        }
+
+        /* Delete unused variables */
+        std::map<triton::usize, SymbolicVariable*>::iterator it2;
+        for (it2 = this->symbolicVariables.begin(); it2 != this->symbolicVariables.end(); it2++) {
+          if (other.symbolicVariables.find(it2->first) == other.symbolicVariables.end())
+            delete this->symbolicVariables[it2->first];
+        }
+
         delete[] this->symbolicReg;
         this->copy(other);
       }
