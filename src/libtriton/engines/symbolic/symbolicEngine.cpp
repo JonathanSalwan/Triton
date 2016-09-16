@@ -70,7 +70,7 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicEngine::SymbolicEngine() {
+      SymbolicEngine::SymbolicEngine(bool isBackup) {
         triton::api.checkArchitecture();
 
         this->numberOfRegisters = triton::api.cpuNumberOfRegisters();
@@ -80,13 +80,14 @@ namespace triton {
         for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
           this->symbolicReg[i] = triton::engines::symbolic::UNSET;
 
+        this->backupFlag      = isBackup;
         this->enableFlag      = true;
         this->uniqueSymExprId = 0;
         this->uniqueSymVarId  = 0;
       }
 
 
-      void SymbolicEngine::init(const SymbolicEngine& other) {
+      void SymbolicEngine::copy(const SymbolicEngine& other) {
         triton::api.checkArchitecture();
 
         this->numberOfRegisters = other.numberOfRegisters;
@@ -95,6 +96,11 @@ namespace triton {
         for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
           this->symbolicReg[i] = other.symbolicReg[i];
 
+        /*
+         * The backup flag cannot be spread. once a class is tagged as
+         * backup, it always be a backup class.
+         */
+        this->backupFlag                  = true;
         this->alignedMemoryReference      = other.alignedMemoryReference;
         this->enableFlag                  = other.enableFlag;
         this->memoryReference             = other.memoryReference;
@@ -110,7 +116,7 @@ namespace triton {
           triton::engines::symbolic::SymbolicOptimization(copy),
           triton::engines::symbolic::SymbolicSimplification(copy),
           triton::engines::symbolic::PathManager(copy) {
-        this->init(copy);
+        this->copy(copy);
       }
 
 
@@ -120,7 +126,7 @@ namespace triton {
         triton::engines::symbolic::SymbolicSimplification::operator=(other);
         triton::engines::symbolic::PathManager::operator=(other);
         delete[] this->symbolicReg;
-        this->init(other);
+        this->copy(other);
       }
 
 
@@ -128,13 +134,21 @@ namespace triton {
         std::map<triton::usize, SymbolicExpression*>::iterator it1 = this->symbolicExpressions.begin();
         std::map<triton::usize, SymbolicVariable*>::iterator it2 = this->symbolicVariables.begin();
 
-        /* Delete all symbolic expressions */
-        for (; it1 != this->symbolicExpressions.end(); ++it1)
-          delete it1->second;
+        /*
+         * Don't delete symbolic expressions and symbolic variables
+         * if this class is used as backup engine. Otherwise that may
+         * result in a double-free bug if the original symbolic engine
+         * is deleted too (cf: #385).
+         */
+        if (this->isBackup() == false) {
+          /* Delete all symbolic expressions */
+          for (; it1 != this->symbolicExpressions.end(); ++it1)
+            delete it1->second;
 
-        /* Delete all symbolic variables */
-        for (; it2 != this->symbolicVariables.end(); ++it2)
-          delete it2->second;
+          /* Delete all symbolic variables */
+          for (; it2 != this->symbolicVariables.end(); ++it2)
+            delete it2->second;
+        }
 
         /* Delete all symbolic register */
         delete[] this->symbolicReg;
@@ -901,13 +915,19 @@ namespace triton {
       }
 
 
-      /* Returns true if the symbolic engine is enable. Otherwise returns false. */
+      /* Returns true if the symbolic engine is enable */
       bool SymbolicEngine::isEnabled(void) const {
         return this->enableFlag;
       }
 
 
-      /* Returns true if the symbolic expression ID exists. */
+      /* Returns true if this symbolic engine is used as backup */
+      bool SymbolicEngine::isBackup(void) const {
+        return this->backupFlag;
+      }
+
+
+      /* Returns true if the symbolic expression ID exists */
       bool SymbolicEngine::isSymbolicExpressionIdExists(triton::usize symExprId) const {
         if (this->symbolicExpressions.find(symExprId) != this->symbolicExpressions.end())
           return true;

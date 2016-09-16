@@ -389,7 +389,7 @@ namespace triton {
     if (!this->symbolic)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->symbolicBackup = new triton::engines::symbolic::SymbolicEngine();
+    this->symbolicBackup = new triton::engines::symbolic::SymbolicEngine(true);
     if (!this->symbolicBackup)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
