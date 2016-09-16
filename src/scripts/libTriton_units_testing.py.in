@@ -3280,6 +3280,55 @@ def test_10():
     return count
 
 
+def test_11():
+    count = 0
+
+    setArchitecture(ARCH.X86_64)
+
+    inst = Instruction()
+    inst.setOpcodes("\x48\xFF\xC0")
+    processing(inst)
+
+    value = getSymbolicRegisterValue(REG.RAX)
+    if value == 1:
+        count += 1
+    else:
+        print '[KO] getSymbolicRegisterValue(REG.RAX)'
+        print '\tOutput   : %d' %(value)
+        print '\tExpected : 1'
+        return -1
+
+    # This call triton::api.backupSymbolicEngine()
+    enableSymbolicEngine(False)
+
+    inst = Instruction()
+    inst.setOpcodes("\x48\xFF\xC0")
+    processing(inst)
+
+    value = getConcreteRegisterValue(REG.RAX)
+    if value == 2:
+        count += 1
+    else:
+        print '[KO] getConcreteRegisterValue(REG.RAX)'
+        print '\tOutput   : %d' %(value)
+        print '\tExpected : 2'
+        return -1
+
+    value = getSymbolicRegisterValue(REG.RAX)
+    if value == 1:
+        count += 1
+    else:
+        print '[KO] getSymbolicRegisterValue(REG.RAX)'
+        print '\tOutput   : %d' %(value)
+        print '\tExpected : 1'
+        return -1
+
+    # Try to reset engine to test if the bug #385 is fixed.
+    resetEngines()
+
+    return count
+
+
 units_testing = [
     ("Testing the arithmetic and logic AST interpreter", test_1),
     ("Testing the Register class", test_2),
@@ -3295,6 +3344,7 @@ units_testing = [
     ("Testing the symbolic emulation engine with the AST_DICTIONARIES optimization and concretization", test_8_5),
     ("Testing the LOAD access semantics", test_9),
     ("Testing the taint engine", test_10),
+    ("Testing the symbolic engine backup", test_11),
 ]
 
 
