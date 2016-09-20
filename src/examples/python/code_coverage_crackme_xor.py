@@ -1,6 +1,8 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
 ##
+## Output:
+##
 ##  $ ./code_coverage_crackme_xor.py
 ##  Seed injected: {4096: 1}
 ##  Seed injected: {4096L: 101L}

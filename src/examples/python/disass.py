@@ -3,115 +3,115 @@
 ##
 ## Output:
 ##
-## $ python src/examples/python/disass.py
-## 40000: imul sil
-##     ---------------
-##     Is memory read : False
-##     Is memory write: False
-##     ---------------
-##     Operand: sil:8 bv[7..0]
-##     ---------------
-## 40003: imul cx
-##     ---------------
-##     Is memory read : False
-##     Is memory write: False
-##     ---------------
-##     Operand: cx:16 bv[15..0]
-##     ---------------
-## 40006: imul rcx
-##     ---------------
-##     Is memory read : False
-##     Is memory write: False
-##     ---------------
-##     Operand: rcx:64 bv[63..0]
-##     ---------------
-## 40009: imul ecx, ecx, 1
-##     ---------------
-##     Is memory read : False
-##     Is memory write: False
-##     ---------------
-##     Operand: ecx:32 bv[31..0]
-##     ---------------
-##     Operand: ecx:32 bv[31..0]
-##     ---------------
-##     Operand: 0x1:32 bv[31..0]
-##     ---------------
-## 4000c: imul ecx, edx
-##     ---------------
-##     Is memory read : False
-##     Is memory write: False
-##     ---------------
-##     Operand: ecx:32 bv[31..0]
-##     ---------------
-##     Operand: edx:32 bv[31..0]
-##     ---------------
-## 4000f: imul rdx, rcx, 4
-##     ---------------
-##     Is memory read : False
-##     Is memory write: False
-##     ---------------
-##     Operand: rdx:64 bv[63..0]
-##     ---------------
-##     Operand: rcx:64 bv[63..0]
-##     ---------------
-##     Operand: 0x4:64 bv[63..0]
-##     ---------------
+##  $ python src/examples/python/disass.py
+##  40000: imul sil
+##      ---------------
+##      Is memory read : False
+##      Is memory write: False
+##      ---------------
+##      Operand: sil:8 bv[7..0]
+##      ---------------
+##  40003: imul cx
+##      ---------------
+##      Is memory read : False
+##      Is memory write: False
+##      ---------------
+##      Operand: cx:16 bv[15..0]
+##      ---------------
+##  40006: imul rcx
+##      ---------------
+##      Is memory read : False
+##      Is memory write: False
+##      ---------------
+##      Operand: rcx:64 bv[63..0]
+##      ---------------
+##  40009: imul ecx, ecx, 1
+##      ---------------
+##      Is memory read : False
+##      Is memory write: False
+##      ---------------
+##      Operand: ecx:32 bv[31..0]
+##      ---------------
+##      Operand: ecx:32 bv[31..0]
+##      ---------------
+##      Operand: 0x1:32 bv[31..0]
+##      ---------------
+##  4000c: imul ecx, edx
+##      ---------------
+##      Is memory read : False
+##      Is memory write: False
+##      ---------------
+##      Operand: ecx:32 bv[31..0]
+##      ---------------
+##      Operand: edx:32 bv[31..0]
+##      ---------------
+##  4000f: imul rdx, rcx, 4
+##      ---------------
+##      Is memory read : False
+##      Is memory write: False
+##      ---------------
+##      Operand: rdx:64 bv[63..0]
+##      ---------------
+##      Operand: rcx:64 bv[63..0]
+##      ---------------
+##      Operand: 0x4:64 bv[63..0]
+##      ---------------
 ##
-## 40013: mov byte ptr [rax], 1
-##     ---------------
-##     Is memory read : False
-##     Is memory write: True
-##     ---------------
-##     Operand: [@0x0]:8 bv[7..0]
-##     - base : rax:64 bv[63..0]
-##     - index: unknown:1 bv[0..0]
-##     - scale: 0x1:8 bv[7..0]
-##     - disp : 0x0:8 bv[7..0]
-##     ---------------
-##     Operand: 0x1:8 bv[7..0]
-##     ---------------
+##  40013: mov byte ptr [rax], 1
+##      ---------------
+##      Is memory read : False
+##      Is memory write: True
+##      ---------------
+##      Operand: [@0x0]:8 bv[7..0]
+##      - base : rax:64 bv[63..0]
+##      - index: unknown:1 bv[0..0]
+##      - scale: 0x1:8 bv[7..0]
+##      - disp : 0x0:8 bv[7..0]
+##      ---------------
+##      Operand: 0x1:8 bv[7..0]
+##      ---------------
 ##
-## 40016: mov rdx, qword ptr [rax]
-##     ---------------
-##     Is memory read : True
-##     Is memory write: False
-##     ---------------
-##     Operand: rdx:64 bv[63..0]
-##     ---------------
-##     Operand: [@0x0]:64 bv[63..0]
-##     - base : rax:64 bv[63..0]
-##     - index: unknown:1 bv[0..0]
-##     - scale: 0x1:64 bv[63..0]
-##     - disp : 0x0:64 bv[63..0]
-##     ---------------
+##  40016: mov rdx, qword ptr [rax]
+##      ---------------
+##      Is memory read : True
+##      Is memory write: False
+##      ---------------
+##      Operand: rdx:64 bv[63..0]
+##      ---------------
+##      Operand: [@0x0]:64 bv[63..0]
+##      - base : rax:64 bv[63..0]
+##      - index: unknown:1 bv[0..0]
+##      - scale: 0x1:64 bv[63..0]
+##      - disp : 0x0:64 bv[63..0]
+##      ---------------
 ##
-## 40019: call rax
-##     ---------------
-##     Is memory read : False
-##     Is memory write: True
-##     ---------------
-##     Operand: rax:64 bv[63..0]
-##     ---------------
+##  40019: call rax
+##      ---------------
+##      Is memory read : False
+##      Is memory write: True
+##      ---------------
+##      Operand: rax:64 bv[63..0]
+##      ---------------
 ##
-## 4001b: ret
-##     ---------------
-##     Is memory read : True
-##     Is memory write: False
-##     ---------------
+##  4001b: ret
+##      ---------------
+##      Is memory read : True
+##      Is memory write: False
+##      ---------------
 ##
-## 4001c: add byte ptr [rax], 1
-##     ---------------
-##     Is memory read : True
-##     Is memory write: True
-##     ---------------
-##     Operand: [@0x0]:8 bv[7..0]
-##     - base : rax:64 bv[63..0]
-##     - index: unknown:1 bv[0..0]
-##     - scale: 0x1:8 bv[7..0]
-##     - disp : 0x0:8 bv[7..0]
-##     ---------------
-##     Operand: 0x1:8 bv[7..0]
-##     ---------------
+##  4001c: add byte ptr [rax], 1
+##      ---------------
+##      Is memory read : True
+##      Is memory write: True
+##      ---------------
+##      Operand: [@0x0]:8 bv[7..0]
+##      - base : rax:64 bv[63..0]
+##      - index: unknown:1 bv[0..0]
+##      - scale: 0x1:8 bv[7..0]
+##      - disp : 0x0:8 bv[7..0]
+##      ---------------
+##      Operand: 0x1:8 bv[7..0]
+##      ---------------
 
 import  sys
 from    triton import *

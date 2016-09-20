@@ -3,35 +3,35 @@
 ##
 ## Output
 ##
-## $ python ir.py
-## 400000: mov rax, qword ptr [rip + 0x13b8]
-##         ref!0 = (concat ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv49 8)) ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv50 8)) ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv51 8)) ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv52 8))) ; MOV operation
-##         ref!1 = (_ bv4194311 64) ; Program Counter
+##  $ python ir.py
+##  400000: mov rax, qword ptr [rip + 0x13b8]
+##          ref!0 = (concat ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv49 8)) ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv50 8)) ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv51 8)) ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv52 8))) ; MOV operation
+##          ref!1 = (_ bv4194311 64) ; Program Counter
 ##
-## 400007: lea rsi, qword ptr [rbx + rax*8]
-##         ref!2 = (bvadd (_ bv0 64) (bvadd (_ bv67890 64) (bvmul ((_ extract 63 0) ref!0) (_ bv8 64)))) ; LEA operation
-##         ref!3 = (_ bv4194315 64) ; Program Counter
+##  400007: lea rsi, qword ptr [rbx + rax*8]
+##          ref!2 = (bvadd (_ bv0 64) (bvadd (_ bv67890 64) (bvmul ((_ extract 63 0) ref!0) (_ bv8 64)))) ; LEA operation
+##          ref!3 = (_ bv4194315 64) ; Program Counter
 ##
-## 40000b: lea rsi, dword ptr [ebx + eax*8 + 0xa]
-##         ref!4 = ((_ zero_extend 32) (bvadd (_ bv10 32) (bvadd (_ bv67890 32) (bvmul ((_ extract 31 0) ref!0) (_ bv8 32))))) ; LEA operation
-##         ref!5 = (_ bv4194321 64) ; Program Counter
+##  40000b: lea rsi, dword ptr [ebx + eax*8 + 0xa]
+##          ref!4 = ((_ zero_extend 32) (bvadd (_ bv10 32) (bvadd (_ bv67890 32) (bvmul ((_ extract 31 0) ref!0) (_ bv8 32))))) ; LEA operation
+##          ref!5 = (_ bv4194321 64) ; Program Counter
 ##
-## 400011: pmovmskb edx, xmm1
-##         ref!6 = ((_ zero_extend 32) ((_ zero_extend 16) (concat ((_ extract 127 127) (_ bv0 128)) ((_ extract 119 119) (_ bv0 128)) ((_ extract 111 111) (_ bv0 128)) ((_ extract 103 103) (_ bv0 128)) ((_ extract 95 95) (_ bv0 128)) ((_ extract 87 87) (_ bv0 128)) ((_ extract 79 79) (_ bv0 128)) ((_ extract 71 71) (_ bv0 128)) ((_ extract 63 63) (_ bv0 128)) ((_ extract 55 55) (_ bv0 128)) ((_ extract 47 47) (_ bv0 128)) ((_ extract 39 39) (_ bv0 128)) ((_ extract 31 31) (_ bv0 128)) ((_ extract 23 23) (_ bv0 128)) ((_ extract 15 15) (_ bv0 128)) ((_ extract 7 7) (_ bv0 128))))) ; PMOVMSKB operation
-##         ref!7 = (_ bv4194325 64) ; Program Counter
+##  400011: pmovmskb edx, xmm1
+##          ref!6 = ((_ zero_extend 32) ((_ zero_extend 16) (concat ((_ extract 127 127) (_ bv0 128)) ((_ extract 119 119) (_ bv0 128)) ((_ extract 111 111) (_ bv0 128)) ((_ extract 103 103) (_ bv0 128)) ((_ extract 95 95) (_ bv0 128)) ((_ extract 87 87) (_ bv0 128)) ((_ extract 79 79) (_ bv0 128)) ((_ extract 71 71) (_ bv0 128)) ((_ extract 63 63) (_ bv0 128)) ((_ extract 55 55) (_ bv0 128)) ((_ extract 47 47) (_ bv0 128)) ((_ extract 39 39) (_ bv0 128)) ((_ extract 31 31) (_ bv0 128)) ((_ extract 23 23) (_ bv0 128)) ((_ extract 15 15) (_ bv0 128)) ((_ extract 7 7) (_ bv0 128))))) ; PMOVMSKB operation
+##          ref!7 = (_ bv4194325 64) ; Program Counter
 ##
-## 400015: mov eax, edx
-##         ref!8 = ((_ zero_extend 32) ((_ extract 31 0) ref!6)) ; MOV operation
-##         ref!9 = (_ bv4194327 64) ; Program Counter
+##  400015: mov eax, edx
+##          ref!8 = ((_ zero_extend 32) ((_ extract 31 0) ref!6)) ; MOV operation
+##          ref!9 = (_ bv4194327 64) ; Program Counter
 ##
-## 400017: xor ah, 0x99
-##         ref!10 = (concat ((_ extract 63 16) ((_ extract 63 0) ref!8)) (concat (bvxor ((_ extract 15 8) ref!8) (_ bv153 8)) ((_ extract 7 0) ((_ extract 63 0) ref!8)))) ; XOR operation
-##         ref!11 = (_ bv0 1) ; Clears carry flag
-##         ref!12 = (_ bv0 1) ; Clears overflow flag
-##         ref!13 = (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (_ bv1 1) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv0 8)))) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv1 8)))) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv2 8)))) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv3 8)))) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv4 8)))) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv5 8)))) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv6 8)))) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv7 8)))) ; Parity flag
-##         ref!14 = ((_ extract 15 15) ref!10) ; Sign flag
-##         ref!15 = (ite (= ((_ extract 15 8) ref!10) (_ bv0 8)) (_ bv1 1) (_ bv0 1)) ; Zero flag
-##         ref!16 = (_ bv4194330 64) ; Program Counter
+##  400017: xor ah, 0x99
+##          ref!10 = (concat ((_ extract 63 16) ((_ extract 63 0) ref!8)) (concat (bvxor ((_ extract 15 8) ref!8) (_ bv153 8)) ((_ extract 7 0) ((_ extract 63 0) ref!8)))) ; XOR operation
+##          ref!11 = (_ bv0 1) ; Clears carry flag
+##          ref!12 = (_ bv0 1) ; Clears overflow flag
+##          ref!13 = (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (_ bv1 1) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv0 8)))) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv1 8)))) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv2 8)))) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv3 8)))) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv4 8)))) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv5 8)))) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv6 8)))) ((_ extract 0 0) (bvlshr ((_ extract 15 8) ref!10) (_ bv7 8)))) ; Parity flag
+##          ref!14 = ((_ extract 15 15) ref!10) ; Sign flag
+##          ref!15 = (ite (= ((_ extract 15 8) ref!10) (_ bv0 8)) (_ bv1 1) (_ bv0 1)) ; Zero flag
+##          ref!16 = (_ bv4194330 64) ; Program Counter
 ##
 
 import  sys

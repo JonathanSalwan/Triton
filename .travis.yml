@@ -86,6 +86,8 @@ script:
   - python2.7 ./src/examples/python/symbolic_emulation_1.py
   - python2.7 ./src/examples/python/symbolic_emulation_2.py
   - python2.7 ./src/examples/python/symbolic_emulation_crackme_xor.py
+  - python2.7 ./src/examples/python/hooks_libc.py
+  - python2.7 ./src/examples/python/proving_opaque_predicates.py
   - python2.7 ./src/testers/libTriton_units_testing.py
   # C++
   - cd src/examples/cpp

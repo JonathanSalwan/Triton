@@ -3,21 +3,21 @@
 ##
 ## Output:
 ##
-##   $ ./simplification.py
-##   Expr:  (bvxor (_ bv1 8) (_ bv1 8))
-##   Simp:  (_ bv0 8)
+##  $ ./simplification.py
+##  Expr:  (bvxor (_ bv1 8) (_ bv1 8))
+##  Simp:  (_ bv0 8)
 ##
-##   Expr:  (bvor (bvand (_ bv1 8) (bvnot (_ bv2 8))) (bvand (bvnot (_ bv1 8)) (_ bv2 8)))
-##   Simp:  (bvxor (_ bv1 8) (_ bv2 8))
+##  Expr:  (bvor (bvand (_ bv1 8) (bvnot (_ bv2 8))) (bvand (bvnot (_ bv1 8)) (_ bv2 8)))
+##  Simp:  (bvxor (_ bv1 8) (_ bv2 8))
 ##
-##   Expr:  (bvor (bvand (bvnot (_ bv2 8)) (_ bv1 8)) (bvand (bvnot (_ bv1 8)) (_ bv2 8)))
-##   Simp:  (bvxor (_ bv1 8) (_ bv2 8))
+##  Expr:  (bvor (bvand (bvnot (_ bv2 8)) (_ bv1 8)) (bvand (bvnot (_ bv1 8)) (_ bv2 8)))
+##  Simp:  (bvxor (_ bv1 8) (_ bv2 8))
 ##
-##   Expr:  (bvor (bvand (bvnot (_ bv2 8)) (_ bv1 8)) (bvand (_ bv2 8) (bvnot (_ bv1 8))))
-##   Simp:  (bvxor (_ bv1 8) (_ bv2 8))
+##  Expr:  (bvor (bvand (bvnot (_ bv2 8)) (_ bv1 8)) (bvand (_ bv2 8) (bvnot (_ bv1 8))))
+##  Simp:  (bvxor (_ bv1 8) (_ bv2 8))
 ##
-##   Expr:  (bvor (bvand (_ bv2 8) (bvnot (_ bv1 8))) (bvand (bvnot (_ bv2 8)) (_ bv1 8)))
-##   Simp:  (bvxor (_ bv2 8) (_ bv1 8))
+##  Expr:  (bvor (bvand (_ bv2 8) (bvnot (_ bv1 8))) (bvand (bvnot (_ bv2 8)) (_ bv1 8)))
+##  Simp:  (bvxor (_ bv2 8) (_ bv1 8))
 ##
 
 import sys

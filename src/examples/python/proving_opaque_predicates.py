@@ -5,36 +5,36 @@
 ## on the Tomislav Zubcic's blog post [0,1] =).
 ##
 ## Output:
-##      $ python proving_opaque_predicates.py
-##      xor eax, eax
-##      jo 7
-##      opaque predicate: never taken
-##      ----------------------------------
-##      xor eax, eax
-##      je 7
-##      opaque predicate: always taken
-##      ----------------------------------
-##      xor eax, ebx
-##      je 7
-##      not an opaque predicate
-##      ----------------------------------
-##      and eax, 0x3fffffff
-##      and ebx, 0x3fffffff
-##      xor ecx, edx
-##      xor edx, edi
-##      add eax, ebx
-##      jo 0x16
-##      opaque predicate: never taken
-##      ----------------------------------
-##      and eax, 0x3fffffff
-##      and ebx, 0x3fffffff
-##      xor ecx, edx
-##      xor edx, edi
-##      xor eax, ebx
-##      je 0x16
-##      not an opaque predicate
-##      ----------------------------------
 ##
+##  $ python proving_opaque_predicates.py
+##  xor eax, eax
+##  jo 7
+##  opaque predicate: never taken
+##  ----------------------------------
+##  xor eax, eax
+##  je 7
+##  opaque predicate: always taken
+##  ----------------------------------
+##  xor eax, ebx
+##  je 7
+##  not an opaque predicate
+##  ----------------------------------
+##  and eax, 0x3fffffff
+##  and ebx, 0x3fffffff
+##  xor ecx, edx
+##  xor edx, edi
+##  add eax, ebx
+##  jo 0x16
+##  opaque predicate: never taken
+##  ----------------------------------
+##  and eax, 0x3fffffff
+##  and ebx, 0x3fffffff
+##  xor ecx, edx
+##  xor edx, edi
+##  xor eax, ebx
+##  je 0x16
+##  not an opaque predicate
+##  ----------------------------------
 ##
 ## [0] http://zubcic.re/blog/experimenting-with-z3-proving-opaque-predicates
 ## [1] https://www.reddit.com/r/ReverseEngineering/comments/4yf6tz/experimenting_with_z3_proving_opaque_predicates/

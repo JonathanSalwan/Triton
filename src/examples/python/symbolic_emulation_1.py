@@ -1,63 +1,65 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
 ##
-## $ ./src/examples/python/symbolic_emulation_1.py
-## 400000: movabs rax, 0x4142434445464748
-##         ref!0 = (_ bv4702394921427289928 64) ; MOVABS operation
-##         ref!1 = (_ bv4194314 64) ; Program Counter
+## Output:
 ##
-## 40000a: mov rsi, 8
-##         ref!2 = (_ bv8 64) ; MOV operation
-##         ref!3 = (_ bv4194321 64) ; Program Counter
+##  $ ./src/examples/python/symbolic_emulation_1.py
+##  400000: movabs rax, 0x4142434445464748
+##          ref!0 = (_ bv4702394921427289928 64) ; MOVABS operation
+##          ref!1 = (_ bv4194314 64) ; Program Counter
 ##
-## 400011: mov rdi, 0x10000
-##         ref!4 = (_ bv65536 64) ; MOV operation
-##         ref!5 = (_ bv4194328 64) ; Program Counter
+##  40000a: mov rsi, 8
+##          ref!2 = (_ bv8 64) ; MOV operation
+##          ref!3 = (_ bv4194321 64) ; Program Counter
 ##
-## 400018: mov qword ptr [rdi + rsi*2 + 0x1234], rax
-##         ref!6 = ((_ extract 63 56) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-##         ref!7 = ((_ extract 55 48) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-##         ref!8 = ((_ extract 47 40) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-##         ref!9 = ((_ extract 39 32) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-##         ref!10 = ((_ extract 31 24) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-##         ref!11 = ((_ extract 23 16) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-##         ref!12 = ((_ extract 15 8) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-##         ref!13 = ((_ extract 7 0) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-##         ref!15 = (_ bv4194336 64) ; Program Counter
+##  400011: mov rdi, 0x10000
+##          ref!4 = (_ bv65536 64) ; MOV operation
+##          ref!5 = (_ bv4194328 64) ; Program Counter
 ##
-## Display emulated information
-## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-## Instruction : mov qword ptr [rdi + rsi*2 + 0x1234], rax
-## Write at    : 0x11244L
-## Content     : 0x41424344L
-## RAX value   : 0x4142434445464748L
-## RSI value   : 0x8L
-## RDI value   : 0x10000L
+##  400018: mov qword ptr [rdi + rsi*2 + 0x1234], rax
+##          ref!6 = ((_ extract 63 56) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##          ref!7 = ((_ extract 55 48) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##          ref!8 = ((_ extract 47 40) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##          ref!9 = ((_ extract 39 32) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##          ref!10 = ((_ extract 31 24) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##          ref!11 = ((_ extract 23 16) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##          ref!12 = ((_ extract 15 8) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##          ref!13 = ((_ extract 7 0) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##          ref!15 = (_ bv4194336 64) ; Program Counter
 ##
-## Symbolic registers information
-## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-## rsi:64 bv[63..0] ref!2 = (_ bv8 64) ; MOV operation
-## rax:64 bv[63..0] ref!0 = (_ bv4702394921427289928 64) ; MOVABS operation
-## rip:64 bv[63..0] ref!15 = (_ bv4194336 64) ; Program Counter
-## rdi:64 bv[63..0] ref!4 = (_ bv65536 64) ; MOV operation
+##  Display emulated information
+##  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  Instruction : mov qword ptr [rdi + rsi*2 + 0x1234], rax
+##  Write at    : 0x11244L
+##  Content     : 0x41424344L
+##  RAX value   : 0x4142434445464748L
+##  RSI value   : 0x8L
+##  RDI value   : 0x10000L
 ##
-## Symbolic memory information
-## ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-## 0x11244L ref!13 = ((_ extract 7 0) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-## 0x11245L ref!12 = ((_ extract 15 8) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-## 0x11246L ref!11 = ((_ extract 23 16) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-## 0x11247L ref!10 = ((_ extract 31 24) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-## 0x11248L ref!9 = ((_ extract 39 32) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-## 0x11249L ref!8 = ((_ extract 47 40) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-## 0x1124aL ref!7 = ((_ extract 55 48) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
-## 0x1124bL ref!6 = ((_ extract 63 56) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##  Symbolic registers information
+##  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  rsi:64 bv[63..0] ref!2 = (_ bv8 64) ; MOV operation
+##  rax:64 bv[63..0] ref!0 = (_ bv4702394921427289928 64) ; MOVABS operation
+##  rip:64 bv[63..0] ref!15 = (_ bv4194336 64) ; Program Counter
+##  rdi:64 bv[63..0] ref!4 = (_ bv65536 64) ; MOV operation
 ##
-## Craft symbolic stuffs
-## ~~~~~~~~~~~~~~~~~~~~~
-## Memory at 0x11248 : (concat ((_ extract 7 0) ref!6) ((_ extract 7 0) ref!7) ((_ extract 7 0) ref!8) ((_ extract 7 0) ref!9))
-## Compute memory    : 0x41424344L
-## Register AH       : ((_ extract 15 8) ref!0)
-## Compute  AH       : 0x47L
+##  Symbolic memory information
+##  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  0x11244L ref!13 = ((_ extract 7 0) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##  0x11245L ref!12 = ((_ extract 15 8) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##  0x11246L ref!11 = ((_ extract 23 16) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##  0x11247L ref!10 = ((_ extract 31 24) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##  0x11248L ref!9 = ((_ extract 39 32) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##  0x11249L ref!8 = ((_ extract 47 40) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##  0x1124aL ref!7 = ((_ extract 55 48) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##  0x1124bL ref!6 = ((_ extract 63 56) ((_ extract 63 0) ref!0)) ; byte reference - MOV operation
+##
+##  Craft symbolic stuffs
+##  ~~~~~~~~~~~~~~~~~~~~~
+##  Memory at 0x11248 : (concat ((_ extract 7 0) ref!6) ((_ extract 7 0) ref!7) ((_ extract 7 0) ref!8) ((_ extract 7 0) ref!9))
+##  Compute memory    : 0x41424344L
+##  Register AH       : ((_ extract 15 8) ref!0)
+##  Compute  AH       : 0x47L
 ##
 
 
