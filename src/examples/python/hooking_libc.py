@@ -3,7 +3,7 @@
 ##
 ## Output:
 ##
-##  $ python ./src/examples/python/hooks_libc.py
+##  $ python ./src/examples/python/hooking_libc.py
 ##  [+] Loading 0x400040 - 0x400270
 ##  [+] Loading 0x400270 - 0x40028c
 ##  [+] Loading 0x400000 - 0x4007a4
