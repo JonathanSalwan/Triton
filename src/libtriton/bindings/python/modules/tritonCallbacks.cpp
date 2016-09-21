@@ -468,15 +468,15 @@ Returns the routine name from a given address. Returns an empty string if not fo
 
 - **getSyscallArgument(\ref py_STANDARD_page std, integer argNum)**<br>
 Returns the argument value of the system call which is executed in the current context. It is a user's responsibility to make sure that the
-current instruction is a syscall. This function is mainly used in a `SYSCALL_ENTRY` \ref py_INSERT_POINT_page.
+current instruction is a syscall. This function must be used in a `SYSCALL_ENTRY` \ref py_INSERT_POINT_page.
 
 - **getSyscallNumber(\ref py_STANDARD_page std)**<br>
 Returns the syscall number of the system call which is executed in the current context. It is a user's responsibility to make sure that the
-current instruction is a syscall. This function is mainly used in a `SYSCALL_ENTRY` \ref py_INSERT_POINT_page.
+current instruction is a syscall. This function must be used in a `SYSCALL_ENTRY` \ref py_INSERT_POINT_page.
 
 - **getSyscallReturn(\ref py_STANDARD_page std)**<br>
 Returns the result of the syscall. It is a user's responsibility to make sure that the current context represents
-the state of a system call after its execution. This function is mainly used in a `SYSCALL_EXIT` \ref py_INSERT_POINT_page.
+the state of a system call after its execution. This function must be used in a `SYSCALL_EXIT` \ref py_INSERT_POINT_page.
 
 - <b>insertCall(function, \ref py_INSERT_POINT_page type)</b><br>
 Inserts a call before and after several cases. All code executed into a callback function are executed during the
