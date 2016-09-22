@@ -232,198 +232,196 @@ a \>> b           | (bvlshr a b)
 <hr>
 
 - **assert_(AstNode expr1)**<br>
-Returns the ast `triton::ast::assert_()` representation as \ref py_AstNode_page.<br>
+Creates an `assert` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(assert expr1)`.
 
 - **bv(integer value, integer size)**<br>
-Returns the ast `triton::ast::bv()` representation as \ref py_AstNode_page. The `size` is in bits.<br>
-e.g: `(_ bvValue size)`.
+Creates a `bv` node (bitvector). Returns an \ref py_AstNode_page. The `size` must be in bits.<br>
+e.g: `(_ bv<balue> size)`.
 
 - **bvadd(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvadd()` representation as \ref py_AstNode_page.<br>
+Creates a `bvadd` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvadd expr1 epxr2)`.
 
 - **bvand(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvand()` as \ref py_AstNode_page.<br>
+Creates a `bvand` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvand expr1 epxr2)`.
 
 - **bvashr(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvashr()` representation as \ref py_AstNode_page.<br>
+Creates a `bvashr` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvashr expr1 epxr2)`.
 
 - **bvdecl(integer size)**<br>
-Returns the ast `triton::ast::bvdecl()` representation as \ref py_AstNode_page.<br>
+Declares a bitvector node. Returns an \ref py_AstNode_page.<br>
 e.g: `(_ BitVec size)`.
 
 - **bvfalse()**<br>
-This is an alias on the `(_ bv0 1)` ast expression.
+This is an alias on the `(_ bv0 1)` ast expression. Returns an \ref py_AstNode_page.
 
 - **bvlshr(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvlshr()` representation as \ref py_AstNode_page.<br>
+Creates a `bvlshr` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(lshr expr1 epxr2)`.
 
 - **bvmul(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvmul()` representation as \ref py_AstNode_page.<br>
+Creates a `bvmul` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvmul expr1 expr2)`.
 
 - **bvnand(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvnand()` representation as \ref py_AstNode_page.<br>
+Creates a `bvnand` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvnand expr1 expr2)`.
 
 - **bvneg(AstNode expr1)**<br>
-Returns the ast `triton::ast::bvneg()` representation as \ref py_AstNode_page.<br>
+Creates a `bvneg` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvneg expr1)`.
 
 - **bvnor(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvnor()` representation as \ref py_AstNode_page.<br>
+Creates a `bvnor` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvnor expr1 expr2)`.
 
 - **bvnot(AstNode expr1)**<br>
-Returns the ast `triton::ast::bvnot()` representation as \ref py_AstNode_page.<br>
+Creates a `bvnot` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvnot expr1)`.
 
 - **bvor(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvor()` representation as \ref py_AstNode_page.<br>
+Creates a `bvor` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvor expr1 expr2)`.
 
 - **bvror(integer displacement, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvror()` representation as \ref py_AstNode_page.<br>
+Creates a `bvror` node. Returns an \ref py_AstNode_page.<br>
 e.g: `((_ rotate_right displacement) expr)`.
 
 - **bvrol(integer displacement, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvrol()` representation as \ref py_AstNode_page.<br>
+Creates a `bvrol` node. Returns an \ref py_AstNode_page.<br>
 e.g: `((_ rotate_left displacement) expr)`.
 
 - **bvsdiv(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvsdiv()` representation as \ref py_AstNode_page.<br>
+Creates a `bvsdiv` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvsdiv expr1 epxr2)`.
 
 - **bvsge(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvsge()` representation as \ref py_AstNode_page.<br>
+Creates a `bvsge` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvsge expr1 epxr2)`.
 
 - **bvsgt(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvsgt()` representation as \ref py_AstNode_page.<br>
+Creates a `bvsgt` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvsgt expr1 epxr2)`.
 
 - **bvshl(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvshl()` representation as \ref py_AstNode_page.<br>
+Creates a Bvshl node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvshl expr1 expr2)`.
 
 - **bvsle(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvsle()` representation as \ref py_AstNode_page.<br>
+Creates a `bvsle` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvsle expr1 epxr2)`.
 
 - **bvslt(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvslt()` representation as \ref py_AstNode_page.<br>
+Creates a `bvslt` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvslt expr1 epxr2)`.
 
 - **bvsmod(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvsmod()` representation as \ref py_AstNode_page.<br>
+Creates a `bvsmod` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvsmod expr1 expr2)`.
 
 - **bvsrem(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvsrem()` representation as \ref py_AstNode_page.<br>
+Creates a `bvsrem` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvsrem expr1 expr2)`.
 
 - **bvsub(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvsub()` representation as \ref py_AstNode_page.<br>
+Creates a `bvsub` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvsub expr1 epxr2)`.
 
 - **bvtrue()**<br>
-This is an alias on the `(_ bv1 1)` ast expression.
+This is an alias on the `(_ bv1 1)` ast expression. Returns an \ref py_AstNode_page.<br>
 
 - **bvudiv(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvudiv()` representation as \ref py_AstNode_page.<br>
+Creates a `bvudiv` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvudiv expr1 epxr2)`.
 
 - **bvuge(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvuge()` representation as \ref py_AstNode_page.<br>
+Creates a `bvuge` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvuge expr1 epxr2)`.
 
 - **bvugt(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvugt()` representation as \ref py_AstNode_page.<br>
+Creates a `bvugt` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvugt expr1 epxr2)`.
 
 - **bvule(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvule()` representation as \ref py_AstNode_page.<br>
+Creates a `bvule` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvule expr1 epxr2)`.
 
 - **bvult(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvult()` representation as \ref py_AstNode_page.<br>
+Creates a `bvult` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvult expr1 epxr2)`.
 
 - **bvurem(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvurem()` representation as \ref py_AstNode_page.<br>
+Creates a `bvurem` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvurem expr1 expr2)`.
 
 - **bvxnor(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvxnor()` representation as \ref py_AstNode_page.<br>
+Creates a `bvxnor` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvxnor expr1 expr2)`.
 
 - **bvxor(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::bvxor()` representation as \ref py_AstNode_page.<br>
+Creates a `bvxor` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(bvxor expr1 epxr2)`.
 
 - **compound([AstNode expr ...])**<br>
-Returns the `triton::ast::compound()` node as \ref py_AstNode_page.
+Creates a `compound` node (a statement of several unrelated nodes). Returns an \ref py_AstNode_page.
 
 - **concat([AstNode expr ...])**<br>
-Returns the `triton::ast::concat()` node as \ref py_AstNode_page.
+Concatenates several nodes. Returns an \ref py_AstNode_page.
 
 - **distinct(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::distinct()` representation as \ref py_AstNode_page.<br>
+Creates a `distinct` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(distinct expr1 expr2)`
 
 - **duplicate(AstNode expr)**<br>
 Duplicates the node and returns a new instance as \ref py_AstNode_page. When you play with a node, it's recommended to use this function before any manipulation.
 
 - **equal(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::equal()` representation as \ref py_AstNode_page.<br>
+Creates an `equal` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(= expr1 epxr2)`.
 
 - **extract(integer high, integer low, AstNode expr1)**<br>
-Returns the ast `triton::ast::extract()` representation as \ref py_AstNode_page.<br>
+Creates an `extract` node. The `high` and `low` fields represent the bits position. Returns an \ref py_AstNode_page.<br>
 e.g: `((_ extract high low) expr1)`.
 
 - **ite(AstNode ifExpr, AstNode thenExpr, AstNode elseExpr)**<br>
-Returns the ast `triton::ast::ite()` representation as \ref py_AstNode_page.<br>
+Creates an `ite` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(ite ifExpr thenExpr elseExpr)`.
 
 - **land(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::land()` representation as \ref py_AstNode_page.<br>
+Creates a `land` node (logical AND). Returns an \ref py_AstNode_page.<br>
 e.g: `(and expr1 expr2)`.
 
 - **let(string alias, AstNode expr2, AstNode expr3)**<br>
-Returns the ast `triton::ast::let()` representation as \ref py_AstNode_page.<br>
+Creates a `let` node. Returns an \ref py_AstNode_page.<br>
 e.g: `(let ((alias expr2)) expr3)`.
 
 - **lnot(AstNode expr)**<br>
-Returns the ast `triton::ast::lnot()` representation as \ref py_AstNode_page.<br>
+Creates a `lnot` node (logical NOT). Returns an \ref py_AstNode_page.<br>
 e.g: `(not expr)`.
 
 - **lor(AstNode expr1, AstNode expr2)**<br>
-Returns the ast `triton::ast::lor()` representation as \ref py_AstNode_page.<br>
+Creates a `lor` node (logical OR). Returns an \ref py_AstNode_page.<br>
 e.g: `(or expr1 expr2)`.
 
 - **reference(integer exprId)**<br>
-Returns the reference (`triton::ast::reference()`) node representation as \ref py_AstNode_page.
-Be careful, the targeted node reference is always on the max vector size, except for volatile
-expressions.<br>
+Creates a reference node (SSA-based). Returns an \ref py_AstNode_page.<br>
 e.g: `ref!123`.
 
 - **string(string s)**<br>
-Returns a `triton::ast::string()` node as \ref py_AstNode_page.
+Creates a `string` node. Returns an \ref py_AstNode_page.
 
 - **sx(integer sizeExt, AstNode expr1)**<br>
-Returns the ast `triton::ast::sx()` representation as \ref py_AstNode_page.<br>
+Creates a `sx` node (sign extend). Returns an \ref py_AstNode_page.<br>
 e.g: `((_ sign_extend sizeExt) expr1)`.
 
 - **variable(\ref py_SymbolicVariable_page symVar)**<br>
-Returns a `triton::ast::variable()` node as \ref py_AstNode_page.
+Creates a `variable` node. Returns an \ref py_AstNode_page.
 
 - **zx(integer sizeExt, AstNode expr1)**<br>
-Returns the ast `triton::ast::zx()` representation as \ref py_AstNode_page.<br>
+Creates a `zx` node (zero extend). Returns an \ref py_AstNode_page.<br>
 e.g: `((_ zero_extend sizeExt) expr1)`.
 
 */
