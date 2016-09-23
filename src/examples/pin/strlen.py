@@ -26,7 +26,7 @@
 ##
 
 from triton  import *
-from ast     import *
+from triton.ast     import *
 from pintool import *
 
 # What value you want that strlen must return?

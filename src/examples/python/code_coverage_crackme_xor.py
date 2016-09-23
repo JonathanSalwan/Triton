@@ -20,7 +20,7 @@
 import  sys
 
 from triton import *
-from ast    import *
+from triton.ast    import *
 
 
 # Isolated function code which must be cover. The source code

@@ -4,8 +4,8 @@
 import sys
 import array
 
-from triton import *
-from ast    import *
+from triton     import *
+from triton.ast import *
 
 
 

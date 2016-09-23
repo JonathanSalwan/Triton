@@ -49,7 +49,7 @@ namespace triton {
 
         /* Create the ast module ===================================================================== */
 
-        triton::bindings::python::astModule = Py_InitModule("ast", astCallbacks);
+        triton::bindings::python::astModule = Py_InitModule("triton.ast", astCallbacks);
         if (triton::bindings::python::astModule == nullptr) {
           std::cerr << "Failed to initialize the ast bindings" << std::endl;
           PyErr_Print();
