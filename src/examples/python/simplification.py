@@ -23,7 +23,7 @@
 import sys
 
 from triton import *
-from ast    import *
+from triton.ast    import *
 
 
 # a ^ a -> a = 0

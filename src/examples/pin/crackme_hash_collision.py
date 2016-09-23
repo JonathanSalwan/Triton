@@ -1,6 +1,6 @@
 
 from triton  import *
-from ast     import *
+from triton.ast     import *
 from pintool import *
 
 #
