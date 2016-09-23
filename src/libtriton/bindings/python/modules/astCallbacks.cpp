@@ -16,7 +16,6 @@
 
 /*! \page py_ast_page AST Representations
     \brief [**python api**] All information about the ast python module.
-    \anchor ast
 
 \tableofcontents
 
@@ -228,6 +227,7 @@ a \>> b           | (bvlshr a b)
 ~a                | (bvnot a)
 -a                | (bvneg a)
 
+\anchor ast
 \section ast_py_api Python API - Methods of the ast module
 <hr>
 

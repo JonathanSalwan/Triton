@@ -10,33 +10,6 @@
 
 
 
-/*! \page Snapshot_page Snapshot
-    \brief [**pintool internal**] All information about the snapshot engine.
-
-\tableofcontents
-\section snapshot_description Description
-<hr>
-
-The pintool shipped in this project (see \ref Tracer_page) allows the user to replay a trace. During the execution, it is possible to
-take a snapshot of the registers and memory states. Then, at each program point, it is possible to restore the previous snapshot.
-
-<b>Example</b>: Imagine a trace with a `LOAD` value, this value is controllable by the user. Then, some operations are applied to this value
-and at the end the value is verified with a constant. At the compare instruction the formula of the operation applied to the value is
-built, by assigning a symbolic variable to the input value, it is possible to solve the formula (if it is satisfiable). So, it will
-be useful to directly inject the model returned by the solver in memory instead of re-run the program.
-
-<p align="center"><img src="http://triton.quarkslab.com/files/triton_snapshot.svg"/></p>
-
-
-As taking a snapshot of the full memory is not really possible, the pintool saves all bytes before each modification of the memory (`STORE` access)
-in a map \f$ \langle addr, byte \rangle \f$.
-
-When the snapshot must be restored, all modifications are re-injected in memory like this: \f$ \forall (addr, byte \in map) : *addr \gets byte \f$
-
-*/
-
-
-
 namespace tracer {
   namespace pintool {
 
