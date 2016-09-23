@@ -22,7 +22,7 @@
 \section py_SymbolicVariable_description Description
 <hr>
 
-This object is used to represent a symbolic variable contained in a \ref py_SymbolicExpression_page.
+This object is used to represent a symbolic variable.
 
 ~~~~~~~~~~~~~{.py}
 >>> symvar = convertRegisterToSymbolicVariable(REG.RAX)

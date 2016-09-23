@@ -285,10 +285,10 @@ Returns true if Triton can use the simplification passes of z3.
 Returns true if the taint engine is enabled.
 
 - **newSymbolicExpression(\ref py_AstNode_page node, string comment="")**<br>
-Returns a new symbolic expression. Note that if there are simplification passes recorded, simplification will be applied.
+Returns a new symbolic expression as \ref py_SymbolicExpression_page. Note that if there are simplification passes recorded, simplification will be applied.
 
 - **newSymbolicVariable(intger varSize, string comment="")**<br>
-Returns a new symbolic variable.
+Returns a new symbolic variable as \ref py_SymbolicVariable_page.
 
 - **processing(\ref py_Instruction_page inst)**<br>
 The main function. This function processes everything (engine, IR, optimization, state, ...) from a given instruction.
