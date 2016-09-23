@@ -19,8 +19,8 @@
 
 import  sys
 
-from triton import *
-from triton.ast    import *
+from triton     import *
+from triton.ast import *
 
 
 # Isolated function code which must be cover. The source code

@@ -46,9 +46,9 @@
 ##  B1: SymVar_4 = 65 (e)  |  B2: SymVar_4 = 0 ()
 ##
 
-from triton  import *
-from triton.ast     import *
-from pintool import *
+from triton     import *
+from triton.ast import *
+from pintool    import *
 
 TAINTING_SIZE = 10
 

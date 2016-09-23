@@ -3,8 +3,8 @@
 
 import  sys
 
-from triton import *
-from triton.ast    import *
+from triton     import *
+from triton.ast import *
 
 function = {
                                               #   <serial> function

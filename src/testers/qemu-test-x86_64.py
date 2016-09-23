@@ -1,8 +1,8 @@
 # $ ./triton ./src/testers/qemu-test-x86_64.py ./src/samples/ir_test_suite/qemu-test-x86_64
 
-from triton  import *
-from triton.ast     import *
-from pintool import *
+from triton     import *
+from triton.ast import *
+from pintool    import *
 
 import sys
 import time

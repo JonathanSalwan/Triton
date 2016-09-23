@@ -22,8 +22,8 @@
 
 import sys
 
-from triton import *
-from triton.ast    import *
+from triton     import *
+from triton.ast import *
 
 
 # a ^ a -> a = 0

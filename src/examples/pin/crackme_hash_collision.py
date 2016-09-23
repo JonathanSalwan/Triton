@@ -1,7 +1,7 @@
 
-from triton  import *
-from triton.ast     import *
-from pintool import *
+from triton     import *
+from triton.ast import *
+from pintool    import *
 
 #
 # This example breaks a simple hash routine.

@@ -25,9 +25,9 @@
 ##  Possible solution: 80:09:d4:40:03:96:00:00
 ##
 
-from triton  import *
-from triton.ast     import *
-from pintool import *
+from triton     import *
+from triton.ast import *
+from pintool    import *
 
 # What value you want that strlen must return?
 STRLEN_ASSERT_LEN = 6

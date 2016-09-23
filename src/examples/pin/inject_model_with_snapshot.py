@@ -25,9 +25,9 @@
 # Win
 # [+] Analysis done!
 
-from triton  import *
-from triton.ast     import *
-from pintool import *
+from triton     import *
+from triton.ast import *
+from pintool    import *
 
 password  = dict()
 symVarMem = None
