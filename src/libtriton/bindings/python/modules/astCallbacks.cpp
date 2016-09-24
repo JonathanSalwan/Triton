@@ -28,7 +28,7 @@ you to perform precise analysis and allows you to build and to modify your own s
 ~~~~~~~~~~~~~{.py}
 >>> from triton import ast
 >>> ast
-<module 'ast' (built-in)>
+<module 'triton.ast' (built-in)>
 ~~~~~~~~~~~~~
 
 \subsection ast_form_page AST Form
