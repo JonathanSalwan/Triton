@@ -117,17 +117,18 @@ include_directories("${Boost_INCLUDE_DIRS}")
 
 
 # Find Python 2.7
-if(NOT PYTHON_INCLUDE_DIRS)
-  set(PYTHON_INCLUDE_DIRS "$ENV{PYTHON_INCLUDE_DIRS}")
+if(PYTHON_BINDINGS)
+  if(NOT PYTHON_INCLUDE_DIRS)
+    set(PYTHON_INCLUDE_DIRS "$ENV{PYTHON_INCLUDE_DIRS}")
+  endif()
+  if(NOT PYTHON_LIBRARIES)
+    set(PYTHON_LIBRARIES "$ENV{PYTHON_LIBRARIES}")
+  endif()
+  if(NOT PYTHON_INCLUDE_DIRS AND NOT PYTHON_LIBRARIES)
+      find_package(PythonLibs 2.7 REQUIRED)
+  endif()
+  include_directories(${PYTHON_INCLUDE_DIRS})
 endif()
-if(NOT PYTHON_LIBRARIES)
-  set(PYTHON_LIBRARIES "$ENV{PYTHON_LIBRARIES}")
-endif()
-if(NOT PYTHON_INCLUDE_DIRS AND NOT PYTHON_LIBRARIES)
-    find_package(PythonLibs 2.7 REQUIRED)
-endif()
-include_directories(${PYTHON_INCLUDE_DIRS})
-
 
 # Find Z3
 if(NOT Z3_INCLUDE_DIRS)
