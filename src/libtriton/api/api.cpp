@@ -156,13 +156,15 @@ $ cd ..
 $ ./triton ./src/examples/pin/ir.py /usr/bin/id
 ~~~~~~~~~~~~~
 
-It's not recommended to use the pintool on a kernel `4.x`. The last version of Pin doesn't support very well
+It's not recommended to use the pintool on a kernel `4.x`. The version `71313` of Pin doesn't support very well
 this branch (`4.x`). Anyway, if you feel lucky, you can compile the Triton pintool with the `-DKERNEL4=on` flag.
 
 ~~~~~~~~~~~~~{.sh}
 $ cmake -DPINTOOL=on -DKERNEL4=on ..
 $ make
 ~~~~~~~~~~~~~
+
+Note that only the version `71313` of Pin is supported.
 
 */
 
