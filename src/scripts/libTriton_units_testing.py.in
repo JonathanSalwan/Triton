@@ -3255,6 +3255,29 @@ def test_9():
     else:
         count += 1
 
+    setArchitecture(ARCH.X86)
+
+    inst = Instruction()
+    # mov ax, ds:word_40213C
+    inst.setOpcodes("\x66\xA1\x3C\x21\x40\x00")
+    processing(inst)
+
+    if inst.getOperands()[1].getAddress() != 0x40213C:
+        print '[KO] inst.getOperands()[1].getAddress()'
+        print '\tOutput   : 0x%x' %(inst.getOperands()[1].getAddress())
+        print '\tExpected : 0x40213C'
+        return -1
+    else:
+        count += 1
+
+    if inst.getOperands()[1].getBitSize() != 16:
+        print '[KO] inst.getOperands()[1].getBitSize()'
+        print '\tOutput   : %d' %(inst.getOperands()[1].getBitSize())
+        print '\tExpected : 32'
+        return -1
+    else:
+        count += 1
+
     return count
 
 
