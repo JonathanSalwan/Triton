@@ -14,12 +14,7 @@ option(PINTOOL "Build Triton with the Pin tool as tracer" OFF)
 option(KERNEL4 "Pin will run on a Linux's kernel v4" OFF)
 option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON)
 option(STATICLIB "Build a static library" OFF)
-
-
-# Get and increment the build number
-file(READ ${CMAKE_SOURCE_DIR}/.build_number BUILD_NUMBER)
-math(EXPR NEW_BUILD_NUMBER "${BUILD_NUMBER} + 1")
-file(WRITE ${CMAKE_SOURCE_DIR}/.build_number ${NEW_BUILD_NUMBER})
+option(INCBUILD "Increment the build number" OFF)
 
 
 # Get architecture
@@ -41,16 +36,23 @@ else()
     set(LIBTRITON_KIND_LINK SHARED)
 endif()
 
-# Triton version
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 3)
-set(VERSION_BUILD ${NEW_BUILD_NUMBER})
 
+if(INCBUILD)
+    # Get and increment the build number
+    file(READ ${CMAKE_SOURCE_DIR}/.build_number BUILD_NUMBER)
+    math(EXPR NEW_BUILD_NUMBER "${BUILD_NUMBER} + 1")
+    file(WRITE ${CMAKE_SOURCE_DIR}/.build_number ${NEW_BUILD_NUMBER})
 
-# Update the PROJECT_NUMBER variable inside the Doxyfile
-file(READ ${CMAKE_SOURCE_DIR}/Doxyfile DOXYFILE)
-STRING(REGEX REPLACE "PROJECT_NUMBER[ ]*=[ ]*\"[a-zA-Z0-9. ]*\"" "PROJECT_NUMBER = \"version ${VERSION_MAJOR}.${VERSION_MINOR} build ${VERSION_BUILD}\"" PROJECT_NUMBER ${DOXYFILE})
-file(WRITE ${CMAKE_SOURCE_DIR}/Doxyfile ${PROJECT_NUMBER})
+    # Triton version
+    set(VERSION_MAJOR 0)
+    set(VERSION_MINOR 3)
+    set(VERSION_BUILD ${NEW_BUILD_NUMBER})
+
+    # Update the PROJECT_NUMBER variable inside the Doxyfile
+    file(READ ${CMAKE_SOURCE_DIR}/Doxyfile DOXYFILE)
+    STRING(REGEX REPLACE "PROJECT_NUMBER[ ]*=[ ]*\"[a-zA-Z0-9. ]*\"" "PROJECT_NUMBER = \"version ${VERSION_MAJOR}.${VERSION_MINOR} build ${VERSION_BUILD}\"" PROJECT_NUMBER ${DOXYFILE})
+    file(WRITE ${CMAKE_SOURCE_DIR}/Doxyfile ${PROJECT_NUMBER})
+endif()
 
 
 # Custom cmake search
