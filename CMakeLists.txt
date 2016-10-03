@@ -38,19 +38,22 @@ endif()
 
 
 # Triton version
+if(INCBUILD)
+    # Get and increment the build number
+    file(READ ${CMAKE_SOURCE_DIR}/.build_number BUILD_NUMBER)
+    math(EXPR NEW_BUILD_NUMBER "${BUILD_NUMBER} + 1")
+    file(WRITE ${CMAKE_SOURCE_DIR}/.build_number ${NEW_BUILD_NUMBER})
+endif()
+
 file(READ ${CMAKE_SOURCE_DIR}/.build_number BUILD_NUMBER)
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 3)
 set(VERSION_BUILD ${BUILD_NUMBER})
 
 if(INCBUILD)
-    # Get and increment the build number
-    math(EXPR NEW_BUILD_NUMBER "${BUILD_NUMBER} + 1")
-    file(WRITE ${CMAKE_SOURCE_DIR}/.build_number ${NEW_BUILD_NUMBER})
-
     # Update the PROJECT_NUMBER variable inside the Doxyfile
     file(READ ${CMAKE_SOURCE_DIR}/Doxyfile DOXYFILE)
-    STRING(REGEX REPLACE "PROJECT_NUMBER[ ]*=[ ]*\"[a-zA-Z0-9. ]*\"" "PROJECT_NUMBER = \"version ${VERSION_MAJOR}.${VERSION_MINOR} build ${NEW_BUILD_NUMBER}\"" PROJECT_NUMBER ${DOXYFILE})
+    STRING(REGEX REPLACE "PROJECT_NUMBER[ ]*=[ ]*\"[a-zA-Z0-9. ]*\"" "PROJECT_NUMBER = \"version ${VERSION_MAJOR}.${VERSION_MINOR} build ${VERSION_BUILD}\"" PROJECT_NUMBER ${DOXYFILE})
     file(WRITE ${CMAKE_SOURCE_DIR}/Doxyfile ${PROJECT_NUMBER})
 endif()
 
