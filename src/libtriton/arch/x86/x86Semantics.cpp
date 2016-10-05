@@ -5169,7 +5169,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVHLPS operation");
 
           /* Spread taint */
-          expr->isTainted = triton::api.taintAssignment(dst, src);
+          expr->isTainted = triton::api.taintUnion(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
@@ -5194,7 +5194,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVHPD operation");
 
           /* Spread taint */
-          expr->isTainted = triton::api.taintAssignment(dst, src);
+          expr->isTainted = triton::api.taintUnion(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
@@ -5219,7 +5219,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVHPS operation");
 
           /* Spread taint */
-          expr->isTainted = triton::api.taintAssignment(dst, src);
+          expr->isTainted = triton::api.taintUnion(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
@@ -5244,7 +5244,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVLHPS operation");
 
           /* Spread taint */
-          expr->isTainted = triton::api.taintAssignment(dst, src);
+          expr->isTainted = triton::api.taintUnion(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
@@ -5269,7 +5269,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVLPD operation");
 
           /* Spread taint */
-          expr->isTainted = triton::api.taintAssignment(dst, src);
+          expr->isTainted = triton::api.taintUnion(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
@@ -5294,7 +5294,7 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVLPS operation");
 
           /* Spread taint */
-          expr->isTainted = triton::api.taintAssignment(dst, src);
+          expr->isTainted = triton::api.taintUnion(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
@@ -5536,7 +5536,10 @@ namespace triton {
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVQ operation");
 
           /* Spread taint */
-          expr->isTainted = triton::api.taintAssignment(dst, src);
+          if (dst.getBitSize() == DQWORD_SIZE_BIT && src.getBitSize() == DQWORD_SIZE_BIT)
+            expr->isTainted = triton::api.taintUnion(dst, src);
+          else
+            expr->isTainted = triton::api.taintAssignment(dst, src);
 
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
