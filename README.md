@@ -37,7 +37,6 @@ A full documentation is available on our [doxygen page](http://triton.quarkslab.
 * [SMT Solver Interface](http://triton.quarkslab.com/documentation/doxygen/solver_interface_page.html)
 * [SMT Simplification Passes](http://triton.quarkslab.com/documentation/doxygen/SMT_simplification_page.html)
 * [Spread Taint](http://triton.quarkslab.com/documentation/doxygen/engine_Taint_page.html)
-* [Replay Trace via Snapshot](http://triton.quarkslab.com/documentation/doxygen/Snapshot_page.html)
 * [Tracer Independent](http://triton.quarkslab.com/documentation/doxygen/Tracer_page.html)
 * [Python Bindings](http://triton.quarkslab.com/documentation/doxygen/py_triton_page.html)
 
