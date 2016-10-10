@@ -8,6 +8,8 @@ os:
     - linux
     - osx
 
+osx_image: xcode7.1
+
 notifications:
   email: false
 
@@ -40,14 +42,14 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update -q; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -y --force-yes libz3-dev; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install python-setuptools; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install z3; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CC" = "gcc" ]; then export CC="gcc-4.9"; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" = "g++" ]; then export CXX="g++-4.9"; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CC" = "clang" ]; then export CC="clang-3.5"; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" = "clang++" ]; then export CXX="clang++-3.5"; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export CC="clang"; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export CXX="clang++"; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install z3 cmake; fi
   # Back to /home/travis/build/JonathanSalwan
   - cd ..
   # Install capstone
