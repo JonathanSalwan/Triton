@@ -1,5 +1,5 @@
 // Test cases for Triton
-// gcc -masm=intel ./ir.c -o ir
+// gcc -O0 -masm=intel ./ir.c -o ir
 
 void init(int *tab1, int *tab2, int *tab3, int *tab4) {
   tab1[0] = 0x11111111;
@@ -42,6 +42,13 @@ void check(void)
   asm("mov al, 0x99");
   asm("mov ax, 0x99");
   asm("mov eax, 0x99");
+
+  asm("mov rax, 0x1234567890abcdef");
+  asm("mov rbx, 0x1111111111111111");
+  asm("push rax");
+  asm("pop bx");
+  asm("push ax");
+  asm("pop rbx");
 
   asm("mov rdx, 4");
   asm("mov rcx, 5");

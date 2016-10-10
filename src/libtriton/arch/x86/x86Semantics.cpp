@@ -7395,7 +7395,7 @@ namespace triton {
           auto  stack      = TRITON_X86_REG_SP.getParent();
           auto  stackValue = triton::api.getConcreteRegisterValue(stack).convert_to<triton::uint64>();
           auto& dst        = inst.operands[0];
-          auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
+          auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, dst.getSize()));
 
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(inst, src);
@@ -8567,12 +8567,10 @@ namespace triton {
 
 
         void push_s(triton::arch::Instruction& inst) {
-          auto stack = TRITON_X86_REG_SP.getParent();
-
           /* Create the semantics - side effect */
-          auto  stackValue = alignSubStack_s(inst, stack.getSize());
-          auto  dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
           auto& src        = inst.operands[0];
+          auto  stackValue = alignSubStack_s(inst, src.getSize());
+          auto  dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, src.getSize()));
 
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(inst, src);
