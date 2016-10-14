@@ -47,16 +47,6 @@ int main(int ac, const char **av) {
     /* optional - Setup address */
     inst.setAddress(trace[i].addr);
 
-    /* optional - Update register state */
-    //inst.updateContext(Register(x86::ID_REG_RSP, 12345));
-    //inst.updateContext(Register(x86::ID_REG_RBX, 67890));
-
-    /* optional - Add memory access <addr, size, content> */
-    //MemoryAccess read(11111111, 8, 401234);
-    //MemoryAccess write(22222222, 8, 400002);
-    //inst.updateContext(read);
-    //inst.updateContext(write);
-
     /* Process everything */
     api.processing(inst);
 

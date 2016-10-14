@@ -614,8 +614,26 @@ namespace triton {
       }
 
 
-      static PyObject* triton_Instruction(PyObject* self, PyObject* noarg) {
-        return PyInstruction();
+      static PyObject* triton_Instruction(PyObject* self, PyObject* args) {
+        PyObject* opcodes = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|O", &opcodes);
+
+        if (opcodes == nullptr)
+          return PyInstruction();
+
+        if (!PyBytes_Check(opcodes))
+          return PyErr_Format(PyExc_TypeError, "Instruction(): Expected a bytes array as argument.");
+
+        try {
+          triton::uint8* opc  = reinterpret_cast<triton::uint8*>(PyBytes_AsString(opcodes));
+          triton::uint32 size = static_cast<triton::uint32>(PyBytes_Size(opcodes));
+          return PyInstruction(opc, size);
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -2900,7 +2918,7 @@ namespace triton {
         {"Bitvector",                           (PyCFunction)triton_Bitvector,                              METH_VARARGS,       ""},
         {"Elf",                                 (PyCFunction)triton_Elf,                                    METH_O,             ""},
         {"Immediate",                           (PyCFunction)triton_Immediate,                              METH_VARARGS,       ""},
-        {"Instruction",                         (PyCFunction)triton_Instruction,                            METH_NOARGS,        ""},
+        {"Instruction",                         (PyCFunction)triton_Instruction,                            METH_VARARGS,       ""},
         {"MemoryAccess",                        (PyCFunction)triton_MemoryAccess,                           METH_VARARGS,       ""},
         {"Register",                            (PyCFunction)triton_Register,                               METH_VARARGS,       ""},
         {"addCallback",                         (PyCFunction)triton_addCallback,                            METH_VARARGS,       ""},

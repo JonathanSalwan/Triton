@@ -55,13 +55,6 @@ if __name__ == '__main__':
         # Setup Address
         inst.setAddress(addr)
 
-        # optional - Update register state
-        inst.updateContext(Register(REG.RAX, 0x4444444455555555))
-        inst.updateContext(Register(REG.RBX, 0x1111111122222222))
-
-        # optional - Add memory access <addr, size, content>
-        inst.updateContext(MemoryAccess(0x66666666, 4, 0x31323334))
-
         # Process everything
         processing(inst)
 
@@ -76,6 +69,27 @@ if __name__ == '__main__':
         print
 
     sys.exit(0)
+~~~~~~~~~~~~~
+
+\subsection py_Instruction_constructor Constructor
+
+~~~~~~~~~~~~~{.py}
+>>> inst = Instruction("\x48\xC7\xC0\x01\x00\x00\x00")
+>>> inst.setAddress(0x40000)
+>>> processing(inst)
+True
+>>> print inst
+40000: mov rax, 1
+~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~{.py}
+>>> inst = Instruction()
+>>> inst.setAddress(0x40000)
+>>> inst.setOpcodes("\x48\xC7\xC0\x01\x00\x00\x00")
+>>> processing(inst)
+True
+>>> print inst
+40000: mov rax, 1
 ~~~~~~~~~~~~~
 
 \section Instruction_py_api Python API - Methods of the Instruction class
@@ -674,9 +688,6 @@ namespace triton {
           if (!PyBytes_Check(opc))
             return PyErr_Format(PyExc_TypeError, "Instruction::setOpcodes(): Expected a bytes array as argument.");
 
-          if (PyBytes_Size(opc) >= 32)
-            return PyErr_Format(PyExc_TypeError, "Instruction::setOpcodes(): Invalid size (too big).");
-
           triton::uint8* opcodes = reinterpret_cast<triton::uint8*>(PyBytes_AsString(opc));
           triton::uint32 size    = static_cast<triton::uint32>(PyBytes_Size(opc));
 
@@ -848,6 +859,18 @@ namespace triton {
         object = PyObject_NEW(Instruction_Object, &Instruction_Type);
         if (object != NULL)
           object->inst = new triton::arch::Instruction();
+
+        return (PyObject* )object;
+      }
+
+
+      PyObject* PyInstruction(const triton::uint8* opcodes, triton::uint32 opSize) {
+        Instruction_Object* object;
+
+        PyType_Ready(&Instruction_Type);
+        object = PyObject_NEW(Instruction_Object, &Instruction_Type);
+        if (object != NULL)
+          object->inst = new triton::arch::Instruction(opcodes, opSize);
 
         return (PyObject* )object;
       }

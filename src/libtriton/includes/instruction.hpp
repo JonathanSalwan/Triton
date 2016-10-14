@@ -115,6 +115,9 @@ namespace triton {
         //! Constructor.
         Instruction();
 
+        //! Constructor with opcodes.
+        Instruction(const triton::uint8* opcodes, triton::uint32 opSize);
+
         //! Constructor by copy.
         Instruction(const Instruction& other);
 
@@ -170,7 +173,7 @@ namespace triton {
         triton::arch::Register getRegisterState(triton::uint32 regId);
 
         //! Sets the opcodes of the instruction.
-        void setOpcodes(triton::uint8* opcodes, triton::uint32 size);
+        void setOpcodes(const triton::uint8* opcodes, triton::uint32 size);
 
         //! Returns the size of the instruction.
         triton::uint32 getSize(void) const;
