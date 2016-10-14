@@ -11,7 +11,7 @@ project(triton)
 
 # Define cmake options
 option(PINTOOL "Build Triton with the Pin tool as tracer" OFF)
-option(KERNEL4 "Pin will run on a Linux's kernel v4" OFF)
+option(KERNEL4 "Pin will run on a Linux's kernel v4" ON)
 option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON)
 option(STATICLIB "Build a static library" OFF)
 option(INCBUILD "Increment the build number" OFF)
