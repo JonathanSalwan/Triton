@@ -350,7 +350,7 @@ namespace triton {
   }
 
 
-  void API::buildSemantics(triton::arch::Instruction& inst) {
+  bool API::buildSemantics(triton::arch::Instruction& inst) {
     this->checkArchitecture();
 
     /* Stage 1 - Update the context memory */
@@ -373,7 +373,7 @@ namespace triton {
       }
     }
 
-    this->arch.buildSemantics(inst);
+    return this->arch.buildSemantics(inst);
   }
 
 
@@ -437,10 +437,10 @@ namespace triton {
   }
 
 
-  void API::processing(triton::arch::Instruction& inst) {
+  bool API::processing(triton::arch::Instruction& inst) {
     this->checkArchitecture();
     this->disassembly(inst);
-    this->buildSemantics(inst);
+    return this->buildSemantics(inst);
   }
 
 

@@ -630,10 +630,10 @@ namespace triton {
       }
 
 
-      void x86Cpu::buildSemantics(triton::arch::Instruction& inst) const {
+      bool x86Cpu::buildSemantics(triton::arch::Instruction& inst) const {
         if (!inst.getType())
           throw triton::exceptions::Cpu("x86Cpu::buildSemantics(): You must disassemble the instruction before.");
-        triton::arch::x86::semantics::build(inst);
+        return triton::arch::x86::semantics::build(inst);
       }
 
 

@@ -299,7 +299,7 @@ namespace triton {
       namespace semantics {
 
 
-        void build(triton::arch::Instruction& inst) {
+        bool build(triton::arch::Instruction& inst) {
           switch (inst.getType()) {
             case ID_INS_ADC:            triton::arch::x86::semantics::adc_s(inst);          break;
             case ID_INS_ADD:            triton::arch::x86::semantics::add_s(inst);          break;
@@ -557,7 +557,10 @@ namespace triton {
             case ID_INS_XOR:            triton::arch::x86::semantics::xor_s(inst);          break;
             case ID_INS_XORPD:          triton::arch::x86::semantics::xorpd_s(inst);        break;
             case ID_INS_XORPS:          triton::arch::x86::semantics::xorps_s(inst);        break;
+            default:
+              return false;
           }
+          return true;
         }
 
 

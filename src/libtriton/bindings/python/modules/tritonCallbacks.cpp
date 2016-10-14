@@ -84,7 +84,7 @@ to 128-bits. Otherwise, you will probably get a sort mismatch error when you wil
 expression to a sub-register like `AX`, `AH` or `AL`, please, craft your expression with the `concat()` and `extract()` ast functions.
 
 - **buildSemantics(\ref py_Instruction_page inst)**<br>
-Builds the instruction semantics. You must define an architecture before.
+Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
 
 - **buildSymbolicImmediate(\ref py_Immediate_page imm)**<br>
 Builds a symbolic immediate from a \ref py_Immediate_page and returns a \ref py_AstNode_page.
@@ -291,7 +291,7 @@ Returns a new symbolic expression as \ref py_SymbolicExpression_page. Note that 
 Returns a new symbolic variable as \ref py_SymbolicVariable_page.
 
 - **processing(\ref py_Instruction_page inst)**<br>
-The main function. This function processes everything (engine, IR, optimization, state, ...) from a given instruction.
+Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
 
 - <b>removeAllCallbacks(void)</b><br>
 Removes all recorded callbacks.
@@ -786,14 +786,13 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "buildSemantics(): Expects an Instruction as argument.");
 
         try {
-          triton::api.buildSemantics(*PyInstruction_AsInstruction(inst));
+          if (triton::api.buildSemantics(*PyInstruction_AsInstruction(inst)))
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
-
-        Py_INCREF(Py_None);
-        return Py_None;
       }
 
 
@@ -2143,14 +2142,13 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "processing(): Expects an Instruction as argument.");
 
         try {
-          triton::api.processing(*PyInstruction_AsInstruction(inst));
+          if (triton::api.processing(*PyInstruction_AsInstruction(inst)))
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
-
-        Py_INCREF(Py_None);
-        return Py_None;
       }
 
 

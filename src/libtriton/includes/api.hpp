@@ -189,15 +189,15 @@ namespace triton {
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa processing().
         void disassembly(triton::arch::Instruction& inst) const;
 
-        //! [**architecture api**] - Builds the instruction semantics. You must define an architecture before. \sa processing().
-        void buildSemantics(triton::arch::Instruction& inst);
+        //! [**architecture api**] - Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before. \sa processing().
+        bool buildSemantics(triton::arch::Instruction& inst);
 
 
 
         /* Processing API ================================================================================ */
 
-        //! [**proccesing api**] - The main function. This function processes everything (engine, IR, optimization, state, ...) from a given instruction.
-        void processing(triton::arch::Instruction& inst);
+        //! [**proccesing api**] - Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported.
+        bool processing(triton::arch::Instruction& inst);
 
         //! [**proccesing api**] - Initialize everything.
         void initEngines(void);

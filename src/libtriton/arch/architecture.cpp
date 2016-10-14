@@ -171,7 +171,9 @@ namespace triton {
     }
 
 
-    void Architecture::buildSemantics(triton::arch::Instruction& inst) const {
+    bool Architecture::buildSemantics(triton::arch::Instruction& inst) const {
+      bool ret = false;
+
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::buildSemantics(): You must define an architecture.");
 
@@ -179,10 +181,12 @@ namespace triton {
       inst.preIRInit();
 
       /* Processing */
-      this->cpu->buildSemantics(inst);
+      ret = this->cpu->buildSemantics(inst);
 
       /* Post IR processing */
       inst.postIRInit();
+
+      return ret;
     }
 
 

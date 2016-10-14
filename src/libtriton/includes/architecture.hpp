@@ -119,8 +119,8 @@ namespace triton {
         //! Disassembles the instruction according to the architecture.
         void disassembly(triton::arch::Instruction& inst) const;
 
-        //! Builds the instruction semantics according to the architecture.
-        void buildSemantics(triton::arch::Instruction& inst) const;
+        //! Builds the instruction semantics according to the architecture. Returns true if the instruction is supported.
+        bool buildSemantics(triton::arch::Instruction& inst) const;
 
         //! Returns the concrete value of a memory cell.
         triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const;

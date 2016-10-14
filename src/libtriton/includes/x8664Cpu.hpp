@@ -334,7 +334,7 @@ namespace triton {
           triton::uint32 registerBitSize(void) const;
           triton::uint32 registerSize(void) const;
           triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const;
-          void buildSemantics(triton::arch::Instruction& inst) const;
+          bool buildSemantics(triton::arch::Instruction& inst) const;
           void disassembly(triton::arch::Instruction& inst) const;
           void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
           void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem);
