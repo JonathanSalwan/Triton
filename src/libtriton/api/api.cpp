@@ -929,7 +929,20 @@ namespace triton {
     return this->symbolic->isOptimizationEnabled(opti);
   }
 
+  bool API::isMemorySymbolic(const triton::arch::MemoryAccess& mem) const{
+	  this->checkSymbolic();
+	  triton::usize symbId = triton::api.getSymbolicMemoryId(mem.getAddress());
+	  triton::engines::symbolic::SymbolicExpression* symbExp = triton::api.getSymbolicExpressionFromId(symbId);
+	  return symbExp->isSymbolized();
+  }
 
+  bool API::isRegisterSymbolic(const triton::arch::Register& reg) const{
+	  this->checkSymbolic();
+	  triton::usize symbId = triton::api.getSymbolicRegisterId(reg);
+	  triton::engines::symbolic::SymbolicExpression* symbExp = triton::api.getSymbolicExpressionFromId(symbId);
+	  return symbExp->isSymbolized();
+  }
+  
   void API::concretizeAllMemory(void) {
     this->checkSymbolic();
     this->symbolic->concretizeAllMemory();

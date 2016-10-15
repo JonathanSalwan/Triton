@@ -459,6 +459,12 @@ namespace triton {
         //! [**symbolic api**] - Returns true if the symbolic optimization is enabled.
         bool isSymbolicOptimizationEnabled(enum triton::engines::symbolic::optimization_e opti);
 
+		//! [**symbolic api**] - Returns true if the register is symbolic
+		bool isMemorySymbolic(const triton::arch::MemoryAccess& mem) const;
+
+		//! [**symbolic api**] - Returns true if the memory is symbolic
+		bool isRegisterSymbolic(const triton::arch::Register& reg) const;
+		
         //! [**symbolic api**] - Concretizes all symbolic memory references.
         void concretizeAllMemory(void);
 
