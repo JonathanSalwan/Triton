@@ -929,17 +929,30 @@ namespace triton {
     return this->symbolic->isOptimizationEnabled(opti);
   }
 
-  bool API::isMemorySymbolic(const triton::arch::MemoryAccess& mem) const{
+  bool API::isMemorySymbolized(const triton::arch::MemoryAccess& mem) const{
 	  this->checkSymbolic();
-	  triton::usize symbId = triton::api.getSymbolicMemoryId(mem.getAddress());
-	  triton::engines::symbolic::SymbolicExpression* symbExp = triton::api.getSymbolicExpressionFromId(symbId);
+	  for (int i = 0; i < mem.getSize(); i++){
+          if (!this->isMemorySymbolized(mem.getAddress() + i))
+              return false;
+      }
+	  return true;
+  }
+
+  bool API::isMemorySymbolized(const triton::uint64 addr) const{
+	  this->checkSymbolic();
+	  triton::usize symbId = this->getSymbolicMemoryId(addr);
+	  if (symbId == triton::engines::symbolic::UNSET)
+		  return false;
+	  triton::engines::symbolic::SymbolicExpression* symbExp = this->getSymbolicExpressionFromId(symbId);
 	  return symbExp->isSymbolized();
   }
 
-  bool API::isRegisterSymbolic(const triton::arch::Register& reg) const{
+  bool API::isRegisterSymbolized(const triton::arch::Register& reg) const{
 	  this->checkSymbolic();
-	  triton::usize symbId = triton::api.getSymbolicRegisterId(reg);
-	  triton::engines::symbolic::SymbolicExpression* symbExp = triton::api.getSymbolicExpressionFromId(symbId);
+	  triton::usize symbId = this->getSymbolicRegisterId(reg);
+      if (symbId == triton::engines::symbolic::UNSET)
+          return false;
+	  triton::engines::symbolic::SymbolicExpression* symbExp = this->getSymbolicExpressionFromId(symbId);
 	  return symbExp->isSymbolized();
   }
   
