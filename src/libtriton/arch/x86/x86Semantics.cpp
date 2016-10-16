@@ -806,7 +806,7 @@ namespace triton {
            * Create the semantic.
            * cf = MSB((op0 & op1) ^ ((op0 ^ op1 ^ parent) & (op0 ^ op1)));
            */
-          auto node = triton::ast::extract(high, high,
+          auto node = triton::ast::extract(bvSize-1, bvSize-1,
                         triton::ast::bvxor(
                           triton::ast::bvand(op1, op2),
                           triton::ast::bvand(
@@ -1136,7 +1136,7 @@ namespace triton {
            * Create the semantic.
            * cf = extract(bvSize, bvSize (((op1 ^ op2 ^ res) ^ ((op1 ^ res) & (op1 ^ op2)))))
            */
-          auto node = triton::ast::extract(high, high,
+          auto node = triton::ast::extract(bvSize-1, bvSize-1,
                         triton::ast::bvxor(
                           triton::ast::bvxor(op1, triton::ast::bvxor(op2, triton::ast::extract(high, low, triton::ast::reference(parent->getId())))),
                           triton::ast::bvand(
@@ -1163,7 +1163,7 @@ namespace triton {
            * Create the semantic.
            * of = MSB((op1 ^ ~op2) & (op1 ^ regDst))
            */
-          auto node = triton::ast::extract(high, high,
+          auto node = triton::ast::extract(bvSize-1, bvSize-1,
                         triton::ast::bvand(
                           triton::ast::bvxor(op1, triton::ast::bvnot(op2)),
                           triton::ast::bvxor(op1, triton::ast::extract(high, low, triton::ast::reference(parent->getId())))
@@ -1437,7 +1437,7 @@ namespace triton {
            * Create the semantic.
            * of = high:bool((op1 ^ op2) & (op1 ^ regDst))
            */
-          auto node = triton::ast::extract(high, high,
+          auto node = triton::ast::extract(bvSize-1, bvSize-1,
                         triton::ast::bvand(
                           triton::ast::bvxor(op1, op2),
                           triton::ast::bvxor(op1, triton::ast::extract(high, low, triton::ast::reference(parent->getId())))
