@@ -50,6 +50,11 @@ void check(void)
   asm("push ax");
   asm("pop rbx");
 
+  asm("push 0");
+  asm("push 0x11");
+  asm("push 0x1122");
+  asm("push 0x11223344");
+
   asm("mov rdx, 4");
   asm("mov rcx, 5");
   asm("xadd rdx, rcx");

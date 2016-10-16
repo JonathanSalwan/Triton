@@ -8570,10 +8570,17 @@ namespace triton {
 
 
         void push_s(triton::arch::Instruction& inst) {
+          auto& src           = inst.operands[0];
+          auto stack          = TRITON_X86_REG_SP.getParent();
+          triton::uint32 size = stack.getSize();
+
+          /* If it's an immediate source, the memory access is always based on the arch size */
+          if (src.getType() != triton::arch::OP_IMM)
+            size = src.getSize();
+
           /* Create the semantics - side effect */
-          auto& src        = inst.operands[0];
-          auto  stackValue = alignSubStack_s(inst, src.getSize());
-          auto  dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, src.getSize()));
+          auto  stackValue = alignSubStack_s(inst, size);
+          auto  dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, size));
 
           /* Create symbolic operands */
           auto op1 = triton::api.buildSymbolicOperand(inst, src);
