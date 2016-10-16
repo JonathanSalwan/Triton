@@ -3352,6 +3352,24 @@ def test_11():
     return count
 
 
+def test_12():
+    count = 0
+
+    setArchitecture(ARCH.X86_64)
+
+    inst = Instruction("\x00\xDC") # add ah,bl
+    try:
+        processing(inst)
+        count += 1
+    except:
+        print '[KO] add ah, bl'
+        print '\tOutput   : <exception>'
+        print '\tExpected : OK'
+        return -1
+
+    return count
+
+
 units_testing = [
     ("Testing the arithmetic and logic AST interpreter", test_1),
     ("Testing the Register class", test_2),
@@ -3368,6 +3386,7 @@ units_testing = [
     ("Testing the LOAD access semantics", test_9),
     ("Testing the taint engine", test_10),
     ("Testing the symbolic engine backup", test_11),
+    ("Testing known issues", test_12),
 ]
 
 
