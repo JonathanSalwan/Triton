@@ -931,7 +931,7 @@ namespace triton {
 
   bool API::isMemorySymbolized(const triton::arch::MemoryAccess& mem) const{
 	  this->checkSymbolic();
-	  for (triton::uint32 = 0; i < mem.getSize(); i++){
+	  for (triton::uint32 i = 0; i < mem.getSize(); i++){
           if (!this->isMemorySymbolized(mem.getAddress() + i))
               return false;
       }
