@@ -22,7 +22,7 @@
 \section py_SolverModel_description Description
 <hr>
 
-This object is used to represent a model from a SMT solver.
+This object is used to represent a model from an SMT solver.
 
 ~~~~~~~~~~~~~{.py}
 >>> from triton import *

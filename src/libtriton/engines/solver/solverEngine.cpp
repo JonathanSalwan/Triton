@@ -22,7 +22,7 @@
 \section solver_interface_description Description
 <hr>
 
-The solver engine is the interface between a SMT solver and **Triton** itself. All requests are sent to the SMT solver
+The solver engine is the interface between an SMT solver and **Triton** itself. All requests are sent to the SMT solver
 as Triton AST (See: \ref py_ast_page). The AST representation as string looks like a manually crafted SMT2-LIB script.
 
 <b>Example:</b>
