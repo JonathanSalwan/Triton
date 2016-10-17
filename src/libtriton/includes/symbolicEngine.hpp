@@ -261,6 +261,15 @@ namespace triton {
           //! Returns true if the symbolic expression ID exists.
           bool isSymbolicExpressionIdExists(triton::usize symExprId) const;
 
+          //! Returns true if memory cell expressions contain symbolic variables.
+          bool isMemorySymbolized(const triton::arch::MemoryAccess& mem) const;
+
+          //! Returns true if memory cell expressions contain symbolic variables.
+          bool isMemorySymbolized(triton::uint64 addr, triton::uint32 size=1) const;
+
+          //! Returns true if the register expression contains a symbolic variable.
+          bool isRegisterSymbolized(const triton::arch::Register& reg) const;
+
           //! Copies and initializes a SymbolicEngine.
           void copy(const SymbolicEngine& other);
 

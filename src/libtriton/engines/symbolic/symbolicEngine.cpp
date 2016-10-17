@@ -950,6 +950,44 @@ namespace triton {
       }
 
 
+      /* Returns true if memory cell expressions contain symbolic variables. */
+      bool SymbolicEngine::isMemorySymbolized(const triton::arch::MemoryAccess& mem) const {
+        triton::uint64 addr = mem.getAddress();
+        triton::uint32 size = mem.getSize();
+
+        return this->isMemorySymbolized(addr, size);
+      }
+
+
+      /* Returns true if memory cell expressions contain symbolic variables. */
+      bool SymbolicEngine::isMemorySymbolized(triton::uint64 addr, triton::uint32 size) const {
+        for (triton::uint32 i = 0; i < size; i++) {
+          triton::usize symId = this->getSymbolicMemoryId(addr+i);
+
+          if (symId == triton::engines::symbolic::UNSET)
+            continue;
+
+          triton::engines::symbolic::SymbolicExpression* symExp = this->getSymbolicExpressionFromId(symId);
+          if (symExp->isSymbolized())
+            return true;
+        }
+
+        return false;
+      }
+
+
+      /* Returns true if the register expression contains a symbolic variable. */
+      bool SymbolicEngine::isRegisterSymbolized(const triton::arch::Register& reg) const {
+        triton::usize symId = this->getSymbolicRegisterId(reg);
+
+        if (symId == triton::engines::symbolic::UNSET)
+          return false;
+
+        triton::engines::symbolic::SymbolicExpression* symExp = this->getSymbolicExpressionFromId(symId);
+        return symExp->isSymbolized();
+      }
+
+
       /* Enables or disables the symbolic engine */
       void SymbolicEngine::enable(bool flag) {
         this->enableFlag = flag;

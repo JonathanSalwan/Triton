@@ -932,37 +932,19 @@ namespace triton {
 
   bool API::isMemorySymbolized(const triton::arch::MemoryAccess& mem) const {
     this->checkSymbolic();
-
-    for (triton::uint32 i = 0; i < mem.getSize(); i++) {
-      if (this->isMemorySymbolized(mem.getAddress() + i))
-        return true;
-    }
-
-    return false;
+    return this->symbolic->isMemorySymbolized(mem);
   }
 
 
-  bool API::isMemorySymbolized(const triton::uint64 addr) const {
+  bool API::isMemorySymbolized(triton::uint64 addr, triton::uint32 size) const {
     this->checkSymbolic();
-
-    triton::usize symId = this->getSymbolicMemoryId(addr);
-    if (symId == triton::engines::symbolic::UNSET)
-      return false;
-
-    triton::engines::symbolic::SymbolicExpression* symExp = this->getSymbolicExpressionFromId(symId);
-    return symExp->isSymbolized();
+    return this->symbolic->isMemorySymbolized(addr, size);
   }
 
 
   bool API::isRegisterSymbolized(const triton::arch::Register& reg) const {
     this->checkSymbolic();
-
-    triton::usize symId = this->getSymbolicRegisterId(reg);
-    if (symId == triton::engines::symbolic::UNSET)
-      return false;
-
-    triton::engines::symbolic::SymbolicExpression* symExp = this->getSymbolicExpressionFromId(symId);
-    return symExp->isSymbolized();
+    return this->symbolic->isRegisterSymbolized(reg);
   }
 
 
