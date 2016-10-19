@@ -19,7 +19,6 @@ namespace triton {
       this->address       = 0;
       this->ast           = nullptr;
       this->concreteValue = 0;
-      this->trusted       = false;
       this->pcRelative    = 0;
     }
 
@@ -28,7 +27,6 @@ namespace triton {
       this->address       = address;
       this->ast           = nullptr;
       this->concreteValue = concreteValue;
-      this->trusted       = true;
       this->pcRelative    = 0;
 
       if (size == 0)
@@ -241,7 +239,7 @@ namespace triton {
 
 
     bool MemoryAccess::isValid(void) const {
-      if (!this->address && !this->concreteValue && !this->trusted && !this->getLow() && !this->getHigh())
+      if (!this->address && !this->concreteValue && !this->getLow() && !this->getHigh())
         return false;
       return true;
     }
@@ -256,7 +254,6 @@ namespace triton {
       if (concreteValue > this->getMaxValue())
         throw triton::exceptions::MemoryAccess("MemoryAccess::MemoryAccess(): You cannot set this concrete value (too big) to this memory access.");
       this->concreteValue = concreteValue;
-      this->trusted       = true;
     }
 
 
@@ -306,7 +303,6 @@ namespace triton {
       this->pcRelative    = other.pcRelative;
       this->scale         = other.scale;
       this->segmentReg    = other.segmentReg;
-      this->trusted       = other.trusted;
     }
 
 

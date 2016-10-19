@@ -33,23 +33,17 @@ namespace triton {
       this->id            = triton::api.cpuInvalidRegister();
       this->name          = "unknown";
       this->parent        = triton::api.cpuInvalidRegister();
-      this->trusted       = false;
     }
 
 
     void Register::setup(triton::uint32 reg, triton::uint512 concreteValue) {
       std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> regInfo;
 
-      this->id        = reg;
-      this->trusted   = true;
-
-      if (!triton::api.isCpuRegisterValid(reg)) {
-        this->id      = triton::api.cpuInvalidRegister();
-        this->trusted = false;
-      }
+      this->id = reg;
+      if (!triton::api.isCpuRegisterValid(reg))
+        this->id = triton::api.cpuInvalidRegister();
 
       regInfo      = triton::api.getCpuRegInformation(this->id);
-
       this->name   = std::get<0>(regInfo);
       this->parent = std::get<3>(regInfo);
 
@@ -131,7 +125,6 @@ namespace triton {
       if (concreteValue > this->getMaxValue())
         throw triton::exceptions::Register("Register::setConcreteValue(): You cannot set this concrete value (too big) to this register.");
       this->concreteValue = concreteValue;
-      this->trusted       = true;
     }
 
 
@@ -161,7 +154,6 @@ namespace triton {
       this->id            = other.id;
       this->name          = other.name;
       this->parent        = other.parent;
-      this->trusted       = other.trusted;
     }
 
 

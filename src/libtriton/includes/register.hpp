@@ -51,9 +51,6 @@ namespace triton {
         //! The concrete value (content of the register)
         triton::uint512 concreteValue;
 
-        //! True if this concrete register value is trusted and synchronized with the real CPU value.
-        bool trusted;
-
         //! Copies a Register.
         void copy(const Register& other);
 

@@ -44,9 +44,6 @@ namespace triton {
         //! The concrete value (content of the access)
         triton::uint512 concreteValue;
 
-        //! True if this concrete memory value is trusted and synchronized with the real MMU value.
-        bool trusted;
-
         //! Contains the pc relative if it exists.
         triton::uint64 pcRelative;
 
