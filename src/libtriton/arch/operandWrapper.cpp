@@ -145,29 +145,6 @@ namespace triton {
     }
 
 
-    bool OperandWrapper::isTrusted(void) const {
-      switch (this->getType()) {
-        case triton::arch::OP_IMM: return true;
-        case triton::arch::OP_MEM: return this->getConstMemory().isTrusted();
-        case triton::arch::OP_REG: return this->getConstRegister().isTrusted();
-        default:
-          throw triton::exceptions::OperandWrapper("OperandWrapper::isTrusted(): Invalid type operand.");
-      }
-      return false;
-    }
-
-
-    void OperandWrapper::setTrust(bool flag) {
-      switch (this->getType()) {
-        case triton::arch::OP_IMM: break;
-        case triton::arch::OP_MEM: this->getMemory().setTrust(flag); break;
-        case triton::arch::OP_REG: this->getRegister().setTrust(flag); break;
-        default:
-          throw triton::exceptions::OperandWrapper("OperandWrapper::setTrust(): Invalid type operand.");
-      }
-    }
-
-
     void OperandWrapper::operator=(const OperandWrapper& other) {
       this->imm  = other.imm;
       this->mem  = other.mem;

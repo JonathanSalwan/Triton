@@ -117,16 +117,6 @@ namespace triton {
     }
 
 
-    bool Register::isTrusted(void) const {
-      return this->trusted;
-    }
-
-
-    void Register::setTrust(bool flag) {
-      this->trusted = flag;
-    }
-
-
     void Register::setId(triton::uint32 reg) {
       this->id = reg;
     }

@@ -240,20 +240,10 @@ namespace triton {
     }
 
 
-    bool MemoryAccess::isTrusted(void) const {
-      return this->trusted;
-    }
-
-
     bool MemoryAccess::isValid(void) const {
       if (!this->address && !this->concreteValue && !this->trusted && !this->getLow() && !this->getHigh())
         return false;
       return true;
-    }
-
-
-    void MemoryAccess::setTrust(bool flag) {
-      this->trusted = flag;
     }
 
 

@@ -98,14 +98,8 @@ Returns true if the register is a flag.
 - **isRegister(void)**<br>
 Returns true if the register is a register.
 
-- **isTrusted(void)**<br>
-True if this concrete register value is trusted and synchronized with the real CPU value.
-
 - **setConcreteValue(integer value)**<br>
 Sets a concrete value to this register.
-
-- **setTrust(bool flag)**<br>
-Sets the trust flag.
 
 */
 
@@ -218,18 +212,6 @@ namespace triton {
       }
 
 
-      static PyObject* Register_isTrusted(PyObject* self, PyObject* noarg) {
-        try {
-          if (PyRegister_AsRegister(self)->isTrusted())
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
-        }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* Register_isFlag(PyObject* self, PyObject* noarg) {
         try {
           if (PyRegister_AsRegister(self)->isFlag())
@@ -252,20 +234,6 @@ namespace triton {
           reg = PyRegister_AsRegister(self);
           reg->setConcreteValue(PyLong_AsUint512(value));
 
-          Py_INCREF(Py_None);
-          return Py_None;
-        }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* Register_setTrust(PyObject* self, PyObject* flag) {
-        try {
-          if (!PyBool_Check(flag))
-            return PyErr_Format(PyExc_TypeError, "Register::setTrust(): Expected a boolean as argument.");
-          PyRegister_AsRegister(self)->setTrust(PyLong_AsBool(flag));
           Py_INCREF(Py_None);
           return Py_None;
         }
@@ -304,10 +272,8 @@ namespace triton {
         {"getType",           Register_getType,          METH_NOARGS,    ""},
         {"isFlag",            Register_isFlag,           METH_NOARGS,    ""},
         {"isRegister",        Register_isRegister,       METH_NOARGS,    ""},
-        {"isTrusted",         Register_isTrusted,        METH_NOARGS,    ""},
         {"isValid",           Register_isValid,          METH_NOARGS,    ""},
         {"setConcreteValue",  Register_setConcreteValue, METH_O,         ""},
-        {"setTrust",          Register_setTrust,         METH_O,         ""},
         {nullptr,             nullptr,                   0,              nullptr}
       };
 

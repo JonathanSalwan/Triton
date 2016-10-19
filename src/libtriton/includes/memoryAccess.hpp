@@ -166,14 +166,8 @@ namespace triton {
         //! LEA - Returns the scale operand.
         const triton::arch::Immediate& getConstScale(void) const;
 
-        //! True if this concrete memory value is trusted and synchronized with the real MMU value.
-        bool isTrusted(void) const;
-
         //! True if the memory is not empty.
         bool isValid(void) const;
-
-        //! Sets the trust flag.
-        void setTrust(bool flag);
 
         //! Sets the address of the memory access.
         void setAddress(triton::uint64 addr);

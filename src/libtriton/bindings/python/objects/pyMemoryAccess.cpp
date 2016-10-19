@@ -122,9 +122,6 @@ e.g: `8`
 - **getType(void)**<br>
 Returns type of the memory access as \ref py_OPERAND_page. In this case this function returns `OPERAND.MEM`.
 
-- **isTrusted(void)**<br>
-True if this concrete memory value is trusted and synchronized with the real MMU value.
-
 - **setBaseRegister(\ref py_Register_page reg)**<br>
 Sets the base register of the memory access.
 
@@ -140,9 +137,6 @@ Sets the index register of the memory' access.
 
 - **setScale(\ref py_Immediate_page imm)**<br>
 Sets the scale of the memory access.
-
-- **setTrust(bool flag)**<br>
-Sets the trust flag.
 
 */
 
@@ -289,18 +283,6 @@ namespace triton {
       }
 
 
-      static PyObject* MemoryAccess_isTrusted(PyObject* self, PyObject* noarg) {
-        try {
-          if (PyMemoryAccess_AsMemoryAccess(self)->isTrusted())
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
-        }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* MemoryAccess_setBaseRegister(PyObject* self, PyObject* reg) {
         try {
           triton::arch::MemoryAccess *mem;
@@ -409,20 +391,6 @@ namespace triton {
       }
 
 
-      static PyObject* MemoryAccess_setTrust(PyObject* self, PyObject* flag) {
-        try {
-          if (!PyBool_Check(flag))
-            return PyErr_Format(PyExc_TypeError, "MemoryAccess::setTrust(): Expected a boolean as argument.");
-          PyMemoryAccess_AsMemoryAccess(self)->setTrust(PyLong_AsBool(flag));
-          Py_INCREF(Py_None);
-          return Py_None;
-        }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static int MemoryAccess_print(PyObject* self) {
         std::cout << PyMemoryAccess_AsMemoryAccess(self);
         return 0;
@@ -455,14 +423,12 @@ namespace triton {
         {"getSegmentRegister",  MemoryAccess_getSegmentRegister, METH_NOARGS,      ""},
         {"getSize",             MemoryAccess_getSize,            METH_NOARGS,      ""},
         {"getType",             MemoryAccess_getType,            METH_NOARGS,      ""},
-        {"isTrusted",           MemoryAccess_isTrusted,          METH_NOARGS,      ""},
         {"setBaseRegister",     MemoryAccess_setBaseRegister,    METH_O,           ""},
         {"setConcreteValue",    MemoryAccess_setConcreteValue,   METH_O,           ""},
         {"setDisplacement",     MemoryAccess_setDisplacement,    METH_O,           ""},
         {"setIndexRegister",    MemoryAccess_setIndexRegister,   METH_O,           ""},
         {"setScale",            MemoryAccess_setScale,           METH_O,           ""},
         {"setSegmentRegister",  MemoryAccess_setSegmentRegister, METH_O,           ""},
-        {"setTrust",            MemoryAccess_setTrust,           METH_O,           ""},
         {nullptr,               nullptr,                         0,                nullptr}
       };
 

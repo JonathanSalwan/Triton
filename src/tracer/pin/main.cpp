@@ -560,10 +560,6 @@ namespace tracer {
       /* Disassemble the instruction */
       triton::api.disassembly(*tritonInst);
 
-      /* Trust operands */
-      for (auto op = tritonInst->operands.begin(); op != tritonInst->operands.end(); op++)
-        op->setTrust(true);
-
       /* Execute the Python callback before the IR processing */
       if (tracer::pintool::context::mustBeExecuted == false)
         tracer::pintool::callbacks::beforeIRProc(tritonInst);
@@ -591,10 +587,6 @@ namespace tracer {
 
       /* Some configurations must be applied after processing */
       tracer::pintool::callbacks::postProcessing(tritonInst, threadId);
-
-      /* Untrust operands */
-      for (auto op = tritonInst->operands.begin(); op != tritonInst->operands.end(); op++)
-        op->setTrust(false);
 
       /* Mutex */
       PIN_UnlockClient();

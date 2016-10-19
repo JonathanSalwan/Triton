@@ -88,12 +88,6 @@ namespace triton {
         //! Returns true if the register is a flag.
         bool isFlag(void) const;
 
-        //! True if this concrete register value is trusted and synchronized with the real CPU value.
-        bool isTrusted(void) const;
-
-        //! Sets the trust flag.
-        void setTrust(bool flag);
-
         //! Returns the name of the register.
         std::string getName(void) const;
 

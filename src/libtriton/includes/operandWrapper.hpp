@@ -90,12 +90,6 @@ namespace triton {
         //! Sets the register operand.
         void setRegister(const triton::arch::Register& reg);
 
-        //! True if this concrete abstract value is trusted and synchronized with the real CPU/MMU value.
-        bool isTrusted(void) const;
-
-        //! Sets the trust flag.
-        void setTrust(bool flag);
-
         //! Returns the abstract size (in bytes) of the operand.
         triton::uint32 getSize(void) const;
 
