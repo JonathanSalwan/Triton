@@ -133,7 +133,7 @@ namespace triton {
 
       /* bvnand representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::BvnandNode* node) {
-        stream << "~(" << node->getChilds()[0] << " & " << node->getChilds()[1] << ")";
+        stream << "(~(" << node->getChilds()[0] << " & " << node->getChilds()[1] << ") & 0x" << std::hex << node->getBitvectorMask() << std::dec << ")";
         return stream;
       }
 
@@ -147,14 +147,14 @@ namespace triton {
 
       /* bvnor representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::BvnorNode* node) {
-        stream << "~(" << node->getChilds()[0] << " | " << node->getChilds()[1] << ")";
+        stream << "(~(" << node->getChilds()[0] << " | " << node->getChilds()[1] << ") & 0x" << std::hex << node->getBitvectorMask() << std::dec << ")";
         return stream;
       }
 
 
       /* bvnot representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::BvnotNode* node) {
-        stream << "~" << node->getChilds()[0];
+        stream << "(~(" << node->getChilds()[0] << ") & 0x" << std::hex << node->getBitvectorMask() << std::dec << ")";
         return stream;
       }
 
@@ -287,7 +287,7 @@ namespace triton {
 
       /* bvxnor representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::BvxnorNode* node) {
-        stream << "~(" << node->getChilds()[0] << " ^ " << node->getChilds()[1] << ")";
+        stream << "(~(" << node->getChilds()[0] << " ^ " << node->getChilds()[1] << ") & 0x" << std::hex << node->getBitvectorMask() << std::dec << ")";
         return stream;
       }
 
