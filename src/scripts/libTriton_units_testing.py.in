@@ -3466,6 +3466,113 @@ def test_13():
     return count
 
 
+def test_14():
+    count = 0
+
+    setArchitecture(ARCH.X86_64)
+    node = buildSymbolicImmediate(Immediate(0x10, CPUSIZE.BYTE))
+    if node.evaluate() == 0x10:
+        count += 1
+    else:
+        print '[KO] node.evaluate()'
+        print '\tOutput   : 0x%x' %(node.evaluate())
+        print '\tExpected : 0x10'
+        return -1
+    if node.getBitvectorSize() == CPUSIZE.BYTE_BIT:
+        count += 1
+    else:
+        print '[KO] node.getBitvectorSize()'
+        print '\tOutput   : %d' %(node.getBitvectorSize())
+        print '\tExpected : 8'
+        return -1
+
+    setArchitecture(ARCH.X86_64)
+    expr1 = newSymbolicExpression(ast.bv(0x1122334455667788, CPUSIZE.QWORD_BIT))
+    assignSymbolicExpressionToRegister(expr1, REG.RAX)
+
+    node = buildSymbolicRegister(REG.RAX)
+    if node.evaluate() == 0x1122334455667788:
+        count += 1
+    else:
+        print '[KO] node.evaluate()'
+        print '\tOutput   : 0x%x' %(node.evaluate())
+        print '\tExpected : 0x1122334455667788'
+        return -1
+    if node.getBitvectorSize() == CPUSIZE.QWORD_BIT:
+        count += 1
+    else:
+        print '[KO] node.getBitvectorSize()'
+        print '\tOutput   : %d' %(node.getBitvectorSize())
+        print '\tExpected : 64'
+        return -1
+
+    node = buildSymbolicRegister(REG.EAX)
+    if node.evaluate() == 0x55667788:
+        count += 1
+    else:
+        print '[KO] node.evaluate()'
+        print '\tOutput   : 0x%x' %(node.evaluate())
+        print '\tExpected : 0x55667788'
+        return -1
+    if node.getBitvectorSize() == CPUSIZE.DWORD_BIT:
+        count += 1
+    else:
+        print '[KO] node.getBitvectorSize()'
+        print '\tOutput   : %d' %(node.getBitvectorSize())
+        print '\tExpected : 32'
+        return -1
+
+    node = buildSymbolicRegister(REG.AX)
+    if node.evaluate() == 0x7788:
+        count += 1
+    else:
+        print '[KO] node.evaluate()'
+        print '\tOutput   : 0x%x' %(node.evaluate())
+        print '\tExpected : 0x7788'
+        return -1
+    if node.getBitvectorSize() == CPUSIZE.WORD_BIT:
+        count += 1
+    else:
+        print '[KO] node.getBitvectorSize()'
+        print '\tOutput   : %d' %(node.getBitvectorSize())
+        print '\tExpected : 16'
+        return -1
+
+    node = buildSymbolicRegister(REG.AH)
+    if node.evaluate() == 0x77:
+        count += 1
+    else:
+        print '[KO] node.evaluate()'
+        print '\tOutput   : 0x%x' %(node.evaluate())
+        print '\tExpected : 0x77'
+        return -1
+    if node.getBitvectorSize() == CPUSIZE.BYTE_BIT:
+        count += 1
+    else:
+        print '[KO] node.getBitvectorSize()'
+        print '\tOutput   : %d' %(node.getBitvectorSize())
+        print '\tExpected : 8'
+        return -1
+
+    node = buildSymbolicRegister(REG.AL)
+    if node.evaluate() == 0x88:
+        count += 1
+    else:
+        print '[KO] node.evaluate()'
+        print '\tOutput   : 0x%x' %(node.evaluate())
+        print '\tExpected : 0x88'
+        return -1
+    if node.getBitvectorSize() == CPUSIZE.BYTE_BIT:
+        count += 1
+    else:
+        print '[KO] node.getBitvectorSize()'
+        print '\tOutput   : %d' %(node.getBitvectorSize())
+        print '\tExpected : 8'
+        return -1
+
+    return count
+
+
 units_testing = [
     ("Testing the arithmetic and logic AST interpreter", test_1),
     ("Testing the Register class", test_2),
@@ -3484,6 +3591,7 @@ units_testing = [
     ("Testing the symbolic engine backup", test_11),
     ("Testing known issues", test_12),
     ("Testing symbolic assignments", test_13),
+    ("Testing symbolic building", test_14),
 ]
 
 
@@ -3492,6 +3600,8 @@ if __name__ == '__main__':
     for n, f in units_testing:
         ret = f()
         if ret < 0:
+            print
+            print 'Error into \'%s\'' %(n)
             sys.exit(-1)
         else:
             count += ret
