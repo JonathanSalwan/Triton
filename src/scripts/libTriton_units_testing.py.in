@@ -3370,6 +3370,102 @@ def test_12():
     return count
 
 
+def test_13():
+    count = 0
+
+    setArchitecture(ARCH.X86_64)
+
+    expr1 = newSymbolicExpression(ast.bv(0x11, 8))
+    mem   = MemoryAccess(0x100, CPUSIZE.BYTE)
+    assignSymbolicExpressionToMemory(expr1, mem)
+    expr2 = getSymbolicExpressionFromId(getSymbolicMemoryId(0x100))
+
+    if expr1.getAst().evaluate() == expr2.getAst().evaluate():
+        count += 1
+    else:
+        print '[KO] assignSymbolicExpressionToMemory'
+        print '\tOutput   : 0x%x' %(expr2.getAst().evaluate())
+        print '\tExpected : 0x11'
+        return -1
+
+    expr1 = newSymbolicExpression(ast.bv(0x11223344, 32))
+    mem   = MemoryAccess(0x100, CPUSIZE.DWORD)
+    assignSymbolicExpressionToMemory(expr1, mem)
+    expr2 = getSymbolicExpressionFromId(getSymbolicMemoryId(0x100))
+    expr3 = getSymbolicExpressionFromId(getSymbolicMemoryId(0x101))
+    expr4 = getSymbolicExpressionFromId(getSymbolicMemoryId(0x102))
+    expr5 = getSymbolicExpressionFromId(getSymbolicMemoryId(0x103))
+
+    if expr2.getAst().evaluate() == 0x44:
+        count += 1
+    else:
+        print '[KO] expr2.getAst().evaluate()'
+        print '\tOutput   : 0x%x' %(expr2.getAst().evaluate())
+        print '\tExpected : 0x44'
+        return -1
+
+    if expr3.getAst().evaluate() == 0x33:
+        count += 1
+    else:
+        print '[KO] expr3.getAst().evaluate()'
+        print '\tOutput   : 0x%x' %(expr3.getAst().evaluate())
+        print '\tExpected : 0x33'
+        return -1
+
+    if expr4.getAst().evaluate() == 0x22:
+        count += 1
+    else:
+        print '[KO] expr4.getAst().evaluate()'
+        print '\tOutput   : 0x%x' %(expr4.getAst().evaluate())
+        print '\tExpected : 0x22'
+        return -1
+
+    if expr5.getAst().evaluate() == 0x11:
+        count += 1
+    else:
+        print '[KO] expr5.getAst().evaluate()'
+        print '\tOutput   : 0x%x' %(expr5.getAst().evaluate())
+        print '\tExpected : 0x11'
+        return -1
+
+    expr1 = newSymbolicExpression(ast.bv(0x11223344, 32))
+    mem   = MemoryAccess(0x100, CPUSIZE.DWORD)
+    assignSymbolicExpressionToMemory(expr1, mem)
+
+    if getSymbolicMemoryValue(mem) == 0x11223344:
+        count += 1
+    else:
+        print '[KO] getSymbolicMemoryValue(mem)'
+        print '\tOutput   : 0x%x' %(getSymbolicMemoryValue(mem))
+        print '\tExpected : 0x11223344'
+        return -1
+
+    setArchitecture(ARCH.X86_64)
+    expr1 = newSymbolicExpression(ast.bv(0x11223344, 64))
+    assignSymbolicExpressionToRegister(expr1, REG.RAX)
+
+    if getSymbolicRegisterValue(REG.RAX) == 0x11223344:
+        count += 1
+    else:
+        print '[KO] getSymbolicRegisterValue(REG.RAX)'
+        print '\tOutput   : 0x%x' %(getSymbolicRegisterValue(REG.RAX))
+        print '\tExpected : 0x11223344'
+        return -1
+
+    setArchitecture(ARCH.X86_64)
+    expr1 = newSymbolicExpression(ast.bv(0x11223344, 32))
+    try:
+        assignSymbolicExpressionToRegister(expr1, REG.RAX)
+        print '[KO] assignSymbolicExpressionToRegister(expr1, REG.RAX)'
+        print '\tOutput   : OK'
+        print '\tExpected : <exception>'
+        return -1
+    except:
+        count += 1
+
+    return count
+
+
 units_testing = [
     ("Testing the arithmetic and logic AST interpreter", test_1),
     ("Testing the Register class", test_2),
@@ -3387,6 +3483,7 @@ units_testing = [
     ("Testing the taint engine", test_10),
     ("Testing the symbolic engine backup", test_11),
     ("Testing known issues", test_12),
+    ("Testing symbolic assignments", test_13),
 ]
 
 
