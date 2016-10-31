@@ -347,6 +347,9 @@ Sets the targeted register as tainted or not.
 Calls all simplification callbacks recorded and returns the simplified node as \ref py_AstNode_page. If the `z3` flag is
 set to True, Triton will use z3 to simplify the given `node` before to call recorded callbacks.
 
+- **sliceExpressions(\ref py_SymbolicExpression_page expr)**<br>
+Slices expressions from a given one and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
+
 - <b>taintAssignmentMemoryImmediate(\ref py_MemoryAccess_page memDst)</b><br>
 Taints `memDst` with an assignment - `memDst` is untained.
 
@@ -2534,6 +2537,31 @@ namespace triton {
       }
 
 
+      static PyObject* triton_sliceExpressions(PyObject* self, PyObject* expr) {
+        PyObject* ret = nullptr;
+        std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*> exprs;
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "sliceExpressions(): Architecture is not defined.");
+
+        if (!PySymbolicExpression_Check(expr))
+          return PyErr_Format(PyExc_TypeError, "sliceExpressions(): Expects a SymbolicExpression as argument.");
+
+        try {
+          ret   = xPyDict_New();
+          exprs = triton::api.sliceExpressions(PySymbolicExpression_AsSymbolicExpression(expr));
+          for (auto it = exprs.begin(); it != exprs.end(); it++)
+            PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return ret;
+      }
+
+
       static PyObject* triton_taintAssignmentMemoryImmediate(PyObject* self, PyObject* mem) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -3047,6 +3075,7 @@ namespace triton {
         {"setTaintMemory",                      (PyCFunction)triton_setTaintMemory,                         METH_VARARGS,       ""},
         {"setTaintRegister",                    (PyCFunction)triton_setTaintRegister,                       METH_VARARGS,       ""},
         {"simplify",                            (PyCFunction)triton_simplify,                               METH_VARARGS,       ""},
+        {"sliceExpressions",                    (PyCFunction)triton_sliceExpressions,                       METH_O,             ""},
         {"taintAssignmentMemoryImmediate",      (PyCFunction)triton_taintAssignmentMemoryImmediate,         METH_O,             ""},
         {"taintAssignmentMemoryMemory",         (PyCFunction)triton_taintAssignmentMemoryMemory,            METH_VARARGS,       ""},
         {"taintAssignmentMemoryRegister",       (PyCFunction)triton_taintAssignmentMemoryRegister,          METH_VARARGS,       ""},

@@ -492,6 +492,9 @@ namespace triton {
         //! [**symbolic api**] - Returns the full AST from a symbolic expression id.
         triton::ast::AbstractNode* getFullAstFromId(triton::usize symExprId);
 
+        //! [**symbolic api**] - Slices all expressions from a given one.
+        std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*> sliceExpressions(triton::engines::symbolic::SymbolicExpression* expr);
+
         //! [**symbolic api**] - Returns the list of the tainted symbolic expressions.
         std::list<triton::engines::symbolic::SymbolicExpression*> getTaintedSymbolicExpressions(void) const;
 

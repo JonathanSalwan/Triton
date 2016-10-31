@@ -3565,6 +3565,10 @@ namespace triton {
 
     AbstractNode* newInstance(AbstractNode* node) {
       AbstractNode* newNode = nullptr;
+
+      if (node == nullptr)
+        return nullptr;
+
       switch (node->getKind()) {
         case ASSERT_NODE:               newNode = new AssertNode(*reinterpret_cast<AssertNode*>(node)); break;
         case BVADD_NODE:                newNode = new BvaddNode(*reinterpret_cast<BvaddNode*>(node)); break;
@@ -3618,8 +3622,10 @@ namespace triton {
         default:
           throw triton::exceptions::Ast("triton::ast::newInstance(): Invalid kind node.");
       }
+
       if (newNode == nullptr)
         throw triton::exceptions::Ast("triton::ast::newInstance(): No enough memory.");
+
       return newNode;
     }
 

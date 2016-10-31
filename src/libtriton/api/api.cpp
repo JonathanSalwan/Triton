@@ -999,6 +999,12 @@ namespace triton {
   }
 
 
+  std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*> API::sliceExpressions(triton::engines::symbolic::SymbolicExpression* expr) {
+    this->checkSymbolic();
+    return this->symbolic->sliceExpressions(expr);
+  }
+
+
   std::list<triton::engines::symbolic::SymbolicExpression*> API::getTaintedSymbolicExpressions(void) const {
     this->checkSymbolic();
     return this->symbolic->getTaintedSymbolicExpressions();

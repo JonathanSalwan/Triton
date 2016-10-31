@@ -106,6 +106,10 @@ namespace triton {
            */
           std::map<std::pair<triton::uint64, triton::uint32>, triton::ast::AbstractNode*> alignedMemoryReference;
 
+        private:
+          //! Slices all expressions from a given node.
+          void sliceExpressions(triton::ast::AbstractNode* node, std::map<triton::usize, SymbolicExpression*>& exprs);
+
         public:
 
           //! Symbolic register state.
@@ -218,6 +222,9 @@ namespace triton {
 
           //! Returns the full AST of a root node.
           triton::ast::AbstractNode* getFullAst(triton::ast::AbstractNode* node, std::set<triton::usize>& processed);
+
+          //! Slices all expressions from a given one.
+          std::map<triton::usize, SymbolicExpression*> sliceExpressions(SymbolicExpression* expr);
 
           //! Returns the list of the tainted symbolic expressions.
           std::list<SymbolicExpression*> getTaintedSymbolicExpressions(void) const;

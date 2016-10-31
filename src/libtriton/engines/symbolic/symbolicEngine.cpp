@@ -443,6 +443,38 @@ namespace triton {
       }
 
 
+      /* [private method] Slices all expressions from a given node */
+      void SymbolicEngine::sliceExpressions(triton::ast::AbstractNode* node, std::map<triton::usize, SymbolicExpression*>& exprs) {
+        std::vector<triton::ast::AbstractNode*>& childs = node->getChilds();
+
+        for (triton::uint32 index = 0; index < childs.size(); index++) {
+          if (childs[index]->getKind() == triton::ast::REFERENCE_NODE) {
+            triton::usize id = reinterpret_cast<triton::ast::ReferenceNode*>(childs[index])->getValue();
+            if (exprs.find(id) == exprs.end()) {
+              SymbolicExpression* expr = this->getSymbolicExpressionFromId(id);
+              exprs[id] = expr;
+              this->sliceExpressions(expr->getAst(), exprs);
+            }
+          }
+          this->sliceExpressions(childs[index], exprs);
+        }
+      }
+
+
+      /* Slices all expressions from a given one */
+      std::map<triton::usize, SymbolicExpression*> SymbolicEngine::sliceExpressions(SymbolicExpression* expr) {
+        std::map<triton::usize, SymbolicExpression*> exprs;
+
+        if (expr == nullptr)
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::sliceExpressions(): expr cannot be null.");
+
+        exprs[expr->getId()] = expr;
+        this->sliceExpressions(expr->getAst(), exprs);
+
+        return exprs;
+      }
+
+
       /* Returns a list which contains all tainted expressions */
       std::list<SymbolicExpression*> SymbolicEngine::getTaintedSymbolicExpressions(void) const {
         std::map<triton::usize, SymbolicExpression*>::const_iterator it;
