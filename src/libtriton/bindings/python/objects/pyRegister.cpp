@@ -60,6 +60,10 @@ ah:8 bv[15..8]
 
 >>> print hex(ah.getConcreteValue())
 0x18L
+
+>>> regId = 1
+>>> Register(regId)
+rax:64 bv[63..0]
 ~~~~~~~~~~~~~
 
 \section Register_py_api Python API - Methods of the Register class

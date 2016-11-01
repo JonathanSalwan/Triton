@@ -684,17 +684,13 @@ namespace triton {
 
 
       static PyObject* triton_Register(PyObject* self, PyObject* args) {
-        PyObject* concreteValue         = nullptr;
-        PyObject* regIn                 = nullptr;
-        triton::uint512 cv              = 0;
-        triton::arch::Register*  r;
+        PyObject* concreteValue = nullptr;
+        PyObject* regIn         = nullptr;
+        triton::uint512 cv      = 0;
+        triton::uint32 rid      = 0;
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &regIn, &concreteValue);
-
-        /* Check if the first arg is a Register */
-        if (regIn == nullptr || !PyRegister_Check(regIn))
-          return PyErr_Format(PyExc_TypeError, "Register(): Expects a Register as first argument.");
 
         /* Check if the second arg is a integer */
         if (concreteValue != nullptr && (!PyLong_Check(concreteValue) && !PyInt_Check(concreteValue)))
@@ -703,9 +699,20 @@ namespace triton {
         if (concreteValue != nullptr)
           cv = PyLong_AsUint512(concreteValue);
 
+        /* Check if the first arg is a Register */
+        if (regIn != nullptr && PyRegister_Check(regIn))
+          rid = PyRegister_AsRegister(regIn)->getId();
+
+        /* Check if the first arg is a Register */
+        else if (regIn != nullptr && (PyLong_Check(regIn) || PyInt_Check(regIn)))
+          rid = PyLong_AsUint32(regIn);
+
+        /* Invalid firt arg */
+        else
+          return PyErr_Format(PyExc_TypeError, "Register(): Expects a Register or an id register as first argument.");
+
         try {
-          r = PyRegister_AsRegister(regIn);
-          triton::arch::Register regOut(r->getId(), cv);
+          triton::arch::Register regOut(rid, cv);
           return PyRegister(regOut);
         }
         catch (const std::exception& e) {
