@@ -1458,6 +1458,11 @@ void check(void)
   asm("movhlps xmm6, xmm4");
   asm("movlhps xmm7, xmm5");
 
+  asm("movlpd xmm1, qword ptr [%0]" :: "r"(tab1));
+  asm("movlps xmm2, qword ptr [%0]" :: "r"(tab2));
+  asm("movhpd xmm3, qword ptr [%0]" :: "r"(tab3));
+  asm("movhps xmm4, qword ptr [%0]" :: "r"(tab4));
+
   asm("movddup xmm1, qword ptr [%0]" :: "r"(tab1));
   asm("movddup xmm2, xmm0");
   asm("movddup xmm3, xmm2");

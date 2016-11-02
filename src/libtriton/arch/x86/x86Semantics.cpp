@@ -5188,10 +5188,20 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
-          auto node = triton::ast::concat(
-                        triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2), /* Destination[127..64] = Source */
-                        triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op1)  /* Destination[63..0] unchanged */
-                      );
+          triton::ast::AbstractNode* node = nullptr;
+
+          /* xmm, m64 */
+          if (dst.getSize() == DQWORD_SIZE) {
+            node = triton::ast::concat(
+                     triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2), /* Destination[127..64] = Source */
+                     triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op1)  /* Destination[63..0] unchanged */
+                   );
+          }
+
+          /* m64, xmm */
+          else {
+            node = triton::ast::extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op2); /* Destination[63..00] = Source[127..64] */
+          }
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVHPD operation");
@@ -5213,10 +5223,20 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
-          auto node = triton::ast::concat(
-                        triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2), /* Destination[127..64] = Source */
-                        triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op1)  /* Destination[63..0] unchanged */
-                      );
+          triton::ast::AbstractNode* node = nullptr;
+
+          /* xmm, m64 */
+          if (dst.getSize() == DQWORD_SIZE) {
+            node = triton::ast::concat(
+                     triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2), /* Destination[127..64] = Source */
+                     triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op1)  /* Destination[63..0] unchanged */
+                   );
+          }
+
+          /* m64, xmm */
+          else {
+            node = triton::ast::extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op2); /* Destination[63..00] = Source[127..64] */
+          }
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVHPS operation");
@@ -5263,10 +5283,20 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
-          auto node = triton::ast::concat(
-                        triton::ast::extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op1), /* Destination[127..64] unchanged */
-                        triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2)                /* Destination[63..0] = Source */
-                      );
+          triton::ast::AbstractNode* node = nullptr;
+
+          /* xmm, m64 */
+          if (dst.getSize() == DQWORD_SIZE) {
+            node = triton::ast::concat(
+                     triton::ast::extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op1), /* Destination[127..64] unchanged */
+                     triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2)                /* Destination[63..0] = Source */
+                   );
+          }
+
+          /* m64, xmm */
+          else {
+            node = triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2); /* Destination = Source[63..00] */
+          }
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVLPD operation");
@@ -5288,10 +5318,20 @@ namespace triton {
           auto op2 = triton::api.buildSymbolicOperand(inst, src);
 
           /* Create the semantics */
-          auto node = triton::ast::concat(
-                        triton::ast::extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op1), /* Destination[127..64] unchanged */
-                        triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2)                /* Destination[63..0] = Source */
-                      );
+          triton::ast::AbstractNode* node = nullptr;
+
+          /* xmm, m64 */
+          if (dst.getSize() == DQWORD_SIZE) {
+            node = triton::ast::concat(
+                     triton::ast::extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op1), /* Destination[127..64] unchanged */
+                     triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2)                /* Destination[63..0] = Source */
+                   );
+          }
+
+          /* m64, xmm */
+          else {
+            node = triton::ast::extract((QWORD_SIZE_BIT - 1), 0, op2); /* Destination = Source[63..00] */
+          }
 
           /* Create symbolic expression */
           auto expr = triton::api.createSymbolicExpression(inst, node, dst, "MOVLPS operation");

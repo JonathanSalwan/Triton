@@ -3367,6 +3367,79 @@ def test_12():
         print '\tExpected : OK'
         return -1
 
+    setArchitecture(ARCH.X86_64)
+    try:
+        processing(Instruction("\x66\x0F\x17\x08")) # movhpd QWORD PTR [rax], xmm1
+        count += 1
+    except:
+        print '[KO] movhpd QWORD PTR [rax], xmm1'
+        print '\tOutput   : <exception>'
+        print '\tExpected : OK'
+        return -1
+
+    try:
+        processing(Instruction("\x66\x0F\x16\x08")) # movhpd xmm1, QWORD PTR [rax]
+        count += 1
+    except:
+        print '[KO] movhpd xmm1, QWORD PTR [rax]'
+        print '\tOutput   : <exception>'
+        print '\tExpected : OK'
+        return -1
+
+    try:
+        processing(Instruction("\x0F\x17\x08")) # movhps QWORD PTR [rax], xmm1
+        count += 1
+    except:
+        print '[KO] movhps QWORD PTR [rax], xmm1'
+        print '\tOutput   : <exception>'
+        print '\tExpected : OK'
+        return -1
+
+    try:
+        processing(Instruction("\x0F\x16\x08")) # movhps xmm1, QWORD PTR [rax]
+        count += 1
+    except:
+        print '[KO] movhps xmm1, QWORD PTR [rax]'
+        print '\tOutput   : <exception>'
+        print '\tExpected : OK'
+        return -1
+
+    try:
+        processing(Instruction("\x66\x0F\x13\x08")) # movlpd QWORD PTR [rax], xmm1
+        count += 1
+    except:
+        print '[KO] movlpd QWORD PTR [rax], xmm1'
+        print '\tOutput   : <exception>'
+        print '\tExpected : OK'
+        return -1
+
+    try:
+        processing(Instruction("\x66\x0F\x12\x08")) # movlpd xmm1, QWORD PTR [rax]
+        count += 1
+    except:
+        print '[KO] movlpd xmm1, QWORD PTR [rax]'
+        print '\tOutput   : <exception>'
+        print '\tExpected : OK'
+        return -1
+
+    try:
+        processing(Instruction("\x0F\x13\x08")) # movlps QWORD PTR [rax], xmm1
+        count += 1
+    except:
+        print '[KO] movlps QWORD PTR [rax], xmm1'
+        print '\tOutput   : <exception>'
+        print '\tExpected : OK'
+        return -1
+
+    try:
+        processing(Instruction("\x0F\x12\x08")) # movlps xmm1, QWORD PTR [rax]
+        count += 1
+    except:
+        print '[KO] movlps xmm1, QWORD PTR [rax]'
+        print '\tOutput   : <exception>'
+        print '\tExpected : OK'
+        return -1
+
     return count
 
 
