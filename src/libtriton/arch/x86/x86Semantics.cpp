@@ -52,6 +52,7 @@ CDQ                          |            | Convert dword (eax) to qword (edx:ea
 CDQE                         |            | Convert dword (eax) to qword (rax)
 CLC                          |            | Clear Carry Flag
 CLD                          |            | Clear Direction Flag
+CLFLUSH                      | sse2       | Flush Cache Line
 CLTS                         |            | Clear Task-Switched Flag in CR0
 CMC                          |            | Complement Carry Flag
 CMOVA                        |            | Move if not below
@@ -88,6 +89,8 @@ EXTRACTPS                    | sse4.1     | Extract Packed Single Precision Floa
 IDIV                         |            | Signed Divide
 IMUL                         |            | Signed Multiply
 INC                          |            | Increment by 1
+INVD                         |            | Invalidate Internal Caches
+INVLPG                       |            | Invalidate TLB Entry
 JA                           |            | Jump if not below (Jump if above)
 JAE                          |            | Jump if not below or equal (Jump if above or equal)
 JB                           |            | Jump if below
@@ -110,10 +113,12 @@ LDDQU                        | sse3       | Load Unaligned Integer 128 Bits
 LDMXCSR                      | sse1       | Load MXCSR Register
 LEA                          |            | Load Effective Address
 LEAVE                        |            | High Level Procedure Exit
+LFENCE                       | sse2       | Load Fence
 LODSB                        |            | Load byte at address
 LODSD                        |            | Load doubleword at address
 LODSQ                        |            | Load quadword at address
 LODSW                        |            | Load word at address
+MFENCE                       | sse2       | Memory Fence
 MOV                          |            | Move
 MOVABS                       |            | Move
 MOVAPD                       | sse2       | Move Aligned Packed Double-Precision Floating-Point Values
@@ -162,6 +167,7 @@ PADDQ                        | mmx/sse2   | Add packed quadword integers
 PADDW                        | mmx/sse2   | Add packed word integers
 PAND                         | mmx/sse2   | Logical AND
 PANDN                        | mmx/sse2   | Logical AND NOT
+PAUSE                        | sse2       | Spin Loop Hint
 PAVGB                        | sse1       | Average Packed Unsigned Byte Integers
 PAVGW                        | sse1       | Average Packed Unsigned Word Integers
 PCMPEQB                      | mmx/sse2   | Compare Packed Data for Equal (bytes)
@@ -260,6 +266,7 @@ SETNS                        |            | Set byte if not sign
 SETO                         |            | Set byte if overflow
 SETP                         |            | Set byte if parity
 SETS                         |            | Set byte if sign
+SFENCE                       | sse1       | Store Fence
 SHL                          |            | Shift Left
 SHR                          |            | Shift Right Unsigned
 STC                          |            | Set Carry Flag
@@ -283,6 +290,7 @@ VPOR                         | avx/avx2   | VEX Logical OR
 VPSHUFD                      | avx/avx2   | VEX Shuffle Packed Doublewords
 VPTEST                       | avx        | VEX Logical Compare
 VPXOR                        | avx/avx2   | VEX Logical XOR
+WBINVD                       |            | Write Back and Invalidate Cache
 XADD                         |            | Exchange and Add
 XCHG                         |            | Exchange Register/Memory with Register
 XOR                          |            | Logical Exclusive OR
@@ -321,6 +329,7 @@ namespace triton {
             case ID_INS_CDQE:           triton::arch::x86::semantics::cdqe_s(inst);         break;
             case ID_INS_CLC:            triton::arch::x86::semantics::clc_s(inst);          break;
             case ID_INS_CLD:            triton::arch::x86::semantics::cld_s(inst);          break;
+            case ID_INS_CLFLUSH:        triton::arch::x86::semantics::clflush_s(inst);      break;
             case ID_INS_CLTS:           triton::arch::x86::semantics::clts_s(inst);         break;
             case ID_INS_CMC:            triton::arch::x86::semantics::cmc_s(inst);          break;
             case ID_INS_CMOVA:          triton::arch::x86::semantics::cmova_s(inst);        break;
@@ -357,6 +366,8 @@ namespace triton {
             case ID_INS_IDIV:           triton::arch::x86::semantics::idiv_s(inst);         break;
             case ID_INS_IMUL:           triton::arch::x86::semantics::imul_s(inst);         break;
             case ID_INS_INC:            triton::arch::x86::semantics::inc_s(inst);          break;
+            case ID_INS_INVD:           triton::arch::x86::semantics::invd_s(inst);         break;
+            case ID_INS_INVLPG:         triton::arch::x86::semantics::invlpg_s(inst);       break;
             case ID_INS_JA:             triton::arch::x86::semantics::ja_s(inst);           break;
             case ID_INS_JAE:            triton::arch::x86::semantics::jae_s(inst);          break;
             case ID_INS_JB:             triton::arch::x86::semantics::jb_s(inst);           break;
@@ -379,10 +390,12 @@ namespace triton {
             case ID_INS_LDMXCSR:        triton::arch::x86::semantics::ldmxcsr_s(inst);      break;
             case ID_INS_LEA:            triton::arch::x86::semantics::lea_s(inst);          break;
             case ID_INS_LEAVE:          triton::arch::x86::semantics::leave_s(inst);        break;
+            case ID_INS_LFENCE:         triton::arch::x86::semantics::lfence_s(inst);       break;
             case ID_INS_LODSB:          triton::arch::x86::semantics::lodsb_s(inst);        break;
             case ID_INS_LODSD:          triton::arch::x86::semantics::lodsd_s(inst);        break;
             case ID_INS_LODSQ:          triton::arch::x86::semantics::lodsq_s(inst);        break;
             case ID_INS_LODSW:          triton::arch::x86::semantics::lodsw_s(inst);        break;
+            case ID_INS_MFENCE:         triton::arch::x86::semantics::mfence_s(inst);       break;
             case ID_INS_MOV:            triton::arch::x86::semantics::mov_s(inst);          break;
             case ID_INS_MOVABS:         triton::arch::x86::semantics::movabs_s(inst);       break;
             case ID_INS_MOVAPD:         triton::arch::x86::semantics::movapd_s(inst);       break;
@@ -431,6 +444,7 @@ namespace triton {
             case ID_INS_PADDW:          triton::arch::x86::semantics::paddw_s(inst);        break;
             case ID_INS_PAND:           triton::arch::x86::semantics::pand_s(inst);         break;
             case ID_INS_PANDN:          triton::arch::x86::semantics::pandn_s(inst);        break;
+            case ID_INS_PAUSE:          triton::arch::x86::semantics::pause_s(inst);        break;
             case ID_INS_PAVGB:          triton::arch::x86::semantics::pavgb_s(inst);        break;
             case ID_INS_PAVGW:          triton::arch::x86::semantics::pavgw_s(inst);        break;
             case ID_INS_PCMPEQB:        triton::arch::x86::semantics::pcmpeqb_s(inst);      break;
@@ -529,6 +543,7 @@ namespace triton {
             case ID_INS_SETO:           triton::arch::x86::semantics::seto_s(inst);         break;
             case ID_INS_SETP:           triton::arch::x86::semantics::setp_s(inst);         break;
             case ID_INS_SETS:           triton::arch::x86::semantics::sets_s(inst);         break;
+            case ID_INS_SFENCE:         triton::arch::x86::semantics::sfence_s(inst);       break;
             case ID_INS_SHL:            triton::arch::x86::semantics::shl_s(inst);          break;
             case ID_INS_SHR:            triton::arch::x86::semantics::shr_s(inst);          break;
             case ID_INS_STC:            triton::arch::x86::semantics::stc_s(inst);          break;
@@ -552,6 +567,7 @@ namespace triton {
             case ID_INS_VPTEST:         triton::arch::x86::semantics::vptest_s(inst);       break;
             case ID_INS_VPSHUFD:        triton::arch::x86::semantics::vpshufd_s(inst);      break;
             case ID_INS_VPXOR:          triton::arch::x86::semantics::vpxor_s(inst);        break;
+            case ID_INS_WBINVD:         triton::arch::x86::semantics::wbinvd_s(inst);       break;
             case ID_INS_XADD:           triton::arch::x86::semantics::xadd_s(inst);         break;
             case ID_INS_XCHG:           triton::arch::x86::semantics::xchg_s(inst);         break;
             case ID_INS_XOR:            triton::arch::x86::semantics::xor_s(inst);          break;
@@ -2538,6 +2554,12 @@ namespace triton {
         }
 
 
+        void clflush_s(triton::arch::Instruction& inst) {
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
         void clts_s(triton::arch::Instruction& inst) {
           auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_CR0);
 
@@ -4131,6 +4153,18 @@ namespace triton {
         }
 
 
+        void invd_s(triton::arch::Instruction& inst) {
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void invlpg_s(triton::arch::Instruction& inst) {
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
         void ja_s(triton::arch::Instruction& inst) {
           auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
           auto  cf      = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
@@ -4838,6 +4872,12 @@ namespace triton {
         }
 
 
+        void lfence_s(triton::arch::Instruction& inst) {
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
         void lodsb_s(triton::arch::Instruction& inst) {
           auto& dst    = inst.operands[0];
           auto& src    = inst.operands[1];
@@ -4961,6 +5001,12 @@ namespace triton {
           expr1->isTainted = triton::api.taintAssignment(dst, src);
           expr2->isTainted = triton::api.taintUnion(index, index);
 
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void mfence_s(triton::arch::Instruction& inst) {
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
         }
@@ -6333,6 +6379,12 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = triton::api.taintUnion(dst, src);
 
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void pause_s(triton::arch::Instruction& inst) {
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
         }
@@ -9935,6 +9987,12 @@ namespace triton {
         }
 
 
+        void sfence_s(triton::arch::Instruction& inst) {
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
         void shl_s(triton::arch::Instruction& inst) {
           auto& dst   = inst.operands[0];
           auto& src   = inst.operands[1];
@@ -10625,6 +10683,12 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = triton::api.taintAssignment(dst, src1) | triton::api.taintUnion(dst, src2);
 
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void wbinvd_s(triton::arch::Instruction& inst) {
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
         }

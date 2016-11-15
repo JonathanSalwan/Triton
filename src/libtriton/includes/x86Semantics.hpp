@@ -225,6 +225,9 @@ namespace triton {
       //! The CLD semantics.
       void cld_s(triton::arch::Instruction& inst);
 
+      //! The CLFLUSH semantics.
+      void clflush_s(triton::arch::Instruction& inst);
+
       //! The CLTS semantics.
       void clts_s(triton::arch::Instruction& inst);
 
@@ -333,6 +336,12 @@ namespace triton {
       //! The INC semantics.
       void inc_s(triton::arch::Instruction& inst);
 
+      //! The INVD semantics.
+      void invd_s(triton::arch::Instruction& inst);
+
+      //! The INVLPG semantics.
+      void invlpg_s(triton::arch::Instruction& inst);
+
       //! The JA semantics.
       void ja_s(triton::arch::Instruction& inst);
 
@@ -399,6 +408,9 @@ namespace triton {
       //! The LEAVE semantics.
       void leave_s(triton::arch::Instruction& inst);
 
+      //! The LFENCE semantics.
+      void lfence_s(triton::arch::Instruction& inst);
+
       //! The LODSB semantics.
       void lodsb_s(triton::arch::Instruction& inst);
 
@@ -410,6 +422,9 @@ namespace triton {
 
       //! The LODSW semantics.
       void lodsw_s(triton::arch::Instruction& inst);
+
+      //! The MFENCE semantics.
+      void mfence_s(triton::arch::Instruction& inst);
 
       //! The MOV semantics.
       void mov_s(triton::arch::Instruction& inst);
@@ -554,6 +569,9 @@ namespace triton {
 
       //! The PANDN semantics.
       void pandn_s(triton::arch::Instruction& inst);
+
+      //! The PAUSE semantics.
+      void pause_s(triton::arch::Instruction& inst);
 
       //! The PAVGB semantics.
       void pavgb_s(triton::arch::Instruction& inst);
@@ -831,6 +849,9 @@ namespace triton {
       //! The SETS semantics.
       void sets_s(triton::arch::Instruction& inst);
 
+      //! The SFENCE semantics.
+      void sfence_s(triton::arch::Instruction& inst);
+
       //! The SHL semantics.
       void shl_s(triton::arch::Instruction& inst);
 
@@ -899,6 +920,9 @@ namespace triton {
 
       //! The VPXOR semantics.
       void vpxor_s(triton::arch::Instruction& inst);
+
+      //! The WBINVD semantics.
+      void wbinvd_s(triton::arch::Instruction& inst);
 
       //! The XADD semantics.
       void xadd_s(triton::arch::Instruction& inst);
