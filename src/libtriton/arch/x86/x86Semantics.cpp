@@ -53,6 +53,7 @@ CDQE                         |            | Convert dword (eax) to qword (rax)
 CLC                          |            | Clear Carry Flag
 CLD                          |            | Clear Direction Flag
 CLFLUSH                      | sse2       | Flush Cache Line
+CLI                          |            | Clear Interrupt Flag
 CLTS                         |            | Clear Task-Switched Flag in CR0
 CMC                          |            | Complement Carry Flag
 CMOVA                        |            | Move if not below
@@ -271,6 +272,7 @@ SHL                          |            | Shift Left
 SHR                          |            | Shift Right Unsigned
 STC                          |            | Set Carry Flag
 STD                          |            | Set Direction Flag
+STI                          |            | Set Interrupt Flag
 STMXCSR                      | sse1       | Store MXCSR Register State
 STOSB                        |            | Store byte at address
 STOSD                        |            | Store doubleword at address
@@ -331,6 +333,7 @@ namespace triton {
             case ID_INS_CLD:            triton::arch::x86::semantics::cld_s(inst);          break;
             case ID_INS_CLFLUSH:        triton::arch::x86::semantics::clflush_s(inst);      break;
             case ID_INS_CLTS:           triton::arch::x86::semantics::clts_s(inst);         break;
+            case ID_INS_CLI:            triton::arch::x86::semantics::cli_s(inst);          break;
             case ID_INS_CMC:            triton::arch::x86::semantics::cmc_s(inst);          break;
             case ID_INS_CMOVA:          triton::arch::x86::semantics::cmova_s(inst);        break;
             case ID_INS_CMOVAE:         triton::arch::x86::semantics::cmovae_s(inst);       break;
@@ -548,6 +551,7 @@ namespace triton {
             case ID_INS_SHR:            triton::arch::x86::semantics::shr_s(inst);          break;
             case ID_INS_STC:            triton::arch::x86::semantics::stc_s(inst);          break;
             case ID_INS_STD:            triton::arch::x86::semantics::std_s(inst);          break;
+            case ID_INS_STI:            triton::arch::x86::semantics::sti_s(inst);          break;
             case ID_INS_STMXCSR:        triton::arch::x86::semantics::stmxcsr_s(inst);      break;
             case ID_INS_STOSB:          triton::arch::x86::semantics::stosb_s(inst);        break;
             case ID_INS_STOSD:          triton::arch::x86::semantics::stosd_s(inst);        break;
@@ -2586,6 +2590,13 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = triton::api.taintUnion(dst, dst);
 
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void cli_s(triton::arch::Instruction& inst) {
+          triton::arch::x86::semantics::clearFlag_s(inst, TRITON_X86_REG_IF, "Clears interrupt flag");
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
         }
@@ -10070,6 +10081,13 @@ namespace triton {
 
         void std_s(triton::arch::Instruction& inst) {
           triton::arch::x86::semantics::setFlag_s(inst, TRITON_X86_REG_DF, "Sets direction flag");
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void sti_s(triton::arch::Instruction& inst) {
+          triton::arch::x86::semantics::setFlag_s(inst, TRITON_X86_REG_IF, "Sets interrupt flag");
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
         }

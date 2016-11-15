@@ -231,6 +231,9 @@ namespace triton {
       //! The CLTS semantics.
       void clts_s(triton::arch::Instruction& inst);
 
+      //! The CLI semantics.
+      void cli_s(triton::arch::Instruction& inst);
+
       //! The CMC semantics.
       void cmc_s(triton::arch::Instruction& inst);
 
@@ -863,6 +866,9 @@ namespace triton {
 
       //! The STD semantics.
       void std_s(triton::arch::Instruction& inst);
+
+      //! The STI semantics.
+      void sti_s(triton::arch::Instruction& inst);
 
       //! The STMXCSR semantics.
       void stmxcsr_s(triton::arch::Instruction& inst);
