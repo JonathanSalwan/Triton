@@ -12,6 +12,7 @@
 #include <map>
 #include <string>
 
+#include "architecture.hpp"
 #include "ast.hpp"
 #include "astDictionaries.hpp"
 #include "callbacks.hpp"
@@ -107,6 +108,9 @@ namespace triton {
           std::map<std::pair<triton::uint64, triton::uint32>, triton::ast::AbstractNode*> alignedMemoryReference;
 
         private:
+          //! Architecture API
+          triton::arch::Architecture* arch;
+
           //! Callbacks API
           triton::callbacks::Callbacks* callbacks;
 
@@ -115,7 +119,7 @@ namespace triton {
 
         public:
           //! Constructor. If you use this class as backup or copy you should define the `isBackup` flag as true.
-          SymbolicEngine(triton::callbacks::Callbacks* callbacks=nullptr, bool isBackup=false);
+          SymbolicEngine(triton::arch::Architecture* arch, triton::callbacks::Callbacks* callbacks=nullptr, bool isBackup=false);
 
           //! Constructor by copy.
           SymbolicEngine(const SymbolicEngine& copy);

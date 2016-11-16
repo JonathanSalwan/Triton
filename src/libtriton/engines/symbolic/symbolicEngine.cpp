@@ -7,7 +7,6 @@
 
 #include <cstring>
 
-#include <api.hpp>
 #include <exceptions.hpp>
 #include <coreUtils.hpp>
 #include <symbolicEngine.hpp>
@@ -70,13 +69,15 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicEngine::SymbolicEngine(triton::callbacks::Callbacks* callbacks, bool isBackup)
+      SymbolicEngine::SymbolicEngine(triton::arch::Architecture* arch, triton::callbacks::Callbacks* callbacks, bool isBackup)
         : triton::engines::symbolic::SymbolicSimplification(callbacks) {
 
-        triton::api.checkArchitecture();
+        this->arch = arch;
+        if (this->arch == nullptr)
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::SymbolicEngine(): The architecture pointer must be valid.");
 
-        this->numberOfRegisters = triton::api.cpuNumberOfRegisters();
-        this->symbolicReg = new triton::usize[this->numberOfRegisters]();
+        this->numberOfRegisters = this->arch->numberOfRegisters();
+        this->symbolicReg       = new triton::usize[this->numberOfRegisters]();
 
         /* Init all symbolic registers/flags to UNSET (init state) */
         for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
@@ -91,8 +92,6 @@ namespace triton {
 
 
       void SymbolicEngine::copy(const SymbolicEngine& other) {
-        triton::api.checkArchitecture();
-
         this->numberOfRegisters = other.numberOfRegisters;
         this->symbolicReg = new triton::usize[this->numberOfRegisters]();
 
@@ -181,7 +180,7 @@ namespace triton {
        */
       void SymbolicEngine::concretizeRegister(const triton::arch::Register& reg) {
         triton::uint32 parentId = reg.getParent().getId();
-        if (!triton::api.isCpuRegisterValid(parentId))
+        if (!this->arch->isRegisterValid(parentId))
           return;
         this->symbolicReg[parentId] = triton::engines::symbolic::UNSET;
       }
@@ -214,7 +213,7 @@ namespace triton {
        */
       void SymbolicEngine::concretizeMemory(triton::uint64 addr) {
         this->memoryReference.erase(addr);
-        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
+        if (this->isOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
           this->removeAlignedMemory(addr, BYTE_SIZE);
       }
 
@@ -318,7 +317,7 @@ namespace triton {
       /* Returns the reg reference or UNSET */
       triton::usize SymbolicEngine::getSymbolicRegisterId(const triton::arch::Register& reg) const {
         triton::uint32 parentId = reg.getParent().getId();
-        if (!triton::api.isCpuRegisterValid(parentId))
+        if (!this->arch->isRegisterValid(parentId))
           return triton::engines::symbolic::UNSET;
         return this->symbolicReg[parentId];
       }
@@ -564,7 +563,7 @@ namespace triton {
         triton::usize memSymId          = triton::engines::symbolic::UNSET;
         triton::uint64 memAddr          = mem.getAddress();
         triton::uint32 symVarSize       = mem.getSize();
-        triton::uint512 cv              = mem.getConcreteValue() ? mem.getConcreteValue() : triton::api.getConcreteMemoryValue(mem);
+        triton::uint512 cv              = mem.getConcreteValue() ? mem.getConcreteValue() : this->arch->getConcreteMemoryValue(mem);
 
         memSymId = this->getSymbolicMemoryId(memAddr);
 
@@ -597,7 +596,7 @@ namespace triton {
 
           /* Add the new memory reference */
           this->addMemoryReference(memAddr+index, se->getId());
-          if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
+          if (this->isOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
             removeAlignedMemory(memAddr+index, BYTE_SIZE);
         }
 
@@ -611,9 +610,9 @@ namespace triton {
         triton::usize regSymId          = triton::engines::symbolic::UNSET;
         triton::uint32 parentId         = reg.getParent().getId();
         triton::uint32 symVarSize       = reg.getBitSize();
-        triton::uint512 cv              = reg.getConcreteValue() ? reg.getConcreteValue() : triton::api.getConcreteRegisterValue(reg);
+        triton::uint512 cv              = reg.getConcreteValue() ? reg.getConcreteValue() : this->arch->getConcreteRegisterValue(reg);
 
-        if (!triton::api.isCpuRegisterValid(parentId))
+        if (!this->arch->isRegisterValid(parentId))
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");
 
         regSymId = this->getSymbolicRegisterId(reg);
@@ -686,7 +685,7 @@ namespace triton {
         triton::uint32 size                       = mem.getSize();
         triton::usize symMem                      = triton::engines::symbolic::UNSET;
         triton::uint8 concreteValue[DQQWORD_SIZE] = {0};
-        triton::uint512 value                     = triton::api.getConcreteMemoryValue(mem);
+        triton::uint512 value                     = this->arch->getConcreteMemoryValue(mem);
 
         triton::utils::fromUintToBuffer(value, concreteValue);
 
@@ -694,7 +693,7 @@ namespace triton {
          * Symbolic optimization
          * If the memory access is aligned, don't split the memory.
          */
-        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY) && this->isAlignedMemory(address, size))
+        if (this->isOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY) && this->isAlignedMemory(address, size))
           return this->getAlignedMemory(address, size);
 
         /* Iterate on every memory cells to use their symbolic or concrete values */
@@ -755,7 +754,7 @@ namespace triton {
 
         /* Otherwise, use the concerte value */
         else
-          op = triton::ast::bv(triton::api.getConcreteRegisterValue(reg), bvSize);
+          op = triton::ast::bv(this->arch->getConcreteRegisterValue(reg), bvSize);
 
         return op;
       }
@@ -780,7 +779,7 @@ namespace triton {
         triton::uint32 writeSize = mem.getSize();
 
         /* Record the aligned memory for a symbolic optimization */
-        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
+        if (this->isOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
           this->addAlignedMemory(address, writeSize, node);
 
         /*
@@ -805,7 +804,7 @@ namespace triton {
           /* Synchronize the memory operand */
           mem.setConcreteValue(tmp->evaluate());
           /* Synchronize the concrete state */
-          triton::api.setConcreteMemoryValue(mem);
+          this->arch->setConcreteMemoryValue(mem);
           /* Define the memory store */
           inst.setStoreAccess(mem, tmp);
           return se;
@@ -818,7 +817,7 @@ namespace triton {
         mem.setConcreteValue(tmp->evaluate());
 
         /* Synchronize the concrete state */
-        triton::api.setConcreteMemoryValue(mem);
+        this->arch->setConcreteMemoryValue(mem);
 
         se  = this->newSymbolicExpression(tmp, triton::engines::symbolic::UNDEF, "Temporary concatenation reference - " + comment);
         se->setOriginMemory(triton::arch::MemoryAccess(address, mem.getSize(), tmp->evaluate()));
@@ -846,23 +845,23 @@ namespace triton {
         switch (regSize) {
           case BYTE_SIZE:
             if (reg.getLow() == 0) {
-              finalExpr = triton::ast::concat(triton::ast::extract((triton::api.cpuRegisterBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
+              finalExpr = triton::ast::concat(triton::ast::extract((this->arch->registerBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
             }
             else {
               finalExpr = triton::ast::concat(
-                            triton::ast::extract((triton::api.cpuRegisterBitSize() - 1), WORD_SIZE_BIT, origReg),
+                            triton::ast::extract((this->arch->registerBitSize() - 1), WORD_SIZE_BIT, origReg),
                             triton::ast::concat(node, triton::ast::extract((BYTE_SIZE_BIT - 1), 0, origReg))
                           );
             }
             break;
 
           case WORD_SIZE:
-            finalExpr = triton::ast::concat(triton::ast::extract((triton::api.cpuRegisterBitSize() - 1), WORD_SIZE_BIT, origReg), node);
+            finalExpr = triton::ast::concat(triton::ast::extract((this->arch->registerBitSize() - 1), WORD_SIZE_BIT, origReg), node);
             break;
 
           case DWORD_SIZE:
             /* In AMD64, if a reg32 is written, it clears the 32-bit MSB of the corresponding register (Thx Wisk!) */
-            if (triton::api.getArchitecture() == triton::arch::ARCH_X86_64) {
+            if (this->arch->getArchitecture() == triton::arch::ARCH_X86_64) {
               finalExpr = triton::ast::zx(DWORD_SIZE_BIT, node);
               break;
             }
@@ -932,7 +931,7 @@ namespace triton {
         this->symbolicReg[id] = se->getId();
 
         /* Synchronize the concrete state */
-        triton::api.setConcreteRegisterValue(reg);
+        this->arch->setConcreteRegisterValue(reg);
       }
 
 
@@ -947,7 +946,7 @@ namespace triton {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::assignSymbolicExpressionToMemory(): The size of the symbolic expression is not equal to the memory access.");
 
         /* Record the aligned memory for a symbolic optimization */
-        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
+        if (this->isOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
           this->addAlignedMemory(address, writeSize, node);
 
         /*
