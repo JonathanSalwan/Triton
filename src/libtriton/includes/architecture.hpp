@@ -11,6 +11,7 @@
 #include <set>
 #include <vector>
 
+#include "callbacks.hpp"
 #include "cpuInterface.hpp"
 #include "instruction.hpp"
 #include "memoryAccess.hpp"
@@ -45,6 +46,9 @@ namespace triton {
     /*! \class Architecture
      *  \brief The abstract architecture class. */
     class Architecture {
+      private:
+        //! Callbacks API
+        triton::callbacks::Callbacks* callbacks;
 
       protected:
         //! The kind of architecture.
@@ -54,6 +58,11 @@ namespace triton {
         triton::arch::CpuInterface* cpu;
 
       public:
+        //! Constructor.
+        Architecture(triton::callbacks::Callbacks* callbacks=nullptr);
+
+        //! Destructor.
+        ~Architecture();
 
         //! Returns true if the regId is a flag.
         /*!
@@ -179,12 +188,6 @@ namespace triton {
 
         //! Removes the range `[baseAddr:size]` from the internal memory representation. \sa isMemoryMapped().
         void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
-
-        //! Constructor.
-        Architecture();
-
-        //! Destructor.
-        ~Architecture();
     };
 
   /*! @} End of arch namespace */

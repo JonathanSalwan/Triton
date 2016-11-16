@@ -15,9 +15,10 @@
 namespace triton {
   namespace arch {
 
-    Architecture::Architecture() {
-      this->arch = triton::arch::ARCH_INVALID;
-      this->cpu  = nullptr;
+    Architecture::Architecture(triton::callbacks::Callbacks* callbacks) {
+      this->arch      = triton::arch::ARCH_INVALID;
+      this->callbacks = callbacks;
+      this->cpu       = nullptr;
     }
 
 
@@ -52,7 +53,7 @@ namespace triton {
           /* remove previous CPU instance (when setArchitecture() has been called twice) */
           delete this->cpu;
           /* init the new instance */
-          this->cpu = new triton::arch::x86::x8664Cpu();
+          this->cpu = new triton::arch::x86::x8664Cpu(this->callbacks);
           if (!this->cpu)
             throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();
@@ -62,7 +63,7 @@ namespace triton {
           /* remove previous CPU instance (when setArchitecture() has been called twice) */
           delete this->cpu;
           /* init the new instance */
-          this->cpu = new triton::arch::x86::x86Cpu();
+          this->cpu = new triton::arch::x86::x86Cpu(this->callbacks);
           if (!this->cpu)
             throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();

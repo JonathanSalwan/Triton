@@ -5,8 +5,6 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
-#include <callbacks.hpp>
 #include <exceptions.hpp>
 #include <symbolicSimplification.hpp>
 #include <tritonToZ3Ast.hpp>
@@ -166,7 +164,8 @@ namespace triton {
     namespace symbolic {
 
 
-      SymbolicSimplification::SymbolicSimplification() {
+      SymbolicSimplification::SymbolicSimplification(triton::callbacks::Callbacks* callbacks) {
+        this->callbacks = callbacks;
         this->z3Enabled = false;
       }
 
@@ -181,6 +180,7 @@ namespace triton {
 
 
       void SymbolicSimplification::copy(const SymbolicSimplification& other) {
+        this->callbacks = other.callbacks;
         this->z3Enabled = other.z3Enabled;
       }
 
@@ -213,7 +213,8 @@ namespace triton {
         }
 
         /* process recorded callback about symbolic simplifications */
-        node = triton::api.processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, node);
+        if (this->callbacks)
+          node = this->callbacks->processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, node);
 
         return node;
       }

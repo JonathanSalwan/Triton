@@ -14,6 +14,7 @@
 
 #include "ast.hpp"
 #include "astDictionaries.hpp"
+#include "callbacks.hpp"
 #include "memoryAccess.hpp"
 #include "pathManager.hpp"
 #include "register.hpp"
@@ -58,7 +59,6 @@ namespace triton {
           public triton::engines::symbolic::PathManager {
 
         protected:
-
           //! Defines if the engine is enable or disable.
           bool enableFlag;
 
@@ -107,10 +107,27 @@ namespace triton {
           std::map<std::pair<triton::uint64, triton::uint32>, triton::ast::AbstractNode*> alignedMemoryReference;
 
         private:
+          //! Callbacks API
+          triton::callbacks::Callbacks* callbacks;
+
           //! Slices all expressions from a given node.
           void sliceExpressions(triton::ast::AbstractNode* node, std::map<triton::usize, SymbolicExpression*>& exprs);
 
         public:
+          //! Constructor. If you use this class as backup or copy you should define the `isBackup` flag as true.
+          SymbolicEngine(triton::callbacks::Callbacks* callbacks=nullptr, bool isBackup=false);
+
+          //! Constructor by copy.
+          SymbolicEngine(const SymbolicEngine& copy);
+
+          //! Destructor.
+          ~SymbolicEngine();
+
+          //! Copies and initializes a SymbolicEngine.
+          void copy(const SymbolicEngine& other);
+
+          //! Copies a SymbolicEngine.
+          void operator=(const SymbolicEngine& other);
 
           //! Symbolic register state.
           triton::usize* symbolicReg;
@@ -276,21 +293,6 @@ namespace triton {
 
           //! Returns true if the register expression contains a symbolic variable.
           bool isRegisterSymbolized(const triton::arch::Register& reg) const;
-
-          //! Copies and initializes a SymbolicEngine.
-          void copy(const SymbolicEngine& other);
-
-          //! Copies a SymbolicEngine.
-          void operator=(const SymbolicEngine& other);
-
-          //! Constructor. If you use this class as backup or copy you should define the `isBackup` flag as true.
-          SymbolicEngine(bool isBackup=false);
-
-          //! Constructor by copy.
-          SymbolicEngine(const SymbolicEngine& copy);
-
-          //! Destructor.
-          ~SymbolicEngine();
       };
 
     /*! @} End of symbolic namespace */

@@ -13,6 +13,7 @@
 #include <tuple>
 #include <vector>
 
+#include "callbacks.hpp"
 #include "cpuInterface.hpp"
 #include "instruction.hpp"
 #include "memoryAccess.hpp"
@@ -47,9 +48,11 @@ namespace triton {
       //! \class x86Cpu
       /*! \brief This class is used to describe the x86 (32-bits) spec. */
       class x86Cpu : public CpuInterface {
+        private:
+          //! Callbacks API
+          triton::callbacks::Callbacks* callbacks;
 
         protected:
-
           /*! \brief map of address -> concrete value
            *
            * \description
@@ -175,7 +178,7 @@ namespace triton {
 
 
         public:
-          x86Cpu();
+          x86Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
           //! Constructor by copy.
           x86Cpu(const x86Cpu& other);
           ~x86Cpu();

@@ -70,7 +70,9 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicEngine::SymbolicEngine(bool isBackup) {
+      SymbolicEngine::SymbolicEngine(triton::callbacks::Callbacks* callbacks, bool isBackup)
+        : triton::engines::symbolic::SymbolicSimplification(callbacks) {
+
         triton::api.checkArchitecture();
 
         this->numberOfRegisters = triton::api.cpuNumberOfRegisters();
@@ -80,6 +82,7 @@ namespace triton {
         for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
           this->symbolicReg[i] = triton::engines::symbolic::UNSET;
 
+        this->callbacks       = callbacks;
         this->backupFlag      = isBackup;
         this->enableFlag      = true;
         this->uniqueSymExprId = 0;
@@ -100,6 +103,7 @@ namespace triton {
          * The backup flag cannot be spread. once a class is tagged as
          * backup, it always be a backup class.
          */
+        this->callbacks                   = other.callbacks;
         this->backupFlag                  = true;
         this->alignedMemoryReference      = other.alignedMemoryReference;
         this->enableFlag                  = other.enableFlag;

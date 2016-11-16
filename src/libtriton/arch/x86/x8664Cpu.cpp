@@ -7,9 +7,7 @@
 
 #include <cstring>
 
-#include <api.hpp>
 #include <architecture.hpp>
-#include <callbacks.hpp>
 #include <coreUtils.hpp>
 #include <cpuSize.hpp>
 #include <exceptions.hpp>
@@ -28,7 +26,8 @@ namespace triton {
   namespace arch {
     namespace x86 {
 
-      x8664Cpu::x8664Cpu() {
+      x8664Cpu::x8664Cpu(triton::callbacks::Callbacks* callbacks) {
+        this->callbacks = callbacks;
         this->clear();
       }
 
@@ -44,7 +43,9 @@ namespace triton {
 
 
       void x8664Cpu::copy(const x8664Cpu& other) {
-        this->memory = other.memory;
+        this->callbacks = other.callbacks;
+        this->memory    = other.memory;
+
         std::memcpy(this->rax,     other.rax,    sizeof(this->rax));
         std::memcpy(this->rbx,     other.rbx,    sizeof(this->rbx));
         std::memcpy(this->rcx,     other.rcx,    sizeof(this->rcx));
@@ -774,8 +775,8 @@ namespace triton {
         if (size == 0 || size > DQQWORD_SIZE)
           throw triton::exceptions::Cpu("x8664Cpu::getConcreteMemoryValue(): Invalid size memory.");
 
-        if (execCallbacks)
-          triton::api.processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, mem);
+        if (execCallbacks && this->callbacks)
+          this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, mem);
 
         for (triton::sint32 i = size-1; i >= 0; i--)
           ret = ((ret << BYTE_SIZE_BIT) | this->getConcreteMemoryValue(addr+i));
@@ -788,8 +789,8 @@ namespace triton {
         std::vector<triton::uint8> area;
 
         for (triton::usize index = 0; index < size; index++) {
-          if (execCallbacks)
-            triton::api.processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, MemoryAccess(baseAddr+index, BYTE_SIZE));
+          if (execCallbacks && this->callbacks)
+            this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, MemoryAccess(baseAddr+index, BYTE_SIZE));
           area.push_back(this->getConcreteMemoryValue(baseAddr+index));
         }
 
@@ -800,8 +801,8 @@ namespace triton {
       triton::uint512 x8664Cpu::getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks) const {
         triton::uint512 value = 0;
 
-        if (execCallbacks)
-          triton::api.processCallbacks(triton::callbacks::GET_CONCRETE_REGISTER_VALUE, reg);
+        if (execCallbacks && this->callbacks)
+          this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_REGISTER_VALUE, reg);
 
         switch (reg.getId()) {
           case triton::arch::x86::ID_REG_RAX: return (*((triton::uint64*)(this->rax)));
