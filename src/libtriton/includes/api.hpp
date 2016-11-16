@@ -41,6 +41,9 @@ namespace triton {
     class API {
 
       protected:
+        //! The Callbacks interface.
+        triton::callbacks::Callbacks callbacks;
+
         //! The architecture entry.
         triton::arch::Architecture arch;
 
@@ -61,9 +64,6 @@ namespace triton {
 
         //! The AST representation interface.
         triton::ast::representations::AstRepresentation* astRepresentation;
-
-        //! The Callbacks interface.
-        triton::callbacks::Callbacks callbacks;
 
       public:
         //! Constructor of the API.

@@ -11,6 +11,7 @@
 #include <list>
 
 #include "ast.hpp"
+#include "callbacks.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -41,6 +42,9 @@ namespace triton {
       //! \class SymbolicSimplification
       /*! \brief The symbolic simplification class */
       class SymbolicSimplification {
+        private:
+          //! Callbacks API
+          triton::callbacks::Callbacks* callbacks;
 
         protected:
           //! Flag to define if we can use z3 to simplify expressions. Default: false.
@@ -48,7 +52,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          SymbolicSimplification();
+          SymbolicSimplification(triton::callbacks::Callbacks* callbacks=nullptr);
 
           //! Constructor.
           SymbolicSimplification(const SymbolicSimplification& copy);
