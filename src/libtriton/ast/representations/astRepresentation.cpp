@@ -5,7 +5,6 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
 #include <astRepresentation.hpp>
 #include <exceptions.hpp>
 
@@ -14,6 +13,10 @@
 namespace triton {
   namespace ast {
     namespace representations {
+
+      /* External access to the AST representation API */
+      AstRepresentation astRepresentation = AstRepresentation();
+
 
       AstRepresentation::AstRepresentation() {
         /* Set the default representation */
