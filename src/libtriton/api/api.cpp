@@ -173,7 +173,7 @@ Note that only the version `71313` of Pin is supported.
 namespace triton {
 
   /* External access to the API */
-  API api = API();
+  triton::API api = triton::API();
 
 
   API::API() {
@@ -181,7 +181,6 @@ namespace triton {
     this->arch                = triton::arch::Architecture(&this->callbacks);
 
     this->astGarbageCollector = nullptr;
-    this->astRepresentation   = nullptr;
     this->solver              = nullptr;
     this->symbolic            = nullptr;
     this->symbolicBackup      = nullptr;
@@ -402,24 +401,18 @@ namespace triton {
     this->astGarbageCollector = new triton::ast::AstGarbageCollector();
     if (!this->astGarbageCollector)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
-
-    this->astRepresentation = new triton::ast::representations::AstRepresentation();
-    if (!this->astRepresentation)
-      throw triton::exceptions::API("API::initEngines(): No enough memory.");
   }
 
 
   void API::removeEngines(void) {
     if (this->isArchitectureValid()) {
       delete this->astGarbageCollector;
-      delete this->astRepresentation;
       delete this->solver;
       delete this->symbolic;
       delete this->symbolicBackup;
       delete this->taint;
 
       this->astGarbageCollector = nullptr;
-      this->astRepresentation   = nullptr;
       this->solver              = nullptr;
       this->symbolic            = nullptr;
       this->symbolicBackup      = nullptr;
@@ -516,27 +509,13 @@ namespace triton {
 
   /* AST representation API ========================================================================= */
 
-  void API::checkAstRepresentation(void) const {
-    if (!this->astRepresentation)
-      throw triton::exceptions::API("API::checkAstRepresentation(): AST representation interface is undefined.");
-  }
-
-
-  std::ostream& API::printAstRepresentation(std::ostream& stream, triton::ast::AbstractNode* node) {
-    this->checkAstRepresentation();
-    return this->astRepresentation->print(stream, node);
-  }
-
-
   triton::uint32 API::getAstRepresentationMode(void) const {
-    this->checkAstRepresentation();
-    return this->astRepresentation->getMode();
+    return triton::ast::representations::astRepresentation.getMode();
   }
 
 
   void API::setAstRepresentationMode(triton::uint32 mode) {
-    this->checkAstRepresentation();
-    this->astRepresentation->setMode(mode);
+    triton::ast::representations::astRepresentation.setMode(mode);
   }
 
 

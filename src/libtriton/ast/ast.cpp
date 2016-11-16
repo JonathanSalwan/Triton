@@ -9,6 +9,7 @@
 
 #include <api.hpp>
 #include <ast.hpp>
+#include <astRepresentation.hpp>
 #include <exceptions.hpp>
 #include <tritonToZ3Ast.hpp>
 #include <z3Result.hpp>
@@ -3059,7 +3060,7 @@ namespace triton {
 
     /* Representation dispatcher from an abstract node */
     std::ostream& operator<<(std::ostream& stream, AbstractNode* node) {
-      return triton::api.printAstRepresentation(stream, node);
+      return triton::ast::representations::astRepresentation.print(stream, node);
     }
 
 

@@ -62,9 +62,6 @@ namespace triton {
         //! The AST garbage collector interface.
         triton::ast::AstGarbageCollector* astGarbageCollector;
 
-        //! The AST representation interface.
-        triton::ast::representations::AstRepresentation* astRepresentation;
-
       public:
         //! Constructor of the API.
         API();
@@ -248,12 +245,6 @@ namespace triton {
 
 
         /* AST Representation API ======================================================================== */
-
-        //! [**AST representation api**] - Raises an exception if the AST representation interface is not initialized.
-        void checkAstRepresentation(void) const;
-
-        //! [**AST representation api**] - Display a node according to the AST representation mode.
-        std::ostream& printAstRepresentation(std::ostream& stream, triton::ast::AbstractNode* node);
 
         //! [**AST representation api**] - Returns the AST representation mode as triton::ast::representations::mode_e.
         triton::uint32 getAstRepresentationMode(void) const;
@@ -719,8 +710,8 @@ namespace triton {
         bool taintAssignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
     };
 
-    //! The API can be accessed as everywhere.
-    extern API api;
+    //! The API can be accessed everywhere (WIP: will be removed).
+    extern triton::API api;
 
 /*! @} End of triton namespace */
 };
