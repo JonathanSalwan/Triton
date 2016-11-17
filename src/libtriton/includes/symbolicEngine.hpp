@@ -54,10 +54,10 @@ namespace triton {
       //! \class SymbolicEngine
       /*! \brief The symbolic engine class. */
       class SymbolicEngine
-        : public triton::ast::AstDictionaries,
-          public triton::engines::symbolic::SymbolicOptimization,
-          public triton::engines::symbolic::SymbolicSimplification,
-          public triton::engines::symbolic::PathManager {
+        : public virtual triton::ast::AstDictionaries,
+          public virtual triton::engines::symbolic::SymbolicOptimization,
+          public virtual triton::engines::symbolic::SymbolicSimplification,
+          public virtual triton::engines::symbolic::PathManager {
 
         protected:
           //! Defines if the engine is enable or disable.
@@ -125,7 +125,7 @@ namespace triton {
           SymbolicEngine(const SymbolicEngine& copy);
 
           //! Destructor.
-          ~SymbolicEngine();
+          virtual ~SymbolicEngine();
 
           //! Copies and initializes a SymbolicEngine.
           void copy(const SymbolicEngine& other);

@@ -78,8 +78,8 @@ namespace triton {
           //! Constructor by copy.
           SymbolicVariable(const SymbolicVariable &copy);
 
-          //! Destructore.
-          ~SymbolicVariable();
+          //! Destructor.
+          virtual ~SymbolicVariable();
 
           //! Returns the symbolic variable kind. \sa triton::engines::symbolic::symkind_e.
           symkind_e getKind(void) const;

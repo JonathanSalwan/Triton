@@ -56,7 +56,7 @@ namespace triton {
         Z3ToTritonAst(const Z3ToTritonAst& copy);
 
         //! Destructor.
-        ~Z3ToTritonAst();
+        virtual ~Z3ToTritonAst();
 
         //! Sets the expression.
         void setExpr(z3::expr& expr);

@@ -18,7 +18,6 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-
       SymbolicOptimization::SymbolicOptimization() {
         this->enableOptimization(PC_TRACKING_SYMBOLIC, true); /* This optimization is enabled by default */
       }

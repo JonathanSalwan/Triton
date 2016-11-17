@@ -164,7 +164,7 @@ namespace triton {
           ElfHeader(const ElfHeader& copy);
 
           //! Destructor.
-          ~ElfHeader();
+          virtual ~ElfHeader();
 
           //! Copies an ElfHeader.
           void operator=(const ElfHeader& copy);

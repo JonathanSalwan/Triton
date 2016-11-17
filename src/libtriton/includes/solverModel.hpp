@@ -71,7 +71,7 @@ namespace triton {
           SolverModel(const SolverModel& other);
 
           //! Destructor.
-          ~SolverModel();
+          virtual ~SolverModel();
 
           //! Copies a SolverModel
           void operator=(const SolverModel& other);

@@ -122,7 +122,7 @@ namespace triton {
         Instruction(const Instruction& other);
 
         //! Destructor.
-        ~Instruction();
+        virtual ~Instruction();
 
         //! Copies an Instruction.
         void operator=(const Instruction& other);

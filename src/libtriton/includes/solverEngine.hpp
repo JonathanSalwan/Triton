@@ -55,7 +55,7 @@ namespace triton {
           SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
 
           //! Destructor.
-          ~SolverEngine();
+          virtual ~SolverEngine();
 
           //! Computes and returns a model from a symbolic constraint.
           /*! \brief map of symbolic variable id -> model

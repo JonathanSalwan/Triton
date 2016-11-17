@@ -254,7 +254,7 @@ namespace triton {
           TaintEngine(const TaintEngine& copy);
 
           //! Destructor.
-          ~TaintEngine();
+          virtual ~TaintEngine();
       };
 
     /*! @} End of taint namespace */

@@ -199,7 +199,7 @@ namespace triton {
         AstDictionaries(const AstDictionaries& copy);
 
         //! Destructor.
-        ~AstDictionaries();
+        virtual ~AstDictionaries();
 
         //! Copies a AstDictionaries.
         void copy(const AstDictionaries& other);

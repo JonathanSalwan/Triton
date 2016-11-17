@@ -51,7 +51,7 @@ namespace triton {
         Immediate(const Immediate& other);
 
         //! Destructor.
-        ~Immediate();
+        virtual ~Immediate();
 
         //! Returns the value of the operand.
         triton::uint64 getValue(void) const;

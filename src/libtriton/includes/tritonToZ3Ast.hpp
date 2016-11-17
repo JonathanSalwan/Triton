@@ -52,7 +52,7 @@ namespace triton {
         TritonToZ3Ast(bool eval=true);
 
         //! Destructor.
-        ~TritonToZ3Ast();
+        virtual ~TritonToZ3Ast();
 
         //! Evaluates a Triton AST.
         virtual Z3Result& eval(triton::ast::AbstractNode& e);

@@ -62,7 +62,7 @@ namespace triton {
           AstRepresentation();
 
           //! Destructor.
-          ~AstRepresentation();
+          virtual ~AstRepresentation();
 
           //! Returns the representation mode.
           triton::uint32 getMode(void) const;

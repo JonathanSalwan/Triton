@@ -181,7 +181,7 @@ namespace triton {
           x86Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
           //! Constructor by copy.
           x86Cpu(const x86Cpu& other);
-          ~x86Cpu();
+          virtual ~x86Cpu();
 
           //! Copies a x86Cpu class.
           void copy(const x86Cpu& other);

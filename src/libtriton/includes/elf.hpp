@@ -131,7 +131,7 @@ namespace triton {
           Elf(const std::string& path);
 
           //! Destructor.
-          ~Elf();
+          virtual ~Elf();
 
           //! Returns the raw binary.
           const triton::uint8* getRaw(void) const;

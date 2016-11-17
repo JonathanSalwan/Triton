@@ -70,7 +70,7 @@ namespace triton {
         AbstractBinary(const std::string& path);
 
         //! Destructor.
-        ~AbstractBinary();
+        virtual ~AbstractBinary();
 
         //! Returns the binary format.
         triton::format::binary_e getFormat(void) const;

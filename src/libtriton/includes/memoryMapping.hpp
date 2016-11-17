@@ -51,7 +51,7 @@ namespace triton {
         MemoryMapping(const MemoryMapping& copy);
 
         //! Destructor.
-        ~MemoryMapping();
+        virtual ~MemoryMapping();
 
         //! Copies a MemoryMapping class.
         void operator=(const MemoryMapping& copy);

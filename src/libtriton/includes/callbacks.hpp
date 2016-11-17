@@ -102,7 +102,7 @@ namespace triton {
         Callbacks(const Callbacks& copy);
 
         //! Destructor.
-        ~Callbacks();
+        virtual ~Callbacks();
 
         //! Copies a Callbacks class
         void operator=(const Callbacks& copy);

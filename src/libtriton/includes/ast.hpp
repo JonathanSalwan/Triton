@@ -135,7 +135,7 @@ namespace triton {
       public:
         AssertNode(AbstractNode* expr);
         AssertNode(const AssertNode& copy);
-        ~AssertNode();
+        virtual ~AssertNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -147,7 +147,7 @@ namespace triton {
       public:
         BvaddNode(AbstractNode* expr1, AbstractNode* expr2);
         BvaddNode(const BvaddNode& copy);
-        ~BvaddNode();
+        virtual ~BvaddNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -159,7 +159,7 @@ namespace triton {
       public:
         BvandNode(AbstractNode* expr1, AbstractNode* expr2);
         BvandNode(const BvandNode& copy);
-        ~BvandNode();
+        virtual ~BvandNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -171,7 +171,7 @@ namespace triton {
       public:
         BvashrNode(AbstractNode* expr1, AbstractNode* expr2);
         BvashrNode(const BvashrNode& copy);
-        ~BvashrNode();
+        virtual ~BvashrNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -183,7 +183,7 @@ namespace triton {
       public:
         BvdeclNode(triton::uint32 size);
         BvdeclNode(const BvdeclNode& copy);
-        ~BvdeclNode();
+        virtual ~BvdeclNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -195,7 +195,7 @@ namespace triton {
       public:
         BvlshrNode(AbstractNode* expr1, AbstractNode* expr2);
         BvlshrNode(const BvlshrNode& copy);
-        ~BvlshrNode();
+        virtual ~BvlshrNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -207,7 +207,7 @@ namespace triton {
       public:
         BvmulNode(AbstractNode* expr1, AbstractNode* expr2);
         BvmulNode(const BvmulNode& copy);
-        ~BvmulNode();
+        virtual ~BvmulNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -219,7 +219,7 @@ namespace triton {
       public:
         BvnandNode(AbstractNode* expr1, AbstractNode* expr2);
         BvnandNode(const BvnandNode& copy);
-        ~BvnandNode();
+        virtual ~BvnandNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -231,7 +231,7 @@ namespace triton {
       public:
         BvnegNode(AbstractNode* expr);
         BvnegNode(const BvnegNode& copy);
-        ~BvnegNode();
+        virtual ~BvnegNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -243,7 +243,7 @@ namespace triton {
       public:
         BvnorNode(AbstractNode* expr1, AbstractNode* expr2);
         BvnorNode(const BvnorNode& copy);
-        ~BvnorNode();
+        virtual ~BvnorNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -255,7 +255,7 @@ namespace triton {
       public:
         BvnotNode(AbstractNode* expr1);
         BvnotNode(const BvnotNode& copy);
-        ~BvnotNode();
+        virtual ~BvnotNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -267,7 +267,7 @@ namespace triton {
       public:
         BvorNode(AbstractNode* expr1, AbstractNode* expr2);
         BvorNode(const BvorNode& copy);
-        ~BvorNode();
+        virtual ~BvorNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -280,7 +280,7 @@ namespace triton {
         BvrolNode(triton::uint32 rot, AbstractNode* expr);
         BvrolNode(AbstractNode* rot, AbstractNode* expr);
         BvrolNode(const BvrolNode& copy);
-        ~BvrolNode();
+        virtual ~BvrolNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -293,7 +293,7 @@ namespace triton {
         BvrorNode(triton::uint32 rot, AbstractNode* expr);
         BvrorNode(AbstractNode* rot, AbstractNode* expr);
         BvrorNode(const BvrorNode& copy);
-        ~BvrorNode();
+        virtual ~BvrorNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -305,7 +305,7 @@ namespace triton {
       public:
         BvsdivNode(AbstractNode* expr1, AbstractNode* expr2);
         BvsdivNode(const BvsdivNode& copy);
-        ~BvsdivNode();
+        virtual ~BvsdivNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -317,7 +317,7 @@ namespace triton {
       public:
         BvsgeNode(AbstractNode* expr1, AbstractNode* expr2);
         BvsgeNode(const BvsgeNode& copy);
-        ~BvsgeNode();
+        virtual ~BvsgeNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -329,7 +329,7 @@ namespace triton {
       public:
         BvsgtNode(AbstractNode* expr1, AbstractNode* expr2);
         BvsgtNode(const BvsgtNode& copy);
-        ~BvsgtNode();
+        virtual ~BvsgtNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -341,7 +341,7 @@ namespace triton {
       public:
         BvshlNode(AbstractNode* expr1, AbstractNode* expr2);
         BvshlNode(const BvshlNode& copy);
-        ~BvshlNode();
+        virtual ~BvshlNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -353,7 +353,7 @@ namespace triton {
       public:
         BvsleNode(AbstractNode* expr1, AbstractNode* expr2);
         BvsleNode(const BvsleNode& copy);
-        ~BvsleNode();
+        virtual ~BvsleNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -365,7 +365,7 @@ namespace triton {
       public:
         BvsltNode(AbstractNode* expr1, AbstractNode* expr2);
         BvsltNode(const BvsltNode& copy);
-        ~BvsltNode();
+        virtual ~BvsltNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -377,7 +377,7 @@ namespace triton {
       public:
         BvsmodNode(AbstractNode* expr1, AbstractNode* expr2);
         BvsmodNode(const BvsmodNode& copy);
-        ~BvsmodNode();
+        virtual ~BvsmodNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -389,7 +389,7 @@ namespace triton {
       public:
         BvsremNode(AbstractNode* expr1, AbstractNode* expr2);
         BvsremNode(const BvsremNode& copy);
-        ~BvsremNode();
+        virtual ~BvsremNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -401,7 +401,7 @@ namespace triton {
       public:
         BvsubNode(AbstractNode* expr1, AbstractNode* expr2);
         BvsubNode(const BvsubNode& copy);
-        ~BvsubNode();
+        virtual ~BvsubNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -413,7 +413,7 @@ namespace triton {
       public:
         BvudivNode(AbstractNode* expr1, AbstractNode* expr2);
         BvudivNode(const BvudivNode& copy);
-        ~BvudivNode();
+        virtual ~BvudivNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -425,7 +425,7 @@ namespace triton {
       public:
         BvugeNode(AbstractNode* expr1, AbstractNode* expr2);
         BvugeNode(const BvugeNode& copy);
-        ~BvugeNode();
+        virtual ~BvugeNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -437,7 +437,7 @@ namespace triton {
       public:
         BvugtNode(AbstractNode* expr1, AbstractNode* expr2);
         BvugtNode(const BvugtNode& copy);
-        ~BvugtNode();
+        virtual ~BvugtNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -449,7 +449,7 @@ namespace triton {
       public:
         BvuleNode(AbstractNode* expr1, AbstractNode* expr2);
         BvuleNode(const BvuleNode& copy);
-        ~BvuleNode();
+        virtual ~BvuleNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -461,7 +461,7 @@ namespace triton {
       public:
         BvultNode(AbstractNode* expr1, AbstractNode* expr2);
         BvultNode(const BvultNode& copy);
-        ~BvultNode();
+        virtual ~BvultNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -473,7 +473,7 @@ namespace triton {
       public:
         BvuremNode(AbstractNode* expr1, AbstractNode* expr2);
         BvuremNode(const BvuremNode& copy);
-        ~BvuremNode();
+        virtual ~BvuremNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -485,7 +485,7 @@ namespace triton {
       public:
         BvxnorNode(AbstractNode* expr1, AbstractNode* expr2);
         BvxnorNode(const BvxnorNode& copy);
-        ~BvxnorNode();
+        virtual ~BvxnorNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -497,7 +497,7 @@ namespace triton {
       public:
         BvxorNode(AbstractNode* expr1, AbstractNode* expr2);
         BvxorNode(const BvxorNode& copy);
-        ~BvxorNode();
+        virtual ~BvxorNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -509,7 +509,7 @@ namespace triton {
       public:
         BvNode(triton::uint512 value, triton::uint32 size);
         BvNode(const BvNode& copy);
-        ~BvNode();
+        virtual ~BvNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -521,7 +521,7 @@ namespace triton {
       public:
         CompoundNode(std::vector<AbstractNode*> exprs);
         CompoundNode(const CompoundNode& copy);
-        ~CompoundNode();
+        virtual ~CompoundNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -535,7 +535,7 @@ namespace triton {
         ConcatNode(std::vector<AbstractNode* > exprs);
         ConcatNode(std::list<AbstractNode* > exprs);
         ConcatNode(const ConcatNode& copy);
-        ~ConcatNode();
+        virtual ~ConcatNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -550,7 +550,7 @@ namespace triton {
       public:
         DecimalNode(triton::uint512 value);
         DecimalNode(const DecimalNode& copy);
-        ~DecimalNode();
+        virtual ~DecimalNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -564,7 +564,7 @@ namespace triton {
       public:
         DeclareFunctionNode(std::string name, AbstractNode* bvDecl);
         DeclareFunctionNode(const DeclareFunctionNode& copy);
-        ~DeclareFunctionNode();
+        virtual ~DeclareFunctionNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -576,7 +576,7 @@ namespace triton {
       public:
         DistinctNode(AbstractNode* expr1, AbstractNode* expr2);
         DistinctNode(const DistinctNode& copy);
-        ~DistinctNode();
+        virtual ~DistinctNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -588,7 +588,7 @@ namespace triton {
       public:
         EqualNode(AbstractNode* expr1, AbstractNode* expr2);
         EqualNode(const EqualNode& copy);
-        ~EqualNode();
+        virtual ~EqualNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -600,7 +600,7 @@ namespace triton {
       public:
         ExtractNode(triton::uint32 high, triton::uint32 low, AbstractNode* expr);
         ExtractNode(const ExtractNode& copy);
-        ~ExtractNode();
+        virtual ~ExtractNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -612,7 +612,7 @@ namespace triton {
       public:
         IteNode(AbstractNode* ifExpr, AbstractNode* thenExpr, AbstractNode* elseExpr);
         IteNode(const IteNode& copy);
-        ~IteNode();
+        virtual ~IteNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -624,7 +624,7 @@ namespace triton {
       public:
         LandNode(AbstractNode* expr1, AbstractNode* expr2);
         LandNode(const LandNode& copy);
-        ~LandNode();
+        virtual ~LandNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -636,7 +636,7 @@ namespace triton {
       public:
         LetNode(std::string alias, AbstractNode* expr2, AbstractNode* expr3);
         LetNode(const LetNode& copy);
-        ~LetNode();
+        virtual ~LetNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -648,7 +648,7 @@ namespace triton {
       public:
         LnotNode(AbstractNode* expr);
         LnotNode(const LnotNode& copy);
-        ~LnotNode();
+        virtual ~LnotNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -660,7 +660,7 @@ namespace triton {
       public:
         LorNode(AbstractNode* expr1, AbstractNode* expr2);
         LorNode(const LorNode& copy);
-        ~LorNode();
+        virtual ~LorNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -675,7 +675,7 @@ namespace triton {
       public:
         ReferenceNode(triton::usize value);
         ReferenceNode(const ReferenceNode& copy);
-        ~ReferenceNode();
+        virtual ~ReferenceNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -692,7 +692,7 @@ namespace triton {
       public:
         StringNode(std::string value);
         StringNode(const StringNode& copy);
-        ~StringNode();
+        virtual ~StringNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -706,7 +706,7 @@ namespace triton {
       public:
         SxNode(triton::uint32 sizeExt, AbstractNode* expr);
         SxNode(const SxNode& copy);
-        ~SxNode();
+        virtual ~SxNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -721,7 +721,7 @@ namespace triton {
       public:
         VariableNode(triton::engines::symbolic::SymbolicVariable& symVar);
         VariableNode(const VariableNode& copy);
-        ~VariableNode();
+        virtual ~VariableNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
@@ -735,7 +735,7 @@ namespace triton {
       public:
         ZxNode(triton::uint32 sizeExt, AbstractNode* expr);
         ZxNode(const ZxNode& copy);
-        ~ZxNode();
+        virtual ~ZxNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);

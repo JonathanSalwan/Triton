@@ -62,7 +62,7 @@ namespace triton {
         Architecture(triton::callbacks::Callbacks* callbacks=nullptr);
 
         //! Destructor.
-        ~Architecture();
+        virtual ~Architecture();
 
         //! Returns true if the regId is a flag.
         /*!

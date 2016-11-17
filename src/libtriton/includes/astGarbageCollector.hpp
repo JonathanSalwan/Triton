@@ -48,7 +48,7 @@ namespace triton {
         AstGarbageCollector();
 
         //! Destructor.
-        ~AstGarbageCollector();
+        virtual ~AstGarbageCollector();
 
         //! Go through every allocated nodes and free them.
         void freeAllAstNodes(void);

@@ -113,7 +113,7 @@ namespace triton {
           ElfRelocationTable(const ElfRelocationTable& copy);
 
           //! Destructor.
-          ~ElfRelocationTable();
+          virtual ~ElfRelocationTable();
 
           //! Copies an ElfRelocationTable.
           void operator=(const ElfRelocationTable& copy);

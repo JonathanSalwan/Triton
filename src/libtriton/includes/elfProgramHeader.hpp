@@ -117,7 +117,7 @@ namespace triton {
           ElfProgramHeader(const ElfProgramHeader& copy);
 
           //! Destructor.
-          ~ElfProgramHeader();
+          virtual ~ElfProgramHeader();
 
           //! Copies an ElfProgramHeader.
           void operator=(const ElfProgramHeader& copy);

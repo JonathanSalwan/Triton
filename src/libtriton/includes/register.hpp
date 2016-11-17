@@ -71,7 +71,7 @@ namespace triton {
         Register(const Register& other);
 
         //! Destructor.
-        ~Register();
+        virtual ~Register();
 
         //! Returns the parent id of the register.
         Register getParent(void) const;

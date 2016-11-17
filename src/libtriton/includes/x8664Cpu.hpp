@@ -294,7 +294,7 @@ namespace triton {
           x8664Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
           //! Constructor by copy.
           x8664Cpu(const x8664Cpu& other);
-          ~x8664Cpu();
+          virtual ~x8664Cpu();
 
           //! Copies a x8664Cpu class.
           void copy(const x8664Cpu& other);

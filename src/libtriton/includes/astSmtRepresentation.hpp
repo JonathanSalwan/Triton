@@ -44,7 +44,7 @@ namespace triton {
           AstSmtRepresentation();
 
           //! Destructor.
-          ~AstSmtRepresentation();
+          virtual ~AstSmtRepresentation();
 
           //! Displays the node according to the representation mode.
           std::ostream& print(std::ostream& stream, triton::ast::AbstractNode* node);

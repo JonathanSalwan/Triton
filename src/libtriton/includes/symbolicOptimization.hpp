@@ -58,7 +58,7 @@ namespace triton {
           SymbolicOptimization(const SymbolicOptimization& copy);
 
           //! Destructor.
-          ~SymbolicOptimization();
+          virtual ~SymbolicOptimization();
 
           //! Copies a SymbolicOptimization.
           void copy(const SymbolicOptimization& other);
