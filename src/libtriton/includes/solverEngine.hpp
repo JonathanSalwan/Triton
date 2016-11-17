@@ -17,6 +17,7 @@
 
 #include "ast.hpp"
 #include "solverModel.hpp"
+#include "symbolicEngine.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -44,9 +45,18 @@ namespace triton {
 
       //! \class SolverEngine
       /*! \brief The solver engine class. */
-      class SolverEngine
-      {
+      class SolverEngine {
+        private:
+          //! Symbolic Engine API
+          triton::engines::symbolic::SymbolicEngine* symbolicEngine;
+
         public:
+          //! Constructor.
+          SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
+
+          //! Destructor.
+          ~SolverEngine();
+
           //! Computes and returns a model from a symbolic constraint.
           /*! \brief map of symbolic variable id -> model
            *
@@ -67,12 +77,6 @@ namespace triton {
 
           //! Evaluates an AST via Z3 and returns the symbolic value.
           triton::uint512 evaluateAstViaZ3(triton::ast::AbstractNode *node) const;
-
-          //! Constructor.
-          SolverEngine();
-
-          //! Destructor.
-          ~SolverEngine();
       };
 
     /*! @} End of solver namespace */

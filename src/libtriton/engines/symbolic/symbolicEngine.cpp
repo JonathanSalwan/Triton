@@ -446,6 +446,13 @@ namespace triton {
       }
 
 
+      /* Returns the full symbolic expression backtracked. */
+      triton::ast::AbstractNode* SymbolicEngine::getFullAst(triton::ast::AbstractNode* node) {
+        std::set<triton::usize> processed;
+        return this->getFullAst(node, processed);
+      }
+
+
       /* [private method] Slices all expressions from a given node */
       void SymbolicEngine::sliceExpressions(triton::ast::AbstractNode* node, std::map<triton::usize, SymbolicExpression*>& exprs) {
         std::vector<triton::ast::AbstractNode*>& childs = node->getChilds();

@@ -5,12 +5,12 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
 #include <ast.hpp>
+#include <astRepresentation.hpp>
 #include <exceptions.hpp>
+#include <solverEngine.hpp>
 #include <tritonToZ3Ast.hpp>
 #include <z3Result.hpp>
-#include <solverEngine.hpp>
 
 
 
@@ -105,7 +105,10 @@ namespace triton {
       }
 
 
-      SolverEngine::SolverEngine() {
+      SolverEngine::SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine) {
+        if (symbolicEngine == nullptr)
+          throw triton::exceptions::SolverEngine("SolverEngine::SolverEngine(): The symbolicEngine API cannot be null.");
+        this->symbolicEngine = symbolicEngine;
       }
 
 
@@ -114,26 +117,26 @@ namespace triton {
 
 
       std::list<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(triton::ast::AbstractNode *node, triton::uint32 limit) const {
-        std::list<std::map<triton::uint32, SolverModel>>  ret;
-        std::ostringstream                                formula;
-        z3::context                                       ctx;
-        z3::solver                                        solver(ctx);
-        triton::uint32                                    representationMode = triton::api.getAstRepresentationMode();
+        std::list<std::map<triton::uint32, SolverModel>> ret;
+        std::ostringstream formula;
+        z3::context ctx;
+        z3::solver solver(ctx);
+        triton::uint32 representationMode = triton::ast::representations::astRepresentation.getMode();
 
         if (node == nullptr)
           throw triton::exceptions::SolverEngine("SolverEngine::getModels(): node cannot be null.");
 
         /* Switch into the SMT mode */
-        triton::api.setAstRepresentationMode(triton::ast::representations::SMT_REPRESENTATION);
+        triton::ast::representations::astRepresentation.setMode(triton::ast::representations::SMT_REPRESENTATION);
 
         /* First, set the QF_AUFBV flag  */
         formula << "(set-logic QF_BV)";
 
         /* Then, delcare all symbolic variables */
-        formula << triton::api.getVariablesDeclaration();
+        formula << this->symbolicEngine->getVariablesDeclaration();
 
         /* And concat the user expression */
-        formula << triton::api.getFullAst(node);
+        formula << this->symbolicEngine->getFullAst(node);
 
         /* Create the context and AST */
         Z3_ast ast = Z3_parse_smtlib2_string(ctx, formula.str().c_str(), 0, 0, 0, 0, 0, 0);
@@ -159,8 +162,8 @@ namespace triton {
             triton::uint32 bvSize   = exp.get_sort().bv_size();
             std::string svalue      = Z3_get_numeral_string(ctx, exp);
 
-            triton::uint512         value{svalue};
-            SolverModel             trionModel{varName, value};
+            triton::uint512 value{svalue};
+            SolverModel trionModel{varName, value};
             smodel[trionModel.getId()] = trionModel;
 
             if (exp.get_sort().is_bv())
@@ -180,7 +183,7 @@ namespace triton {
         }
 
         /* Restore the representation mode */
-        triton::api.setAstRepresentationMode(representationMode);
+        triton::ast::representations::astRepresentation.setMode(representationMode);
 
         return ret;
       }

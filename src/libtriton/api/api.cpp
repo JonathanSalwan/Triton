@@ -394,7 +394,7 @@ namespace triton {
     if (!this->symbolicBackup)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->solver = new triton::engines::solver::SolverEngine();
+    this->solver = new triton::engines::solver::SolverEngine(this->symbolic);
     if (!this->solver)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
@@ -959,8 +959,7 @@ namespace triton {
 
   triton::ast::AbstractNode* API::getFullAst(triton::ast::AbstractNode* node) {
     this->checkSymbolic();
-    std::set<triton::usize> processed;
-    return this->symbolic->getFullAst(node, processed);
+    return this->symbolic->getFullAst(node);
   }
 
 
