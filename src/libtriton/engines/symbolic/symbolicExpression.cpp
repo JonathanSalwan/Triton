@@ -5,7 +5,6 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
 #include <exceptions.hpp>
 #include <astRepresentation.hpp>
 #include <symbolicExpression.hpp>
@@ -54,10 +53,10 @@ namespace triton {
 
 
       std::string SymbolicExpression::getFormattedId(void) const {
-        if (triton::api.getAstRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
+        if (triton::ast::representations::astRepresentation.getMode() == triton::ast::representations::SMT_REPRESENTATION)
           return "ref!" + std::to_string(this->id);
 
-        else if (triton::api.getAstRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION)
+        else if (triton::ast::representations::astRepresentation.getMode() == triton::ast::representations::PYTHON_REPRESENTATION)
           return "ref_" + std::to_string(this->id);
 
         else
@@ -69,10 +68,10 @@ namespace triton {
         if (this->getComment().empty())
           return "";
 
-        else if (triton::api.getAstRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
+        else if (triton::ast::representations::astRepresentation.getMode() == triton::ast::representations::SMT_REPRESENTATION)
           return "; " + this->getComment();
 
-        else if (triton::api.getAstRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION)
+        else if (triton::ast::representations::astRepresentation.getMode() == triton::ast::representations::PYTHON_REPRESENTATION)
           return "# " + this->getComment();
 
         else
