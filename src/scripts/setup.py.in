@@ -12,7 +12,7 @@ import shutil
 import platform
 
 package_name        = 'triton'
-version             = '0.3'
+version             = '0.4'
 package_description = '''
 Triton is a dynamic binary analysis (DBA) framework. It provides internal components like a
 Dynamic Symbolic Exuction (DSE) engine, a Taint Engine, AST Semantics representations of the x86 and
