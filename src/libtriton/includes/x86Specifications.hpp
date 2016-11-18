@@ -1164,9 +1164,11 @@ namespace triton {
         ID_INS_SETNO, //!< SETNO
         ID_INS_SETNP, //!< SETNP
         ID_INS_SETNS, //!< SETNS
+        ID_INS_SETNZ, //!< SETNZ
         ID_INS_SETO, //!< SETO
         ID_INS_SETP, //!< SETP
         ID_INS_SETS, //!< SETS
+        ID_INS_SETZ, //!< SETZ
         ID_INS_SFENCE, //!< SFENCE
         ID_INS_SGDT, //!< SGDT
         ID_INS_SHA1MSG1, //!< SHA1MSG1
