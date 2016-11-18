@@ -72,6 +72,7 @@ CMOVNS                       |            | Move if not sign
 CMOVO                        |            | Move if overflow
 CMOVP                        |            | Move if parity
 CMOVS                        |            | Move if sign
+CMOVZ                        |            | Move if zero
 CMP                          |            | Compare Two Operands
 CMPSB                        |            | Compare byte at address
 CMPSD                        |            | Compare doubleword at address
@@ -351,6 +352,7 @@ namespace triton {
             case ID_INS_CMOVO:          triton::arch::x86::semantics::cmovo_s(inst);        break;
             case ID_INS_CMOVP:          triton::arch::x86::semantics::cmovp_s(inst);        break;
             case ID_INS_CMOVS:          triton::arch::x86::semantics::cmovs_s(inst);        break;
+            case ID_INS_CMOVZ:          triton::arch::x86::semantics::cmovz_s(inst);        break;
             case ID_INS_CMP:            triton::arch::x86::semantics::cmp_s(inst);          break;
             case ID_INS_CMPSB:          triton::arch::x86::semantics::cmpsb_s(inst);        break;
             case ID_INS_CMPSD:          triton::arch::x86::semantics::cmpsd_s(inst);        break;
@@ -3100,6 +3102,36 @@ namespace triton {
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
         }
+
+
+        void cmovz_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+          auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, zf);
+
+          /* Create the semantics */
+          auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvtrue()), op2, op1);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVZ operation");
+
+          /* Spread taint and condition flag */
+          if (op3->evaluate().convert_to<bool>()) {
+            expr->isTainted = triton::api.taintAssignment(dst, src);
+            inst.setConditionTaken(true);
+          }
+          else
+            expr->isTainted = triton::api.taintUnion(dst, dst);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
 
 
         void cmp_s(triton::arch::Instruction& inst) {

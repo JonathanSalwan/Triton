@@ -625,6 +625,7 @@ namespace triton {
         ID_INS_CMOVP, //!< CMOVP
         ID_INS_FCMOVU, //!< FCMOVU
         ID_INS_CMOVS, //!< CMOVS
+        ID_INS_CMOVZ, //!< CMOVS
         ID_INS_CMP, //!< CMP
         ID_INS_CMPPD, //!< CMPPD
         ID_INS_CMPPS, //!< CMPPS

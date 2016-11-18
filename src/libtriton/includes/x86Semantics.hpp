@@ -285,6 +285,9 @@ namespace triton {
       //! The CMOVS semantics.
       void cmovs_s(triton::arch::Instruction& inst);
 
+      //! The CMOVZ semantics.
+      void cmovz_s(triton::arch::Instruction& inst);
+
       //! The CMP semantics.
       void cmp_s(triton::arch::Instruction& inst);
 
