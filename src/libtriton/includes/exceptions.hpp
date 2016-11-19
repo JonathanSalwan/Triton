@@ -359,6 +359,18 @@ namespace triton {
     };
 
 
+    /*! \class AstGarbageCollector
+     *  \brief The exception class used by all AST garbage collector. */
+    class AstGarbageCollector : public triton::exceptions::Ast {
+      public:
+        //! Constructor.
+        AstGarbageCollector(const char* message) : triton::exceptions::Ast(message) {};
+
+        //! Constructor.
+        AstGarbageCollector(const std::string& message) : triton::exceptions::Ast(message) {};
+    };
+
+
     /*! \class Bindings
      *  \brief The exception class used by bindings. */
     class Bindings : public triton::exceptions::Exception {

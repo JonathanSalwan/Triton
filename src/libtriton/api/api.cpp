@@ -398,7 +398,7 @@ namespace triton {
     if (!this->solver)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->astGarbageCollector = new triton::ast::AstGarbageCollector();
+    this->astGarbageCollector = new triton::ast::AstGarbageCollector(this->symbolic);
     if (!this->astGarbageCollector)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
   }

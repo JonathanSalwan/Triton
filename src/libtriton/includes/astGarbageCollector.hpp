@@ -12,7 +12,7 @@
 #include <string>
 
 #include "ast.hpp"
-#include "symbolicEnums.hpp"
+#include "symbolicEngine.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -35,6 +35,10 @@ namespace triton {
     //! \class AstGarbageCollector
     /*! \brief The AST garbage collector class */
     class AstGarbageCollector {
+      private:
+        //! Symbolic Engine API
+        triton::engines::symbolic::SymbolicEngine* symbolicEngine;
+
       protected:
         //! This container contains all allocated nodes.
         std::set<triton::ast::AbstractNode*> allocatedNodes;
@@ -42,10 +46,9 @@ namespace triton {
         //! This map maintains a link between symbolic variables and their nodes.
         std::map<std::string, triton::ast::AbstractNode*> variableNodes;
 
-
       public:
         //! Constructor.
-        AstGarbageCollector();
+        AstGarbageCollector(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
 
         //! Destructor.
         virtual ~AstGarbageCollector();
