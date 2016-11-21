@@ -22,6 +22,7 @@
 #include "symbolicEngine.hpp"
 #include "taintEngine.hpp"
 #include "tritonTypes.hpp"
+#include "z3Interface.hpp"
 
 #ifdef TRITON_PYTHON_BINDINGS
   #include "pythonBindings.hpp"
@@ -61,6 +62,10 @@ namespace triton {
 
         //! The AST garbage collector interface.
         triton::ast::AstGarbageCollector* astGarbageCollector;
+
+        //! The Z3 interface between Triton and Z3
+        triton::ast::Z3Interface* z3Interface;
+
 
       public:
         //! Constructor of the API.
@@ -399,9 +404,6 @@ namespace triton {
         //! [**symbolic api**] - Assigns a symbolic expression to a register.
         void assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, const triton::arch::Register& reg);
 
-        //! [**symbolic api**] - Browses AST Dictionaries if the optimization `AST_DICTIONARIES` is enabled.
-        triton::ast::AbstractNode* browseAstDictionaries(triton::ast::AbstractNode* node);
-
         //! [**symbolic api**] - Returns all stats about AST Dictionaries.
         std::map<std::string, triton::usize> getAstDictionariesStats(void);
 
@@ -432,17 +434,11 @@ namespace triton {
         //! [**symbolic api**] - Enables or disables the symbolic execution engine.
         void enableSymbolicEngine(bool flag);
 
-        //! [**symbolic api**] - Enabled, Triton will use the simplification passes of z3 before to call its recorded simplification passes.
-        void enableSymbolicZ3Simplification(bool flag);
-
         //! [**symbolic api**] - Enables or disables a symbolic optimization.
         void enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti, bool flag);
 
         //! [**symbolic api**] - Returns true if the symbolic execution engine is enabled.
         bool isSymbolicEngineEnabled(void) const;
-
-        //! [**symbolic api**] - Returns true if Triton can use the simplification passes of z3.
-        bool isSymbolicZ3SimplificationEnabled(void) const;
 
         //! [**symbolic api**] - Returns true if the symbolic expression ID exists.
         bool isSymbolicExpressionIdExists(triton::usize symExprId) const;
@@ -495,9 +491,6 @@ namespace triton {
         //! [**symbolic api**] - Returns all symbolic variables as a map of <SymVarId : SymVar>
         const std::map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& getSymbolicVariables(void) const;
 
-        //! [**symbolic api**] - Returns all variable declarations representation.
-        std::string getVariablesDeclaration(void) const;
-
 
 
         /* Solver engine API ============================================================================= */
@@ -523,8 +516,18 @@ namespace triton {
          */
         std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(triton::ast::AbstractNode *node, triton::uint32 limit) const;
 
-        //! [**solver api**] - Evaluates an AST via Z3 and returns the symbolic value.
-        triton::uint512 evaluateAstViaZ3(triton::ast::AbstractNode *node) const;
+
+
+        /* Z3 interface API ============================================================================== */
+
+        //! [**z3 api**] - Raises an exception if the z3 interface is not initialized.
+        void checkZ3Interface(void) const;
+
+        //! [**z3 api**] - Evaluates a Triton's AST via Z3 and returns a concrete value.
+        triton::uint512 evaluateAstViaZ3(triton::ast::AbstractNode* node) const;
+
+        //! [**z3 api**] - Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
+        triton::ast::AbstractNode* processZ3Simplification(triton::ast::AbstractNode* node) const;
 
 
 

@@ -200,16 +200,6 @@ namespace triton {
         return ret;
       }
 
-
-      triton::uint512 SolverEngine::evaluateAstViaZ3(triton::ast::AbstractNode *node) const {
-        if (node == nullptr)
-          throw triton::exceptions::SolverEngine("SolverEngine::evaluateAstViaZ3(): node cannot be null.");
-        triton::ast::TritonToZ3Ast z3ast{};
-        triton::ast::Z3Result result = z3ast.eval(*node);
-        triton::uint512 nbResult{result.getStringValue()};
-        return nbResult;
-      }
-
     };
   };
 };

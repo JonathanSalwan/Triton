@@ -152,9 +152,6 @@ Enables or disables the symbolic execution engine.
 - **enableSymbolicOptimization(\ref py_OPTIMIZATION_page opti, bool flag)**<br>
 Enables or disablrs a symbolic optimization.
 
-- **enableSymbolicZ3Simplification(bool flag)**<br>
-Enabled, Triton will use the simplification passes of z3 before to call its recorded simplification passes.
-
 - **enableTaintEngine(bool flag)**<br>
 Enables or disables the taint engine.
 
@@ -286,9 +283,6 @@ Returns true if the symbolic expression id exists.
 
 - **isSymbolicOptimizationEnabled(\ref py_OPTIMIZATION_page opti)**<br>
 Returns true if the symbolic optimization is enabled.
-
-- **isSymbolicZ3SimplificationEnabled(void)**<br>
-Returns true if Triton can use the simplification passes of z3.
 
 - **isTaintEngineEnabled(void)**<br>
 Returns true if the taint engine is enabled.
@@ -1309,26 +1303,6 @@ namespace triton {
       }
 
 
-      static PyObject* triton_enableSymbolicZ3Simplification(PyObject* self, PyObject* flag) {
-        /* Check if the architecture is definied */
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "enableSymbolicZ3Simplification(): Architecture is not defined.");
-
-        if (!PyBool_Check(flag))
-          return PyErr_Format(PyExc_TypeError, "enableSymbolicZ3Simplification(): Expects a boolean as argument.");
-
-        try {
-          triton::api.enableSymbolicZ3Simplification(PyLong_AsBool(flag));
-        }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        Py_INCREF(Py_None);
-        return Py_None;
-      }
-
-
       static PyObject* triton_enableTaintEngine(PyObject* self, PyObject* flag) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -2120,16 +2094,6 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "isSymbolicOptimizationEnabled(): Expects an OPTIMIZATION as argument.");
 
         if (triton::api.isSymbolicOptimizationEnabled(static_cast<enum triton::engines::symbolic::optimization_e>(PyLong_AsUint32(opti))) == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
-      }
-
-
-      static PyObject* triton_isSymbolicZ3SimplificationEnabled(PyObject* self, PyObject* noarg) {
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isSymbolicZ3SimplificationEnabled(): Architecture is not defined.");
-
-        if (triton::api.isSymbolicZ3SimplificationEnabled() == true)
           Py_RETURN_TRUE;
         Py_RETURN_FALSE;
       }
@@ -3025,7 +2989,6 @@ namespace triton {
         {"disassembly",                         (PyCFunction)triton_disassembly,                            METH_O,             ""},
         {"enableSymbolicEngine",                (PyCFunction)triton_enableSymbolicEngine,                   METH_O,             ""},
         {"enableSymbolicOptimization",          (PyCFunction)triton_enableSymbolicOptimization,             METH_VARARGS,       ""},
-        {"enableSymbolicZ3Simplification",      (PyCFunction)triton_enableSymbolicZ3Simplification,         METH_O,             ""},
         {"enableTaintEngine",                   (PyCFunction)triton_enableTaintEngine,                      METH_O,             ""},
         {"evaluateAstViaZ3",                    (PyCFunction)triton_evaluateAstViaZ3,                       METH_O,             ""},
         {"getAllRegisters",                     (PyCFunction)triton_getAllRegisters,                        METH_NOARGS,        ""},
@@ -3066,7 +3029,6 @@ namespace triton {
         {"isSymbolicEngineEnabled",             (PyCFunction)triton_isSymbolicEngineEnabled,                METH_NOARGS,        ""},
         {"isSymbolicExpressionIdExists",        (PyCFunction)triton_isSymbolicExpressionIdExists,           METH_O,             ""},
         {"isSymbolicOptimizationEnabled",       (PyCFunction)triton_isSymbolicOptimizationEnabled,          METH_O,             ""},
-        {"isSymbolicZ3SimplificationEnabled",   (PyCFunction)triton_isSymbolicZ3SimplificationEnabled,      METH_NOARGS,        ""},
         {"isTaintEngineEnabled",                (PyCFunction)triton_isTaintEngineEnabled,                   METH_NOARGS,        ""},
         {"newSymbolicExpression",               (PyCFunction)triton_newSymbolicExpression,                  METH_VARARGS,       ""},
         {"newSymbolicVariable",                 (PyCFunction)triton_newSymbolicVariable,                    METH_VARARGS,       ""},

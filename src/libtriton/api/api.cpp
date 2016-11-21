@@ -185,6 +185,7 @@ namespace triton {
     this->symbolic            = nullptr;
     this->symbolicBackup      = nullptr;
     this->taint               = nullptr;
+    this->z3Interface         = nullptr;
   }
 
 
@@ -401,6 +402,10 @@ namespace triton {
     this->astGarbageCollector = new triton::ast::AstGarbageCollector(this->symbolic);
     if (!this->astGarbageCollector)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
+
+    this->z3Interface = new triton::ast::Z3Interface(this->symbolic);
+    if (!this->z3Interface)
+      throw triton::exceptions::API("API::initEngines(): No enough memory.");
   }
 
 
@@ -411,12 +416,14 @@ namespace triton {
       delete this->symbolic;
       delete this->symbolicBackup;
       delete this->taint;
+      delete this->z3Interface;
 
       this->astGarbageCollector = nullptr;
       this->solver              = nullptr;
       this->symbolic            = nullptr;
       this->symbolicBackup      = nullptr;
       this->taint               = nullptr;
+      this->z3Interface         = nullptr;
     }
   }
 
@@ -591,7 +598,7 @@ namespace triton {
 
 
 
-  /* Symbolic Engine API ============================================================================ */
+  /* Symbolic engine API ============================================================================ */
 
   void API::checkSymbolic(void) const {
     if (!this->symbolic || !this->symbolicBackup)
@@ -807,12 +814,6 @@ namespace triton {
   }
 
 
-  triton::ast::AbstractNode* API::browseAstDictionaries(triton::ast::AbstractNode* node) {
-    this->checkSymbolic();
-    return this->symbolic->browseAstDictionaries(node);
-  }
-
-
   std::map<std::string, triton::usize> API::getAstDictionariesStats(void) {
     this->checkSymbolic();
     return this->symbolic->getAstDictionariesStats();
@@ -821,7 +822,10 @@ namespace triton {
 
   triton::ast::AbstractNode* API::processSimplification(triton::ast::AbstractNode* node, bool z3) const {
     this->checkSymbolic();
-    return this->symbolic->processSimplification(node, z3);
+    if (z3 == true)
+      node = this->processZ3Simplification(node);
+    node = this->symbolic->processSimplification(node);
+    return node;
   }
 
 
@@ -873,12 +877,6 @@ namespace triton {
   }
 
 
-  void API::enableSymbolicZ3Simplification(bool flag) {
-    this->checkSymbolic();
-    this->symbolic->enableZ3Simplification(flag);
-  }
-
-
   void API::enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti, bool flag) {
     this->checkSymbolic();
     this->symbolic->enableOptimization(opti, flag);
@@ -888,12 +886,6 @@ namespace triton {
   bool API::isSymbolicEngineEnabled(void) const {
     this->checkSymbolic();
     return this->symbolic->isEnabled();
-  }
-
-
-  bool API::isSymbolicZ3SimplificationEnabled(void) const {
-    this->checkSymbolic();
-    return this->symbolic->isZ3SimplificationEnabled();
   }
 
 
@@ -1001,14 +993,8 @@ namespace triton {
   }
 
 
-  std::string API::getVariablesDeclaration(void) const {
-    this->checkSymbolic();
-    return this->symbolic->getVariablesDeclaration();
-  }
 
-
-
-  /* Solver Engine API ============================================================================= */
+  /* Solver engine API ============================================================================= */
 
   void API::checkSolver(void) const {
     if (!this->solver)
@@ -1028,9 +1014,24 @@ namespace triton {
   }
 
 
-  triton::uint512 API::evaluateAstViaZ3(triton::ast::AbstractNode *node) const {
-    this->checkSolver();
-    return this->solver->evaluateAstViaZ3(node);
+
+  /* Z3 interface API ============================================================================== */
+
+  void API::checkZ3Interface(void) const {
+    if (!this->z3Interface)
+      throw triton::exceptions::API("API::checkZ3Interface(): Z3 interface is undefined.");
+  }
+
+
+  triton::uint512 API::evaluateAstViaZ3(triton::ast::AbstractNode* node) const {
+    this->checkZ3Interface();
+    return this->z3Interface->evaluate(node);
+  }
+
+
+  triton::ast::AbstractNode* API::processZ3Simplification(triton::ast::AbstractNode* node) const {
+    this->checkZ3Interface();
+    return this->z3Interface->simplify(node);
   }
 
 
