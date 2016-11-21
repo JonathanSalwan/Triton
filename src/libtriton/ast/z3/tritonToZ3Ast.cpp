@@ -5,11 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
 #include <cpuSize.hpp>
 #include <exceptions.hpp>
-#include <symbolicExpression.hpp>
-#include <symbolicVariable.hpp>
 #include <tritonToZ3Ast.hpp>
 
 
@@ -17,7 +14,11 @@
 namespace triton {
   namespace ast {
 
-    TritonToZ3Ast::TritonToZ3Ast(bool eval) {
+    TritonToZ3Ast::TritonToZ3Ast(triton::engines::symbolic::SymbolicEngine* symbolicEngine, bool eval) {
+      if (symbolicEngine == nullptr)
+        throw triton::exceptions::AstTranslations("TritonToZ3Ast::TritonToZ3Ast(): The symbolicEngine API cannot be null.");
+
+      this->symbolicEngine = symbolicEngine;
       this->isEval = eval;
     }
 
@@ -432,7 +433,7 @@ namespace triton {
 
 
     void TritonToZ3Ast::operator()(triton::ast::ReferenceNode& e) {
-      triton::engines::symbolic::SymbolicExpression* refNode = triton::api.getSymbolicExpressionFromId(e.getValue());
+      triton::engines::symbolic::SymbolicExpression* refNode = this->symbolicEngine->getSymbolicExpressionFromId(e.getValue());
       if (refNode == nullptr)
         throw triton::exceptions::AstTranslations("TritonToZ3Ast::ReferenceNode(): Reference node not found.");
       Z3Result op1 = this->eval(*(refNode->getAst()));
@@ -460,7 +461,7 @@ namespace triton {
 
     void TritonToZ3Ast::operator()(triton::ast::VariableNode& e) {
       std::string varName = e.getValue();
-      triton::engines::symbolic::SymbolicVariable* symVar = triton::api.getSymbolicVariableFromName(varName);
+      triton::engines::symbolic::SymbolicVariable* symVar = this->symbolicEngine->getSymbolicVariableFromName(varName);
 
       if (symVar == nullptr)
         throw triton::exceptions::AstTranslations("TritonToZ3Ast::VariableNode(): Can't get the symbolic variable (nullptr).");

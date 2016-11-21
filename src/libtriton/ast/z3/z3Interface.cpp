@@ -28,8 +28,8 @@ namespace triton {
 
 
     triton::ast::AbstractNode* Z3Interface::simplify(triton::ast::AbstractNode* node) const {
-      triton::ast::TritonToZ3Ast  z3Ast{false};
-      triton::ast::Z3ToTritonAst  tritonAst{};
+      triton::ast::TritonToZ3Ast  z3Ast{this->symbolicEngine, false};
+      triton::ast::Z3ToTritonAst  tritonAst{this->symbolicEngine};
       triton::ast::Z3Result       result = z3Ast.eval(*node);
 
       /* Simplify and convert back to Triton's AST */
@@ -45,7 +45,7 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::AstTranslations("Z3Interface::evaluate(): node cannot be null.");
 
-      triton::ast::TritonToZ3Ast z3ast{};
+      triton::ast::TritonToZ3Ast z3ast{this->symbolicEngine};
       triton::ast::Z3Result result = z3ast.eval(*node);
       triton::uint512 nbResult{result.getStringValue()};
 
