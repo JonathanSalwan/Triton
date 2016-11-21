@@ -657,7 +657,7 @@ namespace triton {
 
       /* Adds a new symbolic variable */
       SymbolicVariable* SymbolicEngine::newSymbolicVariable(triton::engines::symbolic::symkind_e kind, triton::uint64 kindValue, triton::uint32 size, const std::string& comment) {
-        triton::usize uniqueId  = this->getUniqueSymVarId();
+        triton::usize uniqueId = this->getUniqueSymVarId();
         SymbolicVariable* symVar = new SymbolicVariable(kind, kindValue, uniqueId, size, comment);
 
         if (symVar == nullptr)
