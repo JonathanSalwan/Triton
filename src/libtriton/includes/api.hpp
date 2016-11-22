@@ -18,6 +18,7 @@
 #include "memoryAccess.hpp"
 #include "operandWrapper.hpp"
 #include "register.hpp"
+#include "registerSpecification.hpp"
 #include "solverEngine.hpp"
 #include "symbolicEngine.hpp"
 #include "taintEngine.hpp"
@@ -117,12 +118,8 @@ namespace triton {
         //! [**architecture api**] - Returns the number of registers according to the CPU architecture.
         triton::uint32 cpuNumberOfRegisters(void) const;
 
-        /*!
-         * \brief [**architecture api**] - Returns all information about the register.
-         * \param reg the register id.
-         * \return std::tuple<name, b-high, b-low, parentId>
-         */
-        std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getCpuRegInformation(triton::uint32 reg) const;
+        //! [**architecture api**] - Returns all information about the register.
+        triton::arch::RegisterSpecification getCpuRegInformation(triton::uint32 regId) const;
 
         //! [**architecture api**] - Returns all registers. \sa triton::arch::x86::registers_e.
         std::set<triton::arch::Register*> getAllRegisters(void) const;

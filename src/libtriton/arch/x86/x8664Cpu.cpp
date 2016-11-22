@@ -594,8 +594,8 @@ namespace triton {
       }
 
 
-      std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> x8664Cpu::getRegisterInformation(triton::uint32 reg) const {
-        return triton::arch::x86::registerIdToRegisterInformation(reg);
+      triton::arch::RegisterSpecification x8664Cpu::getRegisterInformation(triton::uint32 regId) const {
+        return triton::arch::x86::registerIdToRegisterInformation(regId);
       }
 
 

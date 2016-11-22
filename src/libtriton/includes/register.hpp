@@ -55,7 +55,7 @@ namespace triton {
         void copy(const Register& other);
 
         //! Setup everything.
-        void setup(triton::uint32 reg, triton::uint512 concreteValue);
+        void setup(triton::uint32 regId, triton::uint512 concreteValue);
 
         //! Resets information.
         void clear(void);
@@ -65,7 +65,7 @@ namespace triton {
         Register();
 
         //! Constructor.
-        Register(triton::uint32 reg, triton::uint512 concreteValue=0);
+        Register(triton::uint32 regId, triton::uint512 concreteValue=0);
 
         //! Constructor by copy.
         Register(const Register& other);
@@ -113,10 +113,10 @@ namespace triton {
         void operator=(const Register& other);
 
         //! Sets the id of the register.
-        void setId(triton::uint32 reg);
+        void setId(triton::uint32 regId);
 
         //! Sets the parent id of the register.
-        void setParent(triton::uint32 reg);
+        void setParent(triton::uint32 regId);
 
         //! Sets the concrete value of the register.
         void setConcreteValue(triton::uint512 concreteValue);

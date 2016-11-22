@@ -9,6 +9,7 @@
 #define TRITON_X86SPECIFICATIONS_H
 
 #include "register.hpp"
+#include "registerSpecification.hpp"
 
 
 
@@ -260,7 +261,7 @@ namespace triton {
 
 
       //! Returns all information about the register from its ID.
-      std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> registerIdToRegisterInformation(triton::uint32 reg);
+      triton::arch::RegisterSpecification registerIdToRegisterInformation(triton::uint32 regId);
 
       //! Converts a capstone's register id to a triton's register id.
       triton::uint32 capstoneRegisterToTritonRegister(triton::uint32 id);

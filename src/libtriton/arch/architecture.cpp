@@ -135,16 +135,11 @@ namespace triton {
     }
 
 
-    std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> Architecture::getRegisterInformation(triton::uint32 reg) const {
-      std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> ret;
-
-      std::get<0>(ret) = "unknown"; /* name           */
-      std::get<1>(ret) = 0;         /* highest bit    */
-      std::get<2>(ret) = 0;         /* lower bit      */
-      std::get<3>(ret) = 0;         /* higest reg id  */
+    triton::arch::RegisterSpecification Architecture::getRegisterInformation(triton::uint32 regId) const {
+      triton::arch::RegisterSpecification ret;
 
       if (this->cpu)
-        ret = this->cpu->getRegisterInformation(reg);
+        ret = this->cpu->getRegisterInformation(regId);
 
       return ret;
     }

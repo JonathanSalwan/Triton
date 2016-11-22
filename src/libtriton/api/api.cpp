@@ -272,8 +272,8 @@ namespace triton {
   }
 
 
-  std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> API::getCpuRegInformation(triton::uint32 reg) const {
-    return this->arch.getRegisterInformation(reg);
+  triton::arch::RegisterSpecification API::getCpuRegInformation(triton::uint32 regId) const {
+    return this->arch.getRegisterInformation(regId);
   }
 
 

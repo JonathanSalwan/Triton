@@ -9,12 +9,12 @@
 #define TRITON_CPUINTERFACE_HPP
 
 #include <set>
-#include <tuple>
 #include <vector>
 
 #include "instruction.hpp"
 #include "memoryAccess.hpp"
 #include "register.hpp"
+#include "registerSpecification.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -79,11 +79,7 @@ namespace triton {
         virtual triton::uint32 numberOfRegisters(void) const = 0;
 
         //! Returns all information about a register id.
-        /*!
-            \param reg the register id.
-            \return std::tuple<name, b-high, b-low, parentId>
-        */
-        virtual std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg) const = 0;
+        virtual triton::arch::RegisterSpecification getRegisterInformation(triton::uint32 regId) const = 0;
 
         //! Returns all registers.
         virtual std::set<triton::arch::Register*> getAllRegisters(void) const = 0;

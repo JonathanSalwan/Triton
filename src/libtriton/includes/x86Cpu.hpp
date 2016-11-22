@@ -10,7 +10,6 @@
 
 #include <map>
 #include <set>
-#include <tuple>
 #include <vector>
 
 #include "callbacks.hpp"
@@ -18,6 +17,7 @@
 #include "instruction.hpp"
 #include "memoryAccess.hpp"
 #include "register.hpp"
+#include "registerSpecification.hpp"
 #include "tritonTypes.hpp"
 #include "x86Semantics.hpp"
 
@@ -176,21 +176,21 @@ namespace triton {
           //! Concrete value of SS
           triton::uint8 ss[DWORD_SIZE];
 
-
         public:
+          //! Constructor.
           x86Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
+
           //! Constructor by copy.
           x86Cpu(const x86Cpu& other);
+
+          //! Destructor.
           virtual ~x86Cpu();
 
           //! Copies a x86Cpu class.
-          void copy(const x86Cpu& other);
+          void operator=(const x86Cpu& other);
 
-          void init(void);
-          void clear(void);
-          bool isFlag(triton::uint32 regId) const;
-          bool isRegister(triton::uint32 regId) const;
-          bool isRegisterValid(triton::uint32 regId) const;
+          //! Copies a x86Cpu class.
+          void copy(const x86Cpu& other);
 
           //! Returns true if regId is a GRP.
           bool isGPR(triton::uint32 regId) const;
@@ -210,29 +210,33 @@ namespace triton {
           //! Returns true if regId is a Segment.
           bool isSegment(triton::uint32 regId) const;
 
-          std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg) const;
+          /* Virtual pure inheritance ================================================= */
+          bool buildSemantics(triton::arch::Instruction& inst) const;
+          bool isFlag(triton::uint32 regId) const;
+          bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
+          bool isRegister(triton::uint32 regId) const;
+          bool isRegisterValid(triton::uint32 regId) const;
           std::set<triton::arch::Register*> getAllRegisters(void) const;
           std::set<triton::arch::Register*> getParentRegisters(void) const;
-          triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks=true) const;
           std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;
-          triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const;
+          triton::arch::RegisterSpecification getRegisterInformation(triton::uint32 regId) const;
           triton::uint32 invalidRegister(void) const;
           triton::uint32 numberOfRegisters(void) const;
           triton::uint32 registerBitSize(void) const;
           triton::uint32 registerSize(void) const;
+          triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks=true) const;
+          triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const;
           triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const;
-          bool buildSemantics(triton::arch::Instruction& inst) const;
+          void clear(void);
           void disassembly(triton::arch::Instruction& inst) const;
-          void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
-          void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem);
+          void init(void);
           void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
           void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
+          void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem);
+          void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
           void setConcreteRegisterValue(const triton::arch::Register& reg);
-          bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
           void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
-
-          //! Copies a x86Cpu class.
-          void operator=(const x86Cpu& other);
+          /* End of virtual pure inheritance ========================================== */
       };
 
     /*! @} End of x86 namespace */

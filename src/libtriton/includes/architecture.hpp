@@ -16,6 +16,7 @@
 #include "instruction.hpp"
 #include "memoryAccess.hpp"
 #include "register.hpp"
+#include "registerSpecification.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -113,11 +114,7 @@ namespace triton {
         void clearArchitecture(void);
 
         //! Returns all information about the register.
-        /*!
-          \param reg the register id.
-          \return std::tuple<name, b-high, b-low, parentId>
-        */
-        std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg) const;
+        triton::arch::RegisterSpecification getRegisterInformation(triton::uint32 regId) const;
 
         //! Returns all registers.
         std::set<triton::arch::Register*> getAllRegisters(void) const;
