@@ -262,11 +262,6 @@ namespace triton {
   }
 
 
-  triton::uint32 API::cpuInvalidRegister(void) const {
-    return this->arch.invalidRegister();
-  }
-
-
   triton::uint32 API::cpuNumberOfRegisters(void) const {
     return this->arch.numberOfRegisters();
   }

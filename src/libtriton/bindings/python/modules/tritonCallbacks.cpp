@@ -122,9 +122,6 @@ Converts a symbolic memory expression to a symbolic variable. This function retu
 - **convertRegisterToSymbolicVariable(\ref py_REG_page reg, string comment="")**<br>
 Converts a symbolic register expression to a symbolic variable. This function returns the \ref py_SymbolicVariable_page created.
 
-- **cpuInvalidRegister(void)**<br>
- Returns the invalid CPU register id.
-
 - **cpuRegisterBitSize(void)**<br>
 Returns the max size (in bit) of the CPU register (GPR).
 
@@ -1053,11 +1050,6 @@ namespace triton {
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
-      }
-
-
-      static PyObject* triton_cpuInvalidRegister(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint32(triton::api.cpuInvalidRegister());
       }
 
 
@@ -2979,7 +2971,6 @@ namespace triton {
         {"convertExpressionToSymbolicVariable", (PyCFunction)triton_convertExpressionToSymbolicVariable,    METH_VARARGS,       ""},
         {"convertMemoryToSymbolicVariable",     (PyCFunction)triton_convertMemoryToSymbolicVariable,        METH_VARARGS,       ""},
         {"convertRegisterToSymbolicVariable",   (PyCFunction)triton_convertRegisterToSymbolicVariable,      METH_VARARGS,       ""},
-        {"cpuInvalidRegister",                  (PyCFunction)triton_cpuInvalidRegister,                     METH_NOARGS,        ""},
         {"cpuRegisterBitSize",                  (PyCFunction)triton_cpuRegisterBitSize,                     METH_NOARGS,        ""},
         {"cpuRegisterSize",                     (PyCFunction)triton_cpuRegisterSize,                        METH_NOARGS,        ""},
         {"createSymbolicFlagExpression",        (PyCFunction)triton_createSymbolicFlagExpression,           METH_VARARGS,       ""},

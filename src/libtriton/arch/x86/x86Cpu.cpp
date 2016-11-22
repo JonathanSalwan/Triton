@@ -457,11 +457,6 @@ namespace triton {
       }
 
 
-      triton::uint32 x86Cpu::invalidRegister(void) const {
-        return triton::arch::x86::ID_REG_INVALID;
-      }
-
-
       triton::uint32 x86Cpu::numberOfRegisters(void) const {
         return triton::arch::x86::ID_REG_LAST_ITEM;
       }

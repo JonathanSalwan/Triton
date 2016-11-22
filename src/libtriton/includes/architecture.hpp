@@ -92,9 +92,6 @@ namespace triton {
         //! Returns the CPU
         triton::arch::CpuInterface* getCpu(void);
 
-        //! Returns the invalid CPU register id.
-        triton::uint32 invalidRegister(void) const;
-
         //! Returns the number of registers according to the CPU architecture.
         triton::uint32 numberOfRegisters(void) const;
 

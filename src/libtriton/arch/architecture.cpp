@@ -107,13 +107,6 @@ namespace triton {
     }
 
 
-    triton::uint32 Architecture::invalidRegister(void) const {
-      if (!this->cpu)
-        return 0;
-      return this->cpu->invalidRegister();
-    }
-
-
     triton::uint32 Architecture::numberOfRegisters(void) const {
       if (!this->cpu)
         return 0;

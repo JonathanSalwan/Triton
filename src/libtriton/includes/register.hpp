@@ -137,6 +137,9 @@ namespace triton {
     //! Compares two Register (needed for std::map)
     bool operator<(const Register& reg1, const Register& reg2);
 
+    //! Defines the invalid register constant.
+    const triton::uint32 INVALID_REGISTER_ID = 0;
+
   /*! @} End of arch namespace */
   };
 /*! @} End of triton namespace */

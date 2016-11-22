@@ -31,9 +31,9 @@ namespace triton {
 
     void Register::clear(void) {
       this->concreteValue = 0;
-      this->id            = triton::api.cpuInvalidRegister();
+      this->id            = triton::arch::INVALID_REGISTER_ID;
       this->name          = "unknown";
-      this->parent        = triton::api.cpuInvalidRegister();
+      this->parent        = triton::arch::INVALID_REGISTER_ID;
     }
 
 
@@ -42,7 +42,7 @@ namespace triton {
 
       this->id = regId;
       if (!triton::api.isCpuRegisterValid(regId))
-        this->id = triton::api.cpuInvalidRegister();
+        this->id = triton::arch::INVALID_REGISTER_ID;
 
       regInfo      = triton::api.getCpuRegInformation(this->id);
       this->name   = regInfo.getName();

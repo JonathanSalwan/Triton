@@ -112,9 +112,6 @@ namespace triton {
         //! [**architecture api**] - Returns the max size (in bit) of the CPU register (GPR).
         triton::uint32 cpuRegisterBitSize(void) const;
 
-        //! [**architecture api**] - Returns the invalid CPU register id. \sa triton::arch::x86::registers_e::ID_REG_INVALID.
-        triton::uint32 cpuInvalidRegister(void) const;
-
         //! [**architecture api**] - Returns the number of registers according to the CPU architecture.
         triton::uint32 cpuNumberOfRegisters(void) const;
 

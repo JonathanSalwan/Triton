@@ -72,9 +72,6 @@ namespace triton {
         //! Returns the max size (in bit) of the CPU registers (GPR).
         virtual triton::uint32 registerBitSize(void) const = 0;
 
-        //! Returns the id of the invalid CPU register.
-        virtual triton::uint32 invalidRegister(void) const = 0;
-
         //! Returns the number of registers according to the CPU architecture.
         virtual triton::uint32 numberOfRegisters(void) const = 0;
 
