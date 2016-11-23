@@ -7,6 +7,7 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
+#include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -230,7 +231,7 @@ namespace triton {
 
       static PyObject* Register_setConcreteValue(PyObject* self, PyObject* value) {
         try {
-          triton::arch::Register *reg;
+          triton::arch::Register* reg;
 
           if (!PyLong_Check(value) && !PyInt_Check(value))
             return PyErr_Format(PyExc_TypeError, "Register::setConcretevalue(): Expected an integer as argument.");

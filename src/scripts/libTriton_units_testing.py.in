@@ -721,7 +721,6 @@ def test_2():
     flag     = reg.isFlag()
     register = reg.isRegister()
 
-    print 1
     if name == 'rax':
         count += 1
     else:
@@ -756,7 +755,6 @@ def test_2():
 
     cv = reg.setConcreteValue(0x1122334455667788)
     cv = reg.getConcreteValue()
-    print 2
     if cv == 0x1122334455667788:
         count += 1
     else:
@@ -863,7 +861,6 @@ def test_2():
         return -1
 
     xmm = Register(REG.XMM1, 0x112233445566778899aabbccddeeff00)
-    print 3
     if xmm.getBitSize() == 128:
         count += 1
     else:
@@ -882,7 +879,6 @@ def test_2():
 
     setArchitecture(ARCH.X86_64)
     ymm = Register(REG.YMM1, 0x112233445566778899aabbccddeeff00)
-    print 4
     if ymm.getBitSize() == 256:
         count += 1
     else:
@@ -900,7 +896,6 @@ def test_2():
         return -1
 
     ymm.setConcreteValue(0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
-    print 5
     if ymm.getConcreteValue() == 0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00:
         count += 1
     else:
@@ -910,7 +905,6 @@ def test_2():
         return -1
 
     zmm = Register(REG.ZMM2, 0)
-    print 6
     if zmm.getBitSize() == 512:
         count += 1
     else:
@@ -920,7 +914,6 @@ def test_2():
         return -1
 
     zmm.setConcreteValue(0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
-    print 7
     if zmm.getConcreteValue() == 0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00:
         count += 1
     else:
@@ -986,7 +979,6 @@ def test_2():
     try:
         al = Register(REG.AL)
         al.setConcreteValue(0xff)
-        print 8
         count += 1
     except:
         print '[KO] al.setConcreteValue(0xff)'
@@ -995,7 +987,6 @@ def test_2():
         return -1
 
     try:
-        print 9
         al = Register(REG.AL)
         al.setConcreteValue(0x100)
         print '[KO] al.setConcreteValue(0x100)'
@@ -1003,7 +994,6 @@ def test_2():
         print '\tExpected : <exception>'
         return -1
     except:
-        print 10
         count += 1
 
     return count
