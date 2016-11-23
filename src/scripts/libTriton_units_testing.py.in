@@ -995,14 +995,15 @@ def test_2():
         return -1
 
     try:
+        print 9
         al = Register(REG.AL)
         al.setConcreteValue(0x100)
-        print 9
         print '[KO] al.setConcreteValue(0x100)'
         print '\tOutput   : OK'
         print '\tExpected : <exception>'
         return -1
     except:
+        print 10
         count += 1
 
     return count
