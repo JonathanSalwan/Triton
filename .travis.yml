@@ -1,14 +1,82 @@
 language: cpp
 
-compiler:
-    - gcc
-    - clang
+matrix:
+    include:
+        # Linux gcc 4.9
+        - os: linux
+          compiler: gcc
+          addons:
+            apt:
+              sources: ['ubuntu-toolchain-r-test', 'cmake', 'boost-latest']
+              packages: ['g++-4.9', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake']
+          env: [ CXX_COMPILER=g++-4.9, C_COMPILER=gcc-4.9, PYTHON_VERSION=2.7]
 
-os:
-    - linux
-    - osx
+        # Linux gcc 5.0
+        - os: linux
+          compiler: gcc
+          addons:
+            apt:
+              sources: ['ubuntu-toolchain-r-test', 'cmake', 'boost-latest']
+              packages: ['g++-5', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake']
+          env: [ CXX_COMPILER=g++-5, C_COMPILER=gcc-5, PYTHON_VERSION=2.7]
 
-osx_image: xcode7.1
+        # Linux clang 3.5
+        - os: linux
+          compiler: clang
+          addons:
+            apt:
+              sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.5', 'cmake', 'boost-latest']
+              packages: ['clang-3.5', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake']
+          env: [ CXX_COMPILER=clang++-3.5, C_COMPILER=clang-3.5, PYTHON_VERSION=2.7 ]
+
+        # Linux clang 3.6
+        - os: linux
+          compiler: clang
+          addons:
+            apt:
+              sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.6', 'cmake', 'boost-latest']
+              packages: ['clang-3.6', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake']
+          env: [ CXX_COMPILER=clang++-3.6, C_COMPILER=clang-3.6, PYTHON_VERSION=2.7 ]
+
+        # Linux clang 3.7
+        - os: linux
+          compiler: clang
+          addons:
+            apt:
+              sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7', 'cmake', 'boost-latest']
+              packages: ['clang-3.7', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake']
+          env: [ CXX_COMPILER=clang++-3.7, C_COMPILER=clang-3.7, PYTHON_VERSION=2.7 ]
+
+        # OSX xcode 7.1
+        - os: osx
+          osx_image: xcode7.1
+          compiler: clang
+          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3 cmake' ]
+
+        # OSX xcode 7.2
+        - os: osx
+          osx_image: xcode7.2
+          compiler: clang
+          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3 cmake' ]
+
+        # OSX xcode 7.3
+        - os: osx
+          osx_image: xcode7.3
+          compiler: clang
+          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12_1/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12_1/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
+
+        # OSX xcode 8.0
+        - os: osx
+          osx_image: xcode8
+          compiler: clang
+          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
+
+        # OSX xcode 8.1
+        - os: osx
+          osx_image: xcode8.1
+          compiler: clang
+          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3 cmake', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
+
 
 notifications:
   email: false
@@ -19,45 +87,32 @@ cache:
   - apt
   - ccache
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.5
-      - boost-latest
-    packages:
-      - gcc-4.9
-      - g++-4.9
-      - clang-3.5
-      - ccache
-      - libpython2.7
-      - libboost1.55-all-dev
-      - cmake
-
-env:
-  - PYTHON_VERSION=2.7
-
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo add-apt-repository ppa:hvr/z3 -y; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update -q; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -y --force-yes libz3-dev; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install python-setuptools; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CC" = "gcc" ]; then export CC="gcc-4.9"; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" = "g++" ]; then export CXX="g++-4.9"; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CC" = "clang" ]; then export CC="clang-3.5"; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" = "clang++" ]; then export CXX="clang++-3.5"; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CC" = "gcc" ]; then export CC="$C_COMPILER"; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" = "g++" ]; then export CXX="$CXX_COMPILER"; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CC" = "clang" ]; then export CC="$C_COMPILER"; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" = "clang++" ]; then export CXX="$CXX_COMPILER"; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export CC="clang"; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export CXX="clang++"; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export PREFIX="/usr/local"; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install z3 cmake; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install $TT_DEP_BREW_PKGS; fi
   # Back to /home/travis/build/JonathanSalwan
   - cd ..
   # Install capstone
   - git clone https://github.com/aquynh/capstone.git
   - cd capstone
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash ./make.sh; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make install; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then ./make.sh; fi
-  - sudo make install
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo PREFIX=/usr/local make install; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cd ./bindings/python; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo python2.7 ./setup.py install; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cd ../../; fi
   - cd ../
   # Download pin
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz; fi
@@ -74,9 +129,11 @@ before_install:
   - cd build
 
 script:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cmake -DPINTOOL=on -DKERNEL4=on ..; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cmake ..; fi
-  - sudo make -j2 install
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cmake -DPINTOOL=on -DKERNEL4=on -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER ..; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cmake $TT_PYTHON_ENV ..; fi
+  - sudo make -j2
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo install_name_tool -change libcapstone.3.dylib /usr/local/lib/libcapstone.3.dylib libtriton.dylib; fi
+  - sudo make install
   - cd ..
 
   # libTriton unit testing
