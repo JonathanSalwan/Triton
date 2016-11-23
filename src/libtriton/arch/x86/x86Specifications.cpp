@@ -5,6 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <api.hpp>
 #include <architecture.hpp>
 #include <cpuSize.hpp>
 #include <externalLibs.hpp>
