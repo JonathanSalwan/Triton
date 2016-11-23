@@ -44,7 +44,7 @@ namespace triton {
       if (!triton::api.isCpuRegisterValid(regId))
         this->id = triton::arch::INVALID_REGISTER_ID;
 
-      regInfo      = triton::api.getCpuRegInformation(this->id);
+      regInfo      = triton::api.getRegisterSpecification(this->id);
       this->name   = regInfo.getName();
       this->parent = regInfo.getParentId();
 

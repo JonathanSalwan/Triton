@@ -128,11 +128,11 @@ namespace triton {
     }
 
 
-    triton::arch::RegisterSpecification Architecture::getRegisterInformation(triton::uint32 regId) const {
+    triton::arch::RegisterSpecification Architecture::getRegisterSpecification(triton::uint32 regId) const {
       triton::arch::RegisterSpecification ret;
 
       if (this->cpu)
-        ret = this->cpu->getRegisterInformation(regId);
+        ret = this->cpu->getRegisterSpecification(regId);
 
       return ret;
     }

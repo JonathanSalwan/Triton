@@ -76,7 +76,7 @@ namespace triton {
         virtual triton::uint32 numberOfRegisters(void) const = 0;
 
         //! Returns all information about a register id.
-        virtual triton::arch::RegisterSpecification getRegisterInformation(triton::uint32 regId) const = 0;
+        virtual triton::arch::RegisterSpecification getRegisterSpecification(triton::uint32 regId) const = 0;
 
         //! Returns all registers.
         virtual std::set<triton::arch::Register*> getAllRegisters(void) const = 0;

@@ -471,8 +471,8 @@ namespace triton {
       }
 
 
-      triton::arch::RegisterSpecification x86Cpu::getRegisterInformation(triton::uint32 regId) const {
-        return this->getRegisterSpecification(triton::arch::ARCH_X86, regId);
+      triton::arch::RegisterSpecification x86Cpu::getRegisterSpecification(triton::uint32 regId) const {
+        return this->getX86RegisterSpecification(triton::arch::ARCH_X86, regId);
       }
 
 

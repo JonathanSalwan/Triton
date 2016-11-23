@@ -111,7 +111,7 @@ namespace triton {
         void clearArchitecture(void);
 
         //! Returns all information about the register.
-        triton::arch::RegisterSpecification getRegisterInformation(triton::uint32 regId) const;
+        triton::arch::RegisterSpecification getRegisterSpecification(triton::uint32 regId) const;
 
         //! Returns all registers.
         std::set<triton::arch::Register*> getAllRegisters(void) const;

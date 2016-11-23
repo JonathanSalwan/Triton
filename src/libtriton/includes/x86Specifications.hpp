@@ -271,7 +271,7 @@ namespace triton {
           virtual ~x86Specifications();
 
           //! Returns all specifications about a register from its ID according to the arch (32 or 64-bits).
-          triton::arch::RegisterSpecification getRegisterSpecification(triton::uint32 arch, triton::uint32 regId) const;
+          triton::arch::RegisterSpecification getX86RegisterSpecification(triton::uint32 arch, triton::uint32 regId) const;
 
           //! Converts a capstone's register id to a triton's register id.
           triton::uint32 capstoneRegisterToTritonRegister(triton::uint32 id) const;

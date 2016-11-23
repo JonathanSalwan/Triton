@@ -452,7 +452,7 @@ namespace triton {
       }
 
 
-      triton::arch::RegisterSpecification x86Specifications::getRegisterSpecification(triton::uint32 arch, triton::uint32 regId) const {
+      triton::arch::RegisterSpecification x86Specifications::getX86RegisterSpecification(triton::uint32 arch, triton::uint32 regId) const {
         triton::arch::RegisterSpecification ret;
 
         if (arch != triton::arch::ARCH_X86 && arch != triton::arch::ARCH_X86_64)

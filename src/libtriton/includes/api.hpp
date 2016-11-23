@@ -116,7 +116,7 @@ namespace triton {
         triton::uint32 cpuNumberOfRegisters(void) const;
 
         //! [**architecture api**] - Returns all information about the register.
-        triton::arch::RegisterSpecification getCpuRegInformation(triton::uint32 regId) const;
+        triton::arch::RegisterSpecification getRegisterSpecification(triton::uint32 regId) const;
 
         //! [**architecture api**] - Returns all registers. \sa triton::arch::x86::registers_e.
         std::set<triton::arch::Register*> getAllRegisters(void) const;

@@ -267,8 +267,8 @@ namespace triton {
   }
 
 
-  triton::arch::RegisterSpecification API::getCpuRegInformation(triton::uint32 regId) const {
-    return this->arch.getRegisterInformation(regId);
+  triton::arch::RegisterSpecification API::getRegisterSpecification(triton::uint32 regId) const {
+    return this->arch.getRegisterSpecification(regId);
   }
 
 
