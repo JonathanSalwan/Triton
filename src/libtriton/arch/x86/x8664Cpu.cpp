@@ -14,7 +14,6 @@
 #include <externalLibs.hpp>
 #include <immediate.hpp>
 #include <x8664Cpu.hpp>
-#include <x86Specifications.hpp>
 
 #ifdef TRITON_PYTHON_BINDINGS
   #include <pythonBindings.hpp>
