@@ -7,6 +7,7 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
+#include <exceptions.hpp>
 #include <immediate.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
@@ -99,7 +100,7 @@ namespace triton {
         try {
           return PyBitvector(*PyImmediate_AsImmediate(self));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -109,7 +110,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyImmediate_AsImmediate(self)->getBitSize());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -119,7 +120,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyImmediate_AsImmediate(self)->getSize());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -129,7 +130,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyImmediate_AsImmediate(self)->getType());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -139,7 +140,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyImmediate_AsImmediate(self)->getValue());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -153,7 +154,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -171,7 +172,7 @@ namespace triton {
           str << PyImmediate_AsImmediate(self);
           return PyString_FromFormat("%s", str.str().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

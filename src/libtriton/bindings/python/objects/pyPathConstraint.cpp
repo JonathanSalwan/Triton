@@ -7,6 +7,7 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
+#include <exceptions.hpp>
 #include <pathConstraint.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
@@ -107,7 +108,7 @@ namespace triton {
 
           return ret;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -117,7 +118,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyPathConstraint_AsPathConstraint(self)->getTakenAddress());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -127,7 +128,7 @@ namespace triton {
         try {
           return PyAstNode(PyPathConstraint_AsPathConstraint(self)->getTakenPathConstraintAst());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -139,7 +140,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

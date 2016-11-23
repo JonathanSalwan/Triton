@@ -9,6 +9,7 @@
 
 #include <api.hpp>
 #include <ast.hpp>
+#include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 
@@ -440,7 +441,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::assert_(PyAstNode_AsAstNode(expr)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -462,7 +463,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bv(PyLong_AsUint512(op1), PyLong_AsUint32(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -484,7 +485,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvadd(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -506,7 +507,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvand(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -528,7 +529,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvashr(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -541,7 +542,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvdecl(PyLong_AsUint32(size)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -551,7 +552,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvfalse());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -573,7 +574,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvlshr(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -595,7 +596,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvmul(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -617,7 +618,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvnand(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -630,7 +631,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvneg(PyAstNode_AsAstNode(op1)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -652,7 +653,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvnor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -665,7 +666,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvnot(PyAstNode_AsAstNode(op1)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -687,7 +688,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -709,7 +710,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvror(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -731,7 +732,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvrol(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -753,7 +754,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvsdiv(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -775,7 +776,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvsge(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -797,7 +798,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvsgt(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -819,7 +820,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvshl(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -841,7 +842,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvsle(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -863,7 +864,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvslt(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -885,7 +886,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvsmod(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -907,7 +908,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvsrem(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -929,7 +930,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvsub(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -939,7 +940,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvtrue());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -961,7 +962,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvudiv(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -983,7 +984,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvuge(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1005,7 +1006,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvugt(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1027,7 +1028,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvule(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1049,7 +1050,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvult(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1071,7 +1072,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvurem(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1093,7 +1094,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvxnor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1115,7 +1116,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::bvxor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1137,7 +1138,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::distinct(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1150,7 +1151,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::newInstance(PyAstNode_AsAstNode(expr)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1175,7 +1176,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::compound(exprs));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1200,7 +1201,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::concat(exprs));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1222,7 +1223,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::equal(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1248,7 +1249,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::extract(PyLong_AsUint32(op1), PyLong_AsUint32(op2), PyAstNode_AsAstNode(op3)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1274,7 +1275,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::ite(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2), PyAstNode_AsAstNode(op3)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1296,7 +1297,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::land(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1322,7 +1323,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::let(PyString_AsString(op1), PyAstNode_AsAstNode(op2), PyAstNode_AsAstNode(op3)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1335,7 +1336,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::lnot(PyAstNode_AsAstNode(expr)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1357,7 +1358,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::lor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1373,7 +1374,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::reference(PyLong_AsUsize(exprId)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1386,7 +1387,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::string(PyString_AsString(expr)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1408,7 +1409,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::sx(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1421,7 +1422,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::variable(*PySymbolicVariable_AsSymbolicVariable(symVar)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1443,7 +1444,7 @@ namespace triton {
         try {
           return PyAstNode(triton::ast::zx(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

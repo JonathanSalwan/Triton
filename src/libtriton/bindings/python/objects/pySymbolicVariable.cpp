@@ -7,6 +7,7 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
+#include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -85,7 +86,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PySymbolicVariable_AsSymbolicVariable(self)->getKind());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -95,7 +96,7 @@ namespace triton {
         try {
           return Py_BuildValue("s", PySymbolicVariable_AsSymbolicVariable(self)->getName().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -105,7 +106,7 @@ namespace triton {
         try {
           return PyLong_FromUsize(PySymbolicVariable_AsSymbolicVariable(self)->getId());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -115,7 +116,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PySymbolicVariable_AsSymbolicVariable(self)->getKindValue());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -125,7 +126,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PySymbolicVariable_AsSymbolicVariable(self)->getSize());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -135,7 +136,7 @@ namespace triton {
         try {
           return Py_BuildValue("s", PySymbolicVariable_AsSymbolicVariable(self)->getComment().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -145,7 +146,7 @@ namespace triton {
         try {
           return PyLong_FromUint512(PySymbolicVariable_AsSymbolicVariable(self)->getConcreteValue());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -159,7 +160,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -173,7 +174,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -191,7 +192,7 @@ namespace triton {
           str << PySymbolicVariable_AsSymbolicVariable(self);
           return PyString_FromFormat("%s", str.str().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

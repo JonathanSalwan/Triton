@@ -8,6 +8,7 @@
 #ifdef TRITON_PYTHON_BINDINGS
 
 #include <elfSymbolTable.hpp>
+#include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -109,7 +110,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyElfSymbolTable_AsElfSymbolTable(self)->getIdxname());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -119,7 +120,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyElfSymbolTable_AsElfSymbolTable(self)->getInfo());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -129,7 +130,7 @@ namespace triton {
         try {
           return PyString_FromString(PyElfSymbolTable_AsElfSymbolTable(self)->getName().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -139,7 +140,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyElfSymbolTable_AsElfSymbolTable(self)->getOther());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -149,7 +150,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyElfSymbolTable_AsElfSymbolTable(self)->getShndx());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -159,7 +160,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfSymbolTable_AsElfSymbolTable(self)->getSize());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -169,7 +170,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfSymbolTable_AsElfSymbolTable(self)->getValue());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

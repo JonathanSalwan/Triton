@@ -8,6 +8,7 @@
 #ifdef TRITON_PYTHON_BINDINGS
 
 #include <elfRelocationTable.hpp>
+#include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -101,7 +102,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfRelocationTable_AsElfRelocationTable(self)->getAddend());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -111,7 +112,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfRelocationTable_AsElfRelocationTable(self)->getInfo());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -121,7 +122,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfRelocationTable_AsElfRelocationTable(self)->getOffset());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -131,7 +132,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfRelocationTable_AsElfRelocationTable(self)->getSymidx());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -141,7 +142,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfRelocationTable_AsElfRelocationTable(self)->getType());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -153,7 +154,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

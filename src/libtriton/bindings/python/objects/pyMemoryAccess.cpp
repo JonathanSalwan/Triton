@@ -7,6 +7,7 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
+#include <exceptions.hpp>
 #include <memoryAccess.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
@@ -158,7 +159,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyMemoryAccess_AsMemoryAccess(self)->getAddress());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -172,7 +173,7 @@ namespace triton {
           }
           return PyAstNode(PyMemoryAccess_AsMemoryAccess(self)->getLeaAst());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -183,7 +184,7 @@ namespace triton {
           triton::arch::Register reg(PyMemoryAccess_AsMemoryAccess(self)->getBaseRegister());
           return PyRegister(reg);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -193,7 +194,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyMemoryAccess_AsMemoryAccess(self)->getBitSize());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -203,7 +204,7 @@ namespace triton {
         try {
           return PyBitvector(*PyMemoryAccess_AsMemoryAccess(self));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -213,7 +214,7 @@ namespace triton {
         try {
           return PyLong_FromUint512(PyMemoryAccess_AsMemoryAccess(self)->getConcreteValue());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -224,7 +225,7 @@ namespace triton {
           triton::arch::Immediate imm(PyMemoryAccess_AsMemoryAccess(self)->getDisplacement());
           return PyImmediate(imm);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -235,7 +236,7 @@ namespace triton {
           triton::arch::Register reg(PyMemoryAccess_AsMemoryAccess(self)->getIndexRegister());
           return PyRegister(reg);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -246,7 +247,7 @@ namespace triton {
           triton::arch::Immediate imm(PyMemoryAccess_AsMemoryAccess(self)->getScale());
           return PyImmediate(imm);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -257,7 +258,7 @@ namespace triton {
           triton::arch::Register reg(PyMemoryAccess_AsMemoryAccess(self)->getSegmentRegister());
           return PyRegister(reg);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -267,7 +268,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyMemoryAccess_AsMemoryAccess(self)->getSize());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -277,7 +278,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyMemoryAccess_AsMemoryAccess(self)->getType());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -295,7 +296,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -313,7 +314,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -331,7 +332,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -349,7 +350,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -367,7 +368,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -385,7 +386,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -403,7 +404,7 @@ namespace triton {
           str << PyMemoryAccess_AsMemoryAccess(self);
           return PyString_FromFormat("%s", str.str().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

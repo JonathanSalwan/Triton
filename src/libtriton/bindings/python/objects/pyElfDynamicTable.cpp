@@ -8,6 +8,7 @@
 #ifdef TRITON_PYTHON_BINDINGS
 
 #include <elfDynamicTable.hpp>
+#include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -54,7 +55,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfDynamicTable_AsElfDynamicTable(self)->getTag());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -64,7 +65,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfDynamicTable_AsElfDynamicTable(self)->getValue());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

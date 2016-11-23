@@ -8,6 +8,7 @@
 #ifdef TRITON_PYTHON_BINDINGS
 
 #include <elfSectionHeader.hpp>
+#include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -139,7 +140,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfSectionHeader_AsElfSectionHeader(self)->getAddr());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -149,7 +150,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfSectionHeader_AsElfSectionHeader(self)->getAddralign());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -159,7 +160,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfSectionHeader_AsElfSectionHeader(self)->getEntsize());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -169,7 +170,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfSectionHeader_AsElfSectionHeader(self)->getFlags());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -179,7 +180,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyElfSectionHeader_AsElfSectionHeader(self)->getIdxname());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -189,7 +190,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyElfSectionHeader_AsElfSectionHeader(self)->getInfo());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -199,7 +200,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyElfSectionHeader_AsElfSectionHeader(self)->getLink());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -209,7 +210,7 @@ namespace triton {
         try {
           return PyString_FromString(PyElfSectionHeader_AsElfSectionHeader(self)->getName().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -219,7 +220,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfSectionHeader_AsElfSectionHeader(self)->getOffset());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -229,7 +230,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfSectionHeader_AsElfSectionHeader(self)->getSize());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -239,7 +240,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyElfSectionHeader_AsElfSectionHeader(self)->getType());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

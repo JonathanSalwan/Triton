@@ -8,6 +8,7 @@
 #ifdef TRITON_PYTHON_BINDINGS
 
 #include <bitsVector.hpp>
+#include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -65,7 +66,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyBitvector_AsHigh(self));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -75,7 +76,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyBitvector_AsLow(self));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -86,7 +87,7 @@ namespace triton {
           triton::uint32 vectorSize = ((PyBitvector_AsHigh(self) - PyBitvector_AsLow(self)) + 1);
           return PyLong_FromUint32(vectorSize);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -102,7 +103,7 @@ namespace triton {
         try {
           return PyString_FromFormat("bv[%d..%d]", PyBitvector_AsHigh(self), PyBitvector_AsLow(self));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

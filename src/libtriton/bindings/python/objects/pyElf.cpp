@@ -8,6 +8,7 @@
 #ifdef TRITON_PYTHON_BINDINGS
 
 #include <elf.hpp>
+#include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -142,7 +143,7 @@ namespace triton {
             PyList_SetItem(ret, i, PyElfDynamicTable(dyn[i]));
           }
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -154,7 +155,7 @@ namespace triton {
         try {
           return PyElfHeader(PyElf_AsElf(self)->getHeader());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -164,7 +165,7 @@ namespace triton {
         try {
           return PyString_FromString(PyElf_AsElf(self)->getPath().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -180,7 +181,7 @@ namespace triton {
             PyList_SetItem(ret, i, PyElfProgramHeader(phdr[i]));
           }
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -194,7 +195,7 @@ namespace triton {
           triton::usize size       = PyElf_AsElf(self)->getSize();
           return PyBytes_FromStringAndSize(reinterpret_cast<const char*>(raw), size);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -210,7 +211,7 @@ namespace triton {
             PyList_SetItem(ret, i, PyElfRelocationTable(rel[i]));
           }
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -228,7 +229,7 @@ namespace triton {
             PyList_SetItem(ret, i, PyElfSectionHeader(shdr[i]));
           }
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -246,7 +247,7 @@ namespace triton {
             PyList_SetItem(ret, i, xPyString_FromString(lib[i].c_str()));
           }
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -258,7 +259,7 @@ namespace triton {
         try {
           return PyLong_FromUsize(PyElf_AsElf(self)->getSize());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -274,7 +275,7 @@ namespace triton {
             PyList_SetItem(ret, i, PyElfSymbolTable(sym[i]));
           }
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
