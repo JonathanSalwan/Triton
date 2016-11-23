@@ -58,7 +58,7 @@ def tainting(threadId):
     rsi = getCurrentRegisterValue(REG.RSI) # argv
 
     while rdi > 1:
-        argv = getCurrentMemoryValue(rsi + ((rdi-1) * CPUSIZE.REG), CPUSIZE.REG)
+        argv = getCurrentMemoryValue(rsi + ((rdi-1) * CPUSIZE.QWORD), CPUSIZE.QWORD)
         offset = 0
         while offset != STRLEN_ASSERT_LEN+5:
             taintMemory(argv + offset)
