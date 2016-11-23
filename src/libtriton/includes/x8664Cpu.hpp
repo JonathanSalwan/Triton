@@ -49,7 +49,7 @@ namespace triton {
 
       //! \class x8664Cpu
       /*! \brief This class is used to describe the x86 (64-bits) spec. */
-      class x8664Cpu : public x86Specifications, public CpuInterface {
+      class x8664Cpu : public CpuInterface, public virtual x86Specifications {
         private:
           //! Callbacks API
           triton::callbacks::Callbacks* callbacks;

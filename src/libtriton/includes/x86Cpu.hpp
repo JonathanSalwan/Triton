@@ -48,7 +48,7 @@ namespace triton {
 
       //! \class x86Cpu
       /*! \brief This class is used to describe the x86 (32-bits) spec. */
-      class x86Cpu : public x86Specifications, public CpuInterface {
+      class x86Cpu : public CpuInterface, public virtual x86Specifications {
         private:
           //! Callbacks API
           triton::callbacks::Callbacks* callbacks;
