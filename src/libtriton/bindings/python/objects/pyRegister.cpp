@@ -242,7 +242,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const triton::exceptions::Register& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
