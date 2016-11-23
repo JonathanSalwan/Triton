@@ -20,6 +20,7 @@
 #include "registerSpecification.hpp"
 #include "tritonTypes.hpp"
 #include "x86Semantics.hpp"
+#include "x86Specifications.hpp"
 
 
 //! The Triton namespace
@@ -47,7 +48,7 @@ namespace triton {
 
       //! \class x86Cpu
       /*! \brief This class is used to describe the x86 (32-bits) spec. */
-      class x86Cpu : public CpuInterface {
+      class x86Cpu : public CpuInterface, public x86Specifications {
         private:
           //! Callbacks API
           triton::callbacks::Callbacks* callbacks;

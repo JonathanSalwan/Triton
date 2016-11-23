@@ -260,17 +260,28 @@ namespace triton {
       extern triton::arch::Register x86_reg_ss;
 
 
-      //! Returns all information about the register from its ID.
-      triton::arch::RegisterSpecification registerIdToRegisterInformation(triton::uint32 regId);
+      //! \class x86Specifications
+      /*! \brief The x86Specifications class defines specifications about the x86 and x86_64 CPU */
+      class x86Specifications {
+        public:
+          //! Constructor.
+          x86Specifications();
 
-      //! Converts a capstone's register id to a triton's register id.
-      triton::uint32 capstoneRegisterToTritonRegister(triton::uint32 id);
+          //! Destructor.
+          virtual ~x86Specifications();
 
-      //! Converts a capstone's instruction id to a triton's instruction id.
-      triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id);
+          //! Returns all specifications about a register from its ID according to the arch (32 or 64-bits).
+          triton::arch::RegisterSpecification getRegisterSpecification(triton::uint32 arch, triton::uint32 regId) const;
 
-      //! Converts a capstone's prefix id to a triton's prefix id.
-      triton::uint32 capstonePrefixToTritonPrefix(triton::uint32 id);
+          //! Converts a capstone's register id to a triton's register id.
+          triton::uint32 capstoneRegisterToTritonRegister(triton::uint32 id) const;
+
+          //! Converts a capstone's instruction id to a triton's instruction id.
+          triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id) const;
+
+          //! Converts a capstone's prefix id to a triton's prefix id.
+          triton::uint32 capstonePrefixToTritonPrefix(triton::uint32 id) const;
+      };
 
 
       //! The list of registers.

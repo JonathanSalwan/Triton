@@ -5,7 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
+#include <architecture.hpp>
 #include <cpuSize.hpp>
 #include <externalLibs.hpp>
 #include <x86Specifications.hpp>
@@ -444,11 +444,18 @@ namespace triton {
       };
 
 
-      /* Returns all information about a register from its triton id */
-      triton::arch::RegisterSpecification registerIdToRegisterInformation(triton::uint32 regId) {
+      x86Specifications::x86Specifications() {
+      }
+
+
+      x86Specifications::~x86Specifications() {
+      }
+
+
+      triton::arch::RegisterSpecification x86Specifications::getRegisterSpecification(triton::uint32 arch, triton::uint32 regId) const {
         triton::arch::RegisterSpecification ret;
 
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+        if (arch != triton::arch::ARCH_X86 && arch != triton::arch::ARCH_X86_64)
           return ret;
 
         switch (regId) {
@@ -464,28 +471,28 @@ namespace triton {
             ret.setName("eax");
             ret.setHigh(DWORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RAX : triton::arch::x86::ID_REG_EAX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RAX : triton::arch::x86::ID_REG_EAX);
             break;
 
           case triton::arch::x86::ID_REG_AX:
             ret.setName("ax");
             ret.setHigh(WORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RAX : triton::arch::x86::ID_REG_EAX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RAX : triton::arch::x86::ID_REG_EAX);
             break;
 
           case triton::arch::x86::ID_REG_AH:
             ret.setName("ah");
             ret.setHigh(WORD_SIZE_BIT-1);
             ret.setLow(BYTE_SIZE_BIT);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RAX : triton::arch::x86::ID_REG_EAX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RAX : triton::arch::x86::ID_REG_EAX);
             break;
 
           case triton::arch::x86::ID_REG_AL:
             ret.setName("al");
             ret.setHigh(BYTE_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RAX : triton::arch::x86::ID_REG_EAX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RAX : triton::arch::x86::ID_REG_EAX);
             break;
 
           case triton::arch::x86::ID_REG_RBX:
@@ -499,28 +506,28 @@ namespace triton {
             ret.setName("ebx");
             ret.setHigh(DWORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBX : triton::arch::x86::ID_REG_EBX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBX : triton::arch::x86::ID_REG_EBX);
             break;
 
           case triton::arch::x86::ID_REG_BX:
             ret.setName("bx");
             ret.setHigh(WORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBX : triton::arch::x86::ID_REG_EBX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBX : triton::arch::x86::ID_REG_EBX);
             break;
 
           case triton::arch::x86::ID_REG_BH:
             ret.setName("bh");
             ret.setHigh(WORD_SIZE_BIT-1);
             ret.setLow(BYTE_SIZE_BIT);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBX : triton::arch::x86::ID_REG_EBX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBX : triton::arch::x86::ID_REG_EBX);
             break;
 
           case triton::arch::x86::ID_REG_BL:
             ret.setName("bl");
             ret.setHigh(BYTE_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBX : triton::arch::x86::ID_REG_EBX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBX : triton::arch::x86::ID_REG_EBX);
             break;
 
           case triton::arch::x86::ID_REG_RCX:
@@ -534,28 +541,28 @@ namespace triton {
             ret.setName("ecx");
             ret.setHigh(DWORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RCX : triton::arch::x86::ID_REG_ECX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RCX : triton::arch::x86::ID_REG_ECX);
             break;
 
           case triton::arch::x86::ID_REG_CX:
             ret.setName("cx");
             ret.setHigh(WORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RCX : triton::arch::x86::ID_REG_ECX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RCX : triton::arch::x86::ID_REG_ECX);
             break;
 
           case triton::arch::x86::ID_REG_CH:
             ret.setName("ch");
             ret.setHigh(WORD_SIZE_BIT-1);
             ret.setLow(BYTE_SIZE_BIT);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RCX : triton::arch::x86::ID_REG_ECX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RCX : triton::arch::x86::ID_REG_ECX);
             break;
 
           case triton::arch::x86::ID_REG_CL:
             ret.setName("cl");
             ret.setHigh(BYTE_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RCX : triton::arch::x86::ID_REG_ECX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RCX : triton::arch::x86::ID_REG_ECX);
             break;
 
           case triton::arch::x86::ID_REG_RDX:
@@ -569,28 +576,28 @@ namespace triton {
             ret.setName("edx");
             ret.setHigh(DWORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDX : triton::arch::x86::ID_REG_EDX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDX : triton::arch::x86::ID_REG_EDX);
             break;
 
           case triton::arch::x86::ID_REG_DX:
             ret.setName("dx");
             ret.setHigh(WORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDX : triton::arch::x86::ID_REG_EDX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDX : triton::arch::x86::ID_REG_EDX);
             break;
 
           case triton::arch::x86::ID_REG_DH:
             ret.setName("dh");
             ret.setHigh(WORD_SIZE_BIT-1);
             ret.setLow(BYTE_SIZE_BIT);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDX : triton::arch::x86::ID_REG_EDX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDX : triton::arch::x86::ID_REG_EDX);
             break;
 
           case triton::arch::x86::ID_REG_DL:
             ret.setName("dl");
             ret.setHigh(BYTE_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDX : triton::arch::x86::ID_REG_EDX);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDX : triton::arch::x86::ID_REG_EDX);
             break;
 
           case triton::arch::x86::ID_REG_RDI:
@@ -604,21 +611,21 @@ namespace triton {
             ret.setName("edi");
             ret.setHigh(DWORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDI : triton::arch::x86::ID_REG_EDI);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDI : triton::arch::x86::ID_REG_EDI);
             break;
 
           case triton::arch::x86::ID_REG_DI:
             ret.setName("di");
             ret.setHigh(WORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDI : triton::arch::x86::ID_REG_EDI);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDI : triton::arch::x86::ID_REG_EDI);
             break;
 
           case triton::arch::x86::ID_REG_DIL:
             ret.setName("dil");
             ret.setHigh(BYTE_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDI : triton::arch::x86::ID_REG_EDI);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDI : triton::arch::x86::ID_REG_EDI);
             break;
 
           case triton::arch::x86::ID_REG_RSI:
@@ -632,21 +639,21 @@ namespace triton {
             ret.setName("esi");
             ret.setHigh(DWORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSI : triton::arch::x86::ID_REG_ESI);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSI : triton::arch::x86::ID_REG_ESI);
             break;
 
           case triton::arch::x86::ID_REG_SI:
             ret.setName("si");
             ret.setHigh(WORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSI : triton::arch::x86::ID_REG_ESI);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSI : triton::arch::x86::ID_REG_ESI);
             break;
 
           case triton::arch::x86::ID_REG_SIL:
             ret.setName("sil");
             ret.setHigh(BYTE_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSI : triton::arch::x86::ID_REG_ESI);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSI : triton::arch::x86::ID_REG_ESI);
             break;
 
           case triton::arch::x86::ID_REG_RBP:
@@ -660,21 +667,21 @@ namespace triton {
             ret.setName("ebp");
             ret.setHigh(DWORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBP : triton::arch::x86::ID_REG_EBP);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBP : triton::arch::x86::ID_REG_EBP);
             break;
 
           case triton::arch::x86::ID_REG_BP:
             ret.setName("bp");
             ret.setHigh(WORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBP : triton::arch::x86::ID_REG_EBP);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBP : triton::arch::x86::ID_REG_EBP);
             break;
 
           case triton::arch::x86::ID_REG_BPL:
             ret.setName("bpl");
             ret.setHigh(BYTE_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBP : triton::arch::x86::ID_REG_EBP);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBP : triton::arch::x86::ID_REG_EBP);
             break;
 
           case triton::arch::x86::ID_REG_RSP:
@@ -688,21 +695,21 @@ namespace triton {
             ret.setName("esp");
             ret.setHigh(DWORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSP : triton::arch::x86::ID_REG_ESP);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSP : triton::arch::x86::ID_REG_ESP);
             break;
 
           case triton::arch::x86::ID_REG_SP:
             ret.setName("sp");
             ret.setHigh(WORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSP : triton::arch::x86::ID_REG_ESP);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSP : triton::arch::x86::ID_REG_ESP);
             break;
 
           case triton::arch::x86::ID_REG_SPL:
             ret.setName("spl");
             ret.setHigh(BYTE_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSP : triton::arch::x86::ID_REG_ESP);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSP : triton::arch::x86::ID_REG_ESP);
             break;
 
           case triton::arch::x86::ID_REG_RIP:
@@ -716,19 +723,19 @@ namespace triton {
             ret.setName("eip");
             ret.setHigh(DWORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RIP : triton::arch::x86::ID_REG_EIP);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RIP : triton::arch::x86::ID_REG_EIP);
             break;
 
           case triton::arch::x86::ID_REG_IP:
             ret.setName("ip");
             ret.setHigh(WORD_SIZE_BIT-1);
             ret.setLow(0);
-            ret.setParentId((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RIP : triton::arch::x86::ID_REG_EIP);
+            ret.setParentId((arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RIP : triton::arch::x86::ID_REG_EIP);
             break;
 
           case triton::arch::x86::ID_REG_EFLAGS:
             ret.setName("eflags");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_EFLAGS);
             break;
@@ -1463,119 +1470,119 @@ namespace triton {
 
           case triton::arch::x86::ID_REG_MXCSR:
             ret.setName("mxcsr");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_MXCSR);
             break;
 
           case triton::arch::x86::ID_REG_CR0:
             ret.setName("cr0");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR0);
             break;
 
           case triton::arch::x86::ID_REG_CR1:
             ret.setName("cr1");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR1);
             break;
 
           case triton::arch::x86::ID_REG_CR2:
             ret.setName("cr2");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR2);
             break;
 
           case triton::arch::x86::ID_REG_CR3:
             ret.setName("cr3");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR3);
             break;
 
           case triton::arch::x86::ID_REG_CR4:
             ret.setName("cr4");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR4);
             break;
 
           case triton::arch::x86::ID_REG_CR5:
             ret.setName("cr5");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR5);
             break;
 
           case triton::arch::x86::ID_REG_CR6:
             ret.setName("cr6");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR6);
             break;
 
           case triton::arch::x86::ID_REG_CR7:
             ret.setName("cr7");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR7);
             break;
 
           case triton::arch::x86::ID_REG_CR8:
             ret.setName("cr8");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR8);
             break;
 
           case triton::arch::x86::ID_REG_CR9:
             ret.setName("cr9");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR9);
             break;
 
           case triton::arch::x86::ID_REG_CR10:
             ret.setName("cr10");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR10);
             break;
 
           case triton::arch::x86::ID_REG_CR11:
             ret.setName("cr11");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR11);
             break;
 
           case triton::arch::x86::ID_REG_CR12:
             ret.setName("cr12");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR12);
             break;
 
           case triton::arch::x86::ID_REG_CR13:
             ret.setName("cr13");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR13);
             break;
 
           case triton::arch::x86::ID_REG_CR14:
             ret.setName("cr14");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR14);
             break;
 
           case triton::arch::x86::ID_REG_CR15:
             ret.setName("cr15");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CR15);
             break;
@@ -1757,42 +1764,42 @@ namespace triton {
 
           case triton::arch::x86::ID_REG_CS:
             ret.setName("cs");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_CS);
             break;
 
           case triton::arch::x86::ID_REG_DS:
             ret.setName("ds");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_DS);
             break;
 
           case triton::arch::x86::ID_REG_ES:
             ret.setName("es");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_ES);
             break;
 
           case triton::arch::x86::ID_REG_FS:
             ret.setName("fs");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_FS);
             break;
 
           case triton::arch::x86::ID_REG_GS:
             ret.setName("gs");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_GS);
             break;
 
           case triton::arch::x86::ID_REG_SS:
             ret.setName("ss");
-            ret.setHigh((triton::api.getArchitecture() == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            ret.setHigh((arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
             ret.setLow(0);
             ret.setParentId(triton::arch::x86::ID_REG_SS);
             break;
@@ -1802,12 +1809,8 @@ namespace triton {
       }
 
 
-      /* Converts a capstone's register id to a triton's register id */
-      triton::uint32 capstoneRegisterToTritonRegister(triton::uint32 id) {
+      triton::uint32 x86Specifications::capstoneRegisterToTritonRegister(triton::uint32 id) const {
         triton::uint32 tritonId = triton::arch::x86::ID_REG_INVALID;
-
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return tritonId;
 
         switch (id) {
 
@@ -2484,12 +2487,8 @@ namespace triton {
       }
 
 
-      /* Converts a capstone's instruction id to a triton's instruction id */
-      triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id) {
+      triton::uint32 x86Specifications::capstoneInstructionToTritonInstruction(triton::uint32 id) const {
         triton::uint32 tritonId = triton::arch::x86::ID_INST_INVALID;
-
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return tritonId;
 
         switch (id) {
 
@@ -7682,12 +7681,8 @@ namespace triton {
       }
 
 
-      /* Converts a capstone's prefix id to a triton's prefix id */
-      triton::uint32 capstonePrefixToTritonPrefix(triton::uint32 id) {
+      triton::uint32 x86Specifications::capstonePrefixToTritonPrefix(triton::uint32 id) const {
         triton::uint32 tritonId = triton::arch::x86::ID_PREFIX_INVALID;
-
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return tritonId;
 
         switch (id) {
 

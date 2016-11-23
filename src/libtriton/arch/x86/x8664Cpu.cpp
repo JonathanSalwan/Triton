@@ -14,7 +14,6 @@
 #include <externalLibs.hpp>
 #include <immediate.hpp>
 #include <x8664Cpu.hpp>
-#include <x86Specifications.hpp>
 
 #ifdef TRITON_PYTHON_BINDINGS
   #include <pythonBindings.hpp>
@@ -590,7 +589,7 @@ namespace triton {
 
 
       triton::arch::RegisterSpecification x8664Cpu::getRegisterInformation(triton::uint32 regId) const {
-        return triton::arch::x86::registerIdToRegisterInformation(regId);
+        return this->getRegisterSpecification(triton::arch::ARCH_X86_64, regId);
       }
 
 
@@ -675,10 +674,10 @@ namespace triton {
             inst.setSize(insn[j].size);
 
             /* Init the instruction's type */
-            inst.setType(triton::arch::x86::capstoneInstructionToTritonInstruction(insn[j].id));
+            inst.setType(this->capstoneInstructionToTritonInstruction(insn[j].id));
 
             /* Init the instruction's prefix */
-            inst.setPrefix(triton::arch::x86::capstonePrefixToTritonPrefix(detail->x86.prefix[0]));
+            inst.setPrefix(this->capstonePrefixToTritonPrefix(detail->x86.prefix[0]));
 
             /* Init operands */
             for (triton::uint32 n = 0; n < detail->x86.op_count; n++) {
@@ -696,9 +695,9 @@ namespace triton {
                   mem.setPair(std::make_pair(((op->size * BYTE_SIZE_BIT) - 1), 0));
 
                   /* LEA if exists */
-                  triton::arch::Register segment(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.segment));
-                  triton::arch::Register base(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.base));
-                  triton::arch::Register index(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.index));
+                  triton::arch::Register segment(this->capstoneRegisterToTritonRegister(op->mem.segment));
+                  triton::arch::Register base(this->capstoneRegisterToTritonRegister(op->mem.base));
+                  triton::arch::Register index(this->capstoneRegisterToTritonRegister(op->mem.index));
                   triton::arch::Immediate disp(op->mem.disp, base.isValid() ? base.getSize() : index.isValid() ? index.getSize() : this->registerSize());
                   triton::arch::Immediate scale(op->mem.scale, base.isValid() ? base.getSize() : index.isValid() ? index.getSize() : this->registerSize());
 
@@ -717,7 +716,7 @@ namespace triton {
                 }
 
                 case triton::extlibs::capstone::X86_OP_REG:
-                  inst.operands.push_back(triton::arch::OperandWrapper(inst.getRegisterState(triton::arch::x86::capstoneRegisterToTritonRegister(op->reg))));
+                  inst.operands.push_back(triton::arch::OperandWrapper(inst.getRegisterState(this->capstoneRegisterToTritonRegister(op->reg))));
                   break;
 
                 default:
