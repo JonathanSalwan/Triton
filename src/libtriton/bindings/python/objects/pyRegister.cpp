@@ -230,19 +230,18 @@ namespace triton {
 
 
       static PyObject* Register_setConcreteValue(PyObject* self, PyObject* value) {
+        triton::arch::Register* reg;
+
+        if (!PyLong_Check(value) && !PyInt_Check(value))
+          return PyErr_Format(PyExc_TypeError, "Register::setConcretevalue(): Expected an integer as argument.");
+
         try {
-          triton::arch::Register* reg;
-
-          if (!PyLong_Check(value) && !PyInt_Check(value))
-            return PyErr_Format(PyExc_TypeError, "Register::setConcretevalue(): Expected an integer as argument.");
-
           reg = PyRegister_AsRegister(self);
           reg->setConcreteValue(PyLong_AsUint512(value));
-
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const triton::exceptions::Register& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
