@@ -116,7 +116,7 @@ namespace triton {
       }
 
 
-      std::list<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(triton::ast::AbstractNode *node, triton::uint32 limit) const {
+      std::list<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(triton::ast::AbstractNode* node, triton::uint32 limit) const {
         std::list<std::map<triton::uint32, SolverModel>> ret;
         std::ostringstream formula;
         z3::context ctx;
@@ -189,7 +189,7 @@ namespace triton {
       }
 
 
-      std::map<triton::uint32, SolverModel> SolverEngine::getModel(triton::ast::AbstractNode *node) const {
+      std::map<triton::uint32, SolverModel> SolverEngine::getModel(triton::ast::AbstractNode* node) const {
         std::map<triton::uint32, SolverModel> ret;
         std::list<std::map<triton::uint32, SolverModel>> allModels;
 

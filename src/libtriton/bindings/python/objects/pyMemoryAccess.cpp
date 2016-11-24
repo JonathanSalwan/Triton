@@ -286,7 +286,7 @@ namespace triton {
 
       static PyObject* MemoryAccess_setBaseRegister(PyObject* self, PyObject* reg) {
         try {
-          triton::arch::MemoryAccess *mem;
+          triton::arch::MemoryAccess* mem;
 
           if (!PyRegister_Check(reg))
             return PyErr_Format(PyExc_TypeError, "MemoryAccess::setBaseRegister(): Expected a Register as argument.");
@@ -304,7 +304,7 @@ namespace triton {
 
       static PyObject* MemoryAccess_setConcreteValue(PyObject* self, PyObject* value) {
         try {
-          triton::arch::MemoryAccess *mem;
+          triton::arch::MemoryAccess* mem;
 
           if (!PyLong_Check(value) && !PyInt_Check(value))
             return PyErr_Format(PyExc_TypeError, "MemoryAccess::setConcretevalue(): Expected an integer as argument.");
@@ -322,7 +322,7 @@ namespace triton {
 
       static PyObject* MemoryAccess_setDisplacement(PyObject* self, PyObject* imm) {
         try {
-          triton::arch::MemoryAccess *mem;
+          triton::arch::MemoryAccess* mem;
 
           if (!PyImmediate_Check(imm))
             return PyErr_Format(PyExc_TypeError, "MemoryAccess::setDisplacement(): Expected an Immediate as argument.");
@@ -340,7 +340,7 @@ namespace triton {
 
       static PyObject* MemoryAccess_setIndexRegister(PyObject* self, PyObject* reg) {
         try {
-          triton::arch::MemoryAccess *mem;
+          triton::arch::MemoryAccess* mem;
 
           if (!PyRegister_Check(reg))
             return PyErr_Format(PyExc_TypeError, "MemoryAccess::setIndexRegister(): Expected a Register as argument.");
@@ -358,7 +358,7 @@ namespace triton {
 
       static PyObject* MemoryAccess_setScale(PyObject* self, PyObject* imm) {
         try {
-          triton::arch::MemoryAccess *mem;
+          triton::arch::MemoryAccess* mem;
 
           if (!PyImmediate_Check(imm))
             return PyErr_Format(PyExc_TypeError, "MemoryAccess::setScale(): Expected an Immediate as argument.");
@@ -376,7 +376,7 @@ namespace triton {
 
       static PyObject* MemoryAccess_setSegmentRegister(PyObject* self, PyObject* reg) {
         try {
-          triton::arch::MemoryAccess *mem;
+          triton::arch::MemoryAccess* mem;
 
           if (!PyRegister_Check(reg))
             return PyErr_Format(PyExc_TypeError, "MemoryAccess::setSegmentRegister(): Expected a Register as argument.");

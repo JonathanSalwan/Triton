@@ -499,7 +499,7 @@ namespace triton {
          * **item1**: symbolic variable id<br>
          * **item2**: model
          */
-        std::map<triton::uint32, triton::engines::solver::SolverModel> getModel(triton::ast::AbstractNode *node) const;
+        std::map<triton::uint32, triton::engines::solver::SolverModel> getModel(triton::ast::AbstractNode* node) const;
 
         /*!
          * \brief [**solver api**] - Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
@@ -508,7 +508,7 @@ namespace triton {
          * **item1**: symbolic variable id<br>
          * **item2**: model
          */
-        std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(triton::ast::AbstractNode *node, triton::uint32 limit) const;
+        std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(triton::ast::AbstractNode* node, triton::uint32 limit) const;
 
 
 

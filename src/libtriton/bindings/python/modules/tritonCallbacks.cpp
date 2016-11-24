@@ -1341,18 +1341,17 @@ namespace triton {
 
       static PyObject* triton_getAllRegisters(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        std::set<triton::arch::Register*> reg;
-        std::set<triton::arch::Register*>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getAllRegisters(): Architecture is not defined.");
 
         try {
-          reg = triton::api.getAllRegisters();
-          ret = xPyList_New(reg.size());
           triton::uint32 index = 0;
-          for (it = reg.begin(); it != reg.end(); it++)
+          std::set<triton::arch::Register*> reg = triton::api.getAllRegisters();
+
+          ret = xPyList_New(reg.size());
+          for (auto it = reg.begin(); it != reg.end(); it++)
             PyList_SetItem(ret, index++, PyRegister(**it));
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1370,17 +1369,16 @@ namespace triton {
 
       static PyObject* triton_getAstDictionariesStats(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        std::map<std::string, triton::usize> stats;
-        std::map<std::string, triton::usize>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getAstDictionariesStats(): Architecture is not defined.");
 
         try {
-          stats = triton::api.getAstDictionariesStats();
-          ret   = xPyDict_New();
-          for (it = stats.begin(); it != stats.end(); it++)
+          std::map<std::string, triton::usize> stats = triton::api.getAstDictionariesStats();
+
+          ret = xPyDict_New();
+          for (auto it = stats.begin(); it != stats.end(); it++)
             PyDict_SetItem(ret, PyString_FromString(it->first.c_str()), PyLong_FromUsize(it->second));
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1417,7 +1415,6 @@ namespace triton {
 
 
       static PyObject* triton_getConcreteMemoryAreaValue(PyObject* self, PyObject* args) {
-        std::vector<triton::uint8> vv;
         triton::uint8*  area = nullptr;
         PyObject*       ret  = nullptr;
         PyObject*       addr = nullptr;
@@ -1431,7 +1428,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getConcreteMemoryAreaValue(): Architecture is not defined.");
 
         try {
-          vv   = triton::api.getConcreteMemoryAreaValue(PyLong_AsUint64(addr), PyLong_AsUsize(size));
+          std::vector<triton::uint8> vv = triton::api.getConcreteMemoryAreaValue(PyLong_AsUint64(addr), PyLong_AsUsize(size));
           area = new triton::uint8[vv.size()];
 
           for (triton::usize index = 0; index < vv.size(); index++)
@@ -1522,8 +1519,6 @@ namespace triton {
 
       static PyObject* triton_getModel(PyObject* self, PyObject* node) {
         PyObject* ret = nullptr;
-        std::map<triton::uint32, triton::engines::solver::SolverModel> model;
-        std::map<triton::uint32, triton::engines::solver::SolverModel>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -1534,8 +1529,8 @@ namespace triton {
 
         try {
           ret = xPyDict_New();
-          model = triton::api.getModel(PyAstNode_AsAstNode(node));
-          for (it = model.begin(); it != model.end(); it++) {
+          auto model = triton::api.getModel(PyAstNode_AsAstNode(node));
+          for (auto it = model.begin(); it != model.end(); it++) {
             PyDict_SetItem(ret, PyLong_FromUint32(it->first), PySolverModel(it->second));
           }
         }
@@ -1551,9 +1546,6 @@ namespace triton {
         PyObject* ret   = nullptr;
         PyObject* node  = nullptr;
         PyObject* limit = nullptr;
-        triton::uint32 index = 0;
-        std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> models;
-        std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>>::iterator it;
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &node, &limit);
@@ -1569,11 +1561,14 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getModels(): Expects an integer as second argument.");
 
         try {
-          models = triton::api.getModels(PyAstNode_AsAstNode(node), PyLong_AsUint32(limit));
+          auto models = triton::api.getModels(PyAstNode_AsAstNode(node), PyLong_AsUint32(limit));
+          triton::uint32 index = 0;
+
           ret = xPyList_New(models.size());
-          for (it = models.begin(); it != models.end(); it++) {
+          for (auto it = models.begin(); it != models.end(); it++) {
             PyObject* mdict = xPyDict_New();
-            std::map<triton::uint32, triton::engines::solver::SolverModel> model = *it;
+            auto model = *it;
+
             for (auto it2 = model.begin(); it2 != model.end(); it2++) {
               PyDict_SetItem(mdict, PyLong_FromUint32(it2->first), PySolverModel(it2->second));
             }
@@ -1591,18 +1586,17 @@ namespace triton {
 
       static PyObject* triton_getParentRegisters(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        std::set<triton::arch::Register*> reg;
-        std::set<triton::arch::Register*>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getParentRegisters(): Architecture is not defined.");
 
         try {
-          reg = triton::api.getParentRegisters();
-          ret = xPyList_New(reg.size());
           triton::uint32 index = 0;
-          for (it = reg.begin(); it != reg.end(); it++)
+          std::set<triton::arch::Register*> reg = triton::api.getParentRegisters();
+          ret = xPyList_New(reg.size());
+
+          for (auto it = reg.begin(); it != reg.end(); it++)
             PyList_SetItem(ret, index++, PyRegister(**it));
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1621,10 +1615,10 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getPathConstraintsAst(): Architecture is not defined.");
 
         try {
+          triton::uint32 index = 0;
           const std::vector<triton::engines::symbolic::PathConstraint>& pc = triton::api.getPathConstraints();
           ret = xPyList_New(pc.size());
 
-          triton::uint32 index = 0;
           for (auto it = pc.begin(); it != pc.end(); it++)
             PyList_SetItem(ret, index++, PyPathConstraint(*it));
 
@@ -1669,16 +1663,16 @@ namespace triton {
 
       static PyObject* triton_getSymbolicExpressions(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        const std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*>& expressions = triton::api.getSymbolicExpressions();
-        std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*>::const_iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getTaintedSymbolicExpressions(): Architecture is not defined.");
 
         try {
+          const auto& expressions = triton::api.getSymbolicExpressions();
+
           ret = xPyDict_New();
-          for (it = expressions.begin(); it != expressions.end(); it++)
+          for (auto it = expressions.begin(); it != expressions.end(); it++)
             PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1691,16 +1685,16 @@ namespace triton {
 
       static PyObject* triton_getSymbolicMemory(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        std::map<triton::uint64, triton::engines::symbolic::SymbolicExpression*> regs = triton::api.getSymbolicMemory();
-        std::map<triton::uint64, triton::engines::symbolic::SymbolicExpression*>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getSymbolicMemory(): Architecture is not defined.");
 
         try {
+          auto regs = triton::api.getSymbolicMemory();
+
           ret = xPyDict_New();
-          for (it = regs.begin(); it != regs.end(); it++) {
+          for (auto it = regs.begin(); it != regs.end(); it++) {
             PyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
           }
         }
@@ -1750,16 +1744,16 @@ namespace triton {
 
       static PyObject* triton_getSymbolicRegisters(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        std::map<triton::arch::Register, triton::engines::symbolic::SymbolicExpression*> regs = triton::api.getSymbolicRegisters();
-        std::map<triton::arch::Register, triton::engines::symbolic::SymbolicExpression*>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getSymbolicRegisters(): Architecture is not defined.");
 
         try {
+          auto regs = triton::api.getSymbolicRegisters();
+
           ret = xPyDict_New();
-          for (it = regs.begin(); it != regs.end(); it++) {
+          for (auto it = regs.begin(); it != regs.end(); it++) {
             triton::arch::Register reg(it->first);
             PyDict_SetItem(ret, PyRegister(reg), PySymbolicExpression(it->second));
           }
@@ -1843,16 +1837,16 @@ namespace triton {
 
       static PyObject* triton_getSymbolicVariables(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        const std::map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& variables = triton::api.getSymbolicVariables();
-        std::map<triton::usize, triton::engines::symbolic::SymbolicVariable*>::const_iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getTaintedSymbolicVariables(): Architecture is not defined.");
 
         try {
+          const auto& variables = triton::api.getSymbolicVariables();
+
           ret = xPyDict_New();
-          for (it = variables.begin(); it != variables.end(); it++)
+          for (auto it = variables.begin(); it != variables.end(); it++)
             PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicVariable(it->second));
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1866,18 +1860,17 @@ namespace triton {
       static PyObject* triton_getTaintedMemory(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
         triton::usize size = 0, index = 0;
-        std::set<triton::uint64> addresses;
-        std::set<triton::uint64>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getTaintedMemory(): Architecture is not defined.");
 
         try {
-          addresses = triton::api.getTaintedMemory();
+          std::set<triton::uint64> addresses = triton::api.getTaintedMemory();
+
           size = addresses.size();
           ret = xPyList_New(size);
-          for (it = addresses.begin(); it != addresses.end(); it++) {
+          for (auto it = addresses.begin(); it != addresses.end(); it++) {
             PyList_SetItem(ret, index, PyLong_FromUint64(*it));
             index++;
           }
@@ -1893,18 +1886,17 @@ namespace triton {
       static PyObject* triton_getTaintedRegisters(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
         triton::usize size = 0, index = 0;
-        std::set<triton::arch::Register> registers;
-        std::set<triton::arch::Register>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getTaintedRegisters(): Architecture is not defined.");
 
         try {
-          registers = triton::api.getTaintedRegisters();
+          std::set<triton::arch::Register> registers = triton::api.getTaintedRegisters();
+
           size = registers.size();
           ret = xPyList_New(size);
-          for (it = registers.begin(); it != registers.end(); it++) {
+          for (auto it = registers.begin(); it != registers.end(); it++) {
             PyList_SetItem(ret, index, PyRegister(*it));
             index++;
           }
@@ -1920,18 +1912,17 @@ namespace triton {
       static PyObject* triton_getTaintedSymbolicExpressions(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
         triton::usize size = 0, index = 0;
-        std::list<triton::engines::symbolic::SymbolicExpression*> expressions;
-        std::list<triton::engines::symbolic::SymbolicExpression*>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getTaintedSymbolicExpressions(): Architecture is not defined.");
 
         try {
-          expressions = triton::api.getTaintedSymbolicExpressions();
+          auto expressions = triton::api.getTaintedSymbolicExpressions();
+
           size = expressions.size();
           ret = xPyList_New(size);
-          for (it = expressions.begin(); it != expressions.end(); it++) {
+          for (auto it = expressions.begin(); it != expressions.end(); it++) {
             PyList_SetItem(ret, index, PySymbolicExpression(*it));
             index++;
           }
@@ -2503,7 +2494,6 @@ namespace triton {
 
       static PyObject* triton_sliceExpressions(PyObject* self, PyObject* expr) {
         PyObject* ret = nullptr;
-        std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*> exprs;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -2513,8 +2503,9 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "sliceExpressions(): Expects a SymbolicExpression as argument.");
 
         try {
-          ret   = xPyDict_New();
-          exprs = triton::api.sliceExpressions(PySymbolicExpression_AsSymbolicExpression(expr));
+          auto exprs = triton::api.sliceExpressions(PySymbolicExpression_AsSymbolicExpression(expr));
+
+          ret = xPyDict_New();
           for (auto it = exprs.begin(); it != exprs.end(); it++)
             PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
         }

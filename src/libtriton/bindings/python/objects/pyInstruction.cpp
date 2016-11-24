@@ -265,11 +265,10 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& loadAccess = PyInstruction_AsInstruction(self)->getLoadAccess();
+          const auto& loadAccess = PyInstruction_AsInstruction(self)->getLoadAccess();
 
           ret = xPyList_New(loadAccess.size());
-          for (it = loadAccess.begin(); it != loadAccess.end(); it++) {
+          for (auto it = loadAccess.begin(); it != loadAccess.end(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyMemoryAccess(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
@@ -320,11 +319,10 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& storeAccess = PyInstruction_AsInstruction(self)->getStoreAccess();
+          const auto& storeAccess = PyInstruction_AsInstruction(self)->getStoreAccess();
 
           ret = xPyList_New(storeAccess.size());
-          for (it = storeAccess.begin(); it != storeAccess.end(); it++) {
+          for (auto it = storeAccess.begin(); it != storeAccess.end(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyMemoryAccess(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
@@ -395,11 +393,10 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& readImmediates = PyInstruction_AsInstruction(self)->getReadImmediates();
+          const auto& readImmediates = PyInstruction_AsInstruction(self)->getReadImmediates();
 
           ret = xPyList_New(readImmediates.size());
-          for (it = readImmediates.begin(); it != readImmediates.end(); it++) {
+          for (auto it = readImmediates.begin(); it != readImmediates.end(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyImmediate(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
@@ -418,11 +415,10 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& readRegisters = PyInstruction_AsInstruction(self)->getReadRegisters();
+          const auto& readRegisters = PyInstruction_AsInstruction(self)->getReadRegisters();
 
           ret = xPyList_New(readRegisters.size());
-          for (it = readRegisters.begin(); it != readRegisters.end(); it++) {
+          for (auto it = readRegisters.begin(); it != readRegisters.end(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyRegister(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
@@ -555,11 +551,10 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& writtenRegisters = PyInstruction_AsInstruction(self)->getWrittenRegisters();
+          const auto& writtenRegisters = PyInstruction_AsInstruction(self)->getWrittenRegisters();
 
           ret = xPyList_New(writtenRegisters.size());
-          for (it = writtenRegisters.begin(); it != writtenRegisters.end(); it++) {
+          for (auto it = writtenRegisters.begin(); it != writtenRegisters.end(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyRegister(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
