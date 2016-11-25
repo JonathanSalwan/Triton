@@ -72,10 +72,10 @@ namespace triton {
       SymbolicEngine::SymbolicEngine(triton::arch::Architecture* arch, triton::callbacks::Callbacks* callbacks, bool isBackup)
         : triton::engines::symbolic::SymbolicSimplification(callbacks) {
 
-        this->arch = arch;
-        if (this->arch == nullptr)
+        if (arch == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::SymbolicEngine(): The architecture pointer must be valid.");
 
+        this->arch              = arch;
         this->numberOfRegisters = this->arch->numberOfRegisters();
         this->symbolicReg       = new triton::usize[this->numberOfRegisters]();
 
@@ -102,6 +102,7 @@ namespace triton {
          * The backup flag cannot be spread. once a class is tagged as
          * backup, it always be a backup class.
          */
+        this->arch                        = other.arch;
         this->callbacks                   = other.callbacks;
         this->backupFlag                  = true;
         this->alignedMemoryReference      = other.alignedMemoryReference;

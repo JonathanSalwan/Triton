@@ -12,6 +12,7 @@
 
 #include "memoryAccess.hpp"
 #include "register.hpp"
+#include "symbolicEngine.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -48,9 +49,11 @@ namespace triton {
       /*! \class TaintEngine
           \brief The taint engine class. */
       class TaintEngine {
+        private:
+          //! Symbolic Engine API
+          triton::engines::symbolic::SymbolicEngine* symbolicEngine;
 
         protected:
-
           //! Defines if the taint engine is enabled or disabled.
           bool enableFlag;
 
@@ -63,8 +66,19 @@ namespace triton {
           //! Copies a TaintEngine.
           void copy(const TaintEngine& other);
 
-
         public:
+          //! Constructor.
+          TaintEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
+
+          //! Constructor by copy.
+          TaintEngine(const TaintEngine& copy);
+
+          //! Destructor.
+          virtual ~TaintEngine();
+
+          //! Copies a TaintEngine.
+          void operator=(const TaintEngine& other);
+
           //! Returns true if the taint engine is enabled.
           bool isEnabled(void) const;
 
@@ -95,6 +109,18 @@ namespace triton {
             \param reg the register operand.
           */
           bool isRegisterTainted(const triton::arch::Register& reg) const;
+
+          //! Abstract taint verification.
+          /*!
+            \param op the abstract operand. Can be a register or a memory.
+          */
+          bool isTainted(const triton::arch::OperandWrapper& op) const;
+
+          //! Sets the flag (taint) to an abstract operand (Register or Memory).
+          /*!
+            \param op the abstract operand. Can be a register or a memory.
+          */
+          bool setTaint(const triton::arch::OperandWrapper& op, bool flag);
 
           //! Sets memory flag.
           /*!
@@ -243,18 +269,6 @@ namespace triton {
             \return true if the regDst is tainted.
           */
           bool assignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
-
-          //! Copies a TaintEngine.
-          void operator=(const TaintEngine& other);
-
-          //! Constructor.
-          TaintEngine();
-
-          //! Constructor by copy.
-          TaintEngine(const TaintEngine& copy);
-
-          //! Destructor.
-          virtual ~TaintEngine();
       };
 
     /*! @} End of taint namespace */

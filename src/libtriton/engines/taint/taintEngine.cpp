@@ -5,6 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <exceptions.hpp>
 #include <taintEngine.hpp>
 
 
@@ -88,14 +89,19 @@ namespace triton {
   namespace engines {
     namespace taint {
 
-      TaintEngine::TaintEngine() {
-        this->enableFlag = true;
+      TaintEngine::TaintEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine) {
+        if (symbolicEngine == nullptr)
+          throw triton::exceptions::TaintEngine("TaintEngine::TaintEngine(): The symbolicEngine API cannot be null.");
+
+        this->symbolicEngine = symbolicEngine;
+        this->enableFlag     = true;
       }
 
 
       void TaintEngine::copy(const TaintEngine& other) {
-        this->enableFlag = other.enableFlag;
-        this->taintedMemory = other.taintedMemory;
+        this->enableFlag       = other.enableFlag;
+        this->symbolicEngine   = other.symbolicEngine;
+        this->taintedMemory    = other.taintedMemory;
         this->taintedRegisters = other.taintedRegisters;
       }
 
@@ -172,6 +178,18 @@ namespace triton {
       }
 
 
+      /* Abstract taint verification. */
+      bool TaintEngine::isTainted(const triton::arch::OperandWrapper& op) const {
+        switch (op.getType()) {
+          case triton::arch::OP_IMM: return triton::engines::taint::UNTAINTED;
+          case triton::arch::OP_MEM: return this->isMemoryTainted(op.getConstMemory());
+          case triton::arch::OP_REG: return this->isRegisterTainted(op.getConstRegister());
+          default:
+            throw triton::exceptions::TaintEngine("TaintEngine::isTainted(): Invalid operand.");
+        }
+      }
+
+
       /* Taint the register */
       bool TaintEngine::taintRegister(const triton::arch::Register& reg) {
         triton::arch::Register parent = reg.getParent();
@@ -208,6 +226,18 @@ namespace triton {
           this->untaintMemory(mem);
 
         return flag;
+      }
+
+
+      /* Sets the flag (taint) to an abstract operand (Register or Memory). */
+      bool TaintEngine::setTaint(const triton::arch::OperandWrapper& op, bool flag) {
+        switch (op.getType()) {
+          case triton::arch::OP_IMM: return triton::engines::taint::UNTAINTED;
+          case triton::arch::OP_MEM: return this->setTaintMemory(op.getConstMemory(), flag);
+          case triton::arch::OP_REG: return this->setTaintRegister(op.getConstRegister(), flag);
+          default:
+            throw triton::exceptions::TaintEngine("TaintEngine::setTaint(): Invalid operand.");
+        }
       }
 
 

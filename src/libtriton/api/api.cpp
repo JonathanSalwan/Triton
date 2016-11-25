@@ -387,10 +387,6 @@ namespace triton {
   void API::initEngines(void) {
     this->checkArchitecture();
 
-    this->taint = new triton::engines::taint::TaintEngine();
-    if (!this->taint)
-      throw triton::exceptions::API("API::initEngines(): No enough memory.");
-
     this->symbolic = new triton::engines::symbolic::SymbolicEngine(&this->arch, &this->callbacks);
     if (!this->symbolic)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
@@ -405,6 +401,10 @@ namespace triton {
 
     this->astGarbageCollector = new triton::ast::AstGarbageCollector(this->symbolic);
     if (!this->astGarbageCollector)
+      throw triton::exceptions::API("API::initEngines(): No enough memory.");
+
+    this->taint = new triton::engines::taint::TaintEngine(this->symbolic);
+    if (!this->taint)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
     this->z3Interface = new triton::ast::Z3Interface(this->symbolic);
@@ -1062,13 +1062,7 @@ namespace triton {
 
   bool API::isTainted(const triton::arch::OperandWrapper& op) const {
     this->checkTaint();
-    switch (op.getType()) {
-      case triton::arch::OP_IMM: return triton::engines::taint::UNTAINTED;
-      case triton::arch::OP_MEM: return this->isMemoryTainted(op.getConstMemory());
-      case triton::arch::OP_REG: return this->isRegisterTainted(op.getConstRegister());
-      default:
-        throw triton::exceptions::API("API::isTainted(): Invalid operand.");
-    }
+    return this->taint->isTainted(op);
   }
 
 
@@ -1092,13 +1086,7 @@ namespace triton {
 
   bool API::setTaint(const triton::arch::OperandWrapper& op, bool flag) {
     this->checkTaint();
-    switch (op.getType()) {
-      case triton::arch::OP_IMM: return triton::engines::taint::UNTAINTED;
-      case triton::arch::OP_MEM: return this->setTaintMemory(op.getConstMemory(), flag);
-      case triton::arch::OP_REG: return this->setTaintRegister(op.getConstRegister(), flag);
-      default:
-        throw triton::exceptions::API("API::setTaint(): Invalid operand.");
-    }
+    return this->taint->setTaint(op, flag);
   }
 
 
