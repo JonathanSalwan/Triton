@@ -2,6 +2,15 @@ language: cpp
 
 matrix:
     include:
+        # Linux gcc 4.8
+        - os: linux
+          compiler: gcc
+          addons:
+            apt:
+              sources: ['ubuntu-toolchain-r-test', 'cmake', 'boost-latest']
+              packages: ['g++-4.8', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake']
+          env: [ CXX_COMPILER=g++-4.8, C_COMPILER=gcc-4.8, PYTHON_VERSION=2.7]
+
         # Linux gcc 4.9
         - os: linux
           compiler: gcc
