@@ -668,6 +668,30 @@ namespace triton {
       }
 
 
+      /* Returns a symbolic operand based on the abstract wrapper. */
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicOperand(triton::arch::OperandWrapper& op) {
+        switch (op.getType()) {
+          case triton::arch::OP_IMM: return this->buildSymbolicImmediate(op.getImmediate());
+          case triton::arch::OP_MEM: return this->buildSymbolicMemory(op.getMemory());
+          case triton::arch::OP_REG: return this->buildSymbolicRegister(op.getRegister());
+          default:
+            throw triton::exceptions::SymbolicEngine("SymbolicEngine::buildSymbolicOperand(): Invalid operand.");
+        }
+      }
+
+
+      /* Returns a symbolic operand based on the abstract wrapper. */
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicOperand(triton::arch::Instruction& inst, triton::arch::OperandWrapper& op) {
+        switch (op.getType()) {
+          case triton::arch::OP_IMM: return this->buildSymbolicImmediate(inst, op.getImmediate());
+          case triton::arch::OP_MEM: return this->buildSymbolicMemory(inst, op.getMemory());
+          case triton::arch::OP_REG: return this->buildSymbolicRegister(inst, op.getRegister());
+          default:
+            throw triton::exceptions::SymbolicEngine("SymbolicEngine::buildSymbolicOperand(): Invalid operand.");
+        }
+      }
+
+
       /* Returns a symbolic immediate */
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicImmediate(const triton::arch::Immediate& imm) {
         triton::ast::AbstractNode* node = triton::ast::bv(imm.getValue(), imm.getBitSize());
@@ -773,6 +797,18 @@ namespace triton {
         reg.setConcreteValue(node->evaluate());
         inst.setReadRegister(reg, node);
         return node;
+      }
+
+
+      /* Returns the new symbolic abstract expression and links this expression to the instruction. */
+      SymbolicExpression* SymbolicEngine::createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::OperandWrapper& dst, const std::string& comment) {
+        switch (dst.getType()) {
+          case triton::arch::OP_MEM: return this->createSymbolicMemoryExpression(inst, node, dst.getMemory(), comment);
+          case triton::arch::OP_REG: return this->createSymbolicRegisterExpression(inst, node, dst.getRegister(), comment);
+          default:
+            throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicExpression(): Invalid operand.");
+        }
+        return nullptr;
       }
 
 

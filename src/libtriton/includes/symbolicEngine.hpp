@@ -199,6 +199,12 @@ namespace triton {
           //! Returns the symbolic register value.
           triton::uint512 getSymbolicRegisterValue(const triton::arch::Register& reg);
 
+          //! Returns a symbolic operand based on the abstract wrapper.
+          triton::ast::AbstractNode* buildSymbolicOperand(triton::arch::OperandWrapper& op);
+
+          //! Returns a symbolic operand based on the abstract wrapper.
+          triton::ast::AbstractNode* buildSymbolicOperand(triton::arch::Instruction& inst, triton::arch::OperandWrapper& op);
+
           //! Returns a symbolic immediate.
           triton::ast::AbstractNode* buildSymbolicImmediate(const triton::arch::Immediate& imm);
 
@@ -216,6 +222,9 @@ namespace triton {
 
           //! Returns a symbolic register and defines the register as input of the instruction.
           triton::ast::AbstractNode* buildSymbolicRegister(triton::arch::Instruction& inst, triton::arch::Register& reg);
+
+          //! Returns the new symbolic abstract expression and links this expression to the instruction.
+          SymbolicExpression* createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::OperandWrapper& dst, const std::string& comment="");
 
           //! Returns the new symbolic memory expression expression and links this expression to the instruction.
           SymbolicExpression* createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::MemoryAccess& mem, const std::string& comment="");
