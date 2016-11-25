@@ -33,7 +33,16 @@ automate reverse engineering and perform software verification.
 \section publications_sec Presentations and Publications
 
 <ul>
-  <li><b>Dynamic Binary Analysis and Obfuscated Codes </b><br>
+  <li><b>How Triton can help to reverse virtual machine based software protections</b><br>
+  Talk at CSAW SOS, NYC, 2016.
+  [<a href="http://triton.quarkslab.com/files/csaw2016-sos-rthomas-jsalwan.pdf">slide</a>]<br>
+  Abstract: <i>The first part of the talk is going to be an introduction to the Triton framework
+  to expose its components and to explain how they work together. Then, the second part will
+  include demonstrations on how it's possible to reverse virtual machine based protections using
+  taint analysis, symbolic execution, SMT simplifications and LLVM-IR optimizations.
+  </i></li>
+
+  <li><b>Dynamic Binary Analysis and Obfuscated Codes</b><br>
   Talk at St'Hack, Bordeaux, 2016.
   [<a href="http://triton.quarkslab.com/files/sthack2016-rthomas-jsalwan.pdf">slide</a>]<br>
   Abstract: <i>At this presentation we will talk about how a DBA (Dynamic Binary Analysis) may
