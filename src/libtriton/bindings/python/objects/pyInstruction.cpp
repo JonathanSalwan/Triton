@@ -150,7 +150,7 @@ Returns the type of the instruction as \ref py_OPCODE_page.
 Returns a list of tuple <\ref py_Register_page, \ref py_AstNode_page> which represents all implicit and explicit register (flags includes) outputs.
 
 - **isBranch(void)**<br>
-Returns true if the instruction modifies is a branch (i.e x86: JUMP, JCC).
+Returns true if the instruction is a branch (i.e x86: JUMP, JCC).
 
 - **isConditionTaken(void)**<br>
 Returns true if the condition is taken (i.e x86: JCC, CMOVCC, SETCC, ...).
