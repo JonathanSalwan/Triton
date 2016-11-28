@@ -1202,7 +1202,7 @@ namespace triton {
 
   bool API::taintAssignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
     this->checkTaint();
-    return this->taintAssignmentMemoryRegister(memDst, regSrc);
+    return this->taint->taintAssignmentMemoryRegister(memDst, regSrc);
   }
 
 
