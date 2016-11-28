@@ -72,6 +72,7 @@ CMOVNS                       |            | Move if not sign
 CMOVO                        |            | Move if overflow
 CMOVP                        |            | Move if parity
 CMOVS                        |            | Move if sign
+CMOVZ                        |            | Move if zero
 CMP                          |            | Compare Two Operands
 CMPSB                        |            | Compare byte at address
 CMPSD                        |            | Compare doubleword at address
@@ -264,9 +265,11 @@ SETNE                        |            | Set byte if not zero
 SETNO                        |            | Set byte if not overflow
 SETNP                        |            | Set byte if not parity
 SETNS                        |            | Set byte if not sign
+SETNZ                        |            | Set byte if not zero
 SETO                         |            | Set byte if overflow
 SETP                         |            | Set byte if parity
 SETS                         |            | Set byte if sign
+SETZ                         |            | Set byte if zero
 SFENCE                       | sse1       | Store Fence
 SHL                          |            | Shift Left
 SHR                          |            | Shift Right Unsigned
@@ -351,6 +354,7 @@ namespace triton {
             case ID_INS_CMOVO:          triton::arch::x86::semantics::cmovo_s(inst);        break;
             case ID_INS_CMOVP:          triton::arch::x86::semantics::cmovp_s(inst);        break;
             case ID_INS_CMOVS:          triton::arch::x86::semantics::cmovs_s(inst);        break;
+            case ID_INS_CMOVZ:          triton::arch::x86::semantics::cmovz_s(inst);        break;
             case ID_INS_CMP:            triton::arch::x86::semantics::cmp_s(inst);          break;
             case ID_INS_CMPSB:          triton::arch::x86::semantics::cmpsb_s(inst);        break;
             case ID_INS_CMPSD:          triton::arch::x86::semantics::cmpsd_s(inst);        break;
@@ -543,9 +547,11 @@ namespace triton {
             case ID_INS_SETNO:          triton::arch::x86::semantics::setno_s(inst);        break;
             case ID_INS_SETNP:          triton::arch::x86::semantics::setnp_s(inst);        break;
             case ID_INS_SETNS:          triton::arch::x86::semantics::setns_s(inst);        break;
+            case ID_INS_SETNZ:          triton::arch::x86::semantics::setnz_s(inst);        break;
             case ID_INS_SETO:           triton::arch::x86::semantics::seto_s(inst);         break;
             case ID_INS_SETP:           triton::arch::x86::semantics::setp_s(inst);         break;
             case ID_INS_SETS:           triton::arch::x86::semantics::sets_s(inst);         break;
+            case ID_INS_SETZ:           triton::arch::x86::semantics::setz_s(inst);         break;
             case ID_INS_SFENCE:         triton::arch::x86::semantics::sfence_s(inst);       break;
             case ID_INS_SHL:            triton::arch::x86::semantics::shl_s(inst);          break;
             case ID_INS_SHR:            triton::arch::x86::semantics::shr_s(inst);          break;
@@ -3100,6 +3106,36 @@ namespace triton {
           /* Upate the symbolic control flow */
           triton::arch::x86::semantics::controlFlow_s(inst);
         }
+
+
+        void cmovz_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+          auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+
+          /* Create symbolic operands */
+          auto op1 = triton::api.buildSymbolicOperand(inst, dst);
+          auto op2 = triton::api.buildSymbolicOperand(inst, src);
+          auto op3 = triton::api.buildSymbolicOperand(inst, zf);
+
+          /* Create the semantics */
+          auto node = triton::ast::ite(triton::ast::equal(op3, triton::ast::bvtrue()), op2, op1);
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "CMOVZ operation");
+
+          /* Spread taint and condition flag */
+          if (op3->evaluate().convert_to<bool>()) {
+            expr->isTainted = triton::api.taintAssignment(dst, src);
+            inst.setConditionTaken(true);
+          }
+          else
+            expr->isTainted = triton::api.taintUnion(dst, dst);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
 
 
         void cmp_s(triton::arch::Instruction& inst) {
@@ -9908,6 +9944,36 @@ namespace triton {
         }
 
 
+        void setnz_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, zf);
+
+          /* Create the semantics */
+          auto node = triton::ast::ite(
+                        triton::ast::equal(op2, triton::ast::bvfalse()),
+                        triton::ast::bv(1, dst.getBitSize()),
+                        triton::ast::bv(0, dst.getBitSize())
+                      );
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETNZ operation");
+
+          /* Spread taint and condition flag */
+          if (!op2->evaluate().convert_to<bool>()) {
+            expr->isTainted = triton::api.taintUnion(dst, zf);
+            inst.setConditionTaken(true);
+          }
+          else
+            expr->isTainted = triton::api.taintUnion(dst, dst);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
         void seto_s(triton::arch::Instruction& inst) {
           auto& dst = inst.operands[0];
           auto  of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
@@ -9988,6 +10054,36 @@ namespace triton {
           /* Spread taint and condition flag */
           if (op2->evaluate().convert_to<bool>()) {
             expr->isTainted = triton::api.taintUnion(dst, sf);
+            inst.setConditionTaken(true);
+          }
+          else
+            expr->isTainted = triton::api.taintUnion(dst, dst);
+
+          /* Upate the symbolic control flow */
+          triton::arch::x86::semantics::controlFlow_s(inst);
+        }
+
+
+        void setz_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+
+          /* Create symbolic operands */
+          auto op2 = triton::api.buildSymbolicOperand(inst, zf);
+
+          /* Create the semantics */
+          auto node = triton::ast::ite(
+                        triton::ast::equal(op2, triton::ast::bvtrue()),
+                        triton::ast::bv(1, dst.getBitSize()),
+                        triton::ast::bv(0, dst.getBitSize())
+                      );
+
+          /* Create symbolic expression */
+          auto expr = triton::api.createSymbolicExpression(inst, node, dst, "SETZ operation");
+
+          /* Spread taint and condition flag */
+          if (op2->evaluate().convert_to<bool>()) {
+            expr->isTainted = triton::api.taintUnion(dst, zf);
             inst.setConditionTaken(true);
           }
           else

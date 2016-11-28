@@ -625,6 +625,7 @@ namespace triton {
         ID_INS_CMOVP, //!< CMOVP
         ID_INS_FCMOVU, //!< FCMOVU
         ID_INS_CMOVS, //!< CMOVS
+        ID_INS_CMOVZ, //!< CMOVS
         ID_INS_CMP, //!< CMP
         ID_INS_CMPPD, //!< CMPPD
         ID_INS_CMPPS, //!< CMPPS
@@ -1163,9 +1164,11 @@ namespace triton {
         ID_INS_SETNO, //!< SETNO
         ID_INS_SETNP, //!< SETNP
         ID_INS_SETNS, //!< SETNS
+        ID_INS_SETNZ, //!< SETNZ
         ID_INS_SETO, //!< SETO
         ID_INS_SETP, //!< SETP
         ID_INS_SETS, //!< SETS
+        ID_INS_SETZ, //!< SETZ
         ID_INS_SFENCE, //!< SFENCE
         ID_INS_SGDT, //!< SGDT
         ID_INS_SHA1MSG1, //!< SHA1MSG1

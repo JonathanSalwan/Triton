@@ -285,6 +285,9 @@ namespace triton {
       //! The CMOVS semantics.
       void cmovs_s(triton::arch::Instruction& inst);
 
+      //! The CMOVZ semantics.
+      void cmovz_s(triton::arch::Instruction& inst);
+
       //! The CMP semantics.
       void cmp_s(triton::arch::Instruction& inst);
 
@@ -843,6 +846,9 @@ namespace triton {
       //! The SETNS semantics.
       void setns_s(triton::arch::Instruction& inst);
 
+      //! The SETNZ semantics.
+      void setnz_s(triton::arch::Instruction& inst);
+
       //! The SETO semantics.
       void seto_s(triton::arch::Instruction& inst);
 
@@ -851,6 +857,9 @@ namespace triton {
 
       //! The SETS semantics.
       void sets_s(triton::arch::Instruction& inst);
+
+      //! The SETZ semantics.
+      void setz_s(triton::arch::Instruction& inst);
 
       //! The SFENCE semantics.
       void sfence_s(triton::arch::Instruction& inst);
