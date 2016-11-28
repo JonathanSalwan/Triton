@@ -195,6 +195,17 @@ namespace triton {
         return !TAINTED;
       }
 
+	  /* Get list of tainted memory */
+	  std::list<triton::uint64> TaintEngine::getTaintedMemory(void){
+		  std::list<triton::uint64> taintedMemoryList;
+
+		  typedef std::map<triton::uint64,bool>::iterator it_type;
+		  for (it_type iterator = this->taintedAddresses.begin(); iterator != this->taintedAddresses.end(); iterator++) {
+			  if (iterator->second)
+				  taintedMemoryList.push_back(iterator->first);
+		  }
+		  return taintedMemoryList;
+	  }
 
       /* Set the taint on memory */
       bool TaintEngine::setTaintMemory(const triton::arch::MemoryAccess& mem, bool flag) {

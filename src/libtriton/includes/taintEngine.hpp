@@ -96,6 +96,9 @@ namespace triton {
           */
           bool isRegisterTainted(const triton::arch::Register& reg) const;
 
+		  //! Gets list of tainted memory.
+		  std::list<triton::uint64> getTaintedMemory(void);
+
           //! Sets memory flag.
           /*!
             \param mem the memory access.
