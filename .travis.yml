@@ -56,18 +56,6 @@ matrix:
               packages: ['clang-3.7', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake']
           env: [ CXX_COMPILER=clang++-3.7, C_COMPILER=clang-3.7, PYTHON_VERSION=2.7 ]
 
-        # OSX xcode 7.1
-        - os: osx
-          osx_image: xcode7.1
-          compiler: clang
-          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3 cmake' ]
-
-        # OSX xcode 7.2
-        - os: osx
-          osx_image: xcode7.2
-          compiler: clang
-          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3 cmake' ]
-
         # OSX xcode 7.3
         - os: osx
           osx_image: xcode7.3
