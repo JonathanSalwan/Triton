@@ -6,6 +6,7 @@
 */
 
 #include <cstring>
+#include <new>
 
 #include <exceptions.hpp>
 #include <coreUtils.hpp>
@@ -376,7 +377,7 @@ namespace triton {
       SymbolicExpression* SymbolicEngine::newSymbolicExpression(triton::ast::AbstractNode* node, triton::engines::symbolic::symkind_e kind, const std::string& comment) {
         triton::usize id = this->getUniqueSymExprId();
         node = this->processSimplification(node);
-        SymbolicExpression* expr = new SymbolicExpression(node, id, kind, comment);
+        SymbolicExpression* expr = new(std::nothrow) SymbolicExpression(node, id, kind, comment);
         if (expr == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::newSymbolicExpression(): not enough memory");
         this->symbolicExpressions[id] = expr;
@@ -659,7 +660,7 @@ namespace triton {
       /* Adds a new symbolic variable */
       SymbolicVariable* SymbolicEngine::newSymbolicVariable(triton::engines::symbolic::symkind_e kind, triton::uint64 kindValue, triton::uint32 size, const std::string& comment) {
         triton::usize uniqueId = this->getUniqueSymVarId();
-        SymbolicVariable* symVar = new SymbolicVariable(kind, kindValue, uniqueId, size, comment);
+        SymbolicVariable* symVar = new(std::nothrow) SymbolicVariable(kind, kindValue, uniqueId, size, comment);
 
         if (symVar == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::newSymbolicVariable(): Cannot allocate a new symbolic variable");

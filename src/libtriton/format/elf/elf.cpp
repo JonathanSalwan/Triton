@@ -6,6 +6,7 @@
 */
 
 #include <cstdio>
+#include <new>
 
 #include <elf.hpp>
 #include <exceptions.hpp>
@@ -52,7 +53,7 @@ namespace triton {
         this->totalSize = ftell(fd);
         rewind(fd);
 
-        this->raw = new triton::uint8[this->totalSize];
+        this->raw = new(std::nothrow) triton::uint8[this->totalSize];
         if(!this->raw)
           throw triton::exceptions::Elf("Elf::open(): Not enough memory.");
 

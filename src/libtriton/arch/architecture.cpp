@@ -5,6 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <new>
+
 #include <architecture.hpp>
 #include <exceptions.hpp>
 #include <x8664Cpu.hpp>
@@ -53,8 +55,8 @@ namespace triton {
           /* remove previous CPU instance (when setArchitecture() has been called twice) */
           delete this->cpu;
           /* init the new instance */
-          this->cpu = new triton::arch::x86::x8664Cpu(this->callbacks);
-          if (!this->cpu)
+          this->cpu = new(std::nothrow) triton::arch::x86::x8664Cpu(this->callbacks);
+          if (this->cpu == nullptr)
             throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();
           break;
@@ -63,8 +65,8 @@ namespace triton {
           /* remove previous CPU instance (when setArchitecture() has been called twice) */
           delete this->cpu;
           /* init the new instance */
-          this->cpu = new triton::arch::x86::x86Cpu(this->callbacks);
-          if (!this->cpu)
+          this->cpu = new(std::nothrow) triton::arch::x86::x86Cpu(this->callbacks);
+          if (this->cpu == nullptr)
             throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();
           break;

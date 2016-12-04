@@ -856,7 +856,7 @@ namespace triton {
         if (object != NULL)
           object->inst = new triton::arch::Instruction();
 
-        return (PyObject* )object;
+        return (PyObject*)object;
       }
 
 
@@ -868,7 +868,7 @@ namespace triton {
         if (object != NULL)
           object->inst = new triton::arch::Instruction(opcodes, opSize);
 
-        return (PyObject* )object;
+        return (PyObject*)object;
       }
 
 

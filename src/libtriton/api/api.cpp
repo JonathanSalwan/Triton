@@ -5,8 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <map>
 #include <list>
+#include <map>
+#include <new>
 
 #include <api.hpp>
 #include <exceptions.hpp>
@@ -387,28 +388,28 @@ namespace triton {
   void API::initEngines(void) {
     this->checkArchitecture();
 
-    this->symbolic = new triton::engines::symbolic::SymbolicEngine(&this->arch, &this->callbacks);
-    if (!this->symbolic)
+    this->symbolic = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(&this->arch, &this->callbacks);
+    if (this->symbolic == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->symbolicBackup = new triton::engines::symbolic::SymbolicEngine(&this->arch, &this->callbacks, true);
-    if (!this->symbolicBackup)
+    this->symbolicBackup = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(&this->arch, &this->callbacks, true);
+    if (this->symbolicBackup == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->solver = new triton::engines::solver::SolverEngine(this->symbolic);
-    if (!this->solver)
+    this->solver = new(std::nothrow) triton::engines::solver::SolverEngine(this->symbolic);
+    if (this->solver == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->astGarbageCollector = new triton::ast::AstGarbageCollector(this->symbolic);
-    if (!this->astGarbageCollector)
+    this->astGarbageCollector = new(std::nothrow) triton::ast::AstGarbageCollector(this->symbolic);
+    if (this->astGarbageCollector == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->taint = new triton::engines::taint::TaintEngine(this->symbolic);
-    if (!this->taint)
+    this->taint = new(std::nothrow) triton::engines::taint::TaintEngine(this->symbolic);
+    if (this->taint == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->z3Interface = new triton::ast::Z3Interface(this->symbolic);
-    if (!this->z3Interface)
+    this->z3Interface = new(std::nothrow) triton::ast::Z3Interface(this->symbolic);
+    if (this->z3Interface == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
   }
 
