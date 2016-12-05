@@ -716,6 +716,7 @@ namespace triton {
     //! Variable node
     class VariableNode : public AbstractNode {
       protected:
+        std::string alias;
         std::string value;
 
       public:
@@ -726,6 +727,7 @@ namespace triton {
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
 
+        std::string getAlias(void);
         std::string getValue(void);
     };
 

@@ -9,6 +9,7 @@
 #include <astRepresentation.hpp>
 #include <exceptions.hpp>
 #include <solverEngine.hpp>
+#include <symbolicVariable.hpp>
 #include <tritonToZ3Ast.hpp>
 #include <z3Result.hpp>
 
@@ -156,16 +157,34 @@ namespace triton {
           z3::expr_vector args(ctx);
           for (triton::uint32 i = 0; i < m.size(); i++) {
 
-            z3::func_decl variable  = m[i];
-            std::string varName     = variable.name().str();
-            z3::expr exp            = m.get_const_interp(variable);
-            triton::uint32 bvSize   = exp.get_sort().bv_size();
-            std::string svalue      = Z3_get_numeral_string(ctx, exp);
+            /* Get the z3 variable */
+            z3::func_decl z3Variable = m[i];
 
-            triton::uint512 value{svalue};
-            SolverModel trionModel{varName, value};
+            /* Get the name as std::string from a z3 variable */
+            std::string varName = z3Variable.name().str();
+
+            /* Get the triton variable */
+            triton::engines::symbolic::SymbolicVariable* ttVariable = this->symbolicEngine->getSymbolicVariableFromName(varName);
+
+            /* Get z3 expr */
+            z3::expr exp = m.get_const_interp(z3Variable);
+
+            /* Get the size of a z3 expr */
+            triton::uint32 bvSize = exp.get_sort().bv_size();
+
+            /* Get the value of a z3 expr */
+            std::string svalue = Z3_get_numeral_string(ctx, exp);
+
+            /* Convert a string value to a integer value */
+            triton::uint512 value = triton::uint512(svalue);
+
+            /* Create a triton model */
+            SolverModel trionModel = SolverModel(ttVariable, value);
+
+            /* Map the result */
             smodel[trionModel.getId()] = trionModel;
 
+            /* Uniq result */
             if (exp.get_sort().is_bv())
               args.push_back(ctx.bv_const(varName.c_str(), bvSize) != ctx.bv_val(svalue.c_str(), bvSize));
 

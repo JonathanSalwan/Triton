@@ -423,7 +423,11 @@ namespace triton {
 
       /* variable representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::VariableNode* node) {
-        stream << node->getValue();
+        if (!node->getAlias().empty())
+          stream << node->getAlias();
+        else
+          stream << node->getValue();
+
         return stream;
       }
 

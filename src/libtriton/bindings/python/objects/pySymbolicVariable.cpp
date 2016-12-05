@@ -34,6 +34,9 @@ SymVar_0:64
 \section SymbolicVariable_py_api Python API - Methods of the SymbolicVariable class
 <hr>
 
+- **getAlias(void)**<br>
+Returns the alias (if exists) of the symbolic variable as string.
+
 - **getBitSize(void)**<br>
 Returns the size of the symbolic variable as integer.
 
@@ -61,8 +64,11 @@ Then, if `getKind()` returns triton::engines::symbolic::UNDEF, so `getKindValue(
 Returns name of the the symbolic variable as string.<br>
 e.g: `SymVar_18`
 
+- **setAlias(string alias)**<br>
+Sets an alias to the symbolic variable. Aliases are used for custom names.
+
 - **setComment(string comment)**<br>
-Sets a comment of the symbolic variable.
+Sets a comment to the symbolic variable.
 
 - **setConcreteValue(integer value)**<br>
 Sets a concrete value. `value` must be less than 512-bits.
@@ -82,39 +88,9 @@ namespace triton {
       }
 
 
-      static PyObject* SymbolicVariable_getKind(PyObject* self, PyObject* noarg) {
+      static PyObject* SymbolicVariable_getAlias(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint32(PySymbolicVariable_AsSymbolicVariable(self)->getKind());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* SymbolicVariable_getName(PyObject* self, PyObject* noarg) {
-        try {
-          return Py_BuildValue("s", PySymbolicVariable_AsSymbolicVariable(self)->getName().c_str());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* SymbolicVariable_getId(PyObject* self, PyObject* noarg) {
-        try {
-          return PyLong_FromUsize(PySymbolicVariable_AsSymbolicVariable(self)->getId());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* SymbolicVariable_getKindValue(PyObject* self, PyObject* noarg) {
-        try {
-          return PyLong_FromUint64(PySymbolicVariable_AsSymbolicVariable(self)->getKindValue());
+          return Py_BuildValue("s", PySymbolicVariable_AsSymbolicVariable(self)->getAlias().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -145,6 +121,60 @@ namespace triton {
       static PyObject* SymbolicVariable_getConcreteValue(PyObject* self, PyObject* noarg) {
         try {
           return PyLong_FromUint512(PySymbolicVariable_AsSymbolicVariable(self)->getConcreteValue());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* SymbolicVariable_getId(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUsize(PySymbolicVariable_AsSymbolicVariable(self)->getId());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* SymbolicVariable_getKindValue(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint64(PySymbolicVariable_AsSymbolicVariable(self)->getKindValue());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* SymbolicVariable_getKind(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PySymbolicVariable_AsSymbolicVariable(self)->getKind());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* SymbolicVariable_setAlias(PyObject* self, PyObject* alias) {
+        try {
+          if (!PyString_Check(alias))
+            return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setAlias(): Expected a string as argument.");
+          PySymbolicVariable_AsSymbolicVariable(self)->setAlias(PyString_AsString(alias));
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* SymbolicVariable_getName(PyObject* self, PyObject* noarg) {
+        try {
+          return Py_BuildValue("s", PySymbolicVariable_AsSymbolicVariable(self)->getName().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -200,6 +230,7 @@ namespace triton {
 
       //! SymbolicVariable methods.
       PyMethodDef SymbolicVariable_callbacks[] = {
+        {"getAlias",          SymbolicVariable_getAlias,          METH_NOARGS,    ""},
         {"getBitSize",        SymbolicVariable_getBitSize,        METH_NOARGS,    ""},
         {"getComment",        SymbolicVariable_getComment,        METH_NOARGS,    ""},
         {"getConcreteValue",  SymbolicVariable_getConcreteValue,  METH_NOARGS,    ""},
@@ -207,6 +238,7 @@ namespace triton {
         {"getKind",           SymbolicVariable_getKind,           METH_NOARGS,    ""},
         {"getKindValue",      SymbolicVariable_getKindValue,      METH_NOARGS,    ""},
         {"getName",           SymbolicVariable_getName,           METH_NOARGS,    ""},
+        {"setAlias",          SymbolicVariable_setAlias,          METH_O,         ""},
         {"setComment",        SymbolicVariable_setComment,        METH_O,         ""},
         {"setConcreteValue",  SymbolicVariable_setConcreteValue,  METH_O,         ""},
         {nullptr,             nullptr,                            0,              nullptr}
