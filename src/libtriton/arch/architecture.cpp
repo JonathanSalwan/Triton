@@ -161,11 +161,31 @@ namespace triton {
     }
 
 
-    bool Architecture::buildSemantics(triton::arch::Instruction& inst) const {
+    bool Architecture::buildSemantics(triton::arch::Instruction& inst) {
       bool ret = false;
 
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::buildSemantics(): You must define an architecture.");
+
+      /* Stage 1 - Update the context memory */
+      std::list<triton::arch::MemoryAccess>::iterator it1;
+      for (it1 = inst.memoryAccess.begin(); it1 != inst.memoryAccess.end(); it1++) {
+        this->setConcreteMemoryValue(*it1);
+      }
+
+      /* Stage 2 - Update the context register */
+      std::map<triton::uint32, triton::arch::Register>::iterator it2;
+      for (it2 = inst.registerState.begin(); it2 != inst.registerState.end(); it2++) {
+        this->setConcreteRegisterValue(it2->second);
+      }
+
+      /* Stage 3 - Initialize the target address of memory operands */
+      std::vector<triton::arch::OperandWrapper>::iterator it3;
+      for (it3 = inst.operands.begin(); it3 != inst.operands.end(); it3++) {
+        if (it3->getType() == triton::arch::OP_MEM) {
+          it3->getMemory().initAddress();
+        }
+      }
 
       /* Pre IR processing */
       inst.preIRInit();
