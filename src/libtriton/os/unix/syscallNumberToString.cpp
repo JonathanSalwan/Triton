@@ -18,7 +18,7 @@ namespace triton {
     namespace unix {
 
       #if defined(__unix__)
-      const char *syscall32NumberToString(triton::uint32 syscallNumber) {
+      const char* syscall32NumberToString(triton::uint32 syscallNumber) {
         if (syscallNumber < static_cast<triton::uint32>(triton::os::unix::NB_SYSCALL32))
           return triton::os::unix::syscallmap32[syscallNumber];
         else
@@ -26,7 +26,7 @@ namespace triton {
       }
       #endif
 
-      const char *syscall64NumberToString(triton::uint32 syscallNumber) {
+      const char* syscall64NumberToString(triton::uint32 syscallNumber) {
         if (syscallNumber < static_cast<triton::uint32>(triton::os::unix::NB_SYSCALL64))
           return triton::os::unix::syscallmap64[syscallNumber];
         else

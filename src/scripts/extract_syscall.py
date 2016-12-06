@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 #
-# This script is used to generate the file src/utils/syscalls.cpp.
+# This script is used to generate the files src/utils/syscalls{32,64}.cpp.
 # As the list of syscalls depends of your Kernel version. We must
 # generate the list at the compile time.
 #
@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
     with open(args.file) as hfile:
         print(HEADER)
-        print("      const char *syscallmap%s[] = {" % args.arch)
+        print("      const char* syscallmap%s[] = {" % args.arch)
 
         counter = 0
         for match in regex.finditer(hfile.read()):
