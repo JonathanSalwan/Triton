@@ -45,39 +45,39 @@ This object is used to represent each AST node of an expression.
 \section AstNode_py_api Python API - Methods of the AstNode class
 <hr>
 
-- **evaluate(void)**<br>
-Evaluates the tree and returns the value as integer.
+- <b>integer evaluate(void)</b><br>
+Evaluates the tree and returns its value.
 
-- **getBitvectorMask(void)**<br>
+- <b>integer getBitvectorMask(void)</b><br>
 Returns the mask of the node vector according to its size.<br>
 e.g: `0xffffffff`
 
-- **getBitvectorSize(void)**<br>
+- <b>integer getBitvectorSize(void)</b><br>
 Returns the node vector size.
 
-- **getChilds(void)**<br>
-Returns the list of child nodes as \ref py_AstNode_page.
+- <b>[\ref py_AstNode_page, ...] getChilds(void)</b><br>
+Returns the list of child nodes.
 
-- **getHash(void)**<br>
-Returns the hash (signature) of the AST as float.
+- <b>integer getHash(void)</b><br>
+Returns the hash (signature) of the AST .
 
-- **getKind(void)**<br>
-Returns the kind of the node as \ref py_AST_NODE_page.<br>
+- <b>\ref py_AST_NODE_page getKind(void)</b><br>
+Returns the kind of the node.<br>
 e.g: `AST_NODE.BVADD`
 
-- **getParents(void)**<br>
-Returns the parents list nodes as \ref py_AstNode_page. The list is empty if there is still no parent defined.
+- <b>[\ref py_AstNode_page, ...] getParents(void)</b><br>
+Returns the parents list nodes. The list is empty if there is still no parent defined.
 
-- **getValue(void)**<br>
-Returns the node value as integer or string (it depends of the kind). For example if the kind of node is `decimal`, the value is an integer.
+- <b>integer/string getValue(void)</b><br>
+Returns the node value (metadata) as integer or string (it depends of the kind). For example if the kind of node is `decimal`, the value is an integer.
 
-- **isSigned(void)**<br>
+- <b>bool isSigned(void)</b><br>
 According to the size of the expression, returns true if the MSB is 1.
 
-- **isSymbolized(void)**<br>
-Returns true if the tree contains a symbolic variable.
+- <b>bool isSymbolized(void)</b><br>
+Returns true if the tree (and its sub-trees) contains a symbolic variable.
 
-- **setChild(integer index, AstNode node)**<br>
+- <b>void setChild(integer index, \ref py_AstNode_page node)</b><br>
 Replaces a child node.
 
 */

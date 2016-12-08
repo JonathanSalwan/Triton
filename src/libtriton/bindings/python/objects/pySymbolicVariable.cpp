@@ -34,43 +34,43 @@ SymVar_0:64
 \section SymbolicVariable_py_api Python API - Methods of the SymbolicVariable class
 <hr>
 
-- **getAlias(void)**<br>
-Returns the alias (if exists) of the symbolic variable as string.
+- <b>string getAlias(void)</b><br>
+Returns the alias (if exists) of the symbolic variable.
 
-- **getBitSize(void)**<br>
-Returns the size of the symbolic variable as integer.
+- <b>integer getBitSize(void)</b><br>
+Returns the size of the symbolic variable.
 
-- **getComment(void)**<br>
-Returns the comment (if exists) of the symbolic variable as string.
+- <b>string getComment(void)</b><br>
+Returns the comment (if exists) of the symbolic variable.
 
-- **getConcreteValue(void)**<br>
+- <b>integer getConcreteValue(void)</b><br>
 Returns the concrete value (if exists) of the symbolic variable.
 
-- **getId(void)**<br>
-Returns the id of the symbolic variable as integer. This id is always unique.<br>
+- <b>integer getId(void)</b><br>
+Returns the id of the symbolic variable. This id is always unique.<br>
 e.g: `18`
 
-- **getKind(void)**<br>
-Returns the kind of the symbolic variable as \ref py_SYMEXPR_page.<br>
+- <b>\ref py_SYMEXPR_page getKind(void)</b><br>
+Returns the kind of the symbolic variable.<br>
 e.g: `SYMEXPR.REG`
 
-- **getKindValue(void)**<br>
+- <b>integer getKindValue(void)</b><br>
 Returns the kind value according to the \ref py_SYMEXPR_page.<br>
 If `getKind()` returns triton::engines::symbolic::REG, so `getKindValue()` returns the id of the register.<br>
 Otherwise, if `getKind()` returns triton::engines::symbolic::MEM, so `getKindValue()` returns the address of the memory access.<br>
 Then, if `getKind()` returns triton::engines::symbolic::UNDEF, so `getKindValue()` returns `0`.
 
-- **getName(void)**<br>
-Returns name of the the symbolic variable as string.<br>
+- <b>string getName(void)</b><br>
+Returns name of the the symbolic variable.<br>
 e.g: `SymVar_18`
 
-- **setAlias(string alias)**<br>
+- <b>void setAlias(string alias)</b><br>
 Sets an alias to the symbolic variable. Aliases are used for custom names.
 
-- **setComment(string comment)**<br>
+- <b>void setComment(string comment)</b><br>
 Sets a comment to the symbolic variable.
 
-- **setConcreteValue(integer value)**<br>
+- <b>void setConcreteValue(integer value)</b><br>
 Sets a concrete value. `value` must be less than 512-bits.
 
 */

@@ -70,40 +70,40 @@ rax:64 bv[63..0]
 \section Register_py_api Python API - Methods of the Register class
 <hr>
 
-- **getBitSize(void)**<br>
-Returns the size (in bits) of the register as integer.<br>
+- <b>integer getBitSize(void)</b><br>
+Returns the size (in bits) of the register.<br>
 e.g: `64`
 
-- **getBitvector(void)**<br>
-Returns the bitvector as \ref py_Bitvector_page.
+- <b>\ref py_Bitvector_page getBitvector(void)</b><br>
+Returns the bitvector of the register.
 
-- **getConcreteValue(void)**<br>
+- <b>integer getConcreteValue(void)</b><br>
 Returns the concrete value assigned to this register operand.
 
-- **getName(void)**<br>
-Returns the name of the register as string.<br>
+- <b>string getName(void)</b><br>
+Returns the name of the register.<br>
 e.g: `rbx`
 
-- **getParent(void)**<br>
-Returns the parent register as \ref py_Register_page.
+- <b>\ref py_Register_page getParent(void)</b><br>
+Returns the parent register.
 
-- **getSize(void)**<br>
-Returns the size (in bytes) of the register as integer.<br>
+- <b>integer getSize(void)</b><br>
+Returns the size (in bytes) of the register.<br>
 e.g: `8`
 
-- **getType(void)**<br>
-Returns type of the register as \ref py_OPERAND_page. In this case this function returns `OPERAND.REG`.
+- <b>\ref py_OPERAND_page getType(void)</b><br>
+Returns type of the register. In this case this function returns `OPERAND.REG`.
 
-- **isValid(void)**<br>
+- <b>bool isValid(void)</b><br>
 Returns true if the register is valid.
 
-- **isFlag(void)**<br>
+- <b>bool isFlag(void)</b><br>
 Returns true if the register is a flag.
 
-- **isRegister(void)**<br>
+- <b>bool isRegister(void)</b><br>
 Returns true if the register is a register.
 
-- **setConcreteValue(integer value)**<br>
+- <b>void setConcreteValue(integer value)</b><br>
 Sets a concrete value to this register.
 
 */

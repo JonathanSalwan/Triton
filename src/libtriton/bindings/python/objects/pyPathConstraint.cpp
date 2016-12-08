@@ -60,19 +60,19 @@ B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
 \section PathConstraint_py_api Python API - Methods of the PathConstraint class
 <hr>
 
-- **getBranchConstraints(void)**<br>
+- <b>dict getBranchConstraints(void)</b><br>
 Returns the branch constraints as list of dictionary `{isTaken, srcAddr, dstAddr, constraint}`. The source address is the location
 of the branch instruction and the destination address is the destination of the jump. E.g: `"0x11223344: jne 0x55667788"`, 0x11223344
 is the source address and 0x55667788 is the destination if and only if the branch is taken, otherwise the destination is the next
 instruction address.
 
-- **getTakenAddress(void)**<br>
-Returns the address of the taken branch as integer.
+- <b>integer getTakenAddress(void)</b><br>
+Returns the address of the taken branch.
 
-- **getTakenPathConstraintAst(void)**<br>
-Returns the path constraint AST of the taken branch as \ref py_AstNode_page.
+- <b>\ref py_AstNode_page getTakenPathConstraintAst(void)</b><br>
+Returns the path constraint AST of the taken branch.
 
-- **isMultipleBranches(void)**<br>
+- <b>bool isMultipleBranches(void)</b><br>
 Returns true if it is not a direct jump.
 
 */

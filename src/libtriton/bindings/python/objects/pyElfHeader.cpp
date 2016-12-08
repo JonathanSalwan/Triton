@@ -37,63 +37,63 @@ This object is used to represent the main Header from the ELF binary format.
 \section ElfHeader_py_api Python API - Methods of the ElfHeader class
 <hr>
 
-- **getEIClass(void)**<br>
+- <b>\ref py_ELF_page getEIClass(void)</b><br>
 Returns the architecture size of this binary.<br>
 e.g: `ELFCLASS64`
 
-- **getEIData(void)**<br>
+- <b>\ref py_ELF_page getEIData(void)</b><br>
 Returns the endianness of the binary.<br>
 e.g: `ELFDATA2LSB`
 
-- **getEhsize(void)**<br>
+- <b>integer getEhsize(void)</b><br>
 Returns the ELF header size. This member holds the ELF header's size in bytes.
 
-- **getEntry(void)**<br>
+- <b>integer getEntry(void)</b><br>
 Returns the entry point. This member gives the virtual address to which the system
 first transfers control, thus starting the process. If the file has no associated
 entry point, this member holds zero.
 
-- **getFlags(void)**<br>
+- <b>\ref py_ELF_page getFlags(void)</b><br>
 Returns the flags. This member holds processor-specific flags associated with the file.
 
-- **getMachine(void)**<br>
+- <b>\ref py_ELF_page getMachine(void)</b><br>
 Returns the machine. This member specifies the required architecture for an individual file.
 
-- **getPhentsize(void)**<br>
+- <b>integer getPhentsize(void)</b><br>
 Returns the program header entry size. This member holds the size in bytes of one entry
 in the file's program header table - all entries are the same size.
 
-- **getPhnum(void)**<br>
+- <b>integer getPhnum(void)</b><br>
 Returns the number of program header entry. This member holds the number of entries in
 the program header table. Thus the product of triton::format::elf::ElfHeader::phentsize
 and triton::format::elf::ElfHeader::phnum gives the table's size in bytes.
 
-- **getPhoff(void)**<br>
+- <b>integer getPhoff(void)</b><br>
 Returns the program header offset. This member holds the program header table's file offset in
 bytes. If the file has no program header table, this member holds zero.
 
-- **getShentsize(void)**<br>
+- <b>integer getShentsize(void)</b><br>
 Returns the section header entry size. This member holds a sections header's size in bytes. A
 section header is one entry in the section header table - all entries are the same size.
 
-- **getShnum(void)**<br>
+- <b>integer getShnum(void)</b><br>
 Returns the number of section header entry. This member holds the number of entries in the section
 header table. Thus the product of triton::format::elf::ElfHeader::shentsize and triton::format::elf::ElfHeader::shnum
 gives the section header table's size in bytes.
 
-- **getShoff(void)**<br>
+- <b>integer getShoff(void)</b><br>
 Returns the section header offset. This member holds the section header table's file offset in bytes.
 If the file has no section header table, this member holds zero.
 
-- **getShstrndx(void)**<br>
+- <b>integer getShstrndx(void)</b><br>
 Returns the index of the string table. This member holds the section header table index of the entry
 associated with the section name string table. If the file has no section name string table, this
 member holds the value triton::format::elf::SHN_UNDEF.
 
-- **getType(void)**<br>
+- <b>\ref py_ELF_page getType(void)</b><br>
 Returns the type. This member identifies the object file type.
 
-- **getVersion(void)**<br>
+- <b>\ref py_ELF_page getVersion(void)</b><br>
 Returns the version. This member identifies the file version.
 
 */

@@ -28,11 +28,11 @@ This object is used to represent the Dynamic Table from the ELF binary format.
 \section ElfDynamicTable_py_api Python API - Methods of the ElfDynamicTable class
 <hr>
 
-- **getTag(void)**<br>
+- <b>\ref py_ELF_page getTag(void)</b><br>
 Returns the tag of the dynamic entry. This member describes the kind of the entry.<br>
 e.g: `DT_STRTAB`
 
-- **getValue(void)**<br>
+- <b>integer getValue(void)</b><br>
 Returns the value of the dynamic entry. This member represents integer values with various interpretations.
 
 */

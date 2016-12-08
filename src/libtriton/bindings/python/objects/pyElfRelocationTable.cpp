@@ -56,30 +56,30 @@ This object is used to represent a Relocation Table entry from the ELF binary fo
 \section ElfRelocationTable_py_api Python API - Methods of the ElfRelocationTable class
 <hr>
 
-- **getAddend(void)**<br>
+- <b>\ref py_ELF_page getAddend(void)</b><br>
 Returns the relocation addend. This member specifies a constant addend used to compute the
 value to be stored into the relocatable field.
 
-- **getInfo(void)**<br>
+- <b>\ref py_ELF_page getInfo(void)</b><br>
 Returns the relocation info. This member gives both the symbol table index with respect to
 which the relocation must be made and the type of relocation to apply. Relocation types are
 processor-specific.
 
-- **getOffset(void)**<br>
+- <b>integer getOffset(void)</b><br>
 Returns the relocation offset. This member gives the location at which to apply the relocation action.
 For a relocatable file, the value is the byte offset from the beginning of the section to the storage
 unit affected by the relocation. For an executable file or shared object, the value is the virtual address
 of the storage unit affected by the relocation.
 
-- **getSymidx(void)**<br>
+- <b>integer getSymidx(void)</b><br>
 Returns the relocation symbol index. According to the triton::format::elf::ElfRelocationTable::info value, this field contains
 the index of the corresponding symbol.
 
-- **getType(void)**<br>
+- <b>\ref py_ELF_page getType(void)</b><br>
 Returns the type. According to the triton::format::elf::ElfRelocationTable::info value, this field contains the type of the
 relocation.
 
-- **isAddend(void)**<br>
+- <b>bool isAddend(void)</b><br>
 Returns true if this class is a triton::format::elf::DT_RELA otherwise false if it's a triton::format::elf::DT_REL.
 
 */

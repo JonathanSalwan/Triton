@@ -115,13 +115,13 @@ Concretizes a specific symbolic memory reference.
 Concretizes a specific symbolic register reference.
 
 - <b>\ref py_SymbolicVariable_page convertExpressionToSymbolicVariable(integer symExprId, integer symVarSize, string comment="")</b><br>
-Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits. This function returns the \ref py_SymbolicVariable_page created.
+Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits. This function returns the new symbolic variable created.
 
 - <b>\ref py_SymbolicVariable_page convertMemoryToSymbolicVariable(\ref py_MemoryAccess_page mem, string comment="")</b><br>
-Converts a symbolic memory expression to a symbolic variable. This function returns the \ref py_SymbolicVariable_page created.
+Converts a symbolic memory expression to a symbolic variable. This function returns the new symbolic variable created.
 
 - <b>\ref py_SymbolicVariable_page convertRegisterToSymbolicVariable(\ref py_REG_page reg, string comment="")</b><br>
-Converts a symbolic register expression to a symbolic variable. This function returns the \ref py_SymbolicVariable_page created.
+Converts a symbolic register expression to a symbolic variable. This function returns the new symbolic variable created.
 
 - <b>integer cpuRegisterBitSize(void)</b><br>
 Returns the max size (in bit) of the CPU register (GPR).
@@ -130,16 +130,16 @@ Returns the max size (in bit) of the CPU register (GPR).
 Returns the max size (in byte) of the CPU register (GPR).
 
 - <b>\ref py_SymbolicExpression_page createSymbolicFlagExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page flag, string comment="")</b><br>
-Returns the new symbolic register expression as \ref py_SymbolicExpression_page and links this expression to the \ref py_Instruction_page.
+Returns the new symbolic register expression and links this expression to the instruction.
 
 - <b>\ref py_SymbolicExpression_page createSymbolicMemoryExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_MemoryAccess_page mem, string comment="")</b><br>
-Returns the new symbolic memory expression as \ref py_SymbolicExpression_page and links this expression to the \ref py_Instruction_page.
+Returns the new symbolic memory expression and links this expression to the instruction.
 
 - <b>\ref py_SymbolicExpression_page createSymbolicRegisterExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page reg, string comment="")</b><br>
-Returns the new symbolic register expression as \ref py_SymbolicExpression_page and links this expression to the \ref py_Instruction_page.
+Returns the new symbolic register expression and links this expression to the instruction.
 
 - <b>\ref py_SymbolicExpression_page createSymbolicVolatileExpression (\ref py_Instruction_page inst, \ref py_AstNode_page node, string comment="")</b><br>
-Returns the new symbolic volatile expression as \ref py_SymbolicExpression_page and links this expression to the \ref py_Instruction_page.
+Returns the new symbolic volatile expression and links this expression to the instruction.
 
 - <b>void disassembly(\ref py_Instruction_page inst)</b><br>
 Disassembles the instruction and setup operands. You must define an architecture before.
@@ -153,8 +153,8 @@ Enables or disablrs a symbolic optimization.
 - <b>void enableTaintEngine(bool flag)</b><br>
 Enables or disables the taint engine.
 
-- <b>void evaluateAstViaZ3(\ref py_AstNode_page node)</b><br>
-Evaluates an AST via Z3 and returns the symbolic value as integer.
+- <b>integer evaluateAstViaZ3(\ref py_AstNode_page node)</b><br>
+Evaluates an AST via Z3 and returns the symbolic value.
 
 - <b>[\ref py_Register_page, ...] getAllRegisters(void)</b><br>
 Returns the list of all registers. Each item of this list is a \ref py_Register_page.

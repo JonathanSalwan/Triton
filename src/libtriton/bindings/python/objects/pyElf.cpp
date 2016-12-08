@@ -85,37 +85,37 @@ libc.so.6
 \section Elf_py_api Python API - Methods of the Elf class
 <hr>
 
-- **getDynamicTable(void)**<br>
-Returns dynamic table entries as list of \ref py_ElfDynamicTable_page.
+- <b>[\ref py_ElfDynamicTable_page, ...] getDynamicTable(void)</b><br>
+Returns the list of dynamic table entries.
 
-- **getHeader(void)**<br>
-Returns the ELF header as \ref py_ElfHeader_page.
+- <b>\ref py_ElfHeader_page getHeader(void)</b><br>
+Returns the ELF header.
 
-- **getPath(void)**<br>
-Returns the path as string of the parsed binary.<br>
+- <b>string getPath(void)</b><br>
+Returns the path of the parsed binary.<br>
 e.g: `/usr/bin/gdb`
 
-- **getProgramHeaders(void)**<br>
-Returns program headers as list of \ref py_ElfProgramHeader_page.
+- <b>[\ref py_ElfProgramHeader_page, ...] getProgramHeaders(void)</b><br>
+Returns the list of program headers.
 
-- **getRaw(void)**<br>
-Returns the raw binary as bytes.
+- <b>bytes getRaw(void)</b><br>
+Returns the raw binary.
 
-- **getRelocationTable(void)**<br>
-Returns relocations table entries as list of \ref py_ElfRelocationTable_page.
+- <b>[\ref py_ElfRelocationTable_page, ...] getRelocationTable(void)</b><br>
+Returns the list of relocations table entries.
 
-- **getSectionHeaders(void)**<br>
-Returns section headers as list of \ref py_ElfSectionHeader_page.
+- <b>[\ref py_ElfSectionHeader_page, ...] getSectionHeaders(void)</b><br>
+Returns the list of section headers.
 
-- **getSharedLibraries(void)**<br>
-Returns the list of shared libraries dependency as list of string.<br>
+- <b>[string, ...] getSharedLibraries(void)</b><br>
+Returns the list of shared library dependencies.<br>
 e.g: `["libc.so.6", "libncurses.so.5"]`
 
-- **getSize(void)**<br>
+- <b>integer getSize(void)</b><br>
 Returns the binary size.
 
-- **getSymbolsTable(void)**<br>
-Returns symbols table entries as list of \ref py_ElfSymbolTable_page.
+- <b>[\ref py_ElfSymbolTable_page, ...] getSymbolsTable(void)</b><br>
+Returns the list of symbols table entries.
 
 */
 

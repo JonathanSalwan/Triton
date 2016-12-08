@@ -64,60 +64,60 @@ This object is used to represent a Section Header entry from the ELF binary form
 \section ElfSectionHeader_py_api Python API - Methods of the ElfSectionHeader class
 <hr>
 
-- **getAddr(void)**<br>
+- <b>integer getAddr(void)</b><br>
 Returns the virtual section address. If this section appears in the memory image of a
 process, this member holds the address at which the section's first byte should reside.
 Otherwise, the member contains zero.
 
-- **getAddralign(void)**<br>
+- <b>integer getAddralign(void)</b><br>
 Returns the section alignement. Some sections have address alignment constraints. If a
 section holds a doubleword, the system must ensure doubleword alignment for the entire
 section. That is, the value of sh_addr must be congruent to zero, modulo the value of
 triton::format::elf::ElfSectionHeader::addralign. Only zero and positive integral powers
 of two are allowed. Values of zero or one mean the section has no alignment constraints.
 
-- **getEntsize(void)**<br>
+- <b>integer getEntsize(void)</b><br>
 Returns the size of an section entry. Some sections hold a table of fixed-sized entries,
 such as a symbol table. For such a section, this member gives the size in bytes for each
 entry. This member contains zero if the section does not hold a table of fixed-size entries.
 
-- **getFlags(void)**<br>
+- <b>bool getFlags(void)</b><br>
 Returns the section flags. Sections support one-bit flags that describe miscellaneous attributes.
 If a flag bit is set in triton::format::elf::ElfSectionHeader::flags, the attribute is "on"
 for the section. Otherwise, the attribute is "off" or does not apply. Undefined attributes are
 set to zero.
 
-- **getIdxname(void)**<br>
+- <b>integer getIdxname(void)</b><br>
 Returns the section index name. This member specifies the name of the section. Its value is an
 index into the section header string table section, giving the location of a null-terminated
 string.
 
-- **getInfo(void)**<br>
+- <b>\ref py_ELF_page getInfo(void)</b><br>
 Returns the section info. This member holds extra information, whose interpretation depends
 on the section type.
 
-- **getLink(void)**<br>
+- <b>integer getLink(void)</b><br>
 Returns the section link. This member holds a section header table index link, whose
 interpretation depends on the section type.
 
-- **getName(void)**<br>
-Returns the section name as string. This member specifies the name of the section as string
+- <b>string getName(void)</b><br>
+Returns the section name. This member specifies the name of the section as string
 based on the triton::format::elf::ElfSectionHeader::idxname.<br>
 e.g: `.text`
 
-- **getOffset(void)**<br>
+- <b>integer getOffset(void)</b><br>
 Returns the section offset in the binary file. This member's value holds the byte offset from
 the beginning of the file to the first byte in the section. One section type, triton::format::elf::SHT_NOBITS,
 occupies no space in the file, and its sh_offset member locates the conceptual placement in
 thefile.
 
-- **getSize(void)**<br>
+- <b>integer getSize(void)</b><br>
 Returns the section size. This member holds the section's size in bytes. Unless the section
 type is triton::format::elf::SHT_NOBITS, the section occupies sh_size bytes in the file. A
 section of type triton::format::elf::SHT_NOBITS may have a nonzero size, but it occupies no
 space in the file.
 
-- **getType(void)**<br>
+- <b>\ref py_ELF_page getType(void)</b><br>
 Returns the section type. This member categorizes the section's contents and semantics.
 
 */

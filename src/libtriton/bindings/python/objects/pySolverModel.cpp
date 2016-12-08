@@ -63,17 +63,17 @@ SymVar_0 = 287454020
 \section SolverModel_py_api Python API - Methods of the SolverModel class
 <hr>
 
-- **getAlias(void)**<br>
-Returns the alias of the model as string. This alias is the same that the variable alias. Aliases are used for custom names.
+- <b>string getAlias(void)</b><br>
+Returns the alias of the model. This alias is the same that the variable alias. Aliases are used for custom names.
 
-- **getId(void)**<br>
-Returns the id of the model as integer. This id is the same that the variable id.
+- <b>integer getId(void)</b><br>
+Returns the id of the model. This id is the same that the variable id.
 
-- **getName(void)**<br>
-Returns the name of the model as string. This name is the same that the variable name. Names are always something like this: SymVar_X.
+- <b>string getName(void)</b><br>
+Returns the name of the model. This name is the same that the variable name. Names are always something like this: SymVar_X.
 
-- **getValue(void)**<br>
-Returns the value of the model as integer.
+- <b>integer getValue(void)</b><br>
+Returns the value of the model.
 
 */
 
