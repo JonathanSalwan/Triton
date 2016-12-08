@@ -404,7 +404,7 @@ namespace triton {
         //! [**symbolic api**] - Processes all recorded simplifications. Returns the simplified node.
         triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node, bool z3=false) const;
 
-        //! [**symbolic api**] - Returns the symbolic expression corresponding to the id.
+        //! [**symbolic api**] - Returns the symbolic expression corresponding to an id.
         triton::engines::symbolic::SymbolicExpression* getSymbolicExpressionFromId(triton::usize symExprId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable id.

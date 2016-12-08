@@ -232,197 +232,197 @@ a \>> b           | (bvlshr a b)
 \section ast_py_api Python API - Methods of the ast module
 <hr>
 
-- **assert_(AstNode expr1)**<br>
-Creates an `assert` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page assert_(\ref py_AstNode_page expr1)</b><br>
+Creates an `assert` node.<br>
 e.g: `(assert expr1)`.
 
-- **bv(integer value, integer size)**<br>
-Creates a `bv` node (bitvector). Returns an \ref py_AstNode_page. The `size` must be in bits.<br>
+- <b>\ref py_AstNode_page bv(integer value, integer size)</b><br>
+Creates a `bv` node (bitvector). The `size` must be in bits.<br>
 e.g: `(_ bv<balue> size)`.
 
-- **bvadd(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvadd` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvadd(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvadd` node.<br>
 e.g: `(bvadd expr1 epxr2)`.
 
-- **bvand(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvand` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvand(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvand` node.<br>
 e.g: `(bvand expr1 epxr2)`.
 
-- **bvashr(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvashr` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvashr(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvashr` node.<br>
 e.g: `(bvashr expr1 epxr2)`.
 
-- **bvdecl(integer size)**<br>
-Declares a bitvector node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvdecl(integer size)</b><br>
+Declares a bitvector node.<br>
 e.g: `(_ BitVec size)`.
 
-- **bvfalse()**<br>
-This is an alias on the `(_ bv0 1)` ast expression. Returns an \ref py_AstNode_page.
+- <b>\ref py_AstNode_page bvfalse(void)</b><br>
+This is an alias on the `(_ bv0 1)` ast expression.
 
-- **bvlshr(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvlshr` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvlshr(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvlshr` node.<br>
 e.g: `(lshr expr1 epxr2)`.
 
-- **bvmul(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvmul` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvmul(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvmul` node.<br>
 e.g: `(bvmul expr1 expr2)`.
 
-- **bvnand(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvnand` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvnand(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvnand` node.<br>
 e.g: `(bvnand expr1 expr2)`.
 
-- **bvneg(AstNode expr1)**<br>
-Creates a `bvneg` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvneg(\ref py_AstNode_page expr1)</b><br>
+Creates a `bvneg` node.<br>
 e.g: `(bvneg expr1)`.
 
-- **bvnor(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvnor` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvnor(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvnor` node.<br>
 e.g: `(bvnor expr1 expr2)`.
 
-- **bvnot(AstNode expr1)**<br>
-Creates a `bvnot` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvnot(\ref py_AstNode_page expr1)</b><br>
+Creates a `bvnot` node.<br>
 e.g: `(bvnot expr1)`.
 
-- **bvor(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvor` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvor(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvor` node.<br>
 e.g: `(bvor expr1 expr2)`.
 
-- **bvror(integer displacement, AstNode expr2)**<br>
-Creates a `bvror` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvror(integer displacement, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvror` node.<br>
 e.g: `((_ rotate_right displacement) expr)`.
 
-- **bvrol(integer displacement, AstNode expr2)**<br>
-Creates a `bvrol` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvrol(integer displacement, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvrol` node.<br>
 e.g: `((_ rotate_left displacement) expr)`.
 
-- **bvsdiv(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvsdiv` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvsdiv(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvsdiv` node.<br>
 e.g: `(bvsdiv expr1 epxr2)`.
 
-- **bvsge(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvsge` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvsge(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvsge` node.<br>
 e.g: `(bvsge expr1 epxr2)`.
 
-- **bvsgt(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvsgt` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvsgt(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvsgt` node.<br>
 e.g: `(bvsgt expr1 epxr2)`.
 
-- **bvshl(AstNode expr1, AstNode expr2)**<br>
-Creates a Bvshl node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvshl(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a Bvshl node.<br>
 e.g: `(bvshl expr1 expr2)`.
 
-- **bvsle(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvsle` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvsle(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvsle` node.<br>
 e.g: `(bvsle expr1 epxr2)`.
 
-- **bvslt(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvslt` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvslt(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvslt` node.<br>
 e.g: `(bvslt expr1 epxr2)`.
 
-- **bvsmod(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvsmod` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvsmod(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvsmod` node.<br>
 e.g: `(bvsmod expr1 expr2)`.
 
-- **bvsrem(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvsrem` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvsrem(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvsrem` node.<br>
 e.g: `(bvsrem expr1 expr2)`.
 
-- **bvsub(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvsub` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvsub(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvsub` node.<br>
 e.g: `(bvsub expr1 epxr2)`.
 
-- **bvtrue()**<br>
-This is an alias on the `(_ bv1 1)` ast expression. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvtrue(void)</b><br>
+This is an alias on the `(_ bv1 1)` ast expression.<br>
 
-- **bvudiv(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvudiv` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvudiv(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvudiv` node.<br>
 e.g: `(bvudiv expr1 epxr2)`.
 
-- **bvuge(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvuge` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvuge(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvuge` node.<br>
 e.g: `(bvuge expr1 epxr2)`.
 
-- **bvugt(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvugt` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvugt(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvugt` node.<br>
 e.g: `(bvugt expr1 epxr2)`.
 
-- **bvule(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvule` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvule(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvule` node.<br>
 e.g: `(bvule expr1 epxr2)`.
 
-- **bvult(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvult` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvult(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvult` node.<br>
 e.g: `(bvult expr1 epxr2)`.
 
-- **bvurem(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvurem` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvurem(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvurem` node.<br>
 e.g: `(bvurem expr1 expr2)`.
 
-- **bvxnor(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvxnor` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvxnor(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvxnor` node.<br>
 e.g: `(bvxnor expr1 expr2)`.
 
-- **bvxor(AstNode expr1, AstNode expr2)**<br>
-Creates a `bvxor` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page bvxor(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `bvxor` node.<br>
 e.g: `(bvxor expr1 epxr2)`.
 
-- **compound([AstNode expr ...])**<br>
-Creates a `compound` node (a statement of several unrelated nodes). Returns an \ref py_AstNode_page.
+- <b>\ref py_AstNode_page compound([\ref py_AstNode_page expr ...])</b><br>
+Creates a `compound` node (a statement of several unrelated nodes).
 
-- **concat([AstNode expr ...])**<br>
-Concatenates several nodes. Returns an \ref py_AstNode_page.
+- <b>\ref py_AstNode_page concat([\ref py_AstNode_page expr ...])</b><br>
+Concatenates several nodes.
 
-- **distinct(AstNode expr1, AstNode expr2)**<br>
-Creates a `distinct` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page distinct(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `distinct` node.<br>
 e.g: `(distinct expr1 expr2)`
 
-- **duplicate(AstNode expr)**<br>
+- <b>\ref py_AstNode_page duplicate(\ref py_AstNode_page expr)</b><br>
 Duplicates the node and returns a new instance as \ref py_AstNode_page. When you play with a node, it's recommended to use this function before any manipulation.
 
-- **equal(AstNode expr1, AstNode expr2)**<br>
-Creates an `equal` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page equal(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates an `equal` node.<br>
 e.g: `(= expr1 epxr2)`.
 
-- **extract(integer high, integer low, AstNode expr1)**<br>
-Creates an `extract` node. The `high` and `low` fields represent the bits position. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page extract(integer high, integer low, \ref py_AstNode_page expr1)</b><br>
+Creates an `extract` node. The `high` and `low` fields represent the bits position.<br>
 e.g: `((_ extract high low) expr1)`.
 
-- **ite(AstNode ifExpr, AstNode thenExpr, AstNode elseExpr)**<br>
-Creates an `ite` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page ite(\ref py_AstNode_page ifExpr, \ref py_AstNode_page thenExpr, \ref py_AstNode_page elseExpr)</b><br>
+Creates an `ite` node.<br>
 e.g: `(ite ifExpr thenExpr elseExpr)`.
 
-- **land(AstNode expr1, AstNode expr2)**<br>
-Creates a `land` node (logical AND). Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page land(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `land` node (logical AND).<br>
 e.g: `(and expr1 expr2)`.
 
-- **let(string alias, AstNode expr2, AstNode expr3)**<br>
-Creates a `let` node. Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page let(string alias, \ref py_AstNode_page expr2, \ref py_AstNode_page expr3)</b><br>
+Creates a `let` node.<br>
 e.g: `(let ((alias expr2)) expr3)`.
 
-- **lnot(AstNode expr)**<br>
-Creates a `lnot` node (logical NOT). Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page lnot(\ref py_AstNode_page expr)</b><br>
+Creates a `lnot` node (logical NOT).<br>
 e.g: `(not expr)`.
 
-- **lor(AstNode expr1, AstNode expr2)**<br>
-Creates a `lor` node (logical OR). Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page lor(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates a `lor` node (logical OR).<br>
 e.g: `(or expr1 expr2)`.
 
-- **reference(integer exprId)**<br>
-Creates a reference node (SSA-based). Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page reference(integer exprId)</b><br>
+Creates a reference node (SSA-based).<br>
 e.g: `ref!123`.
 
-- **string(string s)**<br>
-Creates a `string` node. Returns an \ref py_AstNode_page.
+- <b>\ref py_AstNode_page string(string s)</b><br>
+Creates a `string` node.
 
-- **sx(integer sizeExt, AstNode expr1)**<br>
-Creates a `sx` node (sign extend). Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page sx(integer sizeExt, \ref py_AstNode_page expr1)</b><br>
+Creates a `sx` node (sign extend).<br>
 e.g: `((_ sign_extend sizeExt) expr1)`.
 
-- **variable(\ref py_SymbolicVariable_page symVar)**<br>
-Creates a `variable` node. Returns an \ref py_AstNode_page.
+- <b>\ref py_AstNode_page variable(\ref py_SymbolicVariable_page symVar)</b><br>
+Creates a `variable` node.
 
-- **zx(integer sizeExt, AstNode expr1)**<br>
-Creates a `zx` node (zero extend). Returns an \ref py_AstNode_page.<br>
+- <b>\ref py_AstNode_page zx(integer sizeExt, \ref py_AstNode_page expr1)</b><br>
+Creates a `zx` node (zero extend).<br>
 e.g: `((_ zero_extend sizeExt) expr1)`.
 
 */

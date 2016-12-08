@@ -175,7 +175,7 @@ namespace triton {
           //! Returns the symbolic expression id corresponding to the memory address.
           triton::usize getSymbolicMemoryId(triton::uint64 addr) const;
 
-          //! Returns the symbolic expression corresponding to the id.
+          //! Returns the symbolic expression corresponding to an id.
           SymbolicExpression* getSymbolicExpressionFromId(triton::usize symExprId) const;
 
           //! Returns the map of symbolic registers defined.
