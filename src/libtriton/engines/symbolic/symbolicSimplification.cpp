@@ -86,7 +86,7 @@ def xor_bitwise(node):
             c2_not    = getNot(c2)
             c1_nonNot = getNonNot(c1)
             c2_nonNot = getNonNot(c2)
-            if c1_not == ~c2_nonNot and c1_not == ~c2_nonNot:
+            if c1_not == ~c2_nonNot and c2_not == ~c1_nonNot:
                 return c1_nonNot ^ c2_nonNot
     return node
 
