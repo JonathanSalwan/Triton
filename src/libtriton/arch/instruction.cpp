@@ -374,8 +374,8 @@ namespace triton {
       }
 
       /*
-       * If there is no symbolic expression, clean memory operands
-       * AST and implicit/explicit semantics AST to avoid memory leak.
+       * If there is no symbolic expression, clean memory operands AST
+       * and implicit/explicit semantics AST to avoid memory leak.
        */
       if (this->symbolicExpressions.size() == 0) {
         /* Memory operands */
