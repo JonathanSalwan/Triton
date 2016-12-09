@@ -3388,26 +3388,34 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "CMP operation");
+          auto expr2 = triton::api.createSymbolicVolatileExpression(inst, node2, "Temporary operation");
+          auto expr3 = triton::api.createSymbolicVolatileExpression(inst, node2p, "Temporary operation");
+          auto expr4 = triton::api.createSymbolicVolatileExpression(inst, node3, "Temporary operation");
+          auto expr5 = triton::api.createSymbolicVolatileExpression(inst, node3p, "Temporary operation");
 
-          triton::engines::symbolic::SymbolicExpression* expr2 = nullptr;
-          triton::engines::symbolic::SymbolicExpression* expr3 = nullptr;
+          triton::engines::symbolic::SymbolicExpression* expr6 = nullptr;
+          triton::engines::symbolic::SymbolicExpression* expr7 = nullptr;
 
           /* Destination */
           if (nodeq->evaluate() == false && src1.getType() == triton::arch::OP_REG)
-            expr2 = triton::api.createSymbolicRegisterExpression(inst, node2p, src1p, "XCHG operation");
+            expr6 = triton::api.createSymbolicRegisterExpression(inst, node2p, src1p, "XCHG operation");
           else
-            expr2 = triton::api.createSymbolicExpression(inst, node2, src1, "XCHG operation");
+            expr6 = triton::api.createSymbolicExpression(inst, node2, src1, "XCHG operation");
 
           /* Accumulator */
           if (nodeq->evaluate() == true)
-            expr3 = triton::api.createSymbolicExpression(inst, node3p, accumulatorp, "XCHG operation");
+            expr7 = triton::api.createSymbolicExpression(inst, node3p, accumulatorp, "XCHG operation");
           else
-            expr3 = triton::api.createSymbolicExpression(inst, node3, accumulator, "XCHG operation");
+            expr7 = triton::api.createSymbolicExpression(inst, node3, accumulator, "XCHG operation");
 
           /* Spread taint */
           expr1->isTainted = triton::api.isTainted(accumulator) | triton::api.isTainted(src1);
-          expr2->isTainted = triton::api.taintAssignment(src1, src2);
-          expr3->isTainted = triton::api.taintAssignment(accumulator, src1);
+          expr2->isTainted = expr1->isTainted;
+          expr3->isTainted = expr1->isTainted;
+          expr4->isTainted = expr1->isTainted;
+          expr5->isTainted = expr1->isTainted;
+          expr6->isTainted = triton::api.taintAssignment(src1, src2);
+          expr7->isTainted = triton::api.taintAssignment(accumulator, src1);
 
           /* Upate symbolic flags */
           triton::arch::x86::semantics::af_s(inst, expr1, accumulator, op1, op2, true);
@@ -3500,27 +3508,31 @@ namespace triton {
           /* Create symbolic expression */
           auto expr1 = triton::api.createSymbolicVolatileExpression(inst, node1, "CMP operation");
           auto expr2 = triton::api.createSymbolicExpression(inst, node2, src1, "XCHG8B memory operation");
+          auto expr3 = triton::api.createSymbolicVolatileExpression(inst, node3, "Temporary operation");
+          auto expr4 = triton::api.createSymbolicVolatileExpression(inst, node3p, "Temporary operation");
 
-          triton::engines::symbolic::SymbolicExpression* expr3 = nullptr;
-          triton::engines::symbolic::SymbolicExpression* expr4 = nullptr;
+          triton::engines::symbolic::SymbolicExpression* expr5 = nullptr;
+          triton::engines::symbolic::SymbolicExpression* expr6 = nullptr;
 
           /* EDX */
           if (node1->evaluate() == 0)
-            expr3 = triton::api.createSymbolicExpression(inst, triton::ast::extract((src2p.getBitSize() * 2 - 1), src2p.getBitSize(), node3p), src2p, "XCHG8B EDX operation");
+            expr5 = triton::api.createSymbolicExpression(inst, triton::ast::extract((src2p.getBitSize() * 2 - 1), src2p.getBitSize(), node3p), src2p, "XCHG8B EDX operation");
           else
-            expr3 = triton::api.createSymbolicExpression(inst, triton::ast::extract(63, 32, node3), src2, "XCHG8B EDX operation");
+            expr5 = triton::api.createSymbolicExpression(inst, triton::ast::extract(63, 32, node3), src2, "XCHG8B EDX operation");
 
           /* EAX */
           if (node1->evaluate() == 0)
-            expr4 = triton::api.createSymbolicExpression(inst, triton::ast::extract(src2p.getBitSize() - 1, 0, node3p), src3p, "XCHG8B EAX operation");
+            expr6 = triton::api.createSymbolicExpression(inst, triton::ast::extract(src2p.getBitSize() - 1, 0, node3p), src3p, "XCHG8B EAX operation");
           else
-            expr4 = triton::api.createSymbolicExpression(inst, triton::ast::extract(31, 0, node3), src3, "XCHG8B EAX operation");
+            expr6 = triton::api.createSymbolicExpression(inst, triton::ast::extract(31, 0, node3), src3, "XCHG8B EAX operation");
 
           /* Spread taint */
           expr1->isTainted = triton::api.isTainted(src1) | triton::api.isTainted(src2) | triton::api.isTainted(src3);
           expr2->isTainted = triton::api.setTaint(src1, triton::api.isTainted(src2) | triton::api.isTainted(src3));
-          expr3->isTainted = triton::api.taintAssignment(src2, src1);
-          expr4->isTainted = triton::api.taintAssignment(src3, src1);
+          expr3->isTainted = triton::api.isTainted(src1) | triton::api.isTainted(src2) | triton::api.isTainted(src3);
+          expr4->isTainted = triton::api.isTainted(src1) | triton::api.isTainted(src2) | triton::api.isTainted(src3);
+          expr5->isTainted = triton::api.taintAssignment(src2, src1);
+          expr6->isTainted = triton::api.taintAssignment(src3, src1);
 
           /* Upate symbolic flags */
           triton::arch::x86::semantics::zf_s(inst, expr1, src1, true);

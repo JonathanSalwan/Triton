@@ -241,16 +241,11 @@ namespace triton {
     }
 
 
-    void Instruction::removeSymbolicExpressions(void) {
-      std::set<triton::ast::AbstractNode*> uniqueNodes;
-      std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
-
-      for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
+    void Instruction::removeSymbolicExpressions(std::set<triton::ast::AbstractNode*>& uniqueNodes) {
+      for (auto it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
         triton::api.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
         triton::api.removeSymbolicExpression((*it)->getId());
       }
-
-      triton::api.freeAstNodes(uniqueNodes);
       this->symbolicExpressions.clear();
     }
 
@@ -334,7 +329,6 @@ namespace triton {
     void Instruction::postIRInit(void) {
       std::set<triton::ast::AbstractNode*> uniqueNodes;
       std::vector<triton::engines::symbolic::SymbolicExpression*> newVector;
-      std::vector<triton::engines::symbolic::SymbolicExpression*>::iterator it;
 
       /* Clear unused data */
       this->memoryAccess.clear();
@@ -349,7 +343,7 @@ namespace triton {
        * is enable we must compute semanitcs to spread the taint.
        */
       if (!triton::api.isSymbolicEngineEnabled()) {
-        this->removeSymbolicExpressions();
+        this->removeSymbolicExpressions(uniqueNodes);
         triton::api.restoreSymbolicEngine();
       }
 
@@ -359,7 +353,7 @@ namespace triton {
        * expressions untainted and their AST nodes.
        */
       if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ONLY_ON_TAINTED) && !this->isTainted()) {
-        this->removeSymbolicExpressions();
+        this->removeSymbolicExpressions(uniqueNodes);
       }
 
       /*
@@ -368,7 +362,7 @@ namespace triton {
        * concrete expressions and their AST nodes.
        */
       if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ONLY_ON_SYMBOLIZED)) {
-        for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
+        for (auto it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
           if ((*it)->getAst()->isSymbolized() == false) {
             triton::api.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
             triton::api.removeSymbolicExpression((*it)->getId());
@@ -376,9 +370,36 @@ namespace triton {
           else
             newVector.push_back(*it);
         }
-        triton::api.freeAstNodes(uniqueNodes);
         this->symbolicExpressions = newVector;
       }
+
+      /*
+       * If there is no symbolic expression, clean memory operands
+       * AST and implicit/explicit semantics AST to avoid memory leak.
+       */
+      if (this->symbolicExpressions.size() == 0) {
+        /* Memory operands */
+        for (auto it = this->operands.begin(); it!= this->operands.end(); it++) {
+          if (it->getType() == triton::arch::OP_MEM) {
+            triton::api.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+          }
+        }
+
+        /* Implicit and explicit semantics - MEM */
+        for (auto it = this->loadAccess.begin(); it!= this->loadAccess.end(); it++)
+          triton::api.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
+
+        /* Implicit and explicit semantics - REG */
+        for (auto it = this->readRegisters.begin(); it!= this->readRegisters.end(); it++)
+          triton::api.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
+
+        /* Implicit and explicit semantics - IMM */
+        for (auto it = this->readImmediates.begin(); it!= this->readImmediates.end(); it++)
+          triton::api.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
+      }
+
+      /* Free collected nodes */
+      triton::api.freeAstNodes(uniqueNodes);
     }
 
 
