@@ -9,7 +9,6 @@
 #include <astRepresentation.hpp>
 #include <exceptions.hpp>
 #include <solverEngine.hpp>
-#include <symbolicVariable.hpp>
 #include <tritonToZ3Ast.hpp>
 #include <z3Result.hpp>
 
@@ -163,9 +162,6 @@ namespace triton {
             /* Get the name as std::string from a z3 variable */
             std::string varName = z3Variable.name().str();
 
-            /* Get the triton variable */
-            triton::engines::symbolic::SymbolicVariable* ttVariable = this->symbolicEngine->getSymbolicVariableFromName(varName);
-
             /* Get z3 expr */
             z3::expr exp = m.get_const_interp(z3Variable);
 
@@ -179,7 +175,7 @@ namespace triton {
             triton::uint512 value = triton::uint512(svalue);
 
             /* Create a triton model */
-            SolverModel trionModel = SolverModel(ttVariable, value);
+            SolverModel trionModel = SolverModel(varName, value);
 
             /* Map the result */
             smodel[trionModel.getId()] = trionModel;

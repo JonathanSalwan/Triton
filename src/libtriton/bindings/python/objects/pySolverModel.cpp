@@ -63,9 +63,6 @@ SymVar_0 = 287454020
 \section SolverModel_py_api Python API - Methods of the SolverModel class
 <hr>
 
-- <b>string getAlias(void)</b><br>
-Returns the alias of the model. This alias is the same that the variable alias. Aliases are used for custom names.
-
 - <b>integer getId(void)</b><br>
 Returns the id of the model. This id is the same that the variable id.
 
@@ -88,16 +85,6 @@ namespace triton {
         std::cout << std::flush;
         delete PySolverModel_AsSolverModel(self);
         Py_DECREF(self);
-      }
-
-
-      static PyObject* SolverModel_getAlias(PyObject* self, PyObject* noarg) {
-        try {
-          return Py_BuildValue("s", PySolverModel_AsSolverModel(self)->getAlias().c_str());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
       }
 
 
@@ -151,7 +138,6 @@ namespace triton {
 
       //! SolverModel methods.
       PyMethodDef SolverModel_callbacks[] = {
-        {"getAlias",  SolverModel_getAlias,   METH_NOARGS,    ""},
         {"getId",     SolverModel_getId,      METH_NOARGS,    ""},
         {"getName",   SolverModel_getName,    METH_NOARGS,    ""},
         {"getValue",  SolverModel_getValue,   METH_NOARGS,    ""},

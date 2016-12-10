@@ -197,8 +197,8 @@ class TritonExecution(object):
 
         rdi = getCurrentRegisterValue(REG.RDI) # argc
         rsi = getCurrentRegisterValue(REG.RSI) # argv
-        argv0_addr = getCurrentMemoryValue(getCurrentRegisterValue(REG.RSI), CPUSIZE.REG) # argv[0] pointer
-        argv1_addr = getCurrentMemoryValue(rsi + CPUSIZE.REG, CPUSIZE.REG)                # argv[1] pointer
+        argv0_addr = getCurrentMemoryValue(getCurrentRegisterValue(REG.RSI), CPUSIZE.QWORD) # argv[0] pointer
+        argv1_addr = getCurrentMemoryValue(rsi + CPUSIZE.QWORD, CPUSIZE.QWORD)              # argv[1] pointer
 
         print "[+] In main() we set :"
         od = OrderedDict(sorted(TritonExecution.input.dataAddr.items()))

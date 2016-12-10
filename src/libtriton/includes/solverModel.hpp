@@ -9,8 +9,6 @@
 #define TRITON_SOLVERMODEL_H
 
 #include <string>
-
-#include "symbolicVariable.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -44,9 +42,6 @@ namespace triton {
           //! The name of the variable. Names are always something like this: SymVar_X.
           std::string name;
 
-          //! The alias of the variable. Aliases are used for custom names.
-          std::string alias;
-
           //! The id of the variable.
           triton::uint32 id;
 
@@ -56,9 +51,6 @@ namespace triton {
         public:
           //! Returns the name of the variable.
           const std::string& getName(void) const;
-
-          //! Returns the alias of the variable.
-          const std::string& getAlias(void) const;
 
           //! Returns the id of the variable.
           triton::uint32 getId(void) const;
@@ -73,7 +65,7 @@ namespace triton {
           SolverModel();
 
           //! Constructor.
-          SolverModel(const triton::engines::symbolic::SymbolicVariable* variable, triton::uint512 value);
+          SolverModel(const std::string& name, triton::uint512 value);
 
           //! Constructor by copy.
           SolverModel(const SolverModel& other);

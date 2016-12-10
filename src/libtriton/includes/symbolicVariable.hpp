@@ -43,14 +43,12 @@ namespace triton {
       class SymbolicVariable {
 
         protected:
+
           //! The symbolic variable kind. \sa triton::engines::symbolic::symkind_e
           symkind_e kind;
 
           //! The comment of the symbolic variable.
           std::string comment;
-
-          //! The alias of the symbolic variable. Aliases are used for custom names.
-          std::string alias;
 
           //! The name of the symbolic variable. Names are always something like this: SymVar_X. \sa TRITON_SYMVAR_NAME
           std::string name;
@@ -91,9 +89,6 @@ namespace triton {
           //! Returns the symbolic variable kind. \sa triton::engines::symbolic::symkind_e.
           symkind_e getKind(void) const;
 
-          //! Returns the alias of the symbolic variable.
-          const std::string& getAlias(void) const;
-
           //! Returns the comment of the symbolic variable.
           const std::string& getComment(void) const;
 
@@ -111,9 +106,6 @@ namespace triton {
 
           //! Returns the concrete value (if exists) of the symbolic variable.
           triton::uint512 getConcreteValue(void) const;
-
-          //! Sets the alias of the symbolic variable.
-          void setAlias(const std::string& alias);
 
           //! Sets the comment of the symbolic variable.
           void setComment(const std::string& comment);

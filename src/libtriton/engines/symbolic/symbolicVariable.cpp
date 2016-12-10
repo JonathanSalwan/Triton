@@ -22,14 +22,13 @@ namespace triton {
                                          triton::uint32 size,
                                          const std::string& comment,
                                          triton::uint512 concreteValue) {
-        this->alias            = "";
         this->comment          = comment;
-        this->concreteValue    = concreteValue;
         this->id               = id;
         this->kind             = kind;
         this->kindValue        = kindValue;
         this->name             = TRITON_SYMVAR_NAME + std::to_string(id);
         this->size             = size;
+        this->concreteValue    = concreteValue;
 
         if (this->size > MAX_BITS_SUPPORTED)
           throw triton::exceptions::SymbolicVariable("SymbolicVariable::SymbolicVariable(): Size connot be greater than MAX_BITS_SUPPORTED.");
@@ -37,14 +36,13 @@ namespace triton {
 
 
       SymbolicVariable::SymbolicVariable(const SymbolicVariable &copy) {
-        this->alias            = copy.alias;
         this->comment          = copy.comment;
-        this->concreteValue    = copy.concreteValue;
         this->id               = copy.id;
         this->kind             = copy.kind;
         this->kindValue        = copy.kindValue;
         this->name             = copy.name;
         this->size             = copy.size;
+        this->concreteValue    = copy.concreteValue;
       }
 
 
@@ -54,11 +52,6 @@ namespace triton {
 
       symkind_e SymbolicVariable::getKind(void) const {
         return this->kind;
-      }
-
-
-      const std::string& SymbolicVariable::getAlias(void) const {
-        return this->alias;
       }
 
 
@@ -92,15 +85,6 @@ namespace triton {
       }
 
 
-      void SymbolicVariable::setAlias(const std::string& alias) {
-        triton::ast::AbstractNode* node = triton::api.getAstVariableNode(this->getName());
-
-        this->alias = alias;
-        if (node)
-          node->init();
-      }
-
-
       void SymbolicVariable::setComment(const std::string& comment) {
         this->comment = comment;
       }
@@ -116,14 +100,7 @@ namespace triton {
 
 
       std::ostream& operator<<(std::ostream& stream, const SymbolicVariable& symVar) {
-        /* If an alias has been defined, print it */
-        if (!symVar.getAlias().empty())
-          stream << symVar.getAlias() << ":" << symVar.getSize();
-
-        /* Otherwise, we print the default variable name */
-        else
-          stream << symVar.getName() << ":" << symVar.getSize();
-
+        stream << symVar.getName() << ":" << symVar.getSize();
         return stream;
       }
 

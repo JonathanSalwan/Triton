@@ -15,17 +15,15 @@ namespace triton {
     namespace solver {
 
       SolverModel::SolverModel() {
-        this->alias = "";
         this->id    = static_cast<triton::uint32>(-1);
         this->name  = "";
         this->value = 0;
       }
 
 
-      SolverModel::SolverModel(const triton::engines::symbolic::SymbolicVariable* variable, triton::uint512 value) {
-        this->alias = variable->getAlias();
-        this->id    = variable->getId();
-        this->name  = variable->getName();
+      SolverModel::SolverModel(const std::string& name, triton::uint512 value) {
+        this->id    = std::atoi(name.c_str() + TRITON_SYMVAR_NAME_SIZE);
+        this->name  = name;
         this->value = value;
       }
 
@@ -36,7 +34,6 @@ namespace triton {
 
 
       void SolverModel::copy(const SolverModel& other) {
-        this->alias = other.alias;
         this->id    = other.id;
         this->name  = other.name;
         this->value = other.value;
@@ -49,11 +46,6 @@ namespace triton {
 
       const std::string& SolverModel::getName(void) const {
         return this->name;
-      }
-
-
-      const std::string& SolverModel::getAlias(void) const {
-        return this->alias;
       }
 
 
@@ -73,14 +65,7 @@ namespace triton {
 
 
       std::ostream& operator<<(std::ostream& stream, const SolverModel& model) {
-        /* If an alias has been defined, print it */
-        if (!model.getAlias().empty())
-          stream << model.getAlias() << " = " << std::hex << model.getValue() << std::dec;
-
-        /* Otherwise, we print the default variable name */
-        else
-          stream << model.getName() << " = " << std::hex << model.getValue() << std::dec;
-
+        stream << model.getName() << " = " << std::hex << model.getValue() << std::dec;
         return stream;
       }
 

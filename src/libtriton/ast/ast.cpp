@@ -2936,7 +2936,6 @@ namespace triton {
 
     VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar) {
       this->kind  = VARIABLE_NODE;
-      this->alias = symVar.getAlias();
       this->value = symVar.getName();
       this->init();
     }
@@ -2956,9 +2955,8 @@ namespace triton {
 
       symVar = triton::api.getSymbolicVariableFromName(this->value);
       if (symVar) {
-        this->alias       = symVar->getAlias();
-        this->eval        = (symVar->getConcreteValue() & this->getBitvectorMask());
         this->size        = symVar->getSize();
+        this->eval        = (symVar->getConcreteValue() & this->getBitvectorMask());
         this->symbolized  = true;
       }
       else
@@ -2967,11 +2965,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    std::string VariableNode::getAlias(void) {
-      return this->alias;
     }
 
 
