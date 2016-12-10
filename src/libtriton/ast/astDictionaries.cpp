@@ -13,9 +13,7 @@ namespace triton {
   namespace ast {
 
     AstDictionaries::AstDictionaries() {
-      this->allocatedNodes        = 0;
-      this->allocatedDictionaries = 0;
-
+      this->allocatedNodes = 0;
       this->linkDictionaries();
     }
 
@@ -128,9 +126,11 @@ namespace triton {
 
 
     void AstDictionaries::copy(const AstDictionaries& other) {
+      /* Global information */
       this->allocatedNodes              = other.allocatedNodes;
       this->allocatedDictionaries       = other.allocatedDictionaries;
 
+      /* Dictionnaries */
       this->assertDictionary            = other.assertDictionary;
       this->bvaddDictionary             = other.bvaddDictionary;
       this->bvandDictionary             = other.bvandDictionary;
@@ -301,7 +301,7 @@ namespace triton {
 
       }
 
-      this->allocatedDictionaries++;
+      this->allocatedDictionaries.insert(node);
       return nullptr;
     }
 
@@ -357,7 +357,7 @@ namespace triton {
       stats["sx"]                     = this->sxDictionary.size();
       stats["variable"]               = this->variableDictionary.size();
       stats["zx"]                     = this->zxDictionary.size();
-      stats["allocatedDictionaries"]  = this->allocatedDictionaries;
+      stats["allocatedDictionaries"]  = this->allocatedDictionaries.size();
       stats["allocatedNodes"]         = this->allocatedNodes;
       return stats;
     }
