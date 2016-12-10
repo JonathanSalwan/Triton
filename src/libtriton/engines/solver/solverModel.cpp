@@ -6,7 +6,9 @@
 */
 
 #include <cstdlib>
+
 #include <solverModel.hpp>
+#include <symbolicEnums.hpp>
 
 
 
