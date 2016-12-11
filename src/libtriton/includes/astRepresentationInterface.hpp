@@ -36,7 +36,6 @@ namespace triton {
      *  @{
      */
 
-
       /*!
        *  \interface AstRepresentationInterface
        *  \brief The AST representation interface.
@@ -48,7 +47,6 @@ namespace triton {
           //! Entry point of print.
           virtual std::ostream& print(std::ostream& stream, triton::ast::AbstractNode* node) = 0;
       };
-
 
     /*! @} End of representations namespace */
     };

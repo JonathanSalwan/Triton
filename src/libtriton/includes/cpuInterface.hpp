@@ -47,22 +47,13 @@ namespace triton {
         //! Clears the architecture states (registers and memory).
         virtual void clear(void) = 0;
 
-        //! Returns true if the regId is a flag.
-        /*!
-            \param regId the register id.
-        */
+        //! Returns true if the register ID is a flag.
         virtual bool isFlag(triton::uint32 regId) const = 0;
 
-        //! Returns true if the regId is a register.
-        /*!
-            \param regId the register id.
-        */
+        //! Returns true if the register ID is a register.
         virtual bool isRegister(triton::uint32 regId) const = 0;
 
-        //! Returns true if the regId is valid.
-        /*!
-            \param regId the register id.
-        */
+        //! Returns true if the register ID is valid.
         virtual bool isRegisterValid(triton::uint32 regId) const = 0;
 
         //! Returns the max size (in byte) of the CPU registers (GPR).

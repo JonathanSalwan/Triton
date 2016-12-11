@@ -50,7 +50,6 @@ namespace triton {
           //! \brief The logical conjunction vector of path constraints.
           std::vector<triton::engines::symbolic::PathConstraint> pathConstraints;
 
-
         public:
           //! Constructor.
           PathManager();

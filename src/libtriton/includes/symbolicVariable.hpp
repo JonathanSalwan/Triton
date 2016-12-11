@@ -41,9 +41,7 @@ namespace triton {
       /*! \class SymbolicVariable
           \brief The symbolic variable class. */
       class SymbolicVariable {
-
         protected:
-
           //! The symbolic variable kind. \sa triton::engines::symbolic::symkind_e
           symkind_e kind;
 

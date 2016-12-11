@@ -45,7 +45,6 @@ namespace triton {
       //! \class SymbolicOptimization
       /*! \brief The symbolic simplification class */
       class SymbolicOptimization {
-
         protected:
           //! The set of enabled optimization
           std::set<enum optimization_e> enabledOptimizations;

@@ -39,7 +39,6 @@ namespace triton {
         z3::expr expr;
 
       public:
-
         //! Constructor.
         Z3Result();
 

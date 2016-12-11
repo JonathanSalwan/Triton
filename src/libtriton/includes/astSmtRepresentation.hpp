@@ -197,7 +197,6 @@ namespace triton {
           std::ostream& print(std::ostream& stream, triton::ast::ZxNode* node);
       };
 
-
     /*! @} End of representations namespace */
     };
   /*! @} End of ast namespace */

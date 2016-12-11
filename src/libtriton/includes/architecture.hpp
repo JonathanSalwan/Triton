@@ -65,22 +65,13 @@ namespace triton {
         //! Destructor.
         virtual ~Architecture();
 
-        //! Returns true if the regId is a flag.
-        /*!
-          \param regId the register id.
-        */
+        //! Returns true if the register ID is a flag.
         bool isFlag(triton::uint32 regId) const;
 
-        //! Returns true if the regId is a register.
-        /*!
-          \param regId the register id.
-        */
+        //! Returns true if the register ID is a register.
         bool isRegister(triton::uint32 regId) const;
 
-        //! Returns true if the regId is a register or a flag.
-        /*!
-          \param regId the register id.
-        */
+        //! Returns true if the register ID is a register or a flag.
         bool isRegisterValid(triton::uint32 regId) const;
 
         //! Returns true if the architecture is valid.
@@ -102,9 +93,6 @@ namespace triton {
         triton::uint32 registerSize(void) const;
 
         //! Setup an architecture.
-        /*!
-          \param arch the architecture.
-        */
         void setArchitecture(triton::uint32 arch);
 
         //! Clears the architecture states (registers and memory).
