@@ -3778,15 +3778,7 @@ def test15_symbolizeInputs(seed):
     return
 
 
-def test_15():
-    count = 0
-
-    # Set the architecture
-    setArchitecture(ARCH.X86_64)
-
-    # Symbolic optimization
-    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
-
+def test_15_core():
     # Define entry point
     ENTRY = 0x40056d
 
@@ -3814,6 +3806,20 @@ def test_15():
         for inputs in newInputs:
             if inputs not in lastInput and inputs not in worklist:
                 worklist += [dict(inputs)]
+
+    return lastInput
+
+
+def test_15_1():
+    count = 0
+
+    # Set the architecture
+    setArchitecture(ARCH.X86_64)
+
+    # Symbolic optimization
+    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
+
+    lastInput = test_15_core()
 
     if {4096L: 101L, 4097L: 108L, 4098L: 105L, 4099L: 116L, 4100L: 101L} in lastInput:
         count += 1
@@ -3826,7 +3832,7 @@ def test_15():
     return count
 
 
-def test_16():
+def test_15_2():
     count = 0
 
     # Set the architecture
@@ -3836,33 +3842,7 @@ def test_16():
     enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
     enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
 
-    # Define entry point
-    ENTRY = 0x40056d
-
-    # We start the execution with a random value located at 0x1000.
-    lastInput = list()
-    worklist  = list([{0x1000:1}])
-
-    while worklist:
-        # Take the first seed
-        seed = worklist[0]
-
-        # Symbolize inputs
-        test15_symbolizeInputs(seed)
-
-        # Init context memory
-        test15_initContext()
-
-        # Emulate
-        test15_run(ENTRY)
-
-        lastInput += [dict(seed)]
-        del worklist[0]
-
-        newInputs = test15_getNewInput()
-        for inputs in newInputs:
-            if inputs not in lastInput and inputs not in worklist:
-                worklist += [dict(inputs)]
+    lastInput = test_15_core()
 
     if {4096L: 101L, 4097L: 108L, 4098L: 105L, 4099L: 116L, 4100L: 101L} in lastInput:
         count += 1
@@ -3870,6 +3850,143 @@ def test_16():
         print '[KO] lastInput{}'
         print '\tOutput   : missing valid model'
         print '\tExpected : "elite"'
+        return -1
+
+    return count
+
+
+def test_15_3():
+    count = 0
+
+    # Set the architecture
+    setArchitecture(ARCH.X86_64)
+
+    lastInput = test_15_core()
+
+    if {4096L: 101L, 4097L: 108L, 4098L: 105L, 4099L: 116L, 4100L: 101L} in lastInput:
+        count += 1
+    else:
+        print '[KO] lastInput{}'
+        print '\tOutput   : missing valid model'
+        print '\tExpected : "elite"'
+        return -1
+
+    return count
+
+
+# Emulate the CheckSolution() function.
+def test16_emulate(pc):
+    while pc:
+        # Fetch opcodes
+        opcodes = getConcreteMemoryAreaValue(pc, 16)
+
+        # Create the Triton instruction
+        instruction = Instruction()
+        instruction.setOpcodes(opcodes)
+        instruction.setAddress(pc)
+
+        # Process
+        processing(instruction)
+
+        # 40078B: cmp eax, 1
+        # eax must be equal to 1 at each round.
+        if instruction.getAddress() == 0x40078B:
+            # Slice expressions
+            rax   = getSymbolicExpressionFromId(getSymbolicRegisterId(REG.RAX))
+            eax   = ast.extract(31, 0, rax.getAst())
+
+            # Define constraint
+            cstr  = ast.assert_(
+                        ast.land(
+                            getPathConstraintsAst(),
+                            ast.equal(eax, ast.bv(1, 32))
+                        )
+                    )
+
+            model = getModel(cstr)
+            solution = str()
+            for k, v in model.items():
+                value = v.getValue()
+                solution += chr(value)
+                getSymbolicVariableFromId(k).setConcreteValue(value)
+
+        # Next
+        pc = getConcreteRegisterValue(REG.RIP)
+
+    return solution
+
+
+# Load segments into triton.
+def test16_loadBinary(path):
+    binary = Elf(path)
+    raw    = binary.getRaw()
+    phdrs  = binary.getProgramHeaders()
+    for phdr in phdrs:
+        offset = phdr.getOffset()
+        size   = phdr.getFilesz()
+        vaddr  = phdr.getVaddr()
+        setConcreteMemoryAreaValue(vaddr, raw[offset:offset+size])
+    return
+
+
+def test16_core():
+    # Load the binary
+    test16_loadBinary('@CMAKE_SOURCE_DIR@/src/testers/misc/defcamp-2015-r100.bin')
+
+    # Define a fake stack
+    setConcreteRegisterValue(Register(REG.RBP, 0x7fffffff))
+    setConcreteRegisterValue(Register(REG.RSP, 0x6fffffff))
+
+    # Define an user input
+    setConcreteRegisterValue(Register(REG.RDI, 0x10000000))
+
+    # Symbolize user inputs (30 bytes)
+    for index in range(30):
+        convertMemoryToSymbolicVariable(MemoryAccess(0x10000000+index, CPUSIZE.BYTE))
+
+    # Emulate from the verification function
+    solution = test16_emulate(0x4006FD)
+
+    return solution
+
+
+def test_16_1():
+    count = 0
+
+    # Define the target architecture
+    setArchitecture(ARCH.X86_64)
+
+    # Define symbolic optimizations
+    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
+    enableSymbolicOptimization(OPTIMIZATION.ONLY_ON_SYMBOLIZED, True)
+
+    solution = test16_core()
+
+    if solution == 'Code_Talkers':
+        count += 1
+    else:
+        print '[KO] Solving defcamp-2015-r100'
+        print '\tOutput   : "%s"' %(solution)
+        print '\tExpected : "Code_Talkers"'
+        return -1
+
+    return count
+
+
+def test_16_2():
+    count = 0
+
+    # Define the target architecture
+    setArchitecture(ARCH.X86_64)
+
+    solution = test16_core()
+
+    if solution == 'Code_Talkers':
+        count += 1
+    else:
+        print '[KO] Solving defcamp-2015-r100'
+        print '\tOutput   : "%s"' %(solution)
+        print '\tExpected : "Code_Talkers"'
         return -1
 
     return count
@@ -3894,8 +4011,11 @@ units_testing = [
     ("Testing known issues", test_12),
     ("Testing symbolic assignments", test_13),
     ("Testing symbolic building", test_14),
-    ("Testing code coverage with ALIGNED_MEMORY optimization", test_15),
-    ("Testing code coverage with ALIGNED_MEMORY and AST_DICTIONARIES optimizations", test_16),
+    ("Testing code coverage with ALIGNED_MEMORY optimization", test_15_1),
+    ("Testing code coverage with ALIGNED_MEMORY and AST_DICTIONARIES optimizations", test_15_2),
+    ("Testing code coverage without optimization", test_15_3),
+    ("Solving RE challenge with ALIGNED_MEMORY and ONLY_ON_SYMBOLIZED optimizations", test_16_1),
+    ("Solving RE challenge without optimization", test_16_2),
 ]
 
 
