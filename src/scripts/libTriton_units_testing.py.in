@@ -2987,10 +2987,9 @@ def test_8_emulate(concretize=False):
         instruction = Instruction()
         instruction.setOpcodes(opcodes)
         instruction.setAddress(pc)
-        processing(instruction)
 
         # Check if triton doesn't supports this instruction
-        if not len(instruction.getSymbolicExpressions()):
+        if not processing(instruction):
             print '[KO] Emulation of emu_1.dump'
             print '\tOutput   : <invalid expressions>'
             print '\tExpected : <valid expressions>'
@@ -3156,6 +3155,7 @@ def test_8_4():
 
     return count
 
+
 def test_8_5():
     count = 0
 
@@ -3173,6 +3173,85 @@ def test_8_5():
     test_8_setup_mem(mems)
 
     ret = test_8_emulate(concretize=True)
+    if ret == -1:
+        return -1
+    else:
+        count += ret
+
+    return count
+
+
+def test_8_6():
+    count = 0
+
+    setArchitecture(ARCH.X86_64)
+    enableSymbolicEngine(False)
+    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
+
+    fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
+    data = eval(fd.read())
+    fd.close()
+
+    regs = data[0]
+    mems = data[1]
+
+    test_8_setup_reg(regs)
+    test_8_setup_mem(mems)
+
+    ret = test_8_emulate()
+    if ret == -1:
+        return -1
+    else:
+        count += ret
+
+    return count
+
+
+def test_8_7():
+    count = 0
+
+    setArchitecture(ARCH.X86_64)
+    enableSymbolicEngine(False)
+    enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
+
+    fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
+    data = eval(fd.read())
+    fd.close()
+
+    regs = data[0]
+    mems = data[1]
+
+    test_8_setup_reg(regs)
+    test_8_setup_mem(mems)
+
+    ret = test_8_emulate()
+    if ret == -1:
+        return -1
+    else:
+        count += ret
+
+    return count
+
+
+def test_8_8():
+    count = 0
+
+    setArchitecture(ARCH.X86_64)
+    enableSymbolicEngine(False)
+    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
+    enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
+
+    fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
+    data = eval(fd.read())
+    fd.close()
+
+    regs = data[0]
+    mems = data[1]
+
+    test_8_setup_reg(regs)
+    test_8_setup_mem(mems)
+
+    ret = test_8_emulate()
     if ret == -1:
         return -1
     else:
@@ -4005,6 +4084,9 @@ units_testing = [
     ("Testing the symbolic emulation engine with the AST_DICTIONARIES optimization", test_8_3),
     ("Testing the symbolic emulation engine with the ALIGNED_MEMORY and AST_DICTIONARIES optimizations", test_8_4),
     ("Testing the symbolic emulation engine with the AST_DICTIONARIES optimization and concretization", test_8_5),
+    ("Testing the symbolic emulation without symbolic engine and with the ALIGNED_MEMORY optimization", test_8_6),
+    #("Testing the symbolic emulation without symbolic engine and with the AST_DICTIONARIES optimization", test_8_7),
+    #("Testing the symbolic emulation without symbolic engine and with the ALIGNED_MEMORY and AST_DICTIONARIES optimizations", test_8_8),
     ("Testing the LOAD access semantics", test_9),
     ("Testing the taint engine", test_10),
     ("Testing the symbolic engine backup", test_11),
