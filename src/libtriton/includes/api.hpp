@@ -15,6 +15,7 @@
 #include "callbacks.hpp"
 #include "immediate.hpp"
 #include "instruction.hpp"
+#include "irBuilder.hpp"
 #include "memoryAccess.hpp"
 #include "operandWrapper.hpp"
 #include "register.hpp"
@@ -63,6 +64,9 @@ namespace triton {
 
         //! The AST garbage collector interface.
         triton::ast::AstGarbageCollector* astGarbageCollector;
+
+        //! The IR builder.
+        triton::arch::IrBuilder* irBuilder;
 
         //! The Z3 interface between Triton and Z3
         triton::ast::Z3Interface* z3Interface;
@@ -185,9 +189,6 @@ namespace triton {
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa processing().
         void disassembly(triton::arch::Instruction& inst) const;
 
-        //! [**architecture api**] - Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before. \sa processing().
-        bool buildSemantics(triton::arch::Instruction& inst);
-
 
 
         /* Processing API ================================================================================ */
@@ -203,6 +204,16 @@ namespace triton {
 
         //! [**proccesing api**] - Reset everything.
         void resetEngines(void);
+
+
+
+        /* IR API ======================================================================================== */
+
+        //! [**IR builder api**] - Raises an exception if the IR builder is not initialized.
+        void checkIrBuilder(void) const;
+
+        //! [**IR builder api**] - Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before. \sa processing().
+        bool buildSemantics(triton::arch::Instruction& inst);
 
 
 

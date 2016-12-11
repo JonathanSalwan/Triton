@@ -19,7 +19,6 @@
 #include "register.hpp"
 #include "registerSpecification.hpp"
 #include "tritonTypes.hpp"
-#include "x86Semantics.hpp"
 #include "x86Specifications.hpp"
 
 
@@ -328,7 +327,6 @@ namespace triton {
           bool isSegment(triton::uint32 regId) const;
 
           /* Virtual pure inheritance ================================================= */
-          bool buildSemantics(triton::arch::Instruction& inst) const;
           bool isFlag(triton::uint32 regId) const;
           bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
           bool isRegister(triton::uint32 regId) const;

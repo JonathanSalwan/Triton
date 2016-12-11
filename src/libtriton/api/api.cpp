@@ -191,6 +191,7 @@ namespace triton {
     this->arch                = triton::arch::Architecture(&this->callbacks);
 
     this->astGarbageCollector = nullptr;
+    this->irBuilder           = nullptr;
     this->solver              = nullptr;
     this->symbolic            = nullptr;
     this->symbolicBackup      = nullptr;
@@ -355,12 +356,6 @@ namespace triton {
   }
 
 
-  bool API::buildSemantics(triton::arch::Instruction& inst) {
-    this->checkArchitecture();
-    return this->arch.buildSemantics(inst);
-  }
-
-
 
   /* Processing API ================================================================================ */
 
@@ -387,6 +382,10 @@ namespace triton {
     if (this->taint == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
+    this->irBuilder = new(std::nothrow) triton::arch::IrBuilder(&this->arch, this->symbolic, this->taint);
+    if (this->irBuilder == nullptr)
+      throw triton::exceptions::API("API::initEngines(): No enough memory.");
+
     this->z3Interface = new(std::nothrow) triton::ast::Z3Interface(this->symbolic);
     if (this->z3Interface == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
@@ -396,6 +395,7 @@ namespace triton {
   void API::removeEngines(void) {
     if (this->isArchitectureValid()) {
       delete this->astGarbageCollector;
+      delete this->irBuilder;
       delete this->solver;
       delete this->symbolic;
       delete this->symbolicBackup;
@@ -403,6 +403,7 @@ namespace triton {
       delete this->z3Interface;
 
       this->astGarbageCollector = nullptr;
+      this->irBuilder           = nullptr;
       this->solver              = nullptr;
       this->symbolic            = nullptr;
       this->symbolicBackup      = nullptr;
@@ -425,6 +426,21 @@ namespace triton {
     this->checkArchitecture();
     this->disassembly(inst);
     return this->buildSemantics(inst);
+  }
+
+
+
+  /* IR builder API ================================================================================= */
+
+  void API::checkIrBuilder(void) const {
+    if (!this->irBuilder)
+      throw triton::exceptions::API("API::checkIrBuilder(): IR builder is undefined.");
+  }
+
+
+  bool API::buildSemantics(triton::arch::Instruction& inst) {
+    this->checkIrBuilder();
+    return this->irBuilder->buildSemantics(inst);
   }
 
 
@@ -495,7 +511,6 @@ namespace triton {
     this->checkAstGarbageCollector();
     this->astGarbageCollector->setAstVariableNodes(nodes);
   }
-
 
 
   /* AST representation API ========================================================================= */

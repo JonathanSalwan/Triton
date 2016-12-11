@@ -299,6 +299,18 @@ namespace triton {
     };
 
 
+    /*! \class IrBuilder
+     *  \brief The exception class used by the IR builder. */
+    class IrBuilder : public triton::exceptions::Architecture {
+      public:
+        //! Constructor.
+        IrBuilder(const char* message) : triton::exceptions::Architecture(message) {};
+
+        //! Constructor.
+        IrBuilder(const std::string& message) : triton::exceptions::Architecture(message) {};
+    };
+
+
     /*! \class Disassembly
      *  \brief The exception class used by the disassembler. */
     class Disassembly : public triton::exceptions::Cpu {

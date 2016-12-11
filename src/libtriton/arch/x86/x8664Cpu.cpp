@@ -747,13 +747,6 @@ namespace triton {
       }
 
 
-      bool x8664Cpu::buildSemantics(triton::arch::Instruction& inst) const {
-        if (!inst.getType())
-          throw triton::exceptions::Cpu("x8664Cpu::buildSemantics(): You must disassemble the instruction before.");
-        return triton::arch::x86::semantics::build(inst);
-      }
-
-
       triton::uint8 x8664Cpu::getConcreteMemoryValue(triton::uint64 addr) const {
         if (this->memory.find(addr) == this->memory.end())
           return 0x00;
