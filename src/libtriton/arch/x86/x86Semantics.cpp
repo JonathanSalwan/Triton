@@ -773,7 +773,13 @@ namespace triton {
       }
 
 
-      void x86Semantics::af_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::af_s(triton::arch::Instruction& inst,
+                              triton::engines::symbolic::SymbolicExpression* parent,
+                              triton::arch::OperandWrapper& dst,
+                              triton::ast::AbstractNode* op1,
+                              triton::ast::AbstractNode* op2,
+                              bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -805,7 +811,12 @@ namespace triton {
       }
 
 
-      void x86Semantics::afNeg_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol) {
+      void x86Semantics::afNeg_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -837,7 +848,13 @@ namespace triton {
       }
 
 
-      void x86Semantics::cfAdd_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::cfAdd_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -866,7 +883,13 @@ namespace triton {
       }
 
 
-      void x86Semantics::cfImul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* res, bool vol) {
+      void x86Semantics::cfImul_s(triton::arch::Instruction& inst,
+                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::arch::OperandWrapper& dst,
+                                  triton::ast::AbstractNode* op1,
+                                  triton::ast::AbstractNode* res,
+                                  bool vol) {
+
         /*
          * Create the semantic.
          * cf = 0 if sx(dst) == node else 1
@@ -888,8 +911,11 @@ namespace triton {
       }
 
 
-      void x86Semantics::cfMul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol) {
-        auto bvSize = dst.getBitSize();
+      void x86Semantics::cfMul_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 bool vol) {
 
         /*
          * Create the semantic.
@@ -898,7 +924,7 @@ namespace triton {
         auto node = triton::ast::ite(
                       triton::ast::equal(
                         op1,
-                        triton::ast::bv(0, bvSize)
+                        triton::ast::bv(0, dst.getBitSize())
                       ),
                       triton::ast::bv(0, 1),
                       triton::ast::bv(1, 1)
@@ -912,8 +938,11 @@ namespace triton {
       }
 
 
-      void x86Semantics::cfNeg_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol) {
-        auto bvSize = dst.getBitSize();
+      void x86Semantics::cfNeg_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 bool vol) {
 
         /*
          * Create the semantic.
@@ -922,7 +951,7 @@ namespace triton {
         auto node = triton::ast::ite(
                       triton::ast::equal(
                         op1,
-                        triton::ast::bv(0, bvSize)
+                        triton::ast::bv(0, dst.getBitSize())
                       ),
                       triton::ast::bv(0, 1),
                       triton::ast::bv(1, 1)
@@ -936,7 +965,11 @@ namespace triton {
       }
 
 
-      void x86Semantics::cfPtest_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, bool vol) {
+      void x86Semantics::cfPtest_s(triton::arch::Instruction& inst,
+                                   triton::engines::symbolic::SymbolicExpression* parent,
+                                   triton::arch::OperandWrapper& dst,
+                                   bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -962,7 +995,12 @@ namespace triton {
       }
 
 
-      void x86Semantics::cfRcl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::ast::AbstractNode* result, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::cfRcl_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::ast::AbstractNode* result,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto high = result->getBitvectorSize() - 1;
         auto cf   = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
@@ -990,7 +1028,13 @@ namespace triton {
       }
 
 
-      void x86Semantics::cfRcr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* result, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::cfRcr_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* result,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto high = result->getBitvectorSize() - 1;
         auto cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
@@ -1021,7 +1065,12 @@ namespace triton {
       }
 
 
-      void x86Semantics::cfRol_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::cfRol_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto low = vol ? 0 : dst.getAbstractLow();
         auto cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
@@ -1049,7 +1098,12 @@ namespace triton {
       }
 
 
-      void x86Semantics::cfRor_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::cfRor_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
         auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
@@ -1078,7 +1132,13 @@ namespace triton {
       }
 
 
-      void x86Semantics::cfSar_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::cfSar_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
@@ -1108,7 +1168,13 @@ namespace triton {
       }
 
 
-      void x86Semantics::cfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::cfShl_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
@@ -1138,7 +1204,13 @@ namespace triton {
       }
 
 
-      void x86Semantics::cfShr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::cfShr_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
@@ -1167,7 +1239,13 @@ namespace triton {
       }
 
 
-      void x86Semantics::cfSub_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::cfSub_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -1194,7 +1272,13 @@ namespace triton {
       }
 
 
-      void x86Semantics::ofAdd_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::ofAdd_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -1218,7 +1302,12 @@ namespace triton {
       }
 
 
-      void x86Semantics::ofImul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* res, bool vol) {
+      void x86Semantics::ofImul_s(triton::arch::Instruction& inst,
+                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::arch::OperandWrapper& dst,
+                                  triton::ast::AbstractNode* op1,
+                                  triton::ast::AbstractNode* res,
+                                  bool vol) {
         /*
          * Create the semantic.
          * of = 0 if sx(dst) == node else 1
@@ -1240,8 +1329,11 @@ namespace triton {
       }
 
 
-      void x86Semantics::ofMul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol) {
-        auto bvSize = dst.getBitSize();
+      void x86Semantics::ofMul_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 bool vol) {
 
         /*
          * Create the semantic.
@@ -1250,7 +1342,7 @@ namespace triton {
         auto node = triton::ast::ite(
                       triton::ast::equal(
                         op1,
-                        triton::ast::bv(0, bvSize)
+                        triton::ast::bv(0, dst.getBitSize())
                       ),
                       triton::ast::bv(0, 1),
                       triton::ast::bv(1, 1)
@@ -1264,7 +1356,12 @@ namespace triton {
       }
 
 
-      void x86Semantics::ofNeg_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol) {
+      void x86Semantics::ofNeg_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -1288,7 +1385,12 @@ namespace triton {
       }
 
 
-      void x86Semantics::ofRol_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::ofRol_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
         auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
@@ -1323,7 +1425,12 @@ namespace triton {
       }
 
 
-      void x86Semantics::ofRor_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::ofRor_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
         auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
@@ -1357,7 +1464,13 @@ namespace triton {
       }
 
 
-      void x86Semantics::ofRcr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::ofRcr_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto high   = dst.getBitSize()-1;
         auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
         auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
@@ -1391,7 +1504,12 @@ namespace triton {
       }
 
 
-      void x86Semantics::ofSar_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::ofSar_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
@@ -1415,7 +1533,13 @@ namespace triton {
       }
 
 
-      void x86Semantics::ofShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::ofShl_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
@@ -1444,7 +1568,13 @@ namespace triton {
       }
 
 
-      void x86Semantics::ofShr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::ofShr_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
@@ -1468,7 +1598,13 @@ namespace triton {
       }
 
 
-      void x86Semantics::ofSub_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::ofSub_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -1492,7 +1628,11 @@ namespace triton {
       }
 
 
-      void x86Semantics::pf_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, bool vol) {
+      void x86Semantics::pf_s(triton::arch::Instruction& inst,
+                              triton::engines::symbolic::SymbolicExpression* parent,
+                              triton::arch::OperandWrapper& dst,
+                              bool vol) {
+
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? BYTE_SIZE_BIT-1 : !low ? BYTE_SIZE_BIT-1 : WORD_SIZE_BIT-1;
 
@@ -1523,7 +1663,12 @@ namespace triton {
       }
 
 
-      void x86Semantics::pfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::pfShl_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? BYTE_SIZE_BIT-1 : !low ? BYTE_SIZE_BIT-1 : WORD_SIZE_BIT-1;
@@ -1560,7 +1705,11 @@ namespace triton {
       }
 
 
-      void x86Semantics::sf_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, bool vol) {
+      void x86Semantics::sf_s(triton::arch::Instruction& inst,
+                              triton::engines::symbolic::SymbolicExpression* parent,
+                              triton::arch::OperandWrapper& dst,
+                              bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
 
@@ -1578,7 +1727,12 @@ namespace triton {
       }
 
 
-      void x86Semantics::sfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::sfShl_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
         auto sf     = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
@@ -1601,7 +1755,11 @@ namespace triton {
       }
 
 
-      void x86Semantics::zf_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, bool vol) {
+      void x86Semantics::zf_s(triton::arch::Instruction& inst,
+                              triton::engines::symbolic::SymbolicExpression* parent,
+                              triton::arch::OperandWrapper& dst,
+                              bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
@@ -1627,15 +1785,18 @@ namespace triton {
       }
 
 
-      void x86Semantics::zfBsf_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& src, triton::ast::AbstractNode* op2, bool vol) {
-        auto bvSize = src.getBitSize();
+      void x86Semantics::zfBsf_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& src,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
 
         /*
          * Create the semantic.
          * zf = 1 if op2 == 0 else 0
          */
         auto node = triton::ast::ite(
-                      triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
+                      triton::ast::equal(op2, triton::ast::bv(0, src.getBitSize())),
                       triton::ast::bvtrue(),
                       triton::ast::bvfalse()
                     );
@@ -1648,7 +1809,12 @@ namespace triton {
       }
 
 
-      void x86Semantics::zfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol) {
+      void x86Semantics::zfShl_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op2,
+                                 bool vol) {
+
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();

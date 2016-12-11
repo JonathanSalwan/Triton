@@ -80,103 +80,245 @@ namespace triton {
           void controlFlow_s(triton::arch::Instruction& inst);
 
           //! The AF semantics.
-          void af_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol=false);
+          void af_s(triton::arch::Instruction& inst,
+                    triton::engines::symbolic::SymbolicExpression* parent,
+                    triton::arch::OperandWrapper& dst,
+                    triton::ast::AbstractNode* op1,
+                    triton::ast::AbstractNode* op2,
+                    bool vol=false);
 
           //! The AF semantics.
-          void afNeg_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol=false);
+          void afNeg_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       bool vol=false);
 
           //! The CF semantics.
-          void cfAdd_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol=false);
+          void cfAdd_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The CF semantics.
-          void cfImul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* res, bool vol=false);
+          void cfImul_s(triton::arch::Instruction& inst,
+                        triton::engines::symbolic::SymbolicExpression* parent,
+                        triton::arch::OperandWrapper& dst,
+                        triton::ast::AbstractNode* op1,
+                        triton::ast::AbstractNode* res,
+                        bool vol=false);
 
           //! The CF semantics.
-          void cfMul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol=false);
+          void cfMul_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       bool vol=false);
 
           //! The CF semantics.
-          void cfNeg_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol=false);
+          void cfNeg_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       bool vol=false);
 
           //! The CF semantics.
-          void cfPtest_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, bool vol=false);
+          void cfPtest_s(triton::arch::Instruction& inst,
+                         triton::engines::symbolic::SymbolicExpression* parent,
+                         triton::arch::OperandWrapper& dst,
+                         bool vol=false);
 
           //! The CF semantics.
-          void cfRcl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::ast::AbstractNode* result, triton::ast::AbstractNode* op2, bool vol=false);
+          void cfRcl_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::ast::AbstractNode* result,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The CF semantics.
-          void cfRcr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* result, triton::ast::AbstractNode* op2, bool vol=false);
+          void cfRcr_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* result,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The CF semantics.
-          void cfRol_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol=false);
+          void cfRol_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The CF semantics.
-          void cfRor_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol=false);
+          void cfRor_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The CF semantics.
-          void cfSar_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol=false);
+          void cfSar_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The CF semantics.
-          void cfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol=false);
+          void cfShl_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The CF semantics.
-          void cfShr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol=false);
+          void cfShr_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The CF semantics.
-          void cfSub_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol=false);
+          void cfSub_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The OF semantics.
-          void ofAdd_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol=false);
+          void ofAdd_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The OF semantics.
-          void ofImul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst,  triton::ast::AbstractNode* op1, triton::ast::AbstractNode* res, bool vol=false);
+          void ofImul_s(triton::arch::Instruction& inst,
+                        triton::engines::symbolic::SymbolicExpression* parent,
+                        triton::arch::OperandWrapper& dst,
+                        triton::ast::AbstractNode* op1,
+                        triton::ast::AbstractNode* res,
+                        bool vol=false);
 
           //! The OF semantics.
-          void ofMul_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol=false);
+          void ofMul_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       bool vol=false);
 
           //! The OF semantics.
-          void ofNeg_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, bool vol=false);
+          void ofNeg_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       bool vol=false);
 
           //! The OF semantics.
-          void ofRol_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol=false);
+          void ofRol_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The OF semantics.
-          void ofRor_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol=false);
+          void ofRor_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The OF semantics.
-          void ofRcr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol=false);
+          void ofRcr_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The OF semantics.
-          void ofSar_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol=false);
+          void ofSar_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The OF semantics.
-          void ofShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol=false);
+          void ofShl_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The OF semantics.
-          void ofShr_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol=false);
+          void ofShr_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The OF semantics.
-          void ofSub_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op1, triton::ast::AbstractNode* op2, bool vol=false);
+          void ofSub_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The PF semantics.
-          void pf_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, bool vol=false);
+          void pf_s(triton::arch::Instruction& inst,
+                    triton::engines::symbolic::SymbolicExpression* parent,
+                    triton::arch::OperandWrapper& dst,
+                    bool vol=false);
 
           //! The PF semantics.
-          void pfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol=false);
+          void pfShl_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The SF semantics.
-          void sf_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, bool vol=false);
+          void sf_s(triton::arch::Instruction& inst,
+                    triton::engines::symbolic::SymbolicExpression* parent,
+                    triton::arch::OperandWrapper& dst,
+                    bool vol=false);
 
           //! The SF semantics.
-          void sfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol=false);
+          void sfShl_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The ZF semantics.
-          void zf_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, bool vol=false);
+          void zf_s(triton::arch::Instruction& inst,
+                    triton::engines::symbolic::SymbolicExpression* parent,
+                    triton::arch::OperandWrapper& dst,
+                    bool vol=false);
 
           //! The ZF semantics.
-          void zfBsf_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& src, triton::ast::AbstractNode* op2, bool vol=false);
+          void zfBsf_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& src,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The ZF semantics.
-          void zfShl_s(triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* parent, triton::arch::OperandWrapper& dst, triton::ast::AbstractNode* op2, bool vol=false);
+          void zfShl_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op2,
+                       bool vol=false);
 
           //! The ADC semantics.
           void adc_s(triton::arch::Instruction& inst);
