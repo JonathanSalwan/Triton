@@ -20,8 +20,8 @@ namespace triton {
   namespace arch {
 
     IrBuilder::IrBuilder(triton::arch::Architecture* architecture,
-                  triton::engines::symbolic::SymbolicEngine* symbolicEngine,
-                  triton::engines::taint::TaintEngine* taintEngine) {
+                         triton::engines::symbolic::SymbolicEngine* symbolicEngine,
+                         triton::engines::taint::TaintEngine* taintEngine) {
 
       if (architecture == nullptr)
         throw triton::exceptions::IrBuilder("IrBuilder::IrBuilder(): The architecture API must be defined.");

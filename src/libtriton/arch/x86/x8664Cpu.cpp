@@ -529,7 +529,15 @@ namespace triton {
 
 
       bool x8664Cpu::isRegister(triton::uint32 regId) const {
-        return (this->isGPR(regId) || this->isMMX(regId) || this->isSSE(regId) || this->isAVX256(regId) || this->isAVX512(regId) || this->isControl(regId) || this->isSegment(regId));
+        return (
+          this->isGPR(regId)      ||
+          this->isMMX(regId)      ||
+          this->isSSE(regId)      ||
+          this->isAVX256(regId)   ||
+          this->isAVX512(regId)   ||
+          this->isControl(regId)  ||
+          this->isSegment(regId)
+        );
       }
 
 
