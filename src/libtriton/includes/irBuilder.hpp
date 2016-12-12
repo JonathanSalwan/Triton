@@ -9,6 +9,7 @@
 #define TRITON_IRBUILDER_H
 
 #include "architecture.hpp"
+#include "astGarbageCollector.hpp"
 #include "instruction.hpp"
 #include "semanticsInterface.hpp"
 #include "symbolicEngine.hpp"
@@ -38,11 +39,20 @@ namespace triton {
         //! Architecture API
         triton::arch::Architecture* architecture;
 
+        //! AST garbage collector API
+        triton::ast::AstGarbageCollector* astGarbageCollector;
+
         //! Symbolic Engine API
         triton::engines::symbolic::SymbolicEngine* symbolicEngine;
 
+        //! Symbolic Engine API
+        triton::engines::symbolic::SymbolicEngine* backupSymbolicEngine;
+
         //! Taint Engine API
         triton::engines::taint::TaintEngine* taintEngine;
+
+        //! Removes all symbolic expressions of an instruction.
+        void removeSymbolicExpressions(triton::arch::Instruction& inst, std::set<triton::ast::AbstractNode*>& uniqueNodes);
 
       protected:
         //! x86 ISA builder.
@@ -51,6 +61,7 @@ namespace triton {
       public:
         //! Constructor.
         IrBuilder(triton::arch::Architecture* architecture,
+                  triton::ast::AstGarbageCollector* astGarbageCollector,
                   triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                   triton::engines::taint::TaintEngine* taintEngine);
 
@@ -59,6 +70,12 @@ namespace triton {
 
         //! Builds the semantics of the instruction. Returns true if the instruction is supported.
         bool buildSemantics(triton::arch::Instruction& inst);
+
+        //! Everything which must be done before buiding the semantics
+        void preIrInit(triton::arch::Instruction& inst);
+
+        //! Everything which must be done after building the semantics.
+        void postIrInit(triton::arch::Instruction& inst);
     };
 
   /*! @} End of arch namespace */

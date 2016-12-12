@@ -7,7 +7,6 @@
 
 #include <cstring>
 
-#include <api.hpp>
 #include <exceptions.hpp>
 #include <immediate.hpp>
 #include <instruction.hpp>
@@ -241,15 +240,6 @@ namespace triton {
     }
 
 
-    void Instruction::removeSymbolicExpressions(std::set<triton::ast::AbstractNode*>& uniqueNodes) {
-      for (auto it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
-        triton::api.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
-        triton::api.removeSymbolicExpression((*it)->getId());
-      }
-      this->symbolicExpressions.clear();
-    }
-
-
     bool Instruction::isBranch(void) const {
       return this->branch;
     }
@@ -313,93 +303,6 @@ namespace triton {
 
     void Instruction::setConditionTaken(bool flag) {
       this->conditionTaken = flag;
-    }
-
-
-    void Instruction::preIRInit(void) {
-      /* Clear previous expressions if exist */
-      this->symbolicExpressions.clear();
-
-      /* Backup the symbolic engine in the case where only the taint is available. */
-      if (!triton::api.isSymbolicEngineEnabled())
-        triton::api.backupSymbolicEngine();
-    }
-
-
-    void Instruction::postIRInit(void) {
-      std::set<triton::ast::AbstractNode*> uniqueNodes;
-      std::vector<triton::engines::symbolic::SymbolicExpression*> newVector;
-
-      /* Clear unused data */
-      this->memoryAccess.clear();
-      this->registerState.clear();
-
-      /* Set the taint */
-      this->setTaint();
-
-      /*
-       * If the symbolic engine is disable we delete symbolic
-       * expressions and AST nodes. Note that if the taint engine
-       * is enable we must compute semanitcs to spread the taint.
-       */
-      if (!triton::api.isSymbolicEngineEnabled()) {
-        this->removeSymbolicExpressions(uniqueNodes);
-        triton::api.restoreSymbolicEngine();
-      }
-
-      /*
-       * If the symbolic engine is defined to process symbolic
-       * execution only on tainted instructions, we delete all
-       * expressions untainted and their AST nodes.
-       */
-      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ONLY_ON_TAINTED) && !this->isTainted()) {
-        this->removeSymbolicExpressions(uniqueNodes);
-      }
-
-      /*
-       * If the symbolic engine is defined to process symbolic
-       * execution only on symbolized expressions, we delete all
-       * concrete expressions and their AST nodes.
-       */
-      if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ONLY_ON_SYMBOLIZED)) {
-        for (auto it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
-          if ((*it)->getAst()->isSymbolized() == false) {
-            triton::api.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
-            triton::api.removeSymbolicExpression((*it)->getId());
-          }
-          else
-            newVector.push_back(*it);
-        }
-        this->symbolicExpressions = newVector;
-      }
-
-      /*
-       * If there is no symbolic expression, clean memory operands AST
-       * and implicit/explicit semantics AST to avoid memory leak.
-       */
-      if (this->symbolicExpressions.size() == 0) {
-        /* Memory operands */
-        for (auto it = this->operands.begin(); it!= this->operands.end(); it++) {
-          if (it->getType() == triton::arch::OP_MEM) {
-            triton::api.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
-          }
-        }
-
-        /* Implicit and explicit semantics - MEM */
-        for (auto it = this->loadAccess.begin(); it!= this->loadAccess.end(); it++)
-          triton::api.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
-
-        /* Implicit and explicit semantics - REG */
-        for (auto it = this->readRegisters.begin(); it!= this->readRegisters.end(); it++)
-          triton::api.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
-
-        /* Implicit and explicit semantics - IMM */
-        for (auto it = this->readImmediates.begin(); it!= this->readImmediates.end(); it++)
-          triton::api.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
-      }
-
-      /* Free collected nodes */
-      triton::api.freeAstNodes(uniqueNodes);
     }
 
 

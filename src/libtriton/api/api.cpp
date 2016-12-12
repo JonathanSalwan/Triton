@@ -194,7 +194,6 @@ namespace triton {
     this->irBuilder           = nullptr;
     this->solver              = nullptr;
     this->symbolic            = nullptr;
-    this->symbolicBackup      = nullptr;
     this->taint               = nullptr;
     this->z3Interface         = nullptr;
   }
@@ -366,10 +365,6 @@ namespace triton {
     if (this->symbolic == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->symbolicBackup = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(&this->arch, &this->callbacks, true);
-    if (this->symbolicBackup == nullptr)
-      throw triton::exceptions::API("API::initEngines(): No enough memory.");
-
     this->solver = new(std::nothrow) triton::engines::solver::SolverEngine(this->symbolic);
     if (this->solver == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
@@ -382,7 +377,7 @@ namespace triton {
     if (this->taint == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->irBuilder = new(std::nothrow) triton::arch::IrBuilder(&this->arch, this->symbolic, this->taint);
+    this->irBuilder = new(std::nothrow) triton::arch::IrBuilder(&this->arch, this->astGarbageCollector, this->symbolic, this->taint);
     if (this->irBuilder == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
@@ -398,7 +393,6 @@ namespace triton {
       delete this->irBuilder;
       delete this->solver;
       delete this->symbolic;
-      delete this->symbolicBackup;
       delete this->taint;
       delete this->z3Interface;
 
@@ -406,7 +400,6 @@ namespace triton {
       this->irBuilder           = nullptr;
       this->solver              = nullptr;
       this->symbolic            = nullptr;
-      this->symbolicBackup      = nullptr;
       this->taint               = nullptr;
       this->z3Interface         = nullptr;
     }
@@ -600,18 +593,8 @@ namespace triton {
   /* Symbolic engine API ============================================================================ */
 
   void API::checkSymbolic(void) const {
-    if (!this->symbolic || !this->symbolicBackup)
+    if (!this->symbolic)
       throw triton::exceptions::API("API::checkSymbolic(): Symbolic engine is undefined.");
-  }
-
-
-  void API::backupSymbolicEngine(void) {
-    *this->symbolicBackup = *this->symbolic;
-  }
-
-
-  void API::restoreSymbolicEngine(void) {
-    *this->symbolic = *this->symbolicBackup;
   }
 
 
