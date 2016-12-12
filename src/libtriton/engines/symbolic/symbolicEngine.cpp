@@ -182,8 +182,10 @@ namespace triton {
        */
       void SymbolicEngine::concretizeRegister(const triton::arch::Register& reg) {
         triton::uint32 parentId = reg.getParent().getId();
+
         if (!this->arch->isRegisterValid(parentId))
           return;
+
         this->symbolicReg[parentId] = triton::engines::symbolic::UNSET;
       }
 
@@ -203,6 +205,7 @@ namespace triton {
       void SymbolicEngine::concretizeMemory(const triton::arch::MemoryAccess& mem) {
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
+
         for (triton::uint32 index = 0; index < size; index++)
           this->concretizeMemory(addr+index);
       }
@@ -284,8 +287,10 @@ namespace triton {
       /* Returns the reference memory if it's referenced otherwise returns UNSET */
       triton::usize SymbolicEngine::getSymbolicMemoryId(triton::uint64 addr) const {
         std::map<triton::uint64, triton::usize>::const_iterator it;
+
         if ((it = this->memoryReference.find(addr)) != this->memoryReference.end())
           return it->second;
+
         return triton::engines::symbolic::UNSET;
       }
 
@@ -306,6 +311,7 @@ namespace triton {
           if (it->second->getName() == symVarName)
             return it->second;
         }
+
         return nullptr;
       }
 
@@ -319,8 +325,10 @@ namespace triton {
       /* Returns the reg reference or UNSET */
       triton::usize SymbolicEngine::getSymbolicRegisterId(const triton::arch::Register& reg) const {
         triton::uint32 parentId = reg.getParent().getId();
+
         if (!this->arch->isRegisterValid(parentId))
           return triton::engines::symbolic::UNSET;
+
         return this->symbolicReg[parentId];
       }
 
@@ -934,11 +942,13 @@ namespace triton {
       SymbolicExpression* SymbolicEngine::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::Register& flag, const std::string& comment) {
         if (!flag.isFlag())
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicFlagExpression(): The register must be a flag.");
+
         flag.setConcreteValue(node->evaluate());
         triton::engines::symbolic::SymbolicExpression *se = this->newSymbolicExpression(node, triton::engines::symbolic::REG, comment);
         this->assignSymbolicExpressionToRegister(se, flag);
         inst.addSymbolicExpression(se);
         inst.setWrittenRegister(flag, node);
+
         return se;
       }
 
