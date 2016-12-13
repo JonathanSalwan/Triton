@@ -4983,9 +4983,9 @@ namespace triton {
         triton::uint32 leaSize   = 0;
 
         /* Setup LEA size */
-        if (srcBase.isValid())
+        if (this->architecture->isRegisterValid(srcBase))
           leaSize = srcBase.getBitSize();
-        else if (srcIndex.isValid())
+        else if (this->architecture->isRegisterValid(srcIndex))
           leaSize = srcIndex.getBitSize();
         else
           leaSize = srcDisp.getBitSize();
@@ -4999,18 +4999,18 @@ namespace triton {
 
         /* Base */
         triton::ast::AbstractNode* op3;
-        if (srcBase.isValid())
+        if (this->architecture->isRegisterValid(srcBase))
           op3 = this->symbolicEngine->buildSymbolicRegister(inst, srcBase);
         else
           op3 = triton::ast::bv(0, leaSize);
 
         /* Base with PC */
-        if (srcBase.isValid() && (srcBase.getParent().getId() == TRITON_X86_REG_PC.getId()))
+        if (this->architecture->isRegisterValid(srcBase) && (srcBase.getParent().getId() == TRITON_X86_REG_PC.getId()))
           op3 = triton::ast::bvadd(op3, triton::ast::bv(inst.getSize(), leaSize));
 
         /* Index */
         triton::ast::AbstractNode* op4;
-        if (srcIndex.isValid())
+        if (this->architecture->isRegisterValid(srcIndex))
           op4 = this->symbolicEngine->buildSymbolicRegister(inst, srcIndex);
         else
           op4 = triton::ast::bv(0, leaSize);
