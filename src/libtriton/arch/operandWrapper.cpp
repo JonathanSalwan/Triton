@@ -28,7 +28,7 @@ namespace triton {
     OperandWrapper::OperandWrapper(const triton::arch::Register& reg) {
       this->reg = reg;
       this->type = triton::arch::OP_REG;
-    };
+    }
 
 
     OperandWrapper::~OperandWrapper() {
