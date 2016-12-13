@@ -8,6 +8,7 @@
 #ifdef TRITON_PYTHON_BINDINGS
 
 #include <elfProgramHeader.hpp>
+#include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -41,36 +42,36 @@ This object is used to represent a Program Header entry from the ELF binary form
 \section ElfProgramHeader_py_api Python API - Methods of the ElfProgramHeader class
 <hr>
 
-- **getAlign(void)**<br>
+- <b>integer getAlign(void)</b><br>
 Returns the segment alignment. This member holds the value to which the segments are
 aligned in memory and in the file.
 
-- **getFilesz(void)**<br>
+- <b>integer getFilesz(void)</b><br>
 Returns the file image size. This member holds the number of bytes in the file image
 of the segment. It may be zero.
 
-- **getFlags(void)**<br>
+- <b>\ref py_ELF_page getFlags(void)</b><br>
 Returns the flags. This member holds a bit mask of flags relevant to the segment.<br>
 e.g: `PF_X`
 
-- **getMemsz(void)**<br>
+- <b>integer getMemsz(void)</b><br>
 Returns the memory image size. This member holds the number of bytes in the memory
 image of the segment. It may be zero.
 
-- **getOffset(void)**<br>
+- <b>integer getOffset(void)</b><br>
 Returns the offset. This member holds the offset from the beginning of the file at
 which the first byte of the segment resides.
 
-- **getPaddr(void)**<br>
+- <b>integer getPaddr(void)</b><br>
 Returns the physical address. On systems for which physical addressing is relevant,
 this member is reserved for the segment's physical address. Under BSD this member is
 not used and must be zero.
 
-- **getType(void)**<br>
+- <b>\ref py_ELF_page getType(void)</b><br>
 Returns the type. This member indicates what kind of segment this array element describes
 or how to interpret the array element's information.
 
-- **getVaddr(void)**<br>
+- <b>integer getVaddr(void)</b><br>
 Returns the virtual address. This member holds the virtual address at which the first byte
 of the segment resides in memory.
 
@@ -94,7 +95,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfProgramHeader_AsElfProgramHeader(self)->getAlign());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -104,7 +105,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfProgramHeader_AsElfProgramHeader(self)->getFilesz());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -114,7 +115,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyElfProgramHeader_AsElfProgramHeader(self)->getFlags());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -124,7 +125,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfProgramHeader_AsElfProgramHeader(self)->getMemsz());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -134,7 +135,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfProgramHeader_AsElfProgramHeader(self)->getOffset());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -144,7 +145,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfProgramHeader_AsElfProgramHeader(self)->getPaddr());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -154,7 +155,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyElfProgramHeader_AsElfProgramHeader(self)->getType());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -164,7 +165,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyElfProgramHeader_AsElfProgramHeader(self)->getVaddr());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

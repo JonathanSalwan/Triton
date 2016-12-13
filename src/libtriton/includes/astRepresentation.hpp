@@ -9,6 +9,7 @@
 #define TRITON_ASTREPRESENTATION_H
 
 #include <iostream>
+
 #include "astPythonRepresentation.hpp"
 #include "astRepresentationInterface.hpp"
 #include "astSmtRepresentation.hpp"
@@ -46,7 +47,6 @@ namespace triton {
         LAST_REPRESENTATION
       };
 
-
       //! Pseudo code of SMT AST.
       class AstRepresentation {
         protected:
@@ -62,7 +62,7 @@ namespace triton {
           AstRepresentation();
 
           //! Destructor.
-          ~AstRepresentation();
+          virtual ~AstRepresentation();
 
           //! Returns the representation mode.
           triton::uint32 getMode(void) const;
@@ -73,6 +73,9 @@ namespace triton {
           //! Displays the node according to the representation mode.
           std::ostream& print(std::ostream& stream, AbstractNode* node);
       };
+
+      //! The AST representation interface as global for all instances of API.
+      extern triton::ast::representations::AstRepresentation astRepresentation;
 
     /*! @} End of representations namespace */
     };

@@ -78,7 +78,6 @@ namespace triton {
     //! \interface AstVisitor
     /*! \brief This interface is used to go through the ast AST. */
     class AstVisitor {
-
       public:
         AstVisitor(){};
         virtual ~AstVisitor(){};
@@ -132,7 +131,6 @@ namespace triton {
         virtual void operator()(SxNode& e) = 0;
         virtual void operator()(VariableNode& e) = 0;
         virtual void operator()(ZxNode& e) = 0;
-
     }; /* AstVisitor class */
 
   /*! @} End of ast namespace */

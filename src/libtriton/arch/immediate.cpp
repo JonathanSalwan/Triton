@@ -23,7 +23,13 @@ namespace triton {
       if (size == 0)
         throw triton::exceptions::Immediate("Immediate::Immediate(): size cannot be zero.");
 
-      if (size != BYTE_SIZE && size != WORD_SIZE && size != DWORD_SIZE && size != QWORD_SIZE && size != DQWORD_SIZE && size != QQWORD_SIZE && size != DQQWORD_SIZE)
+      if (size != BYTE_SIZE     &&
+          size != WORD_SIZE     &&
+          size != DWORD_SIZE    &&
+          size != QWORD_SIZE    &&
+          size != DQWORD_SIZE   &&
+          size != QQWORD_SIZE   &&
+          size != DQQWORD_SIZE)
         throw triton::exceptions::Immediate("Immediate::Immediate(): size must be aligned.");
 
       switch (size) {
@@ -100,7 +106,15 @@ namespace triton {
 
 
     std::ostream& operator<<(std::ostream& stream, const Immediate& imm) {
-      stream << "0x" << std::hex << imm.getValue() << ":" << std::dec << imm.getBitSize() << " bv[" << imm.getHigh() << ".." << imm.getLow() << "]";
+      stream << "0x"
+             << std::hex << imm.getValue()
+             << ":"
+             << std::dec << imm.getBitSize()
+             << " bv["
+             << imm.getHigh()
+             << ".."
+             << imm.getLow()
+             << "]";
       return stream;
     }
 

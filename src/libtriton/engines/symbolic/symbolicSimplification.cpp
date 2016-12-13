@@ -5,13 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
-#include <callbacks.hpp>
 #include <exceptions.hpp>
 #include <symbolicSimplification.hpp>
-#include <tritonToZ3Ast.hpp>
-#include <z3Result.hpp>
-#include <z3ToTritonAst.hpp>
 
 
 
@@ -91,7 +86,7 @@ def xor_bitwise(node):
             c2_not    = getNot(c2)
             c1_nonNot = getNonNot(c1)
             c2_nonNot = getNonNot(c2)
-            if c1_not == ~c2_nonNot and c1_not == ~c2_nonNot:
+            if c1_not == ~c2_nonNot and c2_not == ~c1_nonNot:
                 return c1_nonNot ^ c2_nonNot
     return node
 
@@ -119,8 +114,6 @@ As Triton is able to convert a Triton's AST to a Z3's AST and vice versa, you ca
 to simplify your expression, then, come back to a Triton's AST and apply your own rules.
 
 ~~~~~~~~~~~~~{.py}
->>> enableSymbolicZ3Simplification(True)
-
 >>> var = newSymbolicVariable(8)
 >>> a = variable(var)
 >>> b = bv(0x38, 8)
@@ -131,7 +124,8 @@ to simplify your expression, then, come back to a Triton's AST and apply your ow
 >>> print e
 (bvmul SymVar_0 (bvor (bvand (_ bv56 8) (_ bv222 8)) (_ bv79 8)))
 
->>> f = simplify(e)
+>>> usingZ3 = True
+>>> f = simplify(e, usingZ3)
 >>> print f
 (bvmul (_ bv95 8) SymVar_0)
 ~~~~~~~~~~~~~
@@ -148,7 +142,7 @@ new expression is not really useful for an humain.
 >>> print c
 (bvor (bvand (bvnot (_ bv2 8)) SymVar_0) (bvand (bvnot SymVar_0) (_ bv2 8)))
 
->>> d = simplify(c)
+>>> d = simplify(c, True)
 >>> print d
 (concat ((_ extract 7 2) SymVar_0) (bvnot ((_ extract 1 1) SymVar_0)) ((_ extract 0 0) SymVar_0))
 ~~~~~~~~~~~~~
@@ -166,8 +160,8 @@ namespace triton {
     namespace symbolic {
 
 
-      SymbolicSimplification::SymbolicSimplification() {
-        this->z3Enabled = false;
+      SymbolicSimplification::SymbolicSimplification(triton::callbacks::Callbacks* callbacks) {
+        this->callbacks = callbacks;
       }
 
 
@@ -181,39 +175,17 @@ namespace triton {
 
 
       void SymbolicSimplification::copy(const SymbolicSimplification& other) {
-        this->z3Enabled = other.z3Enabled;
+        this->callbacks = other.callbacks;
       }
 
 
-      bool SymbolicSimplification::isZ3SimplificationEnabled(void) const {
-        return this->z3Enabled;
-      }
-
-
-      void SymbolicSimplification::enableZ3Simplification(bool flag) {
-        this->z3Enabled = flag;
-      }
-
-
-      triton::ast::AbstractNode* SymbolicSimplification::processSimplification(triton::ast::AbstractNode* node, bool z3) const {
-
+      triton::ast::AbstractNode* SymbolicSimplification::processSimplification(triton::ast::AbstractNode* node) const {
         if (node == nullptr)
           throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::processSimplification(): node cannot be null.");
 
-        /* Check if we can use z3 to simplify the expression before using our own rules */
-        if (this->z3Enabled | z3) {
-          triton::ast::TritonToZ3Ast  z3Ast{false};
-          triton::ast::Z3ToTritonAst  tritonAst{};
-          triton::ast::Z3Result       result = z3Ast.eval(*node);
-
-          /* Simplify and convert back to Triton's AST */
-          z3::expr expr = result.getExpr().simplify();
-          tritonAst.setExpr(expr);
-          node = tritonAst.convert();
-        }
-
         /* process recorded callback about symbolic simplifications */
-        node = triton::api.processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, node);
+        if (this->callbacks)
+          node = this->callbacks->processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, node);
 
         return node;
       }

@@ -5,12 +5,12 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
 #include <ast.hpp>
+#include <astRepresentation.hpp>
 #include <exceptions.hpp>
+#include <solverEngine.hpp>
 #include <tritonToZ3Ast.hpp>
 #include <z3Result.hpp>
-#include <solverEngine.hpp>
 
 
 
@@ -105,7 +105,10 @@ namespace triton {
       }
 
 
-      SolverEngine::SolverEngine() {
+      SolverEngine::SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine) {
+        if (symbolicEngine == nullptr)
+          throw triton::exceptions::SolverEngine("SolverEngine::SolverEngine(): The symbolicEngine API cannot be null.");
+        this->symbolicEngine = symbolicEngine;
       }
 
 
@@ -113,27 +116,27 @@ namespace triton {
       }
 
 
-      std::list<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(triton::ast::AbstractNode *node, triton::uint32 limit) const {
-        std::list<std::map<triton::uint32, SolverModel>>  ret;
-        std::ostringstream                                formula;
-        z3::context                                       ctx;
-        z3::solver                                        solver(ctx);
-        triton::uint32                                    representationMode = triton::api.getAstRepresentationMode();
+      std::list<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(triton::ast::AbstractNode* node, triton::uint32 limit) const {
+        std::list<std::map<triton::uint32, SolverModel>> ret;
+        std::ostringstream formula;
+        z3::context ctx;
+        z3::solver solver(ctx);
+        triton::uint32 representationMode = triton::ast::representations::astRepresentation.getMode();
 
         if (node == nullptr)
           throw triton::exceptions::SolverEngine("SolverEngine::getModels(): node cannot be null.");
 
         /* Switch into the SMT mode */
-        triton::api.setAstRepresentationMode(triton::ast::representations::SMT_REPRESENTATION);
+        triton::ast::representations::astRepresentation.setMode(triton::ast::representations::SMT_REPRESENTATION);
 
         /* First, set the QF_AUFBV flag  */
         formula << "(set-logic QF_BV)";
 
         /* Then, delcare all symbolic variables */
-        formula << triton::api.getVariablesDeclaration();
+        formula << this->symbolicEngine->getVariablesDeclaration();
 
         /* And concat the user expression */
-        formula << triton::api.getFullAst(node);
+        formula << this->symbolicEngine->getFullAst(node);
 
         /* Create the context and AST */
         Z3_ast ast = Z3_parse_smtlib2_string(ctx, formula.str().c_str(), 0, 0, 0, 0, 0, 0);
@@ -153,16 +156,31 @@ namespace triton {
           z3::expr_vector args(ctx);
           for (triton::uint32 i = 0; i < m.size(); i++) {
 
-            z3::func_decl variable  = m[i];
-            std::string varName     = variable.name().str();
-            z3::expr exp            = m.get_const_interp(variable);
-            triton::uint32 bvSize   = exp.get_sort().bv_size();
-            std::string svalue      = Z3_get_numeral_string(ctx, exp);
+            /* Get the z3 variable */
+            z3::func_decl z3Variable = m[i];
 
-            triton::uint512         value{svalue};
-            SolverModel             trionModel{varName, value};
+            /* Get the name as std::string from a z3 variable */
+            std::string varName = z3Variable.name().str();
+
+            /* Get z3 expr */
+            z3::expr exp = m.get_const_interp(z3Variable);
+
+            /* Get the size of a z3 expr */
+            triton::uint32 bvSize = exp.get_sort().bv_size();
+
+            /* Get the value of a z3 expr */
+            std::string svalue = Z3_get_numeral_string(ctx, exp);
+
+            /* Convert a string value to a integer value */
+            triton::uint512 value = triton::uint512(svalue);
+
+            /* Create a triton model */
+            SolverModel trionModel = SolverModel(varName, value);
+
+            /* Map the result */
             smodel[trionModel.getId()] = trionModel;
 
+            /* Uniq result */
             if (exp.get_sort().is_bv())
               args.push_back(ctx.bv_const(varName.c_str(), bvSize) != ctx.bv_val(svalue.c_str(), bvSize));
 
@@ -180,13 +198,13 @@ namespace triton {
         }
 
         /* Restore the representation mode */
-        triton::api.setAstRepresentationMode(representationMode);
+        triton::ast::representations::astRepresentation.setMode(representationMode);
 
         return ret;
       }
 
 
-      std::map<triton::uint32, SolverModel> SolverEngine::getModel(triton::ast::AbstractNode *node) const {
+      std::map<triton::uint32, SolverModel> SolverEngine::getModel(triton::ast::AbstractNode* node) const {
         std::map<triton::uint32, SolverModel> ret;
         std::list<std::map<triton::uint32, SolverModel>> allModels;
 
@@ -195,16 +213,6 @@ namespace triton {
           ret = allModels.front();
 
         return ret;
-      }
-
-
-      triton::uint512 SolverEngine::evaluateAstViaZ3(triton::ast::AbstractNode *node) const {
-        if (node == nullptr)
-          throw triton::exceptions::SolverEngine("SolverEngine::evaluateAstViaZ3(): node cannot be null.");
-        triton::ast::TritonToZ3Ast z3ast{};
-        triton::ast::Z3Result result = z3ast.eval(*node);
-        triton::uint512 nbResult{result.getStringValue()};
-        return nbResult;
       }
 
     };

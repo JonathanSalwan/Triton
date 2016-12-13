@@ -41,16 +41,14 @@ namespace triton {
       /*! \class SymbolicVariable
           \brief The symbolic variable class. */
       class SymbolicVariable {
-
         protected:
-
           //! The symbolic variable kind. \sa triton::engines::symbolic::symkind_e
           symkind_e kind;
 
           //! The comment of the symbolic variable.
           std::string comment;
 
-          //! The name of the symbolic variable. \sa TRITON_SYMVAR_NAME
+          //! The name of the symbolic variable. Names are always something like this: SymVar_X. \sa TRITON_SYMVAR_NAME
           std::string name;
 
           //! The id of the symbolic variable. This id is unique.
@@ -73,13 +71,18 @@ namespace triton {
         public:
 
           //! Constructor.
-          SymbolicVariable(symkind_e kind, triton::uint64 kindValue, triton::usize id, triton::uint32 size, const std::string& comment, triton::uint512 concreteValue=0);
+          SymbolicVariable(symkind_e kind,
+                           triton::uint64 kindValue,
+                           triton::usize id,
+                           triton::uint32 size,
+                           const std::string& comment,
+                           triton::uint512 concreteValue=0);
 
           //! Constructor by copy.
           SymbolicVariable(const SymbolicVariable &copy);
 
-          //! Destructore.
-          ~SymbolicVariable();
+          //! Destructor.
+          virtual ~SymbolicVariable();
 
           //! Returns the symbolic variable kind. \sa triton::engines::symbolic::symkind_e.
           symkind_e getKind(void) const;

@@ -45,7 +45,6 @@ namespace triton {
       //! \class SymbolicOptimization
       /*! \brief The symbolic simplification class */
       class SymbolicOptimization {
-
         protected:
           //! The set of enabled optimization
           std::set<enum optimization_e> enabledOptimizations;
@@ -58,7 +57,7 @@ namespace triton {
           SymbolicOptimization(const SymbolicOptimization& copy);
 
           //! Destructor.
-          ~SymbolicOptimization();
+          virtual ~SymbolicOptimization();
 
           //! Copies a SymbolicOptimization.
           void copy(const SymbolicOptimization& other);

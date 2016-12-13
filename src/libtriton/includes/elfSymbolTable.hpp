@@ -113,7 +113,7 @@ namespace triton {
           ElfSymbolTable(const ElfSymbolTable& copy);
 
           //! Destructor.
-          ~ElfSymbolTable();
+          virtual ~ElfSymbolTable();
 
           //! Copies an ElfSymbolTable.
           void operator=(const ElfSymbolTable& copy);

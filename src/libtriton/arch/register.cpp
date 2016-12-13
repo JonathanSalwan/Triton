@@ -8,6 +8,7 @@
 #include <api.hpp>
 #include <exceptions.hpp>
 #include <register.hpp>
+#include <registerSpecification.hpp>
 
 
 
@@ -19,36 +20,36 @@ namespace triton {
     }
 
 
-    Register::Register(triton::uint32 reg, triton::uint512 concreteValue) {
+    Register::Register(triton::uint32 regId, triton::uint512 concreteValue) {
       if (!triton::api.isArchitectureValid()) {
         this->clear();
         return;
       }
-      this->setup(reg, concreteValue);
+      this->setup(regId, concreteValue);
     }
 
 
     void Register::clear(void) {
       this->concreteValue = 0;
-      this->id            = triton::api.cpuInvalidRegister();
+      this->id            = triton::arch::INVALID_REGISTER_ID;
       this->name          = "unknown";
-      this->parent        = triton::api.cpuInvalidRegister();
+      this->parent        = triton::arch::INVALID_REGISTER_ID;
     }
 
 
-    void Register::setup(triton::uint32 reg, triton::uint512 concreteValue) {
-      std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> regInfo;
+    void Register::setup(triton::uint32 regId, triton::uint512 concreteValue) {
+      triton::arch::RegisterSpecification regInfo;
 
-      this->id = reg;
-      if (!triton::api.isCpuRegisterValid(reg))
-        this->id = triton::api.cpuInvalidRegister();
+      this->id = regId;
+      if (!triton::api.isCpuRegisterValid(regId))
+        this->id = triton::arch::INVALID_REGISTER_ID;
 
-      regInfo      = triton::api.getCpuRegInformation(this->id);
-      this->name   = std::get<0>(regInfo);
-      this->parent = std::get<3>(regInfo);
+      regInfo      = triton::api.getRegisterSpecification(this->id);
+      this->name   = regInfo.getName();
+      this->parent = regInfo.getParentId();
 
-      this->setHigh(std::get<1>(regInfo));
-      this->setLow(std::get<2>(regInfo));
+      this->setHigh(regInfo.getHigh());
+      this->setLow(regInfo.getLow());
 
       if (concreteValue > this->getMaxValue())
         throw triton::exceptions::Register("Register::setup(): You cannot set this concrete value (too big) to this register.");
@@ -111,13 +112,13 @@ namespace triton {
     }
 
 
-    void Register::setId(triton::uint32 reg) {
-      this->id = reg;
+    void Register::setId(triton::uint32 regId) {
+      this->id = regId;
     }
 
 
-    void Register::setParent(triton::uint32 reg) {
-      this->parent = reg;
+    void Register::setParent(triton::uint32 regId) {
+      this->parent = regId;
     }
 
 
@@ -158,7 +159,14 @@ namespace triton {
 
 
     std::ostream& operator<<(std::ostream& stream, const Register& reg) {
-      stream << reg.getName() << ":" << reg.getBitSize() << " bv[" << reg.getHigh() << ".." << reg.getLow() << "]";
+      stream << reg.getName()
+             << ":"
+             << std::dec << reg.getBitSize()
+             << " bv["
+             << reg.getHigh()
+             << ".."
+             << reg.getLow()
+             << "]";
       return stream;
     }
 
@@ -188,7 +196,6 @@ namespace triton {
     bool operator<(const Register& reg1, const Register& reg2) {
       return reg1.getId() < reg2.getId();
     }
-
 
   }; /* arch namespace */
 }; /* triton namespace */

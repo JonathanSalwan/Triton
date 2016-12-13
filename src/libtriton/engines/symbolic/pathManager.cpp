@@ -5,7 +5,6 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
 #include <exceptions.hpp>
 #include <pathManager.hpp>
 #include <symbolicEnums.hpp>
@@ -20,7 +19,8 @@ namespace triton {
       }
 
 
-      PathManager::PathManager(const PathManager& copy) {
+      PathManager::PathManager(const PathManager& copy)
+        : triton::engines::symbolic::SymbolicOptimization(copy) {
         this->copy(copy);
       }
 
@@ -78,11 +78,11 @@ namespace triton {
           throw triton::exceptions::PathManager("PathManager::addPathConstraint(): The PC node cannot be null.");
 
         /* If PC_TRACKING_SYMBOLIC is enabled, Triton will track path constraints only if they are symbolized. */
-        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::PC_TRACKING_SYMBOLIC) && !pc->isSymbolized())
+        if (this->isOptimizationEnabled(triton::engines::symbolic::PC_TRACKING_SYMBOLIC) && !pc->isSymbolized())
           return;
 
         /* If ONLY_ON_TAINTED is enabled and the expression untainted, Triton will skip the storing process. */
-        if (triton::api.isSymbolicOptimizationEnabled(triton::engines::symbolic::ONLY_ON_TAINTED) && !expr->isTainted)
+        if (this->isOptimizationEnabled(triton::engines::symbolic::ONLY_ON_TAINTED) && !expr->isTainted)
           return;
 
         /* Basic block taken */

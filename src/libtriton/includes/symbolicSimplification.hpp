@@ -8,10 +8,8 @@
 #ifndef TRITON_SYMBOLICSIMPLIFICATION_H
 #define TRITON_SYMBOLICSIMPLIFICATION_H
 
-#include <list>
-
 #include "ast.hpp"
-#include "tritonTypes.hpp"
+#include "callbacks.hpp"
 
 
 
@@ -41,32 +39,25 @@ namespace triton {
       //! \class SymbolicSimplification
       /*! \brief The symbolic simplification class */
       class SymbolicSimplification {
-
-        protected:
-          //! Flag to define if we can use z3 to simplify expressions. Default: false.
-          bool z3Enabled;
+        private:
+          //! Callbacks API
+          triton::callbacks::Callbacks* callbacks;
 
         public:
           //! Constructor.
-          SymbolicSimplification();
+          SymbolicSimplification(triton::callbacks::Callbacks* callbacks=nullptr);
 
           //! Constructor.
           SymbolicSimplification(const SymbolicSimplification& copy);
 
           //! Destructor.
-          ~SymbolicSimplification();
+          virtual ~SymbolicSimplification();
 
           //! Copies a SymbolicSimplification.
           void copy(const SymbolicSimplification& other);
 
-          //! Returns true if Triton can use the simplification passes of z3.
-          bool isZ3SimplificationEnabled(void) const;
-
-          //! Enabled, Triton will use the simplification passes of z3 before to call its recorded simplification passes.
-          void enableZ3Simplification(bool flag);
-
           //! Processes all recorded simplifications. Returns the simplified node.
-          triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node, bool z3=false) const;
+          triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node) const;
 
           //! Copies a SymbolicSimplification.
           void operator=(const SymbolicSimplification& other);

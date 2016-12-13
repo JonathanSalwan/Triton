@@ -12,8 +12,10 @@
 #include <map>
 #include <string>
 
+#include "architecture.hpp"
 #include "ast.hpp"
 #include "astDictionaries.hpp"
+#include "callbacks.hpp"
 #include "memoryAccess.hpp"
 #include "pathManager.hpp"
 #include "register.hpp"
@@ -52,13 +54,12 @@ namespace triton {
       //! \class SymbolicEngine
       /*! \brief The symbolic engine class. */
       class SymbolicEngine
-        : public triton::ast::AstDictionaries,
-          public triton::engines::symbolic::SymbolicOptimization,
-          public triton::engines::symbolic::SymbolicSimplification,
-          public triton::engines::symbolic::PathManager {
+        : public virtual triton::ast::AstDictionaries,
+          public virtual triton::engines::symbolic::SymbolicOptimization,
+          public virtual triton::engines::symbolic::SymbolicSimplification,
+          public virtual triton::engines::symbolic::PathManager {
 
         protected:
-
           //! Defines if the engine is enable or disable.
           bool enableFlag;
 
@@ -107,10 +108,30 @@ namespace triton {
           std::map<std::pair<triton::uint64, triton::uint32>, triton::ast::AbstractNode*> alignedMemoryReference;
 
         private:
+          //! Architecture API
+          triton::arch::Architecture* arch;
+
+          //! Callbacks API
+          triton::callbacks::Callbacks* callbacks;
+
           //! Slices all expressions from a given node.
           void sliceExpressions(triton::ast::AbstractNode* node, std::map<triton::usize, SymbolicExpression*>& exprs);
 
         public:
+          //! Constructor. If you use this class as backup or copy you should define the `isBackup` flag as true.
+          SymbolicEngine(triton::arch::Architecture* arch, triton::callbacks::Callbacks* callbacks=nullptr, bool isBackup=false);
+
+          //! Constructor by copy.
+          SymbolicEngine(const SymbolicEngine& copy);
+
+          //! Destructor.
+          virtual ~SymbolicEngine();
+
+          //! Copies and initializes a SymbolicEngine.
+          void copy(const SymbolicEngine& other);
+
+          //! Copies a SymbolicEngine.
+          void operator=(const SymbolicEngine& other);
 
           //! Symbolic register state.
           triton::usize* symbolicReg;
@@ -154,7 +175,7 @@ namespace triton {
           //! Returns the symbolic expression id corresponding to the memory address.
           triton::usize getSymbolicMemoryId(triton::uint64 addr) const;
 
-          //! Returns the symbolic expression corresponding to the id.
+          //! Returns the symbolic expression corresponding to an id.
           SymbolicExpression* getSymbolicExpressionFromId(triton::usize symExprId) const;
 
           //! Returns the map of symbolic registers defined.
@@ -178,6 +199,12 @@ namespace triton {
           //! Returns the symbolic register value.
           triton::uint512 getSymbolicRegisterValue(const triton::arch::Register& reg);
 
+          //! Returns a symbolic operand based on the abstract wrapper.
+          triton::ast::AbstractNode* buildSymbolicOperand(triton::arch::OperandWrapper& op);
+
+          //! Returns a symbolic operand based on the abstract wrapper.
+          triton::ast::AbstractNode* buildSymbolicOperand(triton::arch::Instruction& inst, triton::arch::OperandWrapper& op);
+
           //! Returns a symbolic immediate.
           triton::ast::AbstractNode* buildSymbolicImmediate(const triton::arch::Immediate& imm);
 
@@ -195,6 +222,9 @@ namespace triton {
 
           //! Returns a symbolic register and defines the register as input of the instruction.
           triton::ast::AbstractNode* buildSymbolicRegister(triton::arch::Instruction& inst, triton::arch::Register& reg);
+
+          //! Returns the new symbolic abstract expression and links this expression to the instruction.
+          SymbolicExpression* createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::OperandWrapper& dst, const std::string& comment="");
 
           //! Returns the new symbolic memory expression expression and links this expression to the instruction.
           SymbolicExpression* createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::MemoryAccess& mem, const std::string& comment="");
@@ -222,6 +252,9 @@ namespace triton {
 
           //! Returns the full AST of a root node.
           triton::ast::AbstractNode* getFullAst(triton::ast::AbstractNode* node, std::set<triton::usize>& processed);
+
+          //! Returns the full AST of a root node.
+          triton::ast::AbstractNode* getFullAst(triton::ast::AbstractNode* node);
 
           //! Slices all expressions from a given one.
           std::map<triton::usize, SymbolicExpression*> sliceExpressions(SymbolicExpression* expr);
@@ -276,21 +309,6 @@ namespace triton {
 
           //! Returns true if the register expression contains a symbolic variable.
           bool isRegisterSymbolized(const triton::arch::Register& reg) const;
-
-          //! Copies and initializes a SymbolicEngine.
-          void copy(const SymbolicEngine& other);
-
-          //! Copies a SymbolicEngine.
-          void operator=(const SymbolicEngine& other);
-
-          //! Constructor. If you use this class as backup or copy you should define the `isBackup` flag as true.
-          SymbolicEngine(bool isBackup=false);
-
-          //! Constructor by copy.
-          SymbolicEngine(const SymbolicEngine& copy);
-
-          //! Destructor.
-          ~SymbolicEngine();
       };
 
     /*! @} End of symbolic namespace */

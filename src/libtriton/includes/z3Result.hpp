@@ -39,7 +39,6 @@ namespace triton {
         z3::expr expr;
 
       public:
-
         //! Constructor.
         Z3Result();
 
@@ -47,7 +46,7 @@ namespace triton {
         Z3Result(const Z3Result& copy);
 
         //! Destructor.
-        ~Z3Result();
+        virtual ~Z3Result();
 
         //! Displays the expression.
         void printExpr(void) const;

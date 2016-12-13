@@ -5,6 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <new>
+
 #include <architecture.hpp>
 #include <exceptions.hpp>
 #include <x8664Cpu.hpp>
@@ -15,9 +17,10 @@
 namespace triton {
   namespace arch {
 
-    Architecture::Architecture() {
-      this->arch = triton::arch::ARCH_INVALID;
-      this->cpu  = nullptr;
+    Architecture::Architecture(triton::callbacks::Callbacks* callbacks) {
+      this->arch      = triton::arch::ARCH_INVALID;
+      this->callbacks = callbacks;
+      this->cpu       = nullptr;
     }
 
 
@@ -52,8 +55,8 @@ namespace triton {
           /* remove previous CPU instance (when setArchitecture() has been called twice) */
           delete this->cpu;
           /* init the new instance */
-          this->cpu = new triton::arch::x86::x8664Cpu();
-          if (!this->cpu)
+          this->cpu = new(std::nothrow) triton::arch::x86::x8664Cpu(this->callbacks);
+          if (this->cpu == nullptr)
             throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();
           break;
@@ -62,8 +65,8 @@ namespace triton {
           /* remove previous CPU instance (when setArchitecture() has been called twice) */
           delete this->cpu;
           /* init the new instance */
-          this->cpu = new triton::arch::x86::x86Cpu();
-          if (!this->cpu)
+          this->cpu = new(std::nothrow) triton::arch::x86::x86Cpu(this->callbacks);
+          if (this->cpu == nullptr)
             throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();
           break;
@@ -106,13 +109,6 @@ namespace triton {
     }
 
 
-    triton::uint32 Architecture::invalidRegister(void) const {
-      if (!this->cpu)
-        return 0;
-      return this->cpu->invalidRegister();
-    }
-
-
     triton::uint32 Architecture::numberOfRegisters(void) const {
       if (!this->cpu)
         return 0;
@@ -134,16 +130,11 @@ namespace triton {
     }
 
 
-    std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> Architecture::getRegisterInformation(triton::uint32 reg) const {
-      std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> ret;
-
-      std::get<0>(ret) = "unknown"; /* name           */
-      std::get<1>(ret) = 0;         /* highest bit    */
-      std::get<2>(ret) = 0;         /* lower bit      */
-      std::get<3>(ret) = 0;         /* higest reg id  */
+    triton::arch::RegisterSpecification Architecture::getRegisterSpecification(triton::uint32 regId) const {
+      triton::arch::RegisterSpecification ret;
 
       if (this->cpu)
-        ret = this->cpu->getRegisterInformation(reg);
+        ret = this->cpu->getRegisterSpecification(regId);
 
       return ret;
     }
@@ -167,25 +158,6 @@ namespace triton {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::disassembly(): You must define an architecture.");
       this->cpu->disassembly(inst);
-    }
-
-
-    bool Architecture::buildSemantics(triton::arch::Instruction& inst) const {
-      bool ret = false;
-
-      if (!this->cpu)
-        throw triton::exceptions::Architecture("Architecture::buildSemantics(): You must define an architecture.");
-
-      /* Pre IR processing */
-      inst.preIRInit();
-
-      /* Processing */
-      ret = this->cpu->buildSemantics(inst);
-
-      /* Post IR processing */
-      inst.postIRInit();
-
-      return ret;
     }
 
 

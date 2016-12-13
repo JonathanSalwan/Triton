@@ -77,7 +77,7 @@ namespace triton {
         BitsVector(const triton::arch::BitsVector& copy);
 
         //! Destructor.
-        ~BitsVector();
+        virtual ~BitsVector();
     };
 
     //! Displays a BitsVector.

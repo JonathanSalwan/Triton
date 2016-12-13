@@ -39,7 +39,7 @@ namespace triton {
       class SolverModel
       {
         protected:
-          //! The name of the variable.
+          //! The name of the variable. Names are always something like this: SymVar_X.
           std::string name;
 
           //! The id of the variable.
@@ -71,7 +71,7 @@ namespace triton {
           SolverModel(const SolverModel& other);
 
           //! Destructor.
-          ~SolverModel();
+          virtual ~SolverModel();
 
           //! Copies a SolverModel
           void operator=(const SolverModel& other);

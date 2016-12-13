@@ -7,6 +7,7 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
+#include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -81,42 +82,42 @@ rax:64 bv[63..0]
 \section SymbolicExpression_py_api Python API - Methods of the SymbolicExpression class
 <hr>
 
-- **getAst(void)**<br>
-Returns the SMT AST root node of the symbolic expression as \ref py_AstNode_page. This is the semantics.
+- <b>\ref py_AstNode_page getAst(void)</b><br>
+Returns the AST root node of the symbolic expression.
 
-- **getComment(void)**<br>
-Returns the comment (if exists) of the symbolic expression as string.
+- <b>string getComment(void)</b><br>
+Returns the comment (if exists) of the symbolic expression.
 
-- **getId(void)**<br>
-Returns the if of the symbolic expression as integer. This id is always unique.<br>
+- <b>integer getId(void)</b><br>
+Returns the if of the symbolic expression. This id is always unique.<br>
 e.g: `2387`
 
-- **getKind(void)**<br>
-Returns the kind of the symbolic expression as \ref py_SYMEXPR_page.<br>
+- <b>\ref py_SYMEXPR_page getKind(void)</b><br>
+Returns the kind of the symbolic expression.<br>
 e.g: `SYMEXPR.REG`
 
-- **getNewAst(void)**<br>
-Returns a new SMT AST root node of the symbolic expression as \ref py_AstNode_page. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
+- <b>\ref py_AstNode_page getNewAst(void)</b><br>
+Returns a new AST root node of the symbolic expression. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
 
-- **getOriginMemory(void)**<br>
-Returns the origin memory access as \ref py_MemoryAccess_page if `isMemory()` is equal to `True`, invalid memory otherwise. This memory access represents the target assignment. Note that at this level all information about LEA are lost.
+- <b>\ref py_MemoryAccess_page getOriginMemory(void)</b><br>
+Returns the origin memory access if `isMemory()` is equal to `True`, invalid memory otherwise. This memory access represents the target assignment. Note that at this level all information about LEA are lost.
 
-- **getOriginRegister(void)**<br>
-Returns the origin register as \ref py_Register_page if `isRegister()` is equal `True`, `REG.INVALID` otherwise. This register represents the target assignment.
+- <b>\ref py_Register_page getOriginRegister(void)</b><br>
+Returns the origin register if `isRegister()` is equal `True`, `REG.INVALID` otherwise. This register represents the target assignment.
 
-- **isMemory(void)**<br>
+- <b>bool isMemory(void)</b><br>
 Returns true if the expression is assigned to a memory.
 
-- **isRegister(void)**<br>
+- <b>bool isRegister(void)</b><br>
 Returns true if the expression is assigned to a register.
 
-- **isSymbolized(void)**<br>
+- <b>bool isSymbolized(void)</b><br>
 Returns true if the expression contains a symbolic variable.
 
-- **isTainted(void)**<br>
+- <b>bool isTainted(void)</b><br>
 Returns true if the expression is tainted.
 
-- **setAst(\ref py_AstNode_page node)**<br>
+- <b>void setAst(\ref py_AstNode_page node)</b><br>
 Sets a root node.
 
 */
@@ -138,7 +139,7 @@ namespace triton {
         try {
           return PyAstNode(PySymbolicExpression_AsSymbolicExpression(self)->getAst());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -148,7 +149,7 @@ namespace triton {
         try {
           return Py_BuildValue("s", PySymbolicExpression_AsSymbolicExpression(self)->getComment().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -158,7 +159,7 @@ namespace triton {
         try {
           return PyLong_FromUsize(PySymbolicExpression_AsSymbolicExpression(self)->getId());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -168,7 +169,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PySymbolicExpression_AsSymbolicExpression(self)->getKind());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -178,7 +179,7 @@ namespace triton {
         try {
           return PyAstNode(PySymbolicExpression_AsSymbolicExpression(self)->getNewAst());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -188,7 +189,7 @@ namespace triton {
         try {
           return PyMemoryAccess(PySymbolicExpression_AsSymbolicExpression(self)->getOriginMemory());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -198,7 +199,7 @@ namespace triton {
         try {
           return PyRegister(PySymbolicExpression_AsSymbolicExpression(self)->getOriginRegister());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -210,7 +211,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -222,7 +223,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -234,7 +235,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -246,7 +247,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -260,7 +261,7 @@ namespace triton {
           Py_INCREF(Py_None);
         return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -278,7 +279,7 @@ namespace triton {
           str << PySymbolicExpression_AsSymbolicExpression(self);
           return PyString_FromFormat("%s", str.str().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

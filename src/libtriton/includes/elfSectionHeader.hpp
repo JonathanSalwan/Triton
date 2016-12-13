@@ -145,7 +145,7 @@ namespace triton {
           ElfSectionHeader(const ElfSectionHeader& copy);
 
           //! Destructor.
-          ~ElfSectionHeader();
+          virtual ~ElfSectionHeader();
 
           //! Copies an ElfSectionHeader.
           void operator=(const ElfSectionHeader& copy);

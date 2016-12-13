@@ -8,6 +8,7 @@
 #ifdef TRITON_PYTHON_BINDINGS
 
 #include <api.hpp>
+#include <exceptions.hpp>
 #include <bitsVector.hpp>
 #include <cpuSize.hpp>
 #include <immediate.hpp>
@@ -70,342 +71,341 @@ If you want to use the libTriton without Python bindings, recompile the project 
 
 \subsection triton_py_api_methods Methods
 
-- <b>addCallback(function cb, \ref py_CALLBACK_page kind)</b><br>
+- <b>void addCallback(function cb, \ref py_CALLBACK_page kind)</b><br>
 Adds a callback at specific internal points. Your callback will be called each time the point is reached.
 
-- <b>assignSymbolicExpressionToMemory(\ref py_SymbolicExpression_page symExpr, \ref py_MemoryAccess_page mem)</b><br>
+- <b>void assignSymbolicExpressionToMemory(\ref py_SymbolicExpression_page symExpr, \ref py_MemoryAccess_page mem)</b><br>
 Assigns a \ref py_SymbolicExpression_page to a \ref py_MemoryAccess_page area. **Be careful**, use this function only if you know what you are doing.
 The symbolic expression (`symExpr`) must be aligned to the memory access.
 
-- <b>assignSymbolicExpressionToRegister(\ref py_SymbolicExpression_page symExpr, \ref py_REG_page reg)</b><br>
+- <b>void assignSymbolicExpressionToRegister(\ref py_SymbolicExpression_page symExpr, \ref py_REG_page reg)</b><br>
 Assigns a \ref py_SymbolicExpression_page to a \ref py_REG_page. **Be careful**, use this function only if you know what you are doing.
 The symbolic expression (`symExpr`) must be aligned to the targeted size register. E.g: for SSE registers, the expression must be aligned
 to 128-bits. Otherwise, you will probably get a sort mismatch error when you will solve the expression. If you want to assign an
 expression to a sub-register like `AX`, `AH` or `AL`, please, craft your expression with the `concat()` and `extract()` ast functions.
 
-- **buildSemantics(\ref py_Instruction_page inst)**<br>
+- <b>bool buildSemantics(\ref py_Instruction_page inst)</b><br>
 Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
 
-- **buildSymbolicImmediate(\ref py_Immediate_page imm)**<br>
-Builds a symbolic immediate from a \ref py_Immediate_page and returns a \ref py_AstNode_page.
+- <b>\ref py_AstNode_page buildSymbolicImmediate(\ref py_Immediate_page imm)</b><br>
+Builds a symbolic immediate from a \ref py_Immediate_page.
 
-- **buildSymbolicMemory(\ref py_MemoryAccess_page mem)**<br>
-Builds a symbolic memory cell from a \ref py_MemoryAccess_page and returns a \ref py_AstNode_page.
+- <b>\ref py_AstNode_page buildSymbolicMemory(\ref py_MemoryAccess_page mem)</b><br>
+Builds a symbolic memory cell from a \ref py_MemoryAccess_page with the SSA form.
 
-- **buildSymbolicRegister(\ref py_REG_page reg)**<br>
-Builds a symbolic register from a \ref py_REG_page and returns a \ref py_AstNode_page.
+- <b>\ref py_AstNode_page buildSymbolicRegister(\ref py_REG_page reg)</b><br>
+Builds a symbolic register from a \ref py_REG_page with the SSA form.
 
-- **clearPathConstraints(void)**<br>
+- <b>void clearPathConstraints(void)</b><br>
 Clears the logical conjunction vector of path constraints.
 
-- **concretizeAllMemory(void)**<br>
+- <b>void concretizeAllMemory(void)</b><br>
 Concretizes all symbolic memory references.
 
-- **concretizeAllRegister(void)**<br>
+- <b>void concretizeAllRegister(void)</b><br>
 Concretizes all symbolic register references.
 
-- **concretizeMemory(integer addr)**<br>
+- <b>void concretizeMemory(integer addr)</b><br>
 Concretizes a specific symbolic memory reference.
 
-- **concretizeMemory(\ref py_MemoryAccess_page mem)**<br>
+- <b>void concretizeMemory(\ref py_MemoryAccess_page mem)</b><br>
 Concretizes a specific symbolic memory reference.
 
-- **concretizeRegister(\ref py_REG_page reg)**<br>
+- <b>void concretizeRegister(\ref py_REG_page reg)</b><br>
 Concretizes a specific symbolic register reference.
 
-- **convertExpressionToSymbolicVariable(integer symExprId, integer symVarSize, string comment="")**<br>
-Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits. This function returns the \ref py_SymbolicVariable_page created.
+- <b>\ref py_SymbolicVariable_page convertExpressionToSymbolicVariable(integer symExprId, integer symVarSize, string comment="")</b><br>
+Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits. This function returns the new symbolic variable created.
 
-- **convertMemoryToSymbolicVariable(\ref py_MemoryAccess_page mem, string comment="")**<br>
-Converts a symbolic memory expression to a symbolic variable. This function returns the \ref py_SymbolicVariable_page created.
+- <b>\ref py_SymbolicVariable_page convertMemoryToSymbolicVariable(\ref py_MemoryAccess_page mem, string comment="")</b><br>
+Converts a symbolic memory expression to a symbolic variable. This function returns the new symbolic variable created.
 
-- **convertRegisterToSymbolicVariable(\ref py_REG_page reg, string comment="")**<br>
-Converts a symbolic register expression to a symbolic variable. This function returns the \ref py_SymbolicVariable_page created.
+- <b>\ref py_SymbolicVariable_page convertRegisterToSymbolicVariable(\ref py_REG_page reg, string comment="")</b><br>
+Converts a symbolic register expression to a symbolic variable. This function returns the new symbolic variable created.
 
-- **cpuInvalidRegister(void)**<br>
- Returns the invalid CPU register id.
-
-- **cpuRegisterBitSize(void)**<br>
+- <b>integer cpuRegisterBitSize(void)</b><br>
 Returns the max size (in bit) of the CPU register (GPR).
 
-- **cpuRegisterSize(void)**<br>
+- <b>integer cpuRegisterSize(void)</b><br>
 Returns the max size (in byte) of the CPU register (GPR).
 
-- <b>createSymbolicFlagExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page flag, string comment="")</b><br>
-Returns the new symbolic register expression as \ref py_SymbolicExpression_page and links this expression to the \ref py_Instruction_page.
+- <b>\ref py_SymbolicExpression_page createSymbolicFlagExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page flag, string comment="")</b><br>
+Returns the new symbolic register expression and links this expression to the instruction.
 
-- <b>createSymbolicMemoryExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_MemoryAccess_page mem, string comment="")</b><br>
-Returns the new symbolic memory expression as \ref py_SymbolicExpression_page and links this expression to the \ref py_Instruction_page.
+- <b>\ref py_SymbolicExpression_page createSymbolicMemoryExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_MemoryAccess_page mem, string comment="")</b><br>
+Returns the new symbolic memory expression and links this expression to the instruction.
 
-- <b>createSymbolicRegisterExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page reg, string comment="")</b><br>
-Returns the new symbolic register expression as \ref py_SymbolicExpression_page and links this expression to the \ref py_Instruction_page.
+- <b>\ref py_SymbolicExpression_page createSymbolicRegisterExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page reg, string comment="")</b><br>
+Returns the new symbolic register expression and links this expression to the instruction.
 
-- <b>createSymbolicVolatileExpression (\ref py_Instruction_page inst, \ref py_AstNode_page node, string comment="")</b><br>
-Returns the new symbolic volatile expression as \ref py_SymbolicExpression_page and links this expression to the \ref py_Instruction_page.
+- <b>\ref py_SymbolicExpression_page createSymbolicVolatileExpression (\ref py_Instruction_page inst, \ref py_AstNode_page node, string comment="")</b><br>
+Returns the new symbolic volatile expression and links this expression to the instruction.
 
-- **disassembly(\ref py_Instruction_page inst)**<br>
+- <b>void disassembly(\ref py_Instruction_page inst)</b><br>
 Disassembles the instruction and setup operands. You must define an architecture before.
 
-- **enableSymbolicEngine(bool flag)**<br>
+- <b>void enableSymbolicEngine(bool flag)</b><br>
 Enables or disables the symbolic execution engine.
 
-- **enableSymbolicOptimization(\ref py_OPTIMIZATION_page opti, bool flag)**<br>
+- <b>void enableSymbolicOptimization(\ref py_OPTIMIZATION_page opti, bool flag)</b><br>
 Enables or disablrs a symbolic optimization.
 
-- **enableSymbolicZ3Simplification(bool flag)**<br>
-Enabled, Triton will use the simplification passes of z3 before to call its recorded simplification passes.
-
-- **enableTaintEngine(bool flag)**<br>
+- <b>void enableTaintEngine(bool flag)</b><br>
 Enables or disables the taint engine.
 
-- **evaluateAstViaZ3(\ref py_AstNode_page node)**<br>
-Evaluates an AST via Z3 and returns the symbolic value as integer.
+- <b>integer evaluateAstViaZ3(\ref py_AstNode_page node)</b><br>
+Evaluates an AST via Z3 and returns the symbolic value.
 
-- **getAllRegisters(void)**<br>
+- <b>[\ref py_Register_page, ...] getAllRegisters(void)</b><br>
 Returns the list of all registers. Each item of this list is a \ref py_Register_page.
 
-- **getArchitecture(void)**<br>
-Returns the architecture which has been initialized as \ref py_ARCH_page.
+- <b>\ref py_ARCH_page getArchitecture(void)</b><br>
+Returns the current architecture used.
 
-- **getAstDictionariesStats(void)**<br>
+- <b>dict getAstDictionariesStats(void)</b><br>
 Returns a dictionary which contains all information about number of nodes allocated via AST dictionaries.
 
-- **getAstFromId(integer symExprId)**<br>
-Returns the partial AST as \ref py_AstNode_page from a symbolic expression id.
+- <b>\ref py_AstNode_page getAstFromId(integer symExprId)</b><br>
+Returns the partial AST from a symbolic expression id.
 
-- **getAstRepresentationMode(void)**<br>
-Returns the AST representation mode as \ref py_AST_REPRESENTATION_page.
+- <b>\ref py_AST_REPRESENTATION_page getAstRepresentationMode(void)</b><br>
+Returns the current AST representation mode.
 
-- **getConcreteMemoryAreaValue(integer baseAddr, integer size)**<br>
+- <b>bytes getConcreteMemoryAreaValue(integer baseAddr, integer size)</b><br>
 Returns the concrete value of a memory area.
 
-- **getConcreteMemoryValue(intger addr)**<br>
+- <b>integer getConcreteMemoryValue(intger addr)</b><br>
 Returns the concrete value of a memory cell.
 
-- **getConcreteMemoryValue(\ref py_MemoryAccess_page mem)**<br>
+- <b>integer getConcreteMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
 Returns the concrete value of memory cells.
 
-- **getConcreteRegisterValue(\ref py_REG_page reg)**<br>
+- <b>integer getConcreteRegisterValue(\ref py_REG_page reg)</b><br>
 Returns the concrete value of a register.
 
-- **getFullAst(\ref py_AstNode_page node)**<br>
-Returns the full AST of a root node as \ref py_AstNode_page.
+- <b>\ref py_AstNode_page getFullAst(\ref py_AstNode_page node)</b><br>
+Returns the full AST without SSA form from a given root node.
 
-- **getFullAstFromId(integer symExprId)**<br>
-Returns the full AST as \ref py_AstNode_page from a symbolic expression id.
+- <b>\ref py_AstNode_page getFullAstFromId(integer symExprId)</b><br>
+Returns the full AST without SSA form from a symbolic expression id.
 
-- **getModel(\ref py_AstNode_page node)**<br>
+- <b>dict getModel(\ref py_AstNode_page node)</b><br>
 Computes and returns a model as a dictionary of {integer symVarId : \ref py_SolverModel_page model} from a symbolic constraint.
 
-- **getModels(\ref py_AstNode_page node)**<br>
+- <b>[dict, ...] getModels(\ref py_AstNode_page node)</b><br>
 Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
 
-- **getParentRegisters(void)**<br>
+- <b>[\ref py_Register_page, ...] getParentRegisters(void)</b><br>
 Returns the list of parent registers. Each item of this list is a \ref py_Register_page.
 
-- **getPathConstraints(void)**<br>
+- <b>[\ref py_PathConstraint_page, ...] getPathConstraints(void)</b><br>
 Returns the logical conjunction vector of path constraints as list of \ref py_PathConstraint_page.
 
-- **getPathConstraintsAst(void)**<br>
-Returns the logical conjunction AST of path constraints as \ref py_AstNode_page.
+- <b>\ref py_AstNode_page getPathConstraintsAst(void)</b><br>
+Returns the logical conjunction AST of path constraints.
 
-- **getSymbolicExpressionFromId(intger symExprId)**<br>
-Returns the symbolic expression as \ref py_SymbolicExpression_page corresponding to the id.
+- <b>\ref py_SymbolicExpression_page getSymbolicExpressionFromId(intger symExprId)</b><br>
+Returns the symbolic expression corresponding to an id.
 
-- **getSymbolicExpressions(void)**<br>
+- <b>dict getSymbolicExpressions(void)</b><br>
 Returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
 
-- **getSymbolicMemory(void)**<br>
+- <b>dict getSymbolicMemory(void)</b><br>
 Returns the map of symbolic memory as {integer address : \ref py_SymbolicExpression_page expr}.
 
-- **getSymbolicMemoryId(intger addr)**<br>
-Returns the symbolic expression id as integer corresponding to the memory address.
+- <b>integer getSymbolicMemoryId(intger addr)</b><br>
+Returns the symbolic expression id corresponding to a memory address.
 
-- **getSymbolicMemoryValue(intger addr)**<br>
-Returns the symbolic memory value as integer.
+- <b>integer getSymbolicMemoryValue(intger addr)</b><br>
+Returns the symbolic memory value.
 
-- **getSymbolicMemoryValue(\ref py_MemoryAccess_page mem)**<br>
-Returns the symbolic memory value as integer.
+- <b>integer getSymbolicMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
+Returns the symbolic memory value.
 
-- **getSymbolicRegisters(void)**<br>
+- <b>dict getSymbolicRegisters(void)</b><br>
 Returns the map of symbolic register as {\ref py_REG_page reg : \ref py_SymbolicExpression_page expr}.
 
-- **getSymbolicRegisterId(\ref py_REG_page reg)**<br>
-Returns the symbolic expression id as integer corresponding to the register.
+- <b>integer getSymbolicRegisterId(\ref py_REG_page reg)</b><br>
+Returns the symbolic expression id corresponding to a register.
 
-- **getSymbolicRegisterValue(\ref py_REG_page reg)**<br>
-Returns the symbolic register value as integer.
+- <b>integer getSymbolicRegisterValue(\ref py_REG_page reg)</b><br>
+Returns the symbolic register value.
 
-- **getSymbolicVariableFromId(integer symVarId)**<br>
-Returns the symbolic variable as \ref py_SymbolicVariable_page corresponding to the symbolic variable id.
+- <b>\ref py_SymbolicVariable_page getSymbolicVariableFromId(integer symVarId)</b><br>
+Returns the symbolic variable corresponding to a symbolic variable id.
 
-- **getSymbolicVariableFromName(string symVarName)**<br>
-Returns the symbolic variable as \ref py_SymbolicVariable_page corresponding to the symbolic variable name.
+- <b>\ref py_SymbolicVariable_page getSymbolicVariableFromName(string symVarName)</b><br>
+Returns the symbolic variable corresponding to a symbolic variable name.
 
-- **getSymbolicVariables(void)**<br>
+- <b>dict getSymbolicVariables(void)</b><br>
 Returns all symbolic variable as a dictionary of {integer SymVarId : \ref py_SymbolicVariable_page var}.
 
-- **getTaintedMemory(void)**<br>
-Returns the list of all tainted addresses as integer.
+- <b>[intger, ...] getTaintedMemory(void)</b><br>
+Returns the list of all tainted addresses.
 
-- **getTaintedRegisters(void)**<br>
-Returns the list of all tainted registers as \ref py_Register_page.
+- <b>[\ref py_Register_page, ...] getTaintedRegisters(void)</b><br>
+Returns the list of all tainted registers.
 
-- **getTaintedSymbolicExpressions(void)**<br>
-Returns the list of all tainted \ref py_SymbolicExpression_page.
+- <b>[\ref py_SymbolicExpression_page, ...] getTaintedSymbolicExpressions(void)</b><br>
+Returns the list of all tainted symbolic expressions.
 
-- **isArchitectureValid(void)**<br>
+- <b>bool isArchitectureValid(void)</b><br>
 Returns true if the architecture is valid.
 
-- **isMemoryMapped(integer baseAddr, integer size=1)**<br>
+- <b>bool isMemoryMapped(integer baseAddr, integer size=1)</b><br>
 Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation.
 
-- **isMemorySymbolized(integer addr)**<br>
+- <b>bool isMemorySymbolized(integer addr)</b><br>
 Returns true if the memory cell expression contains a symbolic variable.
 
-- **isMemorySymbolized(\ref py_MemoryAccess_page mem)**<br>
+- <b>bool isMemorySymbolized(\ref py_MemoryAccess_page mem)</b><br>
 Returns true if memory cell expressions contain symbolic variables.
 
-- **isMemoryTainted(integer addr)**<br>
+- <b>bool isMemoryTainted(integer addr)</b><br>
 Returns true if the address is tainted.
 
-- **isMemoryTainted(\ref py_MemoryAccess_page mem)**<br>
+- <b>bool isMemoryTainted(\ref py_MemoryAccess_page mem)</b><br>
 Returns true if the memory is tainted.
 
-- **isRegisterSymbolized(\ref py_REG_page reg)**<br>
+- <b>bool isRegisterSymbolized(\ref py_REG_page reg)</b><br>
 Returns true if the register expression contains a symbolic variable.
 
-- **isRegisterTainted(\ref py_REG_page reg)**<br>
+- <b>bool isRegisterTainted(\ref py_REG_page reg)</b><br>
 Returns true if the register is tainted.
 
-- **isSymbolicEngineEnabled(void)**<br>
+- <b>bool isSymbolicEngineEnabled(void)</b><br>
 Returns true if the symbolic execution engine is enabled.
 
-- **isSymbolicExpressionIdExists(integer symExprId)**<br>
+- <b>bool isSymbolicExpressionIdExists(integer symExprId)</b><br>
 Returns true if the symbolic expression id exists.
 
-- **isSymbolicOptimizationEnabled(\ref py_OPTIMIZATION_page opti)**<br>
+- <b>bool isSymbolicOptimizationEnabled(\ref py_OPTIMIZATION_page opti)</b><br>
 Returns true if the symbolic optimization is enabled.
 
-- **isSymbolicZ3SimplificationEnabled(void)**<br>
-Returns true if Triton can use the simplification passes of z3.
-
-- **isTaintEngineEnabled(void)**<br>
+- <b>bool isTaintEngineEnabled(void)</b><br>
 Returns true if the taint engine is enabled.
 
-- **newSymbolicExpression(\ref py_AstNode_page node, string comment="")**<br>
-Returns a new symbolic expression as \ref py_SymbolicExpression_page. Note that if there are simplification passes recorded, simplification will be applied.
+- <b>\ref py_SymbolicExpression_page newSymbolicExpression(\ref py_AstNode_page node, string comment="")</b><br>
+Returns a new symbolic expression. Note that if there are simplification passes recorded, simplifications will be applied.
 
-- **newSymbolicVariable(intger varSize, string comment="")**<br>
-Returns a new symbolic variable as \ref py_SymbolicVariable_page.
+- <b>\ref py_SymbolicVariable_page newSymbolicVariable(intger varSize, string comment="")</b><br>
+Returns a new symbolic variable.
 
-- **processing(\ref py_Instruction_page inst)**<br>
+- <b>bool processing(\ref py_Instruction_page inst)</b><br>
 Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
 
-- <b>removeAllCallbacks(void)</b><br>
+- <b>void removeAllCallbacks(void)</b><br>
 Removes all recorded callbacks.
 
-- <b>removeCallback(function cb, \ref py_CALLBACK_page kind)</b><br>
+- <b>void removeCallback(function cb, \ref py_CALLBACK_page kind)</b><br>
 Removes a recorded callback.
 
-- **resetEngines(void)**<br>
+- <b>void resetEngines(void)</b><br>
 Resets everything.
 
-- **setArchitecture(\ref py_ARCH_page arch)**<br>
+- <b>void setArchitecture(\ref py_ARCH_page arch)</b><br>
 Initializes an architecture. This function must be called before any call to the rest of the API.
 
-- **setAstRepresentationMode(\ref py_AST_REPRESENTATION_page mode)**<br>
+- <b>void setAstRepresentationMode(\ref py_AST_REPRESENTATION_page mode)</b><br>
 Sets the AST representation mode.
 
-- **setConcreteMemoryAreaValue(integer baseAddr, [integer,])**<br>
+- <b>void setConcreteMemoryAreaValue(integer baseAddr, [integer,])</b><br>
 Sets the concrete value of a memory area. Note that by setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- **setConcreteMemoryAreaValue(integer baseAddr, bytes opcodes)**<br>
+- <b>void setConcreteMemoryAreaValue(integer baseAddr, bytes opcodes)</b><br>
 Sets the concrete value of a memory area. Note that by setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- **setConcreteMemoryValue(integer addr, integer value)**<br>
+- <b>void setConcreteMemoryValue(integer addr, integer value)</b><br>
 Sets the concrete value of a memory cell. Note that by setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- **setConcreteMemoryValue(\ref py_MemoryAccess_page mem)**<br>
+- <b>void setConcreteMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
 Sets the concrete value of memory cells. Note that by setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- **setConcreteRegisterValue(\ref py_REG_page reg)**<br>
+- <b>void setConcreteRegisterValue(\ref py_REG_page reg)</b><br>
 Sets the concrete value of a register. Note that by setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- **setTaintMemory(\ref py_MemoryAccess_page mem, bool flag)**<br>
-Sets the targeted memory as tainted or not.
+- <b>bool setTaintMemory(\ref py_MemoryAccess_page mem, bool flag)</b><br>
+Sets the targeted memory as tainted or not. Returns true if the memory is still tainted.
 
-- **setTaintRegister(\ref py_REG_page reg, bool flag)**<br>
-Sets the targeted register as tainted or not.
+- <b>bool setTaintRegister(\ref py_REG_page reg, bool flag)</b><br>
+Sets the targeted register as tainted or not. Returns true if the register is still tainted.
 
-- **simplify(\ref py_AstNode_page node, bool z3=False)**<br>
-Calls all simplification callbacks recorded and returns the simplified node as \ref py_AstNode_page. If the `z3` flag is
-set to True, Triton will use z3 to simplify the given `node` before to call recorded callbacks.
+- <b>\ref py_AstNode_page simplify(\ref py_AstNode_page node, bool z3=False)</b><br>
+Calls all simplification callbacks recorded and returns a new simplified node. If the `z3` flag is
+set to True, Triton will use z3 to simplify the given `node` before to call its recorded callbacks.
 
-- **sliceExpressions(\ref py_SymbolicExpression_page expr)**<br>
+- <b>dict sliceExpressions(\ref py_SymbolicExpression_page expr)</b><br>
 Slices expressions from a given one and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
 
-- <b>taintAssignmentMemoryImmediate(\ref py_MemoryAccess_page memDst)</b><br>
-Taints `memDst` with an assignment - `memDst` is untained.
+- <b>bool taintAssignmentMemoryImmediate(\ref py_MemoryAccess_page memDst)</b><br>
+Taints `memDst` with an assignment - `memDst` is untained. Returns true if the `memDst` is still tainted.
 
-- <b>taintAssignmentMemoryMemory(\ref py_MemoryAccess_page memDst, \ref py_MemoryAccess_page memSrc)</b><br>
-Taints `memDst` from `memSrc` with an assignment - `memDst` is tainted if `memSrc` is tainted, otherwise `memDst` is untained.
+- <b>bool taintAssignmentMemoryMemory(\ref py_MemoryAccess_page memDst, \ref py_MemoryAccess_page memSrc)</b><br>
+Taints `memDst` from `memSrc` with an assignment - `memDst` is tainted if `memSrc` is tainted, otherwise
+`memDst` is untained. Returns true if `memDst` is tainted.
 
-- <b>taintAssignmentMemoryRegister(\ref py_MemoryAccess_page memDst, \ref py_REG_page regSrc)</b><br>
-Taints `memDst` from `regSrc` with an assignment - `memDst` is tainted if `regSrc` is tainted, otherwise `memDst` is untained.
+- <b>bool taintAssignmentMemoryRegister(\ref py_MemoryAccess_page memDst, \ref py_REG_page regSrc)</b><br>
+Taints `memDst` from `regSrc` with an assignment - `memDst` is tainted if `regSrc` is tainted, otherwise
+`memDst` is untained. Return true if `memDst` is tainted.
 
-- <b>taintAssignmentRegisterImmediate(\ref py_REG_page regDst)</b><br>
-Taints `regDst` with an assignment - `regSrc` is untained.
+- <b>bool taintAssignmentRegisterImmediate(\ref py_REG_page regDst)</b><br>
+Taints `regDst` with an assignment - `regDst` is untained. Returns true if `reDst` is still tainted.
 
-- <b>taintAssignmentRegisterMemory(\ref py_REG_page regDst, \ref py_MemoryAccess_page memSrc)</b><br>
-Taints `regDst` from `MemSrc` with an assignment - `regDst` is tainted if `memSrc` is tainted, otherwise `regDst` is untained.
+- <b>bool taintAssignmentRegisterMemory(\ref py_REG_page regDst, \ref py_MemoryAccess_page memSrc)</b><br>
+Taints `regDst` from `MemSrc` with an assignment - `regDst` is tainted if `memSrc` is tainted, otherwise
+`regDst` is untained. Return true if `regDst` is tainted.
 
-- <b>taintAssignmentRegisterRegister(\ref py_REG_page regDst, \ref py_REG_page regSrc)</b><br>
-Taints `regDst` from `regSrc` with an assignment - `regDst` is tainted if `regSrc` is tainted, otherwise `regDst` is untained.
+- <b>bool taintAssignmentRegisterRegister(\ref py_REG_page regDst, \ref py_REG_page regSrc)</b><br>
+Taints `regDst` from `regSrc` with an assignment - `regDst` is tainted if `regSrc` is tainted, otherwise
+`regDst` is untained. Return true if `regDst` is tainted.
 
-- **taintMemory(intger addr)**<br>
-Taints an address.
+- <b>bool taintMemory(intger addr)</b><br>
+Taints an address. Returns true if the address is tainted.
 
-- **taintMemory(\ref py_MemoryAccess_page mem)**<br>
-Taints a memory.
+- <b>bool taintMemory(\ref py_MemoryAccess_page mem)</b><br>
+Taints a memory. Returns true if the memory is tainted.
 
-- **taintRegister(\ref py_REG_page reg)**<br>
-Taints a register.
+- <b>bool taintRegister(\ref py_REG_page reg)</b><br>
+Taints a register. Returns true if the register is tainted.
 
-- <b>taintUnionMemoryImmediate(\ref py_MemoryAccess_page memDst)</b><br>
-Taints `memDst` with an union - `memDst` does not changes.
+- <b>bool taintUnionMemoryImmediate(\ref py_MemoryAccess_page memDst)</b><br>
+Taints `memDst` with an union - `memDst` does not changes. Returns true if `memDst` is tainted.
 
-- <b>taintUnionMemoryMemory(\ref py_MemoryAccess_page memDst, \ref py_MemoryAccess_page memSrc)</b><br>
-Taints `memDst` from `memSrc` with an union - `memDst` is tainted if `memDst` or `memSrc` are tainted.
+- <b>bool taintUnionMemoryMemory(\ref py_MemoryAccess_page memDst, \ref py_MemoryAccess_page memSrc)</b><br>
+Taints `memDst` from `memSrc` with an union - `memDst` is tainted if `memDst` or `memSrc` are
+tainted. Returns true if `memDst` is tainted.
 
-- <b>taintUnionMemoryRegister(\ref py_MemoryAccess_page memDst, \ref py_REG_page regSrc)</b><br>
-Taints `memDst` from `RegSrc` with an union - `memDst` is tainted if `memDst` or `regSrc` are tainted.
+- <b>bool taintUnionMemoryRegister(\ref py_MemoryAccess_page memDst, \ref py_REG_page regSrc)</b><br>
+Taints `memDst` from `RegSrc` with an union - `memDst` is tainted if `memDst` or `regSrc` are
+tainted. Returns true if `memDst` is tainted.
 
-- <b>taintUnionRegisterImmediate(\ref py_REG_page regDst)</b><br>
-Taints `regDst` with an union - `regDst` does not changes.
+- <b>bool taintUnionRegisterImmediate(\ref py_REG_page regDst)</b><br>
+Taints `regDst` with an union - `regDst` does not changes. Returns true if `regDst` is tainted.
 
-- <b>taintUnionRegisterMemory(\ref py_REG_page regDst, \ref py_MemoryAccess_page memSrc)</b><br>
-Taints `regDst` from `memSrc` with an union - `regDst` is tainted if `regDst` or `memSrc` are tainted.
+- <b>bool taintUnionRegisterMemory(\ref py_REG_page regDst, \ref py_MemoryAccess_page memSrc)</b><br>
+Taints `regDst` from `memSrc` with an union - `regDst` is tainted if `regDst` or `memSrc` are
+tainted. Returns true if `regDst` is tainted.
 
-- <b>taintUnionRegisterRegister(\ref py_REG_page regDst, \ref py_REG_page regSrc)</b><br>
-Taints `regDst` from `regSrc` with an union - `regDst` is tainted if `regDst` or `regSrc` are tainted.
+- <b>bool taintUnionRegisterRegister(\ref py_REG_page regDst, \ref py_REG_page regSrc)</b><br>
+Taints `regDst` from `regSrc` with an union - `regDst` is tainted if `regDst` or `regSrc` are
+tainted. Returns true if `regDst` is tainted.
 
-- **unmapMemory(integer baseAddr, integer size=1)**<br>
+- <b>void unmapMemory(integer baseAddr, integer size=1)</b><br>
 Removes the range `[baseAddr:size]` from the internal memory representation.
 
-- **untaintMemory(intger addr)**<br>
-Untaints an address.
+- <b>bool untaintMemory(intger addr)</b><br>
+Untaints an address. Returns true if the address is still tainted.
 
-- **untaintMemory(\ref py_MemoryAccess_page mem)**<br>
-Untaints a memory.
+- <b>bool untaintMemory(\ref py_MemoryAccess_page mem)</b><br>
+Untaints a memory. Returns true if the memory is still tainted.
 
-- **untaintRegister(\ref py_REG_page reg)**<br>
-Untaints a register.
+- <b>bool untaintRegister(\ref py_REG_page reg)</b><br>
+Untaints a register. Returns true if the register is still tainted.
 
 
 \subsection triton_py_api_namespaces Namespaces
@@ -445,109 +445,109 @@ Your script must contains the pintool and triton imports.
 
 \subsection pintool_py_api_methods Methods
 
-- **checkReadAccess(integer addr)**<br>
-Checks whether the memory page which contains this address has a read access protection. Returns true or false.
+- <b>bool checkReadAccess(integer addr)</b><br>
+Checks whether the memory page which contains this address has a read access protection.
 
-- **checkWriteAccess(integer addr)**<br>
-Checks whether the memory page which contains this address has a write access protection. Returns true or false.
+- <b>bool checkWriteAccess(integer addr)</b><br>
+Checks whether the memory page which contains this address has a write access protection.
 
-- **detachProcess(void)**<br>
+- <b>void detachProcess(void)</b><br>
 Detachs the pintool from the targeted process. The control flow is returned to the original uninstrumented code and
 the application is natively executed.
 
-- **disableSnapshot(void)**<br>
+- <b>void disableSnapshot(void)</b><br>
 Disables the snapshot engine. When you have done with the `tracer::pintool::Snapshot::restoreSnapshot()` function,
 you may use this function to improve performance. Then, the snapshot engine will be enable at the next
 `tracer::pintool::Snapshot::takeSnapshot()` call.
 
-- **getCurrentMemoryValue(\ref py_MemoryAccess_page mem)**<br>
+- <b>integer getCurrentMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
 Returns the memory value from a \ref py_MemoryAccess_page.
 
-- **getCurrentMemoryValue(integer addr)**<br>
+- <b>integer getCurrentMemoryValue(integer addr)</b><br>
 Returns the memory value from the address.
 
-- **getCurrentMemoryValue(integer addr, integer readSize)**<br>
+- <b>integer getCurrentMemoryValue(integer addr, integer readSize)</b><br>
 Returns the memory value according to the `readSize` from the address.
 
-- **getCurrentRegisterValue(\ref py_REG_page reg)**<br>
+- <b>integer getCurrentRegisterValue(\ref py_REG_page reg)</b><br>
 Returns the register value from a \ref py_REG_page.
 
-- **getImageName(integer addr)**<br>
+- <b>string getImageName(integer addr)</b><br>
 Returns the image name from a given address. Returns an empty string if not found.
 
-- **getRoutineName(integer addr)**<br>
+- <b>string getRoutineName(integer addr)</b><br>
 Returns the routine name from a given address. Returns an empty string if not found.
 
-- **getSyscallArgument(\ref py_STANDARD_page std, integer argNum)**<br>
+- <b>integer getSyscallArgument(\ref py_STANDARD_page std, integer argNum)</b><br>
 Returns the argument value of the system call which is executed in the current context. It is a user's responsibility to make sure that the
 current instruction is a syscall. This function must be used in a `SYSCALL_ENTRY` \ref py_INSERT_POINT_page.
 
-- **getSyscallNumber(\ref py_STANDARD_page std)**<br>
+- <b>integer getSyscallNumber(\ref py_STANDARD_page std)</b><br>
 Returns the syscall number of the system call which is executed in the current context. It is a user's responsibility to make sure that the
 current instruction is a syscall. This function must be used in a `SYSCALL_ENTRY` \ref py_INSERT_POINT_page.
 
-- **getSyscallReturn(\ref py_STANDARD_page std)**<br>
+- <b>intger getSyscallReturn(\ref py_STANDARD_page std)</b><br>
 Returns the result of the syscall. It is a user's responsibility to make sure that the current context represents
 the state of a system call after its execution. This function must be used in a `SYSCALL_EXIT` \ref py_INSERT_POINT_page.
 
-- <b>insertCall(function, \ref py_INSERT_POINT_page type)</b><br>
+- <b>void insertCall(function, \ref py_INSERT_POINT_page type)</b><br>
 Inserts a call before and after several cases. All code executed into a callback function are executed during the
 instrumentation.
 
-- **isSnapshotEnabled(void)**<br>
+- <b>bool isSnapshotEnabled(void)</b><br>
 Returns true if the snapshot engine is enabled.
 
-- **restoreSnapshot(void)**<br>
+- <b>void restoreSnapshot(void)</b><br>
 Restores the last snpahost taken. Check the `tracer::pintool::Snapshot::takeSnapshot()` function. Note that this function
 have to execute a new context registers, so `RIP` will be modified and your callback stopped
 (checkout the [Pin API](https://software.intel.com/sites/landingpage/pintool/docs/71313/Pin/html/group__CONTEXT__API.html#g4e6408c641479c22918a888d95ca1930)).
 
-- **runProgram(void)**<br>
+- <b>void runProgram(void)</b><br>
 Starts the binary instrumentation over Pin.
 
-- **setCurrentMemoryValue(\ref py_MemoryAccess_page mem)**<br>
+- <b>void setCurrentMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
 Sets the current memory value from a \ref py_MemoryAccess_page.
 
-- **setCurrentMemoryValue(\ref py_MemoryAccess_page mem, integer value)**<br>
+- <b>void setCurrentMemoryValue(\ref py_MemoryAccess_page mem, integer value)</b><br>
 Sets the current memory value from a \ref py_MemoryAccess_page.
 
-- **setCurrentMemoryValue(integer addr, integer value)**<br>
+- <b>void setCurrentMemoryValue(integer addr, integer value)</b><br>
 Sets the current memory value from an address.
 
-- **setCurrentRegisterValue(\ref py_Register_page reg)**<br>
+- <b>void setCurrentRegisterValue(\ref py_Register_page reg)</b><br>
 Sets the current register value from a \ref py_Register_page. This method can only be called into a `BEFORE_SYMPROC`
 and `AFTER` callback. This method also synchronizes the Triton's register.
 
-- **setCurrentRegisterValue(\ref py_Register_page reg, integer value)**<br>
+- <b>void setCurrentRegisterValue(\ref py_Register_page reg, integer value)</b><br>
 Sets the current register value from a \ref py_Register_page. This method can only be called into a `BEFORE_SYMPROC`
 and `AFTER` callback. This method also synchronizes the Triton's register.
 
-- **setupImageBlacklist([""])**<br>
+- <b>void setupImageBlacklist([string, ...])</b><br>
 Setups a blacklist of image names, it means that these images will not be instrumented and executed natively.
 
-- **setupImageWhitelist([""])**<br>
+- <b>void setupImageWhitelist([string, ...])</b><br>
 Setups a whitelist of image names, it means that these images will be instrumented and all other images will be
 executed natively.
 
-- **startAnalysisFromAddress(integer addr)**<br>
+- <b>void startAnalysisFromAddress(integer addr)</b><br>
 Starts the instrumentation at a specific address.
 
-- **startAnalysisFromEntry(void)**<br>
+- <b>void startAnalysisFromEntry(void)</b><br>
 Starts the instrumentation at the entry point.
 
-- **startAnalysisFromOffset(integer offset)**<br>
+- <b>void startAnalysisFromOffset(integer offset)</b><br>
 Starts the instrumentation at a specific offset in the binary
 
-- **startAnalysisFromSymbol(string symbol)**<br>
+- <b>void startAnalysisFromSymbol(string symbol)</b><br>
 Starts the instrumentation at a specific symbol.
 
-- **stopAnalysisFromAddress(integer addr)**<br>
+- <b>void stopAnalysisFromAddress(integer addr)</b><br>
 Stops the instrumentation at a specific address.
 
-- **stopAnalysisFromOffset(integer offset)**<br>
+- <b>void stopAnalysisFromOffset(integer offset)</b><br>
 Stops the instrumentation at a specific offset.
 
-- **takeSnapshot(void)**<br>
+- <b>void takeSnapshot(void)</b><br>
 Creates a snaphost at this program point.
 
 \subsection pintool_py_api_namespaces Namespaces
@@ -581,7 +581,7 @@ namespace triton {
         try {
           return PyBitvector(PyLong_AsUint32(high), PyLong_AsUint32(low));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -595,7 +595,7 @@ namespace triton {
         try {
           return PyElf(PyString_AsString(path));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -620,7 +620,7 @@ namespace triton {
           triton::arch::Immediate imm(PyLong_AsUint64(value), PyLong_AsUint32(size));
           return PyImmediate(imm);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -643,7 +643,7 @@ namespace triton {
           triton::uint32 size = static_cast<triton::uint32>(PyBytes_Size(opcodes));
           return PyInstruction(opc, size);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -677,7 +677,7 @@ namespace triton {
           triton::arch::MemoryAccess mem(PyLong_AsUint64(address), PyLong_AsUint32(size), cv);
           return PyMemoryAccess(mem);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -715,7 +715,7 @@ namespace triton {
           triton::arch::Register regOut(rid, cv);
           return PyRegister(regOut);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -741,7 +741,7 @@ namespace triton {
         try {
           triton::api.addCallback(function, static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -773,7 +773,7 @@ namespace triton {
         try {
           triton::api.assignSymbolicExpressionToMemory(arg1, arg2);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -805,7 +805,7 @@ namespace triton {
         try {
           triton::api.assignSymbolicExpressionToRegister(arg1, arg2);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -827,7 +827,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -844,7 +844,7 @@ namespace triton {
         try {
           return PyAstNode(triton::api.buildSymbolicImmediate(*PyImmediate_AsImmediate(imm)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -861,7 +861,7 @@ namespace triton {
         try {
           return PyAstNode(triton::api.buildSymbolicMemory(*PyMemoryAccess_AsMemoryAccess(mem)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -878,7 +878,7 @@ namespace triton {
         try {
           return PyAstNode(triton::api.buildSymbolicRegister(*PyRegister_AsRegister(reg)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -924,7 +924,7 @@ namespace triton {
           try {
             triton::api.concretizeMemory(PyLong_AsUint64(mem));
           }
-          catch (const std::exception& e) {
+          catch (const triton::exceptions::Exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
           }
         }
@@ -934,7 +934,7 @@ namespace triton {
           try {
             triton::api.concretizeMemory(*PyMemoryAccess_AsMemoryAccess(mem));
           }
-          catch (const std::exception& e) {
+          catch (const triton::exceptions::Exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
           }
         }
@@ -959,7 +959,7 @@ namespace triton {
         try {
           triton::api.concretizeRegister(*PyRegister_AsRegister(reg));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -996,7 +996,7 @@ namespace triton {
         try {
           return PySymbolicVariable(triton::api.convertExpressionToSymbolicVariable(PyLong_AsUsize(exprId), PyLong_AsUint32(symVarSize), ccomment));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1026,7 +1026,7 @@ namespace triton {
         try {
           return PySymbolicVariable(triton::api.convertMemoryToSymbolicVariable(*PyMemoryAccess_AsMemoryAccess(mem), ccomment));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1056,14 +1056,9 @@ namespace triton {
         try {
           return PySymbolicVariable(triton::api.convertRegisterToSymbolicVariable(*PyRegister_AsRegister(reg), ccomment));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
-      }
-
-
-      static PyObject* triton_cpuInvalidRegister(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint32(triton::api.cpuInvalidRegister());
       }
 
 
@@ -1113,7 +1108,7 @@ namespace triton {
         try {
           return PySymbolicExpression(triton::api.createSymbolicFlagExpression(arg1, arg2, arg3, ccomment));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1155,7 +1150,7 @@ namespace triton {
         try {
           return PySymbolicExpression(triton::api.createSymbolicMemoryExpression(arg1, arg2, arg3, ccomment));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1197,7 +1192,7 @@ namespace triton {
         try {
           return PySymbolicExpression(triton::api.createSymbolicRegisterExpression(arg1, arg2, arg3, ccomment));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1234,7 +1229,7 @@ namespace triton {
         try {
           return PySymbolicExpression(triton::api.createSymbolicVolatileExpression(arg1, arg2, ccomment));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1251,7 +1246,7 @@ namespace triton {
         try {
           triton::api.disassembly(*PyInstruction_AsInstruction(inst));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1271,7 +1266,7 @@ namespace triton {
         try {
           triton::api.enableSymbolicEngine(PyLong_AsBool(flag));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1300,27 +1295,7 @@ namespace triton {
         try {
           triton::api.enableSymbolicOptimization(static_cast<enum triton::engines::symbolic::optimization_e>(PyLong_AsUint32(opti)), PyLong_AsBool(flag));
         }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        Py_INCREF(Py_None);
-        return Py_None;
-      }
-
-
-      static PyObject* triton_enableSymbolicZ3Simplification(PyObject* self, PyObject* flag) {
-        /* Check if the architecture is definied */
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "enableSymbolicZ3Simplification(): Architecture is not defined.");
-
-        if (!PyBool_Check(flag))
-          return PyErr_Format(PyExc_TypeError, "enableSymbolicZ3Simplification(): Expects a boolean as argument.");
-
-        try {
-          triton::api.enableSymbolicZ3Simplification(PyLong_AsBool(flag));
-        }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1340,7 +1315,7 @@ namespace triton {
         try {
           triton::api.enableTaintEngine(PyLong_AsBool(flag));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1360,7 +1335,7 @@ namespace triton {
         try {
           return PyLong_FromUint512(triton::api.evaluateAstViaZ3(PyAstNode_AsAstNode(node)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
         catch (const z3::exception& e) {
@@ -1374,21 +1349,20 @@ namespace triton {
 
       static PyObject* triton_getAllRegisters(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        std::set<triton::arch::Register*> reg;
-        std::set<triton::arch::Register*>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getAllRegisters(): Architecture is not defined.");
 
         try {
-          reg = triton::api.getAllRegisters();
-          ret = xPyList_New(reg.size());
           triton::uint32 index = 0;
-          for (it = reg.begin(); it != reg.end(); it++)
+          std::set<triton::arch::Register*> reg = triton::api.getAllRegisters();
+
+          ret = xPyList_New(reg.size());
+          for (auto it = reg.begin(); it != reg.end(); it++)
             PyList_SetItem(ret, index++, PyRegister(**it));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1403,20 +1377,19 @@ namespace triton {
 
       static PyObject* triton_getAstDictionariesStats(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        std::map<std::string, triton::usize> stats;
-        std::map<std::string, triton::usize>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getAstDictionariesStats(): Architecture is not defined.");
 
         try {
-          stats = triton::api.getAstDictionariesStats();
-          ret   = xPyDict_New();
-          for (it = stats.begin(); it != stats.end(); it++)
+          std::map<std::string, triton::usize> stats = triton::api.getAstDictionariesStats();
+
+          ret = xPyDict_New();
+          for (auto it = stats.begin(); it != stats.end(); it++)
             PyDict_SetItem(ret, PyString_FromString(it->first.c_str()), PyLong_FromUsize(it->second));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1435,7 +1408,7 @@ namespace triton {
         try {
           return PyAstNode(triton::api.getAstFromId(PyLong_AsUsize(symExprId)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1450,7 +1423,6 @@ namespace triton {
 
 
       static PyObject* triton_getConcreteMemoryAreaValue(PyObject* self, PyObject* args) {
-        std::vector<triton::uint8> vv;
         triton::uint8*  area = nullptr;
         PyObject*       ret  = nullptr;
         PyObject*       addr = nullptr;
@@ -1464,7 +1436,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getConcreteMemoryAreaValue(): Architecture is not defined.");
 
         try {
-          vv   = triton::api.getConcreteMemoryAreaValue(PyLong_AsUint64(addr), PyLong_AsUsize(size));
+          std::vector<triton::uint8> vv = triton::api.getConcreteMemoryAreaValue(PyLong_AsUint64(addr), PyLong_AsUsize(size));
           area = new triton::uint8[vv.size()];
 
           for (triton::usize index = 0; index < vv.size(); index++)
@@ -1475,7 +1447,7 @@ namespace triton {
           return ret;
 
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1496,7 +1468,7 @@ namespace triton {
           else
             return PyErr_Format(PyExc_TypeError, "getConcreteMemoryValue(): Expects a MemoryAccess or an integer as argument.");
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1513,7 +1485,7 @@ namespace triton {
         try {
           return PyLong_FromUint512(triton::api.getConcreteRegisterValue(*PyRegister_AsRegister(reg)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1530,7 +1502,7 @@ namespace triton {
         try {
           return PyAstNode(triton::api.getFullAst(PyAstNode_AsAstNode(node)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1547,7 +1519,7 @@ namespace triton {
         try {
           return PyAstNode(triton::api.getFullAstFromId(PyLong_AsUsize(symExprId)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1555,8 +1527,6 @@ namespace triton {
 
       static PyObject* triton_getModel(PyObject* self, PyObject* node) {
         PyObject* ret = nullptr;
-        std::map<triton::uint32, triton::engines::solver::SolverModel> model;
-        std::map<triton::uint32, triton::engines::solver::SolverModel>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -1567,12 +1537,12 @@ namespace triton {
 
         try {
           ret = xPyDict_New();
-          model = triton::api.getModel(PyAstNode_AsAstNode(node));
-          for (it = model.begin(); it != model.end(); it++) {
+          auto model = triton::api.getModel(PyAstNode_AsAstNode(node));
+          for (auto it = model.begin(); it != model.end(); it++) {
             PyDict_SetItem(ret, PyLong_FromUint32(it->first), PySolverModel(it->second));
           }
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1584,9 +1554,6 @@ namespace triton {
         PyObject* ret   = nullptr;
         PyObject* node  = nullptr;
         PyObject* limit = nullptr;
-        triton::uint32 index = 0;
-        std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> models;
-        std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>>::iterator it;
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &node, &limit);
@@ -1602,11 +1569,14 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getModels(): Expects an integer as second argument.");
 
         try {
-          models = triton::api.getModels(PyAstNode_AsAstNode(node), PyLong_AsUint32(limit));
+          auto models = triton::api.getModels(PyAstNode_AsAstNode(node), PyLong_AsUint32(limit));
+          triton::uint32 index = 0;
+
           ret = xPyList_New(models.size());
-          for (it = models.begin(); it != models.end(); it++) {
+          for (auto it = models.begin(); it != models.end(); it++) {
             PyObject* mdict = xPyDict_New();
-            std::map<triton::uint32, triton::engines::solver::SolverModel> model = *it;
+            auto model = *it;
+
             for (auto it2 = model.begin(); it2 != model.end(); it2++) {
               PyDict_SetItem(mdict, PyLong_FromUint32(it2->first), PySolverModel(it2->second));
             }
@@ -1614,7 +1584,7 @@ namespace triton {
               PyList_SetItem(ret, index++, mdict);
           }
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1624,21 +1594,20 @@ namespace triton {
 
       static PyObject* triton_getParentRegisters(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        std::set<triton::arch::Register*> reg;
-        std::set<triton::arch::Register*>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getParentRegisters(): Architecture is not defined.");
 
         try {
-          reg = triton::api.getParentRegisters();
-          ret = xPyList_New(reg.size());
           triton::uint32 index = 0;
-          for (it = reg.begin(); it != reg.end(); it++)
+          std::set<triton::arch::Register*> reg = triton::api.getParentRegisters();
+          ret = xPyList_New(reg.size());
+
+          for (auto it = reg.begin(); it != reg.end(); it++)
             PyList_SetItem(ret, index++, PyRegister(**it));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1654,16 +1623,16 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getPathConstraintsAst(): Architecture is not defined.");
 
         try {
+          triton::uint32 index = 0;
           const std::vector<triton::engines::symbolic::PathConstraint>& pc = triton::api.getPathConstraints();
           ret = xPyList_New(pc.size());
 
-          triton::uint32 index = 0;
           for (auto it = pc.begin(); it != pc.end(); it++)
             PyList_SetItem(ret, index++, PyPathConstraint(*it));
 
           return ret;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1677,7 +1646,7 @@ namespace triton {
         try {
           return PyAstNode(triton::api.getPathConstraintsAst());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1694,7 +1663,7 @@ namespace triton {
         try {
           return PySymbolicExpression(triton::api.getSymbolicExpressionFromId(PyLong_AsUsize(symExprId)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1702,19 +1671,19 @@ namespace triton {
 
       static PyObject* triton_getSymbolicExpressions(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        const std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*>& expressions = triton::api.getSymbolicExpressions();
-        std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*>::const_iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getTaintedSymbolicExpressions(): Architecture is not defined.");
 
         try {
+          const auto& expressions = triton::api.getSymbolicExpressions();
+
           ret = xPyDict_New();
-          for (it = expressions.begin(); it != expressions.end(); it++)
+          for (auto it = expressions.begin(); it != expressions.end(); it++)
             PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1724,20 +1693,20 @@ namespace triton {
 
       static PyObject* triton_getSymbolicMemory(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        std::map<triton::uint64, triton::engines::symbolic::SymbolicExpression*> regs = triton::api.getSymbolicMemory();
-        std::map<triton::uint64, triton::engines::symbolic::SymbolicExpression*>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getSymbolicMemory(): Architecture is not defined.");
 
         try {
+          auto regs = triton::api.getSymbolicMemory();
+
           ret = xPyDict_New();
-          for (it = regs.begin(); it != regs.end(); it++) {
+          for (auto it = regs.begin(); it != regs.end(); it++) {
             PyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
           }
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1756,7 +1725,7 @@ namespace triton {
         try {
           return PyLong_FromUsize(triton::api.getSymbolicMemoryId(PyLong_AsUint64(addr)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1775,7 +1744,7 @@ namespace triton {
             return PyLong_FromUint512(triton::api.getSymbolicMemoryValue(PyLong_AsUint64(mem)));
           return PyLong_FromUint512(triton::api.getSymbolicMemoryValue(*PyMemoryAccess_AsMemoryAccess(mem)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1783,21 +1752,21 @@ namespace triton {
 
       static PyObject* triton_getSymbolicRegisters(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        std::map<triton::arch::Register, triton::engines::symbolic::SymbolicExpression*> regs = triton::api.getSymbolicRegisters();
-        std::map<triton::arch::Register, triton::engines::symbolic::SymbolicExpression*>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getSymbolicRegisters(): Architecture is not defined.");
 
         try {
+          auto regs = triton::api.getSymbolicRegisters();
+
           ret = xPyDict_New();
-          for (it = regs.begin(); it != regs.end(); it++) {
+          for (auto it = regs.begin(); it != regs.end(); it++) {
             triton::arch::Register reg(it->first);
             PyDict_SetItem(ret, PyRegister(reg), PySymbolicExpression(it->second));
           }
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1816,7 +1785,7 @@ namespace triton {
         try {
           return PyLong_FromUsize(triton::api.getSymbolicRegisterId(*PyRegister_AsRegister(reg)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1833,7 +1802,7 @@ namespace triton {
         try {
           return PyLong_FromUint512(triton::api.getSymbolicRegisterValue(*PyRegister_AsRegister(reg)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1850,7 +1819,7 @@ namespace triton {
         try {
           return PySymbolicVariable(triton::api.getSymbolicVariableFromId(PyLong_AsUsize(symVarId)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1868,7 +1837,7 @@ namespace triton {
           std::string arg = PyString_AsString(symVarName);
           return PySymbolicVariable(triton::api.getSymbolicVariableFromName(arg));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -1876,19 +1845,19 @@ namespace triton {
 
       static PyObject* triton_getSymbolicVariables(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-        const std::map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& variables = triton::api.getSymbolicVariables();
-        std::map<triton::usize, triton::engines::symbolic::SymbolicVariable*>::const_iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getTaintedSymbolicVariables(): Architecture is not defined.");
 
         try {
+          const auto& variables = triton::api.getSymbolicVariables();
+
           ret = xPyDict_New();
-          for (it = variables.begin(); it != variables.end(); it++)
+          for (auto it = variables.begin(); it != variables.end(); it++)
             PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicVariable(it->second));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1899,23 +1868,22 @@ namespace triton {
       static PyObject* triton_getTaintedMemory(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
         triton::usize size = 0, index = 0;
-        std::set<triton::uint64> addresses;
-        std::set<triton::uint64>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getTaintedMemory(): Architecture is not defined.");
 
         try {
-          addresses = triton::api.getTaintedMemory();
+          std::set<triton::uint64> addresses = triton::api.getTaintedMemory();
+
           size = addresses.size();
           ret = xPyList_New(size);
-          for (it = addresses.begin(); it != addresses.end(); it++) {
+          for (auto it = addresses.begin(); it != addresses.end(); it++) {
             PyList_SetItem(ret, index, PyLong_FromUint64(*it));
             index++;
           }
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1926,23 +1894,22 @@ namespace triton {
       static PyObject* triton_getTaintedRegisters(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
         triton::usize size = 0, index = 0;
-        std::set<triton::arch::Register> registers;
-        std::set<triton::arch::Register>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getTaintedRegisters(): Architecture is not defined.");
 
         try {
-          registers = triton::api.getTaintedRegisters();
+          std::set<triton::arch::Register> registers = triton::api.getTaintedRegisters();
+
           size = registers.size();
           ret = xPyList_New(size);
-          for (it = registers.begin(); it != registers.end(); it++) {
+          for (auto it = registers.begin(); it != registers.end(); it++) {
             PyList_SetItem(ret, index, PyRegister(*it));
             index++;
           }
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -1953,23 +1920,22 @@ namespace triton {
       static PyObject* triton_getTaintedSymbolicExpressions(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
         triton::usize size = 0, index = 0;
-        std::list<triton::engines::symbolic::SymbolicExpression*> expressions;
-        std::list<triton::engines::symbolic::SymbolicExpression*>::iterator it;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getTaintedSymbolicExpressions(): Architecture is not defined.");
 
         try {
-          expressions = triton::api.getTaintedSymbolicExpressions();
+          auto expressions = triton::api.getTaintedSymbolicExpressions();
+
           size = expressions.size();
           ret = xPyList_New(size);
-          for (it = expressions.begin(); it != expressions.end(); it++) {
+          for (auto it = expressions.begin(); it != expressions.end(); it++) {
             PyList_SetItem(ret, index, PySymbolicExpression(*it));
             index++;
           }
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -2011,7 +1977,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2125,16 +2091,6 @@ namespace triton {
       }
 
 
-      static PyObject* triton_isSymbolicZ3SimplificationEnabled(PyObject* self, PyObject* noarg) {
-        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isSymbolicZ3SimplificationEnabled(): Architecture is not defined.");
-
-        if (triton::api.isSymbolicZ3SimplificationEnabled() == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
-      }
-
-
       static PyObject* triton_isTaintEngineEnabled(PyObject* self, PyObject* noarg) {
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "isTaintEngineEnabled(): Architecture is not defined.");
@@ -2169,7 +2125,7 @@ namespace triton {
         try {
           return PySymbolicExpression(triton::api.newSymbolicExpression(PyAstNode_AsAstNode(node), ccomment));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2199,7 +2155,7 @@ namespace triton {
         try {
           return PySymbolicVariable(triton::api.newSymbolicVariable(PyLong_AsUint32(size), ccomment));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2218,7 +2174,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2228,7 +2184,7 @@ namespace triton {
         try {
           triton::api.removeAllCallbacks();
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -2257,7 +2213,7 @@ namespace triton {
         try {
           triton::api.removeCallback(function, static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -2274,7 +2230,7 @@ namespace triton {
         try {
           triton::api.resetEngines();
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -2290,7 +2246,7 @@ namespace triton {
         try {
           triton::api.setArchitecture(PyLong_AsUint32(arg));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -2306,7 +2262,7 @@ namespace triton {
         try {
           triton::api.setAstRepresentationMode(PyLong_AsUint32(arg));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -2347,7 +2303,7 @@ namespace triton {
           try {
             triton::api.setConcreteMemoryAreaValue(PyLong_AsUint64(baseAddr), vv);
           }
-          catch (const std::exception& e) {
+          catch (const triton::exceptions::Exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
           }
         }
@@ -2360,7 +2316,7 @@ namespace triton {
           try {
             triton::api.setConcreteMemoryAreaValue(PyLong_AsUint64(baseAddr), area, size);
           }
-          catch (const std::exception& e) {
+          catch (const triton::exceptions::Exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
           }
         }
@@ -2373,7 +2329,7 @@ namespace triton {
           try {
             triton::api.setConcreteMemoryAreaValue(PyLong_AsUint64(baseAddr), area, size);
           }
-          catch (const std::exception& e) {
+          catch (const triton::exceptions::Exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
           }
         }
@@ -2412,7 +2368,7 @@ namespace triton {
           try {
             triton::api.setConcreteMemoryValue(addr, static_cast<triton::uint8>(cvalue & 0xff));
           }
-          catch (const std::exception& e) {
+          catch (const triton::exceptions::Exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
           }
 
@@ -2425,7 +2381,7 @@ namespace triton {
           try {
             triton::api.setConcreteMemoryValue(*PyMemoryAccess_AsMemoryAccess(mem));
           }
-          catch (const std::exception& e) {
+          catch (const triton::exceptions::Exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
           }
         }
@@ -2450,7 +2406,7 @@ namespace triton {
         try {
           triton::api.setConcreteRegisterValue(*PyRegister_AsRegister(reg));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -2481,7 +2437,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2509,7 +2465,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2538,7 +2494,7 @@ namespace triton {
         try {
           return PyAstNode(triton::api.processSimplification(PyAstNode_AsAstNode(node), PyLong_AsBool(z3Flag)));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2546,7 +2502,6 @@ namespace triton {
 
       static PyObject* triton_sliceExpressions(PyObject* self, PyObject* expr) {
         PyObject* ret = nullptr;
-        std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*> exprs;
 
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -2556,12 +2511,13 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "sliceExpressions(): Expects a SymbolicExpression as argument.");
 
         try {
-          ret   = xPyDict_New();
-          exprs = triton::api.sliceExpressions(PySymbolicExpression_AsSymbolicExpression(expr));
+          auto exprs = triton::api.sliceExpressions(PySymbolicExpression_AsSymbolicExpression(expr));
+
+          ret = xPyDict_New();
           for (auto it = exprs.begin(); it != exprs.end(); it++)
             PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -2582,7 +2538,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2610,7 +2566,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2638,7 +2594,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2657,7 +2613,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2685,7 +2641,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2713,7 +2669,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2738,7 +2694,7 @@ namespace triton {
           else
             return PyErr_Format(PyExc_TypeError, "taintMemory(): Expects a MemoryAccess or an integer as argument.");
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
         Py_RETURN_FALSE;
@@ -2758,7 +2714,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2777,7 +2733,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2805,7 +2761,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2833,7 +2789,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2852,7 +2808,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2880,7 +2836,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2908,7 +2864,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -2939,7 +2895,7 @@ namespace triton {
             c_size = PyLong_AsUsize(size);
           triton::api.unmapMemory(c_baseAddr, c_size);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
@@ -2967,7 +2923,7 @@ namespace triton {
           else
             return PyErr_Format(PyExc_TypeError, "untaintMemory(): Expects a MemoryAccess or an integer as argument.");
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
         Py_RETURN_FALSE;
@@ -2987,7 +2943,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -3015,7 +2971,6 @@ namespace triton {
         {"convertExpressionToSymbolicVariable", (PyCFunction)triton_convertExpressionToSymbolicVariable,    METH_VARARGS,       ""},
         {"convertMemoryToSymbolicVariable",     (PyCFunction)triton_convertMemoryToSymbolicVariable,        METH_VARARGS,       ""},
         {"convertRegisterToSymbolicVariable",   (PyCFunction)triton_convertRegisterToSymbolicVariable,      METH_VARARGS,       ""},
-        {"cpuInvalidRegister",                  (PyCFunction)triton_cpuInvalidRegister,                     METH_NOARGS,        ""},
         {"cpuRegisterBitSize",                  (PyCFunction)triton_cpuRegisterBitSize,                     METH_NOARGS,        ""},
         {"cpuRegisterSize",                     (PyCFunction)triton_cpuRegisterSize,                        METH_NOARGS,        ""},
         {"createSymbolicFlagExpression",        (PyCFunction)triton_createSymbolicFlagExpression,           METH_VARARGS,       ""},
@@ -3025,7 +2980,6 @@ namespace triton {
         {"disassembly",                         (PyCFunction)triton_disassembly,                            METH_O,             ""},
         {"enableSymbolicEngine",                (PyCFunction)triton_enableSymbolicEngine,                   METH_O,             ""},
         {"enableSymbolicOptimization",          (PyCFunction)triton_enableSymbolicOptimization,             METH_VARARGS,       ""},
-        {"enableSymbolicZ3Simplification",      (PyCFunction)triton_enableSymbolicZ3Simplification,         METH_O,             ""},
         {"enableTaintEngine",                   (PyCFunction)triton_enableTaintEngine,                      METH_O,             ""},
         {"evaluateAstViaZ3",                    (PyCFunction)triton_evaluateAstViaZ3,                       METH_O,             ""},
         {"getAllRegisters",                     (PyCFunction)triton_getAllRegisters,                        METH_NOARGS,        ""},
@@ -3066,7 +3020,6 @@ namespace triton {
         {"isSymbolicEngineEnabled",             (PyCFunction)triton_isSymbolicEngineEnabled,                METH_NOARGS,        ""},
         {"isSymbolicExpressionIdExists",        (PyCFunction)triton_isSymbolicExpressionIdExists,           METH_O,             ""},
         {"isSymbolicOptimizationEnabled",       (PyCFunction)triton_isSymbolicOptimizationEnabled,          METH_O,             ""},
-        {"isSymbolicZ3SimplificationEnabled",   (PyCFunction)triton_isSymbolicZ3SimplificationEnabled,      METH_NOARGS,        ""},
         {"isTaintEngineEnabled",                (PyCFunction)triton_isTaintEngineEnabled,                   METH_NOARGS,        ""},
         {"newSymbolicExpression",               (PyCFunction)triton_newSymbolicExpression,                  METH_VARARGS,       ""},
         {"newSymbolicVariable",                 (PyCFunction)triton_newSymbolicVariable,                    METH_VARARGS,       ""},

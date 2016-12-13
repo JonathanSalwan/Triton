@@ -299,6 +299,18 @@ namespace triton {
     };
 
 
+    /*! \class IrBuilder
+     *  \brief The exception class used by the IR builder. */
+    class IrBuilder : public triton::exceptions::Architecture {
+      public:
+        //! Constructor.
+        IrBuilder(const char* message) : triton::exceptions::Architecture(message) {};
+
+        //! Constructor.
+        IrBuilder(const std::string& message) : triton::exceptions::Architecture(message) {};
+    };
+
+
     /*! \class Disassembly
      *  \brief The exception class used by the disassembler. */
     class Disassembly : public triton::exceptions::Cpu {
@@ -356,6 +368,18 @@ namespace triton {
 
         //! Constructor.
         AstTranslations(const std::string& message) : triton::exceptions::Ast(message) {};
+    };
+
+
+    /*! \class AstGarbageCollector
+     *  \brief The exception class used by all AST garbage collector. */
+    class AstGarbageCollector : public triton::exceptions::Ast {
+      public:
+        //! Constructor.
+        AstGarbageCollector(const char* message) : triton::exceptions::Ast(message) {};
+
+        //! Constructor.
+        AstGarbageCollector(const std::string& message) : triton::exceptions::Ast(message) {};
     };
 
 

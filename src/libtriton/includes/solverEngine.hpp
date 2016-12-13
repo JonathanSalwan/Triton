@@ -17,6 +17,7 @@
 
 #include "ast.hpp"
 #include "solverModel.hpp"
+#include "symbolicEngine.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -44,9 +45,18 @@ namespace triton {
 
       //! \class SolverEngine
       /*! \brief The solver engine class. */
-      class SolverEngine
-      {
+      class SolverEngine {
+        private:
+          //! Symbolic Engine API
+          triton::engines::symbolic::SymbolicEngine* symbolicEngine;
+
         public:
+          //! Constructor.
+          SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
+
+          //! Destructor.
+          virtual ~SolverEngine();
+
           //! Computes and returns a model from a symbolic constraint.
           /*! \brief map of symbolic variable id -> model
            *
@@ -54,7 +64,7 @@ namespace triton {
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          std::map<triton::uint32, SolverModel> getModel(triton::ast::AbstractNode *node) const;
+          std::map<triton::uint32, SolverModel> getModel(triton::ast::AbstractNode* node) const;
 
           //! Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
           /*! \brief list of map of symbolic variable id -> model
@@ -63,16 +73,7 @@ namespace triton {
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          std::list<std::map<triton::uint32, SolverModel>> getModels(triton::ast::AbstractNode *node, triton::uint32 limit) const;
-
-          //! Evaluates an AST via Z3 and returns the symbolic value.
-          triton::uint512 evaluateAstViaZ3(triton::ast::AbstractNode *node) const;
-
-          //! Constructor.
-          SolverEngine();
-
-          //! Destructor.
-          ~SolverEngine();
+          std::list<std::map<triton::uint32, SolverModel>> getModels(triton::ast::AbstractNode* node, triton::uint32 limit) const;
       };
 
     /*! @} End of solver namespace */

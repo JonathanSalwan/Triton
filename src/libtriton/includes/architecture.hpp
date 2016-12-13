@@ -11,10 +11,12 @@
 #include <set>
 #include <vector>
 
+#include "callbacks.hpp"
 #include "cpuInterface.hpp"
 #include "instruction.hpp"
 #include "memoryAccess.hpp"
 #include "register.hpp"
+#include "registerSpecification.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -45,6 +47,9 @@ namespace triton {
     /*! \class Architecture
      *  \brief The abstract architecture class. */
     class Architecture {
+      private:
+        //! Callbacks API
+        triton::callbacks::Callbacks* callbacks;
 
       protected:
         //! The kind of architecture.
@@ -54,23 +59,19 @@ namespace triton {
         triton::arch::CpuInterface* cpu;
 
       public:
+        //! Constructor.
+        Architecture(triton::callbacks::Callbacks* callbacks=nullptr);
 
-        //! Returns true if the regId is a flag.
-        /*!
-          \param regId the register id.
-        */
+        //! Destructor.
+        virtual ~Architecture();
+
+        //! Returns true if the register ID is a flag.
         bool isFlag(triton::uint32 regId) const;
 
-        //! Returns true if the regId is a register.
-        /*!
-          \param regId the register id.
-        */
+        //! Returns true if the register ID is a register.
         bool isRegister(triton::uint32 regId) const;
 
-        //! Returns true if the regId is a register or a flag.
-        /*!
-          \param regId the register id.
-        */
+        //! Returns true if the register ID is a register or a flag.
         bool isRegisterValid(triton::uint32 regId) const;
 
         //! Returns true if the architecture is valid.
@@ -82,9 +83,6 @@ namespace triton {
         //! Returns the CPU
         triton::arch::CpuInterface* getCpu(void);
 
-        //! Returns the invalid CPU register id.
-        triton::uint32 invalidRegister(void) const;
-
         //! Returns the number of registers according to the CPU architecture.
         triton::uint32 numberOfRegisters(void) const;
 
@@ -95,20 +93,13 @@ namespace triton {
         triton::uint32 registerSize(void) const;
 
         //! Setup an architecture.
-        /*!
-          \param arch the architecture.
-        */
         void setArchitecture(triton::uint32 arch);
 
         //! Clears the architecture states (registers and memory).
         void clearArchitecture(void);
 
         //! Returns all information about the register.
-        /*!
-          \param reg the register id.
-          \return std::tuple<name, b-high, b-low, parentId>
-        */
-        std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg) const;
+        triton::arch::RegisterSpecification getRegisterSpecification(triton::uint32 regId) const;
 
         //! Returns all registers.
         std::set<triton::arch::Register*> getAllRegisters(void) const;
@@ -120,7 +111,7 @@ namespace triton {
         void disassembly(triton::arch::Instruction& inst) const;
 
         //! Builds the instruction semantics according to the architecture. Returns true if the instruction is supported.
-        bool buildSemantics(triton::arch::Instruction& inst) const;
+        bool buildSemantics(triton::arch::Instruction& inst);
 
         //! Returns the concrete value of a memory cell.
         triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const;
@@ -179,12 +170,6 @@ namespace triton {
 
         //! Removes the range `[baseAddr:size]` from the internal memory representation. \sa isMemoryMapped().
         void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
-
-        //! Constructor.
-        Architecture();
-
-        //! Destructor.
-        ~Architecture();
     };
 
   /*! @} End of arch namespace */

@@ -5,7 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
+#include <new>
+
 #include <astRepresentation.hpp>
 #include <exceptions.hpp>
 
@@ -15,13 +16,17 @@ namespace triton {
   namespace ast {
     namespace representations {
 
+      /* External access to the AST representation API */
+      AstRepresentation astRepresentation = AstRepresentation();
+
+
       AstRepresentation::AstRepresentation() {
         /* Set the default representation */
         this->mode = triton::ast::representations::SMT_REPRESENTATION;
 
         /* Init representations interface */
-        this->representations[triton::ast::representations::SMT_REPRESENTATION] = new triton::ast::representations::AstSmtRepresentation();
-        this->representations[triton::ast::representations::PYTHON_REPRESENTATION] = new triton::ast::representations::AstPythonRepresentation();
+        this->representations[triton::ast::representations::SMT_REPRESENTATION] = new(std::nothrow) triton::ast::representations::AstSmtRepresentation();
+        this->representations[triton::ast::representations::PYTHON_REPRESENTATION] = new(std::nothrow) triton::ast::representations::AstPythonRepresentation();
 
         if (this->representations[triton::ast::representations::SMT_REPRESENTATION] == nullptr)
           throw triton::exceptions::AstRepresentation("AstRepresentation::AstRepresentation(): Cannot allocate a new representation instance.");

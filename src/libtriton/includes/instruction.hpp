@@ -122,7 +122,7 @@ namespace triton {
         Instruction(const Instruction& other);
 
         //! Destructor.
-        ~Instruction();
+        virtual ~Instruction();
 
         //! Copies an Instruction.
         void operator=(const Instruction& other);
@@ -217,9 +217,6 @@ namespace triton {
         //! Adds a symbolic expression
         void addSymbolicExpression(triton::engines::symbolic::SymbolicExpression* expr);
 
-        //! Removes all symbolic expressions.
-        void removeSymbolicExpressions(void);
-
         //! Returns true if this instruction is a branch
         bool isBranch(void) const;
 
@@ -252,12 +249,6 @@ namespace triton {
 
         //! Sets flag to define if the condition is taken or not.
         void setConditionTaken(bool flag);
-
-        //! Everything which must be done before the IR processing.
-        void preIRInit(void);
-
-        //! Everything which must be done after the IR processing.
-        void postIRInit(void);
 
         //! Resets all instruction information.
         void reset(void);

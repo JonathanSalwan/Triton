@@ -51,10 +51,10 @@ namespace tracer {
 
         /* 6 - Save the Triton CPU state */
         #if defined(__x86_64__) || defined(_M_X64)
-        this->cpu = new triton::arch::x86::x8664Cpu(*reinterpret_cast<triton::arch::x86::x8664Cpu*>(triton::api.getCpu()));
+        this->cpu = new triton::arch::x86::x8664Cpu(*dynamic_cast<triton::arch::x86::x8664Cpu*>(triton::api.getCpu()));
         #endif
         #if defined(__i386) || defined(_M_IX86)
-        this->cpu = new triton::arch::x86::x86Cpu(*reinterpret_cast<triton::arch::x86::x86Cpu*>(triton::api.getCpu()));
+        this->cpu = new triton::arch::x86::x86Cpu(*dynamic_cast<triton::arch::x86::x86Cpu*>(triton::api.getCpu()));
         #endif
 
         /* 7 - Save Pin registers context */
@@ -88,10 +88,10 @@ namespace tracer {
 
         /* 6 - Restore the Triton CPU state */
         #if defined(__x86_64__) || defined(_M_X64)
-        *reinterpret_cast<triton::arch::x86::x8664Cpu*>(triton::api.getCpu()) = *this->cpu;
+        *dynamic_cast<triton::arch::x86::x8664Cpu*>(triton::api.getCpu()) = *this->cpu;
         #endif
         #if defined(__i386) || defined(_M_IX86)
-        *reinterpret_cast<triton::arch::x86::x86Cpu*>(triton::api.getCpu()) = *this->cpu;
+        *dynamic_cast<triton::arch::x86::x86Cpu*>(triton::api.getCpu()) = *this->cpu;
         #endif
 
         /* 7 - Restore Pin registers context */

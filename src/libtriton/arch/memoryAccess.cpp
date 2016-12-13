@@ -32,7 +32,13 @@ namespace triton {
       if (size == 0)
         throw triton::exceptions::MemoryAccess("MemoryAccess::MemoryAccess(): size cannot be zero.");
 
-      if (size != BYTE_SIZE && size != WORD_SIZE && size != DWORD_SIZE && size != QWORD_SIZE && size != DQWORD_SIZE && size != QQWORD_SIZE && size != DQQWORD_SIZE)
+      if (size != BYTE_SIZE     &&
+          size != WORD_SIZE     &&
+          size != DWORD_SIZE    &&
+          size != QWORD_SIZE    &&
+          size != DQWORD_SIZE   &&
+          size != QQWORD_SIZE   &&
+          size != DQQWORD_SIZE)
         throw triton::exceptions::MemoryAccess("MemoryAccess::MemoryAccess(): size must be aligned.");
 
       this->setPair(std::make_pair(((size * BYTE_SIZE_BIT) - 1), 0));
@@ -307,7 +313,15 @@ namespace triton {
 
 
     std::ostream& operator<<(std::ostream& stream, const MemoryAccess& mem) {
-      stream << "[@0x" << std::hex << mem.getAddress() << "]:" << std::dec << mem.getBitSize() << " bv[" << mem.getHigh() << ".." << mem.getLow() << "]";
+      stream << "[@0x"
+             << std::hex << mem.getAddress()
+             << "]:"
+             << std::dec << mem.getBitSize()
+             << " bv["
+             << mem.getHigh()
+             << ".."
+             << mem.getLow()
+             << "]";
       return stream;
     }
 

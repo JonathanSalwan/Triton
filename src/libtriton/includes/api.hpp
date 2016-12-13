@@ -15,13 +15,16 @@
 #include "callbacks.hpp"
 #include "immediate.hpp"
 #include "instruction.hpp"
+#include "irBuilder.hpp"
 #include "memoryAccess.hpp"
 #include "operandWrapper.hpp"
 #include "register.hpp"
+#include "registerSpecification.hpp"
 #include "solverEngine.hpp"
 #include "symbolicEngine.hpp"
 #include "taintEngine.hpp"
 #include "tritonTypes.hpp"
+#include "z3Interface.hpp"
 
 #ifdef TRITON_PYTHON_BINDINGS
   #include "pythonBindings.hpp"
@@ -41,6 +44,9 @@ namespace triton {
     class API {
 
       protected:
+        //! The Callbacks interface.
+        triton::callbacks::Callbacks callbacks;
+
         //! The architecture entry.
         triton::arch::Architecture arch;
 
@@ -50,27 +56,25 @@ namespace triton {
         //! The symbolic engine.
         triton::engines::symbolic::SymbolicEngine* symbolic;
 
-        //! The backuped symbolic engine. Some optimizations need to perform an undo. This instance is used for that.
-        triton::engines::symbolic::SymbolicEngine* symbolicBackup;
-
         //! The solver engine.
         triton::engines::solver::SolverEngine* solver;
 
         //! The AST garbage collector interface.
         triton::ast::AstGarbageCollector* astGarbageCollector;
 
-        //! The AST representation interface.
-        triton::ast::representations::AstRepresentation* astRepresentation;
+        //! The IR builder.
+        triton::arch::IrBuilder* irBuilder;
 
-        //! The Callbacks interface.
-        triton::callbacks::Callbacks callbacks;
+        //! The Z3 interface between Triton and Z3
+        triton::ast::Z3Interface* z3Interface;
+
 
       public:
         //! Constructor of the API.
         API();
 
         //! Destructor of the API.
-        ~API();
+        virtual ~API();
 
 
 
@@ -109,18 +113,11 @@ namespace triton {
         //! [**architecture api**] - Returns the max size (in bit) of the CPU register (GPR).
         triton::uint32 cpuRegisterBitSize(void) const;
 
-        //! [**architecture api**] - Returns the invalid CPU register id. \sa triton::arch::x86::registers_e::ID_REG_INVALID.
-        triton::uint32 cpuInvalidRegister(void) const;
-
         //! [**architecture api**] - Returns the number of registers according to the CPU architecture.
         triton::uint32 cpuNumberOfRegisters(void) const;
 
-        /*!
-         * \brief [**architecture api**] - Returns all information about the register.
-         * \param reg the register id.
-         * \return std::tuple<name, b-high, b-low, parentId>
-         */
-        std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getCpuRegInformation(triton::uint32 reg) const;
+        //! [**architecture api**] - Returns all information about the register.
+        triton::arch::RegisterSpecification getRegisterSpecification(triton::uint32 regId) const;
 
         //! [**architecture api**] - Returns all registers. \sa triton::arch::x86::registers_e.
         std::set<triton::arch::Register*> getAllRegisters(void) const;
@@ -189,9 +186,6 @@ namespace triton {
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa processing().
         void disassembly(triton::arch::Instruction& inst) const;
 
-        //! [**architecture api**] - Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before. \sa processing().
-        bool buildSemantics(triton::arch::Instruction& inst);
-
 
 
         /* Processing API ================================================================================ */
@@ -207,6 +201,16 @@ namespace triton {
 
         //! [**proccesing api**] - Reset everything.
         void resetEngines(void);
+
+
+
+        /* IR API ======================================================================================== */
+
+        //! [**IR builder api**] - Raises an exception if the IR builder is not initialized.
+        void checkIrBuilder(void) const;
+
+        //! [**IR builder api**] - Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before. \sa processing().
+        bool buildSemantics(triton::arch::Instruction& inst);
 
 
 
@@ -248,12 +252,6 @@ namespace triton {
 
 
         /* AST Representation API ======================================================================== */
-
-        //! [**AST representation api**] - Raises an exception if the AST representation interface is not initialized.
-        void checkAstRepresentation(void) const;
-
-        //! [**AST representation api**] - Display a node according to the AST representation mode.
-        std::ostream& printAstRepresentation(std::ostream& stream, triton::ast::AbstractNode* node);
 
         //! [**AST representation api**] - Returns the AST representation mode as triton::ast::representations::mode_e.
         triton::uint32 getAstRepresentationMode(void) const;
@@ -314,12 +312,6 @@ namespace triton {
 
         //! [**symbolic api**] - Returns the instance of the symbolic engine.
         triton::engines::symbolic::SymbolicEngine* getSymbolicEngine(void);
-
-        //! [**symbolic api**] - Applies a backup of the symbolic engine.
-        void backupSymbolicEngine(void);
-
-        //! [**symbolic api**] - Restores the last taken backup of the symbolic engine.
-        void restoreSymbolicEngine(void);
 
         //! [**symbolic api**] - Returns the map of symbolic registers defined.
         std::map<triton::arch::Register, triton::engines::symbolic::SymbolicExpression*> getSymbolicRegisters(void) const;
@@ -408,16 +400,13 @@ namespace triton {
         //! [**symbolic api**] - Assigns a symbolic expression to a register.
         void assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, const triton::arch::Register& reg);
 
-        //! [**symbolic api**] - Browses AST Dictionaries if the optimization `AST_DICTIONARIES` is enabled.
-        triton::ast::AbstractNode* browseAstDictionaries(triton::ast::AbstractNode* node);
-
         //! [**symbolic api**] - Returns all stats about AST Dictionaries.
         std::map<std::string, triton::usize> getAstDictionariesStats(void);
 
         //! [**symbolic api**] - Processes all recorded simplifications. Returns the simplified node.
         triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node, bool z3=false) const;
 
-        //! [**symbolic api**] - Returns the symbolic expression corresponding to the id.
+        //! [**symbolic api**] - Returns the symbolic expression corresponding to an id.
         triton::engines::symbolic::SymbolicExpression* getSymbolicExpressionFromId(triton::usize symExprId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable id.
@@ -441,17 +430,11 @@ namespace triton {
         //! [**symbolic api**] - Enables or disables the symbolic execution engine.
         void enableSymbolicEngine(bool flag);
 
-        //! [**symbolic api**] - Enabled, Triton will use the simplification passes of z3 before to call its recorded simplification passes.
-        void enableSymbolicZ3Simplification(bool flag);
-
         //! [**symbolic api**] - Enables or disables a symbolic optimization.
         void enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti, bool flag);
 
         //! [**symbolic api**] - Returns true if the symbolic execution engine is enabled.
         bool isSymbolicEngineEnabled(void) const;
-
-        //! [**symbolic api**] - Returns true if Triton can use the simplification passes of z3.
-        bool isSymbolicZ3SimplificationEnabled(void) const;
 
         //! [**symbolic api**] - Returns true if the symbolic expression ID exists.
         bool isSymbolicExpressionIdExists(triton::usize symExprId) const;
@@ -504,9 +487,6 @@ namespace triton {
         //! [**symbolic api**] - Returns all symbolic variables as a map of <SymVarId : SymVar>
         const std::map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& getSymbolicVariables(void) const;
 
-        //! [**symbolic api**] - Returns all variable declarations representation.
-        std::string getVariablesDeclaration(void) const;
-
 
 
         /* Solver engine API ============================================================================= */
@@ -521,7 +501,7 @@ namespace triton {
          * **item1**: symbolic variable id<br>
          * **item2**: model
          */
-        std::map<triton::uint32, triton::engines::solver::SolverModel> getModel(triton::ast::AbstractNode *node) const;
+        std::map<triton::uint32, triton::engines::solver::SolverModel> getModel(triton::ast::AbstractNode* node) const;
 
         /*!
          * \brief [**solver api**] - Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
@@ -530,10 +510,20 @@ namespace triton {
          * **item1**: symbolic variable id<br>
          * **item2**: model
          */
-        std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(triton::ast::AbstractNode *node, triton::uint32 limit) const;
+        std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(triton::ast::AbstractNode* node, triton::uint32 limit) const;
 
-        //! [**solver api**] - Evaluates an AST via Z3 and returns the symbolic value.
-        triton::uint512 evaluateAstViaZ3(triton::ast::AbstractNode *node) const;
+
+
+        /* Z3 interface API ============================================================================== */
+
+        //! [**z3 api**] - Raises an exception if the z3 interface is not initialized.
+        void checkZ3Interface(void) const;
+
+        //! [**z3 api**] - Evaluates a Triton's AST via Z3 and returns a concrete value.
+        triton::uint512 evaluateAstViaZ3(triton::ast::AbstractNode* node) const;
+
+        //! [**z3 api**] - Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
+        triton::ast::AbstractNode* processZ3Simplification(triton::ast::AbstractNode* node) const;
 
 
 
@@ -557,7 +547,7 @@ namespace triton {
         //! [**taint api**] - Returns true if the taint engine is enabled.
         bool isTaintEngineEnabled(void) const;
 
-        //! [**taint api**] - Abstract taint verification.
+        //! [**taint api**] - Abstract taint verification. Returns true if the operand is tainted.
         bool isTainted(const triton::arch::OperandWrapper& op) const;
 
         //! [**taint api**] - Returns true if the address:size is tainted.
@@ -569,55 +559,31 @@ namespace triton {
         //! [**taint api**] - Returns true if the register is tainted.
         bool isRegisterTainted(const triton::arch::Register& reg) const;
 
-        //! [**taint api**] - Sets the flag (taint) to an abstract operand (Register or Memory).
+        //! [**taint api**] - Sets the flag (taint or untaint) to an abstract operand (Register or Memory).
         bool setTaint(const triton::arch::OperandWrapper& op, bool flag);
 
-        //! [**taint api**] - Sets the flag (taint) to a memory.
+        //! [**taint api**] - Sets the flag (taint or untaint) to a memory.
         bool setTaintMemory(const triton::arch::MemoryAccess& mem, bool flag);
 
-        //! [**taint api**] - Sets the flag (taint) to a register.
+        //! [**taint api**] - Sets the flag (taint or untaint) to a register.
         bool setTaintRegister(const triton::arch::Register& reg, bool flag);
 
-        //! [**taint api**] - Taints an address.
-        /*!
-          \param addr the targeted address.
-          \return TAINTED if the address has been tainted correctly. Otherwise it returns the last defined state.
-        */
+        //! [**taint api**] - Taints an address. Returns TAINTED if the address has been tainted correctly. Otherwise it returns the last defined state.
         bool taintMemory(triton::uint64 addr);
 
-        //! [**taint api**] - Taints a memory.
-        /*!
-          \param mem the memory access.
-          \return TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
-        */
+        //! [**taint api**] - Taints a memory. Returns TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
         bool taintMemory(const triton::arch::MemoryAccess& mem);
 
-        //! [**taint api**] - Taints a register.
-        /*!
-          \param reg the register operand.
-          \return TAINTED if the register has been tainted correctly. Otherwise it returns the last defined state.
-        */
+        //! [**taint api**] - Taints a register. Returns TAINTED if the register has been tainted correctly. Otherwise it returns the last defined state.
         bool taintRegister(const triton::arch::Register& reg);
 
-        //! [**taint api**] - Untaints an address.
-        /*!
-          \param addr the targeted address.
-          \return !TAINTED if the address has been untainted correctly. Otherwise it returns the last defined state.
-        */
+        //! [**taint api**] - Untaints an address. Returns !TAINTED if the address has been untainted correctly. Otherwise it returns the last defined state.
         bool untaintMemory(triton::uint64 addr);
 
-        //! [**taint api**] - Untaints a memory.
-        /*!
-          \param mem the memory access.
-          \return !TAINTED if the memory has been untainted correctly. Otherwise it returns the last defined state.
-        */
+        //! [**taint api**] - Untaints a memory. Returns !TAINTED if the memory has been untainted correctly. Otherwise it returns the last defined state.
         bool untaintMemory(const triton::arch::MemoryAccess& mem);
 
-        //! [**taint api**] - Untaints a register.
-        /*!
-          \param reg the register operand.
-          \return !TAINTED if the register has been untainted correctly. Otherwise it returns the last defined state.
-        */
+        //! [**taint api**] - Untaints a register. Returns !TAINTED if the register has been untainted correctly. Otherwise it returns the last defined state.
         bool untaintRegister(const triton::arch::Register& reg);
 
         //! [**taint api**] - Abstract union tainting.
@@ -626,101 +592,45 @@ namespace triton {
         //! [**taint api**] - Abstract assignment tainting.
         bool taintAssignment(const triton::arch::OperandWrapper& op1, const triton::arch::OperandWrapper& op2);
 
-        //! [**taint api**] - Taints MemoryImmediate with union.
-        /*!
-          \param memDst the memory destination.
-          \return true if the memDst is TAINTED.
-        */
+        //! [**taint api**] - Taints MemoryImmediate with union. Returns true if the memDst is TAINTED.
         bool taintUnionMemoryImmediate(const triton::arch::MemoryAccess& memDst);
 
-        //! [**taint api**] - Taints MemoryMemory with union.
-        /*!
-          \param memDst the memory destination.
-          \param memSrc the memory source.
-          \return true if the memDst or memSrc are TAINTED.
-        */
+        //! [**taint api**] - Taints MemoryMemory with union. Returns true if the memDst or memSrc are TAINTED.
         bool taintUnionMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
 
-        //! [**taint api**] - Taints MemoryRegister with union.
-        /*!
-          \param memDst the memory destination.
-          \param regSrc the register source.
-          \return true if the memDst or regSrc are TAINTED.
-        */
+        //! [**taint api**] - Taints MemoryRegister with union. Returns true if the memDst or regSrc are TAINTED.
         bool taintUnionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
 
-        //! [**taint api**] - Taints RegisterImmediate with union.
-        /*!
-          \param regDst the register source.
-          \return true if the regDst is TAINTED.
-        */
+        //! [**taint api**] - Taints RegisterImmediate with union. Returns true if the regDst is TAINTED.
         bool taintUnionRegisterImmediate(const triton::arch::Register& regDst);
 
-        //! [**taint api**] - Taints RegisterMemory with union.
-        /*!
-          \param regDst the register destination.
-          \param memSrc the memory source.
-          \return true if the regDst or memSrc are TAINTED.
-        */
+        //! [**taint api**] - Taints RegisterMemory with union. Returns true if the regDst or memSrc are TAINTED.
         bool taintUnionRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
 
-        //! [**taint api**] - Taints RegisterRegister with union.
-        /*!
-          \param regDst the register destination.
-          \param regSrc the register source.
-          \return true if the regDst or regSrc are TAINTED.
-        */
+        //! [**taint api**] - Taints RegisterRegister with union. Returns true if the regDst or regSrc are TAINTED.
         bool taintUnionRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
 
-        //! [**taint api**] - Taints MemoryImmediate with assignment.
-        /*!
-          \param memDst the memory destination.
-          \return always false.
-        */
+        //! [**taint api**] - Taints MemoryImmediate with assignment. Returns always false.
         bool taintAssignmentMemoryImmediate(const triton::arch::MemoryAccess& memDst);
 
-        //! [**taint api**] - Taints MemoryMemory with assignment.
-        /*!
-          \param memDst the memory destination.
-          \param memSrc the memory source.
-          \return true if the memDst is tainted.
-        */
+        //! [**taint api**] - Taints MemoryMemory with assignment. Returns true if the memDst is tainted.
         bool taintAssignmentMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
 
-        //! [**taint api**] - Taints MemoryRegister with assignment.
-        /*!
-          \param memDst the memory destination.
-          \param regSrc the register source.
-          \return true if the memDst is tainted.
-        */
+        //! [**taint api**] - Taints MemoryRegister with assignment. Returns true if the memDst is tainted.
         bool taintAssignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
 
-        //! [**taint api**] - Taints RegisterImmediate with assignment.
-        /*!
-          \param regDst the register destination.
-          \return always false.
-        */
+        //! [**taint api**] - Taints RegisterImmediate with assignment. Returns always false.
         bool taintAssignmentRegisterImmediate(const triton::arch::Register& regDst);
 
-        //! [**taint api**] - Taints RegisterMemory with assignment.
-        /*!
-          \param regDst the register destination.
-          \param memSrc the memory source.
-          \return true if the regDst is tainted.
-        */
+        //! [**taint api**] - Taints RegisterMemory with assignment. Returns true if the regDst is tainted.
         bool taintAssignmentRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
 
-        //! [**taint api**] - Taints RegisterRegister with assignment.
-        /*!
-          \param regDst the register destination.
-          \param regSrc the register source.
-          \return true if the regDst is tainted.
-        */
+        //! [**taint api**] - Taints RegisterRegister with assignment. Returns true if the regDst is tainted.
         bool taintAssignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
     };
 
-    //! The API can be accessed as everywhere.
-    extern API api;
+    //! The API can be accessed everywhere (WIP: will be removed).
+    extern triton::API api;
 
 /*! @} End of triton namespace */
 };

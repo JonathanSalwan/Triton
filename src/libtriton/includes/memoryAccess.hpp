@@ -101,7 +101,7 @@ namespace triton {
         MemoryAccess(const MemoryAccess& other);
 
         //! Destructor.
-        ~MemoryAccess();
+        virtual ~MemoryAccess();
 
         //! Initialize the address of the memory.
         void initAddress(void);

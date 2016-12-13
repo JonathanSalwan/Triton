@@ -7,6 +7,7 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
+#include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -62,14 +63,14 @@ SymVar_0 = 287454020
 \section SolverModel_py_api Python API - Methods of the SolverModel class
 <hr>
 
-- **getId(void)**<br>
-Returns the id of the model as integer. This id is the same that the variable id.
+- <b>integer getId(void)</b><br>
+Returns the id of the model. This id is the same that the variable id.
 
-- **getName(void)**<br>
-Returns the name of the model as string. This name is the same that the variable name.
+- <b>string getName(void)</b><br>
+Returns the name of the model. This name is the same that the variable name. Names are always something like this: SymVar_X.
 
-- **getValue(void)**<br>
-Returns the value of the model as integer.
+- <b>integer getValue(void)</b><br>
+Returns the value of the model.
 
 */
 
@@ -91,7 +92,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PySolverModel_AsSolverModel(self)->getId());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -101,7 +102,7 @@ namespace triton {
         try {
           return Py_BuildValue("s", PySolverModel_AsSolverModel(self)->getName().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -111,7 +112,7 @@ namespace triton {
         try {
           return PyLong_FromUint512(PySolverModel_AsSolverModel(self)->getValue());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -129,7 +130,7 @@ namespace triton {
           str << PySolverModel_AsSolverModel(self);
           return PyString_FromFormat("%s", str.str().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

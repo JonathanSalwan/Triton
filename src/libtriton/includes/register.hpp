@@ -55,7 +55,7 @@ namespace triton {
         void copy(const Register& other);
 
         //! Setup everything.
-        void setup(triton::uint32 reg, triton::uint512 concreteValue);
+        void setup(triton::uint32 regId, triton::uint512 concreteValue);
 
         //! Resets information.
         void clear(void);
@@ -65,13 +65,13 @@ namespace triton {
         Register();
 
         //! Constructor.
-        Register(triton::uint32 reg, triton::uint512 concreteValue=0);
+        Register(triton::uint32 regId, triton::uint512 concreteValue=0);
 
         //! Constructor by copy.
         Register(const Register& other);
 
         //! Destructor.
-        ~Register();
+        virtual ~Register();
 
         //! Returns the parent id of the register.
         Register getParent(void) const;
@@ -113,10 +113,10 @@ namespace triton {
         void operator=(const Register& other);
 
         //! Sets the id of the register.
-        void setId(triton::uint32 reg);
+        void setId(triton::uint32 regId);
 
         //! Sets the parent id of the register.
-        void setParent(triton::uint32 reg);
+        void setParent(triton::uint32 regId);
 
         //! Sets the concrete value of the register.
         void setConcreteValue(triton::uint512 concreteValue);
@@ -136,6 +136,9 @@ namespace triton {
 
     //! Compares two Register (needed for std::map)
     bool operator<(const Register& reg1, const Register& reg2);
+
+    //! Defines the invalid register constant.
+    const triton::uint32 INVALID_REGISTER_ID = 0;
 
   /*! @} End of arch namespace */
   };

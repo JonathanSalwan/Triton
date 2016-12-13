@@ -7,6 +7,7 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
+#include <exceptions.hpp>
 #include <instruction.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
@@ -95,98 +96,98 @@ True
 \section Instruction_py_api Python API - Methods of the Instruction class
 <hr>
 
-- **getAddress(void)**<br>
-Returns the address of the instruction as integer.
+- <b>integer getAddress(void)</b><br>
+Returns the address of the instruction.
 
-- **getDisassembly(void)**<br>
-Returns the disassembly of the instruction as string.
+- <b>string getDisassembly(void)</b><br>
+Returns the disassembly of the instruction.
 
-- **getFirstOperand(void)**<br>
-Returns the first operand of the instruction.
+- <b>\ref py_Immediate_page / \ref py_MemoryAccess_page / \ref py_Register_page getFirstOperand(void)</b><br>
+Returns the first operand of the instruction. The return may be an immediate, a memory or a register.
 
-- **getLoadAccess(void)**<br>
+- <b>[tuple, ...] getLoadAccess(void)</b><br>
 Returns the list of all implicit and explicit LOAD access as list of tuple <\ref py_MemoryAccess_page, \ref py_AstNode_page>.
 
-- **getNextAddress(void)**<br>
-Returns the next address of the instruction as integer.
+- <b>integer getNextAddress(void)</b><br>
+Returns the next address of the instruction.
 
-- **getOpcodes(void)**<br>
-Returns the opcodes of the instruction as bytes.
+- <b>bytes getOpcodes(void)</b><br>
+Returns the opcodes of the instruction.
 
-- **getOperands(void)**<br>
+- <b>[\ref py_Immediate_page, \ref py_MemoryAccess_page, \ref py_Register_page, ...] getOperands(void)</b><br>
 Returns the operands of the instruction as list of \ref py_Immediate_page, \ref py_MemoryAccess_page or \ref py_Register_page.
 
-- **getPrefix(void)**<br>
-Returns the instruction prefix as \ref py_PREFIX_page.
+- <b>\ref py_PREFIX_page getPrefix(void)</b><br>
+Returns the instruction prefix.
 
-- **getReadImmediates(void)**<br>
+- <b>[tuple, ...] getReadImmediates(void)</b><br>
 Returns a list of tuple <\ref py_Immediate_page, \ref py_AstNode_page> which represents all implicit and explicit immediate inputs.
 
-- **getReadRegisters(void)**<br>
+- <b>[tuple, ...] getReadRegisters(void)</b><br>
 Returns a list of tuple <\ref py_Register_page, \ref py_AstNode_page> which represents all implicit and explicit register (flags includes) inputs.
 
-- **getSecondOperand(void)**<br>
-Returns the second operand of the instruction.
+- <b>\ref py_Immediate_page / \ref py_MemoryAccess_page / \ref py_Register_page getSecondOperand(void)</b><br>
+Returns the second operand of the instruction. The return may be an immediate, a memory or a register.
 
-- **getSize(void)**<br>
-Returns the size of the instruction as integer.
+- <b>integer getSize(void)</b><br>
+Returns the size of the instruction.
 
-- **getStoreAccess(void)**<br>
+- <b>[tuple, ...] getStoreAccess(void)</b><br>
 Returns the list of all implicit and explicit STORE access as list of tuple <\ref py_MemoryAccess_page, \ref py_AstNode_page>.
 
-- **getThirdOperand(void)**<br>
-Returns the third operand of the instruction.
+- <b>\ref py_Immediate_page / \ref py_MemoryAccess_page / \ref py_Register_page getThirdOperand(void)</b><br>
+Returns the third operand of the instruction. The return may be an immediate, a memory or a register.
 
-- **getSymbolicExpressions(void)**<br>
-Returns the symbolic expression of the instruction as list of \ref py_SymbolicExpression_page.
+- <b>[\ref py_SymbolicExpression_page, ...] getSymbolicExpressions(void)</b><br>
+Returns the list of symbolic expressions of the instruction.
 
-- **getThreadId(void)**<br>
-Returns the thread id of the instruction as integer.
+- <b>integer getThreadId(void)</b><br>
+Returns the thread id of the instruction.
 
-- **getType(void)**<br>
-Returns the type of the instruction as \ref py_OPCODE_page.
+- <b>\ref py_OPCODE_page getType(void)</b><br>
+Returns the type of the instruction.
 
-- **getWrittenRegisters(void)**<br>
+- <b>[tuple, ...] getWrittenRegisters(void)</b><br>
 Returns a list of tuple <\ref py_Register_page, \ref py_AstNode_page> which represents all implicit and explicit register (flags includes) outputs.
 
-- **isBranch(void)**<br>
+- <b>bool isBranch(void)</b><br>
 Returns true if the instruction is a branch (i.e x86: JUMP, JCC).
 
-- **isConditionTaken(void)**<br>
+- <b>bool isConditionTaken(void)</b><br>
 Returns true if the condition is taken (i.e x86: JCC, CMOVCC, SETCC, ...).
 
-- **isControlFlow(void)**<br>
+- <b>bool isControlFlow(void)</b><br>
 Returns true if the instruction modifies the control flow (i.e x86: JUMP, JCC, CALL, RET).
 
-- **isMemoryRead(void)**<br>
+- <b>bool isMemoryRead(void)</b><br>
 Returns true if the instruction contains an expression which reads the memory.
 
-- **isMemoryWrite(void)**<br>
+- <b>bool isMemoryWrite(void)</b><br>
 Returns true if the instruction contains an expression which writes into the memory.
 
-- **isPrefixed(void)**<br>
+- <b>bool isPrefixed(void)</b><br>
 Returns true if the instruction has a prefix.
 
-- **isSymbolized(void)**<br>
+- <b>bool isSymbolized(void)</b><br>
 Returns true if at least one of its \ref py_SymbolicExpression_page contains a symbolic variable.
 
-- **isTainted(void)**<br>
+- <b>bool isTainted(void)</b><br>
 Returns true if at least one of its \ref py_SymbolicExpression_page is tainted.
 
-- **setAddress(integer addr)**<br>
+- <b>void setAddress(integer addr)</b><br>
 Sets the address of the instruction.
 
-- **setOpcodes(bytes opcodes)**<br>
+- <b>void setOpcodes(bytes opcodes)</b><br>
 Sets the opcodes of the instruction.
 
-- **setThreadId(integer tid)**<br>
+- <b>void setThreadId(integer tid)</b><br>
 Sets the thread id of the instruction.
 
-- **updateContext(\ref py_MemoryAccess_page memCtx)**<br>
+- <b>void updateContext(\ref py_MemoryAccess_page memCtx)</b><br>
 Updates the context of the instruction by adding a concrete value for a **LOAD** memory access. Please note that you don't have to define a **STORE**
 concrete value, this value will be computed symbolically - **Only LOAD** accesses are necessary.
 
-- **updateContext(\ref py_Register_page regCtx)**<br>
+- <b>void updateContext(\ref py_Register_page regCtx)</b><br>
 Updates the context of the instruction by adding a concrete value for a specific register.
 
 */
@@ -209,7 +210,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyInstruction_AsInstruction(self)->getAddress());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -219,7 +220,7 @@ namespace triton {
         try {
           return PyString_FromFormat("%s", PyInstruction_AsInstruction(self)->getDisassembly().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -254,7 +255,7 @@ namespace triton {
 
           return obj;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -264,11 +265,10 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& loadAccess = PyInstruction_AsInstruction(self)->getLoadAccess();
+          const auto& loadAccess = PyInstruction_AsInstruction(self)->getLoadAccess();
 
           ret = xPyList_New(loadAccess.size());
-          for (it = loadAccess.begin(); it != loadAccess.end(); it++) {
+          for (auto it = loadAccess.begin(); it != loadAccess.end(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyMemoryAccess(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
@@ -277,7 +277,7 @@ namespace triton {
 
           return ret;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -287,7 +287,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyInstruction_AsInstruction(self)->getNextAddress());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -299,7 +299,7 @@ namespace triton {
           triton::uint32 size          = PyInstruction_AsInstruction(self)->getSize();
           return PyBytes_FromStringAndSize(reinterpret_cast<const char*>(opcodes), size);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -309,7 +309,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyInstruction_AsInstruction(self)->getSize());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -319,11 +319,10 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& storeAccess = PyInstruction_AsInstruction(self)->getStoreAccess();
+          const auto& storeAccess = PyInstruction_AsInstruction(self)->getStoreAccess();
 
           ret = xPyList_New(storeAccess.size());
-          for (it = storeAccess.begin(); it != storeAccess.end(); it++) {
+          for (auto it = storeAccess.begin(); it != storeAccess.end(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyMemoryAccess(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
@@ -332,7 +331,7 @@ namespace triton {
 
           return ret;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -374,7 +373,7 @@ namespace triton {
 
           return operands;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -384,7 +383,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyInstruction_AsInstruction(self)->getPrefix());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -394,11 +393,10 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& readImmediates = PyInstruction_AsInstruction(self)->getReadImmediates();
+          const auto& readImmediates = PyInstruction_AsInstruction(self)->getReadImmediates();
 
           ret = xPyList_New(readImmediates.size());
-          for (it = readImmediates.begin(); it != readImmediates.end(); it++) {
+          for (auto it = readImmediates.begin(); it != readImmediates.end(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyImmediate(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
@@ -407,7 +405,7 @@ namespace triton {
 
           return ret;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -417,11 +415,10 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& readRegisters = PyInstruction_AsInstruction(self)->getReadRegisters();
+          const auto& readRegisters = PyInstruction_AsInstruction(self)->getReadRegisters();
 
           ret = xPyList_New(readRegisters.size());
-          for (it = readRegisters.begin(); it != readRegisters.end(); it++) {
+          for (auto it = readRegisters.begin(); it != readRegisters.end(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyRegister(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
@@ -430,7 +427,7 @@ namespace triton {
 
           return ret;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -465,7 +462,7 @@ namespace triton {
 
           return obj;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -489,7 +486,7 @@ namespace triton {
 
           return symExprs;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -524,7 +521,7 @@ namespace triton {
 
           return obj;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -534,7 +531,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyInstruction_AsInstruction(self)->getThreadId());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -544,7 +541,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyInstruction_AsInstruction(self)->getType());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -554,11 +551,10 @@ namespace triton {
         try {
           PyObject* ret;
           triton::uint32 index = 0;
-          std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>::const_iterator it;
-          const std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& writtenRegisters = PyInstruction_AsInstruction(self)->getWrittenRegisters();
+          const auto& writtenRegisters = PyInstruction_AsInstruction(self)->getWrittenRegisters();
 
           ret = xPyList_New(writtenRegisters.size());
-          for (it = writtenRegisters.begin(); it != writtenRegisters.end(); it++) {
+          for (auto it = writtenRegisters.begin(); it != writtenRegisters.end(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyRegister(std::get<0>(*it)));
             PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
@@ -567,7 +563,7 @@ namespace triton {
 
           return ret;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -579,7 +575,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -591,7 +587,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -603,7 +599,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -615,7 +611,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -627,7 +623,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -639,7 +635,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -651,7 +647,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -663,7 +659,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -677,7 +673,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -695,7 +691,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -710,7 +706,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -740,7 +736,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -758,7 +754,7 @@ namespace triton {
           str << PyInstruction_AsInstruction(self);
           return PyString_FromFormat("%s", str.str().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -860,7 +856,7 @@ namespace triton {
         if (object != NULL)
           object->inst = new triton::arch::Instruction();
 
-        return (PyObject* )object;
+        return (PyObject*)object;
       }
 
 
@@ -872,7 +868,7 @@ namespace triton {
         if (object != NULL)
           object->inst = new triton::arch::Instruction(opcodes, opSize);
 
-        return (PyObject* )object;
+        return (PyObject*)object;
       }
 
 

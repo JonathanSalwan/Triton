@@ -7,9 +7,7 @@
 
 #include <list>
 
-#include <api.hpp>
 #include <exceptions.hpp>
-#include <symbolicVariable.hpp>
 #include <z3ToTritonAst.hpp>
 
 
@@ -17,19 +15,28 @@
 namespace triton {
   namespace ast {
 
-    Z3ToTritonAst::Z3ToTritonAst()
+    Z3ToTritonAst::Z3ToTritonAst(triton::engines::symbolic::SymbolicEngine* symbolicEngine)
       : context(), expr(this->context) {
+      if (symbolicEngine == nullptr)
+        throw triton::exceptions::AstTranslations("Z3ToTritonAst::Z3ToTritonAst(): The symbolicEngine API cannot be null.");
+
+      this->symbolicEngine = symbolicEngine;
     }
 
 
-    Z3ToTritonAst::Z3ToTritonAst(z3::expr& expr)
+    Z3ToTritonAst::Z3ToTritonAst(triton::engines::symbolic::SymbolicEngine* symbolicEngine, z3::expr& expr)
       : context(), expr(this->context) {
+      if (symbolicEngine == nullptr)
+        throw triton::exceptions::AstTranslations("Z3ToTritonAst::Z3ToTritonAst(): The symbolicEngine API cannot be null.");
+
+      this->symbolicEngine = symbolicEngine;
       this->expr = expr;
     }
 
 
     Z3ToTritonAst::Z3ToTritonAst(const Z3ToTritonAst& copy)
       : expr(copy.expr) {
+      this->symbolicEngine = copy.symbolicEngine;
     }
 
 
@@ -409,7 +416,7 @@ namespace triton {
         /* Variable or string */
         case Z3_OP_UNINTERPRETED: {
           std::string name = function.name().str();
-          triton::engines::symbolic::SymbolicVariable* symVar = triton::api.getSymbolicVariableFromName(name);
+          triton::engines::symbolic::SymbolicVariable* symVar = this->symbolicEngine->getSymbolicVariableFromName(name);
 
           if (symVar)
             node = triton::ast::variable(*symVar);

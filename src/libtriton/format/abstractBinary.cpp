@@ -6,6 +6,7 @@
 */
 
 #include <cstdio>
+#include <new>
 
 #include <abstractBinary.hpp>
 #include <elf.hpp>
@@ -89,7 +90,7 @@ namespace triton {
       switch (this->format) {
         case triton::format::BINARY_ELF:
           delete this->binary;
-          this->binary = new triton::format::elf::Elf(path);
+          this->binary = new(std::nothrow) triton::format::elf::Elf(path);
           if (!this->binary)
             throw triton::exceptions::Format("AbstractBinary::parseBinary(): Not enough memory.");
           break;

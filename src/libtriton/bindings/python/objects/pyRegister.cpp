@@ -7,6 +7,7 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
+#include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -69,40 +70,40 @@ rax:64 bv[63..0]
 \section Register_py_api Python API - Methods of the Register class
 <hr>
 
-- **getBitSize(void)**<br>
-Returns the size (in bits) of the register as integer.<br>
+- <b>integer getBitSize(void)</b><br>
+Returns the size (in bits) of the register.<br>
 e.g: `64`
 
-- **getBitvector(void)**<br>
-Returns the bitvector as \ref py_Bitvector_page.
+- <b>\ref py_Bitvector_page getBitvector(void)</b><br>
+Returns the bitvector of the register.
 
-- **getConcreteValue(void)**<br>
+- <b>integer getConcreteValue(void)</b><br>
 Returns the concrete value assigned to this register operand.
 
-- **getName(void)**<br>
-Returns the name of the register as string.<br>
+- <b>string getName(void)</b><br>
+Returns the name of the register.<br>
 e.g: `rbx`
 
-- **getParent(void)**<br>
-Returns the parent register as \ref py_Register_page.
+- <b>\ref py_Register_page getParent(void)</b><br>
+Returns the parent register.
 
-- **getSize(void)**<br>
-Returns the size (in bytes) of the register as integer.<br>
+- <b>integer getSize(void)</b><br>
+Returns the size (in bytes) of the register.<br>
 e.g: `8`
 
-- **getType(void)**<br>
-Returns type of the register as \ref py_OPERAND_page. In this case this function returns `OPERAND.REG`.
+- <b>\ref py_OPERAND_page getType(void)</b><br>
+Returns type of the register. In this case this function returns `OPERAND.REG`.
 
-- **isValid(void)**<br>
+- <b>bool isValid(void)</b><br>
 Returns true if the register is valid.
 
-- **isFlag(void)**<br>
+- <b>bool isFlag(void)</b><br>
 Returns true if the register is a flag.
 
-- **isRegister(void)**<br>
+- <b>bool isRegister(void)</b><br>
 Returns true if the register is a register.
 
-- **setConcreteValue(integer value)**<br>
+- <b>void setConcreteValue(integer value)</b><br>
 Sets a concrete value to this register.
 
 */
@@ -125,7 +126,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyRegister_AsRegister(self)->getBitSize());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -135,7 +136,7 @@ namespace triton {
         try {
           return PyBitvector(*PyRegister_AsRegister(self));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -145,7 +146,7 @@ namespace triton {
         try {
           return PyLong_FromUint512(PyRegister_AsRegister(self)->getConcreteValue());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -155,7 +156,7 @@ namespace triton {
         try {
           return Py_BuildValue("s", PyRegister_AsRegister(self)->getName().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -166,7 +167,7 @@ namespace triton {
           triton::arch::Register parent = PyRegister_AsRegister(self)->getParent();
           return PyRegister(parent);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -176,7 +177,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyRegister_AsRegister(self)->getSize());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -186,7 +187,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyRegister_AsRegister(self)->getType());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -198,7 +199,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -210,7 +211,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -222,26 +223,25 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
 
 
       static PyObject* Register_setConcreteValue(PyObject* self, PyObject* value) {
+        triton::arch::Register* reg;
+
+        if (!PyLong_Check(value) && !PyInt_Check(value))
+          return PyErr_Format(PyExc_TypeError, "Register::setConcretevalue(): Expected an integer as argument.");
+
         try {
-          triton::arch::Register *reg;
-
-          if (!PyLong_Check(value) && !PyInt_Check(value))
-            return PyErr_Format(PyExc_TypeError, "Register::setConcretevalue(): Expected an integer as argument.");
-
           reg = PyRegister_AsRegister(self);
           reg->setConcreteValue(PyLong_AsUint512(value));
-
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -259,7 +259,7 @@ namespace triton {
           str << PyRegister_AsRegister(self);
           return PyString_FromFormat("%s", str.str().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

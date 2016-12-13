@@ -8,7 +8,8 @@
 #ifndef TRITON_ASTDICTIONARIES_H
 #define TRITON_ASTDICTIONARIES_H
 
-#include <list>
+#include <set>
+#include <vector>
 
 #include "ast.hpp"
 #include "tritonTypes.hpp"
@@ -39,7 +40,7 @@ namespace triton {
         triton::usize allocatedNodes;
 
         //! Total of allocated dictionaries.
-        triton::usize allocatedDictionaries;
+        std::set<triton::ast::AbstractNode*> allocatedDictionaries;
 
         //! Assert Dictionary
         std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*> assertDictionary;
@@ -199,7 +200,7 @@ namespace triton {
         AstDictionaries(const AstDictionaries& copy);
 
         //! Destructor.
-        ~AstDictionaries();
+        virtual ~AstDictionaries();
 
         //! Copies a AstDictionaries.
         void copy(const AstDictionaries& other);

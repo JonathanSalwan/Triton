@@ -7,6 +7,7 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
+#include <exceptions.hpp>
 #include <memoryAccess.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
@@ -80,62 +81,62 @@ rcx:64 bv[63..0]
 \section MemoryAccess_py_api Python API - Methods of the MemoryAccess class
 <hr>
 
-- **getAddress(void)**<br>
+- <b>integer getAddress(void)</b><br>
 Returns the target address of the memory access.<br>
 e.g: `0x7fffdd745ae0`
 
-- **getBaseRegister(void)**<br>
-Returns the base register (if exists) of the memory access as \ref py_Register_page.<br>
+- <b>\ref py_Register_page getBaseRegister(void)</b><br>
+Returns the base register (if exists) of the memory access<br>
 
-- **getBitSize(void)**<br>
-Returns the size (in bits) of the memory access as integer.<br>
+- <b>integer getBitSize(void)</b><br>
+Returns the size (in bits) of the memory access.<br>
 e.g: `64`
 
-- **getBitvector(void)**<br>
-Returns the bitvector as \ref py_Bitvector_page.
+- <b>\ref py_Bitvector_page getBitvector(void)</b><br>
+Returns the bitvector of the memory cells.
 
-- **getConcreteValue(void)**<br>
-Returns the concrete value as integer. It's basically the content which has been LOADED or STORED. Note that getting the
+- <b>integer getConcreteValue(void)</b><br>
+Returns the concrete value. It's basically the content which has been LOADED or STORED. Note that getting the
 concrete value does not relfect the real internal memory state. If you want to know the internal state of a memory cell, use
 the triton::API::getConcreteMemoryValue() function.
 
-- **getDisplacement(void)**<br>
-Returns the displacement (if exists) of the memory access as \ref py_Immediate_page.
+- <b>\ref py_Immediate_page getDisplacement(void)</b><br>
+Returns the displacement (if exists) of the memory access.
 
-- **getIndexRegister(void)**<br>
-Returns the index register (if exists) of the memory access as \ref py_Register_page.<br>
+- <b>\ref py_Register_page getIndexRegister(void)</b><br>
+Returns the index register (if exists) of the memory access.<br>
 
-- **getLeaAst(void)**<br>
-Returns the AST of the memory access (LEA) as \ref py_AstNode_page.
+- <b>\ref py_AstNode_page getLeaAst(void)</b><br>
+Returns the AST of the memory access (LEA).
 
-- **getScale(void)**<br>
-Returns the scale (if exists) of the  memory access as \ref py_Immediate_page.
+- <b>\ref py_Immediate_page getScale(void)</b><br>
+Returns the scale (if exists) of the  memory access.
 
-- **getSegmentRegister(void)**<br>
-Returns the segment register (if exists) of the memory access as \ref py_Register_page. Note that to be user-friendly, the
+- <b>\ref py_Register_page getSegmentRegister(void)</b><br>
+Returns the segment register (if exists) of the memory access. Note that to be user-friendly, the
 segment register is used as base register and not as a selector into the GDT.<br>
 
-- **getSize(void)**<br>
-Returns the size (in bytes) of the  memory access as integer.<br>
+- <b>integer getSize(void)</b><br>
+Returns the size (in bytes) of the  memory access.<br>
 e.g: `8`
 
-- **getType(void)**<br>
-Returns type of the memory access as \ref py_OPERAND_page. In this case this function returns `OPERAND.MEM`.
+- <b>\ref py_OPERAND_page getType(void)</b><br>
+Returns type of the memory access. In this case this function returns `OPERAND.MEM`.
 
-- **setBaseRegister(\ref py_Register_page reg)**<br>
+- <b>void setBaseRegister(\ref py_Register_page reg)</b><br>
 Sets the base register of the memory access.
 
-- **setConcreteValue(integer value)**<br>
+- <b>void setConcreteValue(integer value)</b><br>
 Sets a concrete value to this memory access. Note that by setting the concrete value does not affect the internal memory value.
 If you want to define a concrete value at a specific memory cells, use the triton::API::setConcreteMemoryValue() function.
 
-- **setDisplacement(\ref py_Immediate_page imm)**<br>
+- <b>void setDisplacement(\ref py_Immediate_page imm)</b><br>
 Sets the displacement of the memory access.
 
-- **setIndexRegister(\ref py_Register_page reg)**<br>
+- <b>void setIndexRegister(\ref py_Register_page reg)</b><br>
 Sets the index register of the memory' access.
 
-- **setScale(\ref py_Immediate_page imm)**<br>
+- <b>void setScale(\ref py_Immediate_page imm)</b><br>
 Sets the scale of the memory access.
 
 */
@@ -158,7 +159,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyMemoryAccess_AsMemoryAccess(self)->getAddress());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -172,7 +173,7 @@ namespace triton {
           }
           return PyAstNode(PyMemoryAccess_AsMemoryAccess(self)->getLeaAst());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -183,7 +184,7 @@ namespace triton {
           triton::arch::Register reg(PyMemoryAccess_AsMemoryAccess(self)->getBaseRegister());
           return PyRegister(reg);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -193,7 +194,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyMemoryAccess_AsMemoryAccess(self)->getBitSize());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -203,7 +204,7 @@ namespace triton {
         try {
           return PyBitvector(*PyMemoryAccess_AsMemoryAccess(self));
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -213,7 +214,7 @@ namespace triton {
         try {
           return PyLong_FromUint512(PyMemoryAccess_AsMemoryAccess(self)->getConcreteValue());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -224,7 +225,7 @@ namespace triton {
           triton::arch::Immediate imm(PyMemoryAccess_AsMemoryAccess(self)->getDisplacement());
           return PyImmediate(imm);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -235,7 +236,7 @@ namespace triton {
           triton::arch::Register reg(PyMemoryAccess_AsMemoryAccess(self)->getIndexRegister());
           return PyRegister(reg);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -246,7 +247,7 @@ namespace triton {
           triton::arch::Immediate imm(PyMemoryAccess_AsMemoryAccess(self)->getScale());
           return PyImmediate(imm);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -257,7 +258,7 @@ namespace triton {
           triton::arch::Register reg(PyMemoryAccess_AsMemoryAccess(self)->getSegmentRegister());
           return PyRegister(reg);
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -267,7 +268,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyMemoryAccess_AsMemoryAccess(self)->getSize());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -277,7 +278,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyMemoryAccess_AsMemoryAccess(self)->getType());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -285,7 +286,7 @@ namespace triton {
 
       static PyObject* MemoryAccess_setBaseRegister(PyObject* self, PyObject* reg) {
         try {
-          triton::arch::MemoryAccess *mem;
+          triton::arch::MemoryAccess* mem;
 
           if (!PyRegister_Check(reg))
             return PyErr_Format(PyExc_TypeError, "MemoryAccess::setBaseRegister(): Expected a Register as argument.");
@@ -295,7 +296,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -303,7 +304,7 @@ namespace triton {
 
       static PyObject* MemoryAccess_setConcreteValue(PyObject* self, PyObject* value) {
         try {
-          triton::arch::MemoryAccess *mem;
+          triton::arch::MemoryAccess* mem;
 
           if (!PyLong_Check(value) && !PyInt_Check(value))
             return PyErr_Format(PyExc_TypeError, "MemoryAccess::setConcretevalue(): Expected an integer as argument.");
@@ -313,7 +314,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -321,7 +322,7 @@ namespace triton {
 
       static PyObject* MemoryAccess_setDisplacement(PyObject* self, PyObject* imm) {
         try {
-          triton::arch::MemoryAccess *mem;
+          triton::arch::MemoryAccess* mem;
 
           if (!PyImmediate_Check(imm))
             return PyErr_Format(PyExc_TypeError, "MemoryAccess::setDisplacement(): Expected an Immediate as argument.");
@@ -331,7 +332,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -339,7 +340,7 @@ namespace triton {
 
       static PyObject* MemoryAccess_setIndexRegister(PyObject* self, PyObject* reg) {
         try {
-          triton::arch::MemoryAccess *mem;
+          triton::arch::MemoryAccess* mem;
 
           if (!PyRegister_Check(reg))
             return PyErr_Format(PyExc_TypeError, "MemoryAccess::setIndexRegister(): Expected a Register as argument.");
@@ -349,7 +350,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -357,7 +358,7 @@ namespace triton {
 
       static PyObject* MemoryAccess_setScale(PyObject* self, PyObject* imm) {
         try {
-          triton::arch::MemoryAccess *mem;
+          triton::arch::MemoryAccess* mem;
 
           if (!PyImmediate_Check(imm))
             return PyErr_Format(PyExc_TypeError, "MemoryAccess::setScale(): Expected an Immediate as argument.");
@@ -367,7 +368,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -375,7 +376,7 @@ namespace triton {
 
       static PyObject* MemoryAccess_setSegmentRegister(PyObject* self, PyObject* reg) {
         try {
-          triton::arch::MemoryAccess *mem;
+          triton::arch::MemoryAccess* mem;
 
           if (!PyRegister_Check(reg))
             return PyErr_Format(PyExc_TypeError, "MemoryAccess::setSegmentRegister(): Expected a Register as argument.");
@@ -385,7 +386,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -403,7 +404,7 @@ namespace triton {
           str << PyMemoryAccess_AsMemoryAccess(self);
           return PyString_FromFormat("%s", str.str().c_str());
         }
-        catch (const std::exception& e) {
+        catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

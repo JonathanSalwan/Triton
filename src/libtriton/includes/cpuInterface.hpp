@@ -9,12 +9,12 @@
 #define TRITON_CPUINTERFACE_HPP
 
 #include <set>
-#include <tuple>
 #include <vector>
 
 #include "instruction.hpp"
 #include "memoryAccess.hpp"
 #include "register.hpp"
+#include "registerSpecification.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -34,10 +34,9 @@ namespace triton {
    *  @{
    */
 
-
     /*! \interface CpuInterface
         \brief This interface is used as abstract CPU interface. All CPU must use this interface. */
-    class CpuInterface  {
+    class CpuInterface {
       public:
         //! Destructor.
         virtual ~CpuInterface(){};
@@ -48,22 +47,13 @@ namespace triton {
         //! Clears the architecture states (registers and memory).
         virtual void clear(void) = 0;
 
-        //! Returns true if the regId is a flag.
-        /*!
-            \param regId the register id.
-        */
+        //! Returns true if the register ID is a flag.
         virtual bool isFlag(triton::uint32 regId) const = 0;
 
-        //! Returns true if the regId is a register.
-        /*!
-            \param regId the register id.
-        */
+        //! Returns true if the register ID is a register.
         virtual bool isRegister(triton::uint32 regId) const = 0;
 
-        //! Returns true if the regId is valid.
-        /*!
-            \param regId the register id.
-        */
+        //! Returns true if the register ID is valid.
         virtual bool isRegisterValid(triton::uint32 regId) const = 0;
 
         //! Returns the max size (in byte) of the CPU registers (GPR).
@@ -72,18 +62,11 @@ namespace triton {
         //! Returns the max size (in bit) of the CPU registers (GPR).
         virtual triton::uint32 registerBitSize(void) const = 0;
 
-        //! Returns the id of the invalid CPU register.
-        virtual triton::uint32 invalidRegister(void) const = 0;
-
         //! Returns the number of registers according to the CPU architecture.
         virtual triton::uint32 numberOfRegisters(void) const = 0;
 
         //! Returns all information about a register id.
-        /*!
-            \param reg the register id.
-            \return std::tuple<name, b-high, b-low, parentId>
-        */
-        virtual std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> getRegisterInformation(triton::uint32 reg) const = 0;
+        virtual triton::arch::RegisterSpecification getRegisterSpecification(triton::uint32 regId) const = 0;
 
         //! Returns all registers.
         virtual std::set<triton::arch::Register*> getAllRegisters(void) const = 0;
@@ -93,9 +76,6 @@ namespace triton {
 
         //! Disassembles the instruction according to the architecture.
         virtual void disassembly(triton::arch::Instruction& inst) const = 0;
-
-        //! Builds the instruction semantics according to the architecture. Returns true if the instruction is supported.
-        virtual bool buildSemantics(triton::arch::Instruction& inst) const = 0;
 
         //! Returns the concrete value of a memory cell.
         virtual triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const = 0;

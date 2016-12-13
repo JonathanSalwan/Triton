@@ -7,16 +7,13 @@
 
 #include <cstring>
 
-#include <api.hpp>
 #include <architecture.hpp>
-#include <callbacks.hpp>
 #include <coreUtils.hpp>
 #include <cpuSize.hpp>
 #include <exceptions.hpp>
 #include <externalLibs.hpp>
 #include <immediate.hpp>
 #include <x86Cpu.hpp>
-#include <x86Specifications.hpp>
 
 #ifdef TRITON_PYTHON_BINDINGS
   #include <pythonBindings.hpp>
@@ -28,7 +25,8 @@ namespace triton {
   namespace arch {
     namespace x86 {
 
-      x86Cpu::x86Cpu() {
+      x86Cpu::x86Cpu(triton::callbacks::Callbacks* callbacks) {
+        this->callbacks = callbacks;
         this->clear();
       }
 
@@ -44,7 +42,9 @@ namespace triton {
 
 
       void x86Cpu::copy(const x86Cpu& other) {
-        this->memory = other.memory;
+        this->callbacks = other.callbacks;
+        this->memory    = other.memory;
+
         std::memcpy(this->eax,     other.eax,    sizeof(this->eax));
         std::memcpy(this->ebx,     other.ebx,    sizeof(this->ebx));
         std::memcpy(this->ecx,     other.ecx,    sizeof(this->ecx));
@@ -417,7 +417,14 @@ namespace triton {
 
 
       bool x86Cpu::isRegister(triton::uint32 regId) const {
-        return (this->isGPR(regId) || this->isMMX(regId) || this->isSSE(regId) || this->isAVX256(regId) || this->isControl(regId) || this->isSegment(regId));
+        return (
+          this->isGPR(regId)      ||
+          this->isMMX(regId)      ||
+          this->isSSE(regId)      ||
+          this->isAVX256(regId)   ||
+          this->isControl(regId)  ||
+          this->isSegment(regId)
+        );
       }
 
 
@@ -456,11 +463,6 @@ namespace triton {
       }
 
 
-      triton::uint32 x86Cpu::invalidRegister(void) const {
-        return triton::arch::x86::ID_REG_INVALID;
-      }
-
-
       triton::uint32 x86Cpu::numberOfRegisters(void) const {
         return triton::arch::x86::ID_REG_LAST_ITEM;
       }
@@ -476,8 +478,8 @@ namespace triton {
       }
 
 
-      std::tuple<std::string, triton::uint32, triton::uint32, triton::uint32> x86Cpu::getRegisterInformation(triton::uint32 reg) const {
-        return triton::arch::x86::registerIdToRegisterInformation(reg);
+      triton::arch::RegisterSpecification x86Cpu::getRegisterSpecification(triton::uint32 regId) const {
+        return this->getX86RegisterSpecification(triton::arch::ARCH_X86, regId);
       }
 
 
@@ -558,10 +560,10 @@ namespace triton {
             inst.setSize(insn[j].size);
 
             /* Init the instruction's type */
-            inst.setType(triton::arch::x86::capstoneInstructionToTritonInstruction(insn[j].id));
+            inst.setType(this->capstoneInstructionToTritonInstruction(insn[j].id));
 
             /* Init the instruction's prefix */
-            inst.setPrefix(triton::arch::x86::capstonePrefixToTritonPrefix(detail->x86.prefix[0]));
+            inst.setPrefix(this->capstonePrefixToTritonPrefix(detail->x86.prefix[0]));
 
             /* Init operands */
             for (triton::uint32 n = 0; n < detail->x86.op_count; n++) {
@@ -579,9 +581,9 @@ namespace triton {
                   mem.setPair(std::make_pair(((op->size * BYTE_SIZE_BIT) - 1), 0));
 
                   /* LEA if exists */
-                  triton::arch::Register segment(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.segment));
-                  triton::arch::Register base(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.base));
-                  triton::arch::Register index(triton::arch::x86::capstoneRegisterToTritonRegister(op->mem.index));
+                  triton::arch::Register segment(this->capstoneRegisterToTritonRegister(op->mem.segment));
+                  triton::arch::Register base(this->capstoneRegisterToTritonRegister(op->mem.base));
+                  triton::arch::Register index(this->capstoneRegisterToTritonRegister(op->mem.index));
                   triton::arch::Immediate disp(op->mem.disp, base.isValid() ? base.getSize() : index.isValid() ? index.getSize() : this->registerSize());
                   triton::arch::Immediate scale(op->mem.scale, base.isValid() ? base.getSize() : index.isValid() ? index.getSize() : this->registerSize());
 
@@ -600,7 +602,7 @@ namespace triton {
                 }
 
                 case triton::extlibs::capstone::X86_OP_REG:
-                  inst.operands.push_back(triton::arch::OperandWrapper(inst.getRegisterState(triton::arch::x86::capstoneRegisterToTritonRegister(op->reg))));
+                  inst.operands.push_back(triton::arch::OperandWrapper(inst.getRegisterState(this->capstoneRegisterToTritonRegister(op->reg))));
                   break;
 
                 default:
@@ -630,13 +632,6 @@ namespace triton {
       }
 
 
-      bool x86Cpu::buildSemantics(triton::arch::Instruction& inst) const {
-        if (!inst.getType())
-          throw triton::exceptions::Cpu("x86Cpu::buildSemantics(): You must disassemble the instruction before.");
-        return triton::arch::x86::semantics::build(inst);
-      }
-
-
       triton::uint8 x86Cpu::getConcreteMemoryValue(triton::uint64 addr) const {
         if (this->memory.find(addr) == this->memory.end())
           return 0x00;
@@ -652,8 +647,8 @@ namespace triton {
         if (size == 0 || size > DQQWORD_SIZE)
           throw triton::exceptions::Cpu("x86Cpu::getConcreteMemoryValue(): Invalid size memory.");
 
-        if (execCallbacks)
-          triton::api.processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, mem);
+        if (execCallbacks && this->callbacks)
+          this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, mem);
 
         for (triton::sint32 i = size-1; i >= 0; i--)
           ret = ((ret << BYTE_SIZE_BIT) | this->getConcreteMemoryValue(addr+i));
@@ -666,8 +661,8 @@ namespace triton {
         std::vector<triton::uint8> area;
 
         for (triton::usize index = 0; index < size; index++) {
-          if (execCallbacks)
-            triton::api.processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, MemoryAccess(baseAddr+index, BYTE_SIZE));
+          if (execCallbacks && this->callbacks)
+            this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, MemoryAccess(baseAddr+index, BYTE_SIZE));
           area.push_back(this->getConcreteMemoryValue(baseAddr+index));
         }
 
@@ -678,8 +673,8 @@ namespace triton {
       triton::uint512 x86Cpu::getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks) const {
         triton::uint512 value = 0;
 
-        if (execCallbacks)
-          triton::api.processCallbacks(triton::callbacks::GET_CONCRETE_REGISTER_VALUE, reg);
+        if (execCallbacks && this->callbacks)
+          this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_REGISTER_VALUE, reg);
 
         switch (reg.getId()) {
           case triton::arch::x86::ID_REG_EAX: return (*((triton::uint32*)(this->eax)));

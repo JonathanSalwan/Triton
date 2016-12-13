@@ -71,7 +71,7 @@ namespace triton {
           ElfDynamicTable(const ElfDynamicTable& copy);
 
           //! Destructor.
-          ~ElfDynamicTable();
+          virtual ~ElfDynamicTable();
 
           //! Copies an ElfDynamicTable.
           void operator=(const ElfDynamicTable& copy);

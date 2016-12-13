@@ -69,12 +69,6 @@ Returns `64`
 - **CPUSIZE.DQQWORD_BIT**<br>
 Returns `512`
 
-- **CPUSIZE.REG**<br>
-Returns the max register's size according to your CPU architecture.
-
-- **CPUSIZE.REG_BIT**<br>
-Returns the max register's size (in bit) according to your CPU architecture.
-
 */
 
 
@@ -103,8 +97,6 @@ namespace triton {
         PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "QQWORD_BIT",  PyLong_FromUint32(QQWORD_SIZE_BIT));
         PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DQQWORD",     PyLong_FromUint32(DQQWORD_SIZE));
         PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "DQQWORD_BIT", PyLong_FromUint32(DQQWORD_SIZE_BIT));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "REG",         PyLong_FromUint32(triton::api.cpuRegisterSize()));
-        PyDict_SetItemString(triton::bindings::python::cpuSizeDict, "REG_BIT",     PyLong_FromUint32(triton::api.cpuRegisterBitSize()));
       }
 
     }; /* python namespace */
