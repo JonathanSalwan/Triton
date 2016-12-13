@@ -68,11 +68,20 @@ namespace triton {
         //! Returns true if the register ID is a flag.
         bool isFlag(triton::uint32 regId) const;
 
+        //! Returns true if the register is a flag.
+        bool isFlag(const triton::arch::Register& reg) const;
+
         //! Returns true if the register ID is a register.
         bool isRegister(triton::uint32 regId) const;
 
+        //! Returns true if the register is a register.
+        bool isRegister(const triton::arch::Register& reg) const;
+
         //! Returns true if the register ID is a register or a flag.
         bool isRegisterValid(triton::uint32 regId) const;
+
+        //! Returns true if the register is a register or a flag.
+        bool isRegisterValid(const triton::arch::Register& reg) const;
 
         //! Returns true if the architecture is valid.
         bool isValid(void) const;

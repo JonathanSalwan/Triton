@@ -95,6 +95,11 @@ namespace triton {
     }
 
 
+    bool Architecture::isFlag(const triton::arch::Register& reg) const {
+      return this->isFlag(reg.getId());
+    }
+
+
     bool Architecture::isRegister(triton::uint32 regId) const {
       if (!this->cpu)
         return false;
@@ -102,10 +107,20 @@ namespace triton {
     }
 
 
+    bool Architecture::isRegister(const triton::arch::Register& reg) const {
+      return this->isRegister(reg.getId());
+    }
+
+
     bool Architecture::isRegisterValid(triton::uint32 regId) const {
       if (!this->cpu)
         return false;
       return this->cpu->isRegisterValid(regId);
+    }
+
+
+    bool Architecture::isRegisterValid(const triton::arch::Register& reg) const {
+      return this->isRegisterValid(reg.getId());
     }
 
 

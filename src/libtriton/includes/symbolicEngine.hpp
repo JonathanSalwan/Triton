@@ -109,7 +109,7 @@ namespace triton {
 
         private:
           //! Architecture API
-          triton::arch::Architecture* arch;
+          triton::arch::Architecture* architecture;
 
           //! Callbacks API
           triton::callbacks::Callbacks* callbacks;
@@ -119,7 +119,7 @@ namespace triton {
 
         public:
           //! Constructor. If you use this class as backup or copy you should define the `isBackup` flag as true.
-          SymbolicEngine(triton::arch::Architecture* arch, triton::callbacks::Callbacks* callbacks=nullptr, bool isBackup=false);
+          SymbolicEngine(triton::arch::Architecture* architecture, triton::callbacks::Callbacks* callbacks=nullptr, bool isBackup=false);
 
           //! Constructor by copy.
           SymbolicEngine(const SymbolicEngine& copy);

@@ -70,14 +70,14 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicEngine::SymbolicEngine(triton::arch::Architecture* arch, triton::callbacks::Callbacks* callbacks, bool isBackup)
+      SymbolicEngine::SymbolicEngine(triton::arch::Architecture* architecture, triton::callbacks::Callbacks* callbacks, bool isBackup)
         : triton::engines::symbolic::SymbolicSimplification(callbacks) {
 
-        if (arch == nullptr)
+        if (architecture == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::SymbolicEngine(): The architecture pointer must be valid.");
 
-        this->arch              = arch;
-        this->numberOfRegisters = this->arch->numberOfRegisters();
+        this->architecture      = architecture;
+        this->numberOfRegisters = this->architecture->numberOfRegisters();
         this->symbolicReg       = new triton::usize[this->numberOfRegisters]();
 
         /* Init all symbolic registers/flags to UNSET (init state) */
@@ -103,7 +103,7 @@ namespace triton {
          * The backup flag cannot be spread. once a class is tagged as
          * backup, it always be a backup class.
          */
-        this->arch                        = other.arch;
+        this->architecture                = other.architecture;
         this->callbacks                   = other.callbacks;
         this->backupFlag                  = true;
         this->alignedMemoryReference      = other.alignedMemoryReference;
@@ -183,7 +183,7 @@ namespace triton {
       void SymbolicEngine::concretizeRegister(const triton::arch::Register& reg) {
         triton::uint32 parentId = reg.getParent().getId();
 
-        if (!this->arch->isRegisterValid(parentId))
+        if (!this->architecture->isRegisterValid(parentId))
           return;
 
         this->symbolicReg[parentId] = triton::engines::symbolic::UNSET;
@@ -326,7 +326,7 @@ namespace triton {
       triton::usize SymbolicEngine::getSymbolicRegisterId(const triton::arch::Register& reg) const {
         triton::uint32 parentId = reg.getParent().getId();
 
-        if (!this->arch->isRegisterValid(parentId))
+        if (!this->architecture->isRegisterValid(parentId))
           return triton::engines::symbolic::UNSET;
 
         return this->symbolicReg[parentId];
@@ -580,7 +580,7 @@ namespace triton {
         triton::usize memSymId          = triton::engines::symbolic::UNSET;
         triton::uint64 memAddr          = mem.getAddress();
         triton::uint32 symVarSize       = mem.getSize();
-        triton::uint512 cv              = mem.getConcreteValue() ? mem.getConcreteValue() : this->arch->getConcreteMemoryValue(mem);
+        triton::uint512 cv              = mem.getConcreteValue() ? mem.getConcreteValue() : this->architecture->getConcreteMemoryValue(mem);
 
         memSymId = this->getSymbolicMemoryId(memAddr);
 
@@ -627,9 +627,9 @@ namespace triton {
         triton::usize regSymId          = triton::engines::symbolic::UNSET;
         triton::uint32 parentId         = reg.getParent().getId();
         triton::uint32 symVarSize       = reg.getBitSize();
-        triton::uint512 cv              = reg.getConcreteValue() ? reg.getConcreteValue() : this->arch->getConcreteRegisterValue(reg);
+        triton::uint512 cv              = reg.getConcreteValue() ? reg.getConcreteValue() : this->architecture->getConcreteRegisterValue(reg);
 
-        if (!this->arch->isRegisterValid(parentId))
+        if (!this->architecture->isRegisterValid(parentId))
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");
 
         regSymId = this->getSymbolicRegisterId(reg);
@@ -726,7 +726,7 @@ namespace triton {
         triton::uint32 size                       = mem.getSize();
         triton::usize symMem                      = triton::engines::symbolic::UNSET;
         triton::uint8 concreteValue[DQQWORD_SIZE] = {0};
-        triton::uint512 value                     = this->arch->getConcreteMemoryValue(mem);
+        triton::uint512 value                     = this->architecture->getConcreteMemoryValue(mem);
 
         triton::utils::fromUintToBuffer(value, concreteValue);
 
@@ -795,7 +795,7 @@ namespace triton {
 
         /* Otherwise, use the concerte value */
         else
-          op = triton::ast::bv(this->arch->getConcreteRegisterValue(reg), bvSize);
+          op = triton::ast::bv(this->architecture->getConcreteRegisterValue(reg), bvSize);
 
         return op;
       }
@@ -857,7 +857,7 @@ namespace triton {
           /* Synchronize the memory operand */
           mem.setConcreteValue(tmp->evaluate());
           /* Synchronize the concrete state */
-          this->arch->setConcreteMemoryValue(mem);
+          this->architecture->setConcreteMemoryValue(mem);
           /* Define the memory store */
           inst.setStoreAccess(mem, tmp);
           return se;
@@ -870,7 +870,7 @@ namespace triton {
         mem.setConcreteValue(tmp->evaluate());
 
         /* Synchronize the concrete state */
-        this->arch->setConcreteMemoryValue(mem);
+        this->architecture->setConcreteMemoryValue(mem);
 
         se  = this->newSymbolicExpression(tmp, triton::engines::symbolic::UNDEF, "Temporary concatenation reference - " + comment);
         se->setOriginMemory(triton::arch::MemoryAccess(address, mem.getSize(), tmp->evaluate()));
@@ -889,7 +889,7 @@ namespace triton {
         triton::uint32 regSize                    = reg.getSize();
         triton::arch::Register parentReg          = reg.getParent();
 
-        if (reg.isFlag())
+        if (this->architecture->isFlag(reg))
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicRegisterExpression(): The register cannot be a flag.");
 
         if (regSize == BYTE_SIZE || regSize == WORD_SIZE)
@@ -898,23 +898,23 @@ namespace triton {
         switch (regSize) {
           case BYTE_SIZE:
             if (reg.getLow() == 0) {
-              finalExpr = triton::ast::concat(triton::ast::extract((this->arch->registerBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
+              finalExpr = triton::ast::concat(triton::ast::extract((this->architecture->registerBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
             }
             else {
               finalExpr = triton::ast::concat(
-                            triton::ast::extract((this->arch->registerBitSize() - 1), WORD_SIZE_BIT, origReg),
+                            triton::ast::extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg),
                             triton::ast::concat(node, triton::ast::extract((BYTE_SIZE_BIT - 1), 0, origReg))
                           );
             }
             break;
 
           case WORD_SIZE:
-            finalExpr = triton::ast::concat(triton::ast::extract((this->arch->registerBitSize() - 1), WORD_SIZE_BIT, origReg), node);
+            finalExpr = triton::ast::concat(triton::ast::extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg), node);
             break;
 
           case DWORD_SIZE:
             /* In AMD64, if a reg32 is written, it clears the 32-bit MSB of the corresponding register (Thx Wisk!) */
-            if (this->arch->getArchitecture() == triton::arch::ARCH_X86_64) {
+            if (this->architecture->getArchitecture() == triton::arch::ARCH_X86_64) {
               finalExpr = triton::ast::zx(DWORD_SIZE_BIT, node);
               break;
             }
@@ -940,7 +940,7 @@ namespace triton {
 
       /* Returns the new symbolic flag expression */
       SymbolicExpression* SymbolicEngine::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::Register& flag, const std::string& comment) {
-        if (!flag.isFlag())
+        if (!this->architecture->isFlag(flag))
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicFlagExpression(): The register must be a flag.");
 
         flag.setConcreteValue(node->evaluate());
@@ -986,7 +986,7 @@ namespace triton {
         this->symbolicReg[id] = se->getId();
 
         /* Synchronize the concrete state */
-        this->arch->setConcreteRegisterValue(reg);
+        this->architecture->setConcreteRegisterValue(reg);
       }
 
 
