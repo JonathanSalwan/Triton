@@ -1545,7 +1545,7 @@ namespace triton {
 
         /*
          * Create the semantic.
-         * of = bit_cast((op1 >> (bvSize - 1)) ^ (op1 >> (bvSize - 2)), int1(1)); if op2 == 1
+         * of = ((op1 >> (bvSize - 1)) ^ (op1 >> (bvSize - 2))) & 1; if op2 == 1
          */
         auto node = triton::ast::ite(
                       triton::ast::equal(
