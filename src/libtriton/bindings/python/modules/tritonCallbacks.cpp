@@ -340,7 +340,7 @@ Calls all simplification callbacks recorded and returns a new simplified node. I
 set to True, Triton will use z3 to simplify the given `node` before to call its recorded callbacks.
 
 - <b>dict sliceExpressions(\ref py_SymbolicExpression_page expr)</b><br>
-Slices expressions from a given one and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
+Slices expressions from a given one (backward slicing) and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
 
 - <b>bool taintAssignmentMemoryImmediate(\ref py_MemoryAccess_page memDst)</b><br>
 Taints `memDst` with an assignment - `memDst` is untained. Returns true if the `memDst` is still tainted.
