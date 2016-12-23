@@ -272,7 +272,7 @@ namespace triton {
 
       static PyObject* Register_richcompare(PyObject* self, PyObject* other, int op)
       {
-        PyObject* result    = NULL;
+        PyObject* result    = nullptr;
         triton::uint32 id1  = 0;
         triton::uint32 id2  = 0;
 

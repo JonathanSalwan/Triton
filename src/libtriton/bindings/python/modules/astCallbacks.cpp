@@ -218,7 +218,7 @@ Python's Operator | e.g: SMT2-Lib format
 a + b             | (bvadd a b)
 a - b             | (bvsub a b)
 a \* b            | (bvmul a b)
-a \ b             | (bvsdiv a b)
+a / b             | (bvudiv a b)
 a \| b            | (bvor a b)
 a & b             | (bvand a b)
 a ^ b             | (bvxor a b)
@@ -227,6 +227,12 @@ a << b            | (bvshl a b)
 a \>> b           | (bvlshr a b)
 ~a                | (bvnot a)
 -a                | (bvneg a)
+a == b            | (= a b)
+a != b            | (not (= a b))
+a <= b            | (bvule a b)
+a >= b            | (bvuge a b)
+a < b             | (bvult a b)
+a > b             | (bvugt a b)
 
 \anchor ast
 \section ast_py_api Python API - Methods of the ast module
