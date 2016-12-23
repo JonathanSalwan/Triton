@@ -363,7 +363,16 @@ namespace triton {
 
 
     bool operator<(const MemoryAccess& mem1, const MemoryAccess& mem2) {
-      return (mem1.getAddress() * mem1.getSize()) < (mem2.getAddress() * mem2.getSize());
+      triton::usize seed1 = 0;
+      triton::usize seed2 = 0;
+
+      seed1 ^= mem1.getAddress() + 0x9e3779b9 + (seed1 << 6) + (seed1 >> 2);
+      seed1 ^= mem1.getSize() + 0x9e3779b9 + (seed1 << 6) + (seed1 >> 2);
+
+      seed2 ^= mem2.getAddress() + 0x9e3779b9 + (seed2 << 6) + (seed2 >> 2);
+      seed2 ^= mem2.getSize() + 0x9e3779b9 + (seed2 << 6) + (seed2 >> 2);
+
+      return (seed1 < seed2);
     }
 
   }; /* arch namespace */
