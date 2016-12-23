@@ -1486,6 +1486,18 @@ void check(void)
   asm("pxor xmm1, xmm2");
   asm("pxor xmm2, xmm3");
 
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("andn rcx, rax, rbx");
+
+  asm("mov rax, 0x1824671246812731");
+  asm("mov rbx, 0x7162738189475322");
+  asm("andn rcx, rax, rbx");
+
+  asm("mov rax, 0x8236543983945734");
+  asm("mov rbx, 0x9894568734758341");
+  asm("andn rcx, rax, rbx");
+
   asm("movaps xmm1, xmmword ptr [%0]" :: "r"(tab1));
   asm("movaps xmm2, xmmword ptr [%0]" :: "r"(tab2));
   asm("movaps xmm3, xmmword ptr [%0]" :: "r"(tab1));

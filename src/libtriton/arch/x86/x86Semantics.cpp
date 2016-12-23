@@ -34,6 +34,7 @@ Mnemonic                     | Extensions | Description
 ADC                          |            | Add with Carry
 ADD                          |            | Add
 AND                          |            | Logical AND
+ANDN                         | BMI1       | Logical AND NOT
 ANDNPD                       | sse2       | Bitwise Logical AND NOT of Packed Double-Precision Floating-Point Values
 ANDNPS                       | sse1       | Bitwise Logical AND NOT of Packed Single-Precision Floating-Point Values
 ANDPD                        | sse2       | Bitwise Logical AND of Packed Double-Precision Floating-Point Values
@@ -334,6 +335,7 @@ namespace triton {
           case ID_INS_ADC:            this->adc_s(inst);          break;
           case ID_INS_ADD:            this->add_s(inst);          break;
           case ID_INS_AND:            this->and_s(inst);          break;
+          case ID_INS_ANDN:           this->andn_s(inst);         break;
           case ID_INS_ANDNPD:         this->andnpd_s(inst);       break;
           case ID_INS_ANDNPS:         this->andnps_s(inst);       break;
           case ID_INS_ANDPD:          this->andpd_s(inst);        break;
@@ -1929,6 +1931,34 @@ namespace triton {
         this->clearFlag_s(inst, TRITON_X86_REG_CF, "Clears carry flag");
         this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
         this->pf_s(inst, expr, dst);
+        this->sf_s(inst, expr, dst);
+        this->zf_s(inst, expr, dst);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::andn_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+
+        /* Create the semantics */
+        auto node = triton::ast::bvand(triton::ast::bvnot(op2), op3);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ANDN operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
+
+        this->clearFlag_s(inst, TRITON_X86_REG_CF, "Clears carry flag");
+        this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
         this->sf_s(inst, expr, dst);
         this->zf_s(inst, expr, dst);
 

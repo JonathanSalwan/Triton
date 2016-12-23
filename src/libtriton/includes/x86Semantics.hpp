@@ -329,6 +329,9 @@ namespace triton {
           //! The AND semantics.
           void and_s(triton::arch::Instruction& inst);
 
+          //! The ANDN semantics.
+          void andn_s(triton::arch::Instruction& inst);
+
           //! The ANDNPD semantics.
           void andnpd_s(triton::arch::Instruction& inst);
 
