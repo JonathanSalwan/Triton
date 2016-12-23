@@ -253,6 +253,11 @@ namespace triton {
       }
 
 
+      static long Register_hash(PyObject* self) {
+        return PyRegister_AsRegister(self)->getId();
+      }
+
+
       static PyObject* Register_str(PyObject* self) {
         try {
           std::stringstream str;
@@ -262,6 +267,47 @@ namespace triton {
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
+      }
+
+
+      static PyObject* Register_richcompare(PyObject* self, PyObject* other, int op)
+      {
+        PyObject* result    = NULL;
+        triton::uint32 id1  = 0;
+        triton::uint32 id2  = 0;
+
+        if (!PyRegister_Check(other)) {
+          result = Py_NotImplemented;
+        }
+
+        else {
+          id1 = PyRegister_AsRegister(self)->getId();
+          id2 = PyRegister_AsRegister(other)->getId();
+
+          switch (op) {
+            case Py_LT:
+                result = (id1 <  id2) ? Py_True : Py_False;
+                break;
+            case Py_LE:
+                result = (id1 <= id2) ? Py_True : Py_False;
+                break;
+            case Py_EQ:
+                result = (id1 == id2) ? Py_True : Py_False;
+                break;
+            case Py_NE:
+                result = (id1 != id2) ? Py_True : Py_False;
+                break;
+            case Py_GT:
+                result = (id1 >  id2) ? Py_True : Py_False;
+                break;
+            case Py_GE:
+                result = (id1 >= id2) ? Py_True : Py_False;
+                break;
+          }
+        }
+
+        Py_INCREF(result);
+        return result;
       }
 
 
@@ -297,7 +343,7 @@ namespace triton {
         0,                                          /* tp_as_number */
         0,                                          /* tp_as_sequence */
         0,                                          /* tp_as_mapping */
-        0,                                          /* tp_hash */
+        (hashfunc)Register_hash,                    /* tp_hash */
         0,                                          /* tp_call */
         (reprfunc)Register_str,                     /* tp_str */
         0,                                          /* tp_getattro */
@@ -307,7 +353,7 @@ namespace triton {
         "Register objects",                         /* tp_doc */
         0,                                          /* tp_traverse */
         0,                                          /* tp_clear */
-        0,                                          /* tp_richcompare */
+        (richcmpfunc)Register_richcompare,          /* tp_richcompare */
         0,                                          /* tp_weaklistoffset */
         0,                                          /* tp_iter */
         0,                                          /* tp_iternext */
