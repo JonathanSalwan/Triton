@@ -104,10 +104,17 @@ namespace triton {
 
           //! The CF semantics.
           void cfBlsi_s(triton::arch::Instruction& inst,
-                       triton::engines::symbolic::SymbolicExpression* parent,
-                       triton::arch::OperandWrapper& dst,
-                       triton::ast::AbstractNode* op1,
-                       bool vol=false);
+                        triton::engines::symbolic::SymbolicExpression* parent,
+                        triton::arch::OperandWrapper& dst,
+                        triton::ast::AbstractNode* op1,
+                        bool vol=false);
+
+          //! The CF semantics.
+          void cfBlsmsk_s(triton::arch::Instruction& inst,
+                          triton::engines::symbolic::SymbolicExpression* parent,
+                          triton::arch::OperandWrapper& dst,
+                          triton::ast::AbstractNode* op1,
+                          bool vol=false);
 
           //! The CF semantics.
           void cfImul_s(triton::arch::Instruction& inst,
@@ -353,6 +360,9 @@ namespace triton {
 
           //! The BLSI semantics.
           void blsi_s(triton::arch::Instruction& inst);
+
+          //! The BLSMSK semantics.
+          void blsmsk_s(triton::arch::Instruction& inst);
 
           //! The BSF semantics.
           void bsf_s(triton::arch::Instruction& inst);
