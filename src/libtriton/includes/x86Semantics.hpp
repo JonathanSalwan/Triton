@@ -1049,6 +1049,9 @@ namespace triton {
           //! The SHL semantics.
           void shl_s(triton::arch::Instruction& inst);
 
+          //! The SHLD semantics.
+          void shld_s(triton::arch::Instruction& inst);
+
           //! The SHR semantics.
           void shr_s(triton::arch::Instruction& inst);
 

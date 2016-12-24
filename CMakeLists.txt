@@ -287,8 +287,11 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    set(TRITON_HEADER_INSTALL C:\\Triton\\include\\triton)
-    set(TRITON_LIB_INSTALL C:\\Triton\\lib)
+    if(NOT INSTALL_PREFIX)
+        set(INSTALL_PREFIX C:\\Triton)
+    endif()
+    set(TRITON_HEADER_INSTALL ${INSTALL_PREFIX}\\include\\triton)
+    set(TRITON_LIB_INSTALL ${INSTALL_PREFIX}\\lib)
 endif()
 
 install (TARGETS ${PROJECT_LIBTRITON} DESTINATION ${TRITON_LIB_INSTALL})
