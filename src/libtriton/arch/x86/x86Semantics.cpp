@@ -39,6 +39,7 @@ ANDNPD                       | sse2       | Bitwise Logical AND NOT of Packed Do
 ANDNPS                       | sse1       | Bitwise Logical AND NOT of Packed Single-Precision Floating-Point Values
 ANDPD                        | sse2       | Bitwise Logical AND of Packed Double-Precision Floating-Point Values
 ANDPS                        | sse1       | Bitwise Logical AND of Packed Single-Precision Floating-Point Values
+BEXTR                        | bmi1       | Bit Field Extract
 BLSI                         | bmi1       | Extract Lowest Set Isolated Bit
 BLSMSK                       | bmi1       | Get Mask Up to Lowest Set Bit
 BLSR                         | bmi1       | Reset Lowest Set Bit
@@ -343,6 +344,7 @@ namespace triton {
           case ID_INS_ANDNPS:         this->andnps_s(inst);       break;
           case ID_INS_ANDPD:          this->andpd_s(inst);        break;
           case ID_INS_ANDPS:          this->andps_s(inst);        break;
+          case ID_INS_BEXTR:          this->bextr_s(inst);        break;
           case ID_INS_BLSI:           this->blsi_s(inst);         break;
           case ID_INS_BLSMSK:         this->blsmsk_s(inst);       break;
           case ID_INS_BLSR:           this->blsr_s(inst);         break;
@@ -2136,6 +2138,46 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::bextr_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+
+        /* Create the semantics */
+        auto node = triton::ast::bvand(
+                      triton::ast::bvlshr(
+                        op1,
+                        triton::ast::zx(src1.getBitSize() - BYTE_SIZE_BIT, triton::ast::extract(7, 0, op2))
+                      ),
+                      triton::ast::bvsub(
+                        triton::ast::bvshl(
+                          triton::ast::bv(1, src1.getBitSize()),
+                          triton::ast::zx(src1.getBitSize() - BYTE_SIZE_BIT, triton::ast::extract(15, 8, op2))
+                        ),
+                        triton::ast::bv(1, src1.getBitSize())
+                      )
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "BEXTR operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
+
+        /* Upate symbolic flags */
+        this->clearFlag_s(inst, TRITON_X86_REG_CF, "Clears carry flag");
+        this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
+        this->zf_s(inst, expr, dst);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

@@ -1498,6 +1498,98 @@ void check(void)
   asm("mov rbx, 0x9894568734758341");
   asm("andn rcx, rax, rbx");
 
+  asm("mov rax, 0x0000000000000000");
+  asm("mov rbx, 0x0000000000000000");
+  asm("andn rcx, rax, rbx");
+
+  asm("mov rax, 0x0000000000000001");
+  asm("mov rbx, 0x0000000000000000");
+  asm("andn rcx, rax, rbx");
+
+  asm("mov rax, 0x0000000000000000");
+  asm("mov rbx, 0x0000000000000001");
+  asm("andn rcx, rax, rbx");
+
+  asm("mov rax, 0x7fffffffffffffff");
+  asm("mov rbx, 0x0000000000000001");
+  asm("andn rcx, rax, rbx");
+
+  asm("mov rax, 0x0000000000000001");
+  asm("mov rbx, 0x7fffffffffffffff");
+  asm("andn rcx, rax, rbx");
+
+  asm("mov rax, 0x0000000000000000");
+  asm("mov rbx, 0x7fffffffffffffff");
+  asm("andn rcx, rax, rbx");
+
+  asm("mov rax, 0x8000000000000000");
+  asm("mov rbx, 0x7fffffffffffffff");
+  asm("andn rcx, rax, rbx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x1824671246812731");
+  asm("mov rbx, 0x7162738189475322");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x8236543983945734");
+  asm("mov rbx, 0x9894568734758341");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x0000000000000000");
+  asm("mov rbx, 0x0000000000000000");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x0000000000000001");
+  asm("mov rbx, 0x0000000000000000");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x0000000000000000");
+  asm("mov rbx, 0x0000000000000001");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x7fffffffffffffff");
+  asm("mov rbx, 0x0000000000000001");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x0000000000000001");
+  asm("mov rbx, 0x7fffffffffffffff");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x0000000000000000");
+  asm("mov rbx, 0x7fffffffffffffff");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x8000000000000000");
+  asm("mov rbx, 0x7fffffffffffffff");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x8236543983945734");
+  asm("mov rbx, 0x0000000000000005");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x8236543983945734");
+  asm("mov rbx, 0x0000000000000055");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x8236543983945734");
+  asm("mov rbx, 0x0000000000000555");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x8236543983945734");
+  asm("mov rbx, 0x0000000000005555");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x8236543983945734");
+  asm("mov rbx, 0x00000000000055555");
+  asm("bextr rcx, rax, rbx");
+
+  asm("mov rax, 0x8236543983945734");
+  asm("mov rbx, 0x00000000000555555");
+  asm("bextr rcx, rax, rbx");
+
   asm("mov rax, 0x0123456789abcdef");
   asm("blsi rcx, rax");
 

@@ -365,6 +365,9 @@ namespace triton {
           //! The ANDPS semantics.
           void andps_s(triton::arch::Instruction& inst);
 
+          //! The BEXTR semantics.
+          void bextr_s(triton::arch::Instruction& inst);
+
           //! The BLSI semantics.
           void blsi_s(triton::arch::Instruction& inst);
 
