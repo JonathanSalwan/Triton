@@ -34,11 +34,12 @@ Mnemonic                     | Extensions | Description
 ADC                          |            | Add with Carry
 ADD                          |            | Add
 AND                          |            | Logical AND
-ANDN                         | BMI1       | Logical AND NOT
+ANDN                         | bmi1       | Logical AND NOT
 ANDNPD                       | sse2       | Bitwise Logical AND NOT of Packed Double-Precision Floating-Point Values
 ANDNPS                       | sse1       | Bitwise Logical AND NOT of Packed Single-Precision Floating-Point Values
 ANDPD                        | sse2       | Bitwise Logical AND of Packed Double-Precision Floating-Point Values
 ANDPS                        | sse1       | Bitwise Logical AND of Packed Single-Precision Floating-Point Values
+BLSI                         | bmi1       | Extract Lowest Set Isolated Bit
 BSF                          |            | Bit Scan Forward
 BSR                          |            | Bit Scan Reverse
 BSWAP                        |            | Byte Swap
@@ -340,6 +341,7 @@ namespace triton {
           case ID_INS_ANDNPS:         this->andnps_s(inst);       break;
           case ID_INS_ANDPD:          this->andpd_s(inst);        break;
           case ID_INS_ANDPS:          this->andps_s(inst);        break;
+          case ID_INS_BLSI:           this->blsi_s(inst);         break;
           case ID_INS_BSF:            this->bsf_s(inst);          break;
           case ID_INS_BSR:            this->bsr_s(inst);          break;
           case ID_INS_BSWAP:          this->bswap_s(inst);        break;
@@ -875,6 +877,33 @@ namespace triton {
                           ),
                         triton::ast::bvxor(op1, op2))
                       )
+                    );
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+      }
+
+
+      void x86Semantics::cfBlsi_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 bool vol) {
+
+        /*
+         * Create the semantic.
+         * cf = 0 if op1 == 0 else 1
+         */
+        auto node = triton::ast::ite(
+                      triton::ast::equal(
+                        op1,
+                        triton::ast::bv(0, dst.getBitSize())
+                      ),
+                      triton::ast::bv(0, 1),
+                      triton::ast::bv(1, 1)
                     );
 
         /* Create the symbolic expression */
@@ -2049,6 +2078,33 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::blsi_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+
+        /* Create the semantics */
+        auto node = triton::ast::bvand(triton::ast::bvneg(op1), op1);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "BLSI operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate symbolic flags */
+        this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
+        this->cfBlsi_s(inst, expr, src, op1);
+        this->sf_s(inst, expr, dst);
+        this->zf_s(inst, expr, dst);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

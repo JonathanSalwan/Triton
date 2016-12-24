@@ -103,6 +103,13 @@ namespace triton {
                        bool vol=false);
 
           //! The CF semantics.
+          void cfBlsi_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       bool vol=false);
+
+          //! The CF semantics.
           void cfImul_s(triton::arch::Instruction& inst,
                         triton::engines::symbolic::SymbolicExpression* parent,
                         triton::arch::OperandWrapper& dst,
@@ -343,6 +350,9 @@ namespace triton {
 
           //! The ANDPS semantics.
           void andps_s(triton::arch::Instruction& inst);
+
+          //! The BLSI semantics.
+          void blsi_s(triton::arch::Instruction& inst);
 
           //! The BSF semantics.
           void bsf_s(triton::arch::Instruction& inst);

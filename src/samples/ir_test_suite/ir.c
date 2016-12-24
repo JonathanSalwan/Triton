@@ -1498,6 +1498,39 @@ void check(void)
   asm("mov rbx, 0x9894568734758341");
   asm("andn rcx, rax, rbx");
 
+  asm("mov rax, 0x0123456789abcdef");
+  asm("blsi rcx, rax");
+
+  asm("mov rax, 0x0000000000000000");
+  asm("blsi rcx, rax");
+
+  asm("mov rax, 0x0000000000000001");
+  asm("blsi rcx, rax");
+
+  asm("mov rax, 0x1000000000000001");
+  asm("blsi rcx, rax");
+
+  asm("mov rax, 0x8000000000000001");
+  asm("blsi rcx, rax");
+
+  asm("mov rax, 0x8000000000000000");
+  asm("blsi rcx, rax");
+
+  asm("mov rax, 0x7fffffffffffffff");
+  asm("blsi rcx, rax");
+
+  asm("mov rax, 0xffffffffffffffff");
+  asm("blsi rcx, rax");
+
+  asm("mov rax, 0xfffffffffffffffe");
+  asm("blsi rcx, rax");
+
+  asm("mov rax, 0x2364782365872361");
+  asm("blsi rcx, rax");
+
+  asm("mov rax, 0x9283742734823772");
+  asm("blsi rcx, rax");
+
   asm("movaps xmm1, xmmword ptr [%0]" :: "r"(tab1));
   asm("movaps xmm2, xmmword ptr [%0]" :: "r"(tab2));
   asm("movaps xmm3, xmmword ptr [%0]" :: "r"(tab1));
