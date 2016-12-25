@@ -1297,6 +1297,41 @@ namespace triton {
       }
 
 
+      void x86Semantics::cfShld_s(triton::arch::Instruction& inst,
+                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::arch::OperandWrapper& dst,
+                                  triton::ast::AbstractNode* op1,
+                                  triton::ast::AbstractNode* op2,
+                                  triton::ast::AbstractNode* op3,
+                                  bool vol) {
+
+        auto bvSize = op3->getBitvectorSize();
+        auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+
+        /*
+         * Create the semantic.
+         * cf = MSB(rol(op3, concat(op2,op1))) if op3 != 0
+         */
+        auto node = triton::ast::ite(
+                      triton::ast::equal(op3, triton::ast::bv(0, bvSize)),
+                      this->symbolicEngine->buildSymbolicOperand(inst, cf),
+                      triton::ast::extract(
+                        dst.getBitSize(), dst.getBitSize(),
+                        triton::ast::bvrol(
+                          triton::ast::decimal(op3->evaluate()),
+                          triton::ast::concat(op2, op1)
+                        )
+                      )
+                    );
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+      }
+
+
       void x86Semantics::cfShr_s(triton::arch::Instruction& inst,
                                  triton::engines::symbolic::SymbolicExpression* parent,
                                  triton::arch::OperandWrapper& dst,
@@ -1661,6 +1696,46 @@ namespace triton {
       }
 
 
+      void x86Semantics::ofShld_s(triton::arch::Instruction& inst,
+                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::arch::OperandWrapper& dst,
+                                  triton::ast::AbstractNode* op1,
+                                  triton::ast::AbstractNode* op2,
+                                  triton::ast::AbstractNode* op3,
+                                  bool vol) {
+
+        auto bvSize = dst.getBitSize();
+        auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+
+        /*
+         * Create the semantic.
+         * of = MSB(rol(op3, concat(op2,op1))) ^ MSB(op1); if op3 == 1
+         */
+        auto node = triton::ast::ite(
+                      triton::ast::equal(
+                        op3,
+                        triton::ast::bv(1, bvSize)),
+                      triton::ast::bvxor(
+                        triton::ast::extract(
+                          dst.getBitSize()-1, dst.getBitSize()-1,
+                          triton::ast::bvrol(
+                            triton::ast::decimal(op3->evaluate()),
+                            triton::ast::concat(op2, op1)
+                          )
+                        ),
+                        triton::ast::extract(dst.getBitSize()-1, dst.getBitSize()-1, op1)
+                      ),
+                      this->symbolicEngine->buildSymbolicOperand(inst, of)
+                    );
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+      }
+
+
       void x86Semantics::ofShr_s(triton::arch::Instruction& inst,
                                  triton::engines::symbolic::SymbolicExpression* parent,
                                  triton::arch::OperandWrapper& dst,
@@ -1838,6 +1913,41 @@ namespace triton {
                       triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
                       this->symbolicEngine->buildSymbolicOperand(inst, sf),
                       triton::ast::extract(high, high, triton::ast::reference(parent->getId()))
+                    );
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_SF, "Sign flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_SF, parent->isTainted);
+      }
+
+
+      void x86Semantics::sfShld_s(triton::arch::Instruction& inst,
+                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::arch::OperandWrapper& dst,
+                                  triton::ast::AbstractNode* op1,
+                                  triton::ast::AbstractNode* op2,
+                                  triton::ast::AbstractNode* op3,
+                                  bool vol) {
+
+        auto bvSize = op3->getBitvectorSize();
+        auto sf     = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+
+        /*
+         * Create the semantic.
+         * MSB(rol(op3, concat(op2,op1))) if op3 != 0
+         */
+        auto node = triton::ast::ite(
+                      triton::ast::equal(op3, triton::ast::bv(0, bvSize)),
+                      this->symbolicEngine->buildSymbolicOperand(inst, sf),
+                      triton::ast::extract(
+                        dst.getBitSize()-1, dst.getBitSize()-1,
+                        triton::ast::bvrol(
+                          triton::ast::decimal(op3->evaluate()),
+                          triton::ast::concat(op2, op1)
+                        )
+                      )
                     );
 
         /* Create the symbolic expression */
@@ -10483,80 +10593,64 @@ namespace triton {
         this->controlFlow_s(inst);
       }
 
-      void x86Semantics::shld_s(triton::arch::Instruction& inst) {
-        auto& dst = inst.operands[0];
-        auto& src = inst.operands[1];
-        auto& cnt = inst.operands[2];
 
-        /*
-         * Note that the SMT2-LIB doesn't support expression as rotate value.
-         * The opCnt must be the value of the concretization.
-         */
-        triton::uint512 concreteOp2 = 0;
+      void x86Semantics::shld_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
           case QWORD_SIZE_BIT:
-            concreteOp2 = ((this->symbolicEngine->buildSymbolicOperand(inst, cnt)->evaluate() & (QWORD_SIZE_BIT-1)) % dst.getBitSize());
+            op3 = triton::ast::bvsmod(
+                    triton::ast::bvand(
+                      op3,
+                      triton::ast::bv(QWORD_SIZE_BIT-1, src2.getBitSize())),
+                    triton::ast::bv(dst.getBitSize(), src2.getBitSize())
+                  );
             break;
 
           /* Mask 0x1f MOD size */
           case DWORD_SIZE_BIT:
           case WORD_SIZE_BIT:
-            concreteOp2 = ((this->symbolicEngine->buildSymbolicOperand(inst, cnt)->evaluate() & (DWORD_SIZE_BIT-1)) % DWORD_SIZE_BIT);  //wraps around for word arg, cnt between 17..32
+            op3 = triton::ast::bvsmod(
+                    triton::ast::bvand(
+                      op3,
+                      triton::ast::bv(DWORD_SIZE_BIT-1, src2.getBitSize())),
+                    triton::ast::bv(DWORD_SIZE_BIT, src2.getBitSize())
+                  );
             break;
 
           default:
             throw triton::exceptions::Semantics("x86Semantics::shld_s(): Invalid destination size");
         }
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto opCnt = triton::ast::decimal(concreteOp2);
-
         /* Create the semantics */
-        auto node = triton::ast::extract(dst.getBitSize()-1, 0, triton::ast::bvrol(opCnt, triton::ast::concat(op2, op1)));
+        auto node = triton::ast::extract(
+                      dst.getBitSize()-1, 0,
+                      triton::ast::bvrol(
+                        triton::ast::decimal(op3->evaluate()),
+                        triton::ast::concat(op2, op1))
+                    );
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SHLD operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src)
-                       || this->taintEngine->taintUnion(dst, cnt);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted |= this->taintEngine->taintUnion(dst, src2);
 
         /* Upate symbolic flags */
-        if (concreteOp2) {
-            auto cfnode = triton::ast::extract(dst.getBitSize(), dst.getBitSize(),
-                triton::ast::bvrol(opCnt, triton::ast::concat(op2, op1)));
-            auto cfexpr = this->symbolicEngine->createSymbolicFlagExpression(inst, cfnode, TRITON_X86_REG_CF, "Carry flag");
-            cfexpr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, expr->isTainted);
-
-            auto ofnode = triton::ast::extract(dst.getBitSize()-1, dst.getBitSize()-1,
-                op1);
-            auto ofexpr = this->symbolicEngine->createSymbolicFlagExpression(inst, ofnode, TRITON_X86_REG_OF, "Overflow flag");
-            ofexpr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, expr->isTainted);
-
-            auto pfnode = triton::ast::bv(1, 1);
-            for (triton::uint32 counter = 0; counter <= BYTE_SIZE_BIT-1; counter++) {
-                pfnode = triton::ast::bvxor(pfnode,
-                    triton::ast::extract(counter, counter,
-                        triton::ast::bvrol(opCnt, triton::ast::concat(op2, op1))
-                    )
-                );
-            }
-            auto pfexpr = this->symbolicEngine->createSymbolicFlagExpression(inst, pfnode, TRITON_X86_REG_PF, "Parity flag");
-            pfexpr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_PF, expr->isTainted);
-
-            auto sfnode = triton::ast::extract(dst.getBitSize()-1, dst.getBitSize()-1,
-                triton::ast::bvrol(opCnt, triton::ast::concat(op2, op1)));
-            auto sfexpr = this->symbolicEngine->createSymbolicFlagExpression(inst, sfnode, TRITON_X86_REG_SF, "Sign flag");
-            sfexpr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_SF, expr->isTainted);
-
-            auto zfnode = triton::ast::equal(node, triton::ast::bv(0, dst.getBitSize()));
-            auto zfexpr = this->symbolicEngine->createSymbolicFlagExpression(inst, zfnode, TRITON_X86_REG_ZF, "Zero flag");
-            zfexpr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_ZF, expr->isTainted);
-        }
+        this->cfShld_s(inst, expr, dst, op1, op2, op3);
+        this->ofShld_s(inst, expr, dst, op1, op2, op3);
+        this->pfShl_s(inst, expr, dst, op3);
+        this->sfShld_s(inst, expr, dst, op1, op2, op3);
+        this->zfShl_s(inst, expr, dst, op3);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

@@ -197,6 +197,15 @@ namespace triton {
                        bool vol=false);
 
           //! The CF semantics.
+          void cfShld_s(triton::arch::Instruction& inst,
+                        triton::engines::symbolic::SymbolicExpression* parent,
+                        triton::arch::OperandWrapper& dst,
+                        triton::ast::AbstractNode* op1,
+                        triton::ast::AbstractNode* op2,
+                        triton::ast::AbstractNode* op3,
+                        bool vol=false);
+
+          //! The CF semantics.
           void cfShr_s(triton::arch::Instruction& inst,
                        triton::engines::symbolic::SymbolicExpression* parent,
                        triton::arch::OperandWrapper& dst,
@@ -280,6 +289,15 @@ namespace triton {
                        bool vol=false);
 
           //! The OF semantics.
+          void ofShld_s(triton::arch::Instruction& inst,
+                        triton::engines::symbolic::SymbolicExpression* parent,
+                        triton::arch::OperandWrapper& dst,
+                        triton::ast::AbstractNode* op1,
+                        triton::ast::AbstractNode* op2,
+                        triton::ast::AbstractNode* op3,
+                        bool vol=false);
+
+          //! The OF semantics.
           void ofShr_s(triton::arch::Instruction& inst,
                        triton::engines::symbolic::SymbolicExpression* parent,
                        triton::arch::OperandWrapper& dst,
@@ -320,6 +338,15 @@ namespace triton {
                        triton::arch::OperandWrapper& dst,
                        triton::ast::AbstractNode* op2,
                        bool vol=false);
+
+          //! The SF semantics.
+          void sfShld_s(triton::arch::Instruction& inst,
+                        triton::engines::symbolic::SymbolicExpression* parent,
+                        triton::arch::OperandWrapper& dst,
+                        triton::ast::AbstractNode* op1,
+                        triton::ast::AbstractNode* op2,
+                        triton::ast::AbstractNode* op3,
+                        bool vol=false);
 
           //! The ZF semantics.
           void zf_s(triton::arch::Instruction& inst,
