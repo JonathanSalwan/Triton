@@ -287,6 +287,7 @@ STOSW                        |            | Store word at address
 SUB                          |            | Subtract
 SYSCALL                      |            | Fast System Call
 TEST                         |            | Logical Compare
+TZCNT                        | bmi1       | Count the Number of Trailing Zero Bits
 UNPCKHPD                     | sse2       | Unpack and Interleave High Packed Double- Precision Floating-Point Values
 UNPCKHPS                     | sse1       | Unpack and Interleave High Packed Single-Precision Floating-Point Values
 UNPCKLPD                     | sse2       | Unpack and Interleave Low Packed Double-Precision Floating-Point Values
@@ -594,6 +595,7 @@ namespace triton {
           case ID_INS_SUB:            this->sub_s(inst);          break;
           case ID_INS_SYSCALL:        this->syscall_s(inst);      break;
           case ID_INS_TEST:           this->test_s(inst);         break;
+          case ID_INS_TZCNT:          this->tzcnt_s(inst);        break;
           case ID_INS_UNPCKHPD:       this->unpckhpd_s(inst);     break;
           case ID_INS_UNPCKHPS:       this->unpckhps_s(inst);     break;
           case ID_INS_UNPCKLPD:       this->unpcklpd_s(inst);     break;
@@ -11116,6 +11118,188 @@ namespace triton {
         this->pf_s(inst, expr, src1, true);
         this->sf_s(inst, expr, src1, true);
         this->zf_s(inst, expr, src1, true);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::tzcnt_s(triton::arch::Instruction& inst) {
+        auto& dst     = inst.operands[0];
+        auto& src     = inst.operands[1];
+        auto  bvSize1 = dst.getBitSize();
+        auto  bvSize2 = src.getBitSize();
+
+        /* Create symbolic operands */
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+
+        /* Create the semantics */
+        triton::ast::AbstractNode* node = nullptr;
+        switch (src.getSize()) {
+          case BYTE_SIZE:
+            node = triton::ast::ite(
+                     triton::ast::equal(op2, triton::ast::bv(0, bvSize2)),
+                     triton::ast::bv(bvSize1, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(0, 0, op2), triton::ast::bvtrue()), triton::ast::bv(0, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(1, 1, op2), triton::ast::bvtrue()), triton::ast::bv(1, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(2, 2, op2), triton::ast::bvtrue()), triton::ast::bv(2, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(3, 3, op2), triton::ast::bvtrue()), triton::ast::bv(3, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(4, 4, op2), triton::ast::bvtrue()), triton::ast::bv(4, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(5, 5, op2), triton::ast::bvtrue()), triton::ast::bv(5, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(6, 6, op2), triton::ast::bvtrue()), triton::ast::bv(6, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(7, 7, op2), triton::ast::bvtrue()), triton::ast::bv(7, bvSize1),
+                     triton::ast::bv(0, bvSize1)
+                     ))))))))
+                   );
+            break;
+          case WORD_SIZE:
+            node = triton::ast::ite(
+                     triton::ast::equal(op2, triton::ast::bv(0, bvSize2)),
+                     triton::ast::bv(bvSize1, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(0, 0, op2), triton::ast::bvtrue()), triton::ast::bv(0, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(1, 1, op2), triton::ast::bvtrue()), triton::ast::bv(1, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(2, 2, op2), triton::ast::bvtrue()), triton::ast::bv(2, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(3, 3, op2), triton::ast::bvtrue()), triton::ast::bv(3, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(4, 4, op2), triton::ast::bvtrue()), triton::ast::bv(4, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(5, 5, op2), triton::ast::bvtrue()), triton::ast::bv(5, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(6, 6, op2), triton::ast::bvtrue()), triton::ast::bv(6, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(7, 7, op2), triton::ast::bvtrue()), triton::ast::bv(7, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(8, 8, op2), triton::ast::bvtrue()), triton::ast::bv(8, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(9, 9, op2), triton::ast::bvtrue()), triton::ast::bv(9, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(10, 10, op2), triton::ast::bvtrue()), triton::ast::bv(10, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(11, 11, op2), triton::ast::bvtrue()), triton::ast::bv(11, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(12, 12, op2), triton::ast::bvtrue()), triton::ast::bv(12, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(13, 13, op2), triton::ast::bvtrue()), triton::ast::bv(13, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(14, 14, op2), triton::ast::bvtrue()), triton::ast::bv(14, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(15, 15, op2), triton::ast::bvtrue()), triton::ast::bv(15, bvSize1),
+                     triton::ast::bv(0, bvSize1)
+                     ))))))))))))))))
+                   );
+            break;
+          case DWORD_SIZE:
+            node = triton::ast::ite(
+                     triton::ast::equal(op2, triton::ast::bv(0, bvSize2)),
+                     triton::ast::bv(bvSize1, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(0, 0, op2), triton::ast::bvtrue()), triton::ast::bv(0, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(1, 1, op2), triton::ast::bvtrue()), triton::ast::bv(1, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(2, 2, op2), triton::ast::bvtrue()), triton::ast::bv(2, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(3, 3, op2), triton::ast::bvtrue()), triton::ast::bv(3, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(4, 4, op2), triton::ast::bvtrue()), triton::ast::bv(4, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(5, 5, op2), triton::ast::bvtrue()), triton::ast::bv(5, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(6, 6, op2), triton::ast::bvtrue()), triton::ast::bv(6, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(7, 7, op2), triton::ast::bvtrue()), triton::ast::bv(7, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(8, 8, op2), triton::ast::bvtrue()), triton::ast::bv(8, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(9, 9, op2), triton::ast::bvtrue()), triton::ast::bv(9, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(10, 10, op2), triton::ast::bvtrue()), triton::ast::bv(10, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(11, 11, op2), triton::ast::bvtrue()), triton::ast::bv(11, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(12, 12, op2), triton::ast::bvtrue()), triton::ast::bv(12, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(13, 13, op2), triton::ast::bvtrue()), triton::ast::bv(13, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(14, 14, op2), triton::ast::bvtrue()), triton::ast::bv(14, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(15, 15, op2), triton::ast::bvtrue()), triton::ast::bv(15, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(16, 16, op2), triton::ast::bvtrue()), triton::ast::bv(16, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(17, 17, op2), triton::ast::bvtrue()), triton::ast::bv(17, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(18, 18, op2), triton::ast::bvtrue()), triton::ast::bv(18, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(19, 19, op2), triton::ast::bvtrue()), triton::ast::bv(19, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(20, 20, op2), triton::ast::bvtrue()), triton::ast::bv(20, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(21, 21, op2), triton::ast::bvtrue()), triton::ast::bv(21, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(22, 22, op2), triton::ast::bvtrue()), triton::ast::bv(22, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(23, 23, op2), triton::ast::bvtrue()), triton::ast::bv(23, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(24, 24, op2), triton::ast::bvtrue()), triton::ast::bv(24, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(25, 25, op2), triton::ast::bvtrue()), triton::ast::bv(25, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(26, 26, op2), triton::ast::bvtrue()), triton::ast::bv(26, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(27, 27, op2), triton::ast::bvtrue()), triton::ast::bv(27, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(28, 28, op2), triton::ast::bvtrue()), triton::ast::bv(28, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(29, 29, op2), triton::ast::bvtrue()), triton::ast::bv(29, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(30, 30, op2), triton::ast::bvtrue()), triton::ast::bv(30, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(31, 31, op2), triton::ast::bvtrue()), triton::ast::bv(31, bvSize1),
+                     triton::ast::bv(0, bvSize1)
+                     ))))))))))))))))))))))))))))))))
+                   );
+            break;
+          case QWORD_SIZE:
+            node = triton::ast::ite(
+                     triton::ast::equal(op2, triton::ast::bv(0, bvSize2)),
+                     triton::ast::bv(bvSize1, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(0, 0, op2), triton::ast::bvtrue()), triton::ast::bv(0, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(1, 1, op2), triton::ast::bvtrue()), triton::ast::bv(1, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(2, 2, op2), triton::ast::bvtrue()), triton::ast::bv(2, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(3, 3, op2), triton::ast::bvtrue()), triton::ast::bv(3, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(4, 4, op2), triton::ast::bvtrue()), triton::ast::bv(4, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(5, 5, op2), triton::ast::bvtrue()), triton::ast::bv(5, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(6, 6, op2), triton::ast::bvtrue()), triton::ast::bv(6, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(7, 7, op2), triton::ast::bvtrue()), triton::ast::bv(7, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(8, 8, op2), triton::ast::bvtrue()), triton::ast::bv(8, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(9, 9, op2), triton::ast::bvtrue()), triton::ast::bv(9, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(10, 10, op2), triton::ast::bvtrue()), triton::ast::bv(10, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(11, 11, op2), triton::ast::bvtrue()), triton::ast::bv(11, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(12, 12, op2), triton::ast::bvtrue()), triton::ast::bv(12, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(13, 13, op2), triton::ast::bvtrue()), triton::ast::bv(13, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(14, 14, op2), triton::ast::bvtrue()), triton::ast::bv(14, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(15, 15, op2), triton::ast::bvtrue()), triton::ast::bv(15, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(16, 16, op2), triton::ast::bvtrue()), triton::ast::bv(16, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(17, 17, op2), triton::ast::bvtrue()), triton::ast::bv(17, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(18, 18, op2), triton::ast::bvtrue()), triton::ast::bv(18, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(19, 19, op2), triton::ast::bvtrue()), triton::ast::bv(19, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(20, 20, op2), triton::ast::bvtrue()), triton::ast::bv(20, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(21, 21, op2), triton::ast::bvtrue()), triton::ast::bv(21, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(22, 22, op2), triton::ast::bvtrue()), triton::ast::bv(22, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(23, 23, op2), triton::ast::bvtrue()), triton::ast::bv(23, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(24, 24, op2), triton::ast::bvtrue()), triton::ast::bv(24, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(25, 25, op2), triton::ast::bvtrue()), triton::ast::bv(25, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(26, 26, op2), triton::ast::bvtrue()), triton::ast::bv(26, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(27, 27, op2), triton::ast::bvtrue()), triton::ast::bv(27, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(28, 28, op2), triton::ast::bvtrue()), triton::ast::bv(28, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(29, 29, op2), triton::ast::bvtrue()), triton::ast::bv(29, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(30, 30, op2), triton::ast::bvtrue()), triton::ast::bv(30, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(31, 31, op2), triton::ast::bvtrue()), triton::ast::bv(31, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(32, 32, op2), triton::ast::bvtrue()), triton::ast::bv(32, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(33, 33, op2), triton::ast::bvtrue()), triton::ast::bv(33, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(34, 34, op2), triton::ast::bvtrue()), triton::ast::bv(34, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(35, 35, op2), triton::ast::bvtrue()), triton::ast::bv(35, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(36, 36, op2), triton::ast::bvtrue()), triton::ast::bv(36, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(37, 37, op2), triton::ast::bvtrue()), triton::ast::bv(37, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(38, 38, op2), triton::ast::bvtrue()), triton::ast::bv(38, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(39, 39, op2), triton::ast::bvtrue()), triton::ast::bv(39, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(40, 40, op2), triton::ast::bvtrue()), triton::ast::bv(40, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(41, 41, op2), triton::ast::bvtrue()), triton::ast::bv(41, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(42, 42, op2), triton::ast::bvtrue()), triton::ast::bv(42, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(43, 43, op2), triton::ast::bvtrue()), triton::ast::bv(43, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(44, 44, op2), triton::ast::bvtrue()), triton::ast::bv(44, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(45, 45, op2), triton::ast::bvtrue()), triton::ast::bv(45, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(46, 46, op2), triton::ast::bvtrue()), triton::ast::bv(46, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(47, 47, op2), triton::ast::bvtrue()), triton::ast::bv(47, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(48, 48, op2), triton::ast::bvtrue()), triton::ast::bv(48, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(49, 49, op2), triton::ast::bvtrue()), triton::ast::bv(49, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(50, 50, op2), triton::ast::bvtrue()), triton::ast::bv(50, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(51, 51, op2), triton::ast::bvtrue()), triton::ast::bv(51, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(52, 52, op2), triton::ast::bvtrue()), triton::ast::bv(52, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(53, 53, op2), triton::ast::bvtrue()), triton::ast::bv(53, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(54, 54, op2), triton::ast::bvtrue()), triton::ast::bv(54, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(55, 55, op2), triton::ast::bvtrue()), triton::ast::bv(55, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(56, 56, op2), triton::ast::bvtrue()), triton::ast::bv(56, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(57, 57, op2), triton::ast::bvtrue()), triton::ast::bv(57, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(58, 58, op2), triton::ast::bvtrue()), triton::ast::bv(58, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(59, 59, op2), triton::ast::bvtrue()), triton::ast::bv(59, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(60, 60, op2), triton::ast::bvtrue()), triton::ast::bv(60, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(61, 61, op2), triton::ast::bvtrue()), triton::ast::bv(61, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(62, 62, op2), triton::ast::bvtrue()), triton::ast::bv(62, bvSize1),
+                     triton::ast::ite(triton::ast::equal(triton::ast::extract(63, 63, op2), triton::ast::bvtrue()), triton::ast::bv(63, bvSize1),
+                     triton::ast::bv(0, bvSize1)
+                     ))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+                   );
+            break;
+          default:
+            throw triton::exceptions::Semantics("x86Semantics::tzcnt_s(): Invalid operand size.");
+        }
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "TZCNT operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate symbolic flags */
+        this->zf_s(inst, expr, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

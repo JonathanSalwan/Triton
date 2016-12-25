@@ -1145,6 +1145,9 @@ namespace triton {
           //! The TEST semantics.
           void test_s(triton::arch::Instruction& inst);
 
+          //! The TZCNT semantics.
+          void tzcnt_s(triton::arch::Instruction& inst);
+
           //! The UNPCKHPD semantics.
           void unpckhpd_s(triton::arch::Instruction& inst);
 

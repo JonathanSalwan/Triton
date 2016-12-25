@@ -173,6 +173,48 @@ void check(void)
   asm("mov rax, 0x0");
   asm("bsr rbx, rax");
 
+  asm("mov rax, 0x0");
+  asm("mov rbx, 0x0");
+  asm("tzcnt rbx, rax");
+  asm("mov rax, 0x0");
+  asm("mov rbx, 0x1");
+  asm("tzcnt rbx, rax");
+  asm("mov rax, 0x1");
+  asm("mov rbx, 0x0");
+  asm("tzcnt rbx, rax");
+  asm("mov rax, 0x2");
+  asm("tzcnt rbx, rax");
+  asm("mov rax, 0x40");
+  asm("tzcnt rbx, rax");
+  asm("mov rax, 0x1000");
+  asm("tzcnt rbx, rax");
+  asm("tzcnt bx, ax");
+  asm("mov rax, 0x0");
+  asm("tzcnt rbx, rax");
+  asm("mov rax, 0x8000000000000000");
+  asm("tzcnt rbx, rax");
+
+  asm("mov rax, 0x0");
+  asm("mov rbx, 0x0");
+  asm("tzcnt ebx, eax");
+  asm("mov rax, 0x0");
+  asm("mov rbx, 0x1");
+  asm("tzcnt ebx, eax");
+  asm("mov rax, 0x1");
+  asm("mov rbx, 0x0");
+  asm("tzcnt ebx, eax");
+  asm("mov rax, 0x2");
+  asm("tzcnt ebx, eax");
+  asm("mov rax, 0x40");
+  asm("tzcnt ebx, eax");
+  asm("mov rax, 0x1000");
+  asm("tzcnt ebx, eax");
+  asm("tzcnt bx, ax");
+  asm("mov rax, 0x0");
+  asm("tzcnt ebx, eax");
+  asm("mov rax, 0x8000000000000000");
+  asm("tzcnt ebx, eax");
+
   init(tab1, tab2, tab3, tab4);
 
   asm("mov rax, 0x1111111111111111");
