@@ -14,8 +14,6 @@
   #include <python2.7/Python.h>
   #include <python2.7/longintrepr.h>
 #elif _WIN32
-  #include <cmath>
-  #define _hypot hypot
   #include <Python.h>
   #include <longintrepr.h>
 #endif

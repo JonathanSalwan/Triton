@@ -28,7 +28,6 @@ struct op trace[] = {
   {0x40001d, (unsigned char *)"\x80\x30\x99",                 3}, /* xor        byte ptr [rax], 0x99        */
   {0x400020, (unsigned char *)"\x80\x30\x99",                 3}, /* xor        byte ptr [rax], 0x99        */
   {0x400023, (unsigned char *)"\x0F\x87\x00\x00\x00\x00",     6}, /* ja         11                          */
-  {0x400023, (unsigned char *)"\x66\x0F\xA5\xC2",             4}, /* shld       dx,ax,cl                    */
   {0x0,      nullptr,                                         0}
 };
 
