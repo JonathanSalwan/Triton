@@ -214,6 +214,15 @@ namespace triton {
                        bool vol=false);
 
           //! The CF semantics.
+          void cfShrd_s(triton::arch::Instruction& inst,
+                        triton::engines::symbolic::SymbolicExpression* parent,
+                        triton::arch::OperandWrapper& dst,
+                        triton::ast::AbstractNode* op1,
+                        triton::ast::AbstractNode* op2,
+                        triton::ast::AbstractNode* op3,
+                        bool vol=false);
+
+          //! The CF semantics.
           void cfSub_s(triton::arch::Instruction& inst,
                        triton::engines::symbolic::SymbolicExpression* parent,
                        triton::arch::OperandWrapper& dst,
@@ -306,6 +315,15 @@ namespace triton {
                        bool vol=false);
 
           //! The OF semantics.
+          void ofShrd_s(triton::arch::Instruction& inst,
+                        triton::engines::symbolic::SymbolicExpression* parent,
+                        triton::arch::OperandWrapper& dst,
+                        triton::ast::AbstractNode* op1,
+                        triton::ast::AbstractNode* op2,
+                        triton::ast::AbstractNode* op3,
+                        bool vol=false);
+
+          //! The OF semantics.
           void ofSub_s(triton::arch::Instruction& inst,
                        triton::engines::symbolic::SymbolicExpression* parent,
                        triton::arch::OperandWrapper& dst,
@@ -341,6 +359,15 @@ namespace triton {
 
           //! The SF semantics.
           void sfShld_s(triton::arch::Instruction& inst,
+                        triton::engines::symbolic::SymbolicExpression* parent,
+                        triton::arch::OperandWrapper& dst,
+                        triton::ast::AbstractNode* op1,
+                        triton::ast::AbstractNode* op2,
+                        triton::ast::AbstractNode* op3,
+                        bool vol=false);
+
+          //! The SF semantics.
+          void sfShrd_s(triton::arch::Instruction& inst,
                         triton::engines::symbolic::SymbolicExpression* parent,
                         triton::arch::OperandWrapper& dst,
                         triton::ast::AbstractNode* op1,
@@ -1081,6 +1108,9 @@ namespace triton {
 
           //! The SHR semantics.
           void shr_s(triton::arch::Instruction& inst);
+
+          //! The SHRD semantics.
+          void shrd_s(triton::arch::Instruction& inst);
 
           //! The STC semantics.
           void stc_s(triton::arch::Instruction& inst);
