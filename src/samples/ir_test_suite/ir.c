@@ -1269,8 +1269,6 @@ void check(void)
   asm("mov rbx, 0x0123456789abcdef");
   asm("shrd ax, bx, 255");
 
-  return;
-
   asm("mov rdx, 0x0123456789abcdef");
   asm("shr edx, 0");
   asm("mov rdx, 0x0123456789abcdef");
