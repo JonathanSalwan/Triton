@@ -10,6 +10,7 @@
 
 #include <abstractBinary.hpp>
 #include <elf.hpp>
+#include <pe.hpp>
 #include <exceptions.hpp>
 
 
@@ -94,10 +95,15 @@ namespace triton {
           if (!this->binary)
             throw triton::exceptions::Format("AbstractBinary::parseBinary(): Not enough memory.");
           break;
+        case triton::format::BINARY_PE:
+          delete this->binary;
+          this->binary = new(std::nothrow) triton::format::pe::PE(path);
+          if (!this->binary)
+            throw triton::exceptions::Format("AbstractBinary::parseBinary(): Not enough memory.");
+          break;
 
         // TODO
         case triton::format::BINARY_MACHO:
-        case triton::format::BINARY_PE:
         default:
           throw triton::exceptions::Format("AbstractBinary::parseBinary(): Unsupported binary format.");
       }
@@ -113,6 +119,13 @@ namespace triton {
       if (this->format != triton::format::BINARY_ELF)
         throw triton::exceptions::Format("AbstractBinary::getElf(): The abstract binary is not an ELF.");
       return reinterpret_cast<triton::format::elf::Elf*>(this->binary);
+    }
+
+
+    triton::format::pe::PE* AbstractBinary::getPE(void) {
+      if (this->format != triton::format::BINARY_PE)
+        throw triton::exceptions::Format("AbstractBinary::getPE(): The abstract binary is not a PE.");
+      return reinterpret_cast<triton::format::pe::PE*>(this->binary);
     }
 
 

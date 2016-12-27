@@ -419,6 +419,18 @@ namespace triton {
     };
 
 
+    /*! \class PE
+     *  \brief The exception class used by the PE format. */
+    class PE : public triton::exceptions::Format {
+      public:
+        //! Constructor.
+        PE(const char* message) : triton::exceptions::Format(message) {};
+
+        //! Constructor.
+        PE(const std::string& message) : triton::exceptions::Format(message) {};
+    };
+
+
     /*! \class Callbacks
      *  \brief The exception class used by callbacks. */
     class Callbacks : public triton::exceptions::Exception {
