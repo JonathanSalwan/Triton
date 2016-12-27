@@ -44,7 +44,7 @@ namespace triton {
       }
 
 
-      triton::uint32 PEHeader::parse(const triton::uint8* raw, triton::uint32 totalSize) {
+      triton::uint32 PEHeader::parse(const triton::uint8* raw, triton::usize totalSize) {
         if (totalSize < 64) {
             throw triton::exceptions::PE("PEHeader::parse(): File is too small.");
         }
