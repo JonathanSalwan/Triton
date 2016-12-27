@@ -1098,24 +1098,15 @@ namespace triton {
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
 
-        auto high = result->getBitvectorSize() - 1;
-        auto cf   = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto bvSize = op2->getBitvectorSize();
+        auto high   = result->getBitvectorSize() - 1;
+        auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
-        /*
-         * Create the semantic.
-         * cf = MSB(result) if op2 != 0 else undefined
-         * As the second operand can't be symbolized, there is
-         * no symbolic expression available. So, we must use the
-         * concretization of the op2.
-         */
-        triton::ast::AbstractNode* node;
-        if (op2->getKind() != triton::ast::DECIMAL_NODE)
-          throw triton::exceptions::Semantics("x86Semantics::cfRcl_s(): op2 must be a DecimalNode node.");
-
-        if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0)
-          node = triton::ast::extract(high, high, result);
-        else
-          node = this->symbolicEngine->buildSymbolicOperand(inst, cf);
+        auto node = triton::ast::ite(
+                      triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
+                      this->symbolicEngine->buildSymbolicOperand(inst, cf),
+                      triton::ast::extract(high, high, result)
+                    );
 
         /* Create the symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
@@ -1168,24 +1159,16 @@ namespace triton {
                                  triton::ast::AbstractNode* op2,
                                  bool vol) {
 
-        auto low = vol ? 0 : dst.getAbstractLow();
-        auto cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto bvSize = op2->getBitvectorSize();
+        auto low    = vol ? 0 : dst.getAbstractLow();
+        auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
-        /*
-         * Create the semantic.
-         * cf = LSB(parent) if op2 != 0 else undefined
-         * As the second operand can't be symbolized, there is
-         * no symbolic expression available. So, we must use the
-         * concretization of the op2.
-         */
-        triton::ast::AbstractNode* node;
-        if (op2->getKind() != triton::ast::DECIMAL_NODE)
-          throw triton::exceptions::Semantics("x86Semantics::cfRol_s(): op2 must be a DecimalNode node.");
-
-        if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() != 0)
-          node = triton::ast::extract(low, low, triton::ast::reference(parent->getId()));
-        else
-          node = this->symbolicEngine->buildSymbolicOperand(inst, cf);
+        auto node = triton::ast::ite(
+                      triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
+                      this->symbolicEngine->buildSymbolicOperand(inst, cf),
+                      triton::ast::extract(low, low, triton::ast::reference(parent->getId()))
+                    );
+        //auto node = triton::ast::extract(low, low, triton::ast::reference(parent->getId()));
 
         /* Create the symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
@@ -1563,26 +1546,14 @@ namespace triton {
         auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
         auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
 
-        /*
-         * Create the semantic.
-         * of = MSB(parent) ^ cf if op2 == 1 else undefined
-         * As the second operand can't be symbolized, there is
-         * no symbolic expression available. So, we must use the
-         * concretization of the op2.
-         */
-        if (op2->getKind() != triton::ast::DECIMAL_NODE)
-          throw triton::exceptions::Semantics("x86Semantics::ofRol_s(): op2 must be a DecimalNode node.");
-
-        triton::ast::AbstractNode* node;
-        if (reinterpret_cast<triton::ast::DecimalNode*>(op2)->getValue() == 1) {
-          node = triton::ast::bvxor(
-                   triton::ast::extract(high, high, triton::ast::reference(parent->getId())),
-                   this->symbolicEngine->buildSymbolicOperand(inst, cf)
-                 );
-        }
-        else {
-          node = this->symbolicEngine->buildSymbolicOperand(inst, of);
-        }
+        auto node = triton::ast::ite(
+                      triton::ast::equal(op2, triton::ast::bv(1, bvSize)),
+                      triton::ast::bvxor(
+                        triton::ast::extract(high, high, triton::ast::reference(parent->getId())),
+                        this->symbolicEngine->buildSymbolicOperand(inst, cf)
+                      ),
+                      this->symbolicEngine->buildSymbolicOperand(inst, of)
+                    );
 
         /* Create the symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
@@ -9597,40 +9568,46 @@ namespace triton {
         auto& src   = inst.operands[1];
         auto  srcCf = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
 
-        /*
-         * Note that the SMT2-LIB doesn't support expression as rotate value.
-         * The op2 must be the value of the concretization.
-         */
-        triton::uint512 concreteOp2 = 0;
+        /* Create symbolic operands */
+        auto op1    = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+        auto op2    = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto op2bis = this->symbolicEngine->buildSymbolicOperand(src);
+        auto op3    = this->symbolicEngine->buildSymbolicOperand(inst, srcCf);
 
         switch (dst.getBitSize()) {
           /* Mask: 0x1f without MOD */
           case QWORD_SIZE_BIT:
-            concreteOp2 = (this->symbolicEngine->buildSymbolicOperand(inst, src)->evaluate() & (QWORD_SIZE_BIT-1));
+            op2 = triton::ast::bvand(
+                    op2,
+                    triton::ast::bv(QWORD_SIZE_BIT-1, src.getBitSize())
+                  );
             break;
 
           /* Mask: 0x1f without MOD */
           case DWORD_SIZE_BIT:
-            concreteOp2 = (this->symbolicEngine->buildSymbolicOperand(inst, src)->evaluate() & (DWORD_SIZE_BIT-1));
+            op2 = triton::ast::bvand(
+                    op2,
+                    triton::ast::bv(DWORD_SIZE_BIT-1, src.getBitSize())
+                  );
             break;
 
           /* Mask: 0x1f MOD size + 1 */
           case WORD_SIZE_BIT:
           case BYTE_SIZE_BIT:
-            concreteOp2 = ((this->symbolicEngine->buildSymbolicOperand(inst, src)->evaluate() & (DWORD_SIZE_BIT-1)) % (dst.getBitSize() + 1));
+            op2 = triton::ast::bvsmod(
+                    triton::ast::bvand(
+                      op2,
+                      triton::ast::bv(DWORD_SIZE_BIT-1, src.getBitSize())),
+                    triton::ast::bv(dst.getBitSize()+1, src.getBitSize())
+                  );
             break;
 
           default:
             throw triton::exceptions::Semantics("x86Semantics::rcl_s(): Invalid destination size");
         }
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = triton::ast::decimal(concreteOp2);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcCf);
-
         /* Create the semantics */
-        auto node1 = triton::ast::bvrol(op2, triton::ast::concat(op3, op1));
+        auto node1 = triton::ast::bvrol(triton::ast::decimal(op2->evaluate()), triton::ast::concat(op3, op1));
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "RCL tempory operation");
@@ -9649,8 +9626,8 @@ namespace triton {
         expr2->isTainted = this->taintEngine->taintUnion(dst, srcCf);
 
         /* Upate symbolic flags */
-        this->cfRcl_s(inst, expr2, node1, op2);
-        this->ofRol_s(inst, expr2, dst, op2); /* Same as ROL */
+        this->cfRcl_s(inst, expr2, node1, op2bis);
+        this->ofRol_s(inst, expr2, dst, op2bis); /* Same as ROL */
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -9780,35 +9757,50 @@ namespace triton {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
-        /*
-         * Note that the SMT2-LIB doesn't support expression as rotate value.
-         * The op2 must be the value of the concretization.
-         */
-        triton::uint512 concreteOp2 = 0;
+        /* Create symbolic operands */
+        auto op1    = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+        auto op2    = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto op2bis = this->symbolicEngine->buildSymbolicOperand(src);
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
           case QWORD_SIZE_BIT:
-            concreteOp2 = ((this->symbolicEngine->buildSymbolicOperand(inst, src)->evaluate() & (QWORD_SIZE_BIT-1)) % dst.getBitSize());
+            op2 = triton::ast::bvsmod(
+                    triton::ast::bvand(
+                      op2,
+                      triton::ast::bv(QWORD_SIZE_BIT-1, src.getBitSize())),
+                    triton::ast::bv(dst.getBitSize(), src.getBitSize())
+                  );
+
+            op2bis = triton::ast::bvand(
+                       op2bis,
+                       triton::ast::bv(QWORD_SIZE_BIT-1, src.getBitSize())
+                     );
             break;
 
           /* Mask 0x1f MOD size */
           case DWORD_SIZE_BIT:
           case WORD_SIZE_BIT:
           case BYTE_SIZE_BIT:
-            concreteOp2 = ((this->symbolicEngine->buildSymbolicOperand(inst, src)->evaluate() & (DWORD_SIZE_BIT-1)) % dst.getBitSize());
+            op2 = triton::ast::bvsmod(
+                    triton::ast::bvand(
+                      op2,
+                      triton::ast::bv(DWORD_SIZE_BIT-1, src.getBitSize())),
+                    triton::ast::bv(dst.getBitSize(), src.getBitSize())
+                  );
+
+            op2bis = triton::ast::bvand(
+                       op2bis,
+                       triton::ast::bv(DWORD_SIZE_BIT-1, src.getBitSize())
+                     );
             break;
 
           default:
             throw triton::exceptions::Semantics("x86Semantics::rol_s(): Invalid destination size");
         }
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = triton::ast::decimal(concreteOp2);
-
         /* Create the semantics */
-        auto node = triton::ast::bvrol(op2, op1);
+        auto node = triton::ast::bvrol(triton::ast::decimal(op2->evaluate()), op1);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ROL operation");
@@ -9817,8 +9809,8 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate symbolic flags */
-        this->cfRol_s(inst, expr, dst, op2);
-        this->ofRol_s(inst, expr, dst, op2);
+        this->cfRol_s(inst, expr, dst, op2bis);
+        this->ofRol_s(inst, expr, dst, op2bis);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
