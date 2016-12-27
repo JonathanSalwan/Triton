@@ -133,36 +133,37 @@ namespace triton {
 
       void PE::initImportTable(void) {
           triton::uint32 importStart = header.getDataDirectory().importTable_rva;
-          triton::uint32 importSize = header.getDataDirectory().importTable_size;
           if (0 == importStart) return;
           triton::uint32 importOffset = getOffsetFromAddress(importStart);
           triton::uint64 byNameMask = (header.getOptionalHeader().magic == PE_FORMAT_PE32PLUS ?
             0x8000000000000000 : 0x80000000);
           triton::uint32 entrySize = (header.getOptionalHeader().magic == PE_FORMAT_PE32PLUS ? 8 : 4);
-          for (triton::uint32 pos = importOffset; pos < importOffset+importSize; pos+=20) {
-            PEImportDirectory impdt;
-            std::memcpy(&impdt, raw+pos, 20);
-            if (impdt.importLookupTableRVA > 0) {
-                impdt.name = std::string((char*)raw+getOffsetFromAddress(impdt.nameRVA));
-                triton::uint32 impLookupTable = getOffsetFromAddress(impdt.importLookupTableRVA);
-                triton::uint64 importEntry  = 0;
-                std::memcpy(&importEntry, raw+impLookupTable, entrySize);
-                while (importEntry > 0) {
-                    PEImportLookup entry;
-                    entry.importByName = !(importEntry & byNameMask);
-                    if (entry.importByName) {
-                        triton::uint32 hintNameStart = getOffsetFromAddress(importEntry & ((1u<<31)-1));
-                        std::memcpy(&entry.ordinalNumber, raw+hintNameStart, 2);
-                        entry.name = std::string((char*)raw+hintNameStart+2);
-                    } else {
-                        entry.ordinalNumber = importEntry & ((1<<16)-1);
-                    }
-                    impdt.entries.push_back(entry);
-                    impLookupTable += entrySize;
-                    std::memcpy(&importEntry, raw+impLookupTable, entrySize);
+          triton::uint32 pos = importOffset;
+          PEImportDirectory impdt;
+          std::memcpy(&impdt, raw+pos, 20);
+          while(impdt.importLookupTableRVA) {
+            impdt.entries.clear();
+            impdt.name = std::string((char*)raw+getOffsetFromAddress(impdt.nameRVA));
+            triton::uint32 impLookupTable = getOffsetFromAddress(impdt.importLookupTableRVA);
+            triton::uint64 importEntry  = 0;
+            std::memcpy(&importEntry, raw+impLookupTable, entrySize);
+            while (importEntry > 0) {
+                PEImportLookup entry;
+                entry.importByName = !(importEntry & byNameMask);
+                if (entry.importByName) {
+                    triton::uint32 hintNameStart = getOffsetFromAddress(importEntry & ((1u<<31)-1));
+                    std::memcpy(&entry.ordinalNumber, raw+hintNameStart, 2);
+                    entry.name = std::string((char*)raw+hintNameStart+2);
+                } else {
+                    entry.ordinalNumber = importEntry & ((1<<16)-1);
                 }
-                importTable.push_back(impdt);
+                impdt.entries.push_back(entry);
+                impLookupTable += entrySize;
+                std::memcpy(&importEntry, raw+impLookupTable, entrySize);
             }
+            importTable.push_back(impdt);
+            pos+=20;
+            std::memcpy(&impdt, raw+pos, 20);
           }
       }
 
