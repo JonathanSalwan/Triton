@@ -116,6 +116,7 @@ namespace triton {
           std::list<triton::format::MemoryMapping> memoryMapping;
 
           std::vector<PEImportDirectory> importTable;
+          std::vector<std::string> dlls;
           PEExportDirectory exportTable;
 
           //! Open the binary.
@@ -160,6 +161,9 @@ namespace triton {
 
           //! Returns the import table.
           const std::vector<PEImportDirectory>& getImportTable(void) const;
+
+          //! Returns the names of the imported DLLS.
+          const std::vector<std::string>& getSharedLibraries(void) const;
 
           //! Returns all memory areas which then may be mapped via triton::API::setConcreteMemoryAreaValue.
           const std::list<triton::format::MemoryMapping>& getMemoryMapping(void) const;

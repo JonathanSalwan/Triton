@@ -54,6 +54,7 @@ If you want to use the libTriton without Python bindings, recompile the project 
 - \ref py_ElfRelocationTable_page
 - \ref py_ElfSectionHeader_page
 - \ref py_ElfSymbolTable_page
+- \ref py_Pe_page
 - \ref py_Immediate_page
 - \ref py_Instruction_page
 - \ref py_MemoryAccess_page
@@ -416,6 +417,7 @@ Untaints a register. Returns true if the register is still tainted.
 - \ref py_CALLBACK_page
 - \ref py_CPUSIZE_page
 - \ref py_ELF_page
+- \ref py_PE_page
 - \ref py_OPCODE_page
 - \ref py_OPERAND_page
 - \ref py_OPTIMIZATION_page
@@ -594,6 +596,20 @@ namespace triton {
 
         try {
           return PyElf(PyString_AsString(path));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* triton_PE(PyObject* self, PyObject* path) {
+        /* Check if the first arg is a integer */
+        if (path == nullptr || !PyString_Check(path))
+          return PyErr_Format(PyExc_TypeError, "PE(): Expects a string as first argument.");
+
+        try {
+          return PyPE(PyString_AsString(path));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2952,6 +2968,7 @@ namespace triton {
       PyMethodDef tritonCallbacks[] = {
         {"Bitvector",                           (PyCFunction)triton_Bitvector,                              METH_VARARGS,       ""},
         {"Elf",                                 (PyCFunction)triton_Elf,                                    METH_O,             ""},
+        {"PE",                                  (PyCFunction)triton_PE,                                     METH_O,             ""},
         {"Immediate",                           (PyCFunction)triton_Immediate,                              METH_VARARGS,       ""},
         {"Instruction",                         (PyCFunction)triton_Instruction,                            METH_VARARGS,       ""},
         {"MemoryAccess",                        (PyCFunction)triton_MemoryAccess,                           METH_VARARGS,       ""},

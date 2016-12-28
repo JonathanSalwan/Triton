@@ -20,6 +20,8 @@
 #include "elfRelocationTable.hpp"
 #include "elfSectionHeader.hpp"
 #include "elfSymbolTable.hpp"
+#include "pe.hpp"
+#include "peHeader.hpp"
 #include "immediate.hpp"
 #include "instruction.hpp"
 #include "memoryAccess.hpp"
@@ -90,6 +92,15 @@ namespace triton {
 
       //! Creates the ElfSymbolTable python class.
       PyObject* PyElfSymbolTable(const triton::format::elf::ElfSymbolTable& sym);
+
+      //! Creates the PE python class.
+      PyObject* PyPE(const std::string& pe);
+
+      //! Creates the PEHeader python class.
+      PyObject* PyPEHeader(const triton::format::pe::PEHeader& header);
+
+      //! Creates the PESectionHeader python class.
+      PyObject* PyPESectionHeader(const triton::format::pe::PESectionHeader& shdr);
 
       //! Creates the Immediate python class.
       PyObject* PyImmediate(const triton::arch::Immediate& imm);
@@ -220,6 +231,39 @@ namespace triton {
 
       //! pyElfSymbolTable type.
       extern PyTypeObject ElfSymbolTable_Type;
+
+      /* PE   =========================================================== */
+
+      //! pyPE object.
+      typedef struct {
+        PyObject_HEAD
+        triton::format::pe::PE* pe;
+      } PE_Object;
+
+      //! pyPE type.
+      extern PyTypeObject PE_Type;
+
+      /* PEHeader   ===================================================== */
+
+      //! pyPEHeader object.
+      typedef struct {
+        PyObject_HEAD
+        triton::format::pe::PEHeader* header;
+      } PEHeader_Object;
+
+      //! pyPEHeader type.
+      extern PyTypeObject PEHeader_Type;
+
+      /* PESectionHeader  ============================================== */
+
+      //! pyPESectionHeader object.
+      typedef struct {
+        PyObject_HEAD
+        triton::format::pe::PESectionHeader* shdr;
+      } PESectionHeader_Object;
+
+      //! pyPESectionHeader type.
+      extern PyTypeObject PESectionHeader_Type;
 
       /* Immediate ====================================================== */
 
@@ -370,6 +414,24 @@ namespace triton {
 
 /*! Returns the triton::format::elf::ElfSymbolTable. */
 #define PyElfSymbolTable_AsElfSymbolTable(v) (((triton::bindings::python::ElfSymbolTable_Object*)(v))->sym)
+
+/*! Checks if the pyObject is a triton::format::pe::PE. */
+#define PyPE_Check(v) ((v)->ob_type == &triton::bindings::python::PE_Type)
+
+/*! Returns the triton::format::pe::PE. */
+#define PyPE_AsPE(v) (((triton::bindings::python::PE_Object*)(v))->pe)
+
+/*! Checks if the pyObject is a triton::format::pe::PEHeader. */
+#define PyPEHeader_Check(v) ((v)->ob_type == &triton::bindings::python::PEHeader_Type)
+
+/*! Returns the triton::format::pe::PEHeader. */
+#define PyPEHeader_AsPEHeader(v) (((triton::bindings::python::PEHeader_Object*)(v))->header)
+
+/*! Checks if the pyObject is a triton::format::pe::PESectionHeader. */
+#define PyPESectionHeader_Check(v) ((v)->ob_type == &triton::bindings::python::PESectionHeader_Type)
+
+/*! Returns the triton::format::pe::PESectionHeader. */
+#define PyPESectionHeader_AsPESectionHeader(v) (((triton::bindings::python::PESectionHeader_Object*)(v))->shdr)
 
 /*! Checks if the pyObject is a triton::arch::Immediate. */
 #define PyImmediate_Check(v) ((v)->ob_type == &triton::bindings::python::Immediate_Type)

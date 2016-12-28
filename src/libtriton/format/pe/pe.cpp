@@ -162,6 +162,7 @@ namespace triton {
                 std::memcpy(&importEntry, raw+impLookupTable, entrySize);
             }
             importTable.push_back(impdt);
+            dlls.push_back(impdt.name);
             pos+=20;
             std::memcpy(&impdt, raw+pos, 20);
           }
@@ -192,6 +193,11 @@ namespace triton {
 
       const std::vector<PEImportDirectory>& PE::getImportTable(void) const {
         return this->importTable;
+      }
+
+
+      const std::vector<std::string>& PE::getSharedLibraries(void) const {
+        return this->dlls;
       }
 
 
