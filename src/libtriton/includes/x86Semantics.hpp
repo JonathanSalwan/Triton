@@ -1106,11 +1106,17 @@ namespace triton {
           //! The SHLD semantics.
           void shld_s(triton::arch::Instruction& inst);
 
+          //! The SHLX semantics.
+          void shlx_s(triton::arch::Instruction& inst);
+
           //! The SHR semantics.
           void shr_s(triton::arch::Instruction& inst);
 
           //! The SHRD semantics.
           void shrd_s(triton::arch::Instruction& inst);
+
+          //! The SHRX semantics.
+          void shrx_s(triton::arch::Instruction& inst);
 
           //! The STC semantics.
           void stc_s(triton::arch::Instruction& inst);

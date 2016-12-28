@@ -1311,6 +1311,286 @@ void check(void)
   asm("mov rbx, 0x0123456789abcdef");
   asm("shrd ax, bx, 255");
 
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 0");
+  asm("shrx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 1");
+  asm("shrx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 2");
+  asm("shrx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 3");
+  asm("shrx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 30");
+  asm("shrx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 31");
+  asm("shrx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 32");
+  asm("shrx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 33");
+  asm("shrx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 34");
+  asm("shrx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 63");
+  asm("shrx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 64");
+  asm("shrx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 65");
+  asm("shrx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 66");
+  asm("shrx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 255");
+  asm("shrx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 0");
+  asm("shrx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 1");
+  asm("shrx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 2");
+  asm("shrx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 3");
+  asm("shrx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 30");
+  asm("shrx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 31");
+  asm("shrx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 32");
+  asm("shrx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 33");
+  asm("shrx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 34");
+  asm("shrx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 63");
+  asm("shrx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 64");
+  asm("shrx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 65");
+  asm("shrx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 66");
+  asm("shrx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 255");
+  asm("shrx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 0");
+  asm("shlx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 1");
+  asm("shlx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 2");
+  asm("shlx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 3");
+  asm("shlx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 30");
+  asm("shlx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 31");
+  asm("shlx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 32");
+  asm("shlx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 33");
+  asm("shlx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 34");
+  asm("shlx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 63");
+  asm("shlx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 64");
+  asm("shlx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 65");
+  asm("shlx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 66");
+  asm("shlx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 255");
+  asm("shlx rax, rbx, rcx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 0");
+  asm("shlx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 1");
+  asm("shlx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 2");
+  asm("shlx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 3");
+  asm("shlx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 30");
+  asm("shlx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 31");
+  asm("shlx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 32");
+  asm("shlx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 33");
+  asm("shlx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 34");
+  asm("shlx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 63");
+  asm("shlx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 64");
+  asm("shlx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 65");
+  asm("shlx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 66");
+  asm("shlx eax, ebx, ecx");
+
+  asm("mov rax, 0x0123456789abcdef");
+  asm("mov rbx, 0x0123456789abcdef");
+  asm("mov rcx, 255");
+  asm("shlx eax, ebx, ecx");
+
   asm("mov rdx, 0x0123456789abcdef");
   asm("shr edx, 0");
   asm("mov rdx, 0x0123456789abcdef");

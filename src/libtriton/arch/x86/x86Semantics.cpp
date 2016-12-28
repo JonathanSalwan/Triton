@@ -274,8 +274,10 @@ SETS                         |            | Set byte if sign
 SFENCE                       | sse1       | Store Fence
 SHL                          |            | Shift Left
 SHLD                         |            | Double-precision Shift Left
+SHLX                         | bmi2       | Shift Logical Left Without Affecting Flags
 SHR                          |            | Shift Right Unsigned
 SHRD                         |            | Double Precision Shift Right
+SHRX                         | bmi2       | Shift Logical Right Without Affecting Flags
 STC                          |            | Set Carry Flag
 STD                          |            | Set Direction Flag
 STI                          |            | Set Interrupt Flag
@@ -582,8 +584,10 @@ namespace triton {
           case ID_INS_SFENCE:         this->sfence_s(inst);       break;
           case ID_INS_SHL:            this->shl_s(inst);          break;
           case ID_INS_SHLD:           this->shld_s(inst);         break;
+          case ID_INS_SHLX:           this->shlx_s(inst);         break;
           case ID_INS_SHR:            this->shr_s(inst);          break;
           case ID_INS_SHRD:           this->shrd_s(inst);         break;
+          case ID_INS_SHRX:           this->shrx_s(inst);         break;
           case ID_INS_STC:            this->stc_s(inst);          break;
           case ID_INS_STD:            this->std_s(inst);          break;
           case ID_INS_STI:            this->sti_s(inst);          break;
@@ -10737,6 +10741,45 @@ namespace triton {
       }
 
 
+      void x86Semantics::shlx_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+
+        switch (dst.getBitSize()) {
+          /* Mask 0x3f MOD size */
+          case QWORD_SIZE_BIT:
+            op2 = triton::ast::bvand(op2, triton::ast::bv(QWORD_SIZE_BIT-1, src2.getBitSize()));
+            break;
+
+          /* Mask 0x1f MOD size */
+          case DWORD_SIZE_BIT:
+            op2 = triton::ast::bvand(op2, triton::ast::bv(DWORD_SIZE_BIT-1, src2.getBitSize()));
+            break;
+
+          default:
+            throw triton::exceptions::Semantics("x86Semantics::shlx_s(): Invalid destination size");
+        }
+
+        /* Create the semantics */
+        auto node = triton::ast::bvshl(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SHLX operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted |= this->taintEngine->taintUnion(dst, src2);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
       void x86Semantics::shr_s(triton::arch::Instruction& inst) {
         auto& dst   = inst.operands[0];
         auto& src   = inst.operands[1];
@@ -10828,6 +10871,45 @@ namespace triton {
         this->pfShl_s(inst, expr, dst, op3); /* Same that shl */
         this->sfShrd_s(inst, expr, dst, op1, op2, op3);
         this->zfShl_s(inst, expr, dst, op3); /* Same that shl */
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::shrx_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+
+        switch (dst.getBitSize()) {
+          /* Mask 0x3f MOD size */
+          case QWORD_SIZE_BIT:
+            op2 = triton::ast::bvand(op2, triton::ast::bv(QWORD_SIZE_BIT-1, src2.getBitSize()));
+            break;
+
+          /* Mask 0x1f MOD size */
+          case DWORD_SIZE_BIT:
+            op2 = triton::ast::bvand(op2, triton::ast::bv(DWORD_SIZE_BIT-1, src2.getBitSize()));
+            break;
+
+          default:
+            throw triton::exceptions::Semantics("x86Semantics::shrx_s(): Invalid destination size");
+        }
+
+        /* Create the semantics */
+        auto node = triton::ast::bvlshr(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SHRX operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted |= this->taintEngine->taintUnion(dst, src2);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
