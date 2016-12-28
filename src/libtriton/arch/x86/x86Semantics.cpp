@@ -39,7 +39,7 @@ ANDNPD                       | sse2       | Bitwise Logical AND NOT of Packed Do
 ANDNPS                       | sse1       | Bitwise Logical AND NOT of Packed Single-Precision Floating-Point Values
 ANDPD                        | sse2       | Bitwise Logical AND of Packed Double-Precision Floating-Point Values
 ANDPS                        | sse1       | Bitwise Logical AND of Packed Single-Precision Floating-Point Values
-BEXTR                        | bmi1       | Bit Field Extract
+BEXTR                        | bmi1/tbm   | Bit Field Extract
 BLSI                         | bmi1       | Extract Lowest Set Isolated Bit
 BLSMSK                       | bmi1       | Get Mask Up to Lowest Set Bit
 BLSR                         | bmi1       | Reset Lowest Set Bit
