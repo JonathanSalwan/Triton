@@ -1028,6 +1028,9 @@ namespace triton {
           //! The ROR semantics.
           void ror_s(triton::arch::Instruction& inst);
 
+          //! The RORX semantics.
+          void rorx_s(triton::arch::Instruction& inst);
+
           //! The SAHF semantics.
           void sahf_s(triton::arch::Instruction& inst);
 
