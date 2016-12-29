@@ -10,8 +10,8 @@
 
 #include <abstractBinary.hpp>
 #include <elf.hpp>
-#include <pe.hpp>
 #include <exceptions.hpp>
+#include <pe.hpp>
 
 
 
@@ -95,9 +95,10 @@ namespace triton {
           if (!this->binary)
             throw triton::exceptions::Format("AbstractBinary::parseBinary(): Not enough memory.");
           break;
+
         case triton::format::BINARY_PE:
           delete this->binary;
-          this->binary = new(std::nothrow) triton::format::pe::PE(path);
+          this->binary = new(std::nothrow) triton::format::pe::Pe(path);
           if (!this->binary)
             throw triton::exceptions::Format("AbstractBinary::parseBinary(): Not enough memory.");
           break;
@@ -122,10 +123,10 @@ namespace triton {
     }
 
 
-    triton::format::pe::PE* AbstractBinary::getPE(void) {
+    triton::format::pe::Pe* AbstractBinary::getPe(void) {
       if (this->format != triton::format::BINARY_PE)
-        throw triton::exceptions::Format("AbstractBinary::getPE(): The abstract binary is not a PE.");
-      return reinterpret_cast<triton::format::pe::PE*>(this->binary);
+        throw triton::exceptions::Format("AbstractBinary::getPe(): The abstract binary is not a PE.");
+      return reinterpret_cast<triton::format::pe::Pe*>(this->binary);
     }
 
 

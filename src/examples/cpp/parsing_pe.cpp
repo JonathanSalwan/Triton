@@ -77,7 +77,29 @@
 **     .rsrc 00019ce0 00022000 00019e00 0001d000 00000000 00000000 0000 0000 40000040
 **    .reloc 00001c50 0003c000 00001e00 00036e00 00000000 00000000 0000 0000 42000040
 **
-** ... (imports/exports section)
+**  ------------------------------------------------------------------------------------------
+**  Import table
+**  ------------------------------------------------------------------------------------------
+**  importLookupTableRVA  0001f6fc
+**  timeDateStamp         00000000
+**  forwarderChain        00000000
+**  nameRVA               0001fcaa
+**  name                  ADVAPI32.dll
+**  importAddressTableRVA 0001f000
+**      (hint 0214) OpenProcessToken
+**      (hint 016f) GetTokenInformation
+**      (hint 00ee) DuplicateEncryptionInfoFile
+**      (hint 02a6) RegSetValueExW
+**      (hint 0296) RegQueryValueExW
+**      (hint 0264) RegCreateKeyW
+**      (hint 0258) RegCloseKey
+**      (hint 0289) RegOpenKeyExW
+**      (hint 0121) EventSetInformation
+**      (hint 0120) EventRegister
+**      (hint 0122) EventUnregister
+**      (hint 0128) EventWriteTransfer
+**      (hint 0197) IsTextUnicode
+**  ...
 */
 
 #include <iostream>
@@ -94,20 +116,20 @@ int main(int ac, const char *av[]) {
 
   binary.loadBinary(av[1]);
 
-  auto pe = binary.getPE();
+  auto pe = binary.getPe();
 
   std::cout << "------------------------------------------------------------------------------------------" << std::endl;
   std::cout << "File Header" << std::endl;
   std::cout << "------------------------------------------------------------------------------------------" << std::endl;
   std::cout << std::hex << std::setfill('0');
   auto fhdr = pe->getHeader().getFileHeader();
-  std::cout << "machine:              " << std::setw(4) << fhdr.machine << std::endl;
-  std::cout << "numberOfSections:     " << std::setw(4) << fhdr.numberOfSections << std::endl;
-  std::cout << "timeDateStamp:        " << std::setw(8) << fhdr.timeDateStamp << std::endl;
-  std::cout << "pointerToSymbolTable: " << std::setw(8) << fhdr.pointerToSymbolTable << std::endl;
-  std::cout << "numberOfSymbolTable:  " << std::setw(8) << fhdr.numberOfSymbolTable << std::endl;
-  std::cout << "sizeOfOptionalHeader: " << std::setw(4) << fhdr.sizeOfOptionalHeader << std::endl;
-  std::cout << "characteristics:      " << std::setw(4) << fhdr.characteristics << std::endl;
+  std::cout << "machine:              " << std::setw(4) << fhdr.getMachine() << std::endl;
+  std::cout << "numberOfSections:     " << std::setw(4) << fhdr.getNumberOfSections() << std::endl;
+  std::cout << "timeDateStamp:        " << std::setw(8) << fhdr.getTimeDateStamp() << std::endl;
+  std::cout << "pointerToSymbolTable: " << std::setw(8) << fhdr.getPointerToSymbolTable() << std::endl;
+  std::cout << "numberOfSymbolTable:  " << std::setw(8) << fhdr.getNumberOfSymbolTable() << std::endl;
+  std::cout << "sizeOfOptionalHeader: " << std::setw(4) << fhdr.getSizeOfOptionalHeader() << std::endl;
+  std::cout << "characteristics:      " << std::setw(4) << fhdr.getCharacteristics() << std::endl;
   std::cout << std::endl;
 
   std::cout << "------------------------------------------------------------------------------------------" << std::endl;
@@ -115,36 +137,36 @@ int main(int ac, const char *av[]) {
   std::cout << "------------------------------------------------------------------------------------------" << std::endl;
   auto ohdr = pe->getHeader().getOptionalHeader();
   std::cout << std::hex;
-  std::cout << "magic:                       " << std::setw(4) << ohdr.magic << std::endl;
-  std::cout << "majorLinkerVersion:          " << std::setw(2) << int(ohdr.majorLinkerVersion) << std::endl;
-  std::cout << "minorLinkerVersion:          " << std::setw(2) << int(ohdr.minorLinkerVersion) << std::endl;
-  std::cout << "sizeOfCode:                  " << std::setw(8) << ohdr.sizeOfCode << std::endl;
-  std::cout << "sizeOfInitializedData:       " << std::setw(8) << ohdr.sizeOfInitializedData << std::endl;
-  std::cout << "sizeOfUninitializedData:     " << std::setw(8) << ohdr.sizeOfUninitializedData << std::endl;
-  std::cout << "addressOfEntryPoint:         " << std::setw(8) << ohdr.addressOfEntryPoint << std::endl;
-  std::cout << "baseOfCode:                  " << std::setw(8) << ohdr.baseOfCode << std::endl;
-  std::cout << "baseOfData:                  " << std::setw(8) << ohdr.baseOfData << std::endl;
-  std::cout << "imageBase:                   " << std::setw(8) << ohdr.imageBase << std::endl;
-  std::cout << "sectionAlignment:            " << std::setw(8) << ohdr.sectionAlignment << std::endl;
-  std::cout << "fileAlignment:               " << std::setw(8) << ohdr.fileAlignment << std::endl;
-  std::cout << "majorOperatingSystemVersion: " << std::setw(4) << ohdr.majorOperatingSystemVersion << std::endl;
-  std::cout << "minorOperatingSystemVersion: " << std::setw(4) << ohdr.minorOperatingSystemVersion << std::endl;
-  std::cout << "majorImageVersion:           " << std::setw(4) << ohdr.majorImageVersion << std::endl;
-  std::cout << "minorImageVersion:           " << std::setw(4) << ohdr.minorImageVersion << std::endl;
-  std::cout << "majorSubsystemVersion:       " << std::setw(4) << ohdr.majorSubsystemVersion << std::endl;
-  std::cout << "minorSubsystemVersion:       " << std::setw(4) << ohdr.minorSubsystemVersion << std::endl;
-  std::cout << "win32VersionValue:           " << std::setw(8) << ohdr.win32VersionValue << std::endl;
-  std::cout << "sizeOfImage:                 " << std::setw(8) << ohdr.sizeOfImage << std::endl;
-  std::cout << "sizeOfHeaders:               " << std::setw(8) << ohdr.sizeOfHeaders << std::endl;
-  std::cout << "checkSum:                    " << std::setw(8) << ohdr.checkSum << std::endl;
-  std::cout << "subsystem:                   " << std::setw(4) << ohdr.subsystem << std::endl;
-  std::cout << "dllCharacteristics:          " << std::setw(4) << ohdr.dllCharacteristics << std::endl;
-  std::cout << "sizeOfStackReserve:          " << std::setw(8) << ohdr.sizeOfStackReserve << std::endl;
-  std::cout << "sizeOfStackCommit:           " << std::setw(8) << ohdr.sizeOfStackCommit << std::endl;
-  std::cout << "sizeOfHeapReserve:           " << std::setw(8) << ohdr.sizeOfHeapReserve << std::endl;
-  std::cout << "sizeOfHeapCommit:            " << std::setw(8) << ohdr.sizeOfHeapCommit << std::endl;
-  std::cout << "loaderFlags:                 " << std::setw(8) << ohdr.loaderFlags << std::endl;
-  std::cout << "numberOfRvaAndSizes:         " << std::setw(8) << ohdr.numberOfRvaAndSizes << std::endl;
+  std::cout << "magic:                       " << std::setw(4) << ohdr.getMagic() << std::endl;
+  std::cout << "majorLinkerVersion:          " << std::setw(2) << int(ohdr.getMajorLinkerVersion()) << std::endl;
+  std::cout << "minorLinkerVersion:          " << std::setw(2) << int(ohdr.getMinorLinkerVersion()) << std::endl;
+  std::cout << "sizeOfCode:                  " << std::setw(8) << ohdr.getSizeOfCode() << std::endl;
+  std::cout << "sizeOfInitializedData:       " << std::setw(8) << ohdr.getSizeOfInitializedData() << std::endl;
+  std::cout << "sizeOfUninitializedData:     " << std::setw(8) << ohdr.getSizeOfUninitializedData() << std::endl;
+  std::cout << "addressOfEntryPoint:         " << std::setw(8) << ohdr.getAddressOfEntryPoint() << std::endl;
+  std::cout << "baseOfCode:                  " << std::setw(8) << ohdr.getBaseOfCode() << std::endl;
+  std::cout << "baseOfData:                  " << std::setw(8) << ohdr.getBaseOfData() << std::endl;
+  std::cout << "imageBase:                   " << std::setw(8) << ohdr.getImageBase() << std::endl;
+  std::cout << "sectionAlignment:            " << std::setw(8) << ohdr.getSectionAlignment() << std::endl;
+  std::cout << "fileAlignment:               " << std::setw(8) << ohdr.getFileAlignment() << std::endl;
+  std::cout << "majorOperatingSystemVersion: " << std::setw(4) << ohdr.getMajorOperatingSystemVersion() << std::endl;
+  std::cout << "minorOperatingSystemVersion: " << std::setw(4) << ohdr.getMinorOperatingSystemVersion() << std::endl;
+  std::cout << "majorImageVersion:           " << std::setw(4) << ohdr.getMajorImageVersion() << std::endl;
+  std::cout << "minorImageVersion:           " << std::setw(4) << ohdr.getMinorImageVersion() << std::endl;
+  std::cout << "majorSubsystemVersion:       " << std::setw(4) << ohdr.getMajorSubsystemVersion() << std::endl;
+  std::cout << "minorSubsystemVersion:       " << std::setw(4) << ohdr.getMinorSubsystemVersion() << std::endl;
+  std::cout << "win32VersionValue:           " << std::setw(8) << ohdr.getWin32VersionValue() << std::endl;
+  std::cout << "sizeOfImage:                 " << std::setw(8) << ohdr.getSizeOfImage() << std::endl;
+  std::cout << "sizeOfHeaders:               " << std::setw(8) << ohdr.getSizeOfHeaders() << std::endl;
+  std::cout << "checkSum:                    " << std::setw(8) << ohdr.getCheckSum() << std::endl;
+  std::cout << "subsystem:                   " << std::setw(4) << ohdr.getSubsystem() << std::endl;
+  std::cout << "dllCharacteristics:          " << std::setw(4) << ohdr.getDllCharacteristics() << std::endl;
+  std::cout << "sizeOfStackReserve:          " << std::setw(8) << ohdr.getSizeOfStackReserve() << std::endl;
+  std::cout << "sizeOfStackCommit:           " << std::setw(8) << ohdr.getSizeOfStackCommit() << std::endl;
+  std::cout << "sizeOfHeapReserve:           " << std::setw(8) << ohdr.getSizeOfHeapReserve() << std::endl;
+  std::cout << "sizeOfHeapCommit:            " << std::setw(8) << ohdr.getSizeOfHeapCommit() << std::endl;
+  std::cout << "loaderFlags:                 " << std::setw(8) << ohdr.getLoaderFlags() << std::endl;
+  std::cout << "numberOfRvaAndSizes:         " << std::setw(8) << ohdr.getNumberOfRvaAndSizes() << std::endl;
   std::cout << std::endl;
 
   std::cout << "------------------------------------------------------------------------------------------" << std::endl;
@@ -152,36 +174,36 @@ int main(int ac, const char *av[]) {
   std::cout << "------------------------------------------------------------------------------------------" << std::endl;
   std::cout << "                           RVA     Size" << std::endl;
   auto ddir = pe->getHeader().getDataDirectory();
-  std::cout << "exportTable             " << std::setw(8) << ddir.exportTable_rva
-                                   << " " << std::setw(8) << ddir.exportTable_size << std::endl;
-  std::cout << "importTable             " << std::setw(8) << ddir.importTable_rva
-                                   << " " << std::setw(8) << ddir.importTable_size << std::endl;
-  std::cout << "resourceTable           " << std::setw(8) << ddir.resourceTable_rva
-                                   << " " << std::setw(8) << ddir.resourceTable_size << std::endl;
-  std::cout << "exceptionTable          " << std::setw(8) << ddir.exceptionTable_rva
-                                   << " " << std::setw(8) << ddir.exceptionTable_size << std::endl;
-  std::cout << "certificateTable        " << std::setw(8) << ddir.certificateTable_rva
-                                   << " " << std::setw(8) << ddir.certificateTable_size << std::endl;
-  std::cout << "baseRelocationTable     " << std::setw(8) << ddir.baseRelocationTable_rva
-                                   << " " << std::setw(8) << ddir.baseRelocationTable_size << std::endl;
-  std::cout << "debugTable              " << std::setw(8) << ddir.debugTable_rva
-                                   << " " << std::setw(8) << ddir.debugTable_size << std::endl;
-  std::cout << "architectureTable       " << std::setw(8) << ddir.architectureTable_rva
-                                   << " " << std::setw(8) << ddir.architectureTable_size << std::endl;
-  std::cout << "globalPtr               " << std::setw(8) << ddir.globalPtr_rva
-                                   << " " << std::setw(8) << ddir.globalPtr_size << std::endl;
-  std::cout << "tlsTable                " << std::setw(8) << ddir.tlsTable_rva
-                                   << " " << std::setw(8) << ddir.tlsTable_size << std::endl;
-  std::cout << "loadConfigTable         " << std::setw(8) << ddir.loadConfigTable_rva
-                                   << " " << std::setw(8) << ddir.loadConfigTable_size << std::endl;
-  std::cout << "boundImportTable        " << std::setw(8) << ddir.boundImportTable_rva
-                                   << " " << std::setw(8) << ddir.boundImportTable_size << std::endl;
-  std::cout << "importAddressTable      " << std::setw(8) << ddir.importAddressTable_rva
-                                   << " " << std::setw(8) << ddir.importAddressTable_size << std::endl;
-  std::cout << "delayImportDescriptor   " << std::setw(8) << ddir.delayImportDescriptor_rva
-                                   << " " << std::setw(8) << ddir.delayImportDescriptor_size << std::endl;
-  std::cout << "clrRuntimeHeader        " << std::setw(8) << ddir.clrRuntimeHeader_rva
-                                   << " " << std::setw(8) << ddir.clrRuntimeHeader_size << std::endl;
+  std::cout << "exportTable             " << std::setw(8) << ddir.getExportTable_rva()
+                                   << " " << std::setw(8) << ddir.getExportTable_size() << std::endl;
+  std::cout << "importTable             " << std::setw(8) << ddir.getImportTable_rva()
+                                   << " " << std::setw(8) << ddir.getImportTable_size() << std::endl;
+  std::cout << "resourceTable           " << std::setw(8) << ddir.getResourceTable_rva()
+                                   << " " << std::setw(8) << ddir.getResourceTable_size() << std::endl;
+  std::cout << "exceptionTable          " << std::setw(8) << ddir.getExceptionTable_rva()
+                                   << " " << std::setw(8) << ddir.getExceptionTable_size() << std::endl;
+  std::cout << "certificateTable        " << std::setw(8) << ddir.getCertificateTable_rva()
+                                   << " " << std::setw(8) << ddir.getCertificateTable_size() << std::endl;
+  std::cout << "baseRelocationTable     " << std::setw(8) << ddir.getBaseRelocationTable_rva()
+                                   << " " << std::setw(8) << ddir.getBaseRelocationTable_size() << std::endl;
+  std::cout << "debugTable              " << std::setw(8) << ddir.getDebugTable_rva()
+                                   << " " << std::setw(8) << ddir.getDebugTable_size() << std::endl;
+  std::cout << "architectureTable       " << std::setw(8) << ddir.getArchitectureTable_rva()
+                                   << " " << std::setw(8) << ddir.getArchitectureTable_size() << std::endl;
+  std::cout << "globalPtr               " << std::setw(8) << ddir.getGlobalPtr_rva()
+                                   << " " << std::setw(8) << ddir.getGlobalPtr_size() << std::endl;
+  std::cout << "tlsTable                " << std::setw(8) << ddir.getTlsTable_rva()
+                                   << " " << std::setw(8) << ddir.getTlsTable_size() << std::endl;
+  std::cout << "loadConfigTable         " << std::setw(8) << ddir.getLoadConfigTable_rva()
+                                   << " " << std::setw(8) << ddir.getLoadConfigTable_size() << std::endl;
+  std::cout << "boundImportTable        " << std::setw(8) << ddir.getBoundImportTable_rva()
+                                   << " " << std::setw(8) << ddir.getBoundImportTable_size() << std::endl;
+  std::cout << "importAddressTable      " << std::setw(8) << ddir.getImportAddressTable_rva()
+                                   << " " << std::setw(8) << ddir.getImportAddressTable_size() << std::endl;
+  std::cout << "delayImportDescriptor   " << std::setw(8) << ddir.getDelayImportDescriptor_rva()
+                                   << " " << std::setw(8) << ddir.getDelayImportDescriptor_size() << std::endl;
+  std::cout << "clrRuntimeHeader        " << std::setw(8) << ddir.getClrRuntimeHeader_rva()
+                                   << " " << std::setw(8) << ddir.getClrRuntimeHeader_size() << std::endl;
   std::cout << std::endl;
 
   std::cout << "------------------------------------------------------------------------------------------" << std::endl;
@@ -189,16 +211,16 @@ int main(int ac, const char *av[]) {
   std::cout << "------------------------------------------------------------------------------------------" << std::endl;
   std::cout << "            RVA     VSize   RawAddr RawSize  ptrReloc ptrLineN nRlc nLin  chrstc" << std::endl;
   for (auto section : pe->getHeader().getSectionHeaders()) {
-    std::cout << std::setfill(' ') << std::setw(8) << section.name << std::setfill('0');
-    std::cout << " " << std::setw(8) << section.virtualSize;
-    std::cout << " " << std::setw(8) << section.virtualAddress;
-    std::cout << " " << std::setw(8) << section.rawSize;
-    std::cout << " " << std::setw(8) << section.rawAddress;
-    std::cout << " " << std::setw(8) << section.pointerToRelocations;
-    std::cout << " " << std::setw(8) << section.pointerToLinenumbers;
-    std::cout << " " << std::setw(4) << section.numberOfRelocations;
-    std::cout << " " << std::setw(4) << section.numberOfLinenumbers;
-    std::cout << " " << std::setw(8) << section.characteristics;
+    std::cout << std::setfill(' ') << std::setw(8) << section.getName() << std::setfill('0');
+    std::cout << " " << std::setw(8) << section.getVirtualSize();
+    std::cout << " " << std::setw(8) << section.getVirtualAddress();
+    std::cout << " " << std::setw(8) << section.getRawSize();
+    std::cout << " " << std::setw(8) << section.getRawAddress();
+    std::cout << " " << std::setw(8) << section.getPointerToRelocations();
+    std::cout << " " << std::setw(8) << section.getPointerToLinenumbers();
+    std::cout << " " << std::setw(4) << section.getNumberOfRelocations();
+    std::cout << " " << std::setw(4) << section.getNumberOfLinenumbers();
+    std::cout << " " << std::setw(8) << section.getCharacteristics();
     std::cout << std::endl;
   }
   std::cout << std::endl;
@@ -212,13 +234,13 @@ int main(int ac, const char *av[]) {
       std::cout << "Import table" << std::endl;
       std::cout << "------------------------------------------------------------------------------------------" << std::endl;
       for (auto impd : impt) {
-          std::cout << "importLookupTableRVA  " << std::setw(8) << impd.importLookupTableRVA << std::endl;
-          std::cout << "timeDateStamp         " << std::setw(8) << impd.timeDateStamp << std::endl;
-          std::cout << "forwarderChain        " << std::setw(8) << impd.forwarderChain << std::endl;
-          std::cout << "nameRVA               " << std::setw(8) << impd.nameRVA << std::endl;
-          std::cout << "name                  " << std::setw(8) << impd.name << std::endl;
-          std::cout << "importAddressTableRVA " << std::setw(8) << impd.importAddressTableRVA << std::endl;
-          for (auto impe : impd.entries) {
+          std::cout << "importLookupTableRVA  " << std::setw(8) << impd.getImportLookupTableRVA() << std::endl;
+          std::cout << "timeDateStamp         " << std::setw(8) << impd.getTimeDateStamp() << std::endl;
+          std::cout << "forwarderChain        " << std::setw(8) << impd.getForwarderChain() << std::endl;
+          std::cout << "nameRVA               " << std::setw(8) << impd.getNameRVA() << std::endl;
+          std::cout << "name                  " << impd.getName() << std::endl;
+          std::cout << "importAddressTableRVA " << std::setw(8) << impd.getImportAddressTableRVA() << std::endl;
+          for (auto impe : impd.getEntries()) {
               if (impe.importByName) {
                 std::cout << "    (hint " << std::setw(4) << impe.ordinalNumber;
                 std::cout << ") " << impe.name << std::endl;
@@ -231,27 +253,27 @@ int main(int ac, const char *av[]) {
       std::cout << std::endl;
   }
   auto expt = pe->getExportTable();
-  if (0<ddir.exportTable_rva) {
+  if (0<ddir.getExportTable_rva()) {
       std::cout << "------------------------------------------------------------------------------------------" << std::endl;
       std::cout << "Export table" << std::endl;
       std::cout << "------------------------------------------------------------------------------------------" << std::endl;
       
-      std::cout << "exportFlags            " << std::setw(8) << expt.exportFlags << std::endl;
-      std::cout << "timeDateStamp          " << std::setw(8) << expt.timeDateStamp << std::endl;
-      std::cout << "majorVersion           " << std::setw(4) << expt.majorVersion << std::endl;
-      std::cout << "minorVersion           " << std::setw(4) << expt.minorVersion << std::endl;
-      std::cout << "nameRVA                " << std::setw(8) << expt.nameRVA << std::endl;
-      std::cout << "name                   " << expt.name << std::endl;
-      std::cout << "ordinalBase            " << std::setw(8) << expt.ordinalBase << std::endl;
-      std::cout << "addressTableEntries    " << std::setw(8) << expt.addressTableEntries << std::endl;
-      std::cout << "numberOfNamePointers   " << std::setw(8) << expt.numberOfNamePointers << std::endl;
-      std::cout << "exportAddressTableRVA  " << std::setw(8) << expt.exportAddressTableRVA << std::endl;
-      std::cout << "namePointerRVA         " << std::setw(8) << expt.namePointerRVA << std::endl;
-      std::cout << "ordinalTableRVA        " << std::setw(8) << expt.ordinalTableRVA << std::endl;
+      std::cout << "exportFlags            " << std::setw(8) << expt.getExportFlags() << std::endl;
+      std::cout << "timeDateStamp          " << std::setw(8) << expt.getTimeDateStamp() << std::endl;
+      std::cout << "majorVersion           " << std::setw(4) << expt.getMajorVersion() << std::endl;
+      std::cout << "minorVersion           " << std::setw(4) << expt.getMinorVersion() << std::endl;
+      std::cout << "nameRVA                " << std::setw(8) << expt.getNameRVA() << std::endl;
+      std::cout << "name                   " << expt.getName() << std::endl;
+      std::cout << "ordinalBase            " << std::setw(8) << expt.getOrdinalBase() << std::endl;
+      std::cout << "addressTableEntries    " << std::setw(8) << expt.getAddressTableEntries() << std::endl;
+      std::cout << "numberOfNamePointers   " << std::setw(8) << expt.getNumberOfNamePointers() << std::endl;
+      std::cout << "exportAddressTableRVA  " << std::setw(8) << expt.getExportAddressTableRVA() << std::endl;
+      std::cout << "namePointerRVA         " << std::setw(8) << expt.getNamePointerRVA() << std::endl;
+      std::cout << "ordinalTableRVA        " << std::setw(8) << expt.getOrdinalTableRVA() << std::endl;
       std::cout << std::endl;
       
       std::cout << "    Ord    RVA    nameRVA  name -> fwd " << std::endl;
-      for (auto expd : expt.entries) {
+      for (auto expd : expt.getEntries()) {
           std::cout << "    " << std::setw(4) << expd.ordinal;
           if (expd.isForward)
              std::cout << " " << std::setw(8) << expd.forwarderRVA;

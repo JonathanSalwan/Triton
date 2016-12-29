@@ -40,6 +40,7 @@ namespace triton {
         PE_FORMAT_PE32                  = 0x10b,
         PE_FORMAT_PE32PLUS              = 0x20b,
 
+        //Machine
         IMAGE_FILE_MACHINE_UNKNOWN      = 0,
         IMAGE_FILE_MACHINE_AM33         = 0x1d3,
         IMAGE_FILE_MACHINE_AMD64        = 0x8664,
@@ -66,6 +67,7 @@ namespace triton {
         IMAGE_FILE_MACHINE_THUMB        = 0x1c2,
         IMAGE_FILE_MACHINE_WCEMIPSV2    = 0x169,
 
+        //Characteristic
         IMAGE_FILE_RELOCS_STRIPPED          = 0x0001,
         IMAGE_FILE_EXECUTABLE_IMAGE         = 0x0002,
         IMAGE_FILE_LINE_NUMS_STRIPPED       = 0x0004,
@@ -82,6 +84,7 @@ namespace triton {
         IMAGE_FILE_UP_SYSTEM_ONLY           = 0x4000,
         IMAGE_FILE_BYTES_REVERSED_HI        = 0x8000,
 
+        //Subsystem
         IMAGE_SUBSYSTEM_UNKNOWN                     = 0,
         IMAGE_SUBSYSTEM_NATIVE                      = 1,
         IMAGE_SUBSYSTEM_WINDOWS_GUI                 = 2,
@@ -94,6 +97,7 @@ namespace triton {
         IMAGE_SUBSYSTEM_EFI_ROM                     = 13,
         IMAGE_SUBSYSTEM_XBOX                        = 14,
 
+        //DLL characteristic
         IMAGE_DLLCHARACTERISTICS_HIGH_ENTROPY_VA        = 0x0020,
         IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE           = 0x0040,
         IMAGE_DLLCHARACTERISTICS_FORCE_INTEGRITY        = 0x0080,

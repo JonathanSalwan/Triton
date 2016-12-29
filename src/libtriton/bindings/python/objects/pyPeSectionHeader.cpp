@@ -15,53 +15,32 @@
 
 
 
-/*! \page py_PESectionHeader_page PESectionHeader
-    \brief [**python api**] All information about the PESectionHeader python object.
+/*! \page py_PeSectionHeader_page PeSectionHeader
+    \brief [**python api**] All information about the PeSectionHeader python object.
 
 \tableofcontents
 
-\section py_PESectionHeader_description Description
+\section py_PeSectionHeader_description Description
 <hr>
 
 This object is used to represent a Section Header entry from the PE binary format.
 
-\subsection py_PESectionHeader_example Example
+\subsection py_PeSectionHeader_example Example
 
 ~~~~~~~~~~~~~{.py}
->>> b = PE('C:/Windows/System32/notepad.exe')
+>>> b = Pe('C:/Windows/System32/notepad.exe')
 
 >>> for section in b.getSectionHeaders():
-...     print section.getName(), '\t', hex(section.getAddr())
+...     print section.getName(), '\t', hex(section.getVirtualAddress())
 ...
-                0x0L
-.interp         0x400270L
-.note.ABI-tag   0x40028cL
-.gnu.hash       0x4002b0L
-.dynsym         0x40a388L
-.dynstr         0x431268L
-.gnu.version    0x451bc8L
-.gnu.version_r  0x454fb0L
-.rela.dyn       0x4550d0L
-.rela.plt       0x455748L
-.init           0x4580d0L
-.plt            0x4580f0L
-.text           0x459cb0L
-.fini           0x783dccL
-.rodata         0x783e00L
-.eh_frame_hdr   0x961480L
-.eh_frame       0x977898L
-.init_array     0xbfdda0L
-.fini_array     0xbfdda8L
-.jcr            0xbfddb0L
-.dynamic        0xbfddb8L
-.got            0xbfdff8L
-.got.plt        0xbfe000L
-.data           0xbfee00L
-.bss            0xc12280L
-.shstrtab       0x0L
+.text   0x1000L
+.data   0x1c000L
+.idata  0x1f000L
+.rsrc   0x22000L
+.reloc  0x3c000L
 ~~~~~~~~~~~~~
 
-\section PESectionHeader_py_api Python API - Methods of the PESectionHeader class
+\section PeSectionHeader_py_api Python API - Methods of the PeSectionHeader class
 <hr>
 
 - <b>integer getVirtualAddress(void)</b><br>
@@ -81,7 +60,7 @@ Returns the section size. This member holds the section's size in bytes. The sec
 
 - <b>bool getFlags(void)</b><br>
 Returns the section flags. Sections support one-bit flags that describe miscellaneous attributes.
-If a flag bit is set in triton::format::pe::PESectionHeader::flags, the attribute is "on"
+If a flag bit is set in triton::format::pe::PeSectionHeader::flags, the attribute is "on"
 for the section. Otherwise, the attribute is "off" or does not apply. Undefined attributes are
 set to zero.
 
@@ -97,17 +76,17 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      //! PESectionHeader destructor.
-      void PESectionHeader_dealloc(PyObject* self) {
+      //! PeSectionHeader destructor.
+      void PeSectionHeader_dealloc(PyObject* self) {
         std::cout << std::flush;
-        delete PyPESectionHeader_AsPESectionHeader(self);
+        delete PyPeSectionHeader_AsPeSectionHeader(self);
         Py_DECREF(self);
       }
 
 
-      static PyObject* PESectionHeader_getVirtualAddress(PyObject* self, PyObject* noarg) {
+      static PyObject* PeSectionHeader_getVirtualAddress(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint64(PyPESectionHeader_AsPESectionHeader(self)->virtualAddress);
+          return PyLong_FromUint64(PyPeSectionHeader_AsPeSectionHeader(self)->getVirtualAddress());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -115,9 +94,9 @@ namespace triton {
       }
 
 
-      static PyObject* PESectionHeader_getVirtualSize(PyObject* self, PyObject* noarg) {
+      static PyObject* PeSectionHeader_getVirtualSize(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint64(PyPESectionHeader_AsPESectionHeader(self)->virtualSize);
+          return PyLong_FromUint64(PyPeSectionHeader_AsPeSectionHeader(self)->getVirtualSize());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -125,9 +104,9 @@ namespace triton {
       }
 
 
-      static PyObject* PESectionHeader_getRawAddress(PyObject* self, PyObject* noarg) {
+      static PyObject* PeSectionHeader_getRawAddress(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint64(PyPESectionHeader_AsPESectionHeader(self)->rawAddress);
+          return PyLong_FromUint64(PyPeSectionHeader_AsPeSectionHeader(self)->getRawAddress());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -135,9 +114,9 @@ namespace triton {
       }
 
 
-      static PyObject* PESectionHeader_getRawSize(PyObject* self, PyObject* noarg) {
+      static PyObject* PeSectionHeader_getRawSize(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint64(PyPESectionHeader_AsPESectionHeader(self)->rawSize);
+          return PyLong_FromUint64(PyPeSectionHeader_AsPeSectionHeader(self)->getRawSize());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -145,9 +124,9 @@ namespace triton {
       }
 
 
-      static PyObject* PESectionHeader_getFlags(PyObject* self, PyObject* noarg) {
+      static PyObject* PeSectionHeader_getFlags(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint64(PyPESectionHeader_AsPESectionHeader(self)->characteristics);
+          return PyLong_FromUint64(PyPeSectionHeader_AsPeSectionHeader(self)->getCharacteristics());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -155,9 +134,9 @@ namespace triton {
       }
 
 
-      static PyObject* PESectionHeader_getName(PyObject* self, PyObject* noarg) {
+      static PyObject* PeSectionHeader_getName(PyObject* self, PyObject* noarg) {
         try {
-          return PyString_FromString((char*)PyPESectionHeader_AsPESectionHeader(self)->name);
+          return PyString_FromString((char*)PyPeSectionHeader_AsPeSectionHeader(self)->getName().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -165,25 +144,25 @@ namespace triton {
       }
 
 
-      //! ElfSectionHeader methods.
-      PyMethodDef PESectionHeader_callbacks[] = {
-        {"getVirtualAddress", PESectionHeader_getVirtualAddress, METH_NOARGS,    ""},
-        {"getVirtualSize",    PESectionHeader_getVirtualSize,    METH_NOARGS,    ""},
-        {"getRawAddress",     PESectionHeader_getRawAddress,     METH_NOARGS,    ""},
-        {"getRawSize",        PESectionHeader_getRawSize,        METH_NOARGS,    ""},
-        {"getFlags",          PESectionHeader_getFlags,          METH_NOARGS,    ""},
-        {"getName" ,          PESectionHeader_getName,           METH_NOARGS,    ""},
+      //! PeSectionHeader methods.
+      PyMethodDef PeSectionHeader_callbacks[] = {
+        {"getVirtualAddress", PeSectionHeader_getVirtualAddress, METH_NOARGS,    ""},
+        {"getVirtualSize",    PeSectionHeader_getVirtualSize,    METH_NOARGS,    ""},
+        {"getRawAddress",     PeSectionHeader_getRawAddress,     METH_NOARGS,    ""},
+        {"getRawSize",        PeSectionHeader_getRawSize,        METH_NOARGS,    ""},
+        {"getFlags",          PeSectionHeader_getFlags,          METH_NOARGS,    ""},
+        {"getName" ,          PeSectionHeader_getName,           METH_NOARGS,    ""},
         {nullptr,             nullptr,                           0,              nullptr}
       };
 
 
-      PyTypeObject PESectionHeader_Type = {
+      PyTypeObject PeSectionHeader_Type = {
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */
-        "PESectionHeader",                          /* tp_name */
-        sizeof(PESectionHeader_Object),             /* tp_basicsize */
+        "PeSectionHeader",                          /* tp_name */
+        sizeof(PeSectionHeader_Object),             /* tp_basicsize */
         0,                                          /* tp_itemsize */
-        (destructor)PESectionHeader_dealloc,        /* tp_dealloc */
+        (destructor)PeSectionHeader_dealloc,        /* tp_dealloc */
         0,                                          /* tp_print */
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
@@ -199,14 +178,14 @@ namespace triton {
         0,                                          /* tp_setattro */
         0,                                          /* tp_as_buffer */
         Py_TPFLAGS_DEFAULT,                         /* tp_flags */
-        "PESectionHeader objects",                  /* tp_doc */
+        "PeSectionHeader objects",                  /* tp_doc */
         0,                                          /* tp_traverse */
         0,                                          /* tp_clear */
         0,                                          /* tp_richcompare */
         0,                                          /* tp_weaklistoffset */
         0,                                          /* tp_iter */
         0,                                          /* tp_iternext */
-        PESectionHeader_callbacks,                  /* tp_methods */
+        PeSectionHeader_callbacks,                  /* tp_methods */
         0,                                          /* tp_members */
         0,                                          /* tp_getset */
         0,                                          /* tp_base */
@@ -229,13 +208,13 @@ namespace triton {
       };
 
 
-      PyObject* PyPESectionHeader(const triton::format::pe::PESectionHeader& shdr) {
-        PESectionHeader_Object* object;
+      PyObject* PyPeSectionHeader(const triton::format::pe::PeSectionHeader& shdr) {
+        PeSectionHeader_Object* object;
 
-        PyType_Ready(&PESectionHeader_Type);
-        object = PyObject_NEW(PESectionHeader_Object, &PESectionHeader_Type);
+        PyType_Ready(&PeSectionHeader_Type);
+        object = PyObject_NEW(PeSectionHeader_Object, &PeSectionHeader_Type);
         if (object != NULL)
-          object->shdr = new triton::format::pe::PESectionHeader(shdr);
+          object->shdr = new triton::format::pe::PeSectionHeader(shdr);
 
         return (PyObject*)object;
       }

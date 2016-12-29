@@ -96,7 +96,7 @@ namespace triton {
 
         PyObject* peDict = xPyDict_New();
         initPENamespace(peDict);
-        PyObject* idPEDictClass = xPyClass_New(nullptr, peDict, xPyString_FromString("PE"));
+        PyObject* idPeDictClass = xPyClass_New(nullptr, peDict, xPyString_FromString("PE"));
 
         /* Create the OPCODE namespace =============================================================== */
 
@@ -153,7 +153,7 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "AST_REPRESENTATION",  idAstRepresentationDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "CALLBACK",            idCallbackDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "ELF",                 idElfDictClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "PE_FMT",              idPEDictClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "PE",                  idPeDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "CPUSIZE",             idCpuSizeClass);            /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPCODE",              idOpcodesClass);            /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPERAND",             idOperandClass);

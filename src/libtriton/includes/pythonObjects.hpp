@@ -93,14 +93,26 @@ namespace triton {
       //! Creates the ElfSymbolTable python class.
       PyObject* PyElfSymbolTable(const triton::format::elf::ElfSymbolTable& sym);
 
-      //! Creates the PE python class.
-      PyObject* PyPE(const std::string& pe);
+      //! Creates the Pe python class.
+      PyObject* PyPe(const std::string& pe);
 
-      //! Creates the PEHeader python class.
-      PyObject* PyPEHeader(const triton::format::pe::PEHeader& header);
+      //! Creates the PeHeader python class.
+      PyObject* PyPeHeader(const triton::format::pe::PeHeader& header);
 
-      //! Creates the PESectionHeader python class.
-      PyObject* PyPESectionHeader(const triton::format::pe::PESectionHeader& shdr);
+      //! Creates the PeSectionHeader python class.
+      PyObject* PyPeSectionHeader(const triton::format::pe::PeSectionHeader& shdr);
+
+      //! Creates the PeImportTable python class.
+      PyObject* PyPeImportTable(const triton::format::pe::PeImportDirectory& shdr);
+
+      //! Creates the PeImportLookup python class.
+      PyObject* PyPeImportLookup(const triton::format::pe::PeImportLookup& shdr);
+
+      //! Creates the PeExportTable python class.
+      PyObject* PyPeExportTable(const triton::format::pe::PeExportDirectory& shdr);
+
+      //! Creates the PeExportEntry python class.
+      PyObject* PyPeExportEntry(const triton::format::pe::PeExportEntry& shdr);
 
       //! Creates the Immediate python class.
       PyObject* PyImmediate(const triton::arch::Immediate& imm);
@@ -232,38 +244,82 @@ namespace triton {
       //! pyElfSymbolTable type.
       extern PyTypeObject ElfSymbolTable_Type;
 
-      /* PE   =========================================================== */
+      /* Pe   =========================================================== */
 
-      //! pyPE object.
+      //! pyPe object.
       typedef struct {
         PyObject_HEAD
-        triton::format::pe::PE* pe;
-      } PE_Object;
+        triton::format::pe::Pe* pe;
+      } Pe_Object;
 
-      //! pyPE type.
-      extern PyTypeObject PE_Type;
+      //! pyPe type.
+      extern PyTypeObject Pe_Type;
 
-      /* PEHeader   ===================================================== */
+      /* PeHeader   ===================================================== */
 
-      //! pyPEHeader object.
+      //! pyPeHeader object.
       typedef struct {
         PyObject_HEAD
-        triton::format::pe::PEHeader* header;
-      } PEHeader_Object;
+        triton::format::pe::PeHeader* header;
+      } PeHeader_Object;
 
-      //! pyPEHeader type.
-      extern PyTypeObject PEHeader_Type;
+      //! pyPeHeader type.
+      extern PyTypeObject PeHeader_Type;
 
-      /* PESectionHeader  ============================================== */
+      /* PeSectionHeader  ============================================== */
 
-      //! pyPESectionHeader object.
+      //! pyPeSectionHeader object.
       typedef struct {
         PyObject_HEAD
-        triton::format::pe::PESectionHeader* shdr;
-      } PESectionHeader_Object;
+        triton::format::pe::PeSectionHeader* shdr;
+      } PeSectionHeader_Object;
 
-      //! pyPESectionHeader type.
-      extern PyTypeObject PESectionHeader_Type;
+      //! pyPeSectionHeader type.
+      extern PyTypeObject PeSectionHeader_Type;
+
+      /* PeImportTable    ============================================== */
+
+      //! pyPeImportTable object.
+      typedef struct {
+        PyObject_HEAD
+        triton::format::pe::PeImportDirectory* impt;
+      } PeImportTable_Object;
+
+      //! pyPeImportTable type.
+      extern PyTypeObject PeImportTable_Type;
+
+      /* PeImportLookup    ============================================== */
+
+      //! pyPeImportLookup object.
+      typedef struct {
+        PyObject_HEAD
+        triton::format::pe::PeImportLookup* impt;
+      } PeImportLookup_Object;
+
+      //! pyPeImportTable type.
+      extern PyTypeObject PeImportLookup_Type;
+
+      /* PeImportTable    ============================================== */
+
+      //! pyPeExportTable object.
+      typedef struct {
+        PyObject_HEAD
+        triton::format::pe::PeExportDirectory* expt;
+      } PeExportTable_Object;
+
+      //! pyPeExportTable type.
+      extern PyTypeObject PeExportTable_Type;
+
+      /* PeExportEntry    ============================================== */
+
+      //! pyPeExportEntry object.
+      typedef struct {
+        PyObject_HEAD
+        triton::format::pe::PeExportEntry* impt;
+      } PeExportEntry_Object;
+
+      //! pyPeExportEntry type.
+      extern PyTypeObject PeExportEntry_Type;
 
       /* Immediate ====================================================== */
 
@@ -415,23 +471,47 @@ namespace triton {
 /*! Returns the triton::format::elf::ElfSymbolTable. */
 #define PyElfSymbolTable_AsElfSymbolTable(v) (((triton::bindings::python::ElfSymbolTable_Object*)(v))->sym)
 
-/*! Checks if the pyObject is a triton::format::pe::PE. */
-#define PyPE_Check(v) ((v)->ob_type == &triton::bindings::python::PE_Type)
+/*! Checks if the pyObject is a triton::format::pe::Pe. */
+#define PyPe_Check(v) ((v)->ob_type == &triton::bindings::python::Pe_Type)
 
-/*! Returns the triton::format::pe::PE. */
-#define PyPE_AsPE(v) (((triton::bindings::python::PE_Object*)(v))->pe)
+/*! Returns the triton::format::pe::Pe. */
+#define PyPe_AsPe(v) (((triton::bindings::python::Pe_Object*)(v))->pe)
 
-/*! Checks if the pyObject is a triton::format::pe::PEHeader. */
-#define PyPEHeader_Check(v) ((v)->ob_type == &triton::bindings::python::PEHeader_Type)
+/*! Checks if the pyObject is a triton::format::pe::PeHeader. */
+#define PyPeHeader_Check(v) ((v)->ob_type == &triton::bindings::python::PeHeader_Type)
 
-/*! Returns the triton::format::pe::PEHeader. */
-#define PyPEHeader_AsPEHeader(v) (((triton::bindings::python::PEHeader_Object*)(v))->header)
+/*! Returns the triton::format::pe::PeHeader. */
+#define PyPeHeader_AsPeHeader(v) (((triton::bindings::python::PeHeader_Object*)(v))->header)
 
-/*! Checks if the pyObject is a triton::format::pe::PESectionHeader. */
-#define PyPESectionHeader_Check(v) ((v)->ob_type == &triton::bindings::python::PESectionHeader_Type)
+/*! Checks if the pyObject is a triton::format::pe::PeSectionHeader. */
+#define PyPeSectionHeader_Check(v) ((v)->ob_type == &triton::bindings::python::PeSectionHeader_Type)
 
-/*! Returns the triton::format::pe::PESectionHeader. */
-#define PyPESectionHeader_AsPESectionHeader(v) (((triton::bindings::python::PESectionHeader_Object*)(v))->shdr)
+/*! Returns the triton::format::pe::PeSectionHeader. */
+#define PyPeSectionHeader_AsPeSectionHeader(v) (((triton::bindings::python::PeSectionHeader_Object*)(v))->shdr)
+
+/*! Checks if the pyObject is a triton::format::pe::PeImportDirectory. */
+#define PyPeImportTable_Check(v) ((v)->ob_type == &triton::bindings::python::PeImportTable_Type)
+
+/*! Returns the triton::format::pe::PeImportDirectory. */
+#define PyPeImportTable_AsPeImportDirectory(v) (((triton::bindings::python::PeImportTable_Object*)(v))->impt)
+
+/*! Checks if the pyObject is a triton::format::pe::PeImportLookup. */
+#define PyPeImportLookup_Check(v) ((v)->ob_type == &triton::bindings::python::PeImportLookup_Type)
+
+/*! Returns the triton::format::pe::PeImportLookup. */
+#define PyPeImportLookup_AsPeImportLookup(v) (((triton::bindings::python::PeImportLookup_Object*)(v))->impt)
+
+/*! Checks if the pyObject is a triton::format::pe::PeExportDirectory. */
+#define PyPeExportTable_Check(v) ((v)->ob_type == &triton::bindings::python::PeExportTable_Type)
+
+/*! Returns the triton::format::pe::PeExportDirectory. */
+#define PyPeExportTable_AsPeExportDirectory(v) (((triton::bindings::python::PeExportTable_Object*)(v))->expt)
+
+/*! Checks if the pyObject is a triton::format::pe::PeExportEntry. */
+#define PyPeExportEntry_Check(v) ((v)->ob_type == &triton::bindings::python::PeExportEntry_Type)
+
+/*! Returns the triton::format::pe::PeExportEntry. */
+#define PyPeExportEntry_AsPeExportEntry(v) (((triton::bindings::python::PeExportEntry_Object*)(v))->impt)
 
 /*! Checks if the pyObject is a triton::arch::Immediate. */
 #define PyImmediate_Check(v) ((v)->ob_type == &triton::bindings::python::Immediate_Type)

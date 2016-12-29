@@ -603,13 +603,13 @@ namespace triton {
       }
 
 
-      static PyObject* triton_PE(PyObject* self, PyObject* path) {
+      static PyObject* triton_Pe(PyObject* self, PyObject* path) {
         /* Check if the first arg is a integer */
         if (path == nullptr || !PyString_Check(path))
-          return PyErr_Format(PyExc_TypeError, "PE(): Expects a string as first argument.");
+          return PyErr_Format(PyExc_TypeError, "Pe(): Expects a string as first argument.");
 
         try {
-          return PyPE(PyString_AsString(path));
+          return PyPe(PyString_AsString(path));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2968,7 +2968,7 @@ namespace triton {
       PyMethodDef tritonCallbacks[] = {
         {"Bitvector",                           (PyCFunction)triton_Bitvector,                              METH_VARARGS,       ""},
         {"Elf",                                 (PyCFunction)triton_Elf,                                    METH_O,             ""},
-        {"PE",                                  (PyCFunction)triton_PE,                                     METH_O,             ""},
+        {"Pe",                                  (PyCFunction)triton_Pe,                                     METH_O,             ""},
         {"Immediate",                           (PyCFunction)triton_Immediate,                              METH_VARARGS,       ""},
         {"Instruction",                         (PyCFunction)triton_Instruction,                            METH_VARARGS,       ""},
         {"MemoryAccess",                        (PyCFunction)triton_MemoryAccess,                           METH_VARARGS,       ""},

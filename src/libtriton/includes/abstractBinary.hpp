@@ -86,7 +86,7 @@ namespace triton {
         triton::format::elf::Elf* getElf(void);
 
         //! Returns the PE instance only if the AbstractBinary::format is equal to triton::format::BINARY_PE otherwise raise an excepton.
-        triton::format::pe::PE* getPE(void);
+        triton::format::pe::Pe* getPe(void);
 
         //! Returns the path file of the loaded binary.
         const std::string& getPath(void) const;

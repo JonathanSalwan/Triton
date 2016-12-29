@@ -26,8 +26,8 @@ The PE namespace contains all enums used by the PE format.
 \section PE_py_api Python API - Items of the PE namespace
 <hr>
 
-- **PE_FMT.IMAGE_FILE_MACHINE_AMD64**
-- **PE_FMT.IMAGE_FILE_MACHINE_I386**
+- **PE.IMAGE_FILE_MACHINE_AMD64**
+- **PE.IMAGE_FILE_MACHINE_I386**
 
 */
 
@@ -38,7 +38,7 @@ namespace triton {
     namespace python {
 
       void initPENamespace(PyObject* peDict) {
-        PyDict_SetItemString(peDict, "IMAGE_FILE_MACHINE_AMD64",        PyLong_FromUint32(triton::format::pe::IMAGE_FILE_MACHINE_AMD64));
+        PyDict_SetItemString(peDict, "IMAGE_FILE_MACHINE_AMD64",       PyLong_FromUint32(triton::format::pe::IMAGE_FILE_MACHINE_AMD64));
         PyDict_SetItemString(peDict, "IMAGE_FILE_MACHINE_I386",        PyLong_FromUint32(triton::format::pe::IMAGE_FILE_MACHINE_I386));
       }
 

@@ -13,6 +13,8 @@
 
 #include "binaryInterface.hpp"
 #include "peHeader.hpp"
+#include "peImportDirectory.hpp"
+#include "peExportDirectory.hpp"
 #include "memoryMapping.hpp"
 #include "tritonTypes.hpp"
 
@@ -41,61 +43,9 @@ namespace triton {
      *  @{
      */
 
-      /*! \class PEImportLookup
-       *  \brief PE Import Lookup Table entry */
-      struct PEImportLookup {
-          bool importByName;
-          triton::uint16 ordinalNumber; //contains "hint" if importByName
-          std::string name; //only if importByName
-      };
-
-      /*! \class PEImportDirectory
-       *  \brief PE Import Directory Table entry */
-      struct PEImportDirectory {
-          triton::uint32 importLookupTableRVA;
-          triton::uint32 timeDateStamp;
-          triton::uint32 forwarderChain;
-          triton::uint32 nameRVA;
-          triton::uint32 importAddressTableRVA;
-          std::string name;
-          std::vector<PEImportLookup> entries;
-      };
-
-      /*! \class PEExportEntry
-       *  \brief PE Export entry */
-
-      struct PEExportEntry {
-          bool isForward;
-          triton::uint32 exportRVA;     //if not isForward
-          triton::uint32 forwarderRVA;  //if isForward
-          std::string forwarderName;    //if isForward
-          triton::uint32 exportNameRVA;
-          std::string exportName;
-          triton::uint16 ordinal;
-      };
-
-      /*! \class PEExportDirectory
-       *  \brief PE Export Directory */
-      struct PEExportDirectory {
-          triton::uint32 exportFlags;
-          triton::uint32 timeDateStamp;
-          triton::uint16 majorVersion;
-          triton::uint16 minorVersion;
-          triton::uint32 nameRVA;
-          triton::uint32 ordinalBase;
-          triton::uint32 addressTableEntries;
-          triton::uint32 numberOfNamePointers;
-          triton::uint32 exportAddressTableRVA;
-          triton::uint32 namePointerRVA;
-          triton::uint32 ordinalTableRVA;
-
-          std::string name;
-          std::vector<PEExportEntry> entries;
-      };
-
-      /*! \class PE
+      /*! \class Pe
        *  \brief The PE format class. */
-      class PE : public BinaryInterface {
+      class Pe : public BinaryInterface {
         protected:
           //! Path file of the binary.
           std::string path;
@@ -107,7 +57,7 @@ namespace triton {
           triton::uint8* raw;
 
           //! The PE Header
-          triton::format::pe::PEHeader header;
+          triton::format::pe::PeHeader header;
 
           /*!
            * \description The list of memory areas which may be mapped into the Triton memory.
@@ -115,9 +65,9 @@ namespace triton {
            */
           std::list<triton::format::MemoryMapping> memoryMapping;
 
-          std::vector<PEImportDirectory> importTable;
+          std::vector<PeImportDirectory> importTable;
           std::vector<std::string> dlls;
-          PEExportDirectory exportTable;
+          PeExportDirectory exportTable;
 
           //! Open the binary.
           void open(void);
@@ -139,10 +89,10 @@ namespace triton {
 
         public:
           //! Constructor.
-          PE(const std::string& path);
+          Pe(const std::string& path);
 
           //! Destructor.
-          virtual ~PE();
+          virtual ~Pe();
 
           //! Returns the raw binary.
           const triton::uint8* getRaw(void) const;
@@ -154,13 +104,13 @@ namespace triton {
           const std::string& getPath(void) const;
 
           //! Returns the PE Header.
-          const triton::format::pe::PEHeader& getHeader(void) const;
+          const triton::format::pe::PeHeader& getHeader(void) const;
 
           //! Returns the export table.
-          const PEExportDirectory& getExportTable(void) const;
+          const PeExportDirectory& getExportTable(void) const;
 
           //! Returns the import table.
-          const std::vector<PEImportDirectory>& getImportTable(void) const;
+          const std::vector<PeImportDirectory>& getImportTable(void) const;
 
           //! Returns the names of the imported DLLS.
           const std::vector<std::string>& getSharedLibraries(void) const;

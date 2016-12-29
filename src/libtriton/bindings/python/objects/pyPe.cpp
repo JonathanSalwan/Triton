@@ -15,20 +15,20 @@
 
 
 
-/*! \page py_PE_page PE
-    \brief [**python api**] All information about the PE python object.
+/*! \page py_Pe_page Pe
+    \brief [**python api**] All information about the Pe python object.
 
 \tableofcontents
 
-\section py_PE_description Description
+\section py_Pe_description Description
 <hr>
 
 This object is used to represent the PE binary format.
 
-\subsection py_PE_example Example
+\subsection py_Pe_example Example
 
 ~~~~~~~~~~~~~{.py}
->>> b = PE('C:/Windows/System32/notepad.exe')
+>>> b = Pe('C:/Windows/System32/notepad.exe')
 
 >>> for lib in b.getSharedLibraries():
 ...     print lib
@@ -75,16 +75,16 @@ urlmon.dll
 .reloc  0x3c000L
 ~~~~~~~~~~~~~
 
-\subsection py_PE_constructor Constructor
+\subsection py_Pe_constructor Constructor
 
 ~~~~~~~~~~~~~{.py}
->>> binary = PE('C:/Windows/System32/notepad.exe')
+>>> binary = Pe('C:/Windows/System32/notepad.exe')
 ~~~~~~~~~~~~~
 
-\section PE_py_api Python API - Methods of the PE class
+\section Pe_py_api Python API - Methods of the Pe class
 <hr>
 
-- <b>\ref py_PEHeader_page getHeader(void)</b><br>
+- <b>\ref py_PeHeader_page getHeader(void)</b><br>
 Returns the PE header.
 
 - <b>string getPath(void)</b><br>
@@ -94,7 +94,7 @@ e.g: `C:/Windows/System32/notepad.exe`
 - <b>bytes getRaw(void)</b><br>
 Returns the raw binary.
 
-- <b>[\ref py_PESectionHeader_page, ...] getSectionHeaders(void)</b><br>
+- <b>[\ref py_PeSectionHeader_page, ...] getSectionHeaders(void)</b><br>
 Returns the list of section headers.
 
 - <b>[string, ...] getSharedLibraries(void)</b><br>
@@ -104,10 +104,10 @@ e.g: `['ADVAPI32.dll', 'KERNEL32.dll', 'GDI32.dll', ....... ]`
 - <b>integer getSize(void)</b><br>
 Returns the binary size.
 
-- <b>[\ref py_PEImportTable_page, ...] getImportTable(void)</b><br>
+- <b>[\ref py_PeImportTable_page, ...] getImportTable(void)</b><br>
 Returns the list of import table entries.
 
-- <b>[\ref py_PEExportTable_page, ...] getExportTable(void)</b><br>
+- <b>[\ref py_PeExportTable_page, ...] getExportTable(void)</b><br>
 Returns the list of export table entries.
 
 */
@@ -118,17 +118,17 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      //! PE destructor.
-      void PE_dealloc(PyObject* self) {
+      //! Pe destructor.
+      void Pe_dealloc(PyObject* self) {
         std::cout << std::flush;
-        delete PyPE_AsPE(self);
+        delete PyPe_AsPe(self);
         Py_DECREF(self);
       }
 
 
-      static PyObject* PE_getHeader(PyObject* self, PyObject* noarg) {
+      static PyObject* Pe_getHeader(PyObject* self, PyObject* noarg) {
         try {
-          return PyPEHeader(PyPE_AsPE(self)->getHeader());
+          return PyPeHeader(PyPe_AsPe(self)->getHeader());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -136,9 +136,9 @@ namespace triton {
       }
 
 
-      static PyObject* PE_getPath(PyObject* self, PyObject* noarg) {
+      static PyObject* Pe_getPath(PyObject* self, PyObject* noarg) {
         try {
-          return PyString_FromString(PyPE_AsPE(self)->getPath().c_str());
+          return PyString_FromString(PyPe_AsPe(self)->getPath().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -146,10 +146,10 @@ namespace triton {
       }
 
 
-      static PyObject* PE_getRaw(PyObject* self, PyObject* noarg) {
+      static PyObject* Pe_getRaw(PyObject* self, PyObject* noarg) {
         try {
-          const triton::uint8* raw = PyPE_AsPE(self)->getRaw();
-          triton::usize size       = PyPE_AsPE(self)->getSize();
+          const triton::uint8* raw = PyPe_AsPe(self)->getRaw();
+          triton::usize size       = PyPe_AsPe(self)->getSize();
           return PyBytes_FromStringAndSize(reinterpret_cast<const char*>(raw), size);
         }
         catch (const triton::exceptions::Exception& e) {
@@ -158,14 +158,14 @@ namespace triton {
       }
 
 
-      static PyObject* PE_getSectionHeaders(PyObject* self, PyObject* noarg) {
+      static PyObject* Pe_getSectionHeaders(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
 
         try {
-          const std::vector<triton::format::pe::PESectionHeader>& shdr = PyPE_AsPE(self)->getHeader().getSectionHeaders();
+          const std::vector<triton::format::pe::PeSectionHeader>& shdr = PyPe_AsPe(self)->getHeader().getSectionHeaders();
           ret = xPyList_New(shdr.size());
           for (triton::uint32 i = 0; i < shdr.size(); i++) {
-            PyList_SetItem(ret, i, PyPESectionHeader(shdr[i]));
+            PyList_SetItem(ret, i, PyPeSectionHeader(shdr[i]));
           }
         }
         catch (const triton::exceptions::Exception& e) {
@@ -176,11 +176,11 @@ namespace triton {
       }
 
 
-      static PyObject* PE_getSharedLibraries(PyObject* self, PyObject* noarg) {
+      static PyObject* Pe_getSharedLibraries(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
 
         try {
-          const std::vector<std::string>& lib = PyPE_AsPE(self)->getSharedLibraries();
+          const std::vector<std::string>& lib = PyPe_AsPe(self)->getSharedLibraries();
           ret = xPyList_New(lib.size());
           for (triton::uint32 i = 0; i < lib.size(); i++) {
             PyList_SetItem(ret, i, xPyString_FromString(lib[i].c_str()));
@@ -194,9 +194,9 @@ namespace triton {
       }
 
 
-      static PyObject* PE_getSize(PyObject* self, PyObject* noarg) {
+      static PyObject* Pe_getSize(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUsize(PyPE_AsPE(self)->getSize());
+          return PyLong_FromUsize(PyPe_AsPe(self)->getSize());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -204,63 +204,55 @@ namespace triton {
       }
 
 
-      static PyObject* PE_getImportTable(PyObject* self, PyObject* noarg) {
+      static PyObject* Pe_getImportTable(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
 
-        /*try {
-          const std::vector<triton::format::pe::PEImportDirectory>& sym = PyPE_AsPE(self)->getImportTable();
+        try {
+          const std::vector<triton::format::pe::PeImportDirectory>& sym = PyPe_AsPe(self)->getImportTable();
           ret = xPyList_New(sym.size());
           for (triton::uint32 i = 0; i < sym.size(); i++) {
-            PyList_SetItem(ret, i, PyPEImportTable(sym[i]));
+            PyList_SetItem(ret, i, PyPeImportTable(sym[i]));
           }
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }*/
+        }
 
         return ret;
       }
 
 
-      static PyObject* PE_getExportTable(PyObject* self, PyObject* noarg) {
-        PyObject* ret = nullptr;
-
-        /*try {
-          const std::vector<triton::format::pe::PEExportTable>& sym = PyPE_AsPE(self)->getExportTable();
-          ret = xPyList_New(sym.size());
-          for (triton::uint32 i = 0; i < sym.size(); i++) {
-            PyList_SetItem(ret, i, PyPEExportTable(sym[i]));
-          }
+      static PyObject* Pe_getExportTable(PyObject* self, PyObject* noarg) {
+        try {
+          return PyPeExportTable(PyPe_AsPe(self)->getExportTable());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }*/
-
-        return ret;
+        }
       }
 
 
-      //! PE methods.
-      PyMethodDef PE_callbacks[] = {
-        {"getHeader",             PE_getHeader,            METH_NOARGS,     ""},
-        {"getPath",               PE_getPath,              METH_NOARGS,     ""},
-        {"getRaw",                PE_getRaw,               METH_NOARGS,     ""},
-        {"getSectionHeaders",     PE_getSectionHeaders,    METH_NOARGS,     ""},
-        {"getSharedLibraries",    PE_getSharedLibraries,   METH_NOARGS,     ""},
-        {"getSize",               PE_getSize,              METH_NOARGS,     ""},
-        {"getImportTable",        PE_getImportTable,       METH_NOARGS,     ""},
-        {"getExportTable",        PE_getExportTable,       METH_NOARGS,     ""},
+      //! Pe methods.
+      PyMethodDef Pe_callbacks[] = {
+        {"getHeader",             Pe_getHeader,            METH_NOARGS,     ""},
+        {"getPath",               Pe_getPath,              METH_NOARGS,     ""},
+        {"getRaw",                Pe_getRaw,               METH_NOARGS,     ""},
+        {"getSectionHeaders",     Pe_getSectionHeaders,    METH_NOARGS,     ""},
+        {"getSharedLibraries",    Pe_getSharedLibraries,   METH_NOARGS,     ""},
+        {"getSize",               Pe_getSize,              METH_NOARGS,     ""},
+        {"getImportTable",        Pe_getImportTable,       METH_NOARGS,     ""},
+        {"getExportTable",        Pe_getExportTable,       METH_NOARGS,     ""},
         {nullptr,                 nullptr,                  0,               nullptr}
       };
 
 
-      PyTypeObject PE_Type = {
+      PyTypeObject Pe_Type = {
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */
-        "PE",                                       /* tp_name */
-        sizeof(PE_Object),                          /* tp_basicsize */
+        "Pe",                                       /* tp_name */
+        sizeof(Pe_Object),                          /* tp_basicsize */
         0,                                          /* tp_itemsize */
-        (destructor)PE_dealloc,                     /* tp_dealloc */
+        (destructor)Pe_dealloc,                     /* tp_dealloc */
         0,                                          /* tp_print */
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
@@ -276,14 +268,14 @@ namespace triton {
         0,                                          /* tp_setattro */
         0,                                          /* tp_as_buffer */
         Py_TPFLAGS_DEFAULT,                         /* tp_flags */
-        "PE objects",                               /* tp_doc */
+        "Pe objects",                               /* tp_doc */
         0,                                          /* tp_traverse */
         0,                                          /* tp_clear */
         0,                                          /* tp_richcompare */
         0,                                          /* tp_weaklistoffset */
         0,                                          /* tp_iter */
         0,                                          /* tp_iternext */
-        PE_callbacks,                               /* tp_methods */
+        Pe_callbacks,                               /* tp_methods */
         0,                                          /* tp_members */
         0,                                          /* tp_getset */
         0,                                          /* tp_base */
@@ -306,13 +298,13 @@ namespace triton {
       };
 
 
-      PyObject* PyPE(const std::string& path) {
-        PE_Object* object;
+      PyObject* PyPe(const std::string& path) {
+        Pe_Object* object;
 
-        PyType_Ready(&PE_Type);
-        object = PyObject_NEW(PE_Object, &PE_Type);
+        PyType_Ready(&Pe_Type);
+        object = PyObject_NEW(Pe_Object, &Pe_Type);
         if (object != NULL)
-          object->pe = new triton::format::pe::PE(path);
+          object->pe = new triton::format::pe::Pe(path);
 
         return (PyObject*)object;
       }
