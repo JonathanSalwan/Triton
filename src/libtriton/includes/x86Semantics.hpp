@@ -1037,6 +1037,9 @@ namespace triton {
           //! The SAR semantics.
           void sar_s(triton::arch::Instruction& inst);
 
+          //! The SARX semantics.
+          void sarx_s(triton::arch::Instruction& inst);
+
           //! The SBB semantics.
           void sbb_s(triton::arch::Instruction& inst);
 

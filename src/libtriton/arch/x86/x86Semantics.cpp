@@ -251,6 +251,7 @@ RORX                         | bmi2       | Rotate Right Logical Without Affecti
 SAHF                         |            | Store AH into Flags
 SAL                          |            | Shift Left
 SAR                          |            | Shift Right Signed
+SARX                         | bmi2       | Shift arithmetic right without affecting flags
 SBB                          |            | Integer Subtraction with Borrow
 SCASB                        |            | Scan byte at address
 SCASD                        |            | Scan doubleword at address
@@ -562,6 +563,7 @@ namespace triton {
           case ID_INS_SAHF:           this->sahf_s(inst);         break;
           case ID_INS_SAL:            this->shl_s(inst);          break;
           case ID_INS_SAR:            this->sar_s(inst);          break;
+          case ID_INS_SARX:           this->sarx_s(inst);         break;
           case ID_INS_SBB:            this->sbb_s(inst);          break;
           case ID_INS_SCASB:          this->scasb_s(inst);        break;
           case ID_INS_SCASD:          this->scasd_s(inst);        break;
@@ -9950,6 +9952,45 @@ namespace triton {
         this->pfShl_s(inst, expr, dst, op2); /* Same that shl */
         this->sfShl_s(inst, expr, dst, op2); /* Same that shl */
         this->zfShl_s(inst, expr, dst, op2); /* Same that shl */
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::sarx_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+
+        switch (dst.getBitSize()) {
+          /* Mask 0x3f MOD size */
+          case QWORD_SIZE_BIT:
+            op2 = triton::ast::bvand(op2, triton::ast::bv(QWORD_SIZE_BIT-1, src2.getBitSize()));
+            break;
+
+          /* Mask 0x1f MOD size */
+          case DWORD_SIZE_BIT:
+            op2 = triton::ast::bvand(op2, triton::ast::bv(DWORD_SIZE_BIT-1, src2.getBitSize()));
+            break;
+
+          default:
+            throw triton::exceptions::Semantics("x86Semantics::sarx_s(): Invalid destination size");
+        }
+
+        /* Create the semantics */
+        auto node = triton::ast::bvashr(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SARX operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted |= this->taintEngine->taintUnion(dst, src2);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
