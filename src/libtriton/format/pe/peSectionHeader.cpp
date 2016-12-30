@@ -68,14 +68,34 @@ namespace triton {
       }
 
 
+      triton::uint32 PeSectionHeader::getSize(void) const {
+          return sizeof(st);
+      }
+
       triton::uint32 PeSectionHeader::parse(const triton::uint8* raw) {
         std::memcpy(&st, raw, sizeof(st));
         name = std::string((char*)&st.name[0],8).c_str();
         return sizeof(st);
       }
 
+      void PeSectionHeader::save(std::ostream &os) const {
+        os.write((char*)&st, sizeof(st));
+      }
+
+      void PeSectionHeader::setName(const std::string &name) {
+        this->name = name;
+        std::memset((char*)&st.name[0],0,sizeof(st.name));
+        std::memcpy((char*)&st.name[0],name.c_str(),std::min(name.length(),sizeof(st.name)));
+      }
+
+
       std::string PeSectionHeader::getName(void) const {
         return this->name;
+      }
+
+
+      void PeSectionHeader::setVirtualSize(triton::uint32 virtualSize) {
+        this->st.virtualSize = virtualSize;
       }
 
 
@@ -84,13 +104,28 @@ namespace triton {
       }
 
 
+      void PeSectionHeader::setVirtualAddress(triton::uint32 virtualAddress) {
+        this->st.virtualAddress = virtualAddress;
+      }
+
+
       triton::uint32 PeSectionHeader::getVirtualAddress(void) const {
         return this->st.virtualAddress;
       }
 
 
+      void PeSectionHeader::setRawSize(triton::uint32 rawSize) {
+        this->st.rawSize = rawSize;
+      }
+
+
       triton::uint32 PeSectionHeader::getRawSize(void) const {
         return this->st.rawSize;
+      }
+
+
+      void PeSectionHeader::setRawAddress(triton::uint32 rawAddress) {
+        this->st.rawAddress = rawAddress;
       }
 
 
@@ -119,9 +154,15 @@ namespace triton {
       }
 
 
+      void PeSectionHeader::setCharacteristics(triton::uint32 characteristics) {
+        this->st.characteristics = characteristics;
+      }
+
+
       triton::uint32 PeSectionHeader::getCharacteristics(void) const {
         return this->st.characteristics;
       }
+
 
     }; /* pe namespace */
   }; /* format namespace */

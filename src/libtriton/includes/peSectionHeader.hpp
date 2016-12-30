@@ -112,20 +112,41 @@ namespace triton {
           //! Destructor.
           ~PeSectionHeader();
 
+          //! Returns the size of the structure.
+          triton::uint32 getSize(void) const;
+
           //! Parses the section header.
           triton::uint32 parse(const triton::uint8* raw);
 
-            //! Returns the name.
+          //! Saves the header to file.
+          void save(std::ostream &os) const;
+
+          //! Sets the name.
+          void setName(const std::string &name);
+
+          //! Returns the name.
           std::string getName(void) const;
+
+          //! Sets the virtualSize.
+          void setVirtualSize(triton::uint32 virtualSize);
 
           //! Returns the virtualSize.
           triton::uint32 getVirtualSize(void) const;
 
+          //! Sets the virtualAddress.
+          void setVirtualAddress(triton::uint32 virtualAddress);
+
           //! Returns the virtualAddress.
           triton::uint32 getVirtualAddress(void) const;
 
+          //! Sets the rawSize.
+          void setRawSize(triton::uint32 rawSize);
+
           //! Returns the rawSize.
           triton::uint32 getRawSize(void) const;
+
+          //! Sets the rawAddress.
+          void setRawAddress(triton::uint32 rawAddress);
 
           //! Returns the rawAddress.
           triton::uint32 getRawAddress(void) const;
@@ -141,6 +162,9 @@ namespace triton {
 
           //! Returns the numberOfLinenumbers.
           triton::uint16 getNumberOfLinenumbers(void) const;
+
+          //! Sets the characteristics.
+          void setCharacteristics(triton::uint32 characteristics);
 
           //! Returns the characteristics.
           triton::uint32 getCharacteristics(void) const;

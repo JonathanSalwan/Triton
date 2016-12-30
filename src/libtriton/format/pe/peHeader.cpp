@@ -96,6 +96,53 @@ namespace triton {
         return sectionStart+numSections*sizeof(PeSectionHeader);
       }
 
+      void PeHeader::save(std::ostream &os) const {
+          os.write((char*)&dosStub[0],peHeaderStart);
+          fileHeader.save(os);
+          optionalHeader.save(os);
+          dataDirectory.save(os);
+          for (const PeSectionHeader &hdr : sectionHeaders)
+            hdr.save(os);
+      }
+
+      triton::uint32 PeHeader::fileAlign(triton::uint32 offset) const {
+          triton::uint32 align = optionalHeader.getFileAlignment();
+          return ((offset-1)/align+1)*align;
+      }
+
+      triton::uint32 PeHeader::sectionAlign(triton::uint32 rva) const {
+          triton::uint32 align = optionalHeader.getSectionAlignment();
+          return ((rva-1)/align+1)*align;
+      }
+
+      triton::uint32 PeHeader::getTotalSectionVirtualSize() const {
+          triton::uint32 maxRva = 0;
+          for (const PeSectionHeader &hdr : sectionHeaders) {
+              triton::uint32 rva = hdr.getVirtualAddress()+hdr.getVirtualSize();
+              maxRva = std::max(maxRva,rva);
+          }
+          return sectionAlign(maxRva);
+      }
+
+      triton::uint32 PeHeader::getTotalSectionRawSize() const {
+          triton::uint32 maxOffset = 0;
+          for (const PeSectionHeader &hdr : sectionHeaders) {
+              triton::uint32 offset = hdr.getRawAddress()+hdr.getRawSize();
+              maxOffset = std::max(maxOffset,offset);
+          }
+          return fileAlign(maxOffset);
+      }
+
+      triton::uint32 PeHeader::getSize() const {
+        triton::uint32 size = peHeaderStart+
+            fileHeader.getSize()+
+            optionalHeader.getSize()+
+            dataDirectory.getSize();
+        for (auto &&sectionHeader : sectionHeaders)
+            size += sectionHeader.getSize();
+        return size;
+      }
+
       const PeFileHeader &PeHeader::getFileHeader() const {
           return fileHeader;
       }
@@ -110,6 +157,21 @@ namespace triton {
 
       const std::vector<PeSectionHeader> &PeHeader::getSectionHeaders() const {
           return sectionHeaders;
+      }
+
+      void PeHeader::addSection(const std::string name, triton::uint32 vsize, triton::uint32 rawsize, triton::uint32 characteristics) {
+          PeSectionHeader hdr;
+          hdr.setName(name);
+          hdr.setVirtualAddress(getTotalSectionVirtualSize());
+          hdr.setVirtualSize(vsize);
+          hdr.setRawAddress(getTotalSectionRawSize());
+          hdr.setRawSize(rawsize);
+          hdr.setCharacteristics(characteristics);
+          sectionHeaders.push_back(hdr);
+          fileHeader.setNumberOfSections(sectionHeaders.size());
+          //getTotalSectionVirtualSize will now return the increased size
+          optionalHeader.setSizeOfImage(getTotalSectionVirtualSize());
+          optionalHeader.setSizeOfHeaders(fileAlign(getSize()));
       }
 
     }; /* pe namespace */
