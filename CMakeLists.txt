@@ -260,10 +260,13 @@ file(
 )
 
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND "${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+    set(LIBTRITON_OTHER_LIBS "-lgomp")
+endif()
+
 # Define library's properties
 add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES})
 set_target_properties(${PROJECT_LIBTRITON} PROPERTIES COMPILE_FLAGS ${LIBTRITON_CXX_FLAGS})
-
 
 # Link Triton's dependencies
 target_link_libraries(
@@ -272,6 +275,7 @@ target_link_libraries(
     ${Boost_LIBRARIES}
     ${Z3_LIBRARIES}
     ${CAPSTONE_LIBRARIES}
+    ${LIBTRITON_OTHER_LIBS}
 )
 
 
