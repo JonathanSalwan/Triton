@@ -115,12 +115,14 @@ namespace triton {
           exportTable.parse(raw+getOffsetFromAddress(exportStart));
           exportTable.setName((char*)raw+getOffsetFromAddress(exportTable.getNameRVA()));
           triton::uint32 addrTableStart = getOffsetFromAddress(exportTable.getExportAddressTableRVA());
+          if (addrTableStart + exportTable.getAddressTableEntries()*sizeof(triton::uint32) >= totalSize)
+              throw triton::exceptions::Pe("Pe::initExportTable(): export address table runs past end of file");
 
           std::vector<PeExportEntry> entries;
           for (triton::usize i=0; i<exportTable.getAddressTableEntries(); ++i) {
               PeExportEntry entry;
               triton::uint32 exportRVA;
-              std::memcpy(&exportRVA, raw+addrTableStart+4*i,sizeof(exportRVA));
+              std::memcpy(&exportRVA, raw+addrTableStart+sizeof(exportRVA)*i,sizeof(exportRVA));
               if (exportRVA >= exportStart && exportRVA < exportStart+exportSize) {
                   entry.isForward = true;
                   entry.forwarderRVA = exportRVA;
@@ -133,12 +135,18 @@ namespace triton {
           }
 
           triton::uint32 nameTableStart = getOffsetFromAddress(exportTable.getNamePointerRVA());
+          if (nameTableStart + exportTable.getNumberOfNamePointers()*sizeof(triton::uint32) >= totalSize)
+              throw triton::exceptions::Pe("Pe::initExportTable(): export name table runs past end of file");
+
           triton::uint32 ordTableStart = getOffsetFromAddress(exportTable.getOrdinalTableRVA());
+          if (ordTableStart + exportTable.getNumberOfNamePointers()*sizeof(triton::uint16) >= totalSize)
+              throw triton::exceptions::Pe("Pe::initExportTable(): export ordinal table runs past end of file");
+
           for (triton::usize i=0;i<exportTable.getNumberOfNamePointers(); ++i) {
               triton::uint16 ordinal;
-              std::memcpy(&ordinal, raw+ordTableStart+2*i,sizeof(ordinal));
+              std::memcpy(&ordinal, raw+ordTableStart+sizeof(ordinal)*i,sizeof(ordinal));
               triton::uint32 nameRVA;
-              std::memcpy(&nameRVA, raw+nameTableStart+4*i,sizeof(nameRVA));
+              std::memcpy(&nameRVA, raw+nameTableStart+sizeof(nameRVA)*i,sizeof(nameRVA));
               entries[ordinal].ordinal = ordinal;
               entries[ordinal].exportNameRVA = nameRVA;
               entries[ordinal].exportName = std::string((char*)raw+getOffsetFromAddress(nameRVA));
