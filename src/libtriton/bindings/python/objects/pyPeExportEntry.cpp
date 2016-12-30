@@ -49,8 +49,8 @@ This object is used to represent an exported symbol from the PE binary format.
 \section PeExportEntry_py_api Python API - Methods of the PeExportEntry class
 <hr>
 
-- <b>bool isForward(void)</b><br>
-Returns whether the lookup is a forwarder reference to another function.
+- <b>string getForwarderName(void)</b><br>
+If the entry is a forwarder reference, returns the name of the target function.
 
 - <b>string getName(void)</b><br>
 Returns the name of the exported function.
@@ -58,8 +58,8 @@ Returns the name of the exported function.
 - <b>int getOrdinal(void)</b><br>
 Returns the ordinal number of the exported function.
 
-- <b>string getForwarderName(void)</b><br>
-If the entry is a forwarder reference, returns the name of the target function.
+- <b>bool isForward(void)</b><br>
+Returns whether the lookup is a forwarder reference to another function.
 
 */
 
@@ -119,10 +119,10 @@ namespace triton {
 
       //! PeExportEntry methods.
       PyMethodDef PeExportEntry_callbacks[] = {
-        {"isForward" ,        PeExportEntry_isForward,           METH_NOARGS,    ""},
+        {"getForwarderName" , PeExportEntry_getForwarderName,    METH_NOARGS,    ""},
         {"getName" ,          PeExportEntry_getName,             METH_NOARGS,    ""},
         {"getOrdinal" ,       PeExportEntry_getOrdinal,          METH_NOARGS,    ""},
-        {"getForwarderName" , PeExportEntry_getForwarderName,    METH_NOARGS,    ""},
+        {"isForward" ,        PeExportEntry_isForward,           METH_NOARGS,    ""},
         {nullptr,             nullptr,                           0,              nullptr}
       };
 

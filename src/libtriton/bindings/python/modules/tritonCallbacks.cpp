@@ -54,10 +54,10 @@ If you want to use the libTriton without Python bindings, recompile the project 
 - \ref py_ElfRelocationTable_page
 - \ref py_ElfSectionHeader_page
 - \ref py_ElfSymbolTable_page
-- \ref py_Pe_page
 - \ref py_Immediate_page
 - \ref py_Instruction_page
 - \ref py_MemoryAccess_page
+- \ref py_Pe_page
 - \ref py_PathConstraint_page
 - \ref py_Register_page
 - \ref py_SolverModel_page
@@ -417,10 +417,10 @@ Untaints a register. Returns true if the register is still tainted.
 - \ref py_CALLBACK_page
 - \ref py_CPUSIZE_page
 - \ref py_ELF_page
-- \ref py_PE_page
 - \ref py_OPCODE_page
 - \ref py_OPERAND_page
 - \ref py_OPTIMIZATION_page
+- \ref py_PE_page
 - \ref py_REG_page
 - \ref py_SYMEXPR_page
 - \ref py_SYSCALL_page
@@ -2968,10 +2968,10 @@ namespace triton {
       PyMethodDef tritonCallbacks[] = {
         {"Bitvector",                           (PyCFunction)triton_Bitvector,                              METH_VARARGS,       ""},
         {"Elf",                                 (PyCFunction)triton_Elf,                                    METH_O,             ""},
-        {"Pe",                                  (PyCFunction)triton_Pe,                                     METH_O,             ""},
         {"Immediate",                           (PyCFunction)triton_Immediate,                              METH_VARARGS,       ""},
         {"Instruction",                         (PyCFunction)triton_Instruction,                            METH_VARARGS,       ""},
         {"MemoryAccess",                        (PyCFunction)triton_MemoryAccess,                           METH_VARARGS,       ""},
+        {"Pe",                                  (PyCFunction)triton_Pe,                                     METH_O,             ""},
         {"Register",                            (PyCFunction)triton_Register,                               METH_VARARGS,       ""},
         {"addCallback",                         (PyCFunction)triton_addCallback,                            METH_VARARGS,       ""},
         {"assignSymbolicExpressionToMemory",    (PyCFunction)triton_assignSymbolicExpressionToMemory,       METH_VARARGS,       ""},

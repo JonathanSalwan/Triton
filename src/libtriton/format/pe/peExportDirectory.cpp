@@ -17,34 +17,34 @@ namespace triton {
     namespace pe {
 
       PeExportDirectory::PeExportDirectory() {
-        this->exportFlags = 0;
-        this->timeDateStamp = 0;
-        this->majorVersion = 0;
-        this->minorVersion = 0;
-        this->nameRVA = 0;
-        this->ordinalBase = 0;
-        this->addressTableEntries = 0;
-        this->numberOfNamePointers = 0;
-        this->exportAddressTableRVA = 0;
-        this->namePointerRVA = 0;
-        this->ordinalTableRVA = 0;
+        this->st.exportFlags = 0;
+        this->st.timeDateStamp = 0;
+        this->st.majorVersion = 0;
+        this->st.minorVersion = 0;
+        this->st.nameRVA = 0;
+        this->st.ordinalBase = 0;
+        this->st.addressTableEntries = 0;
+        this->st.numberOfNamePointers = 0;
+        this->st.exportAddressTableRVA = 0;
+        this->st.namePointerRVA = 0;
+        this->st.ordinalTableRVA = 0;
       }
 
 
       PeExportDirectory::PeExportDirectory(const PeExportDirectory& copy) {
-        this->exportFlags           = copy.exportFlags;
-        this->timeDateStamp         = copy.timeDateStamp;
-        this->majorVersion          = copy.majorVersion;
-        this->minorVersion          = copy.minorVersion;
-        this->nameRVA               = copy.nameRVA;
-        this->ordinalBase           = copy.ordinalBase;
-        this->addressTableEntries   = copy.addressTableEntries;
-        this->numberOfNamePointers  = copy.numberOfNamePointers;
-        this->exportAddressTableRVA = copy.exportAddressTableRVA;
-        this->namePointerRVA        = copy.namePointerRVA;
-        this->ordinalTableRVA       = copy.ordinalTableRVA;
-        this->name                  = copy.name;
-        this->entries               = copy.entries;
+        this->st.exportFlags           = copy.st.exportFlags;
+        this->st.timeDateStamp         = copy.st.timeDateStamp;
+        this->st.majorVersion          = copy.st.majorVersion;
+        this->st.minorVersion          = copy.st.minorVersion;
+        this->st.nameRVA               = copy.st.nameRVA;
+        this->st.ordinalBase           = copy.st.ordinalBase;
+        this->st.addressTableEntries   = copy.st.addressTableEntries;
+        this->st.numberOfNamePointers  = copy.st.numberOfNamePointers;
+        this->st.exportAddressTableRVA = copy.st.exportAddressTableRVA;
+        this->st.namePointerRVA        = copy.st.namePointerRVA;
+        this->st.ordinalTableRVA       = copy.st.ordinalTableRVA;
+        this->name                     = copy.name;
+        this->entries                  = copy.entries;
       }
 
 
@@ -55,79 +55,79 @@ namespace triton {
       PeExportDirectory &PeExportDirectory::operator=(const PeExportDirectory& copy) {
         if (this == &copy)
             return *this;
-        this->exportFlags           = copy.exportFlags;
-        this->timeDateStamp         = copy.timeDateStamp;
-        this->majorVersion          = copy.majorVersion;
-        this->minorVersion          = copy.minorVersion;
-        this->nameRVA               = copy.nameRVA;
-        this->ordinalBase           = copy.ordinalBase;
-        this->addressTableEntries   = copy.addressTableEntries;
-        this->numberOfNamePointers  = copy.numberOfNamePointers;
-        this->exportAddressTableRVA = copy.exportAddressTableRVA;
-        this->namePointerRVA        = copy.namePointerRVA;
-        this->ordinalTableRVA       = copy.ordinalTableRVA;
-        this->name                  = copy.name;
-        this->entries               = copy.entries;
+        this->st.exportFlags           = copy.st.exportFlags;
+        this->st.timeDateStamp         = copy.st.timeDateStamp;
+        this->st.majorVersion          = copy.st.majorVersion;
+        this->st.minorVersion          = copy.st.minorVersion;
+        this->st.nameRVA               = copy.st.nameRVA;
+        this->st.ordinalBase           = copy.st.ordinalBase;
+        this->st.addressTableEntries   = copy.st.addressTableEntries;
+        this->st.numberOfNamePointers  = copy.st.numberOfNamePointers;
+        this->st.exportAddressTableRVA = copy.st.exportAddressTableRVA;
+        this->st.namePointerRVA        = copy.st.namePointerRVA;
+        this->st.ordinalTableRVA       = copy.st.ordinalTableRVA;
+        this->name                     = copy.name;
+        this->entries                  = copy.entries;
         return *this;
       }
 
 
       void PeExportDirectory::parse(const triton::uint8* raw) {
-        std::memcpy(&exportFlags, raw, 40);
+        std::memcpy(&st, raw, sizeof(st));
       }
 
       triton::uint32 PeExportDirectory::getExportFlags(void) const {
-        return this->exportFlags;
+        return this->st.exportFlags;
       }
 
 
       triton::uint32 PeExportDirectory::getTimeDateStamp(void) const {
-        return this->timeDateStamp;
+        return this->st.timeDateStamp;
       }
 
 
       triton::uint16 PeExportDirectory::getMajorVersion(void) const {
-        return this->majorVersion;
+        return this->st.majorVersion;
       }
 
 
       triton::uint16 PeExportDirectory::getMinorVersion(void) const {
-        return this->minorVersion;
+        return this->st.minorVersion;
       }
 
 
       triton::uint32 PeExportDirectory::getNameRVA(void) const {
-        return this->nameRVA;
+        return this->st.nameRVA;
       }
 
 
       triton::uint32 PeExportDirectory::getOrdinalBase(void) const {
-        return this->ordinalBase;
+        return this->st.ordinalBase;
       }
 
 
       triton::uint32 PeExportDirectory::getAddressTableEntries(void) const {
-        return this->addressTableEntries;
+        return this->st.addressTableEntries;
       }
 
 
       triton::uint32 PeExportDirectory::getNumberOfNamePointers(void) const {
-        return this->numberOfNamePointers;
+        return this->st.numberOfNamePointers;
       }
 
 
       triton::uint32 PeExportDirectory::getExportAddressTableRVA(void) const {
-        return this->exportAddressTableRVA;
+        return this->st.exportAddressTableRVA;
       }
 
 
       triton::uint32 PeExportDirectory::getNamePointerRVA(void) const {
-        return this->namePointerRVA;
+        return this->st.namePointerRVA;
       }
 
 
       triton::uint32 PeExportDirectory::getOrdinalTableRVA(void) const {
-        return this->ordinalTableRVA;
+        return this->st.ordinalTableRVA;
       }
 
 

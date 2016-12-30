@@ -66,11 +66,11 @@ urlmon.dll
 \section PeImportTable_py_api Python API - Methods of the PeImportTable class
 <hr>
 
-- <b>string getName(void)</b><br>
-Returns the name of the DLL the import table refers to.
-
 - <b>[PeImportLookup, ...] getEntries(void)</b><br>
 Returns the entries in the import table.
+
+- <b>string getName(void)</b><br>
+Returns the name of the DLL the import table refers to.
 
 */
 
@@ -119,8 +119,8 @@ namespace triton {
 
       //! PeImportTable methods.
       PyMethodDef PeImportTable_callbacks[] = {
-        {"getName" ,          PeImportTable_getName,             METH_NOARGS,    ""},
         {"getEntries" ,       PeImportTable_getEntries,          METH_NOARGS,    ""},
+        {"getName" ,          PeImportTable_getName,             METH_NOARGS,    ""},
         {nullptr,             nullptr,                           0,              nullptr}
       };
 

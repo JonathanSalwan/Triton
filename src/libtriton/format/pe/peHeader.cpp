@@ -21,6 +21,8 @@ namespace triton {
 
 
       PeHeader::PeHeader(const PeHeader& copy) {
+        this->dosStub        = copy.dosStub;
+        this->peHeaderStart  = copy.peHeaderStart;
         this->fileHeader     = copy.fileHeader;
         this->optionalHeader = copy.optionalHeader;
         this->dataDirectory  = copy.dataDirectory;
@@ -35,6 +37,8 @@ namespace triton {
       PeHeader &PeHeader::operator=(const PeHeader& copy) {
         if (this == &copy)
             return *this;
+        this->dosStub        = copy.dosStub;
+        this->peHeaderStart  = copy.peHeaderStart;
         this->fileHeader     = copy.fileHeader;
         this->optionalHeader = copy.optionalHeader;
         this->dataDirectory  = copy.dataDirectory;
@@ -49,20 +53,20 @@ namespace triton {
         }
 
         triton::uint16 magic;
-        triton::uint32 peHeaderStart;
-        std::memcpy(&magic, raw, 2);
+        std::memcpy(&magic, raw, sizeof(magic));
         if (magic != 0x5A4D) {
             throw triton::exceptions::Pe("PeHeader::parse(): File doesn't start with \"MZ\".");
         }
 
-        std::memcpy(&peHeaderStart, raw+0x3C, 4);
-        peHeaderStart += 4;
-        if (peHeaderStart + 20 > totalSize) {
+        std::memcpy(&peHeaderStart, raw+0x3C, sizeof(peHeaderStart));
+        dosStub.resize(peHeaderStart);
+        std::memcpy(&dosStub[0], raw, peHeaderStart);
+        if (peHeaderStart + 24 > totalSize) {
             throw triton::exceptions::Pe("PeHeader::parse(): PE Header would extend beyond end of file.");
         }
 
-        fileHeader.parse(raw+peHeaderStart);
-        triton::uint32 optHeaderStart = peHeaderStart+20;
+        fileHeader.parse(raw+peHeaderStart+4);
+        triton::uint32 optHeaderStart = peHeaderStart+24;
         triton::uint32 optHeaderSize = this->fileHeader.getSizeOfOptionalHeader();
         if (optHeaderStart+sizeof(optHeaderSize) > totalSize) {
             throw triton::exceptions::Pe("PeHeader::parse(): PE Optional Header would extend beyond end of file.");

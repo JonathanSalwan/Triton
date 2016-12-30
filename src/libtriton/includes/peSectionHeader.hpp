@@ -40,56 +40,63 @@ namespace triton {
        *  \brief PE Section Header */
       class PeSectionHeader {
       protected:
+          //this struct contains the items found directly in the binary data
+          struct {
+            /*!
+             * \description Section name. If it's 8 bytes long then it's not null-terminated.
+             */
+            triton::uint8 name[8];
+
+            /*!
+             * \description The total size of the section when loaded into memory. If this value is greater than SizeOfRawData, the section is zero-padded.
+             */
+            triton::uint32 virtualSize;
+            
+            /*!
+             * \description The address of the first byte of the section relative to the image base when the section is loaded into memory.
+             */
+            triton::uint32 virtualAddress;
+            
+            /*!
+             * \description the Size of the initialized data on disk.
+             */
+            triton::uint32 rawSize;
+            
+            /*!
+             * \description The file pointer to the first page of the section within the file.
+             */
+            triton::uint32 rawAddress;
+            
+            /*!
+             * \description The file pointer to the beginning of relocation entries for the section.
+             */
+            triton::uint32 pointerToRelocations;
+            
+            /*!
+             * \description The file pointer to the beginning of line-number entries for the section. (deprecated)
+             */
+            triton::uint32 pointerToLinenumbers;
+            
+            /*!
+             * \description The number of relocation entries for the section.
+             */
+            triton::uint16 numberOfRelocations;
+            
+            /*!
+             * \description The number of line-number entries for the section. (deprecated)
+             */
+            triton::uint16 numberOfLinenumbers;
+            
+            /*!
+             * \description The flags that describe the characteristics of the section.
+             */
+            triton::uint32 characteristics;
+          } st;
 
           /*!
            * \description Section name.
            */
           std::string name;
-
-          /*!
-           * \description The total size of the section when loaded into memory. If this value is greater than SizeOfRawData, the section is zero-padded.
-           */
-          triton::uint32 virtualSize;
-
-          /*!
-           * \description The address of the first byte of the section relative to the image base when the section is loaded into memory.
-           */
-          triton::uint32 virtualAddress;
-
-          /*!
-           * \description the Size of the initialized data on disk.
-           */
-          triton::uint32 rawSize;
-
-          /*!
-           * \description The file pointer to the first page of the section within the file.
-           */
-          triton::uint32 rawAddress;
-
-          /*!
-           * \description The file pointer to the beginning of relocation entries for the section.
-           */
-          triton::uint32 pointerToRelocations;
-
-          /*!
-           * \description The file pointer to the beginning of line-number entries for the section. (deprecated)
-           */
-          triton::uint32 pointerToLinenumbers;
-
-          /*!
-           * \description The number of relocation entries for the section.
-           */
-          triton::uint16 numberOfRelocations;
-
-          /*!
-           * \description The number of line-number entries for the section. (deprecated)
-           */
-          triton::uint16 numberOfLinenumbers;
-
-          /*!
-           * \description The flags that describe the characteristics of the section.
-           */
-          triton::uint32 characteristics;
 
       public:
 

@@ -56,60 +56,63 @@ namespace triton {
       class PeExportDirectory {
       protected:
 
-          /*!
-           * \description Reserved, must be 0.
-           */
-          triton::uint32 exportFlags;
-
-          /*!
-           * \description The time and date that the export data was created.
-           */
-          triton::uint32 timeDateStamp;
-
-          /*!
-           * \description The major version number. The major and minor version numbers can be set by the user.
-           */
-          triton::uint16 majorVersion;
-
-          /*!
-           * \description The minor version number.
-           */
-          triton::uint16 minorVersion;
-
-          /*!
-           * \description The address of the ASCII string that contains the name of the DLL. This address is relative to the image base.
-           */
-          triton::uint32 nameRVA;
-
-          /*!
-           * \description The starting ordinal number for exports in this image. This field specifies the starting ordinal number for the export address table. It is usually set to 1.
-           */
-          triton::uint32 ordinalBase;
-
-          /*!
-           * \description The number of entries in the export address table.
-           */
-          triton::uint32 addressTableEntries;
-
-          /*!
-           * \description The number of entries in the name pointer table. This is also the number of entries in the ordinal table.
-           */
-          triton::uint32 numberOfNamePointers;
-
-          /*!
-           * \description The address of the export address table, relative to the image base.
-           */
-          triton::uint32 exportAddressTableRVA;
-
-          /*!
-           * \description The address of the export name pointer table, relative to the image base. The table size is given by the Number of Name Pointers field.
-           */
-          triton::uint32 namePointerRVA;
-
-          /*!
-           * \description The address of the ordinal table, relative to the image base.
-           */
-          triton::uint32 ordinalTableRVA;
+          //this struct contains the items found directly in the binary data
+          struct {
+            /*!
+             * \description Reserved, must be 0.
+             */
+            triton::uint32 exportFlags;
+  
+            /*!
+             * \description The time and date that the export data was created.
+             */
+            triton::uint32 timeDateStamp;
+  
+            /*!
+             * \description The major version number. The major and minor version numbers can be set by the user.
+             */
+            triton::uint16 majorVersion;
+  
+            /*!
+             * \description The minor version number.
+             */
+            triton::uint16 minorVersion;
+  
+            /*!
+             * \description The address of the ASCII string that contains the name of the DLL. This address is relative to the image base.
+             */
+            triton::uint32 nameRVA;
+  
+            /*!
+             * \description The starting ordinal number for exports in this image. This field specifies the starting ordinal number for the export address table. It is usually set to 1.
+             */
+            triton::uint32 ordinalBase;
+  
+            /*!
+             * \description The number of entries in the export address table.
+             */
+            triton::uint32 addressTableEntries;
+  
+            /*!
+             * \description The number of entries in the name pointer table. This is also the number of entries in the ordinal table.
+             */
+            triton::uint32 numberOfNamePointers;
+  
+            /*!
+             * \description The address of the export address table, relative to the image base.
+             */
+            triton::uint32 exportAddressTableRVA;
+  
+            /*!
+             * \description The address of the export name pointer table, relative to the image base. The table size is given by the Number of Name Pointers field.
+             */
+            triton::uint32 namePointerRVA;
+  
+            /*!
+             * \description The address of the ordinal table, relative to the image base.
+             */
+            triton::uint32 ordinalTableRVA;
+          } st;
 
           /*!
            * \description Name, based on nameRVA.

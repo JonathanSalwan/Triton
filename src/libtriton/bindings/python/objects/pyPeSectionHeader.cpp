@@ -43,21 +43,6 @@ This object is used to represent a Section Header entry from the PE binary forma
 \section PeSectionHeader_py_api Python API - Methods of the PeSectionHeader class
 <hr>
 
-- <b>integer getVirtualAddress(void)</b><br>
-Returns the virtual section address. If this section appears in the memory image of a
-process, this member holds the address at which the section's first byte should reside.
-Otherwise, the member contains zero.
-
-- <b>integer getVirtualSize(void)</b><br>
-Returns the virtual section size.
-
-- <b>integer getRawAddress(void)</b><br>
-Returns the section offset in the binary file. This member's value holds the byte offset from
-the beginning of the file to the first byte in the section. 
-
-- <b>integer getRawSize(void)</b><br>
-Returns the section size. This member holds the section's size in bytes. The section occupies sh_size bytes in the file.
-
 - <b>bool getFlags(void)</b><br>
 Returns the section flags. Sections support one-bit flags that describe miscellaneous attributes.
 If a flag bit is set in triton::format::pe::PeSectionHeader::flags, the attribute is "on"
@@ -67,6 +52,21 @@ set to zero.
 - <b>string getName(void)</b><br>
 Returns the section name. This member specifies the name of the section as string.<br>
 e.g: `.text`
+
+- <b>integer getRawAddress(void)</b><br>
+Returns the section offset in the binary file. This member's value holds the byte offset from
+the beginning of the file to the first byte in the section. 
+
+- <b>integer getRawSize(void)</b><br>
+Returns the section size. This member holds the section's size in bytes. The section occupies sh_size bytes in the file.
+
+- <b>integer getVirtualAddress(void)</b><br>
+Returns the virtual section address. If this section appears in the memory image of a
+process, this member holds the address at which the section's first byte should reside.
+Otherwise, the member contains zero.
+
+- <b>integer getVirtualSize(void)</b><br>
+Returns the virtual section size.
 
 */
 
@@ -146,12 +146,12 @@ namespace triton {
 
       //! PeSectionHeader methods.
       PyMethodDef PeSectionHeader_callbacks[] = {
-        {"getVirtualAddress", PeSectionHeader_getVirtualAddress, METH_NOARGS,    ""},
-        {"getVirtualSize",    PeSectionHeader_getVirtualSize,    METH_NOARGS,    ""},
-        {"getRawAddress",     PeSectionHeader_getRawAddress,     METH_NOARGS,    ""},
-        {"getRawSize",        PeSectionHeader_getRawSize,        METH_NOARGS,    ""},
         {"getFlags",          PeSectionHeader_getFlags,          METH_NOARGS,    ""},
         {"getName" ,          PeSectionHeader_getName,           METH_NOARGS,    ""},
+        {"getRawAddress",     PeSectionHeader_getRawAddress,     METH_NOARGS,    ""},
+        {"getRawSize",        PeSectionHeader_getRawSize,        METH_NOARGS,    ""},
+        {"getVirtualAddress", PeSectionHeader_getVirtualAddress, METH_NOARGS,    ""},
+        {"getVirtualSize",    PeSectionHeader_getVirtualSize,    METH_NOARGS,    ""},
         {nullptr,             nullptr,                           0,              nullptr}
       };
 

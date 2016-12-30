@@ -68,7 +68,7 @@
 **  clrRuntimeHeader        00000000 00000000
 **  
 **  ------------------------------------------------------------------------------------------
-**  Seaction Headers
+**  Section Headers
 **  ------------------------------------------------------------------------------------------
 **              RVA     VSize   RawAddr RawSize  ptrReloc ptrLineN nRlc nLin  chrstc
 **     .text 0001a0a4 00001000 0001a200 00000400 00000000 00000000 0000 0000 60000020
@@ -207,7 +207,7 @@ int main(int ac, const char *av[]) {
   std::cout << std::endl;
 
   std::cout << "------------------------------------------------------------------------------------------" << std::endl;
-  std::cout << "Seaction Headers" << std::endl;
+  std::cout << "Section Headers" << std::endl;
   std::cout << "------------------------------------------------------------------------------------------" << std::endl;
   std::cout << "            RVA     VSize   RawAddr RawSize  ptrReloc ptrLineN nRlc nLin  chrstc" << std::endl;
   for (auto section : pe->getHeader().getSectionHeaders()) {

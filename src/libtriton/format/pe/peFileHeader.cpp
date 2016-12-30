@@ -17,24 +17,24 @@ namespace triton {
     namespace pe {
 
       PeFileHeader::PeFileHeader() {
-        this->machine = 0;
-        this->numberOfSections = 0;
-        this->timeDateStamp = 0;
-        this->pointerToSymbolTable = 0;
-        this->numberOfSymbolTable = 0;
-        this->sizeOfOptionalHeader = 0;
-        this->characteristics = 0;
+        this->st.machine = 0;
+        this->st.numberOfSections = 0;
+        this->st.timeDateStamp = 0;
+        this->st.pointerToSymbolTable = 0;
+        this->st.numberOfSymbolTable = 0;
+        this->st.sizeOfOptionalHeader = 0;
+        this->st.characteristics = 0;
       }
 
 
       PeFileHeader::PeFileHeader(const PeFileHeader& copy) {
-        this->machine              = copy.machine;
-        this->numberOfSections     = copy.numberOfSections;
-        this->timeDateStamp        = copy.timeDateStamp;
-        this->pointerToSymbolTable = copy.pointerToSymbolTable;
-        this->numberOfSymbolTable  = copy.numberOfSymbolTable;
-        this->sizeOfOptionalHeader = copy.sizeOfOptionalHeader;
-        this->characteristics      = copy.characteristics;
+        this->st.machine              = copy.st.machine;
+        this->st.numberOfSections     = copy.st.numberOfSections;
+        this->st.timeDateStamp        = copy.st.timeDateStamp;
+        this->st.pointerToSymbolTable = copy.st.pointerToSymbolTable;
+        this->st.numberOfSymbolTable  = copy.st.numberOfSymbolTable;
+        this->st.sizeOfOptionalHeader = copy.st.sizeOfOptionalHeader;
+        this->st.characteristics      = copy.st.characteristics;
       }
 
 
@@ -45,53 +45,53 @@ namespace triton {
       PeFileHeader &PeFileHeader::operator=(const PeFileHeader& copy) {
         if (this == &copy)
             return *this;
-        this->machine              = copy.machine;
-        this->numberOfSections     = copy.numberOfSections;
-        this->timeDateStamp        = copy.timeDateStamp;
-        this->pointerToSymbolTable = copy.pointerToSymbolTable;
-        this->numberOfSymbolTable  = copy.numberOfSymbolTable;
-        this->sizeOfOptionalHeader = copy.sizeOfOptionalHeader;
-        this->characteristics      = copy.characteristics;
+        this->st.machine              = copy.st.machine;
+        this->st.numberOfSections     = copy.st.numberOfSections;
+        this->st.timeDateStamp        = copy.st.timeDateStamp;
+        this->st.pointerToSymbolTable = copy.st.pointerToSymbolTable;
+        this->st.numberOfSymbolTable  = copy.st.numberOfSymbolTable;
+        this->st.sizeOfOptionalHeader = copy.st.sizeOfOptionalHeader;
+        this->st.characteristics      = copy.st.characteristics;
         return *this;
       }
 
 
       void PeFileHeader::parse(const triton::uint8* raw) {
-        std::memcpy(&this->machine, raw, 20);
+        std::memcpy(&this->st, raw, sizeof(st));
       }
 
       triton::uint16 PeFileHeader::getMachine(void) const {
-        return this->machine;
+        return this->st.machine;
       }
 
 
       triton::uint16 PeFileHeader::getNumberOfSections(void) const {
-        return this->numberOfSections;
+        return this->st.numberOfSections;
       }
 
 
       triton::uint32 PeFileHeader::getTimeDateStamp(void) const {
-        return this->timeDateStamp;
+        return this->st.timeDateStamp;
       }
 
 
       triton::uint32 PeFileHeader::getPointerToSymbolTable(void) const {
-        return this->pointerToSymbolTable;
+        return this->st.pointerToSymbolTable;
       }
 
 
       triton::uint32 PeFileHeader::getNumberOfSymbolTable(void) const {
-        return this->numberOfSymbolTable;
+        return this->st.numberOfSymbolTable;
       }
 
 
       triton::uint16 PeFileHeader::getSizeOfOptionalHeader(void) const {
-        return this->sizeOfOptionalHeader;
+        return this->st.sizeOfOptionalHeader;
       }
 
 
       triton::uint16 PeFileHeader::getCharacteristics(void) const {
-        return this->characteristics;
+        return this->st.characteristics;
       }
 
     }; /* pe namespace */

@@ -17,22 +17,22 @@ namespace triton {
     namespace pe {
 
       PeImportDirectory::PeImportDirectory() {
-        this->importLookupTableRVA = 0;
-        this->timeDateStamp = 0;
-        this->forwarderChain = 0;
-        this->nameRVA = 0;
-        this->importAddressTableRVA = 0;
+        this->st.importLookupTableRVA = 0;
+        this->st.timeDateStamp = 0;
+        this->st.forwarderChain = 0;
+        this->st.nameRVA = 0;
+        this->st.importAddressTableRVA = 0;
       }
 
 
       PeImportDirectory::PeImportDirectory(const PeImportDirectory& copy) {
-        this->importLookupTableRVA  = copy.importLookupTableRVA;
-        this->timeDateStamp         = copy.timeDateStamp;
-        this->forwarderChain        = copy.forwarderChain;
-        this->nameRVA               = copy.nameRVA;
-        this->importAddressTableRVA = copy.importAddressTableRVA;
-        this->name                  = copy.name;
-        this->entries               = copy.entries;
+        this->st.importLookupTableRVA  = copy.st.importLookupTableRVA;
+        this->st.timeDateStamp         = copy.st.timeDateStamp;
+        this->st.forwarderChain        = copy.st.forwarderChain;
+        this->st.nameRVA               = copy.st.nameRVA;
+        this->st.importAddressTableRVA = copy.st.importAddressTableRVA;
+        this->name                     = copy.name;
+        this->entries                  = copy.entries;
       }
 
 
@@ -43,44 +43,44 @@ namespace triton {
       PeImportDirectory &PeImportDirectory::operator=(const PeImportDirectory& copy) {
         if (this == &copy)
             return *this;
-        this->importLookupTableRVA  = copy.importLookupTableRVA;
-        this->timeDateStamp         = copy.timeDateStamp;
-        this->forwarderChain        = copy.forwarderChain;
-        this->nameRVA               = copy.nameRVA;
-        this->importAddressTableRVA = copy.importAddressTableRVA;
-        this->name                  = copy.name;
-        this->entries               = copy.entries;
+        this->st.importLookupTableRVA  = copy.st.importLookupTableRVA;
+        this->st.timeDateStamp         = copy.st.timeDateStamp;
+        this->st.forwarderChain        = copy.st.forwarderChain;
+        this->st.nameRVA               = copy.st.nameRVA;
+        this->st.importAddressTableRVA = copy.st.importAddressTableRVA;
+        this->name                     = copy.name;
+        this->entries                  = copy.entries;
         return *this;
       }
 
 
       bool PeImportDirectory::parse(const triton::uint8* raw) {
-        std::memcpy(&importLookupTableRVA, raw, 20);
-        return this->importLookupTableRVA;
+        std::memcpy(&st, raw, sizeof(st));
+        return this->st.importLookupTableRVA;
       }
 
       triton::uint32 PeImportDirectory::getImportLookupTableRVA(void) const {
-        return this->importLookupTableRVA;
+        return this->st.importLookupTableRVA;
       }
 
 
       triton::uint32 PeImportDirectory::getTimeDateStamp(void) const {
-        return this->timeDateStamp;
+        return this->st.timeDateStamp;
       }
 
 
       triton::uint32 PeImportDirectory::getForwarderChain(void) const {
-        return this->forwarderChain;
+        return this->st.forwarderChain;
       }
 
 
       triton::uint32 PeImportDirectory::getNameRVA(void) const {
-        return this->nameRVA;
+        return this->st.nameRVA;
       }
 
 
       triton::uint32 PeImportDirectory::getImportAddressTableRVA(void) const {
-        return this->importAddressTableRVA;
+        return this->st.importAddressTableRVA;
       }
 
 

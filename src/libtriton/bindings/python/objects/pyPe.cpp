@@ -84,8 +84,14 @@ urlmon.dll
 \section Pe_py_api Python API - Methods of the Pe class
 <hr>
 
+- <b>[\ref py_PeExportTable_page, ...] getExportTable(void)</b><br>
+Returns the list of export table entries.
+
 - <b>\ref py_PeHeader_page getHeader(void)</b><br>
 Returns the PE header.
+
+- <b>[\ref py_PeImportTable_page, ...] getImportTable(void)</b><br>
+Returns the list of import table entries.
 
 - <b>string getPath(void)</b><br>
 Returns the path of the parsed binary.<br>
@@ -103,12 +109,6 @@ e.g: `['ADVAPI32.dll', 'KERNEL32.dll', 'GDI32.dll', ....... ]`
 
 - <b>integer getSize(void)</b><br>
 Returns the binary size.
-
-- <b>[\ref py_PeImportTable_page, ...] getImportTable(void)</b><br>
-Returns the list of import table entries.
-
-- <b>[\ref py_PeExportTable_page, ...] getExportTable(void)</b><br>
-Returns the list of export table entries.
 
 */
 
@@ -234,14 +234,14 @@ namespace triton {
 
       //! Pe methods.
       PyMethodDef Pe_callbacks[] = {
+        {"getExportTable",        Pe_getExportTable,       METH_NOARGS,     ""},
         {"getHeader",             Pe_getHeader,            METH_NOARGS,     ""},
+        {"getImportTable",        Pe_getImportTable,       METH_NOARGS,     ""},
         {"getPath",               Pe_getPath,              METH_NOARGS,     ""},
         {"getRaw",                Pe_getRaw,               METH_NOARGS,     ""},
         {"getSectionHeaders",     Pe_getSectionHeaders,    METH_NOARGS,     ""},
         {"getSharedLibraries",    Pe_getSharedLibraries,   METH_NOARGS,     ""},
         {"getSize",               Pe_getSize,              METH_NOARGS,     ""},
-        {"getImportTable",        Pe_getImportTable,       METH_NOARGS,     ""},
-        {"getExportTable",        Pe_getExportTable,       METH_NOARGS,     ""},
         {nullptr,                 nullptr,                  0,               nullptr}
       };
 

@@ -76,7 +76,6 @@ namespace triton {
           triton::uint32 virtAddr = section.getVirtualAddress();
           if (this->totalSize < (rawAddr + rawSize)) {
             std::cerr << "Warning Pe::initMemoryMapping(): Some PE Section Headers of the binary file are corrupted." << std::endl;
-            continue;
           }
 
           area.setOffset(rawAddr);
@@ -102,8 +101,7 @@ namespace triton {
           triton::uint32 exportSize = header.getDataDirectory().getExportTable_size();
 
           if (exportStart == 0) {
-              std::memset(&exportTable, '\0', 40);
-              return;
+              return;   //no export table, leave it blank
           }
 
           exportTable.parse(raw+getOffsetFromAddress(exportStart));
@@ -114,7 +112,7 @@ namespace triton {
           for (triton::usize i=0; i<exportTable.getAddressTableEntries(); ++i) {
               PeExportEntry entry;
               triton::uint32 exportRVA;
-              std::memcpy(&exportRVA, raw+addrTableStart+4*i,4);
+              std::memcpy(&exportRVA, raw+addrTableStart+4*i,sizeof(exportRVA));
               if (exportRVA >= exportStart && exportRVA < exportStart+exportSize) {
                   entry.isForward = true;
                   entry.forwarderRVA = exportRVA;
@@ -130,9 +128,9 @@ namespace triton {
           triton::uint32 ordTableStart = getOffsetFromAddress(exportTable.getOrdinalTableRVA());
           for (triton::usize i=0;i<exportTable.getNumberOfNamePointers(); ++i) {
               triton::uint16 ordinal;
-              std::memcpy(&ordinal, raw+ordTableStart+2*i,2);
+              std::memcpy(&ordinal, raw+ordTableStart+2*i,sizeof(ordinal));
               triton::uint32 nameRVA;
-              std::memcpy(&nameRVA, raw+nameTableStart+4*i,4);
+              std::memcpy(&nameRVA, raw+nameTableStart+4*i,sizeof(nameRVA));
               entries[ordinal].ordinal = ordinal;
               entries[ordinal].exportNameRVA = nameRVA;
               entries[ordinal].exportName = std::string((char*)raw+getOffsetFromAddress(nameRVA));
@@ -149,7 +147,7 @@ namespace triton {
           triton::uint32 format = header.getOptionalHeader().getMagic();
           triton::uint64 byNameMask = (format == PE_FORMAT_PE32PLUS ?
             0x8000000000000000 : 0x80000000);
-          triton::uint32 entrySize = (format == PE_FORMAT_PE32PLUS ? 8 : 4);
+          triton::uint32 entrySize = (format == PE_FORMAT_PE32PLUS ? sizeof(triton::uint64) : sizeof(triton::uint32));
           triton::uint32 pos = importOffset;
           while(true) {
             PeImportDirectory impdt;
@@ -163,7 +161,7 @@ namespace triton {
                 entry.importByName = !(importEntry & byNameMask);
                 if (entry.importByName) {
                     triton::uint32 hintNameStart = getOffsetFromAddress(importEntry & ((1u<<31)-1));
-                    std::memcpy(&entry.ordinalNumber, raw+hintNameStart, 2);
+                    std::memcpy(&entry.ordinalNumber, raw+hintNameStart, sizeof(entry.ordinalNumber));
                     entry.name = std::string((char*)raw+hintNameStart+2);
                 } else {
                     entry.ordinalNumber = importEntry & ((1<<16)-1);

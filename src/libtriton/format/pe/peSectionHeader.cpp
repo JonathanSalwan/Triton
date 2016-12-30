@@ -17,30 +17,32 @@ namespace triton {
     namespace pe {
 
       PeSectionHeader::PeSectionHeader() {
+        std::memset(st.name,0,sizeof(this->st.name));
+        this->st.virtualSize = 0;
+        this->st.virtualAddress = 0;
+        this->st.rawSize = 0;
+        this->st.rawAddress = 0;
+        this->st.pointerToRelocations = 0;
+        this->st.pointerToLinenumbers = 0;
+        this->st.numberOfRelocations = 0;
+        this->st.numberOfLinenumbers = 0;
+        this->st.characteristics = 0;
         this->name = "";
-        this->virtualSize = 0;
-        this->virtualAddress = 0;
-        this->rawSize = 0;
-        this->rawAddress = 0;
-        this->pointerToRelocations = 0;
-        this->pointerToLinenumbers = 0;
-        this->numberOfRelocations = 0;
-        this->numberOfLinenumbers = 0;
-        this->characteristics = 0;
       }
 
 
       PeSectionHeader::PeSectionHeader(const PeSectionHeader& copy) {
-        this->name                 = copy.name;
-        this->virtualSize          = copy.virtualSize;
-        this->virtualAddress       = copy.virtualAddress;
-        this->rawSize              = copy.rawSize;
-        this->rawAddress           = copy.rawAddress;
-        this->pointerToRelocations = copy.pointerToRelocations;
-        this->pointerToLinenumbers = copy.pointerToLinenumbers;
-        this->numberOfRelocations  = copy.numberOfRelocations;
-        this->numberOfLinenumbers  = copy.numberOfLinenumbers;
-        this->characteristics      = copy.characteristics;
+        std::memcpy(this->st.name,copy.st.name,sizeof(this->st.name));
+        this->st.virtualSize          = copy.st.virtualSize;
+        this->st.virtualAddress       = copy.st.virtualAddress;
+        this->st.rawSize              = copy.st.rawSize;
+        this->st.rawAddress           = copy.st.rawAddress;
+        this->st.pointerToRelocations = copy.st.pointerToRelocations;
+        this->st.pointerToLinenumbers = copy.st.pointerToLinenumbers;
+        this->st.numberOfRelocations  = copy.st.numberOfRelocations;
+        this->st.numberOfLinenumbers  = copy.st.numberOfLinenumbers;
+        this->st.characteristics      = copy.st.characteristics;
+        this->name                    = copy.name;
       }
 
 
@@ -51,27 +53,25 @@ namespace triton {
       PeSectionHeader &PeSectionHeader::operator=(const PeSectionHeader& copy) {
         if (this == &copy)
             return *this;
-        this->name                 = copy.name;
-        this->virtualSize          = copy.virtualSize;
-        this->virtualAddress       = copy.virtualAddress;
-        this->rawSize              = copy.rawSize;
-        this->rawAddress           = copy.rawAddress;
-        this->pointerToRelocations = copy.pointerToRelocations;
-        this->pointerToLinenumbers = copy.pointerToLinenumbers;
-        this->numberOfRelocations  = copy.numberOfRelocations;
-        this->numberOfLinenumbers  = copy.numberOfLinenumbers;
-        this->characteristics      = copy.characteristics;
+        std::memcpy(this->st.name,copy.st.name,sizeof(this->st.name));
+        this->st.virtualSize          = copy.st.virtualSize;
+        this->st.virtualAddress       = copy.st.virtualAddress;
+        this->st.rawSize              = copy.st.rawSize;
+        this->st.rawAddress           = copy.st.rawAddress;
+        this->st.pointerToRelocations = copy.st.pointerToRelocations;
+        this->st.pointerToLinenumbers = copy.st.pointerToLinenumbers;
+        this->st.numberOfRelocations  = copy.st.numberOfRelocations;
+        this->st.numberOfLinenumbers  = copy.st.numberOfLinenumbers;
+        this->st.characteristics      = copy.st.characteristics;
+        this->name                    = copy.name;
         return *this;
       }
 
 
       triton::uint32 PeSectionHeader::parse(const triton::uint8* raw) {
-        char tmpname[8];
-        std::memcpy(&tmpname[0], raw, 8);
-        name = std::string(tmpname,8).c_str();
-        
-        std::memcpy(&virtualSize, raw+8, 32);
-        return 40;
+        std::memcpy(&st, raw, sizeof(st));
+        name = std::string((char*)&st.name[0],8).c_str();
+        return sizeof(st);
       }
 
       std::string PeSectionHeader::getName(void) const {
@@ -80,47 +80,47 @@ namespace triton {
 
 
       triton::uint32 PeSectionHeader::getVirtualSize(void) const {
-        return this->virtualSize;
+        return this->st.virtualSize;
       }
 
 
       triton::uint32 PeSectionHeader::getVirtualAddress(void) const {
-        return this->virtualAddress;
+        return this->st.virtualAddress;
       }
 
 
       triton::uint32 PeSectionHeader::getRawSize(void) const {
-        return this->rawSize;
+        return this->st.rawSize;
       }
 
 
       triton::uint32 PeSectionHeader::getRawAddress(void) const {
-        return this->rawAddress;
+        return this->st.rawAddress;
       }
 
 
       triton::uint32 PeSectionHeader::getPointerToRelocations(void) const {
-        return this->pointerToRelocations;
+        return this->st.pointerToRelocations;
       }
 
 
       triton::uint32 PeSectionHeader::getPointerToLinenumbers(void) const {
-        return this->pointerToLinenumbers;
+        return this->st.pointerToLinenumbers;
       }
 
 
       triton::uint16 PeSectionHeader::getNumberOfRelocations(void) const {
-        return this->numberOfRelocations;
+        return this->st.numberOfRelocations;
       }
 
 
       triton::uint16 PeSectionHeader::getNumberOfLinenumbers(void) const {
-        return this->numberOfLinenumbers;
+        return this->st.numberOfLinenumbers;
       }
 
 
       triton::uint32 PeSectionHeader::getCharacteristics(void) const {
-        return this->characteristics;
+        return this->st.characteristics;
       }
 
     }; /* pe namespace */

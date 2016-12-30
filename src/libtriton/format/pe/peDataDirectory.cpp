@@ -17,72 +17,72 @@ namespace triton {
     namespace pe {
 
       PeDataDirectory::PeDataDirectory() {
-        this->exportTable_rva = 0;
-        this->exportTable_size = 0;
-        this->importTable_rva = 0;
-        this->importTable_size = 0;
-        this->resourceTable_rva = 0;
-        this->resourceTable_size = 0;
-        this->exceptionTable_rva = 0;
-        this->exceptionTable_size = 0;
-        this->certificateTable_rva = 0;
-        this->certificateTable_size = 0;
-        this->baseRelocationTable_rva = 0;
-        this->baseRelocationTable_size = 0;
-        this->debugTable_rva = 0;
-        this->debugTable_size = 0;
-        this->architectureTable_rva = 0;
-        this->architectureTable_size = 0;
-        this->globalPtr_rva = 0;
-        this->globalPtr_size = 0;
-        this->tlsTable_rva = 0;
-        this->tlsTable_size = 0;
-        this->loadConfigTable_rva = 0;
-        this->loadConfigTable_size = 0;
-        this->boundImportTable_rva = 0;
-        this->boundImportTable_size = 0;
-        this->importAddressTable_rva = 0;
-        this->importAddressTable_size = 0;
-        this->delayImportDescriptor_rva = 0;
-        this->delayImportDescriptor_size = 0;
-        this->clrRuntimeHeader_rva = 0;
-        this->clrRuntimeHeader_size = 0;
-        this->reserved = 0;
+        this->st.exportTable_rva = 0;
+        this->st.exportTable_size = 0;
+        this->st.importTable_rva = 0;
+        this->st.importTable_size = 0;
+        this->st.resourceTable_rva = 0;
+        this->st.resourceTable_size = 0;
+        this->st.exceptionTable_rva = 0;
+        this->st.exceptionTable_size = 0;
+        this->st.certificateTable_rva = 0;
+        this->st.certificateTable_size = 0;
+        this->st.baseRelocationTable_rva = 0;
+        this->st.baseRelocationTable_size = 0;
+        this->st.debugTable_rva = 0;
+        this->st.debugTable_size = 0;
+        this->st.architectureTable_rva = 0;
+        this->st.architectureTable_size = 0;
+        this->st.globalPtr_rva = 0;
+        this->st.globalPtr_size = 0;
+        this->st.tlsTable_rva = 0;
+        this->st.tlsTable_size = 0;
+        this->st.loadConfigTable_rva = 0;
+        this->st.loadConfigTable_size = 0;
+        this->st.boundImportTable_rva = 0;
+        this->st.boundImportTable_size = 0;
+        this->st.importAddressTable_rva = 0;
+        this->st.importAddressTable_size = 0;
+        this->st.delayImportDescriptor_rva = 0;
+        this->st.delayImportDescriptor_size = 0;
+        this->st.clrRuntimeHeader_rva = 0;
+        this->st.clrRuntimeHeader_size = 0;
+        this->st.reserved = 0;
       }
 
 
       PeDataDirectory::PeDataDirectory(const PeDataDirectory& copy) {
-        this->exportTable_rva            = copy.exportTable_rva;
-        this->exportTable_size           = copy.exportTable_size;
-        this->importTable_rva            = copy.importTable_rva;
-        this->importTable_size           = copy.importTable_size;
-        this->resourceTable_rva          = copy.resourceTable_rva;
-        this->resourceTable_size         = copy.resourceTable_size;
-        this->exceptionTable_rva         = copy.exceptionTable_rva;
-        this->exceptionTable_size        = copy.exceptionTable_size;
-        this->certificateTable_rva       = copy.certificateTable_rva;
-        this->certificateTable_size      = copy.certificateTable_size;
-        this->baseRelocationTable_rva    = copy.baseRelocationTable_rva;
-        this->baseRelocationTable_size   = copy.baseRelocationTable_size;
-        this->debugTable_rva             = copy.debugTable_rva;
-        this->debugTable_size            = copy.debugTable_size;
-        this->architectureTable_rva      = copy.architectureTable_rva;
-        this->architectureTable_size     = copy.architectureTable_size;
-        this->globalPtr_rva              = copy.globalPtr_rva;
-        this->globalPtr_size             = copy.globalPtr_size;
-        this->tlsTable_rva               = copy.tlsTable_rva;
-        this->tlsTable_size              = copy.tlsTable_size;
-        this->loadConfigTable_rva        = copy.loadConfigTable_rva;
-        this->loadConfigTable_size       = copy.loadConfigTable_size;
-        this->boundImportTable_rva       = copy.boundImportTable_rva;
-        this->boundImportTable_size      = copy.boundImportTable_size;
-        this->importAddressTable_rva     = copy.importAddressTable_rva;
-        this->importAddressTable_size    = copy.importAddressTable_size;
-        this->delayImportDescriptor_rva  = copy.delayImportDescriptor_rva;
-        this->delayImportDescriptor_size = copy.delayImportDescriptor_size;
-        this->clrRuntimeHeader_rva       = copy.clrRuntimeHeader_rva;
-        this->clrRuntimeHeader_size      = copy.clrRuntimeHeader_size;
-        this->reserved                   = copy.reserved;
+        this->st.exportTable_rva            = copy.st.exportTable_rva;
+        this->st.exportTable_size           = copy.st.exportTable_size;
+        this->st.importTable_rva            = copy.st.importTable_rva;
+        this->st.importTable_size           = copy.st.importTable_size;
+        this->st.resourceTable_rva          = copy.st.resourceTable_rva;
+        this->st.resourceTable_size         = copy.st.resourceTable_size;
+        this->st.exceptionTable_rva         = copy.st.exceptionTable_rva;
+        this->st.exceptionTable_size        = copy.st.exceptionTable_size;
+        this->st.certificateTable_rva       = copy.st.certificateTable_rva;
+        this->st.certificateTable_size      = copy.st.certificateTable_size;
+        this->st.baseRelocationTable_rva    = copy.st.baseRelocationTable_rva;
+        this->st.baseRelocationTable_size   = copy.st.baseRelocationTable_size;
+        this->st.debugTable_rva             = copy.st.debugTable_rva;
+        this->st.debugTable_size            = copy.st.debugTable_size;
+        this->st.architectureTable_rva      = copy.st.architectureTable_rva;
+        this->st.architectureTable_size     = copy.st.architectureTable_size;
+        this->st.globalPtr_rva              = copy.st.globalPtr_rva;
+        this->st.globalPtr_size             = copy.st.globalPtr_size;
+        this->st.tlsTable_rva               = copy.st.tlsTable_rva;
+        this->st.tlsTable_size              = copy.st.tlsTable_size;
+        this->st.loadConfigTable_rva        = copy.st.loadConfigTable_rva;
+        this->st.loadConfigTable_size       = copy.st.loadConfigTable_size;
+        this->st.boundImportTable_rva       = copy.st.boundImportTable_rva;
+        this->st.boundImportTable_size      = copy.st.boundImportTable_size;
+        this->st.importAddressTable_rva     = copy.st.importAddressTable_rva;
+        this->st.importAddressTable_size    = copy.st.importAddressTable_size;
+        this->st.delayImportDescriptor_rva  = copy.st.delayImportDescriptor_rva;
+        this->st.delayImportDescriptor_size = copy.st.delayImportDescriptor_size;
+        this->st.clrRuntimeHeader_rva       = copy.st.clrRuntimeHeader_rva;
+        this->st.clrRuntimeHeader_size      = copy.st.clrRuntimeHeader_size;
+        this->st.reserved                   = copy.st.reserved;
       }
 
 
@@ -93,196 +93,196 @@ namespace triton {
       PeDataDirectory &PeDataDirectory::operator=(const PeDataDirectory& copy) {
         if (this == &copy)
             return *this;
-        this->exportTable_rva            = copy.exportTable_rva;
-        this->exportTable_size           = copy.exportTable_size;
-        this->importTable_rva            = copy.importTable_rva;
-        this->importTable_size           = copy.importTable_size;
-        this->resourceTable_rva          = copy.resourceTable_rva;
-        this->resourceTable_size         = copy.resourceTable_size;
-        this->exceptionTable_rva         = copy.exceptionTable_rva;
-        this->exceptionTable_size        = copy.exceptionTable_size;
-        this->certificateTable_rva       = copy.certificateTable_rva;
-        this->certificateTable_size      = copy.certificateTable_size;
-        this->baseRelocationTable_rva    = copy.baseRelocationTable_rva;
-        this->baseRelocationTable_size   = copy.baseRelocationTable_size;
-        this->debugTable_rva             = copy.debugTable_rva;
-        this->debugTable_size            = copy.debugTable_size;
-        this->architectureTable_rva      = copy.architectureTable_rva;
-        this->architectureTable_size     = copy.architectureTable_size;
-        this->globalPtr_rva              = copy.globalPtr_rva;
-        this->globalPtr_size             = copy.globalPtr_size;
-        this->tlsTable_rva               = copy.tlsTable_rva;
-        this->tlsTable_size              = copy.tlsTable_size;
-        this->loadConfigTable_rva        = copy.loadConfigTable_rva;
-        this->loadConfigTable_size       = copy.loadConfigTable_size;
-        this->boundImportTable_rva       = copy.boundImportTable_rva;
-        this->boundImportTable_size      = copy.boundImportTable_size;
-        this->importAddressTable_rva     = copy.importAddressTable_rva;
-        this->importAddressTable_size    = copy.importAddressTable_size;
-        this->delayImportDescriptor_rva  = copy.delayImportDescriptor_rva;
-        this->delayImportDescriptor_size = copy.delayImportDescriptor_size;
-        this->clrRuntimeHeader_rva       = copy.clrRuntimeHeader_rva;
-        this->clrRuntimeHeader_size      = copy.clrRuntimeHeader_size;
-        this->reserved                   = copy.reserved;
+        this->st.exportTable_rva            = copy.st.exportTable_rva;
+        this->st.exportTable_size           = copy.st.exportTable_size;
+        this->st.importTable_rva            = copy.st.importTable_rva;
+        this->st.importTable_size           = copy.st.importTable_size;
+        this->st.resourceTable_rva          = copy.st.resourceTable_rva;
+        this->st.resourceTable_size         = copy.st.resourceTable_size;
+        this->st.exceptionTable_rva         = copy.st.exceptionTable_rva;
+        this->st.exceptionTable_size        = copy.st.exceptionTable_size;
+        this->st.certificateTable_rva       = copy.st.certificateTable_rva;
+        this->st.certificateTable_size      = copy.st.certificateTable_size;
+        this->st.baseRelocationTable_rva    = copy.st.baseRelocationTable_rva;
+        this->st.baseRelocationTable_size   = copy.st.baseRelocationTable_size;
+        this->st.debugTable_rva             = copy.st.debugTable_rva;
+        this->st.debugTable_size            = copy.st.debugTable_size;
+        this->st.architectureTable_rva      = copy.st.architectureTable_rva;
+        this->st.architectureTable_size     = copy.st.architectureTable_size;
+        this->st.globalPtr_rva              = copy.st.globalPtr_rva;
+        this->st.globalPtr_size             = copy.st.globalPtr_size;
+        this->st.tlsTable_rva               = copy.st.tlsTable_rva;
+        this->st.tlsTable_size              = copy.st.tlsTable_size;
+        this->st.loadConfigTable_rva        = copy.st.loadConfigTable_rva;
+        this->st.loadConfigTable_size       = copy.st.loadConfigTable_size;
+        this->st.boundImportTable_rva       = copy.st.boundImportTable_rva;
+        this->st.boundImportTable_size      = copy.st.boundImportTable_size;
+        this->st.importAddressTable_rva     = copy.st.importAddressTable_rva;
+        this->st.importAddressTable_size    = copy.st.importAddressTable_size;
+        this->st.delayImportDescriptor_rva  = copy.st.delayImportDescriptor_rva;
+        this->st.delayImportDescriptor_size = copy.st.delayImportDescriptor_size;
+        this->st.clrRuntimeHeader_rva       = copy.st.clrRuntimeHeader_rva;
+        this->st.clrRuntimeHeader_size      = copy.st.clrRuntimeHeader_size;
+        this->st.reserved                   = copy.st.reserved;
         return *this;
       }
 
       void PeDataDirectory::parse(const triton::uint8* raw) {
-        std::memcpy(&exportTable_rva, raw, 128);
+        std::memcpy(&st, raw, sizeof(st));
       }
 
       triton::uint32 PeDataDirectory::getExportTable_rva(void) const {
-        return this->exportTable_rva;
+        return this->st.exportTable_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getExportTable_size(void) const {
-        return this->exportTable_size;
+        return this->st.exportTable_size;
       }
 
 
       triton::uint32 PeDataDirectory::getImportTable_rva(void) const {
-        return this->importTable_rva;
+        return this->st.importTable_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getImportTable_size(void) const {
-        return this->importTable_size;
+        return this->st.importTable_size;
       }
 
 
       triton::uint32 PeDataDirectory::getResourceTable_rva(void) const {
-        return this->resourceTable_rva;
+        return this->st.resourceTable_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getResourceTable_size(void) const {
-        return this->resourceTable_size;
+        return this->st.resourceTable_size;
       }
 
 
       triton::uint32 PeDataDirectory::getExceptionTable_rva(void) const {
-        return this->exceptionTable_rva;
+        return this->st.exceptionTable_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getExceptionTable_size(void) const {
-        return this->exceptionTable_size;
+        return this->st.exceptionTable_size;
       }
 
 
       triton::uint32 PeDataDirectory::getCertificateTable_rva(void) const {
-        return this->certificateTable_rva;
+        return this->st.certificateTable_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getCertificateTable_size(void) const {
-        return this->certificateTable_size;
+        return this->st.certificateTable_size;
       }
 
 
       triton::uint32 PeDataDirectory::getBaseRelocationTable_rva(void) const {
-        return this->baseRelocationTable_rva;
+        return this->st.baseRelocationTable_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getBaseRelocationTable_size(void) const {
-        return this->baseRelocationTable_size;
+        return this->st.baseRelocationTable_size;
       }
 
 
       triton::uint32 PeDataDirectory::getDebugTable_rva(void) const {
-        return this->debugTable_rva;
+        return this->st.debugTable_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getDebugTable_size(void) const {
-        return this->debugTable_size;
+        return this->st.debugTable_size;
       }
 
 
       triton::uint32 PeDataDirectory::getArchitectureTable_rva(void) const {
-        return this->architectureTable_rva;
+        return this->st.architectureTable_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getArchitectureTable_size(void) const {
-        return this->architectureTable_size;
+        return this->st.architectureTable_size;
       }
 
 
       triton::uint32 PeDataDirectory::getGlobalPtr_rva(void) const {
-        return this->globalPtr_rva;
+        return this->st.globalPtr_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getGlobalPtr_size(void) const {
-        return this->globalPtr_size;
+        return this->st.globalPtr_size;
       }
 
 
       triton::uint32 PeDataDirectory::getTlsTable_rva(void) const {
-        return this->tlsTable_rva;
+        return this->st.tlsTable_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getTlsTable_size(void) const {
-        return this->tlsTable_size;
+        return this->st.tlsTable_size;
       }
 
 
       triton::uint32 PeDataDirectory::getLoadConfigTable_rva(void) const {
-        return this->loadConfigTable_rva;
+        return this->st.loadConfigTable_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getLoadConfigTable_size(void) const {
-        return this->loadConfigTable_size;
+        return this->st.loadConfigTable_size;
       }
 
 
       triton::uint32 PeDataDirectory::getBoundImportTable_rva(void) const {
-        return this->boundImportTable_rva;
+        return this->st.boundImportTable_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getBoundImportTable_size(void) const {
-        return this->boundImportTable_size;
+        return this->st.boundImportTable_size;
       }
 
 
       triton::uint32 PeDataDirectory::getImportAddressTable_rva(void) const {
-        return this->importAddressTable_rva;
+        return this->st.importAddressTable_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getImportAddressTable_size(void) const {
-        return this->importAddressTable_size;
+        return this->st.importAddressTable_size;
       }
 
 
       triton::uint32 PeDataDirectory::getDelayImportDescriptor_rva(void) const {
-        return this->delayImportDescriptor_rva;
+        return this->st.delayImportDescriptor_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getDelayImportDescriptor_size(void) const {
-        return this->delayImportDescriptor_size;
+        return this->st.delayImportDescriptor_size;
       }
 
 
       triton::uint32 PeDataDirectory::getClrRuntimeHeader_rva(void) const {
-        return this->clrRuntimeHeader_rva;
+        return this->st.clrRuntimeHeader_rva;
       }
 
 
       triton::uint32 PeDataDirectory::getClrRuntimeHeader_size(void) const {
-        return this->clrRuntimeHeader_size;
+        return this->st.clrRuntimeHeader_size;
       }
 
 
       triton::uint64 PeDataDirectory::getReserved(void) const {
-        return this->reserved;
+        return this->st.reserved;
       }
 
     }; /* pe namespace */
