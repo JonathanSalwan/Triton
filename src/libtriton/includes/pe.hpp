@@ -118,6 +118,9 @@ namespace triton {
           //! Returns all memory areas which then may be mapped via triton::API::setConcreteMemoryAreaValue.
           const std::list<triton::format::MemoryMapping>& getMemoryMapping(void) const;
 
+          //! Returns the image base (shorthand of getting it via getHeader)
+          triton::uint32 getImageBase(void) const;
+
       };
 
     /*! @} End of pe namespace */

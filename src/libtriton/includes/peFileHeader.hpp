@@ -95,14 +95,23 @@ namespace triton {
           //! Destructor.
           ~PeFileHeader();
 
+          //! Returns the size of the structure.
+          triton::uint32 getSize(void) const;
+
           //! Parses the header.
           void parse(const triton::uint8* raw);
+
+          //! Saves the header to file.
+          void save(std::ostream &os) const;
 
           //! Returns the machine.
           triton::uint16 getMachine(void) const;
 
           //! Returns the numberOfSections.
           triton::uint16 getNumberOfSections(void) const;
+
+          //! Sets the numberOfSections.
+          void setNumberOfSections(triton::uint16 numberOfSections);
 
           //! Returns the timeDateStamp.
           triton::uint32 getTimeDateStamp(void) const;

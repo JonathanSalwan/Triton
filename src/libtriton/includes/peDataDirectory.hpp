@@ -212,9 +212,14 @@ namespace triton {
           //! Destructor.
           ~PeDataDirectory();
 
+          //! Returns the size of the structure.
+          triton::uint32 getSize(void) const;
+
           //! Parses the header.
           void parse(const triton::uint8* raw);
 
+          //! Saves the header to file.
+          void save(std::ostream &os) const;
 
           //! Returns the exportTable_rva.
           triton::uint32 getExportTable_rva(void) const;
