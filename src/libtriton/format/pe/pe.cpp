@@ -88,12 +88,20 @@ namespace triton {
 
 
       triton::uint64 Pe::getOffsetFromAddress(triton::uint64 vaddr) const {
-        for (auto section : this->header.getSectionHeaders()) {
+        for (auto &&section : this->header.getSectionHeaders()) {
           if (vaddr >= section.getVirtualAddress() && vaddr < (section.getVirtualAddress() + section.getRawSize())) {
-              return ((vaddr - section.getVirtualAddress()) + section.getRawAddress());
+            triton::uint64 offset = ((vaddr - section.getVirtualAddress()) + section.getRawAddress());
+            if (offset >= section.getRawAddress()+section.getRawSize()) {
+              std::ostringstream os;
+              os << "Pe::getOffsetFromAddress(): address " << std::hex << vaddr << " out of bounds in the " << section.getName() << " section";
+              throw triton::exceptions::Pe(os.str());
+            }
+            return offset;
           }
         }
-        return 0;
+        std::ostringstream os;
+        os << "Pe::getOffsetFromAddress(): address " << std::hex << vaddr << " not found in any section";
+        throw triton::exceptions::Pe(os.str());
       }
 
       void Pe::initExportTable(void) {
@@ -121,7 +129,7 @@ namespace triton {
                   entry.isForward = false;
                   entry.exportRVA = exportRVA;
               }
-              entries.push_back(entry);
+              entries.push_back(std::move(entry));
           }
 
           triton::uint32 nameTableStart = getOffsetFromAddress(exportTable.getNamePointerRVA());

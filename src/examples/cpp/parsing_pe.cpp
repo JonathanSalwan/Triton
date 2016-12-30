@@ -114,7 +114,12 @@ int main(int ac, const char *av[]) {
   if (ac != 2)
     return -1;
 
-  binary.loadBinary(av[1]);
+  try {
+    binary.loadBinary(av[1]);
+  } catch (const std::exception &e) {
+      std::cerr << e.what();
+      return 1;
+  }
 
   auto pe = binary.getPe();
 
@@ -212,10 +217,10 @@ int main(int ac, const char *av[]) {
   std::cout << "            RVA     VSize   RawAddr RawSize  ptrReloc ptrLineN nRlc nLin  chrstc" << std::endl;
   for (auto section : pe->getHeader().getSectionHeaders()) {
     std::cout << std::setfill(' ') << std::setw(8) << section.getName() << std::setfill('0');
-    std::cout << " " << std::setw(8) << section.getVirtualSize();
     std::cout << " " << std::setw(8) << section.getVirtualAddress();
-    std::cout << " " << std::setw(8) << section.getRawSize();
+    std::cout << " " << std::setw(8) << section.getVirtualSize();
     std::cout << " " << std::setw(8) << section.getRawAddress();
+    std::cout << " " << std::setw(8) << section.getRawSize();
     std::cout << " " << std::setw(8) << section.getPointerToRelocations();
     std::cout << " " << std::setw(8) << section.getPointerToLinenumbers();
     std::cout << " " << std::setw(4) << section.getNumberOfRelocations();
