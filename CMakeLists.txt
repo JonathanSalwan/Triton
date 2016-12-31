@@ -259,11 +259,19 @@ file(
     ${CMAKE_SOURCE_DIR}/src/libtriton/includes/*
 )
 
+set(LIBTRITON_SHARED_LINKER_FLAGS " ")
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND "${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+    set(LIBTRITON_OTHER_LIBS "-lgomp")
+    if (NOT STATICLIB)
+        set(LIBTRITON_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
+    endif()
+endif()
 
 # Define library's properties
 add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES})
 set_target_properties(${PROJECT_LIBTRITON} PROPERTIES COMPILE_FLAGS ${LIBTRITON_CXX_FLAGS})
-
+set_target_properties(${PROJECT_LIBTRITON} PROPERTIES LINK_FLAGS ${LIBTRITON_SHARED_LINKER_FLAGS})
 
 # Link Triton's dependencies
 target_link_libraries(
@@ -272,6 +280,7 @@ target_link_libraries(
     ${Boost_LIBRARIES}
     ${Z3_LIBRARIES}
     ${CAPSTONE_LIBRARIES}
+    ${LIBTRITON_OTHER_LIBS}
 )
 
 
