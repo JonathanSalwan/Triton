@@ -137,6 +137,7 @@ if(PYTHON_BINDINGS)
   include_directories(${PYTHON_INCLUDE_DIRS})
 endif()
 
+
 # Find Z3
 if(NOT Z3_INCLUDE_DIRS)
   set(Z3_INCLUDE_DIRS "$ENV{Z3_INCLUDE_DIRS}")
@@ -259,8 +260,12 @@ file(
     ${CMAKE_SOURCE_DIR}/src/libtriton/includes/*
 )
 
+
+# Define gloabl shared linker flags
 set(LIBTRITON_SHARED_LINKER_FLAGS " ")
 
+
+# Special cases for MinGW
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND "${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     set(LIBTRITON_OTHER_LIBS "-lgomp")
     if (NOT STATICLIB)
@@ -268,10 +273,12 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND "${CMAKE_CXX_COMPILER_ID}" MATCHES
     endif()
 endif()
 
+
 # Define library's properties
 add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES})
 set_target_properties(${PROJECT_LIBTRITON} PROPERTIES COMPILE_FLAGS ${LIBTRITON_CXX_FLAGS})
 set_target_properties(${PROJECT_LIBTRITON} PROPERTIES LINK_FLAGS ${LIBTRITON_SHARED_LINKER_FLAGS})
+
 
 # Link Triton's dependencies
 target_link_libraries(
