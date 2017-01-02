@@ -59,7 +59,7 @@ namespace triton {
 
 
       void PeFileHeader::parse(const triton::uint8* raw) {
-        std::memcpy(&this->st, raw, sizeof(st));
+        std::memcpy(&this->st, raw, sizeof(this->st));
       }
 
 

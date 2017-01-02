@@ -47,7 +47,6 @@ namespace triton {
       class PeHeader {
         protected:
           triton::uint32 peHeaderStart;
-          std::vector<triton::uint8> dosStub;
           PeFileHeader fileHeader;
           PeOptionalHeader optionalHeader;
           PeDataDirectory dataDirectory;

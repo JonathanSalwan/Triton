@@ -75,7 +75,7 @@ namespace triton {
 
 
       void PeExportDirectory::parse(const triton::uint8* raw) {
-        std::memcpy(&st, raw, sizeof(st));
+        std::memcpy(&this->st, raw, sizeof(this->st));
       }
 
 
@@ -145,7 +145,7 @@ namespace triton {
 
 
       void PeExportDirectory::addEntry(const PeExportEntry& entry) {
-        entries.push_back(entry);
+        this->entries.push_back(entry);
       }
 
 

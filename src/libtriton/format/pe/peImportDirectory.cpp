@@ -57,7 +57,7 @@ namespace triton {
 
 
       bool PeImportDirectory::parse(const triton::uint8* raw) {
-        std::memcpy(&st, raw, sizeof(st));
+        std::memcpy(&this->st, raw, sizeof(this->st));
         return this->st.importLookupTableRVA;
       }
 
@@ -98,7 +98,7 @@ namespace triton {
 
 
       void PeImportDirectory::addEntry(const PeImportLookup& entry) {
-        entries.push_back(entry);
+        this->entries.push_back(entry);
       }
 
 

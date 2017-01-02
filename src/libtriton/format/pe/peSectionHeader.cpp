@@ -17,7 +17,7 @@ namespace triton {
     namespace pe {
 
       PeSectionHeader::PeSectionHeader() {
-        std::memset(st.name, 0x00, sizeof(this->st.name));
+        std::memset(this->st.name, 0x00, sizeof(this->st.name));
 
         this->st.virtualSize          = 0;
         this->st.virtualAddress       = 0;
@@ -74,8 +74,8 @@ namespace triton {
 
 
       triton::uint32 PeSectionHeader::parse(const triton::uint8* raw) {
-        std::memcpy(&st, raw, sizeof(st));
-        name = std::string(reinterpret_cast<const char*>(&st.name[0]), 8).c_str();
+        std::memcpy(&this->st, raw, sizeof(this->st));
+        name = std::string(reinterpret_cast<const char*>(&this->st.name[0]), 8).c_str();
 
         return sizeof(st);
       }
