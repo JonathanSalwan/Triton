@@ -66,6 +66,8 @@ namespace triton {
       this->tainted             = other.tainted;
       this->tid                 = other.tid;
       this->type                = other.type;
+      this->writtenRegisters    = other.writtenRegisters;
+      this->readRegisters       = other.readRegisters;
 
       std::memcpy(this->opcodes, other.opcodes, sizeof(this->opcodes));
 
