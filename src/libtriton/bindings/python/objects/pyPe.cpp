@@ -105,7 +105,7 @@ Returns the list of section headers.
 
 - <b>[string, ...] getSharedLibraries(void)</b><br>
 Returns the list of shared library dependencies.<br>
-e.g: `['ADVAPI32.dll', 'KERNEL32.dll', 'GDI32.dll', ....... ]`
+e.g: `["ADVAPI32.dll", "KERNEL32.dll", "GDI32.dll", ...]`
 
 - <b>integer getSize(void)</b><br>
 Returns the binary size.

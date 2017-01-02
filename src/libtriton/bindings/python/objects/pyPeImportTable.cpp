@@ -66,7 +66,7 @@ urlmon.dll
 \section PeImportTable_py_api Python API - Methods of the PeImportTable class
 <hr>
 
-- <b>[PeImportLookup, ...] getEntries(void)</b><br>
+- <b>[\ref py_PeImportLookup_page, ...] getEntries(void)</b><br>
 Returns the entries in the import table.
 
 - <b>string getName(void)</b><br>
