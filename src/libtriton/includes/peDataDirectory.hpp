@@ -42,7 +42,7 @@ namespace triton {
        *  \brief PE data directory */
       class PeDataDirectory {
         protected:
-          //this struct contains the items found directly in the binary data
+          //! The data directory structure fields.
           struct {
             /*!
              * \description The export table address.
@@ -201,7 +201,6 @@ namespace triton {
           } st;
 
         public:
-
           //! Constructor.
           PeDataDirectory();
 

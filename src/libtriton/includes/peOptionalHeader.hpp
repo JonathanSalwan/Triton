@@ -38,7 +38,7 @@ namespace triton {
      *  @{
      */
 
-      //PE (32-bit) version
+      //! PE (32-bit) version
       struct PE32_OptionalHeader {
         triton::uint16 magic;
         triton::uint8 majorLinkerVersion;
@@ -72,7 +72,7 @@ namespace triton {
         triton::uint32 numberOfRvaAndSizes;
       };
 
-      //PE+ (64-bit) version
+      //! PE+ (64-bit) version
       struct PE32Plus_OptionalHeader {
         triton::uint16 magic;
         triton::uint8 majorLinkerVersion;
@@ -260,7 +260,10 @@ namespace triton {
            */
           triton::uint32 numberOfRvaAndSizes;
 
+        //! Copies a PE32_OptionalHeader object.
         PeOptionalHeader& operator=(const PE32_OptionalHeader& other);
+
+        //! Copies a PE32Plus_OptionalHeader object.
         PeOptionalHeader& operator=(const PE32Plus_OptionalHeader& other);
 
       public:

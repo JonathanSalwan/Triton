@@ -38,11 +38,8 @@ namespace triton {
      *  @{
      */
 
-      //! The PE export directory structure.
 
-      /*! \class PEExportEntry
-       *  \brief PE Export entry */
-
+      //! The PE export entry structure.
       struct PeExportEntry {
         bool isForward;
         triton::uint32 exportRVA;     // if not isForward
@@ -58,7 +55,7 @@ namespace triton {
        *  \brief PE Export Directory Table */
       class PeExportDirectory {
         protected:
-          //this struct contains the items found directly in the binary data
+          //! The PE export directory structure
           struct {
             /*!
              * \description Reserved, must be 0.

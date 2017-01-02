@@ -38,14 +38,12 @@ namespace triton {
      *  @{
      */
 
-      //! The PE import directory structure.
-
       /*! \class PeFileHeader
        *  \brief PE file header (without DOS stub) */
       class PeFileHeader {
         protected:
 
-          // This struct contains the items found directly in the binary data
+          //! The PE file header structure.
           struct {
             /*!
              * \description The number that identifies the type of target machine. See IMAGE_FILE_MACHINE_* in peEnums.hpp

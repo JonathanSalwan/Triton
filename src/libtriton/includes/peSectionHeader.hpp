@@ -42,7 +42,7 @@ namespace triton {
        *  \brief PE Section Header */
       class PeSectionHeader {
         protected:
-          // This struct contains the items found directly in the binary data
+          //! The PE Section structure.
           struct {
             /*!
              * \description Section name. If it's 8 bytes long then it's not null-terminated.

@@ -419,7 +419,7 @@ namespace triton {
     };
 
 
-    /*! \class PE
+    /*! \class Pe
      *  \brief The exception class used by the PE format. */
     class Pe : public triton::exceptions::Format {
       public:

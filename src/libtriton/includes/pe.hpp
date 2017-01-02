@@ -59,10 +59,7 @@ namespace triton {
           //! The PE Header.
           triton::format::pe::PeHeader header;
 
-          /*!
-           * \description The list of memory areas which may be mapped into the Triton memory.
-           * In the PE context, this is basically all segments.
-           */
+          //! The list of memory areas which may be mapped into the Triton memory. In the PE context, this is basically all segments.
           std::list<triton::format::MemoryMapping> memoryMapping;
 
           //! The import table.

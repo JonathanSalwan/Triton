@@ -38,10 +38,7 @@ namespace triton {
      *  @{
      */
 
-      //! The PE import directory structure.
-
-      /*! \class PEImportLookup
-       *  \brief PE Import Lookup Table entry */
+      //! The PE Import Lookup Table entry.
       struct PeImportLookup {
           bool importByName;
           triton::uint16 ordinalNumber; //contains "hint" if importByName
@@ -53,7 +50,7 @@ namespace triton {
       class PeImportDirectory {
         protected:
 
-          //this struct contains the items found directly in the binary data
+          //! The PE import directory structure
           struct {
             /*!
              * \description The RVA of the import lookup table. This table contains a name or ordinal for each import. (The name “Characteristics” is used in Winnt.h, but no longer describes this field.)
