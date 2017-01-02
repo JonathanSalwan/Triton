@@ -7,8 +7,8 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <peImportDirectory.hpp>
 #include <exceptions.hpp>
+#include <peImportDirectory.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -55,14 +55,14 @@ KERNEL32.dll :
 \section PeImportLookup_py_api Python API - Methods of the PeImportLookup class
 <hr>
 
-- <b>bool importByName(void)</b><br>
-Returns whether the lookup is by name, rather than by ordinal.
-
 - <b>string getName(void)</b><br>
 Returns the name of the DLL the import table refers to.
 
 - <b>int getOrdinal(void)</b><br>
 If the lookup is by name, returns the ordinal hint. Otherwise it retuns the lookup ordinal.
+
+- <b>bool importByName(void)</b><br>
+Returns whether the lookup is by name, rather than by ordinal.
 
 */
 
@@ -77,16 +77,6 @@ namespace triton {
         std::cout << std::flush;
         delete PyPeImportLookup_AsPeImportLookup(self);
         Py_DECREF(self);
-      }
-
-
-      static PyObject* PeImportLookup_importByName(PyObject* self, PyObject* noarg) {
-        try {
-          return PyBool_FromLong(PyPeImportLookup_AsPeImportLookup(self)->importByName);
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
       }
 
 
@@ -110,22 +100,32 @@ namespace triton {
       }
 
 
+      static PyObject* PeImportLookup_importByName(PyObject* self, PyObject* noarg) {
+        try {
+          return PyBool_FromLong(PyPeImportLookup_AsPeImportLookup(self)->importByName);
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       //! PeImportLookup methods.
       PyMethodDef PeImportLookup_callbacks[] = {
-        {"importByName" ,     PeImportLookup_importByName,        METH_NOARGS,    ""},
         {"getName" ,          PeImportLookup_getName,             METH_NOARGS,    ""},
         {"getOrdinal" ,       PeImportLookup_getOrdinal,          METH_NOARGS,    ""},
-        {nullptr,             nullptr,                           0,              nullptr}
+        {"importByName" ,     PeImportLookup_importByName,        METH_NOARGS,    ""},
+        {nullptr,             nullptr,                            0,              nullptr}
       };
 
 
       PyTypeObject PeImportLookup_Type = {
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */
-        "PeImportLookup",                            /* tp_name */
-        sizeof(PeImportLookup_Object),               /* tp_basicsize */
+        "PeImportLookup",                           /* tp_name */
+        sizeof(PeImportLookup_Object),              /* tp_basicsize */
         0,                                          /* tp_itemsize */
-        (destructor)PeImportLookup_dealloc,          /* tp_dealloc */
+        (destructor)PeImportLookup_dealloc,         /* tp_dealloc */
         0,                                          /* tp_print */
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
@@ -141,14 +141,14 @@ namespace triton {
         0,                                          /* tp_setattro */
         0,                                          /* tp_as_buffer */
         Py_TPFLAGS_DEFAULT,                         /* tp_flags */
-        "PeImportLookup objects",                    /* tp_doc */
+        "PeImportLookup objects",                   /* tp_doc */
         0,                                          /* tp_traverse */
         0,                                          /* tp_clear */
         0,                                          /* tp_richcompare */
         0,                                          /* tp_weaklistoffset */
         0,                                          /* tp_iter */
         0,                                          /* tp_iternext */
-        PeImportLookup_callbacks,                    /* tp_methods */
+        PeImportLookup_callbacks,                   /* tp_methods */
         0,                                          /* tp_members */
         0,                                          /* tp_getset */
         0,                                          /* tp_base */

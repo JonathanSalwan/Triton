@@ -8,14 +8,16 @@
 #ifndef TRITON_PEHEADER_H
 #define TRITON_PEHEADER_H
 
+#include <vector>
+
+#include "peDataDirectory.hpp"
 #include "peEnums.hpp"
 #include "peFileHeader.hpp"
 #include "peOptionalHeader.hpp"
-#include "peDataDirectory.hpp"
 #include "peSectionHeader.hpp"
 #include "tritonTypes.hpp"
 
-#include <vector>
+
 
 //! The Triton namespace
 namespace triton {
@@ -43,7 +45,6 @@ namespace triton {
       /*! \class PeHeader
        *  \brief The PE Header class. */
       class PeHeader {
-
         protected:
           triton::uint32 peHeaderStart;
           std::vector<triton::uint8> dosStub;
@@ -63,15 +64,15 @@ namespace triton {
           virtual ~PeHeader();
 
           //! Copies a PeHeader.
-          PeHeader &operator=(const PeHeader& copy);
+          PeHeader& operator=(const PeHeader& copy);
 
           //! Parses the PE Header. Returns the number of bytes read.
           triton::uint32 parse(const triton::uint8* raw, triton::usize totalSize);
 
-          const PeFileHeader &getFileHeader() const;
-          const PeOptionalHeader &getOptionalHeader() const;
-          const PeDataDirectory &getDataDirectory() const;
-          const std::vector<PeSectionHeader> &getSectionHeaders() const;
+          const PeFileHeader& getFileHeader(void) const;
+          const PeOptionalHeader& getOptionalHeader(void) const;
+          const PeDataDirectory& getDataDirectory(void) const;
+          const std::vector<PeSectionHeader>& getSectionHeaders(void) const;
       };
 
     /*! @} End of pe namespace */

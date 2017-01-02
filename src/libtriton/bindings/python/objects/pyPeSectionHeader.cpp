@@ -7,8 +7,8 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <peHeader.hpp>
 #include <exceptions.hpp>
+#include <peHeader.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -55,7 +55,7 @@ e.g: `.text`
 
 - <b>integer getRawAddress(void)</b><br>
 Returns the section offset in the binary file. This member's value holds the byte offset from
-the beginning of the file to the first byte in the section. 
+the beginning of the file to the first byte in the section.
 
 - <b>integer getRawSize(void)</b><br>
 Returns the section size. This member holds the section's size in bytes. The section occupies sh_size bytes in the file.

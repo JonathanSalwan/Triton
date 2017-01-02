@@ -7,8 +7,8 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <pe.hpp>
 #include <exceptions.hpp>
+#include <pe.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -242,7 +242,7 @@ namespace triton {
         {"getSectionHeaders",     Pe_getSectionHeaders,    METH_NOARGS,     ""},
         {"getSharedLibraries",    Pe_getSharedLibraries,   METH_NOARGS,     ""},
         {"getSize",               Pe_getSize,              METH_NOARGS,     ""},
-        {nullptr,                 nullptr,                  0,               nullptr}
+        {nullptr,                 nullptr,                  0,              nullptr}
       };
 
 

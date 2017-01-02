@@ -12,10 +12,10 @@
 #include <vector>
 
 #include "binaryInterface.hpp"
+#include "memoryMapping.hpp"
+#include "peExportDirectory.hpp"
 #include "peHeader.hpp"
 #include "peImportDirectory.hpp"
-#include "peExportDirectory.hpp"
-#include "memoryMapping.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -56,7 +56,7 @@ namespace triton {
           //! The raw binary.
           triton::uint8* raw;
 
-          //! The PE Header
+          //! The PE Header.
           triton::format::pe::PeHeader header;
 
           /*!
@@ -65,8 +65,13 @@ namespace triton {
            */
           std::list<triton::format::MemoryMapping> memoryMapping;
 
+          //! The import table.
           std::vector<PeImportDirectory> importTable;
+
+          //! DLL Dependencies.
           std::vector<std::string> dlls;
+
+          //! Export table.
           PeExportDirectory exportTable;
 
           //! Open the binary.
@@ -117,7 +122,6 @@ namespace triton {
 
           //! Returns all memory areas which then may be mapped via triton::API::setConcreteMemoryAreaValue.
           const std::list<triton::format::MemoryMapping>& getMemoryMapping(void) const;
-
       };
 
     /*! @} End of pe namespace */

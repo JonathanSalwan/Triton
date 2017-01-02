@@ -8,10 +8,12 @@
 #ifndef TRITON_PEOPTIONALHEADER_H
 #define TRITON_PEOPTIONALHEADER_H
 
+#include <vector>
+
 #include "peEnums.hpp"
 #include "tritonTypes.hpp"
 
-#include <vector>
+
 
 //! The Triton namespace
 namespace triton {
@@ -106,7 +108,7 @@ namespace triton {
       /*! \class PeOptionalHeader
        *  \brief PE optional header */
       class PeOptionalHeader {
-      protected:
+        protected:
 
           /*!
            * \description The unsigned integer that identifies the state of the image file. The most common number is 0x10B, which identifies it as a normal executable file. 0x107 identifies it as a ROM image, and 0x20B identifies it as a PE32+ executable.
@@ -258,19 +260,18 @@ namespace triton {
            */
           triton::uint32 numberOfRvaAndSizes;
 
-        PeOptionalHeader &operator=(const PE32_OptionalHeader &other);
-        PeOptionalHeader &operator=(const PE32Plus_OptionalHeader &other);
+        PeOptionalHeader& operator=(const PE32_OptionalHeader& other);
+        PeOptionalHeader& operator=(const PE32Plus_OptionalHeader& other);
 
       public:
-
           //! Constructor.
           PeOptionalHeader();
 
           //! Copy constructor.
-          PeOptionalHeader(const PeOptionalHeader &copy);
+          PeOptionalHeader(const PeOptionalHeader& copy);
 
           //! Copy assignment operator.
-          PeOptionalHeader &operator=(const PeOptionalHeader &copy);
+          PeOptionalHeader& operator=(const PeOptionalHeader& copy);
 
           //! Destructor.
           ~PeOptionalHeader();
@@ -367,9 +368,7 @@ namespace triton {
 
           //! Returns the numberOfRvaAndSizes.
           triton::uint32 getNumberOfRvaAndSizes(void) const;
-
       };
-
 
     /*! @} End of pe namespace */
     };

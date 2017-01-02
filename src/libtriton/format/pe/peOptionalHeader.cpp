@@ -7,8 +7,8 @@
 
 #include <cstdio>
 
-#include <peOptionalHeader.hpp>
 #include <exceptions.hpp>
+#include <peOptionalHeader.hpp>
 
 
 
@@ -17,36 +17,36 @@ namespace triton {
     namespace pe {
 
       PeOptionalHeader::PeOptionalHeader() {
-        this->magic = 0;
-        this->majorLinkerVersion = 0;
-        this->minorLinkerVersion = 0;
-        this->sizeOfCode = 0;
-        this->sizeOfInitializedData = 0;
-        this->sizeOfUninitializedData = 0;
-        this->addressOfEntryPoint = 0;
-        this->baseOfCode = 0;
-        this->baseOfData = 0;
-        this->imageBase = 0;
-        this->sectionAlignment = 0;
-        this->fileAlignment = 0;
+        this->magic                       = 0;
+        this->majorLinkerVersion          = 0;
+        this->minorLinkerVersion          = 0;
+        this->sizeOfCode                  = 0;
+        this->sizeOfInitializedData       = 0;
+        this->sizeOfUninitializedData     = 0;
+        this->addressOfEntryPoint         = 0;
+        this->baseOfCode                  = 0;
+        this->baseOfData                  = 0;
+        this->imageBase                   = 0;
+        this->sectionAlignment            = 0;
+        this->fileAlignment               = 0;
         this->majorOperatingSystemVersion = 0;
         this->minorOperatingSystemVersion = 0;
-        this->majorImageVersion = 0;
-        this->minorImageVersion = 0;
-        this->majorSubsystemVersion = 0;
-        this->minorSubsystemVersion = 0;
-        this->win32VersionValue = 0;
-        this->sizeOfImage = 0;
-        this->sizeOfHeaders = 0;
-        this->checkSum = 0;
-        this->subsystem = 0;
-        this->dllCharacteristics = 0;
-        this->sizeOfStackReserve = 0;
-        this->sizeOfStackCommit = 0;
-        this->sizeOfHeapReserve = 0;
-        this->sizeOfHeapCommit = 0;
-        this->loaderFlags = 0;
-        this->numberOfRvaAndSizes = 0;
+        this->majorImageVersion           = 0;
+        this->minorImageVersion           = 0;
+        this->majorSubsystemVersion       = 0;
+        this->minorSubsystemVersion       = 0;
+        this->win32VersionValue           = 0;
+        this->sizeOfImage                 = 0;
+        this->sizeOfHeaders               = 0;
+        this->checkSum                    = 0;
+        this->subsystem                   = 0;
+        this->dllCharacteristics          = 0;
+        this->sizeOfStackReserve          = 0;
+        this->sizeOfStackCommit           = 0;
+        this->sizeOfHeapReserve           = 0;
+        this->sizeOfHeapCommit            = 0;
+        this->loaderFlags                 = 0;
+        this->numberOfRvaAndSizes         = 0;
       }
 
 
@@ -88,9 +88,10 @@ namespace triton {
       }
 
 
-      PeOptionalHeader &PeOptionalHeader::operator=(const PeOptionalHeader& copy) {
+      PeOptionalHeader& PeOptionalHeader::operator=(const PeOptionalHeader& copy) {
         if (this == &copy)
             return *this;
+
         this->magic                       = copy.magic;
         this->majorLinkerVersion          = copy.majorLinkerVersion;
         this->minorLinkerVersion          = copy.minorLinkerVersion;
@@ -121,25 +122,29 @@ namespace triton {
         this->sizeOfHeapCommit            = copy.sizeOfHeapCommit;
         this->loaderFlags                 = copy.loaderFlags;
         this->numberOfRvaAndSizes         = copy.numberOfRvaAndSizes;
+
         return *this;
       }
 
 
       triton::usize PeOptionalHeader::parse(const triton::uint8* raw) {
         triton::uint16 peFormat;
+
         std::memcpy(&peFormat, raw, sizeof(peFormat));
         if (peFormat == PE_FORMAT_PE32PLUS) {
-            PE32Plus_OptionalHeader ohdr;
-            std::memcpy(&ohdr, raw, sizeof(ohdr));
-            *this = ohdr;
-            return sizeof(ohdr);
-        } else {
-            PE32_OptionalHeader ohdr;
-            std::memcpy(&ohdr, raw, sizeof(ohdr));
-            *this = ohdr;
-            return sizeof(ohdr);
+          PE32Plus_OptionalHeader ohdr;
+          std::memcpy(&ohdr, raw, sizeof(ohdr));
+          *this = ohdr;
+          return sizeof(ohdr);
+        }
+        else {
+          PE32_OptionalHeader ohdr;
+          std::memcpy(&ohdr, raw, sizeof(ohdr));
+          *this = ohdr;
+          return sizeof(ohdr);
         }
       }
+
 
       triton::uint16 PeOptionalHeader::getMagic(void) const {
         return this->magic;
@@ -290,72 +295,76 @@ namespace triton {
         return this->numberOfRvaAndSizes;
       }
 
-      PeOptionalHeader &PeOptionalHeader::operator=(const PE32_OptionalHeader &other) {
-          magic = other.magic;
-          majorLinkerVersion = other.majorLinkerVersion;
-          minorLinkerVersion = other.minorLinkerVersion;
-          sizeOfCode = other.sizeOfCode;
-          sizeOfInitializedData = other.sizeOfInitializedData;
-          sizeOfUninitializedData = other.sizeOfUninitializedData;
-          addressOfEntryPoint = other.addressOfEntryPoint;
-          baseOfCode = other.baseOfCode;
-          baseOfData = other.baseOfData;
-          imageBase = other.imageBase;
-          sectionAlignment = other.sectionAlignment;
-          fileAlignment = other.fileAlignment;
-          majorOperatingSystemVersion = other.majorOperatingSystemVersion;
-          minorOperatingSystemVersion = other.minorOperatingSystemVersion;
-          majorImageVersion = other.majorImageVersion;
-          minorImageVersion = other.minorImageVersion;
-          majorSubsystemVersion = other.majorSubsystemVersion;
-          minorSubsystemVersion = other.minorSubsystemVersion;
-          win32VersionValue = other.win32VersionValue;
-          sizeOfImage = other.sizeOfImage;
-          sizeOfHeaders = other.sizeOfHeaders;
-          checkSum = other.checkSum;
-          subsystem = other.subsystem;
-          dllCharacteristics = other.dllCharacteristics;
-          sizeOfStackReserve = other.sizeOfStackReserve;
-          sizeOfStackCommit = other.sizeOfStackCommit;
-          sizeOfHeapReserve = other.sizeOfHeapReserve;
-          sizeOfHeapCommit = other.sizeOfHeapCommit;
-          loaderFlags = other.loaderFlags;
-          numberOfRvaAndSizes = other.numberOfRvaAndSizes;
-          return *this;
+
+      PeOptionalHeader& PeOptionalHeader::operator=(const PE32_OptionalHeader& other) {
+        magic                       = other.magic;
+        majorLinkerVersion          = other.majorLinkerVersion;
+        minorLinkerVersion          = other.minorLinkerVersion;
+        sizeOfCode                  = other.sizeOfCode;
+        sizeOfInitializedData       = other.sizeOfInitializedData;
+        sizeOfUninitializedData     = other.sizeOfUninitializedData;
+        addressOfEntryPoint         = other.addressOfEntryPoint;
+        baseOfCode                  = other.baseOfCode;
+        baseOfData                  = other.baseOfData;
+        imageBase                   = other.imageBase;
+        sectionAlignment            = other.sectionAlignment;
+        fileAlignment               = other.fileAlignment;
+        majorOperatingSystemVersion = other.majorOperatingSystemVersion;
+        minorOperatingSystemVersion = other.minorOperatingSystemVersion;
+        majorImageVersion           = other.majorImageVersion;
+        minorImageVersion           = other.minorImageVersion;
+        majorSubsystemVersion       = other.majorSubsystemVersion;
+        minorSubsystemVersion       = other.minorSubsystemVersion;
+        win32VersionValue           = other.win32VersionValue;
+        sizeOfImage                 = other.sizeOfImage;
+        sizeOfHeaders               = other.sizeOfHeaders;
+        checkSum                    = other.checkSum;
+        subsystem                   = other.subsystem;
+        dllCharacteristics          = other.dllCharacteristics;
+        sizeOfStackReserve          = other.sizeOfStackReserve;
+        sizeOfStackCommit           = other.sizeOfStackCommit;
+        sizeOfHeapReserve           = other.sizeOfHeapReserve;
+        sizeOfHeapCommit            = other.sizeOfHeapCommit;
+        loaderFlags                 = other.loaderFlags;
+        numberOfRvaAndSizes         = other.numberOfRvaAndSizes;
+
+        return *this;
       }
 
-      PeOptionalHeader &PeOptionalHeader::operator=(const PE32Plus_OptionalHeader &other) {
-          magic = other.magic;
-          majorLinkerVersion = other.majorLinkerVersion;
-          minorLinkerVersion = other.minorLinkerVersion;
-          sizeOfCode = other.sizeOfCode;
-          sizeOfInitializedData = other.sizeOfInitializedData;
-          sizeOfUninitializedData = other.sizeOfUninitializedData;
-          addressOfEntryPoint = other.addressOfEntryPoint;
-          baseOfCode = other.baseOfCode;
-          baseOfData = 0;   //not present in this format
-          imageBase = other.imageBase;
-          sectionAlignment = other.sectionAlignment;
-          fileAlignment = other.fileAlignment;
-          majorOperatingSystemVersion = other.majorOperatingSystemVersion;
-          minorOperatingSystemVersion = other.minorOperatingSystemVersion;
-          majorImageVersion = other.majorImageVersion;
-          minorImageVersion = other.minorImageVersion;
-          majorSubsystemVersion = other.majorSubsystemVersion;
-          minorSubsystemVersion = other.minorSubsystemVersion;
-          win32VersionValue = other.win32VersionValue;
-          sizeOfImage = other.sizeOfImage;
-          sizeOfHeaders = other.sizeOfHeaders;
-          checkSum = other.checkSum;
-          subsystem = other.subsystem;
-          dllCharacteristics = other.dllCharacteristics;
-          sizeOfStackReserve = other.sizeOfStackReserve;
-          sizeOfStackCommit = other.sizeOfStackCommit;
-          sizeOfHeapReserve = other.sizeOfHeapReserve;
-          sizeOfHeapCommit = other.sizeOfHeapCommit;
-          loaderFlags = other.loaderFlags;
-          numberOfRvaAndSizes = other.numberOfRvaAndSizes;
-          return *this;
+
+      PeOptionalHeader& PeOptionalHeader::operator=(const PE32Plus_OptionalHeader& other) {
+        magic                       = other.magic;
+        majorLinkerVersion          = other.majorLinkerVersion;
+        minorLinkerVersion          = other.minorLinkerVersion;
+        sizeOfCode                  = other.sizeOfCode;
+        sizeOfInitializedData       = other.sizeOfInitializedData;
+        sizeOfUninitializedData     = other.sizeOfUninitializedData;
+        addressOfEntryPoint         = other.addressOfEntryPoint;
+        baseOfCode                  = other.baseOfCode;
+        baseOfData                  = 0;   //not present in this format
+        imageBase                   = other.imageBase;
+        sectionAlignment            = other.sectionAlignment;
+        fileAlignment               = other.fileAlignment;
+        majorOperatingSystemVersion = other.majorOperatingSystemVersion;
+        minorOperatingSystemVersion = other.minorOperatingSystemVersion;
+        majorImageVersion           = other.majorImageVersion;
+        minorImageVersion           = other.minorImageVersion;
+        majorSubsystemVersion       = other.majorSubsystemVersion;
+        minorSubsystemVersion       = other.minorSubsystemVersion;
+        win32VersionValue           = other.win32VersionValue;
+        sizeOfImage                 = other.sizeOfImage;
+        sizeOfHeaders               = other.sizeOfHeaders;
+        checkSum                    = other.checkSum;
+        subsystem                   = other.subsystem;
+        dllCharacteristics          = other.dllCharacteristics;
+        sizeOfStackReserve          = other.sizeOfStackReserve;
+        sizeOfStackCommit           = other.sizeOfStackCommit;
+        sizeOfHeapReserve           = other.sizeOfHeapReserve;
+        sizeOfHeapCommit            = other.sizeOfHeapCommit;
+        loaderFlags                 = other.loaderFlags;
+        numberOfRvaAndSizes         = other.numberOfRvaAndSizes;
+
+        return *this;
       }
 
     }; /* pe namespace */
