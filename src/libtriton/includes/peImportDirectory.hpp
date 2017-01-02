@@ -40,9 +40,18 @@ namespace triton {
 
       //! The PE Import Lookup Table entry.
       struct PeImportLookup {
+          /*!
+           * \description Indicates whether the import is by name or ordinal number.
+           */
           bool importByName;
-          triton::uint16 ordinalNumber; //contains "hint" if importByName
-          std::string name; //only if importByName
+          /*!
+           * \description If the import is by ordinal number, this is the ordinal numer, otherwise it's the "hint" that accompanies the import by name.
+           */
+          triton::uint16 ordinalNumber;
+          /*!
+           * \description If the import is by name, this is the name of the imported function.
+           */
+          std::string name;
       };
 
       /*! \class PeImportDirectory
