@@ -7,8 +7,8 @@
 
 #include <cstdio>
 
-#include <peSectionHeader.hpp>
 #include <exceptions.hpp>
+#include <peSectionHeader.hpp>
 
 
 
@@ -17,22 +17,24 @@ namespace triton {
     namespace pe {
 
       PeSectionHeader::PeSectionHeader() {
-        std::memset(st.name,0,sizeof(this->st.name));
-        this->st.virtualSize = 0;
-        this->st.virtualAddress = 0;
-        this->st.rawSize = 0;
-        this->st.rawAddress = 0;
+        std::memset(this->st.name, 0x00, sizeof(this->st.name));
+
+        this->st.virtualSize          = 0;
+        this->st.virtualAddress       = 0;
+        this->st.rawSize              = 0;
+        this->st.rawAddress           = 0;
         this->st.pointerToRelocations = 0;
         this->st.pointerToLinenumbers = 0;
-        this->st.numberOfRelocations = 0;
-        this->st.numberOfLinenumbers = 0;
-        this->st.characteristics = 0;
-        this->name = "";
+        this->st.numberOfRelocations  = 0;
+        this->st.numberOfLinenumbers  = 0;
+        this->st.characteristics      = 0;
+        this->name                    = "";
       }
 
 
       PeSectionHeader::PeSectionHeader(const PeSectionHeader& copy) {
-        std::memcpy(this->st.name,copy.st.name,sizeof(this->st.name));
+        std::memcpy(this->st.name, copy.st.name, sizeof(this->st.name));
+
         this->st.virtualSize          = copy.st.virtualSize;
         this->st.virtualAddress       = copy.st.virtualAddress;
         this->st.rawSize              = copy.st.rawSize;
@@ -50,10 +52,12 @@ namespace triton {
       }
 
 
-      PeSectionHeader &PeSectionHeader::operator=(const PeSectionHeader& copy) {
+      PeSectionHeader& PeSectionHeader::operator=(const PeSectionHeader& copy) {
         if (this == &copy)
-            return *this;
-        std::memcpy(this->st.name,copy.st.name,sizeof(this->st.name));
+          return *this;
+
+        std::memcpy(this->st.name, copy.st.name, sizeof(this->st.name));
+
         this->st.virtualSize          = copy.st.virtualSize;
         this->st.virtualAddress       = copy.st.virtualAddress;
         this->st.rawSize              = copy.st.rawSize;
@@ -64,6 +68,7 @@ namespace triton {
         this->st.numberOfLinenumbers  = copy.st.numberOfLinenumbers;
         this->st.characteristics      = copy.st.characteristics;
         this->name                    = copy.name;
+
         return *this;
       }
 
@@ -73,8 +78,9 @@ namespace triton {
       }
 
       triton::uint32 PeSectionHeader::parse(const triton::uint8* raw) {
-        std::memcpy(&st, raw, sizeof(st));
-        name = std::string((char*)&st.name[0],8).c_str();
+        std::memcpy(&this->st, raw, sizeof(this->st));
+        name = std::string(reinterpret_cast<const char*>(&this->st.name[0]), 8).c_str();
+
         return sizeof(st);
       }
 

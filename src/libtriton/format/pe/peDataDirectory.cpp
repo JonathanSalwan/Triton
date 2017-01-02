@@ -7,8 +7,8 @@
 
 #include <cstdio>
 
-#include <peDataDirectory.hpp>
 #include <exceptions.hpp>
+#include <peDataDirectory.hpp>
 
 
 
@@ -17,37 +17,37 @@ namespace triton {
     namespace pe {
 
       PeDataDirectory::PeDataDirectory() {
-        this->st.exportTable_rva = 0;
-        this->st.exportTable_size = 0;
-        this->st.importTable_rva = 0;
-        this->st.importTable_size = 0;
-        this->st.resourceTable_rva = 0;
-        this->st.resourceTable_size = 0;
-        this->st.exceptionTable_rva = 0;
-        this->st.exceptionTable_size = 0;
-        this->st.certificateTable_rva = 0;
-        this->st.certificateTable_size = 0;
-        this->st.baseRelocationTable_rva = 0;
-        this->st.baseRelocationTable_size = 0;
-        this->st.debugTable_rva = 0;
-        this->st.debugTable_size = 0;
-        this->st.architectureTable_rva = 0;
-        this->st.architectureTable_size = 0;
-        this->st.globalPtr_rva = 0;
-        this->st.globalPtr_size = 0;
-        this->st.tlsTable_rva = 0;
-        this->st.tlsTable_size = 0;
-        this->st.loadConfigTable_rva = 0;
-        this->st.loadConfigTable_size = 0;
-        this->st.boundImportTable_rva = 0;
-        this->st.boundImportTable_size = 0;
-        this->st.importAddressTable_rva = 0;
-        this->st.importAddressTable_size = 0;
-        this->st.delayImportDescriptor_rva = 0;
+        this->st.exportTable_rva            = 0;
+        this->st.exportTable_size           = 0;
+        this->st.importTable_rva            = 0;
+        this->st.importTable_size           = 0;
+        this->st.resourceTable_rva          = 0;
+        this->st.resourceTable_size         = 0;
+        this->st.exceptionTable_rva         = 0;
+        this->st.exceptionTable_size        = 0;
+        this->st.certificateTable_rva       = 0;
+        this->st.certificateTable_size      = 0;
+        this->st.baseRelocationTable_rva    = 0;
+        this->st.baseRelocationTable_size   = 0;
+        this->st.debugTable_rva             = 0;
+        this->st.debugTable_size            = 0;
+        this->st.architectureTable_rva      = 0;
+        this->st.architectureTable_size     = 0;
+        this->st.globalPtr_rva              = 0;
+        this->st.globalPtr_size             = 0;
+        this->st.tlsTable_rva               = 0;
+        this->st.tlsTable_size              = 0;
+        this->st.loadConfigTable_rva        = 0;
+        this->st.loadConfigTable_size       = 0;
+        this->st.boundImportTable_rva       = 0;
+        this->st.boundImportTable_size      = 0;
+        this->st.importAddressTable_rva     = 0;
+        this->st.importAddressTable_size    = 0;
+        this->st.delayImportDescriptor_rva  = 0;
         this->st.delayImportDescriptor_size = 0;
-        this->st.clrRuntimeHeader_rva = 0;
-        this->st.clrRuntimeHeader_size = 0;
-        this->st.reserved = 0;
+        this->st.clrRuntimeHeader_rva       = 0;
+        this->st.clrRuntimeHeader_size      = 0;
+        this->st.reserved                   = 0;
       }
 
 
@@ -90,9 +90,10 @@ namespace triton {
       }
 
 
-      PeDataDirectory &PeDataDirectory::operator=(const PeDataDirectory& copy) {
+      PeDataDirectory& PeDataDirectory::operator=(const PeDataDirectory& copy) {
         if (this == &copy)
             return *this;
+
         this->st.exportTable_rva            = copy.st.exportTable_rva;
         this->st.exportTable_size           = copy.st.exportTable_size;
         this->st.importTable_rva            = copy.st.importTable_rva;
@@ -124,6 +125,7 @@ namespace triton {
         this->st.clrRuntimeHeader_rva       = copy.st.clrRuntimeHeader_rva;
         this->st.clrRuntimeHeader_size      = copy.st.clrRuntimeHeader_size;
         this->st.reserved                   = copy.st.reserved;
+
         return *this;
       }
 

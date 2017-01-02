@@ -7,8 +7,8 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <peExportDirectory.hpp>
 #include <exceptions.hpp>
+#include <peExportDirectory.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -36,11 +36,11 @@ KERNEL32.dll
 \section PeExportTable_py_api Python API - Methods of the PeExportTable class
 <hr>
 
+- <b>[\ref py_PeExportEntry_page, ...] getEntries(void)</b><br>
+Returns the entries in the export table.
+
 - <b>string getName(void)</b><br>
 Returns the name of the DLL the export table refers to.
-
-- <b>[PeExportEntry, ...] getEntries(void)</b><br>
-Returns the entries in the export table.
 
 */
 
@@ -57,15 +57,6 @@ namespace triton {
         Py_DECREF(self);
       }
 
-
-      static PyObject* PeExportTable_getName(PyObject* self, PyObject* noarg) {
-        try {
-          return PyString_FromString((char*)PyPeExportTable_AsPeExportDirectory(self)->getName().c_str());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
 
       static PyObject* PeExportTable_getEntries(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
@@ -85,11 +76,20 @@ namespace triton {
       }
 
 
+      static PyObject* PeExportTable_getName(PyObject* self, PyObject* noarg) {
+        try {
+          return PyString_FromString((char*)PyPeExportTable_AsPeExportDirectory(self)->getName().c_str());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
 
       //! PeExportTable methods.
       PyMethodDef PeExportTable_callbacks[] = {
-        {"getName" ,          PeExportTable_getName,             METH_NOARGS,    ""},
         {"getEntries" ,       PeExportTable_getEntries,          METH_NOARGS,    ""},
+        {"getName" ,          PeExportTable_getName,             METH_NOARGS,    ""},
         {nullptr,             nullptr,                           0,              nullptr}
       };
 

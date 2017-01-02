@@ -39,7 +39,7 @@ ANDNPD                       | sse2       | Bitwise Logical AND NOT of Packed Do
 ANDNPS                       | sse1       | Bitwise Logical AND NOT of Packed Single-Precision Floating-Point Values
 ANDPD                        | sse2       | Bitwise Logical AND of Packed Double-Precision Floating-Point Values
 ANDPS                        | sse1       | Bitwise Logical AND of Packed Single-Precision Floating-Point Values
-BEXTR                        | bmi1       | Bit Field Extract
+BEXTR                        | bmi1/tbm   | Bit Field Extract
 BLSI                         | bmi1       | Extract Lowest Set Isolated Bit
 BLSMSK                       | bmi1       | Get Mask Up to Lowest Set Bit
 BLSR                         | bmi1       | Reset Lowest Set Bit
@@ -247,9 +247,11 @@ RDTSC                        |            | Read Time-Stamp Counter
 RET                          |            | Return from Procedure
 ROL                          |            | Rotate Left
 ROR                          |            | Rotate Right
+RORX                         | bmi2       | Rotate Right Logical Without Affecting Flags
 SAHF                         |            | Store AH into Flags
 SAL                          |            | Shift Left
 SAR                          |            | Shift Right Signed
+SARX                         | bmi2       | Shift arithmetic right without affecting flags
 SBB                          |            | Integer Subtraction with Borrow
 SCASB                        |            | Scan byte at address
 SCASD                        |            | Scan doubleword at address
@@ -274,8 +276,10 @@ SETS                         |            | Set byte if sign
 SFENCE                       | sse1       | Store Fence
 SHL                          |            | Shift Left
 SHLD                         |            | Double-precision Shift Left
+SHLX                         | bmi2       | Shift Logical Left Without Affecting Flags
 SHR                          |            | Shift Right Unsigned
 SHRD                         |            | Double Precision Shift Right
+SHRX                         | bmi2       | Shift Logical Right Without Affecting Flags
 STC                          |            | Set Carry Flag
 STD                          |            | Set Direction Flag
 STI                          |            | Set Interrupt Flag
@@ -555,9 +559,11 @@ namespace triton {
           case ID_INS_RET:            this->ret_s(inst);          break;
           case ID_INS_ROL:            this->rol_s(inst);          break;
           case ID_INS_ROR:            this->ror_s(inst);          break;
+          case ID_INS_RORX:           this->rorx_s(inst);         break;
           case ID_INS_SAHF:           this->sahf_s(inst);         break;
           case ID_INS_SAL:            this->shl_s(inst);          break;
           case ID_INS_SAR:            this->sar_s(inst);          break;
+          case ID_INS_SARX:           this->sarx_s(inst);         break;
           case ID_INS_SBB:            this->sbb_s(inst);          break;
           case ID_INS_SCASB:          this->scasb_s(inst);        break;
           case ID_INS_SCASD:          this->scasd_s(inst);        break;
@@ -582,8 +588,10 @@ namespace triton {
           case ID_INS_SFENCE:         this->sfence_s(inst);       break;
           case ID_INS_SHL:            this->shl_s(inst);          break;
           case ID_INS_SHLD:           this->shld_s(inst);         break;
+          case ID_INS_SHLX:           this->shlx_s(inst);         break;
           case ID_INS_SHR:            this->shr_s(inst);          break;
           case ID_INS_SHRD:           this->shrd_s(inst);         break;
+          case ID_INS_SHRX:           this->shrx_s(inst);         break;
           case ID_INS_STC:            this->stc_s(inst);          break;
           case ID_INS_STD:            this->std_s(inst);          break;
           case ID_INS_STI:            this->sti_s(inst);          break;
@@ -9840,6 +9848,45 @@ namespace triton {
       }
 
 
+      void x86Semantics::rorx_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+
+        switch (dst.getBitSize()) {
+          /* Mask 0x3f MOD size */
+          case QWORD_SIZE_BIT:
+            op2 = triton::ast::bvand(op2, triton::ast::bv(QWORD_SIZE_BIT-1, src2.getBitSize()));
+            break;
+
+          /* Mask 0x1f MOD size */
+          case DWORD_SIZE_BIT:
+            op2 = triton::ast::bvand(op2, triton::ast::bv(DWORD_SIZE_BIT-1, src2.getBitSize()));
+            break;
+
+          default:
+            throw triton::exceptions::Semantics("x86Semantics::rorx_s(): Invalid destination size");
+        }
+
+        /* Create the semantics */
+        auto node = triton::ast::bvror(triton::ast::decimal(op2->evaluate()), op1);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "RORX operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted |= this->taintEngine->taintUnion(dst, src2);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
       void x86Semantics::sahf_s(triton::arch::Instruction& inst) {
         auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
         auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
@@ -9905,6 +9952,45 @@ namespace triton {
         this->pfShl_s(inst, expr, dst, op2); /* Same that shl */
         this->sfShl_s(inst, expr, dst, op2); /* Same that shl */
         this->zfShl_s(inst, expr, dst, op2); /* Same that shl */
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::sarx_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+
+        switch (dst.getBitSize()) {
+          /* Mask 0x3f MOD size */
+          case QWORD_SIZE_BIT:
+            op2 = triton::ast::bvand(op2, triton::ast::bv(QWORD_SIZE_BIT-1, src2.getBitSize()));
+            break;
+
+          /* Mask 0x1f MOD size */
+          case DWORD_SIZE_BIT:
+            op2 = triton::ast::bvand(op2, triton::ast::bv(DWORD_SIZE_BIT-1, src2.getBitSize()));
+            break;
+
+          default:
+            throw triton::exceptions::Semantics("x86Semantics::sarx_s(): Invalid destination size");
+        }
+
+        /* Create the semantics */
+        auto node = triton::ast::bvashr(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SARX operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted |= this->taintEngine->taintUnion(dst, src2);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -10737,6 +10823,45 @@ namespace triton {
       }
 
 
+      void x86Semantics::shlx_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+
+        switch (dst.getBitSize()) {
+          /* Mask 0x3f MOD size */
+          case QWORD_SIZE_BIT:
+            op2 = triton::ast::bvand(op2, triton::ast::bv(QWORD_SIZE_BIT-1, src2.getBitSize()));
+            break;
+
+          /* Mask 0x1f MOD size */
+          case DWORD_SIZE_BIT:
+            op2 = triton::ast::bvand(op2, triton::ast::bv(DWORD_SIZE_BIT-1, src2.getBitSize()));
+            break;
+
+          default:
+            throw triton::exceptions::Semantics("x86Semantics::shlx_s(): Invalid destination size");
+        }
+
+        /* Create the semantics */
+        auto node = triton::ast::bvshl(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SHLX operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted |= this->taintEngine->taintUnion(dst, src2);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
       void x86Semantics::shr_s(triton::arch::Instruction& inst) {
         auto& dst   = inst.operands[0];
         auto& src   = inst.operands[1];
@@ -10828,6 +10953,45 @@ namespace triton {
         this->pfShl_s(inst, expr, dst, op3); /* Same that shl */
         this->sfShrd_s(inst, expr, dst, op1, op2, op3);
         this->zfShl_s(inst, expr, dst, op3); /* Same that shl */
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::shrx_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+
+        switch (dst.getBitSize()) {
+          /* Mask 0x3f MOD size */
+          case QWORD_SIZE_BIT:
+            op2 = triton::ast::bvand(op2, triton::ast::bv(QWORD_SIZE_BIT-1, src2.getBitSize()));
+            break;
+
+          /* Mask 0x1f MOD size */
+          case DWORD_SIZE_BIT:
+            op2 = triton::ast::bvand(op2, triton::ast::bv(DWORD_SIZE_BIT-1, src2.getBitSize()));
+            break;
+
+          default:
+            throw triton::exceptions::Semantics("x86Semantics::shrx_s(): Invalid destination size");
+        }
+
+        /* Create the semantics */
+        auto node = triton::ast::bvlshr(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SHRX operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted |= this->taintEngine->taintUnion(dst, src2);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

@@ -8,10 +8,12 @@
 #ifndef TRITON_PEEXPORTDIRECTORY_H
 #define TRITON_PEEXPORTDIRECTORY_H
 
+#include <vector>
+
 #include "peEnums.hpp"
 #include "tritonTypes.hpp"
 
-#include <vector>
+
 
 //! The Triton namespace
 namespace triton {
@@ -36,78 +38,96 @@ namespace triton {
      *  @{
      */
 
-      //! The PE export directory structure.
 
-      /*! \class PEExportEntry
-       *  \brief PE Export entry */
-
+      //! The PE export entry structure.
       struct PeExportEntry {
+          /*!
+           * \description Indicates whether the entry is a forward (reference by name to another function perhaps in another DLL).
+           */
           bool isForward;
-          triton::uint32 exportRVA;     //if not isForward
-          triton::uint32 forwarderRVA;  //if isForward
-          std::string forwarderName;    //if isForward
+          /*!
+           * \description If the export is not a forward reference, this is the address of the exported function.
+           */
+          triton::uint32 exportRVA;
+          /*!
+           * \description If the export is a forward reference, this is the address of the name of the target function.
+           */
+          triton::uint32 forwarderRVA;
+          /*!
+           * \description If the export is a forward reference, this is the name of the target function.
+           */
+          std::string forwarderName;
+          /*!
+           * \description The address of the name of the exported function.
+           */
           triton::uint32 exportNameRVA;
+          /*!
+           * \description The name of the exported function.
+           */
           std::string exportName;
+          /*!
+           * \description The ordinal number of the target function.
+           */
           triton::uint16 ordinal;
       };
+
 
       /*! \class PeExportDirectory
        *  \brief PE Export Directory Table */
       class PeExportDirectory {
-      protected:
-
-          //this struct contains the items found directly in the binary data
+        protected:
+          //! The PE export directory structure
           struct {
             /*!
              * \description Reserved, must be 0.
              */
             triton::uint32 exportFlags;
-  
+
             /*!
              * \description The time and date that the export data was created.
              */
             triton::uint32 timeDateStamp;
-  
+
             /*!
              * \description The major version number. The major and minor version numbers can be set by the user.
              */
             triton::uint16 majorVersion;
-  
+
             /*!
              * \description The minor version number.
              */
             triton::uint16 minorVersion;
-  
+
             /*!
              * \description The address of the ASCII string that contains the name of the DLL. This address is relative to the image base.
              */
             triton::uint32 nameRVA;
-  
+
             /*!
              * \description The starting ordinal number for exports in this image. This field specifies the starting ordinal number for the export address table. It is usually set to 1.
              */
             triton::uint32 ordinalBase;
-  
+
             /*!
              * \description The number of entries in the export address table.
              */
             triton::uint32 addressTableEntries;
-  
+
             /*!
              * \description The number of entries in the name pointer table. This is also the number of entries in the ordinal table.
              */
             triton::uint32 numberOfNamePointers;
-  
+
             /*!
              * \description The address of the export address table, relative to the image base.
              */
             triton::uint32 exportAddressTableRVA;
-  
+
             /*!
              * \description The address of the export name pointer table, relative to the image base. The table size is given by the Number of Name Pointers field.
              */
             triton::uint32 namePointerRVA;
-  
+
             /*!
              * \description The address of the ordinal table, relative to the image base.
              */
@@ -124,16 +144,16 @@ namespace triton {
            */
           std::vector<PeExportEntry> entries;
 
-      public:
+        public:
 
           //! Constructor.
           PeExportDirectory();
 
           //! Copy constructor.
-          PeExportDirectory(const PeExportDirectory &copy);
+          PeExportDirectory(const PeExportDirectory& copy);
 
           //! Copy assignment operator.
-          PeExportDirectory &operator=(const PeExportDirectory &copy);
+          PeExportDirectory& operator=(const PeExportDirectory& copy);
 
           //! Destructor.
           ~PeExportDirectory();
@@ -175,19 +195,17 @@ namespace triton {
           triton::uint32 getOrdinalTableRVA(void) const;
 
           //! Sets the name.
-          void setName(const std::string &name);
+          void setName(const std::string& name);
 
           //! Returns the name.
-          std::string getName(void) const;
+          const std::string& getName(void) const;
 
           //! Adds an entry.
-          void addEntry(const PeExportEntry &entry);
+          void addEntry(const PeExportEntry& entry);
 
           //! Returns the entries.
-          std::vector<PeExportEntry> getEntries(void) const;
-
+          const std::vector<PeExportEntry>& getEntries(void) const;
       };
-
 
     /*! @} End of pe namespace */
     };

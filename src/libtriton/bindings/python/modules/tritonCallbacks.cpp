@@ -57,8 +57,14 @@ If you want to use the libTriton without Python bindings, recompile the project 
 - \ref py_Immediate_page
 - \ref py_Instruction_page
 - \ref py_MemoryAccess_page
-- \ref py_Pe_page
 - \ref py_PathConstraint_page
+- \ref py_Pe_page
+- \ref py_PeExportEntry_page
+- \ref py_PeExportTable_page
+- \ref py_PeHeader_page
+- \ref py_PeImportLookup_page
+- \ref py_PeImportTable_page
+- \ref py_PeSectionHeader_page
 - \ref py_Register_page
 - \ref py_SolverModel_page
 - \ref py_SymbolicExpression_page

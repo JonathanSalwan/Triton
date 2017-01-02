@@ -7,8 +7,8 @@
 
 #include <cstdio>
 
-#include <peImportDirectory.hpp>
 #include <exceptions.hpp>
+#include <peImportDirectory.hpp>
 
 
 
@@ -17,22 +17,22 @@ namespace triton {
     namespace pe {
 
       PeImportDirectory::PeImportDirectory() {
-        this->st.importLookupTableRVA = 0;
-        this->st.timeDateStamp = 0;
-        this->st.forwarderChain = 0;
-        this->st.nameRVA = 0;
-        this->st.importAddressTableRVA = 0;
+        this->st.importLookupTableRVA   = 0;
+        this->st.timeDateStamp          = 0;
+        this->st.forwarderChain         = 0;
+        this->st.nameRVA                = 0;
+        this->st.importAddressTableRVA  = 0;
       }
 
 
       PeImportDirectory::PeImportDirectory(const PeImportDirectory& copy) {
-        this->st.importLookupTableRVA  = copy.st.importLookupTableRVA;
-        this->st.timeDateStamp         = copy.st.timeDateStamp;
-        this->st.forwarderChain        = copy.st.forwarderChain;
-        this->st.nameRVA               = copy.st.nameRVA;
-        this->st.importAddressTableRVA = copy.st.importAddressTableRVA;
-        this->name                     = copy.name;
-        this->entries                  = copy.entries;
+        this->st.importLookupTableRVA   = copy.st.importLookupTableRVA;
+        this->st.timeDateStamp          = copy.st.timeDateStamp;
+        this->st.forwarderChain         = copy.st.forwarderChain;
+        this->st.nameRVA                = copy.st.nameRVA;
+        this->st.importAddressTableRVA  = copy.st.importAddressTableRVA;
+        this->name                      = copy.name;
+        this->entries                   = copy.entries;
       }
 
 
@@ -40,24 +40,27 @@ namespace triton {
       }
 
 
-      PeImportDirectory &PeImportDirectory::operator=(const PeImportDirectory& copy) {
+      PeImportDirectory& PeImportDirectory::operator=(const PeImportDirectory& copy) {
         if (this == &copy)
-            return *this;
-        this->st.importLookupTableRVA  = copy.st.importLookupTableRVA;
-        this->st.timeDateStamp         = copy.st.timeDateStamp;
-        this->st.forwarderChain        = copy.st.forwarderChain;
-        this->st.nameRVA               = copy.st.nameRVA;
-        this->st.importAddressTableRVA = copy.st.importAddressTableRVA;
-        this->name                     = copy.name;
-        this->entries                  = copy.entries;
+          return *this;
+
+        this->st.importLookupTableRVA   = copy.st.importLookupTableRVA;
+        this->st.timeDateStamp          = copy.st.timeDateStamp;
+        this->st.forwarderChain         = copy.st.forwarderChain;
+        this->st.nameRVA                = copy.st.nameRVA;
+        this->st.importAddressTableRVA  = copy.st.importAddressTableRVA;
+        this->name                      = copy.name;
+        this->entries                   = copy.entries;
+
         return *this;
       }
 
 
       bool PeImportDirectory::parse(const triton::uint8* raw) {
-        std::memcpy(&st, raw, sizeof(st));
+        std::memcpy(&this->st, raw, sizeof(this->st));
         return this->st.importLookupTableRVA;
       }
+
 
       triton::uint32 PeImportDirectory::getImportLookupTableRVA(void) const {
         return this->st.importLookupTableRVA;
@@ -84,25 +87,24 @@ namespace triton {
       }
 
 
-      void PeImportDirectory::setName(std::string name) {
+      void PeImportDirectory::setName(const std::string& name) {
         this->name = name;
       }
 
 
-      std::string PeImportDirectory::getName(void) const {
+      const std::string& PeImportDirectory::getName(void) const {
         return this->name;
       }
 
 
-      void PeImportDirectory::addEntry(const PeImportLookup &entry) {
-        entries.push_back(entry);
+      void PeImportDirectory::addEntry(const PeImportLookup& entry) {
+        this->entries.push_back(entry);
       }
 
 
-      const std::vector<PeImportLookup> &PeImportDirectory::getEntries(void) const {
+      const std::vector<PeImportLookup>& PeImportDirectory::getEntries(void) const {
         return this->entries;
       }
-
 
     }; /* pe namespace */
   }; /* format namespace */

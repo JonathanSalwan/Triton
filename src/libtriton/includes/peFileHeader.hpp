@@ -8,10 +8,12 @@
 #ifndef TRITON_PEFILEHEADER_H
 #define TRITON_PEFILEHEADER_H
 
+#include <vector>
+
 #include "peEnums.hpp"
 #include "tritonTypes.hpp"
 
-#include <vector>
+
 
 //! The Triton namespace
 namespace triton {
@@ -36,45 +38,43 @@ namespace triton {
      *  @{
      */
 
-      //! The PE import directory structure.
-
       /*! \class PeFileHeader
        *  \brief PE file header (without DOS stub) */
       class PeFileHeader {
-      protected:
+        protected:
 
-          //this struct contains the items found directly in the binary data
+          //! The PE file header structure.
           struct {
             /*!
              * \description The number that identifies the type of target machine. See IMAGE_FILE_MACHINE_* in peEnums.hpp
              */
             triton::uint16 machine;
-  
+
             /*!
              * \description The number of sections. This indicates the size of the section table.
              */
             triton::uint16 numberOfSections;
-  
+
             /*!
              * \description The low 32 bits of the number of seconds since 00:00 January 1, 1970 (a C run-time time_t value), that indicates when the file was created.
              */
             triton::uint32 timeDateStamp;
-  
+
             /*!
              * \description The file offset of the COFF symbol table, or zero if no COFF symbol table is present. This value should be zero for an image because COFF debugging information is deprecated.
              */
             triton::uint32 pointerToSymbolTable;
-  
+
             /*!
              * \description The number of entries in the symbol table. This data can be used to locate the string table, which immediately follows the symbol table. This value should be zero for an image because COFF debugging information is deprecated.
              */
             triton::uint32 numberOfSymbolTable;
-  
+
             /*!
              * \description The size of the optional header, which is required for executable files but not for object files. This value should be zero for an object file.
              */
             triton::uint16 sizeOfOptionalHeader;
-  
+
             /*!
              * \description The flags that indicate the attributes of the file. See peEnums.hpp
              */
@@ -82,15 +82,14 @@ namespace triton {
           } st;
 
       public:
-
           //! Constructor.
           PeFileHeader();
 
           //! Copy constructor.
-          PeFileHeader(const PeFileHeader &copy);
+          PeFileHeader(const PeFileHeader& copy);
 
           //! Copy assignment operator.
-          PeFileHeader &operator=(const PeFileHeader &copy);
+          PeFileHeader& operator=(const PeFileHeader& copy);
 
           //! Destructor.
           ~PeFileHeader();
@@ -127,9 +126,7 @@ namespace triton {
 
           //! Returns the characteristics.
           triton::uint16 getCharacteristics(void) const;
-
       };
-
 
     /*! @} End of pe namespace */
     };

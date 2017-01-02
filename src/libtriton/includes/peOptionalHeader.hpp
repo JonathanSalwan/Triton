@@ -8,10 +8,12 @@
 #ifndef TRITON_PEOPTIONALHEADER_H
 #define TRITON_PEOPTIONALHEADER_H
 
+#include <vector>
+
 #include "peEnums.hpp"
 #include "tritonTypes.hpp"
 
-#include <vector>
+
 
 //! The Triton namespace
 namespace triton {
@@ -36,7 +38,9 @@ namespace triton {
      *  @{
      */
 
-      //PE (32-bit) version
+      /*!
+       * \description This struct contains the "PE32" (32-bit) version of the optional header. The fields map to the equivalent field in PeOptionalHeader. 
+       */
       struct PE32_OptionalHeader {
         triton::uint16 magic;
         triton::uint8 majorLinkerVersion;
@@ -70,7 +74,9 @@ namespace triton {
         triton::uint32 numberOfRvaAndSizes;
       };
 
-      //PE+ (64-bit) version
+      /*!
+       * \description This struct contains the "PE32+" (64-bit) version of the optional header. The fields map to the equivalent field in PeOptionalHeader. 
+       */
       struct PE32Plus_OptionalHeader {
         triton::uint16 magic;
         triton::uint8 majorLinkerVersion;
@@ -106,7 +112,7 @@ namespace triton {
       /*! \class PeOptionalHeader
        *  \brief PE optional header */
       class PeOptionalHeader {
-      protected:
+        protected:
 
           /*!
            * \description The unsigned integer that identifies the state of the image file. The most common number is 0x10B, which identifies it as a normal executable file. 0x107 identifies it as a ROM image, and 0x20B identifies it as a PE32+ executable.
@@ -258,21 +264,27 @@ namespace triton {
            */
           triton::uint32 numberOfRvaAndSizes;
 
-        PeOptionalHeader &operator=(const PE32_OptionalHeader &other);
-        PeOptionalHeader &operator=(const PE32Plus_OptionalHeader &other);
+        //! Copies from a PE32_OptionalHeader object.
+        PeOptionalHeader& operator=(const PE32_OptionalHeader& other);
+
+        //! Copies from a PE32Plus_OptionalHeader object.
+        PeOptionalHeader& operator=(const PE32Plus_OptionalHeader& other);
+
+        //! Copies to a PE32_OptionalHeader object.
         void assign(PE32_OptionalHeader &target) const;
+
+        //! Copies to a PE32Plus_OptionalHeader object.
         void assign(PE32Plus_OptionalHeader &target) const;
 
       public:
-
           //! Constructor.
           PeOptionalHeader();
 
           //! Copy constructor.
-          PeOptionalHeader(const PeOptionalHeader &copy);
+          PeOptionalHeader(const PeOptionalHeader& copy);
 
           //! Copy assignment operator.
-          PeOptionalHeader &operator=(const PeOptionalHeader &copy);
+          PeOptionalHeader& operator=(const PeOptionalHeader& copy);
 
           //! Destructor.
           ~PeOptionalHeader();
@@ -381,9 +393,7 @@ namespace triton {
 
           //! Returns the numberOfRvaAndSizes.
           triton::uint32 getNumberOfRvaAndSizes(void) const;
-
       };
-
 
     /*! @} End of pe namespace */
     };

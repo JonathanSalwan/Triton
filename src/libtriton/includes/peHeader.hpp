@@ -8,14 +8,16 @@
 #ifndef TRITON_PEHEADER_H
 #define TRITON_PEHEADER_H
 
+#include <vector>
+
+#include "peDataDirectory.hpp"
 #include "peEnums.hpp"
 #include "peFileHeader.hpp"
 #include "peOptionalHeader.hpp"
-#include "peDataDirectory.hpp"
 #include "peSectionHeader.hpp"
 #include "tritonTypes.hpp"
 
-#include <vector>
+
 
 //! The Triton namespace
 namespace triton {
@@ -43,13 +45,35 @@ namespace triton {
       /*! \class PeHeader
        *  \brief The PE Header class. */
       class PeHeader {
-
         protected:
+          /*!
+           * \description Location of the PE File Header.
+           */
           triton::uint32 peHeaderStart;
+
+          /*!
+           * \description A copy of all the bytes before the PE header, containing the DOS stub and the value of peHeaderStart at offset 0x3C.
+           */
           std::vector<triton::uint8> dosStub;
+
+          /*!
+           * \description COFF File Header
+           */
           PeFileHeader fileHeader;
+
+          /*!
+           * \description Optional Header (mandatory for EXEs and DLLs).
+           */
           PeOptionalHeader optionalHeader;
+
+          /*!
+           * \description Data Directory, formally part of the optional header.
+           */
           PeDataDirectory dataDirectory;
+
+          /*!
+           * \description The table of section headers.
+           */
           std::vector<PeSectionHeader> sectionHeaders;
 
           //! Align offset according to fileAlignment
@@ -74,7 +98,7 @@ namespace triton {
           virtual ~PeHeader();
 
           //! Copies a PeHeader.
-          PeHeader &operator=(const PeHeader& copy);
+          PeHeader& operator=(const PeHeader& copy);
 
           //! Parses the PE Header. Returns the number of bytes read.
           triton::uint32 parse(const triton::uint8* raw, triton::usize totalSize);
@@ -82,10 +106,25 @@ namespace triton {
           //! Saves the header to file.
           void save(std::ostream &os) const;
 
-          const PeFileHeader &getFileHeader() const;
-          const PeOptionalHeader &getOptionalHeader() const;
-          const PeDataDirectory &getDataDirectory() const;
-          const std::vector<PeSectionHeader> &getSectionHeaders() const;
+          /*!
+           * \description Returns the PE File Header.
+           */
+          const PeFileHeader& getFileHeader(void) const;
+
+          /*!
+           * \description Returns the Optional Header.
+           */
+          const PeOptionalHeader& getOptionalHeader(void) const;
+
+          /*!
+           * \description Returns the Data Directory table.
+           */
+          const PeDataDirectory& getDataDirectory(void) const;
+
+          /*!
+           * \description Returns the Section Header table.
+           */
+          const std::vector<PeSectionHeader>& getSectionHeaders(void) const;
 
           //! Adds a new section header.
           void addSection(const std::string name, triton::uint32 vsize, triton::uint32 rawsize, triton::uint32 characteristics);

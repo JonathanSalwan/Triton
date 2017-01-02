@@ -7,8 +7,8 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <pe.hpp>
 #include <exceptions.hpp>
+#include <pe.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -105,7 +105,7 @@ Returns the list of section headers.
 
 - <b>[string, ...] getSharedLibraries(void)</b><br>
 Returns the list of shared library dependencies.<br>
-e.g: `['ADVAPI32.dll', 'KERNEL32.dll', 'GDI32.dll', ....... ]`
+e.g: `["ADVAPI32.dll", "KERNEL32.dll", "GDI32.dll", ...]`
 
 - <b>integer getSize(void)</b><br>
 Returns the binary size.
@@ -242,7 +242,7 @@ namespace triton {
         {"getSectionHeaders",     Pe_getSectionHeaders,    METH_NOARGS,     ""},
         {"getSharedLibraries",    Pe_getSharedLibraries,   METH_NOARGS,     ""},
         {"getSize",               Pe_getSize,              METH_NOARGS,     ""},
-        {nullptr,                 nullptr,                  0,               nullptr}
+        {nullptr,                 nullptr,                  0,              nullptr}
       };
 
 

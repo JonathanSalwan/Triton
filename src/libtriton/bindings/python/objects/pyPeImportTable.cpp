@@ -7,8 +7,8 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <peImportDirectory.hpp>
 #include <exceptions.hpp>
+#include <peImportDirectory.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
 #include <pythonXFunctions.hpp>
@@ -66,7 +66,7 @@ urlmon.dll
 \section PeImportTable_py_api Python API - Methods of the PeImportTable class
 <hr>
 
-- <b>[PeImportLookup, ...] getEntries(void)</b><br>
+- <b>[\ref py_PeImportLookup_page, ...] getEntries(void)</b><br>
 Returns the entries in the import table.
 
 - <b>string getName(void)</b><br>
@@ -88,7 +88,6 @@ namespace triton {
       }
 
 
-
       static PyObject* PeImportTable_getName(PyObject* self, PyObject* noarg) {
         try {
           return PyString_FromString((char*)PyPeImportTable_AsPeImportDirectory(self)->getName().c_str());
@@ -97,6 +96,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
+
 
       static PyObject* PeImportTable_getEntries(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
@@ -114,7 +114,6 @@ namespace triton {
 
         return ret;
       }
-
 
 
       //! PeImportTable methods.

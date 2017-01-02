@@ -8,10 +8,12 @@
 #ifndef TRITON_PESECTIONHEADER_H
 #define TRITON_PESECTIONHEADER_H
 
+#include <vector>
+
 #include "peEnums.hpp"
 #include "tritonTypes.hpp"
 
-#include <vector>
+
 
 //! The Triton namespace
 namespace triton {
@@ -39,8 +41,8 @@ namespace triton {
       /*! \class PeSectionHeader
        *  \brief PE Section Header */
       class PeSectionHeader {
-      protected:
-          //this struct contains the items found directly in the binary data
+        protected:
+          //! The PE Section structure.
           struct {
             /*!
              * \description Section name. If it's 8 bytes long then it's not null-terminated.
@@ -51,42 +53,42 @@ namespace triton {
              * \description The total size of the section when loaded into memory. If this value is greater than SizeOfRawData, the section is zero-padded.
              */
             triton::uint32 virtualSize;
-            
+
             /*!
              * \description The address of the first byte of the section relative to the image base when the section is loaded into memory.
              */
             triton::uint32 virtualAddress;
-            
+
             /*!
              * \description the Size of the initialized data on disk.
              */
             triton::uint32 rawSize;
-            
+
             /*!
              * \description The file pointer to the first page of the section within the file.
              */
             triton::uint32 rawAddress;
-            
+
             /*!
              * \description The file pointer to the beginning of relocation entries for the section.
              */
             triton::uint32 pointerToRelocations;
-            
+
             /*!
              * \description The file pointer to the beginning of line-number entries for the section. (deprecated)
              */
             triton::uint32 pointerToLinenumbers;
-            
+
             /*!
              * \description The number of relocation entries for the section.
              */
             triton::uint16 numberOfRelocations;
-            
+
             /*!
              * \description The number of line-number entries for the section. (deprecated)
              */
             triton::uint16 numberOfLinenumbers;
-            
+
             /*!
              * \description The flags that describe the characteristics of the section.
              */
@@ -98,16 +100,15 @@ namespace triton {
            */
           std::string name;
 
-      public:
-
+        public:
           //! Constructor.
           PeSectionHeader();
 
           //! Copy constructor.
-          PeSectionHeader(const PeSectionHeader &copy);
+          PeSectionHeader(const PeSectionHeader& copy);
 
           //! Copy assignment operator.
-          PeSectionHeader &operator=(const PeSectionHeader &copy);
+          PeSectionHeader& operator=(const PeSectionHeader& copy);
 
           //! Destructor.
           ~PeSectionHeader();
@@ -168,9 +169,7 @@ namespace triton {
 
           //! Returns the characteristics.
           triton::uint32 getCharacteristics(void) const;
-
       };
-
 
     /*! @} End of pe namespace */
     };
