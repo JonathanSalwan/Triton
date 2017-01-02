@@ -95,6 +95,9 @@ namespace triton {
       //! Initializes the ELF python namespace.
       void initElfNamespace(PyObject* elfDict);
 
+      //! Initializes the PE python namespace.
+      void initPENamespace(PyObject* peDict);
+
       //! Initializes the OPCODE python namespace.
       void initX86OpcodesNamespace(void);
 

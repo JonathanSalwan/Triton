@@ -12,6 +12,7 @@
 
 #include "binaryInterface.hpp"
 #include "elf.hpp"
+#include "pe.hpp"
 #include "memoryMapping.hpp"
 #include "tritonTypes.hpp"
 
@@ -83,6 +84,9 @@ namespace triton {
 
         //! Returns the ELF instance only if the AbstractBinary::format is equal to triton::format::BINARY_ELF otherwise raise an excepton.
         triton::format::elf::Elf* getElf(void);
+
+        //! Returns the PE instance only if the AbstractBinary::format is equal to triton::format::BINARY_PE otherwise raise an excepton.
+        triton::format::pe::Pe* getPe(void);
 
         //! Returns the path file of the loaded binary.
         const std::string& getPath(void) const;

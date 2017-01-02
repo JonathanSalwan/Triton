@@ -1,6 +1,6 @@
 all: examples
 
-examples: constraint info_reg ir parsing_elf simplification taint_reg
+examples: constraint info_reg ir parsing_elf parsing_pe simplification taint_reg
 
 constraint:
 	$(CXX) -g3 -ggdb3 -std=c++0x -o constraint.bin constraint.cpp -ltriton
@@ -14,6 +14,9 @@ ir:
 parsing_elf:
 	$(CXX) -g3 -ggdb3 -std=c++0x -o parsing_elf.bin parsing_elf.cpp -ltriton
 
+parsing_pe:
+	$(CXX) -g3 -ggdb3 -std=c++0x -o parsing_pe.bin parsing_pe.cpp -ltriton
+
 simplification:
 	$(CXX) -g3 -ggdb3 -std=c++0x -o simplification.bin simplification.cpp -ltriton
 
@@ -25,4 +28,4 @@ clean:
 
 re: clean all
 
-.PHONY: examples constraint info_reg ir parsing_elf simplification taint_reg
+.PHONY: examples constraint info_reg ir parsing_elf parsing_pe simplification taint_reg
