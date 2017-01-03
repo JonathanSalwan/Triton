@@ -121,6 +121,9 @@ namespace triton {
            */
           const std::vector<PeSectionHeader>& getSectionHeaders(void) const;
 
+          //! Saves the header to file.
+          void save(std::ostream &os) const;
+
           //! Adds a new section header.
           void addSection(const std::string name, triton::uint32 vsize, triton::uint32 rawsize, triton::uint32 characteristics);
 
