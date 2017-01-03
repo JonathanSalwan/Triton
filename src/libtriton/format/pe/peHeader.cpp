@@ -21,10 +21,10 @@ namespace triton {
 
 
       PeHeader::PeHeader(const PeHeader& copy) {
-        this->peHeaderStart  = copy.peHeaderStart;
+        this->dataDirectory  = copy.dataDirectory;
         this->fileHeader     = copy.fileHeader;
         this->optionalHeader = copy.optionalHeader;
-        this->dataDirectory  = copy.dataDirectory;
+        this->peHeaderStart  = copy.peHeaderStart;
         this->sectionHeaders = copy.sectionHeaders;
       }
 
@@ -37,10 +37,10 @@ namespace triton {
         if (this == &copy)
             return *this;
 
-        this->peHeaderStart  = copy.peHeaderStart;
+        this->dataDirectory  = copy.dataDirectory;
         this->fileHeader     = copy.fileHeader;
         this->optionalHeader = copy.optionalHeader;
-        this->dataDirectory  = copy.dataDirectory;
+        this->peHeaderStart  = copy.peHeaderStart;
         this->sectionHeaders = copy.sectionHeaders;
 
         return *this;
