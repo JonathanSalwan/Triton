@@ -38,7 +38,9 @@ namespace triton {
      *  @{
      */
 
-      //! PE (32-bit) version
+      /*!
+       * \description This struct contains the "PE32" (32-bit) version of the optional header. The fields map to the equivalent field in PeOptionalHeader. 
+       */
       struct PE32_OptionalHeader {
         triton::uint16 magic;
         triton::uint8 majorLinkerVersion;
@@ -72,7 +74,9 @@ namespace triton {
         triton::uint32 numberOfRvaAndSizes;
       };
 
-      //! PE+ (64-bit) version
+      /*!
+       * \description This struct contains the "PE32+" (64-bit) version of the optional header. The fields map to the equivalent field in PeOptionalHeader. 
+       */
       struct PE32Plus_OptionalHeader {
         triton::uint16 magic;
         triton::uint8 majorLinkerVersion;

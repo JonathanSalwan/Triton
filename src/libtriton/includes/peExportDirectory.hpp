@@ -41,13 +41,34 @@ namespace triton {
 
       //! The PE export entry structure.
       struct PeExportEntry {
-        bool isForward;
-        triton::uint32 exportRVA;     // if not isForward
-        triton::uint32 forwarderRVA;  // if isForward
-        std::string forwarderName;    // if isForward
-        triton::uint32 exportNameRVA;
-        std::string exportName;
-        triton::uint16 ordinal;
+          /*!
+           * \description Indicates whether the entry is a forward (reference by name to another function perhaps in another DLL).
+           */
+          bool isForward;
+          /*!
+           * \description If the export is not a forward reference, this is the address of the exported function.
+           */
+          triton::uint32 exportRVA;
+          /*!
+           * \description If the export is a forward reference, this is the address of the name of the target function.
+           */
+          triton::uint32 forwarderRVA;
+          /*!
+           * \description If the export is a forward reference, this is the name of the target function.
+           */
+          std::string forwarderName;
+          /*!
+           * \description The address of the name of the exported function.
+           */
+          triton::uint32 exportNameRVA;
+          /*!
+           * \description The name of the exported function.
+           */
+          std::string exportName;
+          /*!
+           * \description The ordinal number of the target function.
+           */
+          triton::uint16 ordinal;
       };
 
 
