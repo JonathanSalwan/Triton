@@ -68,7 +68,7 @@ namespace triton {
 
 
       void Pe::initMemoryMapping(void) {
-        for (auto section : this->header.getSectionHeaders()) {
+        for (auto&& section : this->header.getSectionHeaders()) {
           triton::format::MemoryMapping area(this->raw);
 
           triton::uint32 rawAddr  = section.getRawAddress();
@@ -90,7 +90,7 @@ namespace triton {
       triton::uint64 Pe::getOffsetFromAddress(triton::uint64 vaddr) const {
         std::ostringstream os;
 
-        for (auto &&section : this->header.getSectionHeaders()) {
+        for (auto&& section : this->header.getSectionHeaders()) {
           if (vaddr >= section.getVirtualAddress() && vaddr < (section.getVirtualAddress() + section.getRawSize())) {
             triton::uint64 offset = ((vaddr - section.getVirtualAddress()) + section.getRawAddress());
             if (offset >= section.getRawAddress()+section.getRawSize()) {
