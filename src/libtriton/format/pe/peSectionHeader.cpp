@@ -94,7 +94,6 @@ namespace triton {
         std::memcpy((char*)&st.name[0],name.c_str(),std::min(name.length(),sizeof(st.name)));
       }
 
-
       std::string PeSectionHeader::getName(void) const {
         return this->name;
       }

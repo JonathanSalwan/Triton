@@ -103,9 +103,6 @@ namespace triton {
           //! Parses the PE Header. Returns the number of bytes read.
           triton::uint32 parse(const triton::uint8* raw, triton::usize totalSize);
 
-          //! Saves the header to file.
-          void save(std::ostream &os) const;
-
           /*!
            * \description Returns the PE File Header.
            */
