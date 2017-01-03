@@ -52,6 +52,11 @@ namespace triton {
           triton::uint32 peHeaderStart;
 
           /*!
+           * \description A copy of all the bytes before the PE header, containing the DOS stub and the value of peHeaderStart at offset 0x3C.
+           */
+          std::vector<triton::uint8> dosStub;
+
+          /*!
            * \description COFF File Header
            */
           PeFileHeader fileHeader;
