@@ -1731,6 +1731,54 @@ void check(void)
   asm("mov rcx, 255");
   asm("sarx eax, ebx, ecx");
 
+  asm("mov rdx, 0x0123456789abcdef");
+  asm("mov rcx, 0x9828375823742870");
+  asm("mulx rax, rbx, rcx");
+
+  asm("mov rdx, 0x1975823253642738");
+  asm("mov rcx, 0xffffffffffffffff");
+  asm("mulx rax, rbx, rcx");
+
+  asm("mov rdx, 0x8975823253642738");
+  asm("mov rcx, 0xffffffffffffffff");
+  asm("mulx rax, rbx, rcx");
+
+  asm("mov rdx, 0xffffffffffffffff");
+  asm("mov rcx, 0xffffffffffffffff");
+  asm("mulx rax, rbx, rcx");
+
+  asm("mov rdx, 0x0");
+  asm("mov rcx, 0xffffffffffffffff");
+  asm("mulx rax, rbx, rcx");
+
+  asm("mov rdx, 0xffffffffffffffff");
+  asm("mov rcx, 0x0");
+  asm("mulx rax, rbx, rcx");
+
+  asm("mov rdx, 0x0123456789abcdef");
+  asm("mov rcx, 0x9828375823742870");
+  asm("mulx eax, ebx, ecx");
+
+  asm("mov rdx, 0x1975823253642738");
+  asm("mov rcx, 0xffffffffffffffff");
+  asm("mulx eax, ebx, ecx");
+
+  asm("mov rdx, 0x8975823253642738");
+  asm("mov rcx, 0xffffffffffffffff");
+  asm("mulx eax, ebx, ecx");
+
+  asm("mov rdx, 0xffffffffffffffff");
+  asm("mov rcx, 0xffffffffffffffff");
+  asm("mulx eax, ebx, ecx");
+
+  asm("mov rdx, 0x0");
+  asm("mov rcx, 0xffffffffffffffff");
+  asm("mulx eax, ebx, ecx");
+
+  asm("mov rdx, 0xffffffffffffffff");
+  asm("mov rcx, 0x0");
+  asm("mulx eax, ebx, ecx");
+
   asm("mov rax, 0x0123456789abcdef");
   asm("mov rbx, 0x0123456789abcdef");
   asm("mov rcx, 0");

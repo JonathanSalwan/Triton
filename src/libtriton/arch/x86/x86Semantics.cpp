@@ -160,6 +160,7 @@ MOVUPD                       | see2       | Move Unaligned Packed Double-Precisi
 MOVUPS                       | see1       | Move Unaligned Packed Single-Precision Floating- Point Values
 MOVZX                        |            | Move with Zero-Extend
 MUL                          |            | Unsigned Multiply
+MULX                         | bmi2       | Unsigned Multiply Without Affecting Flags
 NEG                          |            | Two's Complement Negation
 NOP                          |            | No Operation
 NOT                          |            | One's Complement Negation
@@ -472,6 +473,7 @@ namespace triton {
           case ID_INS_MOVUPS:         this->movups_s(inst);       break;
           case ID_INS_MOVZX:          this->movzx_s(inst);        break;
           case ID_INS_MUL:            this->mul_s(inst);          break;
+          case ID_INS_MULX:           this->mulx_s(inst);         break;
           case ID_INS_NEG:            this->neg_s(inst);          break;
           case ID_INS_NOP:            this->nop_s(inst);          break;
           case ID_INS_NOT:            this->not_s(inst);          break;
@@ -6635,6 +6637,74 @@ namespace triton {
             /* Upate symbolic flags */
             this->cfMul_s(inst, expr2, src2, rdx);
             this->ofMul_s(inst, expr2, src2, rdx);
+            break;
+          }
+
+        }
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::mulx_s(triton::arch::Instruction& inst) {
+        switch (inst.operands[0].getSize()) {
+
+          /* r32a, r32b, r/m32 */
+          case DWORD_SIZE: {
+            auto& dst1 = inst.operands[0];
+            auto& dst2 = inst.operands[1];
+            auto  src1 = inst.operands[2];
+            auto  src2 = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
+
+            /* Create symbolic operands */
+            auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+            auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+
+            /* Create the semantics */
+            auto node  = triton::ast::bvmul(triton::ast::zx(DWORD_SIZE_BIT, op1), triton::ast::zx(DWORD_SIZE_BIT, op2));
+            auto node1 = triton::ast::extract((DWORD_SIZE_BIT - 1), 0, node);
+            auto node2 = triton::ast::extract((QWORD_SIZE_BIT - 1), DWORD_SIZE_BIT, node);
+
+            /* Create symbolic expression for eax */
+            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst2, "MULX operation");
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst1, "MULX operation");
+
+            /* Apply the taint */
+            expr1->isTainted = this->taintEngine->taintUnion(dst2, src1);
+            expr1->isTainted = this->taintEngine->taintUnion(dst2, src2);
+
+            expr2->isTainted = this->taintEngine->taintUnion(dst1, src1);
+            expr2->isTainted = this->taintEngine->taintUnion(dst1, src2);
+            break;
+          }
+
+          /* r64a, r64b, r/m64 */
+          case QWORD_SIZE: {
+            auto& dst1 = inst.operands[0];
+            auto& dst2 = inst.operands[1];
+            auto  src1 = inst.operands[2];
+            auto  src2 = triton::arch::OperandWrapper(TRITON_X86_REG_RDX);
+
+            /* Create symbolic operands */
+            auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+            auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+
+            /* Create the semantics */
+            auto node  = triton::ast::bvmul(triton::ast::zx(QWORD_SIZE_BIT, op1), triton::ast::zx(QWORD_SIZE_BIT, op2));
+            auto node1 = triton::ast::extract((QWORD_SIZE_BIT - 1), 0, node);
+            auto node2 = triton::ast::extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, node);
+
+            /* Create symbolic expression for eax */
+            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst2, "MULX operation");
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst1, "MULX operation");
+
+            /* Apply the taint */
+            expr1->isTainted = this->taintEngine->taintUnion(dst2, src1);
+            expr1->isTainted = this->taintEngine->taintUnion(dst2, src2);
+
+            expr2->isTainted = this->taintEngine->taintUnion(dst1, src1);
+            expr2->isTainted = this->taintEngine->taintUnion(dst1, src2);
             break;
           }
 

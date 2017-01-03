@@ -782,6 +782,9 @@ namespace triton {
           //! The MUL semantics.
           void mul_s(triton::arch::Instruction& inst);
 
+          //! The MULX semantics.
+          void mulx_s(triton::arch::Instruction& inst);
+
           //! The NEG semantics.
           void neg_s(triton::arch::Instruction& inst);
 
