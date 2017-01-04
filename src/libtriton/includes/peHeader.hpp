@@ -83,9 +83,10 @@ namespace triton {
           triton::uint32 sectionAlign(triton::uint32 rva) const;
 
           //! Gets the total section virtual size (aligned), used when adding new sections
-          triton::uint32 getTotalSectionVirtualSize() const;
+          triton::uint32 getTotalSectionVirtualSize(void) const;
+
           //! Gets the total section raw size (aligned), used when adding new sections
-          triton::uint32 getTotalSectionRawSize() const;
+          triton::uint32 getTotalSectionRawSize(void) const;
 
         public:
           //! Constructor.
@@ -124,12 +125,13 @@ namespace triton {
           const std::vector<PeSectionHeader>& getSectionHeaders(void) const;
 
           //! Saves the header to file.
-          void save(std::ostream &os) const;
+          void save(std::ostream& os) const;
 
           //! Adds a new section header.
           void addSection(const std::string name, triton::uint32 vsize, triton::uint32 rawsize, triton::uint32 characteristics);
 
-          triton::uint32 getSize() const;
+          //! Returns the total size of the header.
+          triton::uint32 getSize(void) const;
       };
 
     /*! @} End of pe namespace */

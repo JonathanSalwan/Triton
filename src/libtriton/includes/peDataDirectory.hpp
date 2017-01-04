@@ -220,7 +220,7 @@ namespace triton {
           void parse(const triton::uint8* raw);
 
           //! Saves the header to file.
-          void save(std::ostream &os) const;
+          void save(std::ostream& os) const;
 
           //! Returns the exportTable_rva.
           triton::uint32 getExportTable_rva(void) const;

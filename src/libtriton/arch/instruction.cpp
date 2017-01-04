@@ -59,6 +59,7 @@ namespace triton {
       this->memoryAccess        = other.memoryAccess;
       this->operands            = other.operands;
       this->prefix              = other.prefix;
+      this->readRegisters       = other.readRegisters;
       this->registerState       = other.registerState;
       this->size                = other.size;
       this->storeAccess         = other.storeAccess;
@@ -67,7 +68,6 @@ namespace triton {
       this->tid                 = other.tid;
       this->type                = other.type;
       this->writtenRegisters    = other.writtenRegisters;
-      this->readRegisters       = other.readRegisters;
 
       std::memcpy(this->opcodes, other.opcodes, sizeof(this->opcodes));
 

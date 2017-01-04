@@ -90,7 +90,7 @@ namespace triton {
 
       PeOptionalHeader& PeOptionalHeader::operator=(const PeOptionalHeader& copy) {
         if (this == &copy)
-            return *this;
+          return *this;
 
         this->magic                       = copy.magic;
         this->majorLinkerVersion          = copy.majorLinkerVersion;
@@ -128,12 +128,12 @@ namespace triton {
 
 
       triton::uint32 PeOptionalHeader::getSize(void) const {
-          if (magic == PE_FORMAT_PE32PLUS) {
-              return sizeof(PE32Plus_OptionalHeader);
-          } else {
-              return sizeof(PE32_OptionalHeader);
-          }
+        if (this->magic == PE_FORMAT_PE32PLUS)
+          return sizeof(PE32Plus_OptionalHeader);
+        else
+          return sizeof(PE32_OptionalHeader);
       }
+
 
       triton::usize PeOptionalHeader::parse(const triton::uint8* raw) {
         triton::uint16 peFormat;
@@ -153,17 +153,20 @@ namespace triton {
         }
       }
 
-      void PeOptionalHeader::save(std::ostream &os) const {
-        if (magic == PE_FORMAT_PE32PLUS) {
-            PE32Plus_OptionalHeader ohdr;
-            assign(ohdr);
-            os.write((char*)&ohdr,sizeof(ohdr));
-        } else {
-            PE32_OptionalHeader ohdr;
-            assign(ohdr);
-            os.write((char*)&ohdr,sizeof(ohdr));
+
+      void PeOptionalHeader::save(std::ostream& os) const {
+        if (this->magic == PE_FORMAT_PE32PLUS) {
+          PE32Plus_OptionalHeader ohdr;
+          this->assign(ohdr);
+          os.write(reinterpret_cast<char*>(&ohdr), sizeof(ohdr));
+        }
+        else {
+          PE32_OptionalHeader ohdr;
+          this->assign(ohdr);
+          os.write(reinterpret_cast<char*>(&ohdr), sizeof(ohdr));
         }
       }
+
 
       triton::uint16 PeOptionalHeader::getMagic(void) const {
         return this->magic;
@@ -326,139 +329,141 @@ namespace triton {
 
 
       PeOptionalHeader& PeOptionalHeader::operator=(const PE32_OptionalHeader& other) {
-        magic                       = other.magic;
-        majorLinkerVersion          = other.majorLinkerVersion;
-        minorLinkerVersion          = other.minorLinkerVersion;
-        sizeOfCode                  = other.sizeOfCode;
-        sizeOfInitializedData       = other.sizeOfInitializedData;
-        sizeOfUninitializedData     = other.sizeOfUninitializedData;
-        addressOfEntryPoint         = other.addressOfEntryPoint;
-        baseOfCode                  = other.baseOfCode;
-        baseOfData                  = other.baseOfData;
-        imageBase                   = other.imageBase;
-        sectionAlignment            = other.sectionAlignment;
-        fileAlignment               = other.fileAlignment;
-        majorOperatingSystemVersion = other.majorOperatingSystemVersion;
-        minorOperatingSystemVersion = other.minorOperatingSystemVersion;
-        majorImageVersion           = other.majorImageVersion;
-        minorImageVersion           = other.minorImageVersion;
-        majorSubsystemVersion       = other.majorSubsystemVersion;
-        minorSubsystemVersion       = other.minorSubsystemVersion;
-        win32VersionValue           = other.win32VersionValue;
-        sizeOfImage                 = other.sizeOfImage;
-        sizeOfHeaders               = other.sizeOfHeaders;
-        checkSum                    = other.checkSum;
-        subsystem                   = other.subsystem;
-        dllCharacteristics          = other.dllCharacteristics;
-        sizeOfStackReserve          = other.sizeOfStackReserve;
-        sizeOfStackCommit           = other.sizeOfStackCommit;
-        sizeOfHeapReserve           = other.sizeOfHeapReserve;
-        sizeOfHeapCommit            = other.sizeOfHeapCommit;
-        loaderFlags                 = other.loaderFlags;
-        numberOfRvaAndSizes         = other.numberOfRvaAndSizes;
+        this->addressOfEntryPoint         = other.addressOfEntryPoint;
+        this->baseOfCode                  = other.baseOfCode;
+        this->baseOfData                  = other.baseOfData;
+        this->checkSum                    = other.checkSum;
+        this->dllCharacteristics          = other.dllCharacteristics;
+        this->fileAlignment               = other.fileAlignment;
+        this->imageBase                   = other.imageBase;
+        this->loaderFlags                 = other.loaderFlags;
+        this->magic                       = other.magic;
+        this->majorImageVersion           = other.majorImageVersion;
+        this->majorLinkerVersion          = other.majorLinkerVersion;
+        this->majorOperatingSystemVersion = other.majorOperatingSystemVersion;
+        this->majorSubsystemVersion       = other.majorSubsystemVersion;
+        this->minorImageVersion           = other.minorImageVersion;
+        this->minorLinkerVersion          = other.minorLinkerVersion;
+        this->minorOperatingSystemVersion = other.minorOperatingSystemVersion;
+        this->minorSubsystemVersion       = other.minorSubsystemVersion;
+        this->numberOfRvaAndSizes         = other.numberOfRvaAndSizes;
+        this->sectionAlignment            = other.sectionAlignment;
+        this->sizeOfCode                  = other.sizeOfCode;
+        this->sizeOfHeaders               = other.sizeOfHeaders;
+        this->sizeOfHeapCommit            = other.sizeOfHeapCommit;
+        this->sizeOfHeapReserve           = other.sizeOfHeapReserve;
+        this->sizeOfImage                 = other.sizeOfImage;
+        this->sizeOfInitializedData       = other.sizeOfInitializedData;
+        this->sizeOfStackCommit           = other.sizeOfStackCommit;
+        this->sizeOfStackReserve          = other.sizeOfStackReserve;
+        this->sizeOfUninitializedData     = other.sizeOfUninitializedData;
+        this->subsystem                   = other.subsystem;
+        this->win32VersionValue           = other.win32VersionValue;
 
         return *this;
       }
 
 
       PeOptionalHeader& PeOptionalHeader::operator=(const PE32Plus_OptionalHeader& other) {
-        magic                       = other.magic;
-        majorLinkerVersion          = other.majorLinkerVersion;
-        minorLinkerVersion          = other.minorLinkerVersion;
-        sizeOfCode                  = other.sizeOfCode;
-        sizeOfInitializedData       = other.sizeOfInitializedData;
-        sizeOfUninitializedData     = other.sizeOfUninitializedData;
-        addressOfEntryPoint         = other.addressOfEntryPoint;
-        baseOfCode                  = other.baseOfCode;
-        baseOfData                  = 0;   //not present in this format
-        imageBase                   = other.imageBase;
-        sectionAlignment            = other.sectionAlignment;
-        fileAlignment               = other.fileAlignment;
-        majorOperatingSystemVersion = other.majorOperatingSystemVersion;
-        minorOperatingSystemVersion = other.minorOperatingSystemVersion;
-        majorImageVersion           = other.majorImageVersion;
-        minorImageVersion           = other.minorImageVersion;
-        majorSubsystemVersion       = other.majorSubsystemVersion;
-        minorSubsystemVersion       = other.minorSubsystemVersion;
-        win32VersionValue           = other.win32VersionValue;
-        sizeOfImage                 = other.sizeOfImage;
-        sizeOfHeaders               = other.sizeOfHeaders;
-        checkSum                    = other.checkSum;
-        subsystem                   = other.subsystem;
-        dllCharacteristics          = other.dllCharacteristics;
-        sizeOfStackReserve          = other.sizeOfStackReserve;
-        sizeOfStackCommit           = other.sizeOfStackCommit;
-        sizeOfHeapReserve           = other.sizeOfHeapReserve;
-        sizeOfHeapCommit            = other.sizeOfHeapCommit;
-        loaderFlags                 = other.loaderFlags;
-        numberOfRvaAndSizes         = other.numberOfRvaAndSizes;
+        this->addressOfEntryPoint         = other.addressOfEntryPoint;
+        this->baseOfCode                  = other.baseOfCode;
+        this->baseOfData                  = 0;   //not present in this format
+        this->checkSum                    = other.checkSum;
+        this->dllCharacteristics          = other.dllCharacteristics;
+        this->fileAlignment               = other.fileAlignment;
+        this->imageBase                   = other.imageBase;
+        this->loaderFlags                 = other.loaderFlags;
+        this->magic                       = other.magic;
+        this->majorImageVersion           = other.majorImageVersion;
+        this->majorLinkerVersion          = other.majorLinkerVersion;
+        this->majorOperatingSystemVersion = other.majorOperatingSystemVersion;
+        this->majorSubsystemVersion       = other.majorSubsystemVersion;
+        this->minorImageVersion           = other.minorImageVersion;
+        this->minorLinkerVersion          = other.minorLinkerVersion;
+        this->minorOperatingSystemVersion = other.minorOperatingSystemVersion;
+        this->minorSubsystemVersion       = other.minorSubsystemVersion;
+        this->numberOfRvaAndSizes         = other.numberOfRvaAndSizes;
+        this->sectionAlignment            = other.sectionAlignment;
+        this->sizeOfCode                  = other.sizeOfCode;
+        this->sizeOfHeaders               = other.sizeOfHeaders;
+        this->sizeOfHeapCommit            = other.sizeOfHeapCommit;
+        this->sizeOfHeapReserve           = other.sizeOfHeapReserve;
+        this->sizeOfImage                 = other.sizeOfImage;
+        this->sizeOfInitializedData       = other.sizeOfInitializedData;
+        this->sizeOfStackCommit           = other.sizeOfStackCommit;
+        this->sizeOfStackReserve          = other.sizeOfStackReserve;
+        this->sizeOfUninitializedData     = other.sizeOfUninitializedData;
+        this->subsystem                   = other.subsystem;
+        this->win32VersionValue           = other.win32VersionValue;
 
         return *this;
       }
 
+
       void PeOptionalHeader::assign(PE32_OptionalHeader &other) const {
-          other.magic = this->magic;
-          other.majorLinkerVersion = this->majorLinkerVersion;
-          other.minorLinkerVersion = this->minorLinkerVersion;
-          other.sizeOfCode = this->sizeOfCode;
-          other.sizeOfInitializedData = this->sizeOfInitializedData;
-          other.sizeOfUninitializedData = this->sizeOfUninitializedData;
-          other.addressOfEntryPoint = this->addressOfEntryPoint;
-          other.baseOfCode = this->baseOfCode;
-          other.baseOfData = this->baseOfData;
-          other.imageBase = this->imageBase;
-          other.sectionAlignment = this->sectionAlignment;
-          other.fileAlignment = this->fileAlignment;
-          other.majorOperatingSystemVersion = this->majorOperatingSystemVersion;
-          other.minorOperatingSystemVersion = this->minorOperatingSystemVersion;
-          other.majorImageVersion = this->majorImageVersion;
-          other.minorImageVersion = this->minorImageVersion;
-          other.majorSubsystemVersion = this->majorSubsystemVersion;
-          other.minorSubsystemVersion = this->minorSubsystemVersion;
-          other.win32VersionValue = this->win32VersionValue;
-          other.sizeOfImage = this->sizeOfImage;
-          other.sizeOfHeaders = this->sizeOfHeaders;
-          other.checkSum = this->checkSum;
-          other.subsystem = this->subsystem;
-          other.dllCharacteristics = this->dllCharacteristics;
-          other.sizeOfStackReserve = this->sizeOfStackReserve;
-          other.sizeOfStackCommit = this->sizeOfStackCommit;
-          other.sizeOfHeapReserve = this->sizeOfHeapReserve;
-          other.sizeOfHeapCommit = this->sizeOfHeapCommit;
-          other.loaderFlags = this->loaderFlags;
-          other.numberOfRvaAndSizes = this->numberOfRvaAndSizes;
+        other.addressOfEntryPoint         = this->addressOfEntryPoint;
+        other.baseOfCode                  = this->baseOfCode;
+        other.baseOfData                  = this->baseOfData;
+        other.checkSum                    = this->checkSum;
+        other.dllCharacteristics          = this->dllCharacteristics;
+        other.fileAlignment               = this->fileAlignment;
+        other.imageBase                   = this->imageBase;
+        other.loaderFlags                 = this->loaderFlags;
+        other.magic                       = this->magic;
+        other.majorImageVersion           = this->majorImageVersion;
+        other.majorLinkerVersion          = this->majorLinkerVersion;
+        other.majorOperatingSystemVersion = this->majorOperatingSystemVersion;
+        other.majorSubsystemVersion       = this->majorSubsystemVersion;
+        other.minorImageVersion           = this->minorImageVersion;
+        other.minorLinkerVersion          = this->minorLinkerVersion;
+        other.minorOperatingSystemVersion = this->minorOperatingSystemVersion;
+        other.minorSubsystemVersion       = this->minorSubsystemVersion;
+        other.numberOfRvaAndSizes         = this->numberOfRvaAndSizes;
+        other.sectionAlignment            = this->sectionAlignment;
+        other.sizeOfCode                  = this->sizeOfCode;
+        other.sizeOfHeaders               = this->sizeOfHeaders;
+        other.sizeOfHeapCommit            = this->sizeOfHeapCommit;
+        other.sizeOfHeapReserve           = this->sizeOfHeapReserve;
+        other.sizeOfImage                 = this->sizeOfImage;
+        other.sizeOfInitializedData       = this->sizeOfInitializedData;
+        other.sizeOfStackCommit           = this->sizeOfStackCommit;
+        other.sizeOfStackReserve          = this->sizeOfStackReserve;
+        other.sizeOfUninitializedData     = this->sizeOfUninitializedData;
+        other.subsystem                   = this->subsystem;
+        other.win32VersionValue           = this->win32VersionValue;
       }
-      
+
+
       void PeOptionalHeader::assign(PE32Plus_OptionalHeader &other) const {
-          other.magic = this->magic;
-          other.majorLinkerVersion = this->majorLinkerVersion;
-          other.minorLinkerVersion = this->minorLinkerVersion;
-          other.sizeOfCode = this->sizeOfCode;
-          other.sizeOfInitializedData = this->sizeOfInitializedData;
-          other.sizeOfUninitializedData = this->sizeOfUninitializedData;
-          other.addressOfEntryPoint = this->addressOfEntryPoint;
-          other.baseOfCode = this->baseOfCode;
-          other.imageBase = this->imageBase;
-          other.sectionAlignment = this->sectionAlignment;
-          other.fileAlignment = this->fileAlignment;
-          other.majorOperatingSystemVersion = this->majorOperatingSystemVersion;
-          other.minorOperatingSystemVersion = this->minorOperatingSystemVersion;
-          other.majorImageVersion = this->majorImageVersion;
-          other.minorImageVersion = this->minorImageVersion;
-          other.majorSubsystemVersion = this->majorSubsystemVersion;
-          other.minorSubsystemVersion = this->minorSubsystemVersion;
-          other.win32VersionValue = this->win32VersionValue;
-          other.sizeOfImage = this->sizeOfImage;
-          other.sizeOfHeaders = this->sizeOfHeaders;
-          other.checkSum = this->checkSum;
-          other.subsystem = this->subsystem;
-          other.dllCharacteristics = this->dllCharacteristics;
-          other.sizeOfStackReserve = this->sizeOfStackReserve;
-          other.sizeOfStackCommit = this->sizeOfStackCommit;
-          other.sizeOfHeapReserve = this->sizeOfHeapReserve;
-          other.sizeOfHeapCommit = this->sizeOfHeapCommit;
-          other.loaderFlags = this->loaderFlags;
-          other.numberOfRvaAndSizes = this->numberOfRvaAndSizes;
+        other.addressOfEntryPoint         = this->addressOfEntryPoint;
+        other.baseOfCode                  = this->baseOfCode;
+        other.checkSum                    = this->checkSum;
+        other.dllCharacteristics          = this->dllCharacteristics;
+        other.fileAlignment               = this->fileAlignment;
+        other.imageBase                   = this->imageBase;
+        other.loaderFlags                 = this->loaderFlags;
+        other.magic                       = this->magic;
+        other.majorImageVersion           = this->majorImageVersion;
+        other.majorLinkerVersion          = this->majorLinkerVersion;
+        other.majorOperatingSystemVersion = this->majorOperatingSystemVersion;
+        other.majorSubsystemVersion       = this->majorSubsystemVersion;
+        other.minorImageVersion           = this->minorImageVersion;
+        other.minorLinkerVersion          = this->minorLinkerVersion;
+        other.minorOperatingSystemVersion = this->minorOperatingSystemVersion;
+        other.minorSubsystemVersion       = this->minorSubsystemVersion;
+        other.numberOfRvaAndSizes         = this->numberOfRvaAndSizes;
+        other.sectionAlignment            = this->sectionAlignment;
+        other.sizeOfCode                  = this->sizeOfCode;
+        other.sizeOfHeaders               = this->sizeOfHeaders;
+        other.sizeOfHeapCommit            = this->sizeOfHeapCommit;
+        other.sizeOfHeapReserve           = this->sizeOfHeapReserve;
+        other.sizeOfImage                 = this->sizeOfImage;
+        other.sizeOfInitializedData       = this->sizeOfInitializedData;
+        other.sizeOfStackCommit           = this->sizeOfStackCommit;
+        other.sizeOfStackReserve          = this->sizeOfStackReserve;
+        other.sizeOfUninitializedData     = this->sizeOfUninitializedData;
+        other.subsystem                   = this->subsystem;
+        other.win32VersionValue           = this->win32VersionValue;
       }
 
     }; /* pe namespace */

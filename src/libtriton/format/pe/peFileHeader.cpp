@@ -57,19 +57,24 @@ namespace triton {
         return *this;
       }
 
+
       triton::uint32 PeFileHeader::getSize(void) const {
-          return sizeof(st);
+        return sizeof(this->st);
       }
+
 
       void PeFileHeader::parse(const triton::uint8* raw) {
         std::memcpy(&this->st, raw, sizeof(this->st));
       }
 
-      void PeFileHeader::save(std::ostream &os) const {
-        char peSign[4] = {0x50, 0x45, 0x00, 0x00};  //"PE\0\0"
+
+      void PeFileHeader::save(std::ostream& os) const {
+        char peSign[4] = {0x50, 0x45, 0x00, 0x00};  // "PE\0\0"
+
         os.write(peSign, sizeof(peSign));
-        os.write((char*)&st, sizeof(st));
+        os.write(reinterpret_cast<const char*>(&this->st), sizeof(this->st));
       }
+
 
       triton::uint16 PeFileHeader::getMachine(void) const {
         return this->st.machine;
