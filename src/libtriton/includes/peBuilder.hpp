@@ -43,7 +43,7 @@ namespace triton {
       class PeBuilder : public Pe {
         protected:
           //! Content of each section
-          std::vector<std::vector<triton::uint8> > sectionContent;
+          std::vector<std::vector<triton::uint8>> sectionContent;
 
         public:
           //! Constructor.

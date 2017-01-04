@@ -83,13 +83,13 @@ namespace triton {
 
 
       void PeBuilder::writeToSection(triton::uint32 sectionIndex, triton::uint32 dest, void* src, triton::uint32 size) {
-        if (sectionIndex >= sectionContent.size())
+        if (sectionIndex >= this->sectionContent.size())
           throw triton::exceptions::Pe("PeBuilder::writeToSection: section index out of range");
 
-        if (dest+size > sectionContent[sectionIndex].size())
+        if (dest+size > this->sectionContent[sectionIndex].size())
           throw triton::exceptions::Pe("PeBuilder::writeToSection: trying to write past end of section");
 
-        std::memcpy(&sectionContent[sectionIndex][dest], src, size);
+        std::memcpy(&this->sectionContent[sectionIndex][dest], src, size);
       }
 
 
