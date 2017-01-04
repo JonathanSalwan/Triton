@@ -109,7 +109,7 @@ namespace triton {
       }
 
 
-      void PeBuilder::save(const std::string &path) {
+      void PeBuilder::save(const std::string& path) {
         std::ofstream os;
 
         os.open(path, std::ios_base::out | std::ios_base::binary);

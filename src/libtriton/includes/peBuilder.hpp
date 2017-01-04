@@ -74,7 +74,7 @@ namespace triton {
           void writeToRVA(triton::uint32 dest, void* src, triton::uint32 size);
 
           //! Saves the file conents.
-          void save(const std::string &path);
+          void save(const std::string& path);
       };
 
     /*! @} End of pe namespace */
