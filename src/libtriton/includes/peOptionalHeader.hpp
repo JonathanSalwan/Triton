@@ -266,11 +266,17 @@ namespace triton {
            */
           triton::uint32 numberOfRvaAndSizes;
 
-        //! Copies a PE32_OptionalHeader object.
+        //! Copies from a PE32_OptionalHeader object.
         PeOptionalHeader& operator=(const PE32_OptionalHeader& other);
 
-        //! Copies a PE32Plus_OptionalHeader object.
+        //! Copies from a PE32Plus_OptionalHeader object.
         PeOptionalHeader& operator=(const PE32Plus_OptionalHeader& other);
+
+        //! Copies to a PE32_OptionalHeader object.
+        void assign(PE32_OptionalHeader &target) const;
+
+        //! Copies to a PE32Plus_OptionalHeader object.
+        void assign(PE32Plus_OptionalHeader &target) const;
 
       public:
           //! Constructor.
@@ -285,8 +291,14 @@ namespace triton {
           //! Destructor.
           ~PeOptionalHeader();
 
+          //! Returns the size of the structure.
+          triton::uint32 getSize(void) const;
+
           //! Parses the header.
           triton::usize parse(const triton::uint8* raw);
+
+          //! Saves the header to file.
+          void save(std::ostream &os) const;
 
           //! Returns the magic.
           triton::uint16 getMagic(void) const;
@@ -348,8 +360,14 @@ namespace triton {
           //! Returns the sizeOfImage.
           triton::uint32 getSizeOfImage(void) const;
 
+          //! Sets the sizeOfImage.
+          void setSizeOfImage(triton::uint32 setSizeOfImage);
+
           //! Returns the sizeOfHeaders.
           triton::uint32 getSizeOfHeaders(void) const;
+
+          //! Sets the sizeOfHeaders.
+          void setSizeOfHeaders(triton::uint32);
 
           //! Returns the checkSum.
           triton::uint32 getCheckSum(void) const;

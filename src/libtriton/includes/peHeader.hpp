@@ -52,6 +52,11 @@ namespace triton {
           triton::uint32 peHeaderStart;
 
           /*!
+           * \description A copy of all the bytes before the PE header, containing the DOS stub and the value of peHeaderStart at offset 0x3C.
+           */
+          std::vector<triton::uint8> dosStub;
+
+          /*!
            * \description COFF File Header
            */
           PeFileHeader fileHeader;
@@ -70,6 +75,17 @@ namespace triton {
            * \description The table of section headers.
            */
           std::vector<PeSectionHeader> sectionHeaders;
+
+          //! Align offset according to fileAlignment
+          triton::uint32 fileAlign(triton::uint32 offset) const;
+
+          //! Align RVA according to sectionAlignment
+          triton::uint32 sectionAlign(triton::uint32 rva) const;
+
+          //! Gets the total section virtual size (aligned), used when adding new sections
+          triton::uint32 getTotalSectionVirtualSize() const;
+          //! Gets the total section raw size (aligned), used when adding new sections
+          triton::uint32 getTotalSectionRawSize() const;
 
         public:
           //! Constructor.
@@ -106,6 +122,14 @@ namespace triton {
            * \description Returns the Section Header table.
            */
           const std::vector<PeSectionHeader>& getSectionHeaders(void) const;
+
+          //! Saves the header to file.
+          void save(std::ostream &os) const;
+
+          //! Adds a new section header.
+          void addSection(const std::string name, triton::uint32 vsize, triton::uint32 rawsize, triton::uint32 characteristics);
+
+          triton::uint32 getSize() const;
       };
 
     /*! @} End of pe namespace */

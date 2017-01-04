@@ -248,6 +248,10 @@ namespace triton {
         return this->memoryMapping;
       }
 
+      triton::uint32 Pe::getImageBase(void) const {
+        return this->header.getOptionalHeader().getImageBase();
+      }
+
     }; /* pe namespace */
   }; /* format namespace */
 }; /* triton namespace */
