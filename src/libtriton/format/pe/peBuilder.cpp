@@ -67,6 +67,7 @@ namespace triton {
       const std::vector<triton::uint8> PeBuilder::getSectionContent(triton::uint32 sectionIndex) {
         if (sectionIndex >= this->sectionContent.size())
           throw triton::exceptions::Pe("PeBuilder::getSectionContent: section index out of range");
+
         return this->sectionContent[sectionIndex];
       }
 
