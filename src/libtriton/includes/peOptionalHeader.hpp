@@ -265,19 +265,19 @@ namespace triton {
            */
           triton::uint32 numberOfRvaAndSizes;
 
-        //! Copies from a PE32_OptionalHeader object.
-        PeOptionalHeader& operator=(const PE32_OptionalHeader& other);
+          //! Copies from a PE32_OptionalHeader object.
+          PeOptionalHeader& operator=(const PE32_OptionalHeader& other);
 
-        //! Copies from a PE32Plus_OptionalHeader object.
-        PeOptionalHeader& operator=(const PE32Plus_OptionalHeader& other);
+          //! Copies from a PE32Plus_OptionalHeader object.
+          PeOptionalHeader& operator=(const PE32Plus_OptionalHeader& other);
 
-        //! Copies to a PE32_OptionalHeader object.
-        void assign(PE32_OptionalHeader &target) const;
+          //! Copies to a PE32_OptionalHeader object.
+          void assign(PE32_OptionalHeader& target) const;
 
-        //! Copies to a PE32Plus_OptionalHeader object.
-        void assign(PE32Plus_OptionalHeader &target) const;
+          //! Copies to a PE32Plus_OptionalHeader object.
+          void assign(PE32Plus_OptionalHeader& target) const;
 
-      public:
+        public:
           //! Constructor.
           PeOptionalHeader();
 

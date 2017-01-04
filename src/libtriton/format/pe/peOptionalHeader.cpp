@@ -400,7 +400,7 @@ namespace triton {
       }
 
 
-      void PeOptionalHeader::assign(PE32_OptionalHeader &other) const {
+      void PeOptionalHeader::assign(PE32_OptionalHeader& other) const {
         other.addressOfEntryPoint         = this->addressOfEntryPoint;
         other.baseOfCode                  = this->baseOfCode;
         other.baseOfData                  = this->baseOfData;
@@ -434,7 +434,7 @@ namespace triton {
       }
 
 
-      void PeOptionalHeader::assign(PE32Plus_OptionalHeader &other) const {
+      void PeOptionalHeader::assign(PE32Plus_OptionalHeader& other) const {
         other.addressOfEntryPoint         = this->addressOfEntryPoint;
         other.baseOfCode                  = this->baseOfCode;
         other.checkSum                    = this->checkSum;
