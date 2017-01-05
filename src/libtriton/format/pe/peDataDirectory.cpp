@@ -129,17 +129,21 @@ namespace triton {
         return *this;
       }
 
+
       triton::uint32 PeDataDirectory::getSize(void) const {
-          return sizeof(st);
+        return sizeof(this->st);
       }
+
 
       void PeDataDirectory::parse(const triton::uint8* raw) {
-        std::memcpy(&st, raw, sizeof(st));
+        std::memcpy(&this->st, raw, sizeof(this->st));
       }
 
-      void PeDataDirectory::save(std::ostream &os) const {
-        os.write((char*)&st, sizeof(st));
+
+      void PeDataDirectory::save(std::ostream& os) const {
+        os.write(reinterpret_cast<const char*>(&this->st), sizeof(this->st));
       }
+
 
       triton::uint32 PeDataDirectory::getExportTable_rva(void) const {
         return this->st.exportTable_rva;

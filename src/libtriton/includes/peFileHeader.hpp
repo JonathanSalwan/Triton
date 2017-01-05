@@ -42,7 +42,6 @@ namespace triton {
        *  \brief PE file header (without DOS stub) */
       class PeFileHeader {
         protected:
-
           //! The PE file header structure.
           struct {
             /*!
@@ -101,7 +100,7 @@ namespace triton {
           void parse(const triton::uint8* raw);
 
           //! Saves the header to file.
-          void save(std::ostream &os) const;
+          void save(std::ostream& os) const;
 
           //! Returns the machine.
           triton::uint16 getMachine(void) const;

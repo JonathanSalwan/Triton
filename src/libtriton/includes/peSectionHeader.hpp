@@ -120,7 +120,7 @@ namespace triton {
           triton::uint32 parse(const triton::uint8* raw);
 
           //! Saves the header to file.
-          void save(std::ostream &os) const;
+          void save(std::ostream& os) const;
 
           //! Sets the name.
           void setName(const std::string &name);

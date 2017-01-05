@@ -115,7 +115,6 @@ namespace triton {
        *  \brief PE optional header */
       class PeOptionalHeader {
         protected:
-
           /*!
            * \description The unsigned integer that identifies the state of the image file. The most common number is 0x10B, which identifies it as a normal executable file. 0x107 identifies it as a ROM image, and 0x20B identifies it as a PE32+ executable.
            */
@@ -266,19 +265,19 @@ namespace triton {
            */
           triton::uint32 numberOfRvaAndSizes;
 
-        //! Copies from a PE32_OptionalHeader object.
-        PeOptionalHeader& operator=(const PE32_OptionalHeader& other);
+          //! Copies from a PE32_OptionalHeader object.
+          PeOptionalHeader& operator=(const PE32_OptionalHeader& other);
 
-        //! Copies from a PE32Plus_OptionalHeader object.
-        PeOptionalHeader& operator=(const PE32Plus_OptionalHeader& other);
+          //! Copies from a PE32Plus_OptionalHeader object.
+          PeOptionalHeader& operator=(const PE32Plus_OptionalHeader& other);
 
-        //! Copies to a PE32_OptionalHeader object.
-        void assign(PE32_OptionalHeader &target) const;
+          //! Copies to a PE32_OptionalHeader object.
+          void assign(PE32_OptionalHeader& target) const;
 
-        //! Copies to a PE32Plus_OptionalHeader object.
-        void assign(PE32Plus_OptionalHeader &target) const;
+          //! Copies to a PE32Plus_OptionalHeader object.
+          void assign(PE32Plus_OptionalHeader& target) const;
 
-      public:
+        public:
           //! Constructor.
           PeOptionalHeader();
 
@@ -298,7 +297,7 @@ namespace triton {
           triton::usize parse(const triton::uint8* raw);
 
           //! Saves the header to file.
-          void save(std::ostream &os) const;
+          void save(std::ostream& os) const;
 
           //! Returns the magic.
           triton::uint16 getMagic(void) const;
