@@ -120,6 +120,9 @@ Returns true if the expression is tainted.
 - <b>void setAst(\ref py_AstNode_page node)</b><br>
 Sets a root node.
 
+- <b>void setComment(string comment)</b><br>
+Sets a comment to the symbolic expression.
+
 */
 
 
@@ -267,6 +270,20 @@ namespace triton {
       }
 
 
+      static PyObject* SymbolicExpression_setComment(PyObject* self, PyObject* comment) {
+        try {
+          if (!PyString_Check(comment))
+            return PyErr_Format(PyExc_TypeError, "SymbolicExpression::setComment(): Expected a string as argument.");
+          PySymbolicExpression_AsSymbolicExpression(self)->setComment(PyString_AsString(comment));
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static int SymbolicExpression_print(PyObject* self) {
         std::cout << PySymbolicExpression_AsSymbolicExpression(self);
         return 0;
@@ -299,6 +316,7 @@ namespace triton {
         {"isSymbolized",      SymbolicExpression_isSymbolized,      METH_NOARGS,    ""},
         {"isTainted",         SymbolicExpression_isTainted,         METH_NOARGS,    ""},
         {"setAst",            SymbolicExpression_setAst,            METH_O,         ""},
+        {"setComment",        SymbolicExpression_setComment,        METH_O,         ""},
         {nullptr,             nullptr,                              0,              nullptr}
       };
 

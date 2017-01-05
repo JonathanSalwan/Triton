@@ -887,7 +887,7 @@ namespace triton {
 
         /*
          * Create the semantic.
-         * cf = MSB((op0 & op1) ^ ((op0 ^ op1 ^ parent) & (op0 ^ op1)));
+         * cf = MSB((op1 & op2) ^ ((op1 ^ op2 ^ parent) & (op1 ^ op2)));
          */
         auto node = triton::ast::extract(bvSize-1, bvSize-1,
                       triton::ast::bvxor(
