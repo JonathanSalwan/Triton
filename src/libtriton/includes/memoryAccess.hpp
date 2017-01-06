@@ -44,6 +44,9 @@ namespace triton {
         //! The concrete value (content of the access)
         triton::uint512 concreteValue;
 
+        //! True if this memory contains a concrete value.
+        bool concreteValueDefined;
+
         //! Contains the pc relative if it exists.
         triton::uint64 pcRelative;
 
@@ -95,7 +98,10 @@ namespace triton {
         MemoryAccess();
 
         //! Constructor.
-        MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue=0);
+        MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */);
+
+        //! Constructor.
+        MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue);
 
         //! Constructor by copy.
         MemoryAccess(const MemoryAccess& other);
@@ -165,6 +171,9 @@ namespace triton {
 
         //! True if the memory is not empty.
         bool isValid(void) const;
+
+        //! Returns true if the memory contains a concrete value.
+        bool hasConcreteValue(void) const;
 
         //! Sets the address of the memory access.
         void setAddress(triton::uint64 addr);

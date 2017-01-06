@@ -20,24 +20,73 @@ namespace triton {
     }
 
 
+    Register::Register(triton::uint32 regId) {
+      if (!triton::api.isArchitectureValid()) {
+        this->clear();
+        return;
+      }
+
+      this->setup(regId);
+      this->isImmutable          = false;
+      this->concreteValueDefined = false;
+    }
+
+
+    Register::Register(triton::uint32 regId, bool isImmutable) {
+      if (!triton::api.isArchitectureValid()) {
+        this->clear();
+        return;
+      }
+
+      this->setup(regId);
+      this->isImmutable          = isImmutable;
+      this->concreteValueDefined = false;
+    }
+
+
     Register::Register(triton::uint32 regId, triton::uint512 concreteValue) {
       if (!triton::api.isArchitectureValid()) {
         this->clear();
         return;
       }
-      this->setup(regId, concreteValue);
+
+      this->setup(regId);
+      this->isImmutable = false;
+      this->setConcreteValue(concreteValue);
+    }
+
+
+    Register::Register(const Register& other) : BitsVector(other) {
+      this->copy(other);
+    }
+
+
+    Register::Register(const Register& other, bool isImmutable) : Register(other) {
+      this->isImmutable = isImmutable;
+    }
+
+
+    Register::~Register() {
+    }
+
+
+    void Register::operator=(const Register& other) {
+      BitsVector::operator=(other);
+      this->copy(other);
     }
 
 
     void Register::clear(void) {
-      this->concreteValue = 0;
-      this->id            = triton::arch::INVALID_REGISTER_ID;
-      this->name          = "unknown";
-      this->parent        = triton::arch::INVALID_REGISTER_ID;
+      this->concreteValue        = 0;
+      this->concreteValueDefined = false;
+      this->id                   = triton::arch::INVALID_REGISTER_ID;
+      this->isImmutable          = false;
+      this->name                 = "unknown";
+      this->parent               = triton::arch::INVALID_REGISTER_ID;
     }
 
 
-    void Register::setup(triton::uint32 regId, triton::uint512 concreteValue) {
+    void Register::setup(triton::uint32 regId) {
       triton::arch::RegisterSpecification regInfo;
 
       this->id = regId;
@@ -50,20 +99,16 @@ namespace triton {
 
       this->setHigh(regInfo.getHigh());
       this->setLow(regInfo.getLow());
-
-      if (concreteValue > this->getMaxValue())
-        throw triton::exceptions::Register("Register::setup(): You cannot set this concrete value (too big) to this register.");
-
-      this->concreteValue = concreteValue;
     }
 
 
-    Register::Register(const Register& other) : BitsVector(other) {
-      this->copy(other);
-    }
-
-
-    Register::~Register() {
+    void Register::copy(const Register& other) {
+      this->concreteValue        = other.concreteValue;
+      this->concreteValueDefined = other.concreteValueDefined;
+      this->id                   = other.id;
+      this->isImmutable          = false;
+      this->name                 = other.name;
+      this->parent               = other.parent;
     }
 
 
@@ -125,7 +170,12 @@ namespace triton {
     void Register::setConcreteValue(triton::uint512 concreteValue) {
       if (concreteValue > this->getMaxValue())
         throw triton::exceptions::Register("Register::setConcreteValue(): You cannot set this concrete value (too big) to this register.");
-      this->concreteValue = concreteValue;
+
+      if (this->isImmutable)
+        return;
+
+      this->concreteValue        = concreteValue;
+      this->concreteValueDefined = true;
     }
 
 
@@ -144,17 +194,8 @@ namespace triton {
     }
 
 
-    void Register::operator=(const Register& other) {
-      BitsVector::operator=(other);
-      this->copy(other);
-    }
-
-
-    void Register::copy(const Register& other) {
-      this->concreteValue = other.concreteValue;
-      this->id            = other.id;
-      this->name          = other.name;
-      this->parent        = other.parent;
+    bool Register::hasConcreteValue(void) const {
+      return this->concreteValueDefined;
     }
 
 

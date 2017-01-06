@@ -580,7 +580,7 @@ namespace triton {
         triton::usize memSymId          = triton::engines::symbolic::UNSET;
         triton::uint64 memAddr          = mem.getAddress();
         triton::uint32 symVarSize       = mem.getSize();
-        triton::uint512 cv              = mem.getConcreteValue() ? mem.getConcreteValue() : this->architecture->getConcreteMemoryValue(mem);
+        triton::uint512 cv              = mem.hasConcreteValue() ? mem.getConcreteValue() : this->architecture->getConcreteMemoryValue(mem);
 
         memSymId = this->getSymbolicMemoryId(memAddr);
 
@@ -627,7 +627,7 @@ namespace triton {
         triton::usize regSymId          = triton::engines::symbolic::UNSET;
         triton::uint32 parentId         = reg.getParent().getId();
         triton::uint32 symVarSize       = reg.getBitSize();
-        triton::uint512 cv              = reg.getConcreteValue() ? reg.getConcreteValue() : this->architecture->getConcreteRegisterValue(reg);
+        triton::uint512 cv              = reg.hasConcreteValue() ? reg.getConcreteValue() : this->architecture->getConcreteRegisterValue(reg);
 
         if (!this->architecture->isRegisterValid(parentId))
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");

@@ -753,12 +753,25 @@ def test_2():
         print '\tExpected : 0x0'
         return -1
 
-    cv = reg.setConcreteValue(0x1122334455667788)
+    # immutable
+    reg.setConcreteValue(0x1122334455667788)
     cv = reg.getConcreteValue()
-    if cv == 0x1122334455667788:
+    if cv == 0:
         count += 1
     else:
         print '[KO] REG.RAX.getConcreteValue()'
+        print '\tOutput   : 0x%x' %(cv)
+        print '\tExpected : 0'
+        return -1
+
+    # mutable
+    reg2 = Register(reg)
+    reg2.setConcreteValue(0x1122334455667788)
+    cv = reg2.getConcreteValue()
+    if cv == 0x1122334455667788:
+        count += 1
+    else:
+        print '[KO] reg2.getConcreteValue()'
         print '\tOutput   : 0x%x' %(cv)
         print '\tExpected : 0x1122334455667788'
         return -1

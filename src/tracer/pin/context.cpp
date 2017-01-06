@@ -27,7 +27,7 @@ namespace tracer {
       bool     mustBeExecuted = false;
 
 
-      triton::uint512 getCurrentRegisterValue(triton::arch::Register& reg) {
+      triton::uint512 getCurrentRegisterValue(const triton::arch::Register& reg) {
         triton::uint8 buffer[DQQWORD_SIZE] = {0};
         triton::uint512 value = 0;
 
@@ -254,7 +254,7 @@ namespace tracer {
       }
 
 
-      triton::uint512 getCurrentMemoryValue(triton::arch::MemoryAccess& mem) {
+      triton::uint512 getCurrentMemoryValue(const triton::arch::MemoryAccess& mem) {
         return tracer::pintool::context::getCurrentMemoryValue(mem.getAddress(), mem.getSize());
       }
 
@@ -469,8 +469,25 @@ namespace tracer {
 
       void needConcreteRegisterValue(triton::arch::Register& reg) {
         triton::uint512 value = tracer::pintool::context::getCurrentRegisterValue(reg);
-        reg.setConcreteValue(value);
-        triton::api.setConcreteRegisterValue(reg);
+        triton::arch::Register tmp(reg.getId(), value);
+        triton::api.setConcreteRegisterValue(tmp);
+      }
+
+
+      void synchronizeContext(void) {
+        if (triton::api.isSymbolicEngineEnabled() == false)
+          return;
+
+        for (triton::arch::Register* reg : triton::api.getParentRegisters()) {
+          if (reg->getId() > triton::arch::x86::ID_REG_EFLAGS)
+            continue;
+
+          if (triton::api.getSymbolicRegisterId(*reg) == triton::engines::symbolic::UNSET)
+            continue;
+
+          if (triton::api.getSymbolicRegisterValue(*reg) != tracer::pintool::context::getCurrentRegisterValue(*reg))
+            triton::api.concretizeRegister(*reg);
+        }
       }
 
     };

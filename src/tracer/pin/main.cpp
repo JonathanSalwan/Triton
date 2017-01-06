@@ -572,6 +572,9 @@ namespace tracer {
         tracer::pintool::context::executeContext();
       }
 
+      /* Synchronize gliches between Pintool and libTriton */
+      tracer::pintool::context::synchronizeContext();
+
       /* Process the IR and taint */
       triton::api.buildSemantics(*tritonInst);
 

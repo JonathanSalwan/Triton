@@ -696,6 +696,11 @@ namespace triton {
           cv = PyLong_AsUint512(concreteValue);
 
         try {
+          if (concreteValue == nullptr){
+            triton::arch::MemoryAccess mem(PyLong_AsUint64(address), PyLong_AsUint32(size));
+            return PyMemoryAccess(mem);
+          }
+
           triton::arch::MemoryAccess mem(PyLong_AsUint64(address), PyLong_AsUint32(size), cv);
           return PyMemoryAccess(mem);
         }
@@ -734,6 +739,11 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "Register(): Expects a Register or an id register as first argument.");
 
         try {
+          if (concreteValue == nullptr) {
+            triton::arch::Register regOut(rid);
+            return PyRegister(regOut);
+          }
+
           triton::arch::Register regOut(rid, cv);
           return PyRegister(regOut);
         }

@@ -51,11 +51,17 @@ namespace triton {
         //! The concrete value (content of the register)
         triton::uint512 concreteValue;
 
+        //! True if this register contains a concrete value.
+        bool concreteValueDefined;
+
+        //! True if this register is immutable regarding concrete values.
+        bool isImmutable;
+
         //! Copies a Register.
         void copy(const Register& other);
 
         //! Setup everything.
-        void setup(triton::uint32 regId, triton::uint512 concreteValue);
+        void setup(triton::uint32 regId);
 
         //! Resets information.
         void clear(void);
@@ -65,10 +71,22 @@ namespace triton {
         Register();
 
         //! Constructor.
-        Register(triton::uint32 regId, triton::uint512 concreteValue=0);
+        Register(triton::uint32 regId);
+
+        //! Constructor.
+        Register(triton::uint32 regId, bool isImmutable);
+
+        //! Constructor.
+        Register(triton::uint32 regId, triton::uint512 concreteValue);
 
         //! Constructor by copy.
         Register(const Register& other);
+
+        //! Constructor by copy.
+        Register(const Register& other, bool isImmutable);
+
+        //! Copies a Register.
+        void operator=(const Register& other);
 
         //! Destructor.
         virtual ~Register();
@@ -84,6 +102,9 @@ namespace triton {
 
         //! Returns true if the register is a flag.
         bool isFlag(void) const;
+
+        //! Returns true if the register contains a concrete value.
+        bool hasConcreteValue(void) const;
 
         //! Returns the name of the register.
         std::string getName(void) const;
@@ -108,9 +129,6 @@ namespace triton {
 
         //! Returns the concrete value.
         triton::uint512 getConcreteValue(void) const;
-
-        //! Copies a Register.
-        void operator=(const Register& other);
 
         //! Sets the id of the register.
         void setId(triton::uint32 regId);
@@ -139,6 +157,9 @@ namespace triton {
 
     //! Defines the invalid register constant.
     const triton::uint32 INVALID_REGISTER_ID = 0;
+
+    //! Defines the immutable register constant.
+    const bool IMMUTABLE_REGISTER = true;
 
   /*! @} End of arch namespace */
   };
