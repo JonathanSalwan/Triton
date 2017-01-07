@@ -107,6 +107,9 @@ namespace triton {
           //! Sets a root node.
           void setAst(triton::ast::AbstractNode* node);
 
+          //! Sets a comment to the symbolic expression.
+          void setComment(const std::string& comment);
+
           //! Sets the kind of the symbolic expression.
           void setKind(symkind_e k);
 

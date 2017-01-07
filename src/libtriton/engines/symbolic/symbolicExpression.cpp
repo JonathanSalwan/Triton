@@ -101,6 +101,11 @@ namespace triton {
       }
 
 
+      void SymbolicExpression::setComment(const std::string& comment) {
+        this->comment = comment;
+      }
+
+
       void SymbolicExpression::setKind(symkind_e k) {
         this->kind = k;
       }

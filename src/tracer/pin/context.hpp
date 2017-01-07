@@ -46,10 +46,10 @@ namespace tracer {
       extern bool mustBeExecuted;
 
       //! Returns the current register value from a Register.
-      triton::uint512 getCurrentRegisterValue(triton::arch::Register& reg);
+      triton::uint512 getCurrentRegisterValue(const triton::arch::Register& reg);
 
       //! Returns the current memory value from a MemoryAccess.
-      triton::uint512 getCurrentMemoryValue(triton::arch::MemoryAccess& mem);
+      triton::uint512 getCurrentMemoryValue(const triton::arch::MemoryAccess& mem);
 
       //! Returns the current memory value from an address.
       triton::uint512 getCurrentMemoryValue(triton::__uint addr);
@@ -77,6 +77,9 @@ namespace tracer {
 
       //! Callback to provide concrete register values only if Triton needs them - cf #376
       void needConcreteRegisterValue(triton::arch::Register& reg);
+
+      //! Synchronize weird behavior from Pin to libTriton.
+      void synchronizeContext(void);
 
     /*! @} End of context namespace */
     };
