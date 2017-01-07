@@ -107,6 +107,12 @@ namespace triton {
 
         //! Copies a OperandWrapper.
         void operator=(const OperandWrapper& other);
+
+        //! Tests two OperandWrappers for equality.
+        bool operator==(const OperandWrapper& other) const;
+
+        //! Compares two OperandWrappers for ordering.
+        bool operator<(const OperandWrapper& other) const;
     };
 
     //! Displays a OperandWrapper according to the concrete type.
