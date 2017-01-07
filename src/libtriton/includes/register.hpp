@@ -55,7 +55,7 @@ namespace triton {
         bool concreteValueDefined;
 
         //! True if this register is immutable regarding concrete values.
-        bool isImmutable;
+        bool immutable;
 
         //! Copies a Register.
         void copy(const Register& other);
@@ -74,16 +74,13 @@ namespace triton {
         Register(triton::uint32 regId);
 
         //! Constructor.
-        Register(triton::uint32 regId, bool isImmutable);
+        Register(triton::uint32 regId, triton::uint512 concreteValue);
 
         //! Constructor.
-        Register(triton::uint32 regId, triton::uint512 concreteValue);
+        Register(triton::uint32 regId, triton::uint512 concreteValue, bool immutable);
 
         //! Constructor by copy.
         Register(const Register& other);
-
-        //! Constructor by copy.
-        Register(const Register& other, bool isImmutable);
 
         //! Copies a Register.
         void operator=(const Register& other);
@@ -102,6 +99,9 @@ namespace triton {
 
         //! Returns true if the register is a flag.
         bool isFlag(void) const;
+
+        //! Returns true if the register is immutable.
+        bool isImmutable(void) const;
 
         //! Returns true if the register contains a concrete value.
         bool hasConcreteValue(void) const;

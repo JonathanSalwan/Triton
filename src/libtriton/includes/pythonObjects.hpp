@@ -133,7 +133,13 @@ namespace triton {
       PyObject* PyPathConstraint(const triton::engines::symbolic::PathConstraint& pc);
 
       //! Creates the Register python class.
-      PyObject* PyRegister(const triton::arch::Register& reg, bool isImmutable=false);
+      PyObject* PyRegister(const triton::arch::Register& reg);
+
+      //! Creates the Register python class.
+      PyObject* PyRegister(const triton::arch::Register& reg, triton::uint512 concreteValue);
+
+      //! Creates the Register python class.
+      PyObject* PyRegister(const triton::arch::Register& reg, triton::uint512 concreteValue, bool isImmutable);
 
       //! Creates the SolverModel python class.
       PyObject* PySolverModel(const triton::engines::solver::SolverModel& model);
