@@ -481,6 +481,15 @@ namespace triton {
         triton::ast::AbstractNode* node1 = nullptr;
         triton::ast::AbstractNode* node2 = nullptr;
 
+        if (PyLong_Check(other) || PyInt_Check(other)) {
+          triton::uint512 value = PyLong_AsUint512(other);
+          triton::uint32 size   = PyAstNode_AsAstNode(self)->getBitvectorSize();
+          if (size) {
+            Py_DECREF(other);
+            other = PyAstNode(triton::ast::bv(value, size));
+          }
+        }
+
         if (!PyAstNode_Check(other)) {
           result = Py_NotImplemented;
         }
