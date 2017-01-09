@@ -95,7 +95,7 @@ namespace triton {
 
 
       void PeBuilder::readFromRVA(void* dest, triton::uint32 src, triton::uint32 size) {
-        triton::usize index    = this->getSectionIndexForRVA(src);
+        triton::uint32 index   = this->getSectionIndexForRVA(src);
         triton::uint32 rawAddr = this->header.getSectionHeaders()[index].getVirtualAddress();
 
         this->readFromSection(index, dest, src - rawAddr, size);
@@ -103,7 +103,7 @@ namespace triton {
 
 
       void PeBuilder::writeToRVA(triton::uint32 dest, void* src, triton::uint32 size) {
-        triton::usize index    = this->getSectionIndexForRVA(dest);
+        triton::uint32 index   = this->getSectionIndexForRVA(dest);
         triton::uint32 rawAddr = this->header.getSectionHeaders()[index].getVirtualAddress();
 
         this->writeToSection(index, dest-rawAddr, src, size);
