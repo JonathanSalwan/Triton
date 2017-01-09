@@ -8171,16 +8171,36 @@ namespace triton {
 
 
       void x86Semantics::pop_s(triton::arch::Instruction& inst) {
-        auto  stack      = TRITON_X86_REG_SP.getParent();
-        auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
-        auto& dst        = inst.operands[0];
-        auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, dst.getSize()));
+        bool  stackRelative = false;
+        auto  stack         = TRITON_X86_REG_SP.getParent();
+        auto  stackValue    = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+        auto& dst           = inst.operands[0];
+        auto  src           = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, dst.getSize()));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
 
         /* Create the semantics */
         auto node = op1;
+
+        /*
+         * Create the semantics - side effect
+         *
+         * Intel: If the ESP register is used as a base register for addressing a destination operand in
+         * memory, the POP instruction computes the effective address of the operand after it increments
+         * the ESP register.
+         */
+        if (dst.getType() == triton::arch::OP_MEM) {
+          if (dst.getMemory().getBaseRegister().getParent().getId() == stack.getId()) {
+            /* Align the stack */
+            alignAddStack_s(inst, src.getSize());
+
+            /* Re-initialize the memory access */
+            dst.getMemory().initAddress(triton::arch::FORCE_MEMORY_INITIALIZATION);
+
+            stackRelative = true;
+          }
+        }
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "POP operation");
@@ -8189,7 +8209,8 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Create the semantics - side effect */
-        alignAddStack_s(inst, src.getSize());
+        if (!stackRelative)
+          alignAddStack_s(inst, src.getSize());
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

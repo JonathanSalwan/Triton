@@ -72,12 +72,6 @@ namespace triton {
         void copy(const MemoryAccess& other);
 
       private:
-        //! LEA - Returns the base register value.
-        triton::uint64 getBaseValue(void);
-
-        //! LEA - Returns the index register value.
-        triton::uint64 getIndexValue(void);
-
         //! LEA - Returns the segment register value.
         triton::uint64 getSegmentValue(void);
 
@@ -110,7 +104,7 @@ namespace triton {
         virtual ~MemoryAccess();
 
         //! Initialize the address of the memory.
-        void initAddress(void);
+        void initAddress(bool force=false);
 
         //! Returns the AST of the memory access (LEA).
         triton::ast::AbstractNode* getLeaAst(void) const;
@@ -217,6 +211,9 @@ namespace triton {
 
     //! Compares two MemoryAccess (needed for std::map)
     bool operator<(const MemoryAccess& mem1, const MemoryAccess& mem2);
+
+    //! Defines the force memory initialization constant.
+    const bool FORCE_MEMORY_INITIALIZATION = true;
 
   /*! @} End of arch namespace */
   };

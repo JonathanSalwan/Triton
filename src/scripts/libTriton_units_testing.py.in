@@ -3532,6 +3532,94 @@ def test_12():
         print '\tExpected : OK'
         return -1
 
+    # ============
+
+    setArchitecture(ARCH.X86)
+
+    inst1 = Instruction('\xBC\x00\xFE\x19\x00')         # mov esp, 0x19fe00
+    inst2 = Instruction('\xC7\x04\x24\x11\x11\x11\x11') # mov dword ptr [esp], 0x11111111
+    inst3 = Instruction('\x8F\x04\x24')                 # pop dword ptr [esp]
+    processing(inst1)
+    processing(inst2)
+    processing(inst3)
+
+    if inst3.getOperands()[0].getAddress() == 0x19fe04:
+        count += 1
+    else:
+        print '[KO] pop dword ptr [esp] -> memory operand'
+        print '\tOutput   : 0x%x' %(inst3.getOperands()[0].getAddress())
+        print '\tExpected : 0x19fe04'
+        return -1
+
+    if inst3.getOperands()[0].getConcreteValue() == 0x11111111:
+        count += 1
+    else:
+        print '[KO] pop dword ptr [esp] -> concrete value'
+        print '\tOutput   : 0x%x' %(inst3.getOperands()[0].getConcreteValue())
+        print '\tExpected : 0x11111111'
+        return -1
+
+    if inst3.getStoreAccess()[0][0].getAddress() == 0x19fe04:
+        count += 1
+    else:
+        print '[KO] pop dword ptr [esp] -> store access'
+        print '\tOutput   : 0x%x' %(inst3.getStoreAccess()[0][0].getAddress())
+        print '\tExpected : 0x19fe04'
+        return -1
+
+    if inst3.getStoreAccess()[0][1].evaluate() == 0x11111111:
+        count += 1
+    else:
+        print '[KO] pop dword ptr [esp] -> concrete value over store access'
+        print '\tOutput   : 0x%x' %(inst3.getStoreAccess()[0][1].evaluate())
+        print '\tExpected : 0x11111111'
+        return -1
+
+    # ============
+
+    setArchitecture(ARCH.X86)
+
+    inst1 = Instruction('\xBC\x00\xFE\x19\x00')         # mov esp, 0x19fe00
+    inst2 = Instruction('\xBF\x00\xFE\x19\x00')         # mov edi, 0x19fe00
+    inst3 = Instruction('\xC7\x04\x24\x11\x11\x11\x11') # mov dword ptr [esp], 0x11111111
+    inst4 = Instruction('\x8F\x07')                     # pop dword ptr [edi]
+    processing(inst1)
+    processing(inst2)
+    processing(inst3)
+    processing(inst4)
+
+    if inst4.getOperands()[0].getAddress() == 0x19fe00:
+        count += 1
+    else:
+        print '[KO] pop dword ptr [edi] -> memory operand'
+        print '\tOutput   : 0x%x' %(inst4.getOperands()[0].getAddress())
+        print '\tExpected : 0x19fe00'
+        return -1
+
+    if inst4.getOperands()[0].getConcreteValue() == 0x11111111:
+        count += 1
+    else:
+        print '[KO] pop dword ptr [edi] -> concrete value'
+        print '\tOutput   : 0x%x' %(inst4.getOperands()[0].getConcreteValue())
+        print '\tExpected : 0x11111111'
+        return -1
+
+    if inst4.getStoreAccess()[0][0].getAddress() == 0x19fe00:
+        count += 1
+    else:
+        print '[KO] pop dword ptr [edi] -> store access'
+        print '\tOutput   : 0x%x' %(inst4.getStoreAccess()[0][0].getAddress())
+        print '\tExpected : 0x19fe00'
+        return -1
+
+    if inst4.getStoreAccess()[0][1].evaluate() == 0x11111111:
+        count += 1
+    else:
+        print '[KO] pop dword ptr [edi] -> concrete value over store access'
+        print '\tOutput   : 0x%x' %(inst4.getStoreAccess()[0][1].evaluate())
+        print '\tExpected : 0x11111111'
+        return -1
+
     return count
 
 

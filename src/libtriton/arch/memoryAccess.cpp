@@ -79,24 +79,6 @@ namespace triton {
     }
 
 
-    triton::uint64 MemoryAccess::getBaseValue(void) {
-      if (this->pcRelative)
-        return this->pcRelative;
-
-      else if (this->baseReg.isValid())
-        return triton::api.getConcreteRegisterValue(this->baseReg).convert_to<triton::uint64>();
-
-      return 0;
-    }
-
-
-    triton::uint64 MemoryAccess::getIndexValue(void) {
-      if (this->indexReg.isValid())
-        return triton::api.getConcreteRegisterValue(this->indexReg).convert_to<triton::uint64>();
-      return 0;
-    }
-
-
     triton::uint64 MemoryAccess::getSegmentValue(void) {
       if (this->segmentReg.isValid())
         return triton::api.getConcreteRegisterValue(this->segmentReg).convert_to<triton::uint64>();
@@ -134,7 +116,7 @@ namespace triton {
     }
 
 
-    void MemoryAccess::initAddress(void) {
+    void MemoryAccess::initAddress(bool force) {
       /* Otherwise, try to compute the address */
       if (triton::api.isArchitectureValid() && this->getBitSize() >= BYTE_SIZE_BIT) {
         triton::arch::Register& base  = this->baseReg;
@@ -165,7 +147,7 @@ namespace triton {
         }
 
         /* Initialize the address only if it is not already defined */
-        if (!this->address)
+        if (!this->address || force)
           this->address = this->ast->evaluate().convert_to<triton::uint64>();
       }
     }
