@@ -286,46 +286,63 @@ namespace triton {
     }
 
 
-    bool Instruction::isReadFrom(const triton::arch::OperandWrapper &target) const {
+    bool Instruction::isReadFrom(const triton::arch::OperandWrapper& target) const {
       switch(target.getType()) {
+
         case triton::arch::OP_IMM:
-          for (auto pair : readImmediates) {
-            if (pair.first == target.getConstImmediate()) return true;
+          for (auto&& pair : readImmediates) {
+            if (pair.first == target.getConstImmediate())
+              return true;
           }
-          return false;
+          break;
+
         case triton::arch::OP_MEM:
-          for (auto pair : loadAccess) {
-            if (pair.first.getAddress() == target.getConstMemory().getAddress()) return true;
+          for (auto&& pair : loadAccess) {
+            if (pair.first.getAddress() == target.getConstMemory().getAddress())
+              return true;
           }
-          return false;
+          break;
+
         case triton::arch::OP_REG:
-          for (auto pair : readRegisters) {
-            if (pair.first.getId() == target.getConstRegister().getId()) return true;
+          for (auto&& pair : readRegisters) {
+            if (pair.first.getId() == target.getConstRegister().getId())
+              return true;
           }
-          return false;
+          break;
+
         default:
           throw triton::exceptions::Instruction("Instruction::isReadFrom(): Invalid type operand.");
       }
+
+      return false;
     }
 
 
-    bool Instruction::isWriteTo(const triton::arch::OperandWrapper &target) const {
+    bool Instruction::isWriteTo(const triton::arch::OperandWrapper& target) const {
       switch(target.getType()) {
+
         case triton::arch::OP_IMM:
-          return false;
+          break;
+
         case triton::arch::OP_MEM:
-          for (auto pair : storeAccess) {
-            if (pair.first.getAddress() == target.getConstMemory().getAddress()) return true;
+          for (auto&& pair : storeAccess) {
+            if (pair.first.getAddress() == target.getConstMemory().getAddress())
+              return true;
           }
-          return false;
+          break;
+
         case triton::arch::OP_REG:
-          for (auto pair : writtenRegisters) {
-            if (pair.first.getId() == target.getConstRegister().getId()) return true;
+          for (auto&& pair : writtenRegisters) {
+            if (pair.first.getId() == target.getConstRegister().getId())
+              return true;
           }
-          return false;
+          break;
+
         default:
           throw triton::exceptions::Instruction("Instruction::isWriteTo(): Invalid type operand.");
       }
+
+      return false;
     }
 
 

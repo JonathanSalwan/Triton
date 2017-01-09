@@ -152,9 +152,11 @@ namespace triton {
       this->type = other.type;
     }
 
+
     bool OperandWrapper::operator==(const OperandWrapper& other) const {
       if (this->type != other.type)
         return false;
+
       switch (this->getType()) {
         case triton::arch::OP_IMM: return this->imm == other.imm;
         case triton::arch::OP_MEM: return this->mem == other.mem;
@@ -164,11 +166,14 @@ namespace triton {
       }
     }
 
+
     bool OperandWrapper::operator<(const OperandWrapper& other) const {
       if (this->type < other.type)
         return true;
+
       if (this->type > other.type)
         return false;
+
       switch (this->getType()) {
         case triton::arch::OP_IMM: return this->imm < other.imm;
         case triton::arch::OP_MEM: return this->mem < other.mem;
@@ -177,6 +182,7 @@ namespace triton {
           throw triton::exceptions::OperandWrapper("OperandWrapper::operator==(): Invalid type operand.");
       }
     }
+
 
     std::ostream& operator<<(std::ostream& stream, const triton::arch::OperandWrapper& op) {
       switch (op.getType()) {
