@@ -307,6 +307,8 @@ namespace triton {
           for (auto&& pair : readRegisters) {
             if (pair.first.getId() == target.getConstRegister().getId())
               return true;
+            if (pair.first.getParent().getId() == target.getConstRegister().getId())
+              return true;
           }
           break;
 
@@ -334,6 +336,8 @@ namespace triton {
         case triton::arch::OP_REG:
           for (auto&& pair : writtenRegisters) {
             if (pair.first.getId() == target.getConstRegister().getId())
+              return true;
+            if (pair.first.getParent().getId() == target.getConstRegister().getId())
               return true;
           }
           break;
