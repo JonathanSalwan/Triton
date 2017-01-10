@@ -31,6 +31,7 @@ own semantics into the [appropriate file](x86Semantics_8cpp_source.html). Thanks
 
 Mnemonic                     | Extensions | Description
 -----------------------------|------------|----------------------------------------------------
+AAD                          |            | ASCII Adjust AX Before Division
 ADC                          |            | Add with Carry
 ADD                          |            | Add
 AND                          |            | Logical AND
@@ -344,6 +345,7 @@ namespace triton {
 
       bool x86Semantics::buildSemantics(triton::arch::Instruction& inst) {
         switch (inst.getType()) {
+          case ID_INS_AAD:            this->aad_s(inst);          break;
           case ID_INS_ADC:            this->adc_s(inst);          break;
           case ID_INS_ADD:            this->add_s(inst);          break;
           case ID_INS_AND:            this->and_s(inst);          break;
@@ -2094,6 +2096,47 @@ namespace triton {
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_ZF, parent->isTainted);
+      }
+
+
+      void x86Semantics::aad_s(triton::arch::Instruction& inst) {
+        auto  src1   = triton::arch::OperandWrapper(triton::arch::Immediate(0x0a, BYTE_SIZE)); /* D5 0A */
+        auto  src2   = triton::arch::OperandWrapper(TRITON_X86_REG_AL);
+        auto  src3   = triton::arch::OperandWrapper(TRITON_X86_REG_AH);
+        auto  dst    = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
+        auto  dsttmp = triton::arch::OperandWrapper(TRITON_X86_REG_AL);
+
+        /* D5 ib */
+        if (inst.operands.size() == 1)
+          src1 = inst.operands[0];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src3);
+
+        /* Create the semantics */
+        auto node = triton::ast::zx(
+                      BYTE_SIZE_BIT,
+                      triton::ast::bvadd(
+                        op2,
+                        triton::ast::bvmul(op3, op1)
+                      )
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "AAD operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Upate symbolic flags */
+        this->pf_s(inst, expr, dsttmp);
+        this->sf_s(inst, expr, dsttmp);
+        this->zf_s(inst, expr, dsttmp);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
       }
 
 

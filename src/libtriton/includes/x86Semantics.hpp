@@ -395,6 +395,9 @@ namespace triton {
                        triton::ast::AbstractNode* op2,
                        bool vol=false);
 
+          //! The AAD semantics.
+          void aad_s(triton::arch::Instruction& inst);
+
           //! The ADC semantics.
           void adc_s(triton::arch::Instruction& inst);
 
