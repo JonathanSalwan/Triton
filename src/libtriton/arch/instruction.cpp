@@ -298,17 +298,23 @@ namespace triton {
 
         case triton::arch::OP_MEM:
           for (auto&& pair : loadAccess) {
-            if (pair.first.getAddress() == target.getConstMemory().getAddress())
+            auto &&m1 = pair.first;
+            auto &&m2 = target.getConstMemory();
+            if (m1.getAddress() <= m2.getAddress() && m2.getAddress() < m1.getAddress()+m1.getSize())
+              return true;
+            if (m2.getAddress() <= m1.getAddress() && m1.getAddress() < m2.getAddress()+m2.getSize())
               return true;
           }
           break;
 
         case triton::arch::OP_REG:
           for (auto&& pair : readRegisters) {
-            if (pair.first.getId() == target.getConstRegister().getId())
-              return true;
-            if (pair.first.getParent().getId() == target.getConstRegister().getId())
-              return true;
+            auto &&r1 = pair.first;
+            auto &&r2 = target.getConstRegister();
+            if (r1.getParent().getId() == r2.getParent().getId()) {
+              if (r1.getLow() <= r2.getLow() && r2.getLow() <= r1.getHigh()) return true;
+              if (r2.getLow() <= r1.getLow() && r1.getLow() <= r2.getHigh()) return true;
+            }
           }
           break;
 
@@ -328,17 +334,23 @@ namespace triton {
 
         case triton::arch::OP_MEM:
           for (auto&& pair : storeAccess) {
-            if (pair.first.getAddress() == target.getConstMemory().getAddress())
+            auto &&m1 = pair.first;
+            auto &&m2 = target.getConstMemory();
+            if (m1.getAddress() <= m2.getAddress() && m2.getAddress() < m1.getAddress()+m1.getSize())
+              return true;
+            if (m2.getAddress() <= m1.getAddress() && m1.getAddress() < m2.getAddress()+m2.getSize())
               return true;
           }
           break;
 
         case triton::arch::OP_REG:
           for (auto&& pair : writtenRegisters) {
-            if (pair.first.getId() == target.getConstRegister().getId())
-              return true;
-            if (pair.first.getParent().getId() == target.getConstRegister().getId())
-              return true;
+            auto &&r1 = pair.first;
+            auto &&r2 = target.getConstRegister();
+            if (r1.getParent().getId() == r2.getParent().getId()) {
+              if (r1.getLow() <= r2.getLow() && r2.getLow() <= r1.getHigh()) return true;
+              if (r2.getLow() <= r1.getLow() && r1.getLow() <= r2.getHigh()) return true;
+            }
           }
           break;
 
