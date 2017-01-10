@@ -675,7 +675,14 @@ namespace triton {
 
             /* Init the disassembly */
             std::stringstream str;
-            str << insn[j].mnemonic << " " <<  insn[j].op_str;
+
+            /* Add mnemonic */
+            str << insn[j].mnemonic;
+
+            /* Add operands */
+            if (detail->x86.op_count)
+              str << " " <<  insn[j].op_str;
+
             inst.setDisassembly(str.str());
 
             /* Refine the size */
