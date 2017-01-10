@@ -485,8 +485,13 @@ namespace tracer {
           if (triton::api.getSymbolicRegisterId(*reg) == triton::engines::symbolic::UNSET)
             continue;
 
-          if (triton::api.getSymbolicRegisterValue(*reg) != tracer::pintool::context::getCurrentRegisterValue(*reg))
+          triton::uint512 cv = tracer::pintool::context::getCurrentRegisterValue(*reg);
+          triton::uint512 sv = triton::api.getSymbolicRegisterValue(*reg);
+
+          if (sv != cv) {
             triton::api.concretizeRegister(*reg);
+            triton::api.setConcreteRegisterValue(triton::arch::Register(reg->getId(), cv));
+          }
         }
       }
 
