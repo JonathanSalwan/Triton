@@ -298,19 +298,22 @@ namespace triton {
 
         case triton::arch::OP_MEM:
           for (auto&& pair : loadAccess) {
-            auto &&m1 = pair.first;
-            auto &&m2 = target.getConstMemory();
-            if (m1.getAddress() <= m2.getAddress() && m2.getAddress() < m1.getAddress()+m1.getSize())
+            const triton::arch::MemoryAccess& m1 = pair.first;
+            const triton::arch::MemoryAccess& m2 = target.getConstMemory();
+
+            if (m1.getAddress() <= m2.getAddress() && m2.getAddress() < (m1.getAddress() + m1.getSize()))
               return true;
-            if (m2.getAddress() <= m1.getAddress() && m1.getAddress() < m2.getAddress()+m2.getSize())
+
+            if (m2.getAddress() <= m1.getAddress() && m1.getAddress() < (m2.getAddress() + m2.getSize()))
               return true;
           }
           break;
 
         case triton::arch::OP_REG:
           for (auto&& pair : readRegisters) {
-            auto &&r1 = pair.first;
-            auto &&r2 = target.getConstRegister();
+            const triton::arch::Register& r1 = pair.first;
+            const triton::arch::Register& r2 = target.getConstRegister();
+
             if (r1.getParent().getId() == r2.getParent().getId()) {
               if (r1.getLow() <= r2.getLow() && r2.getLow() <= r1.getHigh()) return true;
               if (r2.getLow() <= r1.getLow() && r1.getLow() <= r2.getHigh()) return true;
@@ -334,19 +337,22 @@ namespace triton {
 
         case triton::arch::OP_MEM:
           for (auto&& pair : storeAccess) {
-            auto &&m1 = pair.first;
-            auto &&m2 = target.getConstMemory();
-            if (m1.getAddress() <= m2.getAddress() && m2.getAddress() < m1.getAddress()+m1.getSize())
+            const triton::arch::MemoryAccess& m1 = pair.first;
+            const triton::arch::MemoryAccess& m2 = target.getConstMemory();
+
+            if (m1.getAddress() <= m2.getAddress() && m2.getAddress() < (m1.getAddress() + m1.getSize()))
               return true;
-            if (m2.getAddress() <= m1.getAddress() && m1.getAddress() < m2.getAddress()+m2.getSize())
+
+            if (m2.getAddress() <= m1.getAddress() && m1.getAddress() < (m2.getAddress() + m2.getSize()))
               return true;
           }
           break;
 
         case triton::arch::OP_REG:
           for (auto&& pair : writtenRegisters) {
-            auto &&r1 = pair.first;
-            auto &&r2 = target.getConstRegister();
+            const triton::arch::Register& r1 = pair.first;
+            const triton::arch::Register& r2 = target.getConstRegister();
+
             if (r1.getParent().getId() == r2.getParent().getId()) {
               if (r1.getLow() <= r2.getLow() && r2.getLow() <= r1.getHigh()) return true;
               if (r2.getLow() <= r1.getLow() && r1.getLow() <= r2.getHigh()) return true;
