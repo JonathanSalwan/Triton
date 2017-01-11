@@ -694,13 +694,21 @@ namespace triton {
             /* Init the instruction's prefix */
             inst.setPrefix(this->capstonePrefixToTritonPrefix(detail->x86.prefix[0]));
 
+            /* Base size */
+            triton::uint32 baseSize = 0;
+
             /* Init operands */
             for (triton::uint32 n = 0; n < detail->x86.op_count; n++) {
               triton::extlibs::capstone::cs_x86_op* op = &(detail->x86.operands[n]);
+
+              /* Determine a base size */
+              if (baseSize == 0 || (op->size && op->size < baseSize))
+                baseSize = op->size;
+
               switch(op->type) {
 
                 case triton::extlibs::capstone::X86_OP_IMM:
-                  inst.operands.push_back(triton::arch::OperandWrapper(triton::arch::Immediate(op->imm, op->size)));
+                  inst.operands.push_back(triton::arch::OperandWrapper(triton::arch::Immediate(op->imm, (op->size ? op->size : baseSize))));
                   break;
 
                 case triton::extlibs::capstone::X86_OP_MEM: {
