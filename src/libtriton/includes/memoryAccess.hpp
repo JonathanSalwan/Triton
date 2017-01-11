@@ -166,6 +166,9 @@ namespace triton {
         //! True if the memory is not empty.
         bool isValid(void) const;
 
+        //! Returns true if `other` and `self` overlap.
+        bool isOverlapWith(const MemoryAccess& other) const;
+
         //! Returns true if the memory contains a concrete value.
         bool hasConcreteValue(void) const;
 

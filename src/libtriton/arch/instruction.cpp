@@ -301,10 +301,7 @@ namespace triton {
             const triton::arch::MemoryAccess& m1 = pair.first;
             const triton::arch::MemoryAccess& m2 = target.getConstMemory();
 
-            if (m1.getAddress() <= m2.getAddress() && m2.getAddress() < (m1.getAddress() + m1.getSize()))
-              return true;
-
-            if (m2.getAddress() <= m1.getAddress() && m1.getAddress() < (m2.getAddress() + m2.getSize()))
+            if (m1.isOverlapWith(m2))
               return true;
           }
           break;
@@ -314,10 +311,8 @@ namespace triton {
             const triton::arch::Register& r1 = pair.first;
             const triton::arch::Register& r2 = target.getConstRegister();
 
-            if (r1.getParent().getId() == r2.getParent().getId()) {
-              if (r1.getLow() <= r2.getLow() && r2.getLow() <= r1.getHigh()) return true;
-              if (r2.getLow() <= r1.getLow() && r1.getLow() <= r2.getHigh()) return true;
-            }
+            if (r1.isOverlapWith(r2))
+              return true;
           }
           break;
 
@@ -340,10 +335,7 @@ namespace triton {
             const triton::arch::MemoryAccess& m1 = pair.first;
             const triton::arch::MemoryAccess& m2 = target.getConstMemory();
 
-            if (m1.getAddress() <= m2.getAddress() && m2.getAddress() < (m1.getAddress() + m1.getSize()))
-              return true;
-
-            if (m2.getAddress() <= m1.getAddress() && m1.getAddress() < (m2.getAddress() + m2.getSize()))
+            if (m1.isOverlapWith(m2))
               return true;
           }
           break;
@@ -353,10 +345,8 @@ namespace triton {
             const triton::arch::Register& r1 = pair.first;
             const triton::arch::Register& r2 = target.getConstRegister();
 
-            if (r1.getParent().getId() == r2.getParent().getId()) {
-              if (r1.getLow() <= r2.getLow() && r2.getLow() <= r1.getHigh()) return true;
-              if (r2.getLow() <= r1.getLow() && r1.getLow() <= r2.getHigh()) return true;
-            }
+            if (r1.isOverlapWith(r2))
+              return true;
           }
           break;
 

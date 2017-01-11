@@ -123,6 +123,9 @@ e.g: `8`
 - <b>\ref py_OPERAND_page getType(void)</b><br>
 Returns type of the memory access. In this case this function returns `OPERAND.MEM`.
 
+- <b>bool isOverlapWith(\ref py_MemoryAccess_page other)</b><br>
+Returns true if `other` and `self` overlap.
+
 - <b>void setBaseRegister(\ref py_Register_page reg)</b><br>
 Sets the base register of the memory access.
 
@@ -284,6 +287,24 @@ namespace triton {
       }
 
 
+      static PyObject* MemoryAccess_isOverlapWith(PyObject* self, PyObject* mem2) {
+        try {
+          triton::arch::MemoryAccess* mem1;
+
+          if (!PyMemoryAccess_Check(mem2))
+            return PyErr_Format(PyExc_TypeError, "MemoryAccess::isOverlapWith(): Expected a MemoryAccess as argument.");
+
+          mem1 = PyMemoryAccess_AsMemoryAccess(self);
+          if (mem1->isOverlapWith(*PyMemoryAccess_AsMemoryAccess(mem2)))
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* MemoryAccess_setBaseRegister(PyObject* self, PyObject* reg) {
         try {
           triton::arch::MemoryAccess* mem;
@@ -424,6 +445,7 @@ namespace triton {
         {"getSegmentRegister",  MemoryAccess_getSegmentRegister, METH_NOARGS,      ""},
         {"getSize",             MemoryAccess_getSize,            METH_NOARGS,      ""},
         {"getType",             MemoryAccess_getType,            METH_NOARGS,      ""},
+        {"isOverlapWith",       MemoryAccess_isOverlapWith,      METH_O,           ""},
         {"setBaseRegister",     MemoryAccess_setBaseRegister,    METH_O,           ""},
         {"setConcreteValue",    MemoryAccess_setConcreteValue,   METH_O,           ""},
         {"setDisplacement",     MemoryAccess_setDisplacement,    METH_O,           ""},

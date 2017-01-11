@@ -1009,6 +1009,71 @@ def test_2():
     except:
         count += 1
 
+    setArchitecture(ARCH.X86_64)
+    if REG.AX.isOverlapWith(REG.EAX):
+        count += 1
+    else:
+        print '[KO] REG.AX.isOverlapWith(REG.EAX)'
+        print '\tOutput   : False'
+        print '\tExpected : True'
+        return -1
+
+    if REG.AX.isOverlapWith(REG.RAX):
+        count += 1
+    else:
+        print '[KO] REG.AX.isOverlapWith(REG.RAX)'
+        print '\tOutput   : False'
+        print '\tExpected : True'
+        return -1
+
+    if REG.RAX.isOverlapWith(REG.AX):
+        count += 1
+    else:
+        print '[KO] REG.RAX.isOverlapWith(REG.AX)'
+        print '\tOutput   : False'
+        print '\tExpected : True'
+        return -1
+
+    if REG.AH.isOverlapWith(REG.AL):
+        print '[KO] REG.AH.isOverlapWith(REG.AL)'
+        print '\tOutput   : True'
+        print '\tExpected : False'
+        return -1
+    else:
+        count += 1
+
+    if REG.AL.isOverlapWith(REG.AH):
+        print '[KO] REG.AL.isOverlapWith(REG.AH)'
+        print '\tOutput   : True'
+        print '\tExpected : False'
+        return -1
+    else:
+        count += 1
+
+    if REG.AL.isOverlapWith(REG.AX):
+        count += 1
+    else:
+        print '[KO] REG.AL.isOverlapWith(REG.AX)'
+        print '\tOutput   : False'
+        print '\tExpected : True'
+        return -1
+
+    if REG.AX.isOverlapWith(REG.AL):
+        count += 1
+    else:
+        print '[KO] REG.AX.isOverlapWith(REG.AL)'
+        print '\tOutput   : False'
+        print '\tExpected : True'
+        return -1
+
+    if REG.EAX.isOverlapWith(REG.EDX):
+        print '[KO] REG.EAX.isOverlapWith(REG.EDX)'
+        print '\tOutput   : True'
+        print '\tExpected : False'
+        return -1
+    else:
+        count += 1
+
     return count
 
 
@@ -1191,6 +1256,70 @@ def test_3():
         print '\tOutput   : %s' %(mem.getSegmentRegister())
         print '\tExpected : False'
         return -1
+
+    if MemoryAccess(0x1000, 2).isOverlapWith(MemoryAccess(0x1001, 2)):
+        count += 1
+    else:
+        print '[KO] MemoryAccess(0x1000, 2).isOverlapWith(MemoryAccess(0x1001, 2))'
+        print '\tOutput   : False'
+        print '\tExpected : True'
+        return -1
+
+    if MemoryAccess(0xfff, 2).isOverlapWith(MemoryAccess(0x1000, 2)):
+        count += 1
+    else:
+        print '[KO] MemoryAccess(0xfff, 2).isOverlapWith(MemoryAccess(0x1000, 2))'
+        print '\tOutput   : False'
+        print '\tExpected : True'
+        return -1
+
+    if MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x1004, 4)):
+        print '[KO] MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x1004, 4))'
+        print '\tOutput   : True'
+        print '\tExpected : False'
+        return -1
+    else:
+        count += 1
+
+    if MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x1003, 2)):
+        count += 1
+    else:
+        print '[KO] MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x1003, 2))'
+        print '\tOutput   : False'
+        print '\tExpected : True'
+        return -1
+
+    if MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x1002, 1)):
+        count += 1
+    else:
+        print '[KO] MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x1002, 1))'
+        print '\tOutput   : False'
+        print '\tExpected : True'
+        return -1
+
+    if MemoryAccess(0x1002, 1).isOverlapWith(MemoryAccess(0x1000, 4)):
+        count += 1
+    else:
+        print '[KO] MemoryAccess(0x1002, 1).isOverlapWith(MemoryAccess(0x1000, 4))'
+        print '\tOutput   : False'
+        print '\tExpected : True'
+        return -1
+
+    if MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x10000, 4)):
+        print '[KO] MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x10000, 4))'
+        print '\tOutput   : True'
+        print '\tExpected : False'
+        return -1
+    else:
+        count += 1
+
+    if MemoryAccess(0x10000, 4).isOverlapWith(MemoryAccess(0x1000, 4)):
+        print '[KO] MemoryAccess(0x10000, 4).isOverlapWith(MemoryAccess(0x1000, 4))'
+        print '\tOutput   : True'
+        print '\tExpected : False'
+        return -1
+    else:
+        count += 1
 
     return count
 

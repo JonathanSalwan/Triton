@@ -188,6 +188,15 @@ namespace triton {
     }
 
 
+    bool Register::isOverlapWith(const Register& other) const {
+      if (this->getParent().getId() == other.getParent().getId()) {
+        if (this->getLow() <= other.getLow() && other.getLow() <= this->getHigh()) return true;
+        if (other.getLow() <= this->getLow() && this->getLow() <= other.getHigh()) return true;
+      }
+      return false;
+    }
+
+
     bool Register::hasConcreteValue(void) const {
       return this->concreteValueDefined;
     }

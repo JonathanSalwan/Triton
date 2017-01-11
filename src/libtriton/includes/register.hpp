@@ -103,6 +103,9 @@ namespace triton {
         //! Returns true if the register is immutable.
         bool isImmutable(void) const;
 
+        //! Returns true if `other` and `self` overlap.
+        bool isOverlapWith(const Register& other) const;
+
         //! Returns true if the register contains a concrete value.
         bool hasConcreteValue(void) const;
 

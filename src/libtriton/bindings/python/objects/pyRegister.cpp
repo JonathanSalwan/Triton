@@ -100,6 +100,9 @@ Returns true if the register is valid.
 - <b>bool isFlag(void)</b><br>
 Returns true if the register is a flag.
 
+- <b>bool isOverlapWith(\ref py_Register_page other)</b><br>
+Returns true if `other` and `self` overlap.
+
 - <b>bool isRegister(void)</b><br>
 Returns true if the register is a register.
 
@@ -229,6 +232,24 @@ namespace triton {
       }
 
 
+      static PyObject* Register_isOverlapWith(PyObject* self, PyObject* reg2) {
+        try {
+          triton::arch::Register* reg1;
+
+          if (!PyRegister_Check(reg2))
+            return PyErr_Format(PyExc_TypeError, "Register::isOverlapWith(): Expected a Register as argument.");
+
+          reg1 = PyRegister_AsRegister(self);
+          if (reg1->isOverlapWith(*PyRegister_AsRegister(reg2)))
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* Register_setConcreteValue(PyObject* self, PyObject* value) {
         triton::arch::Register* reg;
 
@@ -321,6 +342,7 @@ namespace triton {
         {"getSize",           Register_getSize,          METH_NOARGS,    ""},
         {"getType",           Register_getType,          METH_NOARGS,    ""},
         {"isFlag",            Register_isFlag,           METH_NOARGS,    ""},
+        {"isOverlapWith",     Register_isOverlapWith,    METH_O,         ""},
         {"isRegister",        Register_isRegister,       METH_NOARGS,    ""},
         {"isValid",           Register_isValid,          METH_NOARGS,    ""},
         {"setConcreteValue",  Register_setConcreteValue, METH_O,         ""},
