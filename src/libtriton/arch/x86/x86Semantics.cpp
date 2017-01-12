@@ -5678,6 +5678,32 @@ namespace triton {
         /* Create the semantics */
         auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
 
+        /*
+         * Special cases:
+         *
+         * Triton defines segment registers as 32 or 64  bits vector to
+         * avoid to simulate the GDT which allows users to directly define
+         * their segments offset.
+         *
+         * The code below, handles the case: MOV r/m{16/32/64}, Sreg
+         */
+        if (src.getType() == triton::arch::OP_REG) {
+          uint32 id = src.getConstRegister().getId();
+          if (id >= triton::arch::x86::ID_REG_CS && id <= triton::arch::x86::ID_REG_SS) {
+            node = triton::ast::extract(dst.getBitSize()-1, 0, node);
+          }
+        }
+
+        /*
+         * The code below, handles the case: MOV Sreg, r/m{16/32/64}
+         */
+        if (dst.getType() == triton::arch::OP_REG) {
+          uint32 id = dst.getConstRegister().getId();
+          if (id >= triton::arch::x86::ID_REG_CS && id <= triton::arch::x86::ID_REG_SS) {
+            node = triton::ast::extract(WORD_SIZE_BIT-1, 0, node);
+          }
+        }
+
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOV operation");
 
