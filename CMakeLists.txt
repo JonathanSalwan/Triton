@@ -326,9 +326,9 @@ if(PYTHON_BINDINGS)
         ${CMAKE_SOURCE_DIR}/src/testers/libTriton_units_testing.py
         IMMEDIATE @ONLY
     )
-    find_program(ENV_BINARY "env")
+    find_package(PythonInterp REQUIRED)
     if(UNIX)
-      install (CODE "execute_process(COMMAND ${ENV_BINARY} python2 ${CMAKE_BINARY_DIR}/setup.py install)")
+            install (CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/setup.py install)")
     endif()
 endif()
 
