@@ -193,6 +193,17 @@ namespace triton {
     }
 
 
+    void Instruction::removeWrittenRegister(const triton::arch::Register& reg) {
+      auto it = writtenRegisters.begin();
+      while (it != writtenRegisters.end()) {
+        if (it->first.getId() == reg.getId())
+          it = writtenRegisters.erase(it);
+        else
+          ++it;
+      }
+    }
+
+
     void Instruction::setReadImmediate(const triton::arch::Immediate& imm, triton::ast::AbstractNode* node) {
       this->readImmediates.insert(std::make_pair(imm, node));
     }

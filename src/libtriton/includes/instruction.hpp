@@ -190,6 +190,9 @@ namespace triton {
         //! Sets a written register.
         void setWrittenRegister(const triton::arch::Register& reg, triton::ast::AbstractNode* node);
 
+        //! Removes a written register.
+        void removeWrittenRegister(const triton::arch::Register& reg);
+
         //! Sets a read immediate.
         void setReadImmediate(const triton::arch::Immediate& imm, triton::ast::AbstractNode* node);
 
