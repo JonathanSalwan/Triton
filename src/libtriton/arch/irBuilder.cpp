@@ -115,7 +115,7 @@ namespace triton {
       inst.memoryAccess.clear();
       inst.registerState.clear();
 
-      ///* Set the taint */
+      /* Set the taint */
       inst.setTaint();
 
       /*

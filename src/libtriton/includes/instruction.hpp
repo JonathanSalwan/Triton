@@ -220,6 +220,9 @@ namespace triton {
         //! Sets the disassembly of the instruction.
         void setDisassembly(const std::string& str);
 
+        //! Sets the taint of the instruction.
+        void setTaint(bool state);
+
         //! Sets the taint of the instruction based on its expressions.
         void setTaint(void);
 

@@ -279,6 +279,11 @@ namespace triton {
     }
 
 
+    void Instruction::setTaint(bool state) {
+      this->tainted = state;
+    }
+
+
     void Instruction::setTaint(void) {
       std::vector<triton::engines::symbolic::SymbolicExpression*>::const_iterator it;
       for (it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
