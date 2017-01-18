@@ -181,17 +181,32 @@ namespace triton {
         //! Sets a load access.
         void setLoadAccess(const triton::arch::MemoryAccess& mem, triton::ast::AbstractNode* node);
 
+        //! Removes a load access.
+        void removeLoadAccess(const triton::arch::MemoryAccess& mem);
+
         //! Sets a store access.
         void setStoreAccess(const triton::arch::MemoryAccess& mem, triton::ast::AbstractNode* node);
+
+        //! Removes a store access.
+        void removeStoreAccess(const triton::arch::MemoryAccess& mem);
 
         //! Sets a read register.
         void setReadRegister(const triton::arch::Register& reg, triton::ast::AbstractNode* node);
 
+        //! Removes a read register.
+        void removeReadRegister(const triton::arch::Register& reg);
+
         //! Sets a written register.
         void setWrittenRegister(const triton::arch::Register& reg, triton::ast::AbstractNode* node);
 
+        //! Removes a written register.
+        void removeWrittenRegister(const triton::arch::Register& reg);
+
         //! Sets a read immediate.
         void setReadImmediate(const triton::arch::Immediate& imm, triton::ast::AbstractNode* node);
+
+        //! Removes a read immediate.
+        void removeReadImmediate(const triton::arch::Immediate& imm);
 
         //! Sets the size of the instruction.
         void setSize(triton::uint32 size);
