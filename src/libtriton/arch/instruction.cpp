@@ -178,30 +178,8 @@ namespace triton {
     }
 
 
-    void Instruction::removeLoadAccess(const triton::arch::MemoryAccess& mem) {
-      auto it = loadAccess.begin();
-      while (it != loadAccess.end()) {
-        if (it->first.getAddress() == mem.getAddress())
-          it = loadAccess.erase(it);
-        else
-          ++it;
-      }
-    }
-
-
     void Instruction::setStoreAccess(const triton::arch::MemoryAccess& mem, triton::ast::AbstractNode* node) {
       this->storeAccess.insert(std::make_pair(mem, node));
-    }
-
-
-    void Instruction::removeStoreAccess(const triton::arch::MemoryAccess& mem) {
-      auto it = storeAccess.begin();
-      while (it != storeAccess.end()) {
-        if (it->first.getAddress() == mem.getAddress())
-          it = storeAccess.erase(it);
-        else
-          ++it;
-      }
     }
 
 
@@ -210,46 +188,13 @@ namespace triton {
     }
 
 
-    void Instruction::removeReadRegister(const triton::arch::Register& reg) {
-      auto it = readRegisters.begin();
-      while (it != readRegisters.end()) {
-        if (it->first.getId() == reg.getId())
-          it = readRegisters.erase(it);
-        else
-          ++it;
-      }
-    }
-
-
     void Instruction::setWrittenRegister(const triton::arch::Register& reg, triton::ast::AbstractNode* node) {
       this->writtenRegisters.insert(std::make_pair(reg, node));
     }
 
 
-    void Instruction::removeWrittenRegister(const triton::arch::Register& reg) {
-      auto it = writtenRegisters.begin();
-      while (it != writtenRegisters.end()) {
-        if (it->first.getId() == reg.getId())
-          it = writtenRegisters.erase(it);
-        else
-          ++it;
-      }
-    }
-
-
     void Instruction::setReadImmediate(const triton::arch::Immediate& imm, triton::ast::AbstractNode* node) {
       this->readImmediates.insert(std::make_pair(imm, node));
-    }
-
-
-    void Instruction::removeReadImmediate(const triton::arch::Immediate& imm) {
-      auto it = readImmediates.begin();
-      while (it != readImmediates.end()) {
-        if (it->first.getValue() == imm.getValue())
-          it = readImmediates.erase(it);
-        else
-          ++it;
-      }
     }
 
 
