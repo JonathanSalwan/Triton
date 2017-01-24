@@ -178,8 +178,32 @@ namespace triton {
     }
 
 
+    void Instruction::removeLoadAccess(const triton::arch::MemoryAccess& mem) {
+      auto it = this->loadAccess.begin();
+
+      while (it != this->loadAccess.end()) {
+        if (it->first.getAddress() == mem.getAddress())
+          it = this->loadAccess.erase(it);
+        else
+          ++it;
+      }
+    }
+
+
     void Instruction::setStoreAccess(const triton::arch::MemoryAccess& mem, triton::ast::AbstractNode* node) {
       this->storeAccess.insert(std::make_pair(mem, node));
+    }
+
+
+    void Instruction::removeStoreAccess(const triton::arch::MemoryAccess& mem) {
+      auto it = this->storeAccess.begin();
+
+      while (it != this->storeAccess.end()) {
+        if (it->first.getAddress() == mem.getAddress())
+          it = this->storeAccess.erase(it);
+        else
+          ++it;
+      }
     }
 
 
@@ -188,13 +212,49 @@ namespace triton {
     }
 
 
+    void Instruction::removeReadRegister(const triton::arch::Register& reg) {
+      auto it = this->readRegisters.begin();
+
+      while (it != this->readRegisters.end()) {
+        if (it->first.getId() == reg.getId())
+          it = this->readRegisters.erase(it);
+        else
+          ++it;
+      }
+    }
+
+
     void Instruction::setWrittenRegister(const triton::arch::Register& reg, triton::ast::AbstractNode* node) {
       this->writtenRegisters.insert(std::make_pair(reg, node));
     }
 
 
+    void Instruction::removeWrittenRegister(const triton::arch::Register& reg) {
+      auto it = this->writtenRegisters.begin();
+
+      while (it != this->writtenRegisters.end()) {
+        if (it->first.getId() == reg.getId())
+          it = this->writtenRegisters.erase(it);
+        else
+          ++it;
+      }
+    }
+
+
     void Instruction::setReadImmediate(const triton::arch::Immediate& imm, triton::ast::AbstractNode* node) {
       this->readImmediates.insert(std::make_pair(imm, node));
+    }
+
+
+    void Instruction::removeReadImmediate(const triton::arch::Immediate& imm) {
+      auto it = this->readImmediates.begin();
+
+      while (it != this->readImmediates.end()) {
+        if (it->first.getValue() == imm.getValue())
+          it = this->readImmediates.erase(it);
+        else
+          ++it;
+      }
     }
 
 
@@ -216,6 +276,11 @@ namespace triton {
     void Instruction::setDisassembly(const std::string& str) {
       this->disassembly.clear();
       this->disassembly.str(str);
+    }
+
+
+    void Instruction::setTaint(bool state) {
+      this->tainted = state;
     }
 
 
@@ -290,14 +355,14 @@ namespace triton {
       switch(target.getType()) {
 
         case triton::arch::OP_IMM:
-          for (auto&& pair : readImmediates) {
+          for (auto&& pair : this->readImmediates) {
             if (pair.first == target.getConstImmediate())
               return true;
           }
           break;
 
         case triton::arch::OP_MEM:
-          for (auto&& pair : loadAccess) {
+          for (auto&& pair : this->loadAccess) {
             const triton::arch::MemoryAccess& m1 = pair.first;
             const triton::arch::MemoryAccess& m2 = target.getConstMemory();
 
@@ -307,7 +372,7 @@ namespace triton {
           break;
 
         case triton::arch::OP_REG:
-          for (auto&& pair : readRegisters) {
+          for (auto&& pair : this->readRegisters) {
             const triton::arch::Register& r1 = pair.first;
             const triton::arch::Register& r2 = target.getConstRegister();
 
@@ -331,7 +396,7 @@ namespace triton {
           break;
 
         case triton::arch::OP_MEM:
-          for (auto&& pair : storeAccess) {
+          for (auto&& pair : this->storeAccess) {
             const triton::arch::MemoryAccess& m1 = pair.first;
             const triton::arch::MemoryAccess& m2 = target.getConstMemory();
 
@@ -341,7 +406,7 @@ namespace triton {
           break;
 
         case triton::arch::OP_REG:
-          for (auto&& pair : writtenRegisters) {
+          for (auto&& pair : this->writtenRegisters) {
             const triton::arch::Register& r1 = pair.first;
             const triton::arch::Register& r2 = target.getConstRegister();
 
