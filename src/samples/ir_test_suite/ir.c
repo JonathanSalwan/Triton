@@ -30,6 +30,16 @@ void check(void)
   int tab3[4];
   int tab4[4];
 
+  int _utab1[5];
+  int _utab2[5];
+  int _utab3[5];
+  int _utab4[5];
+
+  int* utab1 = (int*)((char*)_utab1 + 1);
+  int* utab2 = (int*)((char*)_utab2 + 1);
+  int* utab3 = (int*)((char*)_utab3 + 1);
+  int* utab4 = (int*)((char*)_utab4 + 1);
+
   init(tab1, tab2, tab3, tab4);
 
   // Check concat symbolic expression
@@ -3536,6 +3546,16 @@ void check(void)
   asm("vpshufd xmm2, xmm3, 0x40");
   asm("vpshufd xmm1, xmm4, 0xff");
   asm("vpshufd xmm3, xmm1, 0xaa");
+
+  init(utab1, utab2, utab3, utab4);
+  asm("vmovdqu xmm1, xmmword ptr [%0]" :: "r"(utab1));
+  asm("vmovdqu xmm2, xmmword ptr [%0]" :: "r"(utab2));
+  asm("vmovdqu xmm3, xmmword ptr [%0]" :: "r"(utab3));
+  asm("vmovdqu xmm4, xmmword ptr [%0]" :: "r"(utab4));
+
+  asm("vpor xmm1, xmm2, xmm3");
+  asm("vpor xmm1, xmm1, xmm2");
+  asm("vpor xmm1, xmm3, xmm4");
 }
 
 int main(){
