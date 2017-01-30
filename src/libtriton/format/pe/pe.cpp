@@ -250,7 +250,7 @@ namespace triton {
       }
 
 
-      triton::uint32 Pe::getImageBase(void) const {
+      triton::uint64 Pe::getImageBase(void) const {
         return this->header.getOptionalHeader().getImageBase();
       }
 

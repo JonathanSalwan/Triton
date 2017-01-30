@@ -121,7 +121,7 @@ namespace triton {
           const std::list<triton::format::MemoryMapping>& getMemoryMapping(void) const;
 
           //! Returns the image base (shorthand of getting it via getHeader)
-          triton::uint32 getImageBase(void) const;
+          triton::uint64 getImageBase(void) const;
       };
 
     /*! @} End of pe namespace */
