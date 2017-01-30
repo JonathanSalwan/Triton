@@ -60,12 +60,12 @@ namespace triton {
         if (this->peHeaderStart + 24 > totalSize)
           throw triton::exceptions::Pe("PeHeader::parse(): PE Header would extend beyond end of file.");
 
-        dosStub.resize(peHeaderStart);
-        std::memcpy(&dosStub[0], raw, peHeaderStart);
+        this->dosStub.resize(this->peHeaderStart);
+        std::memcpy(&this->dosStub[0], raw, this->peHeaderStart);
 
-        fileHeader.parse(raw + this->peHeaderStart + 4);
+        this->fileHeader.parse(raw + this->peHeaderStart + 4);
         triton::uint32 optHeaderStart = this->peHeaderStart + 24;
-        triton::uint32 optHeaderSize = this->fileHeader.getSizeOfOptionalHeader();
+        triton::uint32 optHeaderSize  = this->fileHeader.getSizeOfOptionalHeader();
         if (optHeaderStart + sizeof(optHeaderSize) > totalSize)
           throw triton::exceptions::Pe("PeHeader::parse(): PE Optional Header would extend beyond end of file.");
 
@@ -77,7 +77,7 @@ namespace triton {
 
         this->dataDirectory.parse(raw + dataDirStart);
         triton::uint32 sectionStart = optHeaderStart + optHeaderSize;
-        triton::uint32 numSections = this->fileHeader.getNumberOfSections();
+        triton::uint32 numSections  = this->fileHeader.getNumberOfSections();
         if ((sectionStart + (numSections * sizeof(PeSectionHeader))) > totalSize)
           throw triton::exceptions::Pe("PeHeader::parse(): Section table would extend beyond end of file.");
 
@@ -93,11 +93,11 @@ namespace triton {
 
 
       void PeHeader::save(std::ostream& os) const {
-        os.write(reinterpret_cast<const char*>(&dosStub[0]), peHeaderStart);
+        os.write(reinterpret_cast<const char*>(&this->dosStub[0]), this->peHeaderStart);
 
-        fileHeader.save(os);
-        optionalHeader.save(os);
-        dataDirectory.save(os);
+        this->fileHeader.save(os);
+        this->optionalHeader.save(os);
+        this->dataDirectory.save(os);
 
         for (const PeSectionHeader& hdr : this->sectionHeaders)
           hdr.save(os);
@@ -112,7 +112,7 @@ namespace triton {
 
 
       triton::uint32 PeHeader::sectionAlign(triton::uint32 rva) const {
-        triton::uint32 align = optionalHeader.getSectionAlignment();
+        triton::uint32 align = this->optionalHeader.getSectionAlignment();
 
         return (((rva - 1) / align + 1) * align);
       }
@@ -121,7 +121,7 @@ namespace triton {
       triton::uint32 PeHeader::getTotalSectionVirtualSize(void) const {
         triton::uint32 maxRva = 0;
 
-        for (const PeSectionHeader& hdr : sectionHeaders) {
+        for (const PeSectionHeader& hdr : this->sectionHeaders) {
           triton::uint32 rva = hdr.getVirtualAddress() + hdr.getVirtualSize();
           maxRva = std::max(maxRva, rva);
         }
@@ -133,7 +133,7 @@ namespace triton {
       triton::uint32 PeHeader::getTotalSectionRawSize(void) const {
         triton::uint32 maxOffset = 0;
 
-        for (const PeSectionHeader& hdr : sectionHeaders) {
+        for (const PeSectionHeader& hdr : this->sectionHeaders) {
           triton::uint32 offset = hdr.getRawAddress() + hdr.getRawSize();
           maxOffset = std::max(maxOffset, offset);
         }
@@ -143,12 +143,12 @@ namespace triton {
 
 
       triton::uint32 PeHeader::getSize(void) const {
-        triton::uint32 size = peHeaderStart
-                              + fileHeader.getSize()
-                              + optionalHeader.getSize()
-                              + dataDirectory.getSize();
+        triton::uint32 size = this->peHeaderStart
+                            + this->fileHeader.getSize()
+                            + this->optionalHeader.getSize()
+                            + this->dataDirectory.getSize();
 
-        for (auto&& sectionHeader : sectionHeaders)
+        for (auto&& sectionHeader : this->sectionHeaders)
           size += sectionHeader.getSize();
 
         return size;

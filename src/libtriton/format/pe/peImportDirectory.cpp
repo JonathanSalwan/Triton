@@ -110,4 +110,3 @@ namespace triton {
   }; /* format namespace */
 }; /* triton namespace */
 
-
