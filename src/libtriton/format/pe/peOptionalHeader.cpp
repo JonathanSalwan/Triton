@@ -407,7 +407,7 @@ namespace triton {
         other.checkSum                    = this->checkSum;
         other.dllCharacteristics          = this->dllCharacteristics;
         other.fileAlignment               = this->fileAlignment;
-        other.imageBase                   = this->imageBase;
+        other.imageBase                   = static_cast<triton::uint32>(this->imageBase);
         other.loaderFlags                 = this->loaderFlags;
         other.magic                       = this->magic;
         other.majorImageVersion           = this->majorImageVersion;
@@ -422,12 +422,12 @@ namespace triton {
         other.sectionAlignment            = this->sectionAlignment;
         other.sizeOfCode                  = this->sizeOfCode;
         other.sizeOfHeaders               = this->sizeOfHeaders;
-        other.sizeOfHeapCommit            = this->sizeOfHeapCommit;
-        other.sizeOfHeapReserve           = this->sizeOfHeapReserve;
+        other.sizeOfHeapCommit            = static_cast<triton::uint32>(this->sizeOfHeapCommit);
+        other.sizeOfHeapReserve           = static_cast<triton::uint32>(this->sizeOfHeapReserve);
         other.sizeOfImage                 = this->sizeOfImage;
         other.sizeOfInitializedData       = this->sizeOfInitializedData;
-        other.sizeOfStackCommit           = this->sizeOfStackCommit;
-        other.sizeOfStackReserve          = this->sizeOfStackReserve;
+        other.sizeOfStackCommit           = static_cast<triton::uint32>(this->sizeOfStackCommit);
+        other.sizeOfStackReserve          = static_cast<triton::uint32>(this->sizeOfStackReserve);
         other.sizeOfUninitializedData     = this->sizeOfUninitializedData;
         other.subsystem                   = this->subsystem;
         other.win32VersionValue           = this->win32VersionValue;

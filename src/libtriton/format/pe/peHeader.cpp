@@ -186,7 +186,8 @@ namespace triton {
         hdr.setCharacteristics(characteristics);
 
         this->sectionHeaders.push_back(hdr);
-        this->fileHeader.setNumberOfSections(this->sectionHeaders.size());
+        this->fileHeader.setNumberOfSections(static_cast<triton::uint16>(this->sectionHeaders.size()));
+
         // getTotalSectionVirtualSize will now return the increased size
         this->optionalHeader.setSizeOfImage(this->getTotalSectionVirtualSize());
         this->optionalHeader.setSizeOfHeaders(this->fileAlign(this->getSize()));
