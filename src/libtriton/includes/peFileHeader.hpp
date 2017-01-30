@@ -102,14 +102,14 @@ namespace triton {
           //! Saves the header to file.
           void save(std::ostream& os) const;
 
+          //! Sets the numberOfSections.
+          void setNumberOfSections(triton::uint16 numberOfSections);
+
           //! Returns the machine.
           triton::uint16 getMachine(void) const;
 
           //! Returns the numberOfSections.
           triton::uint16 getNumberOfSections(void) const;
-
-          //! Sets the numberOfSections.
-          void setNumberOfSections(triton::uint16 numberOfSections);
 
           //! Returns the timeDateStamp.
           triton::uint32 getTimeDateStamp(void) const;
