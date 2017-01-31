@@ -135,14 +135,25 @@ namespace triton {
 
 
     bool operator!=(const Immediate& imm1, const Immediate& imm2) {
-      if (imm1 == imm2)
-        return false;
-      return true;
+      return (imm1 != imm2);
     }
 
 
     bool operator<(const Immediate& imm1, const Immediate& imm2) {
-      return imm1.getValue() < imm2.getValue();
+      triton::uint64 seed1 = 0;
+      triton::uint64 seed2 = 0;
+
+      /*
+       * Golden ratio 32-bits -> 0x9e3779b9
+       * Golden ratio 64-bits -> 0x9e3779b97f4a7c13
+       */
+      seed1 ^= imm1.getValue() + 0x9e3779b97f4a7c13 + (seed1 << 6) + (seed1 >> 2);
+      seed1 ^= imm1.getSize() + 0x9e3779b97f4a7c13 + (seed1 << 6) + (seed1 >> 2);
+
+      seed2 ^= imm2.getValue() + 0x9e3779b97f4a7c13 + (seed2 << 6) + (seed2 >> 2);
+      seed2 ^= imm2.getSize() + 0x9e3779b97f4a7c13 + (seed2 << 6) + (seed2 >> 2);
+
+      return (seed1 < seed2);
     }
 
   }; /* arch namespace */

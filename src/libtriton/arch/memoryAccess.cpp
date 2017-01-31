@@ -357,21 +357,23 @@ namespace triton {
 
 
     bool operator!=(const MemoryAccess& mem1, const MemoryAccess& mem2) {
-      if (mem1 == mem2)
-        return false;
-      return true;
+      return (mem1 != mem2);
     }
 
 
     bool operator<(const MemoryAccess& mem1, const MemoryAccess& mem2) {
-      triton::usize seed1 = 0;
-      triton::usize seed2 = 0;
+      triton::uint64 seed1 = 0;
+      triton::uint64 seed2 = 0;
 
-      seed1 ^= mem1.getAddress() + 0x9e3779b9 + (seed1 << 6) + (seed1 >> 2);
-      seed1 ^= mem1.getSize() + 0x9e3779b9 + (seed1 << 6) + (seed1 >> 2);
+      /*
+       * Golden ratio 32-bits -> 0x9e3779b9
+       * Golden ratio 64-bits -> 0x9e3779b97f4a7c13
+       */
+      seed1 ^= mem1.getAddress() + 0x9e3779b97f4a7c13 + (seed1 << 6) + (seed1 >> 2);
+      seed1 ^= mem1.getSize() + 0x9e3779b97f4a7c13 + (seed1 << 6) + (seed1 >> 2);
 
-      seed2 ^= mem2.getAddress() + 0x9e3779b9 + (seed2 << 6) + (seed2 >> 2);
-      seed2 ^= mem2.getSize() + 0x9e3779b9 + (seed2 << 6) + (seed2 >> 2);
+      seed2 ^= mem2.getAddress() + 0x9e3779b97f4a7c13 + (seed2 << 6) + (seed2 >> 2);
+      seed2 ^= mem2.getSize() + 0x9e3779b97f4a7c13 + (seed2 << 6) + (seed2 >> 2);
 
       return (seed1 < seed2);
     }

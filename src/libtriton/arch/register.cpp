@@ -231,14 +231,12 @@ namespace triton {
 
 
     bool operator!=(const Register& reg1, const Register& reg2) {
-      if (reg1 == reg2)
-        return false;
-      return true;
+      return (reg1 != reg2);
     }
 
 
     bool operator<(const Register& reg1, const Register& reg2) {
-      return reg1.getId() < reg2.getId();
+      return (reg1.getId() < reg2.getId());
     }
 
   }; /* arch namespace */
