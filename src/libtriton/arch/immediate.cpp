@@ -135,7 +135,7 @@ namespace triton {
 
 
     bool operator!=(const Immediate& imm1, const Immediate& imm2) {
-      return (imm1 != imm2);
+      return !(imm1 == imm2);
     }
 
 

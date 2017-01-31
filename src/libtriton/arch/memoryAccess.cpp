@@ -357,7 +357,7 @@ namespace triton {
 
 
     bool operator!=(const MemoryAccess& mem1, const MemoryAccess& mem2) {
-      return (mem1 != mem2);
+      return !(mem1 == mem2);
     }
 
 

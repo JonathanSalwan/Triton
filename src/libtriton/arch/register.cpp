@@ -231,7 +231,7 @@ namespace triton {
 
 
     bool operator!=(const Register& reg1, const Register& reg2) {
-      return (reg1 != reg2);
+      return !(reg1 == reg2);
     }
 
 
