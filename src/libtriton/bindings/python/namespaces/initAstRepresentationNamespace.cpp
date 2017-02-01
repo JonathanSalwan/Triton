@@ -21,7 +21,7 @@
 \section AST_REPRESENTATION_py_description Description
 <hr>
 
-The AST_REPRESENTATION namespace contains all modes of AST representation.
+The AST_REPRESENTATION namespace contains all kinds of AST representation.
 
 \subsection AST_REPRESENTATION_py_example Example
 

@@ -74,6 +74,7 @@ namespace triton {
                                      triton::modes::Modes* modes,
                                      triton::callbacks::Callbacks* callbacks,
                                      bool isBackup)
+
         : triton::engines::symbolic::SymbolicSimplification(callbacks),
           triton::engines::symbolic::PathManager(modes) {
 
