@@ -40,21 +40,23 @@ namespace triton {
       if (taintEngine == nullptr)
         throw triton::exceptions::IrBuilder("IrBuilder::IrBuilder(): The taint engines API must be defined.");
 
-      this->architecture         = architecture;
-      this->modes                = modes;
-      this->astGarbageCollector  = astGarbageCollector;
-      this->backupSymbolicEngine = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(architecture, modes, nullptr, true);
-      this->symbolicEngine       = symbolicEngine;
-      this->taintEngine          = taintEngine;
-      this->x86Isa               = new(std::nothrow) triton::arch::x86::x86Semantics(architecture, symbolicEngine, taintEngine);
+      this->architecture              = architecture;
+      this->astGarbageCollector       = astGarbageCollector;
+      this->backupAstGarbageCollector = new(std::nothrow) triton::ast::AstGarbageCollector(modes, true);
+      this->backupSymbolicEngine      = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(architecture, modes, nullptr, true);
+      this->modes                     = modes;
+      this->symbolicEngine            = symbolicEngine;
+      this->taintEngine               = taintEngine;
+      this->x86Isa                    = new(std::nothrow) triton::arch::x86::x86Semantics(architecture, symbolicEngine, taintEngine);
 
-      if (this->x86Isa == nullptr || this->backupSymbolicEngine == nullptr)
+      if (this->x86Isa == nullptr || this->backupSymbolicEngine == nullptr || this->backupAstGarbageCollector == nullptr)
         throw triton::exceptions::IrBuilder("IrBuilder::IrBuilder(): Not enough memory.");
     }
 
 
     IrBuilder::~IrBuilder() {
       delete this->backupSymbolicEngine;
+      delete this->backupAstGarbageCollector;
       delete this->x86Isa;
     }
 
@@ -107,8 +109,10 @@ namespace triton {
       inst.symbolicExpressions.clear();
 
       /* Backup the symbolic engine in the case where only the taint is available. */
-      if (!this->symbolicEngine->isEnabled())
+      if (!this->symbolicEngine->isEnabled()) {
         *this->backupSymbolicEngine = *this->symbolicEngine;
+        *this->backupAstGarbageCollector = *this->astGarbageCollector;
+      }
     }
 
 
@@ -190,6 +194,9 @@ namespace triton {
 
       /* Free collected nodes */
       this->astGarbageCollector->freeAstNodes(uniqueNodes);
+
+      if (!this->symbolicEngine->isEnabled())
+        *this->astGarbageCollector = *this->backupAstGarbageCollector;
     }
 
 

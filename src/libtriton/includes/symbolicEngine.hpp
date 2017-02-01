@@ -14,7 +14,6 @@
 
 #include "architecture.hpp"
 #include "ast.hpp"
-#include "astDictionaries.hpp"
 #include "callbacks.hpp"
 #include "memoryAccess.hpp"
 #include "modes.hpp"
@@ -54,15 +53,14 @@ namespace triton {
       //! \class SymbolicEngine
       /*! \brief The symbolic engine class. */
       class SymbolicEngine
-        : public virtual triton::ast::AstDictionaries,
-          public virtual triton::engines::symbolic::SymbolicSimplification,
-          public virtual triton::engines::symbolic::PathManager {
+        : public triton::engines::symbolic::SymbolicSimplification,
+          public triton::engines::symbolic::PathManager {
 
         protected:
           //! Defines if the engine is enable or disable.
           bool enableFlag;
 
-          //! Defines if this engine is used as a backup.
+          //! Defines if this instance is used as a backup.
           bool backupFlag;
 
           //! Number of registers

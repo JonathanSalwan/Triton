@@ -202,7 +202,10 @@ namespace triton {
         //! Destructor.
         virtual ~AstDictionaries();
 
-        //! Copies a AstDictionaries.
+        //! Copies an AstDictionaries.
+        void operator=(const AstDictionaries& other);
+
+        //! Copies an AstDictionaries.
         void copy(const AstDictionaries& other);
 
         //! Links all sub dictionaries to the root one.
@@ -212,10 +215,7 @@ namespace triton {
         triton::ast::AbstractNode* browseAstDictionaries(triton::ast::AbstractNode* node);
 
         //! Returns stats about dictionaries.
-        std::map<std::string, triton::usize> getAstDictionariesStats(void);
-
-        //! Copies a AstDictionaries.
-        void operator=(const AstDictionaries& other);
+        std::map<std::string, triton::usize> getAstDictionariesStats(void) const;
     };
 
   /*! @} End of ast namespace */

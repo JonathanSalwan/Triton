@@ -241,6 +241,9 @@ namespace triton {
         //! [**AST garbage collector api**] - Returns all allocated nodes.
         const std::set<triton::ast::AbstractNode*>& getAllocatedAstNodes(void) const;
 
+        //! [**AST garbage collector api**] - Returns all stats about AST Dictionaries.
+        std::map<std::string, triton::usize> getAstDictionariesStats(void) const;
+
         //! [**AST garbage collector api**] - Returns all variable nodes recorded.
         const std::map<std::string, triton::ast::AbstractNode*>& getAstVariableNodes(void) const;
 
@@ -416,9 +419,6 @@ namespace triton {
 
         //! [**symbolic api**] - Assigns a symbolic expression to a register.
         void assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, const triton::arch::Register& reg);
-
-        //! [**symbolic api**] - Returns all stats about AST Dictionaries.
-        std::map<std::string, triton::usize> getAstDictionariesStats(void);
 
         //! [**symbolic api**] - Processes all recorded simplifications. Returns the simplified node.
         triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node, bool z3=false) const;

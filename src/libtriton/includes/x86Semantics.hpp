@@ -41,7 +41,7 @@ namespace triton {
 
       /*! \class x86Semantics
           \brief The x86 ISA semantics. */
-      class x86Semantics : public virtual SemanticsInterface {
+      class x86Semantics : public SemanticsInterface {
         private:
           //! Architecture API
           triton::arch::Architecture* architecture;

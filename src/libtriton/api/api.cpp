@@ -374,7 +374,7 @@ namespace triton {
     if (this->solver == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->astGarbageCollector = new(std::nothrow) triton::ast::AstGarbageCollector(this->modes, this->symbolic);
+    this->astGarbageCollector = new(std::nothrow) triton::ast::AstGarbageCollector(this->modes);
     if (this->astGarbageCollector == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
@@ -486,6 +486,12 @@ namespace triton {
   const std::set<triton::ast::AbstractNode*>& API::getAllocatedAstNodes(void) const {
     this->checkAstGarbageCollector();
     return this->astGarbageCollector->getAllocatedAstNodes();
+  }
+
+
+  std::map<std::string, triton::usize> API::getAstDictionariesStats(void) const {
+    this->checkAstGarbageCollector();
+    return this->astGarbageCollector->getAstDictionariesStats();
   }
 
 
@@ -803,12 +809,6 @@ namespace triton {
   triton::uint512 API::getSymbolicRegisterValue(const triton::arch::Register& reg) {
     this->checkSymbolic();
     return this->symbolic->getSymbolicRegisterValue(reg);
-  }
-
-
-  std::map<std::string, triton::usize> API::getAstDictionariesStats(void) {
-    this->checkSymbolic();
-    return this->symbolic->getAstDictionariesStats();
   }
 
 

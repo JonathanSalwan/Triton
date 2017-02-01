@@ -29,6 +29,11 @@ namespace triton {
     }
 
 
+    void AstDictionaries::operator=(const AstDictionaries& other) {
+      this->copy(other);
+    }
+
+
     void AstDictionaries::copy(const AstDictionaries& other) {
       /* Global information */
       this->allocatedNodes              = other.allocatedNodes;
@@ -210,7 +215,7 @@ namespace triton {
     }
 
 
-    std::map<std::string, triton::usize> AstDictionaries::getAstDictionariesStats(void) {
+    std::map<std::string, triton::usize> AstDictionaries::getAstDictionariesStats(void) const {
       std::map<std::string, triton::usize> stats;
       stats["assert"]                 = this->assertDictionary.size();
       stats["bvadd"]                  = this->bvaddDictionary.size();
@@ -264,11 +269,6 @@ namespace triton {
       stats["allocatedDictionaries"]  = this->allocatedDictionaries.size();
       stats["allocatedNodes"]         = this->allocatedNodes;
       return stats;
-    }
-
-
-    void AstDictionaries::operator=(const AstDictionaries& other) {
-      this->copy(other);
     }
 
   }; /* ast namespace */

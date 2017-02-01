@@ -127,15 +127,13 @@ namespace triton {
 
 
       SymbolicEngine::SymbolicEngine(const SymbolicEngine& copy)
-        : triton::ast::AstDictionaries(copy),
-          triton::engines::symbolic::SymbolicSimplification(copy),
+        : triton::engines::symbolic::SymbolicSimplification(copy),
           triton::engines::symbolic::PathManager(copy) {
         this->copy(copy);
       }
 
 
       void SymbolicEngine::operator=(const SymbolicEngine& other) {
-        triton::ast::AstDictionaries::operator=(other);
         triton::engines::symbolic::SymbolicSimplification::operator=(other);
         triton::engines::symbolic::PathManager::operator=(other);
 

@@ -43,16 +43,19 @@ namespace triton {
         //! AST garbage collector API
         triton::ast::AstGarbageCollector* astGarbageCollector;
 
-        //! Symbolic Engine API
-        triton::engines::symbolic::SymbolicEngine* backupSymbolicEngine;
+        //! Backup AST garbage collector
+        triton::ast::AstGarbageCollector* backupAstGarbageCollector;
 
         //! Modes API
         triton::modes::Modes* modes;
 
-        //! Symbolic Engine API
+        //! Symbolic engine API
         triton::engines::symbolic::SymbolicEngine* symbolicEngine;
 
-        //! Taint Engine API
+        //! Backup symbolic engine
+        triton::engines::symbolic::SymbolicEngine* backupSymbolicEngine;
+
+        //! Taint engine API
         triton::engines::taint::TaintEngine* taintEngine;
 
         //! Removes all symbolic expressions of an instruction.

@@ -12,8 +12,8 @@
 #include <string>
 
 #include "ast.hpp"
+#include "astDictionaries.hpp"
 #include "modes.hpp"
-#include "symbolicEngine.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -35,15 +35,15 @@ namespace triton {
 
     //! \class AstGarbageCollector
     /*! \brief The AST garbage collector class */
-    class AstGarbageCollector {
+    class AstGarbageCollector : public triton::ast::AstDictionaries {
       private:
         //! Modes API
         triton::modes::Modes* modes;
 
-        //! Symbolic engine API
-        triton::engines::symbolic::SymbolicEngine* symbolicEngine;
-
       protected:
+        //! Defines if this instance is used as a backup.
+        bool backupFlag;
+
         //! This container contains all allocated nodes.
         std::set<triton::ast::AbstractNode*> allocatedNodes;
 
@@ -52,10 +52,19 @@ namespace triton {
 
       public:
         //! Constructor.
-        AstGarbageCollector(triton::modes::Modes* modes, triton::engines::symbolic::SymbolicEngine* symbolicEngine);
+        AstGarbageCollector(triton::modes::Modes* modes, bool isBackup=false);
+
+        //! Constructor by copy.
+        AstGarbageCollector(const AstGarbageCollector& other);
 
         //! Destructor.
         virtual ~AstGarbageCollector();
+
+        //! Copies an AstGarbageCollectors.
+        void operator=(const AstGarbageCollector& other);
+
+        //! Copies an AstGarbageCollectors..
+        void copy(const AstGarbageCollector& other);
 
         //! Go through every allocated nodes and free them.
         void freeAllAstNodes(void);
@@ -86,6 +95,9 @@ namespace triton {
 
         //! Sets all variable nodes recorded.
         void setAstVariableNodes(const std::map<std::string, triton::ast::AbstractNode*>& nodes);
+
+        //! Returns true if this garbage collector is used as backup.
+        bool isBackup(void) const;
     };
 
   /*! @} End of ast namespace */
