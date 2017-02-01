@@ -40,10 +40,10 @@ namespace triton {
         //! Modes API
         triton::modes::Modes* modes;
 
-      protected:
         //! Defines if this instance is used as a backup.
         bool backupFlag;
 
+      protected:
         //! This container contains all allocated nodes.
         std::set<triton::ast::AbstractNode*> allocatedNodes;
 
@@ -95,9 +95,6 @@ namespace triton {
 
         //! Sets all variable nodes recorded.
         void setAstVariableNodes(const std::map<std::string, triton::ast::AbstractNode*>& nodes);
-
-        //! Returns true if this garbage collector is used as backup.
-        bool isBackup(void) const;
     };
 
   /*! @} End of ast namespace */

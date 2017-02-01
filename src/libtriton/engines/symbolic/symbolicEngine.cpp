@@ -166,7 +166,7 @@ namespace triton {
          * result in a double-free bug if the original symbolic engine
          * is deleted too (cf: #385).
          */
-        if (this->isBackup() == false) {
+        if (this->backupFlag == false) {
           /* Delete all symbolic expressions */
           for (; it1 != this->symbolicExpressions.end(); ++it1)
             delete it1->second;
@@ -1029,12 +1029,6 @@ namespace triton {
       /* Returns true if the symbolic engine is enable */
       bool SymbolicEngine::isEnabled(void) const {
         return this->enableFlag;
-      }
-
-
-      /* Returns true if this symbolic engine is used as backup */
-      bool SymbolicEngine::isBackup(void) const {
-        return this->backupFlag;
       }
 
 

@@ -60,9 +60,6 @@ namespace triton {
           //! Defines if the engine is enable or disable.
           bool enableFlag;
 
-          //! Defines if this instance is used as a backup.
-          bool backupFlag;
-
           //! Number of registers
           triton::uint32 numberOfRegisters;
 
@@ -113,6 +110,9 @@ namespace triton {
 
           //! Modes API.
           triton::modes::Modes* modes;
+
+          //! Defines if this instance is used as a backup.
+          bool backupFlag;
 
           //! Slices all expressions from a given node.
           void sliceExpressions(triton::ast::AbstractNode* node, std::map<triton::usize, SymbolicExpression*>& exprs);
@@ -297,9 +297,6 @@ namespace triton {
 
           //! Returns true if the symbolic execution engine is enabled.
           bool isEnabled(void) const;
-
-          //! Returns true if this symbolic engine is used as backup.
-          bool isBackup(void) const;
 
           //! Returns true if the symbolic expression ID exists.
           bool isSymbolicExpressionIdExists(triton::usize symExprId) const;

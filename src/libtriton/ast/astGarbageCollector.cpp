@@ -13,7 +13,9 @@
 namespace triton {
   namespace ast {
 
-    AstGarbageCollector::AstGarbageCollector(triton::modes::Modes* modes, bool isBackup) {
+    AstGarbageCollector::AstGarbageCollector(triton::modes::Modes* modes, bool isBackup)
+      : triton::ast::AstDictionaries(isBackup) {
+
       if (modes == nullptr)
         throw triton::exceptions::AstGarbageCollector("AstGarbageCollector::AstGarbageCollector(): The modes API cannot be null.");
 
@@ -48,7 +50,7 @@ namespace triton {
 
 
     AstGarbageCollector::~AstGarbageCollector() {
-      if (this->isBackup() == false)
+      if (this->backupFlag == false)
         this->freeAllAstNodes();
     }
 
@@ -142,11 +144,6 @@ namespace triton {
 
     void AstGarbageCollector::setAstVariableNodes(const std::map<std::string, triton::ast::AbstractNode*>& nodes) {
       this->variableNodes = nodes;
-    }
-
-
-    bool AstGarbageCollector::isBackup(void) const {
-      return this->backupFlag;
     }
 
   }; /* ast namespace */

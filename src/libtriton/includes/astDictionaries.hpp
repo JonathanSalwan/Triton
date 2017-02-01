@@ -34,6 +34,9 @@ namespace triton {
     //! \class AstDictionaries
     /*! \brief The AST dictionaries class */
     class AstDictionaries {
+      private:
+        //! Defines if this instance is used as a backup.
+        bool backupFlag;
 
       protected:
         //! Total of allocated nodes.
@@ -194,7 +197,7 @@ namespace triton {
 
     public:
         //! Constructor.
-        AstDictionaries();
+        AstDictionaries(bool isBackup=false);
 
         //! Constructor.
         AstDictionaries(const AstDictionaries& copy);
