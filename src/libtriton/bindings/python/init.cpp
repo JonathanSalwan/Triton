@@ -105,9 +105,9 @@ namespace triton {
 
         /* Create the OPTIMIZATION namespace ========================================================= */
 
-        PyObject* symOptiDict = xPyDict_New();
-        initSymOptiNamespace(symOptiDict);
-        PyObject* idSymOptiClass = xPyClass_New(nullptr, symOptiDict, xPyString_FromString("OPTIMIZATION"));
+        PyObject* modeDict = xPyDict_New();
+        initModeNamespace(modeDict);
+        PyObject* idModeClass = xPyClass_New(nullptr, modeDict, xPyString_FromString("MODE"));
 
         /* Create the PE namespace ================================================================== */
 
@@ -153,9 +153,9 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "CALLBACK",            idCallbackDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "CPUSIZE",             idCpuSizeClass);            /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "ELF",                 idElfDictClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "MODE",                idModeClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPCODE",              idOpcodesClass);            /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPERAND",             idOperandClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "OPTIMIZATION",        idSymOptiClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "PE",                  idPeDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "PREFIX",              idPrefixesClass);           /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "REG",                 idRegClass);                /* Empty: filled on the fly */

@@ -15,12 +15,14 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      PathManager::PathManager() {
+      PathManager::PathManager(triton::modes::Modes* modes) {
+        if (modes == nullptr)
+          throw triton::exceptions::PathManager("PathManager::PathManager(): The modes API cannot be null.");
+        this->modes = modes;
       }
 
 
-      PathManager::PathManager(const PathManager& copy)
-        : triton::engines::symbolic::SymbolicOptimization(copy) {
+      PathManager::PathManager(const PathManager& copy) {
         this->copy(copy);
       }
 
@@ -30,6 +32,7 @@ namespace triton {
 
 
       void PathManager::copy(const PathManager& other) {
+        this->modes           = other.modes;
         this->pathConstraints = other.pathConstraints;
       }
 
@@ -78,11 +81,11 @@ namespace triton {
           throw triton::exceptions::PathManager("PathManager::addPathConstraint(): The PC node cannot be null.");
 
         /* If PC_TRACKING_SYMBOLIC is enabled, Triton will track path constraints only if they are symbolized. */
-        if (this->isOptimizationEnabled(triton::engines::symbolic::PC_TRACKING_SYMBOLIC) && !pc->isSymbolized())
+        if (this->modes->isModeEnabled(triton::modes::PC_TRACKING_SYMBOLIC) && !pc->isSymbolized())
           return;
 
         /* If ONLY_ON_TAINTED is enabled and the expression untainted, Triton will skip the storing process. */
-        if (this->isOptimizationEnabled(triton::engines::symbolic::ONLY_ON_TAINTED) && !expr->isTainted)
+        if (this->modes->isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !expr->isTainted)
           return;
 
         /* Basic block taken */

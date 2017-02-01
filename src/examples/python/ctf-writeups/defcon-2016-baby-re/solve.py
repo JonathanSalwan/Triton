@@ -258,8 +258,8 @@ def initialize():
     setArchitecture(ARCH.X86_64)
 
     # Define symbolic optimizations
-    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
-    enableSymbolicOptimization(OPTIMIZATION.ONLY_ON_SYMBOLIZED, True)
+    enableMode(MODE.ALIGNED_MEMORY, True)
+    enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
     # Define internal callbacks.
     addCallback(memoryCaching,   CALLBACK.GET_CONCRETE_MEMORY_VALUE)

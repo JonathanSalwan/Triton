@@ -51,15 +51,6 @@ namespace triton {
         MEM        //!< Assigned to a memory.
       };
 
-      //! Enumerates all Kinds of symbolic optimization.
-      enum optimization_e {
-        ALIGNED_MEMORY,        //!< Keep a map of aligned memory.
-        AST_DICTIONARIES,      //!< Abstract Syntax Tree dictionaries.
-        ONLY_ON_SYMBOLIZED,    //!< Perform symbolic execution only on symbolized expressions.
-        ONLY_ON_TAINTED,       //!< Perform symbolic execution only on tainted instructions.
-        PC_TRACKING_SYMBOLIC,  //!< Track path constraints only if they are symbolized.
-      };
-
     /*! @} End of symbolic namespace */
     };
   /*! @} End of engines namespace */

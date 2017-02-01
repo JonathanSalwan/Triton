@@ -12,6 +12,7 @@
 #include <string>
 
 #include "ast.hpp"
+#include "modes.hpp"
 #include "symbolicEngine.hpp"
 #include "tritonTypes.hpp"
 
@@ -36,7 +37,10 @@ namespace triton {
     /*! \brief The AST garbage collector class */
     class AstGarbageCollector {
       private:
-        //! Symbolic Engine API
+        //! Modes API
+        triton::modes::Modes* modes;
+
+        //! Symbolic engine API
         triton::engines::symbolic::SymbolicEngine* symbolicEngine;
 
       protected:
@@ -48,7 +52,7 @@ namespace triton {
 
       public:
         //! Constructor.
-        AstGarbageCollector(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
+        AstGarbageCollector(triton::modes::Modes* modes, triton::engines::symbolic::SymbolicEngine* symbolicEngine);
 
         //! Destructor.
         virtual ~AstGarbageCollector();

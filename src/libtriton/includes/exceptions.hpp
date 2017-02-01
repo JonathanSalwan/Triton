@@ -95,18 +95,6 @@ namespace triton {
     };
 
 
-    /*! \class SymbolicOptimization
-     *  \brief The exception class used by symbolic optimizations. */
-    class SymbolicOptimization : public triton::exceptions::SymbolicEngine {
-      public:
-        //! Constructor.
-        SymbolicOptimization(const char* message) : triton::exceptions::SymbolicEngine(message) {};
-
-        //! Constructor.
-        SymbolicOptimization(const std::string& message) : triton::exceptions::SymbolicEngine(message) {};
-    };
-
-
     /*! \class SymbolicSimplification
      *  \brief The exception class used by symbolic simplifications. */
     class SymbolicSimplification : public triton::exceptions::SymbolicEngine {

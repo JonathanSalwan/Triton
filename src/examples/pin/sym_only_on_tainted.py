@@ -32,7 +32,7 @@ if __name__ == '__main__':
     startAnalysisFromSymbol('check')
 
     # Perform symbolic execution only on tainted instructions
-    enableSymbolicOptimization(OPTIMIZATION.ONLY_ON_TAINTED, True)
+    enableMode(MODE.ONLY_ON_TAINTED, True)
 
     # Add callback
     insertCall(cb_ir,       INSERT_POINT.BEFORE_SYMPROC)

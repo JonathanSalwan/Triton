@@ -107,7 +107,7 @@ if __name__ == '__main__':
     startAnalysisFromSymbol('main')
 
     # Align the memory
-    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
+    enableMode(MODE.ALIGNED_MEMORY, True)
 
     # Only perform the symbolic execution on the target binary
     setupImageWhitelist(['crackme_xor'])

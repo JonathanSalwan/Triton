@@ -17,11 +17,11 @@
 #include "astDictionaries.hpp"
 #include "callbacks.hpp"
 #include "memoryAccess.hpp"
+#include "modes.hpp"
 #include "pathManager.hpp"
 #include "register.hpp"
 #include "symbolicEnums.hpp"
 #include "symbolicExpression.hpp"
-#include "symbolicOptimization.hpp"
 #include "symbolicSimplification.hpp"
 #include "symbolicVariable.hpp"
 #include "tritonTypes.hpp"
@@ -55,7 +55,6 @@ namespace triton {
       /*! \brief The symbolic engine class. */
       class SymbolicEngine
         : public virtual triton::ast::AstDictionaries,
-          public virtual triton::engines::symbolic::SymbolicOptimization,
           public virtual triton::engines::symbolic::SymbolicSimplification,
           public virtual triton::engines::symbolic::PathManager {
 
@@ -114,12 +113,18 @@ namespace triton {
           //! Callbacks API
           triton::callbacks::Callbacks* callbacks;
 
+          //! Modes API.
+          triton::modes::Modes* modes;
+
           //! Slices all expressions from a given node.
           void sliceExpressions(triton::ast::AbstractNode* node, std::map<triton::usize, SymbolicExpression*>& exprs);
 
         public:
           //! Constructor. If you use this class as backup or copy you should define the `isBackup` flag as true.
-          SymbolicEngine(triton::arch::Architecture* architecture, triton::callbacks::Callbacks* callbacks=nullptr, bool isBackup=false);
+          SymbolicEngine(triton::arch::Architecture* architecture,
+                         triton::modes::Modes* modes,
+                         triton::callbacks::Callbacks* callbacks=nullptr,
+                         bool isBackup=false);
 
           //! Constructor by copy.
           SymbolicEngine(const SymbolicEngine& copy);

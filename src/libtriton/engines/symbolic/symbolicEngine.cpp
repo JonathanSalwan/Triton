@@ -70,11 +70,18 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicEngine::SymbolicEngine(triton::arch::Architecture* architecture, triton::callbacks::Callbacks* callbacks, bool isBackup)
-        : triton::engines::symbolic::SymbolicSimplification(callbacks) {
+      SymbolicEngine::SymbolicEngine(triton::arch::Architecture* architecture,
+                                     triton::modes::Modes* modes,
+                                     triton::callbacks::Callbacks* callbacks,
+                                     bool isBackup)
+        : triton::engines::symbolic::SymbolicSimplification(callbacks),
+          triton::engines::symbolic::PathManager(modes) {
 
         if (architecture == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::SymbolicEngine(): The architecture pointer must be valid.");
+
+        if (modes == nullptr)
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::SymbolicEngine(): The modes API cannot be null.");
 
         this->architecture      = architecture;
         this->numberOfRegisters = this->architecture->numberOfRegisters();
@@ -87,6 +94,7 @@ namespace triton {
         this->callbacks       = callbacks;
         this->backupFlag      = isBackup;
         this->enableFlag      = true;
+        this->modes           = modes;
         this->uniqueSymExprId = 0;
         this->uniqueSymVarId  = 0;
       }
@@ -103,12 +111,13 @@ namespace triton {
          * The backup flag cannot be spread. once a class is tagged as
          * backup, it always be a backup class.
          */
-        this->architecture                = other.architecture;
-        this->callbacks                   = other.callbacks;
-        this->backupFlag                  = true;
         this->alignedMemoryReference      = other.alignedMemoryReference;
+        this->architecture                = other.architecture;
+        this->backupFlag                  = true;
+        this->callbacks                   = other.callbacks;
         this->enableFlag                  = other.enableFlag;
         this->memoryReference             = other.memoryReference;
+        this->modes                       = other.modes;
         this->symbolicExpressions         = other.symbolicExpressions;
         this->symbolicVariables           = other.symbolicVariables;
         this->uniqueSymExprId             = other.uniqueSymExprId;
@@ -118,7 +127,6 @@ namespace triton {
 
       SymbolicEngine::SymbolicEngine(const SymbolicEngine& copy)
         : triton::ast::AstDictionaries(copy),
-          triton::engines::symbolic::SymbolicOptimization(copy),
           triton::engines::symbolic::SymbolicSimplification(copy),
           triton::engines::symbolic::PathManager(copy) {
         this->copy(copy);
@@ -127,7 +135,6 @@ namespace triton {
 
       void SymbolicEngine::operator=(const SymbolicEngine& other) {
         triton::ast::AstDictionaries::operator=(other);
-        triton::engines::symbolic::SymbolicOptimization::operator=(other);
         triton::engines::symbolic::SymbolicSimplification::operator=(other);
         triton::engines::symbolic::PathManager::operator=(other);
 
@@ -218,7 +225,7 @@ namespace triton {
        */
       void SymbolicEngine::concretizeMemory(triton::uint64 addr) {
         this->memoryReference.erase(addr);
-        if (this->isOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
+        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY))
           this->removeAlignedMemory(addr, BYTE_SIZE);
       }
 
@@ -613,7 +620,7 @@ namespace triton {
 
           /* Add the new memory reference */
           this->addMemoryReference(memAddr+index, se->getId());
-          if (this->isOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
+          if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY))
             removeAlignedMemory(memAddr+index, BYTE_SIZE);
         }
 
@@ -734,7 +741,7 @@ namespace triton {
          * Symbolic optimization
          * If the memory access is aligned, don't split the memory.
          */
-        if (this->isOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY) && this->isAlignedMemory(address, size))
+        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY) && this->isAlignedMemory(address, size))
           return this->getAlignedMemory(address, size);
 
         /* Iterate on every memory cells to use their symbolic or concrete values */
@@ -832,7 +839,7 @@ namespace triton {
         triton::uint32 writeSize = mem.getSize();
 
         /* Record the aligned memory for a symbolic optimization */
-        if (this->isOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
+        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY))
           this->addAlignedMemory(address, writeSize, node);
 
         /*
@@ -1001,7 +1008,7 @@ namespace triton {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::assignSymbolicExpressionToMemory(): The size of the symbolic expression is not equal to the memory access.");
 
         /* Record the aligned memory for a symbolic optimization */
-        if (this->isOptimizationEnabled(triton::engines::symbolic::ALIGNED_MEMORY))
+        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY))
           this->addAlignedMemory(address, writeSize, node);
 
         /*

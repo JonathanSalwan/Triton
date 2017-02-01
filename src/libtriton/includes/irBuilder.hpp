@@ -11,6 +11,7 @@
 #include "architecture.hpp"
 #include "astGarbageCollector.hpp"
 #include "instruction.hpp"
+#include "modes.hpp"
 #include "semanticsInterface.hpp"
 #include "symbolicEngine.hpp"
 #include "taintEngine.hpp"
@@ -43,10 +44,13 @@ namespace triton {
         triton::ast::AstGarbageCollector* astGarbageCollector;
 
         //! Symbolic Engine API
-        triton::engines::symbolic::SymbolicEngine* symbolicEngine;
+        triton::engines::symbolic::SymbolicEngine* backupSymbolicEngine;
+
+        //! Modes API
+        triton::modes::Modes* modes;
 
         //! Symbolic Engine API
-        triton::engines::symbolic::SymbolicEngine* backupSymbolicEngine;
+        triton::engines::symbolic::SymbolicEngine* symbolicEngine;
 
         //! Taint Engine API
         triton::engines::taint::TaintEngine* taintEngine;
@@ -61,6 +65,7 @@ namespace triton {
       public:
         //! Constructor.
         IrBuilder(triton::arch::Architecture* architecture,
+                  triton::modes::Modes* modes,
                   triton::ast::AstGarbageCollector* astGarbageCollector,
                   triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                   triton::engines::taint::TaintEngine* taintEngine);

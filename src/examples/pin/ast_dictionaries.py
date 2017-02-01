@@ -32,7 +32,7 @@ if __name__ == '__main__':
     startAnalysisFromEntry()
 
     # Use AST Dictionaries
-    enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
+    enableMode(MODE.AST_DICTIONARIES, True)
 
     # Add callbacks
     insertCall(cb_fini, INSERT_POINT.FINI)

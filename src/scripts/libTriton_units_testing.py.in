@@ -3226,7 +3226,7 @@ def test_8_2():
     count = 0
 
     setArchitecture(ARCH.X86_64)
-    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
+    enableMode(MODE.ALIGNED_MEMORY, True)
 
     fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
     data = eval(fd.read())
@@ -3251,7 +3251,7 @@ def test_8_3():
     count = 0
 
     setArchitecture(ARCH.X86_64)
-    enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
+    enableMode(MODE.AST_DICTIONARIES, True)
 
     fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
     data = eval(fd.read())
@@ -3276,8 +3276,8 @@ def test_8_4():
     count = 0
 
     setArchitecture(ARCH.X86_64)
-    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
-    enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
+    enableMode(MODE.ALIGNED_MEMORY, True)
+    enableMode(MODE.AST_DICTIONARIES, True)
 
     fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
     data = eval(fd.read())
@@ -3302,7 +3302,7 @@ def test_8_5():
     count = 0
 
     setArchitecture(ARCH.X86_64)
-    enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
+    enableMode(MODE.AST_DICTIONARIES, True)
 
     fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
     data = eval(fd.read())
@@ -3328,7 +3328,7 @@ def test_8_6():
 
     setArchitecture(ARCH.X86_64)
     enableSymbolicEngine(False)
-    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
+    enableMode(MODE.ALIGNED_MEMORY, True)
 
     fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
     data = eval(fd.read())
@@ -3354,7 +3354,7 @@ def test_8_7():
 
     setArchitecture(ARCH.X86_64)
     enableSymbolicEngine(False)
-    enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
+    enableMode(MODE.AST_DICTIONARIES, True)
 
     fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
     data = eval(fd.read())
@@ -3380,8 +3380,8 @@ def test_8_8():
 
     setArchitecture(ARCH.X86_64)
     enableSymbolicEngine(False)
-    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
-    enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
+    enableMode(MODE.ALIGNED_MEMORY, True)
+    enableMode(MODE.AST_DICTIONARIES, True)
 
     fd = open('@CMAKE_SOURCE_DIR@/src/testers/dumps/emu_1.dump')
     data = eval(fd.read())
@@ -4126,7 +4126,7 @@ def test_15_1():
     setArchitecture(ARCH.X86_64)
 
     # Symbolic optimization
-    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
+    enableMode(MODE.ALIGNED_MEMORY, True)
 
     lastInput = test_15_core()
 
@@ -4148,8 +4148,8 @@ def test_15_2():
     setArchitecture(ARCH.X86_64)
 
     # Symbolic optimization
-    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
-    enableSymbolicOptimization(OPTIMIZATION.AST_DICTIONARIES, True)
+    enableMode(MODE.ALIGNED_MEMORY, True)
+    enableMode(MODE.AST_DICTIONARIES, True)
 
     lastInput = test_15_core()
 
@@ -4266,8 +4266,8 @@ def test_16_1():
     setArchitecture(ARCH.X86_64)
 
     # Define symbolic optimizations
-    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
-    enableSymbolicOptimization(OPTIMIZATION.ONLY_ON_SYMBOLIZED, True)
+    enableMode(MODE.ALIGNED_MEMORY, True)
+    enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
     solution = test16_core()
 

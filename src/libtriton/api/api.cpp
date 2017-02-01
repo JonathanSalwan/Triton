@@ -192,6 +192,7 @@ namespace triton {
 
     this->astGarbageCollector = nullptr;
     this->irBuilder           = nullptr;
+    this->modes               = nullptr;
     this->solver              = nullptr;
     this->symbolic            = nullptr;
     this->taint               = nullptr;
@@ -361,7 +362,11 @@ namespace triton {
   void API::initEngines(void) {
     this->checkArchitecture();
 
-    this->symbolic = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(&this->arch, &this->callbacks);
+    this->modes = new(std::nothrow) triton::modes::Modes();
+    if (this->modes == nullptr)
+      throw triton::exceptions::API("API::initEngines(): No enough memory.");
+
+    this->symbolic = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(&this->arch, this->modes, &this->callbacks);
     if (this->symbolic == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
@@ -369,7 +374,7 @@ namespace triton {
     if (this->solver == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->astGarbageCollector = new(std::nothrow) triton::ast::AstGarbageCollector(this->symbolic);
+    this->astGarbageCollector = new(std::nothrow) triton::ast::AstGarbageCollector(this->modes, this->symbolic);
     if (this->astGarbageCollector == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
@@ -377,7 +382,7 @@ namespace triton {
     if (this->taint == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->irBuilder = new(std::nothrow) triton::arch::IrBuilder(&this->arch, this->astGarbageCollector, this->symbolic, this->taint);
+    this->irBuilder = new(std::nothrow) triton::arch::IrBuilder(&this->arch, this->modes, this->astGarbageCollector, this->symbolic, this->taint);
     if (this->irBuilder == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
@@ -391,6 +396,7 @@ namespace triton {
     if (this->isArchitectureValid()) {
       delete this->astGarbageCollector;
       delete this->irBuilder;
+      delete this->modes;
       delete this->solver;
       delete this->symbolic;
       delete this->taint;
@@ -398,6 +404,7 @@ namespace triton {
 
       this->astGarbageCollector = nullptr;
       this->irBuilder           = nullptr;
+      this->modes               = nullptr;
       this->solver              = nullptr;
       this->symbolic            = nullptr;
       this->taint               = nullptr;
@@ -586,6 +593,27 @@ namespace triton {
   void API::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) const {
     if (this->callbacks.isDefined)
       this->callbacks.processCallbacks(kind, reg);
+  }
+
+
+
+  /* Modes API======================================================================================= */
+
+  void API::checkModes(void) const {
+    if (!this->modes)
+      throw triton::exceptions::API("API::checkModes(): Modes interface is undefined.");
+  }
+
+
+  void API::enableMode(enum triton::modes::mode_e mode, bool flag) {
+    this->checkModes();
+    this->modes->enableMode(mode, flag);
+  }
+
+
+  bool API::isModeEnabled(enum triton::modes::mode_e mode) const {
+    this->checkModes();
+    return this->modes->isModeEnabled(mode);
   }
 
 
@@ -841,12 +869,6 @@ namespace triton {
   }
 
 
-  void API::enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti, bool flag) {
-    this->checkSymbolic();
-    this->symbolic->enableOptimization(opti, flag);
-  }
-
-
   bool API::isSymbolicEngineEnabled(void) const {
     this->checkSymbolic();
     return this->symbolic->isEnabled();
@@ -856,12 +878,6 @@ namespace triton {
   bool API::isSymbolicExpressionIdExists(triton::usize symExprId) const {
     this->checkSymbolic();
     return this->symbolic->isSymbolicExpressionIdExists(symExprId);
-  }
-
-
-  bool API::isSymbolicOptimizationEnabled(enum triton::engines::symbolic::optimization_e opti) {
-    this->checkSymbolic();
-    return this->symbolic->isOptimizationEnabled(opti);
   }
 
 

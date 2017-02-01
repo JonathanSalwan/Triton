@@ -20,12 +20,16 @@ namespace triton {
   namespace arch {
 
     IrBuilder::IrBuilder(triton::arch::Architecture* architecture,
+                         triton::modes::Modes* modes,
                          triton::ast::AstGarbageCollector* astGarbageCollector,
                          triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                          triton::engines::taint::TaintEngine* taintEngine) {
 
       if (architecture == nullptr)
         throw triton::exceptions::IrBuilder("IrBuilder::IrBuilder(): The architecture API must be defined.");
+
+      if (modes == nullptr)
+        throw triton::exceptions::IrBuilder("IrBuilder::IrBuilder(): The modes API must be defined.");
 
       if (astGarbageCollector == nullptr)
         throw triton::exceptions::IrBuilder("IrBuilder::IrBuilder(): The AST garbage collector API must be defined.");
@@ -37,8 +41,9 @@ namespace triton {
         throw triton::exceptions::IrBuilder("IrBuilder::IrBuilder(): The taint engines API must be defined.");
 
       this->architecture         = architecture;
+      this->modes                = modes;
       this->astGarbageCollector  = astGarbageCollector;
-      this->backupSymbolicEngine = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(architecture, nullptr, true);
+      this->backupSymbolicEngine = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(architecture, modes, nullptr, true);
       this->symbolicEngine       = symbolicEngine;
       this->taintEngine          = taintEngine;
       this->x86Isa               = new(std::nothrow) triton::arch::x86::x86Semantics(architecture, symbolicEngine, taintEngine);
@@ -133,7 +138,7 @@ namespace triton {
        * execution only on tainted instructions, we delete all
        * expressions untainted and their AST nodes.
        */
-      if (this->symbolicEngine->isOptimizationEnabled(triton::engines::symbolic::ONLY_ON_TAINTED) && !inst.isTainted()) {
+      if (this->modes->isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
         this->removeSymbolicExpressions(inst, uniqueNodes);
       }
 
@@ -142,7 +147,7 @@ namespace triton {
        * execution only on symbolized expressions, we delete all
        * concrete expressions and their AST nodes.
        */
-      if (this->symbolicEngine->isOptimizationEnabled(triton::engines::symbolic::ONLY_ON_SYMBOLIZED)) {
+      if (this->modes->isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
         for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
           if ((*it)->getAst()->isSymbolized() == false) {
             this->astGarbageCollector->extractUniqueAstNodes(uniqueNodes, (*it)->getAst());

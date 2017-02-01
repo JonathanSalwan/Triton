@@ -110,8 +110,8 @@ namespace triton {
       //! Initializes the REG python namespace.
       void initRegNamespace(void);
 
-      //! Initializes the OPTIMIZATION python namespace.
-      void initSymOptiNamespace(PyObject* symOptiDict);
+      //! Initializes the MODE python namespace.
+      void initModeNamespace(PyObject* modeDict);
 
       //! Initializes the SYMEXPR python namespace.
       void initSymExprNamespace(PyObject* symExprDict);

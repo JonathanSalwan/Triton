@@ -11,9 +11,9 @@
 #include <vector>
 
 #include "instruction.hpp"
+#include "modes.hpp"
 #include "pathConstraint.hpp"
 #include "symbolicExpression.hpp"
-#include "symbolicOptimization.hpp"
 #include "tritonTypes.hpp"
 
 
@@ -43,8 +43,10 @@ namespace triton {
 
       /*! \class PathManager
           \brief The path manager class. */
-      class PathManager
-        : public virtual triton::engines::symbolic::SymbolicOptimization {
+      class PathManager {
+        private:
+          //! Modes API.
+          triton::modes::Modes* modes;
 
         protected:
           //! \brief The logical conjunction vector of path constraints.
@@ -52,7 +54,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          PathManager();
+          PathManager(triton::modes::Modes* modes);
 
           //! Constructor by copy.
           PathManager(const PathManager& copy);

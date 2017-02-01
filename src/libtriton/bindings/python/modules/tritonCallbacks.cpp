@@ -151,11 +151,11 @@ Returns the new symbolic volatile expression and links this expression to the in
 - <b>void disassembly(\ref py_Instruction_page inst)</b><br>
 Disassembles the instruction and setup operands. You must define an architecture before.
 
+- <b>void enableMode(\ref py_MODE_page mode, bool flag)</b><br>
+Enables or disables a specific mode.
+
 - <b>void enableSymbolicEngine(bool flag)</b><br>
 Enables or disables the symbolic execution engine.
-
-- <b>void enableSymbolicOptimization(\ref py_OPTIMIZATION_page opti, bool flag)</b><br>
-Enables or disablrs a symbolic optimization.
 
 - <b>void enableTaintEngine(bool flag)</b><br>
 Enables or disables the taint engine.
@@ -274,6 +274,9 @@ Returns true if the address is tainted.
 - <b>bool isMemoryTainted(\ref py_MemoryAccess_page mem)</b><br>
 Returns true if the memory is tainted.
 
+- <b>bool isModeEnabled(\ref py_MODE_page mode)</b><br>
+Returns true if the mode is enabled.
+
 - <b>bool isRegisterSymbolized(\ref py_REG_page reg)</b><br>
 Returns true if the register expression contains a symbolic variable.
 
@@ -285,9 +288,6 @@ Returns true if the symbolic execution engine is enabled.
 
 - <b>bool isSymbolicExpressionIdExists(integer symExprId)</b><br>
 Returns true if the symbolic expression id exists.
-
-- <b>bool isSymbolicOptimizationEnabled(\ref py_OPTIMIZATION_page opti)</b><br>
-Returns true if the symbolic optimization is enabled.
 
 - <b>bool isTaintEngineEnabled(void)</b><br>
 Returns true if the taint engine is enabled.
@@ -1287,16 +1287,25 @@ namespace triton {
       }
 
 
-      static PyObject* triton_enableSymbolicEngine(PyObject* self, PyObject* flag) {
+      static PyObject* triton_enableMode(PyObject* self, PyObject* args) {
+        PyObject* mode = nullptr;
+        PyObject* flag = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &mode, &flag);
+
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "enableSymbolicEngine(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "enableMode(): Architecture is not defined.");
 
-        if (!PyBool_Check(flag))
-          return PyErr_Format(PyExc_TypeError, "enableSymbolicEngine(): Expects an boolean as argument.");
+        if (mode == nullptr || (!PyLong_Check(mode) && !PyInt_Check(mode)))
+          return PyErr_Format(PyExc_TypeError, "enableMode(): Expects a MODE as argument.");
+
+        if (flag == nullptr || !PyBool_Check(flag))
+          return PyErr_Format(PyExc_TypeError, "enableMode(): Expects an boolean flag as second argument.");
 
         try {
-          triton::api.enableSymbolicEngine(PyLong_AsBool(flag));
+          triton::api.enableMode(static_cast<enum triton::modes::mode_e>(PyLong_AsUint32(mode)), PyLong_AsBool(flag));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1307,25 +1316,16 @@ namespace triton {
       }
 
 
-      static PyObject* triton_enableSymbolicOptimization(PyObject* self, PyObject* args) {
-        PyObject* opti = nullptr;
-        PyObject* flag = nullptr;
-
-        /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &opti, &flag);
-
+      static PyObject* triton_enableSymbolicEngine(PyObject* self, PyObject* flag) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "enableSymbolicOptimization(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "enableSymbolicEngine(): Architecture is not defined.");
 
-        if (opti == nullptr || (!PyLong_Check(opti) && !PyInt_Check(opti)))
-          return PyErr_Format(PyExc_TypeError, "enableSymbolicOptimization(): Expects an OPTIMIZATION as argument.");
-
-        if (flag == nullptr || !PyBool_Check(flag))
-          return PyErr_Format(PyExc_TypeError, "enableSymbolicOptimization(): Expects an boolean flag as second argument.");
+        if (!PyBool_Check(flag))
+          return PyErr_Format(PyExc_TypeError, "enableSymbolicEngine(): Expects an boolean as argument.");
 
         try {
-          triton::api.enableSymbolicOptimization(static_cast<enum triton::engines::symbolic::optimization_e>(PyLong_AsUint32(opti)), PyLong_AsBool(flag));
+          triton::api.enableSymbolicEngine(PyLong_AsBool(flag));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2110,14 +2110,14 @@ namespace triton {
       }
 
 
-      static PyObject* triton_isSymbolicOptimizationEnabled(PyObject* self, PyObject* opti) {
+      static PyObject* triton_isModeEnabled(PyObject* self, PyObject* mode) {
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isSymbolicOptimizationEnabled(): Architecture is not defined.");
+          return PyErr_Format(PyExc_TypeError, "isModeEnabled(): Architecture is not defined.");
 
-        if (!PyInt_Check(opti) && !PyLong_Check(opti))
-          return PyErr_Format(PyExc_TypeError, "isSymbolicOptimizationEnabled(): Expects an OPTIMIZATION as argument.");
+        if (!PyInt_Check(mode) && !PyLong_Check(mode))
+          return PyErr_Format(PyExc_TypeError, "isModeEnabled(): Expects a MODE as argument.");
 
-        if (triton::api.isSymbolicOptimizationEnabled(static_cast<enum triton::engines::symbolic::optimization_e>(PyLong_AsUint32(opti))) == true)
+        if (triton::api.isModeEnabled(static_cast<enum triton::modes::mode_e>(PyLong_AsUint32(mode))) == true)
           Py_RETURN_TRUE;
         Py_RETURN_FALSE;
       }
@@ -3011,8 +3011,8 @@ namespace triton {
         {"createSymbolicRegisterExpression",    (PyCFunction)triton_createSymbolicRegisterExpression,       METH_VARARGS,       ""},
         {"createSymbolicVolatileExpression",    (PyCFunction)triton_createSymbolicVolatileExpression,       METH_VARARGS,       ""},
         {"disassembly",                         (PyCFunction)triton_disassembly,                            METH_O,             ""},
+        {"enableMode",                          (PyCFunction)triton_enableMode,                             METH_VARARGS,       ""},
         {"enableSymbolicEngine",                (PyCFunction)triton_enableSymbolicEngine,                   METH_O,             ""},
-        {"enableSymbolicOptimization",          (PyCFunction)triton_enableSymbolicOptimization,             METH_VARARGS,       ""},
         {"enableTaintEngine",                   (PyCFunction)triton_enableTaintEngine,                      METH_O,             ""},
         {"evaluateAstViaZ3",                    (PyCFunction)triton_evaluateAstViaZ3,                       METH_O,             ""},
         {"getAllRegisters",                     (PyCFunction)triton_getAllRegisters,                        METH_NOARGS,        ""},
@@ -3048,11 +3048,11 @@ namespace triton {
         {"isMemoryMapped",                      (PyCFunction)triton_isMemoryMapped,                         METH_VARARGS,       ""},
         {"isMemorySymbolized",                  (PyCFunction)triton_isMemorySymbolized,                     METH_O,             ""},
         {"isMemoryTainted",                     (PyCFunction)triton_isMemoryTainted,                        METH_O,             ""},
+        {"isModeEnabled",                       (PyCFunction)triton_isModeEnabled,                          METH_O,             ""},
         {"isRegisterSymbolized",                (PyCFunction)triton_isRegisterSymbolized,                   METH_O,             ""},
         {"isRegisterTainted",                   (PyCFunction)triton_isRegisterTainted,                      METH_O,             ""},
         {"isSymbolicEngineEnabled",             (PyCFunction)triton_isSymbolicEngineEnabled,                METH_NOARGS,        ""},
         {"isSymbolicExpressionIdExists",        (PyCFunction)triton_isSymbolicExpressionIdExists,           METH_O,             ""},
-        {"isSymbolicOptimizationEnabled",       (PyCFunction)triton_isSymbolicOptimizationEnabled,          METH_O,             ""},
         {"isTaintEngineEnabled",                (PyCFunction)triton_isTaintEngineEnabled,                   METH_NOARGS,        ""},
         {"newSymbolicExpression",               (PyCFunction)triton_newSymbolicExpression,                  METH_VARARGS,       ""},
         {"newSymbolicVariable",                 (PyCFunction)triton_newSymbolicVariable,                    METH_VARARGS,       ""},

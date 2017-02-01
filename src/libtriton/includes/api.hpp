@@ -17,6 +17,7 @@
 #include "instruction.hpp"
 #include "irBuilder.hpp"
 #include "memoryAccess.hpp"
+#include "modes.hpp"
 #include "operandWrapper.hpp"
 #include "register.hpp"
 #include "registerSpecification.hpp"
@@ -49,6 +50,9 @@ namespace triton {
 
         //! The architecture entry.
         triton::arch::Architecture arch;
+
+        //! The modes.
+        triton::modes::Modes* modes;
 
         //! The taint engine.
         triton::engines::taint::TaintEngine* taint;
@@ -305,6 +309,19 @@ namespace triton {
 
 
 
+        /* Modes API====================================================================================== */
+
+        //! [**modes api**] - Raises an exception if modes interface is not initialized.
+        void checkModes(void) const;
+
+        //! [**modes api**] - Enables or disables a specific mode.
+        void enableMode(enum triton::modes::mode_e mode, bool flag);
+
+        //! [**modes api**] - Returns true if the mode is enabled.
+        bool isModeEnabled(enum triton::modes::mode_e mode) const;
+
+
+
         /* Symbolic engine API =========================================================================== */
 
         //! [**symbolic api**] - Raises an exception if the symbolic engine is not initialized.
@@ -430,17 +447,11 @@ namespace triton {
         //! [**symbolic api**] - Enables or disables the symbolic execution engine.
         void enableSymbolicEngine(bool flag);
 
-        //! [**symbolic api**] - Enables or disables a symbolic optimization.
-        void enableSymbolicOptimization(enum triton::engines::symbolic::optimization_e opti, bool flag);
-
         //! [**symbolic api**] - Returns true if the symbolic execution engine is enabled.
         bool isSymbolicEngineEnabled(void) const;
 
         //! [**symbolic api**] - Returns true if the symbolic expression ID exists.
         bool isSymbolicExpressionIdExists(triton::usize symExprId) const;
-
-        //! [**symbolic api**] - Returns true if the symbolic optimization is enabled.
-        bool isSymbolicOptimizationEnabled(enum triton::engines::symbolic::optimization_e opti);
 
         //! [**symbolic api**] - Returns true if memory cell expressions contain symbolic variables.
         bool isMemorySymbolized(const triton::arch::MemoryAccess& mem) const;

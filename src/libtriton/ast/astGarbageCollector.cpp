@@ -13,9 +13,14 @@
 namespace triton {
   namespace ast {
 
-    AstGarbageCollector::AstGarbageCollector(triton::engines::symbolic::SymbolicEngine* symbolicEngine) {
+    AstGarbageCollector::AstGarbageCollector(triton::modes::Modes* modes, triton::engines::symbolic::SymbolicEngine* symbolicEngine) {
+      if (modes == nullptr)
+        throw triton::exceptions::AstGarbageCollector("AstGarbageCollector::AstGarbageCollector(): The modes API cannot be null.");
+
       if (symbolicEngine == nullptr)
-        throw triton::exceptions::AstGarbageCollector("AstGarbageCollector::AstGarbageCollector(): The symbolicEngine API cannot be null.");
+        throw triton::exceptions::AstGarbageCollector("AstGarbageCollector::AstGarbageCollector(): The symbolic engine API cannot be null.");
+
+      this->modes = modes;
       this->symbolicEngine = symbolicEngine;
     }
 
@@ -40,7 +45,7 @@ namespace triton {
       std::set<triton::ast::AbstractNode*>::iterator it;
 
       /* Do not delete AST nodes if the AST_DICTIONARIES optimization is enabled */
-      if (this->symbolicEngine->isOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES))
+      if (this->modes->isModeEnabled(triton::modes::AST_DICTIONARIES))
         return;
 
       for (it = nodes.begin(); it != nodes.end(); it++) {
@@ -69,7 +74,7 @@ namespace triton {
 
     triton::ast::AbstractNode* AstGarbageCollector::recordAstNode(triton::ast::AbstractNode* node) {
       /* Check if the AST_DICTIONARIES is enabled. */
-      if (this->symbolicEngine->isOptimizationEnabled(triton::engines::symbolic::AST_DICTIONARIES)) {
+      if (this->modes->isModeEnabled(triton::modes::AST_DICTIONARIES)) {
         triton::ast::AbstractNode* ret = this->symbolicEngine->browseAstDictionaries(node);
         if (ret != nullptr)
           return ret;

@@ -48,7 +48,7 @@ if __name__ == '__main__':
     setArchitecture(ARCH.X86_64)
 
     # Symbolic optimization
-    enableSymbolicOptimization(OPTIMIZATION.ALIGNED_MEMORY, True)
+    enableMode(MODE.ALIGNED_MEMORY, True)
 
     # Define entry point
     pc = 0x40056d
