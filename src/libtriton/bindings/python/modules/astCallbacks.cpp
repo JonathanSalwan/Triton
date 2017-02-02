@@ -83,7 +83,7 @@ add al, cl
 
 At the line 5, the AST of the `AL` register looks like this:
 
-<p align="center"><img width="400" src="http://triton.quarkslab.com/files/smt_ast.svg"/></p>
+<p align="center"><img width="400" src="https://triton.quarkslab.com/files/smt_ast.svg"/></p>
 
 This AST represents the semantics of the `AL` register at the program point 5 from the program point 1. Note that this AST has been simplified for
 a better comprehension. The real AST contains some `concat` and `extract` as mentioned in the previous chapter. According to the API you can build
@@ -96,7 +96,7 @@ and modify your own AST. Then, you can perform some modifications and simplifica
 To manage more easily the subtree and to keep the SSA form of registers and memory, we have added a `REFERENCE` node which is a "terminate" node of a
 tree but contains a reference to another subtree. Below, an example of one "partial" tree linked with two other subtrees.
 
-<p align="center"><img width="600" src="http://triton.quarkslab.com/files/smt_ast_ref.svg"/></p>
+<p align="center"><img width="600" src="https://triton.quarkslab.com/files/smt_ast_ref.svg"/></p>
 
 If you try to go through the full AST you will fail at the first reference node because a reference node does not contains child nodes.
 The only way to jump from a reference node to the targeted node is to use the triton::engines::symbolic::SymbolicEngine::getFullAst() function.

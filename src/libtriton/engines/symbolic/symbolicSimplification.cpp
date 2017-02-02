@@ -20,7 +20,7 @@
 Triton allows you to optimize your AST (See: \ref py_ast_page) just before the assignment to a register, a memory
 or a volatile symbolic expression.
 
-<p align="center"><img src="http://triton.quarkslab.com/files/simplification.png"/></p>
+<p align="center"><img src="https://triton.quarkslab.com/files/simplification.png"/></p>
 
 The record of a simplification pass is really straightforward. You have to record your simplification
 callback using the triton::API::addCallback() function. Your simplification callback
