@@ -69,7 +69,6 @@ namespace triton {
           triton::uint512 concreteValue;
 
         public:
-
           //! Constructor.
           SymbolicVariable(symkind_e kind,
                            triton::uint64 kindValue,
@@ -79,7 +78,7 @@ namespace triton {
                            triton::uint512 concreteValue=0);
 
           //! Constructor by copy.
-          SymbolicVariable(const SymbolicVariable &copy);
+          SymbolicVariable(const SymbolicVariable& copy);
 
           //! Destructor.
           virtual ~SymbolicVariable();

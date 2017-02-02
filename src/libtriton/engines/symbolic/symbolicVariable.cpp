@@ -22,27 +22,27 @@ namespace triton {
                                          triton::uint32 size,
                                          const std::string& comment,
                                          triton::uint512 concreteValue) {
-        this->comment          = comment;
-        this->id               = id;
-        this->kind             = kind;
-        this->kindValue        = kindValue;
-        this->name             = TRITON_SYMVAR_NAME + std::to_string(id);
-        this->size             = size;
-        this->concreteValue    = concreteValue;
+        this->comment         = comment;
+        this->id              = id;
+        this->kind            = kind;
+        this->kindValue       = kindValue;
+        this->name            = TRITON_SYMVAR_NAME + std::to_string(id);
+        this->size            = size;
+        this->concreteValue   = concreteValue;
 
         if (this->size > MAX_BITS_SUPPORTED)
           throw triton::exceptions::SymbolicVariable("SymbolicVariable::SymbolicVariable(): Size connot be greater than MAX_BITS_SUPPORTED.");
       }
 
 
-      SymbolicVariable::SymbolicVariable(const SymbolicVariable &copy) {
-        this->comment          = copy.comment;
-        this->id               = copy.id;
-        this->kind             = copy.kind;
-        this->kindValue        = copy.kindValue;
-        this->name             = copy.name;
-        this->size             = copy.size;
-        this->concreteValue    = copy.concreteValue;
+      SymbolicVariable::SymbolicVariable(const SymbolicVariable& copy) {
+        this->comment         = copy.comment;
+        this->concreteValue   = copy.concreteValue;
+        this->id              = copy.id;
+        this->kind            = copy.kind;
+        this->kindValue       = copy.kindValue;
+        this->name            = copy.name;
+        this->size            = copy.size;
       }
 
 
