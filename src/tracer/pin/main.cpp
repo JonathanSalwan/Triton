@@ -35,7 +35,7 @@
 The new design of the Triton library (since the `v0.3`), allows you to plug any kind of tracers. E.g: Pin,
 Valgrind and even a database.
 
-<p align="center"><img src="http://triton.quarkslab.com/files/triton_v03_architecture.png"/></p>
+<p align="center"><img src="https://triton.quarkslab.com/files/triton_v03_architecture.png"/></p>
 
 To use the `libTriton`, your tracer must provide two kinds of information at each program point:
 
@@ -139,8 +139,8 @@ if __name__ == '__main__':
 ~~~~~~~~~~~~~
 
 The database connection is a pure example to show you how to interact with the Triton API. As Triton is written in `C++`, you can directly
-create your Triton instruction inside a DBI engine (like Pin or Valgrind). According to your tracer, you can refer to the [Python](http://triton.quarkslab.com/documentation/doxygen/py_triton_page.html)
-or the [C++](http://triton.quarkslab.com/documentation/doxygen/classtriton_1_1API.html) API.
+create your Triton instruction inside a DBI engine (like Pin or Valgrind). According to your tracer, you can refer to the [Python](https://triton.quarkslab.com/documentation/doxygen/py_triton_page.html)
+or the [C++](https://triton.quarkslab.com/documentation/doxygen/classtriton_1_1API.html) API.
 
 \section Tracer_pintool The Triton's pintool
 <hr>
