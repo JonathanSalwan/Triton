@@ -423,9 +423,9 @@ Untaints a register. Returns true if the register is still tainted.
 - \ref py_CALLBACK_page
 - \ref py_CPUSIZE_page
 - \ref py_ELF_page
+- \ref py_MODE_page
 - \ref py_OPCODE_page
 - \ref py_OPERAND_page
-- \ref py_OPTIMIZATION_page
 - \ref py_PE_page
 - \ref py_REG_page
 - \ref py_SYMEXPR_page
