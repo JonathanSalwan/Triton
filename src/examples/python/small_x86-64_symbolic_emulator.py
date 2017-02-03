@@ -6,8 +6,13 @@
 ## add more ones):
 ##
 ##  * __libc_start_main
+##  * atoi
+##  * atol
+##  * atoll
 ##  * malloc
 ##  * printf
+##  * putchar
+##  * puts
 ##  * raise
 ##  * rand
 ##  * signal
@@ -17,28 +22,28 @@
 ## Example:
 ##
 ##  $ ./small_x86-64_symbolic_emulator.py ./samples/sample_1 hello
-##  [+] Loading 0x400040 - 0x400270
-##  [+] Loading 0x400270 - 0x40028c
-##  [+] Loading 0x400000 - 0x4007a4
-##  [+] Loading 0x600e10 - 0x601048
-##  [+] Loading 0x600e28 - 0x600ff8
-##  [+] Loading 0x40028c - 0x4002ac
-##  [+] Loading 0x400678 - 0x4006ac
-##  [+] Loading 0x000000 - 0x000000
-##  [+] Loading 0x600e10 - 0x601000
-##  [+] Loading 0x000000 - 0x000000
-##  [+] Hooking strlen
-##  [+] Hooking printf
-##  [+] Hooking __libc_start_main
-##  [+] Starting emulation.
-##  [+] __libc_start_main hooked
-##  [+] argv[0] = ./samples/sample_1
-##  [+] argv[1] = hello
-##  [+] strlen hooked
-##  [+] printf hooked
+##  [Triton] Loading 0x400040 - 0x400270
+##  [Triton] Loading 0x400270 - 0x40028c
+##  [Triton] Loading 0x400000 - 0x4007a4
+##  [Triton] Loading 0x600e10 - 0x601048
+##  [Triton] Loading 0x600e28 - 0x600ff8
+##  [Triton] Loading 0x40028c - 0x4002ac
+##  [Triton] Loading 0x400678 - 0x4006ac
+##  [Triton] Loading 0x000000 - 0x000000
+##  [Triton] Loading 0x600e10 - 0x601000
+##  [Triton] Loading 0x000000 - 0x000000
+##  [Triton] Hooking strlen
+##  [Triton] Hooking printf
+##  [Triton] Hooking __libc_start_main
+##  [Triton] Starting emulation
+##  [Triton] __libc_start_main hooked
+##  [Triton] argv[0] = ./samples/sample_1
+##  [Triton] argv[1] = hello
+##  [Triton] strlen hooked
+##  [Triton] printf hooked
 ##  Input size = 5
-##  [+] Instruction executed: 34
-##  [+] Emulation done.
+##  [Triton] Instruction executed: 34
+##  [Triton] Emulation done
 ##
 
 import os
@@ -52,7 +57,7 @@ from triton import *
 
 
 # Script options
-DEBUG = False
+DEBUG = True
 
 # Memory mapping
 BASE_PLT   = 0x10000000
@@ -94,30 +99,30 @@ def getFormatString(addr):
 
 
 # Simulate the rand() function
-def randHandler():
-    print '[+] rand hooked'
+def __rand():
+    debug('rand hooked')
     # Return value
     return random.randrange(0xffffffff)
 
 
 # Simulate the malloc() function
-def mallocHandler():
+def __malloc():
     global mallocCurrentAllocation
     global mallocMaxAllocation
     global mallocBase
     global mallocChunkSize
 
-    print '[+] malloc hooked'
+    debug('malloc hooked')
 
     # Get arguments
     size = getConcreteRegisterValue(REG.RDI)
 
     if size > mallocChunkSize:
-        print '[+] malloc failed: size too big'
+        debug('malloc failed: size too big')
         sys.exit(-1)
 
     if mallocCurrentAllocation >= mallocMaxAllocation:
-        print '[+] malloc failed: too many allocations done'
+        debug('malloc failed: too many allocations done')
         sys.exit(-1)
 
     area = mallocBase + (mallocCurrentAllocation * mallocChunkSize)
@@ -128,8 +133,8 @@ def mallocHandler():
 
 
 # Simulate the signal() function
-def signalHandler():
-    print '[+] signal hooked'
+def __signal():
+    debug('signal hooked')
 
     # Get arguments
     signal  = getConcreteRegisterValue(REG.RDI)
@@ -143,8 +148,8 @@ def signalHandler():
 
 
 # Simulate the raise() function
-def raiseHandler():
-    print '[+] raise hooked'
+def __raise():
+    debug('raise hooked')
 
     # Get arguments
     signal  = getConcreteRegisterValue(REG.RDI)
@@ -158,8 +163,8 @@ def raiseHandler():
 
 
 # Simulate the strlen() function
-def strlenHandler():
-    print '[+] strlen hooked'
+def __strlen():
+    debug('strlen hooked')
 
     # Get arguments
     arg1 = getMemoryString(getConcreteRegisterValue(REG.RDI))
@@ -169,8 +174,8 @@ def strlenHandler():
 
 
 # Simulate the strtoul() function
-def strtoulHandler():
-    print '[+] strtoul hooked'
+def __strtoul():
+    debug('strtoul hooked')
 
     # Get arguments
     nptr   = getMemoryString(getConcreteRegisterValue(REG.RDI))
@@ -182,8 +187,8 @@ def strtoulHandler():
 
 
 # Simulate the printf() function
-def printfHandler():
-    print '[+] printf hooked'
+def __printf():
+    debug('printf hooked')
 
     # Get arguments
     arg1   = getFormatString(getConcreteRegisterValue(REG.RDI))
@@ -196,19 +201,38 @@ def printfHandler():
     args   = [arg2, arg3, arg4, arg5, arg6][:nbArgs]
     s      = arg1.format(*args)
 
-    for i in range(len(s)):
-        if isMemoryTainted(getConcreteRegisterValue(REG.RDI) + i):
-            print '[Warning] This printf call may be vulnerable.'
-            break
-
     sys.stdout.write(s)
 
     # Return value
     return len(s)
 
 
-def libcMainHandler():
-    print '[+] __libc_start_main hooked'
+# Simulate the putchar() function
+def __putchar():
+    debug('putchar hooked')
+
+    # Get arguments
+    arg1 = getConcreteRegisterValue(REG.RDI)
+    sys.stdout.write(chr(arg1) + '\n')
+
+    # Return value
+    return 2
+
+
+# Simulate the puts() function
+def __puts():
+    debug('puts hooked')
+
+    # Get arguments
+    arg1 = getMemoryString(getConcreteRegisterValue(REG.RDI))
+    sys.stdout.write(arg1 + '\n')
+
+    # Return value
+    return len(arg1) + 1
+
+
+def __libc_start_main():
+    debug('__libc_start_main hooked')
 
     # Get arguments
     main = getConcreteRegisterValue(REG.RDI)
@@ -242,7 +266,7 @@ def libcMainHandler():
             taintMemory(base + i)
 
         base += len(argv)+1
-        print '[+] argv[%d] = %s' %(index, argv)
+        debug('argv[%d] = %s' %(index, argv))
         index += 1
 
     argc = len(argvs)
@@ -257,15 +281,53 @@ def libcMainHandler():
     return 0
 
 
+# Simulate the atoi() function
+def __atoi():
+    debug('atoi hooked')
+
+    # Get arguments
+    arg1 = getMemoryString(getConcreteRegisterValue(REG.RDI))
+
+    # Return value
+    return int(arg1)
+
+
+# Simulate the atol() function
+def __atol():
+    debug('atol hooked')
+
+    # Get arguments
+    arg1 = getMemoryString(getConcreteRegisterValue(REG.RDI))
+
+    # Return value
+    return long(arg1)
+
+
+# Simulate the atoll() function
+def __atoll():
+    debug('atoll hooked')
+
+    # Get arguments
+    arg1 = getMemoryString(getConcreteRegisterValue(REG.RDI))
+
+    # Return value
+    return long(arg1)
+
+
 customRelocation = [
-    ('__libc_start_main', libcMainHandler, BASE_PLT + 0),
-    ('malloc',            mallocHandler,   BASE_PLT + 1),
-    ('printf',            printfHandler,   BASE_PLT + 2),
-    ('raise',             raiseHandler,    BASE_PLT + 3),
-    ('rand',              randHandler,     BASE_PLT + 4),
-    ('signal',            signalHandler,   BASE_PLT + 5),
-    ('strlen',            strlenHandler,   BASE_PLT + 6),
-    ('strtoul',           strtoulHandler,  BASE_PLT + 7),
+    ['__libc_start_main', __libc_start_main,    None],
+    ['atoi',              __atoi,               None],
+    ['atol',              __atol,               None],
+    ['atoll',             __atoll,              None],
+    ['malloc',            __malloc,             None],
+    ['printf',            __printf,             None],
+    ['putchar',           __putchar,            None],
+    ['puts',              __puts,               None],
+    ['raise',             __raise,              None],
+    ['rand',              __rand,               None],
+    ['signal',            __signal,             None],
+    ['strlen',            __strlen,             None],
+    ['strtoul',           __strtoul,            None],
 ]
 
 
@@ -307,8 +369,7 @@ def emulate(pc):
         processing(instruction)
         count += 1
 
-        if DEBUG:
-            print instruction
+        #print instruction
 
         if instruction.getType() == OPCODE.HLT:
             break
@@ -319,7 +380,7 @@ def emulate(pc):
         # Next
         pc = getConcreteRegisterValue(REG.RIP)
 
-    print '[+] Instruction executed: %d' %(count)
+    debug('Instruction executed: %d' %(count))
     return
 
 
@@ -331,12 +392,16 @@ def loadBinary(binary):
         offset = phdr.getOffset()
         size   = phdr.getFilesz()
         vaddr  = phdr.getVaddr()
-        print '[+] Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size)
+        debug('Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size))
         setConcreteMemoryAreaValue(vaddr, raw[offset:offset+size])
     return
 
 
 def makeRelocation(binary):
+    # Setup plt
+    for pltIndex in range(len(customRelocation)):
+        customRelocation[pltIndex][2] = BASE_PLT + pltIndex
+
     # Perform our own relocations
     symbols = binary.getSymbolsTable()
     relocations = binary.getRelocationTable()
@@ -345,8 +410,15 @@ def makeRelocation(binary):
         symbolRelo = rel.getOffset()
         for crel in customRelocation:
             if symbolName == crel[0]:
-                print '[+] Hooking %s' %(symbolName)
+                debug('Hooking %s' %(symbolName))
                 setConcreteMemoryValue(MemoryAccess(symbolRelo, CPUSIZE.QWORD, crel[2]))
+                break
+    return
+
+
+def debug(s):
+    if DEBUG:
+        print '[Triton] %s' %(s)
     return
 
 
@@ -361,7 +433,7 @@ if __name__ == '__main__':
     #setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
 
     if len(sys.argv) < 2:
-        print '[-] Syntax: %s <elf binary> [arg1, arg2, ...]' %(sys.argv[0])
+        debug('Syntax: %s <elf binary> [arg1, arg2, ...]' %(sys.argv[0]))
         sys.exit(1)
 
     # Parse the binary
@@ -378,8 +450,9 @@ if __name__ == '__main__':
     setConcreteRegisterValue(Register(REG.RSP, BASE_STACK))
 
     # Let's emulate the binary from the entry point
-    print '[+] Starting emulation.'
+    debug('Starting emulation')
     emulate(binary.getHeader().getEntry())
-    print '[+] Emulation done.'
+    debug('Emulation done')
 
     sys.exit(0)
+
