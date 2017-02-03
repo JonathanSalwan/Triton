@@ -52,7 +52,7 @@ from triton import *
 
 
 # Script options
-DEBUG = True
+DEBUG = False
 
 # Memory mapping
 BASE_PLT   = 0x10000000
