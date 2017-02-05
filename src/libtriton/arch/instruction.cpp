@@ -476,7 +476,7 @@ namespace triton {
 
 
     std::ostream& operator<<(std::ostream& stream, const Instruction& inst) {
-      stream << std::hex << inst.getAddress() << ": " << inst.getDisassembly() << std::dec;
+      stream << "0x" << std::hex << inst.getAddress() << ": " << inst.getDisassembly() << std::dec;
       return stream;
     }
 
