@@ -141,14 +141,15 @@ script:
   # libTriton unit testing
   # Python
   - python2.7 ./src/examples/python/code_coverage_crackme_xor.py
+  - python2.7 ./src/examples/python/constraints.py
   - python2.7 ./src/examples/python/disass.py
+  - python2.7 ./src/examples/python/hooking_libc.py
   - python2.7 ./src/examples/python/ir.py
+  - python2.7 ./src/examples/python/proving_opaque_predicates.py
   - python2.7 ./src/examples/python/simplification.py
   - python2.7 ./src/examples/python/symbolic_emulation_1.py
   - python2.7 ./src/examples/python/symbolic_emulation_2.py
   - python2.7 ./src/examples/python/symbolic_emulation_crackme_xor.py
-  - python2.7 ./src/examples/python/hooking_libc.py
-  - python2.7 ./src/examples/python/proving_opaque_predicates.py
   - python2.7 ./src/testers/libTriton_units_testing.py
   # C++
   - cd src/examples/cpp
