@@ -96,12 +96,6 @@ namespace triton {
     }
 
 
-    triton::uint64 MemoryAccess::getAccessMask(void) {
-      triton::uint64 mask = -1;
-      return (mask >> (QWORD_SIZE_BIT - triton::api.cpuRegisterBitSize()));
-    }
-
-
     triton::uint32 MemoryAccess::getAccessSize(void) {
       if (this->indexReg.isValid())
         return this->indexReg.getBitSize();

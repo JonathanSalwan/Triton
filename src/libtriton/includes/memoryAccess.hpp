@@ -82,9 +82,6 @@ namespace triton {
         //! LEA - Returns the displacement immediate value.
         triton::uint64 getDisplacementValue(void);
 
-        //! LEA - Returns the mask of the memory access based on the CPU architecture.
-        triton::uint64 getAccessMask(void);
-
         //! LEA - Returns the size of the memory access.
         triton::uint32 getAccessSize(void);
 
