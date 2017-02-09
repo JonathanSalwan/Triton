@@ -635,7 +635,7 @@ namespace triton {
 
 
       triton::uint64 x86Semantics::alignAddStack_s(triton::arch::Instruction& inst, triton::uint32 delta) {
-        auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_SP.getParent());
+        auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_SP.getParent(*this->architecture->getCpu()));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -656,7 +656,7 @@ namespace triton {
 
 
       triton::uint64 x86Semantics::alignSubStack_s(triton::arch::Instruction& inst, triton::uint32 delta) {
-        auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_SP.getParent());
+        auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_SP.getParent(*this->architecture->getCpu()));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -701,8 +701,8 @@ namespace triton {
 
 
       void x86Semantics::controlFlow_s(triton::arch::Instruction& inst) {
-        auto pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC.getParent());
-        auto counter = triton::arch::OperandWrapper(TRITON_X86_REG_CX.getParent());
+        auto pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC.getParent(*this->architecture->getCpu()));
+        auto counter = triton::arch::OperandWrapper(TRITON_X86_REG_CX.getParent(*this->architecture->getCpu()));
         auto zf      = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
         switch (inst.getPrefix()) {
@@ -3071,7 +3071,7 @@ namespace triton {
 
 
       void x86Semantics::call_s(triton::arch::Instruction& inst) {
-        auto stack = TRITON_X86_REG_SP.getParent();
+        auto stack = TRITON_X86_REG_SP.getParent(*this->architecture->getCpu());
 
         /* Create the semantics - side effect */
         auto  stackValue = alignSubStack_s(inst, stack.getSize());
@@ -3773,8 +3773,8 @@ namespace triton {
       void x86Semantics::cmpsb_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent(*this->architecture->getCpu()));
+        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* If the REP prefix is defined, convert REP into REPE */
@@ -3827,8 +3827,8 @@ namespace triton {
       void x86Semantics::cmpsd_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent(*this->architecture->getCpu()));
+        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* If the REP prefix is defined, convert REP into REPE */
@@ -3881,8 +3881,8 @@ namespace triton {
       void x86Semantics::cmpsq_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent(*this->architecture->getCpu()));
+        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* If the REP prefix is defined, convert REP into REPE */
@@ -3935,8 +3935,8 @@ namespace triton {
       void x86Semantics::cmpsw_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent(*this->architecture->getCpu()));
+        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* If the REP prefix is defined, convert REP into REPE */
@@ -3989,12 +3989,12 @@ namespace triton {
       void x86Semantics::cmpxchg_s(triton::arch::Instruction& inst) {
         auto& src1  = inst.operands[0];
         auto& src2  = inst.operands[1];
-        auto src1p  = inst.operands[0].getRegister().getParent();
-        auto src2p  = inst.operands[1].getRegister().getParent();;
+        auto src1p  = inst.operands[0].getRegister().getParent(*this->architecture->getCpu());
+        auto src2p  = inst.operands[1].getRegister().getParent(*this->architecture->getCpu());
 
         /* Create the tempory accumulator */
         triton::arch::OperandWrapper accumulator(TRITON_X86_REG_AL);
-        triton::arch::OperandWrapper accumulatorp(TRITON_X86_REG_AL.getParent());
+        triton::arch::OperandWrapper accumulatorp(TRITON_X86_REG_AL.getParent(*this->architecture->getCpu()));
 
         switch (src1.getSize()) {
           case WORD_SIZE:
@@ -4013,8 +4013,8 @@ namespace triton {
         auto op2  = this->symbolicEngine->buildSymbolicOperand(inst, src1);
         auto op3  = this->symbolicEngine->buildSymbolicOperand(inst, src2);
         auto op1p = this->symbolicEngine->buildSymbolicOperand(accumulatorp);
-        auto op2p = this->symbolicEngine->buildSymbolicRegister((src1.getType() == triton::arch::OP_REG ? src1.getRegister().getParent() : accumulatorp.getRegister()));
-        auto op3p = this->symbolicEngine->buildSymbolicRegister((src1.getType() == triton::arch::OP_REG ? src2.getRegister().getParent() : accumulatorp.getRegister()));
+        auto op2p = this->symbolicEngine->buildSymbolicRegister((src1.getType() == triton::arch::OP_REG ? src1.getRegister().getParent(*this->architecture->getCpu()) : accumulatorp.getRegister()));
+        auto op3p = this->symbolicEngine->buildSymbolicRegister((src1.getType() == triton::arch::OP_REG ? src2.getRegister().getParent(*this->architecture->getCpu()) : accumulatorp.getRegister()));
 
         /* Create the semantics */
         auto nodeq  = triton::ast::equal(op1, op2);
@@ -4116,8 +4116,8 @@ namespace triton {
         auto  src3  = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
         auto  src4  = triton::arch::OperandWrapper(TRITON_X86_REG_ECX);
         auto  src5  = triton::arch::OperandWrapper(TRITON_X86_REG_EBX);
-        auto  src2p = triton::arch::OperandWrapper(TRITON_X86_REG_EDX.getParent());
-        auto  src3p = triton::arch::OperandWrapper(TRITON_X86_REG_EAX.getParent());
+        auto  src2p = triton::arch::OperandWrapper(TRITON_X86_REG_EDX.getParent(*this->architecture->getCpu()));
+        auto  src3p = triton::arch::OperandWrapper(TRITON_X86_REG_EAX.getParent(*this->architecture->getCpu()));
 
         /* Create symbolic operands */
         auto op1  = this->symbolicEngine->buildSymbolicOperand(inst, src1);
@@ -4181,11 +4181,11 @@ namespace triton {
 
 
       void x86Semantics::cpuid_s(triton::arch::Instruction& inst) {
-        auto src  = triton::arch::OperandWrapper(TRITON_X86_REG_AX.getParent());
-        auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_AX.getParent());
-        auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_BX.getParent());
-        auto dst3 = triton::arch::OperandWrapper(TRITON_X86_REG_CX.getParent());
-        auto dst4 = triton::arch::OperandWrapper(TRITON_X86_REG_DX.getParent());
+        auto src  = triton::arch::OperandWrapper(TRITON_X86_REG_AX.getParent(*this->architecture->getCpu()));
+        auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_AX.getParent(*this->architecture->getCpu()));
+        auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_BX.getParent(*this->architecture->getCpu()));
+        auto dst3 = triton::arch::OperandWrapper(TRITON_X86_REG_CX.getParent(*this->architecture->getCpu()));
+        auto dst4 = triton::arch::OperandWrapper(TRITON_X86_REG_DX.getParent(*this->architecture->getCpu()));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -4303,10 +4303,10 @@ namespace triton {
         auto expr4 = this->symbolicEngine->createSymbolicExpression(inst, node4, dst4, "CPUID DX operation");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_AX.getParent(), false);
-        expr2->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_BX.getParent(), false);
-        expr3->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CX.getParent(), false);
-        expr4->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_DX.getParent(), false);
+        expr1->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_AX.getParent(*this->architecture->getCpu()), false);
+        expr2->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_BX.getParent(*this->architecture->getCpu()), false);
+        expr3->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CX.getParent(*this->architecture->getCpu()), false);
+        expr4->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_DX.getParent(*this->architecture->getCpu()), false);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -5457,7 +5457,7 @@ namespace triton {
           op3 = triton::ast::bv(0, leaSize);
 
         /* Base with PC */
-        if (this->architecture->isRegisterValid(srcBase) && (srcBase.getParent().getId() == TRITON_X86_REG_PC.getId()))
+        if (this->architecture->isRegisterValid(srcBase) && (srcBase.getParent(*this->architecture->getCpu()).getId() == TRITON_X86_REG_PC.getId()))
           op3 = triton::ast::bvadd(op3, triton::ast::bv(inst.getSize(), leaSize));
 
         /* Index */
@@ -5494,11 +5494,11 @@ namespace triton {
 
 
       void x86Semantics::leave_s(triton::arch::Instruction& inst) {
-        auto stack     = TRITON_X86_REG_SP.getParent();
-        auto base      = TRITON_X86_REG_BP.getParent();
+        auto stack     = TRITON_X86_REG_SP.getParent(*this->architecture->getCpu());
+        auto base      = TRITON_X86_REG_BP.getParent(*this->architecture->getCpu());
         auto baseValue = this->architecture->getConcreteRegisterValue(base).convert_to<triton::uint64>();
         auto bp1       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(baseValue, base.getSize()));
-        auto bp2       = triton::arch::OperandWrapper(TRITON_X86_REG_BP.getParent());
+        auto bp2       = triton::arch::OperandWrapper(TRITON_X86_REG_BP.getParent(*this->architecture->getCpu()));
         auto sp        = triton::arch::OperandWrapper(stack);
 
         /* Create symbolic operands */
@@ -5542,7 +5542,7 @@ namespace triton {
       void x86Semantics::lodsb_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* Create symbolic operands */
@@ -5574,7 +5574,7 @@ namespace triton {
       void x86Semantics::lodsd_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* Create symbolic operands */
@@ -5606,7 +5606,7 @@ namespace triton {
       void x86Semantics::lodsq_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* Create symbolic operands */
@@ -5638,7 +5638,7 @@ namespace triton {
       void x86Semantics::lodsw_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* Create symbolic operands */
@@ -6345,8 +6345,8 @@ namespace triton {
       void x86Semantics::movsb_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
+        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* Create symbolic operands */
@@ -6386,8 +6386,8 @@ namespace triton {
       void x86Semantics::movsd_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
+        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* Create symbolic operands */
@@ -6463,8 +6463,8 @@ namespace triton {
       void x86Semantics::movsq_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
+        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* Create symbolic operands */
@@ -6504,8 +6504,8 @@ namespace triton {
       void x86Semantics::movsw_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
+        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
+        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* Create symbolic operands */
@@ -8243,7 +8243,7 @@ namespace triton {
 
       void x86Semantics::pop_s(triton::arch::Instruction& inst) {
         bool  stackRelative = false;
-        auto  stack         = TRITON_X86_REG_SP.getParent();
+        auto  stack         = TRITON_X86_REG_SP.getParent(*this->architecture->getCpu());
         auto  stackValue    = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto& dst           = inst.operands[0];
         auto  src           = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, dst.getSize()));
@@ -8262,12 +8262,12 @@ namespace triton {
          * the ESP register.
          */
         if (dst.getType() == triton::arch::OP_MEM) {
-          if (dst.getMemory().getBaseRegister().getParent().getId() == stack.getId()) {
+          if (dst.getMemory().getBaseRegister().getParent(*this->architecture->getCpu()).getId() == stack.getId()) {
             /* Align the stack */
             alignAddStack_s(inst, src.getSize());
 
             /* Re-initialize the memory access */
-            dst.getMemory().initAddress(triton::arch::FORCE_MEMORY_INITIALIZATION);
+            dst.getMemory().initAddress(*this->architecture->getCpu(), triton::arch::FORCE_MEMORY_INITIALIZATION);
 
             stackRelative = true;
           }
@@ -8289,7 +8289,7 @@ namespace triton {
 
 
       void x86Semantics::popal_s(triton::arch::Instruction& inst) {
-        auto stack      = TRITON_X86_REG_SP.getParent();
+        auto stack      = TRITON_X86_REG_SP.getParent(*this->architecture->getCpu());
         auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto dst1       = triton::arch::OperandWrapper(TRITON_X86_REG_EDI);
         auto dst2       = triton::arch::OperandWrapper(TRITON_X86_REG_ESI);
@@ -8344,7 +8344,7 @@ namespace triton {
 
 
       void x86Semantics::popfd_s(triton::arch::Instruction& inst) {
-        auto  stack      = TRITON_X86_REG_SP.getParent();
+        auto  stack      = TRITON_X86_REG_SP.getParent(*this->architecture->getCpu());
         auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto  dst1       = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
         auto  dst2       = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
@@ -8402,7 +8402,7 @@ namespace triton {
 
 
       void x86Semantics::popfq_s(triton::arch::Instruction& inst) {
-        auto  stack      = TRITON_X86_REG_SP.getParent();
+        auto  stack      = TRITON_X86_REG_SP.getParent(*this->architecture->getCpu());
         auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto  dst1       = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
         auto  dst2       = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
@@ -9439,7 +9439,7 @@ namespace triton {
 
       void x86Semantics::push_s(triton::arch::Instruction& inst) {
         auto& src           = inst.operands[0];
-        auto stack          = TRITON_X86_REG_SP.getParent();
+        auto stack          = TRITON_X86_REG_SP.getParent(*this->architecture->getCpu());
         triton::uint32 size = stack.getSize();
 
         /* If it's an immediate source, the memory access is always based on the arch size */
@@ -9468,7 +9468,7 @@ namespace triton {
 
 
       void x86Semantics::pushal_s(triton::arch::Instruction& inst) {
-        auto stack      = TRITON_X86_REG_SP.getParent();
+        auto stack      = TRITON_X86_REG_SP.getParent(*this->architecture->getCpu());
         auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto dst1       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 1), stack.getSize()));
         auto dst2       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 2), stack.getSize()));
@@ -9534,7 +9534,7 @@ namespace triton {
 
 
       void x86Semantics::pushfd_s(triton::arch::Instruction& inst) {
-        auto stack = TRITON_X86_REG_SP.getParent();
+        auto stack = TRITON_X86_REG_SP.getParent(*this->architecture->getCpu());
 
         /* Create the semantics - side effect */
         auto stackValue = alignSubStack_s(inst, stack.getSize());
@@ -9600,7 +9600,7 @@ namespace triton {
 
 
       void x86Semantics::pushfq_s(triton::arch::Instruction& inst) {
-        auto stack = TRITON_X86_REG_SP.getParent();
+        auto stack = TRITON_X86_REG_SP.getParent(*this->architecture->getCpu());
 
         /* Create the semantics - side effect */
         auto stackValue = alignSubStack_s(inst, stack.getSize());
@@ -9850,7 +9850,7 @@ namespace triton {
 
 
       void x86Semantics::ret_s(triton::arch::Instruction& inst) {
-        auto stack      = TRITON_X86_REG_SP.getParent();
+        auto stack      = TRITON_X86_REG_SP.getParent(*this->architecture->getCpu());
         auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto pc         = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
         auto sp         = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
@@ -10195,7 +10195,7 @@ namespace triton {
       void x86Semantics::scasb_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* If the REP prefix is defined, convert REP into REPE */
@@ -10240,7 +10240,7 @@ namespace triton {
       void x86Semantics::scasd_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* If the REP prefix is defined, convert REP into REPE */
@@ -10285,7 +10285,7 @@ namespace triton {
       void x86Semantics::scasq_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* If the REP prefix is defined, convert REP into REPE */
@@ -10330,7 +10330,7 @@ namespace triton {
       void x86Semantics::scasw_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* If the REP prefix is defined, convert REP into REPE */
@@ -11205,7 +11205,7 @@ namespace triton {
       void x86Semantics::stosb_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* Create symbolic operands */
@@ -11237,7 +11237,7 @@ namespace triton {
       void x86Semantics::stosd_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* Create symbolic operands */
@@ -11269,7 +11269,7 @@ namespace triton {
       void x86Semantics::stosq_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* Create symbolic operands */
@@ -11301,7 +11301,7 @@ namespace triton {
       void x86Semantics::stosw_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
+        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent(*this->architecture->getCpu()));
         auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
 
         /* Create symbolic operands */

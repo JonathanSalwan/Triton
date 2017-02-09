@@ -79,9 +79,9 @@ namespace triton {
     }
 
 
-    triton::uint64 MemoryAccess::getSegmentValue(void) {
-      if (this->segmentReg.isValid())
-        return triton::api.getConcreteRegisterValue(this->segmentReg).convert_to<triton::uint64>();
+    triton::uint64 MemoryAccess::getSegmentValue(triton::arch::CpuInterface& cpu) {
+      if (this->segmentReg.isValid(cpu))
+        return cpu.getConcreteRegisterValue(this->segmentReg).convert_to<triton::uint64>();
       return 0;
     }
 
@@ -96,36 +96,36 @@ namespace triton {
     }
 
 
-    triton::uint32 MemoryAccess::getAccessSize(void) {
-      if (this->indexReg.isValid())
+    triton::uint32 MemoryAccess::getAccessSize(triton::arch::CpuInterface& cpu) {
+      if (this->indexReg.isValid(cpu))
         return this->indexReg.getBitSize();
 
-      else if (this->baseReg.isValid())
+      else if (this->baseReg.isValid(cpu))
         return this->baseReg.getBitSize();
 
       else if (this->displacement.getBitSize())
         return this->displacement.getBitSize();
 
-      return triton::api.cpuRegisterBitSize();
+      return cpu.registerBitSize();
     }
 
 
-    void MemoryAccess::initAddress(bool force) {
+    void MemoryAccess::initAddress(triton::arch::CpuInterface& cpu, bool force) {
       /* Otherwise, try to compute the address */
       if (triton::api.isArchitectureValid() && this->getBitSize() >= BYTE_SIZE_BIT) {
         triton::arch::Register& base  = this->baseReg;
         triton::arch::Register& index = this->indexReg;
-        triton::uint64 segmentValue   = this->getSegmentValue();
+        triton::uint64 segmentValue   = this->getSegmentValue(cpu);
         triton::uint64 scaleValue     = this->getScaleValue();
         triton::uint64 dispValue      = this->getDisplacementValue();
-        triton::uint32 bitSize        = this->getAccessSize();
+        triton::uint32 bitSize        = this->getAccessSize(cpu);
 
         /* Initialize the AST of the memory access (LEA) */
         this->ast = triton::ast::bvadd(
-                      (this->pcRelative ? triton::ast::bv(this->pcRelative, bitSize) : (base.isValid() ? triton::api.buildSymbolicRegister(base) : triton::ast::bv(0, bitSize))),
+                      (this->pcRelative ? triton::ast::bv(this->pcRelative, bitSize) : (base.isValid(cpu) ? triton::api.buildSymbolicRegister(base) : triton::ast::bv(0, bitSize))),
                       triton::ast::bvadd(
                         triton::ast::bvmul(
-                          (index.isValid() ? triton::api.buildSymbolicRegister(index) : triton::ast::bv(0, bitSize)),
+                          (index.isValid(cpu) ? triton::api.buildSymbolicRegister(index) : triton::ast::bv(0, bitSize)),
                           triton::ast::bv(scaleValue, bitSize)
                         ),
                         triton::ast::bv(dispValue, bitSize)

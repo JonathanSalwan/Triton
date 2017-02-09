@@ -83,7 +83,7 @@ namespace triton {
       std::vector<triton::arch::OperandWrapper>::iterator it3;
       for (it3 = inst.operands.begin(); it3 != inst.operands.end(); it3++) {
         if (it3->getType() == triton::arch::OP_MEM) {
-          it3->getMemory().initAddress();
+          it3->getMemory().initAddress(*this->architecture->getCpu());
         }
       }
 

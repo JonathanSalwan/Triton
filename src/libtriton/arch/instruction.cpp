@@ -7,6 +7,7 @@
 
 #include <cstring>
 
+#include <api.hpp>
 #include <exceptions.hpp>
 #include <immediate.hpp>
 #include <instruction.hpp>
@@ -165,8 +166,8 @@ namespace triton {
 
 
     /* If there is a concrete value recorded, build the appropriate Register. Otherwise, perfrom the analysis on zero. */
-    triton::arch::Register Instruction::getRegisterState(triton::uint32 regId) {
-      triton::arch::Register reg(regId);
+    triton::arch::Register Instruction::getRegisterState(triton::arch::CpuInterface const& cpu, triton::uint32 regId) {
+      triton::arch::Register reg(cpu, regId);
       if (this->registerState.find(regId) != this->registerState.end())
         reg = this->registerState[regId];
       return reg;
@@ -351,7 +352,7 @@ namespace triton {
     }
 
 
-    bool Instruction::isReadFrom(const triton::arch::OperandWrapper& target) const {
+    bool Instruction::isReadFrom(triton::arch::CpuInterface const& cpu, const triton::arch::OperandWrapper& target) const {
       switch(target.getType()) {
 
         case triton::arch::OP_IMM:
@@ -376,7 +377,7 @@ namespace triton {
             const triton::arch::Register& r1 = pair.first;
             const triton::arch::Register& r2 = target.getConstRegister();
 
-            if (r1.isOverlapWith(r2))
+            if (r1.isOverlapWith(cpu, r2))
               return true;
           }
           break;
@@ -389,7 +390,7 @@ namespace triton {
     }
 
 
-    bool Instruction::isWriteTo(const triton::arch::OperandWrapper& target) const {
+    bool Instruction::isWriteTo(triton::arch::CpuInterface const& cpu, const triton::arch::OperandWrapper& target) const {
       switch(target.getType()) {
 
         case triton::arch::OP_IMM:
@@ -410,7 +411,7 @@ namespace triton {
             const triton::arch::Register& r1 = pair.first;
             const triton::arch::Register& r2 = target.getConstRegister();
 
-            if (r1.isOverlapWith(r2))
+            if (r1.isOverlapWith(cpu, r2))
               return true;
           }
           break;

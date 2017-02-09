@@ -7,6 +7,7 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
+#include <api.hpp>
 #include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
@@ -167,7 +168,7 @@ namespace triton {
 
       static PyObject* Register_getParent(PyObject* self, PyObject* noarg) {
         try {
-          triton::arch::Register parent = PyRegister_AsRegister(self)->getParent();
+          triton::arch::Register parent = PyRegister_AsRegister(self)->getParent(*triton::api.getCpu());
           return PyRegister(parent);
         }
         catch (const triton::exceptions::Exception& e) {
@@ -198,7 +199,7 @@ namespace triton {
 
       static PyObject* Register_isValid(PyObject* self, PyObject* noarg) {
         try {
-          if (PyRegister_AsRegister(self)->isValid())
+          if (PyRegister_AsRegister(self)->isValid(*triton::api.getCpu()))
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -210,7 +211,7 @@ namespace triton {
 
       static PyObject* Register_isRegister(PyObject* self, PyObject* noarg) {
         try {
-          if (PyRegister_AsRegister(self)->isRegister())
+          if (PyRegister_AsRegister(self)->isRegister(*triton::api.getCpu()))
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -222,7 +223,7 @@ namespace triton {
 
       static PyObject* Register_isFlag(PyObject* self, PyObject* noarg) {
         try {
-          if (PyRegister_AsRegister(self)->isFlag())
+          if (PyRegister_AsRegister(self)->isFlag(*triton::api.getCpu()))
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -240,7 +241,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "Register::isOverlapWith(): Expected a Register as argument.");
 
           reg1 = PyRegister_AsRegister(self);
-          if (reg1->isOverlapWith(*PyRegister_AsRegister(reg2)))
+          if (reg1->isOverlapWith(*triton::api.getCpu(), *PyRegister_AsRegister(reg2)))
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -425,7 +426,7 @@ namespace triton {
         PyType_Ready(&Register_Type);
         object = PyObject_NEW(Register_Object, &Register_Type);
         if (object != NULL)
-          object->reg = new triton::arch::Register(reg.getId(), concreteValue, isImmutable);
+          object->reg = new triton::arch::Register(*triton::api.getCpu(), reg.getId(), concreteValue, isImmutable);
 
         return (PyObject*)object;
       }

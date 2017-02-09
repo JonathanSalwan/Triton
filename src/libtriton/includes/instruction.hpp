@@ -33,6 +33,7 @@ namespace triton {
 
   //! The Triton namespace
   namespace arch {
+    class Architecture;
   /*!
    *  \ingroup triton
    *  \addtogroup arch
@@ -170,7 +171,7 @@ namespace triton {
         const std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& getReadImmediates(void) const;
 
         //! Returns the register state which has been recorded.
-        triton::arch::Register getRegisterState(triton::uint32 regId);
+        triton::arch::Register getRegisterState(triton::arch::CpuInterface const& cpu, triton::uint32 regId);
 
         //! Sets the opcodes of the instruction.
         void setOpcodes(const triton::uint8* opcodes, triton::uint32 size);
@@ -257,10 +258,10 @@ namespace triton {
         bool isMemoryWrite(void) const;
 
         //! Returns whether the instruction writes the specified operand.
-        bool isWriteTo(const triton::arch::OperandWrapper& target) const;
+        bool isWriteTo(triton::arch::CpuInterface const& cpu, const triton::arch::OperandWrapper& target) const;
 
         //! Returns whether the instruction reads the specified operand.
-        bool isReadFrom(const triton::arch::OperandWrapper& target) const;
+        bool isReadFrom(triton::arch::CpuInterface const& cpu, const triton::arch::OperandWrapper& target) const;
 
         //! Returns true if the instruction has a prefix.
         bool isPrefixed(void) const;

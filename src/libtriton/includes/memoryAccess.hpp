@@ -27,6 +27,7 @@ namespace triton {
 
   //! The Triton namespace
   namespace arch {
+    class CpuInterface;
   /*!
    *  \ingroup triton
    *  \addtogroup arch
@@ -74,7 +75,7 @@ namespace triton {
 
       private:
         //! LEA - Returns the segment register value.
-        triton::uint64 getSegmentValue(void);
+        triton::uint64 getSegmentValue(triton::arch::CpuInterface& cpu);
 
         //! LEA - Returns the scale immediate value.
         triton::uint64 getScaleValue(void);
@@ -83,7 +84,7 @@ namespace triton {
         triton::uint64 getDisplacementValue(void);
 
         //! LEA - Returns the size of the memory access.
-        triton::uint32 getAccessSize(void);
+        triton::uint32 getAccessSize(triton::arch::CpuInterface&);
 
       public:
         //! Constructor.
@@ -102,7 +103,7 @@ namespace triton {
         virtual ~MemoryAccess();
 
         //! Initialize the address of the memory.
-        void initAddress(bool force=false);
+        void initAddress(triton::arch::CpuInterface& cpu, bool force=false);
 
         //! Returns the AST of the memory access (LEA).
         triton::ast::AbstractNode* getLeaAst(void) const;
