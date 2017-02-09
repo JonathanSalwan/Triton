@@ -49,13 +49,13 @@ namespace triton {
         triton::uint32 type;
 
         //! Immediate constructor.
-        OperandWrapper(const triton::arch::Immediate& imm);
+        OperandWrapper(triton::arch::CpuInterface const& cpu, const triton::arch::Immediate& imm);
 
         //! Memory constructor.
-        OperandWrapper(const triton::arch::MemoryAccess& mem);
+        OperandWrapper(triton::arch::CpuInterface const& cpu, const triton::arch::MemoryAccess& mem);
 
         //! Register constructor.
-        OperandWrapper(const triton::arch::Register& reg);
+        OperandWrapper(triton::arch::CpuInterface const& cpu, const triton::arch::Register& reg);
 
         //! Destructor.
         virtual ~OperandWrapper();

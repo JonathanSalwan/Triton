@@ -700,11 +700,11 @@ namespace triton {
               switch(op->type) {
 
                 case triton::extlibs::capstone::X86_OP_IMM:
-                  inst.operands.push_back(triton::arch::OperandWrapper(triton::arch::Immediate(op->imm, op->size)));
+                  inst.operands.push_back(triton::arch::OperandWrapper(*this, triton::arch::Immediate(op->imm, op->size)));
                   break;
 
                 case triton::extlibs::capstone::X86_OP_MEM: {
-                  triton::arch::MemoryAccess mem;
+                  triton::arch::MemoryAccess mem(*this);
 
                   /* Set the size of the memory access */
                   mem.setPair(std::make_pair(((op->size * BYTE_SIZE_BIT) - 1), 0));
@@ -713,8 +713,8 @@ namespace triton {
                   triton::arch::Register segment(*this, this->capstoneRegisterToTritonRegister(op->mem.segment));
                   triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
                   triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
-                  triton::arch::Immediate disp(op->mem.disp, base.isValid(*this) ? base.getSize() : index.isValid(*this) ? index.getSize() : this->registerSize());
-                  triton::arch::Immediate scale(op->mem.scale, base.isValid(*this) ? base.getSize() : index.isValid(*this) ? index.getSize() : this->registerSize());
+                  triton::arch::Immediate disp(op->mem.disp, base.isValid() ? base.getSize() : index.isValid() ? index.getSize() : this->registerSize());
+                  triton::arch::Immediate scale(op->mem.scale, base.isValid() ? base.getSize() : index.isValid() ? index.getSize() : this->registerSize());
 
                   /* Specify that LEA contains a PC relative */
                   if (base.getId() == TRITON_X86_REG_PC.getId())
@@ -726,12 +726,12 @@ namespace triton {
                   mem.setDisplacement(disp);
                   mem.setScale(scale);
 
-                  inst.operands.push_back(triton::arch::OperandWrapper(mem));
+                  inst.operands.push_back(triton::arch::OperandWrapper(*this, mem));
                   break;
                 }
 
                 case triton::extlibs::capstone::X86_OP_REG:
-                  inst.operands.push_back(triton::arch::OperandWrapper(inst.getRegisterState(*this, this->capstoneRegisterToTritonRegister(op->reg))));
+                  inst.operands.push_back(triton::arch::OperandWrapper(*this, inst.getRegisterState(*this, this->capstoneRegisterToTritonRegister(op->reg))));
                   break;
 
                 default:
@@ -792,7 +792,7 @@ namespace triton {
 
         for (triton::usize index = 0; index < size; index++) {
           if (execCallbacks && this->callbacks)
-            this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, MemoryAccess(baseAddr+index, BYTE_SIZE));
+            this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, MemoryAccess(*this, baseAddr+index, BYTE_SIZE));
           area.push_back(this->getConcreteMemoryValue(baseAddr+index));
         }
 

@@ -168,7 +168,7 @@ namespace triton {
 
       static PyObject* Register_getParent(PyObject* self, PyObject* noarg) {
         try {
-          triton::arch::Register parent = PyRegister_AsRegister(self)->getParent(*triton::api.getCpu());
+          triton::arch::Register parent = PyRegister_AsRegister(self)->getParent();
           return PyRegister(parent);
         }
         catch (const triton::exceptions::Exception& e) {
@@ -199,7 +199,7 @@ namespace triton {
 
       static PyObject* Register_isValid(PyObject* self, PyObject* noarg) {
         try {
-          if (PyRegister_AsRegister(self)->isValid(*triton::api.getCpu()))
+          if (PyRegister_AsRegister(self)->isValid())
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -211,7 +211,7 @@ namespace triton {
 
       static PyObject* Register_isRegister(PyObject* self, PyObject* noarg) {
         try {
-          if (PyRegister_AsRegister(self)->isRegister(*triton::api.getCpu()))
+          if (PyRegister_AsRegister(self)->isRegister())
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -223,7 +223,7 @@ namespace triton {
 
       static PyObject* Register_isFlag(PyObject* self, PyObject* noarg) {
         try {
-          if (PyRegister_AsRegister(self)->isFlag(*triton::api.getCpu()))
+          if (PyRegister_AsRegister(self)->isFlag())
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -241,7 +241,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "Register::isOverlapWith(): Expected a Register as argument.");
 
           reg1 = PyRegister_AsRegister(self);
-          if (reg1->isOverlapWith(*triton::api.getCpu(), *PyRegister_AsRegister(reg2)))
+          if (reg1->isOverlapWith(*PyRegister_AsRegister(reg2)))
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }

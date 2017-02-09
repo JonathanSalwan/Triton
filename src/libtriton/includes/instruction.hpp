@@ -258,10 +258,10 @@ namespace triton {
         bool isMemoryWrite(void) const;
 
         //! Returns whether the instruction writes the specified operand.
-        bool isWriteTo(triton::arch::CpuInterface const& cpu, const triton::arch::OperandWrapper& target) const;
+        bool isWriteTo(const triton::arch::OperandWrapper& target) const;
 
         //! Returns whether the instruction reads the specified operand.
-        bool isReadFrom(triton::arch::CpuInterface const& cpu, const triton::arch::OperandWrapper& target) const;
+        bool isReadFrom(const triton::arch::OperandWrapper& target) const;
 
         //! Returns true if the instruction has a prefix.
         bool isPrefixed(void) const;

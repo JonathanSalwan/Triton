@@ -15,26 +15,28 @@
 namespace triton {
   namespace arch {
 
-    Register::Register():
+    Register::Register(triton::arch::CpuInterface const& cpu):
       name("unknown")
       , id(triton::arch::INVALID_REGISTER_ID)
       , parent(triton::arch::INVALID_REGISTER_ID)
       , concreteValue(0)
       , concreteValueDefined(false)
       , immutable(false)
+      , cpu(cpu)
     {
     }
 
-    Register::Register(triton::uint32 regId, triton::arch::RegisterSpecification const& spec): 
+    Register::Register(triton::arch::CpuInterface const& cpu, triton::uint32 regId, triton::arch::RegisterSpecification const& spec): 
       BitsVector(spec.getLow(), spec.getHigh())
       , id(regId)
       , parent(spec.getParentId())
       , concreteValue(0)
       , concreteValueDefined(false)
       , immutable(false)
+      , cpu(cpu)
     {}
 
-    Register::Register(triton::arch::CpuInterface const& cpu, triton::uint32 regId): Register(cpu.isRegisterValid(regId)?regId:triton::arch::INVALID_REGISTER_ID,
+    Register::Register(triton::arch::CpuInterface const& cpu, triton::uint32 regId): Register(cpu, cpu.isRegisterValid(regId)?regId:triton::arch::INVALID_REGISTER_ID,
                                                                          cpu.getRegisterSpecification(cpu.isRegisterValid(regId)?regId:triton::arch::INVALID_REGISTER_ID)) {
     }
 
@@ -52,7 +54,7 @@ namespace triton {
     }
 
 
-    Register::Register(const Register& other) : BitsVector(other) {
+    Register::Register(const Register& other) : BitsVector(other), cpu(other.cpu) {
       this->copy(other);
     }
 
@@ -92,7 +94,7 @@ namespace triton {
     }
 
 
-    Register Register::getParent(triton::arch::CpuInterface const& cpu) const {
+    Register Register::getParent() const {
       return Register(cpu, this->parent);
     }
 
@@ -145,17 +147,17 @@ namespace triton {
     }
 
 
-    bool Register::isValid(triton::arch::CpuInterface const& cpu) const {
+    bool Register::isValid() const {
       return cpu.isRegisterValid(this->id);
     }
 
 
-    bool Register::isRegister(triton::arch::CpuInterface const& cpu) const {
+    bool Register::isRegister() const {
       return cpu.isRegister(this->id);
     }
 
 
-    bool Register::isFlag(triton::arch::CpuInterface const& cpu) const {
+    bool Register::isFlag() const {
       return cpu.isFlag(this->id);
     }
 
@@ -165,8 +167,9 @@ namespace triton {
     }
 
 
-    bool Register::isOverlapWith(triton::arch::CpuInterface const& cpu, const Register& other) const {
-      if (this->getParent(cpu).getId() == other.getParent(cpu).getId()) {
+    bool Register::isOverlapWith(const Register& other) const {
+      // FIXME : parent?
+      if (this->getParent().getId() == other.getParent().getId()) {
         if (this->getLow() <= other.getLow() && other.getLow() <= this->getHigh()) return true;
         if (other.getLow() <= this->getLow() && this->getLow() <= other.getHigh()) return true;
       }

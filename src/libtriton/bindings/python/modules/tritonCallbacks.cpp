@@ -697,11 +697,11 @@ namespace triton {
 
         try {
           if (concreteValue == nullptr){
-            triton::arch::MemoryAccess mem(PyLong_AsUint64(address), PyLong_AsUint32(size));
+            triton::arch::MemoryAccess mem(*triton::api.getCpu(), PyLong_AsUint64(address), PyLong_AsUint32(size));
             return PyMemoryAccess(mem);
           }
 
-          triton::arch::MemoryAccess mem(PyLong_AsUint64(address), PyLong_AsUint32(size), cv);
+          triton::arch::MemoryAccess mem(*triton::api.getCpu(), PyLong_AsUint64(address), PyLong_AsUint32(size), cv);
           return PyMemoryAccess(mem);
         }
         catch (const triton::exceptions::Exception& e) {

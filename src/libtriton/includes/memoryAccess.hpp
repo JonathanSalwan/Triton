@@ -94,13 +94,13 @@ namespace triton {
 
       public:
         //! Constructor.
-        MemoryAccess();
+        MemoryAccess(triton::arch::CpuInterface const& cpu);
 
         //! Constructor.
-        MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */);
+        MemoryAccess(triton::arch::CpuInterface const& cpu, triton::uint64 address, triton::uint32 size /* bytes */);
 
         //! Constructor.
-        MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue);
+        MemoryAccess(triton::arch::CpuInterface const& cpu, triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue);
 
         //! Constructor by copy.
         MemoryAccess(const MemoryAccess& other);

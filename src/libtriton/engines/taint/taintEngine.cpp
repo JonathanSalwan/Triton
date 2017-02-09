@@ -5,7 +5,6 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
 #include <exceptions.hpp>
 #include <taintEngine.hpp>
 
@@ -170,7 +169,7 @@ namespace triton {
 
       /* Returns true of false if the register is currently tainted */
       bool TaintEngine::isRegisterTainted(const triton::arch::Register& reg) const {
-        triton::arch::Register parent = reg.getParent(*triton::api.getCpu());
+        triton::arch::Register parent = reg.getParent();
 
         if (this->taintedRegisters.find(parent) != this->taintedRegisters.end())
           return TAINTED;
@@ -193,7 +192,7 @@ namespace triton {
 
       /* Taint the register */
       bool TaintEngine::taintRegister(const triton::arch::Register& reg) {
-        triton::arch::Register parent = reg.getParent(*triton::api.getCpu());
+        triton::arch::Register parent = reg.getParent();
 
         if (!this->isEnabled())
           return this->isRegisterTainted(parent);
@@ -205,7 +204,7 @@ namespace triton {
 
       /* Untaint the register */
       bool TaintEngine::untaintRegister(const triton::arch::Register& reg) {
-        triton::arch::Register parent = reg.getParent(*triton::api.getCpu());
+        triton::arch::Register parent = reg.getParent();
 
         if (!this->isEnabled())
           return this->isRegisterTainted(parent);
@@ -244,7 +243,7 @@ namespace triton {
 
       /* Sets the flag (taint or untaint) to a register. */
       bool TaintEngine::setTaintRegister(const triton::arch::Register& reg, bool flag) {
-        triton::arch::Register parent = reg.getParent(*triton::api.getCpu());
+        triton::arch::Register parent = reg.getParent();
 
         if (!this->isEnabled())
           return this->isRegisterTainted(parent);

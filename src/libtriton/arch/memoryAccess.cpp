@@ -15,7 +15,11 @@
 namespace triton {
   namespace arch {
 
-    MemoryAccess::MemoryAccess() {
+    MemoryAccess::MemoryAccess(triton::arch::CpuInterface const& cpu) :
+    segmentReg(cpu)
+    , baseReg(cpu)
+    , indexReg(cpu)
+    {
       this->address              = 0;
       this->ast                  = nullptr;
       this->concreteValue        = 0;
@@ -24,8 +28,8 @@ namespace triton {
     }
 
 
-    MemoryAccess::MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */)
-      : MemoryAccess() {
+    MemoryAccess::MemoryAccess(triton::arch::CpuInterface const& cpu, triton::uint64 address, triton::uint32 size /* bytes */)
+      : MemoryAccess(cpu) {
       this->address = address;
 
       if (size == 0)
@@ -44,13 +48,13 @@ namespace triton {
     }
 
 
-    MemoryAccess::MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue)
-      : MemoryAccess(address, size) {
+    MemoryAccess::MemoryAccess(triton::arch::CpuInterface const& cpu, triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue)
+      : MemoryAccess(cpu, address, size) {
       this->setConcreteValue(concreteValue);
     }
 
 
-    MemoryAccess::MemoryAccess(const MemoryAccess& other) : BitsVector(other) {
+    MemoryAccess::MemoryAccess(const MemoryAccess& other) : BitsVector(other), segmentReg(other.segmentReg), baseReg(other.baseReg), indexReg(other.indexReg) {
       this->copy(other);
     }
 
@@ -80,7 +84,7 @@ namespace triton {
 
 
     triton::uint64 MemoryAccess::getSegmentValue(triton::arch::CpuInterface& cpu) {
-      if (this->segmentReg.isValid(cpu))
+      if (this->segmentReg.isValid())
         return cpu.getConcreteRegisterValue(this->segmentReg).convert_to<triton::uint64>();
       return 0;
     }
@@ -97,10 +101,10 @@ namespace triton {
 
 
     triton::uint32 MemoryAccess::getAccessSize(triton::arch::CpuInterface& cpu) {
-      if (this->indexReg.isValid(cpu))
+      if (this->indexReg.isValid())
         return this->indexReg.getBitSize();
 
-      else if (this->baseReg.isValid(cpu))
+      else if (this->baseReg.isValid())
         return this->baseReg.getBitSize();
 
       else if (this->displacement.getBitSize())
@@ -122,10 +126,10 @@ namespace triton {
 
         /* Initialize the AST of the memory access (LEA) */
         this->ast = triton::ast::bvadd(
-                      (this->pcRelative ? triton::ast::bv(this->pcRelative, bitSize) : (base.isValid(cpu) ? sEngine.buildSymbolicRegister(base) : triton::ast::bv(0, bitSize))),
+                      (this->pcRelative ? triton::ast::bv(this->pcRelative, bitSize) : (base.isValid() ? sEngine.buildSymbolicRegister(base) : triton::ast::bv(0, bitSize))),
                       triton::ast::bvadd(
                         triton::ast::bvmul(
-                          (index.isValid(cpu) ? sEngine.buildSymbolicRegister(index) : triton::ast::bv(0, bitSize)),
+                          (index.isValid() ? sEngine.buildSymbolicRegister(index) : triton::ast::bv(0, bitSize)),
                           triton::ast::bv(scaleValue, bitSize)
                         ),
                         triton::ast::bv(dispValue, bitSize)

@@ -61,15 +61,17 @@ namespace triton {
         //! True if this register is immutable regarding concrete values.
         bool immutable;
 
+        CpuInterface const& cpu;
+
         //! Copies a Register.
         void copy(const Register& other);
 
         //! Constructor from specification.
-        Register(triton::uint32 regId, triton::arch::RegisterSpecification const& spec);
+        Register(triton::arch::CpuInterface const& cpu, triton::uint32 regId, triton::arch::RegisterSpecification const& spec);
 
       public:
         //! Constructor.
-        Register();
+        Register(triton::arch::CpuInterface const& cpu);
 
         //! Constructor.
         Register(triton::arch::CpuInterface const& cpu, triton::uint32 regId);
@@ -90,22 +92,22 @@ namespace triton {
         virtual ~Register();
 
         //! Returns the parent id of the register.
-        Register getParent(triton::arch::CpuInterface const&) const;
+        Register getParent() const;
 
         //! Returns true if the register is valid.
-        bool isValid(triton::arch::CpuInterface const&) const;
+        bool isValid() const;
 
         //! Returns true if the register is a register.
-        bool isRegister(triton::arch::CpuInterface const&) const;
+        bool isRegister() const;
 
         //! Returns true if the register is a flag.
-        bool isFlag(triton::arch::CpuInterface const&) const;
+        bool isFlag() const;
 
         //! Returns true if the register is immutable.
         bool isImmutable(void) const;
 
         //! Returns true if `other` and `self` overlap.
-        bool isOverlapWith(triton::arch::CpuInterface const& cpu, const Register& other) const;
+        bool isOverlapWith(const Register& other) const;
 
         //! Returns true if the register contains a concrete value.
         bool hasConcreteValue(void) const;

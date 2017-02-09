@@ -169,7 +169,7 @@ namespace triton {
     triton::arch::Register Instruction::getRegisterState(triton::arch::CpuInterface const& cpu, triton::uint32 regId) {
       triton::arch::Register reg(cpu, regId);
       if (this->registerState.find(regId) != this->registerState.end())
-        reg = this->registerState[regId];
+        reg = this->registerState.at(regId);
       return reg;
     }
 
@@ -297,7 +297,7 @@ namespace triton {
 
 
     void Instruction::updateContext(const triton::arch::Register& reg) {
-      this->registerState[reg.getId()] = reg;
+      this->registerState.emplace(reg.getId(), reg);
     }
 
 
@@ -352,7 +352,7 @@ namespace triton {
     }
 
 
-    bool Instruction::isReadFrom(triton::arch::CpuInterface const& cpu, const triton::arch::OperandWrapper& target) const {
+    bool Instruction::isReadFrom(const triton::arch::OperandWrapper& target) const {
       switch(target.getType()) {
 
         case triton::arch::OP_IMM:
@@ -377,7 +377,7 @@ namespace triton {
             const triton::arch::Register& r1 = pair.first;
             const triton::arch::Register& r2 = target.getConstRegister();
 
-            if (r1.isOverlapWith(cpu, r2))
+            if (r1.isOverlapWith(r2))
               return true;
           }
           break;
@@ -390,7 +390,7 @@ namespace triton {
     }
 
 
-    bool Instruction::isWriteTo(triton::arch::CpuInterface const& cpu, const triton::arch::OperandWrapper& target) const {
+    bool Instruction::isWriteTo(const triton::arch::OperandWrapper& target) const {
       switch(target.getType()) {
 
         case triton::arch::OP_IMM:
@@ -411,7 +411,7 @@ namespace triton {
             const triton::arch::Register& r1 = pair.first;
             const triton::arch::Register& r2 = target.getConstRegister();
 
-            if (r1.isOverlapWith(cpu, r2))
+            if (r1.isOverlapWith(r2))
               return true;
           }
           break;
