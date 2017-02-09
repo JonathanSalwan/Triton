@@ -8267,7 +8267,7 @@ namespace triton {
             alignAddStack_s(inst, src.getSize());
 
             /* Re-initialize the memory access */
-            dst.getMemory().initAddress(*this->architecture->getCpu(), triton::arch::FORCE_MEMORY_INITIALIZATION);
+            dst.getMemory().initAddress(*this->architecture->getCpu(), *this->symbolicEngine, triton::arch::FORCE_MEMORY_INITIALIZATION);
 
             stackRelative = true;
           }

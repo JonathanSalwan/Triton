@@ -5,7 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
+#include <symbolicEngine.hpp>
 #include <cpuSize.hpp>
 #include <exceptions.hpp>
 #include <memoryAccess.hpp>
@@ -110,9 +110,9 @@ namespace triton {
     }
 
 
-    void MemoryAccess::initAddress(triton::arch::CpuInterface& cpu, bool force) {
+    void MemoryAccess::initAddress(triton::arch::CpuInterface& cpu, triton::engines::symbolic::SymbolicEngine& sEngine, bool force) {
       /* Otherwise, try to compute the address */
-      if (triton::api.isArchitectureValid() && this->getBitSize() >= BYTE_SIZE_BIT) {
+      if (this->getBitSize() >= BYTE_SIZE_BIT) {
         triton::arch::Register& base  = this->baseReg;
         triton::arch::Register& index = this->indexReg;
         triton::uint64 segmentValue   = this->getSegmentValue(cpu);
@@ -122,10 +122,10 @@ namespace triton {
 
         /* Initialize the AST of the memory access (LEA) */
         this->ast = triton::ast::bvadd(
-                      (this->pcRelative ? triton::ast::bv(this->pcRelative, bitSize) : (base.isValid(cpu) ? triton::api.buildSymbolicRegister(base) : triton::ast::bv(0, bitSize))),
+                      (this->pcRelative ? triton::ast::bv(this->pcRelative, bitSize) : (base.isValid(cpu) ? sEngine.buildSymbolicRegister(base) : triton::ast::bv(0, bitSize))),
                       triton::ast::bvadd(
                         triton::ast::bvmul(
-                          (index.isValid(cpu) ? triton::api.buildSymbolicRegister(index) : triton::ast::bv(0, bitSize)),
+                          (index.isValid(cpu) ? sEngine.buildSymbolicRegister(index) : triton::ast::bv(0, bitSize)),
                           triton::ast::bv(scaleValue, bitSize)
                         ),
                         triton::ast::bv(dispValue, bitSize)

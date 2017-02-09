@@ -25,6 +25,12 @@ namespace triton {
  *  @{
  */
 
+  namespace engines {
+    namespace symbolic {
+      class SymbolicEngine;
+    }
+  }
+
   //! The Triton namespace
   namespace arch {
     class CpuInterface;
@@ -103,7 +109,7 @@ namespace triton {
         virtual ~MemoryAccess();
 
         //! Initialize the address of the memory.
-        void initAddress(triton::arch::CpuInterface& cpu, bool force=false);
+        void initAddress(triton::arch::CpuInterface& cpu, triton::engines::symbolic::SymbolicEngine& sEngine, bool force=false);
 
         //! Returns the AST of the memory access (LEA).
         triton::ast::AbstractNode* getLeaAst(void) const;
