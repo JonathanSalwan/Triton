@@ -1083,6 +1083,58 @@ namespace triton {
         this->enableFlag = flag;
       }
 
+
+      /* Initializes the memory access AST (LOAD and STORE) */
+      void SymbolicEngine::initLeaAst(triton::arch::MemoryAccess& mem, bool force) {
+        if (mem.getBitSize() >= BYTE_SIZE_BIT) {
+          const triton::arch::Register& base  = mem.getConstBaseRegister();
+          const triton::arch::Register& index = mem.getConstIndexRegister();
+          const triton::arch::Register& seg   = mem.getConstSegmentRegister();
+          triton::uint64 segmentValue         = (seg.isValid() ? this->architecture->getConcreteRegisterValue(seg).convert_to<triton::uint64>() : 0);
+          triton::uint64 scaleValue           = mem.getConstScale().getValue();
+          triton::uint64 dispValue            = mem.getConstDisplacement().getValue();
+          triton::uint32 bitSize              = (index.isValid() ? index.getBitSize() :
+                                                  (base.isValid() ? base.getBitSize() :
+                                                    (mem.getConstDisplacement().getBitSize() ? mem.getConstDisplacement().getBitSize() :
+                                                      this->architecture->registerBitSize()
+                                                    )
+                                                  )
+                                                );
+
+
+          /* Initialize the AST of the memory access (LEA) -> ((pc + base) + (index * scale) + disp) */
+          auto leaAst = triton::ast::bvadd(
+                          (mem.getPcRelative() ? triton::ast::bv(mem.getPcRelative(), bitSize) :
+                            (base.isValid() ? this->buildSymbolicRegister(base) :
+                              triton::ast::bv(0, bitSize)
+                            )
+                          ),
+                          triton::ast::bvadd(
+                            triton::ast::bvmul(
+                              (index.isValid() ? this->buildSymbolicRegister(index) : triton::ast::bv(0, bitSize)),
+                              triton::ast::bv(scaleValue, bitSize)
+                            ),
+                            triton::ast::bv(dispValue, bitSize)
+                          )
+                        );
+
+          /* Use segments as base address instead of selector into the GDT. */
+          if (segmentValue) {
+            leaAst = triton::ast::bvadd(
+                       triton::ast::bv(segmentValue, seg.getBitSize()),
+                       triton::ast::sx((seg.getBitSize() - bitSize), leaAst)
+                     );
+          }
+
+          /* Set AST */
+          mem.setLeaAst(leaAst);
+
+          /* Initialize the address only if it is not already defined */
+          if (!mem.getAddress() || force)
+            mem.setAddress(leaAst->evaluate().convert_to<triton::uint64>());
+        }
+      }
+
     }; /* symbolic namespace */
   }; /* engines namespace */
 }; /*triton namespace */

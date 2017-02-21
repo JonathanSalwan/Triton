@@ -66,24 +66,11 @@ namespace triton {
         //! LEA - If the operand has a scale, this attribute is filled.
         triton::arch::Immediate scale;
 
-        //! The AST of the memory access.
-        triton::ast::AbstractNode* ast;
+        //! The AST of the memory access (LEA).
+        triton::ast::AbstractNode* leaAst;
 
         //! Copy a MemoryAccess.
         void copy(const MemoryAccess& other);
-
-      private:
-        //! LEA - Returns the segment register value.
-        triton::uint64 getSegmentValue(void);
-
-        //! LEA - Returns the scale immediate value.
-        triton::uint64 getScaleValue(void);
-
-        //! LEA - Returns the displacement immediate value.
-        triton::uint64 getDisplacementValue(void);
-
-        //! LEA - Returns the size of the memory access.
-        triton::uint32 getAccessSize(void);
 
       public:
         //! Constructor.
@@ -100,9 +87,6 @@ namespace triton {
 
         //! Destructor.
         virtual ~MemoryAccess();
-
-        //! Initialize the address of the memory.
-        void initAddress(bool force=false);
 
         //! Returns the AST of the memory access (LEA).
         triton::ast::AbstractNode* getLeaAst(void) const;
@@ -193,6 +177,9 @@ namespace triton {
 
         //! LEA - Sets the scale operand.
         void setScale(triton::arch::Immediate& scale);
+
+        //! Sets the AST of the memory access (LEA).
+        void setLeaAst(triton::ast::AbstractNode* ast);
 
         //! Copies a MemoryAccess.
         void operator=(const MemoryAccess& other);

@@ -309,6 +309,9 @@ namespace triton {
 
           //! Returns true if the register expression contains a symbolic variable.
           bool isRegisterSymbolized(const triton::arch::Register& reg) const;
+
+          //! Initializes the memory access AST (LOAD and STORE).
+          void initLeaAst(triton::arch::MemoryAccess& mem, bool force=false);
       };
 
     /*! @} End of symbolic namespace */
