@@ -112,7 +112,7 @@ namespace triton {
 
     void MemoryAccess::initAddress(bool force) {
       /* Otherwise, try to compute the address */
-      if (triton::api.isArchitectureValid() && this->getBitSize() >= BYTE_SIZE_BIT) {
+      if (this->getBitSize() >= BYTE_SIZE_BIT) {
         triton::arch::Register& base  = this->baseReg;
         triton::arch::Register& index = this->indexReg;
         triton::uint64 segmentValue   = this->getSegmentValue();
