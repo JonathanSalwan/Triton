@@ -401,6 +401,9 @@ namespace triton {
           //! The ADC semantics.
           void adc_s(triton::arch::Instruction& inst);
 
+          //! The ADCX semantics.
+          void adcx_s(triton::arch::Instruction& inst);
+
           //! The ADD semantics.
           void add_s(triton::arch::Instruction& inst);
 

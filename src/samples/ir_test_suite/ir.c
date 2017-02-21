@@ -2699,6 +2699,40 @@ void check(void)
   asm("bswap ecx");
   asm("bswap rdx");
 
+  asm("adcx rax, rbx");
+  asm("adcx rcx, rax");
+  asm("adcx rdx, rcx");
+  asm("adcx rdi, rdx");
+
+  asm("adcx eax, ebx");
+  asm("adcx ecx, eax");
+  asm("adcx edx, ecx");
+  asm("adcx edi, edx");
+
+  asm("adcx rax, rbx");
+  asm("adcx rcx, rax");
+  asm("adcx rdx, rcx");
+  asm("adcx rdi, rdx");
+  asm("adcx rbx, rdi");
+
+  asm("adcx rax, rbx");
+  asm("adcx rcx, rax");
+  asm("adcx rdx, rcx");
+  asm("adcx rdi, rdx");
+  asm("adcx rbx, rdi");
+
+  asm("adcx rax, rbx");
+  asm("adcx rcx, rax");
+  asm("adcx rdx, rcx");
+  asm("adcx rdi, rdx");
+  asm("adcx rbx, rdi");
+
+  asm("adcx rax, rbx");
+  asm("adcx rcx, rax");
+  asm("adcx rdx, rcx");
+  asm("adcx rdi, rdx");
+  asm("adcx rbx, rdi");
+
   init(tab1, tab2, tab3, tab4);
 
   // SSE

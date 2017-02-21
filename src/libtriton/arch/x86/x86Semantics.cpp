@@ -33,6 +33,7 @@ Mnemonic                     | Extensions | Description
 -----------------------------|------------|----------------------------------------------------
 AAD                          |            | ASCII Adjust AX Before Division
 ADC                          |            | Add with Carry
+ADCX                         | adx        | Unsigned Integer Addition of Two Operands with Carry Flag
 ADD                          |            | Add
 AND                          |            | Logical AND
 ANDN                         | bmi1       | Logical AND NOT
@@ -348,6 +349,7 @@ namespace triton {
         switch (inst.getType()) {
           case ID_INS_AAD:            this->aad_s(inst);          break;
           case ID_INS_ADC:            this->adc_s(inst);          break;
+          case ID_INS_ADCX:           this->adcx_s(inst);         break;
           case ID_INS_ADD:            this->add_s(inst);          break;
           case ID_INS_AND:            this->and_s(inst);          break;
           case ID_INS_ANDN:           this->andn_s(inst);         break;
@@ -2169,6 +2171,34 @@ namespace triton {
         this->pf_s(inst, expr, dst);
         this->sf_s(inst, expr, dst);
         this->zf_s(inst, expr, dst);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::adcx_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+        auto  cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
+
+        /* Create the semantics */
+        auto node = triton::ast::bvadd(triton::ast::bvadd(op1, op2), triton::ast::zx(dst.getBitSize()-1, op3));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ADCX operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+        expr->isTainted = this->taintEngine->taintUnion(dst, cf);
+
+        /* Upate symbolic flags */
+        this->cfAdd_s(inst, expr, dst, op1, op2);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
