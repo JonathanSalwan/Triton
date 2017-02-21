@@ -7,6 +7,7 @@
 
 #include <cstring>
 
+#include <api.hpp>
 #include <exceptions.hpp>
 #include <immediate.hpp>
 #include <instruction.hpp>
@@ -165,10 +166,10 @@ namespace triton {
 
 
     /* If there is a concrete value recorded, build the appropriate Register. Otherwise, perfrom the analysis on zero. */
-    triton::arch::Register Instruction::getRegisterState(triton::uint32 regId) {
-      triton::arch::Register reg(regId);
+    triton::arch::Register Instruction::getRegisterState(triton::arch::CpuInterface const& cpu, triton::uint32 regId) {
+      triton::arch::Register reg(cpu, regId);
       if (this->registerState.find(regId) != this->registerState.end())
-        reg = this->registerState[regId];
+        reg = this->registerState.at(regId);
       return reg;
     }
 
@@ -296,7 +297,7 @@ namespace triton {
 
 
     void Instruction::updateContext(const triton::arch::Register& reg) {
-      this->registerState[reg.getId()] = reg;
+      this->registerState.emplace(reg.getId(), reg);
     }
 
 

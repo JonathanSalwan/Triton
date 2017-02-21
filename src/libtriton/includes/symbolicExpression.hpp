@@ -120,7 +120,7 @@ namespace triton {
           void setOriginRegister(const triton::arch::Register& reg);
 
           //! Constructor.
-          SymbolicExpression(triton::ast::AbstractNode* expr, triton::usize id, symkind_e kind, const std::string& comment="");
+          SymbolicExpression(triton::arch::CpuInterface const& cpu, triton::ast::AbstractNode* expr, triton::usize id, symkind_e kind, const std::string& comment="");
 
           //! Destructor.
           virtual ~SymbolicExpression();

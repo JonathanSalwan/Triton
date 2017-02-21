@@ -13,20 +13,18 @@
 namespace triton {
   namespace arch {
 
-    OperandWrapper::OperandWrapper(const triton::arch::Immediate& imm) {
+    OperandWrapper::OperandWrapper(triton::arch::CpuInterface const& cpu, const triton::arch::Immediate& imm): mem(cpu), reg(cpu) {
       this->imm = imm;
       this->type = triton::arch::OP_IMM;
     }
 
 
-    OperandWrapper::OperandWrapper(const triton::arch::MemoryAccess& mem) {
-      this->mem = mem;
+    OperandWrapper::OperandWrapper(triton::arch::CpuInterface const& cpu, const triton::arch::MemoryAccess& mem): mem(mem), reg(cpu) {
       this->type = triton::arch::OP_MEM;
     }
 
 
-    OperandWrapper::OperandWrapper(const triton::arch::Register& reg) {
-      this->reg = reg;
+    OperandWrapper::OperandWrapper(triton::arch::CpuInterface const& cpu, const triton::arch::Register& reg): mem(cpu), reg(reg) {
       this->type = triton::arch::OP_REG;
     }
 

@@ -7,6 +7,7 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
+#include <api.hpp>
 #include <exceptions.hpp>
 #include <pythonObjects.hpp>
 #include <pythonUtils.hpp>
@@ -425,7 +426,7 @@ namespace triton {
         PyType_Ready(&Register_Type);
         object = PyObject_NEW(Register_Object, &Register_Type);
         if (object != NULL)
-          object->reg = new triton::arch::Register(reg.getId(), concreteValue, isImmutable);
+          object->reg = new triton::arch::Register(*triton::api.getCpu(), reg.getId(), concreteValue, isImmutable);
 
         return (PyObject*)object;
       }

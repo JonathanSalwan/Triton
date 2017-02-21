@@ -5,7 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
+#include <symbolicEngine.hpp>
 #include <cpuSize.hpp>
 #include <exceptions.hpp>
 #include <memoryAccess.hpp>
@@ -15,7 +15,11 @@
 namespace triton {
   namespace arch {
 
-    MemoryAccess::MemoryAccess() {
+    MemoryAccess::MemoryAccess(triton::arch::CpuInterface const& cpu) :
+    segmentReg(cpu)
+    , baseReg(cpu)
+    , indexReg(cpu)
+    {
       this->address              = 0;
       this->ast                  = nullptr;
       this->concreteValue        = 0;
@@ -24,8 +28,8 @@ namespace triton {
     }
 
 
-    MemoryAccess::MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */)
-      : MemoryAccess() {
+    MemoryAccess::MemoryAccess(triton::arch::CpuInterface const& cpu, triton::uint64 address, triton::uint32 size /* bytes */)
+      : MemoryAccess(cpu) {
       this->address = address;
 
       if (size == 0)
@@ -44,13 +48,13 @@ namespace triton {
     }
 
 
-    MemoryAccess::MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue)
-      : MemoryAccess(address, size) {
+    MemoryAccess::MemoryAccess(triton::arch::CpuInterface const& cpu, triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue)
+      : MemoryAccess(cpu, address, size) {
       this->setConcreteValue(concreteValue);
     }
 
 
-    MemoryAccess::MemoryAccess(const MemoryAccess& other) : BitsVector(other) {
+    MemoryAccess::MemoryAccess(const MemoryAccess& other) : BitsVector(other), segmentReg(other.segmentReg), baseReg(other.baseReg), indexReg(other.indexReg) {
       this->copy(other);
     }
 
@@ -79,9 +83,9 @@ namespace triton {
     }
 
 
-    triton::uint64 MemoryAccess::getSegmentValue(void) {
+    triton::uint64 MemoryAccess::getSegmentValue(triton::arch::CpuInterface& cpu) {
       if (this->segmentReg.isValid())
-        return triton::api.getConcreteRegisterValue(this->segmentReg).convert_to<triton::uint64>();
+        return cpu.getConcreteRegisterValue(this->segmentReg).convert_to<triton::uint64>();
       return 0;
     }
 
@@ -96,7 +100,7 @@ namespace triton {
     }
 
 
-    triton::uint32 MemoryAccess::getAccessSize(void) {
+    triton::uint32 MemoryAccess::getAccessSize(triton::arch::CpuInterface& cpu) {
       if (this->indexReg.isValid())
         return this->indexReg.getBitSize();
 
@@ -106,26 +110,26 @@ namespace triton {
       else if (this->displacement.getBitSize())
         return this->displacement.getBitSize();
 
-      return triton::api.cpuRegisterBitSize();
+      return cpu.registerBitSize();
     }
 
 
-    void MemoryAccess::initAddress(bool force) {
+    void MemoryAccess::initAddress(triton::arch::CpuInterface& cpu, triton::engines::symbolic::SymbolicEngine& sEngine, bool force) {
       /* Otherwise, try to compute the address */
       if (this->getBitSize() >= BYTE_SIZE_BIT) {
         triton::arch::Register& base  = this->baseReg;
         triton::arch::Register& index = this->indexReg;
-        triton::uint64 segmentValue   = this->getSegmentValue();
+        triton::uint64 segmentValue   = this->getSegmentValue(cpu);
         triton::uint64 scaleValue     = this->getScaleValue();
         triton::uint64 dispValue      = this->getDisplacementValue();
-        triton::uint32 bitSize        = this->getAccessSize();
+        triton::uint32 bitSize        = this->getAccessSize(cpu);
 
         /* Initialize the AST of the memory access (LEA) */
         this->ast = triton::ast::bvadd(
-                      (this->pcRelative ? triton::ast::bv(this->pcRelative, bitSize) : (base.isValid() ? triton::api.buildSymbolicRegister(base) : triton::ast::bv(0, bitSize))),
+                      (this->pcRelative ? triton::ast::bv(this->pcRelative, bitSize) : (base.isValid() ? sEngine.buildSymbolicRegister(base) : triton::ast::bv(0, bitSize))),
                       triton::ast::bvadd(
                         triton::ast::bvmul(
-                          (index.isValid() ? triton::api.buildSymbolicRegister(index) : triton::ast::bv(0, bitSize)),
+                          (index.isValid() ? sEngine.buildSymbolicRegister(index) : triton::ast::bv(0, bitSize)),
                           triton::ast::bv(scaleValue, bitSize)
                         ),
                         triton::ast::bv(dispValue, bitSize)

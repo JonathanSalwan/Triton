@@ -25,8 +25,15 @@ namespace triton {
  *  @{
  */
 
+  namespace engines {
+    namespace symbolic {
+      class SymbolicEngine;
+    }
+  }
+
   //! The Triton namespace
   namespace arch {
+    class CpuInterface;
   /*!
    *  \ingroup triton
    *  \addtogroup arch
@@ -74,7 +81,7 @@ namespace triton {
 
       private:
         //! LEA - Returns the segment register value.
-        triton::uint64 getSegmentValue(void);
+        triton::uint64 getSegmentValue(triton::arch::CpuInterface& cpu);
 
         //! LEA - Returns the scale immediate value.
         triton::uint64 getScaleValue(void);
@@ -83,17 +90,17 @@ namespace triton {
         triton::uint64 getDisplacementValue(void);
 
         //! LEA - Returns the size of the memory access.
-        triton::uint32 getAccessSize(void);
+        triton::uint32 getAccessSize(triton::arch::CpuInterface&);
 
       public:
         //! Constructor.
-        MemoryAccess();
+        MemoryAccess(triton::arch::CpuInterface const& cpu);
 
         //! Constructor.
-        MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */);
+        MemoryAccess(triton::arch::CpuInterface const& cpu, triton::uint64 address, triton::uint32 size /* bytes */);
 
         //! Constructor.
-        MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue);
+        MemoryAccess(triton::arch::CpuInterface const& cpu, triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue);
 
         //! Constructor by copy.
         MemoryAccess(const MemoryAccess& other);
@@ -102,7 +109,7 @@ namespace triton {
         virtual ~MemoryAccess();
 
         //! Initialize the address of the memory.
-        void initAddress(bool force=false);
+        void initAddress(triton::arch::CpuInterface& cpu, triton::engines::symbolic::SymbolicEngine& sEngine, bool force=false);
 
         //! Returns the AST of the memory access (LEA).
         triton::ast::AbstractNode* getLeaAst(void) const;

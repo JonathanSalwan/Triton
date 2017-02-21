@@ -7,6 +7,7 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
+#include <api.hpp>
 #include <exceptions.hpp>
 #include <instruction.hpp>
 #include <pythonObjects.hpp>
@@ -340,8 +341,8 @@ namespace triton {
       static PyObject* Instruction_getOperands(PyObject* self, PyObject* noarg) {
         try {
           triton::arch::Immediate         imm;
-          triton::arch::MemoryAccess      mem;
-          triton::arch::Register          reg;
+          triton::arch::MemoryAccess      mem(*triton::api.getCpu());
+          triton::arch::Register          reg(*triton::api.getCpu());
           triton::arch::Instruction*      inst;
           triton::usize                   opSize;
           PyObject*                       operands;

@@ -5,7 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
+#include <architecture.hpp>
 #include <exceptions.hpp>
 #include <register.hpp>
 #include <registerSpecification.hpp>
@@ -15,42 +15,46 @@
 namespace triton {
   namespace arch {
 
-    Register::Register() {
-      this->clear();
+    Register::Register(triton::arch::CpuInterface const& cpu):
+      name("unknown")
+      , id(triton::arch::INVALID_REGISTER_ID)
+      , parent(triton::arch::INVALID_REGISTER_ID)
+      , concreteValue(0)
+      , concreteValueDefined(false)
+      , immutable(false)
+      , cpu(cpu)
+    {
+    }
+
+    Register::Register(triton::arch::CpuInterface const& cpu, triton::uint32 regId, triton::arch::RegisterSpecification const& spec): 
+      BitsVector(spec.getLow(), spec.getHigh())
+      , id(regId)
+      , parent(spec.getParentId())
+      , concreteValue(0)
+      , concreteValueDefined(false)
+      , immutable(false)
+      , cpu(cpu)
+    {}
+
+    Register::Register(triton::arch::CpuInterface const& cpu, triton::uint32 regId): Register(cpu, cpu.isRegisterValid(regId)?regId:triton::arch::INVALID_REGISTER_ID,
+                                                                         cpu.getRegisterSpecification(cpu.isRegisterValid(regId)?regId:triton::arch::INVALID_REGISTER_ID)) {
     }
 
 
-    Register::Register(triton::uint32 regId) {
-      if (!triton::api.isArchitectureValid()) {
-        this->clear();
-        return;
-      }
-
-      this->setup(regId);
-      this->immutable            = false;
-      this->concreteValueDefined = false;
-    }
-
-
-    Register::Register(triton::uint32 regId, triton::uint512 concreteValue)
-      : Register(regId, concreteValue, false) {
-    }
-
-
-    Register::Register(triton::uint32 regId, triton::uint512 concreteValue, bool immutable) {
-      if (!triton::api.isArchitectureValid()) {
-        this->clear();
-        return;
-      }
-
-      this->setup(regId);
-      this->immutable = false;
+    Register::Register(triton::arch::CpuInterface const& cpu, triton::uint32 regId, triton::uint512 concreteValue)
+      : Register(cpu, regId) {
       this->setConcreteValue(concreteValue);
-      this->immutable = immutable;
     }
 
 
-    Register::Register(const Register& other) : BitsVector(other) {
+    Register::Register(triton::arch::CpuInterface const& cpu, triton::uint32 regId, triton::uint512 concreteValue, bool immutable):
+      Register(cpu, regId, concreteValue)
+    {
+        this->immutable = immutable;
+    }
+
+
+    Register::Register(const Register& other) : BitsVector(other), cpu(other.cpu) {
       this->copy(other);
     }
 
@@ -62,32 +66,6 @@ namespace triton {
     void Register::operator=(const Register& other) {
       BitsVector::operator=(other);
       this->copy(other);
-    }
-
-
-    void Register::clear(void) {
-      this->concreteValue        = 0;
-      this->concreteValueDefined = false;
-      this->id                   = triton::arch::INVALID_REGISTER_ID;
-      this->immutable            = false;
-      this->name                 = "unknown";
-      this->parent               = triton::arch::INVALID_REGISTER_ID;
-    }
-
-
-    void Register::setup(triton::uint32 regId) {
-      triton::arch::RegisterSpecification regInfo;
-
-      this->id = regId;
-      if (!triton::api.isCpuRegisterValid(regId))
-        this->id = triton::arch::INVALID_REGISTER_ID;
-
-      regInfo      = triton::api.getRegisterSpecification(this->id);
-      this->name   = regInfo.getName();
-      this->parent = regInfo.getParentId();
-
-      this->setHigh(regInfo.getHigh());
-      this->setLow(regInfo.getLow());
     }
 
 
@@ -116,8 +94,8 @@ namespace triton {
     }
 
 
-    Register Register::getParent(void) const {
-      return Register(this->parent);
+    Register Register::getParent() const {
+      return Register(cpu, this->parent);
     }
 
 
@@ -161,6 +139,7 @@ namespace triton {
         throw triton::exceptions::Register("Register::setConcreteValue(): You cannot set this concrete value (too big) to this register.");
 
       if (this->immutable)
+        // TODO : Should we throw an exception? Here nothing change and the user don't know
         return;
 
       this->concreteValue        = concreteValue;
@@ -168,18 +147,18 @@ namespace triton {
     }
 
 
-    bool Register::isValid(void) const {
-      return triton::api.isCpuRegisterValid(this->id);
+    bool Register::isValid() const {
+      return cpu.isRegisterValid(this->id);
     }
 
 
-    bool Register::isRegister(void) const {
-      return triton::api.isCpuRegister(this->id);
+    bool Register::isRegister() const {
+      return cpu.isRegister(this->id);
     }
 
 
-    bool Register::isFlag(void) const {
-      return triton::api.isCpuFlag(this->id);
+    bool Register::isFlag() const {
+      return cpu.isFlag(this->id);
     }
 
 
@@ -189,6 +168,7 @@ namespace triton {
 
 
     bool Register::isOverlapWith(const Register& other) const {
+      // FIXME : parent?
       if (this->getParent().getId() == other.getParent().getId()) {
         if (this->getLow() <= other.getLow() && other.getLow() <= this->getHigh()) return true;
         if (other.getLow() <= this->getLow() && this->getLow() <= other.getHigh()) return true;
