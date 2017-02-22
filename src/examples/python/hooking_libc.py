@@ -59,6 +59,7 @@
 ##  [+] Emulation done
 ##
 
+import os
 import sys
 import string
 
@@ -254,7 +255,7 @@ if __name__ == '__main__':
     setArchitecture(ARCH.X86_64)
 
     # Parse the binary
-    binary = Elf('./src/examples/python/samples/sample_1')
+    binary = Elf(os.path.join(os.path.dirname(__file__), 'samples', 'sample_1'))
 
     # Load the binary
     loadBinary(binary)

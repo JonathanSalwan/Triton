@@ -3,6 +3,7 @@
 *.o
 *.so
 *.swp
+*.pyc
 .gdb_history
 build/*
 data/*
