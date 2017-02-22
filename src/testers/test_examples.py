@@ -22,5 +22,5 @@ for example in glob.iglob(os.path.join(EXAMPLE_DIR, "*.py")):
     # lambda creation so that example_name is not in the closure of the lambda
     # function.
     setattr(TestExample, "test_" + os.path.basename(example),
-            lambda self, example_name=example: subprocess.check_call(["python", example_name]))
+            lambda self, example_name=example: subprocess.check_call(["python", example_name], stdout=subprocess.PIPE))
 
