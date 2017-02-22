@@ -140,7 +140,7 @@ script:
 
   # libTriton unit testing
   # Python
-  - python2.7 -m unittest discover ./src/testers/
+  - python2.7 -m unittest discover ./src/testers/unittests/
   # C++
   - cd src/examples/cpp
   - make

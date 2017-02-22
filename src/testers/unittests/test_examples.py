@@ -6,7 +6,7 @@ import subprocess
 import os
 import glob
 
-EXAMPLE_DIR = os.path.join(os.path.dirname(__file__), "..", "examples", "python")
+EXAMPLE_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "examples", "python")
 
 
 class TestExample(unittest.TestCase):

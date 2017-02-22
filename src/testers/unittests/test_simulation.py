@@ -296,7 +296,7 @@ class Emu1(object):
     def test_emulate(self, concretize=False):
         """Run a dumped simulation and check output registers."""
         # Get dumped data
-        dump = os.path.join(os.path.dirname(__file__), "dumps", "emu_1.dump")
+        dump = os.path.join(os.path.dirname(__file__), "misc", "emu_1.dump")
         with open(dump) as f:
             regs, mems = eval(f.read())
 
