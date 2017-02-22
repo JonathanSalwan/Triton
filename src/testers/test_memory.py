@@ -20,7 +20,6 @@ class TestMemory(unittest.TestCase):
         """Check address data is correct."""
         mem = MemoryAccess(0x1122334455667788, 8, 0x6162636465666768)
         self.assertEqual(mem.getAddress(), 0x1122334455667788)
-
         self.assertEqual(self.mem.getAddress(), 0x400f4d3)
 
     def test_bit_size(self):
@@ -74,20 +73,13 @@ class TestMemory(unittest.TestCase):
 
     def test_overlaping(self):
         """Check overlaping."""
-        self.assertTrue(
-            MemoryAccess(0x1000, 2).isOverlapWith(MemoryAccess(0x1001, 2)))
-        self.assertTrue(
-            MemoryAccess(0xfff, 2).isOverlapWith(MemoryAccess(0x1000, 2)))
-        self.assertTrue(
-            MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x1003, 2)))
-        self.assertTrue(
-            MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x1002, 1)))
-        self.assertTrue(
-            MemoryAccess(0x1002, 1).isOverlapWith(MemoryAccess(0x1000, 4)))
+        self.assertTrue(MemoryAccess(0x1000, 2).isOverlapWith(MemoryAccess(0x1001, 2)))
+        self.assertTrue(MemoryAccess(0xfff, 2).isOverlapWith(MemoryAccess(0x1000, 2)))
+        self.assertTrue(MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x1003, 2)))
+        self.assertTrue(MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x1002, 1)))
+        self.assertTrue(MemoryAccess(0x1002, 1).isOverlapWith(MemoryAccess(0x1000, 4)))
 
-        self.assertFalse(
-            MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x1004, 4)))
-        self.assertFalse(
-            MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x10000, 4)))
-        self.assertFalse(
-            MemoryAccess(0x10000, 4).isOverlapWith(MemoryAccess(0x1000, 4)))
+        self.assertFalse(MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x1004, 4)))
+        self.assertFalse(MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x10000, 4)))
+        self.assertFalse(MemoryAccess(0x10000, 4).isOverlapWith(MemoryAccess(0x1000, 4)))
+

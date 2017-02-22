@@ -30,9 +30,7 @@ class TestFlags(unittest.TestCase):
         for reg in rand_registers:
             setConcreteRegisterValue(Register(reg, 1))
             values[registers.index(reg)] = 1
-            self.assertListEqual(
-                [getConcreteRegisterValue(r) for r in registers],
-                values)
+            self.assertListEqual([getConcreteRegisterValue(r) for r in registers], values)
 
     def test_unset_flags(self):
         """Check flags can be unset in any order with a correct result."""
@@ -49,6 +47,5 @@ class TestFlags(unittest.TestCase):
         for reg in rand_registers:
             setConcreteRegisterValue(Register(reg, 0))
             values[registers.index(reg)] = 0
-            self.assertListEqual(
-                [getConcreteRegisterValue(r) for r in registers],
-                values)
+            self.assertListEqual([getConcreteRegisterValue(r) for r in registers], values)
+

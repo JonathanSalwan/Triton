@@ -111,11 +111,8 @@ class TestXmmRegister(unittest.TestCase):
         """Check ymm on 64 bits arch."""
         ymm = Register(REG.YMM1, 0x112233445566778899aabbccddeeff00)
         self.assertEqual(ymm.getBitSize(), 256)
-        ymm.setConcreteValue(
-            0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
-        self.assertEqual(
-            ymm.getConcreteValue(),
-            0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
+        ymm.setConcreteValue(0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
+        self.assertEqual(ymm.getConcreteValue(), 0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
 
     def test_zmm(self):
         """Check zmm on 64 bits arch."""

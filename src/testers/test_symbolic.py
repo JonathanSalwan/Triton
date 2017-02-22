@@ -43,10 +43,8 @@ class TestSymbolic(unittest.TestCase):
         inst.setOpcodes("\x48\xFF\xC0")
         processing(inst)
 
-        self.assertEqual(getConcreteRegisterValue(REG.RAX), 2,
-                         "concrete value is updated")
-        self.assertEqual(getSymbolicRegisterValue(REG.RAX), 1,
-                         "Symbolic value is not update")
+        self.assertEqual(getConcreteRegisterValue(REG.RAX), 2, "concrete value is updated")
+        self.assertEqual(getSymbolicRegisterValue(REG.RAX), 1, "Symbolic value is not update")
 
         # Try to reset engine after a backup to test if the bug #385 is fixed.
         resetEngines()
@@ -112,8 +110,7 @@ class TestSymbolicBuilding(unittest.TestCase):
 
     def test_build_register(self):
         """Check symbolic register has correct size and location."""
-        expr1 = newSymbolicExpression(ast.bv(0x1122334455667788,
-                                             CPUSIZE.QWORD_BIT))
+        expr1 = newSymbolicExpression(ast.bv(0x1122334455667788, CPUSIZE.QWORD_BIT))
         assignSymbolicExpressionToRegister(expr1, REG.RAX)
 
         node = buildSymbolicRegister(REG.RAX)

@@ -36,10 +36,8 @@ class TestInstruction(unittest.TestCase):
 
     def test_registers(self):
         """Check register access."""
-        self.assertEqual(len(self.inst.getReadRegisters()), 2,
-                         "access RAX and RBX")
-        self.assertEqual(len(self.inst.getWrittenRegisters()), 8,
-                         "write in RAX, RIP, AF, XF, OF, PF, SF and ZF")
+        self.assertEqual(len(self.inst.getReadRegisters()), 2, "access RAX and RBX")
+        self.assertEqual(len(self.inst.getWrittenRegisters()), 8, "write in RAX, RIP, AF, XF, OF, PF, SF and ZF")
 
     def test_taints(self):
         """Check taints attributes."""
@@ -52,8 +50,7 @@ class TestInstruction(unittest.TestCase):
 
     def test_control_flow(self):
         """Check control flow flags."""
-        self.assertFalse(self.inst.isControlFlow(),
-                         "It is not a jmp, ret or call")
+        self.assertFalse(self.inst.isControlFlow(), "It is not a jmp, ret or call")
         self.assertFalse(self.inst.isBranch(), "It is not a jmp")
 
     def test_condition(self):
@@ -162,14 +159,10 @@ class TestProcessing(unittest.TestCase):
         processing(inst2)
         processing(inst3)
 
-        self.assertEqual(inst3.getOperands()[0].getAddress(), 0x19fe04,
-                         "esp has been poped")
-        self.assertEqual(inst3.getOperands()[0].getConcreteValue(), 0x11111111,
-                         "new value is still 0x11111111")
-        self.assertEqual(inst3.getStoreAccess()[0][0].getAddress(), 0x19fe04,
-                         "inst3 set the value in 0x19fe04")
-        self.assertEqual(inst3.getStoreAccess()[0][1].evaluate(), 0x11111111,
-                         "And this value is 0x11111111")
+        self.assertEqual(inst3.getOperands()[0].getAddress(), 0x19fe04, "esp has been poped")
+        self.assertEqual(inst3.getOperands()[0].getConcreteValue(), 0x11111111, "new value is still 0x11111111")
+        self.assertEqual(inst3.getStoreAccess()[0][0].getAddress(), 0x19fe04, "inst3 set the value in 0x19fe04")
+        self.assertEqual(inst3.getStoreAccess()[0][1].evaluate(), 0x11111111, "And this value is 0x11111111")
 
     def test_pop(self):
         """Check the pop instruction processing."""
@@ -188,15 +181,10 @@ class TestProcessing(unittest.TestCase):
         processing(inst3)
         processing(inst4)
 
-        self.assertEqual(inst4.getOperands()[0].getAddress(), 0x19fe00,
-                         "poping edi doesn't change it")
-        self.assertEqual(inst4.getOperands()[0].getConcreteValue(), 0x11111111,
-                         "pointed value in edi is the previously pointed value"
-                         " by esp")
-        self.assertEqual(inst4.getStoreAccess()[0][0].getAddress(), 0x19fe00,
-                         "inst4 store the new value in 0x19fe00 (edi value)")
-        self.assertEqual(inst4.getStoreAccess()[0][1].evaluate(), 0x11111111,
-                         "The stored value is 0x11111111")
+        self.assertEqual(inst4.getOperands()[0].getAddress(), 0x19fe00, "poping edi doesn't change it")
+        self.assertEqual(inst4.getOperands()[0].getConcreteValue(), 0x11111111, "pointed value in edi is the previously pointed value by esp")
+        self.assertEqual(inst4.getStoreAccess()[0][0].getAddress(), 0x19fe00, "inst4 store the new value in 0x19fe00 (edi value)")
+        self.assertEqual(inst4.getStoreAccess()[0][1].evaluate(), 0x11111111, "The stored value is 0x11111111")
 
     def test_mov_xmm_to_memory(self):
         """Check move and xmm register to memory do not crash."""

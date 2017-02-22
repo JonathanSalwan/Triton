@@ -43,13 +43,11 @@ class DefCamp2015(object):
             # eax must be equal to 1 at each round.
             if instruction.getAddress() == 0x40078B:
                 # Slice expressions
-                rax = getSymbolicExpressionFromId(
-                    getSymbolicRegisterId(REG.RAX))
+                rax = getSymbolicExpressionFromId(getSymbolicRegisterId(REG.RAX))
                 eax = ast.extract(31, 0, rax.getAst())
 
                 # Define constraint
-                cstr = ast.assert_(ast.land(getPathConstraintsAst(),
-                                            ast.equal(eax, ast.bv(1, 32))))
+                cstr = ast.assert_(ast.land(getPathConstraintsAst(), ast.equal(eax, ast.bv(1, 32))))
 
                 model = getModel(cstr)
                 solution = str()
@@ -76,8 +74,7 @@ class DefCamp2015(object):
     def test_defcamp_2015(self):
         """Load binary, setup environment and solve challenge with sym eval."""
         # Load the binary
-        binary_file = os.path.join(os.path.dirname(__file__), "misc",
-                                   "defcamp-2015-r100.bin")
+        binary_file = os.path.join(os.path.dirname(__file__), "misc", "defcamp-2015-r100.bin")
         self.load_binary(binary_file)
 
         # Define a fake stack
@@ -89,8 +86,7 @@ class DefCamp2015(object):
 
         # Symbolize user inputs (30 bytes)
         for index in range(30):
-            convertMemoryToSymbolicVariable(MemoryAccess(0x10000000+index,
-                                                         CPUSIZE.BYTE))
+            convertMemoryToSymbolicVariable(MemoryAccess(0x10000000+index, CPUSIZE.BYTE))
 
         # Emulate from the verification function
         solution = self.emulate(0x4006FD)
@@ -132,10 +128,8 @@ class SeedCoverage(object):
         concretizeAllRegister()
         concretizeAllMemory()
         for address, value in seed.items():
-            convertMemoryToSymbolicVariable(
-                MemoryAccess(address, CPUSIZE.BYTE, value))
-            convertMemoryToSymbolicVariable(
-                MemoryAccess(address+1, CPUSIZE.BYTE))
+            convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE, value))
+            convertMemoryToSymbolicVariable(MemoryAccess(address+1, CPUSIZE.BYTE))
 
     def seed_emulate(self, ip):
         """Emulate one run of the function with already setup memory."""
@@ -239,9 +233,7 @@ class SeedCoverage(object):
                     # Get the constraint of the branch which has been not taken
                     if branch['isTaken'] == False:
                         # Ask for a model
-                        models = getModel(
-                            ast.assert_(ast.land(previousConstraints,
-                                                 branch['constraint'])))
+                        models = getModel(ast.assert_(ast.land(previousConstraints, branch['constraint'])))
                         seed = dict()
                         for k, v in models.items():
                             # Get the symbolic variable assigned to the model
@@ -253,8 +245,7 @@ class SeedCoverage(object):
 
             # Update the previous constraints with true branch to keep a good
             # path.
-            previousConstraints = ast.land(previousConstraints,
-                                           pc.getTakenPathConstraintAst())
+            previousConstraints = ast.land(previousConstraints, pc.getTakenPathConstraintAst())
 
         # Clear the path constraints to be clean at the next execution.
         clearPathConstraints()
@@ -321,8 +312,7 @@ class Emu1(object):
                          "r14", "eflags", "xmm0", "xmm1", "xmm2", "xmm3",
                          "xmm4", "xmm5", "xmm6", "xmm7", "xmm8", "xmm9",
                          "xmm10", "xmm11", "xmm12", "xmm13", "xmm14", "xmm15"):
-            setConcreteRegisterValue(
-                Register(getattr(REG, reg_name.upper()), regs[reg_name]))
+            setConcreteRegisterValue(Register(getattr(REG, reg_name.upper()), regs[reg_name]))
 
         # run the code
         pc = getConcreteRegisterValue(REG.RIP)
@@ -433,42 +423,3 @@ class TestSymboliqueEngineConcreteAst(BaseTestSimulation, unittest.TestCase):
     def test_defcamp_2015(self):
         pass
 
-
-@unittest.skip("Too long")
-class TestNoEngineAligned(BaseTestSimulation, unittest.TestCase):
-
-    """Testing simulation with aligned_memory."""
-
-    def setUp(self):
-        """Define the arch and modes."""
-        setArchitecture(ARCH.X86_64)
-        enableSymbolicEngine(False)
-        enableMode(MODE.ALIGNED_MEMORY, True)
-        super(TestNoEngineAligned, self).setUp()
-
-
-@unittest.skip("Too much memory")
-class TestNoEngineAst(BaseTestSimulation, unittest.TestCase):
-
-    """Testing simulation with ast_dict."""
-
-    def setUp(self):
-        """Define the arch and modes."""
-        setArchitecture(ARCH.X86_64)
-        enableSymbolicEngine(False)
-        enableMode(MODE.AST_DICTIONARIES, True)
-        super(TestNoEngineAst, self).setUp()
-
-
-@unittest.skip("Too much memory")
-class TestNoEngineAlignedAst(BaseTestSimulation, unittest.TestCase):
-
-    """Testing simulation with aligned_memory and ast_dict."""
-
-    def setUp(self):
-        """Define the arch and modes."""
-        setArchitecture(ARCH.X86_64)
-        enableSymbolicEngine(False)
-        enableMode(MODE.AST_DICTIONARIES, True)
-        enableMode(MODE.ALIGNED_MEMORY, True)
-        super(TestNoEngineAlignedAst, self).setUp()
