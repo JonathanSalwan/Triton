@@ -94,17 +94,8 @@ e.g: `8`
 - <b>\ref py_OPERAND_page getType(void)</b><br>
 Returns type of the register. In this case this function returns `OPERAND.REG`.
 
-- <b>bool isValid(void)</b><br>
-Returns true if the register is valid.
-
-- <b>bool isFlag(void)</b><br>
-Returns true if the register is a flag.
-
 - <b>bool isOverlapWith(\ref py_Register_page other)</b><br>
 Returns true if `other` and `self` overlap.
-
-- <b>bool isRegister(void)</b><br>
-Returns true if the register is a register.
 
 - <b>void setConcreteValue(integer value)</b><br>
 Sets a concrete value to this register.
@@ -189,42 +180,6 @@ namespace triton {
       static PyObject* Register_getType(PyObject* self, PyObject* noarg) {
         try {
           return PyLong_FromUint32(PyRegister_AsRegister(self)->getType());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* Register_isValid(PyObject* self, PyObject* noarg) {
-        try {
-          if (PyRegister_AsRegister(self)->isValid())
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* Register_isRegister(PyObject* self, PyObject* noarg) {
-        try {
-          if (PyRegister_AsRegister(self)->isRegister())
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* Register_isFlag(PyObject* self, PyObject* noarg) {
-        try {
-          if (PyRegister_AsRegister(self)->isFlag())
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -341,10 +296,7 @@ namespace triton {
         {"getParent",         Register_getParent,        METH_NOARGS,    ""},
         {"getSize",           Register_getSize,          METH_NOARGS,    ""},
         {"getType",           Register_getType,          METH_NOARGS,    ""},
-        {"isFlag",            Register_isFlag,           METH_NOARGS,    ""},
         {"isOverlapWith",     Register_isOverlapWith,    METH_O,         ""},
-        {"isRegister",        Register_isRegister,       METH_NOARGS,    ""},
-        {"isValid",           Register_isValid,          METH_NOARGS,    ""},
         {"setConcreteValue",  Register_setConcreteValue, METH_O,         ""},
         {nullptr,             nullptr,                   0,              nullptr}
       };

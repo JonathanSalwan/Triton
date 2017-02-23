@@ -4,7 +4,8 @@
 
 import unittest
 
-from triton import setArchitecture, ARCH, REG, Register, OPERAND
+from triton import (setArchitecture, isRegister, isRegisterValid, isFlag,
+                    ARCH, REG, Register, OPERAND)
 
 
 class TestRAXRegister(unittest.TestCase):
@@ -51,15 +52,15 @@ class TestRAXRegister(unittest.TestCase):
 
     def test_is_valid(self):
         """Check register validity."""
-        self.assertTrue(self.reg.isValid())
+        self.assertTrue(isRegisterValid(self.reg))
 
     def test_is_flag(self):
         """Check register flag."""
-        self.assertFalse(self.reg.isFlag())
+        self.assertFalse(isFlag(self.reg))
 
     def test_is_register(self):
         """Check register detect."""
-        self.assertTrue(self.reg.isRegister())
+        self.assertTrue(isRegister(self.reg))
 
 
 class TestAHRegister(unittest.TestCase):

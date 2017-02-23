@@ -10,7 +10,6 @@
 #include <api.hpp>
 #include <exceptions.hpp>
 #include <bitsVector.hpp>
-#include <cpuSize.hpp>
 #include <immediate.hpp>
 #include <memoryAccess.hpp>
 #include <pythonBindings.hpp>
@@ -130,12 +129,6 @@ Converts a symbolic memory expression to a symbolic variable. This function retu
 - <b>\ref py_SymbolicVariable_page convertRegisterToSymbolicVariable(\ref py_REG_page reg, string comment="")</b><br>
 Converts a symbolic register expression to a symbolic variable. This function returns the new symbolic variable created.
 
-- <b>integer cpuRegisterBitSize(void)</b><br>
-Returns the max size (in bit) of the CPU register (GPR).
-
-- <b>integer cpuRegisterSize(void)</b><br>
-Returns the max size (in byte) of the CPU register (GPR).
-
 - <b>\ref py_SymbolicExpression_page createSymbolicFlagExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page flag, string comment="")</b><br>
 Returns the new symbolic register expression and links this expression to the instruction.
 
@@ -211,6 +204,12 @@ Returns the logical conjunction vector of path constraints as list of \ref py_Pa
 - <b>\ref py_AstNode_page getPathConstraintsAst(void)</b><br>
 Returns the logical conjunction AST of path constraints.
 
+- <b>integer getRegisterBitSize(void)</b><br>
+Returns the max size (in bit) of the CPU register (GPR).
+
+- <b>integer getRegisterSize(void)</b><br>
+Returns the max size (in byte) of the CPU register (GPR).
+
 - <b>\ref py_SymbolicExpression_page getSymbolicExpressionFromId(intger symExprId)</b><br>
 Returns the symbolic expression corresponding to an id.
 
@@ -259,6 +258,9 @@ Returns the list of all tainted symbolic expressions.
 - <b>bool isArchitectureValid(void)</b><br>
 Returns true if the architecture is valid.
 
+- <b>bool isFlag(\ref py_REG_page reg)</b><br>
+Returns true if the register id is a flag.
+
 - <b>bool isMemoryMapped(integer baseAddr, integer size=1)</b><br>
 Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation.
 
@@ -277,11 +279,17 @@ Returns true if the memory is tainted.
 - <b>bool isModeEnabled(\ref py_MODE_page mode)</b><br>
 Returns true if the mode is enabled.
 
+- <b>bool isRegister(\ref py_REG_page reg)</b><br>
+Returns true if the register id is a register (see also isFlag()).
+
 - <b>bool isRegisterSymbolized(\ref py_REG_page reg)</b><br>
 Returns true if the register expression contains a symbolic variable.
 
 - <b>bool isRegisterTainted(\ref py_REG_page reg)</b><br>
 Returns true if the register is tainted.
+
+- <b>bool isRegisterValid(\ref py_REG_page reg)</b><br>
+Returns true if the register id is valid.
 
 - <b>bool isSymbolicEngineEnabled(void)</b><br>
 Returns true if the symbolic execution engine is enabled.
@@ -1094,16 +1102,6 @@ namespace triton {
       }
 
 
-      static PyObject* triton_cpuRegisterBitSize(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint32(triton::api.cpuRegisterBitSize());
-      }
-
-
-      static PyObject* triton_cpuRegisterSize(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint32(triton::api.cpuRegisterSize());
-      }
-
-
       static PyObject* triton_createSymbolicFlagExpression(PyObject* self, PyObject* args) {
         PyObject* inst          = nullptr;
         PyObject* node          = nullptr;
@@ -1684,6 +1682,16 @@ namespace triton {
       }
 
 
+      static PyObject* triton_getRegisterBitSize(PyObject* self, PyObject* noarg) {
+        return PyLong_FromUint32(triton::api.getRegisterBitSize());
+      }
+
+
+      static PyObject* triton_getRegisterSize(PyObject* self, PyObject* noarg) {
+        return PyLong_FromUint32(triton::api.getRegisterSize());
+      }
+
+
       static PyObject* triton_getSymbolicExpressionFromId(PyObject* self, PyObject* symExprId) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -1982,6 +1990,20 @@ namespace triton {
       }
 
 
+      static PyObject* triton_isFlag(PyObject* self, PyObject* reg) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "isFlag(): Architecture is not defined.");
+
+        if (!PyRegister_Check(reg))
+          return PyErr_Format(PyExc_TypeError, "isFlag(): Expects a REG as argument.");
+
+        if (triton::api.isFlag(*PyRegister_AsRegister(reg)) == true)
+          Py_RETURN_TRUE;
+        Py_RETURN_FALSE;
+      }
+
+
       static PyObject* triton_isMemoryMapped(PyObject* self, PyObject* args) {
         PyObject* baseAddr        = nullptr;
         PyObject* size            = nullptr;
@@ -2059,6 +2081,20 @@ namespace triton {
       }
 
 
+      static PyObject* triton_isRegister(PyObject* self, PyObject* reg) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "isRegister(): Architecture is not defined.");
+
+        if (!PyRegister_Check(reg))
+          return PyErr_Format(PyExc_TypeError, "isRegister(): Expects a REG as argument.");
+
+        if (triton::api.isRegister(*PyRegister_AsRegister(reg)) == true)
+          Py_RETURN_TRUE;
+        Py_RETURN_FALSE;
+      }
+
+
       static PyObject* triton_isRegisterSymbolized(PyObject* self, PyObject* reg) {
         /* Check if the architecture is definied */
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
@@ -2082,6 +2118,20 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "isRegisterTainted(): Expects a REG as argument.");
 
         if (triton::api.isRegisterTainted(*PyRegister_AsRegister(reg)) == true)
+          Py_RETURN_TRUE;
+        Py_RETURN_FALSE;
+      }
+
+
+      static PyObject* triton_isRegisterValid(PyObject* self, PyObject* reg) {
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "isRegisterValid(): Architecture is not defined.");
+
+        if (!PyRegister_Check(reg))
+          return PyErr_Format(PyExc_TypeError, "isRegisterValid(): Expects a REG as argument.");
+
+        if (triton::api.isRegisterValid(*PyRegister_AsRegister(reg)) == true)
           Py_RETURN_TRUE;
         Py_RETURN_FALSE;
       }
@@ -3004,8 +3054,6 @@ namespace triton {
         {"convertExpressionToSymbolicVariable", (PyCFunction)triton_convertExpressionToSymbolicVariable,    METH_VARARGS,       ""},
         {"convertMemoryToSymbolicVariable",     (PyCFunction)triton_convertMemoryToSymbolicVariable,        METH_VARARGS,       ""},
         {"convertRegisterToSymbolicVariable",   (PyCFunction)triton_convertRegisterToSymbolicVariable,      METH_VARARGS,       ""},
-        {"cpuRegisterBitSize",                  (PyCFunction)triton_cpuRegisterBitSize,                     METH_NOARGS,        ""},
-        {"cpuRegisterSize",                     (PyCFunction)triton_cpuRegisterSize,                        METH_NOARGS,        ""},
         {"createSymbolicFlagExpression",        (PyCFunction)triton_createSymbolicFlagExpression,           METH_VARARGS,       ""},
         {"createSymbolicMemoryExpression",      (PyCFunction)triton_createSymbolicMemoryExpression,         METH_VARARGS,       ""},
         {"createSymbolicRegisterExpression",    (PyCFunction)triton_createSymbolicRegisterExpression,       METH_VARARGS,       ""},
@@ -3030,6 +3078,8 @@ namespace triton {
         {"getParentRegisters",                  (PyCFunction)triton_getParentRegisters,                     METH_NOARGS,        ""},
         {"getPathConstraints",                  (PyCFunction)triton_getPathConstraints,                     METH_NOARGS,        ""},
         {"getPathConstraintsAst",               (PyCFunction)triton_getPathConstraintsAst,                  METH_NOARGS,        ""},
+        {"getRegisterBitSize",                  (PyCFunction)triton_getRegisterBitSize,                     METH_NOARGS,        ""},
+        {"getRegisterSize",                     (PyCFunction)triton_getRegisterSize,                        METH_NOARGS,        ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)triton_getSymbolicExpressionFromId,            METH_O,             ""},
         {"getSymbolicExpressions",              (PyCFunction)triton_getSymbolicExpressions,                 METH_NOARGS,        ""},
         {"getSymbolicMemory",                   (PyCFunction)triton_getSymbolicMemory,                      METH_NOARGS,        ""},
@@ -3045,12 +3095,15 @@ namespace triton {
         {"getTaintedRegisters",                 (PyCFunction)triton_getTaintedRegisters,                    METH_NOARGS,        ""},
         {"getTaintedSymbolicExpressions",       (PyCFunction)triton_getTaintedSymbolicExpressions,          METH_NOARGS,        ""},
         {"isArchitectureValid",                 (PyCFunction)triton_isArchitectureValid,                    METH_NOARGS,        ""},
+        {"isFlag",                              (PyCFunction)triton_isFlag,                                 METH_O,             ""},
         {"isMemoryMapped",                      (PyCFunction)triton_isMemoryMapped,                         METH_VARARGS,       ""},
         {"isMemorySymbolized",                  (PyCFunction)triton_isMemorySymbolized,                     METH_O,             ""},
         {"isMemoryTainted",                     (PyCFunction)triton_isMemoryTainted,                        METH_O,             ""},
         {"isModeEnabled",                       (PyCFunction)triton_isModeEnabled,                          METH_O,             ""},
+        {"isRegister",                          (PyCFunction)triton_isRegister,                             METH_O,             ""},
         {"isRegisterSymbolized",                (PyCFunction)triton_isRegisterSymbolized,                   METH_O,             ""},
         {"isRegisterTainted",                   (PyCFunction)triton_isRegisterTainted,                      METH_O,             ""},
+        {"isRegisterValid",                     (PyCFunction)triton_isRegisterValid,                        METH_O,             ""},
         {"isSymbolicEngineEnabled",             (PyCFunction)triton_isSymbolicEngineEnabled,                METH_NOARGS,        ""},
         {"isSymbolicExpressionIdExists",        (PyCFunction)triton_isSymbolicExpressionIdExists,           METH_O,             ""},
         {"isTaintEngineEnabled",                (PyCFunction)triton_isTaintEngineEnabled,                   METH_NOARGS,        ""},

@@ -248,32 +248,47 @@ namespace triton {
   }
 
 
-  bool API::isCpuFlag(triton::uint32 regId) const {
+  bool API::isFlag(triton::uint32 regId) const {
     return this->arch.isFlag(regId);
   }
 
 
-  bool API::isCpuRegister(triton::uint32 regId) const {
+  bool API::isFlag(const triton::arch::Register& reg) const {
+    return this->arch.isFlag(reg);
+  }
+
+
+  bool API::isRegister(triton::uint32 regId) const {
     return this->arch.isRegister(regId);
   }
 
 
-  bool API::isCpuRegisterValid(triton::uint32 regId) const {
+  bool API::isRegister(const triton::arch::Register& reg) const {
+    return this->arch.isRegister(reg);
+  }
+
+
+  bool API::isRegisterValid(triton::uint32 regId) const {
     return this->arch.isRegisterValid(regId);
   }
 
 
-  triton::uint32 API::cpuRegisterSize(void) const {
-    return this->arch.registerSize();
+  bool API::isRegisterValid(const triton::arch::Register& reg) const {
+    return this->arch.isRegisterValid(reg);
   }
 
 
-  triton::uint32 API::cpuRegisterBitSize(void) const {
+  triton::uint32 API::getRegisterBitSize(void) const {
     return this->arch.registerBitSize();
   }
 
 
-  triton::uint32 API::cpuNumberOfRegisters(void) const {
+  triton::uint32 API::getRegisterSize(void) const {
+    return this->arch.registerSize();
+  }
+
+
+  triton::uint32 API::getNumberOfRegisters(void) const {
     return this->arch.numberOfRegisters();
   }
 

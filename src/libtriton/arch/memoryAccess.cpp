@@ -153,13 +153,6 @@ namespace triton {
     }
 
 
-    bool MemoryAccess::isValid(void) const {
-      if (!this->address && !this->concreteValue && !this->getLow() && !this->getHigh())
-        return false;
-      return true;
-    }
-
-
     bool MemoryAccess::isOverlapWith(const MemoryAccess& other) const {
       if (this->getAddress() <= other.getAddress() && other.getAddress() < (this->getAddress() + this->getSize())) return true;
       if (other.getAddress() <= this->getAddress() && this->getAddress() < (other.getAddress() + other.getSize())) return true;

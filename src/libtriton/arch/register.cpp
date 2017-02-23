@@ -79,7 +79,7 @@ namespace triton {
       triton::arch::RegisterSpecification regInfo;
 
       this->id = regId;
-      if (!triton::api.isCpuRegisterValid(regId))
+      if (!triton::api.isRegisterValid(regId))
         this->id = triton::arch::INVALID_REGISTER_ID;
 
       regInfo      = triton::api.getRegisterSpecification(this->id);
@@ -165,21 +165,6 @@ namespace triton {
 
       this->concreteValue        = concreteValue;
       this->concreteValueDefined = true;
-    }
-
-
-    bool Register::isValid(void) const {
-      return triton::api.isCpuRegisterValid(this->id);
-    }
-
-
-    bool Register::isRegister(void) const {
-      return triton::api.isCpuRegister(this->id);
-    }
-
-
-    bool Register::isFlag(void) const {
-      return triton::api.isCpuFlag(this->id);
     }
 
 

@@ -103,22 +103,31 @@ namespace triton {
         void clearArchitecture(void);
 
         //! [**architecture api**] - Returns true if the register id is a flag. \sa triton::arch::x86::registers_e.
-        bool isCpuFlag(triton::uint32 regId) const;
+        bool isFlag(triton::uint32 regId) const;
+
+        //! [**architecture api**] - Returns true if the register id is a flag.
+        bool isFlag(const triton::arch::Register& reg) const;
 
         //! [**architecture api**] - Returns true if the regId is a register. \sa triton::arch::x86::registers_e.
-        bool isCpuRegister(triton::uint32 regId) const;
+        bool isRegister(triton::uint32 regId) const;
+
+        //! [**architecture api**] - Returns true if the regId is a register.
+        bool isRegister(const triton::arch::Register& reg) const;
 
         //! [**architecture api**] - Returns true if the regId is a register or a flag. \sa triton::arch::x86::registers_e.
-        bool isCpuRegisterValid(triton::uint32 regId) const;
+        bool isRegisterValid(triton::uint32 regId) const;
 
-        //! [**architecture api**] - Returns the max size (in byte) of the CPU register (GPR).
-        triton::uint32 cpuRegisterSize(void) const;
+        //! [**architecture api**] - Returns true if the regId is a register or a flag.
+        bool isRegisterValid(const triton::arch::Register& reg) const;
 
         //! [**architecture api**] - Returns the max size (in bit) of the CPU register (GPR).
-        triton::uint32 cpuRegisterBitSize(void) const;
+        triton::uint32 getRegisterBitSize(void) const;
+
+        //! [**architecture api**] - Returns the max size (in byte) of the CPU register (GPR).
+        triton::uint32 getRegisterSize(void) const;
 
         //! [**architecture api**] - Returns the number of registers according to the CPU architecture.
-        triton::uint32 cpuNumberOfRegisters(void) const;
+        triton::uint32 getNumberOfRegisters(void) const;
 
         //! [**architecture api**] - Returns all information about the register.
         triton::arch::RegisterSpecification getRegisterSpecification(triton::uint32 regId) const;

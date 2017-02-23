@@ -91,15 +91,6 @@ namespace triton {
         //! Returns the parent id of the register.
         Register getParent(void) const;
 
-        //! Returns true if the register is valid.
-        bool isValid(void) const;
-
-        //! Returns true if the register is a register.
-        bool isRegister(void) const;
-
-        //! Returns true if the register is a flag.
-        bool isFlag(void) const;
-
         //! Returns true if the register is immutable.
         bool isImmutable(void) const;
 

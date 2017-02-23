@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import setArchitecture, ARCH, MemoryAccess, OPERAND, REG
+from triton import setArchitecture, isRegisterValid, ARCH, MemoryAccess, OPERAND, REG
 
 
 class TestMemory(unittest.TestCase):
@@ -42,19 +42,19 @@ class TestMemory(unittest.TestCase):
 
     def test_base_register(self):
         """Check base register modification."""
-        self.assertFalse(self.mem.getBaseRegister().isValid())
+        self.assertFalse(isRegisterValid(self.mem.getBaseRegister()))
         self.mem.setBaseRegister(REG.RAX)
         self.assertEqual(self.mem.getBaseRegister().getName(), "rax")
 
     def test_index_register(self):
         """Check index register modification."""
-        self.assertFalse(self.mem.getIndexRegister().isValid())
+        self.assertFalse(isRegisterValid(self.mem.getIndexRegister()))
         self.mem.setIndexRegister(REG.RCX)
         self.assertEqual(self.mem.getIndexRegister().getName(), "rcx")
 
     def test_segment_register(self):
         """Check segment register modification."""
-        self.assertFalse(self.mem.getSegmentRegister().isValid())
+        self.assertFalse(isRegisterValid(self.mem.getSegmentRegister()))
         self.mem.setSegmentRegister(REG.FS)
         self.assertEqual(self.mem.getSegmentRegister().getName(), "fs")
 

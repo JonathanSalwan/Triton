@@ -145,9 +145,6 @@ namespace triton {
         //! LEA - Returns the scale operand.
         const triton::arch::Immediate& getConstScale(void) const;
 
-        //! True if the memory is not empty.
-        bool isValid(void) const;
-
         //! Returns true if `other` and `self` overlap.
         bool isOverlapWith(const MemoryAccess& other) const;
 
