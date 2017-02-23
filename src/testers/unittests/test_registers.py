@@ -166,3 +166,4 @@ class TestRegisterValues(unittest.TestCase):
         self.assertTrue(REG.AX.isOverlapWith(REG.AL))
         self.assertTrue(REG.AL.isOverlapWith(REG.AX))
         self.assertFalse(REG.EAX.isOverlapWith(REG.EDX))
+

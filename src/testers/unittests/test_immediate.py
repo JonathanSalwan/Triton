@@ -146,32 +146,3 @@ class TestNegativeImmediate(unittest.TestCase):
         self.imm = Immediate(0x8123456789abcdef, CPUSIZE.QWORD)
         self.assertEqual(self.imm.getValue(), 0x8123456789abcdef)
 
-
-class TestNegativeImmediate(unittest.TestCase):
-
-    """Testing the Immediate class."""
-
-    def setUp(self):
-        setArchitecture(ARCH.X86_64)
-
-    def test_value(self):
-        """Check immediate value with different size."""
-        self.imm = Immediate(-4, CPUSIZE.BYTE)
-        self.assertEqual(self.imm.getValue(), 0xfc)
-
-        self.imm = Immediate(-4, CPUSIZE.WORD)
-        self.assertEqual(self.imm.getValue(), 0xfffc)
-
-        self.imm = Immediate(-4, CPUSIZE.DWORD)
-        self.assertEqual(self.imm.getValue(), 0xfffffffc)
-
-        self.imm = Immediate(-4, CPUSIZE.QWORD)
-        self.assertEqual(self.imm.getValue(), 0xfffffffffffffffc)
-
-        # These ones are positives
-        self.imm = Immediate(0x7123456789abcdef, CPUSIZE.QWORD)
-        self.assertEqual(self.imm.getValue(), 0x7123456789abcdef)
-
-        self.imm = Immediate(0x8123456789abcdef, CPUSIZE.QWORD)
-        self.assertEqual(self.imm.getValue(), 0x8123456789abcdef)
-
