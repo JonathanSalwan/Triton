@@ -566,6 +566,8 @@ namespace triton {
             this->taintMemory(addrDst+offset);
             isTainted = TAINTED;
           }
+          else
+            this->untaintMemory(addrDst+offset);
         }
 
         return isTainted;
