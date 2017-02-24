@@ -7,7 +7,8 @@ import unittest
 from triton import (setArchitecture, ARCH, REG, taintRegister, processing,
                     isRegisterTainted, Instruction, taintMemory, MemoryAccess,
                     isMemoryTainted, untaintMemory, taintAssignmentMemoryImmediate,
-                    untaintRegister, taintAssignmentMemoryMemory)
+                    untaintRegister, taintAssignmentMemoryMemory,
+                    taintAssignmentMemoryRegister)
 
 
 class TestTaint(unittest.TestCase):
@@ -126,7 +127,6 @@ class TestTaint(unittest.TestCase):
         self.assertFalse(isMemoryTainted(0x1002))
         self.assertFalse(isMemoryTainted(0x1003))
 
-
     def test_taint_assignement_memory_memory(self):
         """Check tainting assignment memory <- memory."""
         setArchitecture(ARCH.X86_64)
@@ -142,4 +142,44 @@ class TestTaint(unittest.TestCase):
         taintAssignmentMemoryMemory(MemoryAccess(0x2000, 1), MemoryAccess(0x3000, 1))
         self.assertFalse(isMemoryTainted(MemoryAccess(0x1000, 1)))
         self.assertFalse(isMemoryTainted(MemoryAccess(0x2000, 1)))
+
+        taintMemory(MemoryAccess(0x2000, 4))
+        self.assertTrue(isMemoryTainted(MemoryAccess(0x2000, 4)))
+
+        taintAssignmentMemoryMemory(MemoryAccess(0x2001, 2), MemoryAccess(0x3000, 1))
+        self.assertTrue(isMemoryTainted(MemoryAccess(0x2000, 1)))
+        self.assertFalse(isMemoryTainted(MemoryAccess(0x2001, 1)))
+        self.assertFalse(isMemoryTainted(MemoryAccess(0x2001, 1)))
+        self.assertTrue(isMemoryTainted(MemoryAccess(0x2000, 1)))
+
+    def test_taint_assignement_memory_register(self):
+        """Check tainting assignment memory <- register."""
+        setArchitecture(ARCH.X86_64)
+
+        taintMemory(MemoryAccess(0x2000, 8))
+        self.assertTrue(isMemoryTainted(MemoryAccess(0x2000, 8)))
+
+        taintAssignmentMemoryRegister(MemoryAccess(0x2002, 2), REG.AX)
+        self.assertTrue(isMemoryTainted(MemoryAccess(0x2000, 1)))
+        self.assertTrue(isMemoryTainted(MemoryAccess(0x2001, 1)))
+        self.assertFalse(isMemoryTainted(MemoryAccess(0x2002, 1)))
+        self.assertFalse(isMemoryTainted(MemoryAccess(0x2003, 1)))
+        self.assertTrue(isMemoryTainted(MemoryAccess(0x2004, 1)))
+        self.assertTrue(isMemoryTainted(MemoryAccess(0x2005, 1)))
+        self.assertTrue(isMemoryTainted(MemoryAccess(0x2006, 1)))
+        self.assertTrue(isMemoryTainted(MemoryAccess(0x2007, 1)))
+
+        taintMemory(MemoryAccess(0x2000, 8))
+        self.assertTrue(isMemoryTainted(MemoryAccess(0x2000, 8)))
+
+        taintAssignmentMemoryRegister(MemoryAccess(0x1fff, 8), REG.RAX)
+        self.assertFalse(isMemoryTainted(MemoryAccess(0x1fff, 1)))
+        self.assertFalse(isMemoryTainted(MemoryAccess(0x2000, 1)))
+        self.assertFalse(isMemoryTainted(MemoryAccess(0x2001, 1)))
+        self.assertFalse(isMemoryTainted(MemoryAccess(0x2002, 1)))
+        self.assertFalse(isMemoryTainted(MemoryAccess(0x2003, 1)))
+        self.assertFalse(isMemoryTainted(MemoryAccess(0x2004, 1)))
+        self.assertFalse(isMemoryTainted(MemoryAccess(0x2005, 1)))
+        self.assertFalse(isMemoryTainted(MemoryAccess(0x2006, 1)))
+        self.assertTrue(isMemoryTainted(MemoryAccess(0x2007, 1)))
 
