@@ -29,6 +29,15 @@ matrix:
               packages: ['g++-5', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake']
           env: [ CXX_COMPILER=g++-5, C_COMPILER=gcc-5, PYTHON_VERSION=2.7]
 
+        # Linux gcc 5.0 with gcov
+        - os: linux
+          compiler: gcc
+          addons:
+            apt:
+              sources: ['ubuntu-toolchain-r-test', 'cmake', 'boost-latest']
+              packages: ['g++-5', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake']
+          env: [ CXX_COMPILER=g++-5, C_COMPILER=gcc-5, PYTHON_VERSION=2.7, GCOV=ON]
+
         # Linux clang 3.5
         - os: linux
           compiler: clang
@@ -101,6 +110,12 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install $TT_DEP_BREW_PKGS; fi
   # Back to /home/travis/build/JonathanSalwan
   - cd ..
+
+install:
+  - if [ "$GCOV" == "ON" ]; then sudo ln -sf /usr/bin/gcov-5 /usr/bin/gcov; fi
+  - if [ "$GCOV" == "ON" ]; then wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.13.orig.tar.gz; fi
+  - if [ "$GCOV" == "ON" ]; then tar xf lcov_1.13.orig.tar.gz; fi
+  - if [ "$GCOV" == "ON" ]; then sudo make -C lcov-1.13/ install; fi
   # Install capstone
   - git clone https://github.com/aquynh/capstone.git
   - cd capstone
@@ -127,11 +142,13 @@ before_install:
   - cd build
 
 script:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cmake -DPINTOOL=on -DKERNEL4=on -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER ..; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cmake -DPINTOOL=on -DKERNEL4=on -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER .. -DGCOV=${GCOV:OFF}; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cmake $TT_PYTHON_ENV ..; fi
   - sudo make -j2
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo install_name_tool -change libcapstone.3.dylib /usr/local/lib/libcapstone.3.dylib libtriton.dylib; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo install_name_tool -change libcapstone.3.dylib /usr/local/lib/libcapstone.3.dylib; fi
   - sudo make install
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"; fi
   - make check
 
+after_success:
+  - if [ "$GCOV" == "ON" ]; then bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"; fi
