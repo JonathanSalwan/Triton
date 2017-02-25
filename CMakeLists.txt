@@ -304,9 +304,7 @@ if(PYTHON_BINDINGS)
         IMMEDIATE @ONLY
     )
     find_package(PythonInterp 2.7 REQUIRED)
-    if(UNIX)
-      install (CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/setup.py install)")
-    endif()
+    install (CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/setup.py install)")
 endif()
 
 
