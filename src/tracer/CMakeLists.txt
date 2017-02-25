@@ -7,8 +7,7 @@ if(PYTHON_BINDINGS)
 endif()
 
 # Root directory of the Pin toolkit
-set(PIN_ROOT "${CMAKE_SOURCE_DIR}/../../..")
-
+set(PIN_ROOT "${CMAKE_SOURCE_DIR}/../../.." CACHE PATH "Path to pin root directory")
 
 # Specific Linux CXX Flags
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
