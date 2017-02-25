@@ -145,7 +145,6 @@ script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cmake -DPINTOOL=on -DKERNEL4=on -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER .. -DGCOV=${GCOV:OFF}; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cmake $TT_PYTHON_ENV ..; fi
   - sudo make -j2
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo install_name_tool -change libcapstone.3.dylib /usr/local/lib/libcapstone.3.dylib; fi
   - sudo make install
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"; fi
   - make check

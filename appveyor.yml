@@ -56,9 +56,14 @@ install:
   - cmd: echo Running cmake...
   - cmd: cmake .. -G "%CMAKE_TEMPLATE%"
 
-build:
-  parallel: true
-  project: c:\projects\triton\build\triton.sln
+#build:
+# Build manually until we can build every target. For now, we can't run test-python
+# target without installation
+#  parallel: true
+#  project: c:\projects\triton\build\triton.sln
+
+build_script:
+  - cmd: cmake --build . --config release
 
 # This happens in the build directory: c:\projects\triton\build
 before_test:
