@@ -8,7 +8,8 @@ from triton import (setArchitecture, ARCH, REG, taintRegister, processing,
                     isRegisterTainted, Instruction, taintMemory, MemoryAccess,
                     isMemoryTainted, untaintMemory, taintAssignmentMemoryImmediate,
                     untaintRegister, taintAssignmentMemoryMemory,
-                    taintAssignmentMemoryRegister)
+                    taintAssignmentMemoryRegister, taintAssignmentRegisterImmediate,
+                    taintAssignmentRegisterMemory, taintAssignmentRegisterRegister)
 
 
 class TestTaint(unittest.TestCase):
@@ -182,4 +183,58 @@ class TestTaint(unittest.TestCase):
         self.assertFalse(isMemoryTainted(MemoryAccess(0x2005, 1)))
         self.assertFalse(isMemoryTainted(MemoryAccess(0x2006, 1)))
         self.assertTrue(isMemoryTainted(MemoryAccess(0x2007, 1)))
+
+    def test_taint_assignement_register_immediate(self):
+        """Check tainting assignment register <- immediate."""
+        setArchitecture(ARCH.X86_64)
+
+        self.assertFalse(isRegisterTainted(REG.RAX))
+        taintRegister(REG.RAX)
+        self.assertTrue(isRegisterTainted(REG.RAX))
+
+        taintAssignmentRegisterImmediate(REG.RAX)
+        self.assertFalse(isRegisterTainted(REG.RAX))
+
+    def test_taint_assignement_register_memory(self):
+        """Check tainting assignment register <- memory."""
+        setArchitecture(ARCH.X86_64)
+
+        self.assertFalse(isRegisterTainted(REG.RAX))
+        taintRegister(REG.RAX)
+        self.assertTrue(isRegisterTainted(REG.RAX))
+
+        taintAssignmentRegisterMemory(REG.RAX, MemoryAccess(0x2000, 8))
+        self.assertFalse(isRegisterTainted(REG.RAX))
+
+        taintMemory(MemoryAccess(0x2000, 8))
+        self.assertTrue(isMemoryTainted(MemoryAccess(0x2000, 8)))
+
+        taintAssignmentRegisterMemory(REG.RAX, MemoryAccess(0x2000, 8))
+        self.assertTrue(isRegisterTainted(REG.RAX))
+
+        taintAssignmentRegisterMemory(REG.RAX, MemoryAccess(0x3000, 8))
+        self.assertFalse(isRegisterTainted(REG.RAX))
+
+    def test_taint_assignement_register_register(self):
+        """Check tainting assignment register <- register."""
+        setArchitecture(ARCH.X86_64)
+
+        self.assertFalse(isRegisterTainted(REG.RAX))
+        taintRegister(REG.RAX)
+        self.assertTrue(isRegisterTainted(REG.RAX))
+
+        taintAssignmentRegisterRegister(REG.RAX, REG.RAX)
+        self.assertTrue(isRegisterTainted(REG.RAX))
+
+        untaintRegister(REG.RAX)
+        self.assertFalse(isRegisterTainted(REG.RAX))
+        taintAssignmentRegisterRegister(REG.RAX, REG.RAX)
+        self.assertFalse(isRegisterTainted(REG.RAX))
+
+        self.assertFalse(isRegisterTainted(REG.RBX))
+        taintRegister(REG.RBX)
+        self.assertTrue(isRegisterTainted(REG.RBX))
+
+        taintAssignmentRegisterRegister(REG.RAX, REG.RBX)
+        self.assertTrue(isRegisterTainted(REG.RAX))
 
