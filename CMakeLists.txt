@@ -292,26 +292,8 @@ target_link_libraries(
 
 
 # Add the install targets
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    set(TRITON_HEADER_INSTALL /usr/include/triton)
-    set(TRITON_LIB_INSTALL /lib)
-endif()
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set(TRITON_HEADER_INSTALL /usr/local/include/triton)
-    set(TRITON_LIB_INSTALL /usr/local/lib)
-endif()
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    if(NOT INSTALL_PREFIX)
-        set(INSTALL_PREFIX C:\\Triton)
-    endif()
-    set(TRITON_HEADER_INSTALL ${INSTALL_PREFIX}\\include\\triton)
-    set(TRITON_LIB_INSTALL ${INSTALL_PREFIX}\\lib)
-endif()
-
-install (TARGETS ${PROJECT_LIBTRITON} DESTINATION ${TRITON_LIB_INSTALL})
-install (FILES ${LIBTRITON_HEADERS_FILES} DESTINATION ${TRITON_HEADER_INSTALL})
+install (TARGETS ${PROJECT_LIBTRITON} DESTINATION lib)
+install (FILES ${LIBTRITON_HEADERS_FILES} DESTINATION include/triton)
 
 
 # Install Python bindings
