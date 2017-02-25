@@ -65,7 +65,7 @@ before_test:
   - cmd: cmake --build . --config release --target install
 
 test_script:
-  - cmd: python.exe -m unittest discover ..\src\testers\unittests\
+  - cmd: cmake --build . --config release --target check
 
 artifacts:
   - path: triton.*.7z

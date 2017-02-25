@@ -16,6 +16,17 @@ option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON)
 option(STATICLIB "Build a static library" OFF)
 option(INCBUILD "Increment the build number" OFF)
 
+#Enable ctest
+include(CTest)
+add_custom_target(test-python python -m unittest discover ${CMAKE_SOURCE_DIR}/src/testers/unittests)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  # Special handling of Linux test to check if pin can be attached on other binaries.
+  add_custom_target(check COMMAND ${CMAKE_SOURCE_DIR}/src/scripts/run_linux_test.sh)
+else()
+  add_custom_target(check ctest DEPENDS test-python)
+endif()
+
+
 set(CMAKE_BUILD_TYPE Release)
 
 # Specific OSX POLICY

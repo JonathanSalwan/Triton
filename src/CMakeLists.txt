@@ -4,4 +4,5 @@ if(PINTOOL)
   add_subdirectory(tracer)
 endif()
 
-# TODO : Add recipe for tests
+add_subdirectory(examples)
+add_subdirectory(testers)
