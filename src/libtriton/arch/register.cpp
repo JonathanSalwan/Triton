@@ -5,10 +5,10 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <api.hpp>
-#include <exceptions.hpp>
-#include <register.hpp>
-#include <registerSpecification.hpp>
+#include <triton/api.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/register.hpp>
+#include <triton/registerSpecification.hpp>
 
 
 

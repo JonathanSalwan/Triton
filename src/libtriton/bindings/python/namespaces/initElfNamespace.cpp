@@ -7,9 +7,9 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <elfEnums.hpp>
-#include <pythonBindings.hpp>
-#include <pythonUtils.hpp>
+#include <triton/elfEnums.hpp>
+#include <triton/pythonBindings.hpp>
+#include <triton/pythonUtils.hpp>
 
 
 

@@ -12,11 +12,11 @@
 #include <pin.H>
 
 /* libTriton */
-#include <api.hpp>
-#include <pythonBindings.hpp>
-#include <pythonObjects.hpp>
-#include <pythonUtils.hpp>
-#include <pythonXFunctions.hpp>
+#include <triton/api.hpp>
+#include <triton/pythonBindings.hpp>
+#include <triton/pythonObjects.hpp>
+#include <triton/pythonUtils.hpp>
+#include <triton/pythonXFunctions.hpp>
 
 /* pintool */
 #include "bindings.hpp"

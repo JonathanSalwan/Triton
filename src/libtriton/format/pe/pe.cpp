@@ -8,8 +8,8 @@
 #include <cstdio>
 #include <new>
 
-#include <exceptions.hpp>
-#include <pe.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/pe.hpp>
 
 
 

@@ -7,8 +7,8 @@
 
 #include <cstdio>
 
-#include <elfSectionHeader.hpp>
-#include <exceptions.hpp>
+#include <triton/elfSectionHeader.hpp>
+#include <triton/exceptions.hpp>
 
 
 

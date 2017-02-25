@@ -7,9 +7,9 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <astRepresentation.hpp>
-#include <pythonBindings.hpp>
-#include <pythonUtils.hpp>
+#include <triton/astRepresentation.hpp>
+#include <triton/pythonBindings.hpp>
+#include <triton/pythonUtils.hpp>
 
 
 

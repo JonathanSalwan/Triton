@@ -7,9 +7,9 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <modes.hpp>
-#include <pythonBindings.hpp>
-#include <pythonUtils.hpp>
+#include <triton/modes.hpp>
+#include <triton/pythonBindings.hpp>
+#include <triton/pythonUtils.hpp>
 
 
 

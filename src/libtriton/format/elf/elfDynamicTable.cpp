@@ -7,8 +7,8 @@
 
 #include <cstdio>
 
-#include <elfDynamicTable.hpp>
-#include <exceptions.hpp>
+#include <triton/elfDynamicTable.hpp>
+#include <triton/exceptions.hpp>
 
 
 

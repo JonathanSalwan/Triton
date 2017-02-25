@@ -5,9 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <exceptions.hpp>
-#include <pathManager.hpp>
-#include <symbolicEnums.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/pathManager.hpp>
+#include <triton/symbolicEnums.hpp>
 
 
 

@@ -8,7 +8,7 @@
 #ifdef TRITON_PYTHON_BINDINGS
 
 #include <iostream>
-#include <pythonXFunctions.hpp>
+#include <triton/pythonXFunctions.hpp>
 
 
 

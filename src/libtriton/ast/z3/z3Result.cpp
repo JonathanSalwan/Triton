@@ -5,8 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <exceptions.hpp>
-#include <z3Result.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/z3Result.hpp>
 
 
 

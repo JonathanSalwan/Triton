@@ -7,8 +7,8 @@
 
 #include <cstdio>
 
-#include <exceptions.hpp>
-#include <peDataDirectory.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/peDataDirectory.hpp>
 
 
 

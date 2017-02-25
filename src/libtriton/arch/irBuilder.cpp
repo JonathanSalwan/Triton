@@ -7,12 +7,12 @@
 
 #include <new>
 
-#include <exceptions.hpp>
-#include <irBuilder.hpp>
-#include <memoryAccess.hpp>
-#include <operandWrapper.hpp>
-#include <register.hpp>
-#include <x86Semantics.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/irBuilder.hpp>
+#include <triton/memoryAccess.hpp>
+#include <triton/operandWrapper.hpp>
+#include <triton/register.hpp>
+#include <triton/x86Semantics.hpp>
 
 
 

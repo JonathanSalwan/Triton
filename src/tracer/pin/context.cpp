@@ -9,9 +9,9 @@
 #include <stdexcept>
 
 /* libTriton */
-#include <cpuSize.hpp>
-#include <coreUtils.hpp>
-#include <x86Specifications.hpp>
+#include <triton/cpuSize.hpp>
+#include <triton/coreUtils.hpp>
+#include <triton/x86Specifications.hpp>
 
 /* pintool */
 #include "bindings.hpp"

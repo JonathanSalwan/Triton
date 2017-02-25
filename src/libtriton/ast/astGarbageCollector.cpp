@@ -5,8 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <astGarbageCollector.hpp>
-#include <exceptions.hpp>
+#include <triton/astGarbageCollector.hpp>
+#include <triton/exceptions.hpp>
 
 
 

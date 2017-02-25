@@ -10,7 +10,7 @@
 
 #include <string>
 #include <pin.H>
-#include <tritonTypes.hpp>
+#include <triton/tritonTypes.hpp>
 
 
 

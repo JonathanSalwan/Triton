@@ -7,9 +7,9 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <peEnums.hpp>
-#include <pythonBindings.hpp>
-#include <pythonUtils.hpp>
+#include <triton/peEnums.hpp>
+#include <triton/pythonBindings.hpp>
+#include <triton/pythonUtils.hpp>
 
 
 

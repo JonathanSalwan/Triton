@@ -5,8 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <exceptions.hpp>
-#include <taintEngine.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/taintEngine.hpp>
 
 
 

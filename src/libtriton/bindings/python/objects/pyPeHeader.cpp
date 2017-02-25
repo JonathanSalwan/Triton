@@ -7,11 +7,11 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <exceptions.hpp>
-#include <peHeader.hpp>
-#include <pythonObjects.hpp>
-#include <pythonUtils.hpp>
-#include <pythonXFunctions.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/peHeader.hpp>
+#include <triton/pythonObjects.hpp>
+#include <triton/pythonUtils.hpp>
+#include <triton/pythonXFunctions.hpp>
 
 
 

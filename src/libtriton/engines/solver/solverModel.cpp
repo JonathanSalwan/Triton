@@ -7,8 +7,8 @@
 
 #include <cstdlib>
 
-#include <solverModel.hpp>
-#include <symbolicEnums.hpp>
+#include <triton/solverModel.hpp>
+#include <triton/symbolicEnums.hpp>
 
 
 

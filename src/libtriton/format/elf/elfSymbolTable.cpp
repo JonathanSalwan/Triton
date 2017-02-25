@@ -7,8 +7,8 @@
 
 #include <cstdio>
 
-#include <elfSymbolTable.hpp>
-#include <exceptions.hpp>
+#include <triton/elfSymbolTable.hpp>
+#include <triton/exceptions.hpp>
 
 
 

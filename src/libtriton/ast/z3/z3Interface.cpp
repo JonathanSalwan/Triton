@@ -5,11 +5,11 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <exceptions.hpp>
-#include <tritonToZ3Ast.hpp>
-#include <z3Interface.hpp>
-#include <z3Result.hpp>
-#include <z3ToTritonAst.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/tritonToZ3Ast.hpp>
+#include <triton/z3Interface.hpp>
+#include <triton/z3Result.hpp>
+#include <triton/z3ToTritonAst.hpp>
 
 
 

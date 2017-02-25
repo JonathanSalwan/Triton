@@ -5,9 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <bitsVector.hpp>
-#include <cpuSize.hpp>
-#include <exceptions.hpp>
+#include <triton/bitsVector.hpp>
+#include <triton/cpuSize.hpp>
+#include <triton/exceptions.hpp>
 
 
 

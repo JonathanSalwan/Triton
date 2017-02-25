@@ -7,9 +7,9 @@
 
 #if defined(__unix__) || defined(__APPLE__)
 
-#include <syscalls.hpp>
-#include <tritonTypes.hpp>
-#include <unix.hpp>
+#include <triton/syscalls.hpp>
+#include <triton/tritonTypes.hpp>
+#include <triton/unix.hpp>
 
 
 

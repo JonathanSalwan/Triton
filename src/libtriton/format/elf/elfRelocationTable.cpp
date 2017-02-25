@@ -7,8 +7,8 @@
 
 #include <cstdio>
 
-#include <elfRelocationTable.hpp>
-#include <exceptions.hpp>
+#include <triton/elfRelocationTable.hpp>
+#include <triton/exceptions.hpp>
 
 
 

@@ -5,7 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <registerSpecification.hpp>
+#include <triton/registerSpecification.hpp>
 
 
 

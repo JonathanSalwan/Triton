@@ -14,8 +14,8 @@
 #include <pin.H>
 
 /* libTriton */
-#include <api.hpp>
-#include <pythonBindings.hpp>
+#include <triton/api.hpp>
+#include <triton/pythonBindings.hpp>
 
 /* Pintool */
 #include "bindings.hpp"

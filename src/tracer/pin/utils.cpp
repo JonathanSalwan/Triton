@@ -6,8 +6,8 @@
 */
 
 /* libTriton */
-#include <api.hpp>
-#include <x86Specifications.hpp>
+#include <triton/api.hpp>
+#include <triton/x86Specifications.hpp>
 
 /* pintool */
 #include "utils.hpp"

@@ -7,10 +7,10 @@
 
 #include <new>
 
-#include <architecture.hpp>
-#include <exceptions.hpp>
-#include <x8664Cpu.hpp>
-#include <x86Cpu.hpp>
+#include <triton/architecture.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/x8664Cpu.hpp>
+#include <triton/x86Cpu.hpp>
 
 
 

@@ -7,8 +7,8 @@
 
 #include <cstdio>
 
-#include <exceptions.hpp>
-#include <peImportDirectory.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/peImportDirectory.hpp>
 
 
 

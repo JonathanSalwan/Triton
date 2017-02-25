@@ -8,9 +8,9 @@
 #include <pin.H>
 
 /* libTriton */
-#include <pythonUtils.hpp>
-#include <pythonObjects.hpp>
-#include <tritonTypes.hpp>
+#include <triton/pythonUtils.hpp>
+#include <triton/pythonObjects.hpp>
+#include <triton/tritonTypes.hpp>
 
 /* pintool */
 #include "bindings.hpp"

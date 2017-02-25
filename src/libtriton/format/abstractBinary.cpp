@@ -8,10 +8,10 @@
 #include <cstdio>
 #include <new>
 
-#include <abstractBinary.hpp>
-#include <elf.hpp>
-#include <exceptions.hpp>
-#include <pe.hpp>
+#include <triton/abstractBinary.hpp>
+#include <triton/elf.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/pe.hpp>
 
 
 

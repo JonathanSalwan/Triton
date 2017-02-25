@@ -84,6 +84,8 @@ if(PINTOOL)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
 endif()
 
+# Add triton includes for every project
+include_directories("${CMAKE_SOURCE_DIR}/src/libtriton/includes")
 
 set(PROJECT_LIBTRITON "triton")
 add_subdirectory(src)

@@ -8,9 +8,9 @@
 #include <cstring>
 #include <new>
 
-#include <exceptions.hpp>
-#include <coreUtils.hpp>
-#include <symbolicEngine.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/coreUtils.hpp>
+#include <triton/symbolicEngine.hpp>
 
 
 

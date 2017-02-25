@@ -15,7 +15,7 @@ import platform
 HEADER = """
 /*! \\file */
 #if defined(__unix__) || defined(__APPLE__)
-#include <syscalls.hpp>
+#include <triton/syscalls.hpp>
 
 
 
