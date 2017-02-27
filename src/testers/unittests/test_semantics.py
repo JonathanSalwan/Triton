@@ -55,7 +55,7 @@ class TestIR(unittest.TestCase):
         setArchitecture(ARCH.X86_64)
 
         # Load the binary
-        binary_file = os.path.join(os.path.dirname(__file__), "misc", "ir-test-suit.bin")
+        binary_file = os.path.join(os.path.dirname(__file__), "misc", "ir-test-suite.bin")
         self.load_binary(binary_file)
 
         # Define a fake stack
