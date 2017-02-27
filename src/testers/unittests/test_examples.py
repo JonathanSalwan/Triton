@@ -10,7 +10,6 @@ EXAMPLE_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "examples", "p
 
 
 class TestExample(unittest.TestCase):
-
     """Holder to run examples as tests."""
 
 
