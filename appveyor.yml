@@ -66,7 +66,6 @@ build_script:
   - cmd: msbuild c:\projects\triton\build\triton.sln  /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /t:triton /m:3
     #  - cmd: cmake --build . --config release
 
-
 # This happens in the build directory: c:\projects\triton\build
 before_test:
   - cmd: cmake --build . --config release --target install

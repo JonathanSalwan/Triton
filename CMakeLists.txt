@@ -40,7 +40,6 @@ else()
   add_custom_target(check ctest DEPENDS test-python)
 endif()
 
-
 set(CMAKE_BUILD_TYPE Release)
 
 if(GCOV)
@@ -67,7 +66,6 @@ endif()
 if(${TARGET} MATCHES "ia32")
     set(ARCHITECTURE i386)
 endif()
-
 
 # Triton version
 if(INCBUILD)
