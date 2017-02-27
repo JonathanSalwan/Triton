@@ -1,13 +1,12 @@
 #!/usr/bin/env python2
-## -*- coding: utf-8 -*-
-##
-## Copyright (C) - Triton
-## This program is under the terms of the BSD License.
-##
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) - Triton
+# This program is under the terms of the BSD License.
+#
 
 from   setuptools import setup
-import os
-import site
+import sys
 import shutil
 import platform
 
@@ -22,19 +21,19 @@ program analysis tools, automate reverse engineering and perform software verifi
 '''.strip()
 
 if platform.system() == 'Linux':
-    TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/libtriton.so'
-    TRITON_MODULE  = '@CMAKE_BINARY_DIR@/triton.so'
+    TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/src/libtriton/libtriton.so'
+    TRITON_MODULE  = '@CMAKE_BINARY_DIR@/src/libtriton/triton.so'
     TRITON_MODULES = [TRITON_MODULE]
 
 elif platform.system() == 'Darwin':
-    TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/libtriton.dylib'
-    TRITON_MODULE  = '@CMAKE_BINARY_DIR@/triton.so'
+    TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/src/libtriton/libtriton.dylib'
+    TRITON_MODULE  = '@CMAKE_BINARY_DIR@/src/libtriton/triton.so'
     TRITON_MODULES = [TRITON_MODULE]
 
 elif platform.system() == 'Windows':
     Z3_LIB_PATH    = r'@Z3_LIBRARIES@'.replace('.lib', '.dll')
-    TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/Release/triton.dll'.replace('/', '\\')
-    TRITON_MODULE  = '@CMAKE_BINARY_DIR@/Release/triton.pyd'.replace('/', '\\')
+    TRITON_LIBRARY = '@CMAKE_BINARY_DIR@/src/libtriton/Release/triton.dll'.replace('/', '\\')
+    TRITON_MODULE  = '@CMAKE_BINARY_DIR@/src/libtriton/Release/triton.pyd'.replace('/', '\\')
     TRITON_MODULES = [TRITON_MODULE, Z3_LIB_PATH]
 
 else:

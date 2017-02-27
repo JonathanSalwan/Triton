@@ -5,8 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <astPythonRepresentation.hpp>
-#include <exceptions.hpp>
+#include <triton/astPythonRepresentation.hpp>
+#include <triton/exceptions.hpp>
 
 
 

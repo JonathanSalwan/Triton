@@ -7,9 +7,9 @@
 
 #include <cstring>
 
-#include <exceptions.hpp>
-#include <immediate.hpp>
-#include <instruction.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/immediate.hpp>
+#include <triton/instruction.hpp>
 
 
 

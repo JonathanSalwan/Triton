@@ -7,10 +7,10 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <exceptions.hpp>
-#include <pythonBindings.hpp>
-#include <pythonUtils.hpp>
-#include <tritonTypes.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/pythonBindings.hpp>
+#include <triton/pythonUtils.hpp>
+#include <triton/tritonTypes.hpp>
 
 
 

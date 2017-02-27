@@ -7,11 +7,11 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <api.hpp>
-#include <architecture.hpp>
-#include <pythonBindings.hpp>
-#include <pythonObjects.hpp>
-#include <x86Specifications.hpp>
+#include <triton/api.hpp>
+#include <triton/architecture.hpp>
+#include <triton/pythonBindings.hpp>
+#include <triton/pythonObjects.hpp>
+#include <triton/x86Specifications.hpp>
 
 
 

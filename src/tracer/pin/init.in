@@ -14,8 +14,8 @@
 #include <string>
 
 /* libTriton */
-#include <pythonUtils.hpp>
-#include <pythonXFunctions.hpp>
+#include <triton/pythonUtils.hpp>
+#include <triton/pythonXFunctions.hpp>
 
 /* pintool */
 #include "bindings.hpp"

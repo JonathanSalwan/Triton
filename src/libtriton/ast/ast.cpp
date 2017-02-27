@@ -8,12 +8,12 @@
 #include <cmath>
 #include <new>
 
-#include <api.hpp>
-#include <ast.hpp>
-#include <astRepresentation.hpp>
-#include <exceptions.hpp>
-#include <tritonToZ3Ast.hpp>
-#include <z3Result.hpp>
+#include <triton/api.hpp>
+#include <triton/ast.hpp>
+#include <triton/astRepresentation.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/tritonToZ3Ast.hpp>
+#include <triton/z3Result.hpp>
 
 
 

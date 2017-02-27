@@ -5,12 +5,12 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <ast.hpp>
-#include <astRepresentation.hpp>
-#include <exceptions.hpp>
-#include <solverEngine.hpp>
-#include <tritonToZ3Ast.hpp>
-#include <z3Result.hpp>
+#include <triton/ast.hpp>
+#include <triton/astRepresentation.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/solverEngine.hpp>
+#include <triton/tritonToZ3Ast.hpp>
+#include <triton/z3Result.hpp>
 
 
 

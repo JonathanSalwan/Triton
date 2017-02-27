@@ -7,10 +7,10 @@
 
 #ifdef TRITON_PYTHON_BINDINGS
 
-#include <api.hpp>
-#include <pythonBindings.hpp>
-#include <pythonUtils.hpp>
-#include <x86Specifications.hpp>
+#include <triton/api.hpp>
+#include <triton/pythonBindings.hpp>
+#include <triton/pythonUtils.hpp>
+#include <triton/x86Specifications.hpp>
 
 
 

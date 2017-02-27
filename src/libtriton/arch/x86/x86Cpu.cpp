@@ -7,16 +7,16 @@
 
 #include <cstring>
 
-#include <architecture.hpp>
-#include <coreUtils.hpp>
-#include <cpuSize.hpp>
-#include <exceptions.hpp>
-#include <externalLibs.hpp>
-#include <immediate.hpp>
-#include <x86Cpu.hpp>
+#include <triton/architecture.hpp>
+#include <triton/coreUtils.hpp>
+#include <triton/cpuSize.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/externalLibs.hpp>
+#include <triton/immediate.hpp>
+#include <triton/x86Cpu.hpp>
 
 #ifdef TRITON_PYTHON_BINDINGS
-  #include <pythonBindings.hpp>
+  #include <triton/pythonBindings.hpp>
 #endif
 
 

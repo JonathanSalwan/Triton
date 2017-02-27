@@ -5,8 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <astSmtRepresentation.hpp>
-#include <exceptions.hpp>
+#include <triton/astSmtRepresentation.hpp>
+#include <triton/exceptions.hpp>
 
 
 

@@ -5,13 +5,13 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <callbacks.hpp>
-#include <exceptions.hpp>
+#include <triton/callbacks.hpp>
+#include <triton/exceptions.hpp>
 
 #ifdef TRITON_PYTHON_BINDINGS
-  #include <pythonObjects.hpp>
-  #include <pythonUtils.hpp>
-  #include <pythonXFunctions.hpp>
+  #include <triton/pythonObjects.hpp>
+  #include <triton/pythonUtils.hpp>
+  #include <triton/pythonXFunctions.hpp>
 #endif
 
 

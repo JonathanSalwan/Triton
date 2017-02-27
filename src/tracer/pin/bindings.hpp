@@ -16,8 +16,8 @@
 #include <pin.H>
 
 /* libTriton */
-#include <api.hpp>
-#include <tritonTypes.hpp>
+#include <triton/api.hpp>
+#include <triton/tritonTypes.hpp>
 
 /* pintool */
 #include "snapshot.hpp"

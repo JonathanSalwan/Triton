@@ -7,8 +7,8 @@
 
 #include <list>
 
-#include <exceptions.hpp>
-#include <z3ToTritonAst.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/z3ToTritonAst.hpp>
 
 
 

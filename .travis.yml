@@ -29,6 +29,15 @@ matrix:
               packages: ['g++-5', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake']
           env: [ CXX_COMPILER=g++-5, C_COMPILER=gcc-5, PYTHON_VERSION=2.7]
 
+        # Linux gcc 5.0 with gcov
+        - os: linux
+          compiler: gcc
+          addons:
+            apt:
+              sources: ['ubuntu-toolchain-r-test', 'cmake', 'boost-latest']
+              packages: ['g++-5', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake']
+          env: [ CXX_COMPILER=g++-5, C_COMPILER=gcc-5, PYTHON_VERSION=2.7, GCOV=ON]
+
         # Linux clang 3.5
         - os: linux
           compiler: clang
@@ -94,17 +103,19 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update -q; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -y --force-yes libz3-dev; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install python-setuptools; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CC" = "gcc" ]; then export CC="$C_COMPILER"; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" = "g++" ]; then export CXX="$CXX_COMPILER"; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CC" = "clang" ]; then export CC="$C_COMPILER"; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" = "clang++" ]; then export CXX="$CXX_COMPILER"; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export CC="clang"; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export CXX="clang++"; fi
+  - export CC="$C_COMPILER"
+  - export CXX="$CXX_COMPILER"
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export PREFIX="/usr/local"; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install $TT_DEP_BREW_PKGS; fi
   # Back to /home/travis/build/JonathanSalwan
   - cd ..
+
+install:
+  - if [ "$GCOV" == "ON" ]; then sudo ln -sf /usr/bin/gcov-5 /usr/bin/gcov; fi
+  - if [ "$GCOV" == "ON" ]; then wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.13.orig.tar.gz; fi
+  - if [ "$GCOV" == "ON" ]; then tar xf lcov_1.13.orig.tar.gz; fi
+  - if [ "$GCOV" == "ON" ]; then sudo make -C lcov-1.13/ install; fi
   # Install capstone
   - git clone https://github.com/aquynh/capstone.git
   - cd capstone
@@ -131,40 +142,12 @@ before_install:
   - cd build
 
 script:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cmake -DPINTOOL=on -DKERNEL4=on -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER ..; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cmake -DPINTOOL=on -DKERNEL4=on -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER .. -DGCOV=${GCOV:OFF}; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cmake $TT_PYTHON_ENV ..; fi
   - sudo make -j2
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo install_name_tool -change libcapstone.3.dylib /usr/local/lib/libcapstone.3.dylib libtriton.dylib; fi
   - sudo make install
-  - cd ..
-
-  # libTriton unit testing
-  # Python
-  - python2.7 -m unittest discover ./src/testers/unittests/
-  # C++
-  - cd src/examples/cpp
-  - make
-  - ./taint_reg.bin
-  - ./info_reg.bin
-  - ./ir.bin
-  - ./simplification.bin
-  - ./constraint.bin
-  - ./parsing_elf.bin ../../samples/crackmes/crackme_xor
-  - cd ../../../
-
-  # libPintool + libTriton unit testing
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/testers/check_semantics.py ./src/samples/ir_test_suite/ir; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/ast_dictionaries.py ./src/samples/crackmes/crackme_xor elite; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/blacklist.py ./src/samples/crackmes/crackme_xor a; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/callback_image.py ./src/samples/ir_test_suite/ir; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/callback_routine.py  ./src/samples/vulns/testSuite; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/callback_syscall.py  ./src/samples/crackmes/crackme_xor a; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/crackme_hash_collision.py ./src/samples/crackmes/crackme_hash aaaaa; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/inject_model_with_snapshot.py ./src/samples/crackmes/crackme_xor a; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/ir.py ./src/samples/crackmes/crackme_xor a > /dev/null; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/runtime_memory_tainting.py ./src/samples/crackmes/crackme_xor a; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/runtime_register_modification.py ./src/samples/crackmes/crackme_xor a; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/strlen.py ./src/samples/others/strlen 1; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./triton ./src/examples/pin/sym_only_on_tainted.py ./src/samples/crackmes/crackme_xor a; fi
+  - make check
 
+after_success:
+  - if [ "$GCOV" == "ON" ]; then bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"; fi

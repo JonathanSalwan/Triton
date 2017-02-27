@@ -5,10 +5,10 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <architecture.hpp>
-#include <cpuSize.hpp>
-#include <externalLibs.hpp>
-#include <x86Specifications.hpp>
+#include <triton/architecture.hpp>
+#include <triton/cpuSize.hpp>
+#include <triton/externalLibs.hpp>
+#include <triton/x86Specifications.hpp>
 
 
 

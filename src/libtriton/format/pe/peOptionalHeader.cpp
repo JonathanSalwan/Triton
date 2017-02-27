@@ -7,8 +7,8 @@
 
 #include <cstdio>
 
-#include <exceptions.hpp>
-#include <peOptionalHeader.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/peOptionalHeader.hpp>
 
 
 

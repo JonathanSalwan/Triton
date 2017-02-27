@@ -8,11 +8,11 @@
 #ifdef TRITON_PYTHON_BINDINGS
 #if defined(__unix__) || defined(__APPLE__)
 
-#include <api.hpp>
-#include <architecture.hpp>
-#include <pythonBindings.hpp>
-#include <pythonUtils.hpp>
-#include <unix.hpp>
+#include <triton/api.hpp>
+#include <triton/architecture.hpp>
+#include <triton/pythonBindings.hpp>
+#include <triton/pythonUtils.hpp>
+#include <triton/unix.hpp>
 
 
 

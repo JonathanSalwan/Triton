@@ -9,8 +9,8 @@
 #include <map>
 #include <new>
 
-#include <api.hpp>
-#include <exceptions.hpp>
+#include <triton/api.hpp>
+#include <triton/exceptions.hpp>
 
 
 

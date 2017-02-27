@@ -5,8 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <coreUtils.hpp>
-#include <cpuSize.hpp>
+#include <triton/coreUtils.hpp>
+#include <triton/cpuSize.hpp>
 
 
 

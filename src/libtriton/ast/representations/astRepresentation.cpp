@@ -7,8 +7,8 @@
 
 #include <new>
 
-#include <astRepresentation.hpp>
-#include <exceptions.hpp>
+#include <triton/astRepresentation.hpp>
+#include <triton/exceptions.hpp>
 
 
 

@@ -5,9 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <cpuSize.hpp>
-#include <exceptions.hpp>
-#include <memoryAccess.hpp>
+#include <triton/cpuSize.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/memoryAccess.hpp>
 
 
 

@@ -5,7 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <astDictionaries.hpp>
+#include <triton/astDictionaries.hpp>
 
 
 

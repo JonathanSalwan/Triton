@@ -9,9 +9,9 @@
 
 #include <iostream>
 
-#include <pythonBindings.hpp>
-#include <pythonXFunctions.hpp>
-#include <pythonBindings.hpp>
+#include <triton/pythonBindings.hpp>
+#include <triton/pythonXFunctions.hpp>
+#include <triton/pythonBindings.hpp>
 
 
 

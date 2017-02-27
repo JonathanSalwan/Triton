@@ -5,9 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <exceptions.hpp>
-#include <astRepresentation.hpp>
-#include <symbolicExpression.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/astRepresentation.hpp>
+#include <triton/symbolicExpression.hpp>
 
 
 

@@ -9,8 +9,8 @@
 #include <new>
 #include <fstream>
 
-#include <peBuilder.hpp>
-#include <exceptions.hpp>
+#include <triton/peBuilder.hpp>
+#include <triton/exceptions.hpp>
 
 
 
