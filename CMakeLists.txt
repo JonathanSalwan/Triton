@@ -34,7 +34,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
          )
   else()
     # Special handling of Linux test to check if pin can be attached on other binaries.
-    add_custom_target(check COMMAND ${CMAKE_SOURCE_DIR}/src/scripts/run_linux_test.sh)
+    add_custom_target(check COMMAND ${CMAKE_SOURCE_DIR}/src/scripts/run_linux_test.sh DEPENDS test-python)
   endif()
 else()
   add_custom_target(check ctest DEPENDS test-python)
