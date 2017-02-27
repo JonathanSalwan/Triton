@@ -22,7 +22,7 @@ environment:
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x86-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x86-win\bin\libz3.lib
-      Z3_PKG: z3-4.4.1-x86-win.zip
+      Z3_PKG_NAME: z3-4.4.1-x86-win
       CMAKE_TEMPLATE: Visual Studio 14 2015
       PYTHON: "C:\\Python27"
 
@@ -30,7 +30,7 @@ environment:
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x64-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x64-win\bin\libz3.lib
-      Z3_PKG: z3-4.4.1-x64-win.zip
+      Z3_PKG_NAME: z3-4.4.1-x64-win
       CMAKE_TEMPLATE: Visual Studio 14 2015 Win64
       PYTHON: "C:\\Python27-x64"
 
@@ -40,8 +40,8 @@ install:
   - cmd: mkdir build
   - cmd: cd build
   - cmd: echo Downloading z3...
-  - cmd: curl -fsSL -o %Z3_PKG% 'https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/%Z3_PKG%'
-  - cmd: 7z x %Z3_PKG%
+  - cmd: curl -fsSL -o %Z3_PKG_NAME%.zip 'https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/%Z3_PKG_NAME%.zip'
+  - cmd: 7z x %Z3_PKG_NAME%.zip
   - cmd: echo Downloading capstone...
   - cmd: curl -fsSL -o 3.0.4.zip 'https://github.com/aquynh/capstone/archive/3.0.4.zip'
   - cmd: 7z x 3.0.4.zip
@@ -65,12 +65,21 @@ install:
 build_script:
   - cmd: cmake --build . --config release
 
+
 # This happens in the build directory: c:\projects\triton\build
 before_test:
   - cmd: cmake --build . --config release --target install
 
 test_script:
   - cmd: cmake --build . --config release --target check
+
+after_test:
+  # generate artifact
+  - cmd: cd src\libtriton\%configuration%
+  - cmd: copy ..\..\..\%Z3_PKG_NAME%\bin\libz3.dll libz3.dll
+  - cmd: move triton.dll triton.pyd
+  - cmd: if "%platform%"=="Win32" 7z a -t7z ..\..\..\..\triton.x86.release.7z *
+  - cmd: if "%platform%"=="x64" 7z a -t7z ..\..\..\..\triton.x64.release.7z *
 
 artifacts:
   - path: triton.*.7z
