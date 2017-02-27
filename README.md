@@ -60,6 +60,7 @@ A [blog](http://triton.quarkslab.com/blog/) is available and you can follow us o
 ### Authors
 
 * **Jonathan Salwan** - Lead dev, Quarkslab
+* **Pierrick Brunet** - Core dev, Quarkslab
 * **Florent Saudel** - Core dev, Bordeaux University
 * **Romain Thomas** - Core dev, Quarkslab
 
