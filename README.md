@@ -16,9 +16,17 @@ As **Triton** is still a young project, please, **don't blame us** if it is not 
 A full documentation is available on our [doxygen page](http://triton.quarkslab.com/documentation/doxygen).</p>
 
 <p>
-  <a href="https://travis-ci.org/JonathanSalwan/Triton/branches"><img src="https://img.shields.io/travis/JonathanSalwan/Triton/master.svg?style=flat-square&label=unix%20build"></a>
+  <a href="https://travis-ci.org/JonathanSalwan/Triton/branches">
+    <img src="https://img.shields.io/travis/JonathanSalwan/Triton/master.svg?style=flat-square&label=unix%20build">
+  </a>
   &nbsp;
-  <a href="https://ci.appveyor.com/project/JonathanSalwan/triton"><img src="https://img.shields.io/appveyor/ci/JonathanSalwan/triton/master.svg?style=flat-square&label=windows%20build"></a>
+  <a href="https://ci.appveyor.com/project/JonathanSalwan/triton">
+    <img src="https://img.shields.io/appveyor/ci/JonathanSalwan/triton/master.svg?style=flat-square&label=windows%20build">
+  </a>
+  &nbsp;
+  <a href="https://codecov.io/gh/JonathanSalwan/Triton">
+    <img src="https://codecov.io/gh/JonathanSalwan/Triton/branch/master/graph/badge.svg" alt="Codecov" />
+  </a>
 </p>
 
 ### Quick start
