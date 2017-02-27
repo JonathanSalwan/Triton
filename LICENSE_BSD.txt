@@ -2,6 +2,7 @@ This is the software license for the Triton framework.
 The Triton framework has been designed & implemented by:
 
 * Jonathan Salwan (Quarkslab)
+* Pierrick Brunet (Quarkslab)
 * Romain Thomas (Quarkslab)
 * Florent Saudel (Bordeaux University)
 
