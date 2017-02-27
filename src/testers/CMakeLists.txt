@@ -4,6 +4,7 @@ if(PINTOOL AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(TRITON_SCRIPT ${CMAKE_SOURCE_DIR}/triton)
 
     add_test(PinToolCheckSemantic ${TRITON_SCRIPT} ${CMAKE_CURRENT_SOURCE_DIR}/check_semantics.py ${CMAKE_SOURCE_DIR}/src/samples/ir_test_suite/ir)
+    add_test(PinToolCheckSemanticQemu ${TRITON_SCRIPT} ${CMAKE_CURRENT_SOURCE_DIR}/qemu-test-x86_64.py ${CMAKE_SOURCE_DIR}/src/samples/ir_test_suite/qemu-test-x86_64)
     add_test(PinToolAstDict ${TRITON_SCRIPT} ${CMAKE_SOURCE_DIR}/src/examples/pin/ast_dictionaries.py ${CMAKE_SOURCE_DIR}/src/samples/crackmes/crackme_xor elite)
     add_test(PinToolBlackList ${TRITON_SCRIPT} ${CMAKE_SOURCE_DIR}/src/examples/pin/blacklist.py ${CMAKE_SOURCE_DIR}/src/samples/crackmes/crackme_xor a)
     add_test(PinToolCallBackImage ${TRITON_SCRIPT} ${CMAKE_SOURCE_DIR}/src/examples/pin/callback_image.py ${CMAKE_SOURCE_DIR}/src/samples/ir_test_suite/ir)
