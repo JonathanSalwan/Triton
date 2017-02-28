@@ -33,8 +33,6 @@ class TestAstConversion(unittest.TestCase):
             (self.v1 ^ self.v2),
             (self.v1 | self.v2),
             (self.v1 * self.v2),
-            (self.v1 / self.v2),
-            (self.v1 % self.v2),
             (self.v1 << self.v2),
             (self.v1 >> self.v2),
             (~self.v1),
@@ -51,14 +49,8 @@ class TestAstConversion(unittest.TestCase):
             bvnor(self.v1, self.v2),
             bvror(2, self.v2),
             bvrol(3, self.v1),
-            bvsdiv(self.v1, self.v2),
-            bvsmod(self.v1, self.v2),
             distinct(self.v1, self.v2),
             equal(self.v1, self.v2),
-            ite(self.v1, self.v1, self.v2),
-            land(self.v1, self.v2),
-            lnot(self.v1),
-            lor(self.v1, self.v2),
             sx(8, self.v1),
             zx(8, self.v1),
         ]
@@ -67,5 +59,5 @@ class TestAstConversion(unittest.TestCase):
         # No simplification available
         # This only going to test Triton <-> z3 AST conversions.
         for n in self.node:
-            self.assertEqual(n.getHash(), simplify(n).getHash())
+            self.assertEqual(n.evaluate(), simplify(n, True).evaluate())
 
