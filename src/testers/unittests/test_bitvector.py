@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import setArchitecture, ARCH, REG, Bitvector
+from triton import setArchitecture, ARCH, REG
 
 
 class TestRAXBitvector(unittest.TestCase):

@@ -211,20 +211,6 @@ namespace triton {
         return (PyObject*)object;
       }
 
-
-      PyObject* PyBitvector(triton::uint32 high, triton::uint32 low) {
-        Bitvector_Object* object;
-
-        PyType_Ready(&Bitvector_Type);
-        object = PyObject_NEW(Bitvector_Object, &Bitvector_Type);
-        if (object != NULL) {
-          object->high = high;
-          object->low  = low;
-        }
-
-        return (PyObject*)object;
-      }
-
     }; /* python namespace */
   }; /* bindings namespace */
 }; /* triton namespace */

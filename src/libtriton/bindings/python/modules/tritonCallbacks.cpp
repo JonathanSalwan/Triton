@@ -579,30 +579,6 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      static PyObject* triton_Bitvector(PyObject* self, PyObject* args) {
-        PyObject* high = nullptr;
-        PyObject* low  = nullptr;
-
-        /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &high, &low);
-
-        /* Check if the first arg is a integer */
-        if (high == nullptr || (!PyLong_Check(high) && !PyInt_Check(high)))
-          return PyErr_Format(PyExc_TypeError, "Bitvector(): Expects an integer as first argument.");
-
-        /* Check if the second arg is a integer */
-        if (low == nullptr || (!PyLong_Check(low) && !PyInt_Check(low)))
-          return PyErr_Format(PyExc_TypeError, "Bitvector(): Expects an integer as second argument.");
-
-        try {
-          return PyBitvector(PyLong_AsUint32(high), PyLong_AsUint32(low));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* triton_Elf(PyObject* self, PyObject* path) {
         /* Check if the first arg is a integer */
         if (path == nullptr || !PyString_Check(path))
@@ -3032,7 +3008,6 @@ namespace triton {
 
 
       PyMethodDef tritonCallbacks[] = {
-        {"Bitvector",                           (PyCFunction)triton_Bitvector,                              METH_VARARGS,       ""},
         {"Elf",                                 (PyCFunction)triton_Elf,                                    METH_O,             ""},
         {"Immediate",                           (PyCFunction)triton_Immediate,                              METH_VARARGS,       ""},
         {"Instruction",                         (PyCFunction)triton_Instruction,                            METH_VARARGS,       ""},
