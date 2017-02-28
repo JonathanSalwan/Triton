@@ -7,7 +7,7 @@ import unittest
 from triton import (setArchitecture, ARCH, REG, getAllRegisters, getParentRegisters,
                     setConcreteRegisterValue, Register, getConcreteRegisterValue,
                     isMemoryMapped, setConcreteMemoryValue, getConcreteMemoryValue,
-                    unmapMemory)
+                    unmapMemory, setConcreteMemoryAreaValue, getConcreteMemoryAreaValue)
 
 
 class TestX86ConcreteRegisterValue(unittest.TestCase):
@@ -144,6 +144,10 @@ class TestX86ConcreteMemoryValue(unittest.TestCase):
         unmapMemory(base, size)
         self.assertFalse(isMemoryMapped(base, size))
 
+        setConcreteMemoryAreaValue(0x1000, "\x11\x22\x33\x44\x55\x66")
+        setConcreteMemoryAreaValue(0x1006, [0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc])
+        self.assertEqual(getConcreteMemoryAreaValue(0x1000, 12), "\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc")
+
 class TestX8664ConcreteMemoryValue(unittest.TestCase):
 
     """Testing the X86 concrete value api."""
@@ -168,3 +172,6 @@ class TestX8664ConcreteMemoryValue(unittest.TestCase):
         unmapMemory(base, size)
         self.assertFalse(isMemoryMapped(base, size))
 
+        setConcreteMemoryAreaValue(0x1000, "\x11\x22\x33\x44\x55\x66")
+        setConcreteMemoryAreaValue(0x1006, [0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc])
+        self.assertEqual(getConcreteMemoryAreaValue(0x1000, 12), "\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc")
