@@ -23,11 +23,10 @@ add_custom_target(test-python python -m unittest discover ${CMAKE_SOURCE_DIR}/sr
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   if(GCOV)
      add_custom_target(check
-         COMMAND lcov --zerocounters --directory .
-         COMMAND lcov --capture --initial --directory . --output-file app
-         COMMAND ctest
+         COMMAND lcov --zerocounters --directory ${CMAKE_SOURCE_DIR}/src/libtriton
+         COMMAND lcov --capture --initial --directory ${CMAKE_SOURCE_DIR}/src/libtriton --output-file app
          COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target test-python
-         COMMAND lcov --no-checksum --directory . --capture --output-file coverage.info
+         COMMAND lcov --no-checksum --directory ${CMAKE_SOURCE_DIR}/src/libtriton --capture --output-file coverage.info
          COMMAND lcov --remove coverage.info '/usr*' -o coverage.info
          COMMAND genhtml coverage.info -o coverage
          COMMAND ${CMAKE_COMMAND} -E echo "-- Report generated in ${CMAKE_CURRENT_BINARY_DIR}/coverage/index.html"
