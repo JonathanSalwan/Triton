@@ -20,9 +20,11 @@ for example in glob.iglob(os.path.join(EXAMPLE_DIR, "*.py")):
 
     def test_example(self, example_name=example):
         """Run example and show stdout in case of fail."""
-        p = subprocess.Popen(["python", example_name], stdout=subprocess.PIPE)
-        out, _ = p.communicate()
-        self.assertEqual(p.returncode, 0, "\n" + out)
+        p = subprocess.Popen(["python", example_name],
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+        out, err = p.communicate()
+        self.assertEqual(p.returncode, 0, "\n".join((out, err, str(p.returncode))))
 
     # Define an arguments with a default value as default value is capture at
     # lambda creation so that example_name is not in the closure of the lambda
