@@ -194,7 +194,7 @@ target_link_libraries(
 
 # Add the install targets
 install (TARGETS ${PROJECT_LIBTRITON} DESTINATION lib)
-install (FILES ${LIBTRITON_HEADERS_FILES} DESTINATION include)
+install (DIRECTORY ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton DESTINATION include)
 
 
 # Install Python bindings
