@@ -372,10 +372,8 @@ namespace triton {
 
 
       PyObject* PyRegister(const triton::arch::Register& reg, triton::uint512 concreteValue, bool isImmutable) {
-        Register_Object* object;
-
         PyType_Ready(&Register_Type);
-        object = PyObject_NEW(Register_Object, &Register_Type);
+        Register_Object* object = PyObject_NEW(Register_Object, &Register_Type);
         if (object != NULL)
           object->reg = new triton::arch::Register(reg.getId(), concreteValue, isImmutable);
 
