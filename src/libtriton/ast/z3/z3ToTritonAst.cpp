@@ -160,7 +160,8 @@ namespace triton {
           break;
         }
 
-        case Z3_OP_BSDIV: {
+        case Z3_OP_BSDIV:
+        case Z3_OP_BSDIV_I: {
           if (expr.num_args() < 2)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_BSDIV must contain at least two arguments.");
           node = triton::ast::bvsdiv(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
@@ -169,7 +170,8 @@ namespace triton {
           break;
         }
 
-        case Z3_OP_BUDIV: {
+        case Z3_OP_BUDIV:
+        case Z3_OP_BUDIV_I: {
           if (expr.num_args() < 2)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_BUDIV must contain at least two arguments.");
           node = triton::ast::bvudiv(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
@@ -178,7 +180,8 @@ namespace triton {
           break;
         }
 
-        case Z3_OP_BSREM: {
+        case Z3_OP_BSREM:
+        case Z3_OP_BSREM_I: {
           if (expr.num_args() < 2)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_BSREM must contain at least two arguments.");
           node = triton::ast::bvsrem(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
@@ -187,7 +190,8 @@ namespace triton {
           break;
         }
 
-        case Z3_OP_BUREM: {
+        case Z3_OP_BUREM:
+        case Z3_OP_BUREM_I: {
           if (expr.num_args() < 2)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_BUREM must contain at least two arguments.");
           node = triton::ast::bvurem(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
@@ -196,7 +200,8 @@ namespace triton {
           break;
         }
 
-        case Z3_OP_BSMOD: {
+        case Z3_OP_BSMOD:
+        case Z3_OP_BSMOD_I: {
           if (expr.num_args() < 2)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_BSMOD must contain at least two arguments.");
           node = triton::ast::bvsmod(this->visit(expr.arg(0)), this->visit(expr.arg(1)));
