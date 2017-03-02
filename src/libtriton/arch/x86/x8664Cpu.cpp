@@ -15,11 +15,6 @@
 #include <triton/immediate.hpp>
 #include <triton/x8664Cpu.hpp>
 
-#ifdef TRITON_PYTHON_BINDINGS
-  #include <triton/pythonBindings.hpp>
-#endif
-
-
 
 namespace triton {
   namespace arch {
@@ -383,17 +378,6 @@ namespace triton {
         triton::arch::x86::x86_reg_fs     = triton::arch::Register(triton::arch::x86::ID_REG_FS, 0x00, triton::arch::IMMUTABLE_REGISTER);
         triton::arch::x86::x86_reg_gs     = triton::arch::Register(triton::arch::x86::ID_REG_GS, 0x00, triton::arch::IMMUTABLE_REGISTER);
         triton::arch::x86::x86_reg_ss     = triton::arch::Register(triton::arch::x86::ID_REG_SS, 0x00, triton::arch::IMMUTABLE_REGISTER);
-
-        /* Update python env ======================================================== */
-        #ifdef TRITON_PYTHON_BINDINGS
-          triton::bindings::python::initRegNamespace();
-          triton::bindings::python::initCpuSizeNamespace();
-          triton::bindings::python::initX86OpcodesNamespace();
-          triton::bindings::python::initX86PrefixesNamespace();
-          #if defined(__unix__) || defined(__APPLE__)
-            triton::bindings::python::initSyscallNamespace();
-          #endif
-        #endif
       }
 
 
