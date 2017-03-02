@@ -52,25 +52,25 @@ namespace triton {
         triton::arch::Architecture arch;
 
         //! The modes.
-        triton::modes::Modes* modes;
+        triton::modes::Modes* modes = nullptr;
 
         //! The taint engine.
-        triton::engines::taint::TaintEngine* taint;
+        triton::engines::taint::TaintEngine* taint = nullptr;
 
         //! The symbolic engine.
-        triton::engines::symbolic::SymbolicEngine* symbolic;
+        triton::engines::symbolic::SymbolicEngine* symbolic = nullptr;
 
         //! The solver engine.
-        triton::engines::solver::SolverEngine* solver;
+        triton::engines::solver::SolverEngine* solver = nullptr;
 
         //! The AST garbage collector interface.
-        triton::ast::AstGarbageCollector* astGarbageCollector;
+        triton::ast::AstGarbageCollector* astGarbageCollector = nullptr;
 
         //! The IR builder.
-        triton::arch::IrBuilder* irBuilder;
+        triton::arch::IrBuilder* irBuilder = nullptr;
 
         //! The Z3 interface between Triton and Z3
-        triton::ast::Z3Interface* z3Interface;
+        triton::ast::Z3Interface* z3Interface = nullptr;
 
 
       public:

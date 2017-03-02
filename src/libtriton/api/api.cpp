@@ -183,20 +183,10 @@ Note that only the version `71313` of Pin is supported.
 namespace triton {
 
   /* External access to the API */
-  triton::API api = triton::API();
+  triton::API api;
 
 
-  API::API() {
-    this->callbacks           = triton::callbacks::Callbacks();
-    this->arch                = triton::arch::Architecture(&this->callbacks);
-
-    this->astGarbageCollector = nullptr;
-    this->irBuilder           = nullptr;
-    this->modes               = nullptr;
-    this->solver              = nullptr;
-    this->symbolic            = nullptr;
-    this->taint               = nullptr;
-    this->z3Interface         = nullptr;
+  API::API(): arch(&this->callbacks) {
   }
 
 
