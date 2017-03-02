@@ -5,12 +5,6 @@ else()
     set(LIBTRITON_KIND_LINK SHARED)
 endif()
 
-# Python bindings option
-if(PYTHON_BINDINGS)
-    add_definitions(-DTRITON_PYTHON_BINDINGS)
-endif()
-
-
 # Default flags
 # To fix old python version bug http://bugs.python.org/issue21958
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -68,6 +62,41 @@ set(LIBTRITON_SOURCE_FILES
   ast/z3/z3Interface.cpp
   ast/z3/z3Result.cpp
   ast/z3/z3ToTritonAst.cpp
+  callbacks/callbacks.cpp
+  engines/solver/solverEngine.cpp
+  engines/solver/solverModel.cpp
+  engines/symbolic/pathConstraint.cpp
+  engines/symbolic/pathManager.cpp
+  engines/symbolic/symbolicEngine.cpp
+  engines/symbolic/symbolicExpression.cpp
+  engines/symbolic/symbolicSimplification.cpp
+  engines/symbolic/symbolicVariable.cpp
+  engines/taint/taintEngine.cpp
+  format/abstractBinary.cpp
+  format/elf/elf.cpp
+  format/elf/elfDynamicTable.cpp
+  format/elf/elfHeader.cpp
+  format/elf/elfProgramHeader.cpp
+  format/elf/elfRelocationTable.cpp
+  format/elf/elfSectionHeader.cpp
+  format/elf/elfSymbolTable.cpp
+  format/memoryMapping.cpp
+  format/pe/peBuilder.cpp
+  format/pe/pe.cpp
+  format/pe/peDataDirectory.cpp
+  format/pe/peExportDirectory.cpp
+  format/pe/peFileHeader.cpp
+  format/pe/peHeader.cpp
+  format/pe/peImportDirectory.cpp
+  format/pe/peOptionalHeader.cpp
+  format/pe/peSectionHeader.cpp
+  modes/modes.cpp
+  os/unix/syscallNumberToString.cpp
+  utils/coreUtils.cpp
+  )
+
+if(PYTHON_BINDINGS)
+set(LIBTRITON_PYTHON_SOURCE_FILES
   bindings/python/init.cpp
   bindings/python/modules/astCallbacks.cpp
   bindings/python/modules/tritonCallbacks.cpp
@@ -112,38 +141,10 @@ set(LIBTRITON_SOURCE_FILES
   bindings/python/objects/pySymbolicVariable.cpp
   bindings/python/pyXFunctions.cpp
   bindings/python/utils.cpp
-  callbacks/callbacks.cpp
-  engines/solver/solverEngine.cpp
-  engines/solver/solverModel.cpp
-  engines/symbolic/pathConstraint.cpp
-  engines/symbolic/pathManager.cpp
-  engines/symbolic/symbolicEngine.cpp
-  engines/symbolic/symbolicExpression.cpp
-  engines/symbolic/symbolicSimplification.cpp
-  engines/symbolic/symbolicVariable.cpp
-  engines/taint/taintEngine.cpp
-  format/abstractBinary.cpp
-  format/elf/elf.cpp
-  format/elf/elfDynamicTable.cpp
-  format/elf/elfHeader.cpp
-  format/elf/elfProgramHeader.cpp
-  format/elf/elfRelocationTable.cpp
-  format/elf/elfSectionHeader.cpp
-  format/elf/elfSymbolTable.cpp
-  format/memoryMapping.cpp
-  format/pe/peBuilder.cpp
-  format/pe/pe.cpp
-  format/pe/peDataDirectory.cpp
-  format/pe/peExportDirectory.cpp
-  format/pe/peFileHeader.cpp
-  format/pe/peHeader.cpp
-  format/pe/peImportDirectory.cpp
-  format/pe/peOptionalHeader.cpp
-  format/pe/peSectionHeader.cpp
-  modes/modes.cpp
-  os/unix/syscallNumberToString.cpp
-  utils/coreUtils.cpp
   )
+else()
+  set(LIBTRITON_PYTHON_SOURCE_FILES)
+endif()
 
 # Triton have to generate a syscalls table from the kernel source
 # This following code tries to find the unistd_64.h or unistd_32.h header depending on the architecture.
@@ -254,7 +255,7 @@ include_directories("${Boost_INCLUDE_DIRS}")
 
 
 # Define library's properties
-add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES})
+add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES} ${LIBTRITON_PYTHON_SOURCE_FILES})
 add_dependencies(${PROJECT_LIBTRITON} gen-syscall32 gen-syscall64)
 
 

@@ -17,6 +17,10 @@ option(STATICLIB "Build a static library" OFF)
 option(INCBUILD "Increment the build number" OFF)
 option(GCOV "Enable code coverage" OFF)
 
+if(PINTOOL AND NOT PYTHON_BINDINGS)
+  MESSAGE(FATAL_ERROR "You can't have pintools without python binding.")
+endif()
+
 #Enable ctest
 include(CTest)
 add_custom_target(test-python python -m unittest discover ${CMAKE_SOURCE_DIR}/src/testers/unittests)

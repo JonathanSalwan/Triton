@@ -5,8 +5,6 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifdef  TRITON_PYTHON_BINDINGS
-
 #ifndef TRITONXPYFUNCTION_H
 #define TRITONXPYFUNCTION_H
 
@@ -60,4 +58,3 @@ namespace triton {
 };
 
 #endif /* TRITONXPYFUNCTION_H */
-#endif /* TRITON_PYTHON_BINDINGS */

@@ -2,9 +2,6 @@
 
 set(PROJECT_PINTOOL "pintool")
 add_definitions(-DTRITON_PINTOOL)
-if(PYTHON_BINDINGS)
-    add_definitions(-DTRITON_PYTHON_BINDINGS)
-endif()
 
 # Root directory of the Pin toolkit
 set(PIN_ROOT "${CMAKE_SOURCE_DIR}/../../.." CACHE PATH "Path to pin root directory")
