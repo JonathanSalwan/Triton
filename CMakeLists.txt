@@ -100,9 +100,12 @@ if(PYTHON_BINDINGS)
     endif()
     if(NOT PYTHON_INCLUDE_DIRS AND NOT PYTHON_LIBRARIES)
         find_package(PythonLibs 2.7 REQUIRED)
+      else()
+        message(FATAL_ERROR "Inconsistent PYTHON_INCLUDE_DIRS and PYTHON_LIBRARIES")
     endif()
   endif()
   include_directories(${PYTHON_INCLUDE_DIRS})
+  add_definitions("-DPYTHON_LIBRARIES=\"${PYTHON_LIBRARIES}\"")
 endif()
 
 # Use the same ABI as pin

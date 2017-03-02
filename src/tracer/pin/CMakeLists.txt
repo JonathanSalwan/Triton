@@ -98,18 +98,11 @@ endif()
 
 
 # Pintool source files
-configure_file(
-    ${CMAKE_SOURCE_DIR}/src/tracer/pin/init.in
-    ${CMAKE_SOURCE_DIR}/src/tracer/pin/init.cpp
-    IMMEDIATE @ONLY
-)
-
 file(
     GLOB_RECURSE
     PINTOOL_SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/src/tracer/pin/*
 )
-list(REMOVE_ITEM PINTOOL_SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/tracer/pin/init.in)
 
 add_library(${PROJECT_PINTOOL} SHARED ${PINTOOL_SOURCE_FILES})
 
