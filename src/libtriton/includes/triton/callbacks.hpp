@@ -11,15 +11,10 @@
 #include <list>
 
 #include <triton/ast.hpp>
-#include <triton/register.hpp>
 #include <triton/memoryAccess.hpp>
+#include <triton/register.hpp>
 #include <triton/tritonTypes.hpp>
-
-#ifdef TRITON_PYTHON_BINDINGS
-  #include <triton/pythonBindings.hpp>
-#endif
-
-
+#include <triton/comparableFunctor.hpp>
 
 //! The Triton namespace
 namespace triton {
@@ -48,36 +43,26 @@ namespace triton {
      * \description The callback takes as unique argument a memory access. Callbacks will
      * be called each time that the Triton library will need a concrete memory value.
      */
-    typedef void (*getConcreteMemoryValueCallback)(triton::arch::MemoryAccess& mem);
+    using getConcreteMemoryValueCallback = ComparableFunctor<void(triton::arch::MemoryAccess&)>;
 
     /*! \brief The prototype of a GET_CONCRETE_REGISTER_VALUE callback.
      *
      * \description The callback takes as unique argument a register. Callbacks will be
      * called each time that the Triton library will need a concrete register value.
      */
-    typedef void (*getConcreteRegisterValueCallback)(triton::arch::Register& reg);
+    using getConcreteRegisterValueCallback = ComparableFunctor<void(triton::arch::Register&)>;
 
     /*! \brief The prototype of a SYMBOLIC_SIMPLIFICATION callback.
      *
      * \description The callback takes as uniq argument a triton::ast::AbstractNode and must return a valid triton::ast::AbstractNode.
      * The returned node is used as assignment. See also the page about \ref SMT_simplification_page for more information.
      */
-    typedef triton::ast::AbstractNode* (*symbolicSimplificationCallback)(triton::ast::AbstractNode* node);
+    using symbolicSimplificationCallback = ComparableFunctor<triton::ast::AbstractNode*(triton::ast::AbstractNode*)>;
 
     //! \class Callbacks
     /*! \brief The callbacks class */
     class Callbacks {
       protected:
-        #ifdef TRITON_PYTHON_BINDINGS
-        //! [python] Callbacks for all concrete memory needs.
-        std::list<PyObject*> pyGetConcreteMemoryValueCallbacks;
-
-        //! [python] Callbacks for all concrete register needs.
-        std::list<PyObject*> pyGetConcreteRegisterValueCallbacks;
-
-        //! [python] Callbacks for all symbolic simplifications.
-        std::list<PyObject*> pySymbolicSimplificationCallbacks;
-        #endif
 
         //! [c++] Callbacks for all concrete memory needs.
         std::list<triton::callbacks::getConcreteMemoryValueCallback> getConcreteMemoryValueCallbacks;
@@ -116,11 +101,6 @@ namespace triton {
         //! Adds a SYMBOLIC_SIMPLIFICATION callback.
         void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
-        #ifdef TRITON_PYTHON_BINDINGS
-        //! Adds a python callback.
-        void addCallback(PyObject* function, triton::callbacks::callback_e kind);
-        #endif
-
         //! Removes all recorded callbacks.
         void removeAllCallbacks(void);
 
@@ -132,11 +112,6 @@ namespace triton {
 
         //! Deletes a SYMBOLIC_SIMPLIFICATION callback.
         void removeCallback(triton::callbacks::symbolicSimplificationCallback cb);
-
-        #ifdef TRITON_PYTHON_BINDINGS
-        //! Deletes a python callback according to its kind.
-        void removeCallback(PyObject* function, triton::callbacks::callback_e kind);
-        #endif
 
         //! Processes callbacks according to the kind and the C++ polymorphism.
         triton::ast::AbstractNode* processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) const;

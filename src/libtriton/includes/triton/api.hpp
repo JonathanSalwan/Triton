@@ -27,11 +27,6 @@
 #include <triton/tritonTypes.hpp>
 #include <triton/z3Interface.hpp>
 
-#ifdef TRITON_PYTHON_BINDINGS
-  #include <triton/pythonBindings.hpp>
-#endif
-
-
 
 //! The Triton namespace
 namespace triton {
@@ -288,11 +283,6 @@ namespace triton {
         //! [**callbacks api**] - Adds a SYMBOLIC_SIMPLIFICATION callback.
         void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
-        #ifdef TRITON_PYTHON_BINDINGS
-        //! [**callbacks api**] - Adds a python callback.
-        void addCallback(PyObject* function, triton::callbacks::callback_e kind);
-        #endif
-
         //! [**callbacks api**] - Removes all recorded callbacks.
         void removeAllCallbacks(void);
 
@@ -304,11 +294,6 @@ namespace triton {
 
         //! [**callbacks api**] - Deletes a SYMBOLIC_SIMPLIFICATION callback.
         void removeCallback(triton::callbacks::symbolicSimplificationCallback cb);
-
-        #ifdef TRITON_PYTHON_BINDINGS
-        //! [**callbacks api**] - Deletes a python callback according to its kind.
-        void removeCallback(PyObject* function, triton::callbacks::callback_e kind);
-        #endif
 
         //! [**callbacks api**] - Processes callbacks according to the kind and the C++ polymorphism.
         triton::ast::AbstractNode* processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) const;
