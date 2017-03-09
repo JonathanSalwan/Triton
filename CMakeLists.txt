@@ -23,13 +23,18 @@ endif()
 
 #Enable ctest
 include(CTest)
-add_custom_target(test-python python -m unittest discover ${CMAKE_SOURCE_DIR}/src/testers/unittests)
+
+set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
+
+add_custom_target(test-python
+  COMMAND ${PYTHONPATH_CMD} python -m unittest discover ${CMAKE_SOURCE_DIR}/src/testers/unittests)
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   if(GCOV)
      add_custom_target(check
          COMMAND lcov --zerocounters --directory ${CMAKE_BINARY_DIR}/src/libtriton
          COMMAND lcov --capture --initial --directory ${CMAKE_BINARY_DIR}/src/libtriton --output-file app
          COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target test-python
+         COMMAND ${PYTHONPATH_CMD} ctest
          COMMAND lcov --no-checksum --directory ${CMAKE_BINARY_DIR}/src/libtriton --capture --output-file coverage.info
          COMMAND lcov --remove coverage.info '/usr*' -o coverage.info
          COMMAND genhtml coverage.info -o coverage
@@ -37,10 +42,14 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
          )
   else()
     # Special handling of Linux test to check if pin can be attached on other binaries.
-    add_custom_target(check COMMAND ${CMAKE_SOURCE_DIR}/src/scripts/run_linux_test.sh DEPENDS test-python)
+    add_custom_target(check
+      COMMAND ${PYTHONPATH_CMD} ${CMAKE_SOURCE_DIR}/src/scripts/run_linux_test.sh
+      DEPENDS test-python)
   endif()
 else()
-  add_custom_target(check ctest DEPENDS test-python)
+  add_custom_target(check
+    COMMAND ${PYTHONPATH_CMD} ctest
+    DEPENDS test-python)
 endif()
 
 set(CMAKE_BUILD_TYPE Release)

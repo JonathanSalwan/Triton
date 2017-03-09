@@ -11,6 +11,12 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_ROUND /MT")
 endif()
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  set(PYTHON_SUFFIX .pyd)
+else()
+  set(PYTHON_SUFFIX .so)
+endif()
+
 
 # Global UNIX CXX Flags
 if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
@@ -277,12 +283,19 @@ install (DIRECTORY ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton DESTINATION
 
 # Install Python bindings
 if(PYTHON_BINDINGS)
-    configure_file(
-        ${CMAKE_SOURCE_DIR}/src/scripts/setup.py.in
-        ${CMAKE_BINARY_DIR}/setup.py
-        IMMEDIATE @ONLY
-    )
     find_package(PythonInterp 2.7 REQUIRED)
-    install (CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/setup.py install)")
+
+    add_custom_target(python-triton ALL
+      COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_MODULE_PREFIX}triton${CMAKE_SHARED_LIBRARY_SUFFIX}" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/triton${PYTHON_SUFFIX}"
+      DEPENDS triton
+      )
+    add_dependencies(test-python python-triton)
+
+    execute_process (COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+      install (FILES ${CMAKE_CURRENT_BINARY_DIR}/\${CMAKE_INSTALL_CONFIG_NAME}/triton${PYTHON_SUFFIX} DESTINATION ${PYTHON_SITE_PACKAGES})
+    else()
+      install (FILES ${CMAKE_CURRENT_BINARY_DIR}/triton${PYTHON_SUFFIX} DESTINATION ${PYTHON_SITE_PACKAGES})
+    endif()
 endif()
 
