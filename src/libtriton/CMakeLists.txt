@@ -40,6 +40,7 @@ endif()
 
 # Add Triton includes
 include_directories("${CMAKE_SOURCE_DIR}/src/libtriton/includes")
+include_directories("${CMAKE_BINARY_DIR}/src/libtriton/includes")
 
 
 # Define all source files
@@ -203,8 +204,8 @@ endif()
 
 # We generate the version numbers information
 configure_file(
-    ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton/version.hpp.in
-    ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton/version.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/includes/triton/version.hpp.in
+    ${CMAKE_CURRENT_BINARY_DIR}/includes/triton/version.hpp
     IMMEDIATE @ONLY
 )
 
@@ -279,6 +280,7 @@ target_link_libraries(
 # Add the install targets
 install (TARGETS ${PROJECT_LIBTRITON} DESTINATION lib)
 install (DIRECTORY ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton DESTINATION include)
+install (DIRECTORY ${CMAKE_BINARY_DIR}/src/libtriton/includes/triton DESTINATION include)
 
 
 # Install Python bindings

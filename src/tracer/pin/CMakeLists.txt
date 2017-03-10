@@ -131,13 +131,13 @@ endif()
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     configure_file(
         ${CMAKE_SOURCE_DIR}/src/scripts/triton.in
-        ${CMAKE_SOURCE_DIR}/triton
+        ${CMAKE_BINARY_DIR}/triton
         IMMEDIATE @ONLY
     )
 
     configure_file(
         ${CMAKE_SOURCE_DIR}/src/scripts/tritonAttach.in
-        ${CMAKE_SOURCE_DIR}/tritonAttach
+        ${CMAKE_BINARY_DIR}/tritonAttach
         IMMEDIATE @ONLY
     )
 endif()
