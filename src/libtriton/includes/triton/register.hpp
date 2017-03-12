@@ -63,9 +63,6 @@ namespace triton {
         //! Setup everything.
         void setup(triton::uint32 regId);
 
-        //! Resets information.
-        void clear(void);
-
       public:
         //! Constructor.
         Register();

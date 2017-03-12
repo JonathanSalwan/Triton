@@ -15,14 +15,19 @@
 namespace triton {
   namespace arch {
 
-    Register::Register() {
-      this->clear();
+    Register::Register():
+      name("unknown")
+      , id(triton::arch::INVALID_REGISTER_ID)
+      , parent(triton::arch::INVALID_REGISTER_ID)
+      , concreteValue(0)
+      , concreteValueDefined(false)
+      , immutable(false)
+    {
     }
 
 
-    Register::Register(triton::uint32 regId) {
+    Register::Register(triton::uint32 regId): Register() {
       if (!triton::api.isArchitectureValid()) {
-        this->clear();
         return;
       }
 
@@ -37,9 +42,8 @@ namespace triton {
     }
 
 
-    Register::Register(triton::uint32 regId, triton::uint512 concreteValue, bool immutable) {
+    Register::Register(triton::uint32 regId, triton::uint512 concreteValue, bool immutable): Register() {
       if (!triton::api.isArchitectureValid()) {
-        this->clear();
         return;
       }
 
@@ -62,16 +66,6 @@ namespace triton {
     void Register::operator=(const Register& other) {
       BitsVector::operator=(other);
       this->copy(other);
-    }
-
-
-    void Register::clear(void) {
-      this->concreteValue        = 0;
-      this->concreteValueDefined = false;
-      this->id                   = triton::arch::INVALID_REGISTER_ID;
-      this->immutable            = false;
-      this->name                 = "unknown";
-      this->parent               = triton::arch::INVALID_REGISTER_ID;
     }
 
 
