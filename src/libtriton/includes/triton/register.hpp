@@ -60,9 +60,6 @@ namespace triton {
         //! Copies a Register.
         void copy(const Register& other);
 
-        //! Setup everything.
-        void setup(triton::uint32 regId);
-
       public:
         //! Constructor.
         Register();
@@ -71,19 +68,13 @@ namespace triton {
         Register(triton::uint32 regId);
 
         //! Constructor.
-        Register(triton::uint32 regId, triton::uint512 concreteValue);
-
-        //! Constructor.
-        Register(triton::uint32 regId, triton::uint512 concreteValue, bool immutable);
+        Register(triton::uint32 regId, triton::uint512 concreteValue, bool immutable=false);
 
         //! Constructor by copy.
         Register(const Register& other);
 
         //! Copies a Register.
         void operator=(const Register& other);
-
-        //! Destructor.
-        virtual ~Register();
 
         //! Returns the parent id of the register.
         Register getParent(void) const;

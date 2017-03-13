@@ -166,10 +166,9 @@ namespace triton {
 
     /* If there is a concrete value recorded, build the appropriate Register. Otherwise, perfrom the analysis on zero. */
     triton::arch::Register Instruction::getRegisterState(triton::uint32 regId) {
-      triton::arch::Register reg(regId);
       if (this->registerState.find(regId) != this->registerState.end())
-        reg = this->registerState[regId];
-      return reg;
+        return this->registerState[regId];
+      return {regId};
     }
 
 
