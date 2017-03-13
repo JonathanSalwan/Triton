@@ -31,45 +31,6 @@ namespace triton {
         return;
       }
 
-      this->setup(regId);
-      this->immutable            = false;
-      this->concreteValueDefined = false;
-    }
-
-
-    Register::Register(triton::uint32 regId, triton::uint512 concreteValue)
-      : Register(regId, concreteValue, false) {
-    }
-
-
-    Register::Register(triton::uint32 regId, triton::uint512 concreteValue, bool immutable): Register() {
-      if (!triton::api.isArchitectureValid()) {
-        return;
-      }
-
-      this->setup(regId);
-      this->immutable = false;
-      this->setConcreteValue(concreteValue);
-      this->immutable = immutable;
-    }
-
-
-    Register::Register(const Register& other) : BitsVector(other) {
-      this->copy(other);
-    }
-
-
-    Register::~Register() {
-    }
-
-
-    void Register::operator=(const Register& other) {
-      BitsVector::operator=(other);
-      this->copy(other);
-    }
-
-
-    void Register::setup(triton::uint32 regId) {
       triton::arch::RegisterSpecification regInfo;
 
       this->id = regId;
@@ -82,6 +43,25 @@ namespace triton {
 
       this->setHigh(regInfo.getHigh());
       this->setLow(regInfo.getLow());
+      this->immutable            = false;
+      this->concreteValueDefined = false;
+    }
+
+
+    Register::Register(triton::uint32 regId, triton::uint512 concreteValue, bool immutable): Register(regId) {
+      this->setConcreteValue(concreteValue);
+      this->immutable = immutable;
+    }
+
+
+    Register::Register(const Register& other) : BitsVector(other) {
+      this->copy(other);
+    }
+
+
+    void Register::operator=(const Register& other) {
+      BitsVector::operator=(other);
+      this->copy(other);
     }
 
 
