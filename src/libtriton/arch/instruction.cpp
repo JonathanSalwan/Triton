@@ -165,10 +165,11 @@ namespace triton {
 
 
     /* If there is a concrete value recorded, build the appropriate Register. Otherwise, perfrom the analysis on zero. */
-    triton::arch::Register Instruction::getRegisterState(triton::uint32 regId) {
-      if (this->registerState.find(regId) != this->registerState.end())
-        return this->registerState[regId];
-      return {regId};
+    triton::arch::Register Instruction::getRegisterState(triton::arch::CpuInterface const& cpu, triton::arch::registers_e regId) {
+      auto it = this->registerState.find(regId);
+      if (it != this->registerState.end())
+        return it->second;
+      return {cpu, regId};
     }
 
 

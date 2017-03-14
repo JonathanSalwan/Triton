@@ -9,12 +9,13 @@
 #define TRITON_CPUINTERFACE_HPP
 
 #include <set>
+#include <unordered_map>
 #include <vector>
 
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
-#include <triton/registerSpecification.hpp>
+#include <triton/registers_e.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -41,20 +42,17 @@ namespace triton {
         //! Destructor.
         virtual ~CpuInterface(){};
 
-        //! The first function called when the a CPU is initialized.
-        virtual void init(void) = 0;
-
         //! Clears the architecture states (registers and memory).
         virtual void clear(void) = 0;
 
         //! Returns true if the register ID is a flag.
-        virtual bool isFlag(triton::uint32 regId) const = 0;
+        virtual bool isFlag(triton::arch::registers_e regId) const = 0;
 
         //! Returns true if the register ID is a register.
-        virtual bool isRegister(triton::uint32 regId) const = 0;
+        virtual bool isRegister(triton::arch::registers_e regId) const = 0;
 
         //! Returns true if the register ID is valid.
-        virtual bool isRegisterValid(triton::uint32 regId) const = 0;
+        virtual bool isRegisterValid(triton::arch::registers_e regId) const = 0;
 
         //! Returns the max size (in byte) of the CPU registers (GPR).
         virtual triton::uint32 registerSize(void) const = 0;
@@ -65,14 +63,14 @@ namespace triton {
         //! Returns the number of registers according to the CPU architecture.
         virtual triton::uint32 numberOfRegisters(void) const = 0;
 
-        //! Returns all information about a register id.
-        virtual triton::arch::RegisterSpecification getRegisterSpecification(triton::uint32 regId) const = 0;
-
         //! Returns all registers.
-        virtual std::set<triton::arch::Register*> getAllRegisters(void) const = 0;
+        virtual std::unordered_map<registers_e, triton::arch::RegisterSpec const> const& getAllRegisters(void) const = 0;
 
         //! Returns all parent registers.
-        virtual std::set<triton::arch::Register*> getParentRegisters(void) const = 0;
+        virtual std::set<triton::arch::registers_e> getParentRegisters(void) const = 0;
+
+        //! Returns register from id
+        virtual triton::arch::RegisterSpec const& getRegister(triton::arch::registers_e id) const = 0;
 
         //! Disassembles the instruction according to the architecture.
         virtual void disassembly(triton::arch::Instruction& inst) const = 0;
@@ -87,7 +85,7 @@ namespace triton {
         virtual std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const = 0;
 
         //! Returns the concrete value of a register.
-        virtual triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const = 0;
+        virtual triton::uint512 getConcreteRegisterValue(const triton::arch::RegisterSpec& reg, bool execCallbacks=true) const = 0;
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory cell.
@@ -134,6 +132,9 @@ namespace triton {
 
         //! Removes the range `[baseAddr:size]` from the internal memory representation. \sa isMemoryMapped().
         virtual void unmapMemory(triton::uint64 baseAddr, triton::usize size=1) = 0;
+
+        //! Get parent register from a given one.
+        virtual RegisterSpec const& getParent(RegisterSpec const&) const = 0;
     };
 
   /*! @} End of arch namespace */

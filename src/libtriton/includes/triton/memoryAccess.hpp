@@ -160,13 +160,13 @@ namespace triton {
         void setPcRelative(triton::uint64 addr);
 
         //! LEA - Sets the segment register operand.
-        void setSegmentRegister(triton::arch::Register& segment);
+        void setSegmentRegister(triton::arch::Register const& segment);
 
         //! LEA - Sets the base register operand.
-        void setBaseRegister(triton::arch::Register& base);
+        void setBaseRegister(triton::arch::Register const& base);
 
         //! LEA - Sets the index register operand.
-        void setIndexRegister(triton::arch::Register& index);
+        void setIndexRegister(triton::arch::Register const& index);
 
         //! LEA - Sets the displacement operand.
         void setDisplacement(triton::arch::Immediate& displacement);
