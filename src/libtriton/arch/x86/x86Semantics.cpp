@@ -707,6 +707,10 @@ namespace triton {
         auto counter = triton::arch::OperandWrapper(TRITON_X86_REG_CX.getParent());
         auto zf      = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
 
+        /* Update instruction address if undefined */
+        if (!inst.getAddress())
+          inst.setAddress(this->architecture->getConcreteRegisterValue(pc.getConstRegister()).convert_to<triton::uint64>());
+
         switch (inst.getPrefix()) {
 
           case triton::arch::x86::ID_PREFIX_REP: {
@@ -800,7 +804,6 @@ namespace triton {
             expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_PC, triton::engines::taint::UNTAINTED);
             break;
           }
-
         }
       }
 
