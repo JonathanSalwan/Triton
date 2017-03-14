@@ -4,7 +4,8 @@
 
 import unittest
 
-from triton import *
+from triton import (setArchitecture, ARCH, addCallback, processing,
+                    removeCallback, CALLBACK, Instruction)
 
 
 class TestCallback(unittest.TestCase):
@@ -17,12 +18,14 @@ class TestCallback(unittest.TestCase):
 
         flag = False
         addCallback(self.cb_flag, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
-        processing(Instruction("\x48\xa1\x00\x10\x00\x00\x00\x00\x00\x00")) # movabs rax, qword ptr [0x1000]
+        # movabs rax, qword ptr [0x1000]
+        processing(Instruction("\x48\xa1\x00\x10\x00\x00\x00\x00\x00\x00"))
         self.assertTrue(flag)
 
         flag = False
         removeCallback(self.cb_flag, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
-        processing(Instruction("\x48\xa1\x00\x10\x00\x00\x00\x00\x00\x00")) # movabs rax, qword ptr [0x1000]
+        # movabs rax, qword ptr [0x1000]
+        processing(Instruction("\x48\xa1\x00\x10\x00\x00\x00\x00\x00\x00"))
         self.assertFalse(flag)
 
     def test_get_concrete_register_value(self):
@@ -31,16 +34,15 @@ class TestCallback(unittest.TestCase):
 
         flag = False
         addCallback(self.cb_flag, CALLBACK.GET_CONCRETE_REGISTER_VALUE)
-        processing(Instruction("\x48\x89\xd8")) # mov rax, rbx
+        processing(Instruction("\x48\x89\xd8"))  # mov rax, rbx
         self.assertTrue(flag)
 
         flag = False
         removeCallback(self.cb_flag, CALLBACK.GET_CONCRETE_REGISTER_VALUE)
-        processing(Instruction("\x48\x89\xd8")) # mov rax, rbx
+        processing(Instruction("\x48\x89\xd8"))  # mov rax, rbx
         self.assertFalse(flag)
 
     @staticmethod
     def cb_flag(x):
         global flag
         flag = True
-

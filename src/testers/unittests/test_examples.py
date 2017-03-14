@@ -18,7 +18,7 @@ for example in glob.iglob(os.path.join(EXAMPLE_DIR, "*.py")):
     if "small_x86-64_symbolic_emulator.py" in example:
         continue
 
-    def test_example(self, example_name=example):
+    def _test_example(self, example_name=example):
         """Run example and show stdout in case of fail."""
         p = subprocess.Popen(["python", example_name],
                              stdout=subprocess.PIPE,
@@ -29,4 +29,4 @@ for example in glob.iglob(os.path.join(EXAMPLE_DIR, "*.py")):
     # Define an arguments with a default value as default value is capture at
     # lambda creation so that example_name is not in the closure of the lambda
     # function.
-    setattr(TestExample, "test_" + os.path.basename(example), test_example)
+    setattr(TestExample, "test_" + os.path.basename(example), _test_example)

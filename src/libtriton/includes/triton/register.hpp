@@ -15,6 +15,7 @@
 #include <triton/cpuSize.hpp>
 #include <triton/operandInterface.hpp>
 #include <triton/tritonTypes.hpp>
+#include <triton/registers_e.hpp>
 
 
 
@@ -33,60 +34,32 @@ namespace triton {
    *  @{
    */
 
-    /*! \class Register
+    class CpuInterface;
+
+    /*! \class RegisterSpec
      *  \brief This class is used when an instruction has a register operand.
      */
-    class Register : public BitsVector, public OperandInterface {
+    class RegisterSpec : public BitsVector, public OperandInterface {
 
       protected:
         //! The name of the register.
         std::string name;
 
         //! The id of the register.
-        triton::uint32 id;
+        triton::arch::registers_e id;
 
         //! The parent id of the register.
-        triton::uint32 parent;
-
-        //! The concrete value (content of the register)
-        triton::uint512 concreteValue;
-
-        //! True if this register contains a concrete value.
-        bool concreteValueDefined;
-
-        //! True if this register is immutable regarding concrete values.
-        bool immutable;
-
-        //! Copies a Register.
-        void copy(const Register& other);
+        triton::arch::registers_e parent;
 
       public:
         //! Constructor.
-        Register();
-
-        //! Constructor.
-        Register(triton::uint32 regId);
-
-        //! Constructor.
-        Register(triton::uint32 regId, triton::uint512 concreteValue, bool immutable=false);
-
-        //! Constructor by copy.
-        Register(const Register& other);
-
-        //! Copies a Register.
-        void operator=(const Register& other);
+        RegisterSpec(triton::arch::registers_e regId, std::string name, triton::arch::registers_e parent, triton::uint32 high, triton::uint32 low);
 
         //! Returns the parent id of the register.
-        Register getParent(void) const;
-
-        //! Returns true if the register is immutable.
-        bool isImmutable(void) const;
+        registers_e getParent(void) const;
 
         //! Returns true if `other` and `self` overlap.
-        bool isOverlapWith(const Register& other) const;
-
-        //! Returns true if the register contains a concrete value.
-        bool hasConcreteValue(void) const;
+        bool isOverlapWith(const RegisterSpec& other) const;
 
         //! Returns the name of the register.
         std::string getName(void) const;
@@ -101,7 +74,7 @@ namespace triton {
         triton::uint32 getBitSize(void) const;
 
         //! Returns the id of the register.
-        triton::uint32 getId(void) const;
+        triton::arch::registers_e getId(void) const;
 
         //! Returns the size (in bytes) of the register.
         triton::uint32 getSize(void) const;
@@ -109,39 +82,66 @@ namespace triton {
         //! Returns the type of the operand (triton::arch::OP_REG).
         triton::uint32 getType(void) const;
 
+        //! Compare two registers specifications
+        bool operator==(RegisterSpec const& r) const;
+
+        //! Compare two registers specifications
+        bool operator!=(RegisterSpec const& r) const;
+    };
+
+    /*! \class Register
+     *  \brief This class is used to bind a value on a RegisterSpec
+     */
+    class Register : public RegisterSpec {
+
+      protected:
+        //! The concrete value (content of the register)
+        triton::uint512 concreteValue;
+
+        //! True if this register contains a concrete value.
+        bool concreteValueDefined;
+
+      public:
+        //! Constructor.
+        Register();
+
+        //! Constructor.
+        Register(triton::arch::CpuInterface const&, triton::arch::registers_e regId);
+
+        //! Constructor.
+        Register(triton::arch::CpuInterface const&, triton::arch::registers_e regId, triton::uint512 concreteValue);
+
+        //! Constructor.
+        Register(RegisterSpec const& spec, triton::uint512 concreteValue);
+
+        //! Constructor.
+        explicit Register(RegisterSpec const& spec);
+
+        //! Returns true if the register contains a concrete value.
+        bool hasConcreteValue(void) const;
+
         //! Returns the concrete value.
         triton::uint512 getConcreteValue(void) const;
 
-        //! Sets the id of the register.
-        void setId(triton::uint32 regId);
-
-        //! Sets the parent id of the register.
-        void setParent(triton::uint32 regId);
-
         //! Sets the concrete value of the register.
         void setConcreteValue(triton::uint512 concreteValue);
+
+        //! Compare two registers
+        bool operator==(Register const& r) const;
+
+        //! Compare two registers
+        bool operator!=(Register const& r) const;
     };
 
     //! Displays a Register.
-    std::ostream& operator<<(std::ostream& stream, const Register& reg);
+    std::ostream& operator<<(std::ostream& stream, const RegisterSpec& reg);
 
     //! Displays a Register.
-    std::ostream& operator<<(std::ostream& stream, const Register* reg);
-
-    //! Compares two Register.
-    bool operator==(const Register& reg1, const Register& reg2);
-
-    //! Compares two Register.
-    bool operator!=(const Register& reg1, const Register& reg2);
+    std::ostream& operator<<(std::ostream& stream, const RegisterSpec* reg);
 
     //! Compares two Register (needed for std::map)
+    // FIXME This should be remove
     bool operator<(const Register& reg1, const Register& reg2);
-
-    //! Defines the invalid register constant.
-    const triton::uint32 INVALID_REGISTER_ID = 0;
-
-    //! Defines the immutable register constant.
-    const bool IMMUTABLE_REGISTER = true;
 
   /*! @} End of arch namespace */
   };

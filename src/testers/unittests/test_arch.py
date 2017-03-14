@@ -43,11 +43,11 @@ class TestX86Arch(unittest.TestCase):
         self.assertEqual(REG.XMM7.getName(), "xmm7")
 
     def test_register_bit_size(self):
-        """Check GPR register bit size"""
+        """Check GPR register bit size."""
         self.assertEqual(getRegisterBitSize(), 32)
 
     def test_register_size(self):
-        """Check GPR register size"""
+        """Check GPR register size."""
         self.assertEqual(getRegisterSize(), 4)
 
 
@@ -66,9 +66,9 @@ class TestX8664Arch(unittest.TestCase):
         self.assertEqual(REG.XMM15.getName(), "xmm15")
 
     def test_register_bit_size(self):
-        """Check GPR register bit size"""
+        """Check GPR register bit size."""
         self.assertEqual(getRegisterBitSize(), 64)
 
     def test_register_size(self):
-        """Check GPR register size"""
+        """Check GPR register size."""
         self.assertEqual(getRegisterSize(), 8)

@@ -17,7 +17,6 @@
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
-#include <triton/registerSpecification.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -64,22 +63,22 @@ namespace triton {
         Architecture(triton::callbacks::Callbacks* callbacks=nullptr);
 
         //! Returns true if the register ID is a flag.
-        bool isFlag(triton::uint32 regId) const;
+        bool isFlag(triton::arch::registers_e regId) const;
 
         //! Returns true if the register is a flag.
-        bool isFlag(const triton::arch::Register& reg) const;
+        bool isFlag(const triton::arch::RegisterSpec& reg) const;
 
         //! Returns true if the register ID is a register.
-        bool isRegister(triton::uint32 regId) const;
+        bool isRegister(triton::arch::registers_e regId) const;
 
         //! Returns true if the register is a register.
-        bool isRegister(const triton::arch::Register& reg) const;
+        bool isRegister(const triton::arch::RegisterSpec& reg) const;
 
         //! Returns true if the register ID is a register or a flag.
-        bool isRegisterValid(triton::uint32 regId) const;
+        bool isRegisterValid(triton::arch::registers_e regId) const;
 
         //! Returns true if the register is a register or a flag.
-        bool isRegisterValid(const triton::arch::Register& reg) const;
+        bool isRegisterValid(const triton::arch::RegisterSpec& reg) const;
 
         //! Returns true if the architecture is valid.
         bool isValid(void) const;
@@ -105,14 +104,20 @@ namespace triton {
         //! Clears the architecture states (registers and memory).
         void clearArchitecture(void);
 
-        //! Returns all information about the register.
-        triton::arch::RegisterSpecification getRegisterSpecification(triton::uint32 regId) const;
-
         //! Returns all registers.
-        std::set<triton::arch::Register*> getAllRegisters(void) const;
+        std::unordered_map<registers_e, triton::arch::RegisterSpec const>  const& getAllRegisters(void) const;
 
         //! Returns all parent registers.
-        std::set<triton::arch::Register*> getParentRegisters(void) const;
+        std::set<triton::arch::registers_e> getParentRegisters(void) const;
+
+        //! Get register from id.
+        triton::arch::RegisterSpec const& getRegister(triton::arch::registers_e id) const;
+
+        //! Get parent register from id.
+        triton::arch::RegisterSpec const& getParentRegister(triton::arch::registers_e id) const;
+        
+        //! Get parent register from register
+        triton::arch::RegisterSpec const& getParentRegister(triton::arch::RegisterSpec const& reg) const;
 
         //! Disassembles the instruction according to the architecture.
         void disassembly(triton::arch::Instruction& inst) const;
@@ -130,7 +135,7 @@ namespace triton {
         std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;
 
         //! Returns the concrete value of a register.
-        triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const;
+        triton::uint512 getConcreteRegisterValue(const triton::arch::RegisterSpec& reg, bool execCallbacks=true) const;
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory cell.
