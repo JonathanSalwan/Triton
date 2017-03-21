@@ -239,7 +239,7 @@ if __name__ == '__main__':
 ##
 ## Output:
 ##
-##  $ ./triton ./src/examples/pin/runtime_register_modification.py ./src/samples/crackmes/crackme_xor a
+##  $ ./build/triton ./src/examples/pin/runtime_register_modification.py ./src/samples/crackmes/crackme_xor a
 ##  4005f9: mov dword ptr [rbp - 4], eax
 ##          ref!180 = ((_ extract 31 24) (_ bv0 32)) ; byte reference - MOV operation
 ##          ref!181 = ((_ extract 23 16) (_ bv0 32)) ; byte reference - MOV operation
@@ -309,7 +309,7 @@ from pintool import *
 
 # Output
 #
-# $ ./triton ./src/examples/pin/callback_image.py ./src/samples/ir_test_suite/ir
+# $ ./build/triton ./src/examples/pin/callback_image.py ./src/samples/ir_test_suite/ir
 # ----------
 # Image path:  /dir/Triton/samples/ir_test_suite/ir
 # Image base:  0x400000L
@@ -355,7 +355,7 @@ from pintool import *
 
 # Output
 #
-# $ ./triton ./src/examples/pin/callback_routine.py  ./src/samples/vulns/testSuite
+# $ ./build/triton ./src/examples/pin/callback_routine.py  ./src/samples/vulns/testSuite
 # -> malloc(0x20)
 # <- 0x8fc010
 # -> malloc(0x20)
@@ -399,7 +399,7 @@ from pintool import *
 
 # Output
 #
-#  $ ./triton ./src/examples/pin/callback_signals.py ./src/samples/others/signals
+#  $ ./build/triton ./src/examples/pin/callback_signals.py ./src/samples/others/signals
 #  Signal 11 received on thread 0.
 #  ========================== DUMP ==========================
 #  rax:    0x00000000000000                        ((_ zero_extend 32) (_ bv234 32))
@@ -482,7 +482,7 @@ from pintool import *
 
 # Output
 #
-# $ ./triton examples/callback_syscall.py  ./samples/crackmes/crackme_xor a
+# $ ./build/triton examples/callback_syscall.py  ./samples/crackmes/crackme_xor a
 # sys_write(1, 7fb7f06e1000, 6)
 # loose
 #

@@ -163,7 +163,7 @@ $ cd build
 $ cmake -DPINTOOL=on ..
 $ make
 $ cd ..
-$ ./triton ./src/examples/pin/ir.py /usr/bin/id
+$ ./build/triton ./src/examples/pin/ir.py /usr/bin/id
 ~~~~~~~~~~~~~
 
 It's not recommended to use the pintool on a kernel `4.x`. The version `71313` of Pin doesn't support very well
