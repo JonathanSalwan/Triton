@@ -5,8 +5,6 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifdef TRITON_PYTHON_BINDINGS
-
 #include <iostream>
 
 #include <triton/pythonBindings.hpp>
@@ -172,6 +170,4 @@ namespace triton {
     }; /* python namespace */
   }; /* bindings namespace */
 }; /* triton namespace */
-
-#endif /* TRITON_PYTHON_BINDINGS */
 

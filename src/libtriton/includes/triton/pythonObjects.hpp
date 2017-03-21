@@ -6,8 +6,6 @@
 */
 
 
-#ifdef TRITON_PYTHON_BINDINGS
-
 #ifndef TRITON_PYOBJECT_H
 #define TRITON_PYOBJECT_H
 
@@ -571,4 +569,3 @@ namespace triton {
 #define PySymbolicVariable_AsSymbolicVariable(v) (((triton::bindings::python::SymbolicVariable_Object*)(v))->symVar)
 
 #endif /* TRITON_PYOBJECT_H */
-#endif /* TRITON_PYTHON_BINDINGS */

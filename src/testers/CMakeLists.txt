@@ -1,7 +1,7 @@
 if(PINTOOL AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     enable_testing()
 
-    set(TRITON_SCRIPT ${CMAKE_SOURCE_DIR}/triton)
+    set(TRITON_SCRIPT ${CMAKE_BINARY_DIR}/triton)
 
     #add_test(PinToolCheckSemantic ${TRITON_SCRIPT} ${CMAKE_CURRENT_SOURCE_DIR}/check_semantics.py ${CMAKE_SOURCE_DIR}/src/samples/ir_test_suite/ir)
     #add_test(PinToolCheckSemanticQemu ${TRITON_SCRIPT} ${CMAKE_CURRENT_SOURCE_DIR}/qemu-test-x86_64.py ${CMAKE_SOURCE_DIR}/src/samples/ir_test_suite/qemu-test-x86_64)

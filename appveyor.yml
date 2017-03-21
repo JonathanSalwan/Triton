@@ -40,10 +40,12 @@ install:
   - cmd: mkdir build
   - cmd: cd build
   - cmd: echo Downloading z3...
-  - cmd: curl -fsSL -o %Z3_PKG_NAME%.zip 'https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/%Z3_PKG_NAME%.zip'
+  - cmd: appveyor DownloadFile https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/%Z3_PKG_NAME%.zip
   - cmd: 7z x %Z3_PKG_NAME%.zip
+    # Install z3 in the path
+  - set PATH=%Z3_PKG_NAME%/bin;%PATH%
   - cmd: echo Downloading capstone...
-  - cmd: curl -fsSL -o 3.0.4.zip 'https://github.com/aquynh/capstone/archive/3.0.4.zip'
+  - cmd: appveyor DownloadFile https://github.com/aquynh/capstone/archive/3.0.4.zip
   - cmd: 7z x 3.0.4.zip
   - cmd: echo Building capstone...
 # This is required because capstone's slns/vcxprojs file have been made with an old version of MSVC which is not a problem in itself,
@@ -63,17 +65,16 @@ install:
 #  project: c:\projects\triton\build\triton.sln
 
 build_script:
-  - cmd: msbuild c:\projects\triton\build\triton.sln  /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /t:triton /m:3
+  - cmd: msbuild c:\projects\triton\build\triton.sln  /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /t:python-triton /m:3
     #  - cmd: cmake --build . --config release
 
-# This happens in the build directory: c:\projects\triton\build
-before_test:
-  - cmd: cmake --build . --config release --target install
-
 test_script:
-  - cmd: cmake --build . --config release --target check
+  - cmd: cmake --build . --config Release --target check
 
 after_test:
+  # Check installation
+  - cmd: cmake --build . --config Release --target install
+
   # generate artifact
   - cmd: cd src\libtriton\%configuration%
   - cmd: copy ..\..\..\%Z3_PKG_NAME%\bin\libz3.dll libz3.dll

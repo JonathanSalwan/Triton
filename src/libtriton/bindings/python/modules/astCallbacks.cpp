@@ -5,8 +5,6 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifdef TRITON_PYTHON_BINDINGS
-
 #include <triton/api.hpp>
 #include <triton/ast.hpp>
 #include <triton/exceptions.hpp>
@@ -1513,6 +1511,4 @@ namespace triton {
     }; /* python namespace */
   }; /* bindings namespace */
 }; /* triton namespace */
-
-#endif /* TRITON_PYTHON_BINDINGS */
 

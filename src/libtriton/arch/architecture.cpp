@@ -20,12 +20,6 @@ namespace triton {
     Architecture::Architecture(triton::callbacks::Callbacks* callbacks) {
       this->arch      = triton::arch::ARCH_INVALID;
       this->callbacks = callbacks;
-      this->cpu       = nullptr;
-    }
-
-
-    Architecture::~Architecture() {
-      delete this->cpu;
     }
 
 
@@ -37,7 +31,7 @@ namespace triton {
     triton::arch::CpuInterface* Architecture::getCpu(void) {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getCpu(): CPU undefined.");
-      return this->cpu;
+      return this->cpu.get();
     }
 
 
@@ -52,20 +46,16 @@ namespace triton {
       /* Allocate and init the good arch */
       switch (this->arch) {
         case triton::arch::ARCH_X86_64:
-          /* remove previous CPU instance (when setArchitecture() has been called twice) */
-          delete this->cpu;
           /* init the new instance */
-          this->cpu = new(std::nothrow) triton::arch::x86::x8664Cpu(this->callbacks);
+          this->cpu.reset(new(std::nothrow) triton::arch::x86::x8664Cpu(this->callbacks));
           if (this->cpu == nullptr)
             throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();
           break;
 
         case triton::arch::ARCH_X86:
-          /* remove previous CPU instance (when setArchitecture() has been called twice) */
-          delete this->cpu;
           /* init the new instance */
-          this->cpu = new(std::nothrow) triton::arch::x86::x86Cpu(this->callbacks);
+          this->cpu.reset(new(std::nothrow) triton::arch::x86::x86Cpu(this->callbacks));
           if (this->cpu == nullptr)
             throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
           this->cpu->init();

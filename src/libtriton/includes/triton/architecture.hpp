@@ -10,6 +10,7 @@
 
 #include <set>
 #include <vector>
+#include <memory>
 
 #include <triton/callbacks.hpp>
 #include <triton/cpuInterface.hpp>
@@ -56,14 +57,11 @@ namespace triton {
         triton::uint32 arch;
 
         //! Instance to the real CPU class.
-        triton::arch::CpuInterface* cpu;
+        std::unique_ptr<triton::arch::CpuInterface> cpu;
 
       public:
         //! Constructor.
         Architecture(triton::callbacks::Callbacks* callbacks=nullptr);
-
-        //! Destructor.
-        virtual ~Architecture();
 
         //! Returns true if the register ID is a flag.
         bool isFlag(triton::uint32 regId) const;

@@ -191,7 +191,7 @@ namespace tracer {
       void* handle = nullptr;
 
       /* On some Linux distro, we must load libpython to successfully load all others modules. See issue #276. */
-      handle = dlopen("@PYTHON_LIBRARIES@", RTLD_LAZY | RTLD_GLOBAL);
+      handle = dlopen(PYTHON_LIBRARIES, RTLD_LAZY | RTLD_GLOBAL);
       if (!handle)
         throw std::runtime_error("tracer::pintool::execScript(): Cannot load the Python library.");
       #endif

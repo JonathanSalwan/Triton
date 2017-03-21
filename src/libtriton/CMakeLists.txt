@@ -5,16 +5,16 @@ else()
     set(LIBTRITON_KIND_LINK SHARED)
 endif()
 
-# Python bindings option
-if(PYTHON_BINDINGS)
-    add_definitions(-DTRITON_PYTHON_BINDINGS)
-endif()
-
-
 # Default flags
 # To fix old python version bug http://bugs.python.org/issue21958
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_ROUND /MT")
+endif()
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  set(PYTHON_SUFFIX .pyd)
+else()
+  set(PYTHON_SUFFIX .so)
 endif()
 
 
@@ -40,6 +40,7 @@ endif()
 
 # Add Triton includes
 include_directories("${CMAKE_SOURCE_DIR}/src/libtriton/includes")
+include_directories("${CMAKE_BINARY_DIR}/src/libtriton/includes")
 
 
 # Define all source files
@@ -68,6 +69,41 @@ set(LIBTRITON_SOURCE_FILES
   ast/z3/z3Interface.cpp
   ast/z3/z3Result.cpp
   ast/z3/z3ToTritonAst.cpp
+  callbacks/callbacks.cpp
+  engines/solver/solverEngine.cpp
+  engines/solver/solverModel.cpp
+  engines/symbolic/pathConstraint.cpp
+  engines/symbolic/pathManager.cpp
+  engines/symbolic/symbolicEngine.cpp
+  engines/symbolic/symbolicExpression.cpp
+  engines/symbolic/symbolicSimplification.cpp
+  engines/symbolic/symbolicVariable.cpp
+  engines/taint/taintEngine.cpp
+  format/abstractBinary.cpp
+  format/elf/elf.cpp
+  format/elf/elfDynamicTable.cpp
+  format/elf/elfHeader.cpp
+  format/elf/elfProgramHeader.cpp
+  format/elf/elfRelocationTable.cpp
+  format/elf/elfSectionHeader.cpp
+  format/elf/elfSymbolTable.cpp
+  format/memoryMapping.cpp
+  format/pe/peBuilder.cpp
+  format/pe/pe.cpp
+  format/pe/peDataDirectory.cpp
+  format/pe/peExportDirectory.cpp
+  format/pe/peFileHeader.cpp
+  format/pe/peHeader.cpp
+  format/pe/peImportDirectory.cpp
+  format/pe/peOptionalHeader.cpp
+  format/pe/peSectionHeader.cpp
+  modes/modes.cpp
+  os/unix/syscallNumberToString.cpp
+  utils/coreUtils.cpp
+  )
+
+if(PYTHON_BINDINGS)
+set(LIBTRITON_PYTHON_SOURCE_FILES
   bindings/python/init.cpp
   bindings/python/modules/astCallbacks.cpp
   bindings/python/modules/tritonCallbacks.cpp
@@ -112,38 +148,10 @@ set(LIBTRITON_SOURCE_FILES
   bindings/python/objects/pySymbolicVariable.cpp
   bindings/python/pyXFunctions.cpp
   bindings/python/utils.cpp
-  callbacks/callbacks.cpp
-  engines/solver/solverEngine.cpp
-  engines/solver/solverModel.cpp
-  engines/symbolic/pathConstraint.cpp
-  engines/symbolic/pathManager.cpp
-  engines/symbolic/symbolicEngine.cpp
-  engines/symbolic/symbolicExpression.cpp
-  engines/symbolic/symbolicSimplification.cpp
-  engines/symbolic/symbolicVariable.cpp
-  engines/taint/taintEngine.cpp
-  format/abstractBinary.cpp
-  format/elf/elf.cpp
-  format/elf/elfDynamicTable.cpp
-  format/elf/elfHeader.cpp
-  format/elf/elfProgramHeader.cpp
-  format/elf/elfRelocationTable.cpp
-  format/elf/elfSectionHeader.cpp
-  format/elf/elfSymbolTable.cpp
-  format/memoryMapping.cpp
-  format/pe/peBuilder.cpp
-  format/pe/pe.cpp
-  format/pe/peDataDirectory.cpp
-  format/pe/peExportDirectory.cpp
-  format/pe/peFileHeader.cpp
-  format/pe/peHeader.cpp
-  format/pe/peImportDirectory.cpp
-  format/pe/peOptionalHeader.cpp
-  format/pe/peSectionHeader.cpp
-  modes/modes.cpp
-  os/unix/syscallNumberToString.cpp
-  utils/coreUtils.cpp
   )
+else()
+  set(LIBTRITON_PYTHON_SOURCE_FILES)
+endif()
 
 # Triton have to generate a syscalls table from the kernel source
 # This following code tries to find the unistd_64.h or unistd_32.h header depending on the architecture.
@@ -196,8 +204,8 @@ endif()
 
 # We generate the version numbers information
 configure_file(
-    ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton/version.hpp.in
-    ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton/version.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/includes/triton/version.hpp.in
+    ${CMAKE_CURRENT_BINARY_DIR}/includes/triton/version.hpp
     IMMEDIATE @ONLY
 )
 
@@ -254,7 +262,7 @@ include_directories("${Boost_INCLUDE_DIRS}")
 
 
 # Define library's properties
-add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES})
+add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES} ${LIBTRITON_PYTHON_SOURCE_FILES})
 add_dependencies(${PROJECT_LIBTRITON} gen-syscall32 gen-syscall64)
 
 
@@ -272,16 +280,24 @@ target_link_libraries(
 # Add the install targets
 install (TARGETS ${PROJECT_LIBTRITON} DESTINATION lib)
 install (DIRECTORY ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton DESTINATION include)
+install (DIRECTORY ${CMAKE_BINARY_DIR}/src/libtriton/includes/triton DESTINATION include)
 
 
 # Install Python bindings
 if(PYTHON_BINDINGS)
-    configure_file(
-        ${CMAKE_SOURCE_DIR}/src/scripts/setup.py.in
-        ${CMAKE_BINARY_DIR}/setup.py
-        IMMEDIATE @ONLY
-    )
     find_package(PythonInterp 2.7 REQUIRED)
-    install (CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/setup.py install)")
+
+    add_custom_target(python-triton ALL
+      COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_MODULE_PREFIX}triton${CMAKE_SHARED_LIBRARY_SUFFIX}" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/triton${PYTHON_SUFFIX}"
+      DEPENDS triton
+      )
+    add_dependencies(test-python python-triton)
+
+    execute_process (COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+      install (FILES ${CMAKE_CURRENT_BINARY_DIR}/\${CMAKE_INSTALL_CONFIG_NAME}/triton${PYTHON_SUFFIX} DESTINATION ${PYTHON_SITE_PACKAGES})
+    else()
+      install (FILES ${CMAKE_CURRENT_BINARY_DIR}/triton${PYTHON_SUFFIX} DESTINATION ${PYTHON_SITE_PACKAGES})
+    endif()
 endif()
 

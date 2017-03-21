@@ -5,7 +5,6 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifdef TRITON_PYTHON_BINDINGS
 #if defined(__unix__) || defined(__APPLE__)
 
 #include <triton/api.hpp>
@@ -389,4 +388,3 @@ namespace triton {
 }; /* triton namespace */
 
 #endif /* __unix__ || __APPLE__ */
-#endif /* TRITON_PYTHON_BINDINGS */
