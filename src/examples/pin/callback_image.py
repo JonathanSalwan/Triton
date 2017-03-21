@@ -4,7 +4,7 @@ from pintool import *
 
 # Output
 #
-# $ ./triton ./src/examples/pin/callback_image.py ./src/samples/ir_test_suite/ir
+# $ ./build/triton ./src/examples/pin/callback_image.py ./src/samples/ir_test_suite/ir
 # ----------
 # Image path:  /dir/Triton/samples/ir_test_suite/ir
 # Image base:  0x400000L

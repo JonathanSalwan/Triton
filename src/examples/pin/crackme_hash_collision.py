@@ -15,7 +15,7 @@ from pintool    import *
 #
 # This Triton code will try to break and find a hash collision.
 #
-# $ ./triton ./src/examples/pin/crackme_hash_collision.py ./src/samples/crackmes/crackme_hash aaaaa
+# $ ./build/triton ./src/examples/pin/crackme_hash_collision.py ./src/samples/crackmes/crackme_hash aaaaa
 # [+] Please wait, computing in progress...
 # {0L: "0x6c, 'l'", 1L: "0x72, 'r'", 2L: "0x64, 'd'", 3L: "0x78, 'x'", 4L: "0x71, 'q'"}
 # {0L: "0x70, 'p'", 1L: "0x61, 'a'", 2L: "0x69, 'i'", 3L: "0x71, 'q'", 4L: "0x64, 'd'"}

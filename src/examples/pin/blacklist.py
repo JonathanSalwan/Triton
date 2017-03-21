@@ -4,7 +4,7 @@ from pintool import *
 
 # Output
 #
-# $ ./triton ./src/examples/pin/blacklist.py ./src/samples/crackmes/crackme_xor a
+# $ ./build/triton ./src/examples/pin/blacklist.py ./src/samples/crackmes/crackme_xor a
 # 0x4005ca: push rbp
 # 0x4005cb: mov rbp, rsp
 # 0x4005ce: sub rsp, 0x20

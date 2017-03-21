@@ -754,66 +754,76 @@ namespace triton {
 
         try {
           switch (static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode))) {
+
             case callbacks::GET_CONCRETE_MEMORY_VALUE:
-              triton::api.addCallback(callbacks::getConcreteMemoryValueCallback([function](triton::arch::MemoryAccess& mem){
-                  /* Create function args */
-                  PyObject* args = triton::bindings::python::xPyTuple_New(1);
-                  PyTuple_SetItem(args, 0, triton::bindings::python::PyMemoryAccess(mem));
+              triton::api.addCallback(callbacks::getConcreteMemoryValueCallback([function](triton::arch::MemoryAccess& mem) {
+                /********* Lambda *********/
+                /* Create function args */
+                PyObject* args = triton::bindings::python::xPyTuple_New(1);
+                PyTuple_SetItem(args, 0, triton::bindings::python::PyMemoryAccess(mem));
 
-                  /* Call the callback */
-                  PyObject* ret = PyObject_CallObject(function, args);
+                /* Call the callback */
+                PyObject* ret = PyObject_CallObject(function, args);
 
-                  /* Check the call */
-                  if (ret == nullptr) {
-                    PyErr_Print();
-                    throw triton::exceptions::Callbacks("Callbacks::processCallbacks(GET_CONCRETE_MEMORY_VALUE): Fail to call the python callback.");
-                  }
+                /* Check the call */
+                if (ret == nullptr) {
+                  PyErr_Print();
+                  throw triton::exceptions::Callbacks("Callbacks::processCallbacks(GET_CONCRETE_MEMORY_VALUE): Fail to call the python callback.");
+                }
 
-                  Py_DECREF(args);
-                }, function));
+                Py_DECREF(args);
+                /********* End of lambda *********/
+              }, function));
               break;
+
             case callbacks::GET_CONCRETE_REGISTER_VALUE:
-              triton::api.addCallback(callbacks::getConcreteRegisterValueCallback([function](triton::arch::Register& reg){
-                  /* Create function args */
-                  PyObject* args = triton::bindings::python::xPyTuple_New(1);
-                  PyTuple_SetItem(args, 0, triton::bindings::python::PyRegister(reg));
+              triton::api.addCallback(callbacks::getConcreteRegisterValueCallback([function](triton::arch::Register& reg) {
+                /********* Lambda *********/
+                /* Create function args */
+                PyObject* args = triton::bindings::python::xPyTuple_New(1);
+                PyTuple_SetItem(args, 0, triton::bindings::python::PyRegister(reg));
 
-                  /* Call the callback */
-                  PyObject* ret = PyObject_CallObject(function, args);
+                /* Call the callback */
+                PyObject* ret = PyObject_CallObject(function, args);
 
-                  /* Check the call */
-                  if (ret == nullptr) {
-                    PyErr_Print();
-                    throw triton::exceptions::Callbacks("Callbacks::processCallbacks(GET_CONCRETE_MEMORY_VALUE): Fail to call the python callback.");
-                  }
+                /* Check the call */
+                if (ret == nullptr) {
+                  PyErr_Print();
+                  throw triton::exceptions::Callbacks("Callbacks::processCallbacks(GET_CONCRETE_MEMORY_VALUE): Fail to call the python callback.");
+                }
 
-                  Py_DECREF(args);
-                }, function));
+                Py_DECREF(args);
+                /********* End of lambda *********/
+              }, function));
               break;
+
             case callbacks::SYMBOLIC_SIMPLIFICATION:
-              triton::api.addCallback(callbacks::symbolicSimplificationCallback([function](triton::ast::AbstractNode* node){
-                  PyObject* args = triton::bindings::python::xPyTuple_New(1);
-                  PyTuple_SetItem(args, 0, triton::bindings::python::PyAstNode(node));
+              triton::api.addCallback(callbacks::symbolicSimplificationCallback([function](triton::ast::AbstractNode* node) {
+                /********* Lambda *********/
+                PyObject* args = triton::bindings::python::xPyTuple_New(1);
+                PyTuple_SetItem(args, 0, triton::bindings::python::PyAstNode(node));
 
-                  /* Call the callback */
-                  PyObject* ret = PyObject_CallObject(function, args);
+                /* Call the callback */
+                PyObject* ret = PyObject_CallObject(function, args);
 
-                  /* Check the call */
-                  if (ret == nullptr) {
-                    PyErr_Print();
-                    throw triton::exceptions::Callbacks("Callbacks::processCallbacks(SYMBOLIC_SIMPLIFICATION): Fail to call the python callback.");
-                  }
+                /* Check the call */
+                if (ret == nullptr) {
+                  PyErr_Print();
+                  throw triton::exceptions::Callbacks("Callbacks::processCallbacks(SYMBOLIC_SIMPLIFICATION): Fail to call the python callback.");
+                }
 
-                  /* Check if the callback has returned a AbstractNode */
-                  if (!PyAstNode_Check(ret))
-                    throw triton::exceptions::Callbacks("Callbacks::processCallbacks(SYMBOLIC_SIMPLIFICATION): You must return a AstNode object.");
+                /* Check if the callback has returned a AbstractNode */
+                if (!PyAstNode_Check(ret))
+                  throw triton::exceptions::Callbacks("Callbacks::processCallbacks(SYMBOLIC_SIMPLIFICATION): You must return a AstNode object.");
 
-                  /* Update node */
-                  node = PyAstNode_AsAstNode(ret);
-                  Py_DECREF(args);
-                  return node;
-                  }, function));
+                /* Update node */
+                node = PyAstNode_AsAstNode(ret);
+                Py_DECREF(args);
+                return node;
+                /********* End of lambda *********/
+              }, function));
               break;
+
             default:
               return PyErr_Format(PyExc_TypeError, "Callbacks::addCallback(): Invalid kind of callback.");
           }

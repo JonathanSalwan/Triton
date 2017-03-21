@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
 ##
-## $ ./triton ./src/examples/pin/ast_dictionaries.py ./src/samples/crackmes/crackme_xor elite
+## $ ./build/triton ./src/examples/pin/ast_dictionaries.py ./src/samples/crackmes/crackme_xor elite
 ##
 
 import sys

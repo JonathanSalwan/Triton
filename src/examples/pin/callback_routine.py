@@ -4,7 +4,7 @@ from pintool import *
 
 # Output
 #
-# $ ./triton ./src/examples/pin/callback_routine.py  ./src/samples/vulns/testSuite
+# $ ./build/triton ./src/examples/pin/callback_routine.py  ./src/samples/vulns/testSuite
 # -> malloc(0x20)
 # <- 0x8fc010
 # -> malloc(0x20)

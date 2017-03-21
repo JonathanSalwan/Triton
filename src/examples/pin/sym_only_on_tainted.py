@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
 ##
-## $ ./triton ./src/examples/pin/sym_only_on_tainted.py ./src/samples/crackmes/crackme_xor a
+## $ ./build/triton ./src/examples/pin/sym_only_on_tainted.py ./src/samples/crackmes/crackme_xor a
 ##
 
 import sys

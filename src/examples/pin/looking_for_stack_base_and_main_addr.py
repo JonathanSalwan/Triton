@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
 ##
-##  $ ./triton ./src/examples/pin/looking_for_stack_base_and_main_addr.py /usr/bin/id
+##  $ ./build/triton ./src/examples/pin/looking_for_stack_base_and_main_addr.py /usr/bin/id
 ##  [+] stack base found at 7ffedc52a000
 ##  [+] main() found at 401900
 ##  ...

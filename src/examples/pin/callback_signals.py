@@ -4,7 +4,7 @@ from pintool import *
 
 # Output
 #
-#  $ ./triton ./src/examples/pin/callback_signals.py ./src/samples/others/signals
+#  $ ./build/triton ./src/examples/pin/callback_signals.py ./src/samples/others/signals
 #  Signal 11 received on thread 0.
 #  ========================== DUMP ==========================
 #  rax:    0x00000000000000                        ((_ zero_extend 32) (_ bv234 32))

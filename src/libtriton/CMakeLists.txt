@@ -17,7 +17,6 @@ else()
   set(PYTHON_SUFFIX .so)
 endif()
 
-
 # Global UNIX CXX Flags
 if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
     # Flags
@@ -29,7 +28,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -std=c++11")
 endif()
 
-
 # 32-bits
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     if(${ARCHITECTURE} STREQUAL "i386")
@@ -37,11 +35,9 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin"
     endif()
 endif()
 
-
 # Add Triton includes
 include_directories("${CMAKE_SOURCE_DIR}/src/libtriton/includes")
 include_directories("${CMAKE_BINARY_DIR}/src/libtriton/includes")
-
 
 # Define all source files
 set(LIBTRITON_SOURCE_FILES
@@ -100,57 +96,57 @@ set(LIBTRITON_SOURCE_FILES
   modes/modes.cpp
   os/unix/syscallNumberToString.cpp
   utils/coreUtils.cpp
-  )
+)
 
 if(PYTHON_BINDINGS)
-set(LIBTRITON_PYTHON_SOURCE_FILES
-  bindings/python/init.cpp
-  bindings/python/modules/astCallbacks.cpp
-  bindings/python/modules/tritonCallbacks.cpp
-  bindings/python/namespaces/initArchNamespace.cpp
-  bindings/python/namespaces/initAstNodeNamespace.cpp
-  bindings/python/namespaces/initAstRepresentationNamespace.cpp
-  bindings/python/namespaces/initCallbackNamespace.cpp
-  bindings/python/namespaces/initCpuSizeNamespace.cpp
-  bindings/python/namespaces/initElfNamespace.cpp
-  bindings/python/namespaces/initModeNamespace.cpp
-  bindings/python/namespaces/initOperandNamespace.cpp
-  bindings/python/namespaces/initPeNamespace.cpp
-  bindings/python/namespaces/initRegNamespace.cpp
-  bindings/python/namespaces/initSymExprNamespace.cpp
-  bindings/python/namespaces/initSyscallNamespace.cpp
-  bindings/python/namespaces/initVersionNamespace.cpp
-  bindings/python/namespaces/initX86OpcodesNamespace.cpp
-  bindings/python/namespaces/initX86PrefixesNamespace.cpp
-  bindings/python/objects/pyAstNode.cpp
-  bindings/python/objects/pyBitvector.cpp
-  bindings/python/objects/pyElf.cpp
-  bindings/python/objects/pyElfDynamicTable.cpp
-  bindings/python/objects/pyElfHeader.cpp
-  bindings/python/objects/pyElfProgramHeader.cpp
-  bindings/python/objects/pyElfRelocationTable.cpp
-  bindings/python/objects/pyElfSectionHeader.cpp
-  bindings/python/objects/pyElfSymbolTable.cpp
-  bindings/python/objects/pyImmediate.cpp
-  bindings/python/objects/pyInstruction.cpp
-  bindings/python/objects/pyMemoryAccess.cpp
-  bindings/python/objects/pyPathConstraint.cpp
-  bindings/python/objects/pyPe.cpp
-  bindings/python/objects/pyPeExportEntry.cpp
-  bindings/python/objects/pyPeExportTable.cpp
-  bindings/python/objects/pyPeHeader.cpp
-  bindings/python/objects/pyPeImportLookup.cpp
-  bindings/python/objects/pyPeImportTable.cpp
-  bindings/python/objects/pyPeSectionHeader.cpp
-  bindings/python/objects/pyRegister.cpp
-  bindings/python/objects/pySolverModel.cpp
-  bindings/python/objects/pySymbolicExpression.cpp
-  bindings/python/objects/pySymbolicVariable.cpp
-  bindings/python/pyXFunctions.cpp
-  bindings/python/utils.cpp
-  )
+    set(LIBTRITON_PYTHON_SOURCE_FILES
+      bindings/python/init.cpp
+      bindings/python/modules/astCallbacks.cpp
+      bindings/python/modules/tritonCallbacks.cpp
+      bindings/python/namespaces/initArchNamespace.cpp
+      bindings/python/namespaces/initAstNodeNamespace.cpp
+      bindings/python/namespaces/initAstRepresentationNamespace.cpp
+      bindings/python/namespaces/initCallbackNamespace.cpp
+      bindings/python/namespaces/initCpuSizeNamespace.cpp
+      bindings/python/namespaces/initElfNamespace.cpp
+      bindings/python/namespaces/initModeNamespace.cpp
+      bindings/python/namespaces/initOperandNamespace.cpp
+      bindings/python/namespaces/initPeNamespace.cpp
+      bindings/python/namespaces/initRegNamespace.cpp
+      bindings/python/namespaces/initSymExprNamespace.cpp
+      bindings/python/namespaces/initSyscallNamespace.cpp
+      bindings/python/namespaces/initVersionNamespace.cpp
+      bindings/python/namespaces/initX86OpcodesNamespace.cpp
+      bindings/python/namespaces/initX86PrefixesNamespace.cpp
+      bindings/python/objects/pyAstNode.cpp
+      bindings/python/objects/pyBitvector.cpp
+      bindings/python/objects/pyElf.cpp
+      bindings/python/objects/pyElfDynamicTable.cpp
+      bindings/python/objects/pyElfHeader.cpp
+      bindings/python/objects/pyElfProgramHeader.cpp
+      bindings/python/objects/pyElfRelocationTable.cpp
+      bindings/python/objects/pyElfSectionHeader.cpp
+      bindings/python/objects/pyElfSymbolTable.cpp
+      bindings/python/objects/pyImmediate.cpp
+      bindings/python/objects/pyInstruction.cpp
+      bindings/python/objects/pyMemoryAccess.cpp
+      bindings/python/objects/pyPathConstraint.cpp
+      bindings/python/objects/pyPe.cpp
+      bindings/python/objects/pyPeExportEntry.cpp
+      bindings/python/objects/pyPeExportTable.cpp
+      bindings/python/objects/pyPeHeader.cpp
+      bindings/python/objects/pyPeImportLookup.cpp
+      bindings/python/objects/pyPeImportTable.cpp
+      bindings/python/objects/pyPeSectionHeader.cpp
+      bindings/python/objects/pyRegister.cpp
+      bindings/python/objects/pySolverModel.cpp
+      bindings/python/objects/pySymbolicExpression.cpp
+      bindings/python/objects/pySymbolicVariable.cpp
+      bindings/python/pyXFunctions.cpp
+      bindings/python/utils.cpp
+    )
 else()
-  set(LIBTRITON_PYTHON_SOURCE_FILES)
+    set(LIBTRITON_PYTHON_SOURCE_FILES)
 endif()
 
 # Triton have to generate a syscalls table from the kernel source
@@ -181,12 +177,12 @@ macro(gen_syscall bits)
     # We generate the syscalls${bits}.cpp from the unistd_${bits}.h or syscall.h.
     # Added python after COMMAND since to be sure that if ${CMAKE_SOURCE_DIR}/src/scripts/extract_syscall.py doesn't have X rights it gets executed
     add_custom_command(
-        OUTPUT ${OUT_SYSCALL${bits}}
+      OUTPUT ${OUT_SYSCALL${bits}}
       COMMAND python ${EXTRACT_SYSCALL_SCRIPT} ${syscalls${bits}_table_file} ${bits} > ${OUT_SYSCALL${bits}}
       MAIN_DEPENDENCY ${EXTRACT_SYSCALL_SCRIPT}
       DEPENDS ${syscalls${bits}_table_file}
     )
-  add_custom_target(gen-syscall${bits} DEPENDS ${OUT_SYSCALL${bits}})
+    add_custom_target(gen-syscall${bits} DEPENDS ${OUT_SYSCALL${bits}})
     set(LIBTRITON_SOURCE_FILES ${LIBTRITON_SOURCE_FILES} ${OUT_SYSCALL${bits}})
 endmacro()
 
@@ -195,12 +191,10 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin"
     gen_syscall(64)
 endif()
 
-
 # Syscall 32 is only available for linux users
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     gen_syscall(32)
 endif()
-
 
 # We generate the version numbers information
 configure_file(
@@ -211,7 +205,6 @@ configure_file(
 
 # Define gloabl shared linker flags
 set(LIBTRITON_SHARED_LINKER_FLAGS " ")
-
 
 # Special cases for MinGW
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND "${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
@@ -238,7 +231,6 @@ if(NOT STATICLIB) # Only if building dynamic library
 endif()
 include_directories(${Z3_INCLUDE_DIRS})
 
-
 # Find Capstone
 if(NOT CAPSTONE_INCLUDE_DIRS)
   set(CAPSTONE_INCLUDE_DIRS "$ENV{CAPSTONE_INCLUDE_DIRS}")
@@ -260,11 +252,9 @@ include_directories(${CAPSTONE_INCLUDE_DIRS})
 find_package(Boost 1.55.0 REQUIRED)
 include_directories("${Boost_INCLUDE_DIRS}")
 
-
 # Define library's properties
 add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES} ${LIBTRITON_PYTHON_SOURCE_FILES})
 add_dependencies(${PROJECT_LIBTRITON} gen-syscall32 gen-syscall64)
-
 
 # Link Triton's dependencies
 target_link_libraries(
@@ -276,12 +266,10 @@ target_link_libraries(
     ${LIBTRITON_OTHER_LIBS}
 )
 
-
 # Add the install targets
 install (TARGETS ${PROJECT_LIBTRITON} DESTINATION lib)
 install (DIRECTORY ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton DESTINATION include)
 install (DIRECTORY ${CMAKE_BINARY_DIR}/src/libtriton/includes/triton DESTINATION include)
-
 
 # Install Python bindings
 if(PYTHON_BINDINGS)
@@ -290,14 +278,14 @@ if(PYTHON_BINDINGS)
     add_custom_target(python-triton ALL
       COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_MODULE_PREFIX}triton${CMAKE_SHARED_LIBRARY_SUFFIX}" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/triton${PYTHON_SUFFIX}"
       DEPENDS triton
-      )
+    )
     add_dependencies(test-python python-triton)
 
     execute_process (COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
     if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-      install (FILES ${CMAKE_CURRENT_BINARY_DIR}/\${CMAKE_INSTALL_CONFIG_NAME}/triton${PYTHON_SUFFIX} DESTINATION ${PYTHON_SITE_PACKAGES})
+        install (FILES ${CMAKE_CURRENT_BINARY_DIR}/\${CMAKE_INSTALL_CONFIG_NAME}/triton${PYTHON_SUFFIX} DESTINATION ${PYTHON_SITE_PACKAGES})
     else()
-      install (FILES ${CMAKE_CURRENT_BINARY_DIR}/triton${PYTHON_SUFFIX} DESTINATION ${PYTHON_SITE_PACKAGES})
+        install (FILES ${CMAKE_CURRENT_BINARY_DIR}/triton${PYTHON_SUFFIX} DESTINATION ${PYTHON_SITE_PACKAGES})
     endif()
 endif()
 

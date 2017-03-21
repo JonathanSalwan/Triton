@@ -4,7 +4,7 @@ from pintool import *
 
 # Output
 #
-# $ ./triton ./src/examples/pin/callback_syscall.py  ./src/samples/crackmes/crackme_xor a
+# $ ./build/triton ./src/examples/pin/callback_syscall.py  ./src/samples/crackmes/crackme_xor a
 # sys_write(1, 7fb7f06e1000, 6)
 # loose
 #

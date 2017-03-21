@@ -1,5 +1,5 @@
 
-# Using: $ ./triton ./src/examples/pin/runtime_memory_tainting.py ./src/samples/crackmes/crackme_xor a
+# Using: $ ./build/triton ./src/examples/pin/runtime_memory_tainting.py ./src/samples/crackmes/crackme_xor a
 
 from triton  import *
 from pintool import *

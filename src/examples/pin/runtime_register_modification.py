@@ -3,7 +3,7 @@
 ##
 ## Output:
 ##
-##  $ ./triton ./src/examples/pin/runtime_register_modification.py ./src/samples/crackmes/crackme_xor a
+##  $ ./build/triton ./src/examples/pin/runtime_register_modification.py ./src/samples/crackmes/crackme_xor a
 ##  4005f9: mov dword ptr [rbp - 4], eax
 ##          #180 = ((_ extract 31 24) (_ bv0 32)) ; byte reference - MOV operation
 ##          #181 = ((_ extract 23 16) (_ bv0 32)) ; byte reference - MOV operation

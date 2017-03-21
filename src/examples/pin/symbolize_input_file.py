@@ -6,7 +6,7 @@
 ## condition "is a binary". Basically, it returns the .ELF magic which must be present
 ## in the first dword of the binary.
 ##
-## $ ./triton ./src/examples/pin/symbolize_input_file.py ./src/samples/others/read_from_file
+## $ ./build/triton ./src/examples/pin/symbolize_input_file.py ./src/samples/others/read_from_file
 ## [TT] Target name match: /etc/passwd
 ## [TT] Target fd: 4
 ## [TT] Symbolizing the input file
