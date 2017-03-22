@@ -885,47 +885,47 @@ namespace triton {
 
           case triton::arch::x86::ID_REG_CF: {
             triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = value.convert_to<bool>() ? b | (1 << 0) : b & ~(1 << 0);
+            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 0) : b & ~(1 << 0);
             break;
           }
           case triton::arch::x86::ID_REG_PF: {
             triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = value.convert_to<bool>() ? b | (1 << 2) : b & ~(1 << 2);
+            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 2) : b & ~(1 << 2);
             break;
           }
           case triton::arch::x86::ID_REG_AF: {
             triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = value.convert_to<bool>() ? b | (1 << 4) : b & ~(1 << 4);
+            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 4) : b & ~(1 << 4);
             break;
           }
           case triton::arch::x86::ID_REG_ZF: {
             triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = value.convert_to<bool>() ? b | (1 << 6) : b & ~(1 << 6);
+            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 6) : b & ~(1 << 6);
             break;
           }
           case triton::arch::x86::ID_REG_SF: {
             triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = value.convert_to<bool>() ? b | (1 << 7) : b & ~(1 << 7);
+            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 7) : b & ~(1 << 7);
             break;
           }
           case triton::arch::x86::ID_REG_TF: {
             triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = value.convert_to<bool>() ? b | (1 << 8) : b & ~(1 << 8);
+            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 8) : b & ~(1 << 8);
             break;
           }
           case triton::arch::x86::ID_REG_IF: {
             triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = value.convert_to<bool>() ? b | (1 << 9) : b & ~(1 << 9);
+            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 9) : b & ~(1 << 9);
             break;
           }
           case triton::arch::x86::ID_REG_DF: {
             triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = value.convert_to<bool>() ? b | (1 << 10) : b & ~(1 << 10);
+            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 10) : b & ~(1 << 10);
             break;
           }
           case triton::arch::x86::ID_REG_OF: {
             triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = value.convert_to<bool>() ? b | (1 << 11) : b & ~(1 << 11);
+            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 11) : b & ~(1 << 11);
             break;
           }
 
@@ -960,82 +960,82 @@ namespace triton {
 
           case triton::arch::x86::ID_REG_IE: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 0) : b & ~(1 << 0);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 0) : b & ~(1 << 0);
             break;
           }
           case triton::arch::x86::ID_REG_DE: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 1) : b & ~(1 << 1);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 1) : b & ~(1 << 1);
             break;
           }
           case triton::arch::x86::ID_REG_ZE: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 2) : b & ~(1 << 2);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 2) : b & ~(1 << 2);
             break;
           }
           case triton::arch::x86::ID_REG_OE: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 3) : b & ~(1 << 3);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 3) : b & ~(1 << 3);
             break;
           }
           case triton::arch::x86::ID_REG_UE: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 4) : b & ~(1 << 4);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 4) : b & ~(1 << 4);
             break;
           }
           case triton::arch::x86::ID_REG_PE: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 5) : b & ~(1 << 5);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 5) : b & ~(1 << 5);
             break;
           }
           case triton::arch::x86::ID_REG_DAZ: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 6) : b & ~(1 << 6);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 6) : b & ~(1 << 6);
             break;
           }
           case triton::arch::x86::ID_REG_IM: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 7) : b & ~(1 << 7);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 7) : b & ~(1 << 7);
             break;
           }
           case triton::arch::x86::ID_REG_DM: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 8) : b & ~(1 << 8);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 8) : b & ~(1 << 8);
             break;
           }
           case triton::arch::x86::ID_REG_ZM: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 9) : b & ~(1 << 9);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 9) : b & ~(1 << 9);
             break;
           }
           case triton::arch::x86::ID_REG_OM: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 10) : b & ~(1 << 10);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 10) : b & ~(1 << 10);
             break;
           }
           case triton::arch::x86::ID_REG_UM: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 11) : b & ~(1 << 11);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 11) : b & ~(1 << 11);
             break;
           }
           case triton::arch::x86::ID_REG_PM: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 12) : b & ~(1 << 12);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 12) : b & ~(1 << 12);
             break;
           }
           case triton::arch::x86::ID_REG_RL: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 13) : b & ~(1 << 13);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 13) : b & ~(1 << 13);
             break;
           }
           case triton::arch::x86::ID_REG_RH: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 14) : b & ~(1 << 14);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 14) : b & ~(1 << 14);
             break;
           }
           case triton::arch::x86::ID_REG_FZ: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = value.convert_to<bool>() ? b | (1 << 15) : b & ~(1 << 15);
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 15) : b & ~(1 << 15);
             break;
           }
 
