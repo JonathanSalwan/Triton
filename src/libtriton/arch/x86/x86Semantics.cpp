@@ -3312,7 +3312,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVA operation");
 
         /* Spread taint and condition flag */
-        if ((!op3->evaluate().convert_to<bool>() & !op4->evaluate().convert_to<bool>()) == true) {
+        if (op3->evaluate().is_zero() && op4->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3341,7 +3341,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVAE operation");
 
         /* Spread taint and condition flag */
-        if (!op3->evaluate().convert_to<bool>()) {
+        if (op3->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3370,7 +3370,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVB operation");
 
         /* Spread taint and condition flag */
-        if (op3->evaluate().convert_to<bool>()) {
+        if (!op3->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3401,7 +3401,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVBE operation");
 
         /* Spread taint and condition flag */
-        if (op3->evaluate().convert_to<bool>() | op4->evaluate().convert_to<bool>()) {
+        if (!op3->evaluate().is_zero() || !op4->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3430,7 +3430,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVE operation");
 
         /* Spread taint and condition flag */
-        if (op3->evaluate().convert_to<bool>()) {
+        if (!op3->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3463,7 +3463,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVG operation");
 
         /* Spread taint and condition flag */
-        if (((op3->evaluate().convert_to<bool>() ^ op4->evaluate().convert_to<bool>()) | op5->evaluate().convert_to<bool>()) == false) {
+        if ((op3->evaluate().is_zero() == op4->evaluate().is_zero()) && op5->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3494,7 +3494,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVGE operation");
 
         /* Spread taint and condition flag */
-        if (op3->evaluate().convert_to<bool>() == op4->evaluate().convert_to<bool>()) {
+        if (op3->evaluate().is_zero() == op4->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3525,7 +3525,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVL operation");
 
         /* Spread taint and condition flag */
-        if (op3->evaluate().convert_to<bool>() ^ op4->evaluate().convert_to<bool>()) {
+        if (op3->evaluate().is_zero() != op4->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3558,7 +3558,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVBE operation");
 
         /* Spread taint and condition flag */
-        if (((op3->evaluate().convert_to<bool>() ^ op4->evaluate().convert_to<bool>()) | op5->evaluate().convert_to<bool>()) == true) {
+        if ((op3->evaluate().is_zero() != op4->evaluate().is_zero()) || !op5->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3587,7 +3587,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVNE operation");
 
         /* Spread taint and condition flag */
-        if (!op3->evaluate().convert_to<bool>()) {
+        if (op3->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3616,7 +3616,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVNO operation");
 
         /* Spread taint and condition flag */
-        if (!op3->evaluate().convert_to<bool>()) {
+        if (op3->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3645,7 +3645,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVNP operation");
 
         /* Spread taint and condition flag */
-        if (!op3->evaluate().convert_to<bool>()) {
+        if (op3->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3674,7 +3674,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVNS operation");
 
         /* Spread taint and condition flag */
-        if (!op3->evaluate().convert_to<bool>()) {
+        if (op3->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3703,7 +3703,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVO operation");
 
         /* Spread taint and condition flag */
-        if (op3->evaluate().convert_to<bool>()) {
+        if (!op3->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3732,7 +3732,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVP operation");
 
         /* Spread taint and condition flag */
-        if (op3->evaluate().convert_to<bool>()) {
+        if (!op3->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -3761,7 +3761,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CMOVS operation");
 
         /* Spread taint and condition flag */
-        if (op3->evaluate().convert_to<bool>()) {
+        if (!op3->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
@@ -4886,7 +4886,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if ((!op1->evaluate().convert_to<bool>() & !op2->evaluate().convert_to<bool>()) == true)
+        if (op1->evaluate().is_zero() && op2->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -4916,7 +4916,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (!op1->evaluate().convert_to<bool>())
+        if (op1->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -4945,7 +4945,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (op1->evaluate().convert_to<bool>())
+        if (!op1->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -4976,7 +4976,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (op1->evaluate().convert_to<bool>() | op2->evaluate().convert_to<bool>())
+        if (!op1->evaluate().is_zero() || !op2->evaluate().is_zero())
           inst.setConditionTaken(true);
 
 
@@ -5007,7 +5007,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (op1->evaluate().convert_to<bool>())
+        if (!op1->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -5040,7 +5040,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (((op1->evaluate().convert_to<bool>() ^ op2->evaluate().convert_to<bool>()) | op3->evaluate().convert_to<bool>()) == false)
+        if ((op1->evaluate().is_zero() == op2->evaluate().is_zero()) && op3->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -5073,7 +5073,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (op1->evaluate().convert_to<bool>() == op2->evaluate().convert_to<bool>())
+        if (op1->evaluate().is_zero() == op2->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -5105,7 +5105,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (op1->evaluate().convert_to<bool>() ^ op2->evaluate().convert_to<bool>())
+        if (op1->evaluate().is_zero() != op2->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -5139,7 +5139,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (((op1->evaluate().convert_to<bool>() ^ op2->evaluate().convert_to<bool>()) | op3->evaluate().convert_to<bool>()) == true)
+        if ((op1->evaluate().is_zero() != op2->evaluate().is_zero()) || !op3->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -5194,7 +5194,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (!op1->evaluate().convert_to<bool>())
+        if (op1->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -5223,7 +5223,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (!op1->evaluate().convert_to<bool>())
+        if (op1->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -5252,7 +5252,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (!op1->evaluate().convert_to<bool>())
+        if (op1->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -5281,7 +5281,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (!op1->evaluate().convert_to<bool>())
+        if (op1->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -5310,7 +5310,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (op1->evaluate().convert_to<bool>())
+        if (!op1->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -5339,7 +5339,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (op1->evaluate().convert_to<bool>())
+        if (!op1->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -5368,7 +5368,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if (op1->evaluate().convert_to<bool>())
+        if (!op1->evaluate().is_zero())
           inst.setConditionTaken(true);
 
         /* Spread taint */
@@ -10431,7 +10431,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETA operation");
 
         /* Spread taint and condition flag */
-        if (((!op2->evaluate().convert_to<bool>() & !op3->evaluate().convert_to<bool>())) == true) {
+        if (op2->evaluate().is_zero() && op3->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, cf);
           expr->isTainted = this->taintEngine->taintUnion(dst, zf);
           inst.setConditionTaken(true);
@@ -10462,7 +10462,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETAE operation");
 
         /* Spread taint and condition flag */
-        if (!op2->evaluate().convert_to<bool>()) {
+        if (op2->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, cf);
           inst.setConditionTaken(true);
         }
@@ -10492,7 +10492,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETB operation");
 
         /* Spread taint and condition flag */
-        if (op2->evaluate().convert_to<bool>()) {
+        if (!op2->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, cf);
           inst.setConditionTaken(true);
         }
@@ -10524,7 +10524,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETBE operation");
 
         /* Spread taint and condition flag */
-        if (op2->evaluate().convert_to<bool>() | op3->evaluate().convert_to<bool>()) {
+        if (!op2->evaluate().is_zero() || !op3->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, cf);
           expr->isTainted = this->taintEngine->taintUnion(dst, zf);
           inst.setConditionTaken(true);
@@ -10555,7 +10555,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETE operation");
 
         /* Spread taint and condition flag */
-        if (op2->evaluate().convert_to<bool>()) {
+        if (!op2->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, zf);
           inst.setConditionTaken(true);
         }
@@ -10589,7 +10589,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETG operation");
 
         /* Spread taint and condition flag */
-        if (((op2->evaluate().convert_to<bool>() ^ op3->evaluate().convert_to<bool>()) | op4->evaluate().convert_to<bool>()) == false) {
+        if ((op2->evaluate().is_zero() == op3->evaluate().is_zero()) && op4->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, sf);
           expr->isTainted = this->taintEngine->taintUnion(dst, of);
           expr->isTainted = this->taintEngine->taintUnion(dst, zf);
@@ -10623,7 +10623,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETGE operation");
 
         /* Spread taint and condition flag */
-        if (op2->evaluate().convert_to<bool>() == op3->evaluate().convert_to<bool>()) {
+        if (op2->evaluate().is_zero() == op3->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, sf);
           expr->isTainted = this->taintEngine->taintUnion(dst, of);
           inst.setConditionTaken(true);
@@ -10656,7 +10656,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETL operation");
 
         /* Spread taint and condition flag */
-        if (op2->evaluate().convert_to<bool>() ^ op3->evaluate().convert_to<bool>()) {
+        if (op2->evaluate().is_zero() != op3->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, sf);
           expr->isTainted = this->taintEngine->taintUnion(dst, of);
           inst.setConditionTaken(true);
@@ -10691,7 +10691,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETLE operation");
 
         /* Spread taint and condition flag */
-        if (((op2->evaluate().convert_to<bool>() ^ op3->evaluate().convert_to<bool>()) | op4->evaluate().convert_to<bool>()) == true) {
+        if ((op2->evaluate().is_zero() != op3->evaluate().is_zero()) || !op4->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, sf);
           expr->isTainted = this->taintEngine->taintUnion(dst, of);
           expr->isTainted = this->taintEngine->taintUnion(dst, zf);
@@ -10723,7 +10723,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETNE operation");
 
         /* Spread taint and condition flag */
-        if (!op2->evaluate().convert_to<bool>()) {
+        if (op2->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, zf);
           inst.setConditionTaken(true);
         }
@@ -10753,7 +10753,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETNO operation");
 
         /* Spread taint and condition flag */
-        if (!op2->evaluate().convert_to<bool>()) {
+        if (op2->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, of);
           inst.setConditionTaken(true);
         }
@@ -10783,7 +10783,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETNP operation");
 
         /* Spread taint and condition flag */
-        if (!op2->evaluate().convert_to<bool>()) {
+        if (op2->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, pf);
           inst.setConditionTaken(true);
         }
@@ -10813,7 +10813,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETNS operation");
 
         /* Spread taint and condition flag */
-        if (!op2->evaluate().convert_to<bool>()) {
+        if (op2->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, sf);
           inst.setConditionTaken(true);
         }
@@ -10843,7 +10843,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETO operation");
 
         /* Spread taint and condition flag */
-        if (op2->evaluate().convert_to<bool>()) {
+        if (!op2->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, of);
           inst.setConditionTaken(true);
         }
@@ -10873,7 +10873,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETP operation");
 
         /* Spread taint and condition flag */
-        if (op2->evaluate().convert_to<bool>()) {
+        if (!op2->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, pf);
           inst.setConditionTaken(true);
         }
@@ -10903,7 +10903,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETS operation");
 
         /* Spread taint and condition flag */
-        if (op2->evaluate().convert_to<bool>()) {
+        if (!op2->evaluate().is_zero()) {
           expr->isTainted = this->taintEngine->taintUnion(dst, sf);
           inst.setConditionTaken(true);
         }
