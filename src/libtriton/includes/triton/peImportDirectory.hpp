@@ -65,7 +65,7 @@ namespace triton {
           //! The PE import directory structure
           struct {
             /*!
-             * \description The RVA of the import lookup table. This table contains a name or ordinal for each import. (The name “Characteristics” is used in Winnt.h, but no longer describes this field.)
+             * \description The RVA of the import lookup table. This table contains a name or ordinal for each import. (The name "Characteristics" is used in Winnt.h, but no longer describes this field.)
              */
             triton::uint32 importLookupTableRVA;
 
