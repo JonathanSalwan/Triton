@@ -8,9 +8,8 @@ endif()
 # Default flags
 # To fix old python version bug http://bugs.python.org/issue21958
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_ROUND /MT")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_ROUND -D_CRT_SECURE_NO_WARNINGS /MT")
 endif()
-
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   set(PYTHON_SUFFIX .pyd)
 else()
@@ -18,7 +17,7 @@ else()
 endif()
 
 # Global UNIX CXX Flags
-if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     # Flags
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unknown-pragmas -Wno-tautological-compare")
     if(NOT GCOV)
@@ -207,7 +206,7 @@ configure_file(
 set(LIBTRITON_SHARED_LINKER_FLAGS " ")
 
 # Special cases for MinGW
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND "${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
     set(LIBTRITON_OTHER_LIBS "-lgomp")
     if (NOT STATICLIB)
       set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
@@ -254,7 +253,13 @@ include_directories("${Boost_INCLUDE_DIRS}")
 
 # Define library's properties
 add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES} ${LIBTRITON_PYTHON_SOURCE_FILES})
-add_dependencies(${PROJECT_LIBTRITON} gen-syscall32 gen-syscall64)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  add_dependencies(${PROJECT_LIBTRITON} gen-syscall64, gen-syscall32)
+endif()
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  add_dependencies(${PROJECT_LIBTRITON} gen-syscall32)
+endif()
+
 
 # Link Triton's dependencies
 target_link_libraries(
