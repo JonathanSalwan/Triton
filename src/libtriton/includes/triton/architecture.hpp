@@ -12,6 +12,7 @@
 #include <vector>
 #include <memory>
 
+#include <triton/architectureEnums.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/cpuInterface.hpp>
 #include <triton/instruction.hpp>
@@ -36,14 +37,6 @@ namespace triton {
    *  \addtogroup arch
    *  @{
    */
-
-    /*! The architectures */
-    enum architectures_e {
-      ARCH_INVALID = 0, /*!< invalid architecture. */
-      ARCH_X86,         /*!< x86 architecture. */
-      ARCH_X86_64,      /*!< x86_64 architecture. */
-      ARCH_LAST_ITEM    /*!< must be the last item.  */
-    };
 
     /*! \class Architecture
      *  \brief The abstract architecture class. */
@@ -105,6 +98,12 @@ namespace triton {
         //! Clears the architecture states (registers and memory).
         void clearArchitecture(void);
 
+        //! Returns the parent register.
+        triton::arch::Register& getParentRegister(triton::uint32 regId);
+
+        //! Returns a register.
+        triton::arch::Register& getRegister(triton::uint32 regId);
+
         //! Returns all information about the register.
         triton::arch::RegisterSpecification getRegisterSpecification(triton::uint32 regId) const;
 
@@ -115,7 +114,7 @@ namespace triton {
         std::set<triton::arch::Register*> getParentRegisters(void) const;
 
         //! Disassembles the instruction according to the architecture.
-        void disassembly(triton::arch::Instruction& inst) const;
+        void disassembly(triton::arch::Instruction& inst);
 
         //! Builds the instruction semantics according to the architecture. Returns true if the instruction is supported.
         bool buildSemantics(triton::arch::Instruction& inst);

@@ -7,7 +7,7 @@
 
 #include <cstring>
 
-#include <triton/architecture.hpp>
+#include <triton/architectureEnums.hpp>
 #include <triton/coreUtils.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
@@ -20,13 +20,13 @@ namespace triton {
   namespace arch {
     namespace x86 {
 
-      x8664Cpu::x8664Cpu(triton::callbacks::Callbacks* callbacks) {
+      x8664Cpu::x8664Cpu(triton::callbacks::Callbacks* callbacks) : x86Specifications(triton::arch::ARCH_X86_64) {
         this->callbacks = callbacks;
         this->clear();
       }
 
 
-      x8664Cpu::x8664Cpu(const x8664Cpu& other) {
+      x8664Cpu::x8664Cpu(const x8664Cpu& other) : x86Specifications(other) {
         this->copy(other);
       }
 
@@ -580,6 +580,16 @@ namespace triton {
       }
 
 
+      triton::arch::Register& x8664Cpu::getParentRegister(triton::uint32 regId) {
+        return this->getX86ParentRegister(regId);
+      }
+
+
+      triton::arch::Register& x8664Cpu::getRegister(triton::uint32 regId) {
+        return this->getX86Register(regId);
+      }
+
+
       triton::arch::RegisterSpecification x8664Cpu::getRegisterSpecification(triton::uint32 regId) const {
         return this->getX86RegisterSpecification(triton::arch::ARCH_X86_64, regId);
       }
@@ -634,7 +644,7 @@ namespace triton {
       }
 
 
-      void x8664Cpu::disassembly(triton::arch::Instruction& inst) const {
+      void x8664Cpu::disassembly(triton::arch::Instruction& inst) {
         triton::extlibs::capstone::csh       handle;
         triton::extlibs::capstone::cs_insn*  insn;
         triton::usize                        count = 0;
@@ -708,7 +718,7 @@ namespace triton {
                   triton::arch::Immediate scale(op->mem.scale, immsize);
 
                   /* Specify that LEA contains a PC relative */
-                  if (base.getId() == TRITON_X86_REG_PC.getId())
+                  if (base.getId() == this->getParentRegister(triton::arch::x86::ID_REG_IP).getId())
                     mem.setPcRelative(inst.getNextAddress());
 
                   mem.setSegmentRegister(segment);

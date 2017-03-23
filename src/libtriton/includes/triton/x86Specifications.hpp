@@ -8,6 +8,7 @@
 #ifndef TRITON_X86SPECIFICATIONS_H
 #define TRITON_X86SPECIFICATIONS_H
 
+#include <triton/architectureEnums.hpp>
 #include <triton/register.hpp>
 #include <triton/registerSpecification.hpp>
 
@@ -263,12 +264,28 @@ namespace triton {
       //! \class x86Specifications
       /*! \brief The x86Specifications class defines specifications about the x86 and x86_64 CPU */
       class x86Specifications {
+        private:
+          //! The architecture mode (32 or 64).
+          triton::arch::architectures_e arch;
+
+          //! Init all register specifications.
+          void initRegistersSpec(void);
+
         public:
           //! Constructor.
-          x86Specifications();
+          x86Specifications(triton::arch::architectures_e arch);
+
+          //! Constructor.
+          x86Specifications(const x86Specifications& other);
 
           //! Destructor.
           virtual ~x86Specifications();
+
+          //! Returns the parent register from its child's ID according to the arch (32 or 64-bits).
+          triton::arch::Register& getX86ParentRegister(triton::uint32 regId);
+
+          //! Returns a register from its ID according to the arch (32 or 64-bits).
+          triton::arch::Register& getX86Register(triton::uint32 regId);
 
           //! Returns all specifications about a register from its ID according to the arch (32 or 64-bits).
           triton::arch::RegisterSpecification getX86RegisterSpecification(triton::uint32 arch, triton::uint32 regId) const;
@@ -281,6 +298,225 @@ namespace triton {
 
           //! Converts a capstone's prefix id to a triton's prefix id.
           triton::uint32 capstonePrefixToTritonPrefix(triton::uint32 id) const;
+
+          triton::arch::Register raxSpec;
+          triton::arch::Register eaxSpec;
+          triton::arch::Register axSpec;
+          triton::arch::Register ahSpec;
+          triton::arch::Register alSpec;
+
+          triton::arch::Register rbxSpec;
+          triton::arch::Register ebxSpec;
+          triton::arch::Register bxSpec;
+          triton::arch::Register bhSpec;
+          triton::arch::Register blSpec;
+
+          triton::arch::Register rcxSpec;
+          triton::arch::Register ecxSpec;
+          triton::arch::Register cxSpec;
+          triton::arch::Register chSpec;
+          triton::arch::Register clSpec;
+
+          triton::arch::Register rdxSpec;
+          triton::arch::Register edxSpec;
+          triton::arch::Register dxSpec;
+          triton::arch::Register dhSpec;
+          triton::arch::Register dlSpec;
+
+          triton::arch::Register rdiSpec;
+          triton::arch::Register ediSpec;
+          triton::arch::Register diSpec;
+          triton::arch::Register dilSpec;
+
+          triton::arch::Register rsiSpec;
+          triton::arch::Register esiSpec;
+          triton::arch::Register siSpec;
+          triton::arch::Register silSpec;
+
+          triton::arch::Register rspSpec;
+          triton::arch::Register espSpec;
+          triton::arch::Register spSpec;
+          triton::arch::Register splSpec;
+
+          triton::arch::Register rbpSpec;
+          triton::arch::Register ebpSpec;
+          triton::arch::Register bpSpec;
+          triton::arch::Register bplSpec;
+
+          triton::arch::Register ripSpec;
+          triton::arch::Register eipSpec;
+          triton::arch::Register ipSpec;
+
+          triton::arch::Register eflagsSpec;
+
+          triton::arch::Register r8Spec;
+          triton::arch::Register r8dSpec;
+          triton::arch::Register r8wSpec;
+          triton::arch::Register r8bSpec;
+
+          triton::arch::Register r9Spec;
+          triton::arch::Register r9dSpec;
+          triton::arch::Register r9wSpec;
+          triton::arch::Register r9bSpec;
+
+          triton::arch::Register r10Spec;
+          triton::arch::Register r10dSpec;
+          triton::arch::Register r10wSpec;
+          triton::arch::Register r10bSpec;
+
+          triton::arch::Register r11Spec;
+          triton::arch::Register r11dSpec;
+          triton::arch::Register r11wSpec;
+          triton::arch::Register r11bSpec;
+
+          triton::arch::Register r12Spec;
+          triton::arch::Register r12dSpec;
+          triton::arch::Register r12wSpec;
+          triton::arch::Register r12bSpec;
+
+          triton::arch::Register r13Spec;
+          triton::arch::Register r13dSpec;
+          triton::arch::Register r13wSpec;
+          triton::arch::Register r13bSpec;
+
+          triton::arch::Register r14Spec;
+          triton::arch::Register r14dSpec;
+          triton::arch::Register r14wSpec;
+          triton::arch::Register r14bSpec;
+
+          triton::arch::Register r15Spec;
+          triton::arch::Register r15dSpec;
+          triton::arch::Register r15wSpec;
+          triton::arch::Register r15bSpec;
+
+          triton::arch::Register mm0Spec;
+          triton::arch::Register mm1Spec;
+          triton::arch::Register mm2Spec;
+          triton::arch::Register mm3Spec;
+          triton::arch::Register mm4Spec;
+          triton::arch::Register mm5Spec;
+          triton::arch::Register mm6Spec;
+          triton::arch::Register mm7Spec;
+
+          triton::arch::Register xmm0Spec;
+          triton::arch::Register xmm1Spec;
+          triton::arch::Register xmm2Spec;
+          triton::arch::Register xmm3Spec;
+          triton::arch::Register xmm4Spec;
+          triton::arch::Register xmm5Spec;
+          triton::arch::Register xmm6Spec;
+          triton::arch::Register xmm7Spec;
+          triton::arch::Register xmm8Spec;
+          triton::arch::Register xmm9Spec;
+          triton::arch::Register xmm10Spec;
+          triton::arch::Register xmm11Spec;
+          triton::arch::Register xmm12Spec;
+          triton::arch::Register xmm13Spec;
+          triton::arch::Register xmm14Spec;
+          triton::arch::Register xmm15Spec;
+
+          triton::arch::Register ymm0Spec;
+          triton::arch::Register ymm1Spec;
+          triton::arch::Register ymm2Spec;
+          triton::arch::Register ymm3Spec;
+          triton::arch::Register ymm4Spec;
+          triton::arch::Register ymm5Spec;
+          triton::arch::Register ymm6Spec;
+          triton::arch::Register ymm7Spec;
+          triton::arch::Register ymm8Spec;
+          triton::arch::Register ymm9Spec;
+          triton::arch::Register ymm10Spec;
+          triton::arch::Register ymm11Spec;
+          triton::arch::Register ymm12Spec;
+          triton::arch::Register ymm13Spec;
+          triton::arch::Register ymm14Spec;
+          triton::arch::Register ymm15Spec;
+
+          triton::arch::Register zmm0Spec;
+          triton::arch::Register zmm1Spec;
+          triton::arch::Register zmm2Spec;
+          triton::arch::Register zmm3Spec;
+          triton::arch::Register zmm4Spec;
+          triton::arch::Register zmm5Spec;
+          triton::arch::Register zmm6Spec;
+          triton::arch::Register zmm7Spec;
+          triton::arch::Register zmm8Spec;
+          triton::arch::Register zmm9Spec;
+          triton::arch::Register zmm10Spec;
+          triton::arch::Register zmm11Spec;
+          triton::arch::Register zmm12Spec;
+          triton::arch::Register zmm13Spec;
+          triton::arch::Register zmm14Spec;
+          triton::arch::Register zmm15Spec;
+          triton::arch::Register zmm16Spec;
+          triton::arch::Register zmm17Spec;
+          triton::arch::Register zmm18Spec;
+          triton::arch::Register zmm19Spec;
+          triton::arch::Register zmm20Spec;
+          triton::arch::Register zmm21Spec;
+          triton::arch::Register zmm22Spec;
+          triton::arch::Register zmm23Spec;
+          triton::arch::Register zmm24Spec;
+          triton::arch::Register zmm25Spec;
+          triton::arch::Register zmm26Spec;
+          triton::arch::Register zmm27Spec;
+          triton::arch::Register zmm28Spec;
+          triton::arch::Register zmm29Spec;
+          triton::arch::Register zmm30Spec;
+          triton::arch::Register zmm31Spec;
+
+          triton::arch::Register mxcsrSpec;
+
+          triton::arch::Register cr0Spec;
+          triton::arch::Register cr1Spec;
+          triton::arch::Register cr2Spec;
+          triton::arch::Register cr3Spec;
+          triton::arch::Register cr4Spec;
+          triton::arch::Register cr5Spec;
+          triton::arch::Register cr6Spec;
+          triton::arch::Register cr7Spec;
+          triton::arch::Register cr8Spec;
+          triton::arch::Register cr9Spec;
+          triton::arch::Register cr10Spec;
+          triton::arch::Register cr11Spec;
+          triton::arch::Register cr12Spec;
+          triton::arch::Register cr13Spec;
+          triton::arch::Register cr14Spec;
+          triton::arch::Register cr15Spec;
+
+          triton::arch::Register afSpec;
+          triton::arch::Register cfSpec;
+          triton::arch::Register dfSpec;
+          triton::arch::Register ifSpec;
+          triton::arch::Register ofSpec;
+          triton::arch::Register pfSpec;
+          triton::arch::Register sfSpec;
+          triton::arch::Register tfSpec;
+          triton::arch::Register zfSpec;
+
+          triton::arch::Register ieSpec;
+          triton::arch::Register deSpec;
+          triton::arch::Register zeSpec;
+          triton::arch::Register oeSpec;
+          triton::arch::Register ueSpec;
+          triton::arch::Register peSpec;
+          triton::arch::Register dazSpec;
+          triton::arch::Register imSpec;
+          triton::arch::Register dmSpec;
+          triton::arch::Register zmSpec;
+          triton::arch::Register omSpec;
+          triton::arch::Register umSpec;
+          triton::arch::Register pmSpec;
+          triton::arch::Register rlSpec;
+          triton::arch::Register rhSpec;
+          triton::arch::Register fzSpec;
+
+          triton::arch::Register csSpec;
+          triton::arch::Register dsSpec;
+          triton::arch::Register esSpec;
+          triton::arch::Register fsSpec;
+          triton::arch::Register gsSpec;
+          triton::arch::Register ssSpec;
       };
 
 

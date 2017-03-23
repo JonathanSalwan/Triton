@@ -355,7 +355,7 @@ namespace triton {
   }
 
 
-  void API::disassembly(triton::arch::Instruction& inst) const {
+  void API::disassembly(triton::arch::Instruction& inst) {
     this->checkArchitecture();
     this->arch.disassembly(inst);
   }

@@ -124,6 +124,9 @@ namespace triton {
         //! Returns the concrete value.
         triton::uint512 getConcreteValue(void) const;
 
+        //! Sets the name of the register.
+        void setName(const std::string& name);
+
         //! Sets the id of the register.
         void setId(triton::uint32 regId);
 

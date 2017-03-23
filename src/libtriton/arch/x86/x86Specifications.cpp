@@ -5,8 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/architecture.hpp>
 #include <triton/cpuSize.hpp>
+#include <triton/exceptions.hpp>
 #include <triton/externalLibs.hpp>
 #include <triton/x86Specifications.hpp>
 
@@ -444,11 +444,1492 @@ namespace triton {
       };
 
 
-      x86Specifications::x86Specifications() {
+      x86Specifications::x86Specifications(triton::arch::architectures_e arch) : arch(arch) {
+        if (this->arch != triton::arch::ARCH_X86 && this->arch != triton::arch::ARCH_X86_64)
+          throw triton::exceptions::Semantics("x86Specifications::x86Specifications(): Invalid architecture.");
+        this->initRegistersSpec();
+      }
+
+
+      x86Specifications::x86Specifications(const x86Specifications& other) {
+        this->arch = other.arch;
+        this->initRegistersSpec();
       }
 
 
       x86Specifications::~x86Specifications() {
+      }
+
+
+      void x86Specifications::initRegistersSpec(void) {
+        switch (this->arch) {
+
+          case triton::arch::ARCH_X86_64:
+
+            this->raxSpec.setName("rax");
+            this->raxSpec.setId(triton::arch::x86::ID_REG_RAX);
+            this->raxSpec.setParent(triton::arch::x86::ID_REG_RAX);
+            this->raxSpec.setHigh(QWORD_SIZE_BIT-1);
+            this->raxSpec.setLow(0);
+
+            this->rbxSpec.setName("rbx");
+            this->rbxSpec.setId(triton::arch::x86::ID_REG_RBX);
+            this->rbxSpec.setParent(triton::arch::x86::ID_REG_RBX);
+            this->rbxSpec.setHigh(QWORD_SIZE_BIT-1);
+            this->rbxSpec.setLow(0);
+
+            this->rcxSpec.setName("rcx");
+            this->rcxSpec.setId(triton::arch::x86::ID_REG_RCX);
+            this->rcxSpec.setParent(triton::arch::x86::ID_REG_RCX);
+            this->rcxSpec.setHigh(QWORD_SIZE_BIT-1);
+            this->rcxSpec.setLow(0);
+
+            this->rdxSpec.setName("rdx");
+            this->rdxSpec.setId(triton::arch::x86::ID_REG_RDX);
+            this->rdxSpec.setParent(triton::arch::x86::ID_REG_RDX);
+            this->rdxSpec.setHigh(QWORD_SIZE_BIT-1);
+            this->rdxSpec.setLow(0);
+
+            this->rdiSpec.setName("rdi");
+            this->rdiSpec.setId(triton::arch::x86::ID_REG_RDI);
+            this->rdiSpec.setParent(triton::arch::x86::ID_REG_RDI);
+            this->rdiSpec.setHigh(QWORD_SIZE_BIT-1);
+            this->rdiSpec.setLow(0);
+
+            this->rsiSpec.setName("rsi");
+            this->rsiSpec.setId(triton::arch::x86::ID_REG_RSI);
+            this->rsiSpec.setParent(triton::arch::x86::ID_REG_RSI);
+            this->rsiSpec.setHigh(QWORD_SIZE_BIT-1);
+            this->rsiSpec.setLow(0);
+
+            this->rbpSpec.setName("rbp");
+            this->rbpSpec.setId(triton::arch::x86::ID_REG_RBP);
+            this->rbpSpec.setParent(triton::arch::x86::ID_REG_RBP);
+            this->rbpSpec.setHigh(QWORD_SIZE_BIT-1);
+            this->rbpSpec.setLow(0);
+
+            this->rspSpec.setName("rsp");
+            this->rspSpec.setId(triton::arch::x86::ID_REG_RSP);
+            this->rspSpec.setParent(triton::arch::x86::ID_REG_RSP);
+            this->rspSpec.setHigh(QWORD_SIZE_BIT-1);
+            this->rspSpec.setLow(0);
+
+            this->ripSpec.setName("rip");
+            this->ripSpec.setId(triton::arch::x86::ID_REG_RIP);
+            this->ripSpec.setParent(triton::arch::x86::ID_REG_RIP);
+            this->ripSpec.setHigh(QWORD_SIZE_BIT-1);
+            this->ripSpec.setLow(0);
+
+            this->r8Spec.setName("r8");
+            this->r8Spec.setId(triton::arch::x86::ID_REG_R8);
+            this->r8Spec.setParent(triton::arch::x86::ID_REG_R8);
+            this->r8Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->r8Spec.setLow(0);
+
+            this->r8dSpec.setName("r8d");
+            this->r8dSpec.setId(triton::arch::x86::ID_REG_R8D);
+            this->r8dSpec.setParent(triton::arch::x86::ID_REG_R8);
+            this->r8dSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->r8dSpec.setLow(0);
+
+            this->r8wSpec.setName("r8w");
+            this->r8wSpec.setId(triton::arch::x86::ID_REG_R8W);
+            this->r8wSpec.setParent(triton::arch::x86::ID_REG_R8);
+            this->r8wSpec.setHigh(WORD_SIZE_BIT-1);
+            this->r8wSpec.setLow(0);
+
+            this->r8bSpec.setName("r8b");
+            this->r8bSpec.setId(triton::arch::x86::ID_REG_R8B);
+            this->r8bSpec.setParent(triton::arch::x86::ID_REG_R8);
+            this->r8bSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->r8bSpec.setLow(0);
+
+            this->r9Spec.setName("r9");
+            this->r9Spec.setId(triton::arch::x86::ID_REG_R9);
+            this->r9Spec.setParent(triton::arch::x86::ID_REG_R9);
+            this->r9Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->r9Spec.setLow(0);
+
+            this->r9dSpec.setName("r9d");
+            this->r9dSpec.setId(triton::arch::x86::ID_REG_R9D);
+            this->r9dSpec.setParent(triton::arch::x86::ID_REG_R9);
+            this->r9dSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->r9dSpec.setLow(0);
+
+            this->r9wSpec.setName("r9w");
+            this->r9wSpec.setId(triton::arch::x86::ID_REG_R9W);
+            this->r9wSpec.setParent(triton::arch::x86::ID_REG_R9);
+            this->r9wSpec.setHigh(WORD_SIZE_BIT-1);
+            this->r9wSpec.setLow(0);
+
+            this->r9bSpec.setName("r9b");
+            this->r9bSpec.setId(triton::arch::x86::ID_REG_R9B);
+            this->r9bSpec.setParent(triton::arch::x86::ID_REG_R9);
+            this->r9bSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->r9bSpec.setLow(0);
+
+            this->r10Spec.setName("r10");
+            this->r10Spec.setId(triton::arch::x86::ID_REG_R10);
+            this->r10Spec.setParent(triton::arch::x86::ID_REG_R10);
+            this->r10Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->r10Spec.setLow(0);
+
+            this->r10dSpec.setName("r10d");
+            this->r10dSpec.setId(triton::arch::x86::ID_REG_R10D);
+            this->r10dSpec.setParent(triton::arch::x86::ID_REG_R10);
+            this->r10dSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->r10dSpec.setLow(0);
+
+            this->r10wSpec.setName("r10w");
+            this->r10wSpec.setId(triton::arch::x86::ID_REG_R10W);
+            this->r10wSpec.setParent(triton::arch::x86::ID_REG_R10);
+            this->r10wSpec.setHigh(WORD_SIZE_BIT-1);
+            this->r10wSpec.setLow(0);
+
+            this->r10bSpec.setName("r10b");
+            this->r10bSpec.setId(triton::arch::x86::ID_REG_R10B);
+            this->r10bSpec.setParent(triton::arch::x86::ID_REG_R10);
+            this->r10bSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->r10bSpec.setLow(0);
+
+            this->r11Spec.setName("r11");
+            this->r11Spec.setId(triton::arch::x86::ID_REG_R11);
+            this->r11Spec.setParent(triton::arch::x86::ID_REG_R11);
+            this->r11Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->r11Spec.setLow(0);
+
+            this->r11dSpec.setName("r11d");
+            this->r11dSpec.setId(triton::arch::x86::ID_REG_R11D);
+            this->r11dSpec.setParent(triton::arch::x86::ID_REG_R11);
+            this->r11dSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->r11dSpec.setLow(0);
+
+            this->r11wSpec.setName("r11w");
+            this->r11wSpec.setId(triton::arch::x86::ID_REG_R11W);
+            this->r11wSpec.setParent(triton::arch::x86::ID_REG_R11);
+            this->r11wSpec.setHigh(WORD_SIZE_BIT-1);
+            this->r11wSpec.setLow(0);
+
+            this->r11bSpec.setName("r11b");
+            this->r11bSpec.setId(triton::arch::x86::ID_REG_R11B);
+            this->r11bSpec.setParent(triton::arch::x86::ID_REG_R11);
+            this->r11bSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->r11bSpec.setLow(0);
+
+            this->r12Spec.setName("r12");
+            this->r12Spec.setId(triton::arch::x86::ID_REG_R12);
+            this->r12Spec.setParent(triton::arch::x86::ID_REG_R12);
+            this->r12Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->r12Spec.setLow(0);
+
+            this->r12dSpec.setName("r12d");
+            this->r12dSpec.setId(triton::arch::x86::ID_REG_R12D);
+            this->r12dSpec.setParent(triton::arch::x86::ID_REG_R12);
+            this->r12dSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->r12dSpec.setLow(0);
+
+            this->r12wSpec.setName("r12w");
+            this->r12wSpec.setId(triton::arch::x86::ID_REG_R12W);
+            this->r12wSpec.setParent(triton::arch::x86::ID_REG_R12);
+            this->r12wSpec.setHigh(WORD_SIZE_BIT-1);
+            this->r12wSpec.setLow(0);
+
+            this->r12bSpec.setName("r12b");
+            this->r12bSpec.setId(triton::arch::x86::ID_REG_R12B);
+            this->r12bSpec.setParent(triton::arch::x86::ID_REG_R12);
+            this->r12bSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->r12bSpec.setLow(0);
+
+            this->r13Spec.setName("r13");
+            this->r13Spec.setId(triton::arch::x86::ID_REG_R13);
+            this->r13Spec.setParent(triton::arch::x86::ID_REG_R13);
+            this->r13Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->r13Spec.setLow(0);
+
+            this->r13dSpec.setName("r13d");
+            this->r13dSpec.setId(triton::arch::x86::ID_REG_R13D);
+            this->r13dSpec.setParent(triton::arch::x86::ID_REG_R13);
+            this->r13dSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->r13dSpec.setLow(0);
+
+            this->r13wSpec.setName("r13w");
+            this->r13wSpec.setId(triton::arch::x86::ID_REG_R13W);
+            this->r13wSpec.setParent(triton::arch::x86::ID_REG_R13);
+            this->r13wSpec.setHigh(WORD_SIZE_BIT-1);
+            this->r13wSpec.setLow(0);
+
+            this->r13bSpec.setName("r13b");
+            this->r13bSpec.setId(triton::arch::x86::ID_REG_R13B);
+            this->r13bSpec.setParent(triton::arch::x86::ID_REG_R13);
+            this->r13bSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->r13bSpec.setLow(0);
+
+            this->r14Spec.setName("r14");
+            this->r14Spec.setId(triton::arch::x86::ID_REG_R14);
+            this->r14Spec.setParent(triton::arch::x86::ID_REG_R14);
+            this->r14Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->r14Spec.setLow(0);
+
+            this->r14dSpec.setName("r14d");
+            this->r14dSpec.setId(triton::arch::x86::ID_REG_R14D);
+            this->r14dSpec.setParent(triton::arch::x86::ID_REG_R14);
+            this->r14dSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->r14dSpec.setLow(0);
+
+            this->r14wSpec.setName("r14w");
+            this->r14wSpec.setId(triton::arch::x86::ID_REG_R14W);
+            this->r14wSpec.setParent(triton::arch::x86::ID_REG_R14);
+            this->r14wSpec.setHigh(WORD_SIZE_BIT-1);
+            this->r14wSpec.setLow(0);
+
+            this->r14bSpec.setName("r14b");
+            this->r14bSpec.setId(triton::arch::x86::ID_REG_R14B);
+            this->r14bSpec.setParent(triton::arch::x86::ID_REG_R14);
+            this->r14bSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->r14bSpec.setLow(0);
+
+            this->r15Spec.setName("r15");
+            this->r15Spec.setId(triton::arch::x86::ID_REG_R15);
+            this->r15Spec.setParent(triton::arch::x86::ID_REG_R15);
+            this->r15Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->r15Spec.setLow(0);
+
+            this->r15dSpec.setName("r15d");
+            this->r15dSpec.setId(triton::arch::x86::ID_REG_R15D);
+            this->r15dSpec.setParent(triton::arch::x86::ID_REG_R15);
+            this->r15dSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->r15dSpec.setLow(0);
+
+            this->r15wSpec.setName("r15w");
+            this->r15wSpec.setId(triton::arch::x86::ID_REG_R15W);
+            this->r15wSpec.setParent(triton::arch::x86::ID_REG_R15);
+            this->r15wSpec.setHigh(WORD_SIZE_BIT-1);
+            this->r15wSpec.setLow(0);
+
+            this->r15bSpec.setName("r15b");
+            this->r15bSpec.setId(triton::arch::x86::ID_REG_R15B);
+            this->r15bSpec.setParent(triton::arch::x86::ID_REG_R15);
+            this->r15bSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->r15bSpec.setLow(0);
+
+            this->xmm8Spec.setName("xmm8");
+            this->xmm8Spec.setId(triton::arch::x86::ID_REG_XMM8);
+            this->xmm8Spec.setParent(triton::arch::x86::ID_REG_XMM8);
+            this->xmm8Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm8Spec.setLow(0);
+
+            this->xmm9Spec.setName("xmm9");
+            this->xmm9Spec.setId(triton::arch::x86::ID_REG_XMM9);
+            this->xmm9Spec.setParent(triton::arch::x86::ID_REG_XMM9);
+            this->xmm9Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm9Spec.setLow(0);
+
+            this->xmm10Spec.setName("xmm10");
+            this->xmm10Spec.setId(triton::arch::x86::ID_REG_XMM10);
+            this->xmm10Spec.setParent(triton::arch::x86::ID_REG_XMM10);
+            this->xmm10Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm10Spec.setLow(0);
+
+            this->xmm11Spec.setName("xmm11");
+            this->xmm11Spec.setId(triton::arch::x86::ID_REG_XMM11);
+            this->xmm11Spec.setParent(triton::arch::x86::ID_REG_XMM11);
+            this->xmm11Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm11Spec.setLow(0);
+
+            this->xmm12Spec.setName("xmm12");
+            this->xmm12Spec.setId(triton::arch::x86::ID_REG_XMM12);
+            this->xmm12Spec.setParent(triton::arch::x86::ID_REG_XMM12);
+            this->xmm12Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm12Spec.setLow(0);
+
+            this->xmm13Spec.setName("xmm13");
+            this->xmm13Spec.setId(triton::arch::x86::ID_REG_XMM13);
+            this->xmm13Spec.setParent(triton::arch::x86::ID_REG_XMM13);
+            this->xmm13Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm13Spec.setLow(0);
+
+            this->xmm14Spec.setName("xmm14");
+            this->xmm14Spec.setId(triton::arch::x86::ID_REG_XMM14);
+            this->xmm14Spec.setParent(triton::arch::x86::ID_REG_XMM14);
+            this->xmm14Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm14Spec.setLow(0);
+
+            this->xmm15Spec.setName("xmm15");
+            this->xmm15Spec.setId(triton::arch::x86::ID_REG_XMM15);
+            this->xmm15Spec.setParent(triton::arch::x86::ID_REG_XMM15);
+            this->xmm15Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->xmm15Spec.setLow(0);
+
+            this->ymm8Spec.setName("ymm8");
+            this->ymm8Spec.setId(triton::arch::x86::ID_REG_YMM8);
+            this->ymm8Spec.setParent(triton::arch::x86::ID_REG_YMM8);
+            this->ymm8Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm8Spec.setLow(0);
+
+            this->ymm9Spec.setName("ymm9");
+            this->ymm9Spec.setId(triton::arch::x86::ID_REG_YMM9);
+            this->ymm9Spec.setParent(triton::arch::x86::ID_REG_YMM9);
+            this->ymm9Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm9Spec.setLow(0);
+
+            this->ymm10Spec.setName("ymm10");
+            this->ymm10Spec.setId(triton::arch::x86::ID_REG_YMM10);
+            this->ymm10Spec.setParent(triton::arch::x86::ID_REG_YMM10);
+            this->ymm10Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm10Spec.setLow(0);
+
+            this->ymm11Spec.setName("ymm11");
+            this->ymm11Spec.setId(triton::arch::x86::ID_REG_YMM11);
+            this->ymm11Spec.setParent(triton::arch::x86::ID_REG_YMM11);
+            this->ymm11Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm11Spec.setLow(0);
+
+            this->ymm12Spec.setName("ymm12");
+            this->ymm12Spec.setId(triton::arch::x86::ID_REG_YMM12);
+            this->ymm12Spec.setParent(triton::arch::x86::ID_REG_YMM12);
+            this->ymm12Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm12Spec.setLow(0);
+
+            this->ymm13Spec.setName("ymm13");
+            this->ymm13Spec.setId(triton::arch::x86::ID_REG_YMM13);
+            this->ymm13Spec.setParent(triton::arch::x86::ID_REG_YMM13);
+            this->ymm13Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm13Spec.setLow(0);
+
+            this->ymm14Spec.setName("ymm14");
+            this->ymm14Spec.setId(triton::arch::x86::ID_REG_YMM14);
+            this->ymm14Spec.setParent(triton::arch::x86::ID_REG_YMM14);
+            this->ymm14Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm14Spec.setLow(0);
+
+            this->ymm15Spec.setName("ymm15");
+            this->ymm15Spec.setId(triton::arch::x86::ID_REG_YMM15);
+            this->ymm15Spec.setParent(triton::arch::x86::ID_REG_YMM15);
+            this->ymm15Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm15Spec.setLow(0);
+
+            this->zmm1Spec.setName("zmm1");
+            this->zmm1Spec.setId(triton::arch::x86::ID_REG_ZMM1);
+            this->zmm1Spec.setParent(triton::arch::x86::ID_REG_ZMM1);
+            this->zmm1Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm1Spec.setLow(0);
+
+            this->zmm2Spec.setName("zmm2");
+            this->zmm2Spec.setId(triton::arch::x86::ID_REG_ZMM2);
+            this->zmm2Spec.setParent(triton::arch::x86::ID_REG_ZMM2);
+            this->zmm2Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm2Spec.setLow(0);
+
+            this->zmm3Spec.setName("zmm3");
+            this->zmm3Spec.setId(triton::arch::x86::ID_REG_ZMM3);
+            this->zmm3Spec.setParent(triton::arch::x86::ID_REG_ZMM3);
+            this->zmm3Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm3Spec.setLow(0);
+
+            this->zmm4Spec.setName("zmm4");
+            this->zmm4Spec.setId(triton::arch::x86::ID_REG_ZMM4);
+            this->zmm4Spec.setParent(triton::arch::x86::ID_REG_ZMM4);
+            this->zmm4Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm4Spec.setLow(0);
+
+            this->zmm5Spec.setName("zmm5");
+            this->zmm5Spec.setId(triton::arch::x86::ID_REG_ZMM5);
+            this->zmm5Spec.setParent(triton::arch::x86::ID_REG_ZMM5);
+            this->zmm5Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm5Spec.setLow(0);
+
+            this->zmm6Spec.setName("zmm6");
+            this->zmm6Spec.setId(triton::arch::x86::ID_REG_ZMM6);
+            this->zmm6Spec.setParent(triton::arch::x86::ID_REG_ZMM6);
+            this->zmm6Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm6Spec.setLow(0);
+
+            this->zmm7Spec.setName("zmm7");
+            this->zmm7Spec.setId(triton::arch::x86::ID_REG_ZMM7);
+            this->zmm7Spec.setParent(triton::arch::x86::ID_REG_ZMM7);
+            this->zmm7Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm7Spec.setLow(0);
+
+            this->zmm8Spec.setName("zmm8");
+            this->zmm8Spec.setId(triton::arch::x86::ID_REG_ZMM8);
+            this->zmm8Spec.setParent(triton::arch::x86::ID_REG_ZMM8);
+            this->zmm8Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm8Spec.setLow(0);
+
+            this->zmm9Spec.setName("zmm9");
+            this->zmm9Spec.setId(triton::arch::x86::ID_REG_ZMM9);
+            this->zmm9Spec.setParent(triton::arch::x86::ID_REG_ZMM9);
+            this->zmm9Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm9Spec.setLow(0);
+
+            this->zmm10Spec.setName("zmm10");
+            this->zmm10Spec.setId(triton::arch::x86::ID_REG_ZMM10);
+            this->zmm10Spec.setParent(triton::arch::x86::ID_REG_ZMM10);
+            this->zmm10Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm10Spec.setLow(0);
+
+            this->zmm11Spec.setName("zmm11");
+            this->zmm11Spec.setId(triton::arch::x86::ID_REG_ZMM11);
+            this->zmm11Spec.setParent(triton::arch::x86::ID_REG_ZMM11);
+            this->zmm11Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm11Spec.setLow(0);
+
+            this->zmm12Spec.setName("zmm12");
+            this->zmm12Spec.setId(triton::arch::x86::ID_REG_ZMM12);
+            this->zmm12Spec.setParent(triton::arch::x86::ID_REG_ZMM12);
+            this->zmm12Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm12Spec.setLow(0);
+
+            this->zmm13Spec.setName("zmm13");
+            this->zmm13Spec.setId(triton::arch::x86::ID_REG_ZMM13);
+            this->zmm13Spec.setParent(triton::arch::x86::ID_REG_ZMM13);
+            this->zmm13Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm13Spec.setLow(0);
+
+            this->zmm14Spec.setName("zmm14");
+            this->zmm14Spec.setId(triton::arch::x86::ID_REG_ZMM14);
+            this->zmm14Spec.setParent(triton::arch::x86::ID_REG_ZMM14);
+            this->zmm14Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm14Spec.setLow(0);
+
+            this->zmm15Spec.setName("zmm15");
+            this->zmm15Spec.setId(triton::arch::x86::ID_REG_ZMM15);
+            this->zmm15Spec.setParent(triton::arch::x86::ID_REG_ZMM15);
+            this->zmm15Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm15Spec.setLow(0);
+
+            this->zmm16Spec.setName("zmm16");
+            this->zmm16Spec.setId(triton::arch::x86::ID_REG_ZMM16);
+            this->zmm16Spec.setParent(triton::arch::x86::ID_REG_ZMM16);
+            this->zmm16Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm16Spec.setLow(0);
+
+            this->zmm17Spec.setName("zmm17");
+            this->zmm17Spec.setId(triton::arch::x86::ID_REG_ZMM17);
+            this->zmm17Spec.setParent(triton::arch::x86::ID_REG_ZMM17);
+            this->zmm17Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm17Spec.setLow(0);
+
+            this->zmm18Spec.setName("zmm18");
+            this->zmm18Spec.setId(triton::arch::x86::ID_REG_ZMM18);
+            this->zmm18Spec.setParent(triton::arch::x86::ID_REG_ZMM18);
+            this->zmm18Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm18Spec.setLow(0);
+
+            this->zmm19Spec.setName("zmm19");
+            this->zmm19Spec.setId(triton::arch::x86::ID_REG_ZMM19);
+            this->zmm19Spec.setParent(triton::arch::x86::ID_REG_ZMM19);
+            this->zmm19Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm19Spec.setLow(0);
+
+            this->zmm20Spec.setName("zmm20");
+            this->zmm20Spec.setId(triton::arch::x86::ID_REG_ZMM20);
+            this->zmm20Spec.setParent(triton::arch::x86::ID_REG_ZMM20);
+            this->zmm20Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm20Spec.setLow(0);
+
+            this->zmm21Spec.setName("zmm21");
+            this->zmm21Spec.setId(triton::arch::x86::ID_REG_ZMM21);
+            this->zmm21Spec.setParent(triton::arch::x86::ID_REG_ZMM21);
+            this->zmm21Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm21Spec.setLow(0);
+
+            this->zmm22Spec.setName("zmm22");
+            this->zmm22Spec.setId(triton::arch::x86::ID_REG_ZMM22);
+            this->zmm22Spec.setParent(triton::arch::x86::ID_REG_ZMM22);
+            this->zmm22Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm22Spec.setLow(0);
+
+            this->zmm23Spec.setName("zmm23");
+            this->zmm23Spec.setId(triton::arch::x86::ID_REG_ZMM23);
+            this->zmm23Spec.setParent(triton::arch::x86::ID_REG_ZMM23);
+            this->zmm23Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm23Spec.setLow(0);
+
+            this->zmm24Spec.setName("zmm24");
+            this->zmm24Spec.setId(triton::arch::x86::ID_REG_ZMM24);
+            this->zmm24Spec.setParent(triton::arch::x86::ID_REG_ZMM24);
+            this->zmm24Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm24Spec.setLow(0);
+
+            this->zmm25Spec.setName("zmm25");
+            this->zmm25Spec.setId(triton::arch::x86::ID_REG_ZMM25);
+            this->zmm25Spec.setParent(triton::arch::x86::ID_REG_ZMM25);
+            this->zmm25Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm25Spec.setLow(0);
+
+            this->zmm26Spec.setName("zmm26");
+            this->zmm26Spec.setId(triton::arch::x86::ID_REG_ZMM26);
+            this->zmm26Spec.setParent(triton::arch::x86::ID_REG_ZMM26);
+            this->zmm26Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm26Spec.setLow(0);
+
+            this->zmm27Spec.setName("zmm27");
+            this->zmm27Spec.setId(triton::arch::x86::ID_REG_ZMM27);
+            this->zmm27Spec.setParent(triton::arch::x86::ID_REG_ZMM27);
+            this->zmm27Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm27Spec.setLow(0);
+
+            this->zmm28Spec.setName("zmm28");
+            this->zmm28Spec.setId(triton::arch::x86::ID_REG_ZMM28);
+            this->zmm28Spec.setParent(triton::arch::x86::ID_REG_ZMM28);
+            this->zmm28Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm28Spec.setLow(0);
+
+            this->zmm29Spec.setName("zmm29");
+            this->zmm29Spec.setId(triton::arch::x86::ID_REG_ZMM29);
+            this->zmm29Spec.setParent(triton::arch::x86::ID_REG_ZMM29);
+            this->zmm29Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm29Spec.setLow(0);
+
+            this->zmm30Spec.setName("zmm30");
+            this->zmm30Spec.setId(triton::arch::x86::ID_REG_ZMM30);
+            this->zmm30Spec.setParent(triton::arch::x86::ID_REG_ZMM30);
+            this->zmm30Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm30Spec.setLow(0);
+
+            this->zmm31Spec.setName("zmm31");
+            this->zmm31Spec.setId(triton::arch::x86::ID_REG_ZMM31);
+            this->zmm31Spec.setParent(triton::arch::x86::ID_REG_ZMM31);
+            this->zmm31Spec.setHigh(DQQWORD_SIZE_BIT-1);
+            this->zmm31Spec.setLow(0);
+
+          case triton::arch::ARCH_X86:
+
+            this->eaxSpec.setName("eax");
+            this->eaxSpec.setId(triton::arch::x86::ID_REG_EAX);
+            this->eaxSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RAX : triton::arch::x86::ID_REG_EAX);
+            this->eaxSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->eaxSpec.setLow(0);
+
+            this->axSpec.setName("ax");
+            this->axSpec.setId(triton::arch::x86::ID_REG_AX);
+            this->axSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RAX : triton::arch::x86::ID_REG_EAX);
+            this->axSpec.setHigh(WORD_SIZE_BIT-1);
+            this->axSpec.setLow(0);
+
+            this->ahSpec.setName("ah");
+            this->ahSpec.setId(triton::arch::x86::ID_REG_AH);
+            this->ahSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RAX : triton::arch::x86::ID_REG_EAX);
+            this->ahSpec.setHigh(WORD_SIZE_BIT-1);
+            this->ahSpec.setLow(BYTE_SIZE_BIT);
+
+            this->alSpec.setName("al");
+            this->alSpec.setId(triton::arch::x86::ID_REG_AL);
+            this->alSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RAX : triton::arch::x86::ID_REG_EAX);
+            this->alSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->alSpec.setLow(0);
+
+            this->ebxSpec.setName("ebx");
+            this->ebxSpec.setId(triton::arch::x86::ID_REG_EBX);
+            this->ebxSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RAX : triton::arch::x86::ID_REG_EBX);
+            this->ebxSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->ebxSpec.setLow(0);
+
+            this->bxSpec.setName("bx");
+            this->bxSpec.setId(triton::arch::x86::ID_REG_BX);
+            this->bxSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBX : triton::arch::x86::ID_REG_EBX);
+            this->bxSpec.setHigh(WORD_SIZE_BIT-1);
+            this->bxSpec.setLow(0);
+
+            this->bhSpec.setName("bh");
+            this->bhSpec.setId(triton::arch::x86::ID_REG_BH);
+            this->bhSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBX : triton::arch::x86::ID_REG_EBX);
+            this->bhSpec.setHigh(WORD_SIZE_BIT-1);
+            this->bhSpec.setLow(BYTE_SIZE_BIT);
+
+            this->blSpec.setName("bl");
+            this->blSpec.setId(triton::arch::x86::ID_REG_BL);
+            this->blSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBX : triton::arch::x86::ID_REG_EBX);
+            this->blSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->blSpec.setLow(0);
+
+            this->ecxSpec.setName("ecx");
+            this->ecxSpec.setId(triton::arch::x86::ID_REG_ECX);
+            this->ecxSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RCX : triton::arch::x86::ID_REG_ECX);
+            this->ecxSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->ecxSpec.setLow(0);
+
+            this->cxSpec.setName("cx");
+            this->cxSpec.setId(triton::arch::x86::ID_REG_CX);
+            this->cxSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RCX : triton::arch::x86::ID_REG_ECX);
+            this->cxSpec.setHigh(WORD_SIZE_BIT-1);
+            this->cxSpec.setLow(0);
+
+            this->chSpec.setName("bh");
+            this->chSpec.setId(triton::arch::x86::ID_REG_BH);
+            this->chSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RCX : triton::arch::x86::ID_REG_ECX);
+            this->chSpec.setHigh(WORD_SIZE_BIT-1);
+            this->chSpec.setLow(BYTE_SIZE_BIT);
+
+            this->clSpec.setName("bl");
+            this->clSpec.setId(triton::arch::x86::ID_REG_BL);
+            this->clSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RCX : triton::arch::x86::ID_REG_ECX);
+            this->clSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->clSpec.setLow(0);
+
+            this->edxSpec.setName("edx");
+            this->edxSpec.setId(triton::arch::x86::ID_REG_EDX);
+            this->edxSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDX : triton::arch::x86::ID_REG_EDX);
+            this->edxSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->edxSpec.setLow(0);
+
+            this->dxSpec.setName("dx");
+            this->dxSpec.setId(triton::arch::x86::ID_REG_DX);
+            this->dxSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDX : triton::arch::x86::ID_REG_EDX);
+            this->dxSpec.setHigh(WORD_SIZE_BIT-1);
+            this->dxSpec.setLow(0);
+
+            this->dhSpec.setName("dh");
+            this->dhSpec.setId(triton::arch::x86::ID_REG_DH);
+            this->dhSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDX : triton::arch::x86::ID_REG_EDX);
+            this->dhSpec.setHigh(WORD_SIZE_BIT-1);
+            this->dhSpec.setLow(BYTE_SIZE_BIT);
+
+            this->dlSpec.setName("dl");
+            this->dlSpec.setId(triton::arch::x86::ID_REG_DL);
+            this->dlSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDX : triton::arch::x86::ID_REG_EDX);
+            this->dlSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->dlSpec.setLow(0);
+
+            this->ediSpec.setName("edi");
+            this->ediSpec.setId(triton::arch::x86::ID_REG_EDI);
+            this->ediSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDI : triton::arch::x86::ID_REG_EDI);
+            this->ediSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->ediSpec.setLow(0);
+
+            this->diSpec.setName("di");
+            this->diSpec.setId(triton::arch::x86::ID_REG_DI);
+            this->diSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDI : triton::arch::x86::ID_REG_EDI);
+            this->diSpec.setHigh(WORD_SIZE_BIT-1);
+            this->diSpec.setLow(0);
+
+            this->dilSpec.setName("dil");
+            this->dilSpec.setId(triton::arch::x86::ID_REG_DIL);
+            this->dilSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RDI : triton::arch::x86::ID_REG_EDI);
+            this->dilSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->dilSpec.setLow(0);
+
+            this->esiSpec.setName("esi");
+            this->esiSpec.setId(triton::arch::x86::ID_REG_ESI);
+            this->esiSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSI : triton::arch::x86::ID_REG_ESI);
+            this->esiSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->esiSpec.setLow(0);
+
+            this->siSpec.setName("si");
+            this->siSpec.setId(triton::arch::x86::ID_REG_SI);
+            this->siSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSI : triton::arch::x86::ID_REG_ESI);
+            this->siSpec.setHigh(WORD_SIZE_BIT-1);
+            this->siSpec.setLow(0);
+
+            this->silSpec.setName("sil");
+            this->silSpec.setId(triton::arch::x86::ID_REG_SIL);
+            this->silSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSI : triton::arch::x86::ID_REG_ESI);
+            this->silSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->silSpec.setLow(0);
+
+            this->ebpSpec.setName("ebp");
+            this->ebpSpec.setId(triton::arch::x86::ID_REG_EBP);
+            this->ebpSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBP : triton::arch::x86::ID_REG_EBP);
+            this->ebpSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->ebpSpec.setLow(0);
+
+            this->bpSpec.setName("bp");
+            this->bpSpec.setId(triton::arch::x86::ID_REG_BP);
+            this->bpSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBP : triton::arch::x86::ID_REG_EBP);
+            this->bpSpec.setHigh(WORD_SIZE_BIT-1);
+            this->bpSpec.setLow(0);
+
+            this->bplSpec.setName("bpl");
+            this->bplSpec.setId(triton::arch::x86::ID_REG_BPL);
+            this->bplSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RBP : triton::arch::x86::ID_REG_EBP);
+            this->bplSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->bplSpec.setLow(0);
+
+            this->espSpec.setName("esp");
+            this->espSpec.setId(triton::arch::x86::ID_REG_ESP);
+            this->espSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSP : triton::arch::x86::ID_REG_ESP);
+            this->espSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->espSpec.setLow(0);
+
+            this->spSpec.setName("sp");
+            this->spSpec.setId(triton::arch::x86::ID_REG_SP);
+            this->spSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSP : triton::arch::x86::ID_REG_ESP);
+            this->spSpec.setHigh(WORD_SIZE_BIT-1);
+            this->spSpec.setLow(0);
+
+            this->splSpec.setName("spl");
+            this->splSpec.setId(triton::arch::x86::ID_REG_SPL);
+            this->splSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RSP : triton::arch::x86::ID_REG_ESP);
+            this->splSpec.setHigh(BYTE_SIZE_BIT-1);
+            this->splSpec.setLow(0);
+
+            this->eipSpec.setName("eip");
+            this->eipSpec.setId(triton::arch::x86::ID_REG_EIP);
+            this->eipSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RIP : triton::arch::x86::ID_REG_EIP);
+            this->eipSpec.setHigh(DWORD_SIZE_BIT-1);
+            this->eipSpec.setLow(0);
+
+            this->ipSpec.setName("ip");
+            this->ipSpec.setId(triton::arch::x86::ID_REG_IP);
+            this->ipSpec.setParent((this->arch == triton::arch::ARCH_X86_64) ? triton::arch::x86::ID_REG_RIP : triton::arch::x86::ID_REG_EIP);
+            this->ipSpec.setHigh(WORD_SIZE_BIT-1);
+            this->ipSpec.setLow(0);
+
+            this->eflagsSpec.setName("eflags");
+            this->eflagsSpec.setId(triton::arch::x86::ID_REG_EFLAGS);
+            this->eflagsSpec.setParent(triton::arch::x86::ID_REG_EFLAGS);
+            this->eflagsSpec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->eflagsSpec.setLow(0);
+
+            this->mm0Spec.setName("mm0");
+            this->mm0Spec.setId(triton::arch::x86::ID_REG_MM0);
+            this->mm0Spec.setParent(triton::arch::x86::ID_REG_MM0);
+            this->mm0Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->mm0Spec.setLow(0);
+
+            this->mm1Spec.setName("mm1");
+            this->mm1Spec.setId(triton::arch::x86::ID_REG_MM1);
+            this->mm1Spec.setParent(triton::arch::x86::ID_REG_MM1);
+            this->mm1Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->mm1Spec.setLow(0);
+
+            this->mm2Spec.setName("mm2");
+            this->mm2Spec.setId(triton::arch::x86::ID_REG_MM2);
+            this->mm2Spec.setParent(triton::arch::x86::ID_REG_MM2);
+            this->mm2Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->mm2Spec.setLow(0);
+
+            this->mm3Spec.setName("mm3");
+            this->mm3Spec.setId(triton::arch::x86::ID_REG_MM3);
+            this->mm3Spec.setParent(triton::arch::x86::ID_REG_MM3);
+            this->mm3Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->mm3Spec.setLow(0);
+
+            this->mm4Spec.setName("mm4");
+            this->mm4Spec.setId(triton::arch::x86::ID_REG_MM4);
+            this->mm4Spec.setParent(triton::arch::x86::ID_REG_MM4);
+            this->mm4Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->mm4Spec.setLow(0);
+
+            this->mm5Spec.setName("mm5");
+            this->mm5Spec.setId(triton::arch::x86::ID_REG_MM5);
+            this->mm5Spec.setParent(triton::arch::x86::ID_REG_MM5);
+            this->mm5Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->mm5Spec.setLow(0);
+
+            this->mm6Spec.setName("mm6");
+            this->mm6Spec.setId(triton::arch::x86::ID_REG_MM6);
+            this->mm6Spec.setParent(triton::arch::x86::ID_REG_MM6);
+            this->mm6Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->mm6Spec.setLow(0);
+
+            this->mm7Spec.setName("mm7");
+            this->mm7Spec.setId(triton::arch::x86::ID_REG_MM7);
+            this->mm7Spec.setParent(triton::arch::x86::ID_REG_MM7);
+            this->mm7Spec.setHigh(QWORD_SIZE_BIT-1);
+            this->mm7Spec.setLow(0);
+
+            this->xmm0Spec.setName("xmm0");
+            this->xmm0Spec.setId(triton::arch::x86::ID_REG_XMM0);
+            this->xmm0Spec.setParent(triton::arch::x86::ID_REG_XMM0);
+            this->xmm0Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm0Spec.setLow(0);
+
+            this->xmm1Spec.setName("xmm1");
+            this->xmm1Spec.setId(triton::arch::x86::ID_REG_XMM1);
+            this->xmm1Spec.setParent(triton::arch::x86::ID_REG_XMM1);
+            this->xmm1Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm1Spec.setLow(0);
+
+            this->xmm2Spec.setName("xmm2");
+            this->xmm2Spec.setId(triton::arch::x86::ID_REG_XMM2);
+            this->xmm2Spec.setParent(triton::arch::x86::ID_REG_XMM2);
+            this->xmm2Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm2Spec.setLow(0);
+
+            this->xmm3Spec.setName("xmm3");
+            this->xmm3Spec.setId(triton::arch::x86::ID_REG_XMM3);
+            this->xmm3Spec.setParent(triton::arch::x86::ID_REG_XMM3);
+            this->xmm3Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm3Spec.setLow(0);
+
+            this->xmm4Spec.setName("xmm4");
+            this->xmm4Spec.setId(triton::arch::x86::ID_REG_XMM4);
+            this->xmm4Spec.setParent(triton::arch::x86::ID_REG_XMM4);
+            this->xmm4Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm4Spec.setLow(0);
+
+            this->xmm5Spec.setName("xmm5");
+            this->xmm5Spec.setId(triton::arch::x86::ID_REG_XMM5);
+            this->xmm5Spec.setParent(triton::arch::x86::ID_REG_XMM5);
+            this->xmm5Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm5Spec.setLow(0);
+
+            this->xmm6Spec.setName("xmm6");
+            this->xmm6Spec.setId(triton::arch::x86::ID_REG_XMM6);
+            this->xmm6Spec.setParent(triton::arch::x86::ID_REG_XMM6);
+            this->xmm6Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm6Spec.setLow(0);
+
+            this->xmm7Spec.setName("xmm7");
+            this->xmm7Spec.setId(triton::arch::x86::ID_REG_XMM7);
+            this->xmm7Spec.setParent(triton::arch::x86::ID_REG_XMM7);
+            this->xmm7Spec.setHigh(DQWORD_SIZE_BIT-1);
+            this->xmm7Spec.setLow(0);
+
+            this->ymm0Spec.setName("ymm0");
+            this->ymm0Spec.setId(triton::arch::x86::ID_REG_YMM0);
+            this->ymm0Spec.setParent(triton::arch::x86::ID_REG_YMM0);
+            this->ymm0Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm0Spec.setLow(0);
+
+            this->ymm1Spec.setName("ymm1");
+            this->ymm1Spec.setId(triton::arch::x86::ID_REG_YMM1);
+            this->ymm1Spec.setParent(triton::arch::x86::ID_REG_YMM1);
+            this->ymm1Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm1Spec.setLow(0);
+
+            this->ymm2Spec.setName("ymm2");
+            this->ymm2Spec.setId(triton::arch::x86::ID_REG_YMM2);
+            this->ymm2Spec.setParent(triton::arch::x86::ID_REG_YMM2);
+            this->ymm2Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm2Spec.setLow(0);
+
+            this->ymm3Spec.setName("ymm3");
+            this->ymm3Spec.setId(triton::arch::x86::ID_REG_YMM3);
+            this->ymm3Spec.setParent(triton::arch::x86::ID_REG_YMM3);
+            this->ymm3Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm3Spec.setLow(0);
+
+            this->ymm4Spec.setName("ymm4");
+            this->ymm4Spec.setId(triton::arch::x86::ID_REG_YMM4);
+            this->ymm4Spec.setParent(triton::arch::x86::ID_REG_YMM4);
+            this->ymm4Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm4Spec.setLow(0);
+
+            this->ymm5Spec.setName("ymm5");
+            this->ymm5Spec.setId(triton::arch::x86::ID_REG_YMM5);
+            this->ymm5Spec.setParent(triton::arch::x86::ID_REG_YMM5);
+            this->ymm5Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm5Spec.setLow(0);
+
+            this->ymm6Spec.setName("ymm6");
+            this->ymm6Spec.setId(triton::arch::x86::ID_REG_YMM6);
+            this->ymm6Spec.setParent(triton::arch::x86::ID_REG_YMM6);
+            this->ymm6Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm6Spec.setLow(0);
+
+            this->ymm7Spec.setName("ymm7");
+            this->ymm7Spec.setId(triton::arch::x86::ID_REG_YMM7);
+            this->ymm7Spec.setParent(triton::arch::x86::ID_REG_YMM7);
+            this->ymm7Spec.setHigh(QQWORD_SIZE_BIT-1);
+            this->ymm7Spec.setLow(0);
+
+            this->mxcsrSpec.setName("mxcsr");
+            this->mxcsrSpec.setId(triton::arch::x86::ID_REG_MXCSR);
+            this->mxcsrSpec.setParent(triton::arch::x86::ID_REG_MXCSR);
+            this->mxcsrSpec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->mxcsrSpec.setLow(0);
+
+            this->cr0Spec.setName("cr0");
+            this->cr0Spec.setId(triton::arch::x86::ID_REG_CR0);
+            this->cr0Spec.setParent(triton::arch::x86::ID_REG_CR0);
+            this->cr0Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr0Spec.setLow(0);
+
+            this->cr1Spec.setName("cr1");
+            this->cr1Spec.setId(triton::arch::x86::ID_REG_CR1);
+            this->cr1Spec.setParent(triton::arch::x86::ID_REG_CR1);
+            this->cr1Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr1Spec.setLow(0);
+
+            this->cr2Spec.setName("cr2");
+            this->cr2Spec.setId(triton::arch::x86::ID_REG_CR2);
+            this->cr2Spec.setParent(triton::arch::x86::ID_REG_CR2);
+            this->cr2Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr2Spec.setLow(0);
+
+            this->cr3Spec.setName("cr3");
+            this->cr3Spec.setId(triton::arch::x86::ID_REG_CR3);
+            this->cr3Spec.setParent(triton::arch::x86::ID_REG_CR3);
+            this->cr3Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr3Spec.setLow(0);
+
+            this->cr4Spec.setName("cr4");
+            this->cr4Spec.setId(triton::arch::x86::ID_REG_CR4);
+            this->cr4Spec.setParent(triton::arch::x86::ID_REG_CR4);
+            this->cr4Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr4Spec.setLow(0);
+
+            this->cr5Spec.setName("cr5");
+            this->cr5Spec.setId(triton::arch::x86::ID_REG_CR5);
+            this->cr5Spec.setParent(triton::arch::x86::ID_REG_CR5);
+            this->cr5Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr5Spec.setLow(0);
+
+            this->cr6Spec.setName("cr6");
+            this->cr6Spec.setId(triton::arch::x86::ID_REG_CR6);
+            this->cr6Spec.setParent(triton::arch::x86::ID_REG_CR6);
+            this->cr6Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr6Spec.setLow(0);
+
+            this->cr7Spec.setName("cr7");
+            this->cr7Spec.setId(triton::arch::x86::ID_REG_CR7);
+            this->cr7Spec.setParent(triton::arch::x86::ID_REG_CR7);
+            this->cr7Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr7Spec.setLow(0);
+
+            this->cr8Spec.setName("cr8");
+            this->cr8Spec.setId(triton::arch::x86::ID_REG_CR8);
+            this->cr8Spec.setParent(triton::arch::x86::ID_REG_CR8);
+            this->cr8Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr8Spec.setLow(0);
+
+            this->cr9Spec.setName("cr9");
+            this->cr9Spec.setId(triton::arch::x86::ID_REG_CR9);
+            this->cr9Spec.setParent(triton::arch::x86::ID_REG_CR9);
+            this->cr9Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr9Spec.setLow(0);
+
+            this->cr10Spec.setName("cr10");
+            this->cr10Spec.setId(triton::arch::x86::ID_REG_CR10);
+            this->cr10Spec.setParent(triton::arch::x86::ID_REG_CR10);
+            this->cr10Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr10Spec.setLow(0);
+
+            this->cr11Spec.setName("cr11");
+            this->cr11Spec.setId(triton::arch::x86::ID_REG_CR11);
+            this->cr11Spec.setParent(triton::arch::x86::ID_REG_CR11);
+            this->cr11Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr11Spec.setLow(0);
+
+            this->cr12Spec.setName("cr12");
+            this->cr12Spec.setId(triton::arch::x86::ID_REG_CR12);
+            this->cr12Spec.setParent(triton::arch::x86::ID_REG_CR12);
+            this->cr12Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr12Spec.setLow(0);
+
+            this->cr13Spec.setName("cr13");
+            this->cr13Spec.setId(triton::arch::x86::ID_REG_CR13);
+            this->cr13Spec.setParent(triton::arch::x86::ID_REG_CR13);
+            this->cr13Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr13Spec.setLow(0);
+
+            this->cr14Spec.setName("cr14");
+            this->cr14Spec.setId(triton::arch::x86::ID_REG_CR14);
+            this->cr14Spec.setParent(triton::arch::x86::ID_REG_CR14);
+            this->cr14Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr14Spec.setLow(0);
+
+            this->cr15Spec.setName("cr15");
+            this->cr15Spec.setId(triton::arch::x86::ID_REG_CR15);
+            this->cr15Spec.setParent(triton::arch::x86::ID_REG_CR15);
+            this->cr15Spec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->cr15Spec.setLow(0);
+
+            this->ieSpec.setName("ie");
+            this->ieSpec.setId(triton::arch::x86::ID_REG_IE);
+            this->ieSpec.setParent(triton::arch::x86::ID_REG_IE);
+            this->ieSpec.setHigh(0);
+            this->ieSpec.setLow(0);
+
+            this->deSpec.setName("de");
+            this->deSpec.setId(triton::arch::x86::ID_REG_DE);
+            this->deSpec.setParent(triton::arch::x86::ID_REG_DE);
+            this->deSpec.setHigh(0);
+            this->deSpec.setLow(0);
+
+            this->zeSpec.setName("ze");
+            this->zeSpec.setId(triton::arch::x86::ID_REG_ZE);
+            this->zeSpec.setParent(triton::arch::x86::ID_REG_ZE);
+            this->zeSpec.setHigh(0);
+            this->zeSpec.setLow(0);
+
+            this->oeSpec.setName("oe");
+            this->oeSpec.setId(triton::arch::x86::ID_REG_OE);
+            this->oeSpec.setParent(triton::arch::x86::ID_REG_OE);
+            this->oeSpec.setHigh(0);
+            this->oeSpec.setLow(0);
+
+            this->ueSpec.setName("ue");
+            this->ueSpec.setId(triton::arch::x86::ID_REG_UE);
+            this->ueSpec.setParent(triton::arch::x86::ID_REG_UE);
+            this->ueSpec.setHigh(0);
+            this->ueSpec.setLow(0);
+
+            this->peSpec.setName("pe");
+            this->peSpec.setId(triton::arch::x86::ID_REG_PE);
+            this->peSpec.setParent(triton::arch::x86::ID_REG_PE);
+            this->peSpec.setHigh(0);
+            this->peSpec.setLow(0);
+
+            this->dazSpec.setName("daz");
+            this->dazSpec.setId(triton::arch::x86::ID_REG_DAZ);
+            this->dazSpec.setParent(triton::arch::x86::ID_REG_DAZ);
+            this->dazSpec.setHigh(0);
+            this->dazSpec.setLow(0);
+
+            this->imSpec.setName("im");
+            this->imSpec.setId(triton::arch::x86::ID_REG_IM);
+            this->imSpec.setParent(triton::arch::x86::ID_REG_IM);
+            this->imSpec.setHigh(0);
+            this->imSpec.setLow(0);
+
+            this->dmSpec.setName("dm");
+            this->dmSpec.setId(triton::arch::x86::ID_REG_DM);
+            this->dmSpec.setParent(triton::arch::x86::ID_REG_DM);
+            this->dmSpec.setHigh(0);
+            this->dmSpec.setLow(0);
+
+            this->zmSpec.setName("zm");
+            this->zmSpec.setId(triton::arch::x86::ID_REG_ZM);
+            this->zmSpec.setParent(triton::arch::x86::ID_REG_ZM);
+            this->zmSpec.setHigh(0);
+            this->zmSpec.setLow(0);
+
+            this->omSpec.setName("om");
+            this->omSpec.setId(triton::arch::x86::ID_REG_OM);
+            this->omSpec.setParent(triton::arch::x86::ID_REG_OM);
+            this->omSpec.setHigh(0);
+            this->omSpec.setLow(0);
+
+            this->umSpec.setName("um");
+            this->umSpec.setId(triton::arch::x86::ID_REG_UM);
+            this->umSpec.setParent(triton::arch::x86::ID_REG_UM);
+            this->umSpec.setHigh(0);
+            this->umSpec.setLow(0);
+
+            this->pmSpec.setName("pm");
+            this->pmSpec.setId(triton::arch::x86::ID_REG_PM);
+            this->pmSpec.setParent(triton::arch::x86::ID_REG_PM);
+            this->pmSpec.setHigh(0);
+            this->pmSpec.setLow(0);
+
+            this->rlSpec.setName("rl");
+            this->rlSpec.setId(triton::arch::x86::ID_REG_RL);
+            this->rlSpec.setParent(triton::arch::x86::ID_REG_RL);
+            this->rlSpec.setHigh(0);
+            this->rlSpec.setLow(0);
+
+            this->rhSpec.setName("rh");
+            this->rhSpec.setId(triton::arch::x86::ID_REG_RH);
+            this->rhSpec.setParent(triton::arch::x86::ID_REG_RH);
+            this->rhSpec.setHigh(0);
+            this->rhSpec.setLow(0);
+
+            this->fzSpec.setName("fz");
+            this->fzSpec.setId(triton::arch::x86::ID_REG_FZ);
+            this->fzSpec.setParent(triton::arch::x86::ID_REG_FZ);
+            this->fzSpec.setHigh(0);
+            this->fzSpec.setLow(0);
+
+            this->afSpec.setName("af");
+            this->afSpec.setId(triton::arch::x86::ID_REG_AF);
+            this->afSpec.setParent(triton::arch::x86::ID_REG_AF);
+            this->afSpec.setHigh(0);
+            this->afSpec.setLow(0);
+
+            this->cfSpec.setName("cf");
+            this->cfSpec.setId(triton::arch::x86::ID_REG_CF);
+            this->cfSpec.setParent(triton::arch::x86::ID_REG_CF);
+            this->cfSpec.setHigh(0);
+            this->cfSpec.setLow(0);
+
+            this->dfSpec.setName("df");
+            this->dfSpec.setId(triton::arch::x86::ID_REG_DF);
+            this->dfSpec.setParent(triton::arch::x86::ID_REG_DF);
+            this->dfSpec.setHigh(0);
+            this->dfSpec.setLow(0);
+
+            this->ifSpec.setName("if");
+            this->ifSpec.setId(triton::arch::x86::ID_REG_IF);
+            this->ifSpec.setParent(triton::arch::x86::ID_REG_IF);
+            this->ifSpec.setHigh(0);
+            this->ifSpec.setLow(0);
+
+            this->ofSpec.setName("of");
+            this->ofSpec.setId(triton::arch::x86::ID_REG_OF);
+            this->ofSpec.setParent(triton::arch::x86::ID_REG_OF);
+            this->ofSpec.setHigh(0);
+            this->ofSpec.setLow(0);
+
+            this->pfSpec.setName("pf");
+            this->pfSpec.setId(triton::arch::x86::ID_REG_PF);
+            this->pfSpec.setParent(triton::arch::x86::ID_REG_PF);
+            this->pfSpec.setHigh(0);
+            this->pfSpec.setLow(0);
+
+            this->sfSpec.setName("sf");
+            this->sfSpec.setId(triton::arch::x86::ID_REG_SF);
+            this->sfSpec.setParent(triton::arch::x86::ID_REG_SF);
+            this->sfSpec.setHigh(0);
+            this->sfSpec.setLow(0);
+
+            this->tfSpec.setName("tf");
+            this->tfSpec.setId(triton::arch::x86::ID_REG_TF);
+            this->tfSpec.setParent(triton::arch::x86::ID_REG_TF);
+            this->tfSpec.setHigh(0);
+            this->tfSpec.setLow(0);
+
+            this->zfSpec.setName("zf");
+            this->zfSpec.setId(triton::arch::x86::ID_REG_ZF);
+            this->zfSpec.setParent(triton::arch::x86::ID_REG_ZF);
+            this->zfSpec.setHigh(0);
+            this->zfSpec.setLow(0);
+
+            this->csSpec.setName("cs");
+            this->csSpec.setId(triton::arch::x86::ID_REG_CS);
+            this->csSpec.setParent(triton::arch::x86::ID_REG_CS);
+            this->csSpec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->csSpec.setLow(0);
+
+            this->dsSpec.setName("ds");
+            this->dsSpec.setId(triton::arch::x86::ID_REG_DS);
+            this->dsSpec.setParent(triton::arch::x86::ID_REG_DS);
+            this->dsSpec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->dsSpec.setLow(0);
+
+            this->esSpec.setName("es");
+            this->esSpec.setId(triton::arch::x86::ID_REG_ES);
+            this->esSpec.setParent(triton::arch::x86::ID_REG_ES);
+            this->esSpec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->esSpec.setLow(0);
+
+            this->fsSpec.setName("fs");
+            this->fsSpec.setId(triton::arch::x86::ID_REG_FS);
+            this->fsSpec.setParent(triton::arch::x86::ID_REG_FS);
+            this->fsSpec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->fsSpec.setLow(0);
+
+            this->gsSpec.setName("gs");
+            this->gsSpec.setId(triton::arch::x86::ID_REG_GS);
+            this->gsSpec.setParent(triton::arch::x86::ID_REG_GS);
+            this->gsSpec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->gsSpec.setLow(0);
+
+            this->ssSpec.setName("ss");
+            this->ssSpec.setId(triton::arch::x86::ID_REG_SS);
+            this->ssSpec.setParent(triton::arch::x86::ID_REG_SS);
+            this->ssSpec.setHigh((this->arch == triton::arch::ARCH_X86_64) ? QWORD_SIZE_BIT-1 : DWORD_SIZE_BIT-1);
+            this->ssSpec.setLow(0);
+
+          default:
+            break;
+        };
+      }
+
+
+      triton::arch::Register& x86Specifications::getX86ParentRegister(triton::uint32 regId) {
+        switch (regId) {
+          case triton::arch::x86::ID_REG_AL:
+          case triton::arch::x86::ID_REG_AH:
+          case triton::arch::x86::ID_REG_AX:
+          case triton::arch::x86::ID_REG_EAX:
+          case triton::arch::x86::ID_REG_RAX:
+            return (this->arch == triton::arch::ARCH_X86_64) ? this->raxSpec : this->eaxSpec;
+
+          case triton::arch::x86::ID_REG_BL:
+          case triton::arch::x86::ID_REG_BH:
+          case triton::arch::x86::ID_REG_BX:
+          case triton::arch::x86::ID_REG_EBX:
+          case triton::arch::x86::ID_REG_RBX:
+            return (this->arch == triton::arch::ARCH_X86_64) ? this->rbxSpec : this->ebxSpec;
+
+          case triton::arch::x86::ID_REG_CL:
+          case triton::arch::x86::ID_REG_CH:
+          case triton::arch::x86::ID_REG_CX:
+          case triton::arch::x86::ID_REG_ECX:
+          case triton::arch::x86::ID_REG_RCX:
+            return (this->arch == triton::arch::ARCH_X86_64) ? this->rcxSpec : this->ecxSpec;
+
+          case triton::arch::x86::ID_REG_DL:
+          case triton::arch::x86::ID_REG_DH:
+          case triton::arch::x86::ID_REG_DX:
+          case triton::arch::x86::ID_REG_EDX:
+          case triton::arch::x86::ID_REG_RDX:
+            return (this->arch == triton::arch::ARCH_X86_64) ? this->rdxSpec : this->edxSpec;
+
+          case triton::arch::x86::ID_REG_DIL:
+          case triton::arch::x86::ID_REG_DI:
+          case triton::arch::x86::ID_REG_EDI:
+          case triton::arch::x86::ID_REG_RDI:
+            return (this->arch == triton::arch::ARCH_X86_64) ? this->rdiSpec : this->ediSpec;
+
+          case triton::arch::x86::ID_REG_SIL:
+          case triton::arch::x86::ID_REG_SI:
+          case triton::arch::x86::ID_REG_ESI:
+          case triton::arch::x86::ID_REG_RSI:
+            return (this->arch == triton::arch::ARCH_X86_64) ? this->rsiSpec : this->esiSpec;
+
+          case triton::arch::x86::ID_REG_BPL:
+          case triton::arch::x86::ID_REG_BP:
+          case triton::arch::x86::ID_REG_EBP:
+          case triton::arch::x86::ID_REG_RBP:
+            return (this->arch == triton::arch::ARCH_X86_64) ? this->rbpSpec : this->ebpSpec;
+
+          case triton::arch::x86::ID_REG_SPL:
+          case triton::arch::x86::ID_REG_SP:
+          case triton::arch::x86::ID_REG_ESP:
+          case triton::arch::x86::ID_REG_RSP:
+            return (this->arch == triton::arch::ARCH_X86_64) ? this->rspSpec : this->espSpec;
+
+          case triton::arch::x86::ID_REG_IP:
+          case triton::arch::x86::ID_REG_EIP:
+          case triton::arch::x86::ID_REG_RIP:
+            return (this->arch == triton::arch::ARCH_X86_64) ? this->ripSpec : this->eipSpec;
+
+          case triton::arch::x86::ID_REG_R8B:
+          case triton::arch::x86::ID_REG_R8W:
+          case triton::arch::x86::ID_REG_R8D:
+          case triton::arch::x86::ID_REG_R8:
+            return this->r8Spec;
+
+          case triton::arch::x86::ID_REG_R9B:
+          case triton::arch::x86::ID_REG_R9W:
+          case triton::arch::x86::ID_REG_R9D:
+          case triton::arch::x86::ID_REG_R9:
+            return this->r9Spec;
+
+          case triton::arch::x86::ID_REG_R10B:
+          case triton::arch::x86::ID_REG_R10W:
+          case triton::arch::x86::ID_REG_R10D:
+          case triton::arch::x86::ID_REG_R10:
+            return this->r10Spec;
+
+          case triton::arch::x86::ID_REG_R11B:
+          case triton::arch::x86::ID_REG_R11W:
+          case triton::arch::x86::ID_REG_R11D:
+          case triton::arch::x86::ID_REG_R11:
+            return this->r11Spec;
+
+          case triton::arch::x86::ID_REG_R12B:
+          case triton::arch::x86::ID_REG_R12W:
+          case triton::arch::x86::ID_REG_R12D:
+          case triton::arch::x86::ID_REG_R12:
+            return this->r12Spec;
+
+          case triton::arch::x86::ID_REG_R13B:
+          case triton::arch::x86::ID_REG_R13W:
+          case triton::arch::x86::ID_REG_R13D:
+          case triton::arch::x86::ID_REG_R13:
+            return this->r13Spec;
+
+          case triton::arch::x86::ID_REG_R14B:
+          case triton::arch::x86::ID_REG_R14W:
+          case triton::arch::x86::ID_REG_R14D:
+          case triton::arch::x86::ID_REG_R14:
+            return this->r14Spec;
+
+          case triton::arch::x86::ID_REG_R15B:
+          case triton::arch::x86::ID_REG_R15W:
+          case triton::arch::x86::ID_REG_R15D:
+          case triton::arch::x86::ID_REG_R15:
+            return this->r15Spec;
+
+          default:
+            return this->getX86Register(regId);
+        };
+      }
+
+
+      triton::arch::Register& x86Specifications::getX86Register(triton::uint32 regId) {
+        switch (regId) {
+          case triton::arch::x86::ID_REG_RAX:     return this->raxSpec;
+          case triton::arch::x86::ID_REG_EAX:     return this->eaxSpec;
+          case triton::arch::x86::ID_REG_AX:      return this->axSpec;
+          case triton::arch::x86::ID_REG_AH:      return this->ahSpec;
+          case triton::arch::x86::ID_REG_AL:      return this->alSpec;
+          case triton::arch::x86::ID_REG_RBX:     return this->rbxSpec;
+          case triton::arch::x86::ID_REG_EBX:     return this->ebxSpec;
+          case triton::arch::x86::ID_REG_BX:      return this->bxSpec;
+          case triton::arch::x86::ID_REG_BH:      return this->bhSpec;
+          case triton::arch::x86::ID_REG_BL:      return this->blSpec;
+          case triton::arch::x86::ID_REG_RCX:     return this->rcxSpec;
+          case triton::arch::x86::ID_REG_ECX:     return this->ecxSpec;
+          case triton::arch::x86::ID_REG_CX:      return this->cxSpec;
+          case triton::arch::x86::ID_REG_CH:      return this->chSpec;
+          case triton::arch::x86::ID_REG_CL:      return this->clSpec;
+          case triton::arch::x86::ID_REG_RDX:     return this->rdxSpec;
+          case triton::arch::x86::ID_REG_EDX:     return this->edxSpec;
+          case triton::arch::x86::ID_REG_DX:      return this->dxSpec;
+          case triton::arch::x86::ID_REG_DH:      return this->dhSpec;
+          case triton::arch::x86::ID_REG_DL:      return this->dlSpec;
+          case triton::arch::x86::ID_REG_RDI:     return this->rdiSpec;
+          case triton::arch::x86::ID_REG_EDI:     return this->ediSpec;
+          case triton::arch::x86::ID_REG_DI:      return this->diSpec;
+          case triton::arch::x86::ID_REG_DIL:     return this->dilSpec;
+          case triton::arch::x86::ID_REG_RSI:     return this->rsiSpec;
+          case triton::arch::x86::ID_REG_ESI:     return this->esiSpec;
+          case triton::arch::x86::ID_REG_SI:      return this->siSpec;
+          case triton::arch::x86::ID_REG_SIL:     return this->silSpec;
+          case triton::arch::x86::ID_REG_RBP:     return this->rbpSpec;
+          case triton::arch::x86::ID_REG_EBP:     return this->ebpSpec;
+          case triton::arch::x86::ID_REG_BP:      return this->bpSpec;
+          case triton::arch::x86::ID_REG_BPL:     return this->bplSpec;
+          case triton::arch::x86::ID_REG_RSP:     return this->rspSpec;
+          case triton::arch::x86::ID_REG_ESP:     return this->espSpec;
+          case triton::arch::x86::ID_REG_SP:      return this->spSpec;
+          case triton::arch::x86::ID_REG_SPL:     return this->splSpec;
+          case triton::arch::x86::ID_REG_RIP:     return this->ripSpec;
+          case triton::arch::x86::ID_REG_EIP:     return this->eipSpec;
+          case triton::arch::x86::ID_REG_IP:      return this->ipSpec;
+          case triton::arch::x86::ID_REG_EFLAGS:  return this->eflagsSpec;
+          case triton::arch::x86::ID_REG_R8:      return this->r8Spec;
+          case triton::arch::x86::ID_REG_R8D:     return this->r8dSpec;
+          case triton::arch::x86::ID_REG_R8W:     return this->r8wSpec;
+          case triton::arch::x86::ID_REG_R8B:     return this->r8bSpec;
+          case triton::arch::x86::ID_REG_R9:      return this->r9Spec;
+          case triton::arch::x86::ID_REG_R9D:     return this->r9dSpec;
+          case triton::arch::x86::ID_REG_R9W:     return this->r9wSpec;
+          case triton::arch::x86::ID_REG_R9B:     return this->r9bSpec;
+          case triton::arch::x86::ID_REG_R10:     return this->r10Spec;
+          case triton::arch::x86::ID_REG_R10D:    return this->r10dSpec;
+          case triton::arch::x86::ID_REG_R10W:    return this->r10wSpec;
+          case triton::arch::x86::ID_REG_R10B:    return this->r10bSpec;
+          case triton::arch::x86::ID_REG_R11:     return this->r11Spec;
+          case triton::arch::x86::ID_REG_R11D:    return this->r11dSpec;
+          case triton::arch::x86::ID_REG_R11W:    return this->r11wSpec;
+          case triton::arch::x86::ID_REG_R11B:    return this->r11bSpec;
+          case triton::arch::x86::ID_REG_R12:     return this->r12Spec;
+          case triton::arch::x86::ID_REG_R12D:    return this->r12dSpec;
+          case triton::arch::x86::ID_REG_R12W:    return this->r12wSpec;
+          case triton::arch::x86::ID_REG_R12B:    return this->r12bSpec;
+          case triton::arch::x86::ID_REG_R13:     return this->r13Spec;
+          case triton::arch::x86::ID_REG_R13D:    return this->r13dSpec;
+          case triton::arch::x86::ID_REG_R13W:    return this->r13wSpec;
+          case triton::arch::x86::ID_REG_R13B:    return this->r13bSpec;
+          case triton::arch::x86::ID_REG_R14:     return this->r14Spec;
+          case triton::arch::x86::ID_REG_R14D:    return this->r14dSpec;
+          case triton::arch::x86::ID_REG_R14W:    return this->r14wSpec;
+          case triton::arch::x86::ID_REG_R14B:    return this->r14bSpec;
+          case triton::arch::x86::ID_REG_R15:     return this->r15Spec;
+          case triton::arch::x86::ID_REG_R15D:    return this->r15dSpec;
+          case triton::arch::x86::ID_REG_R15W:    return this->r15wSpec;
+          case triton::arch::x86::ID_REG_R15B:    return this->r15bSpec;
+          case triton::arch::x86::ID_REG_MM0:     return this->mm0Spec;
+          case triton::arch::x86::ID_REG_MM1:     return this->mm1Spec;
+          case triton::arch::x86::ID_REG_MM2:     return this->mm2Spec;
+          case triton::arch::x86::ID_REG_MM3:     return this->mm3Spec;
+          case triton::arch::x86::ID_REG_MM4:     return this->mm4Spec;
+          case triton::arch::x86::ID_REG_MM5:     return this->mm5Spec;
+          case triton::arch::x86::ID_REG_MM6:     return this->mm6Spec;
+          case triton::arch::x86::ID_REG_MM7:     return this->mm7Spec;
+          case triton::arch::x86::ID_REG_XMM0:    return this->xmm0Spec;
+          case triton::arch::x86::ID_REG_XMM1:    return this->xmm1Spec;
+          case triton::arch::x86::ID_REG_XMM2:    return this->xmm2Spec;
+          case triton::arch::x86::ID_REG_XMM3:    return this->xmm3Spec;
+          case triton::arch::x86::ID_REG_XMM4:    return this->xmm4Spec;
+          case triton::arch::x86::ID_REG_XMM5:    return this->xmm5Spec;
+          case triton::arch::x86::ID_REG_XMM6:    return this->xmm6Spec;
+          case triton::arch::x86::ID_REG_XMM7:    return this->xmm7Spec;
+          case triton::arch::x86::ID_REG_XMM8:    return this->xmm8Spec;
+          case triton::arch::x86::ID_REG_XMM9:    return this->xmm9Spec;
+          case triton::arch::x86::ID_REG_XMM10:   return this->xmm10Spec;
+          case triton::arch::x86::ID_REG_XMM11:   return this->xmm11Spec;
+          case triton::arch::x86::ID_REG_XMM12:   return this->xmm12Spec;
+          case triton::arch::x86::ID_REG_XMM13:   return this->xmm13Spec;
+          case triton::arch::x86::ID_REG_XMM14:   return this->xmm14Spec;
+          case triton::arch::x86::ID_REG_XMM15:   return this->xmm15Spec;
+          case triton::arch::x86::ID_REG_YMM0:    return this->ymm0Spec;
+          case triton::arch::x86::ID_REG_YMM1:    return this->ymm1Spec;
+          case triton::arch::x86::ID_REG_YMM2:    return this->ymm2Spec;
+          case triton::arch::x86::ID_REG_YMM3:    return this->ymm3Spec;
+          case triton::arch::x86::ID_REG_YMM4:    return this->ymm4Spec;
+          case triton::arch::x86::ID_REG_YMM5:    return this->ymm5Spec;
+          case triton::arch::x86::ID_REG_YMM6:    return this->ymm6Spec;
+          case triton::arch::x86::ID_REG_YMM7:    return this->ymm7Spec;
+          case triton::arch::x86::ID_REG_YMM8:    return this->ymm8Spec;
+          case triton::arch::x86::ID_REG_YMM9:    return this->ymm9Spec;
+          case triton::arch::x86::ID_REG_YMM10:   return this->ymm10Spec;
+          case triton::arch::x86::ID_REG_YMM11:   return this->ymm11Spec;
+          case triton::arch::x86::ID_REG_YMM12:   return this->ymm12Spec;
+          case triton::arch::x86::ID_REG_YMM13:   return this->ymm13Spec;
+          case triton::arch::x86::ID_REG_YMM14:   return this->ymm14Spec;
+          case triton::arch::x86::ID_REG_YMM15:   return this->ymm15Spec;
+          case triton::arch::x86::ID_REG_ZMM0:    return this->zmm0Spec;
+          case triton::arch::x86::ID_REG_ZMM1:    return this->zmm1Spec;
+          case triton::arch::x86::ID_REG_ZMM2:    return this->zmm2Spec;
+          case triton::arch::x86::ID_REG_ZMM3:    return this->zmm3Spec;
+          case triton::arch::x86::ID_REG_ZMM4:    return this->zmm4Spec;
+          case triton::arch::x86::ID_REG_ZMM5:    return this->zmm5Spec;
+          case triton::arch::x86::ID_REG_ZMM6:    return this->zmm6Spec;
+          case triton::arch::x86::ID_REG_ZMM7:    return this->zmm7Spec;
+          case triton::arch::x86::ID_REG_ZMM8:    return this->zmm8Spec;
+          case triton::arch::x86::ID_REG_ZMM9:    return this->zmm9Spec;
+          case triton::arch::x86::ID_REG_ZMM10:   return this->zmm10Spec;
+          case triton::arch::x86::ID_REG_ZMM11:   return this->zmm11Spec;
+          case triton::arch::x86::ID_REG_ZMM12:   return this->zmm12Spec;
+          case triton::arch::x86::ID_REG_ZMM13:   return this->zmm13Spec;
+          case triton::arch::x86::ID_REG_ZMM14:   return this->zmm14Spec;
+          case triton::arch::x86::ID_REG_ZMM15:   return this->zmm15Spec;
+          case triton::arch::x86::ID_REG_ZMM16:   return this->zmm16Spec;
+          case triton::arch::x86::ID_REG_ZMM17:   return this->zmm17Spec;
+          case triton::arch::x86::ID_REG_ZMM18:   return this->zmm18Spec;
+          case triton::arch::x86::ID_REG_ZMM19:   return this->zmm19Spec;
+          case triton::arch::x86::ID_REG_ZMM20:   return this->zmm20Spec;
+          case triton::arch::x86::ID_REG_ZMM21:   return this->zmm21Spec;
+          case triton::arch::x86::ID_REG_ZMM22:   return this->zmm22Spec;
+          case triton::arch::x86::ID_REG_ZMM23:   return this->zmm23Spec;
+          case triton::arch::x86::ID_REG_ZMM24:   return this->zmm24Spec;
+          case triton::arch::x86::ID_REG_ZMM25:   return this->zmm25Spec;
+          case triton::arch::x86::ID_REG_ZMM26:   return this->zmm26Spec;
+          case triton::arch::x86::ID_REG_ZMM27:   return this->zmm27Spec;
+          case triton::arch::x86::ID_REG_ZMM28:   return this->zmm28Spec;
+          case triton::arch::x86::ID_REG_ZMM29:   return this->zmm29Spec;
+          case triton::arch::x86::ID_REG_ZMM30:   return this->zmm30Spec;
+          case triton::arch::x86::ID_REG_ZMM31:   return this->zmm31Spec;
+          case triton::arch::x86::ID_REG_MXCSR:   return this->mxcsrSpec;
+          case triton::arch::x86::ID_REG_CR0:     return this->cr0Spec;
+          case triton::arch::x86::ID_REG_CR1:     return this->cr1Spec;
+          case triton::arch::x86::ID_REG_CR2:     return this->cr2Spec;
+          case triton::arch::x86::ID_REG_CR3:     return this->cr3Spec;
+          case triton::arch::x86::ID_REG_CR4:     return this->cr4Spec;
+          case triton::arch::x86::ID_REG_CR5:     return this->cr5Spec;
+          case triton::arch::x86::ID_REG_CR6:     return this->cr6Spec;
+          case triton::arch::x86::ID_REG_CR7:     return this->cr7Spec;
+          case triton::arch::x86::ID_REG_CR8:     return this->cr8Spec;
+          case triton::arch::x86::ID_REG_CR9:     return this->cr9Spec;
+          case triton::arch::x86::ID_REG_CR10:    return this->cr10Spec;
+          case triton::arch::x86::ID_REG_CR11:    return this->cr11Spec;
+          case triton::arch::x86::ID_REG_CR12:    return this->cr12Spec;
+          case triton::arch::x86::ID_REG_CR13:    return this->cr13Spec;
+          case triton::arch::x86::ID_REG_CR14:    return this->cr14Spec;
+          case triton::arch::x86::ID_REG_CR15:    return this->cr15Spec;
+          case triton::arch::x86::ID_REG_IE:      return this->ieSpec;
+          case triton::arch::x86::ID_REG_DE:      return this->deSpec;
+          case triton::arch::x86::ID_REG_ZE:      return this->zeSpec;
+          case triton::arch::x86::ID_REG_OE:      return this->oeSpec;
+          case triton::arch::x86::ID_REG_UE:      return this->ueSpec;
+          case triton::arch::x86::ID_REG_PE:      return this->peSpec;
+          case triton::arch::x86::ID_REG_DAZ:     return this->dazSpec;
+          case triton::arch::x86::ID_REG_IM:      return this->imSpec;
+          case triton::arch::x86::ID_REG_DM:      return this->dmSpec;
+          case triton::arch::x86::ID_REG_ZM:      return this->zmSpec;
+          case triton::arch::x86::ID_REG_OM:      return this->omSpec;
+          case triton::arch::x86::ID_REG_UM:      return this->umSpec;
+          case triton::arch::x86::ID_REG_PM:      return this->pmSpec;
+          case triton::arch::x86::ID_REG_RL:      return this->rlSpec;
+          case triton::arch::x86::ID_REG_RH:      return this->rhSpec;
+          case triton::arch::x86::ID_REG_FZ:      return this->fzSpec;
+          case triton::arch::x86::ID_REG_AF:      return this->afSpec;
+          case triton::arch::x86::ID_REG_CF:      return this->cfSpec;
+          case triton::arch::x86::ID_REG_DF:      return this->dfSpec;
+          case triton::arch::x86::ID_REG_IF:      return this->ifSpec;
+          case triton::arch::x86::ID_REG_OF:      return this->ofSpec;
+          case triton::arch::x86::ID_REG_PF:      return this->pfSpec;
+          case triton::arch::x86::ID_REG_SF:      return this->sfSpec;
+          case triton::arch::x86::ID_REG_TF:      return this->tfSpec;
+          case triton::arch::x86::ID_REG_ZF:      return this->zfSpec;
+          case triton::arch::x86::ID_REG_CS:      return this->csSpec;
+          case triton::arch::x86::ID_REG_DS:      return this->dsSpec;
+          case triton::arch::x86::ID_REG_ES:      return this->esSpec;
+          case triton::arch::x86::ID_REG_FS:      return this->fsSpec;
+          case triton::arch::x86::ID_REG_GS:      return this->gsSpec;
+          case triton::arch::x86::ID_REG_SS:      return this->ssSpec;
+          default:
+            throw triton::exceptions::Semantics("x86Specifications::getX86Register(): Invalid register id.");
+        };
       }
 
 
