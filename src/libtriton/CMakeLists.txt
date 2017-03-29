@@ -189,11 +189,17 @@ endmacro()
 # Note: Windows ?!
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     gen_syscall(64)
+else()
+    add_custom_target(gen-syscall64
+      COMMAND echo "No syscall64 to extract on your plateform")
 endif()
 
 # Syscall 32 is only available for linux users
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     gen_syscall(32)
+else()
+    add_custom_target(gen-syscall32
+      COMMAND echo "No syscall32 to extract on your plateform")
 endif()
 
 # We generate the version numbers information
