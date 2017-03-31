@@ -123,7 +123,7 @@ $ git clone https://github.com/JonathanSalwan/Triton.git
 $ cd Triton
 $ mkdir build
 $ cd build
-$ cmake ..
+$ cmake -DCMAKE_BUILD_TYPE=release ..
 $ sudo make -j2 install
 ~~~~~~~~~~~~~
 
