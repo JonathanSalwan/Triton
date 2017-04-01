@@ -58,7 +58,7 @@ namespace triton {
           triton::usize totalSize;
 
           //! The raw binary.
-          triton::uint8* raw;
+          std::vector<triton::uint8> raw;
 
           //! The ELF Header
           triton::format::elf::ElfHeader header;
