@@ -24,7 +24,7 @@ namespace triton {
         for (triton::usize i = 0; i < this->header.getSectionHeaders().size(); ++i) {
           triton::uint32 sz = this->header.getSectionHeaders()[i].getRawSize();
           this->sectionContent[i].resize(sz);
-          std::memcpy(&this->sectionContent[i][0], this->raw + this->header.getSectionHeaders()[i].getRawAddress(), sz);
+          std::memcpy(&this->sectionContent[i][0], this->raw.data() + this->header.getSectionHeaders()[i].getRawAddress(), sz);
         }
       }
 
