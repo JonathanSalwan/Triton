@@ -7,7 +7,7 @@ endif()
 
 # Default flags
 # To fix old python version bug http://bugs.python.org/issue21958
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_ROUND /MT")
 endif()
 
@@ -18,7 +18,7 @@ else()
 endif()
 
 # Global UNIX CXX Flags
-if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     # Flags
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unknown-pragmas -Wno-tautological-compare")
     if(NOT GCOV)
@@ -189,11 +189,17 @@ endmacro()
 # Note: Windows ?!
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     gen_syscall(64)
+else()
+    add_custom_target(gen-syscall64
+      COMMAND echo "No syscall64 to extract on your plateform")
 endif()
 
 # Syscall 32 is only available for linux users
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     gen_syscall(32)
+else()
+    add_custom_target(gen-syscall32
+      COMMAND echo "No syscall32 to extract on your plateform")
 endif()
 
 # We generate the version numbers information
@@ -207,7 +213,7 @@ configure_file(
 set(LIBTRITON_SHARED_LINKER_FLAGS " ")
 
 # Special cases for MinGW
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND "${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
     set(LIBTRITON_OTHER_LIBS "-lgomp")
     if (NOT STATICLIB)
       set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
@@ -282,7 +288,7 @@ if(PYTHON_BINDINGS)
     add_dependencies(test-python python-triton)
 
     execute_process (COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
-    if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
         install (FILES ${CMAKE_CURRENT_BINARY_DIR}/\${CMAKE_INSTALL_CONFIG_NAME}/triton${PYTHON_SUFFIX} DESTINATION ${PYTHON_SITE_PACKAGES})
     else()
         install (FILES ${CMAKE_CURRENT_BINARY_DIR}/triton${PYTHON_SUFFIX} DESTINATION ${PYTHON_SITE_PACKAGES})

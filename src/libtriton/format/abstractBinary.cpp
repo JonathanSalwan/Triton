@@ -5,7 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <cstdio>
+#include <fstream>
 #include <new>
 
 #include <triton/abstractBinary.hpp>
@@ -42,29 +42,20 @@ namespace triton {
 
 
     void AbstractBinary::loadBinary(const std::string& path) {
-      FILE* fd = nullptr;
       triton::uint8 raw[8] = {0};
-      triton::usize size = 0;
 
       // Open the file
-      fd = fopen(path.c_str(), "rb");
-      if (fd == nullptr)
+      std::ifstream ifs(path, std::ifstream::binary);
+
+      ifs.unsetf(std::ios::skipws);
+
+      if (!ifs)
         throw triton::exceptions::Format("AbstractBinary::loadBinary(): Cannot open the binary file.");
 
-      // Get the binary size
-      fseek(fd, 0, SEEK_END);
-      size = ftell(fd);
-      rewind(fd);
+      ifs.read(reinterpret_cast<char*>(raw), sizeof(raw));
 
-      if (size < sizeof(raw))
-        throw triton::exceptions::Format("AbstractBinary::loadBinary(): The binary file is too small.");
-
-      // Read only the magic number
-      if (fread(raw, 1, sizeof(raw), fd) != sizeof(raw))
+      if(!ifs)
         throw triton::exceptions::Format("AbstractBinary::loadBinary(): Cannot read the file binary.");
-
-      // Close the file
-      fclose(fd);
 
       // Set the binary format according the magic number
       if ((*((triton::uint32*)(raw))) == triton::format::MAGIC_ELF)

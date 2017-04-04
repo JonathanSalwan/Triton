@@ -6,6 +6,7 @@
 */
 
 #include <cstdio>
+#include <fstream>
 #include <new>
 
 #include <triton/elf.hpp>
@@ -19,7 +20,7 @@ namespace triton {
 
       Elf::Elf(const std::string& path) {
         this->path      = path;
-        this->raw       = nullptr;
+        this->raw       = std::vector<triton::uint8>();
         this->totalSize = 0;
 
         this->open();
@@ -36,33 +37,34 @@ namespace triton {
 
 
       Elf::~Elf() {
-        delete[] this->raw;
       }
 
 
       void Elf::open(void) {
-        FILE* fd = nullptr;
+        std::ifstream ifs(this->path, std::ifstream::binary);
 
-        // Open the file
-        fd = fopen(this->path.c_str(), "rb");
-        if (fd == nullptr)
+        if(!ifs)
           throw triton::exceptions::Elf("Elf::open(): Cannot open the binary file.");
 
-        // Get the binary size
-        fseek(fd, 0, SEEK_END);
-        this->totalSize = ftell(fd);
-        rewind(fd);
+       ifs.unsetf(std::ios::skipws);
 
-        this->raw = new(std::nothrow) triton::uint8[this->totalSize];
-        if(!this->raw)
-          throw triton::exceptions::Elf("Elf::open(): Not enough memory.");
+       // get its size:
+       std::streampos fileSize;
 
-        // Read only the magic number
-        if (fread(this->raw, 1, this->totalSize, fd) != this->totalSize)
-          throw triton::exceptions::Elf("Elf::open(): Cannot read the file binary.");
+       ifs.seekg(0, std::ios::end);
+       fileSize = ifs.tellg();
+       ifs.seekg(0, std::ios::beg);
 
-        // Close the file
-        fclose(fd);
+       // reserve capacity
+       this->raw.reserve(fileSize);
+
+       // read the data:
+       this->raw.insert(this->raw.begin(),
+           std::istream_iterator<triton::uint8>(ifs),
+           std::istream_iterator<triton::uint8>());
+
+      // FIXME : This attribute is useless
+      this->totalSize = this->raw.size();
       }
 
 
@@ -81,7 +83,7 @@ namespace triton {
         if (this->totalSize < this->header.getMaxHeaderSize())
           throw triton::exceptions::Elf("Elf::parse(): The ELF Header of the binary file is corrupted.");
 
-        this->header.parse(this->raw);
+        this->header.parse(this->raw.data());
 
         // Parse Program Headers
         EIClass  = this->header.getEIClass();
@@ -96,7 +98,7 @@ namespace triton {
 
         for (triton::uint16 entry = 0; entry < phNum; entry++) {
           triton::format::elf::ElfProgramHeader phdr;
-          phdr.parse((this->raw + (phOffset + (entry * phSize))), EIClass);
+          phdr.parse((this->raw.data() + (phOffset + (entry * phSize))), EIClass);
           this->programHeaders.push_back(phdr);
         }
 
@@ -115,7 +117,7 @@ namespace triton {
 
         for (triton::uint16 entry = 0; entry < shNum; entry++) {
           triton::format::elf::ElfSectionHeader shdr;
-          shdr.parse((this->raw + (shOffset + (entry * shSize))), EIClass);
+          shdr.parse((this->raw.data() + (shOffset + (entry * shSize))), EIClass);
           this->sectionHeaders.push_back(shdr);
         }
 
@@ -129,7 +131,7 @@ namespace triton {
 
           strtable = this->sectionHeaders[shstrndx].getOffset();
           for (auto it = this->sectionHeaders.begin(); it != this->sectionHeaders.end(); it++) {
-            it->setName(this->raw + strtable + it->getIdxname());
+            it->setName(this->raw.data() + strtable + it->getIdxname());
           }
         }
 
@@ -139,7 +141,7 @@ namespace triton {
 
       void Elf::initMemoryMapping(void) {
         for (auto it = this->programHeaders.begin(); it != this->programHeaders.end(); it++) {
-          triton::format::MemoryMapping area(this->raw);
+          triton::format::MemoryMapping area(this->raw.data());
 
           if (this->totalSize < (it->getOffset() + it->getFilesz())) {
             std::cerr << "Warning Elf::initMemoryMapping(): Some ELF Program Headers of the binary file are corrupted." << std::endl;
@@ -175,7 +177,7 @@ namespace triton {
         // Parse Dynamic Table.
         for (triton::uint32 read = 0; read < dynSize;) {
           triton::format::elf::ElfDynamicTable dyn;
-          read += dyn.parse(this->raw + dynOffset + read, this->header.getEIClass());
+          read += dyn.parse(this->raw.data() + dynOffset + read, this->header.getEIClass());
           this->dynamicTable.push_back(dyn);
         }
       }
@@ -192,7 +194,7 @@ namespace triton {
 
         for (auto it = this->dynamicTable.begin(); it != this->dynamicTable.end(); it++) {
           if (it->getTag() == triton::format::elf::DT_NEEDED) {
-            this->sharedLibraries.push_back(reinterpret_cast<char*>(this->raw + strTabOffset + it->getValue()));
+            this->sharedLibraries.push_back(reinterpret_cast<const char*>(this->raw.data() + strTabOffset + it->getValue()));
           }
         }
       }
@@ -224,7 +226,7 @@ namespace triton {
 
         while (true) {
           triton::format::elf::ElfSymbolTable sym;
-          read += sym.parse(this->raw + symTabOffset + read, this->header.getEIClass());
+          read += sym.parse(this->raw.data() + symTabOffset + read, this->header.getEIClass());
 
           if (sym.getOther() != triton::format::elf::STV_DEFAULT)
             break;
@@ -235,7 +237,7 @@ namespace triton {
           if (this->totalSize < read)
             break;
 
-          sym.setName(this->raw + strTabOffset + sym.getIdxname());
+          sym.setName(this->raw.data() + strTabOffset + sym.getIdxname());
           this->symbolsTable.push_back(sym);
         }
       }
@@ -270,11 +272,11 @@ namespace triton {
         for (triton::uint32 read = 0; read < symTabSize;) {
           triton::format::elf::ElfSymbolTable sym;
 
-          read += sym.parse(this->raw + symTabOffset + read, this->header.getEIClass());
+          read += sym.parse(this->raw.data() + symTabOffset + read, this->header.getEIClass());
           if (this->totalSize < strTabOffset + sym.getIdxname())
             continue;
 
-          sym.setName(this->raw + strTabOffset + sym.getIdxname());
+          sym.setName(this->raw.data() + strTabOffset + sym.getIdxname());
           this->symbolsTable.push_back(sym);
         }
       }
@@ -295,7 +297,7 @@ namespace triton {
 
         for (triton::uint32 read = 0; read < relTabSize;) {
           triton::format::elf::ElfRelocationTable rel;
-          read += rel.parseRel(this->raw + relTabOffset + read, this->header.getEIClass());
+          read += rel.parseRel(this->raw.data() + relTabOffset + read, this->header.getEIClass());
           this->relocationsTable.push_back(rel);
         }
       }
@@ -316,7 +318,7 @@ namespace triton {
 
         for (triton::uint32 read = 0; read < relaTabSize;) {
           triton::format::elf::ElfRelocationTable rela;
-          read += rela.parseRela(this->raw + relaTabOffset + read, this->header.getEIClass());
+          read += rela.parseRela(this->raw.data() + relaTabOffset + read, this->header.getEIClass());
           this->relocationsTable.push_back(rela);
         }
       }
@@ -338,9 +340,9 @@ namespace triton {
         for (triton::uint32 read = 0; read < jmprelTabSize;) {
           triton::format::elf::ElfRelocationTable jmprel;
           if (this->header.getEIClass() == triton::format::elf::ELFCLASS32)
-            read += jmprel.parseRel(this->raw + jmprelTabOffset + read, this->header.getEIClass());
+            read += jmprel.parseRel(this->raw.data() + jmprelTabOffset + read, this->header.getEIClass());
           else if (this->header.getEIClass() == triton::format::elf::ELFCLASS64)
-            read += jmprel.parseRela(this->raw + jmprelTabOffset + read, this->header.getEIClass());
+            read += jmprel.parseRela(this->raw.data() + jmprelTabOffset + read, this->header.getEIClass());
           else
             throw triton::exceptions::Elf("Elf::initJmprelTable(): Invalid EI_CLASS.");
           this->relocationsTable.push_back(jmprel);
@@ -386,7 +388,7 @@ namespace triton {
 
 
       const triton::uint8* Elf::getRaw(void) const {
-        return this->raw;
+        return this->raw.data();
       }
 
 

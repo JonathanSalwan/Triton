@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include <triton/binaryInterface.hpp>
 #include <triton/memoryMapping.hpp>
@@ -54,7 +55,7 @@ namespace triton {
           triton::usize totalSize;
 
           //! The raw binary.
-          triton::uint8* raw;
+          std::vector<triton::uint8> raw;
 
           //! The PE Header.
           triton::format::pe::PeHeader header;

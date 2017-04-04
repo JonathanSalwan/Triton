@@ -9,6 +9,21 @@
   #include <dlfcn.h>
 #endif
 
+#ifdef __STDC_LIB_EXT1__
+#define __STDC_WANT_LIB_EXT1__
+#endif
+#include <cstdio>
+
+#ifndef __STDC_LIB_EXT1__
+int fopen_s(FILE** fd, const char* fn, const char* flags) {
+  *fd = fopen(fn, flags);
+  if(*fd == 0)
+    return -1;
+  else
+    return 0;
+}
+#endif
+
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -186,21 +201,20 @@ namespace tracer {
 
 
     bool execScript(const char *fileName) {
-      FILE* fd = nullptr;
       #if defined(__unix__) || defined(__APPLE__)
-      void* handle = nullptr;
-
       /* On some Linux distro, we must load libpython to successfully load all others modules. See issue #276. */
-      handle = dlopen(PYTHON_LIBRARIES, RTLD_LAZY | RTLD_GLOBAL);
+      void* handle = dlopen(PYTHON_LIBRARIES, RTLD_LAZY | RTLD_GLOBAL);
       if (!handle)
         throw std::runtime_error("tracer::pintool::execScript(): Cannot load the Python library.");
       #endif
 
-      fd = fopen(fileName, "r");
-      if (fd == nullptr)
+      FILE* fd = nullptr;
+      auto err = fopen_s(&fd, fileName, "r");
+      if (err != 0)
         throw std::runtime_error("tracer::pintool::execScript(): Script file can't be found.");
 
       PyRun_SimpleFile(fd, fileName);
+
       fclose(fd);
       return true;
     }
