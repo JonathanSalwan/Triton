@@ -547,7 +547,7 @@ namespace triton {
         const std::set<triton::uint64>& getTaintedMemory(void) const;
 
         //! [**taint api**] - Returns the tainted registers.
-        const std::set<triton::arch::registers_e>& getTaintedRegisters(void) const;
+        std::set<const triton::arch::RegisterSpec*> getTaintedRegisters(void) const;
 
         //! [**taint api**] - Enables or disables the taint engine.
         void enableTaintEngine(bool flag);
