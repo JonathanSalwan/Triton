@@ -89,12 +89,13 @@ namespace triton {
   namespace engines {
     namespace taint {
 
-      TaintEngine::TaintEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine) {
+      TaintEngine::TaintEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine, const triton::arch::CpuInterface& cpu):
+        symbolicEngine(symbolicEngine)
+        , cpu(cpu)
+        , enableFlag(true)
+      {
         if (symbolicEngine == nullptr)
           throw triton::exceptions::TaintEngine("TaintEngine::TaintEngine(): The symbolicEngine TaintEngine cannot be null.");
-
-        this->symbolicEngine = symbolicEngine;
-        this->enableFlag     = true;
       }
 
 
@@ -106,7 +107,7 @@ namespace triton {
       }
 
 
-      TaintEngine::TaintEngine(const TaintEngine& other) {
+      TaintEngine::TaintEngine(const TaintEngine& other): cpu(other.cpu) {
         this->copy(other);
       }
 
@@ -116,6 +117,7 @@ namespace triton {
 
 
       void TaintEngine::operator=(const TaintEngine& other) {
+        // We assume the cpu didn't change
         this->copy(other);
       }
 
@@ -137,8 +139,11 @@ namespace triton {
 
 
       /* Returns the tainted registers */
-      const std::set<triton::arch::registers_e>& TaintEngine::getTaintedRegisters(void) const {
-        return this->taintedRegisters;
+      std::set<const triton::arch::RegisterSpec*> TaintEngine::getTaintedRegisters(void) const {
+        std::set<const triton::arch::RegisterSpec*> res;
+        for(auto id: this->taintedRegisters)
+          res.insert(&cpu.getRegister(id));
+        return res;
       }
 
 

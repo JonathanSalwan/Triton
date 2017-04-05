@@ -385,7 +385,7 @@ namespace triton {
     if (this->astGarbageCollector == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->taint = new(std::nothrow) triton::engines::taint::TaintEngine(this->symbolic);
+    this->taint = new(std::nothrow) triton::engines::taint::TaintEngine(this->symbolic, *this->getCpu());
     if (this->taint == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
@@ -1029,7 +1029,7 @@ namespace triton {
   }
 
 
-  const std::set<triton::arch::registers_e>& API::getTaintedRegisters(void) const {
+  std::set<const triton::arch::RegisterSpec*> API::getTaintedRegisters(void) const {
     this->checkTaint();
     return this->taint->getTaintedRegisters();
   }

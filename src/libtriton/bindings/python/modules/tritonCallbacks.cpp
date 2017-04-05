@@ -1988,12 +1988,12 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getTaintedRegisters(): Architecture is not defined.");
 
         try {
-          std::set<triton::arch::registers_e> registers = triton::api.getTaintedRegisters();
+          std::set<const triton::arch::RegisterSpec*> registers = triton::api.getTaintedRegisters();
 
           size = registers.size();
           ret = xPyList_New(size);
-          for (triton::arch::registers_e id: registers) {
-            PyList_SetItem(ret, index, PyRegister(triton::arch::Register(triton::api.getRegister(id))));
+          for (auto const* spec: registers) {
+            PyList_SetItem(ret, index, PyRegister(triton::arch::Register(*spec)));
             index++;
           }
         }
