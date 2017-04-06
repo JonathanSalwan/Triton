@@ -3122,426 +3122,379 @@ namespace triton {
 namespace triton {
   namespace ast {
 
-    AbstractNode* assert_(AbstractNode* expr) {
-      AbstractNode* node = new(std::nothrow) AssertNode(expr);
+    static inline void checkNode(AbstractNode* node) {
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+    }
+
+
+    AbstractNode* assert_(AbstractNode* expr) {
+      AbstractNode* node = new(std::nothrow) AssertNode(expr);
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bv(triton::uint512 value, triton::uint32 size) {
       AbstractNode* node = new(std::nothrow) BvNode(value, size);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvadd(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvaddNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvand(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvandNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvashr(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvashrNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvdecl(triton::uint32 size) {
       AbstractNode* node = new(std::nothrow) BvdeclNode(size);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvfalse(void) {
       AbstractNode* node = new(std::nothrow) BvNode(0, 1);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvlshr(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvlshrNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvmul(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvmulNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvnand(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvnandNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvneg(AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) BvnegNode(expr);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvnor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvnorNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvnot(AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) BvnotNode(expr);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvorNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvrol(triton::uint32 rot, AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) BvrolNode(rot, expr);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvrol(AbstractNode* rot, AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) BvrolNode(rot, expr);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvror(triton::uint32 rot, AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) BvrorNode(rot, expr);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvror(AbstractNode* rot, AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) BvrorNode(rot, expr);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvsdiv(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsdivNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvsge(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsgeNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvsgt(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsgtNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvshl(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvshlNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvsle(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsleNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvslt(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsltNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvsmod(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsmodNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvsrem(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsremNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvsub(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsubNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvtrue(void) {
       AbstractNode* node = new(std::nothrow) BvNode(1, 1);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvudiv(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvudivNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvuge(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvugeNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvugt(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvugtNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvule(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvuleNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvult(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvultNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvurem(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvuremNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
      AbstractNode* bvxnor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvxnorNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* bvxor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvxorNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* compound(std::vector<AbstractNode*> exprs) {
       AbstractNode* node = new(std::nothrow) CompoundNode(exprs);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* concat(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) ConcatNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* concat(std::vector<AbstractNode*> exprs) {
       AbstractNode* node = new(std::nothrow) ConcatNode(exprs);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* concat(std::list<AbstractNode*> exprs) {
       AbstractNode* node = new(std::nothrow) ConcatNode(exprs);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* decimal(triton::uint512 value) {
       AbstractNode* node = new(std::nothrow) DecimalNode(value);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* declareFunction(std::string name, AbstractNode* bvDecl) {
       AbstractNode* node = new(std::nothrow) DeclareFunctionNode(name, bvDecl);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* distinct(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) DistinctNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* equal(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) EqualNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* extract(triton::uint32 high, triton::uint32 low, AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) ExtractNode(high, low, expr);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* ite(AbstractNode* ifExpr, AbstractNode* thenExpr, AbstractNode* elseExpr) {
       AbstractNode* node = new(std::nothrow) IteNode(ifExpr, thenExpr, elseExpr);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* land(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) LandNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* let(std::string alias, AbstractNode* expr2, AbstractNode* expr3) {
       AbstractNode* node = new(std::nothrow) LetNode(alias, expr2, expr3);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* lnot(AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) LnotNode(expr);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* lor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) LorNode(expr1, expr2);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* reference(triton::usize value) {
       AbstractNode* node = new(std::nothrow) ReferenceNode(value);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* string(std::string value) {
       AbstractNode* node = new(std::nothrow) StringNode(value);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
 
     AbstractNode* sx(triton::uint32 sizeExt, AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) SxNode(sizeExt, expr);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
@@ -3549,8 +3502,7 @@ namespace triton {
     AbstractNode* variable(triton::engines::symbolic::SymbolicVariable& symVar) {
       AbstractNode* ret  = nullptr;
       AbstractNode* node = new(std::nothrow) VariableNode(symVar);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       ret = triton::api.recordAstNode(node);
       triton::api.recordVariableAstNode(symVar.getName(), ret);
       return ret;
@@ -3559,8 +3511,7 @@ namespace triton {
 
     AbstractNode* zx(triton::uint32 sizeExt, AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) ZxNode(sizeExt, expr);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      checkNode(node);
       return triton::api.recordAstNode(node);
     }
 
