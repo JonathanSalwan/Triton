@@ -369,10 +369,6 @@ namespace triton {
   void API::initEngines(void) {
     this->checkArchitecture();
 
-    this->modes = new(std::nothrow) triton::modes::Modes();
-    if (this->modes == nullptr)
-      throw triton::exceptions::API("API::initEngines(): No enough memory.");
-
     this->symbolic = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(&this->arch, this->modes, this->astCtxt, &this->callbacks);
     if (this->symbolic == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
@@ -403,7 +399,6 @@ namespace triton {
     if (this->isArchitectureValid()) {
       delete this->astGarbageCollector;
       delete this->irBuilder;
-      delete this->modes;
       delete this->solver;
       delete this->symbolic;
       delete this->taint;
@@ -411,12 +406,14 @@ namespace triton {
 
       this->astGarbageCollector = nullptr;
       this->irBuilder           = nullptr;
-      this->modes               = nullptr;
       this->solver              = nullptr;
       this->symbolic            = nullptr;
       this->taint               = nullptr;
       this->z3Interface         = nullptr;
     }
+
+    // Use default mode gain.
+    this->modes = triton::modes::Modes();
   }
 
 
@@ -602,21 +599,13 @@ namespace triton {
 
   /* Modes API======================================================================================= */
 
-  void API::checkModes(void) const {
-    if (!this->modes)
-      throw triton::exceptions::API("API::checkModes(): Modes interface is undefined.");
-  }
-
-
   void API::enableMode(enum triton::modes::mode_e mode, bool flag) {
-    this->checkModes();
-    this->modes->enableMode(mode, flag);
+    this->modes.enableMode(mode, flag);
   }
 
 
   bool API::isModeEnabled(enum triton::modes::mode_e mode) const {
-    this->checkModes();
-    return this->modes->isModeEnabled(mode);
+    return this->modes.isModeEnabled(mode);
   }
 
 

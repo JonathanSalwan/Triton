@@ -38,7 +38,7 @@ namespace triton {
     class AstGarbageCollector : public triton::ast::AstDictionaries {
       private:
         //! Modes API
-        triton::modes::Modes* modes;
+        triton::modes::Modes const& modes;
 
         //! Defines if this instance is used as a backup.
         bool backupFlag;
@@ -52,7 +52,7 @@ namespace triton {
 
       public:
         //! Constructor.
-        AstGarbageCollector(triton::modes::Modes* modes, bool isBackup=false);
+        AstGarbageCollector(triton::modes::Modes const& modes, bool isBackup=false);
 
         //! Constructor by copy.
         AstGarbageCollector(const AstGarbageCollector& other);

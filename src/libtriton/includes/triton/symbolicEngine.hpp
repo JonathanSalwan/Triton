@@ -111,7 +111,7 @@ namespace triton {
           triton::callbacks::Callbacks* callbacks;
 
           //! Modes API.
-          triton::modes::Modes* modes;
+          triton::modes::Modes const& modes;
 
           //! Defines if this instance is used as a backup.
           bool backupFlag;
@@ -122,7 +122,7 @@ namespace triton {
         public:
           //! Constructor. If you use this class as backup or copy you should define the `isBackup` flag as true.
           SymbolicEngine(triton::arch::Architecture* architecture,
-                         triton::modes::Modes* modes,
+                         triton::modes::Modes const& modes,
                          triton::ast::AstContext& astCtxt,
                          triton::callbacks::Callbacks* callbacks=nullptr,
                          bool isBackup=false);
