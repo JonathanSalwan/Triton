@@ -39,14 +39,14 @@ namespace triton {
         //! Architecture API
         triton::arch::Architecture* architecture;
 
-        //! AST garbage collector API
-        triton::ast::AstGarbageCollector* astGarbageCollector;
-
-        //! Backup AST garbage collector
-        triton::ast::AstGarbageCollector* backupAstGarbageCollector;
-
         //! Modes API
         triton::modes::Modes const& modes;
+
+        //! AST garbage collector API
+        triton::ast::AstGarbageCollector& astGarbageCollector;
+
+        //! Backup AST garbage collector
+        triton::ast::AstGarbageCollector backupAstGarbageCollector;
 
         //! Symbolic engine API
         triton::engines::symbolic::SymbolicEngine* symbolicEngine;
@@ -68,7 +68,7 @@ namespace triton {
         //! Constructor.
         IrBuilder(triton::arch::Architecture* architecture,
                   triton::modes::Modes const& modes,
-                  triton::ast::AstGarbageCollector* astGarbageCollector,
+                  triton::ast::AstGarbageCollector& astGarbageCollector,
                   triton::ast::AstContext& astCtxt,
                   triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                   triton::engines::taint::TaintEngine* taintEngine);

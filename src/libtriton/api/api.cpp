@@ -185,7 +185,7 @@ namespace triton {
   triton::API api;
 
 
-  API::API(): arch(&this->callbacks) {
+  API::API(): arch(&this->callbacks), modes(), astGarbageCollector(this->modes) {
   }
 
 
@@ -377,10 +377,6 @@ namespace triton {
     if (this->solver == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->astGarbageCollector = new(std::nothrow) triton::ast::AstGarbageCollector(this->modes);
-    if (this->astGarbageCollector == nullptr)
-      throw triton::exceptions::API("API::initEngines(): No enough memory.");
-
     this->taint = new(std::nothrow) triton::engines::taint::TaintEngine(this->symbolic, *this->getCpu());
     if (this->taint == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
@@ -397,14 +393,12 @@ namespace triton {
 
   void API::removeEngines(void) {
     if (this->isArchitectureValid()) {
-      delete this->astGarbageCollector;
       delete this->irBuilder;
       delete this->solver;
       delete this->symbolic;
       delete this->taint;
       delete this->z3Interface;
 
-      this->astGarbageCollector = nullptr;
       this->irBuilder           = nullptr;
       this->solver              = nullptr;
       this->symbolic            = nullptr;
@@ -414,6 +408,8 @@ namespace triton {
 
     // Use default mode gain.
     this->modes = triton::modes::Modes();
+    // Clean up the GarbageCollector
+    this->astGarbageCollector = triton::ast::AstGarbageCollector(this->modes);
   }
 
 
@@ -455,75 +451,58 @@ namespace triton {
 
   /* AST garbage collector API ====================================================================== */
 
-  void API::checkAstGarbageCollector(void) const {
-    if (!this->astGarbageCollector)
-      throw triton::exceptions::API("API::checkAstGarbageCollector(): AST garbage collector is undefined.");
-  }
-
-
   void API::freeAllAstNodes(void) {
-    this->checkAstGarbageCollector();
-    this->astGarbageCollector->freeAllAstNodes();
+    this->astGarbageCollector.freeAllAstNodes();
   }
 
 
   void API::freeAstNodes(std::set<triton::ast::AbstractNode*>& nodes) {
-    this->checkAstGarbageCollector();
-    this->astGarbageCollector->freeAstNodes(nodes);
+    this->astGarbageCollector.freeAstNodes(nodes);
   }
 
 
   void API::extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root) const {
-    this->checkAstGarbageCollector();
-    this->astGarbageCollector->extractUniqueAstNodes(uniqueNodes, root);
+    this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, root);
   }
 
 
   triton::ast::AbstractNode* API::recordAstNode(triton::ast::AbstractNode* node) {
-    this->checkAstGarbageCollector();
-    return this->astGarbageCollector->recordAstNode(node);
+    return this->astGarbageCollector.recordAstNode(node);
   }
 
 
   void API::recordVariableAstNode(const std::string& name, triton::ast::AbstractNode* node) {
-    this->checkAstGarbageCollector();
-    this->astGarbageCollector->recordVariableAstNode(name, node);
+    this->astGarbageCollector.recordVariableAstNode(name, node);
   }
 
 
   const std::set<triton::ast::AbstractNode*>& API::getAllocatedAstNodes(void) const {
-    this->checkAstGarbageCollector();
-    return this->astGarbageCollector->getAllocatedAstNodes();
+    return this->astGarbageCollector.getAllocatedAstNodes();
   }
 
 
   std::map<std::string, triton::usize> API::getAstDictionariesStats(void) const {
-    this->checkAstGarbageCollector();
-    return this->astGarbageCollector->getAstDictionariesStats();
+    return this->astGarbageCollector.getAstDictionariesStats();
   }
 
 
   const std::map<std::string, triton::ast::AbstractNode*>& API::getAstVariableNodes(void) const {
-    this->checkAstGarbageCollector();
-    return this->astGarbageCollector->getAstVariableNodes();
+    return this->astGarbageCollector.getAstVariableNodes();
   }
 
 
   triton::ast::AbstractNode* API::getAstVariableNode(const std::string& name) const {
-    this->checkAstGarbageCollector();
-    return this->astGarbageCollector->getAstVariableNode(name);
+    return this->astGarbageCollector.getAstVariableNode(name);
   }
 
 
   void API::setAllocatedAstNodes(const std::set<triton::ast::AbstractNode*>& nodes) {
-    this->checkAstGarbageCollector();
-    this->astGarbageCollector->setAllocatedAstNodes(nodes);
+    this->astGarbageCollector.setAllocatedAstNodes(nodes);
   }
 
 
   void API::setAstVariableNodes(const std::map<std::string, triton::ast::AbstractNode*>& nodes) {
-    this->checkAstGarbageCollector();
-    this->astGarbageCollector->setAstVariableNodes(nodes);
+    this->astGarbageCollector.setAstVariableNodes(nodes);
   }
 
 

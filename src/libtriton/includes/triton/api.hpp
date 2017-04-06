@@ -59,7 +59,7 @@ namespace triton {
         triton::engines::solver::SolverEngine* solver = nullptr;
 
         //! The AST garbage collector interface.
-        triton::ast::AstGarbageCollector* astGarbageCollector = nullptr;
+        triton::ast::AstGarbageCollector astGarbageCollector;
 
         //! The AST Context interface
         triton::ast::AstContext astCtxt;
