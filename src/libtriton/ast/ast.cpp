@@ -2372,8 +2372,8 @@ namespace triton {
 
 
     ExtractNode::ExtractNode(triton::uint32 high, triton::uint32 low, AbstractNode* expr): AbstractNode(EXTRACT_NODE, expr->getContext()) {
-      this->addChild(ctxt.decimal(high));
-      this->addChild(ctxt.decimal(low));
+      this->addChild(this->ctxt.decimal(high));
+      this->addChild(this->ctxt.decimal(low));
       this->addChild(expr);
       this->init();
     }
@@ -2706,7 +2706,7 @@ namespace triton {
     /* ====== Reference node */
 
 
-    ReferenceNode::ReferenceNode(triton::usize value): AbstractNode(REFERENCE_NODE, ctxt) {
+    ReferenceNode::ReferenceNode(triton::usize value, triton::ast::AstContext& ctxt): AbstractNode(REFERENCE_NODE, ctxt) {
       this->value = value;
       this->init();
     }

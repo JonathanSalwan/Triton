@@ -676,7 +676,7 @@ namespace triton {
         triton::usize value;
 
       public:
-        ReferenceNode(triton::usize value);
+        ReferenceNode(triton::usize value, AstContext& ctxt);
         ReferenceNode(const ReferenceNode& copy);
         virtual ~ReferenceNode();
         virtual void init(void);
