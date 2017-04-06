@@ -52,11 +52,14 @@ namespace triton {
           //! Taint Engine API
           triton::engines::taint::TaintEngine* taintEngine;
 
+          triton::ast::AstContext& astCtxt;
+
         public:
           //! Constructor.
           x86Semantics(triton::arch::Architecture* architecture,
                        triton::engines::symbolic::SymbolicEngine* symbolicEngine,
-                       triton::engines::taint::TaintEngine* taintEngine);
+                       triton::engines::taint::TaintEngine* taintEngine,
+                       triton::ast::AstContext& astCtxt);
 
           //! Destructor.
           virtual ~x86Semantics();

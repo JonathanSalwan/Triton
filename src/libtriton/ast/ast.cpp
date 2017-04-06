@@ -22,23 +22,14 @@ namespace triton {
 
     /* ====== Abstract node */
 
-    AbstractNode::AbstractNode(enum kind_e kind) {
+    AbstractNode::AbstractNode(enum kind_e kind, AstContext& ctxt): ctxt(ctxt) {
       this->eval        = 0;
       this->kind        = kind;
       this->size        = 0;
       this->symbolized  = false;
     }
 
-
-    AbstractNode::AbstractNode() {
-      this->eval        = 0;
-      this->kind        = UNDEFINED_NODE;
-      this->size        = 0;
-      this->symbolized  = false;
-    }
-
-
-    AbstractNode::AbstractNode(const AbstractNode& copy) {
+    AbstractNode::AbstractNode(const AbstractNode& copy, AstContext& ctxt): ctxt(ctxt) {
       this->eval        = copy.eval;
       this->kind        = copy.kind;
       this->parents     = copy.parents;
@@ -54,6 +45,10 @@ namespace triton {
       /* virtual */
     }
 
+    AstContext& AbstractNode::getContext() const
+    {
+      return ctxt;
+    }
 
     enum kind_e AbstractNode::getKind(void) const {
       return this->kind;
@@ -146,8 +141,7 @@ namespace triton {
     /* ====== assert */
 
 
-    AssertNode::AssertNode(AbstractNode* expr) {
-      this->kind = ASSERT_NODE;
+    AssertNode::AssertNode(AbstractNode* expr): AbstractNode(ASSERT_NODE, expr->getContext()) {
       this->addChild(expr);
       this->init();
     }
@@ -198,8 +192,7 @@ namespace triton {
     /* ====== bvadd */
 
 
-    BvaddNode::BvaddNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVADD_NODE;
+    BvaddNode::BvaddNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVADD_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -254,8 +247,7 @@ namespace triton {
     /* ====== bvand */
 
 
-    BvandNode::BvandNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVAND_NODE;
+    BvandNode::BvandNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVAND_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -311,8 +303,7 @@ namespace triton {
     /* ====== bvashr (shift with sign extension fill) */
 
 
-    BvashrNode::BvashrNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVASHR_NODE;
+    BvashrNode::BvashrNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVASHR_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -399,9 +390,8 @@ namespace triton {
     /* ====== bvdecl */
 
 
-    BvdeclNode::BvdeclNode(triton::uint32 size) {
-      this->kind = BVDECL_NODE;
-      this->addChild(triton::ast::decimal(size));
+    BvdeclNode::BvdeclNode(triton::uint32 size, AstContext& ctxt): AbstractNode(BVDECL_NODE, ctxt) {
+      this->addChild(ctxt.decimal(size));
       this->init();
     }
 
@@ -463,8 +453,7 @@ namespace triton {
     /* ====== bvlshr (shift with zero filled) */
 
 
-    BvlshrNode::BvlshrNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVLSHR_NODE;
+    BvlshrNode::BvlshrNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVLSHR_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -519,8 +508,7 @@ namespace triton {
     /* ====== bvmul */
 
 
-    BvmulNode::BvmulNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVMUL_NODE;
+    BvmulNode::BvmulNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVMUL_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -575,8 +563,7 @@ namespace triton {
     /* ====== bvnand */
 
 
-    BvnandNode::BvnandNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVNAND_NODE;
+    BvnandNode::BvnandNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVNAND_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -631,8 +618,7 @@ namespace triton {
     /* ====== bvneg */
 
 
-    BvnegNode::BvnegNode(AbstractNode* expr) {
-      this->kind = BVNEG_NODE;
+    BvnegNode::BvnegNode(AbstractNode* expr): AbstractNode(BVNEG_NODE, expr->getContext()) {
       this->addChild(expr);
       this->init();
     }
@@ -683,8 +669,7 @@ namespace triton {
     /* ====== bvnor */
 
 
-    BvnorNode::BvnorNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVNOR_NODE;
+    BvnorNode::BvnorNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVNOR_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -739,8 +724,7 @@ namespace triton {
     /* ====== bvnot */
 
 
-    BvnotNode::BvnotNode(AbstractNode* expr) {
-      this->kind = BVNOT_NODE;
+    BvnotNode::BvnotNode(AbstractNode* expr): AbstractNode(BVNOT_NODE, expr->getContext()) {
       this->addChild(expr);
       this->init();
     }
@@ -791,8 +775,7 @@ namespace triton {
     /* ====== bvor */
 
 
-    BvorNode::BvorNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVOR_NODE;
+    BvorNode::BvorNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVOR_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -847,16 +830,11 @@ namespace triton {
     /* ====== bvrol */
 
 
-    BvrolNode::BvrolNode(triton::uint32 rot, AbstractNode* expr) {
-      this->kind = BVROL_NODE;
-      this->addChild(triton::ast::decimal(rot));
-      this->addChild(expr);
-      this->init();
+    BvrolNode::BvrolNode(triton::uint32 rot, AbstractNode* expr): BvrolNode(expr->getContext().decimal(rot), expr) {
     }
 
 
-    BvrolNode::BvrolNode(AbstractNode* rot, AbstractNode* expr) {
-      this->kind = BVROL_NODE;
+    BvrolNode::BvrolNode(AbstractNode* rot, AbstractNode* expr): AbstractNode(BVROL_NODE, rot->getContext()) {
       this->addChild(rot);
       this->addChild(expr);
       this->init();
@@ -919,16 +897,11 @@ namespace triton {
     /* ====== bvror */
 
 
-    BvrorNode::BvrorNode(triton::uint32 rot, AbstractNode* expr) {
-      this->kind = BVROR_NODE;
-      this->addChild(triton::ast::decimal(rot));
-      this->addChild(expr);
-      this->init();
+    BvrorNode::BvrorNode(triton::uint32 rot, AbstractNode* expr): BvrorNode(expr->getContext().decimal(rot), expr) {
     }
 
 
-    BvrorNode::BvrorNode(AbstractNode* rot, AbstractNode* expr) {
-      this->kind = BVROR_NODE;
+    BvrorNode::BvrorNode(AbstractNode* rot, AbstractNode* expr): AbstractNode(BVROR_NODE, expr->getContext()) {
       this->addChild(rot);
       this->addChild(expr);
       this->init();
@@ -990,8 +963,7 @@ namespace triton {
     /* ====== bvsdiv */
 
 
-    BvsdivNode::BvsdivNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVSDIV_NODE;
+    BvsdivNode::BvsdivNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVSDIV_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1059,8 +1031,7 @@ namespace triton {
     /* ====== bvsge */
 
 
-    BvsgeNode::BvsgeNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVSGE_NODE;
+    BvsgeNode::BvsgeNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVSGE_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1122,8 +1093,7 @@ namespace triton {
     /* ====== bvsgt */
 
 
-    BvsgtNode::BvsgtNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVSGT_NODE;
+    BvsgtNode::BvsgtNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVSGT_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1185,8 +1155,7 @@ namespace triton {
     /* ====== bvshl */
 
 
-    BvshlNode::BvshlNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVSHL_NODE;
+    BvshlNode::BvshlNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVSHL_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1241,8 +1210,7 @@ namespace triton {
     /* ====== bvsle */
 
 
-    BvsleNode::BvsleNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVSLE_NODE;
+    BvsleNode::BvsleNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVSLE_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1304,8 +1272,7 @@ namespace triton {
     /* ====== bvslt */
 
 
-    BvsltNode::BvsltNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVSLT_NODE;
+    BvsltNode::BvsltNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVSLT_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1367,8 +1334,7 @@ namespace triton {
     /* ====== bvsmod - 2's complement signed remainder (sign follows divisor) */
 
 
-    BvsmodNode::BvsmodNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVSMOD_NODE;
+    BvsmodNode::BvsmodNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVSMOD_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1434,8 +1400,7 @@ namespace triton {
     /* ====== bvsrem - 2's complement signed remainder (sign follows dividend) */
 
 
-    BvsremNode::BvsremNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVSREM_NODE;
+    BvsremNode::BvsremNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVSREM_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1501,8 +1466,7 @@ namespace triton {
     /* ====== bvsub */
 
 
-    BvsubNode::BvsubNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVSUB_NODE;
+    BvsubNode::BvsubNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVSUB_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1557,8 +1521,7 @@ namespace triton {
     /* ====== bvudiv */
 
 
-    BvudivNode::BvudivNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVUDIV_NODE;
+    BvudivNode::BvudivNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVUDIV_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1617,8 +1580,7 @@ namespace triton {
     /* ====== bvuge */
 
 
-    BvugeNode::BvugeNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVUGE_NODE;
+    BvugeNode::BvugeNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVUGE_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1673,8 +1635,7 @@ namespace triton {
     /* ====== bvugt */
 
 
-    BvugtNode::BvugtNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVUGT_NODE;
+    BvugtNode::BvugtNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVUGT_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1729,8 +1690,7 @@ namespace triton {
     /* ====== bvule */
 
 
-    BvuleNode::BvuleNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVULE_NODE;
+    BvuleNode::BvuleNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVULE_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1785,8 +1745,7 @@ namespace triton {
     /* ====== bvult */
 
 
-    BvultNode::BvultNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVULT_NODE;
+    BvultNode::BvultNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVULT_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1841,8 +1800,7 @@ namespace triton {
     /* ====== bvurem */
 
 
-    BvuremNode::BvuremNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVUREM_NODE;
+    BvuremNode::BvuremNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVUREM_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1901,8 +1859,7 @@ namespace triton {
     /* ====== bvxnor */
 
 
-    BvxnorNode::BvxnorNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVXNOR_NODE;
+    BvxnorNode::BvxnorNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVXNOR_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -1957,8 +1914,7 @@ namespace triton {
     /* ====== bvxor */
 
 
-    BvxorNode::BvxorNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = BVXOR_NODE;
+    BvxorNode::BvxorNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(BVXOR_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -2013,10 +1969,9 @@ namespace triton {
     /* ====== bv */
 
 
-    BvNode::BvNode(triton::uint512 value, triton::uint32 size) {
-      this->kind = BV_NODE;
-      this->addChild(triton::ast::decimal(value));
-      this->addChild(triton::ast::decimal(size));
+    BvNode::BvNode(triton::uint512 value, triton::uint32 size, AstContext& ctxt): AbstractNode(BV_NODE, ctxt) {
+      this->addChild(ctxt.decimal(value));
+      this->addChild(ctxt.decimal(size));
       this->init();
     }
 
@@ -2081,8 +2036,7 @@ namespace triton {
     /* ====== compound */
 
 
-    CompoundNode::CompoundNode(std::vector<AbstractNode*> exprs) {
-      this->kind = COMPOUND_NODE;
+    CompoundNode::CompoundNode(std::vector<AbstractNode*> exprs, AstContext& ctxt): AbstractNode(COMPOUND_NODE, ctxt) {
       for (triton::uint32 index = 0; index < exprs.size(); index++)
         this->addChild(exprs[index]);
       this->init();
@@ -2134,24 +2088,21 @@ namespace triton {
     /* ====== concat */
 
 
-    ConcatNode::ConcatNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = CONCAT_NODE;
+    ConcatNode::ConcatNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(CONCAT_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
     }
 
 
-    ConcatNode::ConcatNode(std::vector<AbstractNode*> exprs) {
-      this->kind = CONCAT_NODE;
+    ConcatNode::ConcatNode(std::vector<AbstractNode*> exprs, AstContext& ctxt): AbstractNode(CONCAT_NODE, ctxt) {
       for (triton::uint32 index = 0; index < exprs.size(); index++)
         this->addChild(exprs[index]);
       this->init();
     }
 
 
-    ConcatNode::ConcatNode(std::list<AbstractNode*> exprs) {
-      this->kind = CONCAT_NODE;
+    ConcatNode::ConcatNode(std::list<AbstractNode*> exprs, AstContext& ctxt): AbstractNode(CONCAT_NODE, ctxt) {
       for (std::list<AbstractNode *>::iterator it = exprs.begin() ; it != exprs.end(); it++)
         this->addChild(*it);
       this->init();
@@ -2212,8 +2163,7 @@ namespace triton {
     /* ====== Decimal node */
 
 
-    DecimalNode::DecimalNode(triton::uint512 value) {
-      this->kind  = DECIMAL_NODE;
+    DecimalNode::DecimalNode(triton::uint512 value, AstContext& ctxt): AbstractNode(DECIMAL_NODE, ctxt) {
       this->value = value;
       this->init();
     }
@@ -2259,9 +2209,8 @@ namespace triton {
     /* ====== Declare node */
 
 
-    DeclareFunctionNode::DeclareFunctionNode(std::string name, AbstractNode* bvDecl) {
-      this->kind = DECLARE_FUNCTION_NODE;
-      this->addChild(triton::ast::string(name));
+    DeclareFunctionNode::DeclareFunctionNode(std::string name, AbstractNode* bvDecl): AbstractNode(DECLARE_FUNCTION_NODE, bvDecl->getContext()) {
+      this->addChild(this->ctxt.string(name));
       this->addChild(bvDecl);
       this->init();
     }
@@ -2318,8 +2267,7 @@ namespace triton {
     /* ====== Distinct node */
 
 
-    DistinctNode::DistinctNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = DISTINCT_NODE;
+    DistinctNode::DistinctNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(DISTINCT_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -2371,8 +2319,7 @@ namespace triton {
     /* ====== equal */
 
 
-    EqualNode::EqualNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = EQUAL_NODE;
+    EqualNode::EqualNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(EQUAL_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -2424,10 +2371,9 @@ namespace triton {
     /* ====== extract */
 
 
-    ExtractNode::ExtractNode(triton::uint32 high, triton::uint32 low, AbstractNode* expr) {
-      this->kind = EXTRACT_NODE;
-      this->addChild(triton::ast::decimal(high));
-      this->addChild(triton::ast::decimal(low));
+    ExtractNode::ExtractNode(triton::uint32 high, triton::uint32 low, AbstractNode* expr): AbstractNode(EXTRACT_NODE, expr->getContext()) {
+      this->addChild(ctxt.decimal(high));
+      this->addChild(ctxt.decimal(low));
       this->addChild(expr);
       this->init();
     }
@@ -2493,8 +2439,7 @@ namespace triton {
     /* ====== ite */
 
 
-    IteNode::IteNode(AbstractNode* ifExpr, AbstractNode* thenExpr, AbstractNode* elseExpr) {
-      this->kind = ITE_NODE;
+    IteNode::IteNode(AbstractNode* ifExpr, AbstractNode* thenExpr, AbstractNode* elseExpr): AbstractNode(ITE_NODE, ifExpr->getContext()) {
       this->addChild(ifExpr);
       this->addChild(thenExpr);
       this->addChild(elseExpr);
@@ -2550,8 +2495,7 @@ namespace triton {
     /* ====== Land */
 
 
-    LandNode::LandNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = LAND_NODE;
+    LandNode::LandNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(LAND_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -2603,9 +2547,8 @@ namespace triton {
     /* ====== Let */
 
 
-    LetNode::LetNode(std::string alias, AbstractNode* expr2, AbstractNode* expr3) {
-      this->kind = LET_NODE;
-      this->addChild(triton::ast::string(alias));
+    LetNode::LetNode(std::string alias, AbstractNode* expr2, AbstractNode* expr3): AbstractNode(LET_NODE, expr2->getContext()) {
+      this->addChild(ctxt.string(alias));
       this->addChild(expr2);
       this->addChild(expr3);
       this->init();
@@ -2660,8 +2603,7 @@ namespace triton {
     /* ====== Lnot */
 
 
-    LnotNode::LnotNode(AbstractNode* expr) {
-      this->kind = LNOT_NODE;
+    LnotNode::LnotNode(AbstractNode* expr): AbstractNode(LNOT_NODE, expr->getContext()) {
       this->addChild(expr);
       this->init();
     }
@@ -2712,8 +2654,7 @@ namespace triton {
     /* ====== Lor */
 
 
-    LorNode::LorNode(AbstractNode* expr1, AbstractNode* expr2) {
-      this->kind = LOR_NODE;
+    LorNode::LorNode(AbstractNode* expr1, AbstractNode* expr2): AbstractNode(LOR_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
@@ -2765,8 +2706,7 @@ namespace triton {
     /* ====== Reference node */
 
 
-    ReferenceNode::ReferenceNode(triton::usize value) {
-      this->kind  = REFERENCE_NODE;
+    ReferenceNode::ReferenceNode(triton::usize value): AbstractNode(REFERENCE_NODE, ctxt) {
       this->value = value;
       this->init();
     }
@@ -2821,8 +2761,7 @@ namespace triton {
     /* ====== String node */
 
 
-    StringNode::StringNode(std::string value) {
-      this->kind  = STRING_NODE;
+    StringNode::StringNode(std::string value, AstContext& ctxt): AbstractNode(STRING_NODE, ctxt) {
       this->value = value;
       this->init();
     }
@@ -2871,9 +2810,8 @@ namespace triton {
     /* ====== sx */
 
 
-    SxNode::SxNode(triton::uint32 sizeExt, AbstractNode* expr) {
-      this->kind = SX_NODE;
-      this->addChild(triton::ast::decimal(sizeExt));
+    SxNode::SxNode(triton::uint32 sizeExt, AbstractNode* expr): AbstractNode(SX_NODE, expr->getContext()) {
+      this->addChild(ctxt.decimal(sizeExt));
       this->addChild(expr);
       this->init();
     }
@@ -2934,8 +2872,7 @@ namespace triton {
     /* ====== Variable node */
 
 
-    VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar) {
-      this->kind  = VARIABLE_NODE;
+    VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt): AbstractNode(VARIABLE_NODE, ctxt) {
       this->value = symVar.getName();
       this->init();
     }
@@ -2990,9 +2927,8 @@ namespace triton {
     /* ====== zx */
 
 
-    ZxNode::ZxNode(triton::uint32 sizeExt, AbstractNode* expr) {
-      this->kind = ZX_NODE;
-      this->addChild(triton::ast::decimal(sizeExt));
+    ZxNode::ZxNode(triton::uint32 sizeExt, AbstractNode* expr): AbstractNode(ZX_NODE, expr->getContext()) {
+      this->addChild(ctxt.decimal(sizeExt));
       this->addChild(expr);
       this->init();
     }
@@ -3122,7 +3058,7 @@ namespace triton {
 namespace triton {
   namespace ast {
 
-    AbstractNode* assert_(AbstractNode* expr) {
+    AbstractNode* AstContext::assert_(AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) AssertNode(expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3130,15 +3066,15 @@ namespace triton {
     }
 
 
-    AbstractNode* bv(triton::uint512 value, triton::uint32 size) {
-      AbstractNode* node = new(std::nothrow) BvNode(value, size);
+    AbstractNode* AstContext::bv(triton::uint512 value, triton::uint32 size) {
+      AbstractNode* node = new(std::nothrow) BvNode(value, size, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
 
-    AbstractNode* bvadd(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvadd(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvaddNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3146,7 +3082,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvand(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvand(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvandNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3154,7 +3090,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvashr(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvashr(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvashrNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3162,23 +3098,23 @@ namespace triton {
     }
 
 
-    AbstractNode* bvdecl(triton::uint32 size) {
-      AbstractNode* node = new(std::nothrow) BvdeclNode(size);
+    AbstractNode* AstContext::bvdecl(triton::uint32 size) {
+      AbstractNode* node = new(std::nothrow) BvdeclNode(size, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
 
-    AbstractNode* bvfalse(void) {
-      AbstractNode* node = new(std::nothrow) BvNode(0, 1);
+    AbstractNode* AstContext::bvfalse(void) {
+      AbstractNode* node = new(std::nothrow) BvNode(0, 1, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
 
-    AbstractNode* bvlshr(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvlshr(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvlshrNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3186,7 +3122,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvmul(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvmul(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvmulNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3194,7 +3130,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvnand(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvnand(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvnandNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3202,7 +3138,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvneg(AbstractNode* expr) {
+    AbstractNode* AstContext::bvneg(AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) BvnegNode(expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3210,7 +3146,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvnor(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvnor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvnorNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3218,7 +3154,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvnot(AbstractNode* expr) {
+    AbstractNode* AstContext::bvnot(AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) BvnotNode(expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3226,7 +3162,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvor(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvorNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3234,7 +3170,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvrol(triton::uint32 rot, AbstractNode* expr) {
+    AbstractNode* AstContext::bvrol(triton::uint32 rot, AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) BvrolNode(rot, expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3242,7 +3178,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvrol(AbstractNode* rot, AbstractNode* expr) {
+    AbstractNode* AstContext::bvrol(AbstractNode* rot, AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) BvrolNode(rot, expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3250,7 +3186,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvror(triton::uint32 rot, AbstractNode* expr) {
+    AbstractNode* AstContext::bvror(triton::uint32 rot, AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) BvrorNode(rot, expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3258,7 +3194,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvror(AbstractNode* rot, AbstractNode* expr) {
+    AbstractNode* AstContext::bvror(AbstractNode* rot, AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) BvrorNode(rot, expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3266,7 +3202,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvsdiv(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvsdiv(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsdivNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3274,7 +3210,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvsge(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvsge(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsgeNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3282,7 +3218,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvsgt(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvsgt(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsgtNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3290,7 +3226,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvshl(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvshl(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvshlNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3298,7 +3234,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvsle(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvsle(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsleNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3306,7 +3242,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvslt(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvslt(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsltNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3314,7 +3250,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvsmod(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvsmod(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsmodNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3322,7 +3258,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvsrem(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvsrem(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsremNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3330,7 +3266,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvsub(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvsub(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvsubNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3338,15 +3274,15 @@ namespace triton {
     }
 
 
-    AbstractNode* bvtrue(void) {
-      AbstractNode* node = new(std::nothrow) BvNode(1, 1);
+    AbstractNode* AstContext::bvtrue(void) {
+      AbstractNode* node = new(std::nothrow) BvNode(1, 1, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
 
-    AbstractNode* bvudiv(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvudiv(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvudivNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3354,7 +3290,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvuge(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvuge(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvugeNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3362,7 +3298,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvugt(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvugt(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvugtNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3370,7 +3306,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvule(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvule(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvuleNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3378,7 +3314,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvult(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvult(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvultNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3386,7 +3322,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvurem(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvurem(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvuremNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3394,7 +3330,7 @@ namespace triton {
     }
 
 
-     AbstractNode* bvxnor(AbstractNode* expr1, AbstractNode* expr2) {
+     AbstractNode* AstContext::bvxnor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvxnorNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3402,7 +3338,7 @@ namespace triton {
     }
 
 
-    AbstractNode* bvxor(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::bvxor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) BvxorNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3410,15 +3346,15 @@ namespace triton {
     }
 
 
-    AbstractNode* compound(std::vector<AbstractNode*> exprs) {
-      AbstractNode* node = new(std::nothrow) CompoundNode(exprs);
+    AbstractNode* AstContext::compound(std::vector<AbstractNode*> exprs) {
+      AbstractNode* node = new(std::nothrow) CompoundNode(exprs, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
 
-    AbstractNode* concat(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::concat(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) ConcatNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3426,31 +3362,31 @@ namespace triton {
     }
 
 
-    AbstractNode* concat(std::vector<AbstractNode*> exprs) {
-      AbstractNode* node = new(std::nothrow) ConcatNode(exprs);
+    AbstractNode* AstContext::concat(std::vector<AbstractNode*> exprs) {
+      AbstractNode* node = new(std::nothrow) ConcatNode(exprs, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
 
-    AbstractNode* concat(std::list<AbstractNode*> exprs) {
-      AbstractNode* node = new(std::nothrow) ConcatNode(exprs);
+    AbstractNode* AstContext::concat(std::list<AbstractNode*> exprs) {
+      AbstractNode* node = new(std::nothrow) ConcatNode(exprs, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
 
-    AbstractNode* decimal(triton::uint512 value) {
-      AbstractNode* node = new(std::nothrow) DecimalNode(value);
+    AbstractNode* AstContext::decimal(triton::uint512 value) {
+      AbstractNode* node = new(std::nothrow) DecimalNode(value, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
 
-    AbstractNode* declareFunction(std::string name, AbstractNode* bvDecl) {
+    AbstractNode* AstContext::declareFunction(std::string name, AbstractNode* bvDecl) {
       AbstractNode* node = new(std::nothrow) DeclareFunctionNode(name, bvDecl);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3458,7 +3394,7 @@ namespace triton {
     }
 
 
-    AbstractNode* distinct(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::distinct(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) DistinctNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3466,7 +3402,7 @@ namespace triton {
     }
 
 
-    AbstractNode* equal(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::equal(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) EqualNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3474,7 +3410,7 @@ namespace triton {
     }
 
 
-    AbstractNode* extract(triton::uint32 high, triton::uint32 low, AbstractNode* expr) {
+    AbstractNode* AstContext::extract(triton::uint32 high, triton::uint32 low, AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) ExtractNode(high, low, expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3482,7 +3418,7 @@ namespace triton {
     }
 
 
-    AbstractNode* ite(AbstractNode* ifExpr, AbstractNode* thenExpr, AbstractNode* elseExpr) {
+    AbstractNode* AstContext::ite(AbstractNode* ifExpr, AbstractNode* thenExpr, AbstractNode* elseExpr) {
       AbstractNode* node = new(std::nothrow) IteNode(ifExpr, thenExpr, elseExpr);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3490,7 +3426,7 @@ namespace triton {
     }
 
 
-    AbstractNode* land(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::land(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) LandNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3498,7 +3434,7 @@ namespace triton {
     }
 
 
-    AbstractNode* let(std::string alias, AbstractNode* expr2, AbstractNode* expr3) {
+    AbstractNode* AstContext::let(std::string alias, AbstractNode* expr2, AbstractNode* expr3) {
       AbstractNode* node = new(std::nothrow) LetNode(alias, expr2, expr3);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3506,7 +3442,7 @@ namespace triton {
     }
 
 
-    AbstractNode* lnot(AbstractNode* expr) {
+    AbstractNode* AstContext::lnot(AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) LnotNode(expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3514,7 +3450,7 @@ namespace triton {
     }
 
 
-    AbstractNode* lor(AbstractNode* expr1, AbstractNode* expr2) {
+    AbstractNode* AstContext::lor(AbstractNode* expr1, AbstractNode* expr2) {
       AbstractNode* node = new(std::nothrow) LorNode(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3522,7 +3458,7 @@ namespace triton {
     }
 
 
-    AbstractNode* reference(triton::usize value) {
+    AbstractNode* AstContext::reference(triton::usize value) {
       AbstractNode* node = new(std::nothrow) ReferenceNode(value);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3530,15 +3466,15 @@ namespace triton {
     }
 
 
-    AbstractNode* string(std::string value) {
-      AbstractNode* node = new(std::nothrow) StringNode(value);
+    AbstractNode* AstContext::string(std::string value) {
+      AbstractNode* node = new(std::nothrow) StringNode(value, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       return triton::api.recordAstNode(node);
     }
 
 
-    AbstractNode* sx(triton::uint32 sizeExt, AbstractNode* expr) {
+    AbstractNode* AstContext::sx(triton::uint32 sizeExt, AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) SxNode(sizeExt, expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3546,9 +3482,9 @@ namespace triton {
     }
 
 
-    AbstractNode* variable(triton::engines::symbolic::SymbolicVariable& symVar) {
+    AbstractNode* AstContext::variable(triton::engines::symbolic::SymbolicVariable& symVar) {
       AbstractNode* ret  = nullptr;
-      AbstractNode* node = new(std::nothrow) VariableNode(symVar);
+      AbstractNode* node = new(std::nothrow) VariableNode(symVar, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       ret = triton::api.recordAstNode(node);
@@ -3557,7 +3493,7 @@ namespace triton {
     }
 
 
-    AbstractNode* zx(triton::uint32 sizeExt, AbstractNode* expr) {
+    AbstractNode* AstContext::zx(triton::uint32 sizeExt, AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) ZxNode(sizeExt, expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -3628,7 +3564,7 @@ namespace triton {
       if (newNode == nullptr)
         throw triton::exceptions::Ast("triton::ast::newInstance(): No enough memory.");
 
-      return newNode;
+      return triton::api.recordAstNode(newNode);
     }
 
   }; /* ast namespace */

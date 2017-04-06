@@ -38,6 +38,8 @@ namespace triton {
    *  @{
    */
 
+    class AstContext;
+
     //! Abstract node
     class AbstractNode {
       protected:
@@ -59,15 +61,16 @@ namespace triton {
         //! This value is set to true if the tree contains a symbolic variable.
         bool symbolized;
 
+        AstContext& ctxt;
+
       public:
         //! Constructor.
-        AbstractNode(enum kind_e kind);
+        AbstractNode(enum kind_e kind, AstContext& ctxt);
 
         //! Constructor by copy.
-        AbstractNode(const AbstractNode& copy);
+        AbstractNode(const AbstractNode& copy, AstContext& ctxt);
 
-        //! Constructor.
-        AbstractNode();
+        AstContext& getContext() const;
 
         //! Destructor.
         virtual ~AbstractNode();
@@ -181,7 +184,7 @@ namespace triton {
     //! `(_ BitVec x)` node
     class BvdeclNode : public AbstractNode {
       public:
-        BvdeclNode(triton::uint32 size);
+        BvdeclNode(triton::uint32 size, AstContext& ctxt);
         BvdeclNode(const BvdeclNode& copy);
         virtual ~BvdeclNode();
         virtual void init(void);
@@ -507,7 +510,7 @@ namespace triton {
     //! `(_ bv<value> <size>)` node
     class BvNode : public AbstractNode {
       public:
-        BvNode(triton::uint512 value, triton::uint32 size);
+        BvNode(triton::uint512 value, triton::uint32 size, AstContext& ctxt);
         BvNode(const BvNode& copy);
         virtual ~BvNode();
         virtual void init(void);
@@ -519,7 +522,7 @@ namespace triton {
     //! compound node
     class CompoundNode : public AbstractNode {
       public:
-        CompoundNode(std::vector<AbstractNode*> exprs);
+        CompoundNode(std::vector<AbstractNode*> exprs, AstContext& ctxt);
         CompoundNode(const CompoundNode& copy);
         virtual ~CompoundNode();
         virtual void init(void);
@@ -532,8 +535,8 @@ namespace triton {
     class ConcatNode : public AbstractNode {
       public:
         ConcatNode(AbstractNode* expr1, AbstractNode* expr2);
-        ConcatNode(std::vector<AbstractNode* > exprs);
-        ConcatNode(std::list<AbstractNode* > exprs);
+        ConcatNode(std::vector<AbstractNode* > exprs, AstContext& ctxt);
+        ConcatNode(std::list<AbstractNode* > exprs, AstContext& ctxt);
         ConcatNode(const ConcatNode& copy);
         virtual ~ConcatNode();
         virtual void init(void);
@@ -548,7 +551,7 @@ namespace triton {
         triton::uint512 value;
 
       public:
-        DecimalNode(triton::uint512 value);
+        DecimalNode(triton::uint512 value, AstContext& ctxt);
         DecimalNode(const DecimalNode& copy);
         virtual ~DecimalNode();
         virtual void init(void);
@@ -690,7 +693,7 @@ namespace triton {
         std::string value;
 
       public:
-        StringNode(std::string value);
+        StringNode(std::string value, AstContext& ctxt);
         StringNode(const StringNode& copy);
         virtual ~StringNode();
         virtual void init(void);
@@ -719,7 +722,7 @@ namespace triton {
         std::string value;
 
       public:
-        VariableNode(triton::engines::symbolic::SymbolicVariable& symVar);
+        VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt);
         VariableNode(const VariableNode& copy);
         virtual ~VariableNode();
         virtual void init(void);
@@ -749,7 +752,9 @@ namespace triton {
     //! Compares two trees.
     bool operator==(AbstractNode& node1, AbstractNode& node2);
 
+    class AstContext {
 
+      public:
     //! AST C++ API - bv node builder
     AbstractNode* bv(triton::uint512 value, triton::uint32 size);
 
@@ -914,6 +919,7 @@ namespace triton {
 
     //! AST C++ API - zx node builder
     AbstractNode* zx(triton::uint32 sizeExt, AbstractNode* expr);
+    };
 
     //! AST C++ API - Duplicates the AST
     AbstractNode* newInstance(AbstractNode* node);

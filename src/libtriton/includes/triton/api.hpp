@@ -61,6 +61,9 @@ namespace triton {
         //! The AST garbage collector interface.
         triton::ast::AstGarbageCollector* astGarbageCollector = nullptr;
 
+        //! The AST Context interface
+        triton::ast::AstContext astCtxt;
+
         //! The IR builder.
         triton::arch::IrBuilder* irBuilder = nullptr;
 
@@ -222,6 +225,9 @@ namespace triton {
 
         //! [**IR builder api**] - Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before. \sa processing().
         bool buildSemantics(triton::arch::Instruction& inst);
+
+
+        triton::ast::AstContext& getAstContext();
 
 
 

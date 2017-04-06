@@ -22,6 +22,7 @@ namespace triton {
     IrBuilder::IrBuilder(triton::arch::Architecture* architecture,
                          triton::modes::Modes* modes,
                          triton::ast::AstGarbageCollector* astGarbageCollector,
+                         triton::ast::AstContext& astCtxt,
                          triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                          triton::engines::taint::TaintEngine* taintEngine) {
 
@@ -43,11 +44,11 @@ namespace triton {
       this->architecture              = architecture;
       this->astGarbageCollector       = astGarbageCollector;
       this->backupAstGarbageCollector = new(std::nothrow) triton::ast::AstGarbageCollector(modes, true);
-      this->backupSymbolicEngine      = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(architecture, modes, nullptr, true);
+      this->backupSymbolicEngine      = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(architecture, modes, astCtxt, nullptr, true);
       this->modes                     = modes;
       this->symbolicEngine            = symbolicEngine;
       this->taintEngine               = taintEngine;
-      this->x86Isa                    = new(std::nothrow) triton::arch::x86::x86Semantics(architecture, symbolicEngine, taintEngine);
+      this->x86Isa                    = new(std::nothrow) triton::arch::x86::x86Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
 
       if (this->x86Isa == nullptr || this->backupSymbolicEngine == nullptr || this->backupAstGarbageCollector == nullptr)
         throw triton::exceptions::IrBuilder("IrBuilder::IrBuilder(): Not enough memory.");

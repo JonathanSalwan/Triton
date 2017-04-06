@@ -48,13 +48,16 @@ namespace triton {
           //! Modes API.
           triton::modes::Modes* modes;
 
+          //! AstContext API
+          triton::ast::AstContext & astCtxt;
+
         protected:
           //! \brief The logical conjunction vector of path constraints.
           std::vector<triton::engines::symbolic::PathConstraint> pathConstraints;
 
         public:
           //! Constructor.
-          PathManager(triton::modes::Modes* modes);
+          PathManager(triton::modes::Modes* modes, triton::ast::AstContext& astCtxt);
 
           //! Constructor by copy.
           PathManager(const PathManager& copy);

@@ -373,7 +373,7 @@ namespace triton {
     if (this->modes == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->symbolic = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(&this->arch, this->modes, &this->callbacks);
+    this->symbolic = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(&this->arch, this->modes, this->astCtxt, &this->callbacks);
     if (this->symbolic == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
@@ -389,7 +389,7 @@ namespace triton {
     if (this->taint == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->irBuilder = new(std::nothrow) triton::arch::IrBuilder(&this->arch, this->modes, this->astGarbageCollector, this->symbolic, this->taint);
+    this->irBuilder = new(std::nothrow) triton::arch::IrBuilder(&this->arch, this->modes, this->astGarbageCollector, this->astCtxt, this->symbolic, this->taint);
     if (this->irBuilder == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
@@ -451,6 +451,10 @@ namespace triton {
   }
 
 
+  triton::ast::AstContext& API::getAstContext() 
+  {
+    return this->astCtxt;
+  }
 
   /* AST garbage collector API ====================================================================== */
 

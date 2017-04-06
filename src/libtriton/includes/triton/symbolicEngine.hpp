@@ -57,6 +57,8 @@ namespace triton {
           public triton::engines::symbolic::PathManager {
 
         protected:
+          triton::ast::AstContext& astCtxt;
+
           //! Defines if the engine is enable or disable.
           bool enableFlag;
 
@@ -121,6 +123,7 @@ namespace triton {
           //! Constructor. If you use this class as backup or copy you should define the `isBackup` flag as true.
           SymbolicEngine(triton::arch::Architecture* architecture,
                          triton::modes::Modes* modes,
+                         triton::ast::AstContext& astCtxt,
                          triton::callbacks::Callbacks* callbacks=nullptr,
                          bool isBackup=false);
 
