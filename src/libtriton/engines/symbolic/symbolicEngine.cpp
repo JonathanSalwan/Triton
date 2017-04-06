@@ -11,6 +11,7 @@
 #include <triton/exceptions.hpp>
 #include <triton/coreUtils.hpp>
 #include <triton/symbolicEngine.hpp>
+#include <triton/astContext.hpp>
 
 
 

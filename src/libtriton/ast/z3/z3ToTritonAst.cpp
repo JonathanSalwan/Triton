@@ -9,6 +9,7 @@
 
 #include <triton/exceptions.hpp>
 #include <triton/z3ToTritonAst.hpp>
+#include <triton/astContext.hpp>
 
 
 

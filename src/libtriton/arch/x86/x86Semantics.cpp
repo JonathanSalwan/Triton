@@ -9,6 +9,7 @@
 #include <triton/exceptions.hpp>
 #include <triton/x86Semantics.hpp>
 #include <triton/x86Specifications.hpp>
+#include <triton/astContext.hpp>
 
 
 

@@ -10,7 +10,7 @@
 
 #include <triton/architecture.hpp>
 #include <triton/ast.hpp>
-#include <triton/astGarbageCollector.hpp>
+#include <triton/astContext.hpp>
 #include <triton/astRepresentation.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/immediate.hpp>
@@ -57,9 +57,6 @@ namespace triton {
 
         //! The solver engine.
         triton::engines::solver::SolverEngine* solver = nullptr;
-
-        //! The AST garbage collector interface.
-        triton::ast::AstGarbageCollector astGarbageCollector;
 
         //! The AST Context interface
         triton::ast::AstContext astCtxt;

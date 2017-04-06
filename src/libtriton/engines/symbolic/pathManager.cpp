@@ -8,6 +8,7 @@
 #include <triton/exceptions.hpp>
 #include <triton/pathManager.hpp>
 #include <triton/symbolicEnums.hpp>
+#include <triton/astContext.hpp>
 
 
 

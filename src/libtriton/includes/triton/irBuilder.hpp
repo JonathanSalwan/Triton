@@ -68,7 +68,6 @@ namespace triton {
         //! Constructor.
         IrBuilder(triton::arch::Architecture* architecture,
                   triton::modes::Modes const& modes,
-                  triton::ast::AstGarbageCollector& astGarbageCollector,
                   triton::ast::AstContext& astCtxt,
                   triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                   triton::engines::taint::TaintEngine* taintEngine);
