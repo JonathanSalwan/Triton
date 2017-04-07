@@ -30,6 +30,12 @@ namespace triton {
  *  @{
  */
 
+  namespace engines {
+    namespace symbolic {
+      class SymbolicExpression;
+    }
+  }
+
   //! The AST namespace
   namespace ast {
   /*!
@@ -673,17 +679,17 @@ namespace triton {
     //! Reference node
     class ReferenceNode : public AbstractNode {
       protected:
-        triton::usize value;
+        triton::engines::symbolic::SymbolicExpression & expr;
 
       public:
-        ReferenceNode(triton::usize value, AstContext& ctxt);
+        ReferenceNode(triton::engines::symbolic::SymbolicExpression& expr);
         ReferenceNode(const ReferenceNode& copy);
         virtual ~ReferenceNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
 
-        triton::usize getValue(void);
+        triton::engines::symbolic::SymbolicExpression& getExpr() const;
     };
 
 

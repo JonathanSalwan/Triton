@@ -433,10 +433,7 @@ namespace triton {
 
 
     void TritonToZ3Ast::operator()(triton::ast::ReferenceNode& e) {
-      triton::engines::symbolic::SymbolicExpression* refNode = this->symbolicEngine->getSymbolicExpressionFromId(e.getValue());
-      if (refNode == nullptr)
-        throw triton::exceptions::AstTranslations("TritonToZ3Ast::ReferenceNode(): Reference node not found.");
-      Z3Result op1 = this->eval(*(refNode->getAst()));
+      Z3Result op1 = this->eval(*(e.getExpr().getAst()));
       this->result.setExpr(op1.getExpr());
     }
 

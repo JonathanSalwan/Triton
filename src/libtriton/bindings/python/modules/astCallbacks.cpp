@@ -1376,7 +1376,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "reference(): symbolic expression id not found");
 
         try {
-          return PyAstNode(triton::api.getAstContext().reference(PyLong_AsUsize(exprId)));
+          return PyAstNode(triton::api.getAstContext().reference(*triton::api.getSymbolicExpressionFromId(PyLong_AsUsize(exprId))));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

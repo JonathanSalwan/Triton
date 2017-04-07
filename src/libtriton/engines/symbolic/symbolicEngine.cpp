@@ -452,12 +452,12 @@ namespace triton {
 
         for (triton::uint32 index = 0; index < childs.size(); index++) {
           if (childs[index]->getKind() == triton::ast::REFERENCE_NODE) {
-            triton::usize id = reinterpret_cast<triton::ast::ReferenceNode*>(childs[index])->getValue();
-            triton::ast::AbstractNode* ref = this->getSymbolicExpressionFromId(id)->getAst();
+            auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(childs[index])->getExpr();
+            triton::ast::AbstractNode* ref = expr.getAst();
             childs[index] = ref;
-            if (processed.find(id) != processed.end())
+            if (processed.find(expr.getId()) != processed.end())
               continue;
-            processed.insert(id);
+            processed.insert(expr.getId());
           }
           this->getFullAst(childs[index], processed);
         }
@@ -479,11 +479,12 @@ namespace triton {
 
         for (triton::uint32 index = 0; index < childs.size(); index++) {
           if (childs[index]->getKind() == triton::ast::REFERENCE_NODE) {
-            triton::usize id = reinterpret_cast<triton::ast::ReferenceNode*>(childs[index])->getValue();
+            SymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(childs[index])->getExpr();
+            triton::usize id = expr.getId();
+            // FIXME: it is an insert with check on return value.
             if (exprs.find(id) == exprs.end()) {
-              SymbolicExpression* expr = this->getSymbolicExpressionFromId(id);
-              exprs[id] = expr;
-              this->sliceExpressions(expr->getAst(), exprs);
+              exprs[id] = &expr;
+              this->sliceExpressions(expr.getAst(), exprs);
             }
           }
           this->sliceExpressions(childs[index], exprs);
@@ -751,7 +752,7 @@ namespace triton {
           symMem = this->getSymbolicMemoryId(address + size - 1);
           /* Check if the memory cell is already symbolic */
           if (symMem != triton::engines::symbolic::UNSET) {
-            tmp = astCtxt.reference(symMem);
+            tmp = astCtxt.reference(*this->getSymbolicExpressionFromId(symMem));
             opVec.push_back(astCtxt.extract((BYTE_SIZE_BIT - 1), 0, tmp));
           }
           /* Otherwise, use the concerte value */
@@ -800,7 +801,7 @@ namespace triton {
 
         /* Check if the register is already symbolic */
         if (symReg != triton::engines::symbolic::UNSET)
-          op = astCtxt.extract(high, low, astCtxt.reference(symReg));
+          op = astCtxt.extract(high, low, astCtxt.reference(*this->getSymbolicExpressionFromId(symReg)));
 
         /* Otherwise, use the concerte value */
         else

@@ -11,6 +11,11 @@
 #include <triton/astGarbageCollector.hpp>
 
 namespace triton {
+  namespace engines {
+    namespace symbolic {
+      class SymbolicExpression;
+    }
+  }
   namespace ast {
 
     class AstContext {
@@ -166,7 +171,7 @@ namespace triton {
         AbstractNode* lor(AbstractNode* expr1, AbstractNode* expr2);
 
         //! AST C++ API - reference node builder
-        AbstractNode* reference(triton::usize value);
+        AbstractNode* reference(triton::engines::symbolic::SymbolicExpression& expr);
 
         //! AST C++ API - assert node builder
         AbstractNode* assert_(AbstractNode* expr);

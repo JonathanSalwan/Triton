@@ -831,7 +831,7 @@ namespace triton {
                         astCtxt.bvand(
                           astCtxt.bv(0x10, bvSize),
                           astCtxt.bvxor(
-                            astCtxt.extract(high, low, astCtxt.reference(parent->getId())),
+                            astCtxt.extract(high, low, astCtxt.reference(*parent)),
                             astCtxt.bvxor(op1, op2)
                           )
                         )
@@ -869,7 +869,7 @@ namespace triton {
                           astCtxt.bv(0x10, bvSize),
                           astCtxt.bvxor(
                             op1,
-                            astCtxt.extract(high, low, astCtxt.reference(parent->getId()))
+                            astCtxt.extract(high, low, astCtxt.reference(*parent))
                           )
                         )
                       ),
@@ -906,7 +906,7 @@ namespace triton {
                         astCtxt.bvand(
                           astCtxt.bvxor(
                             astCtxt.bvxor(op1, op2),
-                            astCtxt.extract(high, low, astCtxt.reference(parent->getId()))
+                            astCtxt.extract(high, low, astCtxt.reference(*parent))
                           ),
                         astCtxt.bvxor(op1, op2))
                       )
@@ -1098,7 +1098,7 @@ namespace triton {
          */
         auto node = astCtxt.ite(
                       astCtxt.equal(
-                        astCtxt.extract(high, low, astCtxt.reference(parent->getId())),
+                        astCtxt.extract(high, low, astCtxt.reference(*parent)),
                         astCtxt.bv(0, bvSize)
                       ),
                       astCtxt.bv(1, 1),
@@ -1175,7 +1175,7 @@ namespace triton {
         auto node = astCtxt.ite(
                       astCtxt.equal(op2, astCtxt.bv(0, bvSize)),
                       this->symbolicEngine->buildSymbolicOperand(inst, cf),
-                      astCtxt.extract(low, low, astCtxt.reference(parent->getId()))
+                      astCtxt.extract(low, low, astCtxt.reference(*parent))
                     );
 
         /* Create the symbolic expression */
@@ -1199,7 +1199,7 @@ namespace triton {
         auto node = astCtxt.ite(
                       astCtxt.equal(op2, astCtxt.bv(0, bvSize)),
                       this->symbolicEngine->buildSymbolicOperand(inst, cf),
-                      astCtxt.extract(high, high, astCtxt.reference(parent->getId()))
+                      astCtxt.extract(high, high, astCtxt.reference(*parent))
                     );
 
         /* Create the symbolic expression */
@@ -1404,9 +1404,9 @@ namespace triton {
          */
         auto node = astCtxt.extract(bvSize-1, bvSize-1,
                       astCtxt.bvxor(
-                        astCtxt.bvxor(op1, astCtxt.bvxor(op2, astCtxt.extract(high, low, astCtxt.reference(parent->getId())))),
+                        astCtxt.bvxor(op1, astCtxt.bvxor(op2, astCtxt.extract(high, low, astCtxt.reference(*parent)))),
                         astCtxt.bvand(
-                          astCtxt.bvxor(op1, astCtxt.extract(high, low, astCtxt.reference(parent->getId()))),
+                          astCtxt.bvxor(op1, astCtxt.extract(high, low, astCtxt.reference(*parent))),
                           astCtxt.bvxor(op1, op2)
                         )
                       )
@@ -1438,7 +1438,7 @@ namespace triton {
         auto node = astCtxt.extract(bvSize-1, bvSize-1,
                       astCtxt.bvand(
                         astCtxt.bvxor(op1, astCtxt.bvnot(op2)),
-                        astCtxt.bvxor(op1, astCtxt.extract(high, low, astCtxt.reference(parent->getId())))
+                        astCtxt.bvxor(op1, astCtxt.extract(high, low, astCtxt.reference(*parent)))
                       )
                     );
 
@@ -1520,7 +1520,7 @@ namespace triton {
          */
         auto node = astCtxt.extract(0, 0,
                       astCtxt.bvlshr(
-                        astCtxt.bvand(astCtxt.extract(high, low, astCtxt.reference(parent->getId())), op1),
+                        astCtxt.bvand(astCtxt.extract(high, low, astCtxt.reference(*parent)), op1),
                         astCtxt.bvsub(astCtxt.bv(bvSize, bvSize), astCtxt.bv(1, bvSize))
                       )
                     );
@@ -1547,7 +1547,7 @@ namespace triton {
         auto node = astCtxt.ite(
                       astCtxt.equal(op2, astCtxt.bv(1, bvSize)),
                       astCtxt.bvxor(
-                        astCtxt.extract(high, high, astCtxt.reference(parent->getId())),
+                        astCtxt.extract(high, high, astCtxt.reference(*parent)),
                         this->symbolicEngine->buildSymbolicOperand(inst, cf)
                       ),
                       this->symbolicEngine->buildSymbolicOperand(inst, of)
@@ -1574,8 +1574,8 @@ namespace triton {
         auto node = astCtxt.ite(
                       astCtxt.equal(op2, astCtxt.bv(1, bvSize)),
                       astCtxt.bvxor(
-                        astCtxt.extract(high, high, astCtxt.reference(parent->getId())),
-                        astCtxt.extract(high-1, high-1, astCtxt.reference(parent->getId()))
+                        astCtxt.extract(high, high, astCtxt.reference(*parent)),
+                        astCtxt.extract(high-1, high-1, astCtxt.reference(*parent))
                       ),
                       this->symbolicEngine->buildSymbolicOperand(inst, of)
                     );
@@ -1809,7 +1809,7 @@ namespace triton {
         auto node = astCtxt.extract(bvSize-1, bvSize-1,
                       astCtxt.bvand(
                         astCtxt.bvxor(op1, op2),
-                        astCtxt.bvxor(op1, astCtxt.extract(high, low, astCtxt.reference(parent->getId())))
+                        astCtxt.bvxor(op1, astCtxt.extract(high, low, astCtxt.reference(*parent)))
                       )
                     );
 
@@ -1841,7 +1841,7 @@ namespace triton {
                    node,
                    astCtxt.extract(0, 0,
                      astCtxt.bvlshr(
-                       astCtxt.extract(high, low, astCtxt.reference(parent->getId())),
+                       astCtxt.extract(high, low, astCtxt.reference(*parent)),
                        astCtxt.bv(counter, BYTE_SIZE_BIT)
                      )
                   )
@@ -1877,7 +1877,7 @@ namespace triton {
                    node1,
                    astCtxt.extract(0, 0,
                      astCtxt.bvlshr(
-                       astCtxt.extract(high, low, astCtxt.reference(parent->getId())),
+                       astCtxt.extract(high, low, astCtxt.reference(*parent)),
                        astCtxt.bv(counter, BYTE_SIZE_BIT)
                      )
                   )
@@ -1910,7 +1910,7 @@ namespace triton {
          * Create the semantic.
          * sf = high:bool(regDst)
          */
-        auto node = astCtxt.extract(high, high, astCtxt.reference(parent->getId()));
+        auto node = astCtxt.extract(high, high, astCtxt.reference(*parent));
 
         /* Create the symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_SF), "Sign flag");
@@ -1937,7 +1937,7 @@ namespace triton {
         auto node = astCtxt.ite(
                       astCtxt.equal(op2, astCtxt.bv(0, bvSize)),
                       this->symbolicEngine->buildSymbolicOperand(inst, sf),
-                      astCtxt.extract(high, high, astCtxt.reference(parent->getId()))
+                      astCtxt.extract(high, high, astCtxt.reference(*parent))
                     );
 
         /* Create the symbolic expression */
@@ -2033,7 +2033,7 @@ namespace triton {
          */
         auto node = astCtxt.ite(
                       astCtxt.equal(
-                        astCtxt.extract(high, low, astCtxt.reference(parent->getId())),
+                        astCtxt.extract(high, low, astCtxt.reference(*parent)),
                         astCtxt.bv(0, bvSize)
                       ),
                       astCtxt.bv(1, 1),
@@ -2092,7 +2092,7 @@ namespace triton {
                       this->symbolicEngine->buildSymbolicOperand(inst, zf),
                       astCtxt.ite(
                         astCtxt.equal(
-                          astCtxt.extract(high, low, astCtxt.reference(parent->getId())),
+                          astCtxt.extract(high, low, astCtxt.reference(*parent)),
                           astCtxt.bv(0, bvSize)
                         ),
                         astCtxt.bv(1, 1),
@@ -3175,7 +3175,7 @@ namespace triton {
         expr1->isTainted = this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_EDX)) | this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_EAX));
 
         /* Create the semantics - EAX = TMP[31...0] */
-        auto node2 = astCtxt.extract(DWORD_SIZE_BIT-1, 0, astCtxt.reference(expr1->getId()));
+        auto node2 = astCtxt.extract(DWORD_SIZE_BIT-1, 0, astCtxt.reference(*expr1));
 
         /* Create symbolic expression */
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "CDQ EAX operation");
@@ -3184,7 +3184,7 @@ namespace triton {
         expr2->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_EAX), expr1->isTainted);
 
         /* Create the semantics - EDX = TMP[63...32] */
-        auto node3 = astCtxt.extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, astCtxt.reference(expr1->getId()));
+        auto node3 = astCtxt.extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, astCtxt.reference(*expr1));
 
         /* Create symbolic expression */
         auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "CDQ EDX operation");
@@ -4364,7 +4364,7 @@ namespace triton {
         expr1->isTainted = this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_RDX)) | this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_RAX));
 
         /* Create the semantics - RAX = TMP[63...0] */
-        auto node2 = astCtxt.extract(QWORD_SIZE_BIT-1, 0, astCtxt.reference(expr1->getId()));
+        auto node2 = astCtxt.extract(QWORD_SIZE_BIT-1, 0, astCtxt.reference(*expr1));
 
         /* Create symbolic expression */
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "CQO RAX operation");
@@ -4373,7 +4373,7 @@ namespace triton {
         expr2->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_RAX), expr1->isTainted);
 
         /* Create the semantics - RDX = TMP[127...64] */
-        auto node3 = astCtxt.extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, astCtxt.reference(expr1->getId()));
+        auto node3 = astCtxt.extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, astCtxt.reference(*expr1));
 
         /* Create symbolic expression */
         auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "CQO RDX operation");
@@ -4403,7 +4403,7 @@ namespace triton {
         expr1->isTainted = this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_DX)) | this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_AX));
 
         /* Create the semantics - AX = TMP[15...0] */
-        auto node2 = astCtxt.extract(WORD_SIZE_BIT-1, 0, astCtxt.reference(expr1->getId()));
+        auto node2 = astCtxt.extract(WORD_SIZE_BIT-1, 0, astCtxt.reference(*expr1));
 
         /* Create symbolic expression */
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "CWD AX operation");
@@ -4412,7 +4412,7 @@ namespace triton {
         expr2->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_AX), expr1->isTainted);
 
         /* Create the semantics - DX = TMP[31...16] */
-        auto node3 = astCtxt.extract(DWORD_SIZE_BIT-1, WORD_SIZE_BIT, astCtxt.reference(expr1->getId()));
+        auto node3 = astCtxt.extract(DWORD_SIZE_BIT-1, WORD_SIZE_BIT, astCtxt.reference(*expr1));
 
         /* Create symbolic expression */
         auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "CWD DX operation");

@@ -7,6 +7,7 @@
 
 #include <triton/astSmtRepresentation.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/symbolicExpression.hpp>
 
 
 
@@ -402,7 +403,7 @@ namespace triton {
 
       /* reference representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ReferenceNode* node) {
-        stream << "ref!" << node->getValue();
+        stream << "ref!" << node->getExpr().getId();
         return stream;
       }
 

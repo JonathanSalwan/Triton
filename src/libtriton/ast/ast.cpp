@@ -2706,14 +2706,14 @@ namespace triton {
     /* ====== Reference node */
 
 
-    ReferenceNode::ReferenceNode(triton::usize value, triton::ast::AstContext& ctxt): AbstractNode(REFERENCE_NODE, ctxt) {
-      this->value = value;
+    ReferenceNode::ReferenceNode(triton::engines::symbolic::SymbolicExpression& expr)
+      : AbstractNode(REFERENCE_NODE, expr.getAst()->getContext())
+      , expr(expr) {
       this->init();
     }
 
 
-    ReferenceNode::ReferenceNode(const ReferenceNode& copy) : AbstractNode(copy) {
-      this->value = copy.value;
+    ReferenceNode::ReferenceNode(const ReferenceNode& copy) : AbstractNode(copy), expr(copy.expr) {
     }
 
 
@@ -2723,27 +2723,15 @@ namespace triton {
 
     void ReferenceNode::init(void) {
       /* Init attributes */
-      if (!triton::api.isSymbolicExpressionIdExists(this->value)) {
-        this->eval        = 0;
-        this->size        = 0;
-        this->symbolized  = false;
-      }
-      else {
-        this->eval        = triton::api.getAstFromId(this->value)->evaluate();
-        this->size        = triton::api.getAstFromId(this->value)->getBitvectorSize();
-        this->symbolized  = triton::api.getAstFromId(this->value)->isSymbolized();
+      this->eval        = this->expr.getAst()->evaluate();
+      this->size        = this->expr.getAst()->getBitvectorSize();
+      this->symbolized  = this->expr.getAst()->isSymbolized();
 
-        triton::api.getAstFromId(this->value)->setParent(this);
-      }
+      this->expr.getAst()->setParent(this);
 
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    triton::usize ReferenceNode::getValue(void) {
-      return this->value;
     }
 
 
@@ -2753,8 +2741,13 @@ namespace triton {
 
 
     triton::uint512 ReferenceNode::hash(triton::uint32 deep) {
-      triton::uint512 hash = this->kind ^ this->value;
+      triton::uint512 hash = this->kind ^ this->expr.getId();
       return hash;
+    }
+
+    triton::engines::symbolic::SymbolicExpression& ReferenceNode::getExpr() const
+    {
+      return this->expr;
     }
 
 
