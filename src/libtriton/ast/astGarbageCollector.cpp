@@ -7,6 +7,7 @@
 
 #include <triton/astGarbageCollector.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/symbolicVariable.hpp>
 
 
 
@@ -75,7 +76,7 @@ namespace triton {
 
         /* Remove the node from the global variables map */
         if ((*it)->getKind() == triton::ast::VARIABLE_NODE)
-          this->variableNodes.erase(reinterpret_cast<triton::ast::VariableNode*>(*it)->getValue());
+          this->variableNodes.erase(reinterpret_cast<triton::ast::VariableNode*>(*it)->getVar().getName());
 
         /* Delete the node */
         delete *it;

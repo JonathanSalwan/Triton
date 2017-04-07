@@ -457,7 +457,7 @@ namespace triton {
 
 
     void TritonToZ3Ast::operator()(triton::ast::VariableNode& e) {
-      std::string varName = e.getValue();
+      std::string varName = e.getVar().getName();
       triton::engines::symbolic::SymbolicVariable* symVar = this->symbolicEngine->getSymbolicVariableFromName(varName);
 
       if (symVar == nullptr)

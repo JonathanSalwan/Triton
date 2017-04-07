@@ -2865,14 +2865,14 @@ namespace triton {
     /* ====== Variable node */
 
 
-    VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt): AbstractNode(VARIABLE_NODE, ctxt) {
-      this->value = symVar.getName();
+    VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt)
+      : AbstractNode(VARIABLE_NODE, ctxt)
+        , symVar(symVar) {
       this->init();
     }
 
 
-    VariableNode::VariableNode(const VariableNode& copy) : AbstractNode(copy) {
-      this->value = copy.value;
+    VariableNode::VariableNode(const VariableNode& copy) : AbstractNode(copy), symVar(copy.symVar) {
     }
 
 
@@ -2881,16 +2881,9 @@ namespace triton {
 
 
     void VariableNode::init(void) {
-      triton::engines::symbolic::SymbolicVariable* symVar = nullptr;
-
-      symVar = triton::api.getSymbolicVariableFromName(this->value);
-      if (symVar) {
-        this->size        = symVar->getSize();
-        this->eval        = (symVar->getConcreteValue() & this->getBitvectorMask());
-        this->symbolized  = true;
-      }
-      else
-        throw triton::exceptions::Ast("VariableNode::init(): Variable not found.");
+      this->size        = this->symVar.getSize();
+      this->eval        = (this->symVar.getConcreteValue() & this->getBitvectorMask());
+      this->symbolized  = true;
 
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
@@ -2898,8 +2891,8 @@ namespace triton {
     }
 
 
-    std::string VariableNode::getValue(void) {
-      return this->value;
+    triton::engines::symbolic::SymbolicVariable& VariableNode::getVar() {
+      return this->symVar;
     }
 
 
@@ -2911,8 +2904,8 @@ namespace triton {
     triton::uint512 VariableNode::hash(triton::uint32 deep) {
       triton::uint512 h = this->kind;
       triton::uint32 index = 1;
-      for (std::string::iterator it = this->value.begin(); it != this->value.end(); it++)
-        h = h ^ triton::ast::pow(*it, index++);
+      for(char c: this->symVar.getName())
+        h = h ^ triton::ast::pow(c, index++);
       return triton::ast::rotl(h, deep);
     }
 

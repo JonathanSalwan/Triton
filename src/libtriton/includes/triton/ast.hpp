@@ -725,7 +725,7 @@ namespace triton {
     //! Variable node
     class VariableNode : public AbstractNode {
       protected:
-        std::string value;
+        triton::engines::symbolic::SymbolicVariable& symVar;
 
       public:
         VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt);
@@ -735,7 +735,7 @@ namespace triton {
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
 
-        std::string getValue(void);
+        triton::engines::symbolic::SymbolicVariable& getVar(void);
     };
 
 

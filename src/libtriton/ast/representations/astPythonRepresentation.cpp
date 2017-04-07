@@ -8,6 +8,7 @@
 #include <triton/astPythonRepresentation.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/symbolicExpression.hpp>
+#include <triton/symbolicVariable.hpp>
 
 
 
@@ -434,7 +435,7 @@ namespace triton {
 
       /* variable representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::VariableNode* node) {
-        stream << node->getValue();
+        stream << node->getVar().getName();
         return stream;
       }
 
