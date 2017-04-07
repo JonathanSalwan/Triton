@@ -1163,7 +1163,7 @@ namespace triton {
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Architecture is not defined.");
 
-        if (inst == nullptr || (!PyInstance_Check(inst)))
+        if (inst == nullptr || (!PyInstruction_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects an Instruction as first argument.");
 
         if (node == nullptr || (!PyAstNode_Check(node)))
@@ -1205,7 +1205,7 @@ namespace triton {
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "createSymbolicMemoryExpression(): Architecture is not defined.");
 
-        if (inst == nullptr || (!PyInstance_Check(inst)))
+        if (inst == nullptr || (!PyInstruction_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicMemoryExpression(): Expects an Instruction as first argument.");
 
         if (node == nullptr || (!PyAstNode_Check(node)))
@@ -1247,7 +1247,7 @@ namespace triton {
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Architecture is not defined.");
 
-        if (inst == nullptr || (!PyInstance_Check(inst)))
+        if (inst == nullptr || (!PyInstruction_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects an Instruction as first argument.");
 
         if (node == nullptr || (!PyAstNode_Check(node)))
@@ -1288,7 +1288,7 @@ namespace triton {
         if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "createSymbolicVolatileExpression(): Architecture is not defined.");
 
-        if (inst == nullptr || (!PyInstance_Check(inst)))
+        if (inst == nullptr || (!PyInstruction_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicVolatileExpression(): Expects an Instruction as first argument.");
 
         if (node == nullptr || (!PyAstNode_Check(node)))
