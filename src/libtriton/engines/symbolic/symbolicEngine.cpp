@@ -146,10 +146,9 @@ namespace triton {
         }
 
         /* Delete unused variables */
-        std::map<triton::usize, SymbolicVariable*>::iterator it2;
-        for (it2 = this->symbolicVariables.begin(); it2 != this->symbolicVariables.end(); it2++) {
-          if (other.symbolicVariables.find(it2->first) == other.symbolicVariables.end())
-            delete this->symbolicVariables[it2->first];
+        for (auto& sv: this->symbolicVariables) {
+          if (other.symbolicVariables.find(sv.first) == other.symbolicVariables.end())
+            delete this->symbolicVariables[sv.first];
         }
 
         delete[] this->symbolicReg;
@@ -161,9 +160,6 @@ namespace triton {
 
 
       SymbolicEngine::~SymbolicEngine() {
-        std::map<triton::usize, SymbolicExpression*>::iterator it1 = this->symbolicExpressions.begin();
-        std::map<triton::usize, SymbolicVariable*>::iterator it2 = this->symbolicVariables.begin();
-
         /*
          * Don't delete symbolic expressions and symbolic variables
          * if this class is used as backup engine. Otherwise that may
@@ -172,12 +168,12 @@ namespace triton {
          */
         if (this->backupFlag == false) {
           /* Delete all symbolic expressions */
-          for (; it1 != this->symbolicExpressions.end(); ++it1)
-            delete it1->second;
+          for (auto& se: this->symbolicExpressions)
+            delete se.second;
 
           /* Delete all symbolic variables */
-          for (; it2 != this->symbolicVariables.end(); ++it2)
-            delete it2->second;
+          for (auto sv: this->symbolicVariables)
+            delete sv.second;
         }
 
         /* Delete all symbolic register */
@@ -315,11 +311,9 @@ namespace triton {
 
       /* Returns the symbolic variable otherwise returns nullptr */
       SymbolicVariable* SymbolicEngine::getSymbolicVariableFromName(const std::string& symVarName) const {
-        std::map<triton::usize, SymbolicVariable*>::const_iterator it;
-
-        for (it = this->symbolicVariables.begin(); it != this->symbolicVariables.end(); it++) {
-          if (it->second->getName() == symVarName)
-            return it->second;
+        for (auto& sv: this->symbolicVariables) {
+          if (sv.second->getName() == symVarName)
+            return sv.second;
         }
 
         return nullptr;
@@ -521,11 +515,10 @@ namespace triton {
 
       /* Returns the list of the symbolic variables declared in the trace */
       std::string SymbolicEngine::getVariablesDeclaration(void) const {
-        std::map<triton::usize, SymbolicVariable*>::const_iterator it;
         std::stringstream stream;
 
-        for(it = this->symbolicVariables.begin(); it != this->symbolicVariables.end(); it++)
-          stream << astCtxt.declareFunction(it->second->getName(), astCtxt.bvdecl(it->second->getSize()));
+        for(auto sv: this->symbolicVariables)
+          stream << astCtxt.declareFunction(sv.second->getName(), astCtxt.bvdecl(sv.second->getSize()));
 
         return stream.str();
       }

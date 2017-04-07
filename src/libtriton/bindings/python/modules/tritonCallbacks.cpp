@@ -1942,8 +1942,8 @@ namespace triton {
           const auto& variables = triton::api.getSymbolicVariables();
 
           ret = xPyDict_New();
-          for (auto it = variables.begin(); it != variables.end(); it++)
-            PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicVariable(it->second));
+          for (auto sv: variables)
+            PyDict_SetItem(ret, PyLong_FromUsize(sv.first), PySymbolicVariable(sv.second));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
