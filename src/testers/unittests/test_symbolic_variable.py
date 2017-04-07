@@ -54,20 +54,6 @@ class TestSymbolicVariable(unittest.TestCase):
         self.assertEqual(self.v1.getComment(), "test v1")
         self.assertEqual(self.v2.getComment(), "test com")
 
-    def test_concrete_value(self):
-        """Test concrete value"""
-        self.assertEqual(self.v0.getConcreteValue(), 0)
-        self.assertEqual(self.v1.getConcreteValue(), 0)
-        self.assertEqual(self.v2.getConcreteValue(), 0)
-
-        self.v0.setConcreteValue(0x10)
-        self.v1.setConcreteValue(0x20)
-        self.v2.setConcreteValue(0x30)
-
-        self.assertEqual(self.v0.getConcreteValue(), 0x10)
-        self.assertEqual(self.v1.getConcreteValue(), 0x20)
-        self.assertEqual(self.v2.getConcreteValue(), 0x30)
-
     def test_str(self):
         """Test variable representation"""
         self.assertEqual(str(self.v0), "SymVar_0:8")

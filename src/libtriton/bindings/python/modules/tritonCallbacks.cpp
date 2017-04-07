@@ -2565,6 +2565,34 @@ namespace triton {
         return Py_None;
       }
 
+      static PyObject* triton_setConcreteSymbolicVariableValue(PyObject* self, PyObject* args) {
+        PyObject* symVar = nullptr;
+        PyObject* value  = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &symVar, &value);
+
+        if (symVar == nullptr || !PySymbolicVariable_Check(symVar))
+          return PyErr_Format(PyExc_TypeError, "setConcreteSymbolicVariableValue(): Bad argument type.");
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "setConcreteSymbolicVariableValue(): Architecture is not defined.");
+
+        if (value == nullptr)
+          return PyErr_Format(PyExc_TypeError, "setConcreteSymbolicVariableValue(): Expects a second argument.");
+
+        try {
+            triton::api.setConcreteSymbolicVariableValue(*PySymbolicVariable_AsSymbolicVariable(symVar), PyLong_AsUint512(value));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
 
       static PyObject* triton_setTaintMemory(PyObject* self, PyObject* args) {
         PyObject* mem    = nullptr;
@@ -3186,6 +3214,7 @@ namespace triton {
         {"setConcreteMemoryAreaValue",          (PyCFunction)triton_setConcreteMemoryAreaValue,             METH_VARARGS,       ""},
         {"setConcreteMemoryValue",              (PyCFunction)triton_setConcreteMemoryValue,                 METH_VARARGS,       ""},
         {"setConcreteRegisterValue",            (PyCFunction)triton_setConcreteRegisterValue,               METH_O,             ""},
+        {"setConcreteSymbolicVariableValue",    (PyCFunction)triton_setConcreteSymbolicVariableValue,       METH_VARARGS,       ""},
         {"setTaintMemory",                      (PyCFunction)triton_setTaintMemory,                         METH_VARARGS,       ""},
         {"setTaintRegister",                    (PyCFunction)triton_setTaintRegister,                       METH_VARARGS,       ""},
         {"simplify",                            (PyCFunction)triton_simplify,                               METH_VARARGS,       ""},

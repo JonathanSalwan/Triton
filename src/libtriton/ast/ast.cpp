@@ -2865,9 +2865,11 @@ namespace triton {
     /* ====== Variable node */
 
 
+    // WARNING: A variable ast node should not live onve the SymbolicVariable is dead
     VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt)
       : AbstractNode(VARIABLE_NODE, ctxt)
         , symVar(symVar) {
+      ctxt.initVariable(symVar.getName(), 0);
       this->init();
     }
 
@@ -2882,7 +2884,7 @@ namespace triton {
 
     void VariableNode::init(void) {
       this->size        = this->symVar.getSize();
-      this->eval        = (this->symVar.getConcreteValue() & this->getBitvectorMask());
+      this->eval        = ctxt.getValueForVariable(this->symVar.getName()) & this->getBitvectorMask();
       this->symbolized  = true;
 
       /* Init parents */

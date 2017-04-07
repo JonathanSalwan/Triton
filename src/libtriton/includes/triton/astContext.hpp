@@ -199,9 +199,36 @@ namespace triton {
           return this->astGarbageCollector;
         }
 
+        void initVariable(std::string const& name, triton::uint512 const& value)
+        {
+          valueMapping.insert(std::make_pair(name, value));
+        }
+
+        void updateVariable(std::string const& name, triton::uint512 const& value)
+        {
+          for(auto& kv: this->astGarbageCollector.getAstVariableNodes())
+          {
+            if(kv.first == name) {
+              assert(kv.second->getType() == triton::ast::VARIABLE_NODE);
+              valueMapping[dynamic_cast<VariableNode*>(kv.second)->getVar().getName()] = value;
+              kv.second->init();
+              return;
+            }
+          }
+          throw std::runtime_error("FAIL");
+        }
+
+        triton::uint512 const& getValueForVariable(std::string const& varName) const
+        {
+          return valueMapping.at(varName);
+        }
+
       private:
         //! The AST garbage collector interface.
         triton::ast::AstGarbageCollector astGarbageCollector;
+
+        //! Map a concrete value for a variable name.
+        std::map<std::string, triton::uint512> valueMapping;
     };
 
   }

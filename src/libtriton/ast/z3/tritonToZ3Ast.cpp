@@ -470,13 +470,13 @@ namespace triton {
       if (this->isEval) {
         if (symVar->getKind() == triton::engines::symbolic::MEM) {
           triton::uint32 memSize   = symVar->getSize();
-          triton::uint512 memValue = symVar->getConcreteValue();
+          triton::uint512 memValue = e.evaluate();
           std::string memStrValue(memValue);
           z3::expr newexpr = this->result.getContext().bv_val(memStrValue.c_str(), memSize);
           this->result.setExpr(newexpr);
         }
         else if (symVar->getKind() == triton::engines::symbolic::REG) {
-          triton::uint512 regValue = symVar->getConcreteValue();
+          triton::uint512 regValue = e.evaluate();
           std::string regStrValue(regValue);
           z3::expr newexpr = this->result.getContext().bv_val(regStrValue.c_str(), symVar->getSize());
           this->result.setExpr(newexpr);

@@ -70,6 +70,7 @@ namespace triton {
         AstContext& ctxt;
 
       public:
+
         //! Constructor.
         AbstractNode(enum kind_e kind, AstContext& ctxt);
 

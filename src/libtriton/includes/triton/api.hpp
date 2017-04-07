@@ -188,6 +188,8 @@ namespace triton {
          */
         void setConcreteRegisterValue(const triton::arch::Register& reg);
 
+        void setConcreteSymbolicVariableValue(const triton::engines::symbolic::SymbolicVariable & symVar, triton::uint512 const& value);
+
         //! [**architecture api**] - Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getConcreteMemoryValue() and getConcreteMemoryAreaValue().
         bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
 
