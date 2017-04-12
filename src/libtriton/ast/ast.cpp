@@ -8,12 +8,12 @@
 #include <cmath>
 #include <new>
 
-#include <triton/api.hpp>
 #include <triton/ast.hpp>
 #include <triton/astRepresentation.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/tritonToZ3Ast.hpp>
 #include <triton/z3Result.hpp>
+#include <triton/astContext.hpp>
 
 
 
@@ -3109,7 +3109,7 @@ namespace triton {
       if (newNode == nullptr)
         throw triton::exceptions::Ast("triton::ast::newInstance(): No enough memory.");
 
-      return triton::api.recordAstNode(newNode);
+      return node->getContext().getAstGarbageCollector().recordAstNode(newNode);
     }
 
   }; /* ast namespace */

@@ -5,7 +5,6 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/api.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/symbolicVariable.hpp>
