@@ -406,7 +406,7 @@ namespace triton {
       this->z3Interface         = nullptr;
     }
 
-    // Use default mode gain.
+    // Use default mode again.
     this->modes = triton::modes::Modes();
     // Clean up the ast context
     this->astCtxt = triton::ast::AstContext{this->modes};

@@ -7,6 +7,7 @@
 
 #include <triton/architecture.hpp>
 #include <triton/cpuSize.hpp>
+#include <triton/exceptions.hpp>
 #include <triton/externalLibs.hpp>
 #include <triton/x86Specifications.hpp>
 
@@ -18,8 +19,7 @@ namespace triton {
 
       x86Specifications::x86Specifications(triton::arch::architectures_e arch) {
         if (arch != triton::arch::ARCH_X86 && arch != triton::arch::ARCH_X86_64)
-          // FIXME : Better exception
-          throw std::runtime_error("FAIL");
+            throw triton::exceptions::Architecture("x86Specifications::x86Specifications(): Invalid architecture.");
 
         if(arch == triton::arch::ARCH_X86_64) {
 #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)\

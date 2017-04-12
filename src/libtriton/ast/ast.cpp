@@ -2865,7 +2865,7 @@ namespace triton {
     /* ====== Variable node */
 
 
-    // WARNING: A variable ast node should not live onve the SymbolicVariable is dead
+    // WARNING: A variable ast node should not live once the SymbolicVariable is dead
     VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt)
       : AbstractNode(VARIABLE_NODE, ctxt)
         , symVar(symVar) {
