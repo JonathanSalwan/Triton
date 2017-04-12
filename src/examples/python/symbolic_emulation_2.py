@@ -25,7 +25,7 @@
 
 import  sys
 
-from triton     import *
+from triton import TritonContext, ARCH, Instruction, REG, MODE
 
 
 function = {
@@ -37,6 +37,7 @@ function = {
   0x41424347: "\xc3",                         #   ret
 }
 
+Triton = TritonContext()
 
 
 # This function emulates the code.
@@ -52,13 +53,13 @@ def run(ip):
         inst.setAddress(ip)
 
         # Process everything
-        processing(inst)
+        Triton.processing(inst)
 
         # Display instruction
         print 'Curr ip:', inst
 
         # Next instruction
-        ip = buildSymbolicRegister(REG.RIP).evaluate()
+        ip = Triton.buildSymbolicRegister(REG.RIP).evaluate()
         print 'Next ip:', hex(ip)
         print
     return
@@ -67,8 +68,8 @@ def run(ip):
 
 # This function initializes the context memory.
 def initContext():
-    setConcreteRegisterValue(Register(REG.RSP, 0x7fffffff))
-    setConcreteRegisterValue(Register(REG.RBP, 0x99999999))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RSP, 0x7fffffff))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RBP, 0x99999999))
     return
 
 
@@ -76,10 +77,10 @@ def initContext():
 if __name__ == '__main__':
 
     # Set the architecture
-    setArchitecture(ARCH.X86_64)
+    Triton.setArchitecture(ARCH.X86_64)
 
     # Symbolic optimization
-    enableMode(MODE.ALIGNED_MEMORY, True)
+    Triton.enableMode(MODE.ALIGNED_MEMORY, True)
 
     # Define entry point
     ENTRY = 0x40056d

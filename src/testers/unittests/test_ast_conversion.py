@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton     import *
+from triton     import TritonContext, ARCH
 
 
 class TestAstConversion(unittest.TestCase):
@@ -14,18 +14,18 @@ class TestAstConversion(unittest.TestCase):
     def setUp(self):
         """Define the arch."""
         self.Triton = TritonContext()
-        setArchitecture(ARCH.X86_64)
+        self.Triton.setArchitecture(ARCH.X86_64)
 
         self.astCtxt = self.Triton.getAstContext()
 
-        self.sv1   = newSymbolicVariable(8)
-        self.sv2   = newSymbolicVariable(8)
+        self.sv1   = self.Triton.newSymbolicVariable(8)
+        self.sv2   = self.Triton.newSymbolicVariable(8)
 
         self.v1   = self.astCtxt.variable(self.sv1)
         self.v2   = self.astCtxt.variable(self.sv2)
 
-        setConcreteSymbolicVariableValue(self.sv1, 0xaa)
-        setConcreteSymbolicVariableValue(self.sv2, 0x55)
+        self.Triton.setConcreteSymbolicVariableValue(self.sv1, 0xaa)
+        self.Triton.setConcreteSymbolicVariableValue(self.sv2, 0x55)
 
         self.node = [
             # Overloaded operators
@@ -67,5 +67,5 @@ class TestAstConversion(unittest.TestCase):
         # No simplification available
         # This only going to test Triton <-> z3 AST conversions.
         for n in self.node:
-            self.assertEqual(n.evaluate(), simplify(n, True).evaluate())
+            self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
 

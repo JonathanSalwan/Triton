@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton     import *
+from triton import ARCH, MODE, TritonContext
 
 
 class TestAstDictionaries(unittest.TestCase):
@@ -14,20 +14,20 @@ class TestAstDictionaries(unittest.TestCase):
     def setUp(self):
         """Define the arch."""
         self.Triton = TritonContext()
-        setArchitecture(ARCH.X86_64)
-        enableMode(MODE.AST_DICTIONARIES, True)
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableMode(MODE.AST_DICTIONARIES, True)
         self.astCtxt = self.Triton.getAstContext()
 
     def test_dictionaries(self):
         # d is empty
-        d = getAstDictionariesStats()
+        d = self.Triton.getAstDictionariesStats()
         for k, v in d.items():
             self.assertEqual(v, 0)
 
         bv1 = self.astCtxt.bv(1, 8)
         bv2 = self.astCtxt.bv(2, 8)
 
-        d = getAstDictionariesStats()
+        d = self.Triton.getAstDictionariesStats()
         self.assertEqual(d['bv'], 2)
         self.assertEqual(d['decimal'], 3)
         self.assertEqual(d['allocatedDictionaries'], 5)
@@ -37,7 +37,7 @@ class TestAstDictionaries(unittest.TestCase):
         bv1 = self.astCtxt.bv(1, 8)
         bv2 = self.astCtxt.bv(2, 8)
 
-        d = getAstDictionariesStats()
+        d = self.Triton.getAstDictionariesStats()
         self.assertEqual(d['bv'], 2)
         self.assertEqual(d['decimal'], 3)
         self.assertEqual(d['allocatedDictionaries'], 5)

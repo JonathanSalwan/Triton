@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import setArchitecture, ARCH, evaluateAstViaZ3, TritonContext
+from triton import ARCH, TritonContext
 
 
 class TestAstEval(unittest.TestCase):
@@ -14,14 +14,14 @@ class TestAstEval(unittest.TestCase):
     def setUp(self):
         """Define the arch."""
         self.Triton = TritonContext()
-        setArchitecture(ARCH.X86_64)
+        self.Triton.setArchitecture(ARCH.X86_64)
         self.astCtxt = self.Triton.getAstContext()
 
     def check_ast(self, tests):
         """Check our evaluation is the same as the one from Z3."""
         for test in tests:
             trv = test.evaluate()
-            z3v = evaluateAstViaZ3(test)
+            z3v = self.Triton.evaluateAstViaZ3(test)
             self.assertEqual(trv, z3v)
 
     def test_sub(self):

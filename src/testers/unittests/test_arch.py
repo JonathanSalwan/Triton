@@ -5,7 +5,7 @@
 import unittest
 import random
 
-from triton import setArchitecture, ARCH, REG, getRegisterSize, getRegisterBitSize
+from triton import ARCH, REG, TritonContext
 
 
 class TestArchitecture(unittest.TestCase):
@@ -14,8 +14,9 @@ class TestArchitecture(unittest.TestCase):
 
     def test_modify_arch(self):
         """Check we can change arch at anytime."""
+        self.Triton = TritonContext()
         for _ in xrange(10):
-            setArchitecture(random.choice((ARCH.X86_64, ARCH.X86)))
+            self.Triton.setArchitecture(random.choice((ARCH.X86_64, ARCH.X86)))
 
 
 class TestX86Arch(unittest.TestCase):
@@ -24,7 +25,8 @@ class TestX86Arch(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
-        setArchitecture(ARCH.X86)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86)
 
     def test_registers(self):
         """Check some register can't be accessed on X86 arch."""
@@ -44,11 +46,11 @@ class TestX86Arch(unittest.TestCase):
 
     def test_register_bit_size(self):
         """Check GPR register bit size."""
-        self.assertEqual(getRegisterBitSize(), 32)
+        self.assertEqual(self.Triton.getRegisterBitSize(), 32)
 
     def test_register_size(self):
         """Check GPR register size."""
-        self.assertEqual(getRegisterSize(), 4)
+        self.assertEqual(self.Triton.getRegisterSize(), 4)
 
 
 class TestX8664Arch(unittest.TestCase):
@@ -57,7 +59,8 @@ class TestX8664Arch(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
-        setArchitecture(ARCH.X86_64)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
 
     def test_registers(self):
         """Check X86_64 specific registers exists."""
@@ -67,8 +70,8 @@ class TestX8664Arch(unittest.TestCase):
 
     def test_register_bit_size(self):
         """Check GPR register bit size."""
-        self.assertEqual(getRegisterBitSize(), 64)
+        self.assertEqual(self.Triton.getRegisterBitSize(), 64)
 
     def test_register_size(self):
         """Check GPR register size."""
-        self.assertEqual(getRegisterSize(), 8)
+        self.assertEqual(self.Triton.getRegisterSize(), 8)

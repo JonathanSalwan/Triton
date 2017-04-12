@@ -3,7 +3,7 @@
 """Test Symbolic Variable."""
 
 import unittest
-from triton import *
+from triton import TritonContext, ARCH, SYMEXPR
 
 
 class TestSymbolicVariable(unittest.TestCase):
@@ -12,10 +12,11 @@ class TestSymbolicVariable(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
-        setArchitecture(ARCH.X86_64)
-        self.v0 = newSymbolicVariable(8)
-        self.v1 = newSymbolicVariable(16)
-        self.v2 = newSymbolicVariable(32, "test com")
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.v0 = self.Triton.newSymbolicVariable(8)
+        self.v1 = self.Triton.newSymbolicVariable(16)
+        self.v2 = self.Triton.newSymbolicVariable(32, "test com")
 
     def test_id(self):
         """Test IDs"""
@@ -35,7 +36,7 @@ class TestSymbolicVariable(unittest.TestCase):
         self.assertEqual(self.v1.getName(), "SymVar_1")
         self.assertEqual(self.v2.getName(), "SymVar_2")
 
-    def test_name(self):
+    def test_bitsize(self):
         """Test name"""
         self.assertEqual(self.v0.getBitSize(), 8)
         self.assertEqual(self.v1.getBitSize(), 16)

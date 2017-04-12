@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import setArchitecture, ARCH, REG
+from triton import TritonContext, ARCH, REG
 
 
 class TestRAXBitvector(unittest.TestCase):
@@ -13,7 +13,8 @@ class TestRAXBitvector(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
-        setArchitecture(ARCH.X86_64)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
         self.bv = REG.RAX.getBitvector()
 
     def test_high(self):
@@ -34,7 +35,8 @@ class TestCHBitvector(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
-        setArchitecture(ARCH.X86_64)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
         self.bv = REG.CH.getBitvector()
 
     def test_high(self):
@@ -55,7 +57,8 @@ class TestDLBitvector(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
-        setArchitecture(ARCH.X86_64)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
         self.bv = REG.DL.getBitvector()
 
     def test_high(self):

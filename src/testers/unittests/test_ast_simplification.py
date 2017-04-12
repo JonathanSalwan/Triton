@@ -4,8 +4,7 @@
 
 import unittest
 
-from triton     import *
-
+from triton import ARCH, TritonContext, CALLBACK, AST_NODE
 
 
 class TestAstSimplification(unittest.TestCase):
@@ -14,10 +13,10 @@ class TestAstSimplification(unittest.TestCase):
 
     def setUp(self):
         self.Triton = TritonContext()
-        setArchitecture(ARCH.X86_64)
+        self.Triton.setArchitecture(ARCH.X86_64)
         self.simplify_1 = lambda x: self.xor_1(x)
-        addCallback(self.simplify_1, CALLBACK.SYMBOLIC_SIMPLIFICATION)
-        addCallback(self.xor_2, CALLBACK.SYMBOLIC_SIMPLIFICATION)
+        self.Triton.addCallback(self.simplify_1, CALLBACK.SYMBOLIC_SIMPLIFICATION)
+        self.Triton.addCallback(self.xor_2, CALLBACK.SYMBOLIC_SIMPLIFICATION)
         self.astCtxt = self.Triton.getAstContext()
 
     def test_simplification(self):
@@ -26,26 +25,26 @@ class TestAstSimplification(unittest.TestCase):
 
         # Example 1
         c = a ^ a
-        c = simplify(c)
+        c = self.Triton.simplify(c)
         self.assertEqual(str(c), "(_ bv0 8)")
 
         c = (a & ~b) | (~a & b)
-        c = simplify(c)
+        c = self.Triton.simplify(c)
         self.assertEqual(str(c), "(bvxor (_ bv1 8) (_ bv2 8))")
 
         # Example 2 - forme B
         c = (~b & a) | (~a & b)
-        c = simplify(c)
+        c = self.Triton.simplify(c)
         self.assertEqual(str(c), "(bvxor (_ bv1 8) (_ bv2 8))")
 
         # Example 2 - forme C
         c = (~b & a) | (b & ~a)
-        c = simplify(c)
+        c = self.Triton.simplify(c)
         self.assertEqual(str(c), "(bvxor (_ bv1 8) (_ bv2 8))")
 
         # Example 2 - forme D
         c = (b & ~a) | (~b & a)
-        c = simplify(c)
+        c = self.Triton.simplify(c)
         self.assertEqual(str(c), "(bvxor (_ bv2 8) (_ bv1 8))")
         return
 

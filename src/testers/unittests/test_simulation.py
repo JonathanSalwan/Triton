@@ -5,16 +5,8 @@
 import unittest
 import os
 
-from triton import (getConcreteMemoryAreaValue, getConcreteRegisterValue,
-                    Instruction, getSymbolicExpressionFromId, setArchitecture,
-                    getSymbolicRegisterId, getSymbolicVariableFromId, ARCH,
-                    processing, REG, getPathConstraintsAst, getPathConstraints,
-                    CPUSIZE, setConcreteMemoryAreaValue, concretizeAllRegister,
-                    convertMemoryToSymbolicVariable, MemoryAccess, Register,
-                    setConcreteRegisterValue, setConcreteMemoryValue, getModel,
-                    Elf, concretizeAllMemory, buildSymbolicRegister, MODE,
-                    clearPathConstraints, enableMode, enableSymbolicEngine,
-                    setConcreteSymbolicVariableValue, TritonContext)
+from triton import (Instruction, ARCH, REG, CPUSIZE, MemoryAccess, Elf, MODE,
+                    TritonContext)
 
 
 class DefCamp2015(object):
@@ -26,12 +18,12 @@ class DefCamp2015(object):
         Emulate every opcodes from pc.
 
         * Process instruction until the end and search for constraint
-        resolution on cmp eax, 1 then set the new correct value and keep going.
+        resolution on cmp eax, 1 then self.Triton.set the new correct value and keep going.
         """
         astCtxt = self.Triton.getAstContext()
         while pc:
             # Fetch opcodes
-            opcodes = getConcreteMemoryAreaValue(pc, 16)
+            opcodes = self.Triton.getConcreteMemoryAreaValue(pc, 16)
 
             # Create the Triton instruction
             instruction = Instruction()
@@ -39,27 +31,27 @@ class DefCamp2015(object):
             instruction.setAddress(pc)
 
             # Process
-            processing(instruction)
+            self.Triton.processing(instruction)
 
             # 40078B: cmp eax, 1
             # eax must be equal to 1 at each round.
             if instruction.getAddress() == 0x40078B:
                 # Slice expressions
-                rax = getSymbolicExpressionFromId(getSymbolicRegisterId(REG.RAX))
+                rax = self.Triton.getSymbolicExpressionFromId(self.Triton.getSymbolicRegisterId(REG.RAX))
                 eax = astCtxt.extract(31, 0, rax.getAst())
 
                 # Define constraint
-                cstr = astCtxt.assert_(astCtxt.land(getPathConstraintsAst(), astCtxt.equal(eax, astCtxt.bv(1, 32))))
+                cstr = astCtxt.assert_(astCtxt.land(self.Triton.getPathConstraintsAst(), astCtxt.equal(eax, astCtxt.bv(1, 32))))
 
-                model = getModel(cstr)
+                model = self.Triton.getModel(cstr)
                 solution = str()
                 for k, v in model.items():
                     value = v.getValue()
                     solution += chr(value)
-                    setConcreteSymbolicVariableValue(getSymbolicVariableFromId(k), value)
+                    self.Triton.setConcreteSymbolicVariableValue(self.Triton.getSymbolicVariableFromId(k), value)
 
             # Next
-            pc = getConcreteRegisterValue(REG.RIP)
+            pc = self.Triton.getConcreteRegisterValue(REG.RIP)
         return solution
 
     def load_binary(self, filename):
@@ -71,10 +63,10 @@ class DefCamp2015(object):
             offset = phdr.getOffset()
             size = phdr.getFilesz()
             vaddr = phdr.getVaddr()
-            setConcreteMemoryAreaValue(vaddr, raw[offset:offset+size])
+            self.Triton.setConcreteMemoryAreaValue(vaddr, raw[offset:offset+size])
 
     def test_defcamp_2015(self):
-        """Load binary, setup environment and solve challenge with sym eval."""
+        """Load binary, self.Triton.setup environment and solve challenge with sym eval."""
         self.Triton = TritonContext()
 
         # Load the binary
@@ -82,15 +74,15 @@ class DefCamp2015(object):
         self.load_binary(binary_file)
 
         # Define a fake stack
-        setConcreteRegisterValue(Register(REG.RBP, 0x7fffffff))
-        setConcreteRegisterValue(Register(REG.RSP, 0x6fffffff))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.RBP, 0x7fffffff))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.RSP, 0x6fffffff))
 
         # Define an user input
-        setConcreteRegisterValue(Register(REG.RDI, 0x10000000))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.RDI, 0x10000000))
 
         # Symbolize user inputs (30 bytes)
         for index in range(30):
-            convertMemoryToSymbolicVariable(MemoryAccess(0x10000000+index, CPUSIZE.BYTE))
+            self.Triton.convertMemoryToSymbolicVariable(MemoryAccess(0x10000000+index, CPUSIZE.BYTE))
 
         # Emulate from the verification function
         solution = self.emulate(0x4006FD)
@@ -104,39 +96,39 @@ class SeedCoverage(object):
     def init_ctxt(self):
         """Setup memory and register values."""
         # Define the address of the serial pointer. The address of the serial
-        # pointer must be the same that the one hardcoded into the targeted
+        # pointer must be the same that the one hardcoded into the tarself.Triton.geted
         # function. However, the serial pointer (here 0x900000) is arbitrary.
-        setConcreteMemoryValue(0x601040, 0x00)
-        setConcreteMemoryValue(0x601041, 0x00)
-        setConcreteMemoryValue(0x601042, 0x90)
+        self.Triton.setConcreteMemoryValue(0x601040, 0x00)
+        self.Triton.setConcreteMemoryValue(0x601041, 0x00)
+        self.Triton.setConcreteMemoryValue(0x601042, 0x90)
 
         # Define the serial context. We store the serial content located on our
         # arbitrary # serial pointer (0x900000).
-        setConcreteMemoryValue(0x900000, 0x31)
-        setConcreteMemoryValue(0x900001, 0x3e)
-        setConcreteMemoryValue(0x900002, 0x3d)
-        setConcreteMemoryValue(0x900003, 0x26)
-        setConcreteMemoryValue(0x900004, 0x31)
+        self.Triton.setConcreteMemoryValue(0x900000, 0x31)
+        self.Triton.setConcreteMemoryValue(0x900001, 0x3e)
+        self.Triton.setConcreteMemoryValue(0x900002, 0x3d)
+        self.Triton.setConcreteMemoryValue(0x900003, 0x26)
+        self.Triton.setConcreteMemoryValue(0x900004, 0x31)
 
         # Point RDI on our buffer. The address of our buffer is arbitrary. We
         # just need to point the RDI register on it as first argument of our
-        # targeted function.
-        setConcreteRegisterValue(Register(REG.RDI, 0x1000))
+        # tarself.Triton.geted function.
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.RDI, 0x1000))
 
         # Setup stack on an abitrary address.
-        setConcreteRegisterValue(Register(REG.RSP, 0x7fffffff))
-        setConcreteRegisterValue(Register(REG.RBP, 0x7fffffff))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.RSP, 0x7fffffff))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.RBP, 0x7fffffff))
 
     def symbolize_inputs(self, seed):
         """Add symboles in memory for seed."""
-        concretizeAllRegister()
-        concretizeAllMemory()
+        self.Triton.concretizeAllRegister()
+        self.Triton.concretizeAllMemory()
         for address, value in seed.items():
-            convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE, value))
-            convertMemoryToSymbolicVariable(MemoryAccess(address+1, CPUSIZE.BYTE))
+            self.Triton.convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE, value))
+            self.Triton.convertMemoryToSymbolicVariable(MemoryAccess(address+1, CPUSIZE.BYTE))
 
     def seed_emulate(self, ip):
-        """Emulate one run of the function with already setup memory."""
+        """Emulate one run of the function with already self.Triton.setup memory."""
         function = {
             #   <serial> function
             #   push    rbp
@@ -211,10 +203,10 @@ class SeedCoverage(object):
             inst.setAddress(ip)
 
             # Process everything
-            processing(inst)
+            self.Triton.processing(inst)
 
             # Next instruction
-            ip = buildSymbolicRegister(REG.RIP).evaluate()
+            ip = self.Triton.buildSymbolicRegister(REG.RIP).evaluate()
 
     def new_inputs(self):
         """Look for another branching using current constraints found."""
@@ -224,7 +216,7 @@ class SeedCoverage(object):
         inputs = list()
 
         # Get path constraints from the last execution
-        pco = getPathConstraints()
+        pco = self.Triton.getPathConstraints()
 
         # We start with any input. T (Top)
         previousConstraints = astCtxt.equal(astCtxt.bvtrue(), astCtxt.bvtrue())
@@ -239,11 +231,11 @@ class SeedCoverage(object):
                     # Get the constraint of the branch which has been not taken
                     if branch['isTaken'] == False:
                         # Ask for a model
-                        models = getModel(astCtxt.assert_(astCtxt.land(previousConstraints, branch['constraint'])))
+                        models = self.Triton.getModel(astCtxt.assert_(astCtxt.land(previousConstraints, branch['constraint'])))
                         seed = dict()
                         for k, v in models.items():
                             # Get the symbolic variable assigned to the model
-                            symVar = getSymbolicVariableFromId(k)
+                            symVar = self.Triton.getSymbolicVariableFromId(k)
                             # Save the new input as seed.
                             seed.update({symVar.getKindValue(): v.getValue()})
                         if seed:
@@ -254,7 +246,7 @@ class SeedCoverage(object):
             previousConstraints = astCtxt.land(previousConstraints, pc.getTakenPathConstraintAst())
 
         # Clear the path constraints to be clean at the next execution.
-        clearPathConstraints()
+        self.Triton.clearPathConstraints()
 
         return inputs
 
@@ -311,39 +303,39 @@ class Emu1(object):
         for mem in mems:
             start = mem['start']
             if mem['memory'] is not None:
-                setConcreteMemoryAreaValue(start, bytearray(mem['memory']))
+                self.Triton.setConcreteMemoryAreaValue(start, bytearray(mem['memory']))
 
-        # setup registers
+        # self.Triton.setup registers
         for reg_name in ("rax", "rbx", "rcx", "rdx", "rdi", "rsi", "rbp",
                          "rsp", "rip", "r8", "r9", "r10", "r11", "r12", "r13",
                          "r14", "eflags", "xmm0", "xmm1", "xmm2", "xmm3",
                          "xmm4", "xmm5", "xmm6", "xmm7", "xmm8", "xmm9",
                          "xmm10", "xmm11", "xmm12", "xmm13", "xmm14", "xmm15"):
-            setConcreteRegisterValue(Register(getattr(REG, reg_name.upper()), regs[reg_name]))
+            self.Triton.setConcreteRegisterValue(self.Triton.Register(getattr(REG, reg_name.upper()), regs[reg_name]))
 
         # run the code
-        pc = getConcreteRegisterValue(REG.RIP)
+        pc = self.Triton.getConcreteRegisterValue(REG.RIP)
         while pc != 0x409A18:
-            opcodes = getConcreteMemoryAreaValue(pc, 20)
+            opcodes = self.Triton.getConcreteMemoryAreaValue(pc, 20)
 
             instruction = Instruction()
             instruction.setOpcodes(opcodes)
             instruction.setAddress(pc)
 
             # Check if triton doesn't supports this instruction
-            self.assertTrue(processing(instruction))
+            self.assertTrue(self.Triton.processing(instruction))
 
-            pc = getConcreteRegisterValue(REG.RIP)
+            pc = self.Triton.getConcreteRegisterValue(REG.RIP)
 
             if concretize:
-                concretizeAllMemory()
-                concretizeAllRegister()
+                self.Triton.concretizeAllMemory()
+                self.Triton.concretizeAllRegister()
 
-        rax = getConcreteRegisterValue(REG.RAX)
-        rbx = getConcreteRegisterValue(REG.RBX)
-        rcx = getConcreteRegisterValue(REG.RCX)
-        rdx = getConcreteRegisterValue(REG.RDX)
-        rsi = getConcreteRegisterValue(REG.RSI)
+        rax = self.Triton.getConcreteRegisterValue(REG.RAX)
+        rbx = self.Triton.getConcreteRegisterValue(REG.RBX)
+        rcx = self.Triton.getConcreteRegisterValue(REG.RCX)
+        rdx = self.Triton.getConcreteRegisterValue(REG.RDX)
+        rsi = self.Triton.getConcreteRegisterValue(REG.RSI)
 
         self.assertEqual(rax, 0)
         self.assertEqual(rbx, 0)
@@ -363,7 +355,8 @@ class TestSymboliqueEngineNoOptim(BaseTestSimulation, unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
-        setArchitecture(ARCH.X86_64)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
         super(TestSymboliqueEngineNoOptim, self).setUp()
 
 
@@ -373,8 +366,9 @@ class TestSymboliqueEngineAligned(BaseTestSimulation, unittest.TestCase):
 
     def setUp(self):
         """Define the arch and modes."""
-        setArchitecture(ARCH.X86_64)
-        enableMode(MODE.ALIGNED_MEMORY, True)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
         super(TestSymboliqueEngineAligned, self).setUp()
 
 
@@ -384,9 +378,10 @@ class TestSymboliqueEngineAlignedAst(BaseTestSimulation, unittest.TestCase):
 
     def setUp(self):
         """Define the arch and modes."""
-        setArchitecture(ARCH.X86_64)
-        enableMode(MODE.ALIGNED_MEMORY, True)
-        enableMode(MODE.AST_DICTIONARIES, True)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
+        self.Triton.enableMode(MODE.AST_DICTIONARIES, True)
         super(TestSymboliqueEngineAlignedAst, self).setUp()
 
     @unittest.skip("segfault")
@@ -400,8 +395,9 @@ class TestSymboliqueEngineAst(BaseTestSimulation, unittest.TestCase):
 
     def setUp(self):
         """Define the arch and modes."""
-        setArchitecture(ARCH.X86_64)
-        enableMode(MODE.AST_DICTIONARIES, True)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableMode(MODE.AST_DICTIONARIES, True)
         super(TestSymboliqueEngineAst, self).setUp()
 
     @unittest.skip("segfault")
@@ -415,8 +411,9 @@ class TestSymboliqueEngineConcreteAst(BaseTestSimulation, unittest.TestCase):
 
     def setUp(self):
         """Define the arch and modes."""
-        setArchitecture(ARCH.X86_64)
-        enableMode(MODE.AST_DICTIONARIES, True)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableMode(MODE.AST_DICTIONARIES, True)
         super(TestSymboliqueEngineConcreteAst, self).setUp()
 
     def test_emulate(self):

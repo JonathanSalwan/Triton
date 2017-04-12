@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import setArchitecture, ARCH, CPUSIZE, Immediate, OPERAND
+from triton import ARCH, CPUSIZE, Immediate, OPERAND, TritonContext
 
 
 class TestImmediate8(unittest.TestCase):
@@ -13,7 +13,8 @@ class TestImmediate8(unittest.TestCase):
 
     def setUp(self):
         """Define the arch and Immediate to test."""
-        setArchitecture(ARCH.X86_64)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
         self.imm = Immediate(0x12, CPUSIZE.BYTE)
 
     def test_bit_size(self):
@@ -39,7 +40,8 @@ class TestImmediate16(unittest.TestCase):
 
     def setUp(self):
         """Define the arch and Immediate to test."""
-        setArchitecture(ARCH.X86_64)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
         self.imm = Immediate(0x1234, CPUSIZE.WORD)
 
     def test_bit_size(self):
@@ -73,7 +75,8 @@ class TestImmediate32(unittest.TestCase):
 
     def setUp(self):
         """Define the arch and Immediate to test."""
-        setArchitecture(ARCH.X86_64)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
         self.imm = Immediate(0x12345678, CPUSIZE.DWORD)
 
     def test_bit_size(self):
@@ -99,7 +102,8 @@ class TestImmediate64(unittest.TestCase):
 
     def setUp(self):
         """Define the arch and Immediate to test."""
-        setArchitecture(ARCH.X86_64)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
         self.imm = Immediate(0x0123456789abcdef, CPUSIZE.QWORD)
 
     def test_bit_size(self):
@@ -124,7 +128,8 @@ class TestNegativeImmediate(unittest.TestCase):
     """Testing the Immediate class."""
 
     def setUp(self):
-        setArchitecture(ARCH.X86_64)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
 
     def test_value(self):
         """Check immediate value with different size."""

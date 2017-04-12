@@ -114,7 +114,7 @@
 ##      ---------------
 
 import  sys
-from    triton import *
+from  triton import TritonContext, ARCH, Instruction, OPERAND
 
 
 code = [
@@ -136,8 +136,10 @@ code = [
 
 if __name__ == '__main__':
 
+    Triton = TritonContext()
+
     #Set the arch
-    setArchitecture(ARCH.X86_64)
+    Triton.setArchitecture(ARCH.X86_64)
 
     for (addr, opcodes) in code:
         # Build an instruction
@@ -150,7 +152,7 @@ if __name__ == '__main__':
         inst.setAddress(addr)
 
         # Process everything
-        processing(inst)
+        Triton.processing(inst)
 
         # Display instruction
         print inst

@@ -4,8 +4,7 @@
 
 import unittest
 
-from triton import (setArchitecture, isRegister, isRegisterValid, isFlag,
-                    ARCH, REG, Register, OPERAND)
+from triton import (ARCH, REG, OPERAND, TritonContext)
 
 
 class TestRAXRegister(unittest.TestCase):
@@ -14,7 +13,8 @@ class TestRAXRegister(unittest.TestCase):
 
     def setUp(self):
         """Define arch and register to check."""
-        setArchitecture(ARCH.X86_64)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
         self.reg = REG.RAX
 
     def test_name(self):
@@ -47,15 +47,15 @@ class TestRAXRegister(unittest.TestCase):
 
     def test_is_valid(self):
         """Check register validity."""
-        self.assertTrue(isRegisterValid(self.reg))
+        self.assertTrue(self.Triton.isRegisterValid(self.reg))
 
     def test_is_flag(self):
         """Check register flag."""
-        self.assertFalse(isFlag(self.reg))
+        self.assertFalse(self.Triton.isFlag(self.reg))
 
     def test_is_register(self):
         """Check register detect."""
-        self.assertTrue(isRegister(self.reg))
+        self.assertTrue(self.Triton.isRegister(self.reg))
 
 
 class TestAHRegister(unittest.TestCase):
@@ -64,7 +64,8 @@ class TestAHRegister(unittest.TestCase):
 
     def setUp(self):
         """Define arch and register to check."""
-        setArchitecture(ARCH.X86_64)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
         self.reg = REG.AH
 
     def test_size(self):
@@ -81,7 +82,7 @@ class TestAHRegister(unittest.TestCase):
         """Check parent register on multiple arch."""
         self.assertEqual(self.reg.getParent().getName(), "rax")
 
-        setArchitecture(ARCH.X86)
+        self.Triton.setArchitecture(ARCH.X86)
         self.reg = REG.AH
         self.assertEqual(self.reg.getParent().getName(), "eax")
         self.assertEqual(self.reg.getParent().getBitSize(), 32)
@@ -93,26 +94,27 @@ class TestXmmRegister(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
-        setArchitecture(ARCH.X86_64)
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
 
     def test_xmm_on_x86(self):
         """Check xmm on 32 bits arch."""
-        setArchitecture(ARCH.X86)
-        xmm = Register(REG.XMM1, 0x112233445566778899aabbccddeeff00)
+        self.Triton.setArchitecture(ARCH.X86)
+        xmm = self.Triton.Register(REG.XMM1, 0x112233445566778899aabbccddeeff00)
         self.assertEqual(xmm.getBitSize(), 128)
         self.assertEqual(xmm.getConcreteValue(),
                          0x112233445566778899aabbccddeeff00)
 
     def test_ymm(self):
         """Check ymm on 64 bits arch."""
-        ymm = Register(REG.YMM1, 0x112233445566778899aabbccddeeff00)
+        ymm = self.Triton.Register(REG.YMM1, 0x112233445566778899aabbccddeeff00)
         self.assertEqual(ymm.getBitSize(), 256)
         ymm.setConcreteValue(0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
         self.assertEqual(ymm.getConcreteValue(), 0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
 
     def test_zmm(self):
         """Check zmm on 64 bits arch."""
-        zmm = Register(REG.ZMM2, 0)
+        zmm = self.Triton.Register(REG.ZMM2, 0)
         self.assertEqual(zmm.getBitSize(), 512)
         zmm.setConcreteValue(0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
         self.assertEqual(zmm.getConcreteValue(), 0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
@@ -122,32 +124,37 @@ class TestRegisterValues(unittest.TestCase):
 
     """Check register values with hierarchies."""
 
+    def setUp(self):
+        """Define the arch."""
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+
     def test_register_create(self):
         """Check register creation with value."""
         for reg in (REG.AH, REG.AL):
             # OK
-            Register(reg, 0xff)
+            self.Triton.Register(reg, 0xff)
             # Not OK
             # TODO : Be more specific on the raise exception type
             with self.assertRaises(Exception):
-                Register(reg, 0xff + 1)
+                self.Triton.Register(reg, 0xff + 1)
 
-        Register(REG.ZF, 1)
+        self.Triton.Register(REG.ZF, 1)
         with self.assertRaises(Exception):
-            Register(REG.ZF, 2)
+            self.Triton.Register(REG.ZF, 2)
 
     def test_set_concrete_value(self):
         """Check register value modification."""
         for reg in (REG.AH, REG.AL):
             # OK
-            reg = Register(reg)
+            reg = self.Triton.Register(reg)
             reg.setConcreteValue(0xff)
             # Not OK
             # TODO : Be more specific on the raise exception type
             with self.assertRaises(Exception):
                 reg.setConcreteValue(0xff + 1)
 
-        reg = Register(REG.ZF)
+        reg = self.Triton.Register(REG.ZF)
         reg.setConcreteValue(1)
         with self.assertRaises(Exception):
             reg.setConcreteValue(2)

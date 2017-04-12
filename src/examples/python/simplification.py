@@ -22,7 +22,7 @@
 
 import sys
 
-from triton     import *
+from triton import TritonContext, AST_NODE, CALLBACK, ARCH
 
 Triton = TritonContext()
 
@@ -73,11 +73,11 @@ def xor_2(node):
 if __name__ == "__main__":
 
     # Set arch to init engines
-    setArchitecture(ARCH.X86_64)
+    Triton.setArchitecture(ARCH.X86_64)
 
     # Record simplifications
-    addCallback(xor_1, CALLBACK.SYMBOLIC_SIMPLIFICATION)
-    addCallback(xor_2, CALLBACK.SYMBOLIC_SIMPLIFICATION)
+    Triton.addCallback(xor_1, CALLBACK.SYMBOLIC_SIMPLIFICATION)
+    Triton.addCallback(xor_2, CALLBACK.SYMBOLIC_SIMPLIFICATION)
 
     astCtxt = Triton.getAstContext()
 
@@ -87,7 +87,7 @@ if __name__ == "__main__":
     # Example 1
     c = a ^ a
     print 'Expr: ', c
-    c = simplify(c)
+    c = Triton.simplify(c)
     print 'Simp: ', c
 
     print
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     # Example 2 - forme A
     c = (a & ~b) | (~a & b)
     print 'Expr: ', c
-    c = simplify(c)
+    c = Triton.simplify(c)
     print 'Simp: ', c
 
     print
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     # Example 2 - forme B
     c = (~b & a) | (~a & b)
     print 'Expr: ', c
-    c = simplify(c)
+    c = Triton.simplify(c)
     print 'Simp: ', c
 
     print
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     # Example 2 - forme C
     c = (~b & a) | (b & ~a)
     print 'Expr: ', c
-    c = simplify(c)
+    c = Triton.simplify(c)
     print 'Simp: ', c
 
     print
@@ -119,7 +119,7 @@ if __name__ == "__main__":
     # Example 2 - forme D
     c = (b & ~a) | (~b & a)
     print 'Expr: ', c
-    c = simplify(c)
+    c = Triton.simplify(c)
     print 'Simp: ', c
 
     sys.exit(0)

@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton     import *
+from triton import TritonContext, ARCH, AST_REPRESENTATION
 
 
 class TestAstRepresentation(unittest.TestCase):
@@ -14,12 +14,12 @@ class TestAstRepresentation(unittest.TestCase):
     def setUp(self):
         """Define the arch."""
         self.Triton = TritonContext()
-        setArchitecture(ARCH.X86_64)
+        self.Triton.setArchitecture(ARCH.X86_64)
         self.astCtxt = self.Triton.getAstContext()
 
-        self.v1  = self.astCtxt.variable(newSymbolicVariable(8))
-        self.v2  = self.astCtxt.variable(newSymbolicVariable(8))
-        self.ref = newSymbolicExpression(self.v1 + self.v2, "ref test")
+        self.v1  = self.astCtxt.variable(self.Triton.newSymbolicVariable(8))
+        self.v2  = self.astCtxt.variable(self.Triton.newSymbolicVariable(8))
+        self.ref = self.Triton.newSymbolicExpression(self.v1 + self.v2, "ref test")
 
         self.node = [
             # Overloaded operators              # SMT                                   # Python
@@ -78,12 +78,12 @@ class TestAstRepresentation(unittest.TestCase):
         ]
 
     def test_smt_representation(self):
-        setAstRepresentationMode(AST_REPRESENTATION.SMT)
+        self.Triton.setAstRepresentationMode(AST_REPRESENTATION.SMT)
         for n in self.node:
             self.assertEqual(str(n[0]), n[1])
 
     def test_python_representation(self):
-        setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
+        self.Triton.setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
         for n in self.node:
             self.assertEqual(str(n[0]), n[2])
 
