@@ -691,6 +691,10 @@ namespace triton {
         }
       }
 
+      static PyObject* triton_TritonContext(PyObject* self, PyObject* args) {
+        return PyTritonContext();
+      }
+
 
       static PyObject* triton_Register(PyObject* self, PyObject* args) {
         PyObject* concreteValue = nullptr;
@@ -3129,6 +3133,7 @@ namespace triton {
 
 
       PyMethodDef tritonCallbacks[] = {
+        {"TritonContext",                       (PyCFunction)triton_TritonContext,                          METH_VARARGS,       ""},
         {"Elf",                                 (PyCFunction)triton_Elf,                                    METH_O,             ""},
         {"Immediate",                           (PyCFunction)triton_Immediate,                              METH_VARARGS,       ""},
         {"Instruction",                         (PyCFunction)triton_Instruction,                            METH_VARARGS,       ""},

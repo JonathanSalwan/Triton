@@ -143,6 +143,7 @@ if(PYTHON_BINDINGS)
       bindings/python/objects/pySolverModel.cpp
       bindings/python/objects/pySymbolicExpression.cpp
       bindings/python/objects/pySymbolicVariable.cpp
+      bindings/python/objects/pyTritonContext.cpp
       bindings/python/pyXFunctions.cpp
       bindings/python/utils.cpp
     )
