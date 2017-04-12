@@ -189,39 +189,18 @@ namespace triton {
         AbstractNode* zx(triton::uint32 sizeExt, AbstractNode* expr);
 
       public:
-        triton::ast::AstGarbageCollector& getAstGarbageCollector()
-        {
-          return this->astGarbageCollector;
-        }
+        //! Access to the underliying garbage collector
+        triton::ast::AstGarbageCollector& getAstGarbageCollector();
+        triton::ast::AstGarbageCollector const& getAstGarbageCollector() const;
 
-        triton::ast::AstGarbageCollector const& getAstGarbageCollector() const
-        {
-          return this->astGarbageCollector;
-        }
+        //! Initialize a variable in the context
+        void initVariable(std::string const& name, triton::uint512 const& value);
 
-        void initVariable(std::string const& name, triton::uint512 const& value)
-        {
-          valueMapping.insert(std::make_pair(name, value));
-        }
+        //! Update a variable value in this context
+        void updateVariable(std::string const& name, triton::uint512 const& value);
 
-        void updateVariable(std::string const& name, triton::uint512 const& value)
-        {
-          for(auto& kv: this->astGarbageCollector.getAstVariableNodes())
-          {
-            if(kv.first == name) {
-              assert(kv.second->getType() == triton::ast::VARIABLE_NODE);
-              valueMapping[dynamic_cast<VariableNode*>(kv.second)->getVar().getName()] = value;
-              kv.second->init();
-              return;
-            }
-          }
-          throw std::runtime_error("FAIL");
-        }
-
-        triton::uint512 const& getValueForVariable(std::string const& varName) const
-        {
-          return valueMapping.at(varName);
-        }
+        //! Access a variable value in this context
+        triton::uint512 const& getValueForVariable(std::string const& varName) const;
 
       private:
         //! The AST garbage collector interface.

@@ -450,5 +450,39 @@ namespace triton {
       return astGarbageCollector.recordAstNode(node);
     }
 
+    triton::ast::AstGarbageCollector& AstContext::getAstGarbageCollector()
+    {
+      return this->astGarbageCollector;
+    }
+
+    triton::ast::AstGarbageCollector const& AstContext::getAstGarbageCollector() const
+    {
+      return this->astGarbageCollector;
+    }
+
+    void AstContext::initVariable(std::string const& name, triton::uint512 const& value)
+    {
+      valueMapping.insert(std::make_pair(name, value));
+    }
+
+    void AstContext::updateVariable(std::string const& name, triton::uint512 const& value)
+    {
+      for(auto& kv: this->astGarbageCollector.getAstVariableNodes())
+      {
+        if(kv.first == name) {
+          assert(kv.second->getType() == triton::ast::VARIABLE_NODE);
+          valueMapping[dynamic_cast<VariableNode*>(kv.second)->getVar().getName()] = value;
+          kv.second->init();
+          return;
+        }
+      }
+      throw triton::exceptions::Ast("AstContext::updateVariable(): Variable to update not found");
+    }
+
+    triton::uint512 const& AstContext::getValueForVariable(std::string const& varName) const
+    {
+      return valueMapping.at(varName);
+    }
+
   }; /* ast namespace */
 }; /* triton namespace */
