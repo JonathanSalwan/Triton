@@ -33,14 +33,9 @@ class TestRAXRegister(unittest.TestCase):
         """Check concrete value modification."""
         self.assertEqual(self.reg.getConcreteValue(), 0)
 
-        # immutable
-        self.reg.setConcreteValue(0x1122334455667788)
-        self.assertEqual(self.reg.getConcreteValue(), 0)
-
-        # mutable
-        reg2 = Register(self.reg)
-        reg2.setConcreteValue(0x1122334455667788)
-        self.assertEqual(reg2.getConcreteValue(), 0x1122334455667788)
+        value = 0x1122334455667788
+        self.reg.setConcreteValue(value)
+        self.assertEqual(self.reg.getConcreteValue(), value)
 
     def test_parent(self):
         """Check parent register."""

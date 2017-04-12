@@ -30,6 +30,12 @@ namespace triton {
  *  @{
  */
 
+  namespace engines {
+    namespace symbolic {
+      class SymbolicExpression;
+    }
+  }
+
   //! The AST namespace
   namespace ast {
   /*!
@@ -37,6 +43,8 @@ namespace triton {
    *  \addtogroup ast
    *  @{
    */
+
+    class AstContext;
 
     //! Abstract node
     class AbstractNode {
@@ -59,15 +67,17 @@ namespace triton {
         //! This value is set to true if the tree contains a symbolic variable.
         bool symbolized;
 
+        AstContext& ctxt;
+
       public:
+
         //! Constructor.
-        AbstractNode(enum kind_e kind);
+        AbstractNode(enum kind_e kind, AstContext& ctxt);
 
         //! Constructor by copy.
-        AbstractNode(const AbstractNode& copy);
+        AbstractNode(const AbstractNode& copy, AstContext& ctxt);
 
-        //! Constructor.
-        AbstractNode();
+        AstContext& getContext() const;
 
         //! Destructor.
         virtual ~AbstractNode();
@@ -181,7 +191,7 @@ namespace triton {
     //! `(_ BitVec x)` node
     class BvdeclNode : public AbstractNode {
       public:
-        BvdeclNode(triton::uint32 size);
+        BvdeclNode(triton::uint32 size, AstContext& ctxt);
         BvdeclNode(const BvdeclNode& copy);
         virtual ~BvdeclNode();
         virtual void init(void);
@@ -507,7 +517,7 @@ namespace triton {
     //! `(_ bv<value> <size>)` node
     class BvNode : public AbstractNode {
       public:
-        BvNode(triton::uint512 value, triton::uint32 size);
+        BvNode(triton::uint512 value, triton::uint32 size, AstContext& ctxt);
         BvNode(const BvNode& copy);
         virtual ~BvNode();
         virtual void init(void);
@@ -519,7 +529,7 @@ namespace triton {
     //! compound node
     class CompoundNode : public AbstractNode {
       public:
-        CompoundNode(std::vector<AbstractNode*> exprs);
+        CompoundNode(std::vector<AbstractNode*> exprs, AstContext& ctxt);
         CompoundNode(const CompoundNode& copy);
         virtual ~CompoundNode();
         virtual void init(void);
@@ -532,8 +542,8 @@ namespace triton {
     class ConcatNode : public AbstractNode {
       public:
         ConcatNode(AbstractNode* expr1, AbstractNode* expr2);
-        ConcatNode(std::vector<AbstractNode* > exprs);
-        ConcatNode(std::list<AbstractNode* > exprs);
+        ConcatNode(std::vector<AbstractNode* > exprs, AstContext& ctxt);
+        ConcatNode(std::list<AbstractNode* > exprs, AstContext& ctxt);
         ConcatNode(const ConcatNode& copy);
         virtual ~ConcatNode();
         virtual void init(void);
@@ -548,7 +558,7 @@ namespace triton {
         triton::uint512 value;
 
       public:
-        DecimalNode(triton::uint512 value);
+        DecimalNode(triton::uint512 value, AstContext& ctxt);
         DecimalNode(const DecimalNode& copy);
         virtual ~DecimalNode();
         virtual void init(void);
@@ -670,17 +680,17 @@ namespace triton {
     //! Reference node
     class ReferenceNode : public AbstractNode {
       protected:
-        triton::usize value;
+        triton::engines::symbolic::SymbolicExpression & expr;
 
       public:
-        ReferenceNode(triton::usize value);
+        ReferenceNode(triton::engines::symbolic::SymbolicExpression& expr);
         ReferenceNode(const ReferenceNode& copy);
         virtual ~ReferenceNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
 
-        triton::usize getValue(void);
+        triton::engines::symbolic::SymbolicExpression& getExpr() const;
     };
 
 
@@ -690,7 +700,7 @@ namespace triton {
         std::string value;
 
       public:
-        StringNode(std::string value);
+        StringNode(std::string value, AstContext& ctxt);
         StringNode(const StringNode& copy);
         virtual ~StringNode();
         virtual void init(void);
@@ -716,17 +726,17 @@ namespace triton {
     //! Variable node
     class VariableNode : public AbstractNode {
       protected:
-        std::string value;
+        triton::engines::symbolic::SymbolicVariable& symVar;
 
       public:
-        VariableNode(triton::engines::symbolic::SymbolicVariable& symVar);
+        VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt);
         VariableNode(const VariableNode& copy);
         virtual ~VariableNode();
         virtual void init(void);
         virtual void accept(AstVisitor& v);
         virtual triton::uint512 hash(triton::uint32 deep);
 
-        std::string getValue(void);
+        triton::engines::symbolic::SymbolicVariable& getVar(void);
     };
 
 
@@ -749,171 +759,6 @@ namespace triton {
     //! Compares two trees.
     bool operator==(AbstractNode& node1, AbstractNode& node2);
 
-
-    //! AST C++ API - bv node builder
-    AbstractNode* bv(triton::uint512 value, triton::uint32 size);
-
-    //! AST C++ API - bvadd node builder
-    AbstractNode* bvadd(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvand node builder
-    AbstractNode* bvand(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvashr node builder
-    AbstractNode* bvashr(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvdecl node builder
-    AbstractNode* bvdecl(triton::uint32 size);
-
-    //! AST C++ API - bvfalse node builder
-    AbstractNode* bvfalse(void);
-
-    //! AST C++ API - bvlshr node builder
-    AbstractNode* bvlshr(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvmul node builder
-    AbstractNode* bvmul(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvnand node builder
-    AbstractNode* bvnand(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvneg node builder
-    AbstractNode* bvneg(AbstractNode* expr);
-
-    //! AST C++ API - bvnor node builder
-    AbstractNode* bvnor(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvnot node builder
-    AbstractNode* bvnot(AbstractNode* expr);
-
-    //! AST C++ API - bvor node builder
-    AbstractNode* bvor(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvrol node builder
-    AbstractNode* bvrol(triton::uint32 rot, AbstractNode* expr);
-
-    //! AST C++ API - bvrol node builder
-    AbstractNode* bvrol(AbstractNode* rot, AbstractNode* expr);
-
-    //! AST C++ API - bvror node builder
-    AbstractNode* bvror(triton::uint32 rot, AbstractNode* expr);
-
-    //! AST C++ API - bvror node builder
-    AbstractNode* bvror(AbstractNode* rot, AbstractNode* expr);
-
-    //! AST C++ API - bvsdiv node builder
-    AbstractNode* bvsdiv(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvsge node builder
-    AbstractNode* bvsge(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvsgt node builder
-    AbstractNode* bvsgt(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvshl node builder
-    AbstractNode* bvshl(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvsle node builder
-    AbstractNode* bvsle(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvslt node builder
-    AbstractNode* bvslt(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvsmod node builder
-    AbstractNode* bvsmod(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvsrem node builder
-    AbstractNode* bvsrem(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvsub node builder
-    AbstractNode* bvsub(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvtrue node builder
-    AbstractNode* bvtrue(void);
-
-    //! AST C++ API - bvudiv node builder
-    AbstractNode* bvudiv(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvuge node builder
-    AbstractNode* bvuge(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvugt node builder
-    AbstractNode* bvugt(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvule node builder
-    AbstractNode* bvule(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvult node builder
-    AbstractNode* bvult(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvurem node builder
-    AbstractNode* bvurem(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvxnor node builder
-    AbstractNode* bvxnor(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - bvxor node builder
-    AbstractNode* bvxor(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - compound node builder
-    AbstractNode* compound(std::vector<AbstractNode* > exprs);
-
-    //! AST C++ API - concat node builder
-    AbstractNode* concat(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - concat node builder
-    AbstractNode* concat(std::vector<AbstractNode* > exprs);
-
-    //! AST C++ API - concat node builder
-    AbstractNode* concat(std::list<AbstractNode* > exprs);
-
-    //! AST C++ API - decimal node builder
-    AbstractNode* decimal(triton::uint512 value);
-
-    //! AST C++ API - declare node builder
-    AbstractNode* declareFunction(std::string name, AbstractNode* bvDecl);
-
-    //! AST C++ API - distinct node builder
-    AbstractNode* distinct(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - equal node builder
-    AbstractNode* equal(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - extract node builder
-    AbstractNode* extract(triton::uint32 high, triton::uint32 low, AbstractNode* expr);
-
-    //! AST C++ API - ite node builder
-    AbstractNode* ite(AbstractNode* ifExpr, AbstractNode* thenExpr, AbstractNode* elseExpr);
-
-    //! AST C++ API - land node builder
-    AbstractNode* land(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - let node builder
-    AbstractNode* let(std::string alias, AbstractNode* expr2, AbstractNode* expr3);
-
-    //! AST C++ API - lnot node builder
-    AbstractNode* lnot(AbstractNode* expr);
-
-    //! AST C++ API - lor node builder
-    AbstractNode* lor(AbstractNode* expr1, AbstractNode* expr2);
-
-    //! AST C++ API - reference node builder
-    AbstractNode* reference(triton::usize value);
-
-    //! AST C++ API - assert node builder
-    AbstractNode* assert_(AbstractNode* expr);
-
-    //! AST C++ API - string node builder
-    AbstractNode* string(std::string value);
-
-    //! AST C++ API - sx node builder
-    AbstractNode* sx(triton::uint32 sizeExt, AbstractNode* expr);
-
-    //! AST C++ API - variable node builder
-    AbstractNode* variable(triton::engines::symbolic::SymbolicVariable& symVar);
-
-    //! AST C++ API - zx node builder
-    AbstractNode* zx(triton::uint32 sizeExt, AbstractNode* expr);
 
     //! AST C++ API - Duplicates the AST
     AbstractNode* newInstance(AbstractNode* node);

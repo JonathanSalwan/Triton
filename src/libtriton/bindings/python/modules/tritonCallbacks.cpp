@@ -696,7 +696,7 @@ namespace triton {
         PyObject* concreteValue = nullptr;
         PyObject* regIn         = nullptr;
         triton::uint512 cv      = 0;
-        triton::uint32 rid      = 0;
+        triton::arch::registers_e rid      = triton::arch::ID_REG_INVALID;
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &regIn, &concreteValue);
@@ -714,7 +714,7 @@ namespace triton {
 
         /* Check if the first arg is a Register */
         else if (regIn != nullptr && (PyLong_Check(regIn) || PyInt_Check(regIn)))
-          rid = PyLong_AsUint32(regIn);
+          rid = (triton::arch::registers_e)PyLong_AsUint32(regIn);
 
         /* Invalid firt arg */
         else
@@ -722,11 +722,11 @@ namespace triton {
 
         try {
           if (concreteValue == nullptr) {
-            triton::arch::Register regOut(rid);
+            triton::arch::Register regOut(triton::api.getRegister(rid));
             return PyRegister(regOut);
           }
 
-          triton::arch::Register regOut(rid, cv);
+          triton::arch::Register regOut(triton::api.getRegister(rid), cv);
           return PyRegister(regOut);
         }
         catch (const triton::exceptions::Exception& e) {
@@ -777,24 +777,24 @@ namespace triton {
               break;
 
             case callbacks::GET_CONCRETE_REGISTER_VALUE:
-              triton::api.addCallback(callbacks::getConcreteRegisterValueCallback([function](triton::arch::Register& reg) {
+              triton::api.addCallback(callbacks::getConcreteRegisterValueCallback([function](triton::arch::RegisterSpec& reg){
                 /********* Lambda *********/
-                /* Create function args */
-                PyObject* args = triton::bindings::python::xPyTuple_New(1);
-                PyTuple_SetItem(args, 0, triton::bindings::python::PyRegister(reg));
+                  /* Create function args */
+                  PyObject* args = triton::bindings::python::xPyTuple_New(1);
+                  PyTuple_SetItem(args, 0, triton::bindings::python::PyRegister(triton::arch::Register(reg)));
 
-                /* Call the callback */
-                PyObject* ret = PyObject_CallObject(function, args);
+                  /* Call the callback */
+                  PyObject* ret = PyObject_CallObject(function, args);
 
-                /* Check the call */
-                if (ret == nullptr) {
-                  PyErr_Print();
-                  throw triton::exceptions::Callbacks("Callbacks::processCallbacks(GET_CONCRETE_MEMORY_VALUE): Fail to call the python callback.");
-                }
+                  /* Check the call */
+                  if (ret == nullptr) {
+                    PyErr_Print();
+                    throw triton::exceptions::Callbacks("Callbacks::processCallbacks(GET_CONCRETE_REGISTER_VALUE): Fail to call the python callback.");
+                  }
 
-                Py_DECREF(args);
+                  Py_DECREF(args);
                 /********* End of lambda *********/
-              }, function));
+                }, function));
               break;
 
             case callbacks::SYMBOLIC_SIMPLIFICATION:
@@ -1433,11 +1433,11 @@ namespace triton {
 
         try {
           triton::uint32 index = 0;
-          std::set<triton::arch::Register*> reg = triton::api.getAllRegisters();
+          auto& reg = triton::api.getAllRegisters();
 
           ret = xPyList_New(reg.size());
-          for (auto it = reg.begin(); it != reg.end(); it++)
-            PyList_SetItem(ret, index++, PyRegister(**it));
+          for (auto& kv: reg)
+            PyList_SetItem(ret, index++, PyRegister(triton::arch::Register(kv.second)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1678,11 +1678,12 @@ namespace triton {
 
         try {
           triton::uint32 index = 0;
-          std::set<triton::arch::Register*> reg = triton::api.getParentRegisters();
+          auto reg = triton::api.getParentRegisters();
           ret = xPyList_New(reg.size());
 
-          for (auto it = reg.begin(); it != reg.end(); it++)
-            PyList_SetItem(ret, index++, PyRegister(**it));
+          for (auto regId: reg) {
+            PyList_SetItem(ret, index++, PyRegister(triton::arch::Register(triton::api.getRegister(regId))));
+          }
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1849,7 +1850,7 @@ namespace triton {
 
           ret = xPyDict_New();
           for (auto it = regs.begin(); it != regs.end(); it++) {
-            triton::arch::Register reg(it->first);
+            triton::arch::Register reg(triton::api.getRegister(it->first));
             PyDict_SetItem(ret, PyRegister(reg), PySymbolicExpression(it->second));
           }
         }
@@ -1941,8 +1942,8 @@ namespace triton {
           const auto& variables = triton::api.getSymbolicVariables();
 
           ret = xPyDict_New();
-          for (auto it = variables.begin(); it != variables.end(); it++)
-            PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicVariable(it->second));
+          for (auto sv: variables)
+            PyDict_SetItem(ret, PyLong_FromUsize(sv.first), PySymbolicVariable(sv.second));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1987,12 +1988,12 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getTaintedRegisters(): Architecture is not defined.");
 
         try {
-          std::set<triton::arch::Register> registers = triton::api.getTaintedRegisters();
+          std::set<const triton::arch::RegisterSpec*> registers = triton::api.getTaintedRegisters();
 
           size = registers.size();
           ret = xPyList_New(size);
-          for (auto it = registers.begin(); it != registers.end(); it++) {
-            PyList_SetItem(ret, index, PyRegister(*it));
+          for (auto const* spec: registers) {
+            PyList_SetItem(ret, index, PyRegister(triton::arch::Register(*spec)));
             index++;
           }
         }
@@ -2555,6 +2556,34 @@ namespace triton {
 
         try {
           triton::api.setConcreteRegisterValue(*PyRegister_AsRegister(reg));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+      static PyObject* triton_setConcreteSymbolicVariableValue(PyObject* self, PyObject* args) {
+        PyObject* symVar = nullptr;
+        PyObject* value  = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &symVar, &value);
+
+        if (symVar == nullptr || !PySymbolicVariable_Check(symVar))
+          return PyErr_Format(PyExc_TypeError, "setConcreteSymbolicVariableValue(): Bad argument type.");
+
+        /* Check if the architecture is definied */
+        if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "setConcreteSymbolicVariableValue(): Architecture is not defined.");
+
+        if (value == nullptr)
+          return PyErr_Format(PyExc_TypeError, "setConcreteSymbolicVariableValue(): Expects a second argument.");
+
+        try {
+            triton::api.setConcreteSymbolicVariableValue(*PySymbolicVariable_AsSymbolicVariable(symVar), PyLong_AsUint512(value));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -3185,6 +3214,7 @@ namespace triton {
         {"setConcreteMemoryAreaValue",          (PyCFunction)triton_setConcreteMemoryAreaValue,             METH_VARARGS,       ""},
         {"setConcreteMemoryValue",              (PyCFunction)triton_setConcreteMemoryValue,                 METH_VARARGS,       ""},
         {"setConcreteRegisterValue",            (PyCFunction)triton_setConcreteRegisterValue,               METH_O,             ""},
+        {"setConcreteSymbolicVariableValue",    (PyCFunction)triton_setConcreteSymbolicVariableValue,       METH_VARARGS,       ""},
         {"setTaintMemory",                      (PyCFunction)triton_setTaintMemory,                         METH_VARARGS,       ""},
         {"setTaintRegister",                    (PyCFunction)triton_setTaintRegister,                       METH_VARARGS,       ""},
         {"simplify",                            (PyCFunction)triton_simplify,                               METH_VARARGS,       ""},

@@ -5,7 +5,6 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/api.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/symbolicVariable.hpp>
@@ -20,15 +19,13 @@ namespace triton {
                                          triton::uint64 kindValue,
                                          triton::usize id,
                                          triton::uint32 size,
-                                         const std::string& comment,
-                                         triton::uint512 concreteValue) {
+                                         const std::string& comment) {
         this->comment         = comment;
         this->id              = id;
         this->kind            = kind;
         this->kindValue       = kindValue;
         this->name            = TRITON_SYMVAR_NAME + std::to_string(id);
         this->size            = size;
-        this->concreteValue   = concreteValue;
 
         if (this->size > MAX_BITS_SUPPORTED)
           throw triton::exceptions::SymbolicVariable("SymbolicVariable::SymbolicVariable(): Size connot be greater than MAX_BITS_SUPPORTED.");
@@ -37,7 +34,6 @@ namespace triton {
 
       SymbolicVariable::SymbolicVariable(const SymbolicVariable& copy) {
         this->comment         = copy.comment;
-        this->concreteValue   = copy.concreteValue;
         this->id              = copy.id;
         this->kind            = copy.kind;
         this->kindValue       = copy.kindValue;
@@ -80,24 +76,9 @@ namespace triton {
       }
 
 
-      triton::uint512 SymbolicVariable::getConcreteValue(void) const {
-        return this->concreteValue;
-      }
-
-
       void SymbolicVariable::setComment(const std::string& comment) {
         this->comment = comment;
       }
-
-
-      void SymbolicVariable::setConcreteValue(triton::uint512 value) {
-        triton::ast::AbstractNode* node = triton::api.getAstVariableNode(this->getName());
-
-        this->concreteValue = value;
-        if (node)
-          node->init();
-      }
-
 
       std::ostream& operator<<(std::ostream& stream, const SymbolicVariable& symVar) {
         stream << symVar.getName() << ":" << symVar.getSize();

@@ -7,31 +7,31 @@
 
 #include <triton/astGarbageCollector.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/symbolicVariable.hpp>
 
 
 
 namespace triton {
   namespace ast {
 
-    AstGarbageCollector::AstGarbageCollector(triton::modes::Modes* modes, bool isBackup)
-      : triton::ast::AstDictionaries(isBackup) {
-
-      if (modes == nullptr)
-        throw triton::exceptions::AstGarbageCollector("AstGarbageCollector::AstGarbageCollector(): The modes API cannot be null.");
+    AstGarbageCollector::AstGarbageCollector(triton::modes::Modes const& modes, bool isBackup)
+      : triton::ast::AstDictionaries(isBackup)
+      , modes(modes) {
 
       this->backupFlag = isBackup;
-      this->modes      = modes;
     }
 
 
     AstGarbageCollector::AstGarbageCollector(const AstGarbageCollector& other)
-      : triton::ast::AstDictionaries(other) {
+      : triton::ast::AstDictionaries(other)
+      , modes(other.modes) {
       this->copy(other);
     }
 
 
     void AstGarbageCollector::operator=(const AstGarbageCollector& other) {
       triton::ast::AstDictionaries::operator=(other);
+      // We assume modes didn't change
       this->copy(other);
     }
 
@@ -44,7 +44,6 @@ namespace triton {
       }
       this->allocatedNodes  = other.allocatedNodes;
       this->backupFlag      = true;
-      this->modes           = other.modes;
       this->variableNodes   = other.variableNodes;
     }
 
@@ -68,7 +67,7 @@ namespace triton {
       std::set<triton::ast::AbstractNode*>::iterator it;
 
       /* Do not delete AST nodes if the AST_DICTIONARIES optimization is enabled */
-      if (this->modes->isModeEnabled(triton::modes::AST_DICTIONARIES))
+      if (this->modes.isModeEnabled(triton::modes::AST_DICTIONARIES))
         return;
 
       for (it = nodes.begin(); it != nodes.end(); it++) {
@@ -77,7 +76,7 @@ namespace triton {
 
         /* Remove the node from the global variables map */
         if ((*it)->getKind() == triton::ast::VARIABLE_NODE)
-          this->variableNodes.erase(reinterpret_cast<triton::ast::VariableNode*>(*it)->getValue());
+          this->variableNodes.erase(reinterpret_cast<triton::ast::VariableNode*>(*it)->getVar().getName());
 
         /* Delete the node */
         delete *it;
@@ -97,7 +96,7 @@ namespace triton {
 
     triton::ast::AbstractNode* AstGarbageCollector::recordAstNode(triton::ast::AbstractNode* node) {
       /* Check if the AST_DICTIONARIES is enabled. */
-      if (this->modes->isModeEnabled(triton::modes::AST_DICTIONARIES)) {
+      if (this->modes.isModeEnabled(triton::modes::AST_DICTIONARIES)) {
         triton::ast::AbstractNode* ret = this->browseAstDictionaries(node);
         if (ret != nullptr)
           return ret;

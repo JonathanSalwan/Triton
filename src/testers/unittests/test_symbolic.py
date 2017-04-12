@@ -44,6 +44,7 @@ class TestSymbolic(unittest.TestCase):
         processing(inst)
 
         self.assertEqual(getConcreteRegisterValue(REG.RAX), 2, "concrete value is updated")
+        self.assertEqual(getSymbolicRegisterValue(REG.RAX), 1)
         self.assertEqual(getSymbolicRegisterValue(REG.RAX), 1, "Symbolic value is not update")
 
         # Try to reset engine after a backup to test if the bug #385 is fixed.

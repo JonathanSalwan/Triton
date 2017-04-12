@@ -25,8 +25,7 @@ namespace triton {
     }
 
 
-    OperandWrapper::OperandWrapper(const triton::arch::Register& reg) {
-      this->reg = reg;
+    OperandWrapper::OperandWrapper(const triton::arch::RegisterSpec& reg): reg(reg) {
       this->type = triton::arch::OP_REG;
     }
 
@@ -179,7 +178,7 @@ namespace triton {
         case triton::arch::OP_MEM: return this->mem < other.mem;
         case triton::arch::OP_REG: return this->reg < other.reg;
         default:
-          throw triton::exceptions::OperandWrapper("OperandWrapper::operator==(): Invalid type operand.");
+          throw triton::exceptions::OperandWrapper("OperandWrapper::operator<(): Invalid type operand.");
       }
     }
 

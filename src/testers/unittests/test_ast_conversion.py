@@ -16,14 +16,15 @@ class TestAstConversion(unittest.TestCase):
         """Define the arch."""
         setArchitecture(ARCH.X86_64)
 
-        self.v1   = newSymbolicVariable(8)
-        self.v2   = newSymbolicVariable(8)
+        self.sv1   = newSymbolicVariable(8)
+        self.sv2   = newSymbolicVariable(8)
 
-        self.v1.setConcreteValue(0xaa)
-        self.v2.setConcreteValue(0x55)
+        self.v1   = variable(self.sv1)
+        self.v2   = variable(self.sv2)
 
-        self.v1  = variable(self.v1)
-        self.v2  = variable(self.v2)
+        setConcreteSymbolicVariableValue(self.sv1, 0xaa)
+        setConcreteSymbolicVariableValue(self.sv2, 0x55)
+
 
         self.node = [
             # Overloaded operators

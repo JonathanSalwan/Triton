@@ -13,7 +13,8 @@ from triton import (ast, getConcreteMemoryAreaValue, getConcreteRegisterValue,
                     convertMemoryToSymbolicVariable, MemoryAccess, Register,
                     setConcreteRegisterValue, setConcreteMemoryValue, getModel,
                     Elf, concretizeAllMemory, buildSymbolicRegister, MODE,
-                    clearPathConstraints, enableMode, enableSymbolicEngine)
+                    clearPathConstraints, enableMode, enableSymbolicEngine,
+                    setConcreteSymbolicVariableValue)
 
 
 class DefCamp2015(object):
@@ -54,7 +55,7 @@ class DefCamp2015(object):
                 for k, v in model.items():
                     value = v.getValue()
                     solution += chr(value)
-                    getSymbolicVariableFromId(k).setConcreteValue(value)
+                    setConcreteSymbolicVariableValue(getSymbolicVariableFromId(k), value)
 
             # Next
             pc = getConcreteRegisterValue(REG.RIP)

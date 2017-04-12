@@ -41,6 +41,9 @@ namespace triton {
       /*! \class SymbolicVariable
           \brief The symbolic variable class. */
       class SymbolicVariable {
+
+        using CallBackType = std::function<void(triton::uint512&)>;
+
         protected:
           //! The symbolic variable kind. \sa triton::engines::symbolic::symkind_e
           symkind_e kind;
@@ -65,17 +68,13 @@ namespace triton {
           //! The size (in bits) of the symbolic variable.
           triton::uint32 size;
 
-          //! The concrete value of the symbolic variable.
-          triton::uint512 concreteValue;
-
         public:
           //! Constructor.
           SymbolicVariable(symkind_e kind,
                            triton::uint64 kindValue,
                            triton::usize id,
                            triton::uint32 size,
-                           const std::string& comment,
-                           triton::uint512 concreteValue=0);
+                           const std::string& comment);
 
           //! Constructor by copy.
           SymbolicVariable(const SymbolicVariable& copy);
@@ -101,14 +100,8 @@ namespace triton {
           //! Returns the size (in bits) of the symbolic variable.
           triton::uint32 getSize(void) const;
 
-          //! Returns the concrete value (if exists) of the symbolic variable.
-          triton::uint512 getConcreteValue(void) const;
-
           //! Sets the comment of the symbolic variable.
           void setComment(const std::string& comment);
-
-          //! Sets the concrete value of the symbolic variable.
-          void setConcreteValue(triton::uint512 value);
       };
 
       //! Displays a symbolic variable.

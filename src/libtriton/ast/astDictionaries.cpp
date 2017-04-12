@@ -6,6 +6,8 @@
 */
 
 #include <triton/astDictionaries.hpp>
+#include <triton/symbolicExpression.hpp>
+#include <triton/symbolicVariable.hpp>
 
 
 
@@ -170,7 +172,7 @@ namespace triton {
         }
 
         case triton::ast::REFERENCE_NODE: {
-          auto value       = static_cast<triton::ast::ReferenceNode*>(node)->getValue();
+          auto value       = static_cast<triton::ast::ReferenceNode*>(node)->getExpr().getId();
           auto dictionary  = static_cast<std::map<triton::usize, triton::ast::AbstractNode*>*>((this->dictionaries[kind]));
           if (dictionary->find(value) != dictionary->end()) {
             delete node;
@@ -192,7 +194,7 @@ namespace triton {
         }
 
         case triton::ast::VARIABLE_NODE: {
-          auto value       = static_cast<triton::ast::VariableNode*>(node)->getValue();
+          auto value       = static_cast<triton::ast::VariableNode*>(node)->getVar().getName();
           auto dictionary  = static_cast<std::map<std::string, triton::ast::AbstractNode*>*>((this->dictionaries[kind]));
           if (dictionary->find(value) != dictionary->end()) {
             delete node;

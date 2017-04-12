@@ -433,10 +433,7 @@ namespace triton {
 
 
     void TritonToZ3Ast::operator()(triton::ast::ReferenceNode& e) {
-      triton::engines::symbolic::SymbolicExpression* refNode = this->symbolicEngine->getSymbolicExpressionFromId(e.getValue());
-      if (refNode == nullptr)
-        throw triton::exceptions::AstTranslations("TritonToZ3Ast::ReferenceNode(): Reference node not found.");
-      Z3Result op1 = this->eval(*(refNode->getAst()));
+      Z3Result op1 = this->eval(*(e.getExpr().getAst()));
       this->result.setExpr(op1.getExpr());
     }
 
@@ -460,7 +457,7 @@ namespace triton {
 
 
     void TritonToZ3Ast::operator()(triton::ast::VariableNode& e) {
-      std::string varName = e.getValue();
+      std::string varName = e.getVar().getName();
       triton::engines::symbolic::SymbolicVariable* symVar = this->symbolicEngine->getSymbolicVariableFromName(varName);
 
       if (symVar == nullptr)
@@ -473,13 +470,13 @@ namespace triton {
       if (this->isEval) {
         if (symVar->getKind() == triton::engines::symbolic::MEM) {
           triton::uint32 memSize   = symVar->getSize();
-          triton::uint512 memValue = symVar->getConcreteValue();
+          triton::uint512 memValue = e.evaluate();
           std::string memStrValue(memValue);
           z3::expr newexpr = this->result.getContext().bv_val(memStrValue.c_str(), memSize);
           this->result.setExpr(newexpr);
         }
         else if (symVar->getKind() == triton::engines::symbolic::REG) {
-          triton::uint512 regValue = symVar->getConcreteValue();
+          triton::uint512 regValue = e.evaluate();
           std::string regStrValue(regValue);
           z3::expr newexpr = this->result.getContext().bv_val(regStrValue.c_str(), symVar->getSize());
           this->result.setExpr(newexpr);
