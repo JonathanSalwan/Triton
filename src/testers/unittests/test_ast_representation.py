@@ -19,6 +19,7 @@ class TestAstRepresentation(unittest.TestCase):
         self.v1  = variable(newSymbolicVariable(8))
         self.v2  = variable(newSymbolicVariable(8))
         self.ref = newSymbolicExpression(self.v1 + self.v2, "ref test")
+        astCtxt = TritonContext().getAstContext()
 
         self.node = [
             # Overloaded operators              # SMT                                   # Python
@@ -42,7 +43,7 @@ class TestAstRepresentation(unittest.TestCase):
             ((self.v1 > self.v2),               "(bvugt SymVar_0 SymVar_1)",            "(SymVar_0 > SymVar_1)"),
 
             # AST api                           # SMT                                   # Python
-            (assert_(self.v1),                  "(assert SymVar_0)",                    "assert(SymVar_0)"),
+            (astCtxt.assert_(self.v1),          "(assert SymVar_0)",                    "assert(SymVar_0)"),
             (bv(2, 8),                          "(_ bv2 8)",                            "0x2"),
             (bvashr(self.v1, self.v2),          "(bvashr SymVar_0 SymVar_1)",           "(SymVar_0 >> SymVar_1)"),
             (bvdecl(8),                         "(_ BitVec 8)",                         "bvdecl(0x8)"),

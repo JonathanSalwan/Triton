@@ -52,6 +52,7 @@ from pintool    import *
 
 TAINTING_SIZE = 10
 
+Triton = TritonContext()
 
 
 def tainting(threadId):
@@ -74,6 +75,7 @@ def tainting(threadId):
 
 def fini():
     pco = getPathConstraints()
+    astCtxt = Triton.getAstContext()
     for pc in pco:
         if pc.isMultipleBranches():
             b1   =  pc.getBranchConstraints()[0]['constraint']
@@ -83,13 +85,13 @@ def fini():
             seed = list()
 
             # Branch 1
-            models  = getModel(assert_(b1))
+            models  = getModel(astCtxt.assert_(b1))
             for k, v in models.items():
                 print v
                 seed.append(v)
 
             # Branch 2
-            models  = getModel(assert_(b2))
+            models  = getModel(astCtxt.assert_(b2))
             for k, v in models.items():
                 print v
                 seed.append(v)

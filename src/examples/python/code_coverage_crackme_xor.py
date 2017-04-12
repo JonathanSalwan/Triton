@@ -77,6 +77,8 @@ function = {
   0x4005c9: "\xc3",                           #   ret
 }
 
+Triton = TritonContext()
+
 
 
 # This function emulates the code.
@@ -142,6 +144,9 @@ def getNewInput():
     # We start with any input. T (Top)
     previousConstraints = equal(bvtrue(), bvtrue())
 
+    # Get the astContext
+    astCtxt = Triton.getAstContext()
+
     # Go through the path constraints
     for pc in pco:
         # If there is a condition
@@ -152,7 +157,7 @@ def getNewInput():
                 # Get the constraint of the branch which has been not taken
                 if branch['isTaken'] == False:
                     # Ask for a model
-                    models = getModel(assert_(land(previousConstraints, branch['constraint'])))
+                    models = getModel(astCtxt.assert_(land(previousConstraints, branch['constraint'])))
                     seed   = dict()
                     for k, v in models.items():
                         # Get the symbolic variable assigned to the model

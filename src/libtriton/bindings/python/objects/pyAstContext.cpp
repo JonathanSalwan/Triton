@@ -17,27 +17,31 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      static PyObject* TritonContext_getAstContext(PyObject* self, PyObject* noarg) {
+      static PyObject* AstContext_assert(PyObject* self, PyObject* expr) {
+        if (!PyAstNode_Check(expr))
+          return PyErr_Format(PyExc_TypeError, "assert_(): expected an AstNode as first argument");
+
         try {
-          return PyAstContext(PyTritonContext_AsTritonContext(self)->getAstContext());
+          // FIXME : should we Check the context is the same?
+          return PyAstNode(PyAstContext_AsAstContext(self)->assert_(PyAstNode_AsAstNode(expr)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
 
-      //! TritonContext methods.
-      PyMethodDef TritonContext_callbacks[] = {
-        {"getAstContext",     TritonContext_getAstContext,       METH_NOARGS,    ""},
-        {nullptr,             nullptr,                   0,              nullptr}
+      //! AstContext methods.
+      PyMethodDef AstContext_callbacks[] = {
+        {"assert_",     AstContext_assert,       METH_O,    ""},
+        {nullptr  ,               nullptr,            0,nullptr}
       };
 
 
-      PyTypeObject TritonContext_Type = {
+      PyTypeObject AstContext_Type = {
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */
-        "TritonContext",                            /* tp_name */
-        sizeof(TritonContext_Object),               /* tp_basicsize */
+        "AstContext",                            /* tp_name */
+        sizeof(AstContext_Object),               /* tp_basicsize */
         0,                                          /* tp_itemsize */
         0,                                          /* tp_dealloc */
         0,                                          /* tp_print */
@@ -55,14 +59,14 @@ namespace triton {
         0,                                          /* tp_setattro */
         0,                                          /* tp_as_buffer */
         Py_TPFLAGS_DEFAULT,                         /* tp_flags */
-        "TritonContext objects",                    /* tp_doc */
+        "AstContext objects",                    /* tp_doc */
         0,                                          /* tp_traverse */
         0,                                          /* tp_clear */
         0,                                          /* tp_richcompare */
         0,                                          /* tp_weaklistoffset */
         0,                                          /* tp_iter */
         0,                                          /* tp_iternext */
-        TritonContext_callbacks,                    /* tp_methods */
+        AstContext_callbacks,                    /* tp_methods */
         0,                                          /* tp_members */
         0,                                          /* tp_getset */
         0,                                          /* tp_base */
@@ -85,12 +89,12 @@ namespace triton {
       };
 
 
-      PyObject* PyTritonContext() {
-        PyType_Ready(&TritonContext_Type);
-        TritonContext_Object* object = PyObject_NEW(TritonContext_Object, &TritonContext_Type);
+      PyObject* PyAstContext(triton::ast::AstContext& ctxt) {
+        PyType_Ready(&AstContext_Type);
+        AstContext_Object* object = PyObject_NEW(AstContext_Object, &AstContext_Type);
 
         if (object != nullptr)
-          object->api = &triton::api;
+          object->ctxt = &ctxt;
 
         return (PyObject*)object;
       }

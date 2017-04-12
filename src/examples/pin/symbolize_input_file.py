@@ -26,6 +26,7 @@ targetFd   = None
 isOpen     = False
 isRead     = None
 
+Triton = TritonContext()
 
 
 def getMemoryString(addr):
@@ -84,7 +85,7 @@ def syscallsExit(threadId, std):
 
 def fini():
     pc = getPathConstraintsAst()
-    m = getModel(ast.assert_(ast.lnot(pc)))
+    m = getModel(Triton.getAstContext().assert_(ast.lnot(pc)))
     print '[TT] Model:', m
     return
 

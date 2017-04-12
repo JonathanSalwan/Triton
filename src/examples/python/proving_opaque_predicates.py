@@ -77,6 +77,8 @@ trace_5 = [
     "\x0F\x84\x10\x00\x00\x00",  # je 16
 ]
 
+Triton = TritonContext()
+
 
 def symbolization_init():
     convertRegisterToSymbolicVariable(REG.EAX)
@@ -89,6 +91,8 @@ def test_trace(trace):
     setArchitecture(ARCH.X86)
     symbolization_init()
 
+    astCtxt = Triton.getAstContext()
+
     for opcodes in trace:
         instruction = Instruction()
         instruction.setOpcodes(opcodes)
@@ -99,7 +103,7 @@ def test_trace(trace):
             # Opaque Predicate AST
             op_ast = getPathConstraintsAst()
             # Try another model
-            model = getModel(ast.assert_(ast.lnot(op_ast)))
+            model = getModel(astCtxt.assert_(ast.lnot(op_ast)))
             if model:
                 print "not an opaque predicate"
             else:

@@ -169,7 +169,7 @@ def solution():
 
 
 # Emulate the CheckSolution() function.
-def emulate(pc):
+def emulate(Triton, pc):
     global variables
     global goodBranches
 
@@ -199,9 +199,10 @@ def emulate(pc):
             # Slice expressions
             rax   = getSymbolicExpressionFromId(getSymbolicRegisterId(REG.RAX))
             eax   = ast.extract(31, 0, rax.getAst())
+            astCtxt = Triton.getAstContext()
 
             # Define constraint
-            cstr  = ast.assert_(
+            cstr  = astCtxt.assert_(
                         ast.land(
                             getPathConstraintsAst(),
                             ast.equal(eax, ast.bv(goodBranches[pc], 32))
@@ -220,7 +221,7 @@ def emulate(pc):
             del goodBranches[pc]
 
             # Restart emulation with a good input.
-            initialize()
+            Triton = initialize()
 
         # Next
         pc = getConcreteRegisterValue(REG.RIP)
@@ -254,6 +255,8 @@ def constantFolding(node):
 
 
 def initialize():
+
+    Triton = TritonContext()
     # Define the target architecture
     setArchitecture(ARCH.X86_64)
 
@@ -271,15 +274,15 @@ def initialize():
     # Symbolize user inputs
     symbolizeInputs()
 
-    return
+    return Triton
 
 
 if __name__ == '__main__':
     # Initialize symbolic emulation
-    initialize()
+    Triton = initialize()
 
     # Emulate from the dump
-    emulate(getConcreteRegisterValue(REG.RIP))
+    emulate(Triton, getConcreteRegisterValue(REG.RIP))
 
     # Print the final solution
     solution()

@@ -35,13 +35,13 @@ STRLEN_ASSERT_LEN = 6
 # What number of possible solutions you want?
 SOLUTIONS = 20
 
-
+Triton = TritonContext()
 
 def before(instruction):
     if instruction.getAddress() == 0x4005c5:
         rax = getSymbolicRegisterId(REG.RAX)
         raxAst = getAstFromId(rax)
-        constraint = ast.assert_(ast.equal(raxAst, ast.bv(STRLEN_ASSERT_LEN, raxAst.getBitvectorSize())))
+        constraint = Triton.getAstContext().assert_(ast.equal(raxAst, ast.bv(STRLEN_ASSERT_LEN, raxAst.getBitvectorSize())))
         models = getModels(constraint, SOLUTIONS)
         for model in models:
             s = str()

@@ -438,19 +438,6 @@ namespace triton {
     namespace python {
 
 
-      static PyObject* ast_assert(PyObject* self, PyObject* expr) {
-        if (!PyAstNode_Check(expr))
-          return PyErr_Format(PyExc_TypeError, "assert_(): expected a AstNode as first argument");
-
-        try {
-          return PyAstNode(triton::api.getAstContext().assert_(PyAstNode_AsAstNode(expr)));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* ast_bv(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
@@ -1455,7 +1442,6 @@ namespace triton {
 
 
       PyMethodDef astCallbacks[] = {
-        {"assert_",     (PyCFunction)ast_assert,     METH_O,           ""},
         {"bv",          (PyCFunction)ast_bv,         METH_VARARGS,     ""},
         {"bvadd",       (PyCFunction)ast_bvadd,      METH_VARARGS,     ""},
         {"bvand",       (PyCFunction)ast_bvand,      METH_VARARGS,     ""},

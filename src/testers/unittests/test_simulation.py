@@ -14,7 +14,7 @@ from triton import (ast, getConcreteMemoryAreaValue, getConcreteRegisterValue,
                     setConcreteRegisterValue, setConcreteMemoryValue, getModel,
                     Elf, concretizeAllMemory, buildSymbolicRegister, MODE,
                     clearPathConstraints, enableMode, enableSymbolicEngine,
-                    setConcreteSymbolicVariableValue)
+                    setConcreteSymbolicVariableValue, TritonContext)
 
 
 class DefCamp2015(object):
@@ -28,6 +28,7 @@ class DefCamp2015(object):
         * Process instruction until the end and search for constraint
         resolution on cmp eax, 1 then set the new correct value and keep going.
         """
+        astCtxt = TritonContext().getAstContext()
         while pc:
             # Fetch opcodes
             opcodes = getConcreteMemoryAreaValue(pc, 16)
@@ -48,7 +49,7 @@ class DefCamp2015(object):
                 eax = ast.extract(31, 0, rax.getAst())
 
                 # Define constraint
-                cstr = ast.assert_(ast.land(getPathConstraintsAst(), ast.equal(eax, ast.bv(1, 32))))
+                cstr = astCtxt.assert_(ast.land(getPathConstraintsAst(), ast.equal(eax, ast.bv(1, 32))))
 
                 model = getModel(cstr)
                 solution = str()
@@ -224,6 +225,8 @@ class SeedCoverage(object):
         # We start with any input. T (Top)
         previousConstraints = ast.equal(ast.bvtrue(), ast.bvtrue())
 
+        astCtxt = TritonContext().getAstContext()
+
         # Go through the path constraints
         for pc in pco:
             # If there is a condition
@@ -234,7 +237,7 @@ class SeedCoverage(object):
                     # Get the constraint of the branch which has been not taken
                     if branch['isTaken'] == False:
                         # Ask for a model
-                        models = getModel(ast.assert_(ast.land(previousConstraints, branch['constraint'])))
+                        models = getModel(astCtxt.assert_(ast.land(previousConstraints, branch['constraint'])))
                         seed = dict()
                         for k, v in models.items():
                             # Get the symbolic variable assigned to the model

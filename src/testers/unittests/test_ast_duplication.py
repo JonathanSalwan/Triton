@@ -19,6 +19,7 @@ class TestAstDuplication(unittest.TestCase):
         self.v1  = variable(newSymbolicVariable(8))
         self.v2  = variable(newSymbolicVariable(8))
         self.ref = newSymbolicExpression(self.v1 + self.v2, "ref test")
+        astCtxt = TritonContext().getAstContext()
 
         self.node = [
             # Overloaded operators
@@ -41,7 +42,7 @@ class TestAstDuplication(unittest.TestCase):
             (self.v1 < self.v2),
             (self.v1 > self.v2),
             # AST api
-            assert_(self.v1),
+            astCtxt.assert_(self.v1),
             bv(2, 8),
             bvashr(self.v1, self.v2),
             bvdecl(8),

@@ -7,10 +7,12 @@ from triton import *
 
 # Constraint using AST form
 def test1():
+    Triton = TritonContext()
     setArchitecture(ARCH.X86)
+    astCtxt = Triton.getAstContext()
 
     x = newSymbolicVariable(32)
-    c = ast.assert_(
+    c = astCtxt.assert_(
             ast.equal(
                 ast.bvsub(
                     ast.bvxor(
@@ -28,10 +30,12 @@ def test1():
 
 # Constraint using AST operator overloading
 def test2():
+    Triton = TritonContext()
     setArchitecture(ARCH.X86)
+    astCtxt = Triton.getAstContext()
 
     x = newSymbolicVariable(32)
-    c = ast.assert_(
+    c = astCtxt.assert_(
             (ast.variable(x) ^ 0x40) - 1 == 0x10
         )
     print 'Test 2:', getModel(c)[0]
@@ -40,10 +44,12 @@ def test2():
 
 # Logical conjunction constraints using AST operator overloading
 def test3():
+    Triton = TritonContext()
     setArchitecture(ARCH.X86)
+    astCtxt = Triton.getAstContext()
 
     x = newSymbolicVariable(8)
-    c = ast.assert_(
+    c = astCtxt.assert_(
             ast.land(
                 ast.variable(x) * ast.variable(x) - 1 == 0x20,
                 ast.variable(x) != 0x11
@@ -55,10 +61,12 @@ def test3():
 
 # Several models
 def test4():
+    Triton = TritonContext()
     setArchitecture(ARCH.X86)
+    astCtxt = Triton.getAstContext()
 
     x = newSymbolicVariable(8)
-    c = ast.assert_(
+    c = astCtxt.assert_(
             ast.variable(x) * ast.variable(x) - 1 == 0x20,
         )
     print 'Test 4:', getModels(c, 10)
@@ -67,7 +75,9 @@ def test4():
 
 # From instruction
 def test5():
+    Triton = TritonContext()
     setArchitecture(ARCH.X86)
+    astCtxt = Triton.getAstContext()
 
     # rax is now symbolic
     convertRegisterToSymbolicVariable(REG.EAX)
@@ -79,7 +89,7 @@ def test5():
     eaxAst = getAstFromId(getSymbolicRegisterId(REG.EAX))
 
     # constraint
-    c = ast.assert_(
+    c = astCtxt.assert_(
             eaxAst ^ 0x11223344 == 0xdeadbeaf
         )
 

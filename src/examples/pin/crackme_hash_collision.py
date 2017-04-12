@@ -6,7 +6,7 @@ from pintool    import *
 #
 # This example breaks a simple hash routine.
 #
-# Check the ./src/samples/crackmes/crackme_hash.c file. This file builds 
+# Check the ./src/samples/crackmes/crackme_hash.c file. This file builds
 # a 'hash' and checks the checksum 0xad6d.
 #
 # The needed password is 'elite'. Example:
@@ -45,6 +45,8 @@ from pintool    import *
 # $
 #
 
+Triton = TritonContext()
+
 
 def cafter(instruction):
 
@@ -66,19 +68,21 @@ def cafter(instruction):
         SymVar_3 = getSymbolicVariableFromName('SymVar_3')
         SymVar_4 = getSymbolicVariableFromName('SymVar_4')
 
+        astCtxt = Triton.getAstContext()
+
         # We want printable characters
         expr = compound([
-                 assert_(bvugt(variable(SymVar_0), bv(96,  CPUSIZE.QWORD_BIT))),
-                 assert_(bvult(variable(SymVar_0), bv(123, CPUSIZE.QWORD_BIT))),
-                 assert_(bvugt(variable(SymVar_1), bv(96,  CPUSIZE.QWORD_BIT))),
-                 assert_(bvult(variable(SymVar_1), bv(123, CPUSIZE.QWORD_BIT))),
-                 assert_(bvugt(variable(SymVar_2), bv(96,  CPUSIZE.QWORD_BIT))),
-                 assert_(bvult(variable(SymVar_2), bv(123, CPUSIZE.QWORD_BIT))),
-                 assert_(bvugt(variable(SymVar_3), bv(96,  CPUSIZE.QWORD_BIT))),
-                 assert_(bvult(variable(SymVar_3), bv(123, CPUSIZE.QWORD_BIT))),
-                 assert_(bvugt(variable(SymVar_4), bv(96,  CPUSIZE.QWORD_BIT))),
-                 assert_(bvult(variable(SymVar_4), bv(123, CPUSIZE.QWORD_BIT))),
-                 assert_(equal(raxExpr, bv(0xad6d, CPUSIZE.QWORD_BIT)))  # collision: (assert (= rax 0xad6d)
+                 astCtxt.assert_(bvugt(variable(SymVar_0), bv(96,  CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(bvult(variable(SymVar_0), bv(123, CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(bvugt(variable(SymVar_1), bv(96,  CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(bvult(variable(SymVar_1), bv(123, CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(bvugt(variable(SymVar_2), bv(96,  CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(bvult(variable(SymVar_2), bv(123, CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(bvugt(variable(SymVar_3), bv(96,  CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(bvult(variable(SymVar_3), bv(123, CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(bvugt(variable(SymVar_4), bv(96,  CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(bvult(variable(SymVar_4), bv(123, CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(equal(raxExpr, bv(0xad6d, CPUSIZE.QWORD_BIT)))  # collision: (assert (= rax 0xad6d)
                ])
 
         # Get max 20 different models

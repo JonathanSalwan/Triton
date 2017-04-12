@@ -119,6 +119,7 @@ if(PYTHON_BINDINGS)
       bindings/python/namespaces/initVersionNamespace.cpp
       bindings/python/namespaces/initX86OpcodesNamespace.cpp
       bindings/python/namespaces/initX86PrefixesNamespace.cpp
+      bindings/python/objects/pyAstContext.cpp
       bindings/python/objects/pyAstNode.cpp
       bindings/python/objects/pyBitvector.cpp
       bindings/python/objects/pyElf.cpp
