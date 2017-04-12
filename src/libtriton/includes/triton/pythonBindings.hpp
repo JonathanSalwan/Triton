@@ -72,9 +72,6 @@ namespace triton {
       //! triton python methods.
       extern PyMethodDef tritonCallbacks[];
 
-      //! ast python methods.
-      extern PyMethodDef astCallbacks[];
-
       //! Initializes the ARCH python namespace.
       void initArchNamespace(PyObject* archDict);
 

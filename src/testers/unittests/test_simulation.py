@@ -5,7 +5,7 @@
 import unittest
 import os
 
-from triton import (ast, getConcreteMemoryAreaValue, getConcreteRegisterValue,
+from triton import (getConcreteMemoryAreaValue, getConcreteRegisterValue,
                     Instruction, getSymbolicExpressionFromId, setArchitecture,
                     getSymbolicRegisterId, getSymbolicVariableFromId, ARCH,
                     processing, REG, getPathConstraintsAst, getPathConstraints,
@@ -28,7 +28,7 @@ class DefCamp2015(object):
         * Process instruction until the end and search for constraint
         resolution on cmp eax, 1 then set the new correct value and keep going.
         """
-        astCtxt = TritonContext().getAstContext()
+        astCtxt = self.Triton.getAstContext()
         while pc:
             # Fetch opcodes
             opcodes = getConcreteMemoryAreaValue(pc, 16)
@@ -46,10 +46,10 @@ class DefCamp2015(object):
             if instruction.getAddress() == 0x40078B:
                 # Slice expressions
                 rax = getSymbolicExpressionFromId(getSymbolicRegisterId(REG.RAX))
-                eax = ast.extract(31, 0, rax.getAst())
+                eax = astCtxt.extract(31, 0, rax.getAst())
 
                 # Define constraint
-                cstr = astCtxt.assert_(ast.land(getPathConstraintsAst(), ast.equal(eax, ast.bv(1, 32))))
+                cstr = astCtxt.assert_(astCtxt.land(getPathConstraintsAst(), astCtxt.equal(eax, astCtxt.bv(1, 32))))
 
                 model = getModel(cstr)
                 solution = str()
@@ -75,6 +75,8 @@ class DefCamp2015(object):
 
     def test_defcamp_2015(self):
         """Load binary, setup environment and solve challenge with sym eval."""
+        self.Triton = TritonContext()
+
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "defcamp-2015-r100.bin")
         self.load_binary(binary_file)
@@ -216,6 +218,8 @@ class SeedCoverage(object):
 
     def new_inputs(self):
         """Look for another branching using current constraints found."""
+        astCtxt = self.Triton.getAstContext()
+
         # Set of new inputs
         inputs = list()
 
@@ -223,9 +227,7 @@ class SeedCoverage(object):
         pco = getPathConstraints()
 
         # We start with any input. T (Top)
-        previousConstraints = ast.equal(ast.bvtrue(), ast.bvtrue())
-
-        astCtxt = TritonContext().getAstContext()
+        previousConstraints = astCtxt.equal(astCtxt.bvtrue(), astCtxt.bvtrue())
 
         # Go through the path constraints
         for pc in pco:
@@ -237,7 +239,7 @@ class SeedCoverage(object):
                     # Get the constraint of the branch which has been not taken
                     if branch['isTaken'] == False:
                         # Ask for a model
-                        models = getModel(astCtxt.assert_(ast.land(previousConstraints, branch['constraint'])))
+                        models = getModel(astCtxt.assert_(astCtxt.land(previousConstraints, branch['constraint'])))
                         seed = dict()
                         for k, v in models.items():
                             # Get the symbolic variable assigned to the model
@@ -249,7 +251,7 @@ class SeedCoverage(object):
 
             # Update the previous constraints with true branch to keep a good
             # path.
-            previousConstraints = ast.land(previousConstraints, pc.getTakenPathConstraintAst())
+            previousConstraints = astCtxt.land(previousConstraints, pc.getTakenPathConstraintAst())
 
         # Clear the path constraints to be clean at the next execution.
         clearPathConstraints()
@@ -258,6 +260,7 @@ class SeedCoverage(object):
 
     def test_seed_coverage(self):
         """Found every seed so that every opcode will be use at least once."""
+        self.Triton = TritonContext()
         # Define entry point
         ENTRY = 0x40056d
 

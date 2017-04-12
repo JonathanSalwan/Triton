@@ -5,7 +5,6 @@
 import unittest
 
 from triton     import *
-from triton.ast import *
 
 
 class TestAstConversion(unittest.TestCase):
@@ -14,17 +13,19 @@ class TestAstConversion(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
+        self.Triton = TritonContext()
         setArchitecture(ARCH.X86_64)
+
+        self.astCtxt = self.Triton.getAstContext()
 
         self.sv1   = newSymbolicVariable(8)
         self.sv2   = newSymbolicVariable(8)
 
-        self.v1   = variable(self.sv1)
-        self.v2   = variable(self.sv2)
+        self.v1   = self.astCtxt.variable(self.sv1)
+        self.v2   = self.astCtxt.variable(self.sv2)
 
         setConcreteSymbolicVariableValue(self.sv1, 0xaa)
         setConcreteSymbolicVariableValue(self.sv2, 0x55)
-
 
         self.node = [
             # Overloaded operators
@@ -45,15 +46,15 @@ class TestAstConversion(unittest.TestCase):
             (self.v1 < self.v2),
             (self.v1 > self.v2),
             # AST API
-            bvashr(self.v1, self.v2),
-            bvnand(self.v1, self.v2),
-            bvnor(self.v1, self.v2),
-            bvrol(3, self.v1),
-            bvror(2, self.v2),
-            distinct(self.v1, self.v2),
-            equal(self.v1, self.v2),
-            sx(8, self.v1),
-            zx(8, self.v1),
+            self.astCtxt.bvashr(self.v1, self.v2),
+            self.astCtxt.bvnand(self.v1, self.v2),
+            self.astCtxt.bvnor(self.v1, self.v2),
+            self.astCtxt.bvrol(3, self.v1),
+            self.astCtxt.bvror(2, self.v2),
+            self.astCtxt.distinct(self.v1, self.v2),
+            self.astCtxt.equal(self.v1, self.v2),
+            self.astCtxt.sx(8, self.v1),
+            self.astCtxt.zx(8, self.v1),
             # recent z3 version
             #bvsdiv(self.v1, self.v2),
             #bvsmod(self.v1, self.v2),

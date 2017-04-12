@@ -758,6 +758,7 @@ namespace triton {
 
         try {
           switch (static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode))) {
+            // FIXME : We should incref the function object as it could be a lambda or a temporary function
 
             case callbacks::GET_CONCRETE_MEMORY_VALUE:
               triton::api.addCallback(callbacks::getConcreteMemoryValueCallback([function](triton::arch::MemoryAccess& mem) {

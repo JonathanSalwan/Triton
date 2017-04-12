@@ -5,7 +5,6 @@
 import unittest
 
 from triton     import *
-from triton.ast import *
 
 
 
@@ -14,13 +13,16 @@ class TestAstSimplification(unittest.TestCase):
     """Testing AST simplification."""
 
     def setUp(self):
+        self.Triton = TritonContext()
         setArchitecture(ARCH.X86_64)
-        addCallback(self.xor_1, CALLBACK.SYMBOLIC_SIMPLIFICATION)
+        self.simplify_1 = lambda x: self.xor_1(x)
+        addCallback(self.simplify_1, CALLBACK.SYMBOLIC_SIMPLIFICATION)
         addCallback(self.xor_2, CALLBACK.SYMBOLIC_SIMPLIFICATION)
+        self.astCtxt = self.Triton.getAstContext()
 
     def test_simplification(self):
-        a = bv(1, 8)
-        b = bv(2, 8)
+        a = self.astCtxt.bv(1, 8)
+        b = self.astCtxt.bv(2, 8)
 
         # Example 1
         c = a ^ a
@@ -48,11 +50,10 @@ class TestAstSimplification(unittest.TestCase):
         return
 
     # a ^ a -> a = 0
-    @staticmethod
-    def xor_1(node):
+    def xor_1(self, node):
         if node.getKind() == AST_NODE.BVXOR:
             if node.getChilds()[0] == node.getChilds()[1]:
-                return bv(0, node.getBitvectorSize())
+                return self.astCtxt.bv(0, node.getBitvectorSize())
         return node
 
 

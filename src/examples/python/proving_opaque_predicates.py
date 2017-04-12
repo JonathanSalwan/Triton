@@ -103,7 +103,7 @@ def test_trace(trace):
             # Opaque Predicate AST
             op_ast = getPathConstraintsAst()
             # Try another model
-            model = getModel(astCtxt.assert_(ast.lnot(op_ast)))
+            model = getModel(astCtxt.assert_(astCtxt.lnot(op_ast)))
             if model:
                 print "not an opaque predicate"
             else:

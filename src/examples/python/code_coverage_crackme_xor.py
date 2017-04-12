@@ -20,7 +20,6 @@
 import  sys
 
 from triton     import *
-from triton.ast import *
 
 
 # Isolated function code which must be cover. The source code
@@ -141,11 +140,11 @@ def getNewInput():
     # Get path constraints from the last execution
     pco = getPathConstraints()
 
-    # We start with any input. T (Top)
-    previousConstraints = equal(bvtrue(), bvtrue())
-
     # Get the astContext
     astCtxt = Triton.getAstContext()
+
+    # We start with any input. T (Top)
+    previousConstraints = astCtxt.equal(astCtxt.bvtrue(), astCtxt.bvtrue())
 
     # Go through the path constraints
     for pc in pco:
@@ -157,7 +156,7 @@ def getNewInput():
                 # Get the constraint of the branch which has been not taken
                 if branch['isTaken'] == False:
                     # Ask for a model
-                    models = getModel(astCtxt.assert_(land(previousConstraints, branch['constraint'])))
+                    models = getModel(astCtxt.assert_(astCtxt.land(previousConstraints, branch['constraint'])))
                     seed   = dict()
                     for k, v in models.items():
                         # Get the symbolic variable assigned to the model
@@ -168,7 +167,7 @@ def getNewInput():
                         inputs.append(seed)
 
         # Update the previous constraints with true branch to keep a good path.
-        previousConstraints = land(previousConstraints, pc.getTakenPathConstraintAst())
+        previousConstraints = astCtxt.land(previousConstraints, pc.getTakenPathConstraintAst())
 
     # Clear the path constraints to be clean at the next execution.
     clearPathConstraints()

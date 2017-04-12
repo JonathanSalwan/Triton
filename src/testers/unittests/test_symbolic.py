@@ -7,7 +7,7 @@ import unittest
 from triton import (setArchitecture, ARCH, processing, REG, Instruction,
                     getSymbolicRegisterValue, enableSymbolicEngine,
                     getConcreteRegisterValue, resetEngines, MemoryAccess,
-                    newSymbolicExpression, ast, CPUSIZE,
+                    newSymbolicExpression, CPUSIZE, TritonContext,
                     getSymbolicExpressionFromId, getSymbolicMemoryId,
                     getSymbolicMemoryValue, assignSymbolicExpressionToMemory,
                     assignSymbolicExpressionToRegister, buildSymbolicImmediate,
@@ -20,7 +20,9 @@ class TestSymbolic(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
+        self.Triton = TritonContext()
         setArchitecture(ARCH.X86_64)
+        self.astCtxt = self.Triton.getAstContext()
 
     def test_backup(self):
         """
@@ -53,7 +55,7 @@ class TestSymbolic(unittest.TestCase):
     def test_bind_expr_to_memory(self):
         """Check symbolic expression binded to memory can be retrieve."""
         # Bind expr1 to 0x100
-        expr1 = newSymbolicExpression(ast.bv(0x11, 8))
+        expr1 = newSymbolicExpression(self.astCtxt.bv(0x11, 8))
         mem = MemoryAccess(0x100, CPUSIZE.BYTE)
         assignSymbolicExpressionToMemory(expr1, mem)
 
@@ -65,7 +67,7 @@ class TestSymbolic(unittest.TestCase):
     def test_bind_expr_to_multi_memory(self):
         """Check symbolic expression binded to multiple memory location."""
         # Bind expr to multi memory location (0x100, 0x101, 0x102, 0x103)
-        expr1 = newSymbolicExpression(ast.bv(0x11223344, 32))
+        expr1 = newSymbolicExpression(self.astCtxt.bv(0x11223344, 32))
         mem = MemoryAccess(0x100, CPUSIZE.DWORD)
         assignSymbolicExpressionToMemory(expr1, mem)
 
@@ -84,12 +86,12 @@ class TestSymbolic(unittest.TestCase):
 
     def test_bind_expr_to_register(self):
         """Check symbolic expression binded to register."""
-        expr1 = newSymbolicExpression(ast.bv(0x11223344, 64))
+        expr1 = newSymbolicExpression(self.astCtxt.bv(0x11223344, 64))
         assignSymbolicExpressionToRegister(expr1, REG.RAX)
 
         self.assertEqual(getSymbolicRegisterValue(REG.RAX), 0x11223344)
 
-        expr1 = newSymbolicExpression(ast.bv(0x11223344, 32))
+        expr1 = newSymbolicExpression(self.astCtxt.bv(0x11223344, 32))
         with self.assertRaises(Exception):
             # Incorrect size
             assignSymbolicExpressionToRegister(expr1, REG.RAX)
@@ -101,7 +103,9 @@ class TestSymbolicBuilding(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
+        self.Triton = TritonContext()
         setArchitecture(ARCH.X86_64)
+        self.astCtxt = self.Triton.getAstContext()
 
     def test_build_immediate(self):
         """Check symbolic immediate has correct size and evaluation."""
@@ -111,7 +115,7 @@ class TestSymbolicBuilding(unittest.TestCase):
 
     def test_build_register(self):
         """Check symbolic register has correct size and location."""
-        expr1 = newSymbolicExpression(ast.bv(0x1122334455667788, CPUSIZE.QWORD_BIT))
+        expr1 = newSymbolicExpression(self.astCtxt.bv(0x1122334455667788, CPUSIZE.QWORD_BIT))
         assignSymbolicExpressionToRegister(expr1, REG.RAX)
 
         node = buildSymbolicRegister(REG.RAX)

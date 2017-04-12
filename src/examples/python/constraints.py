@@ -13,15 +13,15 @@ def test1():
 
     x = newSymbolicVariable(32)
     c = astCtxt.assert_(
-            ast.equal(
-                ast.bvsub(
-                    ast.bvxor(
-                        ast.variable(x),
-                        ast.bv(0x40, 32)
+            astCtxt.equal(
+                astCtxt.bvsub(
+                    astCtxt.bvxor(
+                        astCtxt.variable(x),
+                        astCtxt.bv(0x40, 32)
                     ),
-                    ast.bv(1, 32)
+                    astCtxt.bv(1, 32)
                 ),
-                ast.bv(0x10, 32)
+                astCtxt.bv(0x10, 32)
             )
         )
     print 'Test 1:', getModel(c)[0]
@@ -36,7 +36,7 @@ def test2():
 
     x = newSymbolicVariable(32)
     c = astCtxt.assert_(
-            (ast.variable(x) ^ 0x40) - 1 == 0x10
+            (astCtxt.variable(x) ^ 0x40) - 1 == 0x10
         )
     print 'Test 2:', getModel(c)[0]
 
@@ -50,9 +50,9 @@ def test3():
 
     x = newSymbolicVariable(8)
     c = astCtxt.assert_(
-            ast.land(
-                ast.variable(x) * ast.variable(x) - 1 == 0x20,
-                ast.variable(x) != 0x11
+            astCtxt.land(
+                astCtxt.variable(x) * astCtxt.variable(x) - 1 == 0x20,
+                astCtxt.variable(x) != 0x11
             )
         )
     print 'Test 3:', getModel(c)[0]
@@ -67,7 +67,7 @@ def test4():
 
     x = newSymbolicVariable(8)
     c = astCtxt.assert_(
-            ast.variable(x) * ast.variable(x) - 1 == 0x20,
+            astCtxt.variable(x) * astCtxt.variable(x) - 1 == 0x20,
         )
     print 'Test 4:', getModels(c, 10)
 

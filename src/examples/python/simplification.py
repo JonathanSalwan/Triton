@@ -23,14 +23,15 @@
 import sys
 
 from triton     import *
-from triton.ast import *
+
+Triton = TritonContext()
 
 
 # a ^ a -> a = 0
 def xor_1(node):
     if node.getKind() == AST_NODE.BVXOR:
         if node.getChilds()[0] == node.getChilds()[1]:
-            return bv(0, node.getBitvectorSize())
+            return Triton.getAstContext().bv(0, node.getBitvectorSize())
     return node
 
 
@@ -78,8 +79,10 @@ if __name__ == "__main__":
     addCallback(xor_1, CALLBACK.SYMBOLIC_SIMPLIFICATION)
     addCallback(xor_2, CALLBACK.SYMBOLIC_SIMPLIFICATION)
 
-    a = bv(1, 8)
-    b = bv(2, 8)
+    astCtxt = Triton.getAstContext()
+
+    a = astCtxt.bv(1, 8)
+    b = astCtxt.bv(2, 8)
 
     # Example 1
     c = a ^ a

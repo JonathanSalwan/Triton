@@ -45,16 +45,6 @@ namespace triton {
           exit(1);
         }
 
-        /* Create the ast module ===================================================================== */
-
-        triton::bindings::python::astModule = Py_InitModule("triton.ast", astCallbacks);
-        if (triton::bindings::python::astModule == nullptr) {
-          std::cerr << "Failed to initialize the ast bindings" << std::endl;
-          PyErr_Print();
-          exit(1);
-        }
-
-
         /* Create the ARCH namespace ================================================================= */
 
         PyObject* archDict = xPyDict_New();
@@ -162,7 +152,6 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL",             idSyscallsClass);           /* Empty: filled on the fly */
         #endif
         PyModule_AddObject(triton::bindings::python::tritonModule, "VERSION",             idVersionClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "ast",                 triton::bindings::python::astModule);
 
         triton::bindings::python::initialized = true;
       }

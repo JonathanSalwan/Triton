@@ -102,7 +102,6 @@ set(LIBTRITON_SOURCE_FILES
 if(PYTHON_BINDINGS)
     set(LIBTRITON_PYTHON_SOURCE_FILES
       bindings/python/init.cpp
-      bindings/python/modules/astCallbacks.cpp
       bindings/python/modules/tritonCallbacks.cpp
       bindings/python/namespaces/initArchNamespace.cpp
       bindings/python/namespaces/initAstNodeNamespace.cpp
